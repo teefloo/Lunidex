@@ -37,7 +37,17 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const { t } = useTranslation();
   const mounted = useMounted();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const { language } = usePrimeDexStore();
+  const store = usePrimeDexStore();
+  const language = store.language;
+  const addTCGCompare = store.addTCGCompare ?? (() => undefined);
+  const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
+  const isTCGCompared = store.isTCGCompared ?? (() => false);
+  const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
+  const toggleTCGWishlist = store.toggleTCGWishlist ?? (() => undefined);
+  const toggleTCGWatchlist = store.toggleTCGWatchlist ?? (() => undefined);
+  const isTCGOwned = store.isTCGOwned ?? (() => false);
+  const isTCGWishlist = store.isTCGWishlist ?? (() => false);
+  const isTCGWatchlist = store.isTCGWatchlist ?? (() => false);
   const resolvedLang = mounted ? (language === 'auto' ? 'en' : language) : 'en';
 
   useEffect(() => {
@@ -87,6 +97,10 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const effectText = displayCard.effect || displayCard.description || displayCard.flavorText || '';
   const attacks = displayCard.attacks ?? [];
   const abilities = normalizeAbilities(displayCard.abilities);
+  const compared = isTCGCompared(displayCard.id);
+  const owned = isTCGOwned(displayCard.id);
+  const wishlisted = isTCGWishlist(displayCard.id);
+  const watchlisted = isTCGWatchlist(displayCard.id);
 
   return createPortal(
     <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -184,10 +198,33 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     )}
                   </div>
 
-                  <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-foreground/50">
-                    {effectText || t('tcg.detail_empty')}
-                  </p>
-                </header>
+                <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-foreground/50">
+                  {effectText || t('tcg.detail_empty')}
+                </p>
+
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                  <ActionPill
+                    active={compared}
+                    onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
+                    label={compared ? t('tcg.remove_from_compare', { defaultValue: 'Remove compare' }) : t('tcg.add_to_compare', { defaultValue: 'Compare' })}
+                  />
+                  <ActionPill
+                    active={owned}
+                    onClick={() => toggleTCGOwned(displayCard.id)}
+                    label={t('tcg.mark_owned', { defaultValue: 'Owned' })}
+                  />
+                  <ActionPill
+                    active={wishlisted}
+                    onClick={() => toggleTCGWishlist(displayCard.id)}
+                    label={t('tcg.mark_wishlist', { defaultValue: 'Wishlist' })}
+                  />
+                  <ActionPill
+                    active={watchlisted}
+                    onClick={() => toggleTCGWatchlist(displayCard.id)}
+                    label={t('tcg.mark_watchlist', { defaultValue: 'Watchlist' })}
+                  />
+                </div>
+              </header>
 
                 <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   <InfoItem
@@ -474,6 +511,31 @@ function DetailSkeleton() {
         <div className="h-28 rounded-2xl bg-card/50 animate-pulse" />
       </div>
     </div>
+  );
+}
+
+function ActionPill({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'rounded-2xl border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all',
+        active
+          ? 'border-primary/40 bg-primary/15 text-primary shadow-[0_0_18px_rgba(227,53,13,0.12)]'
+          : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+      )}
+    >
+      {label}
+    </button>
   );
 }
 

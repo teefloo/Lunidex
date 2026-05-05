@@ -4,7 +4,7 @@ import i18n from 'i18next';
 import type { TOptions } from 'i18next';
 import { initReactI18next, useTranslation as useReactTranslation } from 'react-i18next';
 import enTranslations from './i18n/en';
-import { getBrowserLanguage, resolveLanguage, type SupportedLanguage } from './languages';
+import type { SupportedLanguage } from './languages';
 
 // Lazy-load map for on-demand language loading
 type TranslationBundle = {
@@ -22,12 +22,9 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
   ko: () => import('./i18n/ko'),
 };
 
-// Try to get initial language synchronously from localStorage
-const getInitialLang = () => {
-  if (typeof window === 'undefined') return 'en';
-  const storedLanguage = localStorage.getItem('primedex-lang');
-  return resolveLanguage(storedLanguage, getBrowserLanguage());
-};
+// Keep the first client render aligned with SSR.
+// The user's preferred language is restored right after hydration in Providers.
+const getInitialLang = () => 'en';
 
 // Initialize with English only (smallest initial bundle)
 i18n

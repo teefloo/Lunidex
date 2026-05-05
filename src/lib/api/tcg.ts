@@ -65,6 +65,7 @@ export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   selectedCategory: 'all',
   sortBy: 'name',
   sortOrder: 'asc',
+  ownedState: 'all',
 };
 
 function resolveTcgLang(lang = 'en') {
@@ -153,10 +154,11 @@ function buildCardQueryParams(filters: TCGCardFilters, page: number, limit: numb
   const selectedSet = filters.selectedSet?.trim();
   const sortBy: TCGCardSortField = filters.sortBy ?? 'name';
   const sortOrder: TCGCardSortOrder = filters.sortOrder ?? 'asc';
+  const remoteSortField = resolveRemoteSortField(sortBy);
 
   params.set('pagination:page', String(page));
   params.set('pagination:itemsPerPage', String(limit + 1));
-  params.set('sort:field', sortBy);
+  params.set('sort:field', remoteSortField);
   params.set('sort:order', sortOrder.toUpperCase());
 
   if (searchTerm) {
@@ -259,6 +261,33 @@ function cardMatchesLocalFilters(card: TCGCard, filters: TCGCardFilters): boolea
     return false;
   }
 
+  if (filters.illustrator) {
+    const illustrator = normalizeFilterValue(card.illustrator ?? '');
+    if (!illustrator.includes(normalizeFilterValue(filters.illustrator))) {
+      return false;
+    }
+  }
+
+  if (filters.regulationMark) {
+    if (normalizeFilterValue(card.regulationMark ?? '') !== normalizeFilterValue(filters.regulationMark)) {
+      return false;
+    }
+  }
+
+  if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
+    const marketPrice = getMarketPrice(card);
+    if (typeof marketPrice !== 'number') return false;
+    if (typeof filters.priceMin === 'number' && marketPrice < filters.priceMin) return false;
+    if (typeof filters.priceMax === 'number' && marketPrice > filters.priceMax) return false;
+  }
+
+  if (filters.releaseStart || filters.releaseEnd) {
+    const releaseDate = card.set?.releaseDate ? new Date(card.set.releaseDate).getTime() : undefined;
+    if (typeof releaseDate !== 'number' || Number.isNaN(releaseDate)) return false;
+    if (filters.releaseStart && releaseDate < new Date(filters.releaseStart).getTime()) return false;
+    if (filters.releaseEnd && releaseDate > new Date(filters.releaseEnd).getTime()) return false;
+  }
+
   return true;
 }
 
@@ -275,8 +304,12 @@ function serializeLocalOnlyFilters(filters: TCGCardFilters) {
   const selectedRarity = filters.selectedRarity ?? '';
   const selectedTrainerTypes = [...(filters.selectedTrainerTypes ?? [])].sort().join('|');
   const selectedEnergyTypes = [...(filters.selectedEnergyTypes ?? [])].sort().join('|');
+  const illustrator = filters.illustrator ?? '';
+  const regulationMark = filters.regulationMark ?? '';
+  const priceRange = `${filters.priceMin ?? ''}:${filters.priceMax ?? ''}`;
+  const releaseRange = `${filters.releaseStart ?? ''}:${filters.releaseEnd ?? ''}`;
 
-  return [selectedRarity, selectedTrainerTypes, selectedEnergyTypes].join('::');
+  return [selectedRarity, selectedTrainerTypes, selectedEnergyTypes, illustrator, regulationMark, priceRange, releaseRange].join('::');
 }
 
 function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): boolean {
@@ -289,6 +322,18 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
   }
 
   if ((filters.selectedEnergyTypes?.length ?? 0) > 0 && !card.energyType) {
+    return true;
+  }
+
+  if (filters.illustrator && !card.illustrator) {
+    return true;
+  }
+
+  if (filters.regulationMark && !card.regulationMark) {
+    return true;
+  }
+
+  if ((filters.priceMin !== undefined || filters.priceMax !== undefined) && !hasMarketPrice(card)) {
     return true;
   }
 
@@ -350,6 +395,80 @@ function needsVisualMetadata(card: TCGCard): boolean {
   }
 
   return false;
+}
+
+function getMarketPrice(card: TCGCard): number | undefined {
+  const tcgplayer = card.pricing?.tcgplayer as { market?: number; mid?: number; low?: number } | undefined;
+  const cardmarket = card.pricing?.cardmarket as { averageSellPrice?: number; trendPrice?: number } | undefined;
+
+  return tcgplayer?.market ?? tcgplayer?.mid ?? tcgplayer?.low ?? cardmarket?.trendPrice ?? cardmarket?.averageSellPrice;
+}
+
+function hasMarketPrice(card: TCGCard): boolean {
+  return typeof getMarketPrice(card) === 'number';
+}
+
+function resolveRemoteSortField(sortBy: TCGCardSortField): string {
+  switch (sortBy) {
+    case 'id':
+    case 'number':
+      return 'number';
+    case 'hp':
+      return 'hp';
+    case 'rarity':
+      return 'rarity';
+    case 'releaseDate':
+    case 'updated':
+    case 'marketPrice':
+      return 'name';
+    default:
+      return 'name';
+  }
+}
+
+function compareCards(a: TCGCard, b: TCGCard, sortBy: TCGCardSortField, sortOrder: TCGCardSortOrder) {
+  const direction = sortOrder === 'desc' ? -1 : 1;
+  let result = 0;
+
+  switch (sortBy) {
+    case 'id':
+      result = compareStrings(a.id, b.id);
+      break;
+    case 'number':
+      result = compareStrings(a.localId, b.localId, true);
+      break;
+    case 'hp':
+      result = (a.hp ?? -1) - (b.hp ?? -1);
+      break;
+    case 'rarity':
+      result = compareStrings(a.rarity ?? '', b.rarity ?? '');
+      break;
+    case 'releaseDate':
+      result = compareDates(a.set?.releaseDate, b.set?.releaseDate);
+      break;
+    case 'marketPrice':
+      result = (getMarketPrice(a) ?? -1) - (getMarketPrice(b) ?? -1);
+      break;
+    case 'updated':
+      result = compareDates(a.updated, b.updated);
+      break;
+    case 'name':
+    default:
+      result = compareStrings(a.name, b.name);
+      break;
+  }
+
+  return result * direction;
+}
+
+function compareStrings(a: string, b: string, numeric = false) {
+  return numeric ? a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }) : a.localeCompare(b, undefined, { sensitivity: 'base' });
+}
+
+function compareDates(a?: string, b?: string) {
+  const timeA = a ? new Date(a).getTime() : Number.NEGATIVE_INFINITY;
+  const timeB = b ? new Date(b).getTime() : Number.NEGATIVE_INFINITY;
+  return timeA - timeB;
 }
 
 async function mapWithConcurrency<T, R>(
@@ -462,17 +581,23 @@ export const searchCards = async (
   const hasLocalOnlyFilters =
     Boolean(filters.selectedRarity) ||
     Boolean(filters.selectedTrainerTypes?.length) ||
-    Boolean(filters.selectedEnergyTypes?.length);
+    Boolean(filters.selectedEnergyTypes?.length) ||
+    Boolean(filters.illustrator) ||
+    Boolean(filters.regulationMark) ||
+    Boolean(filters.priceMin !== undefined || filters.priceMax !== undefined) ||
+    Boolean(filters.releaseStart || filters.releaseEnd);
+  const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(filters.sortBy ?? 'name');
 
   try {
     const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
     if (cached) return cached;
 
-    if (!hasLocalOnlyFilters) {
+    if (!hasLocalOnlyFilters && !requiresLocalSorting) {
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${query}`, signal);
       throwIfAborted(signal);
-      const normalized = Array.isArray(data) ? data.slice(0, limit).map((card) => normaliseCard(card)) : [];
-      const pageCards = await hydrateCardsForVisualEffects(normalized, tcgLang, signal);
+      const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+      const sorted = [...normalized].sort((a, b) => compareCards(a, b, filters.sortBy ?? 'name', filters.sortOrder ?? 'asc'));
+      const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, limit), tcgLang, signal);
       const result = {
         cards: pageCards,
         hasMore: Array.isArray(data) ? data.length > limit : false,
@@ -510,12 +635,15 @@ export const searchCards = async (
       remotePage += 1;
     }
 
+    const sortBy = filters.sortBy ?? 'name';
+    const sortOrder = filters.sortOrder ?? 'asc';
+    const sortedCards = [...cards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
     const start = (page - 1) * limit;
     const end = start + limit;
-    const pageCards = await hydrateCardsForVisualEffects(cards.slice(start, end), tcgLang, signal);
+    const pageCards = await hydrateCardsForVisualEffects(sortedCards.slice(start, end), tcgLang, signal);
     const result = {
       cards: pageCards,
-      hasMore: hasMoreRemote || cards.length > end,
+      hasMore: hasMoreRemote || sortedCards.length > end,
     };
 
     await setCachedData(cacheKey, result);

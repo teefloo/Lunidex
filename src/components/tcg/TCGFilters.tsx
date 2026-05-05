@@ -13,6 +13,8 @@ import {
   Sparkles,
   Shield,
   Zap,
+  BadgeDollarSign,
+  PenLine,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -43,7 +45,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const { language } = usePrimeDexStore();
-  const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | null>('set');
+  const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>('set');
   const searchTimeoutRef = useRef<number | null>(null);
   const didApplyInitialSetRef = useRef(false);
 
@@ -134,6 +136,14 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
       selectedEnergyTypes: [],
       minHp: undefined,
       maxHp: undefined,
+      illustrator: undefined,
+      regulationMark: undefined,
+      legalities: [],
+      priceMin: undefined,
+      priceMax: undefined,
+      releaseStart: undefined,
+      releaseEnd: undefined,
+      ownedState: 'all',
     });
     didApplyInitialSetRef.current = true;
     setActiveSection('set');
@@ -203,6 +213,14 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
       filters.selectedEnergyTypes?.length ?? 0,
       typeof filters.minHp === 'number' ? 1 : 0,
       typeof filters.maxHp === 'number' ? 1 : 0,
+      filters.illustrator ? 1 : 0,
+      filters.regulationMark ? 1 : 0,
+      filters.legalities?.length ?? 0,
+      typeof filters.priceMin === 'number' ? 1 : 0,
+      typeof filters.priceMax === 'number' ? 1 : 0,
+      filters.releaseStart ? 1 : 0,
+      filters.releaseEnd ? 1 : 0,
+      filters.ownedState && filters.ownedState !== 'all' ? 1 : 0,
     ].reduce((count, value) => count + value, 0);
   }, [filters]);
 
@@ -648,6 +666,149 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
                 </button>
               );
             })}
+          </div>
+        </FilterSection>
+
+        <FilterSection
+          icon={BadgeDollarSign}
+          title={t('tcg.filter_market', { defaultValue: 'Market & metadata' })}
+          isOpen={activeSection === 'research'}
+          onToggle={() => setActiveSection(activeSection === 'research' ? null : 'research')}
+        >
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.illustrator', { defaultValue: 'Illustrator' })}
+                </label>
+                <input
+                  type="text"
+                  placeholder={t('tcg.illustrator_placeholder', { defaultValue: 'Any illustrator' })}
+                  value={filters.illustrator ?? ''}
+                  onChange={(event) => updateFilter('illustrator', event.target.value || undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.regulation', { defaultValue: 'Regulation mark' })}
+                </label>
+                <input
+                  type="text"
+                  placeholder={t('tcg.regulation_placeholder', { defaultValue: 'G, H, I...' })}
+                  value={filters.regulationMark ?? ''}
+                  onChange={(event) => updateFilter('regulationMark', event.target.value || undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.price_min', { defaultValue: 'Price min' })}
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={typeof filters.priceMin === 'number' ? filters.priceMin : ''}
+                  onChange={(event) => updateFilter('priceMin', event.target.value ? Number(event.target.value) : undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.price_max', { defaultValue: 'Price max' })}
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="999"
+                  value={typeof filters.priceMax === 'number' ? filters.priceMax : ''}
+                  onChange={(event) => updateFilter('priceMax', event.target.value ? Number(event.target.value) : undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.release_start', { defaultValue: 'Release from' })}
+                </label>
+                <input
+                  type="date"
+                  value={filters.releaseStart ?? ''}
+                  onChange={(event) => updateFilter('releaseStart', event.target.value || undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                  {t('tcg.release_end', { defaultValue: 'Release to' })}
+                </label>
+                <input
+                  type="date"
+                  value={filters.releaseEnd ?? ''}
+                  onChange={(event) => updateFilter('releaseEnd', event.target.value || undefined)}
+                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="ml-1 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                {t('tcg.owned_state', { defaultValue: 'Collection state' })}
+              </label>
+              <select
+                value={filters.ownedState ?? 'all'}
+                onChange={(event) => updateFilter('ownedState', event.target.value)}
+                className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold uppercase tracking-[0.14em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+              >
+                <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
+                <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
+                <option value="wishlist">{t('tcg.owned_wishlist', { defaultValue: 'Wishlist' })}</option>
+                <option value="watchlist">{t('tcg.owned_watchlist', { defaultValue: 'Watchlist' })}</option>
+                <option value="missing">{t('tcg.owned_missing', { defaultValue: 'Missing' })}</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <PenLine className="h-3.5 w-3.5 text-primary" />
+                {t('tcg.legalities', { defaultValue: 'Legalities' })}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(['standard', 'expanded', 'unlimited'] as const).map((state) => {
+                  const isActive = filters.legalities?.includes(state) ?? false;
+                  return (
+                    <button
+                      key={state}
+                      type="button"
+                      onClick={() => {
+                        const next = filters.legalities ?? [];
+                        updateFilter(
+                          'legalities',
+                          isActive ? next.filter((item) => item !== state) : [...next, state],
+                        );
+                      }}
+                      className={cn(
+                        'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                        isActive
+                          ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
+                          : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                      )}
+                    >
+                      {state}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </FilterSection>
       </div>

@@ -2,9 +2,15 @@ export type TCGCardCategory = 'Pokemon' | 'Trainer' | 'Energy';
 
 export type TCGCardCategoryFilter = TCGCardCategory | 'all';
 
-export type TCGCardSortField = 'name' | 'id' | 'hp' | 'rarity';
+export type TCGCardSortField = 'name' | 'id' | 'number' | 'hp' | 'rarity' | 'releaseDate' | 'marketPrice' | 'updated';
 
 export type TCGCardSortOrder = 'asc' | 'desc';
+
+export type TCGCardViewMode = 'visual' | 'compact' | 'table' | 'scan';
+
+export type TCGOwnedState = 'all' | 'owned' | 'wishlist' | 'watchlist' | 'missing';
+
+export type TCGLegalState = 'standard' | 'expanded' | 'unlimited';
 
 export interface TCGCardAttack {
   name?: string;
@@ -43,6 +49,17 @@ export interface TCGCardLegalities {
 export interface TCGCardPricing {
   tcgplayer?: unknown;
   cardmarket?: unknown;
+}
+
+export interface TCGPriceSnapshot {
+  provider: 'tcgplayer' | 'cardmarket' | 'manual';
+  currency: string;
+  low?: number;
+  mid?: number;
+  high?: number;
+  market?: number;
+  updatedAt?: string;
+  url?: string;
 }
 
 export interface TCGCardBooster {
@@ -141,6 +158,14 @@ export interface TCGCardFilters {
   selectedEnergyTypes?: string[];
   minHp?: number;
   maxHp?: number;
+  illustrator?: string;
+  regulationMark?: string;
+  legalities?: TCGLegalState[];
+  priceMin?: number;
+  priceMax?: number;
+  releaseStart?: string;
+  releaseEnd?: string;
+  ownedState?: TCGOwnedState;
   sortBy?: TCGCardSortField;
   sortOrder?: TCGCardSortOrder;
 }
@@ -148,4 +173,51 @@ export interface TCGCardFilters {
 export interface TCGCatalogPageResult {
   cards: TCGCard[];
   hasMore: boolean;
+}
+
+export interface TCGSearchFacetEntry {
+  key: string;
+  label: string;
+  count: number;
+}
+
+export interface TCGSearchFacets {
+  cards: number;
+  sets: TCGSearchFacetEntry[];
+  rarities: TCGSearchFacetEntry[];
+  types: TCGSearchFacetEntry[];
+  stages: TCGSearchFacetEntry[];
+  trainers: TCGSearchFacetEntry[];
+  energies: TCGSearchFacetEntry[];
+}
+
+export interface TCGSearchInsightLine {
+  label: string;
+  value: string;
+  tone?: 'default' | 'primary' | 'warning' | 'success';
+}
+
+export interface TCGSearchInsights {
+  totalResults: number;
+  totalSets: number;
+  activeSet?: TCGSet | null;
+  topRarities: TCGSearchFacetEntry[];
+  topTypes: TCGSearchFacetEntry[];
+  lines: TCGSearchInsightLine[];
+}
+
+export interface TCGSavedSearch {
+  id: string;
+  name: string;
+  query: string;
+  filters: TCGCardFilters;
+  viewMode: TCGCardViewMode;
+  createdAt: string;
+}
+
+export interface TCGUserCardEntry {
+  cardId: string;
+  state: Exclude<TCGOwnedState, 'all' | 'missing'>;
+  note?: string;
+  updatedAt: string;
 }

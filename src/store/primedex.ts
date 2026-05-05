@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
+import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -97,6 +98,32 @@ interface PrimeDexStore {
   removeFromCompare: (id: number) => void;
   isInCompare: (id: number) => boolean;
   clearCompare: () => void;
+
+  // TCG
+  tcgCompareList: string[];
+  addTCGCompare: (cardId: string) => void;
+  removeTCGCompare: (cardId: string) => void;
+  isTCGCompared: (cardId: string) => boolean;
+  clearTCGCompare: () => void;
+
+  tcgOwnedCards: string[];
+  tcgWishlistCards: string[];
+  tcgWatchlistCards: string[];
+  toggleTCGOwned: (cardId: string) => void;
+  toggleTCGWishlist: (cardId: string) => void;
+  toggleTCGWatchlist: (cardId: string) => void;
+  isTCGOwned: (cardId: string) => boolean;
+  isTCGWishlist: (cardId: string) => boolean;
+  isTCGWatchlist: (cardId: string) => boolean;
+
+  tcgSavedSearches: TCGSavedSearch[];
+  saveTCGSearch: (search: TCGSavedSearch) => void;
+  removeTCGSavedSearch: (id: string) => void;
+  clearTCGSavedSearches: () => void;
+
+  tcgCardNotes: TCGUserCardEntry[];
+  upsertTCGCardNote: (entry: TCGUserCardEntry) => void;
+  removeTCGCardNote: (cardId: string) => void;
 
   // Team
   team: number[];
@@ -249,6 +276,57 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       isInCompare: (id) => get().compareList.includes(id),
       clearCompare: () => set({ compareList: [] }),
 
+      tcgCompareList: [],
+      addTCGCompare: (cardId) => set((state) => {
+        if (state.tcgCompareList.includes(cardId)) return state;
+        if (state.tcgCompareList.length >= 4) return state;
+        return { tcgCompareList: [...state.tcgCompareList, cardId] };
+      }),
+      removeTCGCompare: (cardId) => set((state) => ({
+        tcgCompareList: state.tcgCompareList.filter((id) => id !== cardId),
+      })),
+      isTCGCompared: (cardId) => get().tcgCompareList.includes(cardId),
+      clearTCGCompare: () => set({ tcgCompareList: [] }),
+
+      tcgOwnedCards: [],
+      tcgWishlistCards: [],
+      tcgWatchlistCards: [],
+      toggleTCGOwned: (cardId) => set((state) => ({
+        tcgOwnedCards: state.tcgOwnedCards.includes(cardId)
+          ? state.tcgOwnedCards.filter((id) => id !== cardId)
+          : [...state.tcgOwnedCards, cardId],
+      })),
+      toggleTCGWishlist: (cardId) => set((state) => ({
+        tcgWishlistCards: state.tcgWishlistCards.includes(cardId)
+          ? state.tcgWishlistCards.filter((id) => id !== cardId)
+          : [...state.tcgWishlistCards, cardId],
+      })),
+      toggleTCGWatchlist: (cardId) => set((state) => ({
+        tcgWatchlistCards: state.tcgWatchlistCards.includes(cardId)
+          ? state.tcgWatchlistCards.filter((id) => id !== cardId)
+          : [...state.tcgWatchlistCards, cardId],
+      })),
+      isTCGOwned: (cardId) => get().tcgOwnedCards.includes(cardId),
+      isTCGWishlist: (cardId) => get().tcgWishlistCards.includes(cardId),
+      isTCGWatchlist: (cardId) => get().tcgWatchlistCards.includes(cardId),
+
+      tcgSavedSearches: [],
+      saveTCGSearch: (search) => set((state) => ({
+        tcgSavedSearches: [search, ...state.tcgSavedSearches.filter((item) => item.id !== search.id)].slice(0, 20),
+      })),
+      removeTCGSavedSearch: (id) => set((state) => ({
+        tcgSavedSearches: state.tcgSavedSearches.filter((search) => search.id !== id),
+      })),
+      clearTCGSavedSearches: () => set({ tcgSavedSearches: [] }),
+
+      tcgCardNotes: [],
+      upsertTCGCardNote: (entry) => set((state) => ({
+        tcgCardNotes: [entry, ...state.tcgCardNotes.filter((note) => note.cardId !== entry.cardId)],
+      })),
+      removeTCGCardNote: (cardId) => set((state) => ({
+        tcgCardNotes: state.tcgCardNotes.filter((note) => note.cardId !== cardId),
+      })),
+
       // Team
       team: [],
       addToTeam: (id) => set((state) => {
@@ -358,6 +436,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         showFavoritesOnly: state.showFavoritesOnly,
         sortBy: state.sortBy,
         compareList: state.compareList,
+        tcgCompareList: state.tcgCompareList,
+        tcgOwnedCards: state.tcgOwnedCards,
+        tcgWishlistCards: state.tcgWishlistCards,
+        tcgWatchlistCards: state.tcgWatchlistCards,
+        tcgSavedSearches: state.tcgSavedSearches,
+        tcgCardNotes: state.tcgCardNotes,
         team: state.team,
         history: state.history,
         badges: state.badges,
