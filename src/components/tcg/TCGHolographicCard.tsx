@@ -6,6 +6,7 @@ import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { getTCGHoloData } from '@/lib/tcg-holo';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 
 interface TCGHolographicCardProps {
   card: TCGCard;
@@ -36,10 +37,11 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   const pendingVarsRef = useRef<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
   const [interacting, setInteracting] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
 
   const holoData = useMemo(() => getTCGHoloData(card), [card]);
   const staticStyle = useMemo(() => getInitialHoloStyle(card.id), [card.id]);
-  const imageSrc = useMemo(() => getCardImageSrc(card), [card]);
+  const imageCandidates = useMemo(() => getTCGCardImageCandidates(card), [card]);
   const setId = card.set?.id ?? card.id.split('-')[0] ?? '';
   const cardNumber = card.localId ?? card.number ?? '';
 
@@ -185,7 +187,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
           <div className="card__back" aria-label={CARD_BACK_LABEL} />
           <div className="card__front">
             <Image
-              src={imageSrc}
+              src={imageCandidates[imageIndex] ?? imageCandidates.at(-1) ?? '/images/card-placeholder.svg'}
               alt={card.name}
               width={660}
               height={921}
@@ -193,6 +195,13 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               priority={priority}
               className={cn('card__image', imageClassName)}
               onLoad={() => setLoading(false)}
+              onError={() => {
+                setImageIndex((current) => {
+                  const nextIndex = Math.min(current + 1, imageCandidates.length - 1);
+                  if (nextIndex >= imageCandidates.length - 1) setLoading(false);
+                  return nextIndex;
+                });
+              }}
             />
             <div className="card__shine" aria-hidden="true" />
             <div className="card__glare" aria-hidden="true" />
@@ -202,11 +211,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
     </div>
   );
 });
-
-function getCardImageSrc(card: TCGCard): string {
-  if (card.image) return `${card.image}/high.webp`;
-  return card.imageUrl || '/images/card-placeholder.svg';
-}
 
 function getInitialHoloStyle(id: string): HoloStyle {
   const seedX = hashToUnit(`${id}:x`);

@@ -27,7 +27,7 @@ export default function TCGPage() {
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell py-8 pb-24 relative">
+      <main className="page-shell pt-24 pb-24 relative">
         <TCGResearchDesk />
       </main>
     </div>

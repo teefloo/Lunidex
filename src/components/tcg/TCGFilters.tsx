@@ -39,9 +39,20 @@ import { PokeballIcon } from '@/components/ui/PokeballIcon';
 interface TCGFiltersProps {
   filters: TCGCardFilters;
   onChange: (filters: TCGCardFilters) => void;
+  mode?: 'simple' | 'advanced';
+  onSimpleSetChange?: (setId: string) => void;
+  onSimpleCategoryChange?: (category: TCGCardCategoryFilter) => void;
+  onSimpleRarityChange?: (rarity: string) => void;
 }
 
-export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
+export function TCGFilters({
+  filters,
+  onChange,
+  mode = 'advanced',
+  onSimpleSetChange,
+  onSimpleCategoryChange,
+  onSimpleRarityChange,
+}: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const { language } = usePrimeDexStore();
@@ -98,6 +109,13 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
 
   const setOptions = useMemo(() => {
     const sets = filterOptions?.sets ?? [];
+    if (sets.length === 0) return [];
+
+    const hasReleaseDates = sets.some((set) => Boolean(set.releaseDate));
+    if (!hasReleaseDates) {
+      return [...sets].reverse();
+    }
+
     return [...sets].sort((a, b) => {
       const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
       const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
@@ -182,6 +200,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
   }, [clearSearchTimeout]);
 
   useEffect(() => {
+    if (mode === 'simple') return;
     if (!didApplyInitialSetRef.current && mounted && latestSetId && filters.selectedSet == null) {
       didApplyInitialSetRef.current = true;
       onChange({
@@ -189,7 +208,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
         selectedSet: latestSetId,
       });
     }
-  }, [filters, latestSetId, mounted, onChange]);
+  }, [filters, latestSetId, mounted, mode, onChange]);
 
   useEffect(() => {
     if (
@@ -326,6 +345,139 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
 
   const resolveSelectedCategory = filters.selectedCategory ?? 'all';
 
+  if (mode === 'simple') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full space-y-4"
+      >
+        <div className="rounded-2xl border border-border/40 bg-card/45 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
+              {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
+            </div>
+            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              {activeFilterCount > 0 ? t('tcg.active_filters', { count: activeFilterCount }) : t('tcg.simple_filters_hint', { defaultValue: 'Trois réglages' })}
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-4">
+            <div className="space-y-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                {t('tcg.filter_set')}
+              </div>
+              <div className="max-h-56 overflow-y-auto pr-1 scrollbar-premium">
+                <div className="space-y-2">
+                  {setOptions.map((set) => {
+                    const isActive = filters.selectedSet === set.id;
+                    return (
+                      <button
+                        key={set.id}
+                        type="button"
+                        onClick={() => {
+                          onSimpleSetChange?.(set.id);
+                          if (!onSimpleSetChange) {
+                            updateFilter('selectedSet', isActive ? null : set.id);
+                          }
+                        }}
+                        className={cn(
+                          'flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left text-xs font-bold transition-colors',
+                          isActive
+                            ? 'border-primary/35 bg-primary/12 text-primary'
+                            : 'border-border/45 bg-card/45 text-foreground/60 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                        )}
+                      >
+                        <span className="min-w-0 truncate">{set.name}</span>
+                        <span className="shrink-0 text-[9px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                          {set.totalCards}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                {t('tcg.card_category')}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {categoryOptions.map((category) => {
+                  const isActive = resolveSelectedCategory === category;
+                  return (
+                  <button
+                      key={category}
+                      type="button"
+                      onClick={() => {
+                        onSimpleCategoryChange?.(category);
+                        if (!onSimpleCategoryChange) {
+                          applyCategory(category);
+                        }
+                      }}
+                      className={cn(
+                        'rounded-xl border px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
+                        isActive
+                          ? 'border-primary/35 bg-primary/12 text-primary'
+                          : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                      )}
+                    >
+                      {getCategoryLabel(category)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                {t('tcg.filter_rarity')}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {rarityOptions.map((rarity) => {
+                  const isActive = filters.selectedRarity === rarity;
+                  return (
+                    <button
+                      key={rarity}
+                      type="button"
+                      onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
+                      className={cn(
+                        'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
+                        isActive
+                          ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
+                          : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                      )}
+                    >
+                      {rarity}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/40 pt-4">
+            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              {t('tcg.simple_filters_summary', { defaultValue: 'Simple and clear' })}
+            </div>
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/45 bg-card/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                {t('filters.reset')}
+              </button>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -343,7 +495,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
           clearLabel={t('search.clear')}
         />
 
-        <div className="mt-4 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {categoryOptions.map((category) => {
             const isActive = resolveSelectedCategory === category;
             const toneClass = getCategoryTone(category);
@@ -354,7 +506,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
                 type="button"
                 onClick={() => applyCategory(category)}
                 className={cn(
-                  'group relative overflow-hidden rounded-2xl border px-2.5 py-2.5 text-left transition-all duration-300',
+                  'group relative flex min-h-12 items-center justify-center overflow-hidden rounded-2xl border px-3 py-2.5 text-center transition-all duration-300',
                   isActive
                     ? `${toneClass.active} shadow-lg`
                     : 'border-border/40 bg-card/35 text-foreground/55 hover:border-border/70 hover:bg-card/60 hover:text-foreground',
@@ -362,9 +514,9 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
                 aria-pressed={isActive}
               >
                 <div className={cn('absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100', toneClass.glow)} />
-                <div className="relative flex items-center gap-2">
+                <div className="relative flex items-center gap-2 leading-tight">
                   <span className={cn('h-2.5 w-2.5 rounded-full', toneClass.dot)} />
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em]">
+                  <span className="text-[9px] font-black uppercase tracking-[0.14em] whitespace-normal">
                     {getCategoryLabel(category)}
                   </span>
                 </div>
@@ -378,7 +530,7 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
             <Filter className="h-3.5 w-3.5 text-primary" />
             <span>{t('tcg.catalog_filters')}</span>
             {activeFilterCount > 0 && (
-              <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-primary">
+              <span className="inline-flex min-w-[4.25rem] items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] leading-none whitespace-nowrap tabular-nums text-primary">
                 {t('tcg.active_filters', { count: activeFilterCount })}
               </span>
             )}
@@ -489,7 +641,12 @@ export function TCGFilters({ filters, onChange }: TCGFiltersProps) {
                   <button
                     key={rarity}
                     type="button"
-                    onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
+                    onClick={() => {
+                      onSimpleRarityChange?.(rarity);
+                      if (!onSimpleRarityChange) {
+                        updateFilter('selectedRarity', isActive ? null : rarity);
+                      }
+                    }}
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
                       isActive

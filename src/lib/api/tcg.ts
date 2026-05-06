@@ -577,7 +577,7 @@ export const searchCards = async (
   const tcgLang = resolveTcgLang(lang);
   const queryFilters = stripLocalOnlyFilters(filters);
   const query = buildCardQueryParams(queryFilters, page, limit).toString();
-  const cacheKey = `tcg-catalog-v7-${tcgLang}-${query}-p${page}-l${limit}-local-${serializeLocalOnlyFilters(filters)}`;
+  const cacheKey = `tcg-catalog-v8-${tcgLang}-${query}-p${page}-l${limit}-local-${serializeLocalOnlyFilters(filters)}`;
   const hasLocalOnlyFilters =
     Boolean(filters.selectedRarity) ||
     Boolean(filters.selectedTrainerTypes?.length) ||

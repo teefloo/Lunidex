@@ -9,9 +9,9 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { memo, useCallback } from 'react';
-import type { CSSProperties, MouseEvent } from 'react';
+import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -85,6 +85,7 @@ export function PokemonCardSkeleton() {
 
 export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialData }: PokemonCardProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const mounted = useMounted();
 
@@ -167,6 +168,17 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     });
   }, [name, queryClient]);
 
+  const openPokemonDetail = useCallback(() => {
+    router.push(`/pokemon/${name}`);
+  }, [name, router]);
+
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openPokemonDetail();
+    }
+  };
+
   if (isLoading && !displayData) {
     return <PokemonCardSkeleton />;
   }
@@ -235,9 +247,17 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const cardShadow = `0 18px 48px -34px ${hexToRgba(color, 0.42)}, inset 0 1px 0 rgba(255, 255, 255, 0.06)`;
 
   return (
-    <div className="relative block h-full py-1 px-1 sm:px-2" onMouseEnter={prefetchDetails}>
+    <div
+      role="link"
+      tabIndex={0}
+      aria-label={cardLabel}
+      className="relative block h-full cursor-pointer py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      onClick={openPokemonDetail}
+      onKeyDown={handleCardKeyDown}
+      onMouseEnter={prefetchDetails}
+    >
       <div
-        className="group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border p-2 transition-all duration-500 hover:-translate-y-1 sm:p-4"
+        className="group relative isolate flex h-full flex-col overflow-hidden rounded-[1.35rem] border p-2 transition-all duration-500 hover:-translate-y-1 sm:p-4"
         style={{
           '--type-color': color,
           backgroundImage: cardBackground,
@@ -245,12 +265,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           boxShadow: cardShadow,
         } as CSSProperties}
       >
-        <Link
-          href={`/pokemon/${name}`}
-          aria-label={cardLabel}
-          className="absolute inset-0 z-0 rounded-[1.35rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        />
-
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-80 transition-opacity duration-500 group-hover:opacity-90"
           style={{
