@@ -138,12 +138,6 @@ export default async function PokemonLayout({
         {
           '@type': 'ListItem',
           position: 2,
-          name: 'Pokédex',
-          item: `${baseUrl}/pokemon`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
           name: displayName,
           item: `${baseUrl}/pokemon/${name}`,
         },

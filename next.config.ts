@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/pokemon',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
   async headers() {
