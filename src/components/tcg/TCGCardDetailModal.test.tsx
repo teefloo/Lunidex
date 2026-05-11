@@ -73,6 +73,7 @@ describe('TCGCardDetailModal', () => {
     mockedGetTCGCard.mockResolvedValueOnce({
       ...baseCard,
       category: 'Pokemon',
+      dexId: [25],
       hp: 60,
       types: ['Lightning'],
       stage: 'Basic',
@@ -109,6 +110,7 @@ describe('TCGCardDetailModal', () => {
 
     expect(await screen.findByText('Thunder Jolt')).toBeInTheDocument();
     expect(screen.getByText(i18n.t('tcg.retreat_cost'))).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: i18n.t('tcg.open_pokemon_page', { defaultValue: 'Open Pokémon page' }) })).toHaveAttribute('href', '/pokemon/25?lang=en');
   });
 
   it('renders Trainer specific metadata and effect text', async () => {

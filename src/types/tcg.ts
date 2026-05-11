@@ -6,7 +6,7 @@ export type TCGCardSortField = 'name' | 'id' | 'number' | 'hp' | 'rarity' | 'rel
 
 export type TCGCardSortOrder = 'asc' | 'desc';
 
-export type TCGCardViewMode = 'visual' | 'compact' | 'table' | 'scan';
+export type TCGCardViewMode = 'visual' | 'table' | 'scan';
 
 export type TCGOwnedState = 'all' | 'owned' | 'wishlist' | 'watchlist' | 'missing';
 

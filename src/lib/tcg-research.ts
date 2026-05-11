@@ -19,6 +19,7 @@ export interface TCGSearchState {
 const DEFAULT_VIEW_MODE: TCGCardViewMode = 'visual';
 
 export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchState {
+  const viewMode = normalizeViewMode(readString(searchParams, 'view') as TCGCardViewMode | string | null | undefined);
   const filters: TCGCardFilters = {
     searchTerm: readString(searchParams, 'q') || undefined,
     selectedCategory: (readString(searchParams, 'category') as TCGCardFilters['selectedCategory']) ?? 'all',
@@ -44,7 +45,7 @@ export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchSt
 
   return {
     filters,
-    viewMode: (readString(searchParams, 'view') as TCGCardViewMode) || DEFAULT_VIEW_MODE,
+    viewMode,
     compare: readList(searchParams, 'compare'),
   };
 }
@@ -52,6 +53,7 @@ export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchSt
 export function serializeTCGSearchState(state: TCGSearchState): string {
   const params = new URLSearchParams();
   const { filters, viewMode, compare } = state;
+  const normalizedViewMode = normalizeViewMode(viewMode);
 
   writeString(params, 'q', filters.searchTerm);
   writeString(params, 'category', filters.selectedCategory && filters.selectedCategory !== 'all' ? filters.selectedCategory : undefined);
@@ -73,7 +75,7 @@ export function serializeTCGSearchState(state: TCGSearchState): string {
   writeString(params, 'owned', filters.ownedState && filters.ownedState !== 'all' ? filters.ownedState : undefined);
   writeString(params, 'sortBy', filters.sortBy);
   writeString(params, 'sortOrder', filters.sortOrder);
-  writeString(params, 'view', viewMode !== DEFAULT_VIEW_MODE ? viewMode : undefined);
+  writeString(params, 'view', normalizedViewMode !== DEFAULT_VIEW_MODE ? normalizedViewMode : undefined);
   writeList(params, 'compare', compare);
 
   return params.toString();
@@ -169,6 +171,12 @@ function writeNumber(params: URLSearchParams, key: string, value?: number) {
 function writeList(params: URLSearchParams, key: string, values?: string[] | null) {
   if (!values || values.length === 0) return;
   params.set(key, values.join(','));
+}
+
+function normalizeViewMode(viewMode?: TCGCardViewMode | string | null): TCGCardViewMode {
+  if (viewMode === 'compact') return DEFAULT_VIEW_MODE;
+  if (viewMode === 'visual' || viewMode === 'table' || viewMode === 'scan') return viewMode;
+  return DEFAULT_VIEW_MODE;
 }
 
 function hashString(input: string): string {

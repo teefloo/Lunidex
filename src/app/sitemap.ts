@@ -49,16 +49,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/privacy`,
-      changeFrequency: 'yearly',
-      priority: 0.2,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      changeFrequency: 'yearly',
-      priority: 0.2,
-    },
   ];
 
   return [...staticRoutes, ...pokemonUrls];

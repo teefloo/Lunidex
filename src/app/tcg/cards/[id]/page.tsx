@@ -3,9 +3,14 @@ import { getTCGCard } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
 
-export async function generateMetadata({ params, searchParams }: { params: { id: string }; searchParams: { lang?: string } }): Promise<Metadata> {
-  const { id } = params;
-  const { lang } = searchParams;
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ lang?: string }>;
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
 
   return {
@@ -19,9 +24,9 @@ export async function generateMetadata({ params, searchParams }: { params: { id:
   };
 }
 
-export default async function TCGCardPage({ params, searchParams }: { params: { id: string }; searchParams: { lang?: string } }) {
-  const { id } = params;
-  const { lang } = searchParams;
+export default async function TCGCardPage({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
   return <TCGCardDetailRoute card={card} />;
 }

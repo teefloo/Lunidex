@@ -240,16 +240,18 @@ export default function ComparePage() {
 
         <section className="page-surface mb-8 rounded-2xl p-5 shadow-xl">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full lg:max-w-xl">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/35" />
-              <input
-                type="search"
-                value={compareSearch}
-                onChange={(event) => setCompareSearch(event.target.value)}
-                placeholder={t('search.placeholder')}
-                aria-label={t('search.placeholder')}
-                className="h-12 w-full rounded-2xl border border-border/50 bg-card/55 pl-11 pr-4 text-sm font-semibold text-foreground placeholder:text-foreground/30 focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
-              />
+            <div className="w-full lg:max-w-xl">
+              <div className="flex h-12 items-center gap-3 rounded-2xl border border-border/50 bg-card/55 px-4 transition focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10">
+                <Search className="h-4 w-4 shrink-0 text-foreground/35" />
+                <input
+                  type="search"
+                  value={compareSearch}
+                  onChange={(event) => setCompareSearch(event.target.value)}
+                  placeholder={t('search.placeholder')}
+                  aria-label={t('search.placeholder')}
+                  className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-foreground placeholder:text-foreground/30 focus:outline-none"
+                />
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">

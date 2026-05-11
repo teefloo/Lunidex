@@ -900,6 +900,8 @@ export default {
       energy_type: 'Energy type',
       card_id: 'Card ID',
       card_code: 'Card code',
+      pokemon_page: 'Pokémon page',
+      open_pokemon_page: 'Open Pokémon page',
       card_category: 'Category',
       card_updated: 'Updated',
       open_raw_data: 'Open raw data',

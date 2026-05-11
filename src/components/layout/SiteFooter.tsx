@@ -173,13 +173,6 @@ export default function SiteFooter() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(227,53,13,0.35)]" />
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-foreground/42">
-                  {t('footer.legal.title')}
-                </p>
-              </div>
-
               <div className="flex flex-wrap gap-2">
                 {legalLinks.map((link) => (
                   <FooterAction key={`${link.href}-${link.label}`} {...link} />

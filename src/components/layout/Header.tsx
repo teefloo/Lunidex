@@ -137,6 +137,18 @@ export default function Header() {
   const themeLabel = mounted
     ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
     : t('settings.system');
+  const homeAriaLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
+  const teamLabel = mounted ? t('nav.team') : 'Team Builder';
+  const compareLabel = mounted ? t('nav.compare') : 'Compare';
+  const tcgLabel = mounted ? t('nav.tcg') : 'TCG';
+  const typesLabel = mounted ? t('nav.types') : 'Types';
+  const movesLabel = mounted ? t('nav.moves') : 'Moves';
+  const quizLabel = mounted ? t('nav.quiz') : 'Quiz';
+  const favoritesLabel = mounted ? t('nav.favorites') : 'Favorites';
+  const menuLabel = mounted ? (t('header.open_menu') || 'Menu') : 'Menu';
+  const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
+  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon';
+  const settingsLabel = mounted ? t('settings.title') : 'Settings';
 
   const isDark = mounted && (
     theme === 'dark' ||
@@ -173,7 +185,7 @@ export default function Header() {
           className="glass-toolbar inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4"
         >
           <div className="flex shrink-0 items-center justify-start">
-            <Link href="/" className="flex items-center gap-2 group" aria-label={`${t('header.home_aria')} - PrimeDex`}>
+            <Link href="/" className="flex items-center gap-2 group" aria-label={homeAriaLabel}>
               <div className="shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
                 <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
               </div>
@@ -202,27 +214,27 @@ export default function Header() {
 
           <nav className="hidden min-w-0 flex-none items-center justify-center gap-0.5 rounded-full border border-border/50 bg-muted/35 p-0.5 backdrop-blur-xl lg:flex">
             <HeaderLink href="/team" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <Users className="h-3 w-3" /> {t('nav.team')}
+              <Users className="h-3 w-3" /> {teamLabel}
             </HeaderLink>
             <div className="h-3 w-px bg-border/70" />
             <HeaderLink href="/compare" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <ArrowLeftRight className="h-3 w-3" /> {t('nav.compare')}
+              <ArrowLeftRight className="h-3 w-3" /> {compareLabel}
             </HeaderLink>
             <div className="h-3 w-px bg-border/70" />
             <HeaderLink href="/tcg" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <LayoutGrid className="h-3 w-3" /> {t('nav.tcg')}
+              <LayoutGrid className="h-3 w-3" /> {tcgLabel}
             </HeaderLink>
             <div className="h-3 w-px bg-border/70" />
             <HeaderLink href="/types" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <Shapes className="h-3 w-3" /> {t('nav.types')}
+              <Shapes className="h-3 w-3" /> {typesLabel}
             </HeaderLink>
             <div className="h-3 w-px bg-border/70" />
             <HeaderLink href="/moves" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <Swords className="h-3 w-3" /> {t('nav.moves')}
+              <Swords className="h-3 w-3" /> {movesLabel}
             </HeaderLink>
             <div className="h-3 w-px bg-border/70" />
             <HeaderLink href="/quiz" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
-              <BrainCircuit className="h-3 w-3" /> {t('nav.quiz')}
+              <BrainCircuit className="h-3 w-3" /> {quizLabel}
             </HeaderLink>
           </nav>
 
@@ -232,10 +244,10 @@ export default function Header() {
                 <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 transition-colors duration-300 group-hover:text-primary">
                   <Search className="h-3.5 w-3.5 text-foreground/60 transition-colors duration-300 group-hover:text-primary" />
                 </div>
-                <input
+                  <input
                   type="text"
-                  placeholder={t('search.placeholder')}
-                  aria-label={t('search.placeholder')}
+                  placeholder={searchPlaceholder}
+                  aria-label={searchPlaceholder}
                   value={localSearch || ''}
                   onChange={(event) => setLocalSearch(event.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
@@ -248,17 +260,17 @@ export default function Header() {
 
             <Tooltip>
               <TooltipTrigger>
-                <Link href="/favorites" aria-label={t('nav.favorites')} className="hidden sm:block">
+                  <Link href="/favorites" aria-label={t('nav.favorites')} className="hidden sm:block">
                   <div
                     className="glass-control flex h-8 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500 active:scale-95"
                   >
                     <Heart className="h-3.5 w-3.5" />
-                    <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">{t('nav.favorites')}</span>
+                    <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">{favoritesLabel}</span>
                   </div>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="text-xs font-bold">
-                {t('nav.favorites')}
+                {favoritesLabel}
               </TooltipContent>
             </Tooltip>
 
@@ -308,13 +320,13 @@ export default function Header() {
                   type="button"
                   onClick={toggleSettings}
                   className="glass-control flex h-8 w-8 items-center justify-center text-foreground/70 hover:scale-105 hover:rotate-45 hover:border-border/80 hover:bg-muted/55 hover:text-foreground active:scale-95"
-                  aria-label={t('settings.title')}
+                  aria-label={settingsLabel}
                 >
                   <Settings className="h-4 w-4 md:h-[18px] md:w-[18px]" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="text-xs font-bold">
-                {t('settings.title')}
+                {settingsLabel}
               </TooltipContent>
             </Tooltip>
 
@@ -325,7 +337,7 @@ export default function Header() {
                     <button
                       type="button"
                       className="glass-control flex h-8 w-8 items-center justify-center text-foreground/70 hover:scale-105 hover:border-border/80 hover:bg-muted/55 hover:text-foreground active:scale-95"
-                      aria-label={t('header.open_menu') || 'Menu'}
+                      aria-label={menuLabel}
                     >
                       <Menu className="h-4 w-4" />
                     </button>
@@ -342,56 +354,56 @@ export default function Header() {
                     <SheetClose
                       render={
                         <Link href="/" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <PrimeDexLogo className="h-5 w-5 flex-shrink-0" /> {t('header.home_aria')} - PrimeDex
+                          <PrimeDexLogo className="h-5 w-5 flex-shrink-0" /> {homeMenuLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/favorites" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <Heart className="h-5 w-5 flex-shrink-0" /> {t('nav.favorites')}
+                          <Heart className="h-5 w-5 flex-shrink-0" /> {favoritesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/team" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <Users className="h-5 w-5 flex-shrink-0" /> {t('nav.team')}
+                          <Users className="h-5 w-5 flex-shrink-0" /> {teamLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/compare" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <ArrowLeftRight className="h-5 w-5 flex-shrink-0" /> {t('nav.compare')}
+                          <ArrowLeftRight className="h-5 w-5 flex-shrink-0" /> {compareLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/tcg" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <LayoutGrid className="h-5 w-5 flex-shrink-0" /> {t('nav.tcg')}
+                          <LayoutGrid className="h-5 w-5 flex-shrink-0" /> {tcgLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/types" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <Shapes className="h-5 w-5 flex-shrink-0" /> {t('nav.types')}
+                          <Shapes className="h-5 w-5 flex-shrink-0" /> {typesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/moves" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <Swords className="h-5 w-5 flex-shrink-0" /> {t('nav.moves')}
+                          <Swords className="h-5 w-5 flex-shrink-0" /> {movesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
                         <Link href="/quiz" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
-                          <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {t('nav.quiz')}
+                          <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {quizLabel}
                         </Link>
                       }
                     />

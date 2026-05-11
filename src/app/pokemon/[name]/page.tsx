@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { getPokemonDetail, getPokemonSpecies, getLocalizedPokemonData, getPokemonEncounters } from '@/lib/api';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { getAllPokemonNames, getPokemonDetail, getPokemonSpecies, getLocalizedPokemonData, getPokemonEncounters } from '@/lib/api';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
-import { t } from '@/lib/server-i18n';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 
@@ -14,9 +14,28 @@ export const dynamicParams = true; // Allow dynamic params for non-static pages
 const normalizeDescription = (value?: string | null) =>
   value?.replace(/\f/g, ' ').replace(/\s+/g, ' ').trim() || '';
 
+type ResolvedSearchParams = { [key: string]: string | string[] | undefined };
+
+const buildPokemonPath = (name: string, searchParams: ResolvedSearchParams) => {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (typeof value === 'string') {
+      query.set(key, value);
+    } else if (Array.isArray(value)) {
+      for (const item of value) {
+        query.append(key, item);
+      }
+    }
+  }
+
+  const queryString = query.toString();
+  return `/pokemon/${name}${queryString ? `?${queryString}` : ''}`;
+};
+
 interface Props {
   params: Promise<{ name: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<ResolvedSearchParams>;
 }
 
 export async function generateMetadata(
@@ -91,8 +110,9 @@ export async function generateMetadata(
 
 export async function generateStaticParams() {
   // Pre-render first 151 pokemons for better SEO and performance
-  return Array.from({ length: 151 }, (_, i) => ({
-    name: (i + 1).toString(),
+  const pokemonList = await getAllPokemonNames();
+  return pokemonList.slice(0, 151).map((pokemon) => ({
+    name: pokemon.name,
   }));
 }
 
@@ -111,30 +131,26 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   let encounters: PokemonEncounter[] = [];
 
   try {
-    const detailData = await getPokemonDetail(name);
-    pokemon = detailData;
-    
-    // Try species for the form name first, fall back to base name for mega/primal/ultra
-    const [speciesData, localizedData, encountersData, fallbackSpeciesData] = await Promise.all([
-      getPokemonSpecies(baseName).catch(() => null),
-      getLocalizedPokemonData(name, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
-      getPokemonEncounters(detailData.id).catch(() => []),
-      Promise.resolve(null),
-    ]);
-
-    species = speciesData || fallbackSpeciesData;
-    localized = localizedData;
-    encounters = encountersData;
+    pokemon = await getPokemonDetail(name);
   } catch {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">{t('common.pokemon_not_found', { defaultValue: 'Pokemon Not Found' })}</h1>
-          <p className="text-muted-foreground">{t('common.pokemon_not_found_desc', { defaultValue: 'The pokemon you are looking for does not exist.' })}</p>
-        </div>
-      </div>
-    );
+    notFound();
   }
+
+  if (pokemon.name !== name) {
+    permanentRedirect(buildPokemonPath(pokemon.name, sParams));
+  }
+
+  // Try species for the form name first, fall back to base name for mega/primal/ultra
+  const [speciesData, localizedData, encountersData, fallbackSpeciesData] = await Promise.all([
+    getPokemonSpecies(baseName).catch(() => null),
+    getLocalizedPokemonData(name, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
+    getPokemonEncounters(pokemon.id).catch(() => []),
+    Promise.resolve(null),
+  ]);
+
+  species = speciesData || fallbackSpeciesData;
+  localized = localizedData;
+  encounters = encountersData;
 
   const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
     || species?.names?.find(n => n.language.name === lang)?.name
