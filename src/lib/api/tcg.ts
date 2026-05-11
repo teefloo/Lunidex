@@ -435,7 +435,7 @@ function compareCards(a: TCGCard, b: TCGCard, sortBy: TCGCardSortField, sortOrde
       result = compareStrings(a.id, b.id);
       break;
     case 'number':
-      result = compareStrings(a.localId, b.localId, true);
+      result = compareCollectorNumbers(a.localId, b.localId);
       break;
     case 'hp':
       result = (a.hp ?? -1) - (b.hp ?? -1);
@@ -463,6 +463,27 @@ function compareCards(a: TCGCard, b: TCGCard, sortBy: TCGCardSortField, sortOrde
 
 function compareStrings(a: string, b: string, numeric = false) {
   return numeric ? a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }) : a.localeCompare(b, undefined, { sensitivity: 'base' });
+}
+
+function compareCollectorNumbers(a: string, b: string) {
+  const valueA = parseCollectorNumber(a);
+  const valueB = parseCollectorNumber(b);
+
+  if (valueA !== valueB) {
+    return valueA - valueB;
+  }
+
+  return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function parseCollectorNumber(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return Number.POSITIVE_INFINITY;
+
+  const match = normalized.match(/(\d+)/);
+  if (!match) return Number.POSITIVE_INFINITY;
+
+  return Number.parseInt(match[1], 10);
 }
 
 function compareDates(a?: string, b?: string) {
@@ -577,7 +598,7 @@ export const searchCards = async (
   const tcgLang = resolveTcgLang(lang);
   const queryFilters = stripLocalOnlyFilters(filters);
   const query = buildCardQueryParams(queryFilters, page, limit).toString();
-  const cacheKey = `tcg-catalog-v8-${tcgLang}-${query}-p${page}-l${limit}-local-${serializeLocalOnlyFilters(filters)}`;
+  const cacheKey = `tcg-catalog-v9-${tcgLang}-${query}-p${page}-l${limit}-local-${serializeLocalOnlyFilters(filters)}`;
   const hasLocalOnlyFilters =
     Boolean(filters.selectedRarity) ||
     Boolean(filters.selectedTrainerTypes?.length) ||
@@ -586,7 +607,10 @@ export const searchCards = async (
     Boolean(filters.regulationMark) ||
     Boolean(filters.priceMin !== undefined || filters.priceMax !== undefined) ||
     Boolean(filters.releaseStart || filters.releaseEnd);
-  const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(filters.sortBy ?? 'name');
+  const sortBy = filters.sortBy ?? 'name';
+  const sortOrder = filters.sortOrder ?? 'asc';
+  const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
+  const requiresFullDatasetSort = sortBy === 'number';
 
   try {
     const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
@@ -612,7 +636,7 @@ export const searchCards = async (
     let hasMoreRemote = true;
     const targetCount = page * limit + 1;
 
-    while (hasMoreRemote && cards.length < targetCount) {
+    while (hasMoreRemote && (requiresFullDatasetSort || cards.length < targetCount)) {
       const pageQuery = buildCardQueryParams(queryFilters, remotePage, limit).toString();
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
@@ -635,8 +659,6 @@ export const searchCards = async (
       remotePage += 1;
     }
 
-    const sortBy = filters.sortBy ?? 'name';
-    const sortOrder = filters.sortOrder ?? 'asc';
     const sortedCards = [...cards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
     const start = (page - 1) * limit;
     const end = start + limit;

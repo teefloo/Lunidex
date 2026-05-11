@@ -820,6 +820,17 @@ export default {
         filter_rarity: '희귀도',
         filter_hp: 'HP 임계값',
         filter_phase: '진화 단계',
+        sort_label: '카드 정렬',
+        sort_name_asc: '이름 A-Z',
+        sort_name_desc: '이름 Z-A',
+        sort_number_asc: '번호 오름차순',
+        sort_number_desc: '번호 내림차순',
+        sort_id_asc: '카드 ID A-Z',
+        sort_id_desc: '카드 ID Z-A',
+        sort_hp_desc: 'HP 내림차순',
+        sort_hp_asc: 'HP 오름차순',
+        sort_rarity_asc: '희귀도 A-Z',
+        sort_rarity_desc: '희귀도 Z-A',
       },
     }
   }

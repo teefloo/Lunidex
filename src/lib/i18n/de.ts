@@ -838,6 +838,17 @@ balanced_desc: 'Ein vielseitiges Set an Fähigkeiten für verschiedene Situation
         filter_rarity: 'Seltenheitsstufe',
         filter_hp: 'HP-Schwelle',
         filter_phase: 'Evolutionsphase',
+        sort_label: 'Karten sortieren',
+        sort_name_asc: 'Name A-Z',
+        sort_name_desc: 'Name Z-A',
+        sort_number_asc: 'Nummer aufsteigend',
+        sort_number_desc: 'Nummer absteigend',
+        sort_id_asc: 'Karten-ID A-Z',
+        sort_id_desc: 'Karten-ID Z-A',
+        sort_hp_desc: 'KP absteigend',
+        sort_hp_asc: 'KP aufsteigend',
+        sort_rarity_asc: 'Seltenheit A-Z',
+        sort_rarity_desc: 'Seltenheit Z-A',
       },
     }
   }

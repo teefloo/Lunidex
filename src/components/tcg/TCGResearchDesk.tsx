@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   ChevronRight,
+  ChevronDown,
   Search,
   SlidersHorizontal,
   Sparkles,
@@ -121,6 +122,7 @@ export function TCGResearchDesk() {
 
   const cards = useMemo(() => cardsData?.pages.flatMap((page) => page.cards) ?? [], [cardsData]);
   const totalCards = cards.length;
+  const sortValue = `${effectiveFilters.sortBy ?? 'name'}-${effectiveFilters.sortOrder ?? 'asc'}`;
 
   const updateFilters = useCallback((next: TCGCardFilters) => {
     setHasUserEditedFilters(true);
@@ -267,6 +269,14 @@ export function TCGResearchDesk() {
         activeCategory={parsedState.filters.selectedCategory ?? 'all'}
         searchTerm={effectiveFilters.searchTerm ?? ''}
         latestSetName={latestSet?.name ?? t('tcg.unknown')}
+        sortValue={sortValue}
+        onSortChange={(sortBy, sortOrder) => {
+          updateFilters({
+            ...effectiveFilters,
+            sortBy,
+            sortOrder,
+          });
+        }}
         onSearchChange={(value) => updateFilters({
           ...effectiveFilters,
           searchTerm: value.trim() ? value : undefined,
@@ -390,6 +400,8 @@ function DiscoveryHero({
   activeCategory,
   searchTerm,
   latestSetName,
+  sortValue,
+  onSortChange,
   onSearchChange,
   onClearSearch,
   onOpenFilters,
@@ -401,12 +413,16 @@ function DiscoveryHero({
   activeCategory: TCGCardFilters['selectedCategory'];
   searchTerm: string;
   latestSetName: string;
+  sortValue: string;
+  onSortChange: (sortBy: NonNullable<TCGCardFilters['sortBy']>, sortOrder: NonNullable<TCGCardFilters['sortOrder']>) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onOpenFilters: () => void;
   onOpenAdvanced: () => void;
   onQuickPreset: (preset: 'latest' | 'pokemon' | 'trainer' | 'pikachu') => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <section className="page-surface px-5 py-6 sm:px-8 sm:py-7">
       <div className="space-y-4">
@@ -439,6 +455,37 @@ function DiscoveryHero({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <div className="w-full md:w-[250px]">
+            <div className="relative overflow-hidden rounded-full">
+              <select
+                value={sortValue}
+                onChange={(event) => {
+                  const [sortBy, sortOrder] = event.target.value.split('-') as [
+                    NonNullable<TCGCardFilters['sortBy']>,
+                    NonNullable<TCGCardFilters['sortOrder']>,
+                  ];
+                  onSortChange(sortBy, sortOrder);
+                }}
+                className="h-11 w-full appearance-none rounded-full border border-border/50 bg-card/50 px-4 pr-11 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
+                aria-label={t('tcg.sort_label')}
+              >
+                <option value="name-asc">{t('tcg.sort_name_asc')}</option>
+                <option value="name-desc">{t('tcg.sort_name_desc')}</option>
+                <option value="number-asc">{t('tcg.sort_number_asc')}</option>
+                <option value="number-desc">{t('tcg.sort_number_desc')}</option>
+                <option value="id-asc">{t('tcg.sort_id_asc')}</option>
+                <option value="id-desc">{t('tcg.sort_id_desc')}</option>
+                <option value="hp-desc">{t('tcg.sort_hp_desc')}</option>
+                <option value="hp-asc">{t('tcg.sort_hp_asc')}</option>
+                <option value="rarity-asc">{t('tcg.sort_rarity_asc')}</option>
+                <option value="rarity-desc">{t('tcg.sort_rarity_desc')}</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                <ChevronDown className="h-4 w-4 text-foreground/30" />
+              </div>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={() => onQuickPreset('latest')}

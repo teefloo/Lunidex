@@ -831,6 +831,17 @@ export default {
         filter_rarity: 'レアリティ',
         filter_hp: 'HP閾値',
         filter_phase: '進化フェーズ',
+        sort_label: 'カードを並べ替え',
+        sort_name_asc: '名前 A-Z',
+        sort_name_desc: '名前 Z-A',
+        sort_number_asc: '番号の昇順',
+        sort_number_desc: '番号の降順',
+        sort_id_asc: 'カードID A-Z',
+        sort_id_desc: 'カードID Z-A',
+        sort_hp_desc: 'HPの高い順',
+        sort_hp_asc: 'HPの低い順',
+        sort_rarity_asc: 'レアリティ A-Z',
+        sort_rarity_desc: 'レアリティ Z-A',
       },
     }
   }

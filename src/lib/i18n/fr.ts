@@ -924,6 +924,17 @@ export default {
         filter_rarity: 'Niveau de rareté',
         filter_hp: 'Seuil HP',
         filter_phase: "Phase d'évolution",
+        sort_label: 'Trier les cartes',
+        sort_name_asc: 'Nom A-Z',
+        sort_name_desc: 'Nom Z-A',
+        sort_number_asc: 'Numéro croissant',
+        sort_number_desc: 'Numéro décroissant',
+        sort_id_asc: 'ID de carte A-Z',
+        sort_id_desc: 'ID de carte Z-A',
+        sort_hp_desc: 'HP décroissants',
+        sort_hp_asc: 'HP croissants',
+        sort_rarity_asc: 'Rareté A-Z',
+        sort_rarity_desc: 'Rareté Z-A',
       },
     }
   }

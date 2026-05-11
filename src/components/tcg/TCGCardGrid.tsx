@@ -183,6 +183,8 @@ export function TCGCardGrid() {
                 <option value="name-desc">{t('tcg.sort_name_desc')}</option>
                 <option value="id-asc">{t('tcg.sort_id_asc')}</option>
                 <option value="id-desc">{t('tcg.sort_id_desc')}</option>
+                <option value="number-asc">{t('tcg.sort_number_asc')}</option>
+                <option value="number-desc">{t('tcg.sort_number_desc')}</option>
                 <option value="hp-desc">{t('tcg.sort_hp_desc')}</option>
                 <option value="hp-asc">{t('tcg.sort_hp_asc')}</option>
                 <option value="rarity-asc">{t('tcg.sort_rarity_asc')}</option>

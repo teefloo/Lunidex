@@ -114,6 +114,45 @@ describe('tcg api helpers', () => {
     expect(mockedSetCachedData).toHaveBeenCalled();
   });
 
+  it('sorts collector numbers globally so low numbers come first', async () => {
+    mockGet.mockImplementation(async (url: string) => {
+      if (url.includes('pagination%3Apage=1')) {
+        return {
+          data: [
+            makeCard('124', { localId: '124', name: 'Card 124' }),
+            makeCard('123', { localId: '123', name: 'Card 123' }),
+            makeCard('122', { localId: '122', name: 'Card 122' }),
+          ],
+        };
+      }
+
+      if (url.includes('pagination%3Apage=2')) {
+        return {
+          data: [
+            makeCard('001', { localId: '001', name: 'Card 001' }),
+            makeCard('002', { localId: '002', name: 'Card 002' }),
+          ],
+        };
+      }
+
+      throw new Error(`Unexpected url: ${url}`);
+    });
+
+    const result = await searchCards(
+      {
+        selectedCategory: 'Pokemon',
+        selectedSet: 'me03',
+        sortBy: 'number',
+        sortOrder: 'asc',
+      },
+      'en',
+      1,
+      2,
+    );
+
+    expect(result.cards.map((card) => card.localId)).toEqual(['001', '002']);
+  });
+
   it('hydrates missing catalog metadata so visual rarity effects can be mapped', async () => {
     mockGet.mockImplementation(async (url: string) => {
       if (url.includes('/cards?')) {
