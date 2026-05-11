@@ -858,6 +858,8 @@ export default {
       retreat_cost: 'Coût de retraite',
       official_portal: 'Portail officiel',
       open_card_detail: 'Voir les détails de {{name}}',
+      pokemon_page: 'Page du Pokémon',
+      open_pokemon_page: 'Ouvrir la page du Pokémon',
       page_title: 'Catalogue JCC Pokémon — PrimeDex',
       page_description: 'Parcourez le catalogue complet du Jeu de Cartes Pokémon. Explorez toutes les cartes JCC, leurs types, raretés, attaques et talents.',
       page_heading: 'Catalogue JCC',

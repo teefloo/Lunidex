@@ -809,6 +809,8 @@ community: {
         retreat_cost: 'Retreat Cost',
         official_portal: 'Official Portal',
         open_card_detail: 'View {{name}} details',
+        pokemon_page: 'Pokémon page',
+        open_pokemon_page: 'Open Pokémon page',
         page_title: 'Pokémon TCG Catalog — PrimeDex',
         page_description: 'Search cards, browse the latest sets, and open any Pokémon TCG card quickly.',
         page_heading: 'Find a card',

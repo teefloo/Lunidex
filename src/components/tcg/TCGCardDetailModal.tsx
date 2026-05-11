@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type ComponentType } from 'react';
+import Link from 'next/link';
+import { useEffect, useRef, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -97,6 +98,9 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const effectText = displayCard.effect || displayCard.description || displayCard.flavorText || '';
   const attacks = displayCard.attacks ?? [];
   const abilities = normalizeAbilities(displayCard.abilities);
+  const pokemonPageHref = category === 'Pokemon' && displayCard.dexId?.[0]
+    ? `/pokemon/${displayCard.dexId[0]}?lang=${resolvedLang}`
+    : null;
   const compared = isTCGCompared(displayCard.id);
   const owned = isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
@@ -252,6 +256,20 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     label={t('tcg.card_id')}
                     value={displayCard.id}
                   />
+                  {pokemonPageHref && (
+                    <InfoItem
+                      icon={ExternalLink}
+                      label={t('tcg.pokemon_page', { defaultValue: 'Pokémon page' })}
+                      value={(
+                        <Link
+                          href={pokemonPageHref}
+                          className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary/80 hover:underline"
+                        >
+                          {t('tcg.open_pokemon_page', { defaultValue: 'Open Pokémon page' })}
+                        </Link>
+                      )}
+                    />
+                  )}
                   <InfoItem
                     icon={Activity}
                     label={t('tcg.regulation')}
@@ -416,7 +434,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
 interface InfoItemProps {
   icon: ComponentType<{ className?: string }>;
   label: string;
-  value: string;
+  value: ReactNode;
 }
 
 function InfoItem({ icon: Icon, label, value }: InfoItemProps) {

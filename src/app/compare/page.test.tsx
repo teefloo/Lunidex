@@ -74,6 +74,8 @@ describe('ComparePage', () => {
 
     expect(screen.getByText(i18n.t('compare.title'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('compare.no_compare'))).toBeInTheDocument();
-    expect(screen.getByLabelText(i18n.t('search.placeholder'))).toBeInTheDocument();
+    const searchInput = screen.getByLabelText(i18n.t('search.placeholder'));
+    expect(searchInput).toBeInTheDocument();
+    expect(searchInput.parentElement?.querySelector('svg')).toBeInTheDocument();
   });
 });

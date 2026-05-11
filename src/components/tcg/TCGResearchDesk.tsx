@@ -4,8 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   ChevronRight,
-  LayoutGrid,
-  List,
   Search,
   SlidersHorizontal,
   Sparkles,
@@ -18,8 +16,9 @@ import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
-import type { TCGCard, TCGCardFilters, TCGCardViewMode } from '@/types/tcg';
+import type { TCGCard, TCGCardFilters } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
+import { cn } from '@/lib/utils';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGFilters } from './TCGFilters';
@@ -41,7 +40,6 @@ export function TCGResearchDesk() {
     ...DEFAULT_TCG_CARD_FILTERS,
     ...parsedState.filters,
   }));
-  const [viewMode, setViewMode] = useState<TCGCardViewMode>(normalizeViewMode(parsedState.viewMode));
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSimpleFiltersOpen, setIsSimpleFiltersOpen] = useState(false);
@@ -104,13 +102,13 @@ export function TCGResearchDesk() {
   useEffect(() => {
     const query = serializeTCGSearchState({
       filters: effectiveFilters,
-      viewMode: viewMode === 'compact' ? 'compact' : 'visual',
+      viewMode: 'visual',
       compare: [],
     });
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [effectiveFilters, pathname, router, searchParams, viewMode]);
+  }, [effectiveFilters, pathname, router, searchParams]);
 
   const { data: cardsData, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, PAGE_SIZE),
@@ -205,61 +203,56 @@ export function TCGResearchDesk() {
 
   const openSimpleFilters = useCallback(() => setIsSimpleFiltersOpen(true), []);
   const openAdvancedFilters = useCallback(() => setIsAdvancedFiltersOpen(true), []);
-  const toggleViewMode = useCallback(() => {
-    setViewMode((current) => (current === 'visual' ? 'compact' : 'visual'));
-  }, []);
 
   const applyQuickPreset = useCallback((preset: 'latest' | 'pokemon' | 'trainer' | 'pikachu') => {
     setHasUserEditedFilters(true);
+
+    const resetQuickPresetFilters = (current: TCGCardFilters, next: Partial<TCGCardFilters>): TCGCardFilters => normalizeFilters({
+      ...current,
+      searchTerm: undefined,
+      selectedSet: null,
+      selectedCategory: 'all',
+      selectedRarity: null,
+      selectedTypes: [],
+      selectedPhase: null,
+      selectedTrainerTypes: [],
+      selectedEnergyTypes: [],
+      minHp: undefined,
+      maxHp: undefined,
+      illustrator: undefined,
+      regulationMark: undefined,
+      legalities: [],
+      priceMin: undefined,
+      priceMax: undefined,
+      releaseStart: undefined,
+      releaseEnd: undefined,
+      ownedState: 'all',
+      ...next,
+    });
+
     if (preset === 'latest') {
-      setFilters((current) => ({
-        ...current,
-        searchTerm: undefined,
+      setFilters((current) => resetQuickPresetFilters(current, {
         selectedSet: latestSetId ?? current.selectedSet ?? null,
-        selectedCategory: 'all',
-        selectedRarity: null,
-        selectedTypes: [],
-        selectedPhase: null,
-        selectedTrainerTypes: [],
-        selectedEnergyTypes: [],
-        minHp: undefined,
-        maxHp: undefined,
-        illustrator: undefined,
-        regulationMark: undefined,
-        legalities: [],
-        priceMin: undefined,
-        priceMax: undefined,
-        releaseStart: undefined,
-        releaseEnd: undefined,
-        ownedState: 'all',
       }));
       return;
     }
 
     if (preset === 'pokemon') {
-      setFilters((current) => ({
-        ...current,
-        searchTerm: undefined,
-        selectedSet: null,
+      setFilters((current) => resetQuickPresetFilters(current, {
         selectedCategory: 'Pokemon',
       }));
       return;
     }
 
     if (preset === 'trainer') {
-      setFilters((current) => ({
-        ...current,
-        searchTerm: undefined,
-        selectedSet: null,
+      setFilters((current) => resetQuickPresetFilters(current, {
         selectedCategory: 'Trainer',
       }));
       return;
     }
 
-    setFilters((current) => ({
-      ...current,
+    setFilters((current) => resetQuickPresetFilters(current, {
       searchTerm: 'Pikachu',
-      selectedSet: null,
       selectedCategory: 'Pokemon',
     }));
   }, [latestSetId]);
@@ -271,6 +264,7 @@ export function TCGResearchDesk() {
         subtitle={t('tcg.discover_subtitle', {
           defaultValue: 'Cherche une carte, explore les dernières extensions et ouvre les détails en un geste.',
         })}
+        activeCategory={parsedState.filters.selectedCategory ?? 'all'}
         searchTerm={effectiveFilters.searchTerm ?? ''}
         latestSetName={latestSet?.name ?? t('tcg.unknown')}
         onSearchChange={(value) => updateFilters({
@@ -302,10 +296,6 @@ export function TCGResearchDesk() {
             count={totalCards}
             activeSetName={summarySetName}
             isFetching={isFetching}
-            viewMode={viewMode}
-            onToggleViewMode={toggleViewMode}
-            onOpenFilters={openSimpleFilters}
-            onOpenAdvanced={openAdvancedFilters}
           />
 
           {isLoading ? (
@@ -314,7 +304,6 @@ export function TCGResearchDesk() {
             <>
               <CardResults
                 cards={cards}
-                viewMode={viewMode}
                 onCardClick={openCard}
               />
 
@@ -398,6 +387,7 @@ export function TCGResearchDesk() {
 function DiscoveryHero({
   title,
   subtitle,
+  activeCategory,
   searchTerm,
   latestSetName,
   onSearchChange,
@@ -408,6 +398,7 @@ function DiscoveryHero({
 }: {
   title: string;
   subtitle: string;
+  activeCategory: TCGCardFilters['selectedCategory'];
   searchTerm: string;
   latestSetName: string;
   onSearchChange: (value: string) => void;
@@ -459,14 +450,22 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={() => onQuickPreset('pokemon')}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-emerald-500/25 hover:bg-emerald-500/10 hover:text-emerald-500"
+            aria-pressed={activeCategory === 'Pokemon'}
+            className={cn(
+              'inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-emerald-500/25 hover:bg-emerald-500/10 hover:text-emerald-500',
+              activeCategory === 'Pokemon' && 'border-emerald-500/35 bg-emerald-500/15 text-emerald-500',
+            )}
           >
             Pokémon
           </button>
           <button
             type="button"
             onClick={() => onQuickPreset('trainer')}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-amber-500/25 hover:bg-amber-500/10 hover:text-amber-500"
+            aria-pressed={activeCategory === 'Trainer'}
+            className={cn(
+              'inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-amber-500/25 hover:bg-amber-500/10 hover:text-amber-500',
+              activeCategory === 'Trainer' && 'border-amber-500/35 bg-amber-500/15 text-amber-500',
+            )}
           >
             Dresseur
           </button>
@@ -555,21 +554,13 @@ function ResultSummary({
   count,
   activeSetName,
   isFetching,
-  viewMode,
-  onToggleViewMode,
-  onOpenFilters,
-  onOpenAdvanced,
 }: {
   count: number;
   activeSetName: string | null;
   isFetching: boolean;
-  viewMode: TCGCardViewMode;
-  onToggleViewMode: () => void;
-  onOpenFilters: () => void;
-  onOpenAdvanced: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3">
       <div className="space-y-1">
         <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
           {isFetching ? 'Actualisation des cartes' : 'Cartes trouvees'}
@@ -578,56 +569,17 @@ function ResultSummary({
           {activeSetName ? `${formatCount(count)} cartes dans ${activeSetName}` : `${formatCount(count)} cartes`}
         </div>
       </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={onToggleViewMode}
-          className="inline-flex h-11 items-center gap-2 rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
-        >
-          {viewMode === 'visual' ? <LayoutGrid className="h-3.5 w-3.5" /> : <List className="h-3.5 w-3.5" />}
-          Affichage
-        </button>
-        <button
-          type="button"
-          onClick={onOpenFilters}
-          className="inline-flex h-11 items-center gap-2 rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary lg:hidden"
-        >
-          <Filter className="h-3.5 w-3.5" />
-          Filtres
-        </button>
-        <button
-          type="button"
-          onClick={onOpenAdvanced}
-          className="inline-flex h-11 items-center gap-2 rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
-        >
-          <Wand2 className="h-3.5 w-3.5" />
-          Avancees
-        </button>
-      </div>
     </div>
   );
 }
 
 function CardResults({
   cards,
-  viewMode,
   onCardClick,
 }: {
   cards: TCGCard[];
-  viewMode: TCGCardViewMode;
   onCardClick: (card: TCGCard) => void;
 }) {
-  if (viewMode === 'compact') {
-    return (
-      <div className="grid gap-3">
-        {cards.map((card, index) => (
-          <TCGCardItem key={card.id} card={card} index={index} onClick={onCardClick} variant="list" />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
       {cards.map((card, index) => (
@@ -699,10 +651,6 @@ function CardGridSkeleton() {
 
 function formatCount(count: number) {
   return new Intl.NumberFormat().format(count);
-}
-
-function normalizeViewMode(viewMode: TCGCardViewMode): TCGCardViewMode {
-  return viewMode === 'compact' ? 'compact' : 'visual';
 }
 
 function normalizeFilters(filters: TCGCardFilters): TCGCardFilters {
