@@ -11,8 +11,8 @@ export const MAZE_FRAGMENT_SYMBOLS = ['4', '0', '4'] as const;
 
 export type MazeTile = '#' | '.' | 'S' | 'E' | '0' | '4';
 export type MazeDirection = 'up' | 'down' | 'left' | 'right';
-export type MazeStatus = 'ready' | 'playing' | 'won';
-export type MazeNotice = 'ready' | 'exploring' | 'fragment' | 'blocked' | 'locked' | 'won';
+export type MazeStatus = 'playing' | 'won';
+export type MazeNotice = 'exploring' | 'fragment' | 'blocked' | 'locked' | 'won';
 export type MazeRandom = () => number;
 
 export type MazeCoord = {
@@ -420,12 +420,12 @@ export function isMazeSolvable(layout: MazeLayout) {
 
 export function createMazeGame(
   layout: MazeLayout,
-  status: MazeStatus = 'ready',
+  status: MazeStatus = 'playing',
   bestSteps: number | null = null
 ): MazeGameState {
   return {
     status,
-    notice: status === 'ready' ? 'ready' : 'exploring',
+    notice: 'exploring',
     player: cloneCoord(layout.start),
     steps: 0,
     bestSteps,
@@ -434,7 +434,7 @@ export function createMazeGame(
   };
 }
 
-export function createMazeRound(bestSteps: number | null = null, status: MazeStatus = 'ready', random: MazeRandom = Math.random): MazeRound {
+export function createMazeRound(bestSteps: number | null = null, status: MazeStatus = 'playing', random: MazeRandom = Math.random): MazeRound {
   const layout = generateMazeLayout(random);
 
   return {

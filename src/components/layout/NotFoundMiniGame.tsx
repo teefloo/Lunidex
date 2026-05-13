@@ -345,17 +345,13 @@ function noticeText(t: ReturnType<typeof useTranslation>['t'], notice: MazeNotic
         : t('common.not_found_maze_exploring', {
             defaultValue: 'Find the three glowing fragments to rebuild 4-0-4.',
           });
-    case 'ready':
-      return t('common.not_found_maze_ready', {
-        defaultValue: 'Press start, then guide the trainer through the maze.',
-      });
   }
 }
 
 export default function NotFoundMiniGame() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [initialRound] = useState(() => createMazeRound());
+  const [initialRound] = useState(() => createMazeRound(null, 'playing'));
   const [layout, setLayout] = useState<MazeLayout>(() => initialRound.layout);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const layoutRef = useRef<MazeLayout>(initialRound.layout);
@@ -390,21 +386,6 @@ export default function NotFoundMiniGame() {
     repeatAtRef.current = 0;
   }, []);
 
-  const beginCurrentRound = useCallback(() => {
-    if (gameRef.current.status !== 'ready') return;
-
-    gameRef.current = {
-      ...gameRef.current,
-      status: 'playing',
-      notice: 'exploring',
-    };
-    motionRef.current = null;
-    shakeForRef.current = 0;
-    resetInputs();
-    lastFrameAtRef.current = performance.now();
-    publishHud(true);
-  }, [publishHud, resetInputs]);
-
   const restartGame = useCallback(() => {
     const bestSteps = gameRef.current.bestSteps;
     const nextRound = createMazeRound(bestSteps, 'playing');
@@ -421,14 +402,6 @@ export default function NotFoundMiniGame() {
 
   const attemptMove = useCallback((direction: MazeDirection, now: number, isFreshPress = false) => {
     if (motionRef.current) return;
-
-    if (gameRef.current.status === 'ready') {
-      gameRef.current = {
-        ...gameRef.current,
-        status: 'playing',
-        notice: 'exploring',
-      };
-    }
 
     if (gameRef.current.status !== 'playing') return;
 
@@ -498,10 +471,9 @@ export default function NotFoundMiniGame() {
 
       const key = event.key.toLowerCase();
       const direction = KEY_TO_DIRECTION[key];
-      const isStartKey = key === 'enter' || key === ' ';
       const isRestartKey = key === 'r';
 
-      if (!direction && !isStartKey && !isRestartKey) {
+      if (!direction && !isRestartKey) {
         return;
       }
 
@@ -509,15 +481,6 @@ export default function NotFoundMiniGame() {
 
       if (isRestartKey) {
         restartGame();
-        return;
-      }
-
-      if (isStartKey && gameRef.current.status !== 'playing') {
-        if (gameRef.current.status === 'ready') {
-          beginCurrentRound();
-        } else {
-          restartGame();
-        }
         return;
       }
 
@@ -549,7 +512,7 @@ export default function NotFoundMiniGame() {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('blur', clearInputs);
     };
-  }, [attemptMove, beginCurrentRound, publishHud, resetInputs, restartGame]);
+  }, [attemptMove, publishHud, resetInputs, restartGame]);
 
   useEffect(() => {
     if (hud.status !== 'won') {
@@ -579,11 +542,9 @@ export default function NotFoundMiniGame() {
   const collectedCount = hud.foundFragmentIds.length;
   const progressPercent = `${Math.round((collectedCount / FRAGMENT_TOTAL) * 100)}%`;
   const message = noticeText(t, hud.notice, hud.exitUnlocked);
-  const statusLabel = hud.status === 'playing'
-    ? t('common.not_found_maze_live', { defaultValue: 'Exploring' })
-    : hud.status === 'won'
-      ? t('common.not_found_maze_clear', { defaultValue: 'Cleared' })
-      : t('common.not_found_maze_standby', { defaultValue: 'Standby' });
+  const statusLabel = hud.status === 'won'
+    ? t('common.not_found_maze_clear', { defaultValue: 'Cleared' })
+    : t('common.not_found_maze_live', { defaultValue: 'Exploring' });
   const exitLabel = hud.exitUnlocked
     ? t('common.not_found_maze_exit_open_label', { defaultValue: 'Open' })
     : t('common.not_found_maze_exit_locked_label', { defaultValue: 'Locked' });
@@ -655,9 +616,7 @@ export default function NotFoundMiniGame() {
               defaultValue: 'Route 404 maze board',
             })}
             onPointerDown={() => {
-              if (gameRef.current.status === 'ready') {
-                beginCurrentRound();
-              } else if (gameRef.current.status !== 'playing') {
+              if (gameRef.current.status !== 'playing') {
                 restartGame();
               }
             }}
@@ -680,36 +639,30 @@ export default function NotFoundMiniGame() {
             </div>
           </div>
 
-          {hud.status !== 'playing' && (
+          {hud.status === 'won' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/54 px-5 text-center backdrop-blur-[2px]">
               <div className="max-w-sm rounded-2xl border border-white/12 bg-slate-950/76 p-5 text-white shadow-2xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-amber-200">
                   {statusLabel}
                 </p>
                 <h3 className="mt-2 text-2xl font-black">
-                  {hud.status === 'won'
-                    ? t('common.not_found_overlay_win_title', { defaultValue: 'Portal unlocked' })
-                    : t('common.not_found_overlay_ready_title', { defaultValue: 'Ready to explore?' })}
+                  {t('common.not_found_overlay_win_title', { defaultValue: 'Portal unlocked' })}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-white/70">{message}</p>
-                {hud.status === 'won' && (
-                  <p className="mt-3 text-sm font-bold text-white">
-                    {t('common.not_found_overlay_score', {
-                      defaultValue: 'Steps {{steps}} · Best {{best}}',
-                      steps: hud.steps,
-                      best: bestValue,
-                    })}
-                  </p>
-                )}
+                <p className="mt-3 text-sm font-bold text-white">
+                  {t('common.not_found_overlay_score', {
+                    defaultValue: 'Steps {{steps}} · Best {{best}}',
+                    steps: hud.steps,
+                    best: bestValue,
+                  })}
+                </p>
                 <Button
                   type="button"
                   className="mt-5 w-full font-black uppercase tracking-[0.16em]"
-                  onClick={hud.status === 'ready' ? beginCurrentRound : restartGame}
+                  onClick={restartGame}
                 >
                   <RotateCcw className="h-4 w-4" />
-                  {hud.status === 'ready'
-                    ? t('common.not_found_start', { defaultValue: 'Start' })
-                    : t('common.not_found_restart', { defaultValue: 'Restart' })}
+                  {t('common.not_found_restart', { defaultValue: 'Restart' })}
                 </Button>
               </div>
             </div>
@@ -735,7 +688,7 @@ export default function NotFoundMiniGame() {
             </div>
             <p className="mt-2 text-sm leading-6 text-foreground/65">
               {t('common.not_found_controls_desc', {
-                defaultValue: 'Use arrows, WASD, or hold the pad to move tile by tile. Press Enter to start and R to reset.',
+                defaultValue: 'Use arrows, WASD, or hold the pad to move tile by tile. Press R to reset.',
               })}
             </p>
           </div>
@@ -795,12 +748,10 @@ export default function NotFoundMiniGame() {
           <Button
             type="button"
             className="w-full rounded-full font-black uppercase tracking-[0.18em]"
-            onClick={hud.status === 'ready' ? beginCurrentRound : restartGame}
+            onClick={restartGame}
           >
             <RotateCcw className="h-4 w-4" />
-            {hud.status === 'ready'
-              ? t('common.not_found_start', { defaultValue: 'Start' })
-              : t('common.not_found_restart', { defaultValue: 'Restart' })}
+            {t('common.not_found_restart', { defaultValue: 'Restart' })}
           </Button>
         </div>
       </div>

@@ -30,6 +30,13 @@ import { pokemonKeys } from '@/lib/api/keys';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Sheet,
   SheetTrigger,
   SheetContent,
@@ -137,6 +144,16 @@ export default function Header() {
   const themeLabel = mounted
     ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
     : t('settings.system');
+  const languageOptions = useMemo(() => [
+    { code: 'auto', label: t('languages.auto'), flag: '🌐' },
+    { code: 'en', label: t('languages.en'), flag: '🇺🇸' },
+    { code: 'fr', label: t('languages.fr'), flag: '🇫🇷' },
+    { code: 'de', label: t('languages.de'), flag: '🇩🇪' },
+    { code: 'es', label: t('languages.es'), flag: '🇪🇸' },
+    { code: 'it', label: t('languages.it'), flag: '🇮🇹' },
+    { code: 'ja', label: t('languages.ja'), flag: '🇯🇵' },
+    { code: 'ko', label: t('languages.ko'), flag: '🇰🇷' },
+  ] as const, [t]);
   const homeAriaLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
   const teamLabel = mounted ? t('nav.team') : 'Team Builder';
   const compareLabel = mounted ? t('nav.compare') : 'Compare';
@@ -161,16 +178,16 @@ export default function Header() {
     else setTheme('light');
   };
 
-  const cycleLanguage = () => {
-    const langs: ('en' | 'fr' | 'es' | 'de' | 'it' | 'ja' | 'ko')[] = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko'];
-    const currentIdx = langs.indexOf(language === 'auto' ? 'en' : (language as 'en' | 'fr' | 'es' | 'de' | 'it' | 'ja' | 'ko'));
-    const nextLang = langs[(currentIdx + 1) % langs.length];
+  const handleLanguageChange = useCallback((nextLanguage: string | null) => {
+    if (!nextLanguage || nextLanguage === language) return;
 
-    setLanguage(nextLang);
-    loadLanguage(nextLang).then(() => {
-      i18n.changeLanguage(nextLang);
+    setLanguage(nextLanguage);
+
+    const resolvedLang = nextLanguage === 'auto' ? (systemLanguage || 'en') : nextLanguage;
+    loadLanguage(resolvedLang).then(() => {
+      i18n.changeLanguage(resolvedLang);
     });
-  };
+  }, [i18n, language, setLanguage, systemLanguage]);
 
   const caughtCount = mounted ? caughtPokemon.length : 0;
   const progressPercent = Math.round((caughtCount / 1025) * 100);
@@ -274,22 +291,33 @@ export default function Header() {
               </TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger>
-                <button
-                  type="button"
-                  onClick={cycleLanguage}
-                  className="glass-control flex h-8 w-8 items-center justify-center gap-1.5 px-0 text-foreground/70 hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95 sm:w-auto sm:min-w-[56px] sm:px-3"
-                  aria-label={t('header.language_title', { language: languageLabel })}
-                >
-                  <Languages className="h-4 w-4" />
-                  <span suppressHydrationWarning className="hidden min-w-[24px] text-center text-[10px] font-black uppercase sm:inline">{languageLabel}</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs font-bold">
-                {t('header.language_title', { language: languageLabel })}
-              </TooltipContent>
-            </Tooltip>
+            <Select value={language} onValueChange={handleLanguageChange}>
+              <SelectTrigger
+                size="sm"
+                aria-label={t('header.language_title', { language: languageLabel })}
+                className="glass-control flex !h-8 !w-[96px] items-center justify-between !px-3 !py-0 text-foreground/70 hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
+                style={{ width: 96, minWidth: 96, height: 32, minHeight: 32 }}
+              >
+                <Languages className="h-4 w-4" />
+                <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center text-[10px] font-black uppercase leading-none">
+                  {languageLabel}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="glass-surface min-w-48 rounded-2xl p-1">
+                {languageOptions.map((lang) => (
+                  <SelectItem
+                    key={lang.code}
+                    value={lang.code}
+                    className="rounded-xl focus:bg-primary/10 focus:text-primary transition-colors cursor-pointer py-2.5"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-base leading-none">{lang.flag}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-tight">{lang.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <Tooltip>
               <TooltipTrigger>
