@@ -156,14 +156,14 @@ export default function Header() {
   const homeAriaLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
   const teamLabel = mounted ? t('nav.team') : 'Team Builder';
   const compareLabel = mounted ? t('nav.compare') : 'Compare';
-  const tcgLabel = mounted ? t('nav.tcg') : 'TCG';
+  const tcgLabel = mounted ? t('nav.tcg') : 'TCG Catalog';
   const typesLabel = mounted ? t('nav.types') : 'Types';
   const movesLabel = mounted ? t('nav.moves') : 'Moves';
   const quizLabel = mounted ? t('nav.quiz') : 'Quiz';
   const favoritesLabel = mounted ? t('nav.favorites') : 'Favorites';
   const menuLabel = mounted ? (t('header.open_menu') || 'Menu') : 'Menu';
   const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
-  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon';
+  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
   const settingsLabel = mounted ? t('settings.title') : 'Settings';
 
   const isDark = mounted && (
