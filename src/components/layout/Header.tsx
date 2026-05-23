@@ -17,7 +17,6 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 import { useEffect, useMemo, useState, useRef, useCallback, ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -45,8 +44,7 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
-
-const SettingsModal = dynamic(() => import('./SettingsModal'), { ssr: false });
+import SettingsModal from './SettingsModal';
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -153,6 +151,7 @@ export default function Header() {
     { code: 'it', label: t('languages.it'), flag: '🇮🇹' },
     { code: 'ja', label: t('languages.ja'), flag: '🇯🇵' },
     { code: 'ko', label: t('languages.ko'), flag: '🇰🇷' },
+    { code: 'zh', label: t('languages.zh'), flag: '🇨🇳' },
   ] as const, [t]);
   const homeAriaLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
   const teamLabel = mounted ? t('nav.team') : 'Team Builder';

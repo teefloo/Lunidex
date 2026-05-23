@@ -1,4 +1,4 @@
-export const supportedLanguages = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko'] as const;
+export const supportedLanguages = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'] as const;
 
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 export type AppLanguage = SupportedLanguage | 'auto';
@@ -11,6 +11,7 @@ export const languageToMetadataLocale = {
   it: 'it-IT',
   ja: 'ja-JP',
   ko: 'ko-KR',
+  zh: 'zh-CN',
 } as const satisfies Record<SupportedLanguage, string>;
 
 export const languageToOpenGraphLocale = {
@@ -21,6 +22,7 @@ export const languageToOpenGraphLocale = {
   it: 'it_IT',
   ja: 'ja_JP',
   ko: 'ko_KR',
+  zh: 'zh_CN',
 } as const satisfies Record<SupportedLanguage, string>;
 
 export const languageToPokemonLanguageId = {
@@ -31,6 +33,7 @@ export const languageToPokemonLanguageId = {
   it: 8,
   ja: 11,
   ko: 3,
+  zh: 12,
 } as const satisfies Record<SupportedLanguage, number>;
 
 export function isSupportedLanguage(language: string): language is SupportedLanguage {
@@ -71,6 +74,7 @@ export function getLanguageAlternates(pathname = '/'): Record<string, string> {
     [languageToMetadataLocale.it]: normalizedPath,
     [languageToMetadataLocale.ja]: normalizedPath,
     [languageToMetadataLocale.ko]: normalizedPath,
+    [languageToMetadataLocale.zh]: normalizedPath,
     'x-default': normalizedPath,
   };
 }

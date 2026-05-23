@@ -32,6 +32,7 @@ export default function SettingsModal() {
     { code: 'it', name: t('languages.it'), flag: '🇮🇹' },
     { code: 'ja', name: t('languages.ja'), flag: '🇯🇵' },
     { code: 'ko', name: t('languages.ko'), flag: '🇰🇷' },
+    { code: 'zh', name: t('languages.zh'), flag: '🇨🇳' },
   ];
 
   return (

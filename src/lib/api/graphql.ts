@@ -8,6 +8,14 @@ const MOVE_BATCH_SIZE = 250;
 
 const getBatchCacheKey = (base: string, batchIndex: number) => `${base}-batch-${batchIndex}`;
 
+function describeGraphQLResponse(value: unknown) {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return '[unserializable GraphQL response]';
+  }
+}
+
 const fetchBatch = async <T>(query: string, cacheKey: string): Promise<T[]> => {
   const cached = await getCachedData<T[]>(cacheKey, true);
   if (cached) return cached;
@@ -15,7 +23,7 @@ const fetchBatch = async <T>(query: string, cacheKey: string): Promise<T[]> => {
   const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query });
   
   if (!data?.data?.pokemon_v2_pokemon) {
-    throw new Error(`Invalid GraphQL response in fetchBatch: ${JSON.stringify(data)}`);
+    throw new Error(`Invalid GraphQL response in fetchBatch: ${describeGraphQLResponse(data)}`);
   }
   
   const results = data.data.pokemon_v2_pokemon;
@@ -30,7 +38,7 @@ const buildPokemonSummarySelection = () => `
   weight
   pokemon_v2_pokemonspecy {
     generation_id
-    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko"]}}}) {
+    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko", "zh-Hans"]}}}) {
       name
       pokemon_v2_language {
         name
@@ -94,7 +102,7 @@ const buildPokemonDetailedSelection = () => `
         name
       }
     }
-    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko"]}}}) {
+    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko", "zh-Hans"]}}}) {
       name
       pokemon_v2_language {
         name
@@ -112,7 +120,7 @@ const buildPokemonSearchSelection = () => `
   id
   name
   pokemon_v2_pokemonspecy {
-    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko"]}}}) {
+    pokemon_v2_pokemonspeciesnames(where: {pokemon_v2_language: {name: {_in: ["en", "fr", "es", "de", "it", "ja", "ko", "zh-Hans"]}}}) {
       name
       pokemon_v2_language {
         name
@@ -169,7 +177,7 @@ const fetchMoveBatches = async <T>(
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query });
 
     if (!data?.data?.pokemon_v2_move) {
-      throw new Error(`Invalid GraphQL response in fetchMoveBatches: ${JSON.stringify(data)}`);
+      throw new Error(`Invalid GraphQL response in fetchMoveBatches: ${describeGraphQLResponse(data)}`);
     }
 
     const results = data.data.pokemon_v2_move;
@@ -344,7 +352,7 @@ export const getLocalizedPokemonData = async (name: string, languageId: number):
     });
     
     if (!data?.data?.pokemon_v2_pokemonspecies?.[0]) {
-      throw new Error(`Invalid GraphQL response in getLocalizedPokemonData: ${JSON.stringify(data)}`);
+      throw new Error(`Invalid GraphQL response in getLocalizedPokemonData: ${describeGraphQLResponse(data)}`);
     }
     
     const results = data.data.pokemon_v2_pokemonspecies[0];
@@ -497,7 +505,7 @@ export const getMovePokemonLearners = async (moveName: string, languageId: numbe
     });
 
     if (!data?.data?.pokemon_v2_pokemonmove) {
-      throw new Error(`Invalid GraphQL response in getMovePokemonLearners: ${JSON.stringify(data)}`);
+      throw new Error(`Invalid GraphQL response in getMovePokemonLearners: ${describeGraphQLResponse(data)}`);
     }
 
     const results = data.data.pokemon_v2_pokemonmove;
@@ -550,7 +558,7 @@ export const getAllAbilities = async (languageId: number): Promise<GraphQLAbilit
     });
 
     if (!data?.data?.pokemon_v2_ability) {
-      throw new Error(`Invalid GraphQL response in getAllAbilities: ${JSON.stringify(data)}`);
+      throw new Error(`Invalid GraphQL response in getAllAbilities: ${describeGraphQLResponse(data)}`);
     }
 
     const results = data.data.pokemon_v2_ability;
@@ -601,7 +609,7 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
     });
 
     if (!data?.data?.pokemon_v2_pokemonability) {
-      throw new Error(`Invalid GraphQL response in getAbilityPokemon: ${JSON.stringify(data)}`);
+      throw new Error(`Invalid GraphQL response in getAbilityPokemon: ${describeGraphQLResponse(data)}`);
     }
 
     const results = data.data.pokemon_v2_pokemonability;
@@ -613,4 +621,3 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
     throw error;
   }
 };
-
