@@ -3,7 +3,9 @@
 import i18n from 'i18next';
 import type { TOptions } from 'i18next';
 import { initReactI18next, useTranslation as useReactTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 import enTranslations from './i18n/en';
+import { useMounted } from '@/hooks/useMounted';
 import type { SupportedLanguage } from './languages';
 
 // Lazy-load map for on-demand language loading
@@ -20,6 +22,7 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
   it: () => import('./i18n/it'),
   ja: () => import('./i18n/ja'),
   ko: () => import('./i18n/ko'),
+  zh: () => import('./i18n/zh'),
 };
 
 // Keep the first client render aligned with SSR.
@@ -56,7 +59,20 @@ export const loadLanguage = async (lang: string): Promise<void> => {
   }
 };
 
-export const useTranslation = () => useReactTranslation();
+export const useTranslation = () => {
+  const mounted = useMounted();
+  const translation = useReactTranslation();
+
+  const t = useMemo(() => {
+    if (mounted) return translation.t;
+    return i18n.getFixedT('en', 'translation');
+  }, [mounted, translation.t]);
+
+  return {
+    ...translation,
+    t,
+  };
+};
 export const t = (key: string, options?: TOptions) => i18n.t(key, options);
 
 export default i18n;

@@ -3,6 +3,8 @@ import { Fraunces, Manrope } from "next/font/google";
 import Script from "next/script";
 import Providers from "./providers";
 import "./globals.css";
+import "../styles/pokemon-cards-css.css";
+import "../styles/tcg-card-overrides.css";
 import { cn } from "@/lib/utils";
 import { t } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
@@ -53,7 +55,7 @@ export const metadata: Metadata = {
       it: "/?lang=it",
       ja: "/?lang=ja",
       ko: "/?lang=ko",
-      "pt-BR": "/?lang=pt-BR",
+      zh: "/?lang=zh",
     },
   },
   robots: {
