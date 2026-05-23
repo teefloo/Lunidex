@@ -24,7 +24,7 @@ vi.mock('./cache', () => ({
 }));
 
 import { getCachedData, setCachedData } from './cache';
-import { buildCardQueryParams, searchCards } from './tcg';
+import { buildCardQueryParams, normalizeTcgPositiveInteger, searchCards } from './tcg';
 
 const mockedGetCachedData = vi.mocked(getCachedData);
 const mockedSetCachedData = vi.mocked(setCachedData);
@@ -82,6 +82,23 @@ describe('tcg api helpers', () => {
     expect(params.get('trainerType')).toBe('Supporter');
     expect(params.get('energyType')).toBe('Special');
     expect(params.getAll('hp')).toEqual(['gte:120', 'lte:330']);
+  });
+
+  it('normalizes invalid pagination values to safe defaults', () => {
+    expect(normalizeTcgPositiveInteger(-3, 1)).toBe(1);
+    expect(normalizeTcgPositiveInteger(Number.NaN, 48)).toBe(48);
+
+    const params = buildCardQueryParams(
+      {
+        sortBy: 'name',
+        sortOrder: 'asc',
+      },
+      -3,
+      0,
+    );
+
+    expect(params.get('pagination:page')).toBe('1');
+    expect(params.get('pagination:itemsPerPage')).toBe('49');
   });
 
   it('trims overflow cards and marks the page as having more results', async () => {
@@ -298,6 +315,39 @@ describe('tcg api helpers', () => {
     expect(mockGet.mock.calls[0][0]).not.toContain('rarity=');
     expect(result.cards).toHaveLength(1);
     expect(result.cards[0]?.id).toBe('002');
+    expect(result.hasMore).toBe(false);
+  });
+
+  it('matches localized rarity labels against canonical TCG rarities', async () => {
+    mockGet.mockImplementation(async (url: string) => {
+      if (url.includes('/cards?')) {
+        return {
+          data: [
+            makeCard('me03-086', {
+              rarity: 'Special Illustration Rare',
+              category: 'Pokemon',
+            }),
+          ],
+        };
+      }
+
+      throw new Error(`Unexpected url: ${url}`);
+    });
+
+    const result = await searchCards(
+      {
+        selectedCategory: 'Pokemon',
+        selectedSet: 'me03',
+        selectedRarity: 'Illustration spéciale rare',
+        sortBy: 'name',
+        sortOrder: 'asc',
+      },
+      'en',
+      1,
+      10,
+    );
+
+    expect(result.cards.map((card) => card.id)).toEqual(['me03-086']);
     expect(result.hasMore).toBe(false);
   });
 

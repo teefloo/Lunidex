@@ -1,4 +1,5 @@
 import type { TCGCard, TCGCardCategory } from '@/types/tcg';
+import { ALTERNATE_ART_CARD_IDS } from './tcg-holo-reference-data';
 
 export interface TCGHoloData {
   rarity: string;
@@ -11,6 +12,7 @@ export interface TCGHoloData {
 }
 
 const BASIC_RARITIES = new Set(['common', 'uncommon', 'rare']);
+const PROMO_SET_ID = 'swshp';
 
 export function getTCGHoloData(card: TCGCard): TCGHoloData {
   const rarity = getTCGHoloRarity(card);
@@ -29,18 +31,23 @@ export function getTCGHoloData(card: TCGCard): TCGHoloData {
 
 export function getTCGHoloRarity(card: TCGCard): string {
   const rarity = normalizeText(card.rarity);
-  const searchable = normalizeText([card.rarity, card.stage, card.suffix, card.name].filter(Boolean).join(' '));
+  const searchable = getCardSearchableText(card);
+  const collectorNumber = normalizeText(card.localId ?? card.number ?? '');
+  const setId = normalizeText(card.set?.id ?? card.id.split('-')[0] ?? '');
   const trainerGallery = isTrainerGalleryCard(card) || rarity.includes('trainer gallery');
 
   const isVMAX = hasToken(searchable, 'vmax');
   const isVSTAR = hasToken(searchable, 'vstar');
+  const isVUnion = searchable.includes('v union');
   const isV = hasToken(searchable, 'v');
   const isEX = hasToken(searchable, 'ex');
   const isGX = hasToken(searchable, 'gx');
-  const isVLike = isV || isEX || isGX;
+  const isVLike = isV || isEX || isGX || isVUnion;
+  const isShinyVault = isShinyVaultCard(collectorNumber);
+  const isPromo = isPromoCard(card, setId);
 
-  if (rarity.endsWith('reverse holo') || rarity === 'reverse holo') {
-    return rarity || 'reverse holo';
+  if (rarity.includes('reverse holo') || searchable.includes('reverse holo')) {
+    return 'reverse holo';
   }
 
   if (rarity.includes('amazing')) {
@@ -51,10 +58,14 @@ export function getTCGHoloRarity(card: TCGCard): string {
     return 'radiant rare';
   }
 
-  if (rarity.includes('shiny')) {
+  if (rarity.includes('shiny') || isShinyVault) {
     if (isVMAX) return 'rare shiny vmax';
     if (isVLike) return 'rare shiny v';
     return 'rare shiny';
+  }
+
+  if (ALTERNATE_ART_CARD_IDS.has(card.id) && !trainerGallery && !isShinyVault) {
+    return 'rare rainbow alt';
   }
 
   if (rarity.includes('rainbow')) {
@@ -65,16 +76,20 @@ export function getTCGHoloRarity(card: TCGCard): string {
     return 'rare secret';
   }
 
-  if (rarity.includes('cosmos') || rarity.includes('promo') || card.variants?.wPromo) {
-    return 'rare holo cosmos';
-  }
-
-  if (isEX || isGX) {
+  if (isEX || isGX || isVUnion) {
     return 'rare holo v';
   }
 
   if (trainerGallery && !isVLike && !isVMAX && !isVSTAR) {
     return 'trainer gallery rare holo';
+  }
+
+  if (rarity.includes('cosmos')) {
+    return 'rare holo cosmos';
+  }
+
+  if (isPromo && (rarity.includes('cosmos') || rarity.includes('promo'))) {
+    return 'rare holo cosmos';
   }
 
   if (isVMAX) {
@@ -128,20 +143,24 @@ function getSupertypeAttribute(category: TCGCardCategory | undefined): string {
 
 function getSubtypeAttribute(card: TCGCard): string {
   const subtypes = new Set<string>();
-  const searchable = normalizeText([card.stage, card.suffix, card.name, card.rarity].filter(Boolean).join(' '));
+  const searchable = getCardSearchableText(card);
 
   if (card.category === 'Trainer') {
     if (card.trainerType) subtypes.add(normalizeText(card.trainerType));
   } else if (card.category === 'Energy') {
     if (card.energyType) subtypes.add(normalizeText(card.energyType));
   } else {
-    if (card.stage) subtypes.add(formatStageSubtype(card.stage));
     if (hasToken(searchable, 'radiant')) subtypes.add('radiant');
-    if (hasToken(searchable, 'vmax')) subtypes.add('vmax');
-    else if (hasToken(searchable, 'vstar')) subtypes.add('vstar');
-    else if (hasToken(searchable, 'v')) subtypes.add('v');
-    if (hasToken(searchable, 'ex')) subtypes.add('ex');
-    if (hasToken(searchable, 'gx')) subtypes.add('gx');
+    if (searchable.includes('v union')) {
+      subtypes.add('v-union');
+    } else {
+      if (card.stage) subtypes.add(formatStageSubtype(card.stage));
+      if (hasToken(searchable, 'vmax')) subtypes.add('vmax');
+      else if (hasToken(searchable, 'vstar')) subtypes.add('vstar');
+      else if (hasToken(searchable, 'v')) subtypes.add('v');
+      if (hasToken(searchable, 'ex')) subtypes.add('ex');
+      if (hasToken(searchable, 'gx')) subtypes.add('gx');
+    }
   }
 
   return [...subtypes].filter(Boolean).join(' ') || 'basic';
@@ -191,4 +210,18 @@ function normalizeText(value?: string | null): string {
 
 function hasToken(value: string, token: string): boolean {
   return new RegExp(`(^|\\s)${token}(?=\\s|$)`).test(value);
+}
+
+function getCardSearchableText(card: TCGCard): string {
+  return normalizeText([card.rarity, card.stage, card.suffix, card.name, card.localId, card.number].filter(Boolean).join(' '));
+}
+
+function isShinyVaultCard(collectorNumber: string): boolean {
+  if (!collectorNumber) return false;
+
+  return collectorNumber.startsWith('sv') && /\d/.test(collectorNumber);
+}
+
+function isPromoCard(card: TCGCard, setId: string): boolean {
+  return setId === PROMO_SET_ID || card.id.toLowerCase().startsWith(`${PROMO_SET_ID}-`);
 }

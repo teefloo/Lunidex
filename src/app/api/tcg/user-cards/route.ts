@@ -9,19 +9,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  const payload = (await request.json()) as { cardId?: string; state?: string; note?: string };
+  const payload = await readJsonBody<{ cardId?: string; state?: string; note?: string }>(request);
 
-  if (!payload.cardId || payload.state === undefined || payload.state === null) {
-    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-  }
-
-  if (payload.state === 'all' || payload.state === 'missing') {
+  if (!payload?.cardId || !isValidOwnedState(payload.state)) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
   const nextState = upsertEntry(state, {
     cardId: payload.cardId,
-    state: payload.state as TCGUserCardEntry['state'],
+    state: payload.state,
     note: payload.note,
     updatedAt: new Date().toISOString(),
   });
@@ -79,4 +75,17 @@ function persistState(state: ReturnType<typeof decodeTCGUserState>) {
     maxAge: 60 * 60 * 24 * 365,
   });
   return response;
+}
+
+async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
+  try {
+    const payload = await request.json();
+    return payload && typeof payload === 'object' ? (payload as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+function isValidOwnedState(state: unknown): state is TCGUserCardEntry['state'] {
+  return state === 'owned' || state === 'wishlist' || state === 'watchlist';
 }

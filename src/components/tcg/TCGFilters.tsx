@@ -23,7 +23,6 @@ import { useTranslation } from '@/lib/i18n';
 import type { TCGCardCategoryFilter, TCGCardFilters, TCGFilterOptions } from '@/types/tcg';
 import {
   DEFAULT_TCG_CARD_FILTERS,
-  TCG_CARD_CATEGORIES,
   TCG_ENERGY_TYPES,
   TCG_POKEMON_STAGES,
   TCG_POKEMON_TYPES,
@@ -35,6 +34,7 @@ import { tcgKeys } from '@/lib/api/keys';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
 
 interface TCGFiltersProps {
   filters: TCGCardFilters;
@@ -43,6 +43,7 @@ interface TCGFiltersProps {
   onSimpleSetChange?: (setId: string) => void;
   onSimpleCategoryChange?: (category: TCGCardCategoryFilter) => void;
   onSimpleRarityChange?: (rarity: string) => void;
+  autoApplyInitialSet?: boolean;
 }
 
 export function TCGFilters({
@@ -50,8 +51,8 @@ export function TCGFilters({
   onChange,
   mode = 'advanced',
   onSimpleSetChange,
-  onSimpleCategoryChange,
   onSimpleRarityChange,
+  autoApplyInitialSet = true,
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -70,11 +71,16 @@ export function TCGFilters({
   });
 
   const selectedSet = filters.selectedSet || null;
+  const shouldFetchSetRarities = mounted && !!selectedSet && (
+    mode === 'simple'
+    || activeSection === 'rarity'
+    || Boolean(filters.selectedRarity)
+  );
   const { data: setRarities = [], isLoading: raritiesLoading } = useQuery<string[]>({
     queryKey: tcgKeys.rarities(selectedSet, resolvedLang),
     queryFn: () => getRaritiesForSet(selectedSet as string, resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !!selectedSet && (activeSection === 'rarity' || Boolean(filters.selectedRarity)),
+    enabled: shouldFetchSetRarities,
   });
 
   const updateFilter = useCallback(
@@ -167,33 +173,31 @@ export function TCGFilters({
     setActiveSection('set');
   }, [clearSearchTimeout, latestSetId, onChange]);
 
-  const applyCategory = useCallback(
-    (nextCategory: TCGCardCategoryFilter) => {
-      const currentCategory = filters.selectedCategory ?? 'all';
-      const resolvedCategory = currentCategory === nextCategory ? 'all' : nextCategory;
+  const buildUniqueRarityOptions = useCallback((values: string[]) => {
+    const seen = new Set<string>();
 
-      const shouldKeepPokemonFilters = resolvedCategory === 'Pokemon';
-      const shouldKeepTrainerFilters = resolvedCategory === 'Trainer';
-      const shouldKeepEnergyFilters = resolvedCategory === 'Energy';
+    return values.filter((rarity) => {
+      const key = getCanonicalTcgRarity(rarity);
 
-      onChange({
-        ...filters,
-        selectedCategory: resolvedCategory,
-        selectedTypes: shouldKeepPokemonFilters ? filters.selectedTypes : [],
-        selectedPhase: shouldKeepPokemonFilters ? filters.selectedPhase : null,
-        minHp: shouldKeepPokemonFilters ? filters.minHp : undefined,
-        maxHp: shouldKeepPokemonFilters ? filters.maxHp : undefined,
-        selectedTrainerTypes: shouldKeepTrainerFilters ? filters.selectedTrainerTypes : [],
-        selectedEnergyTypes: shouldKeepEnergyFilters ? filters.selectedEnergyTypes : [],
-      });
-    },
-    [filters, onChange],
-  );
+      if (!key || seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }, []);
+
+  const allRarityOptions = useMemo(() => {
+    return buildUniqueRarityOptions(filterOptions?.rarities ?? []).sort((a, b) => a.localeCompare(b));
+  }, [buildUniqueRarityOptions, filterOptions?.rarities]);
 
   const rarityOptions = useMemo(() => {
-    const combined = [...(filterOptions?.rarities ?? []), ...setRarities];
-    return [...new Set(combined)].sort((a, b) => a.localeCompare(b));
-  }, [filterOptions?.rarities, setRarities]);
+    const source = selectedSet ? setRarities : allRarityOptions;
+    return buildUniqueRarityOptions(source).sort((a, b) => a.localeCompare(b));
+  }, [allRarityOptions, buildUniqueRarityOptions, selectedSet, setRarities]);
+
+  const rarityOptionsReady = selectedSet ? !raritiesLoading : Boolean(filterOptions);
 
   useEffect(() => {
     return () => clearSearchTimeout();
@@ -201,6 +205,7 @@ export function TCGFilters({
 
   useEffect(() => {
     if (mode === 'simple') return;
+    if (!autoApplyInitialSet) return;
     if (!didApplyInitialSetRef.current && mounted && latestSetId && filters.selectedSet == null) {
       didApplyInitialSetRef.current = true;
       onChange({
@@ -208,17 +213,17 @@ export function TCGFilters({
         selectedSet: latestSetId,
       });
     }
-  }, [filters, latestSetId, mounted, mode, onChange]);
+  }, [autoApplyInitialSet, filters, latestSetId, mounted, mode, onChange]);
 
   useEffect(() => {
     if (
       filters.selectedRarity &&
-      rarityOptions.length > 0 &&
-      !rarityOptions.includes(filters.selectedRarity)
+      rarityOptionsReady &&
+      !rarityOptions.some((rarity) => isSameTcgRarity(rarity, filters.selectedRarity))
     ) {
       onChange({ ...filters, selectedRarity: null });
     }
-  }, [filters, onChange, rarityOptions]);
+  }, [filters, onChange, rarityOptions, rarityOptionsReady]);
 
   const activeFilterCount = useMemo(() => {
     return [
@@ -243,7 +248,6 @@ export function TCGFilters({
     ].reduce((count, value) => count + value, 0);
   }, [filters]);
 
-  const categoryOptions = filterOptions?.categories ?? TCG_CARD_CATEGORIES;
   const pokemonTypes = filterOptions?.pokemonTypes ?? TCG_POKEMON_TYPES;
   const trainerTypes = filterOptions?.trainerTypes ?? TCG_TRAINER_TYPES;
   const energyTypes = filterOptions?.energyTypes ?? TCG_ENERGY_TYPES;
@@ -263,22 +267,6 @@ export function TCGFilters({
       MEGA: 'tcg.phase_mega',
     }),
     [],
-  );
-
-  const getCategoryLabel = useCallback(
-    (category: TCGCardCategoryFilter) => {
-      switch (category) {
-        case 'Pokemon':
-          return t('tcg.card_category_pokemon');
-        case 'Trainer':
-          return t('tcg.card_category_trainer');
-        case 'Energy':
-          return t('tcg.card_category_energy');
-        default:
-          return t('tcg.card_category_all');
-      }
-    },
-    [t],
   );
 
   const getStageLabel = useCallback(
@@ -343,8 +331,6 @@ export function TCGFilters({
     [t],
   );
 
-  const resolveSelectedCategory = filters.selectedCategory ?? 'all';
-
   if (mode === 'simple') {
     return (
       <motion.div
@@ -359,7 +345,7 @@ export function TCGFilters({
               {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
             </div>
             <div className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
-              {activeFilterCount > 0 ? t('tcg.active_filters', { count: activeFilterCount }) : t('tcg.simple_filters_hint', { defaultValue: 'Trois réglages' })}
+              {activeFilterCount > 0 ? t('tcg.active_filters', { count: activeFilterCount }) : t('tcg.simple_filters_hint_compact', { defaultValue: 'Réglages rapides' })}
             </div>
           </div>
 
@@ -402,58 +388,33 @@ export function TCGFilters({
 
             <div className="space-y-2">
               <div className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
-                {t('tcg.card_category')}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {categoryOptions.map((category) => {
-                  const isActive = resolveSelectedCategory === category;
-                  return (
-                  <button
-                      key={category}
-                      type="button"
-                      onClick={() => {
-                        onSimpleCategoryChange?.(category);
-                        if (!onSimpleCategoryChange) {
-                          applyCategory(category);
-                        }
-                      }}
-                      className={cn(
-                        'rounded-xl border px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
-                        isActive
-                          ? 'border-primary/35 bg-primary/12 text-primary'
-                          : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
-                      )}
-                    >
-                      {getCategoryLabel(category)}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/30">
                 {t('tcg.filter_rarity')}
               </div>
               <div className="flex flex-wrap gap-2">
-                {rarityOptions.map((rarity) => {
-                  const isActive = filters.selectedRarity === rarity;
-                  return (
-                    <button
-                      key={rarity}
-                      type="button"
-                      onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
-                      className={cn(
-                        'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
-                        isActive
-                          ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
-                          : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
-                      )}
-                    >
-                      {rarity}
-                    </button>
-                  );
-                })}
+                {rarityOptions.length === 0 ? (
+                  <p className="text-[10px] italic text-foreground/30">
+                    {t(selectedSet ? 'tcg.no_rarities_in_set' : 'tcg.no_rarities')}
+                  </p>
+                ) : (
+                  rarityOptions.map((rarity) => {
+                    const isActive = isSameTcgRarity(filters.selectedRarity, rarity);
+                    return (
+                      <button
+                        key={rarity}
+                        type="button"
+                        onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
+                        className={cn(
+                          'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
+                          isActive
+                            ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
+                            : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                        )}
+                      >
+                        {rarity}
+                      </button>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -494,36 +455,6 @@ export function TCGFilters({
           placeholder={t('tcg.search_placeholder')}
           clearLabel={t('search.clear')}
         />
-
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {categoryOptions.map((category) => {
-            const isActive = resolveSelectedCategory === category;
-            const toneClass = getCategoryTone(category);
-
-            return (
-              <button
-                key={category}
-                type="button"
-                onClick={() => applyCategory(category)}
-                className={cn(
-                  'group relative flex min-h-12 items-center justify-center overflow-hidden rounded-2xl border px-3 py-2.5 text-center transition-all duration-300',
-                  isActive
-                    ? `${toneClass.active} shadow-lg`
-                    : 'border-border/40 bg-card/35 text-foreground/55 hover:border-border/70 hover:bg-card/60 hover:text-foreground',
-                )}
-                aria-pressed={isActive}
-              >
-                <div className={cn('absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100', toneClass.glow)} />
-                <div className="relative flex items-center gap-2 leading-tight">
-                  <span className={cn('h-2.5 w-2.5 rounded-full', toneClass.dot)} />
-                  <span className="text-[9px] font-black uppercase tracking-[0.14em] whitespace-normal">
-                    {getCategoryLabel(category)}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
 
         <div className="mt-4 flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
@@ -633,10 +564,10 @@ export function TCGFilters({
                 <div key={index} className="h-8 w-20 animate-pulse rounded-full bg-card/50" />
               ))
             ) : rarityOptions.length === 0 ? (
-              <p className="text-[10px] italic text-foreground/30">{t('tcg.no_rarities')}</p>
+              <p className="text-[10px] italic text-foreground/30">{t(selectedSet ? 'tcg.no_rarities_in_set' : 'tcg.no_rarities')}</p>
             ) : (
               rarityOptions.map((rarity) => {
-                const isActive = filters.selectedRarity === rarity;
+                const isActive = isSameTcgRarity(filters.selectedRarity, rarity);
                 return (
                   <button
                     key={rarity}
@@ -1078,35 +1009,6 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
       )}
     </div>
   );
-}
-
-function getCategoryTone(category: TCGCardCategoryFilter) {
-  switch (category) {
-    case 'Pokemon':
-      return {
-        active: 'border-emerald-400/30 bg-emerald-500/15 text-emerald-200',
-        glow: 'bg-gradient-to-br from-emerald-500/20 via-transparent to-emerald-500/5',
-        dot: 'bg-emerald-400',
-      };
-    case 'Trainer':
-      return {
-        active: 'border-amber-400/30 bg-amber-500/15 text-amber-200',
-        glow: 'bg-gradient-to-br from-amber-500/20 via-transparent to-amber-500/5',
-        dot: 'bg-amber-400',
-      };
-    case 'Energy':
-      return {
-        active: 'border-cyan-400/30 bg-cyan-500/15 text-cyan-200',
-        glow: 'bg-gradient-to-br from-cyan-500/20 via-transparent to-cyan-500/5',
-        dot: 'bg-cyan-400',
-      };
-    default:
-      return {
-        active: 'border-primary/25 bg-primary/10 text-foreground',
-        glow: 'bg-gradient-to-br from-foreground/10 via-transparent to-foreground/5',
-        dot: 'bg-foreground/45',
-      };
-  }
 }
 
 function resolveTcgdexAssetSrc(asset?: string | null) {

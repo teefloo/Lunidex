@@ -1,0 +1,15 @@
+/*
+ * Keep the reference pokemon-cards-css effect, but remove the extra outer glow
+ * and the fallback card back that appear around TCG previews.
+ */
+
+.pokemon-holo-card .card__rotator,
+.pokemon-holo-card .card__rotator:focus,
+.pokemon-holo-card.active .card__rotator,
+.pokemon-holo-card.active .card__rotator:focus {
+  box-shadow: none !important;
+}
+
+.pokemon-holo-card .card__back {
+  display: none !important;
+}

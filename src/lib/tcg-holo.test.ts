@@ -22,6 +22,9 @@ describe('tcg holo mapping', () => {
     ['Rare Holo VSTAR', 'rare holo vstar'],
     ['Rare Rainbow', 'rare rainbow'],
     ['Rare Secret', 'rare secret'],
+    ['Rare Shiny', 'rare shiny'],
+    ['Rare Shiny V', 'rare shiny v'],
+    ['Rare Shiny VMAX', 'rare shiny vmax'],
     ['Amazing Rare', 'amazing rare'],
     ['Radiant Rare', 'radiant rare'],
     ['Ultra Rare', 'rare ultra'],
@@ -29,28 +32,64 @@ describe('tcg holo mapping', () => {
     ['Special Illustration Rare', 'rare ultra'],
     ['Hyper Rare', 'rare secret'],
     ['Double Rare', 'rare holo v'],
-  ])('maps %s to the pokemon-cards-css rarity %s', (rarity, expected) => {
-    expect(getTCGHoloRarity({ ...baseCard, rarity })).toBe(expected);
+  ])('maps %s to the pokemon-cards-css rarity %s', (rarity, expectedRarity) => {
+    const data = getTCGHoloData({ ...baseCard, rarity });
+
+    expect(data.rarity).toBe(expectedRarity);
+  });
+
+  it('maps reverse holo suffix cards to the reverse holo effect', () => {
+    const data = getTCGHoloData({
+      ...baseCard,
+      rarity: 'Rare',
+      suffix: 'Reverse Holo',
+    });
+
+    expect(data.rarity).toBe('reverse holo');
+  });
+
+  it('maps alternate art cards to the rainbow alt effect', () => {
+    const data = getTCGHoloData({
+      ...baseCard,
+      id: 'swsh7-167',
+      localId: '167',
+      rarity: 'Rare Ultra',
+      set: { id: 'swsh7', name: 'Evolving Skies' },
+    });
+
+    expect(data.rarity).toBe('rare rainbow alt');
   });
 
   it('maps EX and GX cards to the v-style holo effect', () => {
-    expect(
-      getTCGHoloRarity({
+    const exData = getTCGHoloData({
         ...baseCard,
         id: 'xy1-001',
         name: 'Chesnaught-EX',
         rarity: 'Ultra Rare',
-      }),
-    ).toBe('rare holo v');
+      });
 
-    expect(
-      getTCGHoloRarity({
+    const gxData = getTCGHoloData({
         ...baseCard,
         id: 'sm3-147',
         name: 'Charizard-GX',
         rarity: 'Ultra Rare',
-      }),
-    ).toBe('rare holo v');
+      });
+
+    expect(exData.rarity).toBe('rare holo v');
+    expect(gxData.rarity).toBe('rare holo v');
+  });
+
+  it('treats V-UNION cards as a v-style subtype', () => {
+    const data = getTCGHoloData({
+      ...baseCard,
+      id: 'swsh45-005',
+      localId: '005',
+      name: 'Mewtwo V-UNION',
+      rarity: 'Rare Holo V',
+    });
+
+    expect(data.rarity).toBe('rare holo v');
+    expect(data.subtypes).toBe('v-union');
   });
 
   it('detects trainer gallery numbers for data attributes', () => {
@@ -58,12 +97,27 @@ describe('tcg holo mapping', () => {
       ...baseCard,
       id: 'swsh11tg-TG03',
       localId: 'TG03',
-      rarity: 'Trainer Gallery Rare Holo',
+      rarity: 'Trainer Gallery',
       set: { id: 'swsh11tg', name: 'Lost Origin Trainer Gallery' },
+      variants: { firstEdition: false, holo: false, normal: true, reverse: false, wPromo: true },
     });
 
     expect(data.rarity).toBe('trainer gallery rare holo');
     expect(data.isTrainerGallery).toBe(true);
+  });
+
+  it('maps cosmos promo cards without affecting trainer gallery promos', () => {
+    const data = getTCGHoloData({
+      ...baseCard,
+      id: 'swshp-SWSH010',
+      localId: 'SWSH010',
+      rarity: 'Promo',
+      set: { id: 'swshp', name: 'Sword & Shield Promo Cards' },
+      variants: { firstEdition: false, holo: false, normal: true, reverse: false, wPromo: true },
+    });
+
+    expect(data.rarity).toBe('rare holo cosmos');
+    expect(data.hasHoloEffect).toBe(true);
   });
 
   it.each([

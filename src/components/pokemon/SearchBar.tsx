@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useQueryClient } from '@tanstack/react-query';
 import { pokemonKeys } from '@/lib/api/keys';
 import { getAllPokemonSearchIndex } from '@/lib/api';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function SearchBar() {
   const { searchTerm, setSearchTerm } = usePrimeDexStore();
@@ -15,7 +16,11 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
+  const mounted = useMounted();
   const queryClient = useQueryClient();
+  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
+  const searchAriaLabel = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
+  const clearLabel = mounted ? t('search.clear') : 'Clear search';
 
   const prefetchIndex = useCallback(() => {
     queryClient.prefetchQuery({
@@ -64,7 +69,7 @@ export default function SearchBar() {
         <Input
           ref={inputRef}
           type="text"
-          placeholder={t('search.placeholder')}
+          placeholder={searchPlaceholder}
           value={localSearch}
           onFocus={() => { setIsFocused(true); prefetchIndex(); }}
           onBlur={() => setIsFocused(false)}
@@ -73,7 +78,7 @@ export default function SearchBar() {
             prefetchIndex();
           }}
           className="glass-control w-full py-6 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-foreground/60 focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/30 md:text-lg"
-          aria-label={t('search.placeholder')}
+          aria-label={searchAriaLabel}
           id="pokemon-search"
         />
       </div>
@@ -86,7 +91,7 @@ export default function SearchBar() {
             setSearchTerm('');
           }}
           className="absolute right-6 z-10 rounded-full p-2 text-foreground/60 transition-all duration-300 hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label={t('search.clear')}
+          aria-label={clearLabel}
         >
           <X className="w-5 h-5" />
         </button>

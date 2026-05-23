@@ -20,9 +20,10 @@ const DEFAULT_VIEW_MODE: TCGCardViewMode = 'visual';
 
 export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchState {
   const viewMode = normalizeViewMode(readString(searchParams, 'view') as TCGCardViewMode | string | null | undefined);
+  const selectedCategory = normalizeCategoryFilter(readString(searchParams, 'category'));
   const filters: TCGCardFilters = {
     searchTerm: readString(searchParams, 'q') || undefined,
-    selectedCategory: (readString(searchParams, 'category') as TCGCardFilters['selectedCategory']) ?? 'all',
+    selectedCategory,
     selectedSet: readString(searchParams, 'set') || null,
     selectedRarity: readString(searchParams, 'rarity') || null,
     selectedTypes: readList(searchParams, 'types'),
@@ -177,6 +178,14 @@ function normalizeViewMode(viewMode?: TCGCardViewMode | string | null): TCGCardV
   if (viewMode === 'compact') return DEFAULT_VIEW_MODE;
   if (viewMode === 'visual' || viewMode === 'table' || viewMode === 'scan') return viewMode;
   return DEFAULT_VIEW_MODE;
+}
+
+function normalizeCategoryFilter(value: string): TCGCardFilters['selectedCategory'] {
+  if (value === 'Pokemon' || value === 'Trainer' || value === 'Energy') {
+    return value;
+  }
+
+  return 'all';
 }
 
 function hashString(input: string): string {

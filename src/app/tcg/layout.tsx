@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import "../../styles/pokemon-cards-css.css";
-import "../../styles/tcg-holo-effects.css";
 
 export const metadata: Metadata = {
   title: "TCG Card Catalog - PrimeDex",

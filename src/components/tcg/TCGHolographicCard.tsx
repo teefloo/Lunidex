@@ -20,8 +20,6 @@ interface TCGHolographicCardProps {
 
 type HoloStyle = CSSProperties & Record<`--${string}`, string | number>;
 
-const CARD_BACK_LABEL = 'Pokemon card back';
-
 export const TCGHolographicCard = memo(function TCGHolographicCard({
   card,
   className,
@@ -35,7 +33,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const pendingVarsRef = useRef<Record<string, string> | null>(null);
-  const [loading, setLoading] = useState(true);
   const [interacting, setInteracting] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
@@ -153,7 +150,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
         'card interactive pokemon-holo-card',
         holoData.typeClasses,
         interacting && 'active interacting',
-        loading && 'loading',
         noFrame && 'card--no-frame',
         className,
       )}
@@ -184,7 +180,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
           onBlur={resetCard}
           aria-label={t('tcg.open_card_detail', { name: card.name })}
         >
-          <div className="card__back" aria-label={CARD_BACK_LABEL} />
           <div className="card__front">
             <Image
               src={imageCandidates[imageIndex] ?? imageCandidates.at(-1) ?? '/images/card-placeholder.svg'}
@@ -194,11 +189,9 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               sizes={sizes}
               priority={priority}
               className={cn('card__image', imageClassName)}
-              onLoad={() => setLoading(false)}
               onError={() => {
                 setImageIndex((current) => {
                   const nextIndex = Math.min(current + 1, imageCandidates.length - 1);
-                  if (nextIndex >= imageCandidates.length - 1) setLoading(false);
                   return nextIndex;
                 });
               }}

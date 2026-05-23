@@ -19,7 +19,6 @@ import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, searchCards } from '@/lib/a
 import { tcgKeys } from '@/lib/api/keys';
 import type { TCGCard, TCGCardFilters } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
-import { cn } from '@/lib/utils';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGFilters } from './TCGFilters';
@@ -27,7 +26,14 @@ import { usePrimeDexStore } from '@/store/primedex';
 
 const PAGE_SIZE = 24;
 
-export function TCGResearchDesk() {
+interface TCGResearchDeskProps {
+  initialLatestSet?: {
+    id: string;
+    name: string;
+  } | null;
+}
+
+export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const router = useRouter();
@@ -48,7 +54,6 @@ export function TCGResearchDesk() {
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
     parsedState.filters.selectedSet
     || parsedState.filters.searchTerm
-    || (parsedState.filters.selectedCategory && parsedState.filters.selectedCategory !== 'all')
     || parsedState.filters.selectedRarity
     || (parsedState.filters.selectedTypes?.length ?? 0) > 0
     || parsedState.filters.selectedPhase
@@ -93,23 +98,30 @@ export function TCGResearchDesk() {
 
   const latestSet = setOptions[0] ?? null;
   const latestSetId = latestSet?.id ?? null;
+  const latestSetFallbackId = latestSetId ?? initialLatestSet?.id ?? null;
+  const latestSetFallbackName = latestSet?.name ?? initialLatestSet?.name ?? t('tcg.unknown');
   const effectiveFilters = useMemo(() => normalizeFilters({
     ...normalizedFilters,
-    selectedSet: normalizedFilters.selectedSet ?? (hasUserEditedFilters ? null : latestSetId),
-  }), [hasUserEditedFilters, latestSetId, normalizedFilters]);
+    selectedSet: normalizedFilters.selectedSet ?? (hasUserEditedFilters ? null : latestSetFallbackId),
+  }), [hasUserEditedFilters, latestSetFallbackId, normalizedFilters]);
+  const urlFilters = normalizedFilters;
   const selectedSet = setOptions.find((set) => set.id === effectiveFilters.selectedSet) ?? latestSet;
-  const summarySetName = effectiveFilters.selectedSet ? selectedSet?.name ?? t('tcg.unknown') : null;
+  const activeSetName = effectiveFilters.selectedSet
+    ? selectedSet?.name ?? latestSetFallbackName
+    : hasUserEditedFilters
+      ? null
+      : latestSetFallbackName;
 
   useEffect(() => {
     const query = serializeTCGSearchState({
-      filters: effectiveFilters,
+      filters: urlFilters,
       viewMode: 'visual',
       compare: [],
     });
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [effectiveFilters, pathname, router, searchParams]);
+  }, [pathname, router, searchParams, urlFilters]);
 
   const { data: cardsData, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, PAGE_SIZE),
@@ -153,36 +165,11 @@ export function TCGResearchDesk() {
     }));
   }, []);
 
-  const updateSimpleCategory = useCallback((category: TCGCardFilters['selectedCategory']) => {
-    setHasUserEditedFilters(true);
-    setFilters((current) => {
-      const currentCategory = current.selectedCategory ?? 'all';
-      const resolvedCategory = currentCategory === category ? 'all' : category;
-      const isPokemon = resolvedCategory === 'Pokemon';
-      const isTrainer = resolvedCategory === 'Trainer';
-      const isEnergy = resolvedCategory === 'Energy';
-
-      return normalizeFilters({
-        ...current,
-        selectedCategory: resolvedCategory,
-        selectedSet: null,
-        selectedRarity: null,
-        selectedTypes: isPokemon ? current.selectedTypes : [],
-        selectedPhase: isPokemon ? current.selectedPhase : null,
-        selectedTrainerTypes: isTrainer ? current.selectedTrainerTypes : [],
-        selectedEnergyTypes: isEnergy ? current.selectedEnergyTypes : [],
-        minHp: isPokemon ? current.minHp : undefined,
-        maxHp: isPokemon ? current.maxHp : undefined,
-      });
-    });
-  }, []);
-
   const updateSimpleRarity = useCallback((rarity: string) => {
     setHasUserEditedFilters(true);
     setFilters((current) => normalizeFilters({
       ...current,
       selectedRarity: current.selectedRarity === rarity ? null : rarity,
-      selectedSet: null,
       selectedCategory: current.selectedCategory ?? 'all',
     }));
   }, []);
@@ -206,7 +193,7 @@ export function TCGResearchDesk() {
   const openSimpleFilters = useCallback(() => setIsSimpleFiltersOpen(true), []);
   const openAdvancedFilters = useCallback(() => setIsAdvancedFiltersOpen(true), []);
 
-  const applyQuickPreset = useCallback((preset: 'latest' | 'pokemon' | 'trainer' | 'pikachu') => {
+  const applyQuickPreset = useCallback((preset: 'latest' | 'pikachu') => {
     setHasUserEditedFilters(true);
 
     const resetQuickPresetFilters = (current: TCGCardFilters, next: Partial<TCGCardFilters>): TCGCardFilters => normalizeFilters({
@@ -234,30 +221,15 @@ export function TCGResearchDesk() {
 
     if (preset === 'latest') {
       setFilters((current) => resetQuickPresetFilters(current, {
-        selectedSet: latestSetId ?? current.selectedSet ?? null,
-      }));
-      return;
-    }
-
-    if (preset === 'pokemon') {
-      setFilters((current) => resetQuickPresetFilters(current, {
-        selectedCategory: 'Pokemon',
-      }));
-      return;
-    }
-
-    if (preset === 'trainer') {
-      setFilters((current) => resetQuickPresetFilters(current, {
-        selectedCategory: 'Trainer',
+        selectedSet: latestSetFallbackId ?? current.selectedSet ?? null,
       }));
       return;
     }
 
     setFilters((current) => resetQuickPresetFilters(current, {
       searchTerm: 'Pikachu',
-      selectedCategory: 'Pokemon',
     }));
-  }, [latestSetId]);
+  }, [latestSetFallbackId]);
 
   return (
     <div className="space-y-6 pb-24">
@@ -266,9 +238,8 @@ export function TCGResearchDesk() {
         subtitle={t('tcg.discover_subtitle', {
           defaultValue: 'Cherche une carte, explore les dernières extensions et ouvre les détails en un geste.',
         })}
-        activeCategory={parsedState.filters.selectedCategory ?? 'all'}
         searchTerm={effectiveFilters.searchTerm ?? ''}
-        latestSetName={latestSet?.name ?? t('tcg.unknown')}
+        latestSetName={activeSetName ?? t('tcg.unknown')}
         sortValue={sortValue}
         onSortChange={(sortBy, sortOrder) => {
           updateFilters({
@@ -292,19 +263,18 @@ export function TCGResearchDesk() {
         <aside className="hidden lg:block">
           <div className="sticky top-24 max-h-[calc(100dvh-7rem)] space-y-4 overflow-y-auto pr-1 scrollbar-premium">
               <SimpleFilterBar
-              filters={effectiveFilters}
+                filters={effectiveFilters}
                 onChange={updateFilters}
                 onSimpleSetChange={updateSimpleSet}
-                onSimpleCategoryChange={updateSimpleCategory}
                 onSimpleRarityChange={updateSimpleRarity}
-            />
+              />
           </div>
         </aside>
 
         <main className="min-w-0 space-y-4">
           <ResultSummary
             count={totalCards}
-            activeSetName={summarySetName}
+            activeSetName={activeSetName}
             isFetching={isFetching}
           />
 
@@ -356,7 +326,6 @@ export function TCGResearchDesk() {
               filters={effectiveFilters}
               onChange={updateFilters}
               onSimpleSetChange={updateSimpleSet}
-              onSimpleCategoryChange={updateSimpleCategory}
               onSimpleRarityChange={updateSimpleRarity}
               onOpenAdvanced={() => {
                 setIsSimpleFiltersOpen(false);
@@ -380,6 +349,7 @@ export function TCGResearchDesk() {
               mode="advanced"
               filters={effectiveFilters}
               onChange={updateFilters}
+              autoApplyInitialSet={false}
             />
           </div>
         </SheetContent>
@@ -397,7 +367,6 @@ export function TCGResearchDesk() {
 function DiscoveryHero({
   title,
   subtitle,
-  activeCategory,
   searchTerm,
   latestSetName,
   sortValue,
@@ -410,7 +379,6 @@ function DiscoveryHero({
 }: {
   title: string;
   subtitle: string;
-  activeCategory: TCGCardFilters['selectedCategory'];
   searchTerm: string;
   latestSetName: string;
   sortValue: string;
@@ -419,7 +387,7 @@ function DiscoveryHero({
   onClearSearch: () => void;
   onOpenFilters: () => void;
   onOpenAdvanced: () => void;
-  onQuickPreset: (preset: 'latest' | 'pokemon' | 'trainer' | 'pikachu') => void;
+  onQuickPreset: (preset: 'latest' | 'pikachu') => void;
 }) {
   const { t } = useTranslation();
 
@@ -496,28 +464,6 @@ function DiscoveryHero({
           </button>
           <button
             type="button"
-            onClick={() => onQuickPreset('pokemon')}
-            aria-pressed={activeCategory === 'Pokemon'}
-            className={cn(
-              'inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-emerald-500/25 hover:bg-emerald-500/10 hover:text-emerald-500',
-              activeCategory === 'Pokemon' && 'border-emerald-500/35 bg-emerald-500/15 text-emerald-500',
-            )}
-          >
-            Pokémon
-          </button>
-          <button
-            type="button"
-            onClick={() => onQuickPreset('trainer')}
-            aria-pressed={activeCategory === 'Trainer'}
-            className={cn(
-              'inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-amber-500/25 hover:bg-amber-500/10 hover:text-amber-500',
-              activeCategory === 'Trainer' && 'border-amber-500/35 bg-amber-500/15 text-amber-500',
-            )}
-          >
-            Dresseur
-          </button>
-          <button
-            type="button"
             onClick={onOpenFilters}
             className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary lg:hidden"
           >
@@ -552,25 +498,25 @@ function SimpleFilterBar({
   onChange,
   onOpenAdvanced,
   onSimpleSetChange,
-  onSimpleCategoryChange,
   onSimpleRarityChange,
 }: {
   filters: TCGCardFilters;
   onChange: (filters: TCGCardFilters) => void;
   onOpenAdvanced?: () => void;
   onSimpleSetChange?: (setId: string) => void;
-  onSimpleCategoryChange?: (category: TCGCardFilters['selectedCategory']) => void;
   onSimpleRarityChange?: (rarity: string) => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="rounded-[1.5rem] border border-border/50 bg-card/45 p-4">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
-            Filtres simples
+            {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
           </div>
           <div className="mt-1 text-sm font-semibold text-foreground/70">
-            Les 3 choix les plus utiles.
+            {t('tcg.simple_filters_description', { defaultValue: 'Les réglages essentiels.' })}
           </div>
         </div>
         {onOpenAdvanced && (
@@ -590,8 +536,8 @@ function SimpleFilterBar({
         filters={filters}
         onChange={onChange}
         onSimpleSetChange={onSimpleSetChange}
-        onSimpleCategoryChange={onSimpleCategoryChange}
         onSimpleRarityChange={onSimpleRarityChange}
+        autoApplyInitialSet={false}
       />
     </div>
   );

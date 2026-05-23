@@ -9,9 +9,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  const payload = (await request.json()) as { search?: TCGSavedSearch };
+  const payload = await readJsonBody<{ search?: TCGSavedSearch }>(request);
 
-  if (!payload.search?.id) {
+  if (!payload?.search?.id) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
@@ -48,4 +48,13 @@ function persistState(state: ReturnType<typeof decodeTCGUserState>) {
     maxAge: 60 * 60 * 24 * 365,
   });
   return response;
+}
+
+async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
+  try {
+    const payload = await request.json();
+    return payload && typeof payload === 'object' ? (payload as T) : null;
+  } catch {
+    return null;
+  }
 }

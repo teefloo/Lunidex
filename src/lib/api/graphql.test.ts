@@ -141,4 +141,23 @@ describe('graphql pagination helpers', () => {
     expect(detailed).toHaveLength(1);
     expect(mockedGraphqlPost).toHaveBeenCalledTimes(1);
   });
+
+  it('handles circular GraphQL payloads without crashing the error path', async () => {
+    const circularResponse: { data: Record<string, unknown>; self?: unknown } = { data: {} };
+    circularResponse.self = circularResponse;
+    circularResponse.data.self = circularResponse;
+
+    mockedGetCachedData
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce([] as never);
+    mockedGraphqlPost.mockResolvedValueOnce({
+      data: circularResponse as never,
+    });
+
+    const moves = await getAllMoves(9);
+
+    expect(moves).toEqual([]);
+    expect(mockedGraphqlPost).toHaveBeenCalledTimes(1);
+  });
 });

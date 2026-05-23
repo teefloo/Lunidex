@@ -4,15 +4,17 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function CaughtFilter() {
   const { showCaughtOnly, setShowCaughtOnly } = usePrimeDexStore();
   const { t } = useTranslation();
+  const mounted = useMounted();
 
   const modes: { id: 'all' | 'caught' | 'uncaught', label: string }[] = [
-    { id: 'all', label: t('caught_filter.all') },
-    { id: 'caught', label: t('caught_filter.caught') },
-    { id: 'uncaught', label: t('caught_filter.missing') }
+    { id: 'all', label: mounted ? t('caught_filter.all') : 'All' },
+    { id: 'caught', label: mounted ? t('caught_filter.caught') : 'Caught' },
+    { id: 'uncaught', label: mounted ? t('caught_filter.missing') : 'Missing' }
   ];
 
   return (

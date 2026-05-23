@@ -1,9 +1,17 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
-
-const emptySubscribe = () => () => {};
+import { useEffect, useState } from 'react';
 
 export function useMounted(): boolean {
-  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  return mounted;
 }

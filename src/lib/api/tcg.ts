@@ -13,6 +13,7 @@ import type {
   TCGSet,
   TCGFilterOptions,
 } from '@/types/tcg';
+import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -67,6 +68,13 @@ export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   sortOrder: 'asc',
   ownedState: 'all',
 };
+
+export function normalizeTcgPositiveInteger(value: number, fallback: number) {
+  if (!Number.isFinite(value)) return fallback;
+
+  const normalized = Math.floor(value);
+  return normalized >= 1 ? normalized : fallback;
+}
 
 function resolveTcgLang(lang = 'en') {
   const supportedLang = supportedLangs.includes(lang as (typeof supportedLangs)[number]) ? lang : 'en';
@@ -148,6 +156,8 @@ function normaliseCardCategory(category: TCGCard['category']): TCGCard['category
 }
 
 function buildCardQueryParams(filters: TCGCardFilters, page: number, limit: number) {
+  const safePage = normalizeTcgPositiveInteger(page, 1);
+  const safeLimit = normalizeTcgPositiveInteger(limit, 48);
   const params = new URLSearchParams();
   const searchTerm = filters.searchTerm?.trim();
   const selectedCategory = filters.selectedCategory ?? 'all';
@@ -156,8 +166,8 @@ function buildCardQueryParams(filters: TCGCardFilters, page: number, limit: numb
   const sortOrder: TCGCardSortOrder = filters.sortOrder ?? 'asc';
   const remoteSortField = resolveRemoteSortField(sortBy);
 
-  params.set('pagination:page', String(page));
-  params.set('pagination:itemsPerPage', String(limit + 1));
+  params.set('pagination:page', String(safePage));
+  params.set('pagination:itemsPerPage', String(safeLimit + 1));
   params.set('sort:field', remoteSortField);
   params.set('sort:order', sortOrder.toUpperCase());
 
@@ -208,13 +218,9 @@ function normalizeFilterValue(value: string) {
     .replace(/[^a-z0-9]+/g, '');
 }
 
-function normalizeRarity(rarity?: string | null) {
-  return rarity ? normalizeFilterValue(rarity) : '';
-}
-
 function matchesRarityFilter(card: TCGCard, selectedRarity: string): boolean {
-  const rarityKey = normalizeRarity(selectedRarity);
-  const cardRarity = normalizeRarity(card.rarity);
+  const rarityKey = getCanonicalTcgRarity(selectedRarity);
+  const cardRarity = getCanonicalTcgRarity(card.rarity);
 
   if (rarityKey === 'promo') {
     return Boolean(card.variants?.wPromo) || cardRarity.includes('promo');
@@ -345,7 +351,7 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
  */
 export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSignal): Promise<TCGCard | null> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-card-v5-${cardId}-${tcgLang}`;
+  const cacheKey = `tcg-card-v5-${cardId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
@@ -541,7 +547,7 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
  */
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-all-sets-v4-${tcgLang}`;
+  const cacheKey = `tcg-all-sets-v5-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet[]>(cacheKey);
@@ -569,7 +575,7 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
  */
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-set-v4-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-v4-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
@@ -596,9 +602,11 @@ export const searchCards = async (
   signal?: AbortSignal,
 ): Promise<TCGCatalogPageResult> => {
   const tcgLang = resolveTcgLang(lang);
+  const safePage = normalizeTcgPositiveInteger(page, 1);
+  const safeLimit = normalizeTcgPositiveInteger(limit, 48);
   const queryFilters = stripLocalOnlyFilters(filters);
-  const query = buildCardQueryParams(queryFilters, page, limit).toString();
-  const cacheKey = `tcg-catalog-v9-${tcgLang}-${query}-p${page}-l${limit}-local-${serializeLocalOnlyFilters(filters)}`;
+  const query = buildCardQueryParams(queryFilters, safePage, safeLimit).toString();
+  const cacheKey = `tcg-catalog-v10-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
   const hasLocalOnlyFilters =
     Boolean(filters.selectedRarity) ||
     Boolean(filters.selectedTrainerTypes?.length) ||
@@ -621,10 +629,10 @@ export const searchCards = async (
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
       const sorted = [...normalized].sort((a, b) => compareCards(a, b, filters.sortBy ?? 'name', filters.sortOrder ?? 'asc'));
-      const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, limit), tcgLang, signal);
+      const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, safeLimit), tcgLang, signal);
       const result = {
         cards: pageCards,
-        hasMore: Array.isArray(data) ? data.length > limit : false,
+        hasMore: Array.isArray(data) ? data.length > safeLimit : false,
       };
 
       await setCachedData(cacheKey, result);
@@ -634,10 +642,10 @@ export const searchCards = async (
     const cards: TCGCard[] = [];
     let remotePage = 1;
     let hasMoreRemote = true;
-    const targetCount = page * limit + 1;
+    const targetCount = safePage * safeLimit + 1;
 
     while (hasMoreRemote && (requiresFullDatasetSort || cards.length < targetCount)) {
-      const pageQuery = buildCardQueryParams(queryFilters, remotePage, limit).toString();
+      const pageQuery = buildCardQueryParams(queryFilters, remotePage, safeLimit).toString();
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
@@ -661,7 +669,7 @@ export const searchCards = async (
 
     const sortedCards = [...cards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
     const start = (page - 1) * limit;
-    const end = start + limit;
+    const end = start + safeLimit;
     const pageCards = await hydrateCardsForVisualEffects(sortedCards.slice(start, end), tcgLang, signal);
     const result = {
       cards: pageCards,
@@ -682,7 +690,7 @@ export const searchCards = async (
  */
 export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-filter-options-v5-${tcgLang}`;
+    const cacheKey = `tcg-filter-options-v6-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGFilterOptions>(cacheKey);
@@ -723,7 +731,7 @@ export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> =
  */
 export const getRaritiesForSet = async (setId: string, lang = 'en'): Promise<string[]> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-rarities-v4-${setId}-${tcgLang}`;
+    const cacheKey = `tcg-rarities-v5-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<string[]>(cacheKey);
