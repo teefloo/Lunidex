@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { t } from '@/lib/server-i18n';
 
 export const metadata: Metadata = {
-  title: "Pokémon Quiz - PrimeDex",
-  description: "Test your Pokémon knowledge with interactive quizzes. Identify Pokémon by silhouette, type, and more.",
+  title: t('meta.quiz_title'),
+  description: t('meta.quiz_description'),
   alternates: {
     canonical: "/quiz",
   },
@@ -11,13 +12,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Pokémon Quiz - PrimeDex",
-    description: "Test your Pokémon knowledge with interactive quizzes.",
+    title: t('meta.quiz_title'),
+    description: t('meta.quiz_description'),
     url: "/quiz",
   },
   twitter: {
-    title: "Pokémon Quiz - PrimeDex",
-    description: "Test your Pokémon knowledge with interactive quizzes.",
+    title: t('meta.quiz_title'),
+    description: t('meta.quiz_description'),
   },
 };
 

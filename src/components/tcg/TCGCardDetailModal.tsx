@@ -40,6 +40,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const store = usePrimeDexStore();
   const language = store.language;
+  const systemLanguage = store.systemLanguage;
   const addTCGCompare = store.addTCGCompare ?? (() => undefined);
   const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
   const isTCGCompared = store.isTCGCompared ?? (() => false);
@@ -49,7 +50,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const isTCGOwned = store.isTCGOwned ?? (() => false);
   const isTCGWishlist = store.isTCGWishlist ?? (() => false);
   const isTCGWatchlist = store.isTCGWatchlist ?? (() => false);
-  const resolvedLang = mounted ? (language === 'auto' ? 'en' : language) : 'en';
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -210,22 +211,22 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                   <ActionPill
                     active={compared}
                     onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
-                    label={compared ? t('tcg.remove_from_compare', { defaultValue: 'Remove compare' }) : t('tcg.add_to_compare', { defaultValue: 'Compare' })}
+                    label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
                   />
                   <ActionPill
                     active={owned}
                     onClick={() => toggleTCGOwned(displayCard.id)}
-                    label={t('tcg.mark_owned', { defaultValue: 'Owned' })}
+                    label={t('tcg.mark_owned')}
                   />
                   <ActionPill
                     active={wishlisted}
                     onClick={() => toggleTCGWishlist(displayCard.id)}
-                    label={t('tcg.mark_wishlist', { defaultValue: 'Wishlist' })}
+                    label={t('tcg.mark_wishlist')}
                   />
                   <ActionPill
                     active={watchlisted}
                     onClick={() => toggleTCGWatchlist(displayCard.id)}
-                    label={t('tcg.mark_watchlist', { defaultValue: 'Watchlist' })}
+                    label={t('tcg.mark_watchlist')}
                   />
                 </div>
               </header>
@@ -259,13 +260,13 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                   {pokemonPageHref && (
                     <InfoItem
                       icon={ExternalLink}
-                      label={t('tcg.pokemon_page', { defaultValue: 'Pokémon page' })}
+                      label={t('tcg.pokemon_page')}
                       value={(
                         <Link
                           href={pokemonPageHref}
                           className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary/80 hover:underline"
                         >
-                          {t('tcg.open_pokemon_page', { defaultValue: 'Open Pokémon page' })}
+                          {t('tcg.open_pokemon_page')}
                         </Link>
                       )}
                     />

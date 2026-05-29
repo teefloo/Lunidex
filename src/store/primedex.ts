@@ -3,6 +3,7 @@ import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
 import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
+import type { QuizSession, ActivityAction } from '@/types/dashboard';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -109,12 +110,15 @@ interface PrimeDexStore {
   tcgOwnedCards: string[];
   tcgWishlistCards: string[];
   tcgWatchlistCards: string[];
+  tcgActiveSets: string[];
   toggleTCGOwned: (cardId: string) => void;
   toggleTCGWishlist: (cardId: string) => void;
   toggleTCGWatchlist: (cardId: string) => void;
+  toggleTCGActiveSet: (setId: string) => void;
   isTCGOwned: (cardId: string) => boolean;
   isTCGWishlist: (cardId: string) => boolean;
   isTCGWatchlist: (cardId: string) => boolean;
+  isTCGActiveSet: (setId: string) => boolean;
 
   tcgSavedSearches: TCGSavedSearch[];
   saveTCGSearch: (search: TCGSavedSearch) => void;
@@ -143,6 +147,20 @@ interface PrimeDexStore {
   hasBadge: (badgeId: string) => boolean;
 
   resetFilters: () => void;
+
+  // Dashboard / Activity tracking
+  quizHistory: QuizSession[];
+  addQuizSession: (session: QuizSession) => void;
+  currentStreak: number;
+  bestStreak: number;
+  totalQuizCorrect: number;
+  visitCount: number;
+  lastVisitDate: string | null;
+  incrementVisit: () => void;
+  viewCount: Record<number, number>;
+  incrementViewCount: (id: number) => void;
+  recentActions: ActivityAction[];
+  addAction: (action: ActivityAction) => void;
 
   // Quiz
   quizHighScores: {
@@ -291,6 +309,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgOwnedCards: [],
       tcgWishlistCards: [],
       tcgWatchlistCards: [],
+      tcgActiveSets: [],
       toggleTCGOwned: (cardId) => set((state) => ({
         tcgOwnedCards: state.tcgOwnedCards.includes(cardId)
           ? state.tcgOwnedCards.filter((id) => id !== cardId)
@@ -306,9 +325,15 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           ? state.tcgWatchlistCards.filter((id) => id !== cardId)
           : [...state.tcgWatchlistCards, cardId],
       })),
+      toggleTCGActiveSet: (setId) => set((state) => ({
+        tcgActiveSets: state.tcgActiveSets.includes(setId)
+          ? state.tcgActiveSets.filter((id) => id !== setId)
+          : [...state.tcgActiveSets, setId],
+      })),
       isTCGOwned: (cardId) => get().tcgOwnedCards.includes(cardId),
       isTCGWishlist: (cardId) => get().tcgWishlistCards.includes(cardId),
       isTCGWatchlist: (cardId) => get().tcgWatchlistCards.includes(cardId),
+      isTCGActiveSet: (setId) => get().tcgActiveSets.includes(setId),
 
       tcgSavedSearches: [],
       saveTCGSearch: (search) => set((state) => ({
@@ -376,6 +401,32 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         sortBy: 'id-asc',
       }),
 
+      // Dashboard / Activity tracking
+      quizHistory: [],
+      addQuizSession: (session) => set((state) => ({
+        quizHistory: [session, ...state.quizHistory].slice(0, 100),
+        currentStreak: session.streak > state.currentStreak ? session.streak : 0,
+        bestStreak: Math.max(state.bestStreak, session.streak),
+        totalQuizCorrect: state.totalQuizCorrect + session.correctAnswers,
+      })),
+      currentStreak: 0,
+      bestStreak: 0,
+      totalQuizCorrect: 0,
+      visitCount: 0,
+      lastVisitDate: null,
+      incrementVisit: () => set((state) => ({
+        visitCount: state.visitCount + 1,
+        lastVisitDate: new Date().toISOString(),
+      })),
+      viewCount: {},
+      incrementViewCount: (id) => set((state) => ({
+        viewCount: { ...state.viewCount, [id]: (state.viewCount[id] || 0) + 1 },
+      })),
+      recentActions: [],
+      addAction: (action) => set((state) => ({
+        recentActions: [action, ...state.recentActions].slice(0, 50),
+      })),
+
       // Quiz
       quizHighScores: {
         classic: 0,
@@ -440,12 +491,21 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         tcgOwnedCards: state.tcgOwnedCards,
         tcgWishlistCards: state.tcgWishlistCards,
         tcgWatchlistCards: state.tcgWatchlistCards,
+        tcgActiveSets: state.tcgActiveSets,
         tcgSavedSearches: state.tcgSavedSearches,
         tcgCardNotes: state.tcgCardNotes,
         team: state.team,
         history: state.history,
         badges: state.badges,
         quizHighScores: state.quizHighScores,
+        quizHistory: state.quizHistory,
+        currentStreak: state.currentStreak,
+        bestStreak: state.bestStreak,
+        totalQuizCorrect: state.totalQuizCorrect,
+        visitCount: state.visitCount,
+        lastVisitDate: state.lastVisitDate,
+        viewCount: state.viewCount,
+        recentActions: state.recentActions,
         soundEnabled: state.soundEnabled,
         theme: state.theme,
         language: state.language,

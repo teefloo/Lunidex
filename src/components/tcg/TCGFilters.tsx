@@ -56,12 +56,12 @@ export function TCGFilters({
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const { language } = usePrimeDexStore();
+  const { language, systemLanguage } = usePrimeDexStore();
   const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>('set');
   const searchTimeoutRef = useRef<number | null>(null);
   const didApplyInitialSetRef = useRef(false);
 
-  const resolvedLang = mounted ? (language === 'auto' ? 'en' : language) : 'en';
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
 
   const { data: filterOptions, isLoading } = useQuery<TCGFilterOptions>({
     queryKey: tcgKeys.filterOptions(resolvedLang),
@@ -342,10 +342,10 @@ export function TCGFilters({
         <div className="rounded-2xl border border-border/40 bg-card/45 p-4">
           <div className="flex items-center justify-between gap-2">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
-              {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
+              {t('tcg.simple_filters_title')}
             </div>
             <div className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
-              {activeFilterCount > 0 ? t('tcg.active_filters', { count: activeFilterCount }) : t('tcg.simple_filters_hint_compact', { defaultValue: 'Réglages rapides' })}
+              {activeFilterCount > 0 ? t('tcg.active_filters', { count: activeFilterCount }) : t('tcg.simple_filters_hint_compact')}
             </div>
           </div>
 
@@ -421,7 +421,7 @@ export function TCGFilters({
 
           <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/40 pt-4">
             <div className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
-              {t('tcg.simple_filters_summary', { defaultValue: 'Simple and clear' })}
+              {t('tcg.simple_filters_summary')}
             </div>
             {activeFilterCount > 0 && (
               <button
@@ -759,7 +759,7 @@ export function TCGFilters({
 
         <FilterSection
           icon={BadgeDollarSign}
-          title={t('tcg.filter_market', { defaultValue: 'Market & metadata' })}
+          title={t('tcg.filter_market')}
           isOpen={activeSection === 'research'}
           onToggle={() => setActiveSection(activeSection === 'research' ? null : 'research')}
         >

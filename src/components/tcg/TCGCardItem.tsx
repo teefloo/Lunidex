@@ -99,10 +99,10 @@ export const TCGCardItem = memo(function TCGCardItem({
                 ? 'border-rose-500/30 bg-rose-500/15 text-rose-400'
                 : 'border-border/45 bg-card/60 text-foreground/45 hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400',
             )}
-            aria-label={t('tcg.mark_favorite', { defaultValue: 'Favorite' })}
+            aria-label={t('tcg.mark_favorite')}
           >
             <Heart className="h-2 w-2" />
-            {t('tcg.favorite_short', { defaultValue: 'Favori' })}
+            {t('tcg.favorite_short')}
           </button>
           <button
             type="button"
@@ -116,10 +116,10 @@ export const TCGCardItem = memo(function TCGCardItem({
                 ? 'border-primary/30 bg-primary/12 text-primary'
                 : 'border-border/45 bg-card/60 text-foreground/45 hover:border-primary/30 hover:bg-primary/10 hover:text-primary',
             )}
-            aria-label={t('tcg.mark_watchlist', { defaultValue: 'Watchlist' })}
+            aria-label={t('tcg.mark_watchlist')}
           >
             <Eye className="h-2 w-2" />
-            {t('tcg.watchlist_short', { defaultValue: 'Suivi' })}
+            {t('tcg.watchlist_short')}
           </button>
         </div>
       </div>

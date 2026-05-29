@@ -30,13 +30,13 @@ const PAGE_SIZE = 48;
 export function TCGCardGrid() {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const { language } = usePrimeDexStore();
+  const { language, systemLanguage } = usePrimeDexStore();
   const [filters, setFilters] = useState<TCGCardFilters>(DEFAULT_TCG_CARD_FILTERS);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const resolvedLang = mounted ? (language === 'auto' ? 'en' : language) : 'en';
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
   const queryFilters = useMemo(() => normalizeFilters(filters), [filters]);
 
   const {

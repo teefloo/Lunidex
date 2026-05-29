@@ -39,9 +39,9 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { language } = usePrimeDexStore();
+  const { language, systemLanguage } = usePrimeDexStore();
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
-  const resolvedLang = mounted ? (language === 'auto' ? 'en' : language) : 'en';
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
 
   const [filters, setFilters] = useState<TCGCardFilters>(() => normalizeFilters({
     ...DEFAULT_TCG_CARD_FILTERS,
@@ -234,10 +234,8 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   return (
     <div className="space-y-6 pb-24">
       <DiscoveryHero
-        title={t('tcg.discover_title', { defaultValue: 'Trouve une carte' })}
-        subtitle={t('tcg.discover_subtitle', {
-          defaultValue: 'Cherche une carte, explore les dernières extensions et ouvre les détails en un geste.',
-        })}
+        title={t('tcg.discover_title')}
+        subtitle={t('tcg.discover_subtitle')}
         searchTerm={effectiveFilters.searchTerm ?? ''}
         latestSetName={activeSetName ?? t('tcg.unknown')}
         sortValue={sortValue}
@@ -297,8 +295,8 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
                   >
                     <ChevronRight className="h-4 w-4" />
                     {isFetchingNextPage
-                      ? t('tcg.loading_more', { defaultValue: 'Chargement' })
-                      : t('tcg.load_more_cards', { defaultValue: 'Voir plus' })}
+                      ? t('tcg.loading_more')
+                      : t('tcg.load_more_cards')}
                   </button>
                 </div>
               )}
@@ -318,7 +316,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
           <SheetHeader className="border-b border-border/50 px-5 py-4">
             <SheetTitle className="flex items-center gap-2 text-base font-black uppercase tracking-[0.2em]">
               <Filter className="h-4 w-4 text-primary" />
-              {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
+              {t('tcg.simple_filters_title')}
             </SheetTitle>
           </SheetHeader>
           <div className="max-h-[78dvh] overflow-y-auto p-4">
@@ -341,7 +339,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
           <SheetHeader className="border-b border-border/50 px-5 py-4">
             <SheetTitle className="flex items-center gap-2 text-base font-black uppercase tracking-[0.2em]">
               <Wand2 className="h-4 w-4 text-primary" />
-              {t('tcg.advanced_filters_title', { defaultValue: 'Options avancées' })}
+              {t('tcg.advanced_filters_title')}
             </SheetTitle>
           </SheetHeader>
           <div className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto p-4">
@@ -513,10 +511,10 @@ function SimpleFilterBar({
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
-            {t('tcg.simple_filters_title', { defaultValue: 'Filtres simples' })}
+            {t('tcg.simple_filters_title')}
           </div>
           <div className="mt-1 text-sm font-semibold text-foreground/70">
-            {t('tcg.simple_filters_description', { defaultValue: 'Les réglages essentiels.' })}
+            {t('tcg.simple_filters_description')}
           </div>
         </div>
         {onOpenAdvanced && (

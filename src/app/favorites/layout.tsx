@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { t } from '@/lib/server-i18n';
 
 export const metadata: Metadata = {
-  title: "Favorite Pokémon - PrimeDex",
-  description: "View your collection of favorite Pokémon. Quick access to all the Pokémon you've marked as favorites.",
+  title: t('meta.favorites_title'),
+  description: t('meta.favorites_description'),
   alternates: {
     canonical: "/favorites",
   },
@@ -11,13 +12,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Favorite Pokémon - PrimeDex",
-    description: "View your collection of favorite Pokémon.",
+    title: t('meta.favorites_title'),
+    description: t('meta.favorites_description'),
     url: "/favorites",
   },
   twitter: {
-    title: "Favorite Pokémon - PrimeDex",
-    description: "View your collection of favorite Pokémon.",
+    title: t('meta.favorites_title'),
+    description: t('meta.favorites_description'),
   },
 };
 

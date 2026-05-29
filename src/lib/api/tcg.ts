@@ -90,6 +90,12 @@ function throwIfAborted(signal?: AbortSignal) {
   throw signal.reason ?? new DOMException('Aborted', 'AbortError');
 }
 
+function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
+  if (!url) return undefined;
+  if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.webp') || url.endsWith('.svg')) return url;
+  return `${url}.png`;
+}
+
 function normaliseSet(raw: RawSet): TCGSet {
   const count =
     typeof raw.cardCount?.total === 'number'
@@ -101,8 +107,8 @@ function normaliseSet(raw: RawSet): TCGSet {
   return {
     id: raw.id,
     name: raw.name,
-    logo: raw.logo,
-    symbol: raw.symbol,
+    logo: fixTcgdexImageUrl(raw.logo),
+    symbol: fixTcgdexImageUrl(raw.symbol),
     releaseDate: raw.releaseDate,
     cardCount: raw.cardCount as TCGSet['cardCount'],
     totalCards: count,
@@ -129,6 +135,8 @@ function normaliseAbility(ability: TCGCardAbility): TCGCardAbility {
 function normaliseCard(card: TCGCard): TCGCard {
   return {
     ...card,
+    image: fixTcgdexImageUrl(card.image),
+    imageUrl: fixTcgdexImageUrl(card.imageUrl),
     category: normaliseCardCategory(card.category),
     source: card.source ?? 'TCGames',
     effect: card.effect ?? card.flavorText ?? card.description,
@@ -520,6 +528,7 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
+
 /**
  * Fetches all cards from a given set.
  */
@@ -531,7 +540,7 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
     const cached = await getCachedData<TCGCard[]>(cacheKey);
     if (cached) return cached;
 
-    const { data } = await tcgClient.get<{ cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
+    const { data } = await tcgClient.get<RawSet & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' })) || [];
 
     await setCachedData(cacheKey, cards);
@@ -543,11 +552,11 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
 };
 
 /**
- * Fetch all available expansion sets.
+ * Fetch all available expansion sets, enriched with releaseDate.
  */
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-all-sets-v5-${tcgLang}`;
+  const cacheKey = `tcg-all-sets-v6-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet[]>(cacheKey);
@@ -556,9 +565,19 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
     const { data } = await tcgClient.get<RawSet[]>(`/${tcgLang}/sets`);
     const sets = data.map(normaliseSet).filter((set) => (set.totalCards ?? 0) > 0);
 
-    const sortedSets = [...sets].sort((a, b) => {
-      const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
-      const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
+    const enrichedSets = await mapWithConcurrency(sets, 10, async (set) => {
+      if (set.releaseDate) return set;
+      try {
+        const detail = await getSetById(set.id, lang);
+        return detail?.releaseDate ? { ...set, releaseDate: detail.releaseDate } : set;
+      } catch {
+        return set;
+      }
+    });
+
+    const sortedSets = [...enrichedSets].sort((a, b) => {
+      const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+      const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
       return dateB - dateA;
     });
 

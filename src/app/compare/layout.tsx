@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { t } from '@/lib/server-i18n';
 
 export const metadata: Metadata = {
-  title: "Compare Pokémon - PrimeDex",
-  description: "Compare stats, types, abilities, and more between any two Pokémon side by side. Find out which Pokémon comes out on top.",
+  title: t('meta.compare_title'),
+  description: t('meta.compare_description'),
   alternates: {
     canonical: "/compare",
   },
@@ -11,13 +12,13 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Compare Pokémon - PrimeDex",
-    description: "Compare stats, types, abilities, and more between any two Pokémon side by side.",
+    title: t('meta.compare_title'),
+    description: t('meta.compare_description'),
     url: "/compare",
   },
   twitter: {
-    title: "Compare Pokémon - PrimeDex",
-    description: "Compare stats, types, abilities, and more between any two Pokémon side by side.",
+    title: t('meta.compare_title'),
+    description: t('meta.compare_description'),
   },
 };
 

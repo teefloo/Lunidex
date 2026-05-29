@@ -27,7 +27,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
             className="glass-control mt-8 inline-flex items-center gap-2 px-5 py-2.5 text-xs font-black uppercase tracking-[0.2em]"
           >
             <ArrowLeft className="h-4 w-4" />
-            {t('tcg.back_to_catalog', { defaultValue: 'Back to catalog' })}
+            {t('tcg.back_to_catalog')}
           </button>
         </div>
       </div>
@@ -44,7 +44,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
           className="glass-control mb-6 inline-flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-[0.2em]"
         >
           <ArrowLeft className="h-4 w-4" />
-          {t('common.back', { defaultValue: 'Back' })}
+          {t('common.back')}
         </button>
         <TCGCardDetailModal card={card} isOpen onClose={() => router.push('/tcg')} />
       </div>

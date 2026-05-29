@@ -3,7 +3,6 @@
 import i18n from 'i18next';
 import type { TOptions } from 'i18next';
 import { initReactI18next, useTranslation as useReactTranslation } from 'react-i18next';
-import { useMemo } from 'react';
 import enTranslations from './i18n/en';
 import { useMounted } from '@/hooks/useMounted';
 import type { SupportedLanguage } from './languages';
@@ -62,16 +61,8 @@ export const loadLanguage = async (lang: string): Promise<void> => {
 export const useTranslation = () => {
   const mounted = useMounted();
   const translation = useReactTranslation();
-
-  const t = useMemo(() => {
-    if (mounted) return translation.t;
-    return i18n.getFixedT('en', 'translation');
-  }, [mounted, translation.t]);
-
-  return {
-    ...translation,
-    t,
-  };
+  const t = mounted ? translation.t : i18n.getFixedT('en', 'translation');
+  return { ...translation, t };
 };
 export const t = (key: string, options?: TOptions) => i18n.t(key, options);
 

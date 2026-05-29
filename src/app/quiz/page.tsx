@@ -100,9 +100,12 @@ function QuizPageContent() {
   const [isDaily, setIsDaily] = useState(false);
   const [dailyIndex, setDailyIndex] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [sessionStreak, setSessionStreak] = useState(0);
   
   const { t } = useTranslation();
-  const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges } = usePrimeDexStore();
+  const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore();
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
 
@@ -244,6 +247,9 @@ function QuizPageContent() {
     setLives(3);
     setTimeLeft(30);
     setWrongAnswers(0);
+    setTotalQuestions(0);
+    setCorrectCount(0);
+    setSessionStreak(0);
     
     const today = new Date().toISOString().split('T')[0];
     const firstRng = daily ? seededRandom(`${today}-0`) : Math.random;
@@ -275,8 +281,11 @@ function QuizPageContent() {
     const correct = option === currentPokemon.name;
     setIsCorrect(correct);
     setGameState('answered');
+    setTotalQuestions(q => q + 1);
 
     if (correct) {
+      setCorrectCount(c => c + 1);
+      setSessionStreak(s => s + 1);
       setScore(s => {
         const newScore = s + (gameMode === 'time-attack' ? 10 : 1);
         
@@ -302,6 +311,7 @@ function QuizPageContent() {
         setTimeout(startNewRound, 1500);
       }
     } else {
+      setSessionStreak(0);
       if (isDaily) {
         setDailyIndex(i => i + 1);
       }
@@ -331,8 +341,26 @@ function QuizPageContent() {
   useEffect(() => {
     if (gameState === 'finished' && !isDaily) {
       updateQuizHighScore(quizChallenge, score);
+      addQuizSession({
+        id: `${quizChallenge}-${Date.now()}`,
+        date: new Date().toISOString(),
+        challenge: quizChallenge,
+        mode: gameMode,
+        score,
+        totalQuestions,
+        correctAnswers: correctCount,
+        wrongAnswers: totalQuestions - correctCount,
+        streak: sessionStreak,
+      });
+      addAction({
+        id: `quiz-${Date.now()}`,
+        date: new Date().toISOString(),
+        type: 'quiz',
+        label: `Played ${gameMode} ${quizChallenge} quiz`,
+        details: `Score: ${score}`,
+      });
     }
-  }, [gameState, quizChallenge, score, updateQuizHighScore, isDaily]);
+  }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak]);
 
   useEffect(() => {
     if (gameMode === 'time-attack' && (gameState === 'playing' || gameState === 'answered')) {

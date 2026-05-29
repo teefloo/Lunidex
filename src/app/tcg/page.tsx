@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
+import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { t } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
@@ -29,6 +30,7 @@ export default function TCGPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
+        <TCGPageTabs />
         <TCGResearchDesk initialLatestSet={DEFAULT_LATEST_TCG_SET} />
       </main>
     </div>

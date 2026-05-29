@@ -1,22 +1,23 @@
 import { Metadata } from 'next';
+import { t } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Pokémon Moves — All Moves Database | PrimeDex',
-  description: 'Browse all Pokémon moves with detailed stats, effects, and compatible Pokémon. Search and filter by type, category, power, and more.',
+  title: t('moves_page.title'),
+  description: t('moves_page.subtitle'),
   alternates: {
     canonical: '/moves',
   },
   openGraph: {
-    title: 'Pokémon Moves — All Moves Database | PrimeDex',
-    description: 'Browse all Pokémon moves with detailed stats, effects, and compatible Pokémon.',
+    title: t('moves_page.title'),
+    description: t('moves_page.subtitle'),
     url: '/moves',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pokémon Moves — All Moves Database | PrimeDex',
-    description: 'Browse all Pokémon moves with detailed stats, effects, and compatible Pokémon.',
+    title: t('moves_page.title'),
+    description: t('moves_page.subtitle'),
   },
 };
 
@@ -33,10 +34,10 @@ export default function MovesLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'Pokémon Moves Database — PrimeDex',
+            name: t('moves_page.title'),
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
-            description: 'Complete database of all Pokémon moves with detailed stats, effects, and compatible Pokémon lists.',
+            description: t('moves_page.subtitle'),
             url: `${SITE_URL}/moves`,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
           }),
