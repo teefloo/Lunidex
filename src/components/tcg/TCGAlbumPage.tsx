@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowLeft, Search, X } from 'lucide-react';
+import { ArrowLeft, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
@@ -50,14 +50,6 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
     }
     return result;
   }, [sortedCards, search, rarityFilter]);
-
-  const uniqueRarities = useMemo(() => {
-    const rarities = new Set<string>();
-    for (const c of cards) {
-      if (c.rarity) rarities.add(c.rarity);
-    }
-    return [...rarities].sort();
-  }, [cards]);
 
   if (!mounted) return null;
 

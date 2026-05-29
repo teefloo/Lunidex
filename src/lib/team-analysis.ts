@@ -115,12 +115,14 @@ export function analyzeTeam(
 
     Object.entries(pokemonEffectiveness).forEach(([type, mult]) => {
       if (mult > 1) {
-        defensive[type]--;
-        weaknessesCount[type]++;
+        // Scale penalty by multiplier: 2x = -1, 4x = -2
+        defensive[type] -= Math.round(Math.log2(mult));
+        weaknessesCount[type] += Math.round(Math.log2(mult));
       }
       if (mult < 1 && mult > 0) {
-        defensive[type]++;
-        resistancesCount[type]++;
+        // Scale bonus by multiplier: 0.5x = +1, 0.25x = +2
+        defensive[type] += Math.round(Math.log2(1 / mult));
+        resistancesCount[type] += Math.round(Math.log2(1 / mult));
       }
       if (mult === 0) {
         defensive[type] += 2; // Immunities are highly valued

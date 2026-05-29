@@ -7,7 +7,7 @@ import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_URL } from '@/lib/site';
 import { PokemonCard, PokemonCardSkeleton } from './PokemonCard';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Loader2, RotateCcw, SearchX } from 'lucide-react';
 import { PokemonBasicData, GraphQLPokemonSummary, LocalizedNameEntry, PokemonSpecies } from '@/types/pokemon';
 import { Badge } from '@/components/ui/badge';
@@ -73,7 +73,6 @@ export default function PokemonList() {
   const storeResetFilters = usePrimeDexStore(s => s.resetFilters);
   const resetFilters = () => {
     storeResetFilters();
-    setDisplayLimit(40);
   };
 
   const resolvedLang = language === 'auto' ? systemLanguage : language;
@@ -227,11 +226,15 @@ export default function PokemonList() {
       }));
   }, [allDetailed]);
 
-  const [displayLimit, setDisplayLimit] = useState(20);
+  const filterKey = `${searchTerm}-${selectedTypes.join(',')}-${selectedGeneration}-${showFavoritesOnly}-${isLegendary}-${isMythical}-${selectedEggGroups.join(',')}-${selectedColors.join(',')}-${selectedShapes.join(',')}-${minBaseStats}-${minAttack}-${minDefense}-${minSpeed}-${minHp}-${heightRange[0]}-${heightRange[1]}-${weightRange[0]}-${weightRange[1]}-${isBasicMode}-${showCaughtOnly}`;
 
-  useEffect(() => {
+  const [displayLimit, setDisplayLimit] = useState(20);
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
     setDisplayLimit(20);
-  }, [searchTerm, selectedTypes, selectedGeneration, showFavoritesOnly, isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes, minBaseStats, minAttack, minDefense, minSpeed, minHp, heightRange, weightRange, isBasicMode, showCaughtOnly]);
+  }
 
   const filteredAndSortedResults = useMemo(() => {
     let results: PokemonResultItem[] = [];

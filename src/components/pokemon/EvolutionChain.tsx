@@ -12,7 +12,7 @@ import { REST_API_BASE } from '@/lib/api/client';
 import apiClient from '@/lib/api/client';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
-import { getFormDisplayName } from '@/lib/form-names';
+import { getFormDisplayName, getBaseSpeciesName } from '@/lib/form-names';
 import { cn, formatId } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 
@@ -35,10 +35,6 @@ interface AlternateForm {
   name: string;
   id: number;
   formType: string;
-}
-
-function getBaseSpeciesName(name: string): string {
-  return name.split(/-(mega|mega-x|mega-y|primal|ultra|gmax|gigantamax|alola|galar|hisui|paldea|therian|origin|sky|school|ash|hero|complete|terastal|stellar|pirouette|rock-star|pop-star|cosplay|partner|original-cap|hoenn-cap|sinnoh-cap|unova-cap|kalos-cap|alola-cap|partner-cap|world-cap|original|unbound|confined|ice|shadow|plant|sandy|trash|sun|moon|stand|believe|await|grow|protag|legend|world|baile|pompom|pawget|bravel|dusk|dawn|midnight|erosion|valiant|blade)/)[0] || name;
 }
 
 function collectAllSpeciesNames(node: ChainLink): string[] {

@@ -98,11 +98,11 @@ export default function TeamPage() {
     if (pokemonData.length === 0 || typeRelationsQueries.some(q => q.isLoading)) return null;
 
     const relationsMap: Record<string, TypeRelations> = {};
-    const allTypes = pokemonData.flatMap(p => p.types.map(t => t.type.name));
+    const uniqueTypes = [...new Set(pokemonData.flatMap(p => p.types.map(t => t.type.name)))];
     
     typeRelationsQueries.forEach((q, i) => {
       if (q.data) {
-        const typeName = allTypes[i];
+        const typeName = uniqueTypes[i];
         if (typeName) relationsMap[typeName] = q.data;
       }
     });

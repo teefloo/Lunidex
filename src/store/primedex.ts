@@ -405,7 +405,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       quizHistory: [],
       addQuizSession: (session) => set((state) => ({
         quizHistory: [session, ...state.quizHistory].slice(0, 100),
-        currentStreak: session.streak > state.currentStreak ? session.streak : 0,
+        currentStreak: session.streak,
         bestStreak: Math.max(state.bestStreak, session.streak),
         totalQuizCorrect: state.totalQuizCorrect + session.correctAnswers,
       })),

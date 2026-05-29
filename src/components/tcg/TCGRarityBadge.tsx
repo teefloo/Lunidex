@@ -1,6 +1,5 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 const RARITY_TONES: Record<string, { bg: string; text: string; border: string }> = {

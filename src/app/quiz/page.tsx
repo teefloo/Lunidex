@@ -363,7 +363,7 @@ function QuizPageContent() {
   }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak]);
 
   useEffect(() => {
-    if (gameMode === 'time-attack' && (gameState === 'playing' || gameState === 'answered')) {
+    if (gameMode === 'time-attack' && gameState === 'playing') {
       const timer = setInterval(() => {
         setTimeLeft(t => {
           if (t <= 1) {

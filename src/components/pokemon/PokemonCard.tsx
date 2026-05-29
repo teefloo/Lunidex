@@ -187,6 +187,8 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const pokemon = displayData.pokemon as Partial<PokemonDetail> & GqlPokemonData;
   const pokemonId = pokemon.id || 0;
 
+  if (!pokemonId) return null;
+
   const isFav = mounted && favorites.includes(pokemonId);
   const isComp = mounted && compareList.includes(pokemonId);
   const isTeam = mounted && team.includes(pokemonId);

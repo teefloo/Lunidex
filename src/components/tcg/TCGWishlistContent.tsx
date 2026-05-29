@@ -13,7 +13,6 @@ import {
   getWishlistSuggestions,
   sortByRarityWeight,
   formatWishlistCopyPaste,
-  getRarityLabel,
 } from '@/lib/tcg-collection';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGRarityBadge } from './TCGRarityBadge';

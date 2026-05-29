@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { getAllSets, getCardsBySet } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';

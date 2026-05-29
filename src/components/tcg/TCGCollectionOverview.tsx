@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Search, Trophy, Sparkles, ChevronDown } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -13,8 +12,6 @@ import {
   getSetCompletion,
   computeCollectionStats,
   getRarestOwnedCards,
-  getRarityColor,
-  sortByRarityWeight,
 } from '@/lib/tcg-collection';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGRarityBadge } from './TCGRarityBadge';
@@ -128,7 +125,7 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
             </h2>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {rarest.map((card, i) => (
+            {rarest.map((card) => (
               <Link
                 key={card.id}
                 href={`/tcg/collection/${card.set?.id}?card=${card.id}`}

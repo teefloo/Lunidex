@@ -216,6 +216,8 @@ export const getAllPokemonSummary = async (): Promise<GraphQLPokemonSummary[]> =
     await setCachedData(cacheKey, results);
     return results;
   } catch (error) {
+    const cachedFallback = await getCachedData<GraphQLPokemonSummary[]>(cacheKey, true);
+    if (cachedFallback) return cachedFallback;
     throw error;
   }
 };
@@ -256,6 +258,8 @@ export const getAllPokemonSearchIndex = async (): Promise<GraphQLPokemonSearchIn
     await setCachedData(cacheKey, results);
     return results;
   } catch (error) {
+    const cachedFallback = await getCachedData<GraphQLPokemonSearchIndex[]>(cacheKey, true);
+    if (cachedFallback) return cachedFallback;
     throw error;
   }
 };
