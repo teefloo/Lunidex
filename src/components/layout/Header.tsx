@@ -2,7 +2,6 @@
 
 import Link, { LinkProps } from 'next/link';
 import {
-  Settings,
   Sun,
   Moon,
   Heart,
@@ -45,7 +44,6 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
-import SettingsModal from './SettingsModal';
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -74,7 +72,6 @@ function HeaderLink({ children, href, variant, size, className, ...props }: Head
 
 export default function Header() {
   const {
-    toggleSettings,
     theme,
     setTheme,
     caughtPokemon,
@@ -166,7 +163,6 @@ export default function Header() {
   const menuLabel = mounted ? (t('header.open_menu') || 'Menu') : 'Menu';
   const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
   const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
-  const settingsLabel = mounted ? t('settings.title') : 'Settings';
 
   const isDark = mounted && (
     theme === 'dark' ||
@@ -219,12 +215,13 @@ export default function Header() {
                   <span suppressHydrationWarning className="min-w-[4.4rem] text-[8px] font-black uppercase tracking-[0.22em] text-foreground/70 md:text-[9px]">
                     {mounted ? caughtCount : 0} / 1025
                   </span>
-                  <div className="h-[2px] w-7 overflow-hidden rounded-full bg-muted/70">
+                  <div className="h-[2px] w-7 overflow-hidden rounded-full bg-muted/70" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-primary to-teal-400 transition-[width] duration-700 ease-out"
                       style={{ width: `${mounted ? progressPercent : 0}%` }}
                     />
                   </div>
+                  <span className="sr-only">{mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}</span>
                 </div>
               </div>
             </Link>
@@ -347,22 +344,6 @@ export default function Header() {
               </TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger>
-                <button
-                  type="button"
-                  onClick={toggleSettings}
-                  className="glass-control flex h-8 w-8 items-center justify-center text-foreground/70 hover:scale-105 hover:rotate-45 hover:border-border/80 hover:bg-muted/55 hover:text-foreground active:scale-95"
-                  aria-label={settingsLabel}
-                >
-                  <Settings className="h-4 w-4 md:h-[18px] md:w-[18px]" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs font-bold">
-                {settingsLabel}
-              </TooltipContent>
-            </Tooltip>
-
             <div className="flex items-center lg:hidden">
               <Sheet>
                 <SheetTrigger
@@ -458,6 +439,8 @@ export default function Header() {
               <div
                 className="glass-surface !overflow-hidden rounded-xl p-2 w-72"
                 style={dropdownStyle}
+                role="listbox"
+                aria-label={t('search.results_aria', { defaultValue: 'Search results' })}
               >
                 <div className="flex flex-col gap-1">
                   {searchResults.map((pokemon) => {
@@ -477,6 +460,8 @@ export default function Header() {
                             setLocalSearch('');
                             setIsSearchFocused(false);
                           }}
+                        role="option"
+                        aria-selected={false}
                         className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-muted/70 group/item"
                       >
                         <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border/60 bg-muted/60 p-1">
@@ -499,7 +484,6 @@ export default function Header() {
             )}
         </div>
       </header>
-      <SettingsModal />
     </>
   );
 }

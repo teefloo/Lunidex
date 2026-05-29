@@ -80,7 +80,7 @@ export function useDashboardData(): {
       favoriteCount: favorites.length,
       teamCount: team.length,
       quizHighScore: quizHighScores.classic,
-      quizHighScoreTA: quizHighScores.classic,
+      quizHighScoreTA: quizHighScores.timeAttack,
       quizHighScoreSilhouette: quizHighScores.silhouette,
       quizHighScoreStats: quizHighScores.stats,
       totalQuizSessions: quizHistory.length,
@@ -222,7 +222,9 @@ export function useDashboardData(): {
         profile: {
           displayName: 'Trainer',
           avatarPokemonId: favorites.length > 0 ? favorites[0] : null,
-          memberSince: history.length > 0 ? null : null,
+          memberSince: recentActions.length > 0
+            ? recentActions[recentActions.length - 1].date
+            : null,
         },
         badges: {
           all: badgeStatusesWithUnlock,

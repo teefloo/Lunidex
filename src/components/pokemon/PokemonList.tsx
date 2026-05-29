@@ -231,7 +231,7 @@ export default function PokemonList() {
   const [displayLimit, setDisplayLimit] = useState(20);
   const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
 
-  if (filterKey !== prevFilterKey) {
+  if (prevFilterKey !== filterKey) {
     setPrevFilterKey(filterKey);
     setDisplayLimit(20);
   }
@@ -453,12 +453,17 @@ export default function PokemonList() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
       {!isBasicMode && (
-        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-secondary/10 rounded-2xl border border-border/40 mx-2 mt-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-secondary/10 rounded-2xl border border-border/40 mx-2 mt-4" role="status" aria-live="polite">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">{t('list.results')}</span>
             <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
               {filteredAndSortedResults?.length ?? 0}
             </Badge>
+            {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
+              <span className="text-[10px] text-foreground/50">
+                {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
+              </span>
+            )}
           </div>
           <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 text-[11px] md:text-[10px] font-black uppercase tracking-widest gap-1.5">
             <RotateCcw className="w-3 h-3" /> {t('filters.clear_all')}
@@ -481,13 +486,21 @@ export default function PokemonList() {
             onClick={handleLoadMore}
             disabled={isFetchingNextPage || (!hasNextPage && !hasMoreFiltered)}
             className="rounded-full px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2"
+            aria-label={isFetchingNextPage ? t('list.loading_more') : t('list.load_more')}
           >
             {isFetchingNextPage ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" /> {t('list.loading_more')}
               </>
             ) : (
-              t('list.load_more')
+              <>
+                {t('list.load_more')}
+                {!isBasicMode && filteredAndSortedResults && (
+                  <span className="text-foreground/50 font-normal normal-case tracking-normal">
+                    ({displayedPokemon.length} / {filteredAndSortedResults.length})
+                  </span>
+                )}
+              </>
             )}
           </Button>
         </div>

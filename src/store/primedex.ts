@@ -167,8 +167,9 @@ interface PrimeDexStore {
     classic: number;
     silhouette: number;
     stats: number;
+    timeAttack: number;
   };
-  updateQuizHighScore: (mode: 'classic' | 'silhouette' | 'stats', score: number) => void;
+  updateQuizHighScore: (mode: 'classic' | 'silhouette' | 'stats' | 'timeAttack', score: number) => void;
 
   // Settings
   isSettingsOpen: boolean;
@@ -432,11 +433,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         classic: 0,
         silhouette: 0,
         stats: 0,
+        timeAttack: 0,
       },
       updateQuizHighScore: (mode, score) => set((state) => ({
         quizHighScores: {
           ...state.quizHighScores,
-          [mode]: Math.max(state.quizHighScores[mode], score)
+          [mode]: Math.max(state.quizHighScores[mode as keyof typeof state.quizHighScores] || 0, score)
         }
       })),
 

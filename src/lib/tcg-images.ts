@@ -2,11 +2,16 @@ import type { TCGCard } from '@/types/tcg';
 
 const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
 
+function appendFormat(base: string, ext: string): string {
+  if (/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i.test(base)) return base;
+  return `${base}/${ext}`;
+}
+
 export function getTCGCardImageCandidates(card: TCGCard): string[] {
   const candidates = [
-    card.image ? `${card.image}/high.webp` : null,
-    card.image ? `${card.image}/high.png` : null,
-    card.image ? `${card.image}/high.jpg` : null,
+    card.image ? appendFormat(card.image, 'high.webp') : null,
+    card.image ? appendFormat(card.image, 'high.png') : null,
+    card.image ? appendFormat(card.image, 'high.jpg') : null,
     card.image ?? null,
     card.imageUrl ?? null,
     TCG_CARD_PLACEHOLDER,

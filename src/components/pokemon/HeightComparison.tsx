@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 
 import Image from 'next/image';
@@ -13,6 +13,7 @@ interface HeightComparisonProps {
 
 export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: HeightComparisonProps) {
   const { t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   
   // Convert to meters
   const heightInMeters = pokemonHeight / 10;
@@ -42,7 +43,7 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
         {/* Human Side */}
         <div className="flex flex-col items-center z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="relative flex items-end justify-center"
             style={{ height: 200 }}
@@ -51,8 +52,13 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
               viewBox="0 0 24 24" 
               style={{ height: humanDisplayHeight }}
               className="fill-foreground/20 dark:fill-foreground/15 drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]"
+              role="img"
+              aria-label={t('detail.human')}
             >
-              <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" />
+              <circle cx="12" cy="4" r="2.5" />
+              <path d="M9 8.5c0-.8 1.3-1.5 3-1.5s3 .7 3 1.5v1c.8.5 1.5 1.5 1.5 2.5v3c0 .4-.1.8-.3 1.1l1.3.9v4.7h-1.8v-4l-1.1-.7h-1.6l-1.1.7v4H8.8v-4.7l1.3-.9c-.2-.3-.3-.7-.3-1.1v-3c0-1 .7-2 1.5-2.5v-1Z" />
+              <path d="M7.2 10.5c.3-.3.8-.1 1 .2l.8 2c.1.2 0 .4-.1.6l-.7.6v4.2h-1.2v-4.5l.7-.7c.2-.2.3-.3.5-.1l-.1-.4-.9-2.1Z" />
+              <path d="M16.8 10.5c-.3-.3-.8-.1-1 .2l-.8 2c-.1.2 0 .4.1.6l.7.6v4.2h1.2v-4.5l-.7-.7c-.2-.2-.3-.3-.5-.1l.1-.4.9-2.1Z" />
             </svg>
             
             {/* Measurement Line */}
@@ -70,19 +76,19 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
         {/* Pokemon Side */}
         <div className="flex flex-col items-center z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
+            transition={{ delay: prefersReducedMotion ? 0 : 0.3, type: "spring", stiffness: 100 }}
             className="relative flex items-end justify-center"
             style={{ height: 200 }}
           >
             <motion.div
               style={{ height: pokemonDisplayHeight, width: pokemonDisplayHeight }}
               className="relative brightness-0 opacity-20 dark:opacity-30 drop-shadow-[0_0_15px_rgba(227,53,13,0.3)]"
-              animate={{ 
+              animate={prefersReducedMotion ? undefined : { 
                 opacity: [0.2, 0.4, 0.2],
               }}
-              transition={{ 
+              transition={prefersReducedMotion ? undefined : { 
                 duration: 3, 
                 repeat: Infinity,
                 ease: "easeInOut" 

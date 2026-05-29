@@ -415,7 +415,7 @@ function DiscoveryHero({
             type="text"
             value={searchTerm}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Chercher une carte..."
+            placeholder={t('tcg.search_placeholder')}
             className="h-14 w-full rounded-[1.25rem] border border-border/55 bg-card/55 pl-14 pr-4 text-sm font-semibold text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
           />
         </div>
@@ -458,7 +458,7 @@ function DiscoveryHero({
             className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Dernières cartes
+            {t('tcg.latest_cards')}
           </button>
           <button
             type="button"
@@ -466,7 +466,7 @@ function DiscoveryHero({
             className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary lg:hidden"
           >
             <Filter className="h-3.5 w-3.5" />
-            Filtres
+            {t('tcg.simple_filters_title')}
           </button>
           <button
             type="button"
@@ -474,7 +474,7 @@ function DiscoveryHero({
             className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
-            Options avancees
+            {t('tcg.advanced_filters_title')}
           </button>
           {searchTerm && (
             <button
@@ -482,7 +482,7 @@ function DiscoveryHero({
               onClick={onClearSearch}
               className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500"
             >
-              Effacer
+              {t('tcg.clear')}
             </button>
           )}
         </div>
@@ -524,7 +524,7 @@ function SimpleFilterBar({
             className="inline-flex h-10 items-center gap-2 rounded-full border border-border/45 bg-card/55 px-3 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <Wand2 className="h-3.5 w-3.5" />
-            Avanc�
+            {t('tcg.advanced_filters_title')}
           </button>
         )}
       </div>
@@ -550,14 +550,18 @@ function ResultSummary({
   activeSetName: string | null;
   isFetching: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3">
       <div className="space-y-1">
         <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
-          {isFetching ? 'Actualisation des cartes' : 'Cartes trouvees'}
+          {isFetching ? t('tcg.refreshing') : t('tcg.cards_found')}
         </div>
         <div className="text-sm font-semibold text-foreground/70">
-          {activeSetName ? `${formatCount(count)} cartes dans ${activeSetName}` : `${formatCount(count)} cartes`}
+          {activeSetName
+            ? t('tcg.card_count_in_set', { count, set: activeSetName })
+            : t('tcg.results_count', { count })
+          }
         </div>
       </div>
     </div>
@@ -589,16 +593,17 @@ function EmptyState({
   onLatest: () => void;
   onPikachu: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-border/50 bg-card/35 px-6 py-20 text-center">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
           <Sparkles className="h-7 w-7" />
         </div>
       <h2 className="text-2xl font-black uppercase tracking-[0.16em] text-foreground">
-        Aucun resultat
+        {t('tcg.no_cards')}
       </h2>
       <p className="mt-3 max-w-md text-sm leading-7 text-foreground/50">
-        Essaie sans filtre, ou pars d’une carte connue pour retrouver rapidement ce que tu cherches.
+        {t('tcg.no_results_hint')}
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <button
@@ -606,21 +611,21 @@ function EmptyState({
           onClick={onClear}
           className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
-          Effacer les filtres
+          {t('tcg.reset_filters')}
         </button>
         <button
           type="button"
           onClick={onLatest}
           className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
-          Voir les derni�res cartes
+          {t('tcg.latest_cards')}
         </button>
         <button
           type="button"
           onClick={onPikachu}
           className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
-          Chercher Pikachu
+          {t('tcg.search_pikachu')}
         </button>
       </div>
     </div>
@@ -640,9 +645,6 @@ function CardGridSkeleton() {
   );
 }
 
-function formatCount(count: number) {
-  return new Intl.NumberFormat().format(count);
-}
 
 function normalizeFilters(filters: TCGCardFilters): TCGCardFilters {
   return {

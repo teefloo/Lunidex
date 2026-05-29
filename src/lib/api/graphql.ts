@@ -16,11 +16,11 @@ function describeGraphQLResponse(value: unknown) {
   }
 }
 
-const fetchBatch = async <T>(query: string, cacheKey: string): Promise<T[]> => {
+const fetchBatch = async <T>(query: string, cacheKey: string, variables?: Record<string, unknown>): Promise<T[]> => {
   const cached = await getCachedData<T[]>(cacheKey, true);
   if (cached) return cached;
 
-  const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query });
+  const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query, variables });
   
   if (!data?.data?.pokemon_v2_pokemon) {
     throw new Error(`Invalid GraphQL response in fetchBatch: ${describeGraphQLResponse(data)}`);
@@ -131,7 +131,7 @@ const buildPokemonSearchSelection = () => `
 
 const fetchPokemonBatches = async <T>(
   cacheBase: string,
-  buildQuery: (offset: number, limit: number) => string,
+  buildQuery: (offset: number, limit: number) => { query: string; variables: Record<string, unknown> },
   batchSize: number,
 ): Promise<T[][]> => {
   const batches: T[][] = [];
@@ -139,8 +139,8 @@ const fetchPokemonBatches = async <T>(
 
   while (true) {
     const cacheKey = getBatchCacheKey(cacheBase, Math.floor(offset / batchSize));
-    const query = buildQuery(offset, batchSize);
-    const batch = await fetchBatch<T>(query, cacheKey);
+    const { query, variables } = buildQuery(offset, batchSize);
+    const batch = await fetchBatch<T>(query, cacheKey, variables);
     batches.push(batch);
 
     if (batch.length < batchSize) {
@@ -155,7 +155,7 @@ const fetchPokemonBatches = async <T>(
 
 const fetchMoveBatches = async <T>(
   cacheBase: string,
-  buildQuery: (offset: number, limit: number) => string,
+  buildQuery: (offset: number, limit: number) => { query: string; variables: Record<string, unknown> },
   batchSize: number,
 ): Promise<T[][]> => {
   const batches: T[][] = [];
@@ -173,8 +173,8 @@ const fetchMoveBatches = async <T>(
       continue;
     }
 
-    const query = buildQuery(offset, batchSize);
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query });
+    const { query, variables } = buildQuery(offset, batchSize);
+    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query, variables });
 
     if (!data?.data?.pokemon_v2_move) {
       throw new Error(`Invalid GraphQL response in fetchMoveBatches: ${describeGraphQLResponse(data)}`);
@@ -203,13 +203,16 @@ export const getAllPokemonSummary = async (): Promise<GraphQLPokemonSummary[]> =
   try {
     const batches = await fetchPokemonBatches<GraphQLPokemonSummary>(
       'all-pokemon-summary-paginated-v1',
-      (offset, limit) => `
-        query {
-          pokemon_v2_pokemon(limit: ${limit}, offset: ${offset}, order_by: {id: asc}) {
-            ${buildPokemonSummarySelection()}
+      (offset, limit) => ({
+        query: `
+          query GetAllPokemonSummary($limit: Int!, $offset: Int!) {
+            pokemon_v2_pokemon(limit: $limit, offset: $offset, order_by: {id: asc}) {
+              ${buildPokemonSummarySelection()}
+            }
           }
-        }
-      `,
+        `,
+        variables: { limit, offset },
+      }),
       BATCH_SIZE,
     );
     const results = batches.flat();
@@ -225,13 +228,16 @@ export const getAllPokemonSummary = async (): Promise<GraphQLPokemonSummary[]> =
 export const getAllPokemonSummaryPaginated = async (): Promise<GraphQLPokemonSummary[][]> => {
   return fetchPokemonBatches<GraphQLPokemonSummary>(
     'all-pokemon-summary-paginated-v1',
-    (offset, limit) => `
-      query {
-        pokemon_v2_pokemon(limit: ${limit}, offset: ${offset}, order_by: {id: asc}) {
-          ${buildPokemonSummarySelection()}
+    (offset, limit) => ({
+      query: `
+        query GetAllPokemonSummaryPaginated($limit: Int!, $offset: Int!) {
+          pokemon_v2_pokemon(limit: $limit, offset: $offset, order_by: {id: asc}) {
+            ${buildPokemonSummarySelection()}
+          }
         }
-      }
-    `,
+      `,
+      variables: { limit, offset },
+    }),
     BATCH_SIZE,
   );
 };
@@ -245,13 +251,16 @@ export const getAllPokemonSearchIndex = async (): Promise<GraphQLPokemonSearchIn
   try {
     const batches = await fetchPokemonBatches<GraphQLPokemonSearchIndex>(
       'all-pokemon-search-index-paginated-v1',
-      (offset, limit) => `
-        query {
-          pokemon_v2_pokemon(limit: ${limit}, offset: ${offset}, order_by: {id: asc}) {
-            ${buildPokemonSearchSelection()}
+      (offset, limit) => ({
+        query: `
+          query GetAllPokemonSearchIndex($limit: Int!, $offset: Int!) {
+            pokemon_v2_pokemon(limit: $limit, offset: $offset, order_by: {id: asc}) {
+              ${buildPokemonSearchSelection()}
+            }
           }
-        }
-      `,
+        `,
+        variables: { limit, offset },
+      }),
       SEARCH_BATCH_SIZE,
     );
     const results = batches.flat();
@@ -317,13 +326,16 @@ export const getAllPokemonDetailed = async (): Promise<PokemonBasicData[]> => {
 export const getAllPokemonDetailedPaginated = async (): Promise<PokemonBasicData[][]> => {
   return fetchPokemonBatches<PokemonBasicData>(
     'all-pokemon-detailed-paginated-v2',
-    (offset, limit) => `
-      query {
-        pokemon_v2_pokemon(limit: ${limit}, offset: ${offset}, order_by: {id: asc}) {
-          ${buildPokemonDetailedSelection()}
+    (offset, limit) => ({
+      query: `
+        query GetAllPokemonDetailedPaginated($limit: Int!, $offset: Int!) {
+          pokemon_v2_pokemon(limit: $limit, offset: $offset, order_by: {id: asc}) {
+            ${buildPokemonDetailedSelection()}
+          }
         }
-      }
-    `,
+      `,
+      variables: { limit, offset },
+    }),
     BATCH_SIZE,
   );
 };
@@ -424,37 +436,40 @@ export const getAllMoves = async (languageId: number): Promise<GraphQLMoveData[]
   try {
     const batches = await fetchMoveBatches<GraphQLMoveData>(
       'all-moves-paginated-v2',
-      (offset, limit) => `
-        query GetAllMoves {
-          pokemon_v2_move(limit: ${limit}, offset: ${offset}, order_by: {id: asc}) {
-            id
-            name
-            power
-            accuracy
-            pp
-            priority
-            generation_id
-            pokemon_v2_type {
+      (offset, limit) => ({
+        query: `
+          query GetAllMoves($limit: Int!, $offset: Int!, $languageId: Int!) {
+            pokemon_v2_move(limit: $limit, offset: $offset, order_by: {id: asc}) {
+              id
               name
-            }
-            pokemon_v2_movedamageclass {
-              name
-            }
-            pokemon_v2_movenames(where: {language_id: {_eq: ${languageId}}}) {
-              name
-            }
-            pokemon_v2_moveflavortexts(where: {language_id: {_eq: ${languageId}}}, limit: 1) {
-              flavor_text
-            }
-            pokemon_v2_moveeffect {
-              pokemon_v2_moveeffecteffecttexts(where: {language_id: {_eq: ${languageId}}}) {
-                short_effect
-                effect
+              power
+              accuracy
+              pp
+              priority
+              generation_id
+              pokemon_v2_type {
+                name
+              }
+              pokemon_v2_movedamageclass {
+                name
+              }
+              pokemon_v2_movenames(where: {language_id: {_eq: $languageId}}) {
+                name
+              }
+              pokemon_v2_moveflavortexts(where: {language_id: {_eq: $languageId}}, limit: 1) {
+                flavor_text
+              }
+              pokemon_v2_moveeffect {
+                pokemon_v2_moveeffecteffecttexts(where: {language_id: {_eq: $languageId}}) {
+                  short_effect
+                  effect
+                }
               }
             }
           }
-        }
-      `,
+        `,
+        variables: { limit, offset, languageId },
+      }),
       MOVE_BATCH_SIZE,
     );
 

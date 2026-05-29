@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+import { PokeballLoader } from '@/components/ui/PokeballLoader';
 import { t } from '@/lib/server-i18n';
 
 export default function Loading() {
@@ -6,7 +6,7 @@ export default function Loading() {
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 backdrop-blur-2xl">
       <div role="status" aria-live="polite" className="relative">
         <div className="absolute inset-x-2 bottom-0 h-8 rounded-full bg-primary/10 animate-pulse" />
-        <Loader2 className="w-16 h-16 animate-spin text-primary relative z-10" />
+        <PokeballLoader className="w-16 h-16 relative z-10" />
         <span className="sr-only">{t('loading.title')}</span>
       </div>
       <p className="page-eyebrow mt-8 justify-center">PrimeDex</p>

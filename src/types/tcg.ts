@@ -135,8 +135,6 @@ export interface TCGSet {
   };
 }
 
-export type TCgSet = TCGSet;
-
 export interface TCGFilterOptions {
   categories?: TCGCardCategoryFilter[];
   sets?: TCGSet[];

@@ -1036,6 +1036,13 @@ export default {
         wishlist_empty_desc: 'Add cards from albums or mark sets as "in progress"',
         no_suggestions: 'No suggestions available',
         no_suggestions_desc: 'Mark sets as "in progress" in your collection to see suggestions',
+        latest_cards: 'Latest Cards',
+        clear: 'Clear',
+        refreshing: 'Refreshing cards',
+        cards_found: 'Cards found',
+        no_results_hint: 'Try without a filter, or start from a known card to quickly find what you\'re looking for.',
+        card_count_in_set: '{{count}} cards in {{set}}',
+        search_pikachu: 'Search Pikachu',
     },
     capabilities: {
       abilities: {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTCGCard } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
@@ -28,5 +29,6 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
+  if (!card) notFound();
   return <TCGCardDetailRoute card={card} />;
 }

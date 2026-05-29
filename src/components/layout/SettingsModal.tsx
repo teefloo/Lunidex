@@ -4,10 +4,31 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation, loadLanguage } from '@/lib/i18n';
+import { useEffect, useRef, useCallback } from 'react';
 
 export default function SettingsModal() {
   const { isSettingsOpen, toggleSettings, soundEnabled, toggleSound, theme, setTheme, language, setLanguage, systemLanguage } = usePrimeDexStore();
   const { t, i18n } = useTranslation();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isSettingsOpen) {
+      toggleSettings();
+    }
+  }, [isSettingsOpen, toggleSettings]);
+
+  useEffect(() => {
+    if (isSettingsOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+      closeButtonRef.current?.focus();
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = '';
+      };
+    }
+  }, [isSettingsOpen, handleEscape]);
 
   const themeOptions = [
     { value: 'light' as const, label: t('settings.light'), icon: Sun },
@@ -53,6 +74,7 @@ export default function SettingsModal() {
           />
 
           <motion.div
+            ref={dialogRef}
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -65,8 +87,9 @@ export default function SettingsModal() {
             <div className="relative z-10 flex justify-between items-center mb-8 pb-4 border-b border-border/60">
               <h2 className="text-2xl font-black text-foreground tracking-tight">{t('settings.title')}</h2>
               <button
+                ref={closeButtonRef}
                 onClick={toggleSettings}
-                className="rounded-full border border-transparent p-2 text-foreground/50 transition-colors hover:bg-muted/55 hover:text-foreground"
+                className="rounded-full border border-transparent p-2 text-foreground/50 transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={t('settings.close')}
                 title={t('settings.close')}
               >

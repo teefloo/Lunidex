@@ -141,14 +141,13 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   }
 
   // Try species for the form name first, fall back to base name for mega/primal/ultra
-  const [speciesData, localizedData, encountersData, fallbackSpeciesData] = await Promise.all([
+  const [speciesData, localizedData, encountersData] = await Promise.all([
     getPokemonSpecies(baseName).catch(() => null),
     getLocalizedPokemonData(name, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
     getPokemonEncounters(pokemon.id).catch(() => []),
-    Promise.resolve(null),
   ]);
 
-  species = speciesData || fallbackSpeciesData;
+  species = speciesData;
   localized = localizedData;
   encounters = encountersData;
 
@@ -159,7 +158,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
 
   // JSON-LD structured data for Pokemon
-    const jsonLd = {
+  const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Thing',
     name: displayName,

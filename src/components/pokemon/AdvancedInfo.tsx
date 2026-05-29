@@ -37,7 +37,7 @@ export function AdvancedInfo({ pokemon, species }: AdvancedInfoProps) {
           <div>
             <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-2">{t('detail.egg_groups')}</p>
             <div className="flex flex-wrap gap-2">
-              {species.egg_groups.map(group => (
+              {(species?.egg_groups ?? []).map(group => (
                 <span key={group.name} className="px-3 py-1 bg-background/50 rounded-lg text-[11px] font-bold text-foreground/70 capitalize border border-border/40">
                   {t(`egg_groups.${group.name}`)}
                 </span>
@@ -81,26 +81,26 @@ export function AdvancedInfo({ pokemon, species }: AdvancedInfoProps) {
           <div>
             <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-1">{t('detail.catch_rate')}</p>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black text-foreground/90">{species.capture_rate}</span>
+              <span className="text-lg font-black text-foreground/90">{species?.capture_rate ?? '—'}</span>
               <div className="flex-1 h-1.5 rounded-full bg-card/50 overflow-hidden">
-                <div className="h-full bg-yellow-500" style={{ width: `${(species.capture_rate / 255) * 100}%` }} />
+                <div className="h-full bg-yellow-500" style={{ width: `${((species?.capture_rate ?? 0) / 255) * 100}%` }} />
               </div>
             </div>
           </div>
           <div>
             <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-1">{t('detail.base_happiness')}</p>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black text-foreground/90">{species.base_happiness}</span>
+              <span className="text-lg font-black text-foreground/90">{species?.base_happiness ?? '—'}</span>
               <Heart className="w-3.5 h-3.5 text-red-500/50" />
             </div>
           </div>
           <div>
             <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-1">{t('detail.base_exp')}</p>
-            <p className="text-lg font-black text-foreground/90">{pokemon.base_experience}</p>
+            <p className="text-lg font-black text-foreground/90">{pokemon?.base_experience ?? '—'}</p>
           </div>
           <div>
             <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-1">{t('detail.growth_rate')}</p>
-            <p className="text-xs font-black text-foreground/70 capitalize">{t(`growth_rates.${species.growth_rate.name}`)}</p>
+            <p className="text-xs font-black text-foreground/70 capitalize">{t(`growth_rates.${species?.growth_rate?.name ?? 'unknown'}`)}</p>
           </div>
         </div>
       </div>

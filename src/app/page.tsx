@@ -41,7 +41,7 @@ export default async function Home() {
       <div className="app-page">
         <Header />
 
-        <main className="relative z-10 pt-28 pb-8 md:pt-32">
+        <main id="main-content" className="relative z-10 pt-28 pb-8 md:pt-32">
           <HeroSection />
 
           <PokemonList />

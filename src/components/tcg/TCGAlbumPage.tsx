@@ -31,6 +31,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
   const ownedIds = useMemo(() => new Set(ownedList), [ownedList]);
   const [search, setSearch] = useState('');
   const [rarityFilter, setRarityFilter] = useState<string | null>(null);
+  const [showMissingOnly, setShowMissingOnly] = useState(false);
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,8 +49,11 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
     if (rarityFilter) {
       result = result.filter((c => (c.rarity ?? '').toLowerCase() === rarityFilter.toLowerCase()));
     }
+    if (showMissingOnly) {
+      result = result.filter((c) => !ownedIds.has(c.id));
+    }
     return result;
-  }, [sortedCards, search, rarityFilter]);
+  }, [sortedCards, search, rarityFilter, showMissingOnly, ownedIds]);
 
   if (!mounted) return null;
 
@@ -124,8 +128,12 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
         {missingCards.length > 0 && (
           <button
             type="button"
-            onClick={() => setRarityFilter(null)}
-            className="shrink-0 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] text-rose-400 transition-colors hover:bg-rose-500/20"
+            onClick={() => setShowMissingOnly((prev) => !prev)}
+            className={`shrink-0 rounded-full border px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] transition-colors ${
+              showMissingOnly
+                ? 'border-rose-500/50 bg-rose-500/20 text-rose-300'
+                : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
+            }`}
           >
             {t('tcg.collection_missing')} ({missingCards.length})
           </button>

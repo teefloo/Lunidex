@@ -191,8 +191,8 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               className={cn('card__image', imageClassName)}
               onError={() => {
                 setImageIndex((current) => {
-                  const nextIndex = Math.min(current + 1, imageCandidates.length - 1);
-                  return nextIndex;
+                  if (current >= imageCandidates.length - 1) return current;
+                  return current + 1;
                 });
               }}
             />

@@ -662,8 +662,9 @@ export const searchCards = async (
     let remotePage = 1;
     let hasMoreRemote = true;
     const targetCount = safePage * safeLimit + 1;
+    const MAX_REMOTE_PAGES = 30;
 
-    while (hasMoreRemote && (requiresFullDatasetSort || cards.length < targetCount)) {
+    while (hasMoreRemote && (requiresFullDatasetSort || cards.length < targetCount) && remotePage <= MAX_REMOTE_PAGES) {
       const pageQuery = buildCardQueryParams(queryFilters, remotePage, safeLimit).toString();
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
@@ -682,7 +683,7 @@ export const searchCards = async (
         : normalized;
       const pageCards = hydrated.filter((card) => cardMatchesLocalFilters(card, filters));
       cards.push(...pageCards);
-      hasMoreRemote = Array.isArray(data) ? data.length > limit : false;
+      hasMoreRemote = Array.isArray(data) ? data.length > safeLimit : false;
       remotePage += 1;
     }
 

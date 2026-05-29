@@ -159,7 +159,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           </motion.div>
         ) : (
           <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-xl text-[10px] font-bold text-foreground/30 uppercase tracking-wider">
-            {t('types_page.hover_hint', { defaultValue: 'Survolez une case pour voir le multiplicateur' })}
+            {t('types_page.hover_hint', { defaultValue: 'Hover over a cell to see the multiplier' })}
           </div>
         )}
 

@@ -52,7 +52,7 @@ export default function CompareBar() {
                   <div className="glass-card flex h-14 w-14 items-center justify-center rounded-xl p-2">
                     {q.isLoading ? (
                       <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                    ) : p ? (
+                    ) : p?.sprites?.front_default ? (
                       <Image 
                         src={p.sprites.front_default} 
                         alt={p.name} 
@@ -61,7 +61,11 @@ export default function CompareBar() {
                         sizes="40px"
                         className="w-full h-full object-contain filter drop-shadow-md"
                       />
-                    ) : null}
+                    ) : (
+                      <div className="w-10 h-10 bg-background/50 rounded-lg flex items-center justify-center text-foreground/30 text-xs font-bold">
+                        {p?.name?.charAt(0).toUpperCase() ?? '?'}
+                      </div>
+                    )}
                   </div>
                   <button 
                     onClick={() => removeFromCompare(id)}

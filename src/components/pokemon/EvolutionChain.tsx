@@ -130,7 +130,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
     ? getFormDisplayName(name, baseLocalizedName, resolvedLang)
     : baseLocalizedName;
 
-  const hasError = pokemonError && speciesError;
+  const hasError = pokemonError || speciesError;
   const hasPartialData = pokemonData || speciesData;
 
   return (
@@ -212,7 +212,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
     ? getFormDisplayName(form.name, baseLocalizedName, resolvedLang)
     : baseLocalizedName;
 
-  const formConfig: Record<string, {
+  const formConfig = useMemo((): Record<string, {
     badge: string;
     gradient: string;
     border: string;
@@ -224,7 +224,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
     badgeText: string;
     badgeBorder: string;
     textHover: string;
-  }> = {
+  }> => ({
     mega: {
       badge: t('detail.alternate_badge_mega'),
       gradient: 'from-purple-500/20 to-yellow-500/20',
@@ -849,7 +849,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
       badgeBorder: 'border-blue-500/30',
       textHover: 'group-hover:text-blue-400',
     },
-  };
+  }), [t]);
 
   const config = formConfig[form.formType] || formConfig.standard;
 

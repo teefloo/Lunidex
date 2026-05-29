@@ -135,6 +135,7 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
           { key: 'stats', icon: <BarChart3 className="w-3 h-3" />, color: 'text-rose-500' },
         ].map((cat) => {
           const stats = quiz.perCategory[cat.key as keyof typeof quiz.perCategory];
+          if (!stats) return null;
           return (
             <div
               key={cat.key}

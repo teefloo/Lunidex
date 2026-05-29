@@ -1,17 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700" role="img" aria-labelledby="title desc">
   <title id="title">PrimeDex card placeholder</title>
   <desc id="desc">A minimal placeholder illustration for missing Pokemon TCG artwork.</desc>
+
+  <!-- Card body -->
   <rect width="500" height="700" rx="36" fill="#10131a"/>
   <rect x="24" y="24" width="452" height="652" rx="28" fill="#171b24" stroke="#31384a" stroke-width="3"/>
+
+  <!-- Header bar -->
   <rect x="58" y="62" width="384" height="76" rx="20" fill="#23293a"/>
-  <circle cx="118" cy="100" r="20" fill="#e3530d" opacity="0.9"/>
-  <circle cx="118" cy="100" r="9" fill="#ffffff" opacity="0.92"/>
+
+  <!-- Header Pokeball icon -->
+  <circle cx="100" cy="100" r="18" fill="none" stroke="#e3530d" stroke-width="2.5" opacity="0.9"/>
+  <line x1="82" y1="100" x2="118" y2="100" stroke="#e3530d" stroke-width="2.5" opacity="0.9"/>
+  <circle cx="100" cy="100" r="5" fill="#e3530d" opacity="0.9"/>
+  <circle cx="100" cy="100" r="3" fill="#171b24"/>
+
+  <!-- Art window -->
   <rect x="58" y="170" width="384" height="390" rx="28" fill="url(#g)" stroke="#2e3546" stroke-width="2"/>
-  <path d="M120 520c48-72 94-108 138-108s90 36 138 108" fill="none" stroke="#5b6477" stroke-width="18" stroke-linecap="round"/>
-  <circle cx="250" cy="352" r="74" fill="none" stroke="#5b6477" stroke-width="18"/>
-  <circle cx="250" cy="352" r="20" fill="#5b6477"/>
-  <path d="M72 594h356" stroke="#23293a" stroke-width="2"/>
-  <text x="250" y="632" fill="#7d8798" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" text-anchor="middle" letter-spacing="4">POKEMON</text>
+
+  <!-- Pokeball watermark — clipped to stay inside the circle -->
+  <defs>
+    <clipPath id="ball-clip">
+      <circle cx="250" cy="365" r="90"/>
+    </clipPath>
+  </defs>
+  <g opacity="0.07" clip-path="url(#ball-clip)">
+    <!-- Outer ring -->
+    <circle cx="250" cy="365" r="90" fill="none" stroke="#fff" stroke-width="3"/>
+    <!-- Top half fill -->
+    <path d="M160 365 A90 90 0 0 1 340 365 Z" fill="#fff" opacity="0.4"/>
+    <!-- Horizontal band -->
+    <rect x="160" y="361" width="180" height="8" fill="#fff" opacity="0.6"/>
+    <!-- Center button outer -->
+    <circle cx="250" cy="365" r="22" fill="none" stroke="#fff" stroke-width="3"/>
+    <!-- Center button inner -->
+    <circle cx="250" cy="365" r="10" fill="#fff" opacity="0.5"/>
+  </g>
+
+  <!-- Divider -->
+  <line x1="80" y1="590" x2="420" y2="590" stroke="#23293a" stroke-width="2"/>
+
+  <!-- Text -->
+  <text x="250" y="632" fill="#7d8798" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle" letter-spacing="6">POKEMON</text>
+
   <defs>
     <linearGradient id="g" x1="58" y1="170" x2="442" y2="560" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#1f2534"/>

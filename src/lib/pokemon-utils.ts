@@ -46,13 +46,13 @@ export const getThemeColor = (type: string) => {
   return TYPE_COLORS[type] || '#A8A77A';
 };
 
-export const getTypeGradient = (types: string[]) => {
-  if (types.length === 0) return 'from-slate-400 to-slate-600';
+export const getTypeGradientStyle = (types: string[]): React.CSSProperties => {
+  if (types.length === 0) return { background: 'linear-gradient(to bottom right, #94a3b8, #475569)' };
   if (types.length === 1) {
     const color = getThemeColor(types[0]);
-    return `from-[${color}] to-[${color}]`;
+    return { background: `linear-gradient(to bottom right, ${color}, ${color})` };
   }
-  return `from-[${getThemeColor(types[0])}] to-[${getThemeColor(types[1])}]`;
+  return { background: `linear-gradient(to bottom right, ${getThemeColor(types[0])}, ${getThemeColor(types[1])})` };
 };
 
 /**

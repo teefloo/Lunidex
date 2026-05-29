@@ -18,9 +18,7 @@ import {
   Share,
   Volume2,
   Play,
-  BrainCircuit,
   MapPin,
-  Target,
   SearchX,
   Sparkles
 } from 'lucide-react';
@@ -73,6 +71,7 @@ import { HeldItem } from '@/lib/held-items';
 
 import Image from 'next/image';
 import { ShinyIcon } from '@/components/ui/ShinyIcon';
+import { PokeballIcon } from '@/components/ui/PokeballIcon';
 
 function ItemCard({ item, language }: { item: HeldItem; language: string }) {
   const [imgError, setImgError] = useState(false);
@@ -93,7 +92,7 @@ function ItemCard({ item, language }: { item: HeldItem; language: string }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-foreground/30">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+            <PokeballIcon className="w-5 h-5" aria-hidden="true" />
           </div>
         )}
       </div>
@@ -257,7 +256,6 @@ export function PokemonDetailClient({
   const mainType = pokemon.types[0].type.name;
   const color = TYPE_COLORS[mainType] || '#A8A77A';
   
-  const typeLabel = pokemon.types.map((typeItem) => t(`types.${typeItem.type.name}`)).join(' / ');
   const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name 
     || species?.names?.find(n => n.language.name === resolvedLang)?.name
     || species?.names?.find(n => n.language.name === 'en')?.name
@@ -285,8 +283,8 @@ export function PokemonDetailClient({
   const maleGenderRate = femaleGenderRate === null ? null : 100 - femaleGenderRate;
 
   const artwork = showShiny 
-    ? (pokemon.sprites.other['official-artwork'].front_shiny || pokemon.sprites.front_shiny)
-    : (pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default);
+    ? (pokemon.sprites.other?.['official-artwork']?.front_shiny || pokemon.sprites.front_shiny)
+    : (pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default);
 
   const playCry = async (type: 'latest' | 'legacy') => {
     if (!soundEnabled) return;
@@ -655,8 +653,9 @@ export function PokemonDetailClient({
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.abilities')}
                   </h3>
                   <div className="grid grid-cols-1 gap-3">
-                    {[...pokemon.abilities].sort((a, b) => a.ability.name.localeCompare(b.ability.name)).map((a, idx) => {
-                      const abilityData = abilityQueries[idx]?.data;
+                    {pokemon.abilities.map((_, i) => i).sort((a, b) => pokemon.abilities[a].ability.name.localeCompare(pokemon.abilities[b].ability.name)).map((originalIdx) => {
+                      const a = pokemon.abilities[originalIdx];
+                      const abilityData = abilityQueries[originalIdx]?.data;
                       let description = t('detail.no_ability_desc');
                       let localizedName = formatName(a.ability.name);
                       let battleDesc = '';
@@ -692,7 +691,7 @@ export function PokemonDetailClient({
                               <span className="font-black text-sm text-foreground/80 group-hover:text-primary transition-colors">{localizedName}</span>
                               {a.is_hidden && <span className="px-1.5 py-0.5 bg-primary/20 text-[11px] md:text-[10px] font-black text-primary uppercase tracking-tighter rounded">{t('detail.hidden')}</span>}
                             </div>
-                            {abilityQueries[idx]?.isLoading && <Loader2 className="w-3 h-3 animate-spin text-primary/50" />}
+                            {abilityQueries[originalIdx]?.isLoading && <Loader2 className="w-3 h-3 animate-spin text-primary/50" />}
                           </div>
                           {battleDesc && (
                             <div className="flex items-start gap-2 p-2.5 bg-primary/5 border border-primary/10 rounded-xl">
@@ -735,7 +734,7 @@ export function PokemonDetailClient({
                 <HeightComparison 
                   pokemonHeight={pokemon.height} 
                   pokemonName={displayName} 
-                  pokemonImage={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}
+                  pokemonImage={pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default}
                 />
               </div>
             </TabsContent>
@@ -930,131 +929,6 @@ export function PokemonDetailClient({
             {/* Builds Tab */}
             <TabsContent value="builds" className="space-y-6">
               <PokemonBuilds pokemon={pokemon} />
-            </TabsContent>
-
-            {/* Infos Tab (Educational) */}
-            <TabsContent value="infos" className="space-y-6">
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
-                <h3 className="text-2xl font-black mb-8 border-b border-border/60 pb-4 flex items-center gap-3">
-                  <div className="p-2 bg-purple-500/10 rounded-xl">
-                    <BrainCircuit className="w-6 h-6 text-purple-500" />
-                  </div>
-                  {t('detail.battle_guide')}
-                </h3>
-
-                <div className="space-y-8">
-                  <div className="bg-secondary/20 p-6 rounded-2xl border border-border/40">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-foreground/60 mb-4 flex items-center gap-2">
-                      <Swords className="w-4 h-4 text-primary" /> {t('detail.suggested_role')}
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {pokemon.stats.find(s => s.stat.name === 'speed')?.base_stat ? pokemon.stats.find(s => s.stat.name === 'speed')!.base_stat > 100 && (
-                        <div className="p-4 bg-background/40 rounded-2xl border border-border/40">
-                          <p className="text-xs font-black text-primary uppercase mb-1">{t('detail.roles.fast_sweeper.title')}</p>
-                          <p className="text-[11px] text-foreground/50 leading-relaxed">{t('detail.roles.fast_sweeper.desc')}</p>
-                        </div>
-                      ) : null}
-                      {((pokemon.stats.find(s => s.stat.name === 'attack')?.base_stat || 0) > 100 || (pokemon.stats.find(s => s.stat.name === 'special-attack')?.base_stat || 0) > 100) && (
-                        <div className="p-4 bg-background/40 rounded-2xl border border-border/40">
-                          <p className="text-xs font-black text-red-500 uppercase mb-1">{t('detail.roles.wall_breaker.title')}</p>
-                          <p className="text-[11px] text-foreground/50 leading-relaxed">{t('detail.roles.wall_breaker.desc')}</p>
-                        </div>
-                      )}
-                      {((pokemon.stats.find(s => s.stat.name === 'defense')?.base_stat || 0) > 100 || (pokemon.stats.find(s => s.stat.name === 'special-defense')?.base_stat || 0) > 100) && (
-                        <div className="p-4 bg-background/40 rounded-2xl border border-border/40">
-                          <p className="text-xs font-black text-blue-500 uppercase mb-1">{t('detail.roles.tank.title')}</p>
-                          <p className="text-[11px] text-foreground/50 leading-relaxed">{t('detail.roles.tank.desc')}</p>
-                        </div>
-                      )}
-                      <div className="p-4 bg-background/40 rounded-2xl border border-border/40">
-                        <p className="text-xs font-black text-green-500 uppercase mb-1">{t('detail.roles.strategic.title')}</p>
-                        <p className="text-[11px] text-foreground/50 leading-relaxed">{t('detail.roles.strategic.desc')}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-secondary/20 p-6 rounded-2xl border border-border/40">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-foreground/60 mb-6 flex items-center gap-2">
-                      <Target className="w-4 h-4 text-orange-500" /> {t('detail.type_matchups')}
-                    </h4>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {/* Weaknesses */}
-                      <div className="space-y-4">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60 flex items-center gap-2">
-                          <ShieldAlert className="w-3 h-3" /> {t('detail.receives_double')}
-                        </p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {effectiveness?.weaknesses.map(([type, mult]) => (
-                            <div key={type} className="flex items-center justify-between p-2 rounded-xl bg-background/40 border border-border/40">
-                              <span className="text-[10px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black opacity-40">x{mult}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Resistances */}
-                      <div className="space-y-4">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60 flex items-center gap-2">
-                          <ShieldCheck className="w-3 h-3" /> {t('detail.resists_damage')}
-                        </p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {effectiveness?.resistances.map(([type, mult]) => (
-                            <div key={type} className="flex items-center justify-between p-2 rounded-xl bg-background/40 border border-border/40">
-                              <span className="text-[10px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black opacity-40">x{mult}</span>
-                            </div>
-                          ))}
-                          {effectiveness?.immunities.map(([type]) => (
-                            <div key={type} className="flex items-center justify-between p-2 rounded-xl bg-background/40 border border-blue-500/20">
-                              <span className="text-[10px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black text-blue-400">{t('detail.immune')}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-secondary/20 p-6 rounded-2xl border border-border/40">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-foreground/60 mb-4 flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-yellow-500" /> {t('detail.type_synergy')}
-                    </h4>
-                    <p className="text-xs text-foreground/50 leading-relaxed mb-4">
-                      {t('detail.type_synergy_desc', { name: displayName, types: typeLabel })}
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-foreground/40 mb-1">{t('detail.growth_rate')}</p>
-                        <ul className="space-y-2">
-                          <li className="text-[11px] text-foreground/60 flex items-start gap-2">
-                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                            <span>{t('detail.offensive_tip_1')}</span>
-                          </li>
-                          <li className="text-[11px] text-foreground/60 flex items-start gap-2">
-                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                            <span>{t('detail.offensive_tip_2')}</span>
-                          </li>
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('detail.defensive_tips')}</p>
-                        <ul className="space-y-2">
-                          <li className="text-[11px] text-foreground/60 flex items-start gap-2">
-                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                            <span>{t('detail.defensive_tip_1')}</span>
-                          </li>
-                          <li className="text-[11px] text-foreground/60 flex items-start gap-2">
-                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                            <span>{t('detail.defensive_tip_2')}</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </TabsContent>
 
             {/* Locations Tab */}

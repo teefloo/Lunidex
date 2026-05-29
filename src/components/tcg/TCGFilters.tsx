@@ -83,8 +83,9 @@ export function TCGFilters({
     enabled: shouldFetchSetRarities,
   });
 
+  // Assumes `value` matches the type expected by `key` — callers are internal filter controls only.
   const updateFilter = useCallback(
-    (key: keyof TCGCardFilters, value: unknown) => {
+    (key: keyof TCGCardFilters, value: TCGCardFilters[keyof TCGCardFilters]) => {
       onChange({ ...filters, [key]: value } as TCGCardFilters);
     },
     [filters, onChange],

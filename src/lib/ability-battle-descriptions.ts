@@ -478,7 +478,7 @@ export const ABILITY_BATTLE_DESCRIPTIONS: Record<string, AbilityBattleDesc> = {
     ko: "풀HP 시 받는 데미지 절반. 멀티스케일과 동일 — 루나아라의 압도적인 쌓기 기회.",
   },
   "wonder-guard": {
-    en: "Only super-effective moves hit. Extremely restrictive but incredibly powerful — only non-super-effective moves can damage this Pokémon.",
+    en: "Only super-effective moves can hit. All other moves deal no damage.",
     fr: "Seules les capacités super efficaces touchent. Extrêmement restrictif mais incroyablement puissant — seules les capacités super efficaces peuvent blesser ce Pokémon.",
     es: "Solo movimientos super efectivos golpean. Extremadamente restrictivo pero increíblemente poderoso — solo movimientos super efectivos pueden dañar este Pokémon.",
     de: "Nur superschädigende Attacken treffen. Extrem einschränkend aber unglaublich mächtig — nur superschädigende Attacken können dieses Pokémon verletzen.",

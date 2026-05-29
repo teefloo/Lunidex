@@ -9,9 +9,9 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { memo, useCallback } from 'react';
-import type { CSSProperties, KeyboardEvent, MouseEvent } from 'react';
+import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -85,7 +85,6 @@ export function PokemonCardSkeleton() {
 
 export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialData }: PokemonCardProps) {
   const { t } = useTranslation();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const mounted = useMounted();
 
@@ -168,17 +167,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     });
   }, [name, queryClient]);
 
-  const openPokemonDetail = useCallback(() => {
-    router.push(`/pokemon/${name}`);
-  }, [name, router]);
-
-  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openPokemonDetail();
-    }
-  };
-
   if (isLoading && !displayData) {
     return <PokemonCardSkeleton />;
   }
@@ -249,13 +237,10 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const cardShadow = `0 18px 48px -34px ${hexToRgba(color, 0.42)}, inset 0 1px 0 rgba(255, 255, 255, 0.06)`;
 
   return (
-    <div
-      role="link"
-      tabIndex={0}
+    <Link
+      href={`/pokemon/${name}`}
       aria-label={cardLabel}
-      className="relative block h-full cursor-pointer py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      onClick={openPokemonDetail}
-      onKeyDown={handleCardKeyDown}
+      className="relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-2xl"
       onMouseEnter={prefetchDetails}
     >
       <div
@@ -285,7 +270,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-2 left-2 z-20 flex min-h-[32px] min-w-[32px] items-center justify-center rounded-full border shadow-lg transition-all duration-400 hover:scale-110 active:scale-95 sm:bottom-3 sm:left-3 sm:min-h-[40px] sm:min-w-[40px]',
+            'absolute bottom-2 left-2 z-20 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border shadow-lg transition-all duration-400 hover:scale-110 active:scale-95 sm:bottom-3 sm:left-3',
             caught
               ? 'border-primary/45 bg-primary text-primary-foreground shadow-sm'
               : 'border-border/60 bg-background/75 text-foreground/70 backdrop-blur-md hover:bg-muted/70 hover:text-foreground/90'
@@ -314,7 +299,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 disabled={!isTeam && teamFull}
                 aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
                 className={cn(
-                  'flex min-h-[32px] min-w-[32px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 sm:min-h-[38px] sm:min-w-[38px] sm:p-2',
+                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
                   isTeam
                     ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.25)]'
                     : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90',
@@ -330,7 +315,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 disabled={!isComp && compareFull}
                 aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
                 className={cn(
-                  'flex min-h-[32px] min-w-[32px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 sm:min-h-[38px] sm:min-w-[38px] sm:p-2',
+                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
                   isComp
                     ? 'border-primary/30 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.25)]'
                     : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90',
@@ -345,7 +330,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 onClick={toggleFavorite}
                 aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
                 className={cn(
-                  'flex min-h-[32px] min-w-[32px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 sm:min-h-[38px] sm:min-w-[38px] sm:p-2',
+                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
                   isFav
                     ? 'border-rose-500/30 bg-rose-500/20 text-rose-400 shadow-[0_0_16px_rgba(244,63,94,0.25)]'
                     : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90'
@@ -395,6 +380,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
       </div>
-    </div>
+      </Link>
   );
 });

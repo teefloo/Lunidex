@@ -190,27 +190,32 @@ function QuizPageContent() {
     setSelectedOption(null);
     setIsCorrect(null);
     
-    const detail = await getPokemonDetail(pokemon.name);
-    setCurrentPokemon(detail);
+    try {
+      const detail = await getPokemonDetail(pokemon.name);
+      setCurrentPokemon(detail);
 
-    const otherOptions: string[] = [];
-    const mainPool = allNames || [];
-    
-    const today = new Date().toISOString().split('T')[0];
-    const rngSeed = isDaily ? `${today}-${dailyIndex}` : Math.random().toString();
-    const rng = seededRandom(`options-${rngSeed}`);
-    
-    while (otherOptions.length < 3) {
-      const idx = Math.floor(rng() * mainPool.length);
-      const p = mainPool[idx];
-      if (p.name !== pokemon.name && !otherOptions.includes(p.name)) {
-        otherOptions.push(p.name);
+      const otherOptions: string[] = [];
+      const mainPool = allNames || [];
+      
+      const today = new Date().toISOString().split('T')[0];
+      const rngSeed = isDaily ? `${today}-${dailyIndex}` : Math.random().toString();
+      const rng = seededRandom(`options-${rngSeed}`);
+      
+      while (otherOptions.length < 3) {
+        const idx = Math.floor(rng() * mainPool.length);
+        const p = mainPool[idx];
+        if (p.name !== pokemon.name && !otherOptions.includes(p.name)) {
+          otherOptions.push(p.name);
+        }
       }
-    }
 
-    setOptions([pokemon.name, ...otherOptions].sort(() => rng() - 0.5));
-    setGameState('playing');
-  }, [allNames, getNextPokemon, isDaily, dailyIndex, gameState]);
+      setOptions([pokemon.name, ...otherOptions].sort(() => rng() - 0.5));
+      setGameState('playing');
+    } catch {
+      toast.error(t('quiz.fetch_failed'));
+      setGameState('idle');
+    }
+  }, [allNames, getNextPokemon, isDaily, dailyIndex, gameState, t]);
 
   const startGame = async (challenge: QuizChallenge, mode: GameMode = 'marathon', daily: boolean = false) => {
     setGameState('loading');
@@ -316,24 +321,21 @@ function QuizPageContent() {
         setDailyIndex(i => i + 1);
       }
       if (gameMode === 'survival') {
-        setLives(l => {
-          if (l <= 1) {
-            setGameState('finished');
-            return 0;
-          }
+        const newLives = lives - 1;
+        setLives(newLives);
+        if (newLives <= 0) {
+          setGameState('finished');
+        } else {
           setTimeout(startNewRound, 2000);
-          return l - 1;
-        });
+        }
       } else if (gameMode === 'marathon') {
-        setWrongAnswers(w => {
-          const newW = w + 1;
-          if (newW >= 5) {
-            setGameState('finished');
-            return 5;
-          }
+        const newWrong = wrongAnswers + 1;
+        setWrongAnswers(newWrong);
+        if (newWrong >= 5) {
+          setGameState('finished');
+        } else {
           setTimeout(startNewRound, 2000);
-          return newW;
-        });
+        }
       }
     }
   };
@@ -341,6 +343,9 @@ function QuizPageContent() {
   useEffect(() => {
     if (gameState === 'finished' && !isDaily) {
       updateQuizHighScore(quizChallenge, score);
+      if (gameMode === 'time-attack') {
+        updateQuizHighScore('timeAttack', score);
+      }
       addQuizSession({
         id: `${quizChallenge}-${Date.now()}`,
         date: new Date().toISOString(),
