@@ -24,10 +24,10 @@ export default async function HeroSection() {
         <p className="mt-3 text-base md:text-lg text-foreground/70 max-w-2xl">
           {description}
         </p>
-      </div>
 
-      <div className="mt-8 md:mt-10">
-        <HeroControls />
+        <div className="mt-8 md:mt-10">
+          <HeroControls />
+        </div>
       </div>
     </section>
   );
