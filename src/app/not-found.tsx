@@ -1,19 +1,25 @@
 import Link from 'next/link';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 import NotFoundMiniGame from '@/components/layout/NotFoundMiniGame';
-import { t } from '@/lib/server-i18n';
+import { getServerT } from '@/lib/server-i18n';
 
-export const metadata: Metadata = {
-  title: 'Page Not Found | PrimeDex',
-  description: 'The page you are looking for does not exist. Browse our complete Pokédex with all 1025 Pokémon.',
-  robots: {
-    index: false,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  return {
+    title: t('common.not_found_title', { defaultValue: 'Page Not Found' }) + ' | PrimeDex',
+    description: t('common.not_found_desc', {
+      defaultValue: "The Pokémon you're looking for might have fled! The page doesn't exist or has been moved.",
+    }),
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
+}
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getServerT();
   return (
     <div className="page-shell min-h-screen px-4 py-8 text-foreground md:py-12">
       <div className="not-found-layout mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(22rem,0.75fr)] lg:items-stretch">

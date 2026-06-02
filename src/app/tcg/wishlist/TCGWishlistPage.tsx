@@ -9,6 +9,7 @@ import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { TCGWishlistContent } from '@/components/tcg/TCGWishlistContent';
 
 export function TCGWishlistPage() {
@@ -56,6 +57,7 @@ export function TCGWishlistPage() {
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
         <TCGPageTabs />
+        <TCGDataLangBanner resolvedLang={resolvedLang} />
         <div className="mb-6">
           <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
             {t('tcg.wishlist_title')}

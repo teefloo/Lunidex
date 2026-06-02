@@ -15,13 +15,15 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
-import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, searchCards } from '@/lib/api/tcg';
+import { persistLanguageCookie } from '@/lib/i18n';
+import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import type { TCGCard, TCGCardFilters } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGFilters } from './TCGFilters';
+import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
 
 const PAGE_SIZE = 24;
@@ -233,6 +235,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
 
   return (
     <div className="space-y-6 pb-24">
+      <TCGDataLangBanner resolvedLang={resolvedLang} />
       <DiscoveryHero
         title={t('tcg.discover_title')}
         subtitle={t('tcg.discover_subtitle')}
@@ -594,6 +597,13 @@ function EmptyState({
   onPikachu: () => void;
 }) {
   const { t } = useTranslation();
+  const setLanguage = usePrimeDexStore((s) => s.setLanguage);
+  const language = usePrimeDexStore((s) => s.language);
+  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
+  const mounted = useMounted();
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const isLimited = isTcgLangLimited(resolvedLang);
+
   return (
     <div className="flex flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-border/50 bg-card/35 px-6 py-20 text-center">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
@@ -606,6 +616,18 @@ function EmptyState({
         {t('tcg.no_results_hint')}
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {isLimited && (
+          <button
+            type="button"
+            onClick={() => {
+              setLanguage('en');
+              persistLanguageCookie('en');
+            }}
+            className="inline-flex h-11 items-center rounded-full border border-primary/40 bg-primary/15 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
+          >
+            {t('tcg.try_english')}
+          </button>
+        )}
         <button
           type="button"
           onClick={onClear}

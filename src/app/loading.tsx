@@ -1,7 +1,8 @@
 import { PokeballLoader } from '@/components/ui/PokeballLoader';
-import { t } from '@/lib/server-i18n';
+import { getServerT } from '@/lib/server-i18n';
 
-export default function Loading() {
+export default async function Loading() {
+  const t = await getServerT();
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 backdrop-blur-2xl">
       <div role="status" aria-live="polite" className="relative">

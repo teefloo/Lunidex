@@ -335,6 +335,7 @@ export default {
       'weight-desc': 'Poids (Décroissant)',
     },
     list: {
+      title: 'Liste des Pokémon',
       search_results: 'Résultats pour',
       results: 'Résultats',
       showing: 'Affichage de',
@@ -817,6 +818,10 @@ export default {
       list_view: 'Vue liste',
       no_cards: 'Aucune carte trouvée',
       no_cards_desc: 'Essayez de sélectionner un autre set ou d\'ajuster vos filtres',
+      cards_not_available_in_language: 'Les données de cartes ne sont pas encore disponibles en {{language}}. Contenu anglais affiché à la place.',
+      cards_limited_in_language: 'Les données de cartes en {{language}} sont actuellement limitées sur TCGdex. Certains sets peuvent être vides ou incomplets.',
+      try_english: 'Passer en anglais',
+      showing_english_fallback: 'Contenu anglais affiché',
       filter_set: 'Extension',
       filter_rarity: 'Niveau de rareté',
       filter_hp: 'Seuil HP',

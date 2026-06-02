@@ -9,6 +9,7 @@ import { TCGCollectionOverview } from '@/components/tcg/TCGCollectionOverview';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { useTranslation } from '@/lib/i18n';
 
 export function TCGCollectionPage() {
@@ -53,6 +54,7 @@ export function TCGCollectionPage() {
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
         <TCGPageTabs />
+        <TCGDataLangBanner resolvedLang={resolvedLang} />
         <div className="mb-6">
           <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
             {t('tcg.collection_title')}

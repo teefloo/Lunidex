@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
-import { t } from '@/lib/server-i18n';
+import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/server-i18n';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
@@ -11,13 +11,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = (await params).name;
+  const t = await getServerT();
+  const lang = await getServerLanguage();
+  const speciesLangCode = await getServerPokemonLanguage();
   try {
     const baseName = getBaseSpeciesName(name);
     const [pokemon, species] = await Promise.all([
       getPokemonDetail(name),
       getPokemonSpecies(baseName).catch(() => null),
     ]);
-    const baseLocalizedName = species?.names?.find((entry) => entry.language.name === 'en')?.name
+    const baseLocalizedName = species?.names?.find((entry) => entry.language.name === speciesLangCode)?.name
+      || species?.names?.find((entry) => entry.language.name === 'en')?.name
       || baseName.charAt(0).toUpperCase() + baseName.slice(1);
     const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
     const types = pokemon.types
@@ -40,6 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: `/pokemon/${name}`,
         images: [{ url: artwork || '', width: 475, height: 475, alt: `${displayName} official artwork` }],
         type: 'article',
+        locale: lang,
       },
       twitter: {
         card: 'summary_large_image',
@@ -73,6 +78,7 @@ export default async function PokemonLayout({
   params: Promise<{ name: string }>;
 }) {
   const { name } = await params;
+  const speciesLangCode = await getServerPokemonLanguage();
   const baseUrl = SITE_URL;
   let jsonLd = null;
   let breadcrumbJsonLd = null;
@@ -83,7 +89,8 @@ export default async function PokemonLayout({
       getPokemonDetail(name),
       getPokemonSpecies(baseName).catch(() => null),
     ]);
-    const baseLocalizedName = species?.names?.find((entry) => entry.language.name === 'en')?.name
+    const baseLocalizedName = species?.names?.find((entry) => entry.language.name === speciesLangCode)?.name
+      || species?.names?.find((entry) => entry.language.name === 'en')?.name
       || baseName.charAt(0).toUpperCase() + baseName.slice(1);
     const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
     const imageUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;

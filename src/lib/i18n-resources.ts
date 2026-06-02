@@ -336,6 +336,7 @@ community: {
         'weight-desc': 'Weight (High to Low)',
       },
       list: {
+        title: 'Pokémon List',
         search_results: 'Search results for',
         results: 'Results',
         showing: 'Showing',
@@ -3583,7 +3584,7 @@ community: {
         language_option: '言語: {{language}}',
       },
       languages: {
-        auto: '自動',
+        auto: 'Auto',
         en: 'English',
         fr: 'Français',
         es: 'Español',
@@ -3591,6 +3592,8 @@ community: {
         it: 'Italiano',
         ja: '日本語',
         ko: '한국어',
+        zh: '中文',
+        pt: 'Português',
       },
       header: {
         home_aria: 'ホームへ',

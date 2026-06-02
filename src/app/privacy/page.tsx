@@ -1,8 +1,9 @@
 import Header from '@/components/layout/Header';
-import { t } from '@/lib/server-i18n';
+import { getServerT } from '@/lib/server-i18n';
 import { ShieldCheck, Database, Server, Cookie, RefreshCw } from 'lucide-react';
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const t = await getServerT();
   const sections = [
     {
       icon: Database,

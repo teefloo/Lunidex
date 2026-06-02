@@ -1,29 +1,34 @@
-import { Metadata } from 'next';
-import { t } from '@/lib/server-i18n';
+import type { Metadata } from 'next';
+import { getServerT } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: t('meta.team_title'),
-  description: t('meta.team_description'),
-  robots: {
-    index: false,
-    follow: true,
-  },
-  alternates: {
-    canonical: '/team',
-  },
-  openGraph: {
-    title: t('meta.team_title'),
-    description: t('meta.team_description'),
-    url: '/team',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: t('meta.team_title'),
-    description: t('meta.team_description'),
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const title = t('meta.team_title');
+  const description = t('meta.team_description');
+  return {
+    title,
+    description,
+    robots: {
+      index: false,
+      follow: true,
+    },
+    alternates: {
+      canonical: '/team',
+    },
+    openGraph: {
+      title,
+      description,
+      url: '/team',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 export default function TeamLayout({
   children,

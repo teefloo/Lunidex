@@ -1,25 +1,30 @@
-import { Metadata } from 'next';
-import { t } from '@/lib/server-i18n';
+import type { Metadata } from 'next';
+import { getServerT } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: t('meta.types_title'),
-  description: t('meta.types_description'),
-  alternates: {
-    canonical: '/types',
-  },
-  openGraph: {
-    title: t('meta.types_title'),
-    description: t('meta.types_description'),
-    url: '/types',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: t('meta.types_title'),
-    description: t('meta.types_description'),
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const title = t('meta.types_title');
+  const description = t('meta.types_description');
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: '/types',
+    },
+    openGraph: {
+      title,
+      description,
+      url: '/types',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 export default function TypesLayout({
   children,

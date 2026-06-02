@@ -22,7 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getFormDisplayName } from '@/lib/form-names';
-import { useTranslation, loadLanguage } from '@/lib/i18n';
+import { useTranslation, loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
@@ -184,6 +184,7 @@ export default function Header() {
     loadLanguage(resolvedLang).then(() => {
       i18n.changeLanguage(resolvedLang);
     });
+    persistLanguageCookie(resolvedLang);
   }, [i18n, language, setLanguage, systemLanguage]);
 
   const caughtCount = mounted ? caughtPokemon.length : 0;

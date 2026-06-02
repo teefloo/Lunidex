@@ -28,8 +28,9 @@ axiosRetry(tcgClient, {
   },
 });
 
-const supportedLangs = ['en', 'fr', 'es', 'it', 'pt', 'de', 'ja', 'ko'] as const;
-const unsupportedTcgLangs = new Set(['ja', 'ko']);
+const supportedLangs = ['en', 'fr', 'es', 'it', 'pt', 'de', 'ja', 'ko', 'zh'] as const;
+const unsupportedTcgLangs = new Set(['zh']);
+const limitedTcgLangs = new Set(['ko', 'ja']);
 
 export const TCG_CARD_CATEGORIES: TCGCardCategoryFilter[] = ['all', 'Pokemon', 'Trainer', 'Energy'];
 export const TCG_POKEMON_TYPES = ['Colorless', 'Fire', 'Water', 'Lightning', 'Grass', 'Fighting', 'Psychic', 'Darkness', 'Dragon', 'Fairy', 'Metal'];
@@ -81,6 +82,19 @@ function resolveTcgLang(lang = 'en') {
   return unsupportedTcgLangs.has(supportedLang) ? 'en' : supportedLang;
 }
 
+export function isTcgLangSupported(lang: string): boolean {
+  if (!supportedLangs.includes(lang as (typeof supportedLangs)[number])) return false;
+  return !unsupportedTcgLangs.has(lang);
+}
+
+export function getUnsupportedTcgLangs(): readonly string[] {
+  return Array.from(unsupportedTcgLangs);
+}
+
+export function isTcgLangLimited(lang: string): boolean {
+  return limitedTcgLangs.has(lang);
+}
+
 function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
   return signal ? tcgClient.get<T>(url, { signal }) : tcgClient.get<T>(url);
 }
@@ -97,12 +111,10 @@ function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
 }
 
 function normaliseSet(raw: RawSet): TCGSet {
-  const count =
-    typeof raw.cardCount?.total === 'number'
-      ? raw.cardCount.total
-      : typeof raw.totalCards === 'number'
-        ? raw.totalCards
-        : 0;
+  const fromCardsArray = Array.isArray(raw.cards) ? raw.cards.length : undefined;
+  const fromCardCount = typeof raw.cardCount?.total === 'number' ? raw.cardCount.total : undefined;
+  const fromTotalCards = typeof raw.totalCards === 'number' ? raw.totalCards : undefined;
+  const count = fromCardsArray ?? fromCardCount ?? fromTotalCards ?? 0;
 
   return {
     id: raw.id,
@@ -540,7 +552,7 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
     const cached = await getCachedData<TCGCard[]>(cacheKey);
     if (cached) return cached;
 
-    const { data } = await tcgClient.get<RawSet & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
+    const { data } = await tcgClient.get<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' })) || [];
 
     await setCachedData(cacheKey, cards);
@@ -553,29 +565,41 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
 
 /**
  * Fetch all available expansion sets, enriched with releaseDate.
+ * For non-English languages, also filters out sets that have no card data
+ * on TCGdex (e.g. Korean SV6/SV5a report cards in the listing but the
+ * detail endpoint returns an empty `cards` array).
  */
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-all-sets-v6-${tcgLang}`;
+  const cacheKey = `tcg-all-sets-v7-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet[]>(cacheKey);
     if (cached) return cached;
 
     const { data } = await tcgClient.get<RawSet[]>(`/${tcgLang}/sets`);
-    const sets = data.map(normaliseSet).filter((set) => (set.totalCards ?? 0) > 0);
+    const sets = data.map(normaliseSet);
 
     const enrichedSets = await mapWithConcurrency(sets, 10, async (set) => {
-      if (set.releaseDate) return set;
       try {
         const detail = await getSetById(set.id, lang);
-        return detail?.releaseDate ? { ...set, releaseDate: detail.releaseDate } : set;
+        if (!detail) return null;
+
+        return {
+          ...set,
+          releaseDate: detail.releaseDate ?? set.releaseDate,
+          totalCards: detail.totalCards ?? set.totalCards,
+        };
       } catch {
         return set;
       }
     });
 
-    const sortedSets = [...enrichedSets].sort((a, b) => {
+    const validSets = enrichedSets.filter((set): set is TCGSet =>
+      set !== null && (set.totalCards ?? 0) > 0,
+    );
+
+    const sortedSets = [...validSets].sort((a, b) => {
       const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
       const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
       return dateB - dateA;
@@ -594,7 +618,7 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
  */
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-v4-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-v5-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
@@ -710,7 +734,7 @@ export const searchCards = async (
  */
 export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-filter-options-v6-${tcgLang}`;
+    const cacheKey = `tcg-filter-options-v7-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGFilterOptions>(cacheKey);
@@ -867,6 +891,7 @@ interface RawSet {
   cardCount?: { total?: number };
   totalCards?: number;
   legalities?: { unlimited?: string; standard?: string; expanded?: string };
+  cards?: { id: string }[];
 }
 
 export { buildCardQueryParams };

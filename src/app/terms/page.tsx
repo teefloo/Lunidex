@@ -1,8 +1,9 @@
 import Header from '@/components/layout/Header';
-import { t } from '@/lib/server-i18n';
+import { getServerT } from '@/lib/server-i18n';
 import { FileText, CheckCircle, Award, AlertTriangle, UserX, Mail } from 'lucide-react';
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await getServerT();
   const sections = [
     {
       icon: CheckCircle,

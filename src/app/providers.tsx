@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
-import i18n, { loadLanguage } from '@/lib/i18n';
+import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { resolveLanguage } from '@/lib/languages';
 
@@ -56,6 +56,8 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // localStorage may be unavailable in private browsing
     }
+    // Mirror to a cookie so server components can read the active language
+    persistLanguageCookie(resolvedLanguage);
   }, [resolvedLanguage, _hasHydrated]);
 
   return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;

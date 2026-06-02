@@ -6,6 +6,8 @@ import Header from '@/components/layout/Header';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
+import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
+import { languageToPokemonLanguageId, isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 
 // Route segment config for performance optimization
 export const revalidate = 3600; // Revalidate every hour
@@ -43,20 +45,23 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { name } = await params;
   const sParams = await searchParams;
-  const lang = (sParams.lang as string) || 'en';
+  const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
+  const cookieLang = await getServerLanguage();
+  const lang: SupportedLanguage = urlLang ?? cookieLang;
+  const speciesLangCode = await getServerPokemonLanguage();
   const baseName = getBaseSpeciesName(name);
-  
+
   try {
     const [pokemon, species] = await Promise.all([
       getPokemonDetail(name),
       getPokemonSpecies(baseName).catch(() => null),
     ]);
-    
-    // lang ID 5 is French, 9 is English in PokeAPI GraphQL
-    const langId = lang === 'fr' ? 5 : 9;
+
+    const langId = languageToPokemonLanguageId[lang];
     const localizedData = await getLocalizedPokemonData(name, langId).catch(() => null) as LocalizedPokemonData | null;
-    
+
     const localizedName = localizedData?.pokemon_v2_pokemonspeciesnames?.[0]?.name
+      || species?.names?.find(n => n.language.name === speciesLangCode)?.name
       || species?.names?.find(n => n.language.name === lang)?.name
       || species?.names?.find(n => n.language.name === 'en')?.name
       || baseName;
@@ -119,8 +124,11 @@ export async function generateStaticParams() {
 export default async function PokemonPage({ params, searchParams }: Props) {
   const { name } = await params;
   const sParams = await searchParams;
-  const lang = (sParams.lang as string) || 'en';
-  const langId = lang === 'fr' ? 5 : 9;
+  const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
+  const cookieLang = await getServerLanguage();
+  const lang: SupportedLanguage = urlLang ?? cookieLang;
+  const langId = languageToPokemonLanguageId[lang];
+  const speciesLangCode = await getServerPokemonLanguage();
 
   // For alternate forms, derive the base species name
   const baseName = getBaseSpeciesName(name);
@@ -152,6 +160,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   encounters = encountersData;
 
   const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
+    || species?.names?.find(n => n.language.name === speciesLangCode)?.name
     || species?.names?.find(n => n.language.name === lang)?.name
     || species?.names?.find(n => n.language.name === 'en')?.name
     || baseName;

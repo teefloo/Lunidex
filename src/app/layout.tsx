@@ -6,7 +6,7 @@ import "./globals.css";
 import "../styles/pokemon-cards-css.css";
 import "../styles/tcg-card-overrides.css";
 import { cn } from "@/lib/utils";
-import { t } from '@/lib/server-i18n';
+import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import { languageToOpenGraphLocale } from "@/lib/languages";
@@ -35,74 +35,80 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: t("meta.title"),
-  description: t("meta.description"),
-  keywords: t("meta.keywords", { returnObjects: true }) as unknown as string[],
-  authors: [{ name: t("meta.author"), url: SITE_URL }],
-  creator: "PrimeDex",
-  publisher: "PrimeDex",
-  applicationName: "PrimeDex",
-  category: "games",
-  alternates: {
-    canonical: "/",
-    languages: {
-      en: "/",
-      fr: "/?lang=fr",
-      de: "/?lang=de",
-      es: "/?lang=es",
-      it: "/?lang=it",
-      ja: "/?lang=ja",
-      ko: "/?lang=ko",
-      zh: "/?lang=zh",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const lang = await getServerLanguage();
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: t("meta.title"),
+    description: t("meta.description"),
+    keywords: t("meta.keywords", { returnObjects: true }) as unknown as string[],
+    authors: [{ name: t("meta.author"), url: SITE_URL }],
+    creator: "PrimeDex",
+    publisher: "PrimeDex",
+    applicationName: "PrimeDex",
+    category: "games",
+    alternates: {
+      canonical: "/",
+      languages: {
+        en: "/",
+        fr: "/?lang=fr",
+        de: "/?lang=de",
+        es: "/?lang=es",
+        it: "/?lang=it",
+        ja: "/?lang=ja",
+        ko: "/?lang=ko",
+        zh: "/?lang=zh",
+        pt: "/?lang=pt",
+      },
     },
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    title: t("meta.og_title"),
-    description: t("meta.og_description"),
-    type: "website",
-    siteName: t("meta.site_name"),
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "PrimeDex — The Ultimate Online Pokédex",
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    ],
-    locale: languageToOpenGraphLocale.en,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: t("meta.twitter_title"),
-    description: t("meta.twitter_description"),
-  },
-  icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
-  },
-  other: {
-    "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || "pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg",
-  },
-};
+    },
+    openGraph: {
+      title: t("meta.og_title"),
+      description: t("meta.og_description"),
+      type: "website",
+      siteName: t("meta.site_name"),
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: "PrimeDex — The Ultimate Online Pokédex",
+        },
+      ],
+      locale: languageToOpenGraphLocale[lang],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("meta.twitter_title"),
+      description: t("meta.twitter_description"),
+    },
+    icons: {
+      icon: "/icon.svg",
+      apple: "/icon.svg",
+    },
+    other: {
+      "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || "pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg",
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
 
   const websiteJsonLd = {
@@ -129,7 +135,7 @@ export default function RootLayout({
   };
 
   return (
-      <html lang="en" suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
+      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head>
         {/* DNS Prefetch & Preconnect for external APIs */}
         <link rel="preconnect" href="https://pokeapi.co" />

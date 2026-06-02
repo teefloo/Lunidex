@@ -1,31 +1,37 @@
-import { Metadata } from 'next';
-import { t } from '@/lib/server-i18n';
+import type { Metadata } from 'next';
+import { getServerT } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: t('moves_page.title'),
-  description: t('moves_page.subtitle'),
-  alternates: {
-    canonical: '/moves',
-  },
-  openGraph: {
-    title: t('moves_page.title'),
-    description: t('moves_page.subtitle'),
-    url: '/moves',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: t('moves_page.title'),
-    description: t('moves_page.subtitle'),
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const title = t('moves_page.title');
+  const description = t('moves_page.subtitle');
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: '/moves',
+    },
+    openGraph: {
+      title,
+      description,
+      url: '/moves',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
-export default function MovesLayout({
+export default async function MovesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getServerT();
   return (
     <>
       <script

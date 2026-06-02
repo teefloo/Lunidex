@@ -335,6 +335,7 @@ export default {
       'weight-desc': '重さ（降順）',
     },
     list: {
+      title: 'ポケモン一覧',
       search_results: '検索結果',
       results: '結果',
       showing: '表示中',
@@ -814,6 +815,10 @@ export default {
       list_view: 'リスト表示',
       no_cards: 'カードが見つかりません',
       no_cards_desc: '別のセットを選択するか、フィルターを調整してください',
+      cards_not_available_in_language: '{{language}}ではカードデータがまだ利用できません。英語のコンテンツが表示されています。',
+      cards_limited_in_language: '{{language}}のカードデータは現在TCGdexで制限されています。一部のセットが空または不完全な場合があります。',
+      try_english: '英語に切り替え',
+      showing_english_fallback: '英語のコンテンツを表示中',
       filter_set: '拡張パック',
       filter_rarity: 'レアリティ',
       filter_hp: 'HP閾値',

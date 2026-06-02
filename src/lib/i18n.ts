@@ -22,6 +22,7 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
   ja: () => import('./i18n/ja'),
   ko: () => import('./i18n/ko'),
   zh: () => import('./i18n/zh'),
+  pt: () => import('./i18n/pt'),
 };
 
 // Keep the first client render aligned with SSR.
@@ -45,7 +46,7 @@ i18n
 // Dynamically load a language and add it to i18n
 export const loadLanguage = async (lang: string): Promise<void> => {
   if (lang === 'en' || !languageResources[lang as SupportedLanguage]) return;
-  
+
   const hasResourceBundle = i18n.hasResourceBundle(lang, 'translation');
   if (hasResourceBundle) return;
 
@@ -57,6 +58,16 @@ export const loadLanguage = async (lang: string): Promise<void> => {
     console.error(`Failed to load language: ${lang}`, error);
   }
 };
+
+const LANG_COOKIE = 'primedex-lang';
+const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+
+export function persistLanguageCookie(lang: string): void {
+  if (typeof document === 'undefined') return;
+  const safe = lang.replace(/[^a-zA-Z0-9_-]/g, '');
+  if (!safe) return;
+  document.cookie = `${LANG_COOKIE}=${safe}; path=/; max-age=${LANG_COOKIE_MAX_AGE}; samesite=lax`;
+}
 
 export const useTranslation = () => {
   const mounted = useMounted();

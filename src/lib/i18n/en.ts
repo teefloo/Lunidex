@@ -335,6 +335,7 @@ export default {
       'weight-desc': 'Weight (High to Low)',
     },
     list: {
+      title: 'Pokémon List',
       search_results: 'Search results for',
       results: 'Results',
       showing: 'Showing',
@@ -843,6 +844,10 @@ export default {
       list_view: 'List view',
       no_cards: 'No cards found',
       no_cards_desc: 'Try a different category, set, rarity, or search term.',
+      cards_not_available_in_language: 'Card data is not yet available in {{language}}. Showing English content instead.',
+      cards_limited_in_language: 'Card data in {{language}} is currently limited on TCGdex. Some sets may be empty or incomplete.',
+      try_english: 'Switch to English',
+      showing_english_fallback: 'Showing English content',
       filter_category: 'Category',
       filter_set: 'Set',
       filter_rarity: 'Rarity',
