@@ -454,36 +454,10 @@ export default function PokemonList() {
       />
 
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
-        <div className="grid grid-cols-12 gap-x-6 items-end gap-y-3">
-          <div className="col-span-12 md:col-span-7 flex flex-col gap-2">
-            <p className="page-eyebrow flex items-center gap-3 text-muted-foreground/90">
-              <span aria-hidden="true" className="h-px w-6 bg-current opacity-60" />
-              <span>{t('list.chapter_label', { defaultValue: 'Chapter I · The Index' })}</span>
-            </p>
-            <h2 className="page-title font-display text-3xl md:text-4xl font-extrabold tracking-[-0.01em] text-foreground" style={{ fontVariationSettings: '"opsz" 72' }}>
-              {t('list.title', { defaultValue: 'Specimen Catalogue' })}
-            </h2>
-            <p className="page-subtitle text-sm md:text-[0.95rem] text-foreground/65 max-w-xl">
-              {t('list.subtitle', { defaultValue: 'A complete enumeration of recorded specimens, ordered as you have chosen to view them.' })}
-            </p>
-          </div>
-          <div className="col-span-12 md:col-span-5 flex md:justify-end items-end gap-4">
-            <div className="flex flex-col items-start md:items-end gap-1">
-              <span className="cat-no text-[0.6rem] text-muted-foreground/70">Specimens on display</span>
-              <span className="font-mono text-xl md:text-2xl font-semibold text-foreground/85 tabular-nums">
-                {(filteredAndSortedResults?.length ?? 0).toString().padStart(4, '0')}
-              </span>
-            </div>
-            <span aria-hidden="true" className="hidden md:block h-10 w-px bg-foreground/15" />
-            <div className="hidden md:flex flex-col items-end gap-1">
-              <span className="cat-no text-[0.6rem] text-muted-foreground/70">Showing</span>
-              <span className="font-mono text-base font-medium text-foreground/70 tabular-nums">
-                {displayedPokemon.length.toString().padStart(3, '0')}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="rule-line mt-5" aria-hidden="true" />
+        <h2 className="sr-only">
+          {t('list.title', { defaultValue: 'Specimen Catalogue' })}
+        </h2>
+        <div className="rule-line" aria-hidden="true" />
       </div>
 
       {!isBasicMode && (
