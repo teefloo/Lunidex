@@ -60,23 +60,21 @@ function hexToRgba(hex: string, alpha: number) {
 
 export function PokemonCardSkeleton() {
   return (
-    <div className="py-2 px-2 h-[22rem]">
-      <div className="glass-card h-full p-6 flex flex-col items-center rounded-xl animate-pulse">
-        <div className="flex justify-between items-center w-full mb-4">
-          <Skeleton className="h-5 w-14 bg-muted/60" />
-          <div className="flex gap-2">
-            <Skeleton className="h-9 w-9 rounded-full bg-muted/60" />
-            <Skeleton className="h-9 w-9 rounded-full bg-muted/60" />
-            <Skeleton className="h-9 w-9 rounded-full bg-muted/60" />
+    <div className="py-2 px-2 h-[24rem]">
+      <div className="codex-frame h-full p-4 flex flex-col animate-pulse">
+        <div className="flex justify-between items-center w-full mb-3">
+          <Skeleton className="h-4 w-12 bg-muted/40" />
+          <div className="flex gap-1.5">
+            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
+            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
+            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
           </div>
         </div>
-        <Skeleton className="w-36 h-36 rounded-full bg-muted/60 my-4" />
-        <div className="mt-auto w-full flex flex-col items-center gap-4 pt-6">
-          <Skeleton className="h-8 w-32 bg-muted/60" />
-          <div className="flex gap-2">
-            <Skeleton className="h-6 w-16 rounded-full bg-muted/60" />
-            <Skeleton className="h-6 w-16 rounded-full bg-muted/60" />
-          </div>
+        <Skeleton className="w-28 h-28 rounded-full bg-muted/40 my-3 mx-auto" />
+        <div className="mt-auto w-full flex flex-col items-center gap-2">
+          <Skeleton className="h-3 w-20 bg-muted/40" />
+          <Skeleton className="h-6 w-32 bg-muted/40" />
+          <Skeleton className="h-5 w-16 rounded-full bg-muted/40" />
         </div>
       </div>
     </div>
@@ -230,38 +228,149 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const color = TYPE_COLORS[mainType] || '#A8A77A';
   const cardLabel = t('detail.view_card_aria', { name: displayName });
   const cardBackground = [
-    `radial-gradient(circle at 50% 18%, ${hexToRgba(color, 0.18)} 0%, transparent 52%)`,
-    `radial-gradient(circle at 50% 100%, ${hexToRgba(color, 0.1)} 0%, transparent 42%)`,
-    `linear-gradient(180deg, ${hexToRgba(color, 0.12)} 0%, rgba(8, 12, 22, 0.9) 48%, rgba(4, 7, 14, 1) 100%)`,
+    `linear-gradient(165deg, ${hexToRgba(color, 0.07)} 0%, transparent 35%, ${hexToRgba(color, 0.05)} 100%)`,
   ].join(', ');
-  const cardShadow = `0 18px 48px -34px ${hexToRgba(color, 0.42)}, inset 0 1px 0 rgba(255, 255, 255, 0.06)`;
+  const cardShadow = `0 14px 36px -28px ${hexToRgba(color, 0.4)}, 0 2px 6px -3px rgba(20, 14, 8, 0.08)`;
+  const isLegendary = pokemon.is_legendary;
+  const isMythical = pokemon.is_mythical;
 
   return (
     <Link
       href={`/pokemon/${name}`}
       aria-label={cardLabel}
-      className="relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-2xl"
+      className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-[1.35rem]"
       onMouseEnter={prefetchDetails}
     >
-      <div
-        className="group relative isolate flex h-full flex-col overflow-hidden rounded-[1.35rem] border p-2 transition-all duration-500 hover:-translate-y-1 sm:p-4"
+      <article
+        className="codex-frame relative isolate flex h-full flex-col overflow-hidden rounded-[1.15rem] border p-2 transition-all duration-500 hover:-translate-y-1 sm:p-3"
         style={{
           '--type-color': color,
           backgroundImage: cardBackground,
-          borderColor: hexToRgba(color, 0.28),
+          borderColor: hexToRgba(color, 0.32),
           boxShadow: cardShadow,
         } as CSSProperties}
       >
         <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-80 transition-opacity duration-500 group-hover:opacity-90"
+          className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-100 transition-transform duration-500 group-hover/specimen:scale-x-100"
+          style={{ background: `linear-gradient(90deg, ${color} 0%, ${hexToRgba(color, 0.4)} 100%)` }}
+          aria-hidden="true"
+        />
+
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-60 transition-opacity duration-500 group-hover/specimen:opacity-80"
           style={{
-            background: [
-              `radial-gradient(circle at 50% 28%, ${hexToRgba(color, 0.14)} 0%, transparent 68%)`,
-              `radial-gradient(circle at 50% 72%, ${hexToRgba(color, 0.08)} 0%, transparent 58%)`,
-              `linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 28%, rgba(0, 0, 0, 0.14) 100%)`,
-            ].join(', '),
+            background: `radial-gradient(circle at 50% 30%, ${hexToRgba(color, 0.1)} 0%, transparent 65%)`,
           }}
         />
+
+        <div className="relative z-10 mb-1.5 flex w-full items-start justify-between sm:mb-2.5">
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="cat-no text-[0.55rem] text-muted-foreground/70 sm:text-[0.6rem]">Cat. No.</span>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/85 sm:text-[11px]">
+              #{pokemonId.toString().padStart(3, '0')}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleTeam}
+              disabled={!isTeam && teamFull}
+              aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
+              className={cn(
+                'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                isTeam
+                  ? 'border-emerald-500/35 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.22)]'
+                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
+                !isTeam && teamFull && 'cursor-not-allowed opacity-30'
+              )}
+            >
+              {isTeam ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleCompare}
+              disabled={!isComp && compareFull}
+              aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
+              className={cn(
+                'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                isComp
+                  ? 'border-primary/35 bg-primary/15 text-primary shadow-[0_0_14px_rgba(227,53,13,0.22)]'
+                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
+                !isComp && compareFull && 'cursor-not-allowed opacity-30'
+              )}
+            >
+              <ArrowLeftRight className={cn('h-3 w-3 transition-transform', isComp && 'scale-110 rotate-12')} />
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleFavorite}
+              aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
+              className={cn(
+                'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                isFav
+                  ? 'border-rose-500/35 bg-rose-500/15 text-rose-500 shadow-[0_0_14px_rgba(244,63,94,0.22)]'
+                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90'
+              )}
+            >
+              <Heart className={cn('h-3.5 w-3.5 transition-all', isFav && 'fill-current scale-110')} />
+            </button>
+          </div>
+        </div>
+
+        <div className="relative mx-auto h-24 w-24 transition-transform duration-500 group-hover/specimen:scale-105 sm:h-32 sm:w-32">
+          <div
+            className="absolute inset-2 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
+            style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
+            aria-hidden="true"
+          />
+          <Image
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
+            alt={displayName}
+            fill
+            sizes="(max-width: 640px) 40vw, (max-width: 1024px) 33vw, 20vw"
+            className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)]"
+            priority={index < 8}
+          />
+        </div>
+
+        <div className="relative z-10 mt-1.5 flex flex-col items-center gap-1 px-1 sm:mt-3 sm:gap-1.5">
+          <p className="latin-name font-display text-[10px] italic text-muted-foreground/80 sm:text-[11px]" style={{ fontVariationSettings: '"opsz" 9' }}>
+            {pokemonName.replace(/-/g, ' ')}
+          </p>
+          <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base" style={{ fontVariationSettings: '"opsz" 24' }}>
+            {displayName}
+          </h3>
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
+            {types.map((typeItem: PokemonCardType, i: number) => {
+              const typeName = typeItem?.type?.name;
+              if (!typeName) return null;
+              const typeColor = TYPE_COLORS[typeName] || '#A8A77A';
+              return (
+                <span
+                  key={`${typeName}-${i}`}
+                  className="type-bar rounded-sm border px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[9px]"
+                  style={{
+                    backgroundColor: `${typeColor}1A`,
+                    color: typeColor,
+                    borderColor: `${typeColor}55`,
+                  }}
+                >
+                  {t(`types.${typeName}`)}
+                </span>
+              );
+            })}
+            {(isLegendary || isMythical) && (
+              <span
+                className="type-bar rounded-sm border border-amber-500/55 bg-amber-500/15 px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] text-amber-600 dark:text-amber-300 sm:text-[9px]"
+                title={isMythical ? t('card.mythical') : t('card.legendary')}
+              >
+                {isMythical ? t('card.mythical') : t('card.legendary')}
+              </span>
+            )}
+          </div>
+        </div>
 
         <button
           type="button"
@@ -270,116 +379,16 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-2 left-2 z-20 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border shadow-lg transition-all duration-400 hover:scale-110 active:scale-95 sm:bottom-3 sm:left-3',
+            'absolute bottom-2 right-2 z-20 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border shadow-sm transition-all duration-300 hover:scale-110 active:scale-95 sm:bottom-2.5 sm:right-2.5',
             caught
-              ? 'border-primary/45 bg-primary text-primary-foreground shadow-sm'
-              : 'border-border/60 bg-background/75 text-foreground/70 backdrop-blur-md hover:bg-muted/70 hover:text-foreground/90'
+              ? 'border-primary/55 bg-primary text-primary-foreground shadow-[0_0_18px_rgba(190,93,72,0.32)]'
+              : 'border-foreground/15 bg-background/65 text-foreground/55 backdrop-blur-md hover:border-foreground/35 hover:text-foreground/85'
           )}
           aria-label={caught ? t('card.caught') : t('card.mark_caught')}
         >
-          <PokeballIcon className={cn('h-4 w-4 sm:h-5 sm:w-5', caught ? 'text-primary-foreground' : 'text-foreground/50')} />
+          <PokeballIcon className={cn('h-3.5 w-3.5 sm:h-4 sm:w-4', caught ? 'text-primary-foreground' : 'text-foreground/55')} />
         </button>
-
-        <div
-          className="pointer-events-none absolute inset-0 z-0 rounded-xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            boxShadow: `inset 0 0 0 1px ${color}28`,
-          }}
-        />
-
-        <div className="relative z-10 mb-1 flex w-full flex-col gap-1 sm:mb-2 sm:gap-2">
-          <div className="flex items-start justify-between">
-            <span className="rounded-md bg-muted/60 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/70 sm:text-[11px]">
-              #{pokemonId.toString().padStart(3, '0')}
-            </span>
-            <div className="flex items-center gap-1 sm:gap-1.5">
-              <button
-                type="button"
-                onClick={toggleTeam}
-                disabled={!isTeam && teamFull}
-                aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
-                className={cn(
-                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
-                  isTeam
-                    ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.25)]'
-                    : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90',
-                  !isTeam && teamFull && 'cursor-not-allowed opacity-20'
-                )}
-              >
-                {isTeam ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={toggleCompare}
-                disabled={!isComp && compareFull}
-                aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
-                className={cn(
-                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
-                  isComp
-                    ? 'border-primary/30 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.25)]'
-                    : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90',
-                  !isComp && compareFull && 'cursor-not-allowed opacity-20'
-                )}
-              >
-                <ArrowLeftRight className={cn('h-3 w-3 transition-transform', isComp && 'scale-110 rotate-12')} />
-              </button>
-
-              <button
-                type="button"
-                onClick={toggleFavorite}
-                aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
-                className={cn(
-                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border p-1.5 backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95',
-                  isFav
-                    ? 'border-rose-500/30 bg-rose-500/20 text-rose-400 shadow-[0_0_16px_rgba(244,63,94,0.25)]'
-                    : 'border-border/60 bg-background/70 text-foreground/70 hover:bg-muted/70 hover:text-foreground/90'
-                )}
-              >
-                <Heart className={cn('h-3.5 w-3.5 transition-all', isFav && 'fill-current scale-110')} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative mx-auto h-24 w-24 transition-transform duration-500 group-hover:scale-110 sm:h-36 sm:w-36">
-          <div className="absolute inset-0 rounded-full" />
-          <Image
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
-            alt={displayName}
-            fill
-            sizes="(max-width: 640px) 40vw, (max-width: 1024px) 33vw, 20vw"
-            className="object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.42)] transition-all duration-500 group-hover:drop-shadow-[0_22px_38px_rgba(0,0,0,0.55)]"
-            priority={index < 8}
-          />
-        </div>
-
-        <div className="relative z-10 mt-1 space-y-1 text-center sm:mt-4 sm:space-y-2">
-          <h3 className="truncate px-1 text-xs font-bold uppercase tracking-wide text-foreground/90 transition-colors duration-300 group-hover:text-white sm:text-lg">
-            {displayName}
-          </h3>
-          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
-            {types.map((typeItem: PokemonCardType, i: number) => {
-              const typeName = typeItem?.type?.name;
-              if (!typeName) return null;
-              return (
-                <span
-                  key={`${typeName}-${i}`}
-                  className="rounded-md border px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.12em] shadow-sm backdrop-blur-sm sm:px-2.5 sm:py-1 sm:text-[10px]"
-                  style={{
-                    backgroundColor: `${TYPE_COLORS[typeName] || '#A8A77A'}22`,
-                    color: TYPE_COLORS[typeName] || '#A8A77A',
-                    borderColor: `${TYPE_COLORS[typeName] || '#A8A77A'}35`,
-                    boxShadow: `0 2px 8px -2px ${TYPE_COLORS[typeName] || '#A8A77A'}24`,
-                  }}
-                >
-                  {t(`types.${typeName}`)}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      </Link>
+      </article>
+    </Link>
   );
 });

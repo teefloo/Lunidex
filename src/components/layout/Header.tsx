@@ -197,28 +197,33 @@ export default function Header() {
       >
         <div className="relative">
         <div
-          className="glass-toolbar inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4"
+          className="glass-toolbar codex-frame inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4"
         >
           <div className="flex shrink-0 items-center justify-start">
-            <Link href="/" className="flex items-center gap-2 group" aria-label={homeAriaLabel}>
-              <div className="shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+            <Link href="/" className="flex items-center gap-2.5 group" aria-label={homeAriaLabel}>
+              <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
                 <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
               </div>
 
               <div className="flex flex-col items-start gap-0.5">
-                <div className="flex items-center text-[0.95rem] font-black leading-none tracking-tight md:text-base">
-                  <span className="gradient-text-primary">Prime</span>
-                  <span className="text-foreground">Dex</span>
+                <div className="flex items-baseline leading-none tracking-tight">
+                  <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base" style={{ fontVariationSettings: '"opsz" 144' }}>
+                    Prime
+                  </span>
+                  <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground/90 md:text-base" style={{ fontVariationSettings: '"opsz" 144' }}>
+                    Dex
+                  </span>
+                  <span aria-hidden="true" className="ml-1.5 hidden h-3 w-px bg-foreground/30 sm:block" />
+                  <span className="ml-1.5 cat-no hidden text-[0.55rem] text-muted-foreground/80 sm:block">No. 0001</span>
                 </div>
 
-                <div className="flex h-3 items-center gap-1 px-1 py-0.5">
-                  <div className="h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.45)]" />
-                  <span suppressHydrationWarning className="min-w-[4.4rem] text-[8px] font-black uppercase tracking-[0.22em] text-foreground/70 md:text-[9px]">
-                    {mounted ? caughtCount : 0} / 1025
+                <div className="flex h-3 items-center gap-1.5 px-0.5">
+                  <span suppressHydrationWarning className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/65 md:text-[10px]">
+                    {mounted ? caughtCount.toString().padStart(3, '0') : '000'} <span className="text-muted-foreground/50">/</span> 1025
                   </span>
-                  <div className="h-[2px] w-7 overflow-hidden rounded-full bg-muted/70" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
+                  <div className="h-[2px] w-7 overflow-hidden rounded-full bg-foreground/15" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-primary to-teal-400 transition-[width] duration-700 ease-out"
+                      className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out"
                       style={{ width: `${mounted ? progressPercent : 0}%` }}
                     />
                   </div>
@@ -228,32 +233,32 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden min-w-0 flex-none items-center justify-center gap-0.5 rounded-full border border-border/50 bg-muted/35 p-0.5 backdrop-blur-xl lg:flex">
-            <HeaderLink href="/team" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+          <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-full border border-foreground/10 bg-foreground/[0.03] px-1 py-0.5 backdrop-blur-xl lg:flex">
+            <HeaderLink href="/team" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Users className="h-3 w-3" /> {teamLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/compare" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/compare" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <ArrowLeftRight className="h-3 w-3" /> {compareLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/tcg" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/tcg" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <LayoutGrid className="h-3 w-3" /> {tcgLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/types" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/types" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Shapes className="h-3 w-3" /> {typesLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/moves" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/moves" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Swords className="h-3 w-3" /> {movesLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/quiz" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/quiz" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <BrainCircuit className="h-3 w-3" /> {quizLabel}
             </HeaderLink>
-            <div className="h-3 w-px bg-border/70" />
-            <HeaderLink href="/dashboard" variant="ghost" size="sm" className="gap-1.5 px-2 py-1 text-[9px] text-foreground/60 hover:text-primary">
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href="/dashboard" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <BarChart3 className="h-3 w-3" /> {dashboardLabel}
             </HeaderLink>
           </nav>
@@ -272,7 +277,7 @@ export default function Header() {
                   onChange={(event) => setLocalSearch(event.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  className="h-8 w-full rounded-full border border-border/60 bg-card/60 pl-9 pr-3 text-[10px] font-semibold leading-none text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/45 focus:border-primary/35 focus:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="h-8 w-full rounded-full border border-foreground/15 bg-background/40 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/40 placeholder:normal-case placeholder:tracking-normal focus:border-primary/45 focus:bg-background/65 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
@@ -302,7 +307,7 @@ export default function Header() {
                 style={{ width: 96, minWidth: 96, height: 32, minHeight: 32 }}
               >
                 <Languages className="h-4 w-4" />
-                <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center text-[10px] font-black uppercase leading-none">
+                <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[10px] font-semibold uppercase leading-none">
                   {languageLabel}
                 </SelectValue>
               </SelectTrigger>
@@ -359,13 +364,18 @@ export default function Header() {
                   }
                 />
                 <SheetContent side="right" className="w-[85vw] max-w-[350px] p-0">
-                  <SheetHeader className="border-b border-border/60 p-6">
-                    <SheetTitle className="flex items-center text-left text-2xl font-black tracking-tighter">
-                      <span className="gradient-text-primary">Prime</span>
-                      <span className="text-foreground">Dex</span>
+                  <SheetHeader className="border-b border-foreground/15 p-6">
+                    <SheetTitle className="flex items-baseline text-left font-display tracking-tight">
+                      <span className="text-2xl font-extrabold gradient-text-hero" style={{ fontVariationSettings: '"opsz" 144' }}>
+                        Prime
+                      </span>
+                      <span className="text-2xl font-medium italic editorial-italic text-foreground/90" style={{ fontVariationSettings: '"opsz" 144' }}>
+                        Dex
+                      </span>
                     </SheetTitle>
+                    <p className="mt-1 cat-no text-[0.6rem] text-muted-foreground">Chapter I — Field Compendium</p>
                   </SheetHeader>
-                  <div className="flex flex-col gap-2 p-4">
+                  <div className="flex flex-col gap-1 p-4">
                     <SheetClose
                       render={
                         <Link href="/" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
@@ -456,16 +466,16 @@ export default function Header() {
                       <button
                         key={pokemon.name}
                         type="button"
-                          onClick={() => {
-                            router.push(`/pokemon/${pokemon.name}`);
-                            setLocalSearch('');
-                            setIsSearchFocused(false);
-                          }}
+                        onClick={() => {
+                          router.push(`/pokemon/${pokemon.name}`);
+                          setLocalSearch('');
+                          setIsSearchFocused(false);
+                        }}
                         role="option"
                         aria-selected={false}
                         className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-muted/70 group/item"
                       >
-                        <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border/60 bg-muted/60 p-1">
+                        <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-foreground/15 bg-muted/60 p-1">
                           <Image
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
                             alt={displayName}
@@ -474,8 +484,11 @@ export default function Header() {
                             className="object-contain transition-transform drop-shadow-md group-hover/item:scale-110"
                           />
                         </div>
-                        <span className="flex-1 truncate text-xs font-black capitalize text-foreground/80 group-hover/item:text-primary">
+                        <span className="flex-1 truncate font-display text-xs font-semibold italic editorial-italic capitalize text-foreground/85 group-hover/item:text-primary">
                           {displayName}
+                        </span>
+                        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/60">
+                          No. {pokemon.id.toString().padStart(3, '0')}
                         </span>
                       </button>
                     );

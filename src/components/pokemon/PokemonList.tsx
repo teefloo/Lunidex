@@ -446,37 +446,75 @@ export default function PokemonList() {
   };
 
   return (
-    <div className="space-y-2 pb-20">
+    <div className="space-y-6 pb-20">
       <h2 className="sr-only">{t('list.title') || 'Pokémon List'}</h2>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
-      {!isBasicMode && (
-        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-secondary/10 rounded-2xl border border-border/40 mx-2 mt-4" role="status" aria-live="polite">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">{t('list.results')}</span>
-            <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
-              {filteredAndSortedResults?.length ?? 0}
-            </Badge>
-            {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
-              <span className="text-[10px] text-foreground/50">
-                {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
-              </span>
-            )}
+
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
+        <div className="grid grid-cols-12 gap-x-6 items-end gap-y-3">
+          <div className="col-span-12 md:col-span-7 flex flex-col gap-2">
+            <p className="page-eyebrow flex items-center gap-3 text-muted-foreground/90">
+              <span aria-hidden="true" className="h-px w-6 bg-current opacity-60" />
+              <span>{t('list.chapter_label', { defaultValue: 'Chapter I · The Index' })}</span>
+            </p>
+            <h2 className="page-title font-display text-3xl md:text-4xl font-extrabold tracking-[-0.01em] text-foreground" style={{ fontVariationSettings: '"opsz" 72' }}>
+              {t('list.title', { defaultValue: 'Specimen Catalogue' })}
+            </h2>
+            <p className="page-subtitle text-sm md:text-[0.95rem] text-foreground/65 max-w-xl">
+              {t('list.subtitle', { defaultValue: 'A complete enumeration of recorded specimens, ordered as you have chosen to view them.' })}
+            </p>
           </div>
-          <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 text-[11px] md:text-[10px] font-black uppercase tracking-widest gap-1.5">
-            <RotateCcw className="w-3 h-3" /> {t('filters.clear_all')}
-          </Button>
+          <div className="col-span-12 md:col-span-5 flex md:justify-end items-end gap-4">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              <span className="cat-no text-[0.6rem] text-muted-foreground/70">Specimens on display</span>
+              <span className="font-mono text-xl md:text-2xl font-semibold text-foreground/85 tabular-nums">
+                {(filteredAndSortedResults?.length ?? 0).toString().padStart(4, '0')}
+              </span>
+            </div>
+            <span aria-hidden="true" className="hidden md:block h-10 w-px bg-foreground/15" />
+            <div className="hidden md:flex flex-col items-end gap-1">
+              <span className="cat-no text-[0.6rem] text-muted-foreground/70">Showing</span>
+              <span className="font-mono text-base font-medium text-foreground/70 tabular-nums">
+                {displayedPokemon.length.toString().padStart(3, '0')}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="rule-line mt-5" aria-hidden="true" />
+      </div>
+
+      {!isBasicMode && (
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
+            <div className="flex items-center gap-3">
+              <span className="cat-no text-[0.6rem] text-muted-foreground/80">{t('list.results')}</span>
+              <Badge variant="secondary" className="bg-primary/10 text-primary font-mono font-semibold tracking-wider border-none text-[10px]">
+                {(filteredAndSortedResults?.length ?? 0).toString().padStart(3, '0')}
+              </Badge>
+              {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
+                <span className="text-[10px] text-foreground/55">
+                  {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
+                </span>
+              )}
+            </div>
+            <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 text-[11px] md:text-[10px] font-bold uppercase tracking-[0.18em] gap-1.5">
+              <RotateCcw className="w-3 h-3" /> {t('filters.clear_all')}
+            </Button>
+          </div>
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-0.5 gap-x-2 px-2">
-        {displayedPokemon.map((p, idx) => (
-          <div key={p.id} className="pokemon-grid-item">
-            <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />
-          </div>
-        ))}
+      <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-0.5 gap-x-2">
+          {displayedPokemon.map((p, idx) => (
+            <div key={p.id} className="pokemon-grid-item">
+              <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />
+            </div>
+          ))}
+        </div>
       </div>
 
       {(isBasicMode || hasMoreFiltered) && (

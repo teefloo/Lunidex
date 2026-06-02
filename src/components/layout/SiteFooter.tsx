@@ -32,6 +32,7 @@ type FooterLink = {
 
 type FooterSection = {
   title: string;
+  caption?: string;
   links: FooterLink[];
 };
 
@@ -42,7 +43,7 @@ function FooterAction({
   icon: Icon,
 }: FooterLink) {
   const className = cn(
-    'group inline-flex items-center justify-between gap-2 rounded-full border border-border/50 bg-card/55 px-3 py-2 text-left text-sm font-semibold text-foreground/70 backdrop-blur-xl transition-all duration-300 hover:border-primary/25 hover:bg-card/75 hover:text-foreground'
+    'group inline-flex items-center justify-between gap-2 rounded-md border border-foreground/15 bg-background/30 px-3 py-1.5 text-left text-[12px] font-semibold text-foreground/70 transition-all duration-300 hover:border-primary/35 hover:bg-background/55 hover:text-foreground'
   );
 
   if (external) {
@@ -68,15 +69,22 @@ function FooterAction({
   );
 }
 
-function FooterSectionCard({ title, links }: FooterSection) {
+function FooterSectionCard({ title, caption, links }: FooterSection) {
   return (
-    <div className="glass-card flex flex-col gap-3 p-5">
-      <div className="flex items-center gap-2">
-        <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(227,53,13,0.35)]" />
-        <h2 className="text-xs font-black uppercase tracking-[0.24em] text-foreground/55">{title}</h2>
+    <div className="codex-frame flex flex-col gap-3 p-5">
+      <div className="flex flex-col gap-1">
+        <span className="cat-no text-[0.55rem] text-muted-foreground/70">Section</span>
+        <h2 className="font-display text-base font-semibold tracking-tight text-foreground/90" style={{ fontVariationSettings: '"opsz" 24' }}>
+          {title}
+        </h2>
+        {caption && (
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/70">
+            {caption}
+          </p>
+        )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         {links.map((link) => (
           <FooterAction key={`${link.href}-${link.label}`} {...link} />
         ))}
@@ -112,31 +120,45 @@ export default function SiteFooter() {
   ];
 
   return (
-    <footer className="relative z-0 mt-24 border-t border-border/50">
-      <div className="page-shell py-12 md:py-16">
+    <footer className="relative z-0 mt-24 border-t border-foreground/10">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-12 md:py-16">
         <motion.div
-          className="section-frame relative overflow-hidden px-5 py-8 md:px-8 md:py-10"
+          className="codex-frame relative overflow-hidden px-5 py-8 md:px-8 md:py-10"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent" />
+
+          <div className="mb-8 flex flex-col gap-2">
+            <p className="page-eyebrow flex items-center gap-3 text-muted-foreground/90">
+              <span aria-hidden="true" className="h-px w-6 bg-current opacity-60" />
+              <span>Colophon · Imprint</span>
+            </p>
+            <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-[-0.01em] text-foreground" style={{ fontVariationSettings: '"opsz" 60' }}>
+              {t('footer.brand.title', { defaultValue: 'About this volume' })}
+            </h2>
+          </div>
 
           <div className="relative z-0 grid gap-5 lg:grid-cols-[1.15fr_0.85fr_0.85fr]">
             <motion.div
               whileHover={{ y: -2 }}
               transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-              className="glass-card relative z-0 flex flex-col gap-4 p-5"
+              className="codex-frame relative z-0 flex flex-col gap-4 p-5"
             >
               <div className="flex items-center gap-3">
-                <PrimeDexLogo className="h-10 w-10 shrink-0 drop-shadow-[0_0_18px_rgba(227,53,13,0.24)]" />
+                <PrimeDexLogo className="h-10 w-10 shrink-0 drop-shadow-[0_0_18px_rgba(190,93,72,0.28)]" />
                 <div className="flex flex-col">
-                  <span className="text-lg font-black tracking-tight">
-                    <span className="gradient-text-primary">Prime</span>
-                    <span className="text-foreground">Dex</span>
-                  </span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.24em] text-foreground/30">
+                  <div className="flex items-baseline">
+                    <span className="font-display text-lg font-extrabold gradient-text-hero" style={{ fontVariationSettings: '"opsz" 144' }}>
+                      Prime
+                    </span>
+                    <span className="font-display text-lg font-medium italic editorial-italic text-foreground/90" style={{ fontVariationSettings: '"opsz" 144' }}>
+                      Dex
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono uppercase tracking-[0.24em] text-muted-foreground/70">
                     {t('footer.brand.mission')}
                   </span>
                 </div>
@@ -146,33 +168,43 @@ export default function SiteFooter() {
                 {t('footer.brand.description')}
               </p>
 
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full border border-border/50 bg-card/55 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/45">
-                  {t('footer.resources.pokeapi')}
-                </span>
-                <span className="rounded-full border border-border/50 bg-card/55 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/45">
-                  {t('footer.resources.tcgdex')}
-                </span>
-                <span className="rounded-full border border-border/50 bg-card/55 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/45">
-                  {t('footer.resources.github')}
-                </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="cat-no text-[0.55rem] text-muted-foreground/70 mr-1">Compiled from</span>
+                {[
+                  t('footer.resources.pokeapi'),
+                  t('footer.resources.tcgdex'),
+                  t('footer.resources.github'),
+                ].map((label) => (
+                  <span key={label} className="rounded-sm border border-foreground/15 bg-background/30 px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-foreground/65">
+                    {label}
+                  </span>
+                ))}
               </div>
             </motion.div>
 
-            <FooterSectionCard title={t('footer.navigation.title')} links={navigationLinks} />
-            <FooterSectionCard title={t('footer.resources.title')} links={resourceLinks} />
+            <FooterSectionCard
+              title={t('footer.navigation.title')}
+              caption="§ I — Index"
+              links={navigationLinks}
+            />
+            <FooterSectionCard
+              title={t('footer.resources.title')}
+              caption="§ II — Sources"
+              links={resourceLinks}
+            />
           </div>
 
-          <div className="relative z-0 mt-6 flex flex-col gap-5 border-t border-border/60 pt-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="relative z-0 mt-6 flex flex-col gap-5 border-t border-dashed border-foreground/15 pt-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex flex-col gap-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-foreground/35">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/55">
                 {t('home.footer_copyright', { year })}
               </p>
-              <p className="max-w-3xl text-sm leading-7 text-foreground/58">
+              <p className="max-w-3xl text-sm leading-7 text-foreground/65">
                 {t('footer.disclaimer.text')}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
+              <span className="cat-no text-[0.55rem] text-muted-foreground/70">§ III — Legal</span>
               <div className="flex flex-wrap gap-2">
                 {legalLinks.map((link) => (
                   <FooterAction key={`${link.href}-${link.label}`} {...link} />
