@@ -59,7 +59,7 @@ export default async function HeroSection() {
               <span className="cat-no text-[0.65rem]">Edition MMXXVI</span>
               <span className="cat-no text-[0.65rem] text-muted-foreground/70">Compiled 06·03·2026</span>
             </div>
-            <div className="editorial-ornament md:mt-1" aria-hidden="true">
+            <div className="editorial-ornament hidden md:flex md:mt-1" aria-hidden="true">
               <svg viewBox="0 0 80 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-auto text-foreground/40">
                 <path d="M0 12 H30" stroke="currentColor" strokeWidth="0.6" />
                 <path d="M40 12 C44 6 50 6 50 12 C50 18 56 18 60 12" stroke="currentColor" strokeWidth="0.8" fill="none" />

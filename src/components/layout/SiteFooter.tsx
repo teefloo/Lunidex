@@ -141,7 +141,7 @@ export default function SiteFooter() {
             </h2>
           </div>
 
-          <div className="relative z-0 grid gap-5 lg:grid-cols-[1.15fr_0.85fr_0.85fr]">
+          <div className="relative z-0 grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.85fr]">
             <motion.div
               whileHover={{ y: -2 }}
               transition={{ type: 'spring', stiffness: 260, damping: 24 }}

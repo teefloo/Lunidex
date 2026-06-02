@@ -25,7 +25,7 @@ export default function HeroControls() {
             <span aria-hidden="true" className="h-px w-6 bg-foreground/30" />
             <h2 className="cat-no text-[0.65rem] text-muted-foreground">Filter the Index</h2>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <span className="cat-no text-[0.65rem] text-muted-foreground/70">/ refine specimen entries</span>
           </div>
         </div>

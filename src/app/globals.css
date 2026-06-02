@@ -259,6 +259,9 @@ h3 {
   letter-spacing: -0.018em;
 }
 
+/* ── Component classes — wrapped in @layer components so Tailwind utilities ──
+   ── (hidden, md:flex, etc.) can correctly override their base display. ───── */
+@layer components {
 .font-display {
   font-family: var(--font-display);
   font-variation-settings: "opsz" 144, "SOFT" 30;
@@ -2001,6 +2004,9 @@ h3 {
   --radius-sm: calc(var(--radius) - 0.375rem);
   --radius-md: calc(var(--radius) - 0.125rem);
   --radius-lg: var(--radius);
+}
+
+/* ── end @layer components ────────────────────────────────────────────── */
 }
 
 @layer base {
