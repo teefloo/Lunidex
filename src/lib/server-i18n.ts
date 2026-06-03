@@ -2,9 +2,9 @@ import { cookies } from 'next/headers';
 import { createInstance } from 'i18next';
 import type { i18n as I18nInstance, TFunction, TOptions } from 'i18next';
 
-import { resources as allResources } from './i18n-resources';
 import { isSupportedLanguage, type SupportedLanguage } from './languages';
 
+import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import de from './i18n/de';
@@ -17,7 +17,7 @@ import pt from './i18n/pt';
 const SERVER_LANG_COOKIE = 'primedex-lang';
 
 const serverResources = {
-  en: allResources.en,
+  en: { translation: en.translation },
   fr: { translation: fr.translation },
   es: { translation: es.translation },
   de: { translation: de.translation },

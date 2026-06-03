@@ -51,37 +51,35 @@ const SHAPES = [
 ];
 
 export default function AdvancedFilters() {
-  const {
-    selectedTypes,
-    toggleType,
-    selectedGeneration,
-    setSelectedGeneration,
-    selectedEggGroups,
-    toggleEggGroup,
-    selectedColors,
-    toggleColor,
-    selectedShapes,
-    toggleShape,
-    isLegendary,
-    setIsLegendary,
-    isMythical,
-    setIsMythical,
-    minBaseStats,
-    setMinBaseStats,
-    minAttack,
-    setMinAttack,
-    minDefense,
-    setMinDefense,
-    minSpeed,
-    setMinSpeed,
-    minHp,
-    setMinHp,
-    heightRange,
-    setHeightRange,
-    weightRange,
-    setWeightRange,
-    resetFilters
-  } = usePrimeDexStore();
+  const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
+  const toggleType = usePrimeDexStore(s => s.toggleType);
+  const selectedGeneration = usePrimeDexStore(s => s.selectedGeneration);
+  const setSelectedGeneration = usePrimeDexStore(s => s.setSelectedGeneration);
+  const selectedEggGroups = usePrimeDexStore(s => s.selectedEggGroups);
+  const toggleEggGroup = usePrimeDexStore(s => s.toggleEggGroup);
+  const selectedColors = usePrimeDexStore(s => s.selectedColors);
+  const toggleColor = usePrimeDexStore(s => s.toggleColor);
+  const selectedShapes = usePrimeDexStore(s => s.selectedShapes);
+  const toggleShape = usePrimeDexStore(s => s.toggleShape);
+  const isLegendary = usePrimeDexStore(s => s.isLegendary);
+  const setIsLegendary = usePrimeDexStore(s => s.setIsLegendary);
+  const isMythical = usePrimeDexStore(s => s.isMythical);
+  const setIsMythical = usePrimeDexStore(s => s.setIsMythical);
+  const minBaseStats = usePrimeDexStore(s => s.minBaseStats);
+  const setMinBaseStats = usePrimeDexStore(s => s.setMinBaseStats);
+  const minAttack = usePrimeDexStore(s => s.minAttack);
+  const setMinAttack = usePrimeDexStore(s => s.setMinAttack);
+  const minDefense = usePrimeDexStore(s => s.minDefense);
+  const setMinDefense = usePrimeDexStore(s => s.setMinDefense);
+  const minSpeed = usePrimeDexStore(s => s.minSpeed);
+  const setMinSpeed = usePrimeDexStore(s => s.setMinSpeed);
+  const minHp = usePrimeDexStore(s => s.minHp);
+  const setMinHp = usePrimeDexStore(s => s.setMinHp);
+  const heightRange = usePrimeDexStore(s => s.heightRange);
+  const setHeightRange = usePrimeDexStore(s => s.setHeightRange);
+  const weightRange = usePrimeDexStore(s => s.weightRange);
+  const setWeightRange = usePrimeDexStore(s => s.setWeightRange);
+  const resetFilters = usePrimeDexStore(s => s.resetFilters);
   const { t } = useTranslation();
 
   const activeFiltersCount = [

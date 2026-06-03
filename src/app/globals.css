@@ -580,25 +580,9 @@ h3 {
   background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 22%, transparent), transparent);
 }
 
-/* Type bar — a thin colored bar across a card top, museum-tag style */
+/* Type label — colored text tag for Pokemon types */
 .type-bar {
-  height: 3px;
-  width: 100%;
-  background: linear-gradient(90deg, var(--type-color, var(--primary)), color-mix(in oklab, var(--type-color, var(--primary)) 60%, transparent 40%));
-  border-radius: 9999px;
-  position: relative;
-}
-
-.type-bar::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 30%, oklch(1 0 0 / 0.32) 50%, transparent 70%);
-  border-radius: inherit;
-}
-
-.dark .type-bar::after {
-  background: linear-gradient(90deg, transparent 30%, oklch(0 0 0 / 0.32) 50%, transparent 70%);
+  display: inline-block;
 }
 
 /* Specimen badge — a small spec number in the corner of a card */

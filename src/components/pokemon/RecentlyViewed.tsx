@@ -12,7 +12,8 @@ import { useMounted } from '@/hooks/useMounted';
 import Image from 'next/image';
 
 export default function RecentlyViewed() {
-  const { history, clearHistory } = usePrimeDexStore();
+  const history = usePrimeDexStore(s => s.history);
+  const clearHistory = usePrimeDexStore(s => s.clearHistory);
   const mounted = useMounted();
   const { t } = useTranslation();
 

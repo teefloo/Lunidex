@@ -7,7 +7,9 @@ import { X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 
 export default function TypeFilter() {
-  const { selectedTypes, toggleType, setSelectedTypes } = usePrimeDexStore();
+  const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
+  const toggleType = usePrimeDexStore(s => s.toggleType);
+  const setSelectedTypes = usePrimeDexStore(s => s.setSelectedTypes);
   const types = Object.keys(TYPE_COLORS);
   const { t } = useTranslation();
 

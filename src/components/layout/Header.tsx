@@ -71,14 +71,12 @@ function HeaderLink({ children, href, variant, size, className, ...props }: Head
 }
 
 export default function Header() {
-  const {
-    theme,
-    setTheme,
-    caughtPokemon,
-    language,
-    setLanguage,
-    systemLanguage,
-  } = usePrimeDexStore();
+  const theme = usePrimeDexStore(s => s.theme);
+  const setTheme = usePrimeDexStore(s => s.setTheme);
+  const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
+  const language = usePrimeDexStore(s => s.language);
+  const setLanguage = usePrimeDexStore(s => s.setLanguage);
+  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const { t, i18n } = useTranslation();
   const mounted = useMounted();
   const router = useRouter();

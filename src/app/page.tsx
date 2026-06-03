@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import Header from '@/components/layout/Header';
 import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
@@ -34,8 +35,10 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <script
+      <Script
+        id="software-app-jsonld"
         type="application/ld+json"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
       />
       <div className="app-page">

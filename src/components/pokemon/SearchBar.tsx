@@ -11,8 +11,9 @@ import { getAllPokemonSearchIndex } from '@/lib/api';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function SearchBar() {
-  const { searchTerm, setSearchTerm } = usePrimeDexStore();
-  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const searchTerm = usePrimeDexStore(s => s.searchTerm);
+  const setSearchTerm = usePrimeDexStore(s => s.setSearchTerm);
+  const [localSearch, setLocalSearch] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
@@ -30,16 +31,23 @@ export default function SearchBar() {
     });
   }, [queryClient]);
 
+  const prevSearchTermRef = useRef(searchTerm);
+
   useEffect(() => {
-    setLocalSearch(searchTerm);
+    if (prevSearchTermRef.current !== searchTerm) {
+      prevSearchTermRef.current = searchTerm;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Valid pattern: sync local state from external store
+      setLocalSearch(searchTerm);
+    }
   }, [searchTerm]);
 
   useEffect(() => {
+    if (localSearch === searchTerm) return;
     const timer = setTimeout(() => {
       setSearchTerm(localSearch);
     }, 300);
     return () => clearTimeout(timer);
-  }, [localSearch, setSearchTerm]);
+  }, [localSearch, searchTerm, setSearchTerm]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

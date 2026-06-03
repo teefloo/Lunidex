@@ -7,7 +7,15 @@ import { useTranslation, loadLanguage, persistLanguageCookie } from '@/lib/i18n'
 import { useEffect, useRef, useCallback } from 'react';
 
 export default function SettingsModal() {
-  const { isSettingsOpen, toggleSettings, soundEnabled, toggleSound, theme, setTheme, language, setLanguage, systemLanguage } = usePrimeDexStore();
+  const isSettingsOpen = usePrimeDexStore(s => s.isSettingsOpen);
+  const toggleSettings = usePrimeDexStore(s => s.toggleSettings);
+  const soundEnabled = usePrimeDexStore(s => s.soundEnabled);
+  const toggleSound = usePrimeDexStore(s => s.toggleSound);
+  const theme = usePrimeDexStore(s => s.theme);
+  const setTheme = usePrimeDexStore(s => s.setTheme);
+  const language = usePrimeDexStore(s => s.language);
+  const setLanguage = usePrimeDexStore(s => s.setLanguage);
+  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const { t, i18n } = useTranslation();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);

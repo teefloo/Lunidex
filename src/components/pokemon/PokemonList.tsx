@@ -1,13 +1,13 @@
 'use client';
 
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getPokemonList, getAllPokemonDetailed, getAllPokemonSummary } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_URL } from '@/lib/site';
 import { PokemonCard, PokemonCardSkeleton } from './PokemonCard';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Loader2, RotateCcw, SearchX } from 'lucide-react';
 import { PokemonBasicData, GraphQLPokemonSummary, LocalizedNameEntry, PokemonSpecies } from '@/types/pokemon';
 import { Badge } from '@/components/ui/badge';
@@ -71,34 +71,48 @@ export default function PokemonList() {
   const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const storeResetFilters = usePrimeDexStore(s => s.resetFilters);
+  const _hasHydrated = usePrimeDexStore(s => s._hasHydrated);
   const resetFilters = () => {
     storeResetFilters();
   };
 
   const resolvedLang = language === 'auto' ? systemLanguage : language;
 
-  const isBasicMode = selectedTypes.length === 0 &&
-    !searchTerm &&
-    !selectedGeneration &&
-    !showFavoritesOnly &&
-    showCaughtOnly === 'all' &&
-    isLegendary === null &&
-    isMythical === null &&
-    selectedEggGroups.length === 0 &&
-    selectedColors.length === 0 &&
-    selectedShapes.length === 0 &&
-    minBaseStats === 0 &&
-    minAttack === 0 &&
-    minDefense === 0 &&
-    minSpeed === 0 &&
-    minHp === 0 &&
-    heightRange[0] === 0 &&
-    heightRange[1] === 25 &&
-    weightRange[0] === 0 &&
-    weightRange[1] === 1200 &&
-    sortBy === 'id-asc';
+  // Detect whether any filter is non-default.
+  const hasActiveFilters = selectedTypes.length > 0 ||
+    !!searchTerm ||
+    !!selectedGeneration ||
+    showFavoritesOnly ||
+    showCaughtOnly !== 'all' ||
+    isLegendary !== null ||
+    isMythical !== null ||
+    selectedEggGroups.length > 0 ||
+    selectedColors.length > 0 ||
+    selectedShapes.length > 0 ||
+    minBaseStats > 0 ||
+    minAttack > 0 ||
+    minDefense > 0 ||
+    minSpeed > 0 ||
+    minHp > 0 ||
+    heightRange[0] > 0 ||
+    heightRange[1] < 25 ||
+    weightRange[0] > 0 ||
+    weightRange[1] < 1200 ||
+    sortBy !== 'id-asc';
 
-  // Advanced mode check
+  // Before IndexedDB hydration completes, always use basic mode.
+  // This matches the server render (all defaults) and prevents
+  // query switching (infinite → allSummary) during hydration,
+  // which was the root cause of the infinite load/stop cycle.
+  const isBasicMode = !_hasHydrated ? true : !hasActiveFilters;
+
+  // Whether stat-based advanced filters need the heavy allDetailed query
+  const needsDetailedData = isLegendary !== null || isMythical !== null ||
+    selectedEggGroups.length > 0 || selectedColors.length > 0 ||
+    selectedShapes.length > 0 || minBaseStats > 0 || minAttack > 0 ||
+    minDefense > 0 || minSpeed > 0 || minHp > 0;
+
+  // Whether ANY advanced filter is active (including height/weight/sort)
   const isAdvancedFilterActive = isLegendary !== null || 
     isMythical !== null || 
     selectedEggGroups.length > 0 || 
@@ -123,6 +137,7 @@ export default function PokemonList() {
     enabled: !isBasicMode || !!searchTerm, // Load only if filtering or searching
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000, // Keep 48h in garbage collection
+    placeholderData: keepPreviousData,
   });
 
   const { data: basicSummary } = useQuery({
@@ -178,23 +193,17 @@ export default function PokemonList() {
     }));
   }, [allSummary, basicSummary, isBasicMode]);
 
-  const buildInitialData = (p: PokemonResultItem) => {
-    const localizedNames = p.localizedNames || [];
-    return {
-      pokemon: {
-        id: p.id,
-        name: p.name,
-        types: p.types?.map((t) => ({ type: { name: t, url: '' }, slot: 1 })) || [],
-        localizedNames,
-      },
-      species: {
-        names: localizedNames.map((n: LocalizedNameEntry) => ({
-          name: n.name,
-          language: { name: n.language },
-        })),
-      } as Partial<PokemonSpecies>,
+  const buildInitialData = useMemo(() => {
+    return (p: PokemonResultItem) => {
+      const key = `${p.id}-${p.name}`;
+      let data = _initialDataCache.get(key);
+      if (!data) {
+        data = _buildInitialDataRaw(p);
+        _initialDataCache.set(key, data);
+      }
+      return data;
     };
-  };
+  }, []);
 
   const transformedDetailed = useMemo(() => {
     if (!allDetailed || !Array.isArray(allDetailed)) return [];
@@ -229,12 +238,15 @@ export default function PokemonList() {
   const filterKey = `${searchTerm}-${selectedTypes.join(',')}-${selectedGeneration}-${showFavoritesOnly}-${isLegendary}-${isMythical}-${selectedEggGroups.join(',')}-${selectedColors.join(',')}-${selectedShapes.join(',')}-${minBaseStats}-${minAttack}-${minDefense}-${minSpeed}-${minHp}-${heightRange[0]}-${heightRange[1]}-${weightRange[0]}-${weightRange[1]}-${isBasicMode}-${showCaughtOnly}`;
 
   const [displayLimit, setDisplayLimit] = useState(20);
-  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  const prevFilterKeyRef = useRef(filterKey);
 
-  if (prevFilterKey !== filterKey) {
-    setPrevFilterKey(filterKey);
-    setDisplayLimit(20);
-  }
+  useEffect(() => {
+    if (prevFilterKeyRef.current !== filterKey) {
+      prevFilterKeyRef.current = filterKey;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Valid pattern: reset pagination when filters change
+      setDisplayLimit(20);
+    }
+  }, [filterKey]);
 
   const filteredAndSortedResults = useMemo(() => {
     let results: PokemonResultItem[] = [];
@@ -246,12 +258,6 @@ export default function PokemonList() {
         return summaryMap.get(id) || { ...p, id };
       }) || [];
     } else {
-      // Only use detailed data when stat-based advanced filters require it
-      const needsDetailedData = isLegendary !== null || isMythical !== null ||
-        selectedEggGroups.length > 0 || selectedColors.length > 0 ||
-        selectedShapes.length > 0 || minBaseStats > 0 || minAttack > 0 ||
-        minDefense > 0 || minSpeed > 0 || minHp > 0;
-      
       let sourceData: PokemonResultItem[] = needsDetailedData ? transformedDetailed : transformedSummary;
       
       if (!sourceData || !Array.isArray(sourceData) || sourceData.length === 0) {
@@ -379,7 +385,7 @@ export default function PokemonList() {
     }
 
     return sortedResults;
-  }, [infiniteData, transformedSummary, transformedDetailed, searchTerm, selectedTypes, selectedGeneration, showFavoritesOnly, favorites, sortBy, isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes, minBaseStats, minAttack, minDefense, minSpeed, minHp, heightRange, weightRange, isBasicMode, resolvedLang, showCaughtOnly, caughtPokemon, isLoadingDetailed]);
+  }, [infiniteData, transformedSummary, transformedDetailed, searchTerm, selectedTypes, selectedGeneration, showFavoritesOnly, favorites, sortBy, isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes, minBaseStats, minAttack, minDefense, minSpeed, minHp, heightRange, weightRange, isBasicMode, resolvedLang, showCaughtOnly, caughtPokemon, isLoadingDetailed, needsDetailedData]);
 
   const displayedPokemon = useMemo(() => {
     if (!filteredAndSortedResults) return [];
@@ -396,8 +402,8 @@ export default function PokemonList() {
   };
 
   const isDataLoading = (isBasicMode && isLoadingInfinite) || 
-                        (!isBasicMode && isAdvancedFilterActive && isLoadingDetailed) || 
-                        (!isBasicMode && !isAdvancedFilterActive && isLoadingSummary) ||
+                        (!isBasicMode && needsDetailedData && isLoadingDetailed) || 
+                        (!isBasicMode && !needsDetailedData && isLoadingSummary) ||
                         (!isBasicMode && filteredAndSortedResults === null);
 
   if (isDataLoading) {
@@ -445,13 +451,25 @@ export default function PokemonList() {
     })),
   };
 
+  const jsonLdId = 'pokemon-item-list-jsonld';
+
+  useEffect(() => {
+    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
+    if (!el) {
+      el = document.createElement('script');
+      el.id = jsonLdId;
+      el.type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(itemListJsonLd);
+    return () => {
+      el?.remove();
+    };
+  }, [itemListJsonLd]);
+
   return (
     <div className="space-y-6 pb-20">
       <h2 className="sr-only">{t('list.title') || 'Pokémon List'}</h2>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
-      />
 
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
         <h2 className="sr-only">
@@ -482,7 +500,7 @@ export default function PokemonList() {
       )}
 
       <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-0.5 gap-x-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
           {displayedPokemon.map((p, idx) => (
             <div key={p.id} className="pokemon-grid-item">
               <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />
@@ -519,4 +537,24 @@ export default function PokemonList() {
       )}
     </div>
   );
+}
+
+const _initialDataCache = new Map<string, ReturnType<typeof _buildInitialDataRaw>>();
+
+function _buildInitialDataRaw(p: PokemonResultItem) {
+  const localizedNames = p.localizedNames || [];
+  return {
+    pokemon: {
+      id: p.id,
+      name: p.name,
+      types: p.types?.map((t) => ({ type: { name: t, url: '' }, slot: 1 })) || [],
+      localizedNames,
+    },
+    species: {
+      names: localizedNames.map((n: LocalizedNameEntry) => ({
+        name: n.name,
+        language: { name: n.language },
+      })),
+    } as Partial<PokemonSpecies>,
+  };
 }

@@ -18,7 +18,8 @@ const REGIONS = [
 ];
 
 export default function RegionFilter() {
-  const { selectedGeneration, setSelectedGeneration } = usePrimeDexStore();
+  const selectedGeneration = usePrimeDexStore(s => s.selectedGeneration);
+  const setSelectedGeneration = usePrimeDexStore(s => s.setSelectedGeneration);
   const { t } = useTranslation();
 
   return (

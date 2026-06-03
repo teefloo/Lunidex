@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight, Home } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
@@ -42,12 +43,22 @@ export function Breadcrumbs() {
       })),
     };
 
+  const jsonLdId = 'breadcrumb-jsonld';
+
+  useEffect(() => {
+    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
+    if (!el) {
+      el = document.createElement('script');
+      el.id = jsonLdId;
+      el.type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(breadcrumbJsonLd);
+    return () => { el?.remove(); };
+  }, [breadcrumbJsonLd]);
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
       <nav 
         aria-label="Breadcrumb" 
         className="w-full relative z-40 bg-background/60 backdrop-blur-xl border-b border-border/40"
