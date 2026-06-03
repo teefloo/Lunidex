@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
@@ -10,14 +10,20 @@ import { resolveLanguage } from '@/lib/languages';
 
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme, setSystemLanguage, language, systemLanguage, _hasHydrated } = usePrimeDexStore();
+  const theme = usePrimeDexStore(s => s.theme);
+  const setSystemLanguage = usePrimeDexStore(s => s.setSystemLanguage);
+  const language = usePrimeDexStore(s => s.language);
+  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
+  const _hasHydrated = usePrimeDexStore(s => s._hasHydrated);
   const resolvedLanguage = resolveLanguage(language, systemLanguage);
+  const langDetectedRef = useRef(false);
 
   useEffect(() => {
     if (!_hasHydrated) return;
 
-    // Detect system language
-    if (navigator.language) {
+    // Detect system language (once only)
+    if (!langDetectedRef.current && navigator.language) {
+      langDetectedRef.current = true;
       const baseLang = navigator.language.split('-')[0];
       if (baseLang !== systemLanguage) {
         setSystemLanguage(baseLang);

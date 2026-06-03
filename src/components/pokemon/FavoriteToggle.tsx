@@ -7,7 +7,9 @@ import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function FavoriteToggle() {
-  const { showFavoritesOnly, setShowFavoritesOnly, favorites } = usePrimeDexStore();
+  const showFavoritesOnly = usePrimeDexStore(s => s.showFavoritesOnly);
+  const setShowFavoritesOnly = usePrimeDexStore(s => s.setShowFavoritesOnly);
+  const favorites = usePrimeDexStore(s => s.favorites);
   const { t } = useTranslation();
   const mounted = useMounted();
   const favoritesLabel = mounted ? t('favorites.toggle', { count: favorites.length }) : `Favorites (${favorites.length})`;

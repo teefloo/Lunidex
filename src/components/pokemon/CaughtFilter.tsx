@@ -7,7 +7,8 @@ import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function CaughtFilter() {
-  const { showCaughtOnly, setShowCaughtOnly } = usePrimeDexStore();
+  const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
+  const setShowCaughtOnly = usePrimeDexStore(s => s.setShowCaughtOnly);
   const { t } = useTranslation();
   const mounted = useMounted();
 

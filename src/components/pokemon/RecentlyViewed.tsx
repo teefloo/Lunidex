@@ -1,99 +1,67 @@
 'use client';
 
 import { usePrimeDexStore } from '@/store/primedex';
-import { History, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { formatId } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
-import { Skeleton } from '@/components/ui/skeleton';
 
 import Image from 'next/image';
 
 export default function RecentlyViewed() {
-  const { history, clearHistory } = usePrimeDexStore();
+  const history = usePrimeDexStore(s => s.history);
+  const clearHistory = usePrimeDexStore(s => s.clearHistory);
   const mounted = useMounted();
   const { t } = useTranslation();
 
   if (!mounted || history.length === 0) {
-    return (
-      <section className="mt-4 px-4 min-h-[18rem]" aria-hidden="true">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-secondary/50 rounded-xl border border-border/60">
-              <History className="w-5 h-5 text-foreground/60" />
-            </div>
-            <div className="space-y-1">
-              <Skeleton className="h-5 w-40 rounded-full" />
-              <Skeleton className="h-3 w-28 rounded-full" />
-            </div>
-          </div>
-          <Skeleton className="h-9 w-28 rounded-full" />
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-3">
-          {Array.from({ length: 10 }).map((_, idx) => (
-            <div key={idx} className="glass-panel p-3 rounded-2xl flex flex-col items-center text-center gap-2">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-1">
-                <Skeleton className="h-3 w-8 rounded-full mx-auto" />
-                <Skeleton className="h-3 w-14 rounded-full mx-auto" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
+    return null;
   }
 
   return (
-    <section className="mt-4 px-4">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-secondary/50 rounded-xl border border-border/60">
-            <History className="w-5 h-5 text-foreground/60" />
-          </div>
-          <div>
-            <h2 className="text-xl font-black uppercase tracking-tight">{t('recently_viewed.title')}</h2>
-            <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mt-0.5">
-              {t('recently_viewed.subtitle', { count: history.length })}
-            </p>
-          </div>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+    <section className="mx-auto w-full max-w-6xl px-4 sm:px-2 mt-12">
+      <div className="flex items-end justify-between mb-4 gap-4">
+        <h2 className="font-display text-xl md:text-2xl font-extrabold tracking-[-0.01em] text-foreground">
+          {t('recently_viewed.title', { defaultValue: 'Recently viewed' })}
+        </h2>
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={clearHistory}
-          className="text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-destructive transition-colors"
+          className="h-8 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive transition-colors gap-1.5"
           aria-label={t('recently_viewed.clear')}
         >
-          <Trash2 className="w-3.5 h-3.5 mr-2" /> {t('recently_viewed.clear')}
+          <Trash2 className="w-3.5 h-3.5" /> {t('recently_viewed.clear')}
         </Button>
       </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-3">
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
         {history.map((p, idx) => (
           <Link key={`${p.id}-${idx}`} href={`/pokemon/${p.name}`}>
-            <motion.div 
-              whileHover={{ y: -5, scale: 1.05 }}
-              className="glass-panel p-3 rounded-2xl flex flex-col items-center text-center gap-2 group border-border/60 hover:border-primary/20 transition-all"
+            <motion.div
+              whileHover={{ y: -4 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 hover:border-primary/40 transition-all"
             >
-              <div className="relative w-12 h-12">
-                <div className="absolute inset-x-2 bottom-1 h-3 rounded-full bg-primary/10 transition-opacity group-hover:opacity-80" />
-                <Image 
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`} 
-                  alt={p.name} 
-                  width={48}
-                  height={48}
-                  sizes="48px"
-                  className="w-full h-full object-contain relative z-10 filter drop-shadow-sm"
+              <div className="relative w-10 h-10">
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
+                  alt={p.name}
+                  width={40}
+                  height={40}
+                  sizes="40px"
+                  className="w-full h-full object-contain relative z-10 drop-shadow-sm"
                 />
               </div>
-              <div className="space-y-0.5">
-                <p className="text-[10px] sm:text-[11px] font-black text-foreground/30">{formatId(p.id)}</p>
-                <p className="text-[10px] font-black capitalize truncate max-w-full text-foreground/70 group-hover:text-primary transition-colors">{p.name}</p>
+              <div className="space-y-0.5 w-full">
+                <p className="font-mono text-[8px] font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase">
+                  {formatId(p.id)}
+                </p>
+                <p className="text-[10px] font-display font-semibold italic editorial-italic capitalize truncate max-w-full text-foreground/80 group-hover:text-primary transition-colors">
+                  {p.name}
+                </p>
               </div>
             </motion.div>
           </Link>
@@ -102,4 +70,3 @@ export default function RecentlyViewed() {
     </section>
   );
 }
-

@@ -14,7 +14,8 @@ import { useMemo } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function SortSelector() {
-  const { sortBy, setSortBy } = usePrimeDexStore();
+  const sortBy = usePrimeDexStore(s => s.sortBy);
+  const setSortBy = usePrimeDexStore(s => s.setSortBy);
   const { t } = useTranslation();
   const mounted = useMounted();
 
