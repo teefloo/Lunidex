@@ -46,7 +46,7 @@ export default function SortSelector() {
             })()}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="glass-surface rounded-2xl p-1">
+        <SelectContent className="rounded-2xl p-1 bg-popover/95 supports-[backdrop-filter]:bg-popover/80 supports-[backdrop-filter]:backdrop-blur-2xl shadow-2xl border border-border/60">
           {options.map((opt) => (
             <SelectItem 
               key={opt.value} 

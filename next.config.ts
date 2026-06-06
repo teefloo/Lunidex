@@ -91,8 +91,8 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Cache sitemap and robots
-        source: '/(sitemap\\.xml|robots\\.txt)',
+        // Cache sitemap, robots, and AI discovery files
+        source: '/(sitemap\\.xml|robots\\.txt|llms\\.txt|llms-full\\.txt|ai\\.txt)',
         headers: [
           {
             key: 'Cache-Control',

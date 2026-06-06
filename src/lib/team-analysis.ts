@@ -35,7 +35,7 @@ export function calculateSynergyScore(
 
   let score = 100;
 
-  // 1. Subtract for duplicate types
+  // 1. Subtract for duplicate types (steeper penalty to discourage redundant typings)
   const typeCounts: Record<string, number> = {};
   teamData.forEach(p => {
     p.types.forEach(t => {
@@ -45,21 +45,67 @@ export function calculateSynergyScore(
 
   Object.values(typeCounts).forEach(count => {
     if (count > 1) {
-      score -= (count - 1) * 10;
+      score -= (count - 1) * 8;
     }
   });
 
-  // 2. Add for unique type coverage (offensive)
-  score += analysis.coverage.length * 5;
+  // 2. Bonus for unique type coverage (offensive breadth)
+  score += analysis.coverage.length * 2;
 
-  // 3. Subtract for major weaknesses (types where we have > 2 weaknesses and no resistances)
+  // 3. Bonus for defensive breadth (resistances and immunities)
+  const resistanceTypes = Object.values(analysis.resistancesCount).filter(v => v > 0).length;
+  score += resistanceTypes * 2;
+  const immunitiesTotal = Object.values(analysis.immunitiesCount).reduce((sum, v) => sum + v, 0);
+  score += immunitiesTotal * 3;
+
+  // 4. Subtract for major weaknesses
   Object.entries(analysis.weaknessesCount).forEach(([type, count]) => {
     if (count >= 3 && analysis.resistancesCount[type] === 0 && analysis.immunitiesCount[type] === 0) {
-      score -= 15;
+      score -= 12;
+    } else if (count >= 2 && analysis.resistancesCount[type] === 0 && analysis.immunitiesCount[type] === 0) {
+      score -= 4;
     }
   });
 
+  // 5. Role balance: reward diversity of combat roles
+  const roles = teamData.map(classifyRoleByDetailStats);
+  const uniqueRoles = new Set(roles);
+  score += uniqueRoles.size * 5;
+
+  // 6. Stat balance: penalize if the lowest average stat is too low
+  const averages = [
+    analysis.stats.avgHp,
+    analysis.stats.avgAtk,
+    analysis.stats.avgDef,
+    analysis.stats.avgSpAtk,
+    analysis.stats.avgSpDef,
+    analysis.stats.avgSpe,
+  ];
+  const minAvg = Math.min(...averages);
+  if (minAvg < 55) score -= 18;
+  else if (minAvg < 70) score -= 10;
+  else if (minAvg < 80) score -= 4;
+
   return Math.min(100, Math.max(0, score));
+}
+
+function classifyRoleByDetailStats(p: PokemonDetail): string {
+  const hp = p.stats.find(s => s.stat.name === 'hp')?.base_stat ?? 0;
+  const atk = p.stats.find(s => s.stat.name === 'attack')?.base_stat ?? 0;
+  const def = p.stats.find(s => s.stat.name === 'defense')?.base_stat ?? 0;
+  const spAtk = p.stats.find(s => s.stat.name === 'special-attack')?.base_stat ?? 0;
+  const spDef = p.stats.find(s => s.stat.name === 'special-defense')?.base_stat ?? 0;
+  const spe = p.stats.find(s => s.stat.name === 'speed')?.base_stat ?? 0;
+
+  if (spe >= 120 && (atk >= 100 || spAtk >= 100)) return 'speedster';
+  if (def >= 100 && spDef >= 100 && hp >= 80) return 'wall';
+  if (def >= 100 && hp >= 80 && atk >= spAtk) return 'physical-tank';
+  if (spDef >= 100 && hp >= 80 && spAtk >= atk) return 'special-tank';
+  if (atk >= 100 && atk >= spAtk && spe >= 80) return 'physical-sweeper';
+  if (spAtk >= 100 && spAtk > atk && spe >= 80) return 'special-sweeper';
+  if (atk + def > spAtk + spDef && atk >= def) return 'physical-sweeper';
+  if (spAtk + spDef > atk + def && spAtk >= spDef) return 'special-sweeper';
+  return 'all-rounder';
 }
 
 export function analyzeTeam(

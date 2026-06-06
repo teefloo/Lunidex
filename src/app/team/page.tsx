@@ -2,6 +2,7 @@
 
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
+import GenerationPicker from '@/components/team/GenerationPicker';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAllPokemonDetailed } from '@/lib/api';
@@ -27,6 +28,11 @@ import { useTranslation } from '@/lib/i18n';
 import { resolveLanguage } from '@/lib/languages';
 import { toast } from 'sonner';
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
+import {
+  rankAutoCompleteCandidates,
+  TargetGeneration,
+  DEFAULT_AUTO_COMPLETE_OPTIONS,
+} from '@/lib/auto-complete';
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 
@@ -46,6 +52,9 @@ import Image from 'next/image';
 export default function TeamPage() {
   const { language, systemLanguage, team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore();
   const [isAutoCompleting, setIsAutoCompleting] = useState(false);
+  const [targetGeneration, setTargetGeneration] = useState<TargetGeneration>(
+    DEFAULT_AUTO_COMPLETE_OPTIONS.targetGeneration
+  );
   const { t } = useTranslation();
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
@@ -83,28 +92,23 @@ export default function TeamPage() {
   const pokemonData = pokemonQueries.map(q => q.data).filter((d): d is { pokemon: NonNullable<typeof d>['pokemon']; species: NonNullable<typeof d>['species'] } => !!d?.pokemon).map(d => d.pokemon);
   const teamData = pokemonQueries.map(q => q.data).filter((d): d is { pokemon: NonNullable<typeof d>['pokemon']; species: NonNullable<typeof d>['species'] } => !!d?.pokemon);
 
-  // Type relations for the whole team
+  // Fetch relations for all 18 types so suggestion logic can recommend
+  // types that resist the team's weaknesses but aren't yet on the team.
   const typeRelationsQueries = useQueries({
-    queries: pokemonData.flatMap(p => 
-      p.types.map(t => ({
-        queryKey: ['typeRelations', t.type.name],
-        queryFn: () => getTypeRelations(t.type.name),
-        staleTime: 24 * 60 * 60 * 1000,
-      }))
-    )
+    queries: Object.keys(TYPE_COLORS).map(typeName => ({
+      queryKey: ['typeRelations', typeName],
+      queryFn: () => getTypeRelations(typeName),
+      staleTime: 24 * 60 * 60 * 1000,
+    }))
   });
 
   const analysis = useMemo(() => {
     if (pokemonData.length === 0 || typeRelationsQueries.some(q => q.isLoading)) return null;
 
     const relationsMap: Record<string, TypeRelations> = {};
-    const uniqueTypes = [...new Set(pokemonData.flatMap(p => p.types.map(t => t.type.name)))];
-    
-    typeRelationsQueries.forEach((q, i) => {
-      if (q.data) {
-        const typeName = uniqueTypes[i];
-        if (typeName) relationsMap[typeName] = q.data;
-      }
+    Object.keys(TYPE_COLORS).forEach((typeName, i) => {
+      const data = typeRelationsQueries[i]?.data;
+      if (data) relationsMap[typeName] = data;
     });
 
     return analyzeTeam(pokemonData, relationsMap);
@@ -124,26 +128,37 @@ export default function TeamPage() {
 
   const handleAutoComplete = async () => {
     if (!analysis || team.length >= 6) return;
-    
+
     setIsAutoCompleting(true);
     try {
       const allPokemon = await getAllPokemonDetailed();
-      const currentTeamIds = new Set(team);
-      
-      // Filter for pokemon that match suggested types and have good stats
-      const candidates = allPokemon.filter(p => 
-        !currentTeamIds.has(p.id) &&
-        p.pokemon_v2_pokemontypes.some(t => analysis.suggestions.types.includes(t.pokemon_v2_type.name))
-      ).sort((a, b) => {
-        const totalA = a.pokemon_v2_pokemonstats.reduce((sum, s) => sum + s.base_stat, 0);
-        const totalB = b.pokemon_v2_pokemonstats.reduce((sum, s) => sum + s.base_stat, 0);
-        return totalB - totalA;
+
+      const relationsMap: Record<string, TypeRelations> = {};
+      Object.keys(TYPE_COLORS).forEach((typeName, i) => {
+        const data = typeRelationsQueries[i]?.data;
+        if (data) relationsMap[typeName] = data;
       });
 
-      const toAdd = candidates.slice(0, 6 - team.length);
+      const result = rankAutoCompleteCandidates(
+        pokemonData,
+        analysis,
+        allPokemon,
+        relationsMap,
+        {
+          ...DEFAULT_AUTO_COMPLETE_OPTIONS,
+          targetGeneration,
+        }
+      );
+
+      const toAdd = result.added;
       if (toAdd.length > 0) {
         toAdd.forEach(p => addToTeam(p.id));
-        toast.success(t('team.added_suggestions', { count: toAdd.length }));
+        toast.success(
+          t('team.added_suggestions', {
+            count: toAdd.length,
+            synergy: Math.round(result.finalSynergy),
+          })
+        );
       } else {
         toast.info(t('team.no_suggestions'));
       }
@@ -190,39 +205,48 @@ export default function TeamPage() {
           eyebrow={t('team.eyebrow', { defaultValue: 'PrimeDex' })}
           className="mt-16 md:mt-20"
           badge={(
-            <div className="flex flex-wrap items-center justify-end gap-3">
+            <div className="flex flex-col items-end gap-3">
               {team.length > 0 && team.length < 6 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAutoComplete}
-                  disabled={isAutoCompleting}
-                  className="rounded-full text-[10px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
-                >
-                  {isAutoCompleting ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Zap className="w-2.5 h-2.5" />}
-                  {t('team.auto_complete')}
-                </Button>
+                <GenerationPicker
+                  value={targetGeneration}
+                  onChange={setTargetGeneration}
+                  label={t('team.generation_label')}
+                />
               )}
-              {pokemonData.length > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={handleShareTeam}
-                  className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
-                >
-                  <Share className="w-4 h-4" />
-                  {t('detail.share')}
-                </Button>
-              )}
-              {pokemonData.length > 0 && (
-                <Button
-                  variant="destructive"
-                  onClick={clearTeam}
-                  className="rounded-full font-black uppercase tracking-widest gap-2"
-                >
-                  <Trash2CustomIcon className="w-4 h-4" />
-                  {t('team.disband')}
-                </Button>
-              )}
+              <div className="flex flex-wrap items-center justify-end gap-3">
+                {team.length > 0 && team.length < 6 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAutoComplete}
+                    disabled={isAutoCompleting}
+                    className="rounded-full text-[10px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
+                  >
+                    {isAutoCompleting ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Zap className="w-2.5 h-2.5" />}
+                    {t('team.auto_complete')}
+                  </Button>
+                )}
+                {pokemonData.length > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={handleShareTeam}
+                    className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
+                  >
+                    <Share className="w-4 h-4" />
+                    {t('detail.share')}
+                  </Button>
+                )}
+                {pokemonData.length > 0 && (
+                  <Button
+                    variant="destructive"
+                    onClick={clearTeam}
+                    className="rounded-full font-black uppercase tracking-widest gap-2"
+                  >
+                    <Trash2CustomIcon className="w-4 h-4" />
+                    {t('team.disband')}
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         />

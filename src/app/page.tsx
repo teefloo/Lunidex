@@ -1,18 +1,20 @@
-import Script from 'next/script';
 import Header from '@/components/layout/Header';
 import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
 import HeroSection from '@/components/layout/HeroSection';
+import HomeFaqSection from '@/components/layout/HomeFaqSection';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, SITE_KEYWORDS, FEATURE_LIST } from '@/lib/site';
+import { getServerT } from '@/lib/server-i18n';
 
 export default async function Home() {
   const queryClient = new QueryClient();
+  const t = await getServerT();
+  const baseUrl = SITE_URL;
 
-  // Prefetch the first page of pokemon
   await queryClient.prefetchInfiniteQuery({
     queryKey: pokemonKeys.lists(),
     queryFn: getPokemonList,
@@ -23,23 +25,176 @@ export default async function Home() {
     queryFn: () => getPokemonSummarySlice(80, 0),
   });
 
+  const topPokemon = [
+    'pikachu', 'charizard', 'mewtwo', 'rayquaza', 'arceus',
+    'garchomp', 'lucario', 'eevee', 'snorlax', 'dragonite',
+    'gengar', 'alakazam', 'machamp', 'lapras', 'gyarados',
+  ];
+
   const softwareAppJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'PrimeDex Dashboard',
+    '@id': `${baseUrl}/#webapp-home`,
+    name: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    url: `${baseUrl}/en`,
+    applicationCategory: ['GameApplication', 'EducationalApplication'],
+    applicationSubCategory: 'GameDatabase',
     operatingSystem: 'All',
-    applicationCategory: 'GameApplication',
-    description: 'A high-performance Gaming Dashboard for Pokémon tracking and team building.',
-    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    image: `${baseUrl}/opengraph-image`,
+    featureList: FEATURE_LIST.join(', '),
+    keywords: SITE_KEYWORDS.join(', '),
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    datePublished: '2024-01-15',
+    dateModified: '2026-06-04',
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    isPartOf: { '@id': `${baseUrl}/#webapp` },
+  };
+
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${baseUrl}/#pokedex-list`,
+    name: 'Complete Pokédex — All 1025 Pokémon',
+    description: 'The complete National Pokédex listing all 1025 Pokémon across 9 generations with stats, types, and official artwork.',
+    url: `${baseUrl}/en`,
+    numberOfItems: 1025,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: topPokemon.map((slug, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: slug.charAt(0).toUpperCase() + slug.slice(1),
+      url: `${baseUrl}/en/pokemon/${slug}`,
+      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${[25, 6, 150, 384, 493, 445, 448, 133, 143, 149, 94, 65, 68, 131, 130][index]}.png`,
+    })),
+  };
+
+  const faqPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${baseUrl}/#faq`,
+    url: `${baseUrl}/en`,
+    name: t('home.faq_title'),
+    inLanguage: 'en',
+    mainEntity: [
+      { '@type': 'Question', name: t('home.faq_q1'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a1') } },
+      { '@type': 'Question', name: t('home.faq_q2'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a2') } },
+      { '@type': 'Question', name: t('home.faq_q3'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a3') } },
+      { '@type': 'Question', name: t('home.faq_q4'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a4') } },
+      { '@type': 'Question', name: t('home.faq_q5'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a5') } },
+      { '@type': 'Question', name: t('home.faq_q6'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a6') } },
+    ],
+  };
+
+  const homeSpeakableJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${baseUrl}/#speakable-home`,
+    url: `${baseUrl}/en`,
+    name: SITE_NAME,
+    datePublished: '2024-01-15',
+    dateModified: '2026-06-04',
+    inLanguage: 'en',
+    isPartOf: { '@id': `${baseUrl}/#webapp` },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['#hero-title', '#faq-title', 'h1', 'h2'],
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${baseUrl}/#breadcrumb-home`,
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: SITE_NAME,
+        item: `${baseUrl}/en`,
+      },
+    ],
+  };
+
+  const howToJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    '@id': `${baseUrl}/#howto-team-builder`,
+    name: 'How to build a competitive Pokémon team with PrimeDex',
+    description: 'Step-by-step guide to building a balanced 6-Pokémon team using the PrimeDex team builder tool, optimized for type coverage, stat synergy, and role distribution.',
+    totalTime: 'PT5M',
+    estimatedCost: { '@type': 'MonetaryAmount', currency: 'USD', value: '0' },
+    tool: [
+      { '@type': 'HowToTool', name: 'PrimeDex team builder' },
+      { '@type': 'HowToTool', name: 'PokeAPI type data' },
+    ],
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Open the team builder',
+        text: 'Navigate to /en/team to access the drag-and-drop team builder.',
+        url: `${baseUrl}/en/team`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Add 6 Pokémon',
+        text: 'Add up to 6 Pokémon from the National Pokédex (all 1025 entries).',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Check type coverage',
+        text: 'Review the live type coverage bar to identify weaknesses across 18 offensive types.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Balance roles',
+        text: 'Aim for at least one physical sweeper, one special wallbreaker, one tank, and one support/defensive pivot.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 5,
+        name: 'Export and share',
+        text: 'Save the team to your account or export it as a Showdown paste.',
+      },
+    ],
   };
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Script
+      <script
         id="software-app-jsonld"
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
+      />
+      <script
+        id="item-list-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <script
+        id="faq-page-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
+      />
+      <script
+        id="home-speakable-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSpeakableJsonLd) }}
+      />
+      <script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        id="howto-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
       />
       <div className="app-page">
         <Header />
@@ -49,6 +204,7 @@ export default async function Home() {
 
           <PokemonList />
           <ClientRecentlyViewed />
+          <HomeFaqSection />
         </main>
 
 

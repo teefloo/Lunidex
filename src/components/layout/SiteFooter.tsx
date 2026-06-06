@@ -20,6 +20,14 @@ export default function SiteFooter() {
     { href: '/moves', label: t('nav.moves') },
     { href: '/quiz', label: t('nav.quiz') },
     { href: '/favorites', label: t('nav.favorites') },
+    { href: '/faq', label: t('nav.faq') },
+  ];
+
+  const legalLinks = [
+    { href: '/legal', label: t('footer.legal.legal_notice') },
+    { href: '/privacy', label: t('footer.legal.privacy') },
+    { href: '/terms', label: t('footer.legal.terms') },
+    { href: '/cookies', label: t('footer.legal.cookies') },
   ];
 
   return (
@@ -34,7 +42,7 @@ export default function SiteFooter() {
           </div>
 
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-            {navigationLinks.slice(0, 5).map((link) => (
+            {navigationLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -64,6 +72,24 @@ export default function SiteFooter() {
             </a>
           </div>
         </div>
+
+        <nav
+          aria-label={t('footer.legal.title')}
+          className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground"
+        >
+          <span className="font-semibold uppercase tracking-wide text-foreground/50">
+            {t('footer.legal.title')}
+          </span>
+          {legalLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="hover:text-foreground transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
         <p className="mt-6 text-[11px] text-muted-foreground/60 max-w-3xl">
           {t('footer.disclaimer.text')}

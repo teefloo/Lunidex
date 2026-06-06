@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>PrimeDex</ShortName>
+  <Description>Search the National Pokédex — 1025 Pokémon with stats, evolutions, and moves.</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Url type="text/html" template="https://primedex.vercel.app/en?search={searchTerms}"/>
+  <Image height="64" width="64" type="image/png">https://primedex.vercel.app/icon-192.png</Image>
+  <Developer>PrimeDex</Developer>
+  <Contact>contact@primedex.app</Contact>
+  <Attribution>Search data via PokéAPI and TCGdex</Attribution>
+  <SyndicationRight>open</SyndicationRight>
+  <AdultContent>false</AdultContent>
+  <Language>en-US</Language>
+  <Language>fr-FR</Language>
+  <Language>de-DE</Language>
+  <Language>es-ES</Language>
+  <Language>it-IT</Language>
+  <Language>ja-JP</Language>
+  <Language>ko-KR</Language>
+  <Language>zh-CN</Language>
+  <Language>pt-BR</Language>
+</OpenSearchDescription>

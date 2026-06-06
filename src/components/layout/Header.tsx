@@ -22,7 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getFormDisplayName } from '@/lib/form-names';
-import { useTranslation, loadLanguage, persistLanguageCookie } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
@@ -44,6 +44,7 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
+import { useChangeLanguage } from '@/hooks/useChangeLanguage';
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -75,11 +76,11 @@ export default function Header() {
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const language = usePrimeDexStore(s => s.language);
-  const setLanguage = usePrimeDexStore(s => s.setLanguage);
   const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const mounted = useMounted();
   const router = useRouter();
+  const changeLanguage = useChangeLanguage();
   const [localSearch, setLocalSearch] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -98,6 +99,10 @@ export default function Header() {
   }, []);
 
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const localizedHref = (path: string) => {
+    const normalized = path.startsWith('/') ? path : `/${path}`;
+    return normalized === '/' ? `/${resolvedLang}` : `/${resolvedLang}${normalized}`;
+  };
 
   const { data: allPokemon } = useQuery({
     queryKey: pokemonKeys.allSearchIndex(),
@@ -175,15 +180,8 @@ export default function Header() {
 
   const handleLanguageChange = useCallback((nextLanguage: string | null) => {
     if (!nextLanguage || nextLanguage === language) return;
-
-    setLanguage(nextLanguage);
-
-    const resolvedLang = nextLanguage === 'auto' ? (systemLanguage || 'en') : nextLanguage;
-    loadLanguage(resolvedLang).then(() => {
-      i18n.changeLanguage(resolvedLang);
-    });
-    persistLanguageCookie(resolvedLang);
-  }, [i18n, language, setLanguage, systemLanguage]);
+    changeLanguage(nextLanguage);
+  }, [changeLanguage, language]);
 
   const caughtCount = mounted ? caughtPokemon.length : 0;
   const progressPercent = Math.round((caughtCount / 1025) * 100);
@@ -198,7 +196,7 @@ export default function Header() {
           className="glass-toolbar codex-frame inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4"
         >
           <div className="flex shrink-0 items-center justify-start">
-            <Link href="/" className="flex items-center gap-2.5 group" aria-label={homeAriaLabel}>
+            <Link href={localizedHref('/')} className="flex items-center gap-2.5 group" aria-label={homeAriaLabel}>
               <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
                 <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
               </div>
@@ -211,8 +209,6 @@ export default function Header() {
                   <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground/90 md:text-base" style={{ fontVariationSettings: '"opsz" 144' }}>
                     Dex
                   </span>
-                  <span aria-hidden="true" className="ml-1.5 hidden h-3 w-px bg-foreground/30 sm:block" />
-                  <span className="ml-1.5 cat-no hidden text-[0.55rem] text-muted-foreground/80 sm:block">No. 0001</span>
                 </div>
 
                 <div className="flex h-3 items-center gap-1.5 px-0.5">
@@ -232,31 +228,31 @@ export default function Header() {
           </div>
 
           <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-full border border-foreground/10 bg-foreground/[0.03] px-1 py-0.5 backdrop-blur-xl lg:flex">
-            <HeaderLink href="/team" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/team')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Users className="h-3 w-3" /> {teamLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/compare" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/compare')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <ArrowLeftRight className="h-3 w-3" /> {compareLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/tcg" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/tcg')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <LayoutGrid className="h-3 w-3" /> {tcgLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/types" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/types')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Shapes className="h-3 w-3" /> {typesLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/moves" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/moves')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Swords className="h-3 w-3" /> {movesLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/quiz" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/quiz')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <BrainCircuit className="h-3 w-3" /> {quizLabel}
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href="/dashboard" variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+            <HeaderLink href={localizedHref('/dashboard')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <BarChart3 className="h-3 w-3" /> {dashboardLabel}
             </HeaderLink>
           </nav>
@@ -283,7 +279,7 @@ export default function Header() {
 
             <Tooltip>
               <TooltipTrigger>
-                  <Link href="/favorites" aria-label={t('nav.favorites')} className="hidden sm:block">
+                  <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} className="hidden sm:block">
                   <div
                     className="glass-control flex h-8 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500 active:scale-95"
                   >
@@ -376,63 +372,63 @@ export default function Header() {
                   <div className="flex flex-col gap-1 p-4">
                     <SheetClose
                       render={
-                        <Link href="/" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <PrimeDexLogo className="h-5 w-5 flex-shrink-0" /> {homeMenuLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/favorites" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/favorites')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Heart className="h-5 w-5 flex-shrink-0" /> {favoritesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/team" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/team')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Users className="h-5 w-5 flex-shrink-0" /> {teamLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/compare" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/compare')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <ArrowLeftRight className="h-5 w-5 flex-shrink-0" /> {compareLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/tcg" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/tcg')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <LayoutGrid className="h-5 w-5 flex-shrink-0" /> {tcgLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/types" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/types')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Shapes className="h-5 w-5 flex-shrink-0" /> {typesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/moves" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/moves')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Swords className="h-5 w-5 flex-shrink-0" /> {movesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/quiz" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/quiz')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {quizLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href="/dashboard" className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/dashboard')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <BarChart3 className="h-5 w-5 flex-shrink-0" /> {dashboardLabel}
                         </Link>
                       }

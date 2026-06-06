@@ -79,11 +79,14 @@ export default function PokemonList() {
   const resolvedLang = language === 'auto' ? systemLanguage : language;
 
   // Detect whether any filter is non-default.
+  // Note: `showCaughtOnly` is intentionally excluded so the basic (infinite
+  // scroll) mode keeps serving the prefetched first page. Switching to the
+  // `allSummary` query on a first-click cold cache was triggering a network
+  // error that bubbled to the root error boundary.
   const hasActiveFilters = selectedTypes.length > 0 ||
     !!searchTerm ||
     !!selectedGeneration ||
     showFavoritesOnly ||
-    showCaughtOnly !== 'all' ||
     isLegendary !== null ||
     isMythical !== null ||
     selectedEggGroups.length > 0 ||
@@ -138,6 +141,9 @@ export default function PokemonList() {
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000, // Keep 48h in garbage collection
     placeholderData: keepPreviousData,
+    // Never bubble summary fetch failures to the root error boundary — we
+    // already have basic + detailed fallbacks.
+    throwOnError: false,
   });
 
   const { data: basicSummary } = useQuery({
@@ -156,6 +162,7 @@ export default function PokemonList() {
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000,
     retry: 2,
+    throwOnError: false,
   });
 
   // 3. Normal Mode : Infinite Scroll
@@ -243,7 +250,7 @@ export default function PokemonList() {
   useEffect(() => {
     if (prevFilterKeyRef.current !== filterKey) {
       prevFilterKeyRef.current = filterKey;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Valid pattern: reset pagination when filters change
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset pagination when filters change
       setDisplayLimit(20);
     }
   }, [filterKey]);
@@ -253,10 +260,22 @@ export default function PokemonList() {
 
     if (isBasicMode) {
       const summaryMap = new Map(transformedSummary.map(d => [d.id, d]));
-      results = infiniteData?.pages.flatMap((page) => page.results).map(p => {
+      const basicResults = infiniteData?.pages.flatMap((page) => page.results).map(p => {
         const id = parseInt(p.url.split('/').filter(Boolean).pop() || '0');
         return summaryMap.get(id) || { ...p, id };
       }) || [];
+
+      // Apply the caught filter client-side over the prefetched basic slice
+      // so it works on first click without triggering the cold allSummary
+      // query. Users can load more pages to see additional caught/missing
+      // specimens.
+      if (showCaughtOnly === 'caught') {
+        results = basicResults.filter(p => caughtPokemon.includes(p.id));
+      } else if (showCaughtOnly === 'uncaught') {
+        results = basicResults.filter(p => !caughtPokemon.includes(p.id));
+      } else {
+        results = basicResults;
+      }
     } else {
       let sourceData: PokemonResultItem[] = needsDetailedData ? transformedDetailed : transformedSummary;
       
@@ -392,6 +411,33 @@ export default function PokemonList() {
     return filteredAndSortedResults.slice(0, displayLimit);
   }, [filteredAndSortedResults, displayLimit]);
 
+  const jsonLdId = 'pokemon-item-list-jsonld';
+
+  useEffect(() => {
+    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
+    const itemListJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      numberOfItems: filteredAndSortedResults?.length ?? 0,
+      itemListElement: displayedPokemon.map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: p.localizedNames?.find((n: LocalizedNameEntry) => n.language === resolvedLang)?.name || p.name,
+        url: `${SITE_URL}/${resolvedLang}/pokemon/${p.name}`,
+      })),
+    };
+    if (!el) {
+      el = document.createElement('script');
+      el.id = jsonLdId;
+      el.type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(itemListJsonLd);
+    return () => {
+      el?.remove();
+    };
+  }, [displayedPokemon, filteredAndSortedResults, resolvedLang]);
+
   const hasMoreFiltered = !isBasicMode && filteredAndSortedResults !== null && displayLimit < filteredAndSortedResults.length;
 
   const handleLoadMore = () => {
@@ -438,34 +484,6 @@ export default function PokemonList() {
       </div>
     );
   }
-
-  const itemListJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    numberOfItems: filteredAndSortedResults?.length ?? 0,
-    itemListElement: displayedPokemon.map((p, idx) => ({
-      '@type': 'ListItem',
-      position: idx + 1,
-      name: p.localizedNames?.find((n: LocalizedNameEntry) => n.language === resolvedLang)?.name || p.name,
-      url: `${SITE_URL}/pokemon/${p.name}`,
-    })),
-  };
-
-  const jsonLdId = 'pokemon-item-list-jsonld';
-
-  useEffect(() => {
-    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
-    if (!el) {
-      el = document.createElement('script');
-      el.id = jsonLdId;
-      el.type = 'application/ld+json';
-      document.head.appendChild(el);
-    }
-    el.textContent = JSON.stringify(itemListJsonLd);
-    return () => {
-      el?.remove();
-    };
-  }, [itemListJsonLd]);
 
   return (
     <div className="space-y-6 pb-20">

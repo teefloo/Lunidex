@@ -7,7 +7,7 @@ import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData }
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
-import { languageToPokemonLanguageId, isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { languageToPokemonLanguageId, isSupportedLanguage, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 
 // Route segment config for performance optimization
 export const revalidate = 3600; // Revalidate every hour
@@ -77,34 +77,79 @@ export async function generateMetadata(
     return {
       title,
       description: seoDescription,
+      alternates: {
+        canonical: `/${lang}/pokemon/${name}`,
+        languages: {
+          ...Object.fromEntries(
+            supportedLanguages.map((locale: SupportedLanguage) => [locale, `/${locale}/pokemon/${name}`])
+          ),
+          'x-default': `/en/pokemon/${name}`,
+        },
+      },
       openGraph: {
         title,
         description: seoDescription,
-        type: 'website',
-        images: [
-          {
-            url: image,
-            width: 475,
-            height: 475,
-            alt: displayName,
-          },
+        type: 'article',
+        url: `/${lang}/pokemon/${name}`,
+        locale: languageToMetadataLocale[lang],
+        siteName: 'PrimeDex',
+        publishedTime: '2024-01-15T00:00:00Z',
+        modifiedTime: new Date().toISOString(),
+        authors: ['PrimeDex'],
+        section: 'Pokédex',
+        tags: [
+          displayName,
+          'Pokemon',
+          'Pokedex',
+          ...pokemon.types.map(t => t.type.name),
+          'PrimeDex',
+          'Stats',
+          'Abilities',
         ],
+        images: image ? [{ url: image, width: 475, height: 475, alt: displayName }] : undefined,
       },
       twitter: {
         card: 'summary_large_image',
         title,
         description: seoDescription,
-        images: [image],
+        images: image ? [image] : undefined,
       },
+      authors: [{ name: 'PrimeDex', url: 'https://primedex.vercel.app/about' }],
+      creator: 'PrimeDex',
+      publisher: 'PrimeDex',
       keywords: [
-        displayName, 
-        'Pokemon', 
-        'Pokedex', 
+        displayName,
+        'Pokemon',
+        'Pokedex',
         ...pokemon.types.map(t => t.type.name),
         'PrimeDex',
         'Stats',
         'Abilities'
       ],
+      other: {
+        'article:published_time': '2024-01-15T00:00:00Z',
+        'article:modified_time': new Date().toISOString(),
+        'article:author': 'PrimeDex',
+        'article:section': 'Pokédex',
+        'pokemon:dex': String(pokemon.id),
+        'pokemon:generation': String(pokemon.id <= 151 ? 1 : pokemon.id <= 251 ? 2 : pokemon.id <= 386 ? 3 : pokemon.id <= 493 ? 4 : pokemon.id <= 649 ? 5 : pokemon.id <= 721 ? 6 : pokemon.id <= 809 ? 7 : pokemon.id <= 905 ? 8 : 9),
+        'pokemon:types': pokemon.types.map(t => t.type.name).join(','),
+        'citation_title': `${displayName} — Pokédex Entry | PrimeDex`,
+        'citation_publisher': 'PrimeDex',
+        'citation_author': 'PrimeDex',
+        'citation_language': lang,
+        'citation_release_date': '2024-01-15',
+        'citation_online_date': '2026-06-04',
+        'DC.title': displayName,
+        'DC.creator': 'PrimeDex',
+        'DC.subject': pokemon.types.map(t => t.type.name).join(', '),
+        'DC.description': seoDescription,
+        'DC.language': languageToMetadataLocale[lang],
+        'DC.publisher': 'PrimeDex',
+        'DC.contributor': 'PokéAPI (https://pokeapi.co)',
+        'DC.date': new Date().toISOString(),
+        'DC.type': 'InteractiveResource',
+      },
     };
   } catch {
     return {
@@ -128,9 +173,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   const cookieLang = await getServerLanguage();
   const lang: SupportedLanguage = urlLang ?? cookieLang;
   const langId = languageToPokemonLanguageId[lang];
-  const speciesLangCode = await getServerPokemonLanguage();
 
-  // For alternate forms, derive the base species name
   const baseName = getBaseSpeciesName(name);
 
   let pokemon: PokemonDetail;
@@ -159,55 +202,12 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   localized = localizedData;
   encounters = encountersData;
 
-  const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
-    || species?.names?.find(n => n.language.name === speciesLangCode)?.name
-    || species?.names?.find(n => n.language.name === lang)?.name
-    || species?.names?.find(n => n.language.name === 'en')?.name
-    || baseName;
-  const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
-
-  // JSON-LD structured data for Pokemon
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Thing',
-    name: displayName,
-    description: normalizeDescription(localized?.pokemon_v2_pokemonspeciesflavortexts?.[0]?.flavor_text) || `Stats and details for ${displayName}`,
-    image: pokemon.sprites.other?.['official-artwork'].front_default || pokemon.sprites.front_default,
-    url: `/pokemon/${name}`,
-    sku: pokemon.id.toString(),
-    brand: {
-      '@type': 'Brand',
-      name: 'Pokémon',
-    },
-    additionalProperty: [
-      {
-        '@type': 'PropertyValue',
-        name: 'Height',
-        value: `${pokemon.height / 10} m`,
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'Weight',
-        value: `${pokemon.weight / 10} kg`,
-      },
-      ...pokemon.stats.map(s => ({
-        '@type': 'PropertyValue',
-        name: s.stat.name,
-        value: s.base_stat
-      }))
-    ],
-  };
-
   return (
     <>
       <Header />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <PokemonDetailClient 
-        initialPokemon={pokemon} 
-        initialSpecies={species} 
+      <PokemonDetailClient
+        initialPokemon={pokemon}
+        initialSpecies={species}
         initialLocalized={localized}
         initialEncounters={encounters}
       />

@@ -3,8 +3,9 @@
 import { usePrimeDexStore } from '@/store/primedex';
 import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation, loadLanguage, persistLanguageCookie } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { useEffect, useRef, useCallback } from 'react';
+import { useChangeLanguage } from '@/hooks/useChangeLanguage';
 
 export default function SettingsModal() {
   const isSettingsOpen = usePrimeDexStore(s => s.isSettingsOpen);
@@ -14,9 +15,8 @@ export default function SettingsModal() {
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const language = usePrimeDexStore(s => s.language);
-  const setLanguage = usePrimeDexStore(s => s.setLanguage);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const changeLanguage = useChangeLanguage();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -45,12 +45,7 @@ export default function SettingsModal() {
   ];
 
   const handleLanguageChange = (code: string) => {
-    setLanguage(code);
-    const resolvedLang = code === 'auto' ? systemLanguage : code;
-    loadLanguage(resolvedLang).then(() => {
-      i18n.changeLanguage(resolvedLang);
-    });
-    persistLanguageCookie(resolvedLang);
+    changeLanguage(code);
   };
 
   const languageOptions = [

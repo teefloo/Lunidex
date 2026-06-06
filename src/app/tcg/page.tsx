@@ -3,23 +3,23 @@ import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
-import { getServerT } from '@/lib/server-i18n';
-import { SITE_URL } from '@/lib/site';
+import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
+  const lang = await getServerLanguage();
   const title = t('tcg.page_title');
   const description = t('tcg.page_description');
   return {
     title,
     description,
     alternates: {
-      canonical: '/tcg',
+      canonical: `/${lang}/tcg`,
     },
     openGraph: {
       title,
       description,
-      url: `${SITE_URL}/tcg`,
+      url: `/${lang}/tcg`,
       type: 'website',
     },
     twitter: {

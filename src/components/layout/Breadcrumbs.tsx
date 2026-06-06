@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight, Home } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
@@ -13,27 +13,34 @@ export function Breadcrumbs() {
   const { t } = useTranslation();
   const baseUrl = SITE_URL;
 
-  if (pathname === '/' || pathname.startsWith('/pokemon/')) return null;
+  const pathSegments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
+  const shouldHide = pathname === '/' || pathname.startsWith('/pokemon/');
 
-  const pathSegments = pathname.split('/').filter(Boolean);
-  
-  const breadcrumbs = [
+  const breadcrumbs = useMemo(() => [
     { label: t('nav.home'), href: '/', icon: true },
-    ...pathSegments.map((segment, index) => {
-      const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
-      
-      // Handle special cases for labels
+    ...pathSegments.map((segment) => {
+      const href = `/${pathSegments.slice(0, pathSegments.indexOf(segment) + 1).join('/')}`;
+
       let label = segment;
       if (segment === 'pokemon') label = t('list.pokemon');
-      else if (segment.match(/^[0-9]+$/)) label = `#${segment}`; // Pokemon ID
+      else if (segment.match(/^[0-9]+$/)) label = `#${segment}`;
       else label = segment.charAt(0).toUpperCase() + segment.slice(1);
 
       return { label, href, icon: false };
     })
-  ];
+  ], [pathSegments, t]);
 
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
+  const jsonLdId = 'breadcrumb-jsonld';
+
+  useEffect(() => {
+    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
+    if (shouldHide) {
+      el?.remove();
+      return;
+    }
+
+    const breadcrumbJsonLd = {
+      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: breadcrumbs.map((crumb, index) => ({
         '@type': 'ListItem',
@@ -43,10 +50,6 @@ export function Breadcrumbs() {
       })),
     };
 
-  const jsonLdId = 'breadcrumb-jsonld';
-
-  useEffect(() => {
-    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
     if (!el) {
       el = document.createElement('script');
       el.id = jsonLdId;
@@ -55,12 +58,14 @@ export function Breadcrumbs() {
     }
     el.textContent = JSON.stringify(breadcrumbJsonLd);
     return () => { el?.remove(); };
-  }, [breadcrumbJsonLd]);
+  }, [breadcrumbs, shouldHide, baseUrl]);
+
+  if (shouldHide) return null;
 
   return (
     <>
-      <nav 
-        aria-label="Breadcrumb" 
+      <nav
+        aria-label="Breadcrumb"
         className="w-full relative z-40 bg-background/60 backdrop-blur-xl border-b border-border/40"
       >
         <div className="container mx-auto px-6 md:px-12 pt-24 pb-4">

@@ -4,6 +4,7 @@ import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/s
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
+import { supportedLanguages, languageToMetadataLocale } from '@/lib/languages';
 
 type Props = {
   params: Promise<{ name: string }>;
@@ -31,26 +32,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const title = t('meta.pokemon_title', { name: displayName });
     const description = t('meta.pokemon_description', { name: displayName, types });
+    const languages: Record<string, string> = {};
+    for (const locale of supportedLanguages) {
+      languages[locale] = `/${locale}/pokemon/${name}`;
+    }
 
     return {
       title,
       description,
       alternates: {
-        canonical: `/pokemon/${name}`,
+        canonical: `/${lang}/pokemon/${name}`,
+        languages: { ...languages, 'x-default': `/en/pokemon/${name}` },
       },
       openGraph: {
         title,
         description,
-        url: `/pokemon/${name}`,
-        images: [{ url: artwork || '', width: 475, height: 475, alt: `${displayName} official artwork` }],
+        url: `/${lang}/pokemon/${name}`,
+        images: artwork ? [{ url: artwork, width: 475, height: 475, alt: `${displayName} official artwork` }] : undefined,
         type: 'article',
-        locale: lang,
+        locale: languageToMetadataLocale[lang],
       },
       twitter: {
         card: 'summary_large_image',
         title,
         description,
-        images: [artwork || ''],
+        images: artwork ? [artwork] : undefined,
       },
       keywords: [
         displayName.toLowerCase(),
@@ -79,8 +85,9 @@ export default async function PokemonLayout({
 }) {
   const { name } = await params;
   const speciesLangCode = await getServerPokemonLanguage();
+  const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
-  let jsonLd = null;
+  let webPageJsonLd = null;
   let breadcrumbJsonLd = null;
 
   try {
@@ -96,58 +103,75 @@ export default async function PokemonLayout({
     const imageUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
     const totalStats = pokemon.stats.reduce((sum: number, s: { base_stat: number }) => sum + s.base_stat, 0);
     const typesArr = pokemon.types.map((typeItem: { type: { name: string } }) => typeItem.type.name);
+    const typesString = typesArr.join('/');
+    const statProperties = pokemon.stats.map((s: { stat: { name: string }; base_stat: number }) => ({
+      '@type': 'PropertyValue',
+      name: s.stat.name,
+      value: s.base_stat,
+    }));
 
-    jsonLd = {
+    webPageJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
+      '@id': `${baseUrl}/${lang}/pokemon/${name}#webpage`,
       name: `${displayName} — Complete Pokémon Guide`,
       headline: `${displayName} — Stats, Evolutions, Moves & Builds`,
-      description: `Comprehensive data for ${displayName}: base stat total of ${totalStats}, ${typesArr.join('/')} type. Full evolution chain, competitive builds, moveset analysis, abilities, and TCG cards.`,
-      url: `${baseUrl}/pokemon/${name}`,
+      description: `Comprehensive data for ${displayName}: base stat total of ${totalStats}, ${typesString} type. Full evolution chain, competitive builds, moveset analysis, abilities, and TCG cards.`,
+      url: `${baseUrl}/${lang}/pokemon/${name}`,
+      inLanguage: languageToMetadataLocale[lang],
+      datePublished: '2024-01-15T00:00:00Z',
+      dateModified: new Date().toISOString(),
+      lastReviewed: new Date().toISOString(),
       primaryImageOfPage: imageUrl ? {
         '@type': 'ImageObject',
         url: imageUrl,
+        width: 475,
+        height: 475,
       } : undefined,
       about: {
         '@type': 'Thing',
         name: displayName,
-        description: `Pokemon data for ${displayName}`,
+        alternateName: species?.names?.map((n) => n.name).filter(Boolean) || [],
+        description: `Pokémon data for ${displayName} (${typesString} type, BST ${totalStats}).`,
         image: imageUrl,
-        url: `${baseUrl}/pokemon/${name}`,
+        url: `${baseUrl}/${lang}/pokemon/${name}`,
+        identifier: pokemon.id.toString(),
+        sameAs: [
+          `https://pokeapi.co/api/v2/pokemon/${pokemon.id}`,
+          `https://bulbapedia.bulbagarden.net/wiki/${displayName.replace(/\s/g, '_')}`,
+        ],
+        additionalProperty: [
+          { '@type': 'PropertyValue', name: 'National Dex Number', value: pokemon.id },
+          { '@type': 'PropertyValue', name: 'Height', value: `${pokemon.height / 10} m` },
+          { '@type': 'PropertyValue', name: 'Weight', value: `${pokemon.weight / 10} kg` },
+          { '@type': 'PropertyValue', name: 'Base Stat Total', value: totalStats },
+          { '@type': 'PropertyValue', name: 'Types', value: typesString },
+          ...statProperties,
+        ],
       },
-      author: {
+      author: { '@id': `${baseUrl}/#organization` },
+      publisher: { '@id': `${baseUrl}/#organization` },
+      sourceOrganization: {
         '@type': 'Organization',
-        name: 'PrimeDex',
-        url: baseUrl,
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'PrimeDex',
-        url: baseUrl,
+        name: 'PokéAPI',
+        url: 'https://pokeapi.co',
       },
       keywords: `${displayName}, Pokemon, ${typesArr.join(', ')}, Pokedex, stats, evolution, moveset, competitive builds`,
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': `${baseUrl}/pokemon/${name}`,
+      isPartOf: { '@id': `${baseUrl}/#website` },
+      speakable: {
+        '@type': 'SpeakableSpecification',
+        cssSelector: ['h1', 'h2', '#pokemon-stats'],
       },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}/${lang}/pokemon/${name}` },
     };
 
     breadcrumbJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'PrimeDex',
-          item: baseUrl,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: displayName,
-          item: `${baseUrl}/pokemon/${name}`,
-        },
+        { '@type': 'ListItem', position: 1, name: 'PrimeDex', item: `${baseUrl}/${lang}` },
+        { '@type': 'ListItem', position: 2, name: 'Pokédex', item: `${baseUrl}/${lang}` },
+        { '@type': 'ListItem', position: 3, name: displayName, item: `${baseUrl}/${lang}/pokemon/${name}` },
       ],
     };
   } catch {
@@ -156,10 +180,10 @@ export default async function PokemonLayout({
 
   return (
     <>
-      {jsonLd && (
+      {webPageJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
         />
       )}
       {breadcrumbJsonLd && (

@@ -1,0 +1,66 @@
+# PrimeDex
+
+> The most complete online Pokédex on the open web. Browse all 1025 Pokémon with detailed base stats, evolution chains, abilities, moves, type matchups, competitive builds, team builder, side-by-side comparison, and TCG cards. Available in 9 languages, free, fast, and beautifully designed.
+
+## Short Facts
+- **Pokémon covered**: 1,025 (Generations I–IX, complete National Dex)
+- **Total base stats in database**: 1,025 × 6 = 6,150 stat entries
+- **Distinct types**: 18 (Normal, Fire, Water, Electric, Grass, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, Fairy)
+- **Distinct abilities**: 300+ across all Pokémon
+- **Languages supported**: 9 (en, fr, de, es, it, ja, ko, zh, pt)
+- **TCG cards indexed**: 25,000+ across all sets
+- **Page load (LCP, p75)**: < 1.0s on 4G (Next.js 16 + edge cache)
+- **Data freshness**: revalidated every 3600s (1 hour)
+- **License**: MIT (code), non-commercial fan project
+- **First launched**: January 2024
+
+## About
+PrimeDex (https://primedex.vercel.app) is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. The project is available on GitHub at https://github.com/teefloo/Poke and is not affiliated with Nintendo, Game Freak, or The Pokémon Company.
+
+## Core Features
+- Complete Pokédex of all 1025 Pokémon across 9 generations with localized names in 9 languages
+- Team Builder with type coverage analysis, shared weakness detection, and synergy scoring
+- Side-by-side comparison of up to 3 Pokémon with interactive stat radar charts
+- Type Chart with strengths, weaknesses, resistances, and immunities for all 18 types
+- Moves database with detailed power, accuracy, PP, and effect information
+- Pokémon TCG catalog with set, rarity, type, stage, and HP filters
+- "Who's That Pokémon?" quiz with 6 modes: Classic, Silhouette, Stats, Time Attack, Survival, Marathon
+- Living Dex Tracker for personal collection management (local storage)
+- Search and advanced filtering by generation, type, BST, egg groups, special status
+
+## Primary URLs
+- Home (Pokédex listing): https://primedex.vercel.app/en
+- Team Builder: https://primedex.vercel.app/en/team
+- Compare: https://primedex.vercel.app/en/compare
+- Type Chart: https://primedex.vercel.app/en/types
+- Moves: https://primedex.vercel.app/en/moves
+- Quiz: https://primedex.vercel.app/en/quiz
+- TCG Catalog: https://primedex.vercel.app/en/tcg
+- About: https://primedex.vercel.app/en/about
+- Sitemap: https://primedex.vercel.app/sitemap.xml
+
+## Data Sources (Authoritative Citations)
+- **PokéAPI** (https://pokeapi.co) — Pokémon species, base stats, moves, abilities, encounters, evolution chains. REST + GraphQL endpoints.
+- **TCGdex** (https://www.tcgdex.net) — Pokémon Trading Card Game catalog (cards, sets, rarities, images).
+- **PokéAPI GraphQL** (https://beta.pokeapi.co/graphql) — Localized species names and flavor text in 9 languages.
+
+All data is fetched server-side and cached with `revalidate=3600`. Origin sources are credited on every Pokémon page.
+
+## Languages
+The site is fully localized in 9 languages: English (en), French (fr), German (de), Spanish (es), Italian (it), Japanese (ja), Korean (ko), Simplified Chinese (zh), and Brazilian Portuguese (pt). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
+
+## Licensing
+- Application code: MIT License (https://github.com/teefloo/Poke/blob/main/LICENSE)
+- Pokémon data, names, and imagery: © Nintendo, Game Freak, The Pokémon Company
+- This is a non-commercial fan project for educational and entertainment purposes only
+
+## Contact
+- GitHub: https://github.com/teefloo/Poke
+- Issues and contributions: https://github.com/teefloo/Poke/issues
+
+## Optional
+- Privacy Policy: https://primedex.vercel.app/en/privacy
+- Terms of Service: https://primedex.vercel.app/en/terms
+- Full content snapshot: https://primedex.vercel.app/llms-full.txt
+- AI crawl policy: https://primedex.vercel.app/ai.txt
+- Security disclosure: https://primedex.vercel.app/.well-known/security.txt

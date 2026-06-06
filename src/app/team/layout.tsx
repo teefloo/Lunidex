@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import { getServerT } from '@/lib/server-i18n';
+import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
+  const lang = await getServerLanguage();
   const title = t('meta.team_title');
   const description = t('meta.team_description');
   return {
@@ -14,12 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
     },
     alternates: {
-      canonical: '/team',
+      canonical: `/${lang}/team`,
+      languages: buildSubpathLanguages('/team'),
     },
     openGraph: {
       title,
       description,
-      url: '/team',
+      url: `/${lang}/team`,
       type: 'website',
     },
     twitter: {
@@ -30,12 +33,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function TeamLayout({
+export default async function TeamLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const baseUrl = SITE_URL;
+  const lang = await getServerLanguage();
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: 'PrimeDex', path: '/' },
+    { name: 'Team Builder', path: '/team' },
+  ], lang);
   return (
     <>
       <script
@@ -48,10 +56,16 @@ export default function TeamLayout({
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
             description: 'Build your ultimate Pokémon team with type coverage analysis, weakness detection, and synergy scores.',
-            url: `${baseUrl}/team`,
+            url: `${baseUrl}/${lang}/team`,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            isAccessibleForFree: true,
+            featureList: 'Team of 6, type coverage analysis, weakness detection, synergy scoring, share via URL',
           }),
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
       {children}
     </>
