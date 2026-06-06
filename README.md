@@ -23,6 +23,12 @@ A high-performance Next.js 16 + React 19 dashboard for the entire National Poké
 
 </div>
 
+<!-- README-I18N:START -->
+
+**English** · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · [汉语](./README.zh.md) · [Português](./README.pt.md)
+
+<!-- README-I18N:END -->
+
 ## Overview
 
 PrimeDex is an open-source Pokédex dashboard for competitive players, TCG collectors, and curious fans. It covers all **1,025 Pokémon** across 9 generations, with localized names in 9 languages, side-by-side stat comparisons, a type-coverage team builder, and a 25k+ card TCG catalog.
