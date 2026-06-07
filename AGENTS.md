@@ -46,7 +46,7 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 ## Routing & Architecture
 
 - **Locale prefix is required.** `src/middleware.ts` rewrites `/<lang>/...` → `/...` and 308-redirects unprefixed paths based on the `primedex-lang` cookie or `Accept-Language`. Supported: `en, fr, es, de, it, ja, ko, zh, pt`. Use `useLocaleHref` to build internal links with the current prefix.
-- **Routes** (under `src/app/`): `/` (listing), `/pokemon/[name]`, `/team`, `/compare`, `/favorites`, `/quiz`, `/types`, `/tcg`, `/about`, `/cookies`, `/legal`, `/privacy`, `/terms`. `revalidate = 3600` and `generateStaticParams` (first 151) are set on the dynamic `[name]` page.
+- **Routes** (under `src/app/`): `/` (listing), `/pokemon/[name]`, `/team`, `/compare`, `/favorites`, `/quiz`, `/types`, `/tcg`, `/moves`, `/dashboard`, `/about`, `/faq`, `/cookies`, `/legal`, `/privacy`, `/terms`. `revalidate = 3600` and `generateStaticParams` (first 151) are set on the dynamic `[name]` page.
 - **Providers** (`src/app/providers.tsx`): TanStack Query (staleTime 10 min, gcTime 60 min, retry 1, no refetchOnWindowFocus), theme via store + `next-themes`, i18n.
 - **Data flow:** components consume TanStack Query hooks from `@/lib/api/`; persistent UI state (favorites, team, caught, filters, history, settings) from `@/store/primedex`.
 
@@ -54,7 +54,7 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 
 - **Dev uses webpack, not turbopack.** The `dev` script forces `--webpack`. `next.config.ts` still declares `turbopack.root`; leave it alone.
 - **Agentation dev tool** runs on `http://localhost:4747` (CSP and `allowedDevOrigins` are pre-wired for it). Toggled via `NEXT_PUBLIC_ENABLE_AGENTATION=true` in `.env.local`. Don't add 4747 to CSP yourself.
-- **`src/test/setup.ts` is missing.** `vitest.config.ts` points `setupFiles` to it. Create that file before adding tests, or `npm run test` / `npx vitest` will fail to start.
+- **Tests live next to the code they cover** (e.g., `src/lib/auto-complete.test.ts`). The Vitest setup file `src/test/setup.ts` is in place and just imports `@testing-library/jest-dom/vitest`.
 - **No CI yet** — no `.github/` directory. `vercel.json` only has `{"name": "poke-app"}`; deploy config lives in the Vercel dashboard.
 - **No project-level opencode config** — `.opencode/` is gitignored (has its own `node_modules`).
 - **`GEMINI.md` is a separate mandate document** at the repo root and in some subtrees; treat its rules as authoritative when they overlap.

@@ -40,31 +40,30 @@ export const PokeballLoader = memo(function PokeballLoader(
         <filter id="pokeball-shadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="2" stdDeviation="4" floodOpacity="0.15" />
         </filter>
+        <g id="pokeball-shape">
+          <g clipPath="url(#pokeball-top)">
+            <circle cx="60" cy="60" r="50" fill="#DC2626" />
+            <ellipse cx="45" cy="30" rx="22" ry="12" fill="white" opacity="0.12" />
+          </g>
+          <g clipPath="url(#pokeball-bottom)">
+            <circle cx="60" cy="60" r="50" fill="#F5F5F5" />
+          </g>
+          <rect x="10" y="55" width="100" height="10" rx="1" fill="#1A1A1A" />
+          <circle cx="60" cy="60" r="50" stroke="#1A1A1A" strokeWidth="4" fill="none" />
+          <circle cx="60" cy="60" r="16" fill="#F5F5F5" stroke="#1A1A1A" strokeWidth="4" />
+          <circle cx="60" cy="58" r="6" fill="white" opacity="0.5" />
+        </g>
       </defs>
 
-      <g className="pokeball-spin" filter="url(#pokeball-shadow)">
-        {/* Top half — red */}
-        <g clipPath="url(#pokeball-top)">
-          <circle cx="60" cy="60" r="50" fill="#DC2626" />
-          <ellipse cx="45" cy="30" rx="22" ry="12" fill="white" opacity="0.12" />
-        </g>
+      {/* Static drop-shadow layer — filter stays on a non-animated wrapper
+          so the rotating <g> can be promoted to the GPU compositor. */}
+      <g filter="url(#pokeball-shadow)" aria-hidden="true">
+        <use href="#pokeball-shape" />
+      </g>
 
-        {/* Bottom half — white */}
-        <g clipPath="url(#pokeball-bottom)">
-          <circle cx="60" cy="60" r="50" fill="#F5F5F5" />
-        </g>
-
-        {/* Black horizontal band */}
-        <rect x="10" y="55" width="100" height="10" rx="1" fill="#1A1A1A" />
-
-        {/* Outer ring */}
-        <circle cx="60" cy="60" r="50" stroke="#1A1A1A" strokeWidth="4" fill="none" />
-
-        {/* Center button — outer ring */}
-        <circle cx="60" cy="60" r="16" fill="#F5F5F5" stroke="#1A1A1A" strokeWidth="4" />
-
-        {/* Center button — highlight */}
-        <circle cx="60" cy="58" r="6" fill="white" opacity="0.5" />
+      {/* Animated layer — no filter, no per-frame rasterization. */}
+      <g className="pokeball-spin">
+        <use href="#pokeball-shape" />
       </g>
     </svg>
   );

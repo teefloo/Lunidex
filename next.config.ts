@@ -11,7 +11,7 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
-  { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://images.pokemontcg.io https://assets.tcgdex.net https://tcg.pokemon.com data: blob:; font-src 'self' data:; media-src 'self' https://raw.githubusercontent.com; connect-src 'self' http://localhost:4747 https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com;" },
+  { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://images.pokemontcg.io https://assets.tcgdex.net https://tcg.pokemon.com data: blob:; font-src 'self' data:; media-src 'self' https://raw.githubusercontent.com; connect-src 'self' https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com;" },
 ];
 
 const nextConfig: NextConfig = {
@@ -30,22 +30,27 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'pokeapi.co',
+        pathname: '/media/upload/**',
       },
       {
         protocol: 'https',
         hostname: 'images.scrydex.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.pokemontcg.io',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'assets.tcgdex.net',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'tcg.pokemon.com',
+        pathname: '/**',
       },
     ],
   },
@@ -69,16 +74,6 @@ const nextConfig: NextConfig = {
         // Apply security headers to all routes
         source: '/(.*)',
         headers: securityHeaders,
-      },
-      {
-        // Immutable caching for static assets (JS, CSS, fonts)
-        source: '/_next/static/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
       },
       {
         // Cache SVG and image assets

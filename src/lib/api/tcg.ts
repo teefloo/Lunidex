@@ -21,7 +21,7 @@ const tcgClient = axios.create({
 });
 
 axiosRetry(tcgClient, {
-  retries: 3,
+  retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;

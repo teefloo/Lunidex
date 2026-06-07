@@ -15,7 +15,7 @@ const graphqlClient = axios.create({
 });
 
 axiosRetry(apiClient, {
-  retries: 3,
+  retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
@@ -23,7 +23,7 @@ axiosRetry(apiClient, {
 });
 
 axiosRetry(graphqlClient, {
-  retries: 2,
+  retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;

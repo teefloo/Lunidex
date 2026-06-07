@@ -10,7 +10,7 @@ function detectLocaleFromAcceptLanguage(header: string | null): string {
   return isSupportedLanguage(first) ? first : 'en';
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const segments = pathname.split('/').filter(Boolean);

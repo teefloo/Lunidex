@@ -346,12 +346,8 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://pokeapi.co" />
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
-        <link rel="preconnect" href="https://api.tcgdex.net" />
-        <link rel="preconnect" href="https://assets.tcgdex.net" />
         <link rel="dns-prefetch" href="https://pokeapi.co" />
         <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
-        <link rel="dns-prefetch" href="https://api.tcgdex.net" />
-        <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
         <script
