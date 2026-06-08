@@ -3,7 +3,6 @@ import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
 export interface TCGUserState {
   owned: TCGUserCardEntry[];
   wishlist: string[];
-  watchlist: string[];
   savedSearches: TCGSavedSearch[];
   compare: string[];
 }
@@ -11,7 +10,6 @@ export interface TCGUserState {
 export const DEFAULT_TCG_USER_STATE: TCGUserState = {
   owned: [],
   wishlist: [],
-  watchlist: [],
   savedSearches: [],
   compare: [],
 };
@@ -26,7 +24,6 @@ export function decodeTCGUserState(value?: string | null): TCGUserState {
     return {
       owned: Array.isArray(parsed.owned) ? parsed.owned : [],
       wishlist: Array.isArray(parsed.wishlist) ? parsed.wishlist : [],
-      watchlist: Array.isArray(parsed.watchlist) ? parsed.watchlist : [],
       savedSearches: Array.isArray(parsed.savedSearches) ? parsed.savedSearches : [],
       compare: Array.isArray(parsed.compare) ? parsed.compare : [],
     };

@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { TCGCard } from '@/types/tcg';
 import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGOwnedButton } from './TCGOwnedButton';
+import { TCGCardImage } from './TCGCardImage';
 
 interface TCGAlbumCardProps {
   card: TCGCard;
@@ -28,10 +28,8 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
       )}
     >
       {card.image ? (
-        <Image
-          src={card.image}
-          alt={card.name}
-          fill
+        <TCGCardImage
+          card={card}
           sizes="(min-width: 1280px) 16vw, (min-width: 768px) 25vw, 45vw"
           className="object-contain p-1 transition-transform group-hover:scale-105"
         />

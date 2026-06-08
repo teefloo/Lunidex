@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Heart } from 'lucide-react';
+import { PackageCheck } from 'lucide-react';
 import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
@@ -26,13 +26,10 @@ export const TCGCardItem = memo(function TCGCardItem({
   const { t } = useTranslation();
   const mounted = useMounted();
   const store = usePrimeDexStore();
-  const toggleTCGWishlist = store.toggleTCGWishlist ?? (() => undefined);
-  const toggleTCGWatchlist = store.toggleTCGWatchlist ?? (() => undefined);
-  const isTCGWishlist = store.isTCGWishlist ?? (() => false);
-  const isTCGWatchlist = store.isTCGWatchlist ?? (() => false);
+  const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
+  const isTCGOwned = store.isTCGOwned ?? (() => false);
 
-  const favorite = mounted ? isTCGWishlist(card.id) : false;
-  const watchlisted = mounted ? isTCGWatchlist(card.id) : false;
+  const owned = mounted ? isTCGOwned(card.id) : false;
   const isList = variant === 'list';
 
   return (
@@ -86,42 +83,23 @@ export const TCGCardItem = memo(function TCGCardItem({
           ) : null}
         </div>
 
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              toggleTCGWishlist(card.id);
-            }}
-            className={cn(
-              'inline-flex h-6 flex-1 items-center justify-center gap-1 rounded-lg border text-[6px] font-black uppercase tracking-[0.08em] transition-colors',
-              favorite
-                ? 'border-rose-500/30 bg-rose-500/15 text-rose-400'
-                : 'border-border/45 bg-card/60 text-foreground/45 hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400',
-            )}
-            aria-label={t('tcg.mark_favorite')}
-          >
-            <Heart className="h-2 w-2" />
-            {t('tcg.favorite_short')}
-          </button>
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              toggleTCGWatchlist(card.id);
-            }}
-            className={cn(
-              'inline-flex h-6 flex-1 items-center justify-center gap-1 rounded-lg border text-[6px] font-black uppercase tracking-[0.08em] transition-colors',
-              watchlisted
-                ? 'border-primary/30 bg-primary/12 text-primary'
-                : 'border-border/45 bg-card/60 text-foreground/45 hover:border-primary/30 hover:bg-primary/10 hover:text-primary',
-            )}
-            aria-label={t('tcg.mark_watchlist')}
-          >
-            <Eye className="h-2 w-2" />
-            {t('tcg.watchlist_short')}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            toggleTCGOwned(card.id);
+          }}
+          className={cn(
+            'inline-flex h-6 w-full items-center justify-center gap-1 rounded-lg border text-[6px] font-black uppercase tracking-[0.08em] transition-colors',
+            owned
+              ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
+              : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',
+          )}
+          aria-label={t('tcg.owned_short')}
+        >
+          <PackageCheck className="h-2 w-2" />
+          {t('tcg.owned_short')}
+        </button>
       </div>
     </motion.article>
   );

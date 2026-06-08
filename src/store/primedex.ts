@@ -109,15 +109,12 @@ interface PrimeDexStore {
 
   tcgOwnedCards: string[];
   tcgWishlistCards: string[];
-  tcgWatchlistCards: string[];
   tcgActiveSets: string[];
   toggleTCGOwned: (cardId: string) => void;
   toggleTCGWishlist: (cardId: string) => void;
-  toggleTCGWatchlist: (cardId: string) => void;
   toggleTCGActiveSet: (setId: string) => void;
   isTCGOwned: (cardId: string) => boolean;
   isTCGWishlist: (cardId: string) => boolean;
-  isTCGWatchlist: (cardId: string) => boolean;
   isTCGActiveSet: (setId: string) => boolean;
 
   tcgSavedSearches: TCGSavedSearch[];
@@ -309,7 +306,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       tcgOwnedCards: [],
       tcgWishlistCards: [],
-      tcgWatchlistCards: [],
       tcgActiveSets: [],
       toggleTCGOwned: (cardId) => set((state) => ({
         tcgOwnedCards: state.tcgOwnedCards.includes(cardId)
@@ -321,11 +317,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           ? state.tcgWishlistCards.filter((id) => id !== cardId)
           : [...state.tcgWishlistCards, cardId],
       })),
-      toggleTCGWatchlist: (cardId) => set((state) => ({
-        tcgWatchlistCards: state.tcgWatchlistCards.includes(cardId)
-          ? state.tcgWatchlistCards.filter((id) => id !== cardId)
-          : [...state.tcgWatchlistCards, cardId],
-      })),
       toggleTCGActiveSet: (setId) => set((state) => ({
         tcgActiveSets: state.tcgActiveSets.includes(setId)
           ? state.tcgActiveSets.filter((id) => id !== setId)
@@ -333,7 +324,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       })),
       isTCGOwned: (cardId) => get().tcgOwnedCards.includes(cardId),
       isTCGWishlist: (cardId) => get().tcgWishlistCards.includes(cardId),
-      isTCGWatchlist: (cardId) => get().tcgWatchlistCards.includes(cardId),
       isTCGActiveSet: (setId) => get().tcgActiveSets.includes(setId),
 
       tcgSavedSearches: [],
@@ -492,7 +482,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         tcgCompareList: state.tcgCompareList,
         tcgOwnedCards: state.tcgOwnedCards,
         tcgWishlistCards: state.tcgWishlistCards,
-        tcgWatchlistCards: state.tcgWatchlistCards,
         tcgActiveSets: state.tcgActiveSets,
         tcgSavedSearches: state.tcgSavedSearches,
         tcgCardNotes: state.tcgCardNotes,

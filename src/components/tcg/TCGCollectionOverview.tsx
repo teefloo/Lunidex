@@ -15,6 +15,7 @@ import {
 } from '@/lib/tcg-collection';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGRarityBadge } from './TCGRarityBadge';
+import { TCGCardImage } from './TCGCardImage';
 
 interface TCGCollectionOverviewProps {
   setsMap: Map<string, { set: TCGSet; cards: TCGCard[] }>;
@@ -132,10 +133,8 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
                 className="group relative aspect-[2.15/3] overflow-hidden rounded-lg border border-border/20 bg-card/30 transition-all hover:border-primary/30"
               >
                 {card.image ? (
-                  <Image
-                    src={card.image}
-                    alt={card.name}
-                    fill
+                  <TCGCardImage
+                    card={card}
                     sizes="(min-width: 1280px) 14vw, (min-width: 768px) 20vw, 40vw"
                     className="object-contain p-1"
                   />

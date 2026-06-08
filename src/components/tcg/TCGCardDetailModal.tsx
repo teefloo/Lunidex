@@ -46,10 +46,8 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const isTCGCompared = store.isTCGCompared ?? (() => false);
   const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
   const toggleTCGWishlist = store.toggleTCGWishlist ?? (() => undefined);
-  const toggleTCGWatchlist = store.toggleTCGWatchlist ?? (() => undefined);
   const isTCGOwned = store.isTCGOwned ?? (() => false);
   const isTCGWishlist = store.isTCGWishlist ?? (() => false);
-  const isTCGWatchlist = store.isTCGWatchlist ?? (() => false);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
 
   useEffect(() => {
@@ -105,7 +103,6 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const compared = isTCGCompared(displayCard.id);
   const owned = isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
-  const watchlisted = isTCGWatchlist(displayCard.id);
 
   return createPortal(
     <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -222,11 +219,6 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     active={wishlisted}
                     onClick={() => toggleTCGWishlist(displayCard.id)}
                     label={t('tcg.mark_wishlist')}
-                  />
-                  <ActionPill
-                    active={watchlisted}
-                    onClick={() => toggleTCGWatchlist(displayCard.id)}
-                    label={t('tcg.mark_watchlist')}
                   />
                 </div>
               </header>

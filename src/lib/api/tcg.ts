@@ -661,13 +661,13 @@ export const searchCards = async (
   const sortBy = filters.sortBy ?? 'name';
   const sortOrder = filters.sortOrder ?? 'asc';
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
-  const requiresFullDatasetSort = sortBy === 'number';
+  const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
 
   try {
     const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
     if (cached) return cached;
 
-    if (!hasLocalOnlyFilters && !requiresLocalSorting) {
+    if (!hasLocalOnlyFilters && !requiresLocalSorting && !requiresFullDatasetSort) {
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${query}`, signal);
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];

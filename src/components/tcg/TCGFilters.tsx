@@ -861,7 +861,6 @@ export function TCGFilters({
                 <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
                 <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
                 <option value="wishlist">{t('tcg.owned_wishlist', { defaultValue: 'Wishlist' })}</option>
-                <option value="watchlist">{t('tcg.owned_watchlist', { defaultValue: 'Watchlist' })}</option>
                 <option value="missing">{t('tcg.owned_missing', { defaultValue: 'Missing' })}</option>
               </select>
             </div>

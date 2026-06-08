@@ -3,8 +3,8 @@ import type { TCGCard } from '@/types/tcg';
 const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
 
 function appendFormat(base: string, ext: string): string {
-  if (/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i.test(base)) return base;
-  return `${base}/${ext}`;
+  const stripped = base.replace(/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i, '');
+  return `${stripped}/${ext}`;
 }
 
 export function getTCGCardImageCandidates(card: TCGCard): string[] {

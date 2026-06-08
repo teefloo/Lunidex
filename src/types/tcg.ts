@@ -8,7 +8,7 @@ export type TCGCardSortOrder = 'asc' | 'desc';
 
 export type TCGCardViewMode = 'visual' | 'table' | 'scan';
 
-export type TCGOwnedState = 'all' | 'owned' | 'wishlist' | 'watchlist' | 'missing';
+export type TCGOwnedState = 'all' | 'owned' | 'wishlist' | 'missing';
 
 export type TCGLegalState = 'standard' | 'expanded' | 'unlimited';
 

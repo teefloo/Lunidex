@@ -87,5 +87,5 @@ async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
 }
 
 function isValidOwnedState(state: unknown): state is TCGUserCardEntry['state'] {
-  return state === 'owned' || state === 'wishlist' || state === 'watchlist';
+  return state === 'owned' || state === 'wishlist';
 }
