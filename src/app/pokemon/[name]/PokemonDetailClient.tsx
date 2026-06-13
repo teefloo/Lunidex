@@ -27,7 +27,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
 import { cn, formatId, formatName, formatLocationName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
 import { useMounted } from '@/hooks/useMounted';
 
@@ -372,11 +372,12 @@ export function PokemonDetailClient({
             variant="outline"
             size="icon"
             onClick={() => isFav ? removeFavorite(pokemon.id) : addFavorite(pokemon.id)}
+            style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
             className={cn(
               "rounded-full transition-all h-12 w-12",
-              isFav 
-                ? "bg-rose-500/15 border-rose-500/30 text-rose-400 hover:bg-rose-500/20 shadow-[0_4px_16px_-4px_rgba(244,63,94,0.3)]" 
-                : "bg-card/55 border-border/50 text-foreground/40 hover:text-rose-400/60 backdrop-blur-xl"
+              isFav
+                ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)] shadow-[0_4px_16px_-4px_color-mix(in_oklab,var(--chip)_30%,transparent)] hover:brightness-110"
+                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70 backdrop-blur-xl"
             )}
             title={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
             aria-label={isFav ? t('card.remove_favorite') || 'Remove from favorites' : t('card.add_favorite') || 'Add to favorites'}
@@ -1051,10 +1052,11 @@ export function PokemonDetailClient({
                 }
               }
             }}
+            style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-xl transition-all border-0",
               pokemon?.id && isFavorite(pokemon.id)
-                ? "bg-rose-500/15 text-rose-400"
+                ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
             aria-label={pokemon?.id && isFavorite(pokemon.id) ? t('card.remove_favorite') : t('card.add_favorite')}
@@ -1077,10 +1079,11 @@ export function PokemonDetailClient({
                 }
               }
             }}
+            style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-xl transition-all border-0",
               pokemon?.id && isInCompare(pokemon.id)
-                ? "bg-blue-500/15 text-blue-400"
+                ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
             aria-label={pokemon?.id && isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
@@ -1104,10 +1107,11 @@ export function PokemonDetailClient({
                 }
               }
             }}
+            style={{ '--chip': 'var(--action-team)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-xl transition-all border-0",
               pokemon?.id && isInTeam(pokemon.id)
-                ? "bg-amber-500/15 text-amber-400"
+                ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
             aria-label={pokemon?.id && isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}

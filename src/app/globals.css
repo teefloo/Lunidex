@@ -97,6 +97,15 @@
   --type-dark: oklch(0.45 0.040 60);
   --type-steel: oklch(0.70 0.022 245);
   --type-fairy: oklch(0.78 0.085 350);
+
+  /* Semantic action accents — one canonical hue per action, used site-wide.
+     Each action keeps a distinct, consistent color everywhere it appears
+     (grid cards, detail page, toolbars) so the meaning reads at a glance. */
+  --action-favorite: oklch(0.637 0.208 25);   /* rose   — saved / loved */
+  --action-compare: oklch(0.623 0.190 256);   /* blue   — side-by-side */
+  --action-team: oklch(0.696 0.165 162);      /* emerald — roster */
+  --action-caught: var(--primary);            /* brass/green — collected */
+  --action-legendary: oklch(0.769 0.165 70);  /* amber  — legendary / mythical */
 }
 
 .dark {
@@ -154,6 +163,13 @@
   --mist-a: oklch(0.34 0.060 145 / 0.20);
   --mist-b: oklch(0.38 0.055 38 / 0.18);
   --mist-c: oklch(0.32 0.040 80 / 0.14);
+
+  /* Action accents — lifted for legibility against the midnight ground */
+  --action-favorite: oklch(0.705 0.180 22);
+  --action-compare: oklch(0.715 0.150 252);
+  --action-team: oklch(0.760 0.150 164);
+  --action-caught: var(--primary);
+  --action-legendary: oklch(0.820 0.150 76);
 }
 
 * {

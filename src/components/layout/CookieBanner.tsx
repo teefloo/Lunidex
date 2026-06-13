@@ -6,6 +6,7 @@ import { Cookie } from 'lucide-react';
 
 import i18n, { useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { Button } from '@/components/ui/button';
 
 const STORAGE_KEY = 'primedex-cookie-consent';
 
@@ -76,23 +77,28 @@ export default function CookieBanner() {
       role="dialog"
       aria-live="polite"
       aria-label={t('legal.banner.title')}
-      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
+      className="animate-fade-in-up fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
     >
-      <div className="mx-auto w-full max-w-3xl rounded-2xl border border-foreground/15 bg-background/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-5">
+      <div className="glass-panel mx-auto w-full max-w-xl p-4 sm:p-5">
         <div className="flex items-start gap-3">
-          <Cookie className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" aria-hidden="true" />
+          <span
+            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--accent)_45%,transparent)] bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-accent"
+            aria-hidden="true"
+          >
+            <Cookie className="h-4 w-4" />
+          </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground sm:text-base">
+            <h2 className="font-display text-sm font-semibold tracking-tight text-foreground sm:text-base">
               {t('legal.banner.title')}
             </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-[0.8125rem]">
               {t('legal.banner.description')}
             </p>
-            <p className="mt-2 text-[11px] text-muted-foreground/80 sm:text-xs">
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/80 sm:text-xs">
               {t('legal.banner.disclaimer')}{' '}
               <Link
                 href={cookiesHref}
-                className="underline underline-offset-2 hover:text-foreground"
+                className="rounded-sm text-foreground/90 underline underline-offset-2 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
               >
                 {t('legal.banner.policy_link')}
               </Link>
@@ -100,21 +106,13 @@ export default function CookieBanner() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
-          <button
-            type="button"
-            onClick={handleReject}
-            className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground sm:text-sm"
-          >
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2.5">
+          <Button type="button" variant="ghost" size="sm" onClick={handleReject}>
             {t('legal.banner.reject')}
-          </button>
-          <button
-            type="button"
-            onClick={handleAccept}
-            className="rounded-lg bg-foreground px-4 py-2 text-xs font-semibold text-background transition-opacity hover:opacity-90 sm:text-sm"
-          >
+          </Button>
+          <Button type="button" variant="default" size="sm" onClick={handleAccept}>
             {t('legal.banner.accept')}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

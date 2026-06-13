@@ -58,6 +58,10 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
+// Active state for an action toggle — tinted by the element's --chip accent.
+const CHIP_ACTIVE =
+  'border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)] shadow-[0_0_14px_color-mix(in_oklab,var(--chip)_26%,transparent)]';
+
 export function PokemonCardSkeleton() {
   return (
     <div className="py-1 px-1 h-[18rem]">
@@ -270,10 +274,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               onClick={toggleTeam}
               disabled={!isTeam && teamFull}
               aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
+              style={{ '--chip': 'var(--action-team)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
-                  ? 'border-emerald-500/35 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.22)]'
+                  ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
                 !isTeam && teamFull && 'cursor-not-allowed opacity-30'
               )}
@@ -286,10 +291,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               onClick={toggleCompare}
               disabled={!isComp && compareFull}
               aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
+              style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
-                  ? 'border-primary/35 bg-primary/15 text-primary shadow-[0_0_14px_rgba(227,53,13,0.22)]'
+                  ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
                 !isComp && compareFull && 'cursor-not-allowed opacity-30'
               )}
@@ -301,10 +307,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               type="button"
               onClick={toggleFavorite}
               aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
+              style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95',
+                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
-                  ? 'border-rose-500/35 bg-rose-500/15 text-rose-500 shadow-[0_0_14px_rgba(244,63,94,0.22)]'
+                  ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90'
               )}
             >
@@ -355,7 +362,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             })}
             {(isLegendary || isMythical) && (
               <span
-                className="type-bar rounded-sm border border-amber-500/55 bg-amber-500/15 px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] text-amber-600 dark:text-amber-300 sm:text-[9px]"
+                className="type-bar rounded-sm border px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] sm:text-[9px]"
+                style={{
+                  borderColor: 'color-mix(in oklab, var(--action-legendary) 55%, transparent)',
+                  background: 'color-mix(in oklab, var(--action-legendary) 15%, transparent)',
+                  color: 'color-mix(in oklab, var(--action-legendary) 82%, var(--foreground) 18%)',
+                }}
                 title={isMythical ? t('card.mythical') : t('card.legendary')}
               >
                 {isMythical ? t('card.mythical') : t('card.legendary')}
@@ -371,7 +383,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-1 right-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-all duration-300 hover:scale-110 active:scale-95 sm:bottom-1 sm:right-2',
+            'absolute bottom-1 right-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
             caught
               ? 'border-primary/55 bg-primary text-primary-foreground shadow-[0_0_18px_rgba(190,93,72,0.32)]'
               : 'border-foreground/15 bg-background/65 text-foreground/55 backdrop-blur-md hover:border-foreground/35 hover:text-foreground/85'

@@ -22,7 +22,7 @@ export default function FavoriteToggle() {
       className={cn(
         "flex items-center justify-center gap-2 px-5 min-h-[44px] rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-400 border hover:scale-105 active:scale-95",
         showFavoritesOnly
-          ? "bg-rose-500 text-primary-foreground border-rose-400/50 shadow-[0_4px_20px_-4px_rgba(244,63,94,0.5)]"
+          ? "text-primary-foreground border-[color-mix(in_oklab,var(--action-favorite)_55%,transparent)] bg-[var(--action-favorite)] shadow-[0_4px_20px_-4px_color-mix(in_oklab,var(--action-favorite)_50%,transparent)]"
           : "bg-card/50 backdrop-blur-xl text-foreground/70 hover:text-foreground/90 border-border/50 hover:border-border/70"
       )}
     >
