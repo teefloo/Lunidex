@@ -37,6 +37,25 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
   ], lang);
   return (
     <>
+      {/* Resource hints for the TCG card-image CDN and the heavy card CSS.
+          Lives here (not in a head.tsx — unsupported in the App Router) so it
+          renders into <head> for every /tcg route. */}
+      <link rel="preconnect" href="https://api.tcgdex.net" />
+      <link rel="preconnect" href="https://assets.tcgdex.net" />
+      <link rel="dns-prefetch" href="https://api.tcgdex.net" />
+      <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
+      <link rel="preload" href="/pokemon-cards/css/all-cards.css" as="style" />
+      {/* Non-blocking CSS: load as print, then swap to all once fetched.
+          Inline script keeps this working in a server component (no client handler). */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='/pokemon-cards/css/all-cards.css';l.media='print';l.onload=function(){this.media='all';};document.head.appendChild(l);})();`,
+        }}
+      />
+      <noscript>
+        {/* eslint-disable-next-line @next/next/no-css-tags -- fallback when JS is disabled */}
+        <link rel="stylesheet" href="/pokemon-cards/css/all-cards.css" />
+      </noscript>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
