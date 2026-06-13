@@ -58,3 +58,6 @@ next-env.d.ts
 
 # system
 nul
+
+# Local agent artifacts
+.claude/
