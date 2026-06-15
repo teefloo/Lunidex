@@ -310,7 +310,6 @@ export function TCGFilters({
         'Technical Machine': 'tcg.trainer_type_technical_machine',
         'Goldenrod Game Corner': 'tcg.trainer_type_goldenrod_game_corner',
         'Rocket\'s Secret Machine': 'tcg.trainer_type_rockets_secret_machine',
-        'Rocket’s Secret Machine': 'tcg.trainer_type_rockets_secret_machine',
       };
 
       return labelKey[type] ? t(labelKey[type]) : type;
@@ -580,7 +579,7 @@ export function TCGFilters({
                       }
                     }}
                     className={cn(
-                      'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -619,7 +618,7 @@ export function TCGFilters({
                       );
                     }}
                     className={cn(
-                      'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-emerald-400/40 bg-emerald-500/20 text-emerald-300 shadow-[0_0_16px_rgba(16,185,129,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -670,7 +669,7 @@ export function TCGFilters({
                     type="button"
                     onClick={() => updateFilter('selectedPhase', isActive ? null : stage)}
                     className={cn(
-                      'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -708,7 +707,7 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                    'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                     isActive
                       ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -745,14 +744,14 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                    'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                     isActive
                       ? 'border-cyan-400/40 bg-cyan-500/20 text-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
-                  )}
-                >
-                  {getEnergyTypeLabel(type)}
-                </button>
+                    )}
+                  >
+                    {getEnergyTypeLabel(type)}
+                  </button>
               );
             })}
           </div>

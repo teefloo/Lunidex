@@ -22,7 +22,7 @@ export default function TypeFilter() {
           <button
             type="button"
             onClick={() => setSelectedTypes([])}
-            className="flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-foreground/80 bg-destructive/10 border border-destructive/20 rounded-full hover:bg-destructive/20 hover:text-destructive transition-all duration-300 whitespace-nowrap overflow-hidden backdrop-blur-xl"
+            className="flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-foreground/80 bg-destructive/10 border border-destructive/20 rounded-full hover:bg-destructive/20 hover:text-destructive transition-all duration-300 whitespace-nowrap overflow-hidden backdrop-blur-xl min-h-[44px]"
             aria-label={t('filters.clear_types', { count: selectedTypes.length })}
           >
             <X className="w-3.5 h-3.5" />
@@ -42,7 +42,7 @@ export default function TypeFilter() {
               onClick={() => toggleType(type)}
               aria-label={label}
               className={cn(
-                "relative px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-400 overflow-hidden group border hover:scale-105 active:scale-95",
+                "relative px-5 py-3 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-400 overflow-hidden group border hover:scale-105 active:scale-95 min-h-[44px]",
                 isActive
                   ? "text-primary-foreground border-transparent"
                   : "bg-card/50 backdrop-blur-xl text-foreground/70 hover:text-foreground/90 border-border/50 hover:border-border/70"

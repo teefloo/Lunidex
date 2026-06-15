@@ -246,7 +246,7 @@ export default function AdvancedFilters() {
                       key={group}
                       onClick={() => toggleEggGroup(group)}
                       className={cn(
-                        "px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200",
+                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -273,7 +273,7 @@ export default function AdvancedFilters() {
                       key={color}
                       onClick={() => toggleColor(color)}
                       className={cn(
-                        "px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200",
+                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -300,7 +300,7 @@ export default function AdvancedFilters() {
                       key={shape}
                       onClick={() => toggleShape(shape)}
                       className={cn(
-                        "px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200",
+                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"

@@ -66,10 +66,6 @@ describe('getLanguageId', () => {
     expect(getLanguageId('ja', 'en')).toBe(11);
     expect(getLanguageId('auto', 'fr')).toBe(5);
   });
-
-  it('uses the English id for Portuguese (no official PokeAPI id)', () => {
-    expect(getLanguageId('pt', 'en')).toBe(9);
-  });
 });
 
 describe('getLanguageAlternates', () => {

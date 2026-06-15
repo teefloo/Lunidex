@@ -7,8 +7,10 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, SITE_KEYWORDS, FEATURE_LIST } from '@/lib/site';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { getServerT } from '@/lib/server-i18n';
+
+export const revalidate = 3600;
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -30,27 +32,6 @@ export default async function Home() {
     'garchomp', 'lucario', 'eevee', 'snorlax', 'dragonite',
     'gengar', 'alakazam', 'machamp', 'lapras', 'gyarados',
   ];
-
-  const softwareAppJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    '@id': `${baseUrl}/#webapp-home`,
-    name: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    url: `${baseUrl}/en`,
-    applicationCategory: ['GameApplication', 'EducationalApplication'],
-    applicationSubCategory: 'GameDatabase',
-    operatingSystem: 'All',
-    description: SITE_DESCRIPTION,
-    image: `${baseUrl}/opengraph-image`,
-    featureList: FEATURE_LIST.join(', '),
-    keywords: SITE_KEYWORDS.join(', '),
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    datePublished: '2024-01-15',
-    dateModified: '2026-06-04',
-    inLanguage: 'en',
-    isAccessibleForFree: true,
-    isPartOf: { '@id': `${baseUrl}/#webapp` },
-  };
 
   const itemListJsonLd = {
     '@context': 'https://schema.org',
@@ -166,11 +147,6 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <script
-        id="software-app-jsonld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppJsonLd) }}
-      />
       <script
         id="item-list-jsonld"
         type="application/ld+json"

@@ -12,6 +12,8 @@ const LAST_UPDATED = '2026-06-05';
 const FAQ_COUNT = 12;
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();

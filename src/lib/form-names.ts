@@ -100,7 +100,6 @@ const localizedSuffix = (
   ja = en,
   ko = en,
   zh = en,
-  pt = en,
 ): LanguageSuffixMap => ({
   en,
   fr,
@@ -110,7 +109,6 @@ const localizedSuffix = (
   ja,
   ko,
   zh,
-  pt,
 });
 
 const appendSuffixOnce = (baseLocalizedName: string, suffix: string): string => {

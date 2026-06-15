@@ -17,18 +17,18 @@ import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
-  timeout: 15000,
+  timeout: 30000,
 });
 
 axiosRetry(tcgClient, {
-  retries: 1,
+  retries: 3,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
   },
 });
 
-const supportedLangs = ['en', 'fr', 'es', 'it', 'pt', 'de', 'ja', 'ko', 'zh'] as const;
+const supportedLangs = ['en', 'fr', 'es', 'it', 'de', 'ja', 'ko', 'zh'] as const;
 const unsupportedTcgLangs = new Set(['zh']);
 const limitedTcgLangs = new Set(['ko', 'ja']);
 
@@ -235,7 +235,8 @@ function normalizeFilterValue(value: string) {
     .toLowerCase()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '');
+    .replace(/[\u2019\u2018\u201C\u201D`]/g, "'")
+    .replace(/[^a-z0-9']+/g, '');
 }
 
 function matchesRarityFilter(card: TCGCard, selectedRarity: string): boolean {
@@ -274,7 +275,12 @@ function matchesEnergyType(card: TCGCard, selectedTypes: string[]): boolean {
   });
 }
 
-function cardMatchesLocalFilters(card: TCGCard, filters: TCGCardFilters): boolean {
+interface LocalFilterContext {
+  ownedIds?: Set<string>;
+  wishlistIds?: Set<string>;
+}
+
+function cardMatchesLocalFilters(card: TCGCard, filters: TCGCardFilters, ctx?: LocalFilterContext): boolean {
   if (filters.selectedRarity && !matchesRarityFilter(card, filters.selectedRarity)) {
     return false;
   }
@@ -312,6 +318,33 @@ function cardMatchesLocalFilters(card: TCGCard, filters: TCGCardFilters): boolea
     if (typeof releaseDate !== 'number' || Number.isNaN(releaseDate)) return false;
     if (filters.releaseStart && releaseDate < new Date(filters.releaseStart).getTime()) return false;
     if (filters.releaseEnd && releaseDate > new Date(filters.releaseEnd).getTime()) return false;
+  }
+
+  if (filters.legalities?.length) {
+    const legal = card.legal;
+    const setLegalities = card.set?.legalities;
+    const matches = filters.legalities.some((state) => {
+      if (legal?.[state]) return true;
+      if (setLegalities?.[state]) return true;
+      return false;
+    });
+    if (!matches) return false;
+  }
+
+  if (filters.ownedState && filters.ownedState !== 'all' && ctx) {
+    const isOwned = ctx.ownedIds?.has(card.id) ?? false;
+    const isWishlisted = ctx.wishlistIds?.has(card.id) ?? false;
+    switch (filters.ownedState) {
+      case 'owned':
+        if (!isOwned) return false;
+        break;
+      case 'wishlist':
+        if (!isWishlisted) return false;
+        break;
+      case 'missing':
+        if (isOwned) return false;
+        break;
+    }
   }
 
   return true;
@@ -643,6 +676,8 @@ export const searchCards = async (
   page = 1,
   limit = 48,
   signal?: AbortSignal,
+  ownedIds?: Set<string>,
+  wishlistIds?: Set<string>,
 ): Promise<TCGCatalogPageResult> => {
   const tcgLang = resolveTcgLang(lang);
   const safePage = normalizeTcgPositiveInteger(page, 1);
@@ -705,7 +740,8 @@ export const searchCards = async (
             }),
           )
         : normalized;
-      const pageCards = hydrated.filter((card) => cardMatchesLocalFilters(card, filters));
+      const filterCtx: LocalFilterContext | undefined = (ownedIds || wishlistIds) ? { ownedIds, wishlistIds } : undefined;
+      const pageCards = hydrated.filter((card) => cardMatchesLocalFilters(card, filters, filterCtx));
       cards.push(...pageCards);
       hasMoreRemote = Array.isArray(data) ? data.length > safeLimit : false;
       remotePage += 1;
@@ -802,8 +838,8 @@ export const getRaritiesForSet = async (setId: string, lang = 'en'): Promise<str
     }
 
     const sampledIds = [...sampledIndices].map((index) => summaries[index].id);
-    const details = await Promise.all(
-      sampledIds.map((id) => getTCGCard(id, tcgLang).catch(() => null)),
+    const details = await mapWithConcurrency(sampledIds, 4, (id) =>
+      getTCGCard(id, tcgLang).catch(() => null),
     );
 
     const raritySet = new Set<string>();

@@ -5,6 +5,8 @@ import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();

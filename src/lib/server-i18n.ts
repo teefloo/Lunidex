@@ -12,7 +12,6 @@ import it from './i18n/it';
 import ja from './i18n/ja';
 import ko from './i18n/ko';
 import zh from './i18n/zh';
-import pt from './i18n/pt';
 
 const SERVER_LANG_COOKIE = 'primedex-lang';
 
@@ -25,7 +24,6 @@ const serverResources = {
   ja: { translation: ja.translation },
   ko: { translation: ko.translation },
   zh: { translation: zh.translation },
-  pt: { translation: pt.translation },
 };
 
 const serverI18n: I18nInstance = createInstance();
@@ -74,7 +72,6 @@ const POKEAPI_SPECIES_LANGUAGE: Record<SupportedLanguage, string> = {
   ja: 'ja',
   ko: 'ko',
   zh: 'zh-Hans',
-  pt: 'en',
 };
 
 export async function getServerPokemonLanguage(): Promise<string> {

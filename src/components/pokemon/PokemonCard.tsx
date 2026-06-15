@@ -69,9 +69,9 @@ export function PokemonCardSkeleton() {
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
           <div className="flex gap-1.5">
-            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
-            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
-            <Skeleton className="h-7 w-7 rounded-full bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
           </div>
         </div>
         <Skeleton className="w-28 h-28 rounded-full bg-muted/40 my-3 mx-auto" />
@@ -276,14 +276,14 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
               style={{ '--chip': 'var(--action-team)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
                 !isTeam && teamFull && 'cursor-not-allowed opacity-30'
               )}
             >
-              {isTeam ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+              {isTeam ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
             </button>
 
             <button
@@ -293,14 +293,14 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
               style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
                 !isComp && compareFull && 'cursor-not-allowed opacity-30'
               )}
             >
-              <ArrowLeftRight className={cn('h-3 w-3 transition-transform', isComp && 'scale-110 rotate-12')} />
+              <ArrowLeftRight className={cn('h-4 w-4 transition-transform', isComp && 'scale-110 rotate-12')} />
             </button>
 
             <button
@@ -309,13 +309,13 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
               style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
               className={cn(
-                'flex h-7 w-7 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90'
               )}
             >
-              <Heart className={cn('h-3.5 w-3.5 transition-all', isFav && 'fill-current scale-110')} />
+              <Heart className={cn('h-5 w-5 transition-all', isFav && 'fill-current scale-110')} />
             </button>
           </div>
         </div>
@@ -383,14 +383,14 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-1 right-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
+            'absolute bottom-1 right-1.5 z-20 flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
             caught
               ? 'border-primary/55 bg-primary text-primary-foreground shadow-[0_0_18px_rgba(190,93,72,0.32)]'
               : 'border-foreground/15 bg-background/65 text-foreground/55 backdrop-blur-md hover:border-foreground/35 hover:text-foreground/85'
           )}
           aria-label={caught ? t('card.caught') : t('card.mark_caught')}
         >
-          <PokeballIcon className={cn('h-3.5 w-3.5 sm:h-4 sm:w-4', caught ? 'text-primary-foreground' : 'text-foreground/55')} />
+          <PokeballIcon className={cn('h-5 w-5 sm:h-5 sm:w-5', caught ? 'text-primary-foreground' : 'text-foreground/55')} />
         </button>
       </article>
     </Link>

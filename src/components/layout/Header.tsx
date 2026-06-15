@@ -61,7 +61,7 @@ function HeaderLink({ children, href, variant, size, className, ...props }: Head
       className={cn(
         'inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
         variant === 'ghost' && 'hover:border-border/60 hover:bg-muted/70 hover:text-foreground',
-        size === 'sm' && 'h-9 px-4 text-xs tracking-[0.16em] uppercase',
+        size === 'sm' && 'h-10 px-4 text-xs tracking-[0.16em] uppercase',
         className
       )}
       {...props}
@@ -271,7 +271,7 @@ export default function Header() {
                   onChange={(event) => setLocalSearch(event.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  className="h-8 w-full rounded-full border border-foreground/15 bg-background/40 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/40 placeholder:normal-case placeholder:tracking-normal focus:border-primary/45 focus:bg-background/65 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="h-10 w-full rounded-full border border-foreground/15 bg-background/40 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/40 placeholder:normal-case placeholder:tracking-normal focus:border-primary/45 focus:bg-background/65 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
@@ -281,7 +281,7 @@ export default function Header() {
               <TooltipTrigger>
                   <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} className="hidden sm:block">
                   <div
-                    className="glass-control flex h-8 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500 active:scale-95"
+                    className="glass-control flex h-10 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500 active:scale-95"
                   >
                     <Heart className="h-3.5 w-3.5" />
                     <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">{favoritesLabel}</span>
@@ -297,8 +297,8 @@ export default function Header() {
               <SelectTrigger
                 size="sm"
                 aria-label={t('header.language_title', { language: languageLabel })}
-                className="glass-control flex !h-8 !w-[96px] items-center justify-between !px-3 !py-0 text-foreground/70 hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
-                style={{ width: 96, minWidth: 96, height: 32, minHeight: 32 }}
+                className="glass-control flex !h-10 !w-[96px] items-center justify-between !px-3 !py-0 text-foreground/70 hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
+                style={{ width: 96, minWidth: 96, height: 40, minHeight: 40 }}
               >
                 <Languages className="h-4 w-4" />
                 <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[10px] font-semibold uppercase leading-none">
@@ -326,7 +326,7 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={cycleTheme}
-                  className="glass-control flex h-8 w-8 items-center justify-center text-foreground/70 hover:border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 active:scale-95"
+                  className="glass-control flex h-10 w-10 items-center justify-center text-foreground/70 hover:border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 active:scale-95"
                   aria-label={themeLabel}
                   suppressHydrationWarning
                 >
@@ -350,7 +350,7 @@ export default function Header() {
                   render={
                     <button
                       type="button"
-                      className="glass-control flex h-8 w-8 items-center justify-center text-foreground/70 hover:scale-105 hover:border-border/80 hover:bg-muted/55 hover:text-foreground active:scale-95"
+                      className="glass-control flex h-10 w-10 items-center justify-center text-foreground/70 hover:scale-105 hover:border-border/80 hover:bg-muted/55 hover:text-foreground active:scale-95"
                       aria-label={menuLabel}
                     >
                       <Menu className="h-4 w-4" />

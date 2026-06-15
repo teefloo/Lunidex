@@ -37,7 +37,7 @@ export default function RegionFilter() {
           <button
             type="button"
             onClick={() => setSelectedGeneration(null)}
-            className="flex items-center justify-center shrink-0 gap-1 bg-destructive/10 border border-destructive/20 px-4 py-2 rounded-full text-xs text-destructive hover:bg-destructive/20 transition-all duration-300 whitespace-nowrap backdrop-blur-xl"
+            className="flex items-center justify-center shrink-0 gap-1 bg-destructive/10 border border-destructive/20 px-4 py-3 rounded-full text-xs text-destructive hover:bg-destructive/20 transition-all duration-300 whitespace-nowrap backdrop-blur-xl min-h-[44px]"
             aria-label={t('filters.reset')}
           >
             <X className="w-3 h-3 shrink-0" />
@@ -56,7 +56,7 @@ export default function RegionFilter() {
               onClick={() => setSelectedGeneration(isActive ? null : parseInt(region.gen))}
               aria-label={label}
               className={cn(
-                "relative px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-400 overflow-hidden group border hover:scale-105 active:scale-95",
+                "relative px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-400 overflow-hidden group border hover:scale-105 active:scale-95 min-h-[44px]",
                 isActive 
                   ? "bg-primary text-primary-foreground border-primary/50 shadow-[0_4px_20px_-4px_rgba(227,53,13,0.5)]"
                   : "bg-card/50 backdrop-blur-xl text-foreground/70 hover:text-foreground/90 border-border/50 hover:border-border/70"

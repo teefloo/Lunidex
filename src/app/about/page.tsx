@@ -4,6 +4,8 @@ import Header from '@/components/layout/Header';
 import { SITE_URL, SITE_NAME, SITE_TAGLINE, GITHUB_REPO_URL, GITHUB_ISSUES_URL, TWITTER_HANDLE, DISCORD_URL } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();

@@ -22,7 +22,6 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
   ja: () => import('./i18n/ja'),
   ko: () => import('./i18n/ko'),
   zh: () => import('./i18n/zh'),
-  pt: () => import('./i18n/pt'),
 };
 
 // Keep the first client render aligned with SSR.

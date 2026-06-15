@@ -66,6 +66,11 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/pt/:path*',
+        destination: '/en/:path*',
+        permanent: true,
+      },
     ];
   },
   async headers() {

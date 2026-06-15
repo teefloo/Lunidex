@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Check, Plus } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -15,7 +16,8 @@ export function TCGOwnedButton({ cardId, className, size = 'md' }: TCGOwnedButto
   const mounted = useMounted();
   const owned = usePrimeDexStore((s) => s.tcgOwnedCards);
   const toggle = usePrimeDexStore((s) => s.toggleTCGOwned);
-  const isOwned = mounted && owned.includes(cardId);
+  const ownedSet = useMemo(() => new Set(owned), [owned]);
+  const isOwned = mounted && ownedSet.has(cardId);
 
   const sizeClasses = {
     sm: 'h-6 w-6 text-[9px]',

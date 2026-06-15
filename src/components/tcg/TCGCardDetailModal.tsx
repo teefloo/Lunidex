@@ -105,7 +105,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const wishlisted = isTCGWishlist(displayCard.id);
 
   return createPortal(
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div lang={resolvedLang} className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -605,7 +605,6 @@ function getTrainerTypeLabel(type: string, t: (key: string, options?: { defaultV
     'Technical Machine': 'tcg.trainer_type_technical_machine',
     'Goldenrod Game Corner': 'tcg.trainer_type_goldenrod_game_corner',
     'Rocket\'s Secret Machine': 'tcg.trainer_type_rockets_secret_machine',
-    'Rocket’s Secret Machine': 'tcg.trainer_type_rockets_secret_machine',
   };
 
   return mapping[type] ? t(mapping[type]) : type;

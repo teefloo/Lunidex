@@ -17,9 +17,12 @@ const STATIC_ROUTES: StaticEntry[] = [
   { path: 'types', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'moves', changeFrequency: 'monthly', priority: 0.6 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
+  { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'about', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'privacy', changeFrequency: 'yearly', priority: 0.2 },
   { path: 'terms', changeFrequency: 'yearly', priority: 0.2 },
+  { path: 'cookies', changeFrequency: 'yearly', priority: 0.2 },
+  { path: 'legal', changeFrequency: 'yearly', priority: 0.2 },
 ];
 
 function buildLanguages(path: string): Record<string, string> {

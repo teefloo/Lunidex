@@ -90,7 +90,6 @@ export async function generateMetadata(): Promise<Metadata> {
         ja: "/ja",
         ko: "/ko",
         zh: "/zh",
-        pt: "/pt",
         "x-default": "/en",
       },
     },
@@ -283,7 +282,7 @@ export default async function RootLayout({
         '@type': 'ContactPoint',
         contactType: 'customer support',
         url: GITHUB_ISSUES_URL,
-        availableLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh', 'pt'],
+        availableLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
       },
     ],
   };
@@ -387,4 +386,4 @@ export default async function RootLayout({
   );
 }
 
-const supportedInLanguage = ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh-CN', 'pt-BR'];
+const supportedInLanguage = ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh-CN'];

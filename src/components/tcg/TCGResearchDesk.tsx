@@ -6,9 +6,7 @@ import {
   ChevronRight,
   ChevronDown,
   Search,
-  SlidersHorizontal,
   Sparkles,
-  Wand2,
   Filter,
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -42,6 +40,10 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { language, systemLanguage } = usePrimeDexStore();
+  const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
+  const tcgWishlistCards = usePrimeDexStore((s) => s.tcgWishlistCards);
+  const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
+  const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
 
@@ -51,8 +53,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   }));
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSimpleFiltersOpen, setIsSimpleFiltersOpen] = useState(false);
-  const [isAdvancedFiltersOpen, setIsAdvancedFiltersOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
     parsedState.filters.selectedSet
     || parsedState.filters.searchTerm
@@ -127,7 +128,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
 
   const { data: cardsData, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, PAGE_SIZE),
-    queryFn: async ({ pageParam = 1, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, PAGE_SIZE, signal),
+    queryFn: async ({ pageParam = 1, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, PAGE_SIZE, signal, ownedIds, wishlistIds),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
     enabled: mounted,
@@ -141,39 +142,6 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const updateFilters = useCallback((next: TCGCardFilters) => {
     setHasUserEditedFilters(true);
     setFilters(normalizeFilters(next));
-  }, []);
-
-  const updateSimpleSet = useCallback((setId: string) => {
-    setHasUserEditedFilters(true);
-    setFilters((current) => normalizeFilters({
-      ...current,
-      selectedSet: current.selectedSet === setId ? null : setId,
-      selectedCategory: 'all',
-      selectedRarity: null,
-      selectedTypes: [],
-      selectedPhase: null,
-      selectedTrainerTypes: [],
-      selectedEnergyTypes: [],
-      minHp: undefined,
-      maxHp: undefined,
-      illustrator: undefined,
-      regulationMark: undefined,
-      legalities: [],
-      priceMin: undefined,
-      priceMax: undefined,
-      releaseStart: undefined,
-      releaseEnd: undefined,
-      ownedState: 'all',
-    }));
-  }, []);
-
-  const updateSimpleRarity = useCallback((rarity: string) => {
-    setHasUserEditedFilters(true);
-    setFilters((current) => normalizeFilters({
-      ...current,
-      selectedRarity: current.selectedRarity === rarity ? null : rarity,
-      selectedCategory: current.selectedCategory ?? 'all',
-    }));
   }, []);
 
   const clearFilters = useCallback(() => {
@@ -192,8 +160,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
     setIsModalOpen(true);
   }, []);
 
-  const openSimpleFilters = useCallback(() => setIsSimpleFiltersOpen(true), []);
-  const openAdvancedFilters = useCallback(() => setIsAdvancedFiltersOpen(true), []);
+  const openFilters = useCallback(() => setIsFiltersOpen(true), []);
 
   const applyQuickPreset = useCallback((preset: 'latest' | 'pikachu') => {
     setHasUserEditedFilters(true);
@@ -252,26 +219,13 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
         onSearchChange={(value) => updateFilters({
           ...effectiveFilters,
           searchTerm: value.trim() ? value : undefined,
-          selectedSet: value.trim() ? null : effectiveFilters.selectedSet,
         })}
         onClearSearch={() => updateFilters({ ...effectiveFilters, searchTerm: undefined, selectedSet: null })}
-        onOpenFilters={openSimpleFilters}
-        onOpenAdvanced={openAdvancedFilters}
+        onOpenFilters={openFilters}
         onQuickPreset={applyQuickPreset}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
-        <aside className="hidden lg:block">
-          <div className="sticky top-24 max-h-[calc(100dvh-7rem)] space-y-4 overflow-y-auto pr-1 scrollbar-premium">
-              <SimpleFilterBar
-                filters={effectiveFilters}
-                onChange={updateFilters}
-                onSimpleSetChange={updateSimpleSet}
-                onSimpleRarityChange={updateSimpleRarity}
-              />
-          </div>
-        </aside>
-
+      <div className="space-y-4">
         <main className="min-w-0 space-y-4">
           <ResultSummary
             count={totalCards}
@@ -314,38 +268,26 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
         </main>
       </div>
 
-      <Sheet open={isSimpleFiltersOpen} onOpenChange={setIsSimpleFiltersOpen}>
-        <SheetContent side="bottom" className="rounded-t-[2rem] p-0 lg:hidden">
-          <SheetHeader className="border-b border-border/50 px-5 py-4">
-            <SheetTitle className="flex items-center gap-2 text-base font-black uppercase tracking-[0.2em]">
-              <Filter className="h-4 w-4 text-primary" />
-              {t('tcg.simple_filters_title')}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="max-h-[78dvh] overflow-y-auto p-4">
-            <SimpleFilterBar
-              filters={effectiveFilters}
-              onChange={updateFilters}
-              onSimpleSetChange={updateSimpleSet}
-              onSimpleRarityChange={updateSimpleRarity}
-              onOpenAdvanced={() => {
-                setIsSimpleFiltersOpen(false);
-                setIsAdvancedFiltersOpen(true);
-              }}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      <Sheet open={isAdvancedFiltersOpen} onOpenChange={setIsAdvancedFiltersOpen}>
+      <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
         <SheetContent side="right" className="w-[92vw] max-w-[480px] p-0">
           <SheetHeader className="border-b border-border/50 px-5 py-4">
             <SheetTitle className="flex items-center gap-2 text-base font-black uppercase tracking-[0.2em]">
-              <Wand2 className="h-4 w-4 text-primary" />
-              {t('tcg.advanced_filters_title')}
+              <Filter className="h-4 w-4 text-primary" />
+              {t('tcg.filters')}
             </SheetTitle>
           </SheetHeader>
-          <div className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto p-4">
+          <div className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto p-4 space-y-4">
+            <button
+              type="button"
+              onClick={() => {
+                applyQuickPreset('latest');
+                setIsFiltersOpen(false);
+              }}
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {t('tcg.latest_cards')}
+            </button>
             <TCGFilters
               mode="advanced"
               filters={effectiveFilters}
@@ -375,7 +317,6 @@ function DiscoveryHero({
   onSearchChange,
   onClearSearch,
   onOpenFilters,
-  onOpenAdvanced,
   onQuickPreset,
 }: {
   title: string;
@@ -387,7 +328,6 @@ function DiscoveryHero({
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onOpenFilters: () => void;
-  onOpenAdvanced: () => void;
   onQuickPreset: (preset: 'latest' | 'pikachu') => void;
 }) {
   const { t } = useTranslation();
@@ -458,7 +398,7 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={() => onQuickPreset('latest')}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+            className="hidden md:inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <Sparkles className="h-3.5 w-3.5" />
             {t('tcg.latest_cards')}
@@ -466,18 +406,10 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={onOpenFilters}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary lg:hidden"
-          >
-            <Filter className="h-3.5 w-3.5" />
-            {t('tcg.simple_filters_title')}
-          </button>
-          <button
-            type="button"
-            onClick={onOpenAdvanced}
             className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
-            <SlidersHorizontal className="h-3.5 w-3.5" />
-            {t('tcg.advanced_filters_title')}
+            <Filter className="h-3.5 w-3.5" />
+            {t('tcg.filters')}
           </button>
           {searchTerm && (
             <button
@@ -491,56 +423,6 @@ function DiscoveryHero({
         </div>
       </div>
     </section>
-  );
-}
-
-function SimpleFilterBar({
-  filters,
-  onChange,
-  onOpenAdvanced,
-  onSimpleSetChange,
-  onSimpleRarityChange,
-}: {
-  filters: TCGCardFilters;
-  onChange: (filters: TCGCardFilters) => void;
-  onOpenAdvanced?: () => void;
-  onSimpleSetChange?: (setId: string) => void;
-  onSimpleRarityChange?: (rarity: string) => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <div className="rounded-[1.5rem] border border-border/50 bg-card/45 p-4">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div>
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
-            {t('tcg.simple_filters_title')}
-          </div>
-          <div className="mt-1 text-sm font-semibold text-foreground/70">
-            {t('tcg.simple_filters_description')}
-          </div>
-        </div>
-        {onOpenAdvanced && (
-          <button
-            type="button"
-            onClick={onOpenAdvanced}
-            className="inline-flex h-10 items-center gap-2 rounded-full border border-border/45 bg-card/55 px-3 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
-          >
-            <Wand2 className="h-3.5 w-3.5" />
-            {t('tcg.advanced_filters_title')}
-          </button>
-        )}
-      </div>
-
-      <TCGFilters
-        mode="simple"
-        filters={filters}
-        onChange={onChange}
-        onSimpleSetChange={onSimpleSetChange}
-        onSimpleRarityChange={onSimpleRarityChange}
-        autoApplyInitialSet={false}
-      />
-    </div>
   );
 }
 

@@ -1046,6 +1046,7 @@ export default {
       card_row_hint: 'Open the card to view full details.',
       retreat_cost: 'Retreat cost',
         no_rarities_in_set: 'No rarity data for this selection.',
+        filters: 'Filters',
         simple_filters_title: 'Simple filters',
         simple_filters_hint_compact: 'Quick settings',
         simple_filters_summary: 'Simple and clear',
