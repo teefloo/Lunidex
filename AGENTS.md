@@ -40,7 +40,7 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 - **i18n:** client code uses `@/lib/i18n` (lazy-loaded language bundles, English is the initial bundle); server code uses `@/lib/server-i18n` (all bundles baked in). User-facing strings go through `t()`.
 - **State:** Zustand store in `src/store/primedex.ts` holds IDs/primitives only, persisted via `idb-keyval` (IndexedDB, **not** localStorage). Check `_hasHydrated` before trusting persisted state in effects. Use selectors to avoid re-renders.
 - **Heavy components** (`EvolutionChain`, `AdvancedInfo`, etc.) are loaded via `next/dynamic`.
-- **shadcn/ui style is `base-nova`; some primitives come from `@base-ui/react` (see `components.json`).**
+- **shadcn/ui style is `base-nova`;** some primitives come from `@base-ui/react` (see `components.json`).
 - **Accessibility:** WCAG 2.2 AA; every icon-only control needs `aria-label`, every image an `alt`.
 
 ## Routing & Architecture
@@ -54,7 +54,7 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 
 - **Dev uses webpack, not turbopack.** The `dev` script forces `--webpack`. `next.config.ts` still declares `turbopack.root`; leave it alone.
 - **Agentation dev tool** runs on `http://localhost:4747` (CSP and `allowedDevOrigins` are pre-wired for it). Toggled via `NEXT_PUBLIC_ENABLE_AGENTATION=true` in `.env.local`. Don't add 4747 to CSP yourself.
-- **Tests live next to the code they cover** (e.g., `src/lib/auto-complete.test.ts`). The Vitest setup file `src/test/setup.ts` is in place and just imports `@testing-library/jest-dom/vitest`.
+- **Tests live next to the code they cover** (e.g., `src/lib/auto-complete.test.ts`). The Vitest setup file `src/test/setup.ts` exists and imports `@testing-library/jest-dom/vitest` — without it, `npm run test` fails to start.
 - **No CI yet** — no `.github/` directory. `vercel.json` only has `{"name": "poke-app"}`; deploy config lives in the Vercel dashboard.
 - **No project-level opencode config** — `.opencode/` is gitignored (has its own `node_modules`).
 - **`GEMINI.md` is a separate mandate document** at the repo root and in some subtrees; treat its rules as authoritative when they overlap.
@@ -67,8 +67,3 @@ AI-authored commits MUST include the trailer:
 ```
 Co-authored-by: Gemini CLI <agent@gemini.google.com>
 ```
-
-## Detailed Instructions
-
-- [Architecture](docs/agent-instructions/architecture.md)
-- [Code Conventions](docs/agent-instructions/conventions.md)
