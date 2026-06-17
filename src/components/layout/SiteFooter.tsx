@@ -1,14 +1,12 @@
-'use client';
-
 import Link from 'next/link';
 import { Github, Heart } from 'lucide-react';
 
-import { useTranslation } from '@/lib/i18n';
+import { getServerT } from '@/lib/server-i18n';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { GITHUB_REPO_URL } from '@/lib/site';
 
-export default function SiteFooter() {
-  const { t } = useTranslation();
+export default async function SiteFooter() {
+  const t = await getServerT();
   const year = new Date().getFullYear();
 
   const navigationLinks = [

@@ -5,7 +5,6 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { getPokemonList, getAllPokemonDetailed, getAllPokemonSummary } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL } from '@/lib/site';
 import { PokemonCard, PokemonCardSkeleton } from './PokemonCard';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Loader2, RotateCcw, SearchX } from 'lucide-react';
@@ -201,15 +200,7 @@ export default function PokemonList() {
   }, [allSummary, basicSummary, isBasicMode]);
 
   const buildInitialData = useMemo(() => {
-    return (p: PokemonResultItem) => {
-      const key = `${p.id}-${p.name}`;
-      let data = _initialDataCache.get(key);
-      if (!data) {
-        data = _buildInitialDataRaw(p);
-        _initialDataCache.set(key, data);
-      }
-      return data;
-    };
+    return (p: PokemonResultItem) => _getCachedInitialData(p);
   }, []);
 
   const transformedDetailed = useMemo(() => {
@@ -411,33 +402,6 @@ export default function PokemonList() {
     return filteredAndSortedResults.slice(0, displayLimit);
   }, [filteredAndSortedResults, displayLimit]);
 
-  const jsonLdId = 'pokemon-item-list-jsonld';
-
-  useEffect(() => {
-    let el = document.getElementById(jsonLdId) as HTMLScriptElement | null;
-    const itemListJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      numberOfItems: filteredAndSortedResults?.length ?? 0,
-      itemListElement: displayedPokemon.map((p, idx) => ({
-        '@type': 'ListItem',
-        position: idx + 1,
-        name: p.localizedNames?.find((n: LocalizedNameEntry) => n.language === resolvedLang)?.name || p.name,
-        url: `${SITE_URL}/${resolvedLang}/pokemon/${p.name}`,
-      })),
-    };
-    if (!el) {
-      el = document.createElement('script');
-      el.id = jsonLdId;
-      el.type = 'application/ld+json';
-      document.head.appendChild(el);
-    }
-    el.textContent = JSON.stringify(itemListJsonLd);
-    return () => {
-      el?.remove();
-    };
-  }, [displayedPokemon, filteredAndSortedResults, resolvedLang]);
-
   const hasMoreFiltered = !isBasicMode && filteredAndSortedResults !== null && displayLimit < filteredAndSortedResults.length;
 
   const handleLoadMore = () => {
@@ -558,6 +522,7 @@ export default function PokemonList() {
 }
 
 const _initialDataCache = new Map<string, ReturnType<typeof _buildInitialDataRaw>>();
+const CACHE_MAX = 200;
 
 function _buildInitialDataRaw(p: PokemonResultItem) {
   const localizedNames = p.localizedNames || [];
@@ -575,4 +540,18 @@ function _buildInitialDataRaw(p: PokemonResultItem) {
       })),
     } as Partial<PokemonSpecies>,
   };
+}
+
+function _getCachedInitialData(p: PokemonResultItem) {
+  const key = `${p.id}-${p.name}`;
+  let data = _initialDataCache.get(key);
+  if (!data) {
+    data = _buildInitialDataRaw(p);
+    if (_initialDataCache.size >= CACHE_MAX) {
+      const firstKey = _initialDataCache.keys().next().value;
+      if (firstKey !== undefined) _initialDataCache.delete(firstKey);
+    }
+    _initialDataCache.set(key, data);
+  }
+  return data;
 }

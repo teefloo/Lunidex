@@ -2,7 +2,6 @@
 
 import { usePrimeDexStore } from '@/store/primedex';
 import { Trash2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { formatId } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -40,10 +39,8 @@ export default function RecentlyViewed() {
       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
         {history.map((p, idx) => (
           <Link key={`${p.id}-${idx}`} href={`/pokemon/${p.name}`}>
-            <motion.div
-              whileHover={{ y: -4 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 24 }}
-              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 hover:border-primary/40 transition-all"
+            <div
+              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
             >
               <div className="relative w-10 h-10">
                 <Image
@@ -63,7 +60,7 @@ export default function RecentlyViewed() {
                   {p.name}
                 </p>
               </div>
-            </motion.div>
+            </div>
           </Link>
         ))}
       </div>

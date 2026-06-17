@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
-import CookieBanner from "@/components/layout/CookieBanner";
+import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import {
   SITE_URL,
@@ -34,7 +34,7 @@ const displayFont = Fraunces({
 
 const bodyFont = Manrope({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
   variable: "--font-body",
   display: "swap",
   preload: true,
@@ -172,106 +172,105 @@ export default async function RootLayout({
   const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
 
-  const websiteJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    '@id': `${baseUrl}/#website`,
-    name: SITE_NAME,
-    alternateName: ['PrimeDex', 'Prime Dex', 'PrimeDex Pokédex'],
-    url: baseUrl,
-    description: SITE_DESCRIPTION,
-    inLanguage: supportedInLanguage,
-    keywords: SITE_KEYWORDS.join(', '),
-    publisher: { '@id': `${baseUrl}/#organization` },
-    potentialAction: [
-      {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${baseUrl}/?search={search_term_string}`,
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
+      name: SITE_NAME,
+      alternateName: ['PrimeDex', 'Prime Dex', 'PrimeDex Pokédex'],
+      url: baseUrl,
+      description: SITE_DESCRIPTION,
+      inLanguage: supportedInLanguage,
+      keywords: SITE_KEYWORDS.join(', '),
+      publisher: { '@id': `${baseUrl}/#organization` },
+      potentialAction: [
+        {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${baseUrl}/?search={search_term_string}`,
+          },
+          'query-input': 'required name=search_term_string',
         },
-        'query-input': 'required name=search_term_string',
-      },
-    ],
-    mainEntity: { '@id': `${baseUrl}/#webapp` },
-  };
-
-  const organizationJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${baseUrl}/#organization`,
-    name: SITE_NAME,
-    legalName: SITE_NAME,
-    url: baseUrl,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${baseUrl}/icon-512.png`,
-      width: 512,
-      height: 512,
+      ],
+      mainEntity: { '@id': `${baseUrl}/#webapp` },
     },
-    image: `${baseUrl}/opengraph-image`,
-    description: SITE_DESCRIPTION,
-    foundingDate: '2024',
-    sameAs: SOCIAL_PROFILES,
-    contactPoint: [
-      {
-        '@type': 'ContactPoint',
-        contactType: 'customer support',
-        url: GITHUB_ISSUES_URL,
-        availableLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+      name: SITE_NAME,
+      legalName: SITE_NAME,
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/icon-512.png`,
+        width: 512,
+        height: 512,
       },
-    ],
-  };
-
-  const webAppJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    '@id': `${baseUrl}/#webapp`,
-    name: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    alternateName: SITE_NAME,
-    url: baseUrl,
-    applicationCategory: ['GameApplication', 'EducationalApplication'],
-    applicationSubCategory: 'GameDatabase',
-    operatingSystem: 'All',
-    browserRequirements: 'Requires modern browser with JavaScript enabled',
-    description: SITE_DESCRIPTION,
-    image: `${baseUrl}/opengraph-image`,
-    screenshot: [
-      `${baseUrl}/screenshot-desktop.png`,
-      `${baseUrl}/screenshot-mobile.png`,
-    ],
-    featureList: FEATURE_LIST.join(', '),
-    keywords: SITE_KEYWORDS.join(', '),
-    inLanguage: supportedInLanguage,
-    isAccessibleForFree: true,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-    },
-    author: { '@id': `${baseUrl}/#organization` },
-    publisher: { '@id': `${baseUrl}/#organization` },
-    softwareVersion: '1.0.0',
-  };
-
-  const speakableJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    '@id': `${baseUrl}/#speakable`,
-    url: baseUrl,
-    name: SITE_NAME,
-    inLanguage: lang,
-    speakable: {
-      '@type': 'SpeakableSpecification',
-      xpath: [
-        '/html/head/title',
-        '/html/head/meta[@name="description"]/@content',
-        '//h1',
-        '//h2[contains(@class, "hero-title")]',
+      image: `${baseUrl}/opengraph-image`,
+      description: SITE_DESCRIPTION,
+      foundingDate: '2024',
+      sameAs: SOCIAL_PROFILES,
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'customer support',
+          url: GITHUB_ISSUES_URL,
+          availableLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
+        },
       ],
     },
-  };
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      '@id': `${baseUrl}/#webapp`,
+      name: `${SITE_NAME} — ${SITE_TAGLINE}`,
+      alternateName: SITE_NAME,
+      url: baseUrl,
+      applicationCategory: ['GameApplication', 'EducationalApplication'],
+      applicationSubCategory: 'GameDatabase',
+      operatingSystem: 'All',
+      browserRequirements: 'Requires modern browser with JavaScript enabled',
+      description: SITE_DESCRIPTION,
+      image: `${baseUrl}/opengraph-image`,
+      screenshot: [
+        `${baseUrl}/screenshot-desktop.png`,
+        `${baseUrl}/screenshot-mobile.png`,
+      ],
+      featureList: FEATURE_LIST.join(', '),
+      keywords: SITE_KEYWORDS.join(', '),
+      inLanguage: supportedInLanguage,
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+      },
+      author: { '@id': `${baseUrl}/#organization` },
+      publisher: { '@id': `${baseUrl}/#organization` },
+      softwareVersion: '1.0.0',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': `${baseUrl}/#speakable`,
+      url: baseUrl,
+      name: SITE_NAME,
+      inLanguage: lang,
+      speakable: {
+        '@type': 'SpeakableSpecification',
+        xpath: [
+          '/html/head/title',
+          '/html/head/meta[@name="description"]/@content',
+          '//h1',
+          '//h2[contains(@class, "hero-title")]',
+        ],
+      },
+    },
+  ];
 
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable, monoFont.variable)}>
@@ -295,28 +294,13 @@ export default async function RootLayout({
                {children}
              </div>
              <SiteFooter />
-             <CookieBanner />
+              <ClientCookieBanner />
            </AppContent>
          </Providers>
         <script
-          id="website-jsonld"
+          id="primedex-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
-        <script
-          id="organization-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
-        <script
-          id="webapp-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
-        />
-        <script
-          id="speakable-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Cookie } from 'lucide-react';
 
@@ -56,13 +56,8 @@ export default function CookieBanner() {
   const initialVisible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const visible = initialVisible && !postActionVisible;
 
-  // Reserve layout space to prevent CLS when the banner appears
-  useEffect(() => {
-    if (visible) {
-      document.body.style.paddingBottom = '160px';
-      return () => { document.body.style.paddingBottom = ''; };
-    }
-  }, [visible]);
+  // No dynamic padding manipulation — the fixed-position banner
+  // floats above content, so no CLS reservation is needed.
 
   const handleAccept = () => {
     writeStoredConsent('accepted');
@@ -86,7 +81,6 @@ export default function CookieBanner() {
       aria-live="polite"
       aria-label={t('legal.banner.title')}
       className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
-      style={{ willChange: 'transform' }}
     >
       <div className="glass-panel mx-auto w-full max-w-xl p-4 sm:p-5">
         <div className="flex items-start gap-3">
