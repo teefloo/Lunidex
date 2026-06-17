@@ -1,9 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
-  ChevronRight,
   ChevronDown,
   Search,
   Sparkles,
@@ -23,8 +22,6 @@ import { TCGCardItem } from './TCGCardItem';
 import { TCGFilters } from './TCGFilters';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
-
-const PAGE_SIZE = 24;
 
 interface TCGResearchDeskProps {
   initialLatestSet?: {
@@ -126,18 +123,16 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }, [pathname, router, searchParams, urlFilters]);
 
-  const { data: cardsData, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, PAGE_SIZE),
-    queryFn: async ({ pageParam = 1, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, PAGE_SIZE, signal, ownedIds, wishlistIds),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
+  const { data: cardsData, isLoading, isFetching } = useQuery({
+    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 0),
+    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds, true),
     enabled: mounted,
     staleTime: 5 * 60 * 1000,
   });
 
-  const cards = useMemo(() => cardsData?.pages.flatMap((page) => page.cards) ?? [], [cardsData]);
+  const cards = useMemo(() => cardsData?.cards ?? [], [cardsData]);
   const totalCards = cards.length;
-  const sortValue = `${effectiveFilters.sortBy ?? 'name'}-${effectiveFilters.sortOrder ?? 'asc'}`;
+  const sortValue = `${effectiveFilters.sortBy ?? 'id'}-${effectiveFilters.sortOrder ?? 'asc'}`;
 
   const updateFilters = useCallback((next: TCGCardFilters) => {
     setHasUserEditedFilters(true);
@@ -222,7 +217,6 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
         })}
         onClearSearch={() => updateFilters({ ...effectiveFilters, searchTerm: undefined, selectedSet: null })}
         onOpenFilters={openFilters}
-        onQuickPreset={applyQuickPreset}
       />
 
       <div className="space-y-4">
@@ -241,22 +235,6 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
                 cards={cards}
                 onCardClick={openCard}
               />
-
-              {hasNextPage && (
-                <div className="flex justify-center pt-2">
-                  <button
-                    type="button"
-                    onClick={() => void fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="inline-flex h-12 items-center gap-2 rounded-full border border-border/50 bg-card/55 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/65 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary disabled:opacity-50"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                    {isFetchingNextPage
-                      ? t('tcg.loading_more')
-                      : t('tcg.load_more_cards')}
-                  </button>
-                </div>
-              )}
             </>
           ) : (
             <EmptyState
@@ -317,7 +295,6 @@ function DiscoveryHero({
   onSearchChange,
   onClearSearch,
   onOpenFilters,
-  onQuickPreset,
 }: {
   title: string;
   subtitle: string;
@@ -328,7 +305,6 @@ function DiscoveryHero({
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onOpenFilters: () => void;
-  onQuickPreset: (preset: 'latest' | 'pikachu') => void;
 }) {
   const { t } = useTranslation();
 
@@ -395,14 +371,6 @@ function DiscoveryHero({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onQuickPreset('latest')}
-            className="hidden md:inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            {t('tcg.latest_cards')}
-          </button>
           <button
             type="button"
             onClick={onOpenFilters}

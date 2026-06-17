@@ -65,7 +65,7 @@ const VISUAL_METADATA_CONCURRENCY = 8;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   selectedCategory: 'all',
-  sortBy: 'name',
+  sortBy: 'id',
   sortOrder: 'asc',
   ownedState: 'all',
 };
@@ -669,6 +669,7 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
 
 /**
  * Search for cards with filters and pagination.
+ * When fetchAll is true, ignores pagination and returns all matching cards.
  */
 export const searchCards = async (
   filters: TCGCardFilters,
@@ -678,13 +679,13 @@ export const searchCards = async (
   signal?: AbortSignal,
   ownedIds?: Set<string>,
   wishlistIds?: Set<string>,
+  fetchAll = false,
 ): Promise<TCGCatalogPageResult> => {
   const tcgLang = resolveTcgLang(lang);
   const safePage = normalizeTcgPositiveInteger(page, 1);
   const safeLimit = normalizeTcgPositiveInteger(limit, 48);
   const queryFilters = stripLocalOnlyFilters(filters);
   const query = buildCardQueryParams(queryFilters, safePage, safeLimit).toString();
-  const cacheKey = `tcg-catalog-v10-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
   const hasLocalOnlyFilters =
     Boolean(filters.selectedRarity) ||
     Boolean(filters.selectedTrainerTypes?.length) ||
@@ -697,12 +698,39 @@ export const searchCards = async (
   const sortOrder = filters.sortOrder ?? 'asc';
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
+  const cacheKey = fetchAll
+    ? `tcg-catalog-all-v10-${tcgLang}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    : `tcg-catalog-v10-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
 
   try {
     const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
     if (cached) return cached;
 
     if (!hasLocalOnlyFilters && !requiresLocalSorting && !requiresFullDatasetSort) {
+      if (fetchAll) {
+        const ALL_PAGE_SIZE = 250;
+        const allCards: TCGCard[] = [];
+        let remotePage = 1;
+        let hasMoreRemote = true;
+
+        while (hasMoreRemote) {
+          const pageQuery = buildCardQueryParams(queryFilters, remotePage, ALL_PAGE_SIZE - 1).toString();
+          const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
+          throwIfAborted(signal);
+          const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+          allCards.push(...normalized);
+          hasMoreRemote = normalized.length === ALL_PAGE_SIZE;
+          remotePage += 1;
+        }
+
+        const sorted = [...allCards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
+        const pageCards = await hydrateCardsForVisualEffects(sorted, tcgLang, signal);
+        const result = { cards: pageCards, hasMore: false };
+
+        await setCachedData(cacheKey, result);
+        return result;
+      }
+
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${query}`, signal);
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
@@ -720,8 +748,8 @@ export const searchCards = async (
     const cards: TCGCard[] = [];
     let remotePage = 1;
     let hasMoreRemote = true;
-    const targetCount = safePage * safeLimit + 1;
-    const MAX_REMOTE_PAGES = 30;
+    const targetCount = fetchAll ? Number.POSITIVE_INFINITY : safePage * safeLimit + 1;
+    const MAX_REMOTE_PAGES = fetchAll ? Number.POSITIVE_INFINITY : 30;
 
     while (hasMoreRemote && (requiresFullDatasetSort || cards.length < targetCount) && remotePage <= MAX_REMOTE_PAGES) {
       const pageQuery = buildCardQueryParams(queryFilters, remotePage, safeLimit).toString();
@@ -748,12 +776,12 @@ export const searchCards = async (
     }
 
     const sortedCards = [...cards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
-    const start = (page - 1) * limit;
-    const end = start + safeLimit;
-    const pageCards = await hydrateCardsForVisualEffects(sortedCards.slice(start, end), tcgLang, signal);
+    const pageCards = fetchAll
+      ? await hydrateCardsForVisualEffects(sortedCards, tcgLang, signal)
+      : await hydrateCardsForVisualEffects(sortedCards.slice((page - 1) * limit, (page - 1) * limit + safeLimit), tcgLang, signal);
     const result = {
       cards: pageCards,
-      hasMore: hasMoreRemote || sortedCards.length > end,
+      hasMore: fetchAll ? false : hasMoreRemote || sortedCards.length > (page - 1) * limit + safeLimit,
     };
 
     await setCachedData(cacheKey, result);
