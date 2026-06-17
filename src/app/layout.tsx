@@ -156,72 +156,19 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     other: {
       "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || "pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg",
-      "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION || "",
-      "yandex-verification": process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || "",
-      "p:domain_verify": process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION || "",
       "theme-color": PRIMARY_COLOR,
       "color-scheme": "light dark",
-      "application-name": SITE_NAME,
-      "apple-mobile-web-app-title": SITE_NAME,
       "apple-mobile-web-app-capable": "yes",
       "apple-mobile-web-app-status-bar-style": "black-translucent",
-      "mobile-web-app-capable": "yes",
-      "HandheldFriendly": "True",
-      "MobileOptimized": "320",
       "og:locale:alternate": supportedLanguages
         .filter((l) => l !== lang)
         .map((l) => languageToOpenGraphLocale[l])
         .join(", "),
-      "search": "/opensearch.xml",
-      "geo.region": "US",
-      "geo.placename": "Worldwide",
-      "geo.position": "0;0",
-      "ICBM": "0, 0",
-      "rating": "general",
-      "distribution": "global",
-      "revisit-after": "1 day",
       "copyright": `© 2024–2026 ${SITE_NAME}. Pokémon data, names, and imagery are © Nintendo, Game Freak, The Pokémon Company.`,
-      "author": SITE_NAME,
-      "owner": SITE_NAME,
-      "url": `${SITE_URL}/${lang}`,
-      "identifier": "primedex",
-      "category": "Games, Entertainment, Education",
-      "target": "all",
-      "audience": "all",
-      "coverage": "Worldwide",
-      "language": languageToOpenGraphLocale[lang],
-      "robots": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-      "googlebot": "index, follow",
-      "slurp": "index, follow",
-      "doc-type": "WebApplication",
-      "doc-class": "Living Document",
-      "doc-rights": "MIT Licensed source code; non-commercial fan project",
-      "citation_title": `${SITE_NAME} — ${SITE_TAGLINE}`,
-      "citation_publisher": SITE_NAME,
-      "citation_author": SITE_NAME,
-      "citation_language": languageToOpenGraphLocale[lang],
-      "citation_release_date": "2024-01-15",
-      "citation_online_date": "2026-06-04",
-      "DC.title": `${SITE_NAME} — ${SITE_TAGLINE}`,
-      "DC.creator": SITE_NAME,
-      "DC.subject": SITE_KEYWORDS.join(', '),
-      "DC.description": SITE_DESCRIPTION,
-      "DC.publisher": SITE_NAME,
-      "DC.contributor": "PokéAPI (https://pokeapi.co), TCGdex (https://www.tcgdex.net)",
-      "DC.type": "InteractiveResource",
-      "DC.format": "text/html",
-      "DC.identifier": SITE_URL,
-      "DC.source": "https://pokeapi.co",
-      "DC.language": languageToOpenGraphLocale[lang],
-      "DC.relation": "https://github.com/teefloo/Poke",
-      "DC.coverage": "Worldwide",
-      "DC.rights": "MIT (code); Pokémon data © Nintendo, Game Freak, The Pokémon Company",
-      "DC.date": "2024-01-15",
       "twitter:label1": "Pokémon Count",
       "twitter:data1": "1,025",
       "twitter:label2": "Generations",
       "twitter:data2": "9",
-      "apple-itunes-app": `app-id=primedex, app-argument=${SITE_URL}/${lang}`,
     },
   };
 }
@@ -338,6 +285,8 @@ export default async function RootLayout({
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable, monoFont.variable)}>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://pokeapi.co" />
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
         <link rel="preconnect" href="https://beta.pokeapi.co" />

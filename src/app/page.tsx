@@ -7,7 +7,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { SITE_URL } from '@/lib/site';
 import { getServerT } from '@/lib/server-i18n';
 
 export const revalidate = 3600;
@@ -70,36 +70,6 @@ export default async function Home() {
     ],
   };
 
-  const homeSpeakableJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    '@id': `${baseUrl}/#speakable-home`,
-    url: `${baseUrl}/en`,
-    name: SITE_NAME,
-    datePublished: '2024-01-15',
-    dateModified: '2026-06-04',
-    inLanguage: 'en',
-    isPartOf: { '@id': `${baseUrl}/#webapp` },
-    speakable: {
-      '@type': 'SpeakableSpecification',
-      cssSelector: ['#hero-title', '#faq-title', 'h1', 'h2'],
-    },
-  };
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    '@id': `${baseUrl}/#breadcrumb-home`,
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: SITE_NAME,
-        item: `${baseUrl}/en`,
-      },
-    ],
-  };
-
   const howToJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
@@ -158,16 +128,6 @@ export default async function Home() {
         id="faq-page-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
-      />
-      <script
-        id="home-speakable-jsonld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSpeakableJsonLd) }}
-      />
-      <script
-        id="breadcrumb-jsonld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <script
         id="howto-jsonld"

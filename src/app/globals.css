@@ -724,6 +724,7 @@ h3 {
   background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 55%, var(--accent) 45%) 60%, var(--accent) 100%);
   -webkit-background-clip: text;
   background-clip: text;
+  color: var(--primary);
   color: transparent;
 }
 
