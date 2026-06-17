@@ -156,19 +156,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     other: {
       "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || "pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg",
-      "theme-color": PRIMARY_COLOR,
-      "color-scheme": "light dark",
-      "apple-mobile-web-app-capable": "yes",
-      "apple-mobile-web-app-status-bar-style": "black-translucent",
       "og:locale:alternate": supportedLanguages
         .filter((l) => l !== lang)
         .map((l) => languageToOpenGraphLocale[l])
         .join(", "),
-      "copyright": `© 2024–2026 ${SITE_NAME}. Pokémon data, names, and imagery are © Nintendo, Game Freak, The Pokémon Company.`,
-      "twitter:label1": "Pokémon Count",
-      "twitter:data1": "1,025",
-      "twitter:label2": "Generations",
-      "twitter:data2": "9",
     },
   };
 }
@@ -285,18 +276,11 @@ export default async function RootLayout({
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable, monoFont.variable)}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://pokeapi.co" />
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
-        <link rel="preconnect" href="https://beta.pokeapi.co" />
         <link rel="preconnect" href="https://api.tcgdex.net" />
         <link rel="preconnect" href="https://assets.tcgdex.net" />
-        <link rel="dns-prefetch" href="https://pokeapi.co" />
-        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
         <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
-        <link rel="dns-prefetch" href="https://api.tcgdex.net" />
-        <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
         <script

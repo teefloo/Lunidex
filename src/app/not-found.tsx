@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 
 import NotFoundMiniGame from '@/components/layout/NotFoundMiniGame';
 import { getServerT } from '@/lib/server-i18n';
+import '@/styles/not-found.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
