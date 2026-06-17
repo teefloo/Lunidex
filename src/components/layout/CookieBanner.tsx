@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Cookie } from 'lucide-react';
 
@@ -56,6 +56,14 @@ export default function CookieBanner() {
   const initialVisible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const visible = initialVisible && !postActionVisible;
 
+  // Reserve layout space to prevent CLS when the banner appears
+  useEffect(() => {
+    if (visible) {
+      document.body.style.paddingBottom = '160px';
+      return () => { document.body.style.paddingBottom = ''; };
+    }
+  }, [visible]);
+
   const handleAccept = () => {
     writeStoredConsent('accepted');
     setPostActionVisible(true);
@@ -77,7 +85,8 @@ export default function CookieBanner() {
       role="dialog"
       aria-live="polite"
       aria-label={t('legal.banner.title')}
-      className="animate-fade-in-up fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
+      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
+      style={{ willChange: 'transform' }}
     >
       <div className="glass-panel mx-auto w-full max-w-xl p-4 sm:p-5">
         <div className="flex items-start gap-3">

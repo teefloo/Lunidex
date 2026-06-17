@@ -27,8 +27,8 @@ const displayFont = Fraunces({
   weight: "variable",
   style: ["normal", "italic"],
   variable: "--font-display",
-  display: "swap",
-  preload: true,
+  display: "optional",
+  preload: false,
   axes: ["opsz", "SOFT"],
 });
 
@@ -283,6 +283,21 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:font-bold"
+        >
+          Skip to main content
+        </a>
+         <Providers>
+           <AppContent>
+             <div id="main-content">
+               {children}
+             </div>
+             <SiteFooter />
+             <CookieBanner />
+           </AppContent>
+         </Providers>
         <script
           id="website-jsonld"
           type="application/ld+json"
@@ -303,21 +318,6 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }}
         />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:font-bold"
-        >
-          Skip to main content
-        </a>
-         <Providers>
-           <AppContent>
-             <div id="main-content">
-               {children}
-             </div>
-             <SiteFooter />
-             <CookieBanner />
-           </AppContent>
-         </Providers>
       </body>
     </html>
   );

@@ -64,8 +64,8 @@ const CHIP_ACTIVE =
 
 export function PokemonCardSkeleton() {
   return (
-    <div className="py-1 px-1 h-[18rem]">
-      <div className="relative h-full p-4 flex flex-col animate-pulse rounded-[1.15rem] border border-border/50 bg-card/60 overflow-hidden">
+    <div className="py-1 px-1">
+      <div className="relative min-h-[18rem] p-4 flex flex-col animate-pulse rounded-[1.15rem] border border-border/50 bg-card/60 overflow-hidden">
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
           <div className="flex gap-1.5">
@@ -246,7 +246,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
       onMouseEnter={prefetchDetails}
     >
       <article
-        className="relative flex h-full flex-col rounded-[1.15rem] border border-border/50 bg-card/60 p-1.5 transition-all duration-500 hover:-translate-y-1 sm:p-2"
+        className="relative flex min-h-[18rem] flex-col rounded-[1.15rem] border border-border/50 bg-card/60 p-1.5 transition-all duration-500 hover:-translate-y-1 sm:p-2"
         style={{
           '--type-color': color,
           backgroundImage: cardBackground,
@@ -330,9 +330,9 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
             alt={displayName}
             fill
-            sizes="(max-width: 640px) 40vw, (max-width: 1024px) 33vw, 20vw"
+            sizes="(max-width: 640px) 160px, (max-width: 1024px) 128px, 128px"
             className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)]"
-            priority={index < 8}
+            priority={index < 4}
           />
         </div>
 
