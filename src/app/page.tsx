@@ -17,15 +17,17 @@ export default async function Home() {
   const t = await getServerT();
   const baseUrl = SITE_URL;
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: pokemonKeys.lists(),
-    queryFn: getPokemonList,
-    initialPageParam: 0,
-  });
-  await queryClient.prefetchQuery({
-    queryKey: pokemonKeys.summarySlice(0, 80),
-    queryFn: () => getPokemonSummarySlice(80, 0),
-  });
+  await Promise.all([
+    queryClient.prefetchInfiniteQuery({
+      queryKey: pokemonKeys.lists(),
+      queryFn: getPokemonList,
+      initialPageParam: 0,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: pokemonKeys.summarySlice(0, 80),
+      queryFn: () => getPokemonSummarySlice(80, 0),
+    }),
+  ]);
 
   const topPokemon = [
     'pikachu', 'charizard', 'mewtwo', 'rayquaza', 'arceus',

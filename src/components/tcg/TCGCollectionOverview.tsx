@@ -224,7 +224,7 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
                 >
                   {set.logo && (
                     <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-card/40">
-                      <Image src={set.logo} alt={set.name} fill className="object-contain p-1" />
+                      <Image src={set.logo} alt={set.name} fill sizes="48px" className="object-contain p-1" />
                     </div>
                   )}
                   <div className="min-w-0 flex-1">

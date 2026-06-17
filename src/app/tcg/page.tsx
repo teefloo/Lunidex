@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
+import { Loader2 } from 'lucide-react';
 
 export const revalidate = 3600;
 
@@ -37,8 +39,12 @@ export default function TCGPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
-        <TCGPageTabs />
-        <TCGResearchDesk initialLatestSet={DEFAULT_LATEST_TCG_SET} />
+        <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
+          <TCGPageTabs />
+        </Suspense>
+        <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
+          <TCGResearchDesk initialLatestSet={DEFAULT_LATEST_TCG_SET} />
+        </Suspense>
       </main>
     </div>
   );

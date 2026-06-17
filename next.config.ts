@@ -15,10 +15,14 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  compress: true,
   turbopack: {
     root: projectRoot,
   },
   allowedDevOrigins: ['192.168.2.203:3000', 'localhost:3000'],
+  experimental: {
+    optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react'],
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -81,6 +85,16 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        // Next.js immutable hashed chunks (JS/CSS) — safe to cache aggressively
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
         // Cache SVG and image assets
         source: '/(.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico))',
         headers: [
@@ -97,6 +111,16 @@ const nextConfig: NextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=3600, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        // Cache font files
+        source: '/(.*\\.(?:woff|woff2|ttf|otf))',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

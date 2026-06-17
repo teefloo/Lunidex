@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope, JetBrains_Mono } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
-import "../styles/pokemon-cards-css.css";
-import "../styles/tcg-card-overrides.css";
 import { cn } from "@/lib/utils";
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
@@ -342,8 +340,14 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://pokeapi.co" />
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
+        <link rel="preconnect" href="https://beta.pokeapi.co" />
+        <link rel="preconnect" href="https://api.tcgdex.net" />
+        <link rel="preconnect" href="https://assets.tcgdex.net" />
         <link rel="dns-prefetch" href="https://pokeapi.co" />
         <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+        <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
+        <link rel="dns-prefetch" href="https://api.tcgdex.net" />
+        <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
         <script
