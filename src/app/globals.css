@@ -246,14 +246,6 @@ body::after {
   opacity: 0.5;
 }
 
-img,
-svg,
-video,
-canvas {
-  position: relative;
-  z-index: 1;
-}
-
 /* ── Editorial typography defaults ──────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
