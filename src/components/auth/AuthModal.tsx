@@ -25,7 +25,7 @@ export default function AuthModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { signIn, signUp, signInWithOAuth, resetPassword } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -62,17 +62,6 @@ export default function AuthModal({
     } finally {
       setBusy(false);
     }
-  };
-
-  const handleOAuth = async (provider: 'google' | 'github') => {
-    if (busy) return;
-    setBusy(true);
-    const { error } = await signInWithOAuth(provider);
-    if (error) {
-      toast.error(error.message);
-      setBusy(false);
-    }
-    // On success the browser redirects to the provider — no further UI needed.
   };
 
   const handleReset = async () => {
@@ -159,23 +148,6 @@ export default function AuthModal({
               : tt('auth.signup_cta', 'Create account')}
           </Button>
         </form>
-
-        <div className="flex items-center gap-3 py-1">
-          <span className="h-px flex-1 bg-border/60" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/40">
-            {tt('auth.or', 'or')}
-          </span>
-          <span className="h-px flex-1 bg-border/60" />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <Button type="button" variant="outline" disabled={busy} onClick={() => handleOAuth('google')} className="w-full">
-            {tt('auth.continue_google', 'Continue with Google')}
-          </Button>
-          <Button type="button" variant="outline" disabled={busy} onClick={() => handleOAuth('github')} className="w-full">
-            {tt('auth.continue_github', 'Continue with GitHub')}
-          </Button>
-        </div>
 
         <p className="text-center text-xs text-foreground/60">
           {mode === 'signin'
