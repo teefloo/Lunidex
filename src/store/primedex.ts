@@ -190,6 +190,60 @@ interface PrimeDexStore {
   setHasHydrated: (state: boolean) => void;
 }
 
+/**
+ * Keys that make up a user's persisted snapshot. Single source of truth shared
+ * by the local IndexedDB persistence (`partialize` below) and the Supabase sync
+ * layer (`src/lib/supabase/sync-state.ts`). Add a key here and it is both stored
+ * locally and synced to the signed-in user's `user_state` row.
+ */
+export const SYNCED_KEYS = [
+  'favorites',
+  'caughtPokemon',
+  'showCaughtOnly',
+  'selectedTypes',
+  'selectedGeneration',
+  'selectedEggGroups',
+  'selectedColors',
+  'selectedShapes',
+  'isLegendary',
+  'isMythical',
+  'minBaseStats',
+  'minAttack',
+  'minDefense',
+  'minSpeed',
+  'minHp',
+  'heightRange',
+  'weightRange',
+  'selectedRegion',
+  'showFavoritesOnly',
+  'sortBy',
+  'compareList',
+  'tcgCompareList',
+  'tcgOwnedCards',
+  'tcgWishlistCards',
+  'tcgActiveSets',
+  'tcgSavedSearches',
+  'tcgCardNotes',
+  'team',
+  'history',
+  'badges',
+  'quizHighScores',
+  'quizHistory',
+  'currentStreak',
+  'bestStreak',
+  'totalQuizCorrect',
+  'visitCount',
+  'lastVisitDate',
+  'viewCount',
+  'recentActions',
+  'soundEnabled',
+  'theme',
+  'language',
+] as const;
+
+export type SyncedKey = (typeof SYNCED_KEYS)[number];
+export type PersistedState = Pick<PrimeDexStore, SyncedKey>;
+
 export const usePrimeDexStore = create<PrimeDexStore>()(
   persist(
     (set, get) => ({
@@ -457,50 +511,8 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
-      partialize: (state) => ({
-        favorites: state.favorites,
-        caughtPokemon: state.caughtPokemon,
-        showCaughtOnly: state.showCaughtOnly,
-        selectedTypes: state.selectedTypes,
-        selectedGeneration: state.selectedGeneration,
-        selectedEggGroups: state.selectedEggGroups,
-        selectedColors: state.selectedColors,
-        selectedShapes: state.selectedShapes,
-        isLegendary: state.isLegendary,
-        isMythical: state.isMythical,
-        minBaseStats: state.minBaseStats,
-        minAttack: state.minAttack,
-        minDefense: state.minDefense,
-        minSpeed: state.minSpeed,
-        minHp: state.minHp,
-        heightRange: state.heightRange,
-        weightRange: state.weightRange,
-        selectedRegion: state.selectedRegion,
-        showFavoritesOnly: state.showFavoritesOnly,
-        sortBy: state.sortBy,
-        compareList: state.compareList,
-        tcgCompareList: state.tcgCompareList,
-        tcgOwnedCards: state.tcgOwnedCards,
-        tcgWishlistCards: state.tcgWishlistCards,
-        tcgActiveSets: state.tcgActiveSets,
-        tcgSavedSearches: state.tcgSavedSearches,
-        tcgCardNotes: state.tcgCardNotes,
-        team: state.team,
-        history: state.history,
-        badges: state.badges,
-        quizHighScores: state.quizHighScores,
-        quizHistory: state.quizHistory,
-        currentStreak: state.currentStreak,
-        bestStreak: state.bestStreak,
-        totalQuizCorrect: state.totalQuizCorrect,
-        visitCount: state.visitCount,
-        lastVisitDate: state.lastVisitDate,
-        viewCount: state.viewCount,
-        recentActions: state.recentActions,
-        soundEnabled: state.soundEnabled,
-        theme: state.theme,
-        language: state.language,
-      }),
+      partialize: (state) =>
+        Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState,
     }
   )
 );

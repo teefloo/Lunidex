@@ -7,6 +7,13 @@ import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { resolveLanguage } from '@/lib/languages';
+import { AuthProvider } from '@/lib/supabase/AuthProvider';
+import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
+
+function SupabaseSyncBridge() {
+  useSupabaseSync();
+  return null;
+}
 
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -84,11 +91,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <TooltipProvider>
+            <SupabaseSyncBridge />
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

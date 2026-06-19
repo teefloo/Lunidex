@@ -45,6 +45,7 @@ import {
 } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
+import AccountMenu from '@/components/auth/AccountMenu';
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -343,6 +344,8 @@ export default function Header() {
                 {themeLabel}
               </TooltipContent>
             </Tooltip>
+
+            <AccountMenu />
 
             <div className="flex items-center lg:hidden">
               <Sheet>
