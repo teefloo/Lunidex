@@ -60,7 +60,9 @@ export default function AccountMenu() {
   }
 
   const email = user.email ?? '';
-  const initial = email.charAt(0).toUpperCase() || '?';
+  const displayName =
+    (typeof user.user_metadata?.name === 'string' && user.user_metadata.name.trim()) || '';
+  const initial = (displayName || email).charAt(0).toUpperCase() || '?';
 
   const handleSignOut = async () => {
     await signOut();
@@ -107,8 +109,10 @@ export default function AccountMenu() {
               {initial}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-foreground">{email}</p>
-              <p className="text-xs text-foreground/55">{tt('auth.signed_in_label', 'Signed in')}</p>
+              <p className="truncate text-sm font-bold text-foreground">{displayName || email}</p>
+              <p className="truncate text-xs text-foreground/55">
+                {displayName ? email : tt('auth.signed_in_label', 'Signed in')}
+              </p>
             </div>
           </div>
 

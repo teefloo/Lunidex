@@ -20,7 +20,7 @@ interface AuthContextValue {
   loading: boolean;
   session: Session | null;
   user: User | null;
-  signUp: (email: string, password: string) => Promise<AuthResult>;
+  signUp: (email: string, password: string, name?: string) => Promise<AuthResult>;
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signInWithOAuth: (provider: Provider) => Promise<AuthResult>;
   signOut: () => Promise<void>;
@@ -84,11 +84,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       session,
       user: session?.user ?? null,
-      signUp: async (email, password) => {
+      signUp: async (email, password, name) => {
+        const trimmedName = name?.trim();
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: redirectTo },
+          options: {
+            emailRedirectTo: redirectTo,
+            data: trimmedName ? { name: trimmedName, display_name: trimmedName } : undefined,
+          },
         });
         return { error };
       },

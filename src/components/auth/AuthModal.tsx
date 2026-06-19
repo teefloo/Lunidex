@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mail, Lock } from 'lucide-react';
+import { Loader2, Mail, Lock, User } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ export default function AuthModal({
   const { t } = useTranslation();
   const { signIn, signUp, resetPassword } = useAuth();
   const [mode, setMode] = useState<Mode>('signin');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -43,7 +44,7 @@ export default function AuthModal({
 
     try {
       if (mode === 'signup') {
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(email, password, name);
         if (error) {
           toast.error(error.message);
           return;
@@ -94,6 +95,26 @@ export default function AuthModal({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          {mode === 'signup' && (
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/60">
+                {tt('auth.name', 'Name')}
+              </span>
+              <div className="relative">
+                <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
+                <Input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Sacha"
+                  className="pl-9"
+                />
+              </div>
+            </label>
+          )}
+
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/60">
               {tt('auth.email', 'Email')}
