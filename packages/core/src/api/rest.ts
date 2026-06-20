@@ -1,6 +1,6 @@
 import apiClient from './client';
 import { getCachedData, setCachedData } from './cache';
-import { PokemonDetail, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
+import { PokemonDetail, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '../types/pokemon';
 
 export const getPokemonList = async ({ pageParam = 0 }) => {
   const cacheKey = `pokemon-list-${pageParam}`;

@@ -7,7 +7,7 @@ import {
   buildWebPageJsonLd,
 } from './seo';
 import { SITE_URL } from './site';
-import { supportedLanguages } from './languages';
+import { supportedLanguages } from '@/lib/languages';
 
 describe('buildBreadcrumbJsonLd', () => {
   it('builds a position-ordered BreadcrumbList', () => {

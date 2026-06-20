@@ -1,9 +1,11 @@
 'use client';
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+import {
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  supabaseAuthOptions,
+} from '../platform/supabase-env';
 
 /**
  * Whether Supabase credentials are present. When false the app keeps working
@@ -23,14 +25,7 @@ export function getSupabaseClient(): SupabaseClient | null {
   if (cachedClient) return cachedClient;
 
   cachedClient = createClient(SUPABASE_URL as string, SUPABASE_ANON_KEY as string, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      // Lets OAuth redirects (?code=...) complete the session on return.
-      detectSessionInUrl: true,
-      storageKey: 'primedex-auth',
-      flowType: 'pkce',
-    },
+    auth: supabaseAuthOptions,
   });
 
   return cachedClient;

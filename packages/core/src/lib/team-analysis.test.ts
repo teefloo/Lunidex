@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { analyzeTeam, calculateSynergyScore } from './team-analysis';
-import type { PokemonDetail } from '@/types/pokemon';
+import type { PokemonDetail } from '../types/pokemon';
 import type { TypeRelations } from './api/rest';
 
 /** Build a minimal PokemonDetail with the fields team-analysis reads. */

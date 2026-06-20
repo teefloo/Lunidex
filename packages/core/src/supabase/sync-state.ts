@@ -1,6 +1,6 @@
-import { usePrimeDexStore, SYNCED_KEYS, type PersistedState } from '@/store/primedex';
-import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
-import type { QuizSession, ActivityAction } from '@/types/dashboard';
+import { usePrimeDexStore, SYNCED_KEYS, type PersistedState } from '../store/primedex';
+import type { TCGSavedSearch, TCGUserCardEntry } from '../types/tcg';
+import type { QuizSession, ActivityAction } from '../types/dashboard';
 
 /**
  * Extracts the syncable snapshot from the live store. Mirrors the IndexedDB

@@ -7,10 +7,10 @@ import {
   getBaseStatTotal,
   DEFAULT_AUTO_COMPLETE_OPTIONS,
   AutoCompleteOptions,
-} from '@/lib/auto-complete';
-import { PokemonBasicData, TYPE_COLORS } from '@/types/pokemon';
-import { TypeRelations } from '@/lib/api';
-import { analyzeTeam } from '@/lib/team-analysis';
+} from './auto-complete';
+import { PokemonBasicData, TYPE_COLORS } from '../types/pokemon';
+import { TypeRelations } from '../api';
+import { analyzeTeam } from './team-analysis';
 
 function makeBasicPokemon(overrides: Partial<PokemonBasicData> & { id: number; name: string }): PokemonBasicData {
   const defaultStats = [

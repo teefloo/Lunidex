@@ -12,8 +12,8 @@ import type {
   TCGCatalogPageResult,
   TCGSet,
   TCGFilterOptions,
-} from '@/types/tcg';
-import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
+} from '../types/tcg';
+import { getCanonicalTcgRarity } from '../lib/tcg-rarity';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',

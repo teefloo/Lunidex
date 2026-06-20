@@ -1,4 +1,4 @@
-import type { TCGCardFilters } from '@/types/tcg';
+import type { TCGCardFilters } from '../types/tcg';
 
 export const pokemonKeys = {
   all: ['pokemon'] as const,

@@ -1,4 +1,4 @@
-import { isSupportedLanguage, type SupportedLanguage } from './languages';
+import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 
 type FormRule = {
   readonly test: (normalizedName: string) => boolean;

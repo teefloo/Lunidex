@@ -1,7 +1,7 @@
-import { PokemonBasicData } from '@/types/pokemon';
+import { PokemonBasicData } from '../types/pokemon';
 import { analyzeTeam, TeamAnalysisResult } from './team-analysis';
-import { TypeRelations } from './api';
-import { PokemonDetail } from '@/types/pokemon';
+import { TypeRelations } from '../api';
+import { PokemonDetail } from '../types/pokemon';
 
 export type TargetGeneration = 'all' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 

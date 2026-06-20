@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { toast } from 'sonner';
-import { usePrimeDexStore } from '@/store/primedex';
+import { notify } from '../platform/notify';
+import { usePrimeDexStore } from '../store/primedex';
 import { getSupabaseClient } from './client';
 import { useAuth } from './AuthProvider';
 import { applySyncState, mergeSyncState, pickSyncState } from './sync-state';
@@ -62,7 +62,7 @@ export function useSupabaseSync(): void {
 
       if (error) {
         console.warn('[supabase-sync] failed to load:', error.message);
-        toast.error('Could not load your saved data.');
+        notify.error('Could not load your saved data.');
         return;
       }
 

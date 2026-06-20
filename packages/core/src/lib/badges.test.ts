@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { BADGE_DEFINITIONS, computeBadgeStatus, findNextBadge } from './badges';
-import type { BadgeConditionData } from '@/types/dashboard';
+import type { BadgeConditionData } from '../types/dashboard';
 
 const emptyData: BadgeConditionData = {
   caughtCount: 0,

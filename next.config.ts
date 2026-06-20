@@ -16,6 +16,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   compress: true,
+  // Shared business logic now lives in the @primedex/core workspace package,
+  // consumed by both this web app and the Expo mobile app.
+  transpilePackages: ['@primedex/core'],
   turbopack: {
     root: projectRoot,
   },

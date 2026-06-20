@@ -1,5 +1,5 @@
-import { PokemonDetail, TYPE_COLORS } from '@/types/pokemon';
-import { TypeRelations } from './api';
+import { PokemonDetail, TYPE_COLORS } from '../types/pokemon';
+import { TypeRelations } from '../api';
 
 export interface TeamAnalysisResult {
   defensive: Record<string, number>;

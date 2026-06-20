@@ -1,6 +1,6 @@
 ﻿import { graphqlClient } from './client';
 import { getCachedData, setCachedData } from './cache';
-import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData } from '@/types/pokemon';
+import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData } from '../types/pokemon';
 
 const BATCH_SIZE = 200;
 const SEARCH_BATCH_SIZE = 250;

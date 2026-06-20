@@ -1,28 +1,9 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
-import { get, set, del } from 'idb-keyval';
-import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
-import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
-import type { QuizSession, ActivityAction } from '@/types/dashboard';
-
-const isIndexedDbAvailable = (): boolean =>
-  typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
-
-// Custom storage for IndexedDB
-const storage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    if (!isIndexedDbAvailable()) return null;
-    return (await get(name)) || null;
-  },
-  setItem: async (name: string, value: string): Promise<void> => {
-    if (!isIndexedDbAvailable()) return;
-    await set(name, value);
-  },
-  removeItem: async (name: string): Promise<void> => {
-    if (!isIndexedDbAvailable()) return;
-    await del(name);
-  },
-};
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { getLanguageId as getResolvedLanguageId } from '../lib/languages';
+import { storage } from '../platform/storage';
+import type { TCGSavedSearch, TCGUserCardEntry } from '../types/tcg';
+import type { QuizSession, ActivityAction } from '../types/dashboard';
 
 type Theme = 'light' | 'dark' | 'system';
 

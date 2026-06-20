@@ -1,4 +1,4 @@
-import { getCanonicalTcgRarity } from './tcg-rarity';
+import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 
 const RARITY_WEIGHTS: Record<string, number> = {

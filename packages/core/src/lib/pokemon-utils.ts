@@ -19,7 +19,7 @@ import {
   Sparkles,
   LucideIcon
 } from 'lucide-react';
-import { TYPE_COLORS } from '@/types/pokemon';
+import { TYPE_COLORS } from '../types/pokemon';
 
 export const TYPE_ICONS: Record<string, LucideIcon> = {
   normal: Circle,

@@ -1,5 +1,5 @@
 import { SITE_URL } from './site';
-import { supportedLanguages, languageToMetadataLocale, type SupportedLanguage } from './languages';
+import { supportedLanguages, languageToMetadataLocale, type SupportedLanguage } from '@/lib/languages';
 
 type BreadcrumbItem = {
   name: string;

@@ -1,4 +1,4 @@
-import type { BadgeDefinition, BadgeConditionData, BadgeDefinitionWithStatus } from '@/types/dashboard';
+import type { BadgeDefinition, BadgeConditionData, BadgeDefinitionWithStatus } from '../types/dashboard';
 
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
   {
