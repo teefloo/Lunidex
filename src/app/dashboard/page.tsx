@@ -3,6 +3,7 @@
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
+import AccountCard from '@/components/dashboard/AccountCard';
 import ProfileAndBadges from '@/components/dashboard/ProfileAndBadges';
 import QuizStatistics from '@/components/dashboard/QuizStatistics';
 import PokedexProgress from '@/components/dashboard/PokedexProgress';
@@ -34,6 +35,10 @@ export default function DashboardPage() {
           subtitle={t('dashboard.subtitle')}
           eyebrow={t('dashboard.eyebrow')}
         />
+
+        <div className="mb-6">
+          <AccountCard />
+        </div>
 
         {isLoading ? (
           <DashboardSkeleton />
