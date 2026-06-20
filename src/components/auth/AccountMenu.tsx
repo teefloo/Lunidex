@@ -58,25 +58,19 @@ export default function AccountMenu() {
   const initial = (displayName || email).charAt(0).toUpperCase() || '?';
   const tooltip = displayName || email || tt('dashboard.title', 'Dashboard');
 
-  // Signed in → the avatar opens the user dashboard.
+  // Signed in → the avatar links straight to the user dashboard.
+  // A plain Next Link (not a Tooltip-wrapped trigger) guarantees the click
+  // navigates on both desktop and touch.
   return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Link
-            href={localeHref('/dashboard')}
-            aria-label={tt('dashboard.title', 'Dashboard')}
-            className="glass-control flex h-10 w-10 items-center justify-center text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95"
-          >
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[11px] font-black text-primary">
-              {initial}
-            </span>
-          </Link>
-        }
-      />
-      <TooltipContent side="bottom" className="text-xs font-bold">
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
+    <Link
+      href={localeHref('/dashboard')}
+      aria-label={tt('dashboard.title', 'Dashboard')}
+      title={tooltip}
+      className="glass-control flex h-10 w-10 items-center justify-center text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95"
+    >
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[11px] font-black text-primary">
+        {initial}
+      </span>
+    </Link>
   );
 }
