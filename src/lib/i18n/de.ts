@@ -1011,6 +1011,7 @@ export default {
       collection_in_progress: 'In Bearbeitung',
       collection_active_sets_singular: 'aktive Erweiterung',
         collection_active_sets_plural: 'aktive Erweiterungen',
+        collection_sort_id: 'Nach ID',
         collection_sort_default: 'Nach Fortschritt',
         collection_sort_release_newest: 'Release (Neueste)',
         collection_sort_release_oldest: 'Release (Älteste)',

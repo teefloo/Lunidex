@@ -1009,6 +1009,7 @@ export default {
       collection_in_progress: 'En curso',
       collection_active_sets_singular: 'colección activa',
         collection_active_sets_plural: 'colecciones activas',
+        collection_sort_id: 'Por ID',
         collection_sort_default: 'Por progreso',
         collection_sort_release_newest: 'Fecha (Más reciente)',
         collection_sort_release_oldest: 'Fecha (Más antiguo)',

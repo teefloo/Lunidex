@@ -1051,6 +1051,7 @@ export default {
       collection_in_progress: '진행 중',
       collection_active_sets_singular: '활성 확장팩',
         collection_active_sets_plural: '활성 확장팩',
+        collection_sort_id: 'ID순',
         collection_sort_default: '진행도순',
         collection_sort_release_newest: '출시 (최신순)',
         collection_sort_release_oldest: '출시 (오래된순)',

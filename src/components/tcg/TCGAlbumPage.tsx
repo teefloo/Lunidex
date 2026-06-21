@@ -17,7 +17,6 @@ import {
 } from '@/lib/tcg-collection';
 import { TCGAlbumCard } from './TCGAlbumCard';
 import { TCGProgressBar } from './TCGProgressBar';
-import { TCGCardDetailModal } from './TCGCardDetailModal';
 
 interface TCGAlbumPageProps {
   set: TCGSet;
@@ -32,8 +31,6 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
   const [search, setSearch] = useState('');
   const [rarityFilter, setRarityFilter] = useState<string | null>(null);
   const [showMissingOnly, setShowMissingOnly] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
@@ -147,21 +144,9 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
             key={card.id}
             card={card}
             owned={ownedIds.has(card.id)}
-            onClick={() => {
-              setSelectedCard(card);
-              setIsModalOpen(true);
-            }}
           />
         ))}
       </div>
-
-      {selectedCard && (
-        <TCGCardDetailModal
-          card={selectedCard}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
     </div>
   );
 }

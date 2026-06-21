@@ -1013,6 +1013,7 @@ export default {
       collection_in_progress: 'In corso',
       collection_active_sets_singular: 'espansione attiva',
         collection_active_sets_plural: 'espansioni attive',
+        collection_sort_id: 'Per ID',
         collection_sort_default: 'Per progresso',
         collection_sort_release_newest: 'Data (Più recente)',
         collection_sort_release_oldest: 'Data (Più vecchia)',

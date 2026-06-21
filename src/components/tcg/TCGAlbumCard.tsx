@@ -2,8 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import type { TCGCard } from '@/types/tcg';
+import { usePrimeDexStore } from '@/store/primedex';
 import { TCGRarityBadge } from './TCGRarityBadge';
-import { TCGOwnedButton } from './TCGOwnedButton';
 import { TCGCardImage } from './TCGCardImage';
 
 interface TCGAlbumCardProps {
@@ -14,16 +14,23 @@ interface TCGAlbumCardProps {
 }
 
 export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAlbumCardProps) {
+  const toggleOwned = usePrimeDexStore((s) => s.toggleTCGOwned);
+
+  const handleClick = () => {
+    toggleOwned(card.id);
+    onClick?.();
+  };
+
   if (!owned && !showMissing) return null;
 
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
-        'group relative aspect-[2.15/3] overflow-hidden rounded-xl border transition-all hover:border-primary/30 hover:shadow-lg',
+        'group relative aspect-[2.15/3] overflow-hidden rounded-xl border transition-all hover:border-primary/30 hover:shadow-lg active:scale-95',
         owned
-          ? 'border-border/20 bg-card/40'
+          ? 'border-emerald-500/30 bg-card/40'
           : 'border-border/15 bg-card/20 grayscale opacity-50 hover:grayscale-0 hover:opacity-100'
       )}
     >
@@ -46,9 +53,6 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
       </div>
       <div className="absolute right-1 top-1">
         <TCGRarityBadge rarity={card.rarity} />
-      </div>
-      <div className="absolute left-1 top-1 opacity-0 transition-opacity group-hover:opacity-100">
-        <TCGOwnedButton cardId={card.id} size="sm" />
       </div>
       {owned && (
         <div className="absolute right-1 top-8">

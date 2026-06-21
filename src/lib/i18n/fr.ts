@@ -1025,6 +1025,7 @@ export default {
       collection_overall_progress: 'Progression globale',
       collection_rarest_owned: 'Plus rare possédée',
       collection_per_set: 'Par extension',
+      collection_sort_id: 'Par ID',
       collection_sort_default: 'Par progression',
       collection_sort_release_newest: 'Date (Récent → Ancien)',
       collection_sort_release_oldest: 'Date (Ancien → Récent)',

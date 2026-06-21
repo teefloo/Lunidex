@@ -1013,6 +1013,7 @@ export default {
       collection_in_progress: '進行中',
       collection_active_sets_singular: 'アクティブな拡張パック',
         collection_active_sets_plural: 'アクティブな拡張パック',
+        collection_sort_id: 'ID順',
         collection_sort_default: '進捗順',
         collection_sort_release_newest: 'リリース（新しい順）',
         collection_sort_release_oldest: 'リリース（古い順）',

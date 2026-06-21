@@ -3,25 +3,22 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Trophy, Sparkles, ChevronDown } from 'lucide-react';
+import { Search, Sparkles, ChevronDown } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
-import type { TCGCard, TCGSet } from '@/types/tcg';
+import type { TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import {
-  getSetCompletion,
-  computeCollectionStats,
-  getRarestOwnedCards,
+  getSetCompletionFromSet,
+  computeCollectionStatsFromSets,
 } from '@/lib/tcg-collection';
 import { TCGProgressBar } from './TCGProgressBar';
-import { TCGRarityBadge } from './TCGRarityBadge';
-import { TCGCardImage } from './TCGCardImage';
 
 interface TCGCollectionOverviewProps {
-  setsMap: Map<string, { set: TCGSet; cards: TCGCard[] }>;
+  sets: TCGSet[];
 }
 
-export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
+export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
@@ -30,19 +27,15 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
   const toggleTCGActiveSet = usePrimeDexStore((s) => s.toggleTCGActiveSet);
   const [filterInProgress, setFilterInProgress] = useState(false);
   const [search, setSearch] = useState('');
-  const [sortMode, setSortMode] = useState<'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('progress');
+  const [sortMode, setSortMode] = useState<'id-asc' | 'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('id-asc');
 
-  const stats = useMemo(() => computeCollectionStats(setsMap, ownedIds), [setsMap, ownedIds]);
-  const rarest = useMemo(() => getRarestOwnedCards(setsMap, ownedIds, 12), [setsMap, ownedIds]);
+  const stats = useMemo(() => computeCollectionStatsFromSets(sets, ownedIds), [sets, ownedIds]);
 
   const setEntries = useMemo(() => {
-    const entries = [...setsMap.entries()];
-    return entries
-      .map(([setId, { set, cards }]) => ({
-        setId,
+    return sets
+      .map((set) => ({
         set,
-        cards,
-        completion: getSetCompletion(cards, ownedIds),
+        completion: getSetCompletionFromSet(set, ownedIds),
       }))
       .filter((entry) => {
         if (filterInProgress && entry.completion.percentage >= 100) return false;
@@ -59,6 +52,8 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
           return (Number(p[0]) || 0) * 10000 + (Number(p[1]) || 0) * 100 + (Number(p[2]) || 0);
         }
         switch (sortMode) {
+          case 'id-asc':
+            return a.set.id.localeCompare(b.set.id);
           case 'release-newest':
             return toDateNum(b.set.releaseDate) - toDateNum(a.set.releaseDate);
           case 'release-oldest':
@@ -76,7 +71,7 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
             return b.completion.percentage - a.completion.percentage;
         }
       });
-  }, [setsMap, ownedIds, filterInProgress, search, sortMode]);
+  }, [sets, ownedIds, filterInProgress, search, sortMode]);
 
   if (!mounted) return null;
 
@@ -116,47 +111,6 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
         </div>
       </div>
 
-      {/* Rarest owned */}
-      {rarest.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-amber-400" />
-            <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/50">
-              {t('tcg.collection_rarest_owned')}
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {rarest.map((card) => (
-              <Link
-                key={card.id}
-                href={`/tcg/collection/${card.set?.id}?card=${card.id}`}
-                className="group relative aspect-[2.15/3] overflow-hidden rounded-lg border border-border/20 bg-card/30 transition-all hover:border-primary/30"
-              >
-                {card.image ? (
-                  <TCGCardImage
-                    card={card}
-                    sizes="(min-width: 1280px) 14vw, (min-width: 768px) 20vw, 40vw"
-                    className="object-contain p-1"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <span className="text-[8px] font-bold text-foreground/30">{card.name}</span>
-                  </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
-                  <p className="truncate text-[8px] font-black uppercase text-white drop-shadow-md">
-                    {card.name}
-                  </p>
-                </div>
-                <div className="absolute right-1 top-1">
-                  <TCGRarityBadge rarity={card.rarity} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Sets list */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -183,6 +137,7 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
                 onChange={(e) => setSortMode(e.target.value as typeof sortMode)}
                 className="min-w-0 flex-1 appearance-none bg-transparent text-[9px] font-bold text-foreground/70 transition-colors hover:bg-card/60 focus:outline-none"
               >
+                <option value="id-asc">{t('tcg.collection_sort_id')}</option>
                 <option value="progress">{t('tcg.collection_sort_default')}</option>
                 <option value="release-newest">{t('tcg.collection_sort_release_newest')}</option>
                 <option value="release-oldest">{t('tcg.collection_sort_release_oldest')}</option>
@@ -213,13 +168,13 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {setEntries.map(({ setId, set, completion }) => {
+            {setEntries.map(({ set, completion }) => {
               const isComplete = completion.percentage >= 100;
-              const isActive = tcgActiveSets.includes(setId);
+              const isActive = tcgActiveSets.includes(set.id);
               return (
                 <Link
-                  key={setId}
-                  href={`/tcg/collection/${setId}`}
+                  key={set.id}
+                  href={`/tcg/collection/${set.id}`}
                   className="group flex items-center gap-4 rounded-xl border border-border/15 bg-card/30 p-4 transition-all hover:border-primary/20 hover:bg-card/50"
                 >
                   {set.logo && (
@@ -249,7 +204,7 @@ export function TCGCollectionOverview({ setsMap }: TCGCollectionOverviewProps) {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        toggleTCGActiveSet(setId);
+                        toggleTCGActiveSet(set.id);
                       }}
                       className={`rounded-full border px-2.5 py-1 text-[8px] font-black uppercase tracking-[0.06em] transition-colors ${
                         isActive

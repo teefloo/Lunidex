@@ -1,6 +1,55 @@
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 
+export function countOwnedInSet(setId: string, ownedIds: Set<string>): number {
+  const prefix = `${setId}-`;
+  let count = 0;
+  for (const id of ownedIds) {
+    if (id.startsWith(prefix)) count++;
+  }
+  return count;
+}
+
+export function getSetCompletionFromSet(
+  set: TCGSet,
+  ownedIds: Set<string>,
+): { owned: number; total: number; percentage: number } {
+  const total = set.totalCards ?? set.cardCount?.total ?? 0;
+  const owned = countOwnedInSet(set.id, ownedIds);
+  return {
+    owned,
+    total,
+    percentage: total > 0 ? Math.round((owned / total) * 100) : 0,
+  };
+}
+
+export function computeCollectionStatsFromSets(
+  sets: TCGSet[],
+  ownedIds: Set<string>,
+) {
+  let totalCards = 0;
+  let totalOwned = 0;
+  const completeSets: string[] = [];
+
+  for (const set of sets) {
+    const total = set.totalCards ?? set.cardCount?.total ?? 0;
+    const owned = countOwnedInSet(set.id, ownedIds);
+    totalCards += total;
+    totalOwned += owned;
+    if (owned === total && total > 0) {
+      completeSets.push(set.id);
+    }
+  }
+
+  return {
+    totalCards,
+    totalOwned,
+    totalSets: sets.length,
+    completeSets,
+    percentage: totalCards > 0 ? Math.round((totalOwned / totalCards) * 100) : 0,
+  };
+}
+
 const RARITY_WEIGHTS: Record<string, number> = {
   hyperrare: 100,
   secretrare: 90,

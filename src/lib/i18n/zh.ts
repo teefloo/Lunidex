@@ -1009,6 +1009,7 @@ export default {
       collection_in_progress: '进行中',
       collection_active_sets_singular: '活跃扩充包',
         collection_active_sets_plural: '活跃扩充包',
+        collection_sort_id: '按ID',
         collection_sort_default: '按进度',
         collection_sort_release_newest: '发布日期（最新）',
         collection_sort_release_oldest: '发布日期（最旧）',

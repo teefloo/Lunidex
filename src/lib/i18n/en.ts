@@ -928,6 +928,7 @@ export default {
         collection_overall_progress: 'Overall Progress',
         collection_rarest_owned: 'Rarest Owned',
         collection_per_set: 'Per Set',
+        collection_sort_id: 'By ID',
         collection_sort_default: 'By Progress',
         collection_sort_release_newest: 'Release (Newest)',
         collection_sort_release_oldest: 'Release (Oldest)',
