@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-display: var(--font-display), ui-serif, Georgia, serif;
-  --font-body: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body), "Hiragino Sans", "Noto Sans CJK JP", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --color-background: var(--background);
@@ -16,160 +16,139 @@
 }
 
 :root {
-  /* ── Living Codex — Warm Parchment Palette ───────────────────────── */
-  --background: oklch(0.962 0.022 80);
-  --foreground: oklch(0.22 0.024 55);
+  /* ── Soft Pixel — Warm Cozy Palette ─────────────────────────────── */
+  --background: oklch(0.945 0.028 85);
+  --foreground: oklch(0.42 0.045 60);
 
-  --card: oklch(0.985 0.012 85 / 0.7);
-  --card-foreground: oklch(0.22 0.024 55);
+  --card: oklch(0.985 0.012 85);
+  --card-foreground: oklch(0.42 0.045 60);
 
-  --popover: oklch(0.985 0.012 85 / 0.92);
-  --popover-foreground: oklch(0.22 0.024 55);
+  --popover: oklch(0.985 0.012 85);
+  --popover-foreground: oklch(0.42 0.045 60);
 
-  /* Codex green — primary structural color, deeply botanical */
-  --primary: oklch(0.40 0.078 148);
-  --primary-foreground: oklch(0.97 0.015 85);
+  --primary: oklch(0.72 0.110 45);
+  --primary-foreground: oklch(0.30 0.060 45);
 
-  /* Specimen red — pokeball heritage, used sparingly as a signal */
-  --accent: oklch(0.55 0.165 30);
-  --accent-foreground: oklch(0.97 0.015 85);
+  --accent: oklch(0.80 0.050 240);
+  --accent-foreground: oklch(0.25 0.040 240);
 
-  --secondary: oklch(0.93 0.022 85 / 0.78);
-  --secondary-foreground: oklch(0.30 0.030 60);
+  --secondary: oklch(0.92 0.020 85);
+  --secondary-foreground: oklch(0.42 0.045 60);
 
-  --muted: oklch(0.92 0.024 80 / 0.62);
-  --muted-foreground: oklch(0.45 0.028 65);
+  --muted: oklch(0.92 0.020 85);
+  --muted-foreground: oklch(0.62 0.060 70);
 
-  --destructive: oklch(0.55 0.165 30);
+  --destructive: oklch(0.70 0.090 20);
 
-  --border: oklch(0.78 0.030 75 / 0.5);
-  --input: oklch(0.84 0.025 80 / 0.5);
-  --ring: oklch(0.50 0.080 148);
+  --border: oklch(0.74 0.060 75);
+  --input: oklch(0.74 0.060 75);
+  --ring: oklch(0.72 0.110 45);
 
-  --radius: 0.625rem;
+  /* Pixel shape tokens */
+  --radius: 0.125rem;
+  --border-width: 3px;
+  --pixel-shadow: oklch(0.86 0.035 80);
+  --pixel-shadow-offset: 4px;
+  --shadow-pixel: var(--pixel-shadow-offset) var(--pixel-shadow-offset) 0 var(--pixel-shadow);
+  --shadow-pixel-sm: 2px 2px 0 var(--pixel-shadow);
+
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Glass surfaces — warm parchment tinted */
-  --glass-bg: linear-gradient(155deg, oklch(0.99 0.010 85 / 0.78), oklch(0.94 0.026 75 / 0.48));
-  --glass-bg-strong: linear-gradient(155deg, oklch(1 0 0 / 0.86), oklch(0.95 0.028 80 / 0.62));
-  --glass-bg-muted: linear-gradient(155deg, oklch(0.985 0.012 85 / 0.55), oklch(0.93 0.025 75 / 0.38));
-  --glass-border: oklch(0.62 0.045 70 / 0.42);
-  --glass-border-muted: oklch(0.65 0.035 70 / 0.32);
-  --glass-highlight: oklch(1 0 0 / 0.78);
-  --glass-shadow: 0 18px 54px -38px oklch(0.22 0.024 55 / 0.32);
-  --glass-shadow-strong: 0 28px 78px -48px oklch(0.18 0.024 55 / 0.42);
-  --glass-inset: inset 0 1px 0 oklch(1 0 0 / 0.7), inset 0 -1px 0 oklch(0.22 0.024 55 / 0.06);
+  --focus-ring: color-mix(in oklab, var(--primary) 40%, transparent);
+  --body-noise: oklch(0.30 0.030 60 / 0.025);
 
-  --surface: oklch(0.985 0.012 85 / 0.66);
-  --surface-strong: oklch(0.995 0.008 85 / 0.84);
-  --surface-muted: oklch(0.92 0.024 80 / 0.5);
-  --surface-border: var(--glass-border-muted);
-  --surface-shadow: var(--glass-shadow);
-  --surface-shadow-strong: var(--glass-shadow-strong);
+  /* Surface aliases — backwards compat for component files */
+  --surface: var(--card);
+  --surface-strong: var(--card);
+  --surface-muted: var(--background);
+  --surface-border: var(--border);
 
-  --focus-ring: color-mix(in oklab, var(--primary) 32%, transparent);
+  /* Type colors — pastel cozy, desaturated warm */
+  --type-normal: oklch(0.78 0.025 80);
+  --type-fire: oklch(0.78 0.090 40);
+  --type-water: oklch(0.80 0.060 235);
+  --type-electric: oklch(0.88 0.090 85);
+  --type-grass: oklch(0.80 0.075 148);
+  --type-ice: oklch(0.88 0.045 205);
+  --type-fighting: oklch(0.74 0.075 35);
+  --type-poison: oklch(0.76 0.080 320);
+  --type-ground: oklch(0.80 0.055 70);
+  --type-flying: oklch(0.84 0.045 285);
+  --type-psychic: oklch(0.80 0.085 355);
+  --type-bug: oklch(0.82 0.065 130);
+  --type-rock: oklch(0.75 0.040 75);
+  --type-ghost: oklch(0.70 0.065 305);
+  --type-dragon: oklch(0.74 0.070 270);
+  --type-dark: oklch(0.68 0.030 60);
+  --type-steel: oklch(0.82 0.018 245);
+  --type-fairy: oklch(0.88 0.055 355);
 
-  /* Paper grain — dark fiber on cream */
-  --body-noise: oklch(0.30 0.030 60 / 0.038);
-
-  /* Editorial accent mists — warm directional washes */
-  --mist-a: oklch(0.92 0.060 145 / 0.42);
-  --mist-b: oklch(0.95 0.055 38 / 0.32);
-  --mist-c: oklch(0.91 0.045 80 / 0.20);
-
-  /* Type colors — slightly desaturated, museum-tag feel */
-  --type-normal: oklch(0.70 0.030 80);
-  --type-fire: oklch(0.62 0.165 35);
-  --type-water: oklch(0.62 0.105 235);
-  --type-electric: oklch(0.78 0.155 80);
-  --type-grass: oklch(0.62 0.135 148);
-  --type-ice: oklch(0.78 0.080 200);
-  --type-fighting: oklch(0.55 0.135 30);
-  --type-poison: oklch(0.55 0.155 320);
-  --type-ground: oklch(0.65 0.085 70);
-  --type-flying: oklch(0.72 0.075 285);
-  --type-psychic: oklch(0.65 0.155 350);
-  --type-bug: oklch(0.70 0.115 130);
-  --type-rock: oklch(0.60 0.055 70);
-  --type-ghost: oklch(0.50 0.115 305);
-  --type-dragon: oklch(0.55 0.130 270);
-  --type-dark: oklch(0.45 0.040 60);
-  --type-steel: oklch(0.70 0.022 245);
-  --type-fairy: oklch(0.78 0.085 350);
-
-  /* Semantic action accents — one canonical hue per action, used site-wide.
-     Each action keeps a distinct, consistent color everywhere it appears
-     (grid cards, detail page, toolbars) so the meaning reads at a glance. */
-  --action-favorite: oklch(0.637 0.208 25);   /* rose   — saved / loved */
-  --action-compare: oklch(0.623 0.190 256);   /* blue   — side-by-side */
-  --action-team: oklch(0.696 0.165 162);      /* emerald — roster */
-  --action-caught: var(--primary);            /* brass/green — collected */
-  --action-legendary: oklch(0.769 0.165 70);  /* amber  — legendary / mythical */
+  /* Semantic action accents */
+  --action-favorite: oklch(0.70 0.090 20);
+  --action-compare: oklch(0.68 0.090 250);
+  --action-team: oklch(0.72 0.090 162);
+  --action-caught: var(--primary);
+  --action-legendary: oklch(0.82 0.090 80);
 }
 
 .dark {
-  --background: oklch(0.165 0.022 60);
-  --foreground: oklch(0.94 0.022 85);
+  --background: oklch(0.22 0.012 50);
+  --foreground: oklch(0.92 0.022 85);
 
-  --card: oklch(0.235 0.028 60 / 0.6);
-  --card-foreground: oklch(0.94 0.022 85);
+  --card: oklch(0.27 0.015 55);
+  --card-foreground: oklch(0.92 0.022 85);
 
-  --popover: oklch(0.21 0.026 60 / 0.92);
-  --popover-foreground: oklch(0.94 0.022 85);
+  --popover: oklch(0.27 0.015 55);
+  --popover-foreground: oklch(0.92 0.022 85);
 
-  /* Aged brass / candlelight — warm metallic on midnight */
-  --primary: oklch(0.78 0.085 75);
-  --primary-foreground: oklch(0.18 0.024 60);
+  --primary: oklch(0.80 0.100 45);
+  --primary-foreground: oklch(0.30 0.060 45);
 
-  /* Specimen red — the fire-color, slightly muted in dark */
-  --accent: oklch(0.68 0.155 32);
-  --accent-foreground: oklch(0.18 0.024 60);
+  --accent: oklch(0.87 0.040 235);
+  --accent-foreground: oklch(0.25 0.040 240);
 
-  --secondary: oklch(0.26 0.030 60 / 0.7);
+  --secondary: oklch(0.32 0.018 55);
   --secondary-foreground: oklch(0.92 0.022 85);
 
-  --muted: oklch(0.26 0.028 60 / 0.6);
-  --muted-foreground: oklch(0.74 0.022 80);
+  --muted: oklch(0.32 0.018 55);
+  --muted-foreground: oklch(0.72 0.060 65);
 
-  --destructive: oklch(0.68 0.155 32);
+  --destructive: oklch(0.70 0.090 20);
 
-  --border: oklch(0.42 0.030 65 / 0.45);
-  --input: oklch(0.42 0.030 65 / 0.42);
-  --ring: oklch(0.78 0.085 75);
+  --border: oklch(0.40 0.030 60);
+  --border-strong: oklch(0.50 0.035 60);
+  --input: oklch(0.40 0.030 60);
+  --ring: oklch(0.80 0.100 45);
 
-  --glass-bg: linear-gradient(155deg, oklch(0.28 0.030 60 / 0.68), oklch(0.18 0.026 65 / 0.42));
-  --glass-bg-strong: linear-gradient(155deg, oklch(0.32 0.032 60 / 0.78), oklch(0.20 0.028 65 / 0.58));
-  --glass-bg-muted: linear-gradient(155deg, oklch(0.27 0.028 60 / 0.5), oklch(0.17 0.024 65 / 0.36));
-  --glass-border: oklch(0.94 0.022 85 / 0.10);
-  --glass-border-muted: oklch(0.94 0.022 85 / 0.075);
-  --glass-highlight: oklch(0.94 0.022 85 / 0.18);
-  --glass-shadow: 0 24px 70px -38px oklch(0 0 0 / 0.62);
-  --glass-shadow-strong: 0 34px 92px -42px oklch(0 0 0 / 0.72);
-  --glass-inset: inset 0 1px 0 oklch(0.94 0.022 85 / 0.10), inset 0 -1px 0 oklch(0.94 0.022 85 / 0.035);
+  --pixel-shadow: oklch(0.16 0.010 50);
 
-  --surface: oklch(0.235 0.028 60 / 0.58);
-  --surface-strong: oklch(0.275 0.030 60 / 0.74);
-  --surface-muted: oklch(0.22 0.026 60 / 0.44);
-  --surface-border: var(--glass-border-muted);
-  --surface-shadow: var(--glass-shadow);
-  --surface-shadow-strong: var(--glass-shadow-strong);
+  /* Type colors — lifted for dark mode */
+  --type-normal: oklch(0.72 0.028 80);
+  --type-fire: oklch(0.82 0.095 42);
+  --type-water: oklch(0.82 0.065 238);
+  --type-electric: oklch(0.90 0.095 85);
+  --type-grass: oklch(0.82 0.080 148);
+  --type-ice: oklch(0.88 0.048 205);
+  --type-fighting: oklch(0.76 0.080 35);
+  --type-poison: oklch(0.78 0.085 320);
+  --type-ground: oklch(0.82 0.058 70);
+  --type-flying: oklch(0.85 0.048 285);
+  --type-psychic: oklch(0.82 0.090 355);
+  --type-bug: oklch(0.84 0.068 130);
+  --type-rock: oklch(0.76 0.042 75);
+  --type-ghost: oklch(0.74 0.068 305);
+  --type-dragon: oklch(0.76 0.074 270);
+  --type-dark: oklch(0.72 0.032 60);
+  --type-steel: oklch(0.84 0.020 245);
+  --type-fairy: oklch(0.90 0.058 355);
 
-  --focus-ring: color-mix(in oklab, var(--primary) 32%, transparent);
-
-  /* Paper grain — light fiber on dark */
-  --body-noise: oklch(0.94 0.022 85 / 0.038);
-
-  --mist-a: oklch(0.34 0.060 145 / 0.20);
-  --mist-b: oklch(0.38 0.055 38 / 0.18);
-  --mist-c: oklch(0.32 0.040 80 / 0.14);
-
-  /* Action accents — lifted for legibility against the midnight ground */
-  --action-favorite: oklch(0.705 0.180 22);
-  --action-compare: oklch(0.715 0.150 252);
-  --action-team: oklch(0.760 0.150 164);
+  /* Action accents — lifted for legibility */
+  --action-favorite: oklch(0.75 0.100 22);
+  --action-compare: oklch(0.74 0.095 252);
+  --action-team: oklch(0.78 0.095 164);
   --action-caught: var(--primary);
-  --action-legendary: oklch(0.820 0.150 76);
+  --action-legendary: oklch(0.87 0.090 80);
 }
 
 * {
@@ -195,23 +174,18 @@ body {
   min-height: 100vh;
   max-width: 100%;
   overflow-x: clip;
-  background:
-    radial-gradient(ellipse 80% 60% at 12% 8%, var(--mist-a), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 92% 30%, var(--mist-b), transparent 55%),
-    radial-gradient(ellipse 100% 70% at 50% 100%, var(--mist-c), transparent 70%),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.45s ease, color 0.45s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   position: relative;
   isolation: isolate;
-  font-feature-settings: "ss01" 1, "ss02" 1, "cv11" 1;
 }
 
-/* Paper grain — applies a subtle noise to the entire viewport */
+/* Pixel grain — subtle noise over the background */
 body::before {
   content: "";
   position: fixed;
@@ -222,7 +196,7 @@ body::before {
   background-image:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.10 0 0 0 0 0.04 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   background-size: 240px 240px;
-  opacity: 0.32;
+  opacity: 0.18;
   mix-blend-mode: multiply;
 }
 
@@ -230,64 +204,34 @@ body::before {
   background-image:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.92 0 0 0 0 0.82 0 0 0 0.40 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   mix-blend-mode: screen;
-  opacity: 0.18;
+  opacity: 0.10;
 }
 
-/* Subtle vignette — frames content like a book page */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  contain: strict;
-  background:
-    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 60%, color-mix(in oklab, var(--foreground) 8%, transparent) 100%);
-  opacity: 0.5;
-}
-
-/* ── Editorial typography defaults ──────────────────────────────── */
+/* ── Typography defaults ─────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  letter-spacing: -0.012em;
-  font-variation-settings: "opsz" 32, "SOFT" 30;
   color: var(--foreground);
+  letter-spacing: 0.01em;
 }
 
-h1 {
-  font-variation-settings: "opsz" 144, "SOFT" 30;
-  letter-spacing: -0.028em;
-}
+h1 { letter-spacing: 0; }
 
-h2 {
-  font-variation-settings: "opsz" 96, "SOFT" 30;
-  letter-spacing: -0.022em;
-}
-
-h3 {
-  font-variation-settings: "opsz" 48, "SOFT" 30;
-  letter-spacing: -0.018em;
-}
-
-/* ── Component classes — wrapped in @layer components so Tailwind utilities ──
-   ── (hidden, md:flex, etc.) can correctly override their base display. ───── */
+/* ── Component classes ───────────────────────────────────────────── */
 @layer components {
+
 .font-display {
   font-family: var(--font-display);
-  font-variation-settings: "opsz" 144, "SOFT" 30;
 }
 
 .font-mono {
   font-family: var(--font-mono);
-  font-feature-settings: "ss01" 1, "ss02" 1, "zero" 1;
 }
 
-/* Italic Fraunces — used for chapter sub-titles, Latin-feel labels */
+/* Pixel italic helper — for non-CJK labels using display font */
 .editorial-italic {
   font-family: var(--font-display);
   font-style: italic;
-  font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.02em;
 }
 
 .app-page {
@@ -329,56 +273,26 @@ h3 {
   }
 }
 
+/* ── Pixel surface panels ──────────────────────────────────────── */
 .page-surface,
 .section-frame,
 .glass-panel,
 .glass-surface {
   position: relative;
   overflow: hidden;
-  border-radius: 1.125rem;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  backdrop-filter: blur(22px) saturate(1.05);
-  -webkit-backdrop-filter: blur(22px) saturate(1.05);
-  box-shadow:
-    var(--surface-shadow),
-    var(--glass-inset);
-}
-
-.section-frame,
-.glass-panel,
-.glass-surface {
-  border-radius: 0.875rem;
-}
-
-.dark .page-surface,
-.dark .section-frame,
-.dark .glass-panel,
-.dark .glass-surface {
-  box-shadow:
-    var(--surface-shadow),
-    var(--glass-inset);
-}
-
-.page-surface::before,
-.section-frame::before,
-.glass-panel::before,
-.glass-surface::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(155deg, var(--glass-highlight), transparent 28%),
-    linear-gradient(180deg, oklch(1 0 0 / 0.08), transparent 44%);
-  opacity: 0.42;
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel);
 }
 
 .page-surface:hover,
 .section-frame:hover,
 .glass-panel:hover,
 .glass-surface:hover {
-  border-color: color-mix(in oklab, var(--glass-border) 60%, var(--primary) 40%);
+  transform: translate(-1px, -1px);
+  box-shadow: calc(var(--pixel-shadow-offset) + 2px) calc(var(--pixel-shadow-offset) + 2px) 0 var(--pixel-shadow);
+  border-color: var(--primary);
 }
 
 .glass-card,
@@ -386,90 +300,70 @@ h3 {
 .glass-toolbar,
 .type-accent {
   position: relative;
-  border: 1px solid var(--glass-border-muted);
-  background: var(--glass-bg-muted);
-  backdrop-filter: blur(18px) saturate(1.04);
-  -webkit-backdrop-filter: blur(18px) saturate(1.04);
-  box-shadow: 0 14px 40px -32px oklch(0.22 0.024 55 / 0.42), var(--glass-inset);
+  border: 2px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
 .glass-card {
-  border-radius: 0.625rem;
+  border-radius: var(--radius);
 }
 
 .glass-control {
-  border-radius: 9999px;
+  border-radius: var(--radius);
   transition:
-    transform 0.22s ease,
-    border-color 0.22s ease,
-    background-color 0.22s ease,
-    box-shadow 0.22s ease;
+    transform 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .glass-control:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in oklab, var(--primary) 28%, var(--glass-border) 72%);
-  box-shadow: 0 18px 42px -34px oklch(0.22 0.024 55 / 0.48), var(--glass-inset);
+  transform: translate(-1px, -1px);
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--pixel-shadow);
 }
 
 .glass-toolbar {
-  border-radius: 9999px;
-  background: var(--glass-bg-strong);
+  border-radius: var(--radius);
 }
 
 .type-accent {
   --type-soft: color-mix(in oklab, var(--type-color, var(--primary)) 18%, transparent);
-  background:
-    linear-gradient(180deg, var(--type-soft), transparent),
-    var(--glass-bg-muted);
-  border-color: color-mix(in oklab, var(--type-color, var(--primary)) 28%, var(--glass-border-muted) 72%);
+  background: color-mix(in oklab, var(--type-color, var(--primary)) 10%, var(--card));
+  border-color: color-mix(in oklab, var(--type-color, var(--primary)) 45%, var(--border));
 }
 
 .soft-divider {
-  height: 1px;
+  height: 2px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 18%, transparent), transparent);
+  background: var(--border);
 }
 
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .page-surface,
-  .section-frame,
-  .glass-panel,
-  .glass-surface,
-  .glass-card,
-  .glass-control,
-  .glass-toolbar,
-  .type-accent {
-    background: var(--surface-strong);
-  }
-}
-
-/* ── Editorial helpers ───────────────────────────────────────────── */
+/* ── Editorial typography helpers ──────────────────────────────── */
 
 .page-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 9999px;
-  border: 1px solid var(--glass-border-muted);
-  background: var(--glass-bg-muted);
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--card);
   padding: 0.42rem 0.84rem;
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   line-height: 1;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%);
-  box-shadow: var(--glass-inset);
+  color: var(--primary);
+  box-shadow: var(--shadow-pixel-sm);
   font-family: var(--font-body);
 }
 
 .page-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-variation-settings: "opsz" 144, "SOFT" 30;
-  letter-spacing: -0.028em;
-  line-height: 0.96;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
   text-wrap: balance;
   color: var(--foreground);
 }
@@ -482,12 +376,12 @@ h3 {
 }
 
 .page-divider {
-  height: 1px;
+  height: 2px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 16%, transparent), transparent);
+  background: var(--border);
 }
 
-/* Ornament — a small SVG-style flourish divider used between sections */
+/* Ornament divider */
 .editorial-ornament {
   display: flex;
   align-items: center;
@@ -501,74 +395,70 @@ h3 {
 .editorial-ornament::after {
   content: "";
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 32%, transparent) 50%, transparent);
+  height: 2px;
+  background: var(--border);
   max-width: 7rem;
 }
 
 .editorial-ornament__glyph {
-  font-style: italic;
   font-size: 0.875rem;
   letter-spacing: 0.18em;
-  font-variation-settings: "opsz" 14, "SOFT" 80;
-  color: color-mix(in oklab, var(--primary) 80%, var(--accent) 20%);
+  color: var(--primary);
   text-transform: lowercase;
 }
 
-/* Field-stamp — a square corner mark with a label, like a museum tag */
+/* Field stamp — square corner mark, museum-tag feel */
 .field-stamp {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
   padding: 0.45rem 0.875rem 0.45rem 0.625rem;
-  border: 1.5px solid color-mix(in oklab, var(--accent) 65%, transparent);
-  border-radius: 2px;
-  background: color-mix(in oklab, var(--accent) 10%, transparent);
-  color: color-mix(in oklab, var(--accent) 95%, var(--foreground) 5%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   position: relative;
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 14%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
 .field-stamp::before {
   content: "";
   width: 0.45rem;
   height: 0.45rem;
-  background: var(--accent);
-  border-radius: 9999px;
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 22%, transparent);
+  background: var(--primary);
+  border-radius: 0;
 }
 
-/* Catalog number — museum specimen tag style, mono uppercase */
+/* Catalog number — specimen tag style */
 .cat-no {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  color: var(--muted-foreground);
 }
 
 .cat-no__num {
-  color: color-mix(in oklab, var(--primary) 85%, var(--foreground) 15%);
+  color: var(--primary);
   font-weight: 700;
 }
 
-/* Latin name — italic, lower contrast, displayed beneath the main name */
+/* Latin name — used for secondary labels */
 .latin-name {
   font-family: var(--font-display);
   font-style: italic;
   font-size: 0.78rem;
-  color: color-mix(in oklab, var(--foreground) 48%, transparent);
+  color: var(--muted-foreground);
   letter-spacing: 0.02em;
-  font-variation-settings: "opsz" 14, "SOFT" 80;
 }
 
-/* Rule line — thin editorial separator with small caps label */
+/* Rule line — thin separator with caps label */
 .rule-line {
   display: flex;
   align-items: center;
@@ -579,97 +469,69 @@ h3 {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  color: var(--muted-foreground);
 }
 
 .rule-line::before,
 .rule-line::after {
   content: "";
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 22%, transparent), transparent);
+  height: 2px;
+  background: var(--border);
 }
 
-/* Type label — colored text tag for Pokemon types */
 .type-bar {
   display: inline-block;
 }
 
-/* Specimen badge — a small spec number in the corner of a card */
+/* Specimen badge — small spec number in card corner */
 .specimen-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.25rem 0.55rem;
-  border-radius: 2px;
-  background: oklch(0.22 0.024 55 / 0.04);
-  border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+  border-radius: var(--radius);
+  background: var(--background);
+  border: 2px solid var(--border);
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  color: var(--muted-foreground);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
-.dark .specimen-badge {
-  background: oklch(0.94 0.022 85 / 0.04);
-}
-
-/* Pill — refined editorial pill, used for tags */
+/* Pill — tag style */
 .editorial-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.3rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: var(--radius);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--foreground) 75%, transparent);
-  background: color-mix(in oklab, var(--foreground) 5%, transparent);
-  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+  color: var(--muted-foreground);
+  background: var(--background);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
-/* Section frame — a more card-like block used for the main hero */
+/* Codex frame — main hero block */
 .codex-frame {
   position: relative;
-  border-radius: 1.125rem;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  backdrop-filter: blur(22px) saturate(1.04);
-  -webkit-backdrop-filter: blur(22px) saturate(1.04);
-  box-shadow:
-    var(--surface-shadow),
-    var(--glass-inset);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel);
   overflow: hidden;
   isolation: isolate;
 }
 
-.codex-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(155deg, var(--glass-highlight), transparent 32%),
-    radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--primary) 5%, transparent), transparent 40%);
-  opacity: 0.62;
-}
-
-.codex-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 100% 100%, color-mix(in oklab, var(--accent) 5%, transparent), transparent 40%);
-  opacity: 0.45;
-}
-
-/* Loading shimmer — used for skeletons */
+/* Loading shimmer — pixel shimmer for skeletons */
 .codex-shimmer {
   position: relative;
   overflow: hidden;
@@ -680,92 +542,68 @@ h3 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 14%, transparent), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 20%, transparent), transparent);
   animation: shimmerSlide 2.4s ease-in-out infinite;
 }
 
+/* Pixel dot grid noise overlay */
 .noise-overlay {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(oklch(0.30 0.030 60 / 0.04) 0.6px, transparent 0.6px),
-    radial-gradient(oklch(0.30 0.030 60 / 0.025) 0.6px, transparent 0.6px);
+    radial-gradient(oklch(0.42 0.045 60 / 0.04) 1px, transparent 1px),
+    radial-gradient(oklch(0.42 0.045 60 / 0.025) 1px, transparent 1px);
   background-position: 0 0, 8px 8px;
   background-size: 16px 16px;
-  opacity: 0.4;
+  opacity: 0.5;
   mix-blend-mode: multiply;
   pointer-events: none;
 }
 
 .dark .noise-overlay {
   background-image:
-    radial-gradient(oklch(0.94 0.022 85 / 0.04) 0.6px, transparent 0.6px),
-    radial-gradient(oklch(0.94 0.022 85 / 0.025) 0.6px, transparent 0.6px);
+    radial-gradient(oklch(0.92 0.022 85 / 0.04) 1px, transparent 1px),
+    radial-gradient(oklch(0.92 0.022 85 / 0.025) 1px, transparent 1px);
   mix-blend-mode: screen;
 }
 
-/* Gradient text — primary uses a moss->brass sweep, accent uses terracotta */
+/* Solid text helpers (replaces gradient-text-* with solid primary) */
 .gradient-text-primary,
-.gradient-text-premium {
-  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 65%, var(--accent) 35%) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
+.gradient-text-premium,
 .gradient-text-hero,
 .gradient-text-syne {
-  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 55%, var(--accent) 45%) 60%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
   color: var(--primary);
-  color: transparent;
 }
 
 .gradient-text-vellum {
-  background: linear-gradient(135deg, color-mix(in oklab, var(--primary) 92%, white 8%) 0%, color-mix(in oklab, var(--accent) 65%, var(--primary) 35%) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--foreground);
 }
 
-
+/* ── Pixel button ──────────────────────────────────────────────── */
 .glass-btn {
   position: relative;
   overflow: hidden;
-  border-radius: 9999px;
-  border: 1px solid var(--glass-border-muted);
-  background: var(--glass-bg-muted);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
   color: var(--foreground);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 14px 34px -30px oklch(0.22 0.024 55 / 0.34), var(--glass-inset);
+  box-shadow: var(--shadow-pixel-sm);
   transition:
-    transform 0.28s ease,
-    background-color 0.28s ease,
-    border-color 0.28s ease,
-    color 0.28s ease,
-    box-shadow 0.28s ease;
-}
-
-.glass-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--glass-highlight), transparent 56%);
-  opacity: 0;
-  transition: opacity 0.28s ease;
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    border-color 0.1s ease,
+    background-color 0.1s ease;
 }
 
 .glass-btn:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in oklab, var(--primary) 30%, var(--glass-border) 70%);
-  background: var(--glass-bg-strong);
-  box-shadow: var(--surface-shadow);
+  transform: translate(-1px, -1px);
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--pixel-shadow);
 }
 
-.glass-btn:hover::before {
-  opacity: 1;
+.glass-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .glass-btn:focus-visible {
@@ -774,59 +612,41 @@ h3 {
 }
 
 .glass-btn-active {
-  background: color-mix(in oklab, var(--primary) 88%, var(--foreground) 12%);
+  background: var(--primary);
   color: var(--primary-foreground);
-  border-color: color-mix(in oklab, var(--primary) 50%, var(--glass-border) 50%);
+  border-color: var(--primary);
 }
 
+/* ── Pixel type badge ──────────────────────────────────────────── */
 .glass-tag {
   position: relative;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  border: 1px solid oklch(1 0 0 / 0.22);
-  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius);
+  border: 2px solid oklch(0 0 0 / 0.18);
+  padding: 0.25rem 0.625rem;
   font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: white;
-  text-shadow: 0 1px 2px oklch(0 0 0 / 0.32);
-  box-shadow: 0 10px 18px -16px oklch(0 0 0 / 0.35);
+  color: oklch(0.25 0.030 60);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
-.glass-tag::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, oklch(1 0 0 / 0.18), transparent 55%);
-}
-
+/* ── Pixel card hover interaction ─────────────────────────────── */
 .type-glow {
   position: relative;
-  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-}
-
-.type-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  box-shadow: 0 0 48px -12px var(--type-color, oklch(0 0 0 / 0));
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .type-glow:hover {
-  transform: translateY(-4px);
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--pixel-shadow-offset) + 2px) calc(var(--pixel-shadow-offset) + 2px) 0 var(--pixel-shadow);
 }
 
-.type-glow:hover::after {
-  opacity: 1;
-}
-
+/* TCG holographic border — kept for TCG card feature */
 .holo-border {
   position: relative;
 }
@@ -851,6 +671,14 @@ h3 {
   opacity: 1;
 }
 
+/* ── Pixel sprite utility ──────────────────────────────────────── */
+.pixel-sprite {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ── TCG holo card (preserved intact) ─────────────────────────── */
 .pokemon-holo-card {
   contain: layout;
   overflow: visible;
@@ -946,105 +774,16 @@ h3 {
     filter 0.26s ease;
 }
 
-@keyframes holographicShimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+/* ── Toast (sonner) ─────────────────────────────────────────────── */
+.cn-toast {
+  border-radius: var(--radius) !important;
+  border: var(--border-width) solid var(--border) !important;
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  box-shadow: var(--shadow-pixel) !important;
 }
 
-@keyframes auroraDrift {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  33% {
-    transform: translate3d(1%, -1.5%, 0) scale(1.03);
-  }
-  66% {
-    transform: translate3d(-1.5%, 1%, 0) scale(0.98);
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-  100% {
-    background-position: 0% center;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-14px) rotate(3deg);
-  }
-  66% {
-    transform: translateY(8px) rotate(-2deg);
-  }
-}
-
-@keyframes pulseSlow {
-  0%,
-  100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes shimmerSlide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes statFill {
-  from {
-    width: 0%;
-  }
-}
-
+/* ── Animations ─────────────────────────────────────────────────── */
 .float-particle {
   animation: float 8s ease-in-out infinite;
 }
@@ -1079,6 +818,60 @@ h3 {
   animation: statFill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* ── end @layer components ──────────────────────────────────────── */
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────── */
+@keyframes holographicShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes auroraDrift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(1%, -1.5%, 0) scale(1.03); }
+  66% { transform: translate3d(-1.5%, 1%, 0) scale(0.98); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-14px) rotate(3deg); }
+  66% { transform: translateY(8px) rotate(-2deg); }
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmerSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes statFill {
+  from { width: 0%; }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
 [data-slot="sheet-content"] [data-slot="scroll-area-scrollbar"] {
   display: none;
 }
@@ -1093,8 +886,8 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--border) 70%, transparent);
-  border-radius: 9999px;
+  background: var(--border);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -1110,19 +903,13 @@ h3 {
   scrollbar-width: none;
 }
 
-.cn-toast {
-  border-radius: 1rem !important;
-  border: 1px solid var(--border) !important;
-  background: var(--popover) !important;
-  color: var(--popover-foreground) !important;
-  box-shadow: var(--surface-shadow-strong) !important;
-}
-
+/* ── Selection ──────────────────────────────────────────────────── */
 ::selection {
-  background: color-mix(in oklab, var(--primary) 24%, transparent);
+  background: color-mix(in oklab, var(--primary) 28%, transparent);
   color: var(--foreground);
 }
 
+/* ── Reduced motion ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1133,16 +920,13 @@ h3 {
     scroll-behavior: auto !important;
   }
 
-  body::before,
-  body::after {
-    opacity: 0.08;
+  body::before {
+    opacity: 0.06;
   }
 
   .float-particle,
   .animate-pulse-glow,
   .animate-pulse-slow,
-  .gradient-text-hero,
-  .gradient-text-syne,
   .pokemon-holo-card .card__translater,
   .pokemon-holo-card .card__rotator {
     animation: none !important;
@@ -1168,12 +952,10 @@ h3 {
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 0.375rem);
-  --radius-md: calc(var(--radius) - 0.125rem);
-  --radius-lg: var(--radius);
-}
-
-/* ── end @layer components ────────────────────────────────────────────── */
+  --color-card-foreground: var(--card-foreground);
+  --radius-sm: 0;
+  --radius-md: var(--radius);
+  --radius-lg: 0.25rem;
 }
 
 @layer base {

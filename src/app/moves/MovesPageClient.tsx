@@ -223,7 +223,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSortBy(option.key)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-full border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -252,7 +252,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedType(active ? null : type)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-full border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
                             active
                               ? 'border-transparent text-primary-foreground shadow-[0_0_16px_rgba(227,53,13,0.14)]'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -282,7 +282,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedClass(active ? null : damageClass)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-full border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -296,7 +296,7 @@ export default function MovesPageClient() {
                   </div>
                 </FilterSection>
 
-              <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+              <div className="rounded-sm border border-border/70 bg-background/60 p-4">
                 <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
                     {t('moves_page.catalog_filters_hint')}
                   </p>
@@ -409,7 +409,7 @@ function MoveCard({
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="group relative overflow-hidden rounded-xl border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-border/90 hover:bg-card/60"
+      className="group relative overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-border/90 hover:bg-card/60"
       aria-label={move.localizedName}
     >
       <div
@@ -458,7 +458,7 @@ function MoveCard({
 
 function SmallStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-muted/40 px-3 py-2 text-center">
+    <div className="rounded-sm border border-border/70 bg-muted/40 px-3 py-2 text-center">
       <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
       <p className="mt-1 text-sm font-black text-foreground/80">{value}</p>
     </div>
@@ -467,7 +467,7 @@ function SmallStat({ label, value }: { label: string; value: number }) {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-muted/40 px-3 py-2 text-center">
+    <div className="rounded-sm border border-border/70 bg-muted/40 px-3 py-2 text-center">
       <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
       <p className="mt-1 text-sm font-black text-foreground/80">{value}</p>
     </div>
@@ -485,7 +485,7 @@ function StatTile({
 }) {
   return (
     <div className="page-surface flex items-center gap-3 p-4">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-sm border border-primary/20 bg-primary/10">
         <Icon className="h-5 w-5 text-primary" />
       </div>
       <div className="min-w-0">
@@ -508,14 +508,14 @@ function FilterSection({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-border/70 bg-card/35 p-4">
+    <section className="rounded-sm border border-border/70 bg-card/35 p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon className="h-4 w-4 text-primary" />
           <h4 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{title}</h4>
         </div>
         {badge && (
-          <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-primary">
+          <span className="rounded-sm border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-primary">
             {badge}
           </span>
         )}
@@ -548,13 +548,13 @@ function SearchInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="relative z-0 h-11 w-full rounded-2xl border border-border/70 bg-muted/40 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+        className="relative z-0 h-11 w-full rounded-sm border border-border/70 bg-muted/40 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
       />
       {value && (
         <button
           type="button"
           onClick={onClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-foreground/30 transition-colors hover:text-foreground"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-foreground/30 transition-colors hover:text-foreground"
           aria-label={clearLabel}
         >
           <X className="h-4 w-4" />
@@ -568,15 +568,15 @@ function MovesGridSkeleton() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {Array.from({ length: 12 }).map((_, index) => (
-        <div key={index} className="rounded-xl border border-border/70 bg-card/50 p-4">
+        <div key={index} className="rounded-sm border border-border/70 bg-card/50 p-4">
           <Skeleton className="h-3 w-12 rounded-full" />
           <Skeleton className="mt-3 h-5 w-3/4 rounded-full" />
           <Skeleton className="mt-3 h-7 w-24 rounded-full" />
-          <Skeleton className="mt-4 h-14 w-full rounded-2xl" />
+          <Skeleton className="mt-4 h-14 w-full rounded-sm" />
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <Skeleton className="h-12 rounded-2xl" />
-            <Skeleton className="h-12 rounded-2xl" />
-            <Skeleton className="h-12 rounded-2xl" />
+            <Skeleton className="h-12 rounded-sm" />
+            <Skeleton className="h-12 rounded-sm" />
+            <Skeleton className="h-12 rounded-sm" />
           </div>
         </div>
       ))}
@@ -618,15 +618,15 @@ function MovesSkeleton() {
   return (
     <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
       <div className="page-surface h-[60vh] p-4">
-        <Skeleton className="h-11 w-full rounded-2xl" />
-        <Skeleton className="mt-4 h-16 w-full rounded-xl" />
-        <Skeleton className="mt-3 h-24 w-full rounded-xl" />
-        <Skeleton className="mt-3 h-24 w-full rounded-xl" />
+        <Skeleton className="h-11 w-full rounded-sm" />
+        <Skeleton className="mt-4 h-16 w-full rounded-sm" />
+        <Skeleton className="mt-3 h-24 w-full rounded-sm" />
+        <Skeleton className="mt-3 h-24 w-full rounded-sm" />
       </div>
       <div className="page-surface min-h-[60vh] p-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="h-44 rounded-xl" />
+            <Skeleton key={index} className="h-44 rounded-sm" />
           ))}
         </div>
       </div>
@@ -648,14 +648,14 @@ function ErrorState({
   onRetry: () => void;
 }) {
   return (
-    <div className="glass-card flex flex-col items-center justify-center rounded-2xl border-dashed px-6 py-16 text-center">
+    <div className="glass-card flex flex-col items-center justify-center rounded-sm border-dashed px-6 py-16 text-center">
       <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
         <AlertCircle className="h-8 w-8 text-primary" />
       </div>
       <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground/90">{title}</h3>
       <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/35">{description}</p>
       {details && (
-        <p className="mt-3 max-w-xl rounded-2xl border border-border/70 bg-muted/40 px-4 py-3 font-mono text-[11px] leading-5 text-foreground/45">
+        <p className="mt-3 max-w-xl rounded-sm border border-border/70 bg-muted/40 px-4 py-3 font-mono text-[11px] leading-5 text-foreground/45">
           {details}
         </p>
       )}
@@ -679,7 +679,7 @@ function NoResults({
   clearLabel: string;
 }) {
   return (
-    <div className="glass-card flex flex-col items-center justify-center rounded-2xl border-dashed px-6 py-16 text-center">
+    <div className="glass-card flex flex-col items-center justify-center rounded-sm border-dashed px-6 py-16 text-center">
       <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
         <X className="h-8 w-8 text-primary" />
       </div>

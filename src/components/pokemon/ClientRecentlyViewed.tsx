@@ -17,16 +17,16 @@ const RecentlyViewed = dynamic(() => import('@/components/pokemon/RecentlyViewed
             Recently catalogued
           </h2>
         </div>
-        <Skeleton className="h-8 w-24 rounded-full" />
+        <Skeleton className="h-8 w-24 rounded-sm" />
       </div>
       <div className="rule-line mb-6" aria-hidden="true" />
       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
         {Array.from({ length: 10 }).map((_, idx) => (
           <div key={idx} className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5">
-            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-10 w-10 rounded-sm" />
             <div className="space-y-1 w-full">
-              <Skeleton className="h-2 w-6 rounded-full mx-auto" />
-              <Skeleton className="h-2.5 w-12 rounded-full mx-auto" />
+              <Skeleton className="h-2 w-6 rounded-sm mx-auto" />
+              <Skeleton className="h-2.5 w-12 rounded-sm mx-auto" />
             </div>
           </div>
         ))}

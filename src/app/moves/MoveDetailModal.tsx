@@ -65,7 +65,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
     <Dialog open={open} onOpenChange={(value) => {
       if (!value) onClose();
     }}>
-      <DialogContent className="glass-surface max-h-[88vh] overflow-y-auto rounded-2xl p-0 sm:max-w-4xl">
+      <DialogContent className="glass-surface max-h-[88vh] overflow-y-auto rounded-sm p-0 sm:max-w-4xl">
         <div className="relative overflow-hidden">
           <div
             className="absolute inset-x-0 top-0 h-1.5"
@@ -113,7 +113,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
 
           <div className="grid gap-0 border-t border-border/70 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <div className="space-y-6 px-6 py-6 sm:px-8">
-              <section className="rounded-xl border border-border/70 bg-card/35 p-5">
+              <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="flex items-center gap-2">
                   <Info className="h-4 w-4 text-primary" />
                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
@@ -125,7 +125,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
                 </p>
               </section>
 
-              <section className="rounded-xl border border-border/70 bg-card/35 p-5">
+              <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
@@ -143,15 +143,15 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
                 {learnersLoading ? (
                   <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     {Array.from({ length: 8 }).map((_, index) => (
-                      <Skeleton key={index} className="h-28 rounded-2xl" />
+                      <Skeleton key={index} className="h-28 rounded-sm" />
                     ))}
                   </div>
                 ) : learnersError ? (
-                  <div className="mt-4 rounded-2xl border border-dashed border-border/70 bg-background/60 px-4 py-6 text-center">
+                  <div className="mt-4 rounded-sm border border-dashed border-border/70 bg-background/60 px-4 py-6 text-center">
                     <p className="text-sm font-medium text-foreground/60">{t('moves_page.learners_error')}</p>
                   </div>
                 ) : learners.length === 0 ? (
-                  <div className="mt-4 rounded-2xl border border-dashed border-border/70 bg-background/60 px-4 py-6 text-center">
+                  <div className="mt-4 rounded-sm border border-dashed border-border/70 bg-background/60 px-4 py-6 text-center">
                     <p className="text-sm font-medium text-foreground/45">{t('moves_page.no_learners')}</p>
                   </div>
                 ) : (
@@ -211,7 +211,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
             </div>
 
             <aside className="border-t border-border/70 px-6 py-6 lg:border-l lg:border-t-0 sm:px-8">
-              <div className="rounded-xl border border-border/70 bg-card/35 p-4">
+              <div className="rounded-sm border border-border/70 bg-card/35 p-4">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
@@ -323,7 +323,7 @@ function LearnerSection({
   return (
     <div>
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-primary/20 bg-primary/10">
+        <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-primary/20 bg-primary/10">
           <Icon className="h-4 w-4 text-primary" />
         </div>
         <span className="text-sm font-black text-foreground/80">{title}</span>
@@ -358,7 +358,7 @@ function PokemonLearnerCard({
       <motion.div
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.98 }}
-        className="flex flex-col items-center rounded-2xl border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
+        className="flex flex-col items-center rounded-sm border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
       >
         <div className="relative h-14 w-14">
           <Image
@@ -403,7 +403,7 @@ function MoveStatBox({
   value: number | string | null;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-border/70 bg-card/50 p-3">
+    <div className="flex flex-col items-center gap-1.5 rounded-sm border border-border/70 bg-card/50 p-3">
       <Icon className="h-4 w-4 text-primary" />
       <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</span>
       <span className="text-lg font-black text-foreground">{value ?? '-'}</span>

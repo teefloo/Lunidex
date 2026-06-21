@@ -53,7 +53,7 @@ export default function FavoritesPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center py-32 text-foreground/50 glass-panel rounded-2xl max-w-2xl mx-auto border-dashed border border-border/50"
+            className="flex flex-col items-center justify-center py-32 text-foreground/50 glass-panel rounded-sm max-w-2xl mx-auto border-dashed border border-border/50"
           >
             <div className="p-6 bg-card/50 rounded-full mb-6">
               <Ghost className="w-16 h-16 text-foreground/20" />

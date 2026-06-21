@@ -33,7 +33,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
   const { profile, badges } = data;
 
   return (
-    <div className="glass-card rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+    <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
       {/* Profile */}
@@ -82,7 +82,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
           {badges.unlocked.slice(0, 6).map((badge) => (
             <div
               key={badge.id}
-              className="relative p-3 rounded-xl border border-primary/20 bg-primary/5 text-primary flex flex-col items-center gap-1.5 text-center group hover:bg-primary/10 transition-all duration-300"
+              className="relative p-3 rounded-sm border border-primary/20 bg-primary/5 text-primary flex flex-col items-center gap-1.5 text-center group hover:bg-primary/10 transition-all duration-300"
             >
               <div className="p-1.5 rounded-lg bg-primary/20 shadow-[0_0_10px_rgba(227,53,13,0.2)] group-hover:scale-110 transition-transform duration-300">
                 <BadgeIcon iconName={badge.icon} />
@@ -101,7 +101,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
 
         {/* Next badge */}
         {badges.next && (
-          <div className="mt-4 p-3 rounded-xl border border-dashed border-border/60 bg-muted/30">
+          <div className="mt-4 p-3 rounded-sm border border-dashed border-border/60 bg-muted/30">
             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-2">
               {t('dashboard.badges.next_badge')}
             </p>

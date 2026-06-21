@@ -38,7 +38,7 @@ export default function SortSelector() {
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
-        <SelectTrigger aria-label={mounted ? t('sort.label') : 'Sort by'} className="w-[200px] rounded-full bg-card/50 backdrop-blur-xl border-border/50 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border/70 transition-all">
+        <SelectTrigger aria-label={mounted ? t('sort.label') : 'Sort by'} className="w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
           <SelectValue>
             {(() => {
               const current = options.find(o => o.value === sortBy);
@@ -46,12 +46,12 @@ export default function SortSelector() {
             })()}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="rounded-2xl p-1 bg-popover/95 supports-[backdrop-filter]:bg-popover/80 supports-[backdrop-filter]:backdrop-blur-2xl shadow-2xl border border-border/60">
+        <SelectContent className="p-1 border border-border/60">
           {options.map((opt) => (
-            <SelectItem 
-              key={opt.value} 
+            <SelectItem
+              key={opt.value}
               value={opt.value}
-              className="rounded-xl focus:bg-primary/10 focus:text-primary transition-colors cursor-pointer py-2.5"
+              className="rounded-sm focus:bg-primary/10 focus:text-primary transition-colors cursor-pointer py-2.5"
             >
               <div className="flex items-center gap-2">
                 <opt.icon className="w-3.5 h-3.5 opacity-40" />

@@ -66,7 +66,7 @@ export function Breadcrumbs() {
     <>
       <nav
         aria-label="Breadcrumb"
-        className="w-full relative z-40 bg-background/60 backdrop-blur-xl border-b border-border/40"
+        className="w-full relative z-40 bg-background/60  border-b border-border/40"
       >
         <div className="container mx-auto px-6 md:px-12 pt-24 pb-4">
           <ol className="flex items-center space-x-2 list-none p-0 m-0 text-[10px] md:text-xs font-medium text-foreground/30">

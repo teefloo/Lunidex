@@ -4,9 +4,9 @@ import { getServerT } from '@/lib/server-i18n';
 export default async function Loading() {
   const t = await getServerT();
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 backdrop-blur-2xl">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 ">
       <div role="status" aria-live="polite" className="relative">
-        <div className="absolute inset-x-2 bottom-0 h-8 rounded-full bg-primary/10 animate-pulse" />
+        <div className="absolute inset-x-2 bottom-0 h-8 rounded-sm bg-primary/10 animate-pulse" />
         <PokeballLoader className="w-16 h-16 relative z-10" />
         <span className="sr-only">{t('loading.title')}</span>
       </div>

@@ -15,7 +15,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
   const { pokedex } = data;
 
   return (
-    <div className="glass-card rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+    <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
       <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">

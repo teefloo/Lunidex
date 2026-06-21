@@ -39,7 +39,7 @@ export default function PageHeader({
         <div className={cn('pointer-events-none absolute inset-x-0 top-0 h-28 opacity-55 bg-gradient-to-b to-transparent', gradientFrom)} />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
         <div className={cn('flex items-start gap-4 md:items-center', centered && 'justify-center')}>
-          <div className={cn('flex h-14 w-14 flex-none items-center justify-center rounded-xl border backdrop-blur-xl shadow-[var(--glass-inset)]', iconBgColor, iconBorderColor)}>
+          <div className={cn('flex h-14 w-14 flex-none items-center justify-center rounded-sm border shadow-[var(--shadow-pixel-sm)]', iconBgColor, iconBorderColor)}>
             <Icon className={cn('w-6 h-6', iconColor)} />
           </div>
           <div className={cn('min-w-0 space-y-2', centered && 'max-w-3xl')}>

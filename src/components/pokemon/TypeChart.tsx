@@ -100,14 +100,14 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="glass-surface rounded-2xl overflow-hidden relative"
+      className="glass-surface rounded-sm overflow-hidden relative"
     >
       {/* Header */}
       <div className="bg-card/55 dark:bg-card/50 border-b border-border/50 dark:border-border/40 p-5 md:p-6 relative">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-primary/10 rounded-xl">
+            <div className="p-2.5 bg-primary/10 rounded-sm">
               <Grid3x3 className="w-5 h-5 md:w-6 md:h-6 text-primary" />
             </div>
             <div>
@@ -119,7 +119,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           </div>
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-xl bg-card/50 border border-border/50 hover:bg-card/70 transition-colors"
+            className="p-2 rounded-sm bg-card/50 border border-border/50 hover:bg-card/70 transition-colors"
             aria-label={collapsed ? t('types_page.expand') : t('types_page.collapse')}
           >
             {collapsed ? <ChevronDown className="w-4 h-4 text-foreground/50" /> : <ChevronUp className="w-4 h-4 text-foreground/50" />}
@@ -131,7 +131,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 px-4 py-3 bg-primary/10 backdrop-blur-xl border border-primary/20 rounded-xl flex items-center gap-3 text-sm"
+            className="mt-4 px-4 py-3 bg-primary/10  border border-primary/20 rounded-sm flex items-center gap-3 text-sm"
           >
             <span className="font-black uppercase text-xs px-2 py-1 rounded-md" style={{ backgroundColor: TYPE_COLORS[tooltipInfo.atk] + '30', color: TYPE_COLORS[tooltipInfo.atk] }}>
               {t(`types.${tooltipInfo.atk}`)}
@@ -158,7 +158,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </span>
           </motion.div>
         ) : (
-          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-xl text-[10px] font-bold text-foreground/30 uppercase tracking-wider">
+          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-[10px] font-bold text-foreground/30 uppercase tracking-wider">
             {t('types_page.hover_hint', { defaultValue: 'Hover over a cell to see the multiplier' })}
           </div>
         )}
@@ -186,7 +186,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
         className="overflow-hidden"
       >
         <div className="bg-background/50 p-3 md:p-5">
-          <div className="rounded-xl overflow-hidden border border-border/40">
+          <div className="rounded-sm overflow-hidden border border-border/40">
             <div className="overflow-x-auto scrollbar-hide">
               <div className="min-w-[750px]">
                 <table className="w-full border-separate border-spacing-[2px]" style={{ tableLayout: 'fixed' }} role="grid" aria-label={t('types_page.type_chart')}>
@@ -198,7 +198,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                   </colgroup>
                   <thead>
                     <tr>
-                      <th className="p-2 sticky left-0 z-30 bg-background/95 backdrop-blur-md rounded-lg shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]">
+                      <th className="p-2 sticky left-0 z-30 bg-background/95  rounded-lg shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]">
                         <div className="flex items-center justify-center text-[9px] font-black text-foreground/30 uppercase tracking-wider gap-1">
                           <span className="text-primary/60">ATK</span>
                           <span className="text-foreground/15">╲</span>
@@ -237,7 +237,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                     {TYPE_ORDER.map((atkType) => (
                       <tr key={atkType}>
                         <td className={cn(
-                          'p-0.5 sticky left-0 z-20 bg-background/95 backdrop-blur-md transition-all duration-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]',
+                          'p-0.5 sticky left-0 z-20 bg-background/95  transition-all duration-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]',
                           isHighlighted(atkType) && 'bg-card/50'
                         )}>
                           <button

@@ -339,7 +339,7 @@ export function TCGFilters({
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="w-full space-y-4"
       >
-        <div className="rounded-2xl border border-border/40 bg-card/45 p-4">
+        <div className="rounded-sm border border-border/40 bg-card/45 p-4">
           <div className="flex items-center justify-between gap-2">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
               {t('tcg.simple_filters_title')}
@@ -369,7 +369,7 @@ export function TCGFilters({
                           }
                         }}
                         className={cn(
-                          'flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left text-xs font-bold transition-colors',
+                          'flex w-full items-center justify-between rounded-sm border px-3 py-2 text-left text-xs font-bold transition-colors',
                           isActive
                             ? 'border-primary/35 bg-primary/12 text-primary'
                             : 'border-border/45 bg-card/45 text-foreground/60 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -404,7 +404,7 @@ export function TCGFilters({
                         type="button"
                         onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
                         className={cn(
-                          'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
+                          'rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-colors',
                           isActive
                             ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
                             : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -427,7 +427,7 @@ export function TCGFilters({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border/45 bg-card/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55"
+                className="inline-flex items-center gap-1.5 rounded-sm border border-border/45 bg-card/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 {t('filters.reset')}
@@ -446,7 +446,7 @@ export function TCGFilters({
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       className="w-full space-y-4"
     >
-      <div className="glass-surface rounded-2xl p-4">
+      <div className="glass-surface rounded-sm p-4">
         <CatalogSearchInput
           key={filters.searchTerm ?? '__empty__'}
           initialValue={filters.searchTerm || ''}
@@ -461,7 +461,7 @@ export function TCGFilters({
             <Filter className="h-3.5 w-3.5 text-primary" />
             <span>{t('tcg.catalog_filters')}</span>
             {activeFilterCount > 0 && (
-              <span className="inline-flex min-w-[4.25rem] items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] leading-none whitespace-nowrap tabular-nums text-primary">
+              <span className="inline-flex min-w-[4.25rem] items-center justify-center rounded-sm border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] leading-none whitespace-nowrap tabular-nums text-primary">
                 {t('tcg.active_filters', { count: activeFilterCount })}
               </span>
             )}
@@ -491,7 +491,7 @@ export function TCGFilters({
           <div className="grid grid-cols-1 gap-2 max-h-[360px] overflow-y-auto pr-2 scrollbar-premium">
             {isLoading ? (
               Array.from({ length: 10 }).map((_, index) => (
-                <div key={index} className="h-14 animate-pulse rounded-2xl bg-card/50" />
+                <div key={index} className="h-14 animate-pulse rounded-sm bg-card/50" />
               ))
             ) : (
               setOptions.map((set) => {
@@ -504,13 +504,13 @@ export function TCGFilters({
                     type="button"
                     onClick={() => updateFilter('selectedSet', isActive ? null : set.id)}
                     className={cn(
-                      'group relative flex items-center gap-3 overflow-hidden rounded-2xl border p-3 text-left transition-all duration-300',
+                      'group relative flex items-center gap-3 overflow-hidden rounded-sm border p-3 text-left transition-all duration-300',
                       isActive
                         ? 'border-primary/40 bg-primary/15 text-primary shadow-[0_0_30px_rgba(227,53,13,0.14)]'
                         : 'border-border/40 bg-card/35 text-foreground/65 hover:border-border/70 hover:bg-card/60 hover:text-foreground',
                     )}
                   >
-                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border/40 bg-muted/50 p-2">
+                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border border-border/40 bg-muted/50 p-2">
                       {logoSrc ? (
                         <Image
                           src={logoSrc}
@@ -519,7 +519,7 @@ export function TCGFilters({
                           className="object-contain p-2"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 via-white/[0.03] to-transparent text-primary/70">
+                        <div className="flex h-full w-full items-center justify-center rounded-sm bg-gradient-to-br from-primary/10 via-white/[0.03] to-transparent text-primary/70">
                           <PokeballIcon className="h-4 w-4" />
                         </div>
                       )}
@@ -561,7 +561,7 @@ export function TCGFilters({
           <div className="flex flex-wrap gap-2">
             {raritiesLoading ? (
               Array.from({ length: 8 }).map((_, index) => (
-                <div key={index} className="h-8 w-20 animate-pulse rounded-full bg-card/50" />
+                <div key={index} className="h-8 w-20 animate-pulse rounded-sm bg-card/50" />
               ))
             ) : rarityOptions.length === 0 ? (
               <p className="text-[10px] italic text-foreground/30">{t(selectedSet ? 'tcg.no_rarities_in_set' : 'tcg.no_rarities')}</p>
@@ -579,7 +579,7 @@ export function TCGFilters({
                       }
                     }}
                     className={cn(
-                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      'rounded-sm border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -618,7 +618,7 @@ export function TCGFilters({
                       );
                     }}
                     className={cn(
-                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      'rounded-sm border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-emerald-400/40 bg-emerald-500/20 text-emerald-300 shadow-[0_0_16px_rgba(16,185,129,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -641,7 +641,7 @@ export function TCGFilters({
                   placeholder="0"
                   value={typeof filters.minHp === 'number' ? filters.minHp : ''}
                   onChange={(event) => updateFilter('minHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -655,7 +655,7 @@ export function TCGFilters({
                   placeholder="340"
                   value={typeof filters.maxHp === 'number' ? filters.maxHp : ''}
                   onChange={(event) => updateFilter('maxHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -669,7 +669,7 @@ export function TCGFilters({
                     type="button"
                     onClick={() => updateFilter('selectedPhase', isActive ? null : stage)}
                     className={cn(
-                      'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      'rounded-sm border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                       isActive
                         ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -707,7 +707,7 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                    'rounded-sm border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                     isActive
                       ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -744,7 +744,7 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-full border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                    'rounded-sm border px-3 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
                     isActive
                       ? 'border-cyan-400/40 bg-cyan-500/20 text-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -774,7 +774,7 @@ export function TCGFilters({
                   placeholder={t('tcg.illustrator_placeholder', { defaultValue: 'Any illustrator' })}
                   value={filters.illustrator ?? ''}
                   onChange={(event) => updateFilter('illustrator', event.target.value || undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -787,7 +787,7 @@ export function TCGFilters({
                   placeholder={t('tcg.regulation_placeholder', { defaultValue: 'G, H, I...' })}
                   value={filters.regulationMark ?? ''}
                   onChange={(event) => updateFilter('regulationMark', event.target.value || undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -803,7 +803,7 @@ export function TCGFilters({
                   placeholder="0"
                   value={typeof filters.priceMin === 'number' ? filters.priceMin : ''}
                   onChange={(event) => updateFilter('priceMin', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -817,7 +817,7 @@ export function TCGFilters({
                   placeholder="999"
                   value={typeof filters.priceMax === 'number' ? filters.priceMax : ''}
                   onChange={(event) => updateFilter('priceMax', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -831,7 +831,7 @@ export function TCGFilters({
                   type="date"
                   value={filters.releaseStart ?? ''}
                   onChange={(event) => updateFilter('releaseStart', event.target.value || undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -843,7 +843,7 @@ export function TCGFilters({
                   type="date"
                   value={filters.releaseEnd ?? ''}
                   onChange={(event) => updateFilter('releaseEnd', event.target.value || undefined)}
-                  className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -855,7 +855,7 @@ export function TCGFilters({
               <select
                 value={filters.ownedState ?? 'all'}
                 onChange={(event) => updateFilter('ownedState', event.target.value)}
-                className="h-10 w-full rounded-xl border border-border/50 bg-card/50 px-3 text-xs font-bold uppercase tracking-[0.14em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold uppercase tracking-[0.14em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
               >
                 <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
                 <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
@@ -884,7 +884,7 @@ export function TCGFilters({
                         );
                       }}
                       className={cn(
-                        'rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                        'rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
                         isActive
                           ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -900,7 +900,7 @@ export function TCGFilters({
         </FilterSection>
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-card/35 p-4 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
+      <div className="rounded-sm border border-border/40 bg-card/35 p-4 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
         {t('tcg.catalog_filters_hint')}
       </div>
     </motion.div>
@@ -919,7 +919,7 @@ interface FilterSectionProps {
 function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }: FilterSectionProps) {
   return (
     <div className={cn(
-      'overflow-hidden rounded-xl border transition-all duration-300',
+      'overflow-hidden rounded-sm border transition-all duration-300',
       isOpen
         ? 'border-border/60 bg-card/55 shadow-[0_18px_60px_rgba(0,0,0,0.2)]'
         : 'border-border/40 bg-card/25 hover:bg-card/50',
@@ -930,7 +930,7 @@ function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }:
         className="flex w-full items-center justify-between px-4 py-3.5 text-left"
       >
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className={cn('flex h-8 w-8 items-center justify-center rounded-xl border', isOpen ? 'border-primary/20 bg-primary/10' : 'border-border/50 bg-card/35')}>
+          <span className={cn('flex h-8 w-8 items-center justify-center rounded-sm border', isOpen ? 'border-primary/20 bg-primary/10' : 'border-border/50 bg-card/35')}>
             <Icon className={cn('h-4 w-4', isOpen ? 'text-primary' : 'text-foreground/35')} />
           </span>
           <div className="min-w-0">
@@ -938,7 +938,7 @@ function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }:
               {title}
             </span>
             {badge && !isOpen && (
-              <span className="mt-1 inline-flex rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-primary">
+              <span className="mt-1 inline-flex rounded-sm border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-primary">
                 {badge}
               </span>
             )}
@@ -991,7 +991,7 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
           setValue(nextValue);
           onChange(nextValue);
         }}
-        className="w-full rounded-2xl border border-border/50 bg-muted/40 py-3.5 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+        className="w-full rounded-sm border border-border/50 bg-muted/40 py-3.5 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
       />
       {value && (
         <button

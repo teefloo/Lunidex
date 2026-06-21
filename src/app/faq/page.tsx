@@ -257,7 +257,7 @@ export default async function FaqPage() {
                     href={GITHUB_ISSUES_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-border/60 bg-card/70 backdrop-blur-xl px-5 py-3 text-xs font-black uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:border-primary/25 transition-all duration-200"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-border/60 bg-card/70  px-5 py-3 text-xs font-black uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:border-primary/25 transition-all duration-200"
                   >
                     <MessageCircleQuestion className="w-3.5 h-3.5" />
                     {t('faq.still_questions_cta_issues')}

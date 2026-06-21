@@ -28,11 +28,11 @@ export default function EmptyState({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       className={cn(
-        'section-frame flex flex-col items-center justify-center rounded-2xl border-dashed border border-border/70 py-24 text-foreground/50 md:py-28',
+        'section-frame flex flex-col items-center justify-center rounded-sm border-dashed border border-border/70 py-24 text-foreground/50 md:py-28',
         className
       )}
     >
-      <div className="mb-6 rounded-full border border-border/70 bg-background/70 p-6 shadow-[0_10px_20px_-18px_rgba(0,0,0,0.18)]">
+      <div className="mb-6 rounded-sm border border-border/70 bg-background/70 p-6 shadow-[var(--shadow-pixel)]">
         <Icon className="w-16 h-16 text-foreground/20" />
       </div>
       <p className="page-eyebrow mb-3 justify-center">PrimeDex</p>

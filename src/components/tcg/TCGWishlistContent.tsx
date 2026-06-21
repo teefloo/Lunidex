@@ -84,7 +84,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
     <div className="space-y-8">
       {/* Suggestions */}
       {activeSetIds.size > 0 && sortedSuggestions.length > 0 && (
-        <div className="rounded-xl border border-border/30 bg-card/40 p-4">
+        <div className="rounded-sm border border-border/30 bg-card/40 p-4">
           <div className="mb-4 flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-400" />
             <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/50">
@@ -189,7 +189,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-border/20 rounded-xl border border-border/30 bg-card/40">
+          <div className="divide-y divide-border/20 rounded-sm border border-border/30 bg-card/40">
             {sortedManual.map((card) => (
               <button
                 key={card.id}

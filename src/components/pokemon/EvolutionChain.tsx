@@ -144,7 +144,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
         )}
       >
         <div className={cn(
-          "w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-2xl flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary/30 transition-all duration-500 relative overflow-hidden shadow-sm",
+          "w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-sm flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary/30 transition-all duration-500 relative overflow-hidden shadow-sm",
           isCurrent && "bg-primary/10 border-primary/40 ring-2 ring-primary/30 shadow-lg shadow-primary/20"
         )}>
           <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -856,7 +856,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center">
-        <div className="w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-2xl flex items-center justify-center">
+        <div className="w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-sm flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-primary/40" />
         </div>
       </div>
@@ -866,7 +866,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
   if (isError || !pokemonData) {
     return (
       <div className="flex flex-col items-center">
-        <div className="w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-2xl flex items-center justify-center">
+        <div className="w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-sm flex items-center justify-center">
           <AlertCircle className="w-6 h-6 text-red-400/60" />
         </div>
         <span className="mt-2 text-[10px] sm:text-[11px] font-black text-red-400/60 uppercase tracking-wider">
@@ -883,7 +883,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
         whileTap={{ scale: 0.95 }}
         className="flex flex-col items-center cursor-pointer group"
       >
-        <div className={`w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br ${config.gradient} border ${config.border} rounded-2xl flex items-center justify-center p-4 ${config.borderHover} ${config.shadow} transition-all duration-500 relative overflow-hidden`}>
+        <div className={`w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br ${config.gradient} border ${config.border} rounded-sm flex items-center justify-center p-4 ${config.borderHover} ${config.shadow} transition-all duration-500 relative overflow-hidden`}>
           <div className={`absolute inset-0 bg-gradient-to-tr ${config.innerGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
           {sprite ? (
             <Image

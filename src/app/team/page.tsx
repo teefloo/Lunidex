@@ -267,7 +267,7 @@ export default function TeamPage() {
                       <motion.div 
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="glass-panel h-full p-4 rounded-2xl flex flex-col items-center relative group"
+                        className="glass-panel h-full p-4 rounded-sm flex flex-col items-center relative group"
                       >
                         <button 
                           onClick={() => removeFromTeam(p.id)}
@@ -278,7 +278,7 @@ export default function TeamPage() {
                         </button>
                         
                         <div className="relative w-28 h-28 mb-4">
-                          <div className="absolute inset-x-5 bottom-3 top-10 rounded-2xl bg-gradient-to-t from-primary/10 to-transparent transition-opacity group-hover:opacity-80" />
+                          <div className="absolute inset-x-5 bottom-3 top-10 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity group-hover:opacity-80" />
                         <Image 
                           src={p.sprites.other['official-artwork'].front_default || p.sprites.front_default} 
                           alt={displayName || ''} 
@@ -311,7 +311,7 @@ export default function TeamPage() {
                       </motion.div>
                     ) : (
                       <Link href="/" className="block h-full">
-                        <div className="h-full rounded-2xl border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-foreground/20 hover:border-primary/30 hover:text-primary/40 hover:bg-primary/5 transition-all group">
+                        <div className="h-full rounded-sm border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-foreground/20 hover:border-primary/30 hover:text-primary/40 hover:bg-primary/5 transition-all group">
                           <div className="p-4 rounded-full bg-secondary/30 mb-3 group-hover:scale-110 transition-transform">
                             <Plus className="w-8 h-8" />
                           </div>
@@ -332,10 +332,10 @@ export default function TeamPage() {
               >
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Synergy Score */}
-                  <div className="glass-panel p-6 md:p-8 rounded-2xl flex flex-col h-full">
+                  <div className="glass-panel p-6 md:p-8 rounded-sm flex flex-col h-full">
                     <div className="flex items-center justify-between gap-6 mb-8">
                       <div className="flex items-center gap-3">
-                        <div className={cn("p-2 rounded-xl text-primary-foreground shadow-lg shadow-black/20", scoreColor)}>
+                        <div className={cn("p-2 rounded-sm text-primary-foreground shadow-lg shadow-black/20", scoreColor)}>
                           <Zap className="w-5 h-5 fill-current" />
                         </div>
                         <div>
@@ -362,7 +362,7 @@ export default function TeamPage() {
                     </div>
 
                     <div className="flex-1 space-y-4">
-                      <div className="p-4 rounded-2xl bg-secondary/20 border border-border/40">
+                      <div className="p-4 rounded-sm bg-secondary/20 border border-border/40">
                         <p className="text-xs text-foreground/60 leading-relaxed font-medium">
                           {synergyScore > 80 ? t('team.synergy_excellent') :
                           synergyScore > 60 ? t('team.synergy_good') :
@@ -371,13 +371,13 @@ export default function TeamPage() {
                         </p>
                       </div>
                       
-                      <div className="p-4 rounded-2xl bg-secondary/20 border border-border/40">
+                      <div className="p-4 rounded-sm bg-secondary/20 border border-border/40">
                         <p className="text-[10px] font-black uppercase tracking-widest text-red-500/60 mb-3">{t('team.main_weaknesses')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.weaknesses.slice(0, 3).map(([type]) => (
                             <div 
                               key={type} 
-                              className="px-3 py-1.5 rounded-xl border border-border/40 shadow-sm text-primary-foreground flex items-center gap-2"
+                              className="px-3 py-1.5 rounded-sm border border-border/40 shadow-sm text-primary-foreground flex items-center gap-2"
                               style={{ backgroundColor: TYPE_COLORS[type] }}
                             >
                               <span className="text-[10px] font-black uppercase">{t(`types.${type}`)}</span>
@@ -390,9 +390,9 @@ export default function TeamPage() {
                   </div>
 
                   {/* Stats Radar Chart */}
-                  <div className="glass-panel p-6 md:p-8 rounded-2xl h-full flex flex-col">
+                  <div className="glass-panel p-6 md:p-8 rounded-sm h-full flex flex-col">
                     <h3 className="text-xl font-black mb-6 flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-xl">
+                      <div className="p-2 bg-primary/10 rounded-sm">
                         <BarChart3 className="w-5 h-5 text-primary" />
                       </div>
                       {t('team.stat_balance')}
@@ -426,7 +426,7 @@ export default function TeamPage() {
                   </div>
                 </div>
 
-                <div className="glass-panel p-6 md:p-8 rounded-2xl">
+                <div className="glass-panel p-6 md:p-8 rounded-sm">
                   <h3 className="text-2xl font-black mb-8 border-b border-border/60 pb-4 flex items-center gap-3">
                     <Sword className="w-6 h-6 text-primary" />
                     {t('team.type_analysis')}
@@ -444,7 +444,7 @@ export default function TeamPage() {
                           <p className="text-[10px] font-black text-red-500/60 uppercase mb-2">{t('team.weaknesses')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.weaknesses.map(([type, val]) => (
-                              <div key={type} className="px-3 py-1.5 rounded-xl border border-red-500/10 bg-red-500/5 flex items-center gap-2">
+                              <div key={type} className="px-3 py-1.5 rounded-sm border border-red-500/10 bg-red-500/5 flex items-center gap-2">
                                 <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                                 <span className="text-[10px] font-bold opacity-40">{val}</span>
                               </div>
@@ -455,7 +455,7 @@ export default function TeamPage() {
                           <p className="text-[10px] font-black text-green-500/60 uppercase mb-2">{t('team.resistances')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.resistances.map(([type, val]) => (
-                              <div key={type} className="px-3 py-1.5 rounded-xl border border-green-500/10 bg-green-500/5 flex items-center gap-2">
+                              <div key={type} className="px-3 py-1.5 rounded-sm border border-green-500/10 bg-green-500/5 flex items-center gap-2">
                                 <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                                 <span className="text-[10px] font-bold opacity-40">+{val}</span>
                               </div>
@@ -475,7 +475,7 @@ export default function TeamPage() {
                         <p className="text-[10px] font-black text-yellow-500/60 uppercase mb-2">{t('team.super_effective_coverage')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.coverage.map(([type, val]) => (
-                            <div key={type} className="px-3 py-1.5 rounded-xl border border-yellow-500/10 bg-yellow-500/5 flex items-center gap-2">
+                            <div key={type} className="px-3 py-1.5 rounded-sm border border-yellow-500/10 bg-yellow-500/5 flex items-center gap-2">
                               <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[10px] font-bold opacity-40">{val}</span>
                             </div>
@@ -491,7 +491,7 @@ export default function TeamPage() {
 
           {/* Sidebar / Suggestions */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="glass-panel p-6 rounded-2xl">
+            <div className="glass-panel p-6 rounded-sm">
               <h3 className="text-lg font-black mb-6 border-b border-border/60 pb-4 flex items-center gap-2">
                 <Info className="w-5 h-5 text-primary" />
                 {t('team.type_coverage')}
@@ -529,7 +529,7 @@ export default function TeamPage() {
                       <p className="text-[10px] text-foreground/50 mb-4">{t('team.coverage_gaps_desc')}</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.suggestions.types.map(type => (
-                          <div key={type} className="flex-1 min-w-[80px] p-3 rounded-2xl bg-secondary/20 border border-border/40 text-center group hover:border-primary/30 transition-all cursor-default">
+                          <div key={type} className="flex-1 min-w-[80px] p-3 rounded-sm bg-secondary/20 border border-border/40 text-center group hover:border-primary/30 transition-all cursor-default">
                             <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                           </div>
                         ))}
@@ -543,7 +543,7 @@ export default function TeamPage() {
                         <p className="text-[10px] text-foreground/50 mb-4">{t('team.stat_deficiencies_desc')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.suggestions.statFocus.map(stat => (
-                            <div key={stat} className="px-3 py-2 rounded-xl bg-orange-500/5 border border-orange-500/10 text-center">
+                            <div key={stat} className="px-3 py-2 rounded-sm bg-orange-500/5 border border-orange-500/10 text-center">
                               <span className="text-[10px] font-black uppercase text-orange-500">{t(`stats.${stat.toLowerCase().replace(' ', '_')}`)}</span>
                             </div>
                           ))}
@@ -555,13 +555,13 @@ export default function TeamPage() {
               </div>
             </div>
 
-            <div className="glass-card p-6 rounded-2xl relative overflow-hidden">
+            <div className="glass-card p-6 rounded-sm relative overflow-hidden">
               <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary/10 to-transparent" />
               <h3 className="text-lg font-black mb-4 relative z-10">{t('team.export_title')}</h3>
               <p className="text-xs text-foreground/50 mb-6 leading-relaxed relative z-10">
                 {t('team.export_desc')}
               </p>
-              <div className="bg-background/50 p-3 rounded-xl border border-border/40 font-mono text-[10px] text-foreground/60 break-all mb-4 relative z-10">
+              <div className="bg-background/50 p-3 rounded-sm border border-border/40 font-mono text-[10px] text-foreground/60 break-all mb-4 relative z-10">
                 {team.length > 0 ? team.join('-') : t('team.empty_team')}
               </div>
               <Button 
@@ -570,7 +570,7 @@ export default function TeamPage() {
                   navigator.clipboard.writeText(team.join('-'));
                   toast.success(t('detail.copied'));
                 }}
-                className="w-full rounded-xl font-black uppercase tracking-widest h-12 shadow-lg shadow-primary/20"
+                className="w-full rounded-sm font-black uppercase tracking-widest h-12 shadow-lg shadow-primary/20"
               >
                 {t('team.copy_code')}
               </Button>

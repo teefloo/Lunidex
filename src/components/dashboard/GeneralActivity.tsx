@@ -37,7 +37,7 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
   const { activity } = data;
 
   return (
-    <div className="glass-card rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+    <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
       <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
@@ -47,13 +47,13 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
 
       {/* Visit stats */}
       <div className="flex gap-4">
-        <div className="flex-1 p-3 rounded-xl border border-border/50 bg-card/50">
+        <div className="flex-1 p-3 rounded-sm border border-border/50 bg-card/50">
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
             {t('dashboard.activity.visits')}
           </p>
           <p className="text-xl font-black text-foreground tabular-nums">{activity.visitCount}</p>
         </div>
-        <div className="flex-1 p-3 rounded-xl border border-border/50 bg-card/50">
+        <div className="flex-1 p-3 rounded-sm border border-border/50 bg-card/50">
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1 flex items-center gap-1">
             <Calendar className="w-3 h-3" />
             {t('dashboard.activity.last_visit')}
@@ -74,7 +74,7 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
             {activity.recentActions.map((action) => (
               <div
                 key={action.id}
-                className="flex items-center gap-3 p-2 rounded-xl border border-border/30 bg-muted/20 hover:bg-muted/40 transition-colors"
+                className="flex items-center gap-3 p-2 rounded-sm border border-border/30 bg-muted/20 hover:bg-muted/40 transition-colors"
               >
                 <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
                   {ACTION_ICONS[action.type] || <ActivityIcon className="w-3.5 h-3.5" />}

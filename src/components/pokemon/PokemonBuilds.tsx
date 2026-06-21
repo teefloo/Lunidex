@@ -115,11 +115,11 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className={cn("glass-panel p-6 md:p-8 rounded-2xl border", build.color)}
+            className={cn("glass-panel p-6 md:p-8 rounded-sm border", build.color)}
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-background/50 rounded-2xl border border-border/40 shadow-inner">
+                <div className="p-3 bg-background/50 rounded-sm border border-border/40 shadow-inner">
                   {build.icon}
                 </div>
                 <div>
@@ -127,7 +127,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                   <p className="text-xs text-foreground/50 font-medium">{build.desc}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-background/40 rounded-full border border-border/40">
+              <div className="flex items-center gap-2 px-4 py-2 bg-background/40 rounded-sm border border-border/40">
                 <Trophy className="w-4 h-4 text-yellow-500" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground/60">{t('builds.recommended')}</span>
               </div>
@@ -140,7 +140,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                   || formatName(move.name);
 
                 return (
-                  <div key={`${move.name}-${i}`} className="bg-background/40 p-4 rounded-2xl border border-border/40 hover:border-primary/30 transition-all group">
+                  <div key={`${move.name}-${i}`} className="bg-background/40 p-4 rounded-sm border border-border/40 hover:border-primary/30 transition-all group">
                     <div className="flex justify-between items-start mb-3">
                       <span className="font-black text-sm capitalize group-hover:text-primary transition-colors">
                         {localizedMoveName}
@@ -166,7 +166,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                       </div>
                       <div className="ml-auto flex items-center gap-1">
                         <div className={cn(
-                          "w-2 h-2 rounded-full",
+                          "w-2 h-2 rounded-sm",
                           move.damage_class.name === 'physical' ? 'bg-orange-500' : 
                           move.damage_class.name === 'special' ? 'bg-blue-500' : 'bg-gray-500'
                         )} />

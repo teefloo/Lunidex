@@ -28,7 +28,7 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
       type="button"
       onClick={handleClick}
       className={cn(
-        'group relative aspect-[2.15/3] overflow-hidden rounded-xl border transition-all hover:border-primary/30 hover:shadow-lg active:scale-95',
+        'group relative aspect-[2.15/3] overflow-hidden rounded-sm border transition-all duration-100 hover:border-primary/30 hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 shadow-[var(--shadow-pixel-sm)]',
         owned
           ? 'border-emerald-500/30 bg-card/40'
           : 'border-border/15 bg-card/20 grayscale opacity-50 hover:grayscale-0 hover:opacity-100'
@@ -56,7 +56,7 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
       </div>
       {owned && (
         <div className="absolute right-1 top-8">
-          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500/80">
+          <div className="flex h-4 w-4 items-center justify-center rounded-none bg-emerald-500/80">
             <span className="text-[7px] font-black text-white">&#10003;</span>
           </div>
         </div>

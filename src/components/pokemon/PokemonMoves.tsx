@@ -45,7 +45,7 @@ export const PokemonMoves = ({ pokemonName }: PokemonMovesProps) => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 9 }).map((_, i) => (
-          <Skeleton key={i} className="h-32 w-full rounded-xl" />
+          <Skeleton key={i} className="h-32 w-full rounded-sm" />
         ))}
       </div>
     );
@@ -89,7 +89,7 @@ export const PokemonMoves = ({ pokemonName }: PokemonMovesProps) => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="h-full bg-muted/40 border-border/60 backdrop-blur-sm overflow-hidden hover:bg-muted/50 transition-colors">
+            <Card className="h-full bg-muted/40 border-border/60  overflow-hidden hover:bg-muted/50 transition-colors">
               <CardHeader className="pb-2 flex flex-row items-center justify-between border-b border-border/40">
                 <div>
                   <CardTitle className="text-lg font-bold text-foreground capitalize">{localizedName}</CardTitle>

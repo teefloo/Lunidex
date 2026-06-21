@@ -19,7 +19,7 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
   return (
     <div className="app-page min-h-screen px-4 py-24 text-foreground">
       <section className="section-frame mx-auto flex max-w-xl flex-col items-center px-6 py-10 text-center md:px-8 md:py-12">
-        <div className="mb-5 rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-destructive">
+        <div className="mb-5 rounded-sm border border-destructive/20 bg-destructive/10 p-4 text-destructive">
           <AlertTriangle className="h-8 w-8" />
         </div>
         <p className="page-eyebrow justify-center">{scope ?? 'PrimeDex'}</p>

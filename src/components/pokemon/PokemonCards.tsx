@@ -45,7 +45,7 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
 
   if (error || !cards || cards.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center min-h-[300px] glass-panel rounded-2xl">
+      <div className="flex flex-col items-center justify-center p-12 text-center min-h-[300px] glass-panel rounded-sm">
         <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm mb-2">
           {t('detail.no_cards_found', { defaultValue: 'No cards found' })}
         </p>
@@ -70,7 +70,7 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
   };
 
   return (
-    <div className="glass-panel p-6 md:p-8 rounded-2xl">
+    <div className="glass-panel p-6 md:p-8 rounded-sm">
       <h3 className="text-2xl font-black mb-8 border-b border-border/60 pb-4 flex items-center gap-3">
         <span className="text-foreground/90">{t('detail.cards')}</span>
         <span className="px-2 py-1 bg-secondary/50 rounded-md text-xs font-bold text-foreground/60 border border-border/50">

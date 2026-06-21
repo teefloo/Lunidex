@@ -14,7 +14,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
     return (
       <div className="page-shell py-24">
         <div className="glass-surface mx-auto max-w-2xl rounded-[2rem] px-8 py-12 text-center">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-sm bg-primary/10 text-primary">
             <Sparkles className="h-7 w-7" />
           </div>
           <h1 className="text-3xl font-black uppercase tracking-[0.22em]">{t('tcg.no_cards')}</h1>

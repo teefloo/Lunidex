@@ -59,7 +59,7 @@ function HeaderLink({ children, href, variant, size, className, ...props }: Head
     <Link
       href={href}
       className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex items-center justify-center whitespace-nowrap rounded-sm border border-transparent text-sm font-semibold transition-all duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
         variant === 'ghost' && 'hover:border-border/60 hover:bg-muted/70 hover:text-foreground',
         size === 'sm' && 'h-10 px-4 text-xs tracking-[0.16em] uppercase',
         className
@@ -192,7 +192,7 @@ export default function Header() {
       >
         <div className="relative">
         <div
-          className="glass-toolbar codex-frame inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4"
+          className="glass-toolbar codex-frame inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4 shadow-[var(--shadow-pixel)]"
         >
           <div className="flex shrink-0 items-center justify-start">
             <Link href={localizedHref('/')} className="flex items-center gap-2.5 group" aria-label={homeAriaLabel}>
@@ -202,10 +202,10 @@ export default function Header() {
 
               <div className="flex flex-col items-start gap-0.5">
                 <div className="flex items-baseline leading-none tracking-tight">
-                  <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base" style={{ fontVariationSettings: '"opsz" 144' }}>
+                  <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base">
                     Prime
                   </span>
-                  <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground/90 md:text-base" style={{ fontVariationSettings: '"opsz" 144' }}>
+                  <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground/90 md:text-base">
                     Dex
                   </span>
                 </div>
@@ -214,9 +214,9 @@ export default function Header() {
                   <span suppressHydrationWarning className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/65 md:text-[10px]">
                     {mounted ? caughtCount.toString().padStart(3, '0') : '000'} <span className="text-muted-foreground/50">/</span> 1025
                   </span>
-                  <div className="h-[2px] w-7 overflow-hidden rounded-full bg-foreground/15" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
+                  <div className="h-[2px] w-7 overflow-hidden bg-foreground/15" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
                     <div
-                      className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out"
+                      className="h-full bg-primary transition-[width] duration-700 ease-out"
                       style={{ width: `${mounted ? progressPercent : 0}%` }}
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-full border border-foreground/10 bg-foreground/[0.03] px-1 py-0.5 backdrop-blur-xl lg:flex">
+          <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-sm border border-border bg-background/40 px-1 py-0.5 lg:flex">
             <HeaderLink href={localizedHref('/team')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <Users className="h-3 w-3" /> {teamLabel}
             </HeaderLink>
@@ -266,7 +266,7 @@ export default function Header() {
                   onChange={(event) => setLocalSearch(event.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  className="h-10 w-full rounded-full border border-foreground/15 bg-background/40 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/40 placeholder:normal-case placeholder:tracking-normal focus:border-primary/45 focus:bg-background/65 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/70 bg-background/50 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[var(--shadow-pixel-sm)] transition-all duration-100 placeholder:text-foreground/40 placeholder:normal-case placeholder:tracking-normal focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
@@ -300,12 +300,12 @@ export default function Header() {
                   {languageLabel}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="glass-surface min-w-48 rounded-2xl p-1">
+              <SelectContent className="glass-surface min-w-48 p-1">
                 {languageOptions.map((lang) => (
                   <SelectItem
                     key={lang.code}
                     value={lang.code}
-                    className="rounded-xl focus:bg-primary/10 focus:text-primary transition-colors cursor-pointer py-2.5"
+                    className="rounded-sm focus:bg-primary/10 focus:text-primary transition-colors cursor-pointer py-2.5"
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-base leading-none">{lang.flag}</span>
@@ -357,10 +357,10 @@ export default function Header() {
                 <SheetContent side="right" className="w-[85vw] max-w-[350px] p-0">
                   <SheetHeader className="border-b border-foreground/15 p-6">
                     <SheetTitle className="flex items-baseline text-left font-display tracking-tight">
-                      <span className="text-2xl font-extrabold gradient-text-hero" style={{ fontVariationSettings: '"opsz" 144' }}>
+                      <span className="text-2xl font-extrabold gradient-text-hero" >
                         Prime
                       </span>
-                      <span className="text-2xl font-medium italic editorial-italic text-foreground/90" style={{ fontVariationSettings: '"opsz" 144' }}>
+                      <span className="text-2xl font-medium italic editorial-italic text-foreground/90" >
                         Dex
                       </span>
                     </SheetTitle>
@@ -369,56 +369,56 @@ export default function Header() {
                   <div className="flex flex-col gap-1 p-4">
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <PrimeDexLogo className="h-5 w-5 flex-shrink-0" /> {homeMenuLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/favorites')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/favorites')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Heart className="h-5 w-5 flex-shrink-0" /> {favoritesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/team')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/team')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Users className="h-5 w-5 flex-shrink-0" /> {teamLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/compare')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/compare')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <ArrowLeftRight className="h-5 w-5 flex-shrink-0" /> {compareLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/tcg')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/tcg')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <LayoutGrid className="h-5 w-5 flex-shrink-0" /> {tcgLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/types')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/types')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Shapes className="h-5 w-5 flex-shrink-0" /> {typesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/moves')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/moves')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <Swords className="h-5 w-5 flex-shrink-0" /> {movesLabel}
                         </Link>
                       }
                     />
                     <SheetClose
                       render={
-                        <Link href={localizedHref('/quiz')} className="flex items-center gap-4 rounded-xl p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                        <Link href={localizedHref('/quiz')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {quizLabel}
                         </Link>
                       }
@@ -432,7 +432,7 @@ export default function Header() {
 
           {isSearchFocused && localSearch && searchResults.length > 0 && (
               <div
-                className="glass-surface !overflow-hidden rounded-xl p-2 w-72"
+                className="glass-surface !overflow-hidden p-2 w-72"
                 style={dropdownStyle}
                 role="listbox"
                 aria-label={t('search.results_aria', { defaultValue: 'Search results' })}
@@ -457,9 +457,9 @@ export default function Header() {
                         }}
                         role="option"
                         aria-selected={false}
-                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-muted/70 group/item"
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-sm p-2.5 text-left transition-colors hover:bg-muted/70 group/item"
                       >
-                        <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-foreground/15 bg-muted/60 p-1">
+                        <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm border border-border/60 bg-muted/60 p-1">
                           <Image
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
                             alt={displayName}

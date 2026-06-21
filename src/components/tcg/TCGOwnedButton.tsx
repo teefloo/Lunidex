@@ -34,10 +34,10 @@ export function TCGOwnedButton({ cardId, className, size = 'md' }: TCGOwnedButto
         toggle(cardId);
       }}
       className={cn(
-        'inline-flex items-center justify-center rounded-full border transition-all',
+        'inline-flex items-center justify-center rounded-sm border transition-all duration-100 hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5',
         sizeClasses[size],
         isOwned
-          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.15)]'
+          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-400 shadow-[var(--shadow-pixel-sm)]'
           : 'border-border/40 bg-card/40 text-foreground/30 hover:border-primary/30 hover:text-primary/60',
         className,
       )}

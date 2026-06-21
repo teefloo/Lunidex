@@ -112,7 +112,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
         transition={{ duration: 0.2, ease: 'easeOut' }}
         onClick={onClose}
         aria-hidden="true"
-        className="fixed inset-0 bg-muted/45 backdrop-blur-sm"
+        className="fixed inset-0 bg-muted/45"
       />
 
       <motion.section
@@ -123,7 +123,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.24, ease: 'easeOut' }}
-        className="glass-surface relative z-[301] flex h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-2xl text-foreground sm:h-[calc(100dvh-3rem)] lg:h-[88dvh]"
+        className="glass-surface relative z-[301] flex h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-sm text-foreground sm:h-[calc(100dvh-3rem)] lg:h-[88dvh]"
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--primary)_12%,transparent),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_24%,transparent_76%,rgba(0,0,0,0.16))]" />
@@ -132,7 +132,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
           ref={closeButtonRef}
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-20 rounded-full border border-border/60 bg-muted/60 p-3 text-foreground/70 backdrop-blur-xl transition-colors hover:bg-card/70 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          className="absolute right-4 top-4 z-20 rounded-sm border border-border/60 bg-muted/60 p-3 text-foreground/70 transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           aria-label={t('common.close')}
           title={t('common.close')}
         >
@@ -165,7 +165,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
               <div className="relative space-y-8">
                 <header className="space-y-3">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className={cn('rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
+                    <span className={cn('rounded-sm border px-3 py-1 text-[10px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
                       {categoryLabel}
                     </span>
                     {displayCard.stage && (
@@ -408,7 +408,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     href={`https://api.tcgdex.net/v2/${resolvedLang}/cards/${displayCard.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-border/40 bg-card/60 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/10 hover:text-primary"
+                    className="inline-flex items-center gap-2 rounded-sm border border-border/40 bg-card/60 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/10 hover:text-primary shadow-[var(--shadow-pixel-sm)]"
                   >
                     {t('tcg.open_raw_data')}
                     <ExternalLink className="h-3 w-3" />
@@ -432,7 +432,7 @@ interface InfoItemProps {
 
 function InfoItem({ icon: Icon, label, value }: InfoItemProps) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-card/35 p-4">
+    <div className="rounded-sm border border-border/40 bg-card/35 p-4">
       <div className="mb-1 flex items-center gap-2">
         <Icon className="h-3 w-3 text-primary" />
         <span className="text-[9px] font-black uppercase tracking-widest text-foreground/30">{label}</span>
@@ -454,7 +454,7 @@ function EffectPanel({
   text: string;
 }) {
   return (
-    <div className="glass-card space-y-3 rounded-2xl p-6">
+    <div className="glass-card space-y-3 p-6">
       <div className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-primary" />
         <h3 className="text-xs font-black uppercase tracking-widest text-primary">
@@ -468,14 +468,14 @@ function EffectPanel({
 
 function AttackPanel({ attack }: { attack: TCGCardAttack }) {
   return (
-    <div className="glass-card group rounded-2xl p-6 transition-all hover:bg-card/60">
+    <div className="glass-card group p-6 transition-all hover:bg-card/60">
       <div className="mb-2 flex items-start justify-between gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex flex-wrap gap-1.5">
             {attack.cost?.map((cost, costIndex) => (
               <span
                 key={`${cost}-${costIndex}`}
-                className="rounded-full border border-border/60 bg-card/55 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/50"
+                className="rounded-sm border border-border/60 bg-card/55 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/50"
               >
                 {cost}
               </span>
@@ -504,22 +504,22 @@ function DetailSkeleton() {
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <div className="h-5 w-28 rounded-full bg-card/65 animate-pulse" />
-        <div className="h-12 w-3/4 rounded-full bg-card/60 animate-pulse" />
-        <div className="h-4 w-full rounded-full bg-card/55 animate-pulse" />
-        <div className="h-4 w-5/6 rounded-full bg-card/55 animate-pulse" />
+        <div className="h-5 w-28 rounded-sm bg-card/65 animate-pulse" />
+        <div className="h-12 w-3/4 rounded-sm bg-card/60 animate-pulse" />
+        <div className="h-4 w-full rounded-sm bg-card/55 animate-pulse" />
+        <div className="h-4 w-5/6 rounded-sm bg-card/55 animate-pulse" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="h-24 rounded-2xl bg-card/50 animate-pulse" />
+          <div key={index} className="h-24 rounded-sm bg-card/50 animate-pulse" />
         ))}
       </div>
 
       <div className="space-y-3">
-        <div className="h-4 w-32 rounded-full bg-card/60 animate-pulse" />
-        <div className="h-28 rounded-2xl bg-card/50 animate-pulse" />
-        <div className="h-28 rounded-2xl bg-card/50 animate-pulse" />
+        <div className="h-4 w-32 rounded-sm bg-card/60 animate-pulse" />
+        <div className="h-28 rounded-sm bg-card/50 animate-pulse" />
+        <div className="h-28 rounded-sm bg-card/50 animate-pulse" />
       </div>
     </div>
   );
@@ -539,9 +539,9 @@ function ActionPill({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-2xl border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all',
+        'rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
         active
-          ? 'border-primary/40 bg-primary/15 text-primary shadow-[0_0_18px_rgba(227,53,13,0.12)]'
+          ? 'border-primary/60 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
       )}
     >

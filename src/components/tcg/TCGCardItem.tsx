@@ -65,19 +65,19 @@ export const TCGCardItem = memo(function TCGCardItem({
             </p>
           </div>
 
-          <span className="shrink-0 rounded-full border border-border/50 bg-card/65 px-1 py-0.5 text-[6px] font-black uppercase tracking-[0.1em] text-foreground/40 sm:text-[7px]">
+          <span className="shrink-0 rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-[6px] font-black uppercase tracking-[0.1em] text-foreground/40 sm:text-[7px]">
             {card.rarity ?? t('tcg.none')}
           </span>
         </div>
 
         <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[6px] font-black uppercase tracking-[0.08em] text-foreground/40 sm:text-[7px]">
           {card.category && (
-            <span className="shrink-0 rounded-full border border-border/40 bg-muted/40 px-0.75 py-0.5">
+            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
               {card.category}
             </span>
           )}
           {card.hp ? (
-            <span className="shrink-0 rounded-full border border-border/40 bg-muted/40 px-0.75 py-0.5">
+            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
               HP {card.hp}
             </span>
           ) : null}

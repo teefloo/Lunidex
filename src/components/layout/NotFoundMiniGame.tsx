@@ -601,7 +601,7 @@ export default function NotFoundMiniGame() {
       <div className="mt-4 grid gap-4">
         <div
           className={cn(
-            'not-found-game-board relative aspect-[16/11] overflow-hidden rounded-2xl border border-border/60 shadow-[0_28px_80px_-56px_rgba(15,23,42,0.95)]',
+            'not-found-game-board relative aspect-[16/11] overflow-hidden rounded-sm border border-border/60 shadow-[0_28px_80px_-56px_rgba(15,23,42,0.95)]',
             hud.shakeFor > 0 && 'not-found-game-board--hit'
           )}
           data-maze-rows={layout.rows.join('|')}
@@ -640,8 +640,8 @@ export default function NotFoundMiniGame() {
           </div>
 
           {hud.status === 'won' && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/54 px-5 text-center backdrop-blur-[2px]">
-              <div className="max-w-sm rounded-2xl border border-white/12 bg-slate-950/76 p-5 text-white shadow-2xl">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/54 px-5 text-center ">
+              <div className="max-w-sm rounded-sm border border-white/12 bg-slate-950/76 p-5 text-white shadow-2xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-amber-200">
                   {statusLabel}
                 </p>
@@ -670,7 +670,7 @@ export default function NotFoundMiniGame() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <div className="glass-card rounded-2xl p-3 md:min-h-28">
+          <div className="glass-card rounded-sm p-3 md:min-h-28">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-foreground/40">
               {t('common.not_found_goal', { defaultValue: 'Goal' })}
             </p>
@@ -681,7 +681,7 @@ export default function NotFoundMiniGame() {
             </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-3 md:min-h-28">
+          <div className="glass-card rounded-sm p-3 md:min-h-28">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-foreground/40">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               <span>{t('common.not_found_controls', { defaultValue: 'Controls' })}</span>
@@ -693,7 +693,7 @@ export default function NotFoundMiniGame() {
             </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-3 md:min-h-28">
+          <div className="glass-card rounded-sm p-3 md:min-h-28">
             <div className="flex items-center justify-between gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-foreground/40">
               <span>{t('common.not_found_progress', { defaultValue: 'Sequence' })}</span>
               <span>{collectedCount}/{FRAGMENT_TOTAL}</span>
@@ -703,7 +703,7 @@ export default function NotFoundMiniGame() {
                 <span
                   key={fragment.id}
                   className={cn(
-                    'inline-flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-black',
+                    'inline-flex h-10 w-10 items-center justify-center rounded-sm border text-sm font-black',
                     fragment.found
                       ? 'border-primary/50 bg-primary/15 text-foreground'
                       : 'border-border/60 bg-background/60 text-foreground/35'
@@ -733,7 +733,7 @@ export default function NotFoundMiniGame() {
                 type="button"
                 variant="outline"
                 size="icon-sm"
-                className={cn('rounded-2xl touch-none', className)}
+                className={cn('rounded-sm touch-none', className)}
                 onPointerDown={() => holdDirection(direction)}
                 onPointerUp={releaseDirection}
                 onPointerCancel={releaseDirection}
@@ -769,7 +769,7 @@ function Metric({
   value: number | string;
 }) {
   return (
-    <div className="glass-card flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-center">
+    <div className="glass-card flex flex-col items-center gap-1 rounded-sm px-3 py-2 text-center">
       <Icon className="h-4 w-4 text-primary" />
       <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/40">{label}</span>
       <span className="text-lg font-black tabular-nums">{value}</span>

@@ -24,10 +24,10 @@ export function TCGProgressBar({
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className={cn('flex-1 overflow-hidden rounded-full bg-muted/40', heights[size])}>
+      <div className={cn('flex-1 overflow-hidden rounded-none bg-muted/40', heights[size])}>
         <div
           className={cn(
-            'h-full rounded-full transition-all duration-700 ease-out',
+            'h-full transition-all duration-700 ease-out',
             isComplete
               ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
               : 'bg-gradient-to-r from-primary/60 to-primary',

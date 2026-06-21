@@ -25,9 +25,9 @@ export function AdvancedInfo({ pokemon, species }: AdvancedInfoProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="bg-secondary/20 border border-border/40 p-5 rounded-2xl flex flex-col gap-4">
+      <div className="bg-secondary/20 border border-border/40 p-5 rounded-sm flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500">
+          <div className="p-2 bg-purple-500/10 rounded-sm text-purple-500">
             <Dna className="w-5 h-5" />
           </div>
           <h4 className="font-black text-sm uppercase tracking-wider">{t('detail.breeding')}</h4>
@@ -69,9 +69,9 @@ export function AdvancedInfo({ pokemon, species }: AdvancedInfoProps) {
         </div>
       </div>
 
-      <div className="bg-secondary/20 border border-border/40 p-5 rounded-2xl flex flex-col gap-4">
+      <div className="bg-secondary/20 border border-border/40 p-5 rounded-sm flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-yellow-500/10 rounded-xl text-yellow-500">
+          <div className="p-2 bg-yellow-500/10 rounded-sm text-yellow-500">
             <Target className="w-5 h-5" />
           </div>
           <h4 className="font-black text-sm uppercase tracking-wider">{t('detail.training')}</h4>

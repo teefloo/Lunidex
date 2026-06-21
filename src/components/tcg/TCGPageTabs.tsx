@@ -27,9 +27,9 @@ export function TCGPageTabs() {
           key={tab.href}
           href={tab.href}
           className={cn(
-            'relative rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition-all duration-200',
+            'relative rounded-sm px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition-all duration-100 hover:-translate-x-px hover:-translate-y-px',
             isActive(tab.href)
-              ? 'bg-primary/15 text-primary shadow-[0_0_12px_-4px_rgba(227,53,13,0.2)]'
+              ? 'border border-primary/40 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
               : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',
           )}
         >

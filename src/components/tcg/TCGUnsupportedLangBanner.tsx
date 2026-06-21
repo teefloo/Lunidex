@@ -30,7 +30,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
     return (
       <div
         role="status"
-        className={`flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 ${
+        className={`flex items-start gap-3 rounded-sm border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 ${
           variant === 'full' ? 'sm:px-5 sm:py-4' : ''
         }`}
       >
@@ -46,7 +46,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
                 setLanguage('en');
                 persistLanguageCookie('en');
               }}
-              className="inline-flex h-8 items-center rounded-full border border-amber-300/40 bg-amber-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-amber-100 transition-colors hover:border-amber-200/60 hover:bg-amber-500/25"
+              className="inline-flex h-8 items-center rounded-sm border border-amber-300/40 bg-amber-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-amber-100 transition-colors hover:border-amber-200/60 hover:bg-amber-500/25"
             >
               {t('tcg.try_english')}
             </button>
@@ -59,7 +59,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
           type="button"
           onClick={() => setDismissed(true)}
           aria-label={t('tcg.clear')}
-          className="shrink-0 rounded-full p-1 text-amber-200/60 transition-colors hover:bg-amber-500/15 hover:text-amber-100"
+          className="shrink-0 rounded-sm p-1 text-amber-200/60 transition-colors hover:bg-amber-500/15 hover:text-amber-100"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -70,7 +70,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
   return (
     <div
       role="status"
-      className="flex items-start gap-3 rounded-2xl border border-sky-500/30 bg-sky-500/10 px-4 py-3 text-sm text-sky-100"
+      className="flex items-start gap-3 rounded-sm border border-sky-500/30 bg-sky-500/10 px-4 py-3 text-sm text-sky-100"
     >
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" aria-hidden />
       <div className="min-w-0 flex-1 space-y-1">
@@ -84,7 +84,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
               setLanguage('en');
               persistLanguageCookie('en');
             }}
-            className="inline-flex h-8 items-center rounded-full border border-sky-300/40 bg-sky-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
+            className="inline-flex h-8 items-center rounded-sm border border-sky-300/40 bg-sky-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
           >
             {t('tcg.try_english')}
           </button>
@@ -94,7 +94,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
         type="button"
         onClick={() => setDismissed(true)}
         aria-label={t('tcg.clear')}
-        className="shrink-0 rounded-full p-1 text-sky-200/60 transition-colors hover:bg-sky-500/15 hover:text-sky-100"
+        className="shrink-0 rounded-sm p-1 text-sky-200/60 transition-colors hover:bg-sky-500/15 hover:text-sky-100"
       >
         <X className="h-3.5 w-3.5" />
       </button>

@@ -60,7 +60,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
       <div className="flex flex-wrap items-center gap-4">
         <Link
           href="/tcg/collection"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
+          className="flex h-9 w-9 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
@@ -119,14 +119,14 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('tcg.search_placeholder')}
-            className="h-9 w-full rounded-full border border-border/30 bg-card/40 pl-9 pr-4 text-xs font-bold text-foreground placeholder:text-foreground/25 focus:border-primary/40 focus:outline-none"
+            className="h-9 w-full rounded-sm border border-border/30 bg-card/40 pl-9 pr-4 text-xs font-bold text-foreground placeholder:text-foreground/25 focus:border-primary/40 focus:outline-none"
           />
         </div>
         {missingCards.length > 0 && (
           <button
             type="button"
             onClick={() => setShowMissingOnly((prev) => !prev)}
-            className={`shrink-0 rounded-full border px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] transition-colors ${
+            className={`shrink-0 rounded-sm border px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] transition-colors ${
               showMissingOnly
                 ? 'border-rose-500/50 bg-rose-500/20 text-rose-300'
                 : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'

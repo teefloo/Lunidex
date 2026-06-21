@@ -261,7 +261,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
                 applyQuickPreset('latest');
                 setIsFiltersOpen(false);
               }}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
             >
               <Sparkles className="h-3.5 w-3.5" />
               {t('tcg.latest_cards')}
@@ -327,7 +327,7 @@ function DiscoveryHero({
 
       <div className="mt-5 space-y-4">
         <div className="relative isolate">
-          <div className="pointer-events-none absolute left-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/45 bg-card/75 text-primary/80 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.45)]">
+          <div className="pointer-events-none absolute left-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-sm border border-border/45 bg-card/75 text-primary/80 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.45)]">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -341,7 +341,7 @@ function DiscoveryHero({
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="w-full md:w-[250px]">
-            <div className="relative overflow-hidden rounded-full">
+            <div className="relative overflow-hidden rounded-sm">
               <select
                 value={sortValue}
                 onChange={(event) => {
@@ -351,7 +351,7 @@ function DiscoveryHero({
                   ];
                   onSortChange(sortBy, sortOrder);
                 }}
-                className="h-11 w-full appearance-none rounded-full border border-border/50 bg-card/50 px-4 pr-11 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
+                className="h-11 w-full appearance-none rounded-sm border border-border/50 bg-card/50 px-4 pr-11 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
                 aria-label={t('tcg.sort_label')}
               >
                 <option value="name-asc">{t('tcg.sort_name_asc')}</option>
@@ -374,7 +374,7 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={onOpenFilters}
-            className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+            className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <Filter className="h-3.5 w-3.5" />
             {t('tcg.filters')}
@@ -383,7 +383,7 @@ function DiscoveryHero({
             <button
               type="button"
               onClick={onClearSearch}
-              className="inline-flex h-11 items-center gap-2 rounded-full border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500"
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500"
             >
               {t('tcg.clear')}
             </button>
@@ -456,7 +456,7 @@ function EmptyState({
 
   return (
     <div className="flex flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-border/50 bg-card/35 px-6 py-20 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-sm border border-primary/20 bg-primary/10 text-primary">
           <Sparkles className="h-7 w-7" />
         </div>
       <h2 className="text-2xl font-black uppercase tracking-[0.16em] text-foreground">
@@ -473,7 +473,7 @@ function EmptyState({
               setLanguage('en');
               persistLanguageCookie('en');
             }}
-            className="inline-flex h-11 items-center rounded-full border border-primary/40 bg-primary/15 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
+            className="inline-flex h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
           >
             {t('tcg.try_english')}
           </button>
@@ -481,21 +481,21 @@ function EmptyState({
         <button
           type="button"
           onClick={onClear}
-          className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.reset_filters')}
         </button>
         <button
           type="button"
           onClick={onLatest}
-          className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.latest_cards')}
         </button>
         <button
           type="button"
           onClick={onPikachu}
-          className="inline-flex h-11 items-center rounded-full border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.search_pikachu')}
         </button>

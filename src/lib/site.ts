@@ -36,9 +36,9 @@ export const TWITTER_HANDLE = '@primedex';
 export const TWITTER_URL = 'https://twitter.com/primedex';
 export const DISCORD_URL = 'https://discord.gg/primedex';
 
-export const PRIMARY_COLOR = '#e94560';
-export const BACKGROUND_COLOR = '#1a1612';
-export const ACCENT_COLOR = '#ff8a00';
+export const PRIMARY_COLOR = '#E8916B';
+export const BACKGROUND_COLOR = '#211A17';
+export const ACCENT_COLOR = '#A8C5E0';
 
 export const SOCIAL_PROFILES = [
   GITHUB_REPO_URL,

@@ -27,27 +27,27 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 function TypeChartSkeleton() {
   return (
-    <div className="glass-surface rounded-2xl overflow-hidden p-5 md:p-6 min-h-[44rem] animate-pulse">
+    <div className="glass-surface rounded-sm overflow-hidden p-5 md:p-6 min-h-[44rem] animate-pulse">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Skeleton className="h-11 w-11 rounded-xl" />
+          <Skeleton className="h-11 w-11 rounded-sm" />
           <div className="space-y-2">
-            <Skeleton className="h-5 w-44 rounded-full" />
-            <Skeleton className="h-3 w-64 rounded-full" />
+            <Skeleton className="h-5 w-44 rounded-sm" />
+            <Skeleton className="h-3 w-64 rounded-sm" />
           </div>
         </div>
-        <Skeleton className="h-10 w-10 rounded-xl" />
+        <Skeleton className="h-10 w-10 rounded-sm" />
       </div>
 
-      <Skeleton className="mt-4 h-14 w-full rounded-xl" />
+      <Skeleton className="mt-4 h-14 w-full rounded-sm" />
 
       <div className="mt-4 flex flex-wrap gap-3">
         {Array.from({ length: 4 }).map((_, idx) => (
-          <Skeleton key={idx} className="h-4 w-24 rounded-full" />
+          <Skeleton key={idx} className="h-4 w-24 rounded-sm" />
         ))}
       </div>
 
-      <div className="mt-5 rounded-xl border border-border/40 bg-background/40 p-3 md:p-5">
+      <div className="mt-5 rounded-sm border border-border/40 bg-background/40 p-3 md:p-5">
         <div className="min-w-[750px] space-y-2">
           {Array.from({ length: 19 }).map((_, rowIdx) => (
             <div key={rowIdx} className="grid grid-cols-[80px_repeat(18,minmax(0,1fr))] gap-[2px]">
@@ -136,10 +136,10 @@ export default function TypesPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-8"
           >
-            <div className="page-surface p-4 md:p-6 rounded-2xl relative overflow-hidden">
+            <div className="page-surface p-4 md:p-6 rounded-sm relative overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-secondary/30 rounded-xl">
+                <div className="p-2 bg-secondary/30 rounded-sm">
                   <Flame className="w-4 h-4 text-foreground/60" />
                 </div>
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
@@ -150,7 +150,7 @@ export default function TypesPage() {
                     key={type}
                     type="button"
                     className={cn(
-                      "flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-300",
+                      "flex items-center gap-2 px-3 py-2 rounded-sm border transition-all duration-300",
                       selectedType === type
                         ? "bg-card/70 border-border/70 shadow-lg"
                         : "bg-secondary/20 border-border/40 opacity-60 hover:opacity-100 hover:bg-secondary/30"
@@ -158,7 +158,7 @@ export default function TypesPage() {
                     aria-label={t(`types.${type}`)}
                   >
                     <div
-                      className="w-2.5 h-2.5 rounded-full shadow-sm"
+                      className="w-2.5 h-2.5 rounded-sm shadow-sm"
                       style={{ backgroundColor: TYPE_COLORS[type] }}
                     />
                     <span className="text-[10px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
@@ -173,23 +173,23 @@ export default function TypesPage() {
           </div>
 
           <div className="space-y-8">
-            <div className="page-surface p-6 md:p-8 rounded-2xl relative overflow-hidden group">
-              <Skeleton className="h-5 w-48 rounded-full mb-6" />
+            <div className="page-surface p-6 md:p-8 rounded-sm relative overflow-hidden group">
+              <Skeleton className="h-5 w-48 rounded-sm mb-6" />
               <div className="flex items-center gap-4 mb-8">
-                <Skeleton className="h-16 w-16 rounded-2xl" />
+                <Skeleton className="h-16 w-16 rounded-sm" />
                 <div className="space-y-3">
-                  <Skeleton className="h-10 w-48 rounded-full" />
-                  <Skeleton className="h-3 w-36 rounded-full" />
+                  <Skeleton className="h-10 w-48 rounded-sm" />
+                  <Skeleton className="h-3 w-36 rounded-sm" />
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {Array.from({ length: 2 }).map((_, idx) => (
                   <div key={idx} className="space-y-3">
-                    <Skeleton className="h-3 w-32 rounded-full" />
+                    <Skeleton className="h-3 w-32 rounded-sm" />
                     <div className="flex flex-wrap gap-2">
                       {Array.from({ length: 5 }).map((__, pillIdx) => (
-                        <Skeleton key={pillIdx} className="h-8 w-20 rounded-xl" />
+                        <Skeleton key={pillIdx} className="h-8 w-20 rounded-sm" />
                       ))}
                     </div>
                   </div>
@@ -199,8 +199,8 @@ export default function TypesPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               {Array.from({ length: 2 }).map((_, idx) => (
-                <div key={idx} className="bg-card/30 border border-border/40 backdrop-blur-xl p-5 rounded-2xl">
-                  <Skeleton className="h-3 w-24 rounded-full mb-3" />
+                <div key={idx} className="bg-card/30 border border-border/40  p-5 rounded-sm">
+                  <Skeleton className="h-3 w-24 rounded-sm mb-3" />
                   <div className="flex flex-wrap gap-1.5">
                     {Array.from({ length: 4 }).map((__, pillIdx) => (
                       <Skeleton key={pillIdx} className="h-6 w-16 rounded-lg" />
@@ -211,28 +211,28 @@ export default function TypesPage() {
             </div>
 
             <div className="space-y-6">
-              <Skeleton className="h-6 w-48 rounded-full" />
+              <Skeleton className="h-6 w-48 rounded-sm" />
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {Array.from({ length: 6 }).map((_, idx) => (
-                  <div key={idx} className="bg-card/50 border border-border/50 p-4 rounded-2xl flex flex-col items-center gap-3">
-                    <Skeleton className="h-20 w-20 rounded-full" />
-                    <Skeleton className="h-4 w-16 rounded-full" />
-                    <Skeleton className="h-3 w-10 rounded-full" />
+                  <div key={idx} className="bg-card/50 border border-border/50 p-4 rounded-sm flex flex-col items-center gap-3">
+                    <Skeleton className="h-20 w-20 rounded-sm" />
+                    <Skeleton className="h-4 w-16 rounded-sm" />
+                    <Skeleton className="h-3 w-10 rounded-sm" />
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="page-surface p-6 md:p-8 rounded-2xl relative overflow-hidden">
-              <Skeleton className="h-6 w-40 rounded-full mb-4" />
+            <div className="page-surface p-6 md:p-8 rounded-sm relative overflow-hidden">
+              <Skeleton className="h-6 w-40 rounded-sm mb-4" />
               <div className="space-y-3">
                 {Array.from({ length: 2 }).map((_, idx) => (
-                  <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-background/40 border border-border/40">
-                    <Skeleton className="h-9 w-9 rounded-xl" />
+                  <div key={idx} className="flex gap-4 p-4 rounded-sm bg-background/40 border border-border/40">
+                    <Skeleton className="h-9 w-9 rounded-sm" />
                     <div className="flex-1 space-y-2">
-                      <Skeleton className="h-4 w-28 rounded-full" />
-                      <Skeleton className="h-3 w-full rounded-full" />
-                      <Skeleton className="h-3 w-5/6 rounded-full" />
+                      <Skeleton className="h-4 w-28 rounded-sm" />
+                      <Skeleton className="h-3 w-full rounded-sm" />
+                      <Skeleton className="h-3 w-5/6 rounded-sm" />
                     </div>
                   </div>
                 ))}
@@ -273,10 +273,10 @@ export default function TypesPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8"
         >
-          <div className="page-surface p-4 md:p-6 rounded-2xl relative overflow-hidden">
+          <div className="page-surface p-4 md:p-6 rounded-sm relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-secondary/30 rounded-xl">
+              <div className="p-2 bg-secondary/30 rounded-sm">
                 <Flame className="w-4 h-4 text-foreground/60" />
               </div>
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
@@ -289,14 +289,14 @@ export default function TypesPage() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedType(type)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-300",
+                    "flex items-center gap-2 px-3 py-2 rounded-sm border transition-all duration-300",
                     selectedType === type
                       ? "bg-card/70 border-border/70 shadow-lg"
                       : "bg-secondary/20 border-border/40 opacity-60 hover:opacity-100 hover:bg-secondary/30"
                   )}
                 >
                   <div
-                    className="w-2.5 h-2.5 rounded-full shadow-sm"
+                    className="w-2.5 h-2.5 rounded-sm shadow-sm"
                     style={{ backgroundColor: TYPE_COLORS[type] }}
                   />
                   <span className="text-[10px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
@@ -327,7 +327,7 @@ export default function TypesPage() {
             className="space-y-8"
           >
             {/* Type Header Card */}
-            <motion.div variants={itemVariants} className="page-surface p-6 md:p-8 rounded-2xl relative overflow-hidden group">
+            <motion.div variants={itemVariants} className="page-surface p-6 md:p-8 rounded-sm relative overflow-hidden group">
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
               <div
                 className="absolute inset-x-0 top-0 h-32 opacity-60 transition-opacity duration-700 group-hover:opacity-80"
@@ -337,7 +337,7 @@ export default function TypesPage() {
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-8">
                   <div
-                    className="p-4 rounded-2xl text-primary-foreground shadow-xl"
+                    className="p-4 rounded-sm text-primary-foreground shadow-xl"
                     style={{ backgroundColor: TYPE_COLORS[selectedType] }}
                   >
                     {(() => {
@@ -364,7 +364,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.1 }}
-                          className="px-3 py-1.5 rounded-xl bg-yellow-500/5 border border-yellow-500/10 text-[10px] font-black uppercase hover:bg-yellow-500/10 transition-colors"
+                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[10px] font-black uppercase hover:bg-yellow-500/10 transition-colors"
                           style={{ color: TYPE_COLORS[t_rel.name] }}
                         >
                           {t(`types.${t_rel.name}`)}
@@ -385,7 +385,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.15 }}
-                          className="px-3 py-1.5 rounded-xl bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase hover:bg-green-500/10 transition-colors"
+                          className="px-3 py-1.5 rounded-sm bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase hover:bg-green-500/10 transition-colors"
                           style={{ color: TYPE_COLORS[t_rel.name] }}
                         >
                           {t(`types.${t_rel.name}`)}
@@ -397,7 +397,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.2 }}
-                          className="px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-[10px] font-black uppercase hover:bg-blue-500/10 transition-colors text-blue-400"
+                          className="px-3 py-1.5 rounded-sm bg-blue-500/5 border border-blue-500/10 text-[10px] font-black uppercase hover:bg-blue-500/10 transition-colors text-blue-400"
                         >
                           {t(`types.${t_rel.name}`)} ({t('types_page.immune')})
                         </motion.div>
@@ -410,8 +410,8 @@ export default function TypesPage() {
 
             {/* Weaknesses Warning */}
             <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-4">
-              <div className="bg-red-500/5 border border-red-500/10 backdrop-blur-xl p-5 rounded-2xl flex gap-4 items-start">
-                <div className="p-2 bg-red-500/10 rounded-xl h-fit flex-shrink-0">
+              <div className="bg-red-500/5 border border-red-500/10  p-5 rounded-sm flex gap-4 items-start">
+                <div className="p-2 bg-red-500/10 rounded-sm h-fit flex-shrink-0">
                   <ShieldAlert className="w-4 h-4 text-red-500" />
                 </div>
                 <div>
@@ -425,8 +425,8 @@ export default function TypesPage() {
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-500/5 border border-blue-500/10 backdrop-blur-xl p-5 rounded-2xl flex gap-4 items-start">
-                <div className="p-2 bg-blue-500/10 rounded-xl h-fit flex-shrink-0">
+              <div className="bg-blue-500/5 border border-blue-500/10  p-5 rounded-sm flex gap-4 items-start">
+                <div className="p-2 bg-blue-500/10 rounded-sm h-fit flex-shrink-0">
                   <Sword className="w-4 h-4 text-blue-500" />
                 </div>
                 <div>
@@ -445,7 +445,7 @@ export default function TypesPage() {
             {/* Emblematic Pokemon */}
             <motion.div variants={itemVariants} className="space-y-6">
               <h3 className="text-xl font-black px-2 flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-xl">
+                <div className="p-2 bg-primary/10 rounded-sm">
                   <Star className="w-5 h-5 text-primary" />
                 </div>
                 {t('types_page.emblematic')}
@@ -458,7 +458,7 @@ export default function TypesPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 p-4 rounded-2xl flex flex-col items-center group hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 active:scale-95 relative overflow-hidden"
+                      className="bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 p-4 rounded-sm flex flex-col items-center group hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 active:scale-95 relative overflow-hidden"
                     >
                       <div
                         className="absolute inset-x-0 top-0 h-12 opacity-0 transition-opacity duration-500 group-hover:opacity-70"
@@ -482,15 +482,15 @@ export default function TypesPage() {
             </motion.div>
 
             {/* Learning Tips */}
-            <motion.div variants={itemVariants} className="page-surface p-6 md:p-8 rounded-2xl relative overflow-hidden">
+            <motion.div variants={itemVariants} className="page-surface p-6 md:p-8 rounded-sm relative overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
               <h3 className="text-lg font-black mb-4 flex items-center gap-2">
                 <Info className="w-5 h-5 text-primary" />
                 {t('types_page.tips_title', { type: t(`types.${selectedType}`) })}
               </h3>
               <div className="space-y-3">
-                <div className="flex gap-4 p-4 rounded-2xl bg-background/40 border border-border/40">
-                  <div className="p-2 bg-red-500/10 rounded-xl h-fit flex-shrink-0">
+                <div className="flex gap-4 p-4 rounded-sm bg-background/40 border border-border/40">
+                  <div className="p-2 bg-red-500/10 rounded-sm h-fit flex-shrink-0">
                     <ShieldAlert className="w-4 h-4 text-red-500" />
                   </div>
                   <p className="text-xs text-foreground/60 leading-relaxed">
@@ -500,8 +500,8 @@ export default function TypesPage() {
                     })}
                   </p>
                 </div>
-                <div className="flex gap-4 p-4 rounded-2xl bg-background/40 border border-border/40">
-                  <div className="p-2 bg-blue-500/10 rounded-xl h-fit flex-shrink-0">
+                <div className="flex gap-4 p-4 rounded-sm bg-background/40 border border-border/40">
+                  <div className="p-2 bg-blue-500/10 rounded-sm h-fit flex-shrink-0">
                     <Sword className="w-4 h-4 text-blue-500" />
                   </div>
                   <p className="text-xs text-foreground/60 leading-relaxed">

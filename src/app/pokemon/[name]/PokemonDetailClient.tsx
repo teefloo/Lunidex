@@ -46,13 +46,13 @@ const EvolutionChain = dynamic(() => import('@/components/pokemon/EvolutionChain
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 const AdvancedInfo = dynamic(() => import('@/components/pokemon/AdvancedInfo').then(m => m.AdvancedInfo), {
-  loading: () => <div className="h-40 animate-pulse bg-card/50 rounded-2xl" />
+  loading: () => <div className="h-40 animate-pulse bg-card/50 rounded-sm" />
 });
 const PokemonBuilds = dynamic(() => import('@/components/pokemon/PokemonBuilds').then(m => m.PokemonBuilds), {
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 const HeightComparison = dynamic(() => import('@/components/pokemon/HeightComparison').then(m => m.HeightComparison), {
-  loading: () => <div className="h-40 animate-pulse bg-card/50 rounded-2xl" />
+  loading: () => <div className="h-40 animate-pulse bg-card/50 rounded-sm" />
 });
 const PokemonCards = dynamic(() => import('@/components/pokemon/PokemonCards').then(m => m.PokemonCards), {
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
@@ -79,8 +79,8 @@ function ItemCard({ item, language }: { item: HeldItem; language: string }) {
   const itemDesc = item.description[language as 'en' | 'fr'] || item.description.en;
 
   return (
-    <div className="flex gap-3 p-4 bg-secondary/20 border border-border/40 rounded-2xl group hover:bg-secondary/40 transition-colors">
-      <div className="flex-shrink-0 w-12 h-12 bg-background/50 rounded-xl flex items-center justify-center p-2 border border-border/40 overflow-hidden">
+    <div className="flex gap-3 p-4 bg-secondary/20 border border-border/40 rounded-sm group hover:bg-secondary/40 transition-colors">
+      <div className="flex-shrink-0 w-12 h-12 bg-background/50 rounded-sm flex items-center justify-center p-2 border border-border/40 overflow-hidden">
         {!imgError ? (
           <Image 
             src={item.iconUrl} 
@@ -333,7 +333,7 @@ export function PokemonDetailClient({
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">
         <button
           onClick={() => router.push('/')}
-          className="fixed top-[calc(6rem+env(safe-area-inset-top))] left-4 md:left-12 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55 backdrop-blur-2xl rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
+          className="fixed top-[calc(6rem+env(safe-area-inset-top))] left-4 md:left-12 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55  rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
           aria-label={t('common.back') || 'Go back'}
         >
           <ArrowLeft className="w-6 h-6" />
@@ -345,7 +345,7 @@ export function PokemonDetailClient({
             variant="outline"
             size="icon"
             onClick={handleShare}
-            className="rounded-full transition-all h-12 w-12 bg-card/55 border-border/50 text-foreground/60 hover:bg-card/75 hover:border-border/70 backdrop-blur-xl"
+            className="rounded-full transition-all h-12 w-12 bg-card/55 border-border/50 text-foreground/60 hover:bg-card/75 hover:border-border/70 "
             title={t('detail.share')}
             aria-label={t('detail.share') || 'Share this Pokémon'}
           >
@@ -360,7 +360,7 @@ export function PokemonDetailClient({
               "rounded-full transition-all h-12 w-12",
               showShiny 
                 ? "bg-yellow-500/15 border-yellow-500/30 text-yellow-400 shadow-[0_4px_16px_-4px_rgba(234,179,8,0.3)]" 
-                : "bg-card/55 border-border/50 text-foreground/50 backdrop-blur-xl"
+                : "bg-card/55 border-border/50 text-foreground/50 "
             )}
             title={t('detail.shiny')}
             aria-label={showShiny ? t('detail.show_normal') || 'Show normal version' : t('detail.show_shiny') || 'Show shiny version'}
@@ -377,7 +377,7 @@ export function PokemonDetailClient({
               "rounded-full transition-all h-12 w-12",
               isFav
                 ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)] shadow-[0_4px_16px_-4px_color-mix(in_oklab,var(--chip)_30%,transparent)] hover:brightness-110"
-                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70 backdrop-blur-xl"
+                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70 "
             )}
             title={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
             aria-label={isFav ? t('card.remove_favorite') || 'Remove from favorites' : t('card.add_favorite') || 'Add to favorites'}
@@ -511,29 +511,29 @@ export function PokemonDetailClient({
           className="max-w-4xl mx-auto"
         >          <Tabs defaultValue="about" className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
-              <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-2xl bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-4 lg:grid-cols-8 overflow-x-scroll">
-                <TabsTrigger value="about" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-4 lg:grid-cols-8 overflow-x-scroll">
+                <TabsTrigger value="about" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.about')}
                 </TabsTrigger>
-                <TabsTrigger value="stats" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="stats" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.stats')}
                 </TabsTrigger>
-                <TabsTrigger value="evolution" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="evolution" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.evolution')}
                 </TabsTrigger>
-                <TabsTrigger value="moves" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="moves" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.moveset')}
                 </TabsTrigger>
-                <TabsTrigger value="breeding" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="breeding" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.breeding')}
                 </TabsTrigger>
-                <TabsTrigger value="builds" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="builds" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.builds')}
                 </TabsTrigger>
-                <TabsTrigger value="locations" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="locations" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.where_to_find')}
                 </TabsTrigger>
-                <TabsTrigger value="cards" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-xl text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="cards" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.cards')}
                 </TabsTrigger>
               </TabsList>
@@ -545,10 +545,10 @@ export function PokemonDetailClient({
             
             {/* About Tab */}
             <TabsContent value="about" className="space-y-6">
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
+              <div className="glass-panel p-6 md:p-8 rounded-sm">
                 <h2 className="text-xl font-black mb-4 text-foreground/90 border-b border-border/60 pb-4">{t('detail.entry')}</h2>
                 {!species ? (
-                  <div className="h-24 animate-pulse bg-card/50 rounded-2xl" />
+                  <div className="h-24 animate-pulse bg-card/50 rounded-sm" />
                 ) : (
                   <p className="text-base text-foreground/70 leading-relaxed font-medium">
                     {flavorText || t('detail.no_description')}
@@ -556,12 +556,12 @@ export function PokemonDetailClient({
                 )}
 
                 <div className="grid grid-cols-2 gap-3 mt-6">
-                  <div className="bg-secondary/30 border border-border/40 p-4 rounded-2xl flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
+                  <div className="bg-secondary/30 border border-border/40 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
                     <Weight className="w-5 h-5 text-foreground/40 mb-2 group-hover:text-primary transition-colors" />
                     <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.weight')}</p>
                     <p className="text-lg font-black text-foreground/90">{pokemon.weight / 10} kg</p>
                   </div>
-                  <div className="bg-secondary/30 border border-border/40 p-4 rounded-2xl flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
+                  <div className="bg-secondary/30 border border-border/40 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
                     <Ruler className="w-5 h-5 text-foreground/40 mb-2 group-hover:text-primary transition-colors" />
                     <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.height')}</p>
                     <p className="text-lg font-black text-foreground/90">{pokemon.height / 10} m</p>
@@ -573,15 +573,15 @@ export function PokemonDetailClient({
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.pokedex_data')}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-2xl flex flex-col gap-2">
+                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm flex flex-col gap-2">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.order')}</p>
                       <p className="text-lg font-black text-foreground/90">#{pokemon.order}</p>
                     </div>
-                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-2xl flex flex-col gap-2">
+                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm flex flex-col gap-2">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.default_form')}</p>
                       <p className="text-lg font-black text-foreground/90">{pokemon.is_default ? t('detail.yes') : t('detail.no')}</p>
                     </div>
-                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-2xl md:col-span-2 flex flex-col gap-3">
+                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.forms')}</p>
                         <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">{forms.length}</span>
@@ -590,14 +590,14 @@ export function PokemonDetailClient({
                         {forms.map((form) => (
                           <span
                             key={form.name}
-                            className="px-3 py-1.5 rounded-xl bg-background/40 border border-border/40 text-xs font-black text-foreground/80"
+                            className="px-3 py-1.5 rounded-sm bg-background/40 border border-border/40 text-xs font-black text-foreground/80"
                           >
                             {getFormDisplayName(form.name, baseLocalizedName, resolvedLang)}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-2xl md:col-span-2 flex flex-col gap-3">
+                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.game_indices')}</p>
                         <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">
@@ -608,14 +608,14 @@ export function PokemonDetailClient({
                         {gameIndices.map((entry) => (
                           <span
                             key={`${entry.version.name}-${entry.game_index}`}
-                            className="px-3 py-1.5 rounded-xl bg-background/40 border border-border/40 text-xs font-black text-foreground/80"
+                            className="px-3 py-1.5 rounded-sm bg-background/40 border border-border/40 text-xs font-black text-foreground/80"
                           >
                             {formatName(entry.version.name)} · #{entry.game_index}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-2xl md:col-span-2 flex flex-col gap-3">
+                    <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.held_items')}</p>
                         <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">{heldItems.length}</span>
@@ -623,7 +623,7 @@ export function PokemonDetailClient({
                       {heldItems.length > 0 ? (
                         <div className="space-y-3">
                           {heldItems.map((heldItem) => (
-                            <div key={heldItem.item.name} className="rounded-2xl border border-border/40 bg-background/35 p-3">
+                            <div key={heldItem.item.name} className="rounded-sm border border-border/40 bg-background/35 p-3">
                               <div className="flex items-center justify-between gap-3">
                                 <span className="text-sm font-black text-foreground/85">{formatName(heldItem.item.name)}</span>
                               </div>
@@ -641,7 +641,7 @@ export function PokemonDetailClient({
                           ))}
                         </div>
                       ) : (
-                        <div className="rounded-2xl border border-dashed border-border/60 bg-background/20 p-4 text-center text-xs text-foreground/50">
+                        <div className="rounded-sm border border-dashed border-border/60 bg-background/20 p-4 text-center text-xs text-foreground/50">
                           {t('detail.no_held_items')}
                         </div>
                       )}
@@ -686,7 +686,7 @@ export function PokemonDetailClient({
                       }
 
                       return (
-                        <div key={a.ability.name} className="flex flex-col gap-2 p-4 bg-secondary/20 border border-border/40 rounded-2xl group hover:bg-secondary/40 transition-colors">
+                        <div key={a.ability.name} className="flex flex-col gap-2 p-4 bg-secondary/20 border border-border/40 rounded-sm group hover:bg-secondary/40 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="font-black text-sm text-foreground/80 group-hover:text-primary transition-colors">{localizedName}</span>
@@ -695,7 +695,7 @@ export function PokemonDetailClient({
                             {abilityQueries[originalIdx]?.isLoading && <Loader2 className="w-3 h-3 animate-spin text-primary/50" />}
                           </div>
                           {battleDesc && (
-                            <div className="flex items-start gap-2 p-2.5 bg-primary/5 border border-primary/10 rounded-xl">
+                            <div className="flex items-start gap-2 p-2.5 bg-primary/5 border border-primary/10 rounded-sm">
                               <Zap className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
                               <p className="text-xs text-primary/90 leading-relaxed font-medium">
                                 {battleDesc}
@@ -719,7 +719,7 @@ export function PokemonDetailClient({
                     {(() => {
                       const items = getRecommendedItems(pokemon);
                       if (!items.length) {
-                        return <div className="col-span-full p-4 text-center text-xs text-foreground/50 bg-secondary/20 rounded-2xl border border-border/40">{t('detail.no_items')}</div>;
+                        return <div className="col-span-full p-4 text-center text-xs text-foreground/50 bg-secondary/20 rounded-sm border border-border/40">{t('detail.no_items')}</div>;
                       }
                       return items.map(item => (
                         <ItemCard key={item.id} item={item} language={language} />
@@ -731,7 +731,7 @@ export function PokemonDetailClient({
 
               {species && <AdvancedInfo pokemon={pokemon} species={species} />}
 
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
+              <div className="glass-panel p-6 md:p-8 rounded-sm">
                 <HeightComparison 
                   pokemonHeight={pokemon.height} 
                   pokemonName={displayName} 
@@ -742,10 +742,10 @@ export function PokemonDetailClient({
 
             {/* Stats Tab */}
             <TabsContent value="stats" className="space-y-6">
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
+              <div className="glass-panel p-6 md:p-8 rounded-sm">
                 <div className="flex justify-between items-center mb-8 pb-4 border-b border-border/60">
                   <h3 className="text-2xl font-black text-foreground/90 flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-xl">
+                    <div className="p-2 bg-primary/10 rounded-sm">
                       <Swords className="w-6 h-6 text-primary" />
                     </div>
                     {t('detail.combat_stats')}
@@ -785,9 +785,9 @@ export function PokemonDetailClient({
                 </div>
               </div>
 
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
+              <div className="glass-panel p-6 md:p-8 rounded-sm">
                 <h3 className="text-2xl font-black text-foreground/90 flex items-center gap-3 mb-8 pb-4 border-b border-border/60">
-                  <div className="p-2 bg-blue-500/10 rounded-xl">
+                  <div className="p-2 bg-blue-500/10 rounded-sm">
                     <ShieldCheck className="w-6 h-6 text-blue-500" />
                   </div>
                   {t('detail.defensive_coverage')}
@@ -806,7 +806,7 @@ export function PokemonDetailClient({
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.weaknesses.map(([type, multiplier]) => (
-                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-secondary/20">
+                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
                               <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[11px] md:text-[10px] font-black opacity-40">x{multiplier}</span>
                             </div>
@@ -822,13 +822,13 @@ export function PokemonDetailClient({
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.resistances.map(([type, multiplier]) => (
-                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-secondary/20">
+                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
                               <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[11px] md:text-[10px] font-black opacity-40">x{multiplier}</span>
                             </div>
                           ))}
                           {effectiveness.immunities.map(([type]) => (
-                            <div key={type} className="flex items-center justify-between p-2 rounded-xl bg-background/40 border border-blue-500/20">
+                            <div key={type} className="flex items-center justify-between p-2 rounded-sm bg-background/40 border border-blue-500/20">
                               <span className="text-[10px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[11px] md:text-[10px] font-black text-blue-400">{t('detail.immune')}</span>
                             </div>
@@ -844,7 +844,7 @@ export function PokemonDetailClient({
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.immunities.map(([type]) => (
-                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-secondary/20">
+                            <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
                               <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[11px] md:text-[10px] font-black opacity-40">x0</span>
                             </div>
@@ -865,12 +865,12 @@ export function PokemonDetailClient({
             {/* Evolution Tab */}
             <TabsContent value="evolution" className="space-y-6">
               {species?.evolution_chain?.url ? (
-                <div className="glass-panel p-6 md:p-8 rounded-2xl">
+                <div className="glass-panel p-6 md:p-8 rounded-sm">
                   <h3 className="text-xl font-black mb-8 text-foreground/90 border-b border-border/60 pb-4 text-center">{t('detail.evolution_chain')}</h3>
                   <EvolutionChain url={species.evolution_chain.url} currentSpeciesName={name.split('-')[0] || name} speciesData={species} />
                 </div>
               ) : (
-                <div className="glass-panel p-6 md:p-8 rounded-2xl flex items-center justify-center min-h-[200px]">
+                <div className="glass-panel p-6 md:p-8 rounded-sm flex items-center justify-center min-h-[200px]">
                   <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm">{t('detail.no_evolution')}</p>
                 </div>
               )}
@@ -879,17 +879,17 @@ export function PokemonDetailClient({
             {/* Breeding Tab */}
             <TabsContent value="breeding" className="space-y-6">
               {species ? (
-                <div className="glass-panel p-6 md:p-8 rounded-2xl space-y-6">
+                <div className="glass-panel p-6 md:p-8 rounded-sm space-y-6">
                   <h3 className="text-xl font-black mb-4 text-foreground/90 border-b border-border/60 pb-4">{t('detail.breeding')}</h3>
                   
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.egg_groups')}</p>
                       <p className="text-sm font-black text-foreground/90">
                         {species.egg_groups?.map(g => t(`egg_groups.${g.name}`)).join(', ') || t('detail.no_evolution')}
                       </p>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.gender_ratio')}</p>
                       <p className="text-sm font-black text-foreground/90">
                         {genderRate !== null ? (
@@ -899,29 +899,29 @@ export function PokemonDetailClient({
                         ) : '-'}
                       </p>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.catch_rate')}</p>
                       <p className="text-sm font-black text-foreground/90">{species.capture_rate || '-'}</p>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_happiness')}</p>
                       <p className="text-sm font-black text-foreground/90">{species.base_happiness || '-'}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/60">
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.growth_rate')}</p>
                       <p className="text-sm font-black text-foreground/90">{species.growth_rate ? t(`growth_rates.${species.growth_rate.name}`) : '-'}</p>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-2xl border border-border/40">
+                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
                       <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_exp')}</p>
                       <p className="text-sm font-black text-foreground/90">{pokemon.base_experience || '-'}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="glass-panel p-6 md:p-8 rounded-2xl flex items-center justify-center min-h-[200px]">
+                <div className="glass-panel p-6 md:p-8 rounded-sm flex items-center justify-center min-h-[200px]">
                   <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm">{t('detail.no_evolution')}</p>
                 </div>
               )}
@@ -934,9 +934,9 @@ export function PokemonDetailClient({
 
             {/* Locations Tab */}
             <TabsContent value="locations" className="space-y-6">
-              <div className="glass-panel p-6 md:p-8 rounded-2xl">
+              <div className="glass-panel p-6 md:p-8 rounded-sm">
                 <h3 className="text-2xl font-black text-foreground/90 flex items-center gap-3 mb-8 pb-4 border-b border-border/60">
-                  <div className="p-2 bg-green-500/10 rounded-xl">
+                  <div className="p-2 bg-green-500/10 rounded-sm">
                     <MapPin className="w-6 h-6 text-green-500" />
                   </div>
                   {t('detail.where_to_find')}
@@ -945,9 +945,9 @@ export function PokemonDetailClient({
                 {encounters && encounters.length > 0 ? (
                   <div className="grid grid-cols-1 gap-4">
                     {encounters.map((enc: PokemonEncounter, i: number) => (
-                      <div key={i} className="p-6 bg-secondary/20 border border-border/40 rounded-2xl space-y-4">
+                      <div key={i} className="p-6 bg-secondary/20 border border-border/40 rounded-sm space-y-4">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-background/40 rounded-xl">
+                          <div className="p-2 bg-background/40 rounded-sm">
                             <MapPin className="w-4 h-4 text-primary" />
                           </div>
                           <span className="font-black text-base text-foreground/80 capitalize">
@@ -957,7 +957,7 @@ export function PokemonDetailClient({
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {enc.version_details.map((vd: PokemonEncounterVersionDetail, vi: number) => (
-                            <div key={vi} className="p-4 bg-background/40 rounded-2xl border border-border/40 flex flex-col gap-2">
+                            <div key={vi} className="p-4 bg-background/40 rounded-sm border border-border/40 flex flex-col gap-2">
                               <div className="flex items-center mb-1">
                                 <span className="text-[10px] font-black uppercase text-primary/60">{formatName(vd.version.name)}</span>
                               </div>
@@ -1026,7 +1026,7 @@ export function PokemonDetailClient({
             size="default"
             onClick={(e) => { e.stopPropagation(); if (pokemon?.id) toggleCaught(pokemon.id); }}
             className={cn(
-              "flex-1 h-12 rounded-xl transition-all gap-2 border-0",
+              "flex-1 h-12 rounded-sm transition-all gap-2 border-0",
               pokemon?.id && isCaught(pokemon.id)
                 ? "bg-primary text-primary-foreground shadow-[0_4px_16px_rgba(227,53,13,0.4)]"
                 : "bg-card/50 text-foreground/70"
@@ -1054,7 +1054,7 @@ export function PokemonDetailClient({
             }}
             style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
             className={cn(
-              "h-12 w-12 rounded-xl transition-all border-0",
+              "h-12 w-12 rounded-sm transition-all border-0",
               pokemon?.id && isFavorite(pokemon.id)
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
@@ -1081,7 +1081,7 @@ export function PokemonDetailClient({
             }}
             style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
             className={cn(
-              "h-12 w-12 rounded-xl transition-all border-0",
+              "h-12 w-12 rounded-sm transition-all border-0",
               pokemon?.id && isInCompare(pokemon.id)
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
@@ -1109,7 +1109,7 @@ export function PokemonDetailClient({
             }}
             style={{ '--chip': 'var(--action-team)' } as CSSProperties}
             className={cn(
-              "h-12 w-12 rounded-xl transition-all border-0",
+              "h-12 w-12 rounded-sm transition-all border-0",
               pokemon?.id && isInTeam(pokemon.id)
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"

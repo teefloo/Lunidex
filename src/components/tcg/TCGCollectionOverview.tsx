@@ -79,19 +79,19 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
     <div className="space-y-8">
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-border/20 bg-card/30 p-4">
+        <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
           <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
             {t('tcg.collection_total_owned')}
           </p>
           <p className="mt-1 text-2xl font-black">{stats.totalOwned}</p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-card/30 p-4">
+        <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
           <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
             {t('tcg.collection_total_cards')}
           </p>
           <p className="mt-1 text-2xl font-black">{stats.totalCards}</p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-card/30 p-4">
+        <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
           <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
             {t('tcg.collection_overall_progress')}
           </p>
@@ -103,7 +103,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
           />
           <p className="mt-1 text-xl font-black">{stats.percentage}%</p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-card/30 p-4">
+        <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
           <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
             {t('tcg.collection_active_sets_plural')}
           </p>
@@ -121,7 +121,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
             </h2>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-8 items-center gap-2 rounded-full border border-border/30 bg-card/40 pl-3 pr-3 focus-within:border-primary/40 sm:w-48 w-32">
+            <div className="flex h-8 items-center gap-2 rounded-sm border border-border/30 bg-card/40 pl-3 pr-3 focus-within:border-primary/40 sm:w-48 w-32">
               <Search className="h-3 w-3 shrink-0 text-foreground/30" />
               <input
                 type="text"
@@ -131,7 +131,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
                 className="min-w-0 flex-1 bg-transparent text-[9px] font-bold text-foreground placeholder:text-foreground/25 focus:outline-none"
               />
             </div>
-            <div className="flex h-8 items-center gap-1 rounded-full border border-border/30 bg-card/40 pl-3 pr-2 focus-within:border-primary/40">
+            <div className="flex h-8 items-center gap-1 rounded-sm border border-border/30 bg-card/40 pl-3 pr-2 focus-within:border-primary/40">
               <select
                 value={sortMode}
                 onChange={(e) => setSortMode(e.target.value as typeof sortMode)}
@@ -149,7 +149,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
             <button
               type="button"
               onClick={() => setFilterInProgress(!filterInProgress)}
-              className={`h-8 shrink-0 rounded-full border px-3 text-[9px] font-bold transition-colors ${
+              className={`h-8 shrink-0 rounded-sm border px-3 text-[9px] font-bold transition-colors ${
                 filterInProgress
                   ? 'border-primary/40 bg-primary/15 text-primary'
                   : 'border-border/30 bg-card/40 text-foreground/70 hover:border-primary/30 hover:text-primary/60'
@@ -175,10 +175,10 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
                 <Link
                   key={set.id}
                   href={`/tcg/collection/${set.id}`}
-                  className="group flex items-center gap-4 rounded-xl border border-border/15 bg-card/30 p-4 transition-all hover:border-primary/20 hover:bg-card/50"
+                  className="group flex items-center gap-4 rounded-sm border border-border/15 bg-card/30 p-4 transition-all hover:border-primary/20 hover:bg-card/50 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px"
                 >
                   {set.logo && (
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-card/40">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-sm bg-card/40">
                       <Image src={set.logo} alt={set.name} fill sizes="48px" className="object-contain p-1" />
                     </div>
                   )}
@@ -195,7 +195,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {isComplete && (
-                      <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.08em] text-emerald-400">
+                      <span className="rounded-sm bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.08em] text-emerald-400">
                         {t('tcg.collection_complete')}
                       </span>
                     )}
@@ -206,7 +206,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
                         e.stopPropagation();
                         toggleTCGActiveSet(set.id);
                       }}
-                      className={`rounded-full border px-2.5 py-1 text-[8px] font-black uppercase tracking-[0.06em] transition-colors ${
+                      className={`rounded-sm border px-2.5 py-1 text-[8px] font-black uppercase tracking-[0.06em] transition-colors ${
                         isActive
                           ? 'border-primary/30 bg-primary/10 text-primary'
                           : 'border-border/30 text-foreground/30 hover:border-primary/30 hover:text-primary/60'

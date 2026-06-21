@@ -98,7 +98,7 @@ export default function SearchBar() {
             setLocalSearch('');
             setSearchTerm('');
           }}
-          className="absolute right-6 z-10 rounded-full p-3 text-foreground/60 transition-all duration-300 hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="absolute right-6 z-10 rounded-sm p-3 text-foreground/60 transition-all duration-100 hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={clearLabel}
         >
           <X className="w-5 h-5" />

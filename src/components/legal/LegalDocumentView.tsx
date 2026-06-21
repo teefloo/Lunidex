@@ -131,7 +131,7 @@ export default function LegalDocumentView({
 
       <nav
         aria-label="Table of contents"
-        className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4"
+        className="rounded-sm border border-foreground/10 bg-foreground/[0.02] p-4"
       >
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Table of contents

@@ -52,7 +52,7 @@ export default function GenerationPicker({ value, onChange, label }: GenerationP
         <SelectPrimitive.Positioner sideOffset={6} align="end">
           <SelectPrimitive.Popup
             className={cn(
-              'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/60 bg-card/95 p-1 shadow-xl backdrop-blur-xl'
+              'z-50 min-w-[10rem] overflow-hidden rounded-sm border border-border/60 bg-card/95 p-1 shadow-xl '
             )}
           >
             {GENERATION_OPTIONS.map(option => (

@@ -148,7 +148,7 @@ export function HeaderSearch({
               : undefined
           }
           role="combobox"
-          className="w-full min-w-0 rounded-full border border-border/60 bg-card/60 py-2 pl-9 pr-4 text-left text-[10px] font-semibold text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)] backdrop-blur-xl transition-all duration-300 placeholder:text-foreground/35 focus:border-primary/35 focus:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-xs"
+          className="w-full min-w-0 rounded-full border border-border/60 bg-card/60 py-2 pl-9 pr-4 text-left text-[10px] font-semibold text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)]  transition-all duration-300 placeholder:text-foreground/35 focus:border-primary/35 focus:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-xs"
         />
       </div>
 
@@ -159,7 +159,7 @@ export function HeaderSearch({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="glass-surface absolute left-0 top-full z-50 mt-2 w-64 !overflow-hidden rounded-xl p-2"
+          className="glass-surface absolute left-0 top-full z-50 mt-2 w-64 !overflow-hidden rounded-sm p-2"
         >
             <div id={SEARCH_LISTBOX_ID} role="listbox" aria-label={searchPlaceholder} className="flex flex-col gap-1">
               {searchResults.map((pokemon, index) => {
@@ -181,7 +181,7 @@ export function HeaderSearch({
                     onMouseEnter={() => setActiveIndex(index)}
                     onClick={() => selectPokemon(pokemon)}
                   className={cn(
-                      'group/item flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors',
+                      'group/item flex w-full cursor-pointer items-center gap-3 rounded-sm p-2.5 text-left transition-colors',
                       isActive ? 'bg-muted/80 ring-1 ring-primary/30' : 'hover:bg-muted/70'
                     )}
                   >

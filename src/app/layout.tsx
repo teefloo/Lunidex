@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope, JetBrains_Mono } from "next/font/google";
+import { Pixelify_Sans, VT323, Nunito } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -22,17 +22,15 @@ import {
   FEATURE_LIST,
 } from "@/lib/site";
 
-const displayFont = Fraunces({
+const displayFont = Pixelify_Sans({
   subsets: ["latin"],
-  weight: "variable",
-  style: ["normal", "italic"],
+  weight: ["400", "500", "700"],
   variable: "--font-display",
   display: "optional",
   preload: false,
-  axes: ["opsz", "SOFT"],
 });
 
-const bodyFont = Manrope({
+const bodyFont = Nunito({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-body",
@@ -40,9 +38,9 @@ const bodyFont = Manrope({
   preload: true,
 });
 
-const monoFont = JetBrains_Mono({
+const monoFont = VT323({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
   variable: "--font-mono",
   display: "swap",
   preload: false,
@@ -50,8 +48,8 @@ const monoFont = JetBrains_Mono({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f4ecd8' },
-    { media: '(prefers-color-scheme: dark)', color: BACKGROUND_COLOR },
+    { media: '(prefers-color-scheme: light)', color: '#F4EAD5' },
+    { media: '(prefers-color-scheme: dark)', color: '#211A17' },
   ],
   width: 'device-width',
   initialScale: 1,

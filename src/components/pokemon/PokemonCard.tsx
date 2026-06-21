@@ -60,25 +60,25 @@ function hexToRgba(hex: string, alpha: number) {
 
 // Active state for an action toggle — tinted by the element's --chip accent.
 const CHIP_ACTIVE =
-  'border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)] shadow-[0_0_14px_color-mix(in_oklab,var(--chip)_26%,transparent)]';
+  'border-[color-mix(in_oklab,var(--chip)_55%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)] shadow-[2px_2px_0_color-mix(in_oklab,var(--chip)_35%,transparent)]';
 
 export function PokemonCardSkeleton() {
   return (
     <div className="py-1 px-1">
-      <div className="relative min-h-[18rem] p-4 flex flex-col animate-pulse rounded-[1.15rem] border border-border/50 bg-card/60 overflow-hidden">
+      <div className="relative min-h-[18rem] p-4 flex flex-col animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
           <div className="flex gap-1.5">
-            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
-            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
-            <Skeleton className="h-11 w-11 rounded-full bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-sm bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-sm bg-muted/40" />
+            <Skeleton className="h-11 w-11 rounded-sm bg-muted/40" />
           </div>
         </div>
-        <Skeleton className="w-28 h-28 rounded-full bg-muted/40 my-3 mx-auto" />
+        <Skeleton className="w-28 h-28 rounded-sm bg-muted/40 my-3 mx-auto" />
         <div className="mt-auto w-full flex flex-col items-center gap-2">
           <Skeleton className="h-3 w-20 bg-muted/40" />
           <Skeleton className="h-6 w-32 bg-muted/40" />
-          <Skeleton className="h-5 w-16 rounded-full bg-muted/40" />
+          <Skeleton className="h-5 w-16 rounded-sm bg-muted/40" />
         </div>
       </div>
     </div>
@@ -234,7 +234,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const cardBackground = [
     `linear-gradient(165deg, ${hexToRgba(color, 0.07)} 0%, transparent 35%, ${hexToRgba(color, 0.05)} 100%)`,
   ].join(', ');
-  const cardShadow = `0 14px 36px -28px ${hexToRgba(color, 0.4)}, 0 2px 6px -3px rgba(20, 14, 8, 0.08)`;
+  const cardShadow = `4px 4px 0 ${hexToRgba(color, 0.45)}`;
   const isLegendary = pokemon.is_legendary;
   const isMythical = pokemon.is_mythical;
 
@@ -242,11 +242,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     <Link
       href={`/pokemon/${name}`}
       aria-label={cardLabel}
-      className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-[1.35rem]"
+      className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
       onMouseEnter={prefetchDetails}
     >
       <article
-        className="relative flex min-h-[18rem] flex-col rounded-[1.15rem] border border-border/50 bg-card/60 p-1.5 transition-all duration-500 hover:-translate-y-1 sm:p-2"
+        className="relative flex min-h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
           '--type-color': color,
           backgroundImage: cardBackground,
@@ -276,7 +276,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
               style={{ '--chip': 'var(--action-team)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
@@ -293,7 +293,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
               style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
@@ -309,7 +309,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
               style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-full border p-1 backdrop-blur-md transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90'
@@ -337,10 +337,10 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         </div>
 
         <div className="relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
-          <p className="latin-name font-display text-[10px] italic text-muted-foreground/80 sm:text-[11px]" style={{ fontVariationSettings: '"opsz" 9' }}>
+          <p className="latin-name font-display text-[10px] italic text-muted-foreground/80 sm:text-[11px]">
             {pokemonName.replace(/-/g, ' ')}
           </p>
-          <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base" style={{ fontVariationSettings: '"opsz" 24' }}>
+          <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
             {displayName}
           </h3>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
@@ -383,10 +383,10 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-1 right-1.5 z-20 flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-all duration-300 outline-none hover:scale-110 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
+            'absolute bottom-1 right-1.5 z-20 flex h-10 w-10 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
             caught
-              ? 'border-primary/55 bg-primary text-primary-foreground shadow-[0_0_18px_rgba(190,93,72,0.32)]'
-              : 'border-foreground/15 bg-background/65 text-foreground/55 backdrop-blur-md hover:border-foreground/35 hover:text-foreground/85'
+              ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
+              : 'border-foreground/20 bg-background/65 text-foreground/55 hover:border-foreground/40 hover:text-foreground/85'
           )}
           aria-label={caught ? t('card.caught') : t('card.mark_caught')}
         >

@@ -105,7 +105,7 @@ export default function AdvancedFilters() {
         render={
           <Button
             variant="outline"
-            className="relative glass-btn px-6 py-6 rounded-2xl gap-2 group hover:border-primary/50 transition-all duration-300"
+            className="relative glass-btn px-6 py-6 rounded-sm gap-2 group hover:border-primary/50 transition-all duration-300"
           />
         }
       >
@@ -120,7 +120,7 @@ export default function AdvancedFilters() {
           </Badge>
         )}
       </SheetTrigger>
-      <SheetContent className="w-full bg-background/95 backdrop-blur-2xl border-l border-border/60 flex max-h-[calc(100dvh-1rem)] min-h-0 flex-col p-0 data-[side=right]:sm:max-w-none data-[side=right]:lg:w-[min(56rem,calc(100vw-1rem))]">
+      <SheetContent className="w-full bg-background/95  border-l border-border/60 flex max-h-[calc(100dvh-1rem)] min-h-0 flex-col p-0 data-[side=right]:sm:max-w-none data-[side=right]:lg:w-[min(56rem,calc(100vw-1rem))]">
         <SheetHeader className="border-b border-border/40 p-5 pb-4 pr-16 sm:pr-20 shrink-0">
           <div className="flex items-center justify-between gap-4">
             <SheetTitle className="text-2xl font-black uppercase tracking-tighter flex items-center gap-2">
@@ -157,7 +157,7 @@ export default function AdvancedFilters() {
                       key={gen.id}
                       onClick={() => setSelectedGeneration(isActive ? null : gen.id)}
                       className={cn(
-                        "flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200 min-h-[64px]",
+                        "flex flex-col items-center justify-center p-4 rounded-sm border transition-all duration-200 min-h-[64px]",
                         isActive
                           ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(255,50,50,0.1)]"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -186,7 +186,7 @@ export default function AdvancedFilters() {
                       key={type}
                       onClick={() => toggleType(type)}
                       className={cn(
-                        "relative flex items-center gap-2 px-4 py-4 rounded-xl border transition-all duration-200 overflow-hidden group min-h-[56px]",
+                        "relative flex items-center gap-2 px-4 py-4 rounded-sm border transition-all duration-200 overflow-hidden group min-h-[56px]",
                         isActive
                           ? "text-primary-foreground border-transparent"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -207,7 +207,7 @@ export default function AdvancedFilters() {
                 {t('filters.special')}
               </h4>
               <div className="grid grid-cols-1 gap-3">
-                <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-2xl border border-border/40">
+                <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-sm font-bold">{t('filters.legendary')}</span>
                     <span className="text-[10px] text-foreground/40 font-medium">{t('filters.legendary_desc')}</span>
@@ -218,7 +218,7 @@ export default function AdvancedFilters() {
                      onCheckedChange={(checked) => setIsLegendary(checked ? true : null)}
                    />
                 </div>
-                <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-2xl border border-border/40">
+                <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-sm font-bold">{t('filters.mythical')}</span>
                     <span className="text-[10px] text-foreground/40 font-medium">{t('filters.mythical_desc')}</span>
@@ -465,7 +465,7 @@ export default function AdvancedFilters() {
         </div>
 
         <SheetFooter className="border-t border-border/40 bg-background/50 p-4 md:p-5">
-          <SheetClose render={<Button className="h-12 w-full rounded-2xl text-sm font-black uppercase tracking-widest shadow-sm transition-all hover:scale-[1.01] active:scale-[0.98]" />}>
+          <SheetClose render={<Button className="h-12 w-full rounded-sm text-sm font-black uppercase tracking-widest shadow-sm transition-all hover:scale-[1.01] active:scale-[0.98]" />}>
             {t('filters.apply')}
           </SheetClose>
         </SheetFooter>

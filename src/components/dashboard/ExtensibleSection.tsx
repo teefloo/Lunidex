@@ -23,7 +23,7 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
   if (metrics.length === 0) return null;
 
   return (
-    <div className="glass-card rounded-2xl p-6 md:p-8 space-y-4 relative overflow-hidden">
+    <div className="glass-card rounded-sm p-6 md:p-8 space-y-4 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
       <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
@@ -35,7 +35,7 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
         {metrics.map((metric) => (
           <div
             key={metric.id}
-            className="p-4 rounded-xl border border-border/40 bg-card/40 flex flex-col items-center gap-2 text-center group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-300"
+            className="p-4 rounded-sm border border-border/40 bg-card/40 flex flex-col items-center gap-2 text-center group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-300"
           >
             <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
               {ICON_MAP[metric.icon] || <BarChart3 className="w-4 h-4" />}

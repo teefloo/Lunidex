@@ -14,15 +14,13 @@ export default function TypeFilter() {
   const { t } = useTranslation();
 
   return (
-    <div
-      className="w-full overflow-x-auto pb-8 pt-4 scrollbar-hide"
-    >
+    <div className="w-full overflow-x-auto pb-8 pt-4 scrollbar-hide">
       <div className="flex flex-nowrap lg:flex-wrap gap-2 justify-start lg:justify-center px-4 min-w-max lg:min-w-0 mx-auto max-w-7xl">
         {selectedTypes.length > 0 && (
           <button
             type="button"
             onClick={() => setSelectedTypes([])}
-            className="flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-foreground/80 bg-destructive/10 border border-destructive/20 rounded-full hover:bg-destructive/20 hover:text-destructive transition-all duration-300 whitespace-nowrap overflow-hidden backdrop-blur-xl min-h-[44px]"
+            className="flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-destructive bg-destructive/10 border border-destructive/30 rounded-sm hover:bg-destructive/20 transition-all duration-100 whitespace-nowrap overflow-hidden min-h-[44px] shadow-[var(--shadow-pixel-sm)]"
             aria-label={t('filters.clear_types', { count: selectedTypes.length })}
           >
             <X className="w-3.5 h-3.5" />
@@ -42,32 +40,25 @@ export default function TypeFilter() {
               onClick={() => toggleType(type)}
               aria-label={label}
               className={cn(
-                "relative px-5 py-3 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-400 overflow-hidden group border hover:scale-105 active:scale-95 min-h-[44px]",
+                "relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "text-primary-foreground border-transparent"
-                  : "bg-card/50 backdrop-blur-xl text-foreground/70 hover:text-foreground/90 border-border/50 hover:border-border/70"
+                  : "bg-card text-foreground/70 hover:text-foreground/90 border-border/60 hover:border-border"
               )}
               style={isActive ? {
                 backgroundColor: color,
-                boxShadow: `0 4px 20px -4px ${color}80, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                boxShadow: `2px 2px 0 ${color}80`,
               } : {}}
             >
-              {/* Hover color preview */}
               {!isActive && (
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-400 rounded-full"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-100 rounded-sm"
                   style={{ backgroundColor: color }}
                 />
               )}
-
-              {/* Inner glow for active */}
-              {isActive && (
-                <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent rounded-full" />
-              )}
-
               <span className="relative z-10 flex items-center gap-2">
                 {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground shadow-sm" />
+                  <span className="w-1.5 h-1.5 bg-primary-foreground" />
                 )}
                 {label}
               </span>

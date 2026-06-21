@@ -73,7 +73,7 @@ export default function SettingsModal() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-foreground/22 backdrop-blur-md"
+            className="absolute inset-0 bg-foreground/22 "
             onClick={toggleSettings}
           />
 
@@ -84,7 +84,7 @@ export default function SettingsModal() {
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
-            className="glass-surface relative w-full max-w-sm rounded-xl p-8 overflow-hidden"
+            className="glass-surface relative w-full max-w-sm rounded-sm p-8 overflow-hidden"
           >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/10 to-transparent" />
 
@@ -124,7 +124,7 @@ export default function SettingsModal() {
               {/* Theme Selector */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-2.5 rounded-xl text-foreground/70 bg-secondary/30 border border-border/50">
+                  <div className="p-2.5 rounded-sm text-foreground/70 bg-secondary/30 border border-border/50">
                     <Monitor className="w-5 h-5" />
                   </div>
                   <span className="font-bold text-foreground/80">{t('settings.theme')}</span>
@@ -134,7 +134,7 @@ export default function SettingsModal() {
                     <button
                       key={value}
                       onClick={() => setTheme(value)}
-                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-xl text-xs font-bold transition-all duration-300 ${theme === value
+                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-sm text-xs font-bold transition-all duration-300 ${theme === value
                         ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                         : 'text-foreground/50 hover:bg-muted/55 hover:text-foreground/80'
                         }`}
@@ -150,7 +150,7 @@ export default function SettingsModal() {
               {/* Language Selector */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-2.5 rounded-xl text-foreground/70 bg-secondary/30 border border-border/50">
+                  <div className="p-2.5 rounded-sm text-foreground/70 bg-secondary/30 border border-border/50">
                     <Globe className="w-5 h-5" />
                   </div>
                   <span className="font-bold text-foreground/80">{t('settings.language')}</span>
@@ -160,7 +160,7 @@ export default function SettingsModal() {
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className={`flex items-center justify-center gap-2 py-2 px-2 rounded-xl text-xs font-bold transition-all duration-300 ${language === lang.code
+                      className={`flex items-center justify-center gap-2 py-2 px-2 rounded-sm text-xs font-bold transition-all duration-300 ${language === lang.code
                         ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                         : 'text-foreground/50 hover:bg-muted/55 hover:text-foreground/80'
                         }`}

@@ -410,7 +410,7 @@ function QuizPageContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="page-surface p-6 md:p-8 rounded-2xl space-y-8 relative overflow-hidden"
+                className="page-surface p-6 md:p-8 rounded-sm space-y-8 relative overflow-hidden"
               >
                 {/* Inner decorative line */}
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
@@ -439,14 +439,14 @@ function QuizPageContent() {
                   {/* Daily Challenge - Premium styled button */}
                   <Button
                     onClick={() => startGame('classic', 'marathon', true)}
-                    className="w-full h-18 rounded-2xl font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-all duration-300 hover:bg-primary"
+                    className="w-full h-18 rounded-sm font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-all duration-300 hover:bg-primary"
                   >
                     <Calendar className="w-5 h-5 mr-2" />
                     {t('quiz.daily')}
                   </Button>
 
                   {/* Filters Section */}
-                  <div className="space-y-4 bg-card/50 dark:bg-card/35 p-5 md:p-6 rounded-xl border border-border/50 dark:border-border/40 backdrop-blur-sm">
+                  <div className="space-y-4 bg-card/50 dark:bg-card/35 p-5 md:p-6 rounded-sm border border-border/50 dark:border-border/40">
                     <div className="flex items-center gap-2 mb-3 justify-center">
                       <Filter className="w-4 h-4 text-primary" />
                       <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50">{t('quiz.customize')}</span>
@@ -456,10 +456,10 @@ function QuizPageContent() {
                       <div className="space-y-2 text-left relative">
                         <label htmlFor="quiz-gen-select" className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.generation')}</label>
                         <Select value={selectedGen || ''} onValueChange={(value) => setSelectedGen(value || null)}>
-                          <SelectTrigger id="quiz-gen-select" className="w-full h-11 rounded-xl bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
+                          <SelectTrigger id="quiz-gen-select" className="w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
                             <SelectValue placeholder={t('quiz.all_generations')} />
                           </SelectTrigger>
-                          <SelectContent className="bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 backdrop-blur-3xl rounded-xl overflow-hidden">
+                          <SelectContent className="bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 rounded-sm overflow-hidden">
                             <SelectItem value="" className="focus:bg-card/60">{t('quiz.all_generations')}</SelectItem>
                             {GENERATIONS.map(gen => (
                               <SelectItem key={gen.id} value={gen.id} className="focus:bg-card/60">{gen.name}</SelectItem>
@@ -471,10 +471,10 @@ function QuizPageContent() {
                       <div className="space-y-2 text-left relative">
                         <label htmlFor="quiz-type-select" className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.types')}</label>
                         <Select value={selectedType || ''} onValueChange={(value) => setSelectedType(value || null)}>
-                          <SelectTrigger id="quiz-type-select" className="w-full h-11 rounded-xl bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
+                          <SelectTrigger id="quiz-type-select" className="w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
                             <SelectValue placeholder={t('quiz.all_types')} />
                           </SelectTrigger>
-                          <SelectContent className="bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 backdrop-blur-3xl rounded-xl overflow-hidden">
+                          <SelectContent className="bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 rounded-sm overflow-hidden">
                             <SelectItem value="" className="focus:bg-card/60">{t('quiz.all_types')}</SelectItem>
                             {TYPES.map(type => (
                               <SelectItem key={type} value={type} className="focus:bg-card/60">{type.charAt(0).toUpperCase() + type.slice(1)}</SelectItem>
@@ -497,7 +497,7 @@ function QuizPageContent() {
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => startGame(mode.id)} 
-                        className="h-24 md:h-26 rounded-2xl flex flex-col items-center justify-center gap-2 group bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 backdrop-blur-sm relative overflow-hidden"
+                        className="h-24 md:h-26 rounded-sm flex flex-col items-center justify-center gap-2 group bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 relative overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="flex items-center gap-2 font-bold uppercase tracking-[0.12em] text-[10px] md:text-xs text-foreground/60 group-hover:text-primary transition-colors">
@@ -514,7 +514,7 @@ function QuizPageContent() {
                     <Button
                       variant="outline"
                       onClick={() => startGame(quizChallenge, 'time-attack')}
-                      className="h-14 rounded-2xl flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5"
+                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5"
                     >
                       <Timer className="w-4 h-4 text-blue-400" />
                       {t('quiz.time_attack')} <span className="opacity-50 ml-1">(30s)</span>
@@ -523,7 +523,7 @@ function QuizPageContent() {
                     <Button
                       variant="outline"
                       onClick={() => startGame(quizChallenge, 'survival')}
-                      className="h-14 rounded-2xl flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-red-500/30 hover:bg-red-500/5"
+                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-red-500/30 hover:bg-red-500/5"
                     >
                       <Heart className="w-4 h-4 text-red-400" />
                       {t('quiz.survival')} <span className="opacity-50 ml-1">(3 {t('quiz.lives')})</span>
@@ -533,15 +533,15 @@ function QuizPageContent() {
                   {/* High Scores */}
                   {quizHighScores && (
                     <div className="pt-6 border-t border-border/50 dark:border-border/40 grid grid-cols-3 gap-3">
-                      <div className="bg-card/50 dark:bg-card/35 rounded-xl p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
+                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
                         <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.classic')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.classic}</p>
                       </div>
-                      <div className="bg-card/50 dark:bg-card/35 rounded-xl p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
+                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
                         <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.silhouette')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.silhouette}</p>
                       </div>
-                      <div className="bg-card/50 dark:bg-card/35 rounded-xl p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
+                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
                         <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.stats_mode')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.stats}</p>
                       </div>
@@ -555,7 +555,7 @@ function QuizPageContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="glass-card p-6 md:p-8 rounded-2xl space-y-6 relative overflow-hidden"
+                className="glass-card p-6 md:p-8 rounded-sm space-y-6 relative overflow-hidden"
               >
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
                 <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.25em] flex items-center justify-center gap-3 text-foreground/60">
@@ -577,14 +577,14 @@ function QuizPageContent() {
                       <div 
                         key={badge.id}
                         className={cn(
-                          "relative p-4 rounded-2xl border transition-all duration-300 flex flex-col items-center gap-2 text-center overflow-hidden group",
+                          "relative p-4 rounded-sm border transition-all duration-300 flex flex-col items-center gap-2 text-center overflow-hidden group",
                           isUnlocked 
                             ? "bg-primary/5 border-primary/20 text-primary shadow-[inset_0_0_20px_rgba(227,53,13,0.05)] hover:bg-primary/10" 
                             : "bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 text-foreground/30 hover:bg-card/60"
                         )}
                       >
                         {isUnlocked && <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-primary/35" />}
-                        <div className={cn("p-2.5 rounded-xl transition-all duration-300", isUnlocked ? "bg-primary/20 shadow-[0_0_12px_rgba(227,53,13,0.25)] group-hover:scale-110" : "bg-card/60 dark:bg-card/50 grayscale")}>
+                        <div className={cn("p-2.5 rounded-sm transition-all duration-300", isUnlocked ? "bg-primary/20 shadow-[0_0_12px_rgba(227,53,13,0.25)] group-hover:scale-110" : "bg-card/60 dark:bg-card/50 grayscale")}>
                           {badge.icon}
                         </div>
                         <div className="space-y-0.5">
@@ -602,7 +602,7 @@ function QuizPageContent() {
           ) : (
             <div className="space-y-6 md:space-y-8 animate-fade-in-up">
               {/* Game HUD */}
-              <div className="page-surface px-4 md:px-6 py-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 relative overflow-hidden">
+              <div className="page-surface px-4 md:px-6 py-4 rounded-sm flex flex-wrap items-center justify-between gap-4 relative overflow-hidden">
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
                 
                 <div className="flex gap-2 sm:gap-3 flex-wrap w-full lg:w-auto overflow-hidden justify-center lg:justify-start">
@@ -682,11 +682,11 @@ function QuizPageContent() {
               </div>
 
               {/* Main Game Stage */}
-              <div className="page-surface relative min-h-[20rem] md:min-h-[24rem] flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl overflow-hidden">
+              <div className="page-surface relative min-h-[20rem] md:min-h-[24rem] flex flex-col items-center justify-center p-6 md:p-8 rounded-sm overflow-hidden">
                 {/* Stage background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent backdrop-blur-sm" />
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
-                <div className="absolute inset-x-8 bottom-8 h-24 rounded-2xl bg-gradient-to-t from-primary/10 to-transparent pointer-events-none transition-opacity duration-700" />
+                <div className="absolute inset-x-8 bottom-8 h-24 rounded-sm bg-gradient-to-t from-primary/10 to-transparent pointer-events-none transition-opacity duration-700" />
                 
                 <AnimatePresence mode="wait">
                   {gameState === 'loading' ? (
@@ -709,7 +709,7 @@ function QuizPageContent() {
                       className="w-full flex flex-col items-center relative z-10"
                     >
                       {quizChallenge === 'stats' ? (
-                        <div className="bg-background/90 backdrop-blur-xl border border-border/60 dark:border-border/40 p-5 md:p-6 rounded-xl w-full max-w-[18rem] md:max-w-md space-y-4 shadow-2xl relative">
+                        <div className="bg-background/90  border border-border/60 dark:border-border/40 p-5 md:p-6 rounded-sm w-full max-w-[18rem] md:max-w-md space-y-4 shadow-2xl relative">
                           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
                           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-foreground/60 mb-4 text-center">{t('quiz.who_stats')}</p>
                           {[
@@ -742,7 +742,7 @@ function QuizPageContent() {
                       ) : (
                         <div className="relative w-52 h-52 md:w-72 md:h-72 drop-shadow-2xl flex items-center justify-center float-particle">
                           <div className={cn(
-                            "absolute inset-x-8 bottom-8 top-12 rounded-2xl bg-gradient-to-t from-primary/10 to-transparent transition-opacity duration-700",
+                            "absolute inset-x-8 bottom-8 top-12 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity duration-700",
                             gameState === 'answered' && isCorrect ? "opacity-100 bg-emerald-500/20" : "opacity-0"
                           )} />
                           <Image 
@@ -788,15 +788,15 @@ function QuizPageContent() {
                   const isActualAnswer = option === currentPokemon?.name;
                   const isRevealed = gameState === 'answered';
                   
-                  let buttonClass = "h-14 md:h-16 rounded-xl font-bold uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98] shadow-lg backdrop-blur-sm";
+                  let buttonClass = "h-14 md:h-16 rounded-sm font-bold uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98] shadow-lg";
                   
                   if (isRevealed) {
                     if (isActualAnswer) {
-                      buttonClass = "h-14 md:h-16 rounded-xl font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(34,197,94,0.15)]";
+                      buttonClass = "h-14 md:h-16 rounded-sm font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(34,197,94,0.15)]";
                     } else if (isSelected) {
-                      buttonClass = "h-14 md:h-16 rounded-xl font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-red-500/20 border-red-500/50 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)]";
+                      buttonClass = "h-14 md:h-16 rounded-sm font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-red-500/20 border-red-500/50 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)]";
                     } else {
-                      buttonClass = "h-14 md:h-16 rounded-xl font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-secondary/10 border-border/40 text-foreground/30 cursor-default opacity-50";
+                      buttonClass = "h-14 md:h-16 rounded-sm font-black uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-300 border-2 relative overflow-hidden bg-secondary/10 border-border/40 text-foreground/30 cursor-default opacity-50";
                     }
                   }
 
