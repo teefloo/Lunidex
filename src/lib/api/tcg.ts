@@ -699,7 +699,7 @@ export const searchCards = async (
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
   const cacheKey = fetchAll
-    ? `tcg-catalog-all-v10-${tcgLang}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    ? `tcg-catalog-all-v10-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
     : `tcg-catalog-v10-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
 
   try {
