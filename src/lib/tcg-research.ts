@@ -40,7 +40,7 @@ export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchSt
     releaseStart: readString(searchParams, 'releaseStart') || undefined,
     releaseEnd: readString(searchParams, 'releaseEnd') || undefined,
     ownedState: (readString(searchParams, 'owned') as TCGOwnedState) || 'all',
-    sortBy: (readString(searchParams, 'sortBy') as TCGCardFilters['sortBy']) || 'name',
+    sortBy: (readString(searchParams, 'sortBy') as TCGCardFilters['sortBy']) || 'id',
     sortOrder: (readString(searchParams, 'sortOrder') as TCGCardFilters['sortOrder']) || 'asc',
   };
 

@@ -27,7 +27,7 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
   const toggleTCGActiveSet = usePrimeDexStore((s) => s.toggleTCGActiveSet);
   const [filterInProgress, setFilterInProgress] = useState(false);
   const [search, setSearch] = useState('');
-  const [sortMode, setSortMode] = useState<'id-asc' | 'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('id-asc');
+  const [sortMode, setSortMode] = useState<'id-asc' | 'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('progress');
 
   const stats = useMemo(() => computeCollectionStatsFromSets(sets, ownedIds), [sets, ownedIds]);
 
