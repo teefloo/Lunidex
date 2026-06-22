@@ -157,7 +157,10 @@ export interface PublicProfileRow {
   unlocked_badges: string[];
   team_ids: number[];
   quiz_best_score: number;
+  quiz_best_streak: number;
   quiz_total_correct: number;
+  tcg_owned_count: number;
+  caught_by_gen: number[];
   member_since: string | null;
 }
 
@@ -173,7 +176,11 @@ export interface PublicProfile {
   unlockedBadges: string[];
   teamIds: number[];
   quizBestScore: number;
+  quizBestStreak: number;
   quizTotalCorrect: number;
+  tcgOwnedCount: number;
+  /** Caught count per generation, index 0 = gen 1 … index 8 = gen 9. */
+  caughtByGen: number[];
   memberSince: string | null;
 }
 

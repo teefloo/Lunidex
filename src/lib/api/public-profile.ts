@@ -20,7 +20,7 @@ export async function getPublicProfileByHandle(
   const { data, error } = await supabase
     .from('profiles')
     .select(
-      'id, name, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_total_correct, member_since',
+      'id, name, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_best_streak, quiz_total_correct, tcg_owned_count, caught_by_gen, member_since',
     )
     .eq('public_handle', handle)
     .eq('is_public', true)
@@ -46,7 +46,7 @@ export async function getOwnPublicProfile(
   const { data, error } = await supabase
     .from('profiles')
     .select(
-      'id, name, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_total_correct, member_since',
+      'id, name, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_best_streak, quiz_total_correct, tcg_owned_count, caught_by_gen, member_since',
     )
     .maybeSingle();
 
@@ -128,7 +128,10 @@ function rowToPublicProfile(row: PublicProfileRow): PublicProfile {
     unlockedBadges: row.unlocked_badges ?? [],
     teamIds: row.team_ids ?? [],
     quizBestScore: row.quiz_best_score,
+    quizBestStreak: row.quiz_best_streak ?? 0,
     quizTotalCorrect: row.quiz_total_correct,
+    tcgOwnedCount: row.tcg_owned_count ?? 0,
+    caughtByGen: row.caught_by_gen ?? [],
     memberSince: row.member_since,
   };
 }

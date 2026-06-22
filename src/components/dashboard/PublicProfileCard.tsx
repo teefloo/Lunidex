@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Trophy, Target, Zap, Users, Calendar, Copy, Check } from 'lucide-react';
+import { Trophy, Target, Zap, Users, Calendar, Copy, Check, Flame, Layers, Library } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -25,6 +25,9 @@ const BADGE_ICON_MAP: Record<string, string> = {
   'team-builder': 'Users',
   'type-explorer': 'Shapes',
 };
+
+/** National Dex totals per generation (index 0 = gen 1 … index 8 = gen 9). */
+const GEN_TOTALS = [151, 100, 135, 107, 156, 72, 88, 96, 120];
 
 interface PublicProfileCardProps {
   profile: PublicProfile;
@@ -139,6 +142,43 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
         </p>
       </div>
 
+      {/* Living Dex by generation */}
+      {profile.caughtByGen.some((c) => c > 0) && (
+        <div className="glass-card rounded-sm p-6 relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2 mb-4">
+            <Layers className="h-3.5 w-3.5 text-primary" />
+            {t('profile.by_generation', { defaultValue: 'By Generation' })}
+          </h2>
+
+          <div className="space-y-2.5">
+            {GEN_TOTALS.map((total, i) => {
+              const caught = profile.caughtByGen[i] ?? 0;
+              const percent = total > 0 ? Math.round((caught / total) * 100) : 0;
+              return (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="w-12 flex-none text-[10px] font-black uppercase tracking-[0.1em] text-foreground/50">
+                    {t('profile.gen_short', { defaultValue: 'Gen' })} {i + 1}
+                  </span>
+                  <div className="h-2.5 flex-1 rounded-full bg-muted/60 overflow-hidden pixel-progress">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${percent}%` }}
+                      transition={{ duration: 0.8, ease: 'easeOut', delay: i * 0.05 }}
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-orange-400"
+                    />
+                  </div>
+                  <span className="w-14 flex-none text-right text-[10px] font-bold text-foreground/40 tabular-nums">
+                    {caught}/{total}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Badges */}
       {profile.unlockedBadges.length > 0 && (
         <div className="glass-card rounded-sm p-6 relative overflow-hidden">
@@ -200,7 +240,9 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
       )}
 
       {/* Quiz Stats */}
-      {(profile.quizBestScore > 0 || profile.quizTotalCorrect > 0) && (
+      {(profile.quizBestScore > 0 ||
+        profile.quizTotalCorrect > 0 ||
+        profile.quizBestStreak > 0) && (
         <div className="glass-card rounded-sm p-6 relative overflow-hidden">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-500/25 to-transparent" />
 
@@ -209,13 +251,22 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
             {t('profile.quiz_stats', { defaultValue: 'Quiz Stats' })}
           </h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-3">
             <div className="p-4 rounded-sm border border-green-400/20 bg-green-400/5 text-center">
               <p className="text-2xl font-black text-green-400">
                 {profile.quizBestScore}
               </p>
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
                 {t('profile.best_score', { defaultValue: 'Best Score' })}
+              </p>
+            </div>
+            <div className="p-4 rounded-sm border border-green-400/20 bg-green-400/5 text-center">
+              <p className="text-2xl font-black text-green-400 flex items-center justify-center gap-1">
+                <Flame className="h-5 w-5 text-orange-400" />
+                {profile.quizBestStreak}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
+                {t('profile.best_streak', { defaultValue: 'Best Streak' })}
               </p>
             </div>
             <div className="p-4 rounded-sm border border-green-400/20 bg-green-400/5 text-center">
@@ -226,6 +277,27 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                 {t('profile.total_correct', { defaultValue: 'Correct Answers' })}
               </p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TCG Collection */}
+      {profile.tcgOwnedCount > 0 && (
+        <div className="glass-card rounded-sm p-6 relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500/25 to-transparent" />
+
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2 mb-4">
+            <Library className="h-3.5 w-3.5 text-purple-400" />
+            {t('profile.tcg_collection', { defaultValue: 'TCG Collection' })}
+          </h2>
+
+          <div className="flex items-center gap-3">
+            <span className="text-3xl font-black text-purple-400">
+              {profile.tcgOwnedCount}
+            </span>
+            <span className="text-xs font-bold uppercase tracking-[0.12em] text-foreground/50 mb-0.5">
+              {t('profile.cards_owned', { defaultValue: 'Cards Owned' })}
+            </span>
           </div>
         </div>
       )}
