@@ -4,7 +4,10 @@ import { Trophy, Gamepad2, Zap, EyeOff, BrainCircuit, Heart, Users, Shapes, Back
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useAuth } from '@/lib/supabase/AuthProvider';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useState, useEffect } from 'react';
 import { computeTotalXP, getTrainerLevel, getXPProgress, computeWeeklyQuest } from '@/lib/trainer';
 import type { DashboardData, BadgeTier } from '@/types/dashboard';
 
@@ -48,7 +51,35 @@ interface ProfileAndBadgesProps {
 
 export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { profile, badges } = data;
+  const [publicHandle, setPublicHandle] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    const supabase = getSupabaseClient();
+    if (!supabase) return;
+    supabase
+      .from('profiles')
+      .select('public_handle')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data: row }) => {
+        if (row?.public_handle) setPublicHandle(row.public_handle);
+      });
+  }, [user]);
+
+  const displayName = publicHandle
+    ? `@${publicHandle}`
+    : (user?.user_metadata?.name as string | undefined)?.trim() ||
+      (user?.user_metadata?.display_name as string | undefined)?.trim() ||
+      user?.email?.split('@')[0] ||
+      profile.displayName;
+
+  const memberSinceRaw = user?.created_at ?? profile.memberSince;
+  const memberSince = memberSinceRaw
+    ? new Date(memberSinceRaw).toLocaleDateString()
+    : t('common.unknown');
   const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
   const totalQuizCorrect = usePrimeDexStore((s) => s.totalQuizCorrect);
   const weeklyQuestClaimedWeek = usePrimeDexStore((s) => s.weeklyQuestClaimedWeek);
@@ -126,10 +157,10 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
         </div>
         <div className="min-w-0">
           <h3 className="text-lg font-black tracking-tight text-foreground">
-            {t('dashboard.profile.display_name', { name: profile.displayName })}
+            {t('dashboard.profile.display_name', { name: displayName })}
           </h3>
           <p className="text-xs font-semibold text-foreground/50 uppercase tracking-[0.15em] mt-0.5">
-            {t('dashboard.profile.member_since')}: {profile.memberSince ?? t('common.unknown')}
+            {t('dashboard.profile.member_since')}: {memberSince}
           </p>
         </div>
       </div>
