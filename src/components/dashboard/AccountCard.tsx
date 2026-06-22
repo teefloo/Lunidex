@@ -2,18 +2,27 @@
 
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { LogOut, LogIn, User as UserIcon } from 'lucide-react';
-import { useState } from 'react';
+import { LogOut, LogIn, User as UserIcon, Globe, Copy, Check, ExternalLink } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/lib/supabase/AuthProvider';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import AuthModal from '@/components/auth/AuthModal';
+import { HANDLE_REGEX, HANDLE_MIN_LENGTH, HANDLE_MAX_LENGTH } from '@/types/dashboard';
 
 /**
  * Account panel shown on the dashboard. Surfaces the signed-in identity and the
  * sign-out action (the avatar in the header now links here instead of opening a
  * popover). Renders nothing when Supabase is unconfigured.
+ *
+ * When the user is signed in, a "Public Profile" section is shown with:
+ * - A handle input (3-30 lowercase alphanumeric + hyphens)
+ * - A toggle to enable/disable public visibility
+ * - A share link button
  */
 export default function AccountCard() {
   const { enabled, user, signOut } = useAuth();
@@ -22,9 +31,120 @@ export default function AccountCard() {
   const router = useRouter();
   const [authOpen, setAuthOpen] = useState(false);
 
-  const tt = (key: string, fallback: string) => {
-    const value = t(key, { defaultValue: fallback });
-    return value === key ? fallback : value;
+  // Public profile state
+  const [publicHandle, setPublicHandle] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+  const [handleError, setHandleError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  const tt = useCallback(
+    (key: string, fallback: string) => {
+      const value = t(key, { defaultValue: fallback });
+      return value === key ? fallback : value;
+    },
+    [t],
+  );
+
+  // Load current profile settings
+  useEffect(() => {
+    if (!user || !enabled) return;
+
+    const loadProfile = async () => {
+      const supabase = getSupabaseClient();
+      if (!supabase) return;
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('public_handle, is_public')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (data) {
+        setPublicHandle(data.public_handle ?? '');
+        setIsPublic(data.is_public ?? false);
+      }
+      setProfileLoaded(true);
+    };
+
+    void loadProfile();
+  }, [user, enabled]);
+
+  const validateHandle = useCallback(
+    (value: string): boolean => {
+      if (!value) {
+        setHandleError(null);
+        return true;
+      }
+      if (value.length < HANDLE_MIN_LENGTH || value.length > HANDLE_MAX_LENGTH) {
+        setHandleError(
+          tt('profile.handle_length_error', `Handle must be ${HANDLE_MIN_LENGTH}-${HANDLE_MAX_LENGTH} characters`),
+        );
+        return false;
+      }
+      if (!HANDLE_REGEX.test(value)) {
+        setHandleError(
+          tt('profile.handle_format_error', 'Only lowercase letters, numbers, and hyphens'),
+        );
+        return false;
+      }
+      setHandleError(null);
+      return true;
+    },
+    [tt],
+  );
+
+  const saveProfile = async (handle: string, publicFlag: boolean) => {
+    const supabase = getSupabaseClient();
+    if (!supabase || !user) return;
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.rpc('set_public_profile', {
+        p_handle: handle || null,
+        p_is_public: publicFlag,
+      });
+
+      if (error) {
+        if (error.message.includes('Handle already taken')) {
+          setHandleError(tt('profile.handle_taken', 'This handle is already taken'));
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
+
+      toast.success(
+        publicFlag
+          ? tt('profile.public_enabled', 'Your profile is now public!')
+          : tt('profile.public_disabled', 'Your profile is now private.'),
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleTogglePublic = async (checked: boolean) => {
+    if (checked && !publicHandle) {
+      setHandleError(tt('profile.handle_required', 'Choose a handle first'));
+      return;
+    }
+    setIsPublic(checked);
+    await saveProfile(publicHandle, checked);
+  };
+
+  const handleSaveHandle = async () => {
+    if (!validateHandle(publicHandle)) return;
+    await saveProfile(publicHandle, isPublic);
+  };
+
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}/u/${publicHandle}`;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    toast.success(tt('profile.link_copied', 'Profile link copied!'));
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (!enabled) return null;
@@ -66,22 +186,127 @@ export default function AccountCard() {
   };
 
   return (
-    <div className="glass-card flex flex-col items-start gap-3 rounded-sm p-5 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex min-w-0 items-center gap-3">
-        <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-primary/15 text-base font-black text-primary">
-          {initial}
-        </span>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-bold text-foreground">{displayName || email}</p>
-          <p className="truncate text-xs text-foreground/55">
-            {displayName ? email : tt('auth.signed_in_label', 'Signed in')}
-          </p>
+    <div className="space-y-3">
+      {/* Account info */}
+      <div className="glass-card flex flex-col items-start gap-3 rounded-sm p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-primary/15 text-base font-black text-primary">
+            {initial}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold text-foreground">{displayName || email}</p>
+            <p className="truncate text-xs text-foreground/55">
+              {displayName ? email : tt('auth.signed_in_label', 'Signed in')}
+            </p>
+          </div>
         </div>
+        <Button variant="destructive" size="sm" onClick={handleSignOut}>
+          <LogOut className="h-4 w-4" />
+          {tt('auth.signout_cta', 'Sign out')}
+        </Button>
       </div>
-      <Button variant="destructive" size="sm" onClick={handleSignOut}>
-        <LogOut className="h-4 w-4" />
-        {tt('auth.signout_cta', 'Sign out')}
-      </Button>
+
+      {/* Public profile settings */}
+      {profileLoaded && (
+        <div className="glass-card rounded-sm p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4 text-foreground/50" />
+            <h3 className="text-xs font-black uppercase tracking-[0.15em] text-foreground/60">
+              {tt('profile.settings_title', 'Public Profile')}
+            </h3>
+          </div>
+
+          {/* Handle input */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/50">
+              {tt('profile.handle_label', 'Handle')}
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center rounded-sm border border-border/50 bg-muted/30 px-3 py-1.5">
+                <span className="text-xs text-foreground/40 mr-1">/u/</span>
+                <Input
+                  value={publicHandle}
+                  onChange={(e) => {
+                    const val = e.target.value.toLowerCase();
+                    setPublicHandle(val);
+                    validateHandle(val);
+                  }}
+                  onBlur={() => publicHandle && validateHandle(publicHandle)}
+                  placeholder={tt('profile.handle_placeholder', 'your-name')}
+                  className="h-auto border-0 bg-transparent p-0 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 w-36"
+                  maxLength={HANDLE_MAX_LENGTH}
+                  aria-label={tt('profile.handle_label', 'Handle')}
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSaveHandle}
+                disabled={isSaving || !!handleError || !publicHandle}
+                className="shrink-0"
+              >
+                {isSaving ? '...' : tt('common.save', 'Save')}
+              </Button>
+            </div>
+            {handleError && (
+              <p className="text-[11px] text-destructive font-medium">{handleError}</p>
+            )}
+          </div>
+
+          {/* Toggle + share */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={isPublic}
+                onCheckedChange={handleTogglePublic}
+                disabled={!publicHandle || !!handleError || isSaving}
+                aria-label={tt('profile.toggle_public', 'Make profile public')}
+              />
+              <span className="text-sm font-medium text-foreground/70">
+                {isPublic
+                  ? tt('profile.status_public', 'Public')
+                  : tt('profile.status_private', 'Private')}
+              </span>
+            </div>
+
+            {isPublic && publicHandle && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopyLink}
+                  className="h-8 gap-1.5 text-xs"
+                >
+                  {copied ? (
+                    <Check className="h-3.5 w-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
+                  {copied
+                    ? tt('profile.copied', 'Copied!')
+                    : tt('profile.copy_link', 'Copy link')}
+                </Button>
+                <a
+                  href={`/u/${publicHandle}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-medium text-foreground/50 hover:text-foreground/70 transition-colors"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  {tt('profile.view', 'View')}
+                </a>
+              </div>
+            )}
+          </div>
+
+          {isPublic && publicHandle && (
+            <p className="text-[11px] text-foreground/40 font-medium">
+              {tt('profile.public_hint', 'Your profile is visible at')}:{' '}
+              <span className="text-foreground/60">/u/{publicHandle}</span>
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

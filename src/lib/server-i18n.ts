@@ -60,6 +60,13 @@ export async function getServerT(): Promise<TFunction> {
   return serverI18n.getFixedT(lang, 'translation');
 }
 
+// Synchronous, language-explicit translator. Used where the locale comes from
+// the request (e.g. `?lang=` on OG image routes) instead of the cookie.
+export function getServerTForLanguage(lang: SupportedLanguage): TFunction {
+  ensureInit();
+  return serverI18n.getFixedT(lang, 'translation');
+}
+
 // Map SupportedLanguage -> PokeAPI species `language.name` values.
 // PokeAPI uses BCP-47 codes for the `names[]` array (en, fr, de, es, it, ja, ko, zh-Hans, zh-Hant).
 // Portuguese has no PokeAPI species translation, so it falls back to English.

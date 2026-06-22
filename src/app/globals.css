@@ -967,3 +967,12 @@ h1 { letter-spacing: 0; }
     @apply bg-background text-foreground;
   }
 }
+
+.pixel-progress {
+  image-rendering: pixelated;
+  border-radius: var(--radius);
+}
+
+.pixel-progress > div {
+  border-radius: var(--radius);
+}

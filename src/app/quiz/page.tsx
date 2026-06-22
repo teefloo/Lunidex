@@ -38,6 +38,10 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { resolveLanguage } from '@/lib/languages';
+import { useAuth } from '@/lib/supabase/AuthProvider';
+import { submitDailyScore } from '@/lib/supabase/leaderboard-client';
+import QuizLeaderboard from '@/components/dashboard/QuizLeaderboard';
+import type { LeaderboardChallenge, LeaderboardMode } from '@/lib/leaderboard';
 
 type GameMode = 'time-attack' | 'survival' | 'marathon';
 type QuizChallenge = 'classic' | 'silhouette' | 'stats';
@@ -103,8 +107,10 @@ function QuizPageContent() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [sessionStreak, setSessionStreak] = useState(0);
-  
+  const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
+
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore();
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
@@ -367,6 +373,24 @@ function QuizPageContent() {
     }
   }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak]);
 
+  // Submit the daily challenge score to the online leaderboard — only when the
+  // daily run finishes and the user is signed in. The score is re-validated and
+  // clamped server-side; no-ops entirely when Supabase is unconfigured.
+  useEffect(() => {
+    if (gameState !== 'finished' || !isDaily || !user) return;
+    let cancelled = false;
+    void submitDailyScore({
+      mode: gameMode as LeaderboardMode,
+      challenge: quizChallenge as LeaderboardChallenge,
+      score,
+    }).then((ok) => {
+      if (ok && !cancelled) setLeaderboardRefresh((n) => n + 1);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [gameState, isDaily, user, gameMode, quizChallenge, score]);
+
   useEffect(() => {
     if (gameMode === 'time-attack' && gameState === 'playing') {
       const timer = setInterval(() => {
@@ -444,6 +468,9 @@ function QuizPageContent() {
                     <Calendar className="w-5 h-5 mr-2" />
                     {t('quiz.daily')}
                   </Button>
+
+                  {/* Online daily leaderboard (hidden when Supabase is unconfigured) */}
+                  <QuizLeaderboard refreshKey={leaderboardRefresh} />
 
                   {/* Filters Section */}
                   <div className="space-y-4 bg-card/50 dark:bg-card/35 p-5 md:p-6 rounded-sm border border-border/50 dark:border-border/40">

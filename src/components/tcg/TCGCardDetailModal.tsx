@@ -5,6 +5,7 @@ import { useEffect, useRef, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import {
   X,
   Zap,
@@ -103,6 +104,19 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const compared = isTCGCompared(displayCard.id);
   const owned = isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
+
+  const handleShareCard = async () => {
+    const url = new URL(
+      `/tcg/cards/${displayCard.id}?lang=${resolvedLang}`,
+      window.location.origin,
+    ).toString();
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success(t('detail.copied'));
+    } catch {
+      window.prompt(t('detail.copied'), url);
+    }
+  };
 
   return createPortal(
     <div lang={resolvedLang} className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -219,6 +233,11 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     active={wishlisted}
                     onClick={() => toggleTCGWishlist(displayCard.id)}
                     label={t('tcg.mark_wishlist')}
+                  />
+                  <ActionPill
+                    active={false}
+                    onClick={handleShareCard}
+                    label={t('detail.share')}
                   />
                 </div>
               </header>

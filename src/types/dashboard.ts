@@ -10,6 +10,14 @@ export interface QuizSession {
   streak: number;
 }
 
+export type BadgeTier = 'bronze' | 'silver' | 'gold';
+
+export interface BadgeTierDefinition {
+  nameKey: string;
+  descKey: string;
+  threshold: number;
+}
+
 export interface BadgeDefinition {
   id: string;
   nameKey: string;
@@ -18,6 +26,7 @@ export interface BadgeDefinition {
   category: 'quiz' | 'pokedex' | 'social' | 'team' | 'discovery';
   condition: (data: BadgeConditionData) => boolean;
   progress: (data: BadgeConditionData) => { current: number; max: number };
+  tiers?: BadgeTierDefinition[];
 }
 
 export interface BadgeConditionData {
@@ -88,6 +97,14 @@ export interface BadgeDefinitionWithStatus extends BadgeDefinition {
   unlocked: boolean;
   progressCurrent: number;
   progressMax: number;
+  tierStatus?: TierStatus;
+}
+
+export interface TierStatus {
+  currentTier: BadgeTier | null;
+  highestTier: BadgeTier;
+  currentTierProgress: number;
+  currentTierMax: number;
 }
 
 export interface ActivityAction {
@@ -105,3 +122,62 @@ export interface ExtensibleMetric {
   icon: string;
   subtitle?: string;
 }
+
+export interface TrainerLevel {
+  level: number;
+  titleKey: string;
+  xp: number;
+  xpForNextLevel: number;
+  xpForCurrentLevel: number;
+}
+
+export interface WeeklyQuest {
+  id: string;
+  nameKey: string;
+  descKey: string;
+  icon: string;
+  target: number;
+  progress: number;
+  xpReward: number;
+}
+
+// ---------------------------------------------------------------------------
+// Public profile (read-only, SEO-indexable)
+// ---------------------------------------------------------------------------
+
+/** Row shape returned by Supabase for public profile queries. */
+export interface PublicProfileRow {
+  id: string;
+  name: string | null;
+  public_handle: string;
+  is_public: boolean;
+  avatar_pokemon_id: number | null;
+  caught_count: number;
+  total_pokemon: number;
+  unlocked_badges: string[];
+  team_ids: number[];
+  quiz_best_score: number;
+  quiz_total_correct: number;
+  member_since: string | null;
+}
+
+/** Derived shape consumed by the public profile UI. */
+export interface PublicProfile {
+  id: string;
+  displayName: string;
+  handle: string;
+  avatarPokemonId: number | null;
+  caughtCount: number;
+  totalPokemon: number;
+  caughtPercent: number;
+  unlockedBadges: string[];
+  teamIds: number[];
+  quizBestScore: number;
+  quizTotalCorrect: number;
+  memberSince: string | null;
+}
+
+/** Handle validation regex: 3-30 lowercase alphanumeric with internal hyphens. */
+export const HANDLE_REGEX = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
+export const HANDLE_MIN_LENGTH = 3;
+export const HANDLE_MAX_LENGTH = 30;

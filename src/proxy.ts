@@ -25,7 +25,11 @@ export function proxy(request: NextRequest) {
     const restPath = '/' + segments.slice(1).join('/');
     const finalPath = restPath === '/' ? '/' : restPath;
 
-    const response = NextResponse.rewrite(new URL(finalPath, request.url));
+    // Preserve the query string when stripping the locale prefix, otherwise
+    // server-side `searchParams` readers (OG image routes, share pages) lose it.
+    const rewriteUrl = new URL(finalPath, request.url);
+    rewriteUrl.search = request.nextUrl.search;
+    const response = NextResponse.rewrite(rewriteUrl);
     if (cookieLang !== urlLocale) {
       response.cookies.set(COOKIE_NAME, urlLocale, {
         path: '/',

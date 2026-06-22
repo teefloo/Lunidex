@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueries } from '@tanstack/react-query';
-import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getPokemonEncounters, getAbilityDetail } from '@/lib/api';
+import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
 import { useParams, useRouter } from 'next/navigation';
 import { 
@@ -19,13 +19,12 @@ import {
   Volume2,
   Play,
   MapPin,
-  SearchX,
   Sparkles
 } from 'lucide-react';
-import { PokemonDetail, PokemonSpecies, PokemonEncounter, PokemonEncounterVersionDetail, PokemonEncounterDetail, TYPE_COLORS } from '@/types/pokemon';
+import { PokemonDetail, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
-import { cn, formatId, formatName, formatLocationName } from '@/lib/utils';
+import { cn, formatId, formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
@@ -58,6 +57,9 @@ const PokemonCards = dynamic(() => import('@/components/pokemon/PokemonCards').t
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 const PokemonMoves = dynamic(() => import('@/components/pokemon/PokemonMoves').then(m => m.PokemonMoves), {
+  loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
+});
+const EncounterLocations = dynamic(() => import('@/components/pokemon/EncounterLocations').then(m => m.EncounterLocations), {
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 
@@ -166,10 +168,8 @@ export function PokemonDetailClient({
         getPokemonSpecies(baseName).catch(() => null),
         getLocalizedPokemonData(name, langId).catch(() => null)
       ]);
-      
-      const encounters = await getPokemonEncounters(pokemon.id).catch(() => []);
-      
-      return { pokemon, species, localized: localized as LocalizedGqlData | null, encounters };
+
+      return { pokemon, species, localized: localized as LocalizedGqlData | null };
     },
     initialData: () => {
       const fetchedLang = initialLocalized?.pokemon_v2_pokemonspeciesnames?.[0]?.pokemon_v2_language?.name;
@@ -182,7 +182,6 @@ export function PokemonDetailClient({
           pokemon: initialPokemon,
           species: initialSpecies,
           localized: initialLocalized as LocalizedGqlData | null,
-          encounters: initialEncounters
         };
       }
       return undefined;
@@ -193,7 +192,6 @@ export function PokemonDetailClient({
   const pokemon = data?.pokemon;
   const species = data?.species;
   const localized = data?.localized;
-  const encounters = data?.encounters;
 
   // Add to history when pokemon data is loaded
   useEffect(() => {
@@ -934,80 +932,11 @@ export function PokemonDetailClient({
 
             {/* Locations Tab */}
             <TabsContent value="locations" className="space-y-6">
-              <div className="glass-panel p-6 md:p-8 rounded-sm">
-                <h3 className="text-2xl font-black text-foreground/90 flex items-center gap-3 mb-8 pb-4 border-b border-border/60">
-                  <div className="p-2 bg-green-500/10 rounded-sm">
-                    <MapPin className="w-6 h-6 text-green-500" />
-                  </div>
-                  {t('detail.where_to_find')}
-                </h3>
-
-                {encounters && encounters.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4">
-                    {encounters.map((enc: PokemonEncounter, i: number) => (
-                      <div key={i} className="p-6 bg-secondary/20 border border-border/40 rounded-sm space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-background/40 rounded-sm">
-                            <MapPin className="w-4 h-4 text-primary" />
-                          </div>
-                          <span className="font-black text-base text-foreground/80 capitalize">
-                            {formatLocationName(enc.location_area.name)}
-                          </span>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {enc.version_details.map((vd: PokemonEncounterVersionDetail, vi: number) => (
-                            <div key={vi} className="p-4 bg-background/40 rounded-sm border border-border/40 flex flex-col gap-2">
-                              <div className="flex items-center mb-1">
-                                <span className="text-[10px] font-black uppercase text-primary/60">{formatName(vd.version.name)}</span>
-                              </div>
-                              <div className="flex flex-col gap-2">
-                                {(() => {
-                                  return vd.encounter_details.map((ed: PokemonEncounterDetail, ei: number) => {
-                                    const actualChance = ed.chance;
-                                    return (
-                                      <div key={ei} className="flex flex-col gap-1 pb-2 border-b border-border/40 last:border-0 last:pb-0">
-                                        <div className="flex justify-between items-center text-xs">
-                                          <span className="font-bold text-foreground/70 capitalize">{formatName(ed.method.name)}</span>
-                                          <span className="font-black text-foreground/90">{actualChance}%</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                          <div className="flex-1 h-1.5 rounded-full bg-secondary/50 overflow-hidden border border-border/40">
-                                            <div
-                                              className="h-full rounded-full bg-green-500 transition-all duration-500"
-                                              style={{ width: `${Math.min(actualChance, 100)}%` }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="text-[10px] text-foreground/50">
-                                          Lv. {ed.min_level}{ed.min_level !== ed.max_level ? ` - ${ed.max_level}` : ''}
-                                        </div>
-                                        {ed.condition_values && ed.condition_values.length > 0 && (
-                                          <div className="text-[11px] md:text-[10px] text-primary/70 uppercase">
-                                            {ed.condition_values.map((c) => formatName(c.name)).join(', ')}
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  });
-                                })()}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <div className="p-4 bg-secondary/30 rounded-full mb-4">
-                      <SearchX className="w-10 h-10 text-foreground/20" />
-                    </div>
-                    <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm">{t('detail.no_location')}</p>
-                    <p className="text-[10px] text-foreground/30 mt-2 max-w-xs uppercase">{t('detail.no_location_desc')}</p>
-                  </div>
-                )}
-              </div>
+              <EncounterLocations
+                pokemonId={pokemon.id}
+                pokemonName={displayName}
+                initialEncounters={initialEncounters}
+              />
             </TabsContent>
 
             {/* Cards Tab */}

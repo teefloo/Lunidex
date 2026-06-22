@@ -57,6 +57,19 @@ utilisateur à `auth.uid() = user_id`.
 
 > Avec la CLI Supabase : `supabase db push` applique le même fichier.
 
+Exécute ensuite [`supabase/migrations/0002_quiz_scores.sql`](supabase/migrations/0002_quiz_scores.sql)
+de la même façon. Ce script crée la table `quiz_scores` (classement du défi
+quotidien), son index `(date, score desc)`, active RLS et ajoute les politiques :
+**lecture publique** (`anon` + `authenticated`) et **écriture réservée au
+propriétaire authentifié** (`auth.uid() = user_id`) — impossible donc d'écrire un
+score au nom d'un autre. Tant que les clés Supabase sont absentes, aucun
+classement n'apparaît et l'app reste 100 % local-first.
+
+Enfin, exécute [`supabase/migrations/0003_quiz_leaderboard_rpc.sql`](supabase/migrations/0003_quiz_leaderboard_rpc.sql) :
+il ajoute les fonctions `quiz_leaderboard_top` et `quiz_leaderboard_user_rank`
+(classement « meilleur score par joueur » calculé côté Postgres, `SECURITY
+INVOKER`), utilisées par l'API au lieu d'agréger les lignes côté serveur.
+
 ## Étape 5 — Configurer l'authentification e-mail
 
 Dashboard → **Authentication** → **Providers** → **Email** : activé par défaut.
@@ -101,6 +114,13 @@ Tant qu'un provider n'est pas configuré, son bouton renverra une erreur explici
 | Fichier | Rôle |
 |---|---|
 | `supabase/migrations/0001_user_state.sql` | Table `user_state` + trigger + RLS |
+| `supabase/migrations/0002_quiz_scores.sql` | Table `quiz_scores` (classement quotidien) + index + RLS |
+| `supabase/migrations/0003_quiz_leaderboard_rpc.sql` | Fonctions de classement (ranking côté Postgres) |
+| `src/lib/leaderboard.ts` | Types, clamp anti-triche & validation du classement |
+| `src/lib/supabase/server.ts` | Client Supabase côté serveur (route handlers, RLS via JWT) |
+| `src/lib/supabase/leaderboard-client.ts` | Soumission / lecture du classement (client) |
+| `src/app/api/quiz/leaderboard/route.ts` | API : POST (clamp serveur) + GET (top N + rang) |
+| `src/components/dashboard/QuizLeaderboard.tsx` | UI classement (onglets Jour / Semaine / Général) |
 | `src/lib/supabase/client.ts` | Client navigateur (singleton, PKCE) |
 | `src/lib/supabase/AuthProvider.tsx` | Contexte session + `useAuth()` |
 | `src/lib/supabase/sync-state.ts` | Extraction / application / fusion du snapshot |

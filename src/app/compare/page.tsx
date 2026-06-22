@@ -4,8 +4,11 @@ import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { getAllPokemonSearchIndex, getPokemonDetail, getPokemonSpecies } from '@/lib/api';
+import { getAllPokemonSearchIndex, getPokemonDetail, getPokemonSpecies, getTypeRelations } from '@/lib/api';
+import { TypeRelations } from '@/lib/api/rest';
 import { TYPE_COLORS, PokemonDetail, PokemonSpecies } from '@/types/pokemon';
+import { analyzeTeam } from '@/lib/team-analysis';
+import { getCompareSuggestions } from '@/lib/counter-suggestions';
 import { 
   ArrowLeft, 
   Loader2, 
@@ -19,7 +22,11 @@ import {
   Sparkles,
   X,
   Trash2,
-  Trophy
+  Trophy,
+  ShieldAlert,
+  Heart,
+  AlertTriangle,
+  Zap
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -203,6 +210,36 @@ export default function ComparePage() {
 
     return stats;
   }, [compareData]);
+
+  const typeRelationsQueries = useQueries({
+    queries: Object.keys(TYPE_COLORS).map(typeName => ({
+      queryKey: ['typeRelations', typeName],
+      queryFn: () => getTypeRelations(typeName),
+      staleTime: 24 * 60 * 60 * 1000,
+    }))
+  });
+
+  const analysis = useMemo(() => {
+    if (compareData.length === 0 || typeRelationsQueries.some(q => q.isLoading)) return null;
+    const pokemonDataList = compareData.map(d => d.pokemon);
+    const relationsMap: Record<string, TypeRelations> = {};
+    Object.keys(TYPE_COLORS).forEach((typeName, i) => {
+      const data = typeRelationsQueries[i]?.data;
+      if (data) relationsMap[typeName] = data;
+    });
+    return analyzeTeam(pokemonDataList, relationsMap);
+  }, [compareData, typeRelationsQueries]);
+
+  const suggestions = useMemo(() => {
+    if (!analysis) return null;
+    const relationsMap: Record<string, TypeRelations> = {};
+    Object.keys(TYPE_COLORS).forEach((typeName, i) => {
+      const data = typeRelationsQueries[i]?.data;
+      if (data) relationsMap[typeName] = data;
+    });
+    const teamTypes = compareData.flatMap(d => d.pokemon.types.map(t => t.type.name));
+    return getCompareSuggestions(analysis, relationsMap, [...new Set(teamTypes)]);
+  }, [analysis, compareData, typeRelationsQueries]);
 
   return (
     <div className="app-page text-foreground pb-20 overflow-x-hidden">
@@ -410,6 +447,152 @@ export default function ComparePage() {
                     )}
                   </div>
                 </div>
+              </motion.div>
+            )}
+
+            {/* Suggestions Section */}
+            {suggestions && (suggestions.counters.length > 0 || suggestions.partners.length > 0 || suggestions.sharedWeaknesses.length > 0) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="glass-panel p-8 rounded-sm"
+              >
+                <div className="mb-8">
+                  <h3 className="text-2xl font-black mb-2 tracking-tight flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-sm">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                    </div>
+                    {t('compare.suggestions_title')}
+                  </h3>
+                  <p className="text-sm text-foreground/40 font-bold uppercase tracking-widest">{t('compare.suggestions_subtitle')}</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Threats / Counters */}
+                  {suggestions.counters.length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-black uppercase tracking-widest text-red-500/60 flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4" /> {t('compare.counters_title')}
+                      </h4>
+                      <p className="text-[10px] text-foreground/40 font-bold">{t('compare.counters_desc')}</p>
+                      <div className="space-y-3">
+                        {suggestions.counters.map(counter => (
+                          <div key={counter.type} className="p-4 rounded-sm bg-red-500/5 border border-red-500/10 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="glass-tag px-3 py-1 text-[10px]"
+                                  style={{ backgroundColor: `${TYPE_COLORS[counter.type]}d9`, borderColor: TYPE_COLORS[counter.type] }}
+                                >
+                                  {t(`types.${counter.type}`)}
+                                </span>
+                                <span className="text-[10px] text-foreground/30 font-bold">
+                                  {t('compare.threat_severity', { severity: counter.severity })}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {counter.threatTypes.map(threat => (
+                                <span
+                                  key={threat}
+                                  className="px-2 py-0.5 rounded-sm text-[9px] font-black uppercase bg-red-500/10 border border-red-500/15"
+                                  style={{ color: TYPE_COLORS[threat] }}
+                                >
+                                  {t(`types.${threat}`)}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Recommended Partners */}
+                  {suggestions.partners.length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-black uppercase tracking-widest text-green-500/60 flex items-center gap-2">
+                        <Heart className="w-4 h-4" /> {t('compare.partners_title')}
+                      </h4>
+                      <p className="text-[10px] text-foreground/40 font-bold">{t('compare.partners_desc')}</p>
+                      <div className="space-y-3">
+                        {suggestions.partners.map(partner => (
+                          <div key={partner.type} className="p-4 rounded-sm bg-green-500/5 border border-green-500/10 flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <span
+                                className="glass-tag px-3 py-1 text-[10px]"
+                                style={{ backgroundColor: `${TYPE_COLORS[partner.type]}d9`, borderColor: TYPE_COLORS[partner.type] }}
+                              >
+                                {t(`types.${partner.type}`)}
+                              </span>
+                              <span className="text-[10px] text-foreground/40 font-bold">
+                                {partner.reason === 'both'
+                                  ? t('compare.covers_both')
+                                  : partner.reason === 'covers_weakness'
+                                  ? t('compare.covers_weakness', { types: partner.coversTypes.map(ct => t(`types.${ct}`)).join(', ') })
+                                  : t('compare.fills_coverage')}
+                              </span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                const term = partner.type;
+                                setCompareSearch(term);
+                              }}
+                              className="rounded-sm text-[10px] font-black uppercase gap-1 text-primary hover:bg-primary/10 shrink-0"
+                              aria-label={t('compare.add_to_compare')}
+                            >
+                              <Plus className="w-3 h-3" />
+                              {t('compare.add_to_compare')}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Shared Weaknesses */}
+                {suggestions.sharedWeaknesses.length > 0 && (
+                  <div className="mt-8 pt-6 border-t border-border/40">
+                    <h4 className="text-sm font-black uppercase tracking-widest text-orange-500/60 flex items-center gap-2 mb-4">
+                      <AlertTriangle className="w-4 h-4" /> {t('compare.shared_weaknesses')}
+                    </h4>
+                    <p className="text-[10px] text-foreground/40 font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestions.sharedWeaknesses.map(type => (
+                        <span
+                          key={type}
+                          className="px-3 py-1.5 rounded-sm border border-orange-500/10 bg-orange-500/5 text-[10px] font-black uppercase"
+                          style={{ color: TYPE_COLORS[type] }}
+                        >
+                          {t(`types.${type}`)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Stat Deficiencies */}
+                {suggestions.statDeficiencies.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-border/40">
+                    <h4 className="text-sm font-black uppercase tracking-widest text-yellow-500/60 flex items-center gap-2 mb-4">
+                      <Zap className="w-4 h-4" /> {t('compare.stat_deficiencies')}
+                    </h4>
+                    <p className="text-[10px] text-foreground/40 font-bold mb-4">{t('compare.stat_deficiencies_desc')}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestions.statDeficiencies.map(stat => (
+                        <span
+                          key={stat}
+                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[10px] font-black uppercase text-yellow-500"
+                        >
+                          {t(`stats.${stat}`)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 

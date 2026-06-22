@@ -38,7 +38,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const typeLabel = typeInfo ? ` [${typeInfo}]` : '';
   const title = `${card.name} - ${setName || 'TCG'} | PrimeDex`;
   const description = `${card.name}${typeLabel}${rarityLabel}${setLabel}. HP ${card.hp ?? '?'}. Card details, attacks, abilities, and pricing on PrimeDex.`;
-  const imageUrl = card.imageUrl || card.image || `${SITE_URL}/images/card-placeholder.svg`;
+  // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
+  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${lang ?? currentLang}`;
 
   return {
     title,
@@ -52,13 +53,13 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       description,
       url: `/${currentLang}/tcg/cards/${id}`,
       type: 'website',
-      images: [{ url: imageUrl, width: 734, height: 1024, alt: card.name }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: card.name }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [imageUrl],
+      images: [ogImage],
     },
   };
 }

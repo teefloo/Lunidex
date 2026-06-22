@@ -143,6 +143,11 @@ interface PrimeDexStore {
   addBadge: (badgeId: string) => void;
   hasBadge: (badgeId: string) => boolean;
 
+  // Weekly Quest
+  weeklyQuestClaimedWeek: number | null;
+  claimWeeklyQuest: () => void;
+  hasClaimedWeeklyQuest: (weekNumber: number) => boolean;
+
   resetFilters: () => void;
 
   // Dashboard / Activity tracking
@@ -239,6 +244,7 @@ export const SYNCED_KEYS = [
   'soundEnabled',
   'theme',
   'language',
+  'weeklyQuestClaimedWeek',
 ] as const;
 
 export type SyncedKey = (typeof SYNCED_KEYS)[number];
@@ -423,6 +429,18 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         badges: state.badges.includes(badgeId) ? state.badges : [...state.badges, badgeId]
       })),
       hasBadge: (badgeId) => get().badges.includes(badgeId),
+
+      weeklyQuestClaimedWeek: null,
+      claimWeeklyQuest: () => {
+        const now = new Date();
+        const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+        const dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        const weekNum = Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
+        set({ weeklyQuestClaimedWeek: weekNum });
+      },
+      hasClaimedWeeklyQuest: (weekNumber) => get().weeklyQuestClaimedWeek === weekNumber,
 
       resetFilters: () => set({
         searchTerm: '',

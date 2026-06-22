@@ -1,10 +1,12 @@
 'use client';
 
-import { Trophy, Gamepad2, Zap, EyeOff, BrainCircuit, Heart, Users, Shapes, Backpack, Award, CircleDot } from 'lucide-react';
+import { Trophy, Gamepad2, Zap, EyeOff, BrainCircuit, Heart, Users, Shapes, Backpack, Award, CircleDot, Star, Flame, Droplets, Leaf, Layers, Check } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import type { DashboardData } from '@/types/dashboard';
+import { usePrimeDexStore } from '@/store/primedex';
+import { computeTotalXP, getTrainerLevel, getXPProgress, computeWeeklyQuest } from '@/lib/trainer';
+import type { DashboardData, BadgeTier } from '@/types/dashboard';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Pokeball: <CircleDot className="w-5 h-5" />,
@@ -18,11 +20,27 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Heart: <Heart className="w-5 h-5" />,
   Users: <Users className="w-5 h-5" />,
   Shapes: <Shapes className="w-5 h-5" />,
+  Flame: <Flame className="w-5 h-5" />,
+  Droplets: <Droplets className="w-5 h-5" />,
+  Leaf: <Leaf className="w-5 h-5" />,
+  Layers: <Layers className="w-5 h-5" />,
 };
 
 function BadgeIcon({ iconName }: { iconName: string }) {
   return ICON_MAP[iconName] || <Trophy className="w-5 h-5" />;
 }
+
+const TIER_COLORS: Record<BadgeTier, { bg: string; border: string; text: string; glow: string }> = {
+  bronze: { bg: 'bg-amber-700/15', border: 'border-amber-700/30', text: 'text-amber-600', glow: 'shadow-[0_0_8px_rgba(180,83,9,0.25)]' },
+  silver: { bg: 'bg-slate-300/15', border: 'border-slate-400/30', text: 'text-slate-400', glow: 'shadow-[0_0_8px_rgba(148,163,184,0.3)]' },
+  gold: { bg: 'bg-yellow-500/15', border: 'border-yellow-500/30', text: 'text-yellow-400', glow: 'shadow-[0_0_10px_rgba(234,179,8,0.3)]' },
+};
+
+const TIER_LABELS: Record<BadgeTier, string> = {
+  bronze: 'dashboard.badges.tier_bronze',
+  silver: 'dashboard.badges.tier_silver',
+  gold: 'dashboard.badges.tier_gold',
+};
 
 interface ProfileAndBadgesProps {
   data: DashboardData;
@@ -31,6 +49,56 @@ interface ProfileAndBadgesProps {
 export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
   const { t } = useTranslation();
   const { profile, badges } = data;
+  const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
+  const totalQuizCorrect = usePrimeDexStore((s) => s.totalQuizCorrect);
+  const weeklyQuestClaimedWeek = usePrimeDexStore((s) => s.weeklyQuestClaimedWeek);
+  const claimWeeklyQuest = usePrimeDexStore((s) => s.claimWeeklyQuest);
+
+  const xp = computeTotalXP(
+    {
+      caughtCount: data.pokedex.caughtCount,
+      favoriteCount: data.badges.unlocked.filter((b) => b.category === 'social').length,
+      teamCount: 0,
+      quizHighScore: data.quiz.bestScore,
+      quizHighScoreTA: 0,
+      quizHighScoreSilhouette: 0,
+      quizHighScoreStats: 0,
+      totalQuizSessions: data.quiz.totalSessions,
+      uniqueTypesViewed: data.pokedex.byType.length,
+    },
+    { tcgOwnedCount: tcgOwnedCards.length, totalQuizCorrect },
+  );
+
+  const trainerLevel = getTrainerLevel(xp);
+  const xpProgress = getXPProgress(xp);
+
+  const weeklyQuest = computeWeeklyQuest(
+    new Date(),
+    {
+      caughtCount: data.pokedex.caughtCount,
+      favoriteCount: 0,
+      teamCount: 0,
+      quizHighScore: data.quiz.bestScore,
+      quizHighScoreTA: 0,
+      quizHighScoreSilhouette: 0,
+      quizHighScoreStats: 0,
+      totalQuizSessions: data.quiz.totalSessions,
+      uniqueTypesViewed: data.pokedex.byType.length,
+    },
+    tcgOwnedCards.length,
+  );
+
+  const weekNum = (() => {
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
+  })();
+
+  const questClaimed = weeklyQuestClaimedWeek === weekNum;
+  const questComplete = weeklyQuest.progress >= weeklyQuest.target;
 
   return (
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
@@ -66,6 +134,34 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
         </div>
       </div>
 
+      {/* Trainer Level + XP Bar */}
+      <div className="p-4 rounded-sm border border-primary/20 bg-primary/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full" />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4 text-primary" />
+            <span className="text-xs font-black uppercase tracking-[0.15em] text-foreground/60">
+              {t('dashboard.trainer.title')}
+            </span>
+          </div>
+          <span className="text-sm font-black text-primary">
+            {t('dashboard.trainer.level', { level: trainerLevel.level })}
+          </span>
+        </div>
+        <p className="text-[10px] font-bold text-foreground/40 mb-2">
+          {t(trainerLevel.titleKey)}
+        </p>
+        <div className="h-2.5 rounded-full bg-muted/60 overflow-hidden pixel-progress">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-primary via-orange-400 to-yellow-400 transition-all duration-700"
+            style={{ width: `${xpProgress.percent}%` }}
+          />
+        </div>
+        <p className="text-[9px] font-semibold text-foreground/40 mt-1 text-right">
+          {t('dashboard.trainer.xp_bar', { current: xpProgress.current, max: xpProgress.max })}
+        </p>
+      </div>
+
       {/* Badges */}
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -79,19 +175,36 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          {badges.unlocked.slice(0, 6).map((badge) => (
-            <div
-              key={badge.id}
-              className="relative p-3 rounded-sm border border-primary/20 bg-primary/5 text-primary flex flex-col items-center gap-1.5 text-center group hover:bg-primary/10 transition-all duration-300"
-            >
-              <div className="p-1.5 rounded-lg bg-primary/20 shadow-[0_0_10px_rgba(227,53,13,0.2)] group-hover:scale-110 transition-transform duration-300">
-                <BadgeIcon iconName={badge.icon} />
+          {badges.unlocked.slice(0, 6).map((badge) => {
+            const tier = badge.tierStatus?.currentTier;
+            const tierStyle = tier ? TIER_COLORS[tier] : null;
+            return (
+              <div
+                key={badge.id}
+                className={cn(
+                  'relative p-3 rounded-sm border flex flex-col items-center gap-1.5 text-center group transition-all duration-300',
+                  tierStyle
+                    ? `${tierStyle.bg} ${tierStyle.border} ${tierStyle.text} hover:brightness-110 ${tierStyle.glow}`
+                    : 'border-primary/20 bg-primary/5 text-primary hover:bg-primary/10'
+                )}
+              >
+                <div className={cn(
+                  'p-1.5 rounded-lg shadow-sm group-hover:scale-110 transition-transform duration-300',
+                  tierStyle ? `${tierStyle.bg}` : 'bg-primary/20 shadow-[0_0_10px_rgba(227,53,13,0.2)]'
+                )}>
+                  <BadgeIcon iconName={badge.icon} />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-[0.08em] leading-tight">
+                  {t(badge.nameKey)}
+                </span>
+                {tier && (
+                  <span className={cn('text-[8px] font-black uppercase tracking-wider', tierStyle?.text)}>
+                    {t(TIER_LABELS[tier])}
+                  </span>
+                )}
               </div>
-              <span className="text-[9px] font-bold uppercase tracking-[0.08em] leading-tight">
-                {t(badge.nameKey)}
-              </span>
-            </div>
-          ))}
+            );
+          })}
           {badges.unlocked.length === 0 && (
             <p className="col-span-full text-xs text-foreground/40 font-medium text-center py-4">
               {t('dashboard.badges.locked')}
@@ -130,6 +243,76 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Weekly Quest */}
+      <div className={cn(
+        'p-4 rounded-sm border transition-all duration-300',
+        questComplete && !questClaimed
+          ? 'border-green-500/30 bg-green-500/5'
+          : 'border-border/40 bg-muted/20'
+      )}>
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+            <Zap className="w-3.5 h-3.5 text-yellow-500" />
+            {t('dashboard.weekly.title')}
+          </h4>
+          {questComplete && (
+            <span className="text-[9px] font-bold uppercase tracking-wider text-green-500">
+              {t('dashboard.weekly.complete')}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-muted/60 text-foreground/50">
+            <BadgeIcon iconName={weeklyQuest.icon} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground/70 truncate">
+              {t(weeklyQuest.nameKey)}
+            </p>
+            <p className="text-[9px] text-foreground/40 mt-0.5">
+              {t(weeklyQuest.descKey)}
+            </p>
+            <div className="mt-1.5 h-1.5 rounded-full bg-muted/70 overflow-hidden">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all duration-700',
+                  questComplete
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-400'
+                    : 'bg-gradient-to-r from-yellow-500 to-orange-400'
+                )}
+                style={{
+                  width: `${weeklyQuest.target > 0
+                    ? Math.round((weeklyQuest.progress / weeklyQuest.target) * 100)
+                    : 0}%`
+                }}
+              />
+            </div>
+            <p className="text-[9px] font-semibold text-foreground/40 mt-0.5">
+              {weeklyQuest.progress} / {weeklyQuest.target}
+            </p>
+          </div>
+          <div className="text-right">
+            {questComplete && !questClaimed ? (
+              <button
+                onClick={() => claimWeeklyQuest()}
+                className="text-[9px] font-bold uppercase tracking-wider text-green-500 hover:text-green-400 transition-colors px-2 py-1 rounded bg-green-500/10 hover:bg-green-500/20"
+              >
+                {t('dashboard.weekly.xp_reward', { amount: weeklyQuest.xpReward })}
+              </button>
+            ) : questClaimed ? (
+              <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/30 flex items-center gap-1">
+                <Check className="w-3 h-3" />
+                {t('dashboard.weekly.complete')}
+              </span>
+            ) : (
+              <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/30">
+                {t('dashboard.weekly.xp_reward', { amount: weeklyQuest.xpReward })}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

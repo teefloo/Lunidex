@@ -18,11 +18,11 @@ import {
   Zap,
   BarChart3,
   Loader2,
-  Share,
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { ShareButton } from '@/components/share/ShareButton';
 import { useMemo, useEffect, useState, SVGProps } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { resolveLanguage } from '@/lib/languages';
@@ -59,12 +59,12 @@ export default function TeamPage() {
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
 
-  // Team sharing logic: Check for team code in URL
+  // Team sharing logic: Check for team in URL (`?code=25-6-9` or `?ids=25,6,9`)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const teamCode = urlParams.get('code');
+    const teamCode = urlParams.get('code') ?? urlParams.get('ids');
     if (teamCode && team.length === 0) {
-      const ids = teamCode.split('-').map(Number).filter(id => !isNaN(id));
+      const ids = teamCode.split(/[-,]/).map(Number).filter(id => !isNaN(id));
       if (ids.length > 0) {
         ids.forEach(id => addToTeam(id));
         toast.success(t('team.toast_loaded'));
@@ -169,22 +169,7 @@ export default function TeamPage() {
     }
   };
 
-  const handleShareTeam = () => {
-    if (team.length === 0) return;
-    const teamCode = team.join('-');
-    const shareUrl = `${window.location.origin}${window.location.pathname}?code=${teamCode}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: t('team.share_title'),
-        text: t('team.share_text'),
-        url: shareUrl
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      toast.success(t('team.share_copied'));
-    }
-  };
+  const shareTeamPath = `/team/share?code=${team.join('-')}&lang=${resolvedLang}`;
 
   const synergyScore = useMemo(() => {
     if (!analysis || pokemonData.length === 0) return 0;
@@ -227,14 +212,12 @@ export default function TeamPage() {
                   </Button>
                 )}
                 {pokemonData.length > 0 && (
-                  <Button
-                    variant="outline"
-                    onClick={handleShareTeam}
+                  <ShareButton
+                    path={shareTeamPath}
+                    label={t('detail.share')}
+                    copiedMessage={t('team.share_copied')}
                     className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
-                  >
-                    <Share className="w-4 h-4" />
-                    {t('detail.share')}
-                  </Button>
+                  />
                 )}
                 {pokemonData.length > 0 && (
                   <Button
