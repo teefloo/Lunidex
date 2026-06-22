@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getSupabaseClient } from './client';
-import { useAuth } from './AuthProvider';
+import { AuthContext } from './AuthProvider';
 import { applySyncState, mergeSyncState, pickSyncState } from './sync-state';
 
 const TABLE = 'user_state';
@@ -22,7 +22,9 @@ const DEBOUNCE_MS = 1200;
  * Mounted once, near the app root. No-ops entirely when Supabase is unconfigured.
  */
 export function useSupabaseSync(): void {
-  const { user, enabled } = useAuth();
+  const ctx = useContext(AuthContext);
+  const user = ctx?.user ?? null;
+  const enabled = ctx?.enabled ?? false;
   const hasHydrated = usePrimeDexStore((s) => s._hasHydrated);
 
   const lastPushedRef = useRef<string | null>(null);
