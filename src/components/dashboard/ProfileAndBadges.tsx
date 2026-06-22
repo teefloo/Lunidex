@@ -70,7 +70,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
   }, [user]);
 
   const displayName = publicHandle
-    ? `@${publicHandle}`
+    ? publicHandle
     : (user?.user_metadata?.name as string | undefined)?.trim() ||
       (user?.user_metadata?.display_name as string | undefined)?.trim() ||
       user?.email?.split('@')[0] ||
