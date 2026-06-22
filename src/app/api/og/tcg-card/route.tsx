@@ -9,7 +9,9 @@ import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 
-export const runtime = 'edge';
+// Node.js runtime: the edge bundle (next/og + satori + vendored fonts) exceeds
+// the 1 MB edge function size limit; the Node serverless function has headroom.
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;

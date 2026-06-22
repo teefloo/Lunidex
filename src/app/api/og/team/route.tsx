@@ -10,7 +10,9 @@ import { OG_SIZE, OG_THEME, OG_TYPE_COLORS, synergyColor } from '@/lib/og/theme'
 import { SITE_URL } from '@/lib/site';
 import type { PokemonDetail } from '@/types/pokemon';
 
-export const runtime = 'edge';
+// Node.js runtime: the edge bundle (next/og + satori + vendored fonts) exceeds
+// the 1 MB edge function size limit; the Node serverless function has headroom.
+export const runtime = 'nodejs';
 
 // NOTE: satori (next/og) renders a stray black rectangle at the SVG origin when
 // `box-shadow` or `position: absolute` is used inside a `flex-direction: column`

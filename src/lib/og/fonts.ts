@@ -1,12 +1,18 @@
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import type { SupportedLanguage } from '@/lib/languages';
 
 /**
  * Font loading for `next/og` (satori). Satori only accepts static TTF/OTF/WOFF
  * buffers — never WOFF2 or variable fonts — so the Soft Pixel brand faces
  * (Pixelify Sans / Nunito) are vendored as static TTFs next to this module and
- * loaded with `fetch(new URL('./fonts/...', import.meta.url))`. That pattern
- * makes the bundler emit the asset alongside the route chunk and works in the
- * edge runtime used by the OG routes (where `fs` is unavailable).
+ * read with `fs.readFile(fileURLToPath(new URL('./fonts/...', import.meta.url)))`.
+ * The `new URL(..., import.meta.url)` reference makes the bundler emit the asset
+ * alongside the route chunk and have @vercel/nft trace it into the function.
+ *
+ * The OG routes run on the Node.js runtime (not edge): the edge bundle of
+ * `next/og` + satori + the vendored faces exceeds the 1 MB edge function size
+ * limit, whereas the Node serverless function has ample headroom.
  *
  * NOTE: the optional CJK fallback uses `fetch` purely to load a *font* subset
  * (not application data), which is the standard ImageResponse pattern and sits
@@ -25,16 +31,25 @@ export interface OgFont {
 
 let brandFontsPromise: Promise<OgFont[]> | null = null;
 
+function readFontFile(file: string): Promise<Buffer> {
+  return readFile(fileURLToPath(new URL(`./fonts/${file}`, import.meta.url)));
+}
+
+/** Buffer → standalone ArrayBuffer slice (avoids a shared-pool offset). */
+function toArrayBuffer(buf: Buffer): ArrayBuffer {
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+}
+
 async function loadBrandFonts(): Promise<OgFont[]> {
   const [pixelify, nunito, nunitoExtra] = await Promise.all([
-    fetch(new URL('./fonts/PixelifySans-Bold.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./fonts/Nunito-Bold.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./fonts/Nunito-ExtraBold.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
+    readFontFile('PixelifySans-Bold.ttf'),
+    readFontFile('Nunito-Bold.ttf'),
+    readFontFile('Nunito-ExtraBold.ttf'),
   ]);
   return [
-    { name: 'Pixelify Sans', data: pixelify, weight: 700, style: 'normal' },
-    { name: 'Nunito', data: nunito, weight: 700, style: 'normal' },
-    { name: 'Nunito', data: nunitoExtra, weight: 800, style: 'normal' },
+    { name: 'Pixelify Sans', data: toArrayBuffer(pixelify), weight: 700, style: 'normal' },
+    { name: 'Nunito', data: toArrayBuffer(nunito), weight: 700, style: 'normal' },
+    { name: 'Nunito', data: toArrayBuffer(nunitoExtra), weight: 800, style: 'normal' },
   ];
 }
 
