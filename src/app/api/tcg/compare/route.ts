@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCard } from '@/lib/api/tcg';
+import { ipKey, rateLimit } from '@/lib/rate-limit';
+
+const MAX_COMPARE_IDS = 4;
 
 export async function GET(request: NextRequest) {
+  if (!rateLimit(`tcg-compare:${ipKey(request)}`, 20)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   try {
     const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
     const ids = request.nextUrl.searchParams.get('ids')?.split(',').map((id) => id.trim()).filter(Boolean) ?? [];
 
     if (ids.length === 0) {
       return NextResponse.json({ error: 'Missing ids' }, { status: 400 });
+    }
+
+    if (ids.length > MAX_COMPARE_IDS) {
+      return NextResponse.json({ error: `Too many ids (max ${MAX_COMPARE_IDS})` }, { status: 400 });
     }
 
     const cards = await Promise.all(ids.map(async (id) => getTCGCard(id, lang)));

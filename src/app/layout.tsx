@@ -152,7 +152,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     other: {
-      "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || "pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg",
+      ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ? { "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION } : {}),
       "og:locale:alternate": supportedLanguages
         .filter((l) => l !== lang)
         .map((l) => languageToOpenGraphLocale[l])

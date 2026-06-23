@@ -49,6 +49,7 @@ function PokemonCardBase({ id }: { id: number }) {
         style={styles.image}
         contentFit="contain"
         transition={150}
+        accessibilityLabel={name ? formatName(name) : undefined}
       />
 
       <Text style={[styles.name, { color: palette.text }]} numberOfLines={1}>

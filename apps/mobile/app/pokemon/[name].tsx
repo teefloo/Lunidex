@@ -60,6 +60,7 @@ export default function PokemonDetailScreen() {
             style={styles.heroImage}
             contentFit="contain"
             transition={200}
+            accessibilityLabel={formatName(data.name)}
           />
         </View>
 

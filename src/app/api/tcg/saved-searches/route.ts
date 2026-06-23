@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decodeTCGUserState, encodeTCGUserState, TCG_USER_STATE_COOKIE } from '@/lib/tcg-user-state';
+import { readJsonBody } from '@/lib/api/route-helpers';
 import type { TCGSavedSearch } from '@/types/tcg';
 
 export async function GET(request: NextRequest) {
@@ -42,7 +43,8 @@ export async function DELETE(request: NextRequest) {
 function persistState(state: ReturnType<typeof decodeTCGUserState>) {
   const response = NextResponse.json(state);
   response.cookies.set(TCG_USER_STATE_COOKIE, encodeTCGUserState(state), {
-    httpOnly: false,
+    httpOnly: true,
+    secure: true,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 365,
@@ -50,11 +52,3 @@ function persistState(state: ReturnType<typeof decodeTCGUserState>) {
   return response;
 }
 
-async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
-  try {
-    const payload = await request.json();
-    return payload && typeof payload === 'object' ? (payload as T) : null;
-  } catch {
-    return null;
-  }
-}

@@ -1,5 +1,6 @@
 // Metro config tuned for an npm-workspaces monorepo: watch the repo root so
 // changes in packages/core hot-reload, and let Metro resolve hoisted deps.
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
 

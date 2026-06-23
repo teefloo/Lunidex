@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFilterOptions, normalizeTcgPositiveInteger, searchCards } from '@/lib/api/tcg';
 import { buildTCGSearchInsights, parseTCGSearchState } from '@/lib/tcg-research';
+import { ipKey, rateLimit } from '@/lib/rate-limit';
 import type { TCGSearchFacets } from '@/types/tcg';
 
 export async function GET(request: NextRequest) {
+  if (!rateLimit(`tcg-search:${ipKey(request)}`, 30)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
   try {
     const searchState = parseTCGSearchState(request.nextUrl.searchParams);
     const page = normalizeTcgPositiveInteger(Number(request.nextUrl.searchParams.get('page') ?? '1'), 1);
@@ -35,9 +39,10 @@ export async function GET(request: NextRequest) {
 }
 
 function buildFacets(cards: Awaited<ReturnType<typeof searchCards>>['cards']): TCGSearchFacets {
+  const setLabelMap = new Map(cards.map((card) => [card.set?.id ?? 'unknown', card.set?.name ?? 'Unknown']));
   return {
     cards: cards.length,
-    sets: buildCounts(cards.map((card) => card.set?.id ?? 'unknown'), cards.map((card) => card.set?.name ?? 'Unknown')),
+    sets: buildCounts(cards.map((card) => card.set?.id ?? 'unknown'), setLabelMap),
     rarities: buildCounts(cards.map((card) => card.rarity ?? 'Unknown')),
     types: buildCounts(cards.flatMap((card) => card.types ?? [])),
     stages: buildCounts(cards.map((card) => card.stage ?? 'Unknown')),
@@ -46,14 +51,14 @@ function buildFacets(cards: Awaited<ReturnType<typeof searchCards>>['cards']): T
   };
 }
 
-function buildCounts(values: string[], labels?: string[]) {
+function buildCounts(values: string[], labelMap?: Map<string, string>) {
   const counts = new Map<string, number>();
   values.forEach((value) => counts.set(value, (counts.get(value) ?? 0) + 1));
 
   return [...counts.entries()]
-    .map(([key, count], index) => ({
+    .map(([key, count]) => ({
       key,
-      label: labels?.[index] ?? key,
+      label: labelMap?.get(key) ?? key,
       count,
     }))
     .sort((a, b) => b.count - a.count);

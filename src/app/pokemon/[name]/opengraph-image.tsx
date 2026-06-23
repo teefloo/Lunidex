@@ -168,6 +168,7 @@ export default async function Image({ params }: { params: { name: string } }) {
             }}
           >
             {artwork && (
+              // eslint-disable-next-line @next/next/no-img-element -- OG image route uses Vercel OG renderer, not Next.js Image
               <img
                 src={artwork}
                 alt={displayName}

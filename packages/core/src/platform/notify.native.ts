@@ -6,5 +6,5 @@ import { Alert } from 'react-native';
  */
 export const notify = {
   error: (message: string) => Alert.alert('PrimeDex', message),
-  success: (_message: string) => {},
+  success: () => {},
 };

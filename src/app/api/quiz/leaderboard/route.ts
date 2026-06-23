@@ -4,6 +4,8 @@ import {
   getSupabaseServerClient,
   isSupabaseConfiguredServer,
 } from '@/lib/supabase/server';
+import { ipKey, rateLimit } from '@/lib/rate-limit';
+import { readJsonBody } from '@/lib/api/route-helpers';
 import {
   clampScore,
   isLeaderboardChallenge,
@@ -105,6 +107,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  if (!rateLimit(`leaderboard-post:${ipKey(request)}`, 10)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   if (!isSupabaseConfiguredServer) {
     return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
   }
@@ -188,11 +194,3 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ ok: true, score, improved: true });
 }
 
-async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
-  try {
-    const payload = await request.json();
-    return payload && typeof payload === 'object' ? (payload as T) : null;
-  } catch {
-    return null;
-  }
-}
