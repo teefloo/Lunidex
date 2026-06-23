@@ -9,6 +9,8 @@ import { getSupabaseClient } from '@/lib/supabase/client';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useState, useEffect } from 'react';
 import { computeTotalXP, getTrainerLevel, getXPProgress, computeWeeklyQuest } from '@/lib/trainer';
+import { ShareButton } from '@/components/share/ShareButton';
+import { SITE_URL } from '@/lib/site';
 import type { DashboardData, BadgeTier } from '@/types/dashboard';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -159,7 +161,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             <CircleDot className="w-7 h-7 text-foreground/30" />
           )}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="text-lg font-black tracking-tight text-foreground">
             {t('dashboard.profile.display_name', { name: displayName })}
           </h3>
@@ -167,6 +169,14 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             {t('dashboard.profile.member_since')}: {memberSince}
           </p>
         </div>
+        <ShareButton
+          url={`${SITE_URL}/dashboard?utm_source=share&utm_medium=social`}
+          title={`${displayName} on PrimeDex`}
+          description={`Level ${trainerLevel.level} Trainer — ${data.pokedex.caughtPercent}% Dex completed`}
+          label={t('detail.share')}
+          variant="outline"
+          className="rounded-full text-[10px] font-black uppercase border-border/50 text-foreground/60 hover:bg-primary/10 shrink-0"
+        />
       </div>
 
       {/* Trainer Level + XP Bar */}

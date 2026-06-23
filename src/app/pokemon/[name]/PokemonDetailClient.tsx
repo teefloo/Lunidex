@@ -15,7 +15,6 @@ import {
   Zap,
   Star,
   Heart,
-  Share,
   Volume2,
   Play,
   MapPin,
@@ -69,7 +68,7 @@ const SpriteGallery = dynamic(() => import('@/components/pokemon/SpriteGallery')
 });
 
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import { ShareButton } from '@/components/share/ShareButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from '@/lib/i18n';
 import { getLocalizedPokemonData } from '@/lib/api';
@@ -326,23 +325,6 @@ export function PokemonDetailClient({
     }
   };
 
-  const handleShare = async () => {
-    const title = t('detail.share_title', { name: displayName });
-    const text = t('detail.share_text', { name: displayName });
-    const url = window.location.href;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text, url });
-      } catch {
-        // Ignore user cancellation
-      }
-    } else {
-      navigator.clipboard.writeText(url);
-      toast(t('detail.copied'));
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden relative">
 
@@ -358,16 +340,14 @@ export function PokemonDetailClient({
 
       {/* Floating Action Buttons — sidebar on desktop, hidden on mobile */}
       <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-50 flex-col items-center justify-center gap-3" >
-          <Button
+          <ShareButton
+            url={`/pokemon/${name}?utm_source=share&utm_medium=social`}
+            title={t('detail.share_title', { name: displayName ?? name })}
+            description={t('detail.share_text', { name: displayName ?? name })}
+            label={t('detail.share')}
             variant="outline"
-            size="icon"
-            onClick={handleShare}
-            className="rounded-full transition-all h-12 w-12 bg-card/55 border-border/50 text-foreground/60 hover:bg-card/75 hover:border-border/70 "
-            title={t('detail.share')}
-            aria-label={t('detail.share') || 'Share this Pokémon'}
-          >
-            <Share className="w-5 h-5" />
-          </Button>
+            className="rounded-full transition-all h-12 w-12 bg-card/55 border-border/50 text-foreground/60 hover:bg-card/75 hover:border-border/70 p-0 flex items-center justify-center"
+          />
 
           <Button
             variant="outline"

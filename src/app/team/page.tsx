@@ -171,7 +171,7 @@ export default function TeamPage() {
     }
   };
 
-  const shareTeamPath = `/team/share?code=${team.join('-')}&lang=${resolvedLang}`;
+  const shareTeamPath = `/team/share?code=${team.join('-')}&lang=${resolvedLang}&utm_source=share&utm_medium=social`;
 
   const synergyScore = useMemo(() => {
     if (!analysis || pokemonData.length === 0) return 0;
@@ -215,9 +215,10 @@ export default function TeamPage() {
                 )}
                 {pokemonData.length > 0 && (
                   <ShareButton
-                    path={shareTeamPath}
+                    url={shareTeamPath}
+                    title={t('team.title')}
+                    description={t('team.share_copied')}
                     label={t('detail.share')}
-                    copiedMessage={t('team.share_copied')}
                     className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
                   />
                 )}
