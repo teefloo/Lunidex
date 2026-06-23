@@ -23,7 +23,7 @@ export interface BadgeDefinition {
   nameKey: string;
   descKey: string;
   icon: string;
-  category: 'quiz' | 'pokedex' | 'social' | 'team' | 'discovery';
+  category: 'quiz' | 'pokedex' | 'social' | 'team' | 'discovery' | 'tcg';
   condition: (data: BadgeConditionData) => boolean;
   progress: (data: BadgeConditionData) => { current: number; max: number };
   tiers?: BadgeTierDefinition[];
@@ -39,6 +39,8 @@ export interface BadgeConditionData {
   quizHighScoreStats: number;
   totalQuizSessions: number;
   uniqueTypesViewed: number;
+  tcgOwnedCount: number;
+  currentStreak: number;
 }
 
 export interface DashboardData {

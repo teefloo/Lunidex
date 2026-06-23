@@ -10,7 +10,6 @@ import {
   X,
   Zap,
   Box,
-  Trophy,
   Brush,
   ExternalLink,
   Activity,
@@ -18,7 +17,6 @@ import {
   Sparkles,
   Shield,
   ScrollText,
-  Layers3,
   BadgeDollarSign,
 } from 'lucide-react';
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';

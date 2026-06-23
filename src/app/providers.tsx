@@ -9,6 +9,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { resolveLanguage } from '@/lib/languages';
 import { AuthProvider } from '@/lib/supabase/AuthProvider';
 import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
+import dynamic from 'next/dynamic';
+
+const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 
 function SupabaseSyncBridge() {
   useSupabaseSync();
@@ -96,6 +99,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <TooltipProvider>
             <SupabaseSyncBridge />
             {children}
+            <SettingsModal />
           </TooltipProvider>
         </ThemeProvider>
       </AuthProvider>

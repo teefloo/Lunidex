@@ -19,7 +19,8 @@ import {
   Volume2,
   Play,
   MapPin,
-  Sparkles
+  Sparkles,
+  Images
 } from 'lucide-react';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -60,6 +61,9 @@ const PokemonMoves = dynamic(() => import('@/components/pokemon/PokemonMoves').t
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 const EncounterLocations = dynamic(() => import('@/components/pokemon/EncounterLocations').then(m => m.EncounterLocations), {
+  loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
+});
+const SpriteGallery = dynamic(() => import('@/components/pokemon/SpriteGallery').then(m => m.SpriteGallery), {
   loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
 });
 
@@ -509,7 +513,7 @@ export function PokemonDetailClient({
           className="max-w-4xl mx-auto"
         >          <Tabs defaultValue="about" className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
-              <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-4 lg:grid-cols-8 overflow-x-scroll">
+              <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-5 lg:grid-cols-9 overflow-x-scroll">
                 <TabsTrigger value="about" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.about')}
                 </TabsTrigger>
@@ -533,6 +537,9 @@ export function PokemonDetailClient({
                 </TabsTrigger>
                 <TabsTrigger value="cards" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.cards')}
+                </TabsTrigger>
+                <TabsTrigger value="sprites" className="whitespace-nowrap px-6 py-2.5 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  <Images className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1" /> {t('detail.sprites')}
                 </TabsTrigger>
               </TabsList>
               {/* Mobile scroll indicator */}
@@ -942,6 +949,11 @@ export function PokemonDetailClient({
             {/* Cards Tab */}
             <TabsContent value="cards" className="space-y-6">
               <PokemonCards name={pokemon.name} localizedName={displayName} lang={resolvedLang} />
+            </TabsContent>
+
+            {/* Sprites Tab */}
+            <TabsContent value="sprites" className="space-y-6">
+              <SpriteGallery pokemon={pokemon} />
             </TabsContent>
           </Tabs>
         </motion.div>

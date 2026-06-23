@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense, useRef } from 'react';
 import { PokemonDetail } from '@/types/pokemon';
 import { useTranslation } from '@/lib/i18n';
 import { getFormDisplayName } from '@/lib/form-names';
@@ -41,6 +41,7 @@ import { resolveLanguage } from '@/lib/languages';
 import { useAuth } from '@/lib/supabase/AuthProvider';
 import { submitDailyScore } from '@/lib/supabase/leaderboard-client';
 import QuizLeaderboard from '@/components/dashboard/QuizLeaderboard';
+import QuizResultCard from '@/components/quiz/QuizResultCard';
 import type { LeaderboardChallenge, LeaderboardMode } from '@/lib/leaderboard';
 
 type GameMode = 'time-attack' | 'survival' | 'marathon';
@@ -108,6 +109,8 @@ function QuizPageContent() {
   const [correctCount, setCorrectCount] = useState(0);
   const [sessionStreak, setSessionStreak] = useState(0);
   const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
+  const [sessionBadges, setSessionBadges] = useState(0);
+  const initialBadgeCountRef = useRef(0);
 
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -261,6 +264,8 @@ function QuizPageContent() {
     setTotalQuestions(0);
     setCorrectCount(0);
     setSessionStreak(0);
+    setSessionBadges(0);
+    initialBadgeCountRef.current = badges.length;
     
     const today = new Date().toISOString().split('T')[0];
     const firstRng = daily ? seededRandom(`${today}-0`) : Math.random;
@@ -352,6 +357,7 @@ function QuizPageContent() {
       if (gameMode === 'time-attack') {
         updateQuizHighScore('timeAttack', score);
       }
+      setSessionBadges(badges.length - initialBadgeCountRef.current);
       addQuizSession({
         id: `${quizChallenge}-${Date.now()}`,
         date: new Date().toISOString(),
@@ -371,7 +377,7 @@ function QuizPageContent() {
         details: `Score: ${score}`,
       });
     }
-  }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak]);
+  }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak, badges.length]);
 
   // Submit the daily challenge score to the online leaderboard — only when the
   // daily run finishes and the user is signed in. The score is re-validated and
@@ -416,14 +422,13 @@ function QuizPageContent() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)]" />
       </div>
       
-      <main className="page-shell py-8 relative z-10 max-w-4xl">
+      <main className="page-shell pt-24 pb-8 relative z-10 max-w-4xl">
         {gameState === 'idle' || gameState === 'finished' ? (
           <PageHeader
             icon={Gamepad2}
             title={t('quiz.title')}
             subtitle={t('quiz.subtitle')}
             eyebrow={t('quiz.eyebrow', { defaultValue: 'PrimeDex' })}
-            className="mt-16 md:mt-20"
           />
         ) : null}
 
@@ -457,6 +462,17 @@ function QuizPageContent() {
                     </p>
                     <p className="text-5xl md:text-6xl font-black text-foreground drop-shadow-lg">{score}</p>
                   </motion.div>
+                )}
+
+                {gameState === 'finished' && (
+                  <QuizResultCard
+                    score={score}
+                    total={totalQuestions || 10}
+                    mode={gameMode}
+                    challenge={quizChallenge}
+                    streak={sessionStreak}
+                    badgesEarned={sessionBadges}
+                  />
                 )}
 
                 <div className="relative z-10 space-y-8">
@@ -769,8 +785,10 @@ function QuizPageContent() {
                       ) : (
                         <div className="relative w-52 h-52 md:w-72 md:h-72 drop-shadow-2xl flex items-center justify-center float-particle">
                           <div className={cn(
-                            "absolute inset-x-8 bottom-8 top-12 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity duration-700",
-                            gameState === 'answered' && isCorrect ? "opacity-100 bg-emerald-500/20" : "opacity-0"
+                            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 md:w-56 md:h-56 rounded-full transition-opacity duration-700",
+                            gameState === 'answered' && isCorrect
+                              ? "opacity-100 bg-[radial-gradient(circle,rgba(34,197,94,0.25)_0%,transparent_70%)]"
+                              : "opacity-0"
                           )} />
                           <Image 
                             src={currentPokemon.sprites.other['official-artwork'].front_default || currentPokemon.sprites.front_default} 

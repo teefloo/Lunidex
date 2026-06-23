@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
 import AccountCard from '@/components/dashboard/AccountCard';
+import SettingsCard from '@/components/dashboard/SettingsCard';
 import ProfileAndBadges from '@/components/dashboard/ProfileAndBadges';
 import QuizStatistics from '@/components/dashboard/QuizStatistics';
 import PokedexProgress from '@/components/dashboard/PokedexProgress';
@@ -38,6 +39,10 @@ export default function DashboardPage() {
 
         <div className="mb-6">
           <AccountCard />
+        </div>
+
+        <div className="mb-6">
+          <SettingsCard />
         </div>
 
         {isLoading ? (

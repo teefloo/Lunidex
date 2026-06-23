@@ -19,6 +19,8 @@ const emptyData: BadgeConditionData = {
   quizHighScoreStats: 0,
   totalQuizSessions: 0,
   uniqueTypesViewed: 0,
+  tcgOwnedCount: 0,
+  currentStreak: 0,
 };
 
 describe('computeTotalXP', () => {
@@ -72,6 +74,8 @@ describe('computeTotalXP', () => {
       quizHighScoreStats: 0,
       totalQuizSessions: 4,
       uniqueTypesViewed: 8,
+      tcgOwnedCount: 0,
+      currentStreak: 0,
     };
     const xp = computeTotalXP(data, { tcgOwnedCount: 7, totalQuizCorrect: 20 });
     const expected =

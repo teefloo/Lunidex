@@ -10,6 +10,14 @@ export interface PokemonListItem {
   url: string;
 }
 
+export interface SpriteEntry {
+  group: string;
+  label: string;
+  url: string | null;
+  isShiny: boolean;
+  isAnimated: boolean;
+}
+
 export interface PokemonDetail {
   id: number;
   name: string;
@@ -25,11 +33,24 @@ export interface PokemonDetail {
         front_default: string;
         front_shiny: string;
       };
+      dream_world?: {
+        front_default: string | null;
+      };
+      home?: {
+        front_default: string | null;
+        front_shiny: string | null;
+      };
       showdown: {
         front_default: string;
         back_default: string;
       };
     };
+    versions?: Record<string, Record<string, {
+      front_default: string | null;
+      back_default: string | null;
+      front_shiny: string | null;
+      back_shiny: string | null;
+    }>>;
   };
   types: {
     slot: number;

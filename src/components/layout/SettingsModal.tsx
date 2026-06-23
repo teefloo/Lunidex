@@ -1,7 +1,7 @@
 'use client';
 
 import { usePrimeDexStore } from '@/store/primedex';
-import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe } from 'lucide-react';
+import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 import { useEffect, useRef, useCallback } from 'react';
@@ -12,6 +12,8 @@ export default function SettingsModal() {
   const toggleSettings = usePrimeDexStore(s => s.toggleSettings);
   const soundEnabled = usePrimeDexStore(s => s.soundEnabled);
   const toggleSound = usePrimeDexStore(s => s.toggleSound);
+  const animatedSprites = usePrimeDexStore(s => s.animatedSprites);
+  const toggleAnimatedSprites = usePrimeDexStore(s => s.toggleAnimatedSprites);
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const language = usePrimeDexStore(s => s.language);
@@ -118,6 +120,28 @@ export default function SettingsModal() {
                   aria-checked={soundEnabled}
                 >
                   <span className={`absolute top-1 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${soundEnabled ? 'left-8' : 'left-1'}`} />
+                </button>
+              </div>
+
+              {/* Animated Sprites Toggle */}
+              <div className="glass-card flex items-center justify-between p-4">
+                <div className="flex items-center gap-4">
+                  <div className={`rounded-lg p-2.5 transition-colors ${animatedSprites ? 'text-primary bg-primary/15' : 'text-foreground/50 bg-muted/55'}`}>
+                    <Film className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-foreground/80">{t('settings.animated_sprites')}</span>
+                    <span className="text-[10px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={toggleAnimatedSprites}
+                  className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${animatedSprites ? 'bg-primary' : 'bg-muted/70'}`}
+                  aria-label={animatedSprites ? t('settings.animated_sprites_disable') : t('settings.animated_sprites_enable')}
+                  role="switch"
+                  aria-checked={animatedSprites}
+                >
+                  <span className={`absolute top-1 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${animatedSprites ? 'left-8' : 'left-1'}`} />
                 </button>
               </div>
 

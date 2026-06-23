@@ -17,7 +17,7 @@ export default async function HeroSection() {
           className="page-title font-display tracking-[-0.01em] text-foreground"
           style={{ fontVariationSettings: '"opsz" 144' }}
         >
-          <span className="block text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.92] font-extrabold gradient-text-hero">
+          <span className="block font-display text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.92] font-extrabold gradient-text-hero">
             {t('home.hero_title')}
           </span>
         </h1>

@@ -58,6 +58,10 @@ function getRawValue(data: BadgeConditionData, category: string): number {
       return data.teamCount;
     case 'types':
       return data.uniqueTypesViewed;
+    case 'tcg':
+      return data.tcgOwnedCount;
+    case 'streak':
+      return data.currentStreak;
     default:
       return 0;
   }
@@ -76,6 +80,9 @@ const TIER_RAW_KEY: Record<string, string> = {
   'fan-favorite': 'favorites',
   'team-builder': 'team',
   'type-explorer': 'types',
+  'tcg-starter': 'tcg',
+  'daily-streak': 'streak',
+  'quiz-daily-champion': 'quiz',
 };
 
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
@@ -130,8 +137,8 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     condition: (data) => data.caughtCount >= 1025,
     progress: (data) => ({ current: Math.min(data.caughtCount, 1025), max: 1025 }),
     tiers: [
-      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 1025 },
-      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 1025 },
+      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 151 },
+      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 493 },
       { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 1025 },
     ],
   },
@@ -237,14 +244,56 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     id: 'type-explorer',
     nameKey: 'dashboard.badges.type_explorer',
     descKey: 'dashboard.badges.type_explorer_desc',
-    icon: 'Shapes',
+    icon: 'Triangle',
     category: 'discovery',
-    condition: (data) => data.uniqueTypesViewed >= 10,
-    progress: (data) => ({ current: Math.min(data.uniqueTypesViewed, 10), max: 10 }),
+    condition: (data) => data.uniqueTypesViewed >= 18,
+    progress: (data) => ({ current: Math.min(data.uniqueTypesViewed, 18), max: 18 }),
     tiers: [
-      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 3 },
-      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 7 },
-      { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 10 },
+      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 9 },
+      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 14 },
+      { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 18 },
+    ],
+  },
+  {
+    id: 'tcg-starter',
+    nameKey: 'dashboard.badges.tcg_starter',
+    descKey: 'dashboard.badges.tcg_starter_desc',
+    icon: 'Layers',
+    category: 'tcg',
+    condition: (data) => data.tcgOwnedCount >= 1,
+    progress: (data) => ({ current: Math.min(data.tcgOwnedCount, 500), max: 500 }),
+    tiers: [
+      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 1 },
+      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 50 },
+      { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 500 },
+    ],
+  },
+  {
+    id: 'daily-streak',
+    nameKey: 'dashboard.badges.daily_streak',
+    descKey: 'dashboard.badges.daily_streak_desc',
+    icon: 'Flame',
+    category: 'discovery',
+    condition: (data) => data.currentStreak >= 7,
+    progress: (data) => ({ current: Math.min(data.currentStreak, 90), max: 90 }),
+    tiers: [
+      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 7 },
+      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 30 },
+      { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 90 },
+    ],
+  },
+  {
+    id: 'quiz-daily-champion',
+    nameKey: 'dashboard.badges.quiz_daily_champion',
+    descKey: 'dashboard.badges.quiz_daily_champion_desc',
+    icon: 'Crown',
+    category: 'quiz',
+    condition: (data) => data.quizHighScore >= 5,
+    progress: (data) => ({ current: Math.min(data.quizHighScore, 100), max: 100 }),
+    tiers: [
+      { nameKey: 'dashboard.badges.tier_bronze', descKey: 'dashboard.badges.tier_bronze_desc', threshold: 5 },
+      { nameKey: 'dashboard.badges.tier_silver', descKey: 'dashboard.badges.tier_silver_desc', threshold: 25 },
+      { nameKey: 'dashboard.badges.tier_gold', descKey: 'dashboard.badges.tier_gold_desc', threshold: 100 },
     ],
   },
 ];

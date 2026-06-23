@@ -96,6 +96,8 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
       quizHighScoreStats: 0,
       totalQuizSessions: data.quiz.totalSessions,
       uniqueTypesViewed: data.pokedex.byType.length,
+      tcgOwnedCount: tcgOwnedCards.length,
+      currentStreak: data.quiz.currentStreak,
     },
     { tcgOwnedCount: tcgOwnedCards.length, totalQuizCorrect },
   );
@@ -115,6 +117,8 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
       quizHighScoreStats: 0,
       totalQuizSessions: data.quiz.totalSessions,
       uniqueTypesViewed: data.pokedex.byType.length,
+      tcgOwnedCount: tcgOwnedCards.length,
+      currentStreak: data.quiz.currentStreak,
     },
     tcgOwnedCards.length,
   );

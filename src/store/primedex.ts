@@ -138,6 +138,10 @@ interface PrimeDexStore {
   addToHistory: (pokemon: { id: number, name: string }) => void;
   clearHistory: () => void;
 
+  // Viewed types (for type explorer badge)
+  viewedTypes: string[];
+  addViewedType: (type: string) => void;
+
   // Badges
   badges: string[];
   addBadge: (badgeId: string) => void;
@@ -178,6 +182,8 @@ interface PrimeDexStore {
   toggleSettings: () => void;
   soundEnabled: boolean;
   toggleSound: () => void;
+  animatedSprites: boolean;
+  toggleAnimatedSprites: () => void;
 
   // Theme
   theme: Theme;
@@ -241,7 +247,9 @@ export const SYNCED_KEYS = [
   'lastVisitDate',
   'viewCount',
   'recentActions',
+  'viewedTypes',
   'soundEnabled',
+  'animatedSprites',
   'theme',
   'language',
   'weeklyQuestClaimedWeek',
@@ -424,6 +432,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       }),
       clearHistory: () => set({ history: [] }),
 
+      // Viewed types (for type explorer badge)
+      viewedTypes: [],
+      addViewedType: (type) => set((state) => ({
+        viewedTypes: state.viewedTypes.includes(type) ? state.viewedTypes : [...state.viewedTypes, type],
+      })),
+
       badges: [],
       addBadge: (badgeId) => set((state) => ({
         badges: state.badges.includes(badgeId) ? state.badges : [...state.badges, badgeId]
@@ -508,6 +522,8 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
       soundEnabled: true,
       toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+      animatedSprites: false,
+      toggleAnimatedSprites: () => set((state) => ({ animatedSprites: !state.animatedSprites })),
 
       theme: 'system',
       setTheme: (theme) => set({ theme }),

@@ -88,6 +88,8 @@ export function useDashboardData(): {
         .filter((p) => viewedIds.has(p.id))
         .flatMap((p) => p.pokemon_v2_pokemontypes.map((t) => t.pokemon_v2_type.name))
         .filter((t, i, arr) => arr.indexOf(t) === i).length,
+      tcgOwnedCount: tcgOwnedCards.length,
+      currentStreak,
     };
 
     const badgeStatuses = computeBadgeStatus(BADGE_DEFINITIONS, badgeData);

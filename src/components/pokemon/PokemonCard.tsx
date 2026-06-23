@@ -96,6 +96,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const compareList = usePrimeDexStore(s => s.compareList);
   const team = usePrimeDexStore(s => s.team);
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
+  const animatedSprites = usePrimeDexStore(s => s.animatedSprites);
 
   const addFavorite = usePrimeDexStore(s => s.addFavorite);
   const removeFavorite = usePrimeDexStore(s => s.removeFavorite);
@@ -327,9 +328,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             aria-hidden="true"
           />
           <Image
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
+            src={animatedSprites
+              ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonId}.gif`
+              : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
             alt={displayName}
             fill
+            unoptimized={animatedSprites}
             sizes="(max-width: 640px) 160px, (max-width: 1024px) 128px, 128px"
             className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)]"
             priority={index < 4}
@@ -379,6 +383,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         <button
           type="button"
           onClick={(event) => {
+            event.preventDefault();
             event.stopPropagation();
             if (pokemon.id) toggleCaught(pokemon.id);
           }}

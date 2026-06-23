@@ -12,6 +12,8 @@ const emptyData: BadgeConditionData = {
   quizHighScoreStats: 0,
   totalQuizSessions: 0,
   uniqueTypesViewed: 0,
+  tcgOwnedCount: 0,
+  currentStreak: 0,
 };
 
 describe('computeBadgeStatus', () => {
@@ -119,6 +121,8 @@ describe('findNextTierUnlock', () => {
       quizHighScoreStats: 99999,
       totalQuizSessions: 99999,
       uniqueTypesViewed: 99999,
+      tcgOwnedCount: 99999,
+      currentStreak: 99999,
     };
     const statuses = computeBadgeStatus(BADGE_DEFINITIONS, maxedData);
     expect(findNextTierUnlock(statuses)).toBeNull();
@@ -137,6 +141,8 @@ describe('findNextBadge', () => {
       quizHighScoreStats: 99999,
       totalQuizSessions: 99999,
       uniqueTypesViewed: 99999,
+      tcgOwnedCount: 99999,
+      currentStreak: 99999,
     };
     const statuses = computeBadgeStatus(BADGE_DEFINITIONS, maxedData);
     expect(findNextBadge(statuses)).toBeNull();
@@ -151,5 +157,106 @@ describe('findNextBadge', () => {
   it('returns a badge object when at least one is locked', () => {
     const statuses = computeBadgeStatus(BADGE_DEFINITIONS, emptyData);
     expect(findNextBadge(statuses)).not.toBeNull();
+  });
+});
+
+describe('complete-dex tier progression', () => {
+  it('returns bronze tier at 151 catches', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, caughtCount: 151 });
+    const completeDex = statuses.find((b) => b.id === 'complete-dex');
+    expect(completeDex?.tierStatus?.currentTier).toBe('bronze');
+    expect(completeDex?.tierStatus?.highestTier).toBe('bronze');
+  });
+
+  it('returns silver tier at 493 catches', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, caughtCount: 493 });
+    const completeDex = statuses.find((b) => b.id === 'complete-dex');
+    expect(completeDex?.tierStatus?.currentTier).toBe('silver');
+    expect(completeDex?.tierStatus?.highestTier).toBe('silver');
+  });
+
+  it('returns gold tier at 1025 catches', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, caughtCount: 1025 });
+    const completeDex = statuses.find((b) => b.id === 'complete-dex');
+    expect(completeDex?.tierStatus?.currentTier).toBe('gold');
+    expect(completeDex?.tierStatus?.highestTier).toBe('gold');
+  });
+});
+
+describe('TCG badge progress', () => {
+  it('unlocks tcg-starter at 1 owned card', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, tcgOwnedCount: 1 });
+    const tcgStarter = statuses.find((b) => b.id === 'tcg-starter');
+    expect(tcgStarter?.unlocked).toBe(true);
+  });
+
+  it('returns bronze tier for tcg-starter at 1 card', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, tcgOwnedCount: 1 });
+    const tcgStarter = statuses.find((b) => b.id === 'tcg-starter');
+    expect(tcgStarter?.tierStatus?.currentTier).toBe('bronze');
+  });
+
+  it('returns silver tier for tcg-starter at 50 cards', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, tcgOwnedCount: 50 });
+    const tcgStarter = statuses.find((b) => b.id === 'tcg-starter');
+    expect(tcgStarter?.tierStatus?.currentTier).toBe('silver');
+  });
+
+  it('returns gold tier for tcg-starter at 500 cards', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, tcgOwnedCount: 500 });
+    const tcgStarter = statuses.find((b) => b.id === 'tcg-starter');
+    expect(tcgStarter?.tierStatus?.currentTier).toBe('gold');
+  });
+});
+
+describe('daily-streak badge', () => {
+  it('unlocks at 7 day streak', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, currentStreak: 7 });
+    const dailyStreak = statuses.find((b) => b.id === 'daily-streak');
+    expect(dailyStreak?.unlocked).toBe(true);
+  });
+
+  it('returns bronze tier at 7', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, currentStreak: 7 });
+    const dailyStreak = statuses.find((b) => b.id === 'daily-streak');
+    expect(dailyStreak?.tierStatus?.currentTier).toBe('bronze');
+  });
+
+  it('returns silver tier at 30', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, currentStreak: 30 });
+    const dailyStreak = statuses.find((b) => b.id === 'daily-streak');
+    expect(dailyStreak?.tierStatus?.currentTier).toBe('silver');
+  });
+
+  it('returns gold tier at 90', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, currentStreak: 90 });
+    const dailyStreak = statuses.find((b) => b.id === 'daily-streak');
+    expect(dailyStreak?.tierStatus?.currentTier).toBe('gold');
+  });
+});
+
+describe('quiz-daily-champion badge', () => {
+  it('unlocks at score 5', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, quizHighScore: 5 });
+    const champion = statuses.find((b) => b.id === 'quiz-daily-champion');
+    expect(champion?.unlocked).toBe(true);
+  });
+
+  it('returns bronze tier at 5', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, quizHighScore: 5 });
+    const champion = statuses.find((b) => b.id === 'quiz-daily-champion');
+    expect(champion?.tierStatus?.currentTier).toBe('bronze');
+  });
+
+  it('returns silver tier at 25', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, quizHighScore: 25 });
+    const champion = statuses.find((b) => b.id === 'quiz-daily-champion');
+    expect(champion?.tierStatus?.currentTier).toBe('silver');
+  });
+
+  it('returns gold tier at 100', () => {
+    const statuses = computeBadgeStatus(BADGE_DEFINITIONS, { ...emptyData, quizHighScore: 100 });
+    const champion = statuses.find((b) => b.id === 'quiz-daily-champion');
+    expect(champion?.tierStatus?.currentTier).toBe('gold');
   });
 });
