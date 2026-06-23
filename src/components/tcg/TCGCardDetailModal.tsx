@@ -19,6 +19,7 @@ import {
   Shield,
   ScrollText,
   Layers3,
+  BadgeDollarSign,
 } from 'lucide-react';
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -26,6 +27,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
+import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
 
@@ -104,6 +106,20 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const compared = isTCGCompared(displayCard.id);
   const owned = isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
+  const marketValue = getCardMarketValue(displayCard);
+  const marketValueLabel = marketValue
+    ? (() => {
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency: marketValue.currency,
+            maximumFractionDigits: 2,
+          }).format(marketValue.amount);
+        } catch {
+          return `${marketValue.amount.toFixed(2)} ${marketValue.currency}`;
+        }
+      })()
+    : null;
 
   const handleShareCard = async () => {
     const url = new URL(
@@ -176,164 +192,124 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
             {isHydrating ? (
               <DetailSkeleton />
             ) : (
-              <div className="relative space-y-8">
-                <header className="space-y-3">
-                  <div className="flex flex-wrap items-center gap-3">
+              <div className="relative space-y-7">
+
+                {/* ── Identity ─────────────────────────────────────── */}
+                <header className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={cn('rounded-sm border px-3 py-1 text-[10px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
                       {categoryLabel}
                     </span>
+                    {displayCard.rarity && (
+                      <span className="rounded-sm border border-border/30 bg-card/35 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-foreground/45">
+                        {displayCard.rarity}
+                      </span>
+                    )}
                     {displayCard.stage && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
                         {getStageLabel(displayCard.stage, t)}
                       </span>
                     )}
                     {displayCard.trainerType && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
                         {getTrainerTypeLabel(displayCard.trainerType, t)}
                       </span>
                     )}
                     {displayCard.energyType && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
                         {getEnergyTypeLabel(displayCard.energyType, t)}
                       </span>
                     )}
                   </div>
 
                   <div className="flex flex-wrap items-baseline gap-4">
-                    <h2 id={titleId} className="text-3xl font-display font-black uppercase tracking-tight sm:text-4xl xl:text-6xl">
+                    <h2 id={titleId} className="text-3xl font-display font-black uppercase tracking-tight sm:text-4xl xl:text-5xl">
                       {displayCard.name}
                     </h2>
-
                     {typeof displayCard.hp === 'number' && (
                       <div className="flex items-baseline gap-1">
                         <span className="text-sm font-black uppercase tracking-[0.2em] text-foreground/30">{t('stats.hp')}</span>
-                        <span className="text-3xl font-display font-black text-primary sm:text-4xl">
-                          {displayCard.hp}
-                        </span>
+                        <span className="text-3xl font-display font-black text-primary sm:text-4xl">{displayCard.hp}</span>
                       </div>
                     )}
                   </div>
 
-                <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-foreground/50">
-                  {effectText || t('tcg.detail_empty')}
-                </p>
+                  <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-foreground/50">
+                    {effectText || t('tcg.detail_empty')}
+                  </p>
 
-                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-                  <ActionPill
-                    active={compared}
-                    onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
-                    label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
-                  />
-                  <ActionPill
-                    active={owned}
-                    onClick={() => toggleTCGOwned(displayCard.id)}
-                    label={t('tcg.mark_owned')}
-                  />
-                  <ActionPill
-                    active={wishlisted}
-                    onClick={() => toggleTCGWishlist(displayCard.id)}
-                    label={t('tcg.mark_wishlist')}
-                  />
-                  <ActionPill
-                    active={false}
-                    onClick={handleShareCard}
-                    label={t('detail.share')}
-                  />
-                </div>
-              </header>
-
-                <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  <InfoItem
-                    icon={Box}
-                    label={t('tcg.expansion')}
-                    value={displayCard.set?.name || t('tcg.unknown')}
-                  />
-                  <InfoItem
-                    icon={Trophy}
-                    label={t('tcg.rarity')}
-                    value={displayCard.rarity || t('tcg.unknown')}
-                  />
-                  <InfoItem
-                    icon={Info}
-                    label={t('tcg.collector_no')}
-                    value={`#${displayCard.localId}${totalCards ? ` / ${totalCards}` : ''}`}
-                  />
-                  <InfoItem
-                    icon={Brush}
-                    label={t('tcg.illustrator')}
-                    value={displayCard.illustrator || t('tcg.unknown')}
-                  />
-                  <InfoItem
-                    icon={Layers3}
-                    label={t('tcg.card_id')}
-                    value={displayCard.id}
-                  />
-                  {pokemonPageHref && (
-                    <InfoItem
-                      icon={ExternalLink}
-                      label={t('tcg.pokemon_page')}
-                      value={(
-                        <Link
-                          href={pokemonPageHref}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary/80 hover:underline"
-                        >
-                          {t('tcg.open_pokemon_page')}
-                        </Link>
-                      )}
+                  <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                    <ActionPill
+                      active={compared}
+                      onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
+                      label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
                     />
-                  )}
-                  <InfoItem
-                    icon={Activity}
-                    label={t('tcg.regulation')}
-                    value={displayCard.regulationMark || t('tcg.none')}
-                  />
+                    <ActionPill active={owned} onClick={() => toggleTCGOwned(displayCard.id)} label={t('tcg.mark_owned')} />
+                    <ActionPill active={wishlisted} onClick={() => toggleTCGWishlist(displayCard.id)} label={t('tcg.mark_wishlist')} />
+                    <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
+                  </div>
+                </header>
+
+                {/* ── Market price ─────────────────────────────────── */}
+                {marketValue && (
+                  <div className="flex items-center justify-between rounded-sm border border-primary/20 bg-primary/5 px-5 py-4">
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/40">
+                        {t('tcg.market_price')}
+                      </p>
+                      <p className="mt-1 text-2xl font-black leading-none text-primary">{marketValueLabel}</p>
+                      <p className="mt-1.5 text-[9px] font-bold text-foreground/30">
+                        via {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
+                      </p>
+                    </div>
+                    <BadgeDollarSign className="h-8 w-8 shrink-0 text-primary/20" />
+                  </div>
+                )}
+
+                {/* ── Card details ─────────────────────────────────── */}
+                <section className="space-y-3">
+                  <SectionLabel>{t('tcg.expansion')}</SectionLabel>
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    <InfoItem icon={Box} label={t('tcg.expansion')} value={displayCard.set?.name || t('tcg.unknown')} />
+                    <InfoItem icon={Info} label={t('tcg.collector_no')} value={`#${displayCard.localId}${totalCards ? ` / ${totalCards}` : ''}`} />
+                    <InfoItem icon={Brush} label={t('tcg.illustrator')} value={displayCard.illustrator || t('tcg.unknown')} />
+                    <InfoItem icon={Activity} label={t('tcg.regulation')} value={displayCard.regulationMark || t('tcg.none')} />
+                    {pokemonPageHref && (
+                      <InfoItem
+                        icon={ExternalLink}
+                        label={t('tcg.pokemon_page')}
+                        value={(
+                          <Link href={pokemonPageHref} className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary/80 hover:underline">
+                            {t('tcg.open_pokemon_page')}
+                          </Link>
+                        )}
+                      />
+                    )}
+                  </div>
                 </section>
 
+                {/* ── Pokémon ──────────────────────────────────────── */}
                 {category === 'Pokemon' && (
                   <section className="space-y-5">
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                      <InfoItem
-                        icon={Zap}
-                        label={t('tcg.pokemon_types')}
-                        value={displayCard.types?.join(', ') || t('tcg.none')}
-                      />
-                      <InfoItem
-                        icon={Shield}
-                        label={t('tcg.stage')}
-                        value={displayCard.stage ? getStageLabel(displayCard.stage, t) : t('tcg.none')}
-                      />
-                      <InfoItem
-                        icon={Sparkles}
-                        label={t('tcg.evolves_from')}
-                        value={displayCard.evolveFrom || t('tcg.none')}
-                      />
+                    <SectionLabel>{t('tcg.card_category_pokemon')}</SectionLabel>
+
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                      <InfoItem icon={Zap} label={t('tcg.pokemon_types')} value={displayCard.types?.join(', ') || t('tcg.none')} />
+                      <InfoItem icon={Shield} label={t('tcg.stage')} value={displayCard.stage ? getStageLabel(displayCard.stage, t) : t('tcg.none')} />
+                      <InfoItem icon={Sparkles} label={t('tcg.evolves_from')} value={displayCard.evolveFrom || t('tcg.none')} />
                     </div>
 
                     {(displayCard.weaknesses?.length || displayCard.resistances?.length || displayCard.retreat || displayCard.retreatCost) ? (
-                      <div className="grid gap-4 sm:grid-cols-3">
-                        <InfoItem
-                          icon={Shield}
-                          label={t('detail.weaknesses')}
-                          value={formatCardList(displayCard.weaknesses, t('tcg.none'))}
-                        />
-                        <InfoItem
-                          icon={Shield}
-                          label={t('detail.resistances')}
-                          value={formatCardList(displayCard.resistances, t('tcg.none'))}
-                        />
-                        <InfoItem
-                          icon={Zap}
-                          label={t('tcg.retreat_cost')}
-                          value={formatRetreatCost(displayCard.retreat ?? displayCard.retreatCost ?? 0, t)}
-                        />
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        <InfoItem icon={Shield} label={t('detail.weaknesses')} value={formatCardList(displayCard.weaknesses, t('tcg.none'))} />
+                        <InfoItem icon={Shield} label={t('detail.resistances')} value={formatCardList(displayCard.resistances, t('tcg.none'))} />
+                        <InfoItem icon={Zap} label={t('tcg.retreat_cost')} value={formatRetreatCost(displayCard.retreat ?? displayCard.retreatCost ?? 0, t)} />
                       </div>
                     ) : null}
 
                     {abilities.length > 0 && (
-                      <div className="space-y-4">
-                        <h3 className="px-1 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">
-                          {t('tcg.abilities')}
-                        </h3>
+                      <div className="space-y-3">
+                        <SectionLabel>{t('tcg.abilities')}</SectionLabel>
                         <div className="space-y-3">
                           {abilities.map((ability, index) => (
                             <EffectPanel
@@ -348,10 +324,8 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     )}
 
                     {attacks.length > 0 && (
-                      <div className="space-y-4">
-                        <h3 className="px-1 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">
-                          {t('detail.moveset')}
-                        </h3>
+                      <div className="space-y-3">
+                        <SectionLabel>{t('detail.moveset')}</SectionLabel>
                         <div className="space-y-3">
                           {attacks.map((attack, index) => (
                             <AttackPanel key={`${attack.name || 'attack'}-${index}`} attack={attack} />
@@ -361,68 +335,31 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     )}
 
                     {effectText && (
-                      <EffectPanel
-                        icon={ScrollText}
-                        title={t('tcg.flavor_text')}
-                        text={effectText}
-                      />
+                      <EffectPanel icon={ScrollText} title={t('tcg.flavor_text')} text={effectText} />
                     )}
                   </section>
                 )}
 
+                {/* ── Trainer / Energy ─────────────────────────────── */}
                 {(category === 'Trainer' || category === 'Energy') && (
-                  <section className="space-y-5">
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  <section className="space-y-4">
+                    <SectionLabel>{categoryLabel}</SectionLabel>
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                       {displayCard.trainerType && (
-                        <InfoItem
-                          icon={Shield}
-                          label={t('tcg.trainer_type')}
-                          value={getTrainerTypeLabel(displayCard.trainerType, t)}
-                        />
+                        <InfoItem icon={Shield} label={t('tcg.trainer_type')} value={getTrainerTypeLabel(displayCard.trainerType, t)} />
                       )}
                       {displayCard.energyType && (
-                        <InfoItem
-                          icon={Zap}
-                          label={t('tcg.energy_type')}
-                          value={getEnergyTypeLabel(displayCard.energyType, t)}
-                        />
+                        <InfoItem icon={Zap} label={t('tcg.energy_type')} value={getEnergyTypeLabel(displayCard.energyType, t)} />
                       )}
-                      <InfoItem
-                        icon={Info}
-                        label={t('tcg.effect')}
-                        value={effectText || t('tcg.none')}
-                      />
                     </div>
-
                     {effectText && (
-                      <EffectPanel
-                        icon={Sparkles}
-                        title={t('tcg.effect')}
-                        text={effectText}
-                      />
+                      <EffectPanel icon={Sparkles} title={t('tcg.effect')} text={effectText} />
                     )}
                   </section>
                 )}
 
-                <section className="flex flex-col gap-6 border-t border-border/40 pt-8 xl:flex-row xl:items-end xl:justify-between">
-                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    <InfoItem
-                      icon={Activity}
-                      label={t('tcg.card_category')}
-                      value={categoryLabel}
-                    />
-                    <InfoItem
-                      icon={Info}
-                      label={t('tcg.card_updated')}
-                      value={displayCard.updated || t('tcg.none')}
-                    />
-                    <InfoItem
-                      icon={Layers3}
-                      label={t('tcg.card_code')}
-                      value={`${displayCard.id} / ${displayCard.localId}`}
-                    />
-                  </div>
-
+                {/* ── Footer ───────────────────────────────────────── */}
+                <div className="flex justify-end border-t border-border/20 pt-5">
                   <a
                     href={`https://api.tcgdex.net/v2/${resolvedLang}/cards/${displayCard.id}`}
                     target="_blank"
@@ -432,7 +369,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     {t('tcg.open_raw_data')}
                     <ExternalLink className="h-3 w-3" />
                   </a>
-                </section>
+                </div>
               </div>
             )}
           </div>
@@ -447,6 +384,15 @@ interface InfoItemProps {
   icon: ComponentType<{ className?: string }>;
   label: string;
   value: ReactNode;
+}
+
+function SectionLabel({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="shrink-0 text-[9px] font-black uppercase tracking-[0.2em] text-foreground/30">{children}</span>
+      <div className="h-px flex-1 bg-border/20" />
+    </div>
+  );
 }
 
 function InfoItem({ icon: Icon, label, value }: InfoItemProps) {

@@ -1187,6 +1187,7 @@ export default {
       card_id: 'ID de carte',
       card_code: 'Code de carte',
       card_category: 'Catégorie',
+      market_price: 'Prix marché',
       card_updated: 'Mis à jour',
       open_raw_data: 'Ouvrir les données brutes',
       detail_empty: 'Aucun effet ou texte d\'ambiance disponible.',

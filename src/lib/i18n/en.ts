@@ -1103,6 +1103,7 @@ export default {
       pokemon_page: 'Pokémon page',
       open_pokemon_page: 'Open Pokémon page',
       card_category: 'Category',
+      market_price: 'Market price',
       card_updated: 'Updated',
       open_raw_data: 'Open raw data',
       detail_empty: 'No effect or flavor text available.',

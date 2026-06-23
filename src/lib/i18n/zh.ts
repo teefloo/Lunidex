@@ -1177,6 +1177,7 @@ export default {
       pokemon_page: '宝可梦页面',
       open_pokemon_page: '打开宝可梦页面',
       card_category: '类别',
+      market_price: '市场价格',
       card_updated: '更新于',
       open_raw_data: '查看原始数据',
       detail_empty: '没有效果或图鉴描述。',

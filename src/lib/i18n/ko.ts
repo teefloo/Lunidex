@@ -1078,6 +1078,7 @@ export default {
       pokemon_page: '포켓몬 페이지',
       open_pokemon_page: '포켓몬 페이지 열기',
       card_category: '카테고리',
+      market_price: '시장 가격',
       card_updated: '업데이트',
       open_raw_data: '원시 데이터 열기',
       detail_empty: '효과 또는 플레이버 텍스트가 없습니다.',

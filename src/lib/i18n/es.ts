@@ -1177,6 +1177,7 @@ export default {
       pokemon_page: 'Página del Pokémon',
       open_pokemon_page: 'Abrir página del Pokémon',
       card_category: 'Categoría',
+      market_price: 'Precio de mercado',
       card_updated: 'Actualizada',
       open_raw_data: 'Abrir datos sin procesar',
       detail_empty: 'No hay efecto o texto de sabor disponible.',

@@ -1177,6 +1177,7 @@ export default {
       pokemon_page: 'ポケモンページ',
       open_pokemon_page: 'ポケモンページを開く',
       card_category: 'カテゴリ',
+      market_price: '市場価格',
       card_updated: '更新日',
       open_raw_data: '生データを開く',
       detail_empty: '効果やフレーバーテキストはありません。',

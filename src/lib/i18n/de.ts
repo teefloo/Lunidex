@@ -1177,6 +1177,7 @@ export default {
       pokemon_page: 'Pokémon-Seite',
       open_pokemon_page: 'Pokémon-Seite öffnen',
       card_category: 'Kategorie',
+      market_price: 'Marktpreis',
       card_updated: 'Aktualisiert',
       open_raw_data: 'Rohdaten öffnen',
       detail_empty: 'Kein Effekt oder Text verfügbar.',
