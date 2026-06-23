@@ -4,12 +4,12 @@ import { useQuery, useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
 import { useParams, useRouter } from 'next/navigation';
-import { 
-  Loader2, 
-  ArrowLeft, 
-  Ruler, 
-  Weight, 
-  Swords, 
+import {
+  Loader2,
+  ArrowLeft,
+  Ruler,
+  Weight,
+  Swords,
   ShieldAlert,
   ShieldCheck,
   Zap,
@@ -20,7 +20,9 @@ import {
   Play,
   MapPin,
   Sparkles,
-  Images
+  Images,
+  Egg,
+  ExternalLink,
 } from 'lucide-react';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -76,8 +78,13 @@ import { ABILITY_BATTLE_DESCRIPTIONS } from '@/lib/ability-battle-descriptions';
 import { HeldItem } from '@/lib/held-items';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { ShinyIcon } from '@/components/ui/ShinyIcon';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+
+const EggMoveExplorer = dynamic(() => import('@/components/breeding/EggMoveExplorer').then(m => m.EggMoveExplorer), {
+  loading: () => <div className="h-40 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/20" /></div>
+});
 
 function ItemCard({ item, language }: { item: HeldItem; language: string }) {
   const [imgError, setImgError] = useState(false);
@@ -884,47 +891,63 @@ export function PokemonDetailClient({
             {/* Breeding Tab */}
             <TabsContent value="breeding" className="space-y-6">
               {species ? (
-                <div className="glass-panel p-6 md:p-8 rounded-sm space-y-6">
-                  <h3 className="text-xl font-black mb-4 text-foreground/90 border-b border-border/60 pb-4">{t('detail.breeding')}</h3>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.egg_groups')}</p>
-                      <p className="text-sm font-black text-foreground/90">
-                        {species.egg_groups?.map(g => t(`egg_groups.${g.name}`)).join(', ') || t('detail.no_evolution')}
-                      </p>
+                <>
+                  <div className="glass-panel p-6 md:p-8 rounded-sm space-y-6">
+                    <div className="flex items-center justify-between pb-4 border-b border-border/60">
+                      <h3 className="text-xl font-black text-foreground/90">{t('detail.breeding')}</h3>
+                      <Link
+                        href={`/breeding?pokemon=${pokemon.name}`}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
+                      >
+                        <Egg className="h-3.5 w-3.5" /> Breeding Calculator
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.gender_ratio')}</p>
-                      <p className="text-sm font-black text-foreground/90">
-                        {genderRate !== null ? (
-                          genderRate === -1 
-                            ? t('detail.genderless')
-                            : `♂ ${maleGenderRate?.toFixed(1)}% / ♀ ${femaleGenderRate?.toFixed(1)}%`
-                        ) : '-'}
-                      </p>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.egg_groups')}</p>
+                        <p className="text-sm font-black text-foreground/90">
+                          {species.egg_groups?.map(g => t(`egg_groups.${g.name}`)).join(', ') || t('detail.no_evolution')}
+                        </p>
+                      </div>
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.gender_ratio')}</p>
+                        <p className="text-sm font-black text-foreground/90">
+                          {genderRate !== null ? (
+                            genderRate === -1
+                              ? t('detail.genderless')
+                              : `♂ ${maleGenderRate?.toFixed(1)}% / ♀ ${femaleGenderRate?.toFixed(1)}%`
+                          ) : '-'}
+                        </p>
+                      </div>
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.catch_rate')}</p>
+                        <p className="text-sm font-black text-foreground/90">{species.capture_rate || '-'}</p>
+                      </div>
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_happiness')}</p>
+                        <p className="text-sm font-black text-foreground/90">{species.base_happiness || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.catch_rate')}</p>
-                      <p className="text-sm font-black text-foreground/90">{species.capture_rate || '-'}</p>
-                    </div>
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_happiness')}</p>
-                      <p className="text-sm font-black text-foreground/90">{species.base_happiness || '-'}</p>
+
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/60">
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.growth_rate')}</p>
+                        <p className="text-sm font-black text-foreground/90">{species.growth_rate ? t(`growth_rates.${species.growth_rate.name}`) : '-'}</p>
+                      </div>
+                      <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
+                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_exp')}</p>
+                        <p className="text-sm font-black text-foreground/90">{pokemon.base_experience || '-'}</p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/60">
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.growth_rate')}</p>
-                      <p className="text-sm font-black text-foreground/90">{species.growth_rate ? t(`growth_rates.${species.growth_rate.name}`) : '-'}</p>
-                    </div>
-                    <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_exp')}</p>
-                      <p className="text-sm font-black text-foreground/90">{pokemon.base_experience || '-'}</p>
-                    </div>
+                  {/* Egg Move Explorer inline */}
+                  <div className="glass-panel p-6 md:p-8 rounded-sm">
+                    <EggMoveExplorer pokemonName={pokemon.name} />
                   </div>
-                </div>
+                </>
               ) : (
                 <div className="glass-panel p-6 md:p-8 rounded-sm flex items-center justify-center min-h-[200px]">
                   <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm">{t('detail.no_evolution')}</p>

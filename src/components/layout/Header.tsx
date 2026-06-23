@@ -14,6 +14,7 @@ import {
   Menu,
   ArrowLeftRight,
   LayoutGrid,
+  Egg,
 } from 'lucide-react';
 import { useEffect, useMemo, useState, useRef, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
@@ -161,6 +162,7 @@ export default function Header() {
   const typesLabel = mounted ? t('nav.types') : 'Types';
   const movesLabel = mounted ? t('nav.moves') : 'Moves';
   const quizLabel = mounted ? t('nav.quiz') : 'Quiz';
+  const breedingLabel = mounted ? (t('nav.breeding') || 'Breeding') : 'Breeding';
   const favoritesLabel = mounted ? t('nav.favorites') : 'Favorites';
   const menuLabel = mounted ? (t('header.open_menu') || 'Menu') : 'Menu';
   const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
@@ -249,6 +251,10 @@ export default function Header() {
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
             <HeaderLink href={localizedHref('/quiz')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
               <BrainCircuit className="h-3 w-3" /> {quizLabel}
+            </HeaderLink>
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <HeaderLink href={localizedHref('/breeding')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/65 hover:text-primary">
+              <Egg className="h-3 w-3" /> {breedingLabel}
             </HeaderLink>
           </nav>
 
@@ -420,6 +426,13 @@ export default function Header() {
                       render={
                         <Link href={localizedHref('/quiz')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
                           <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {quizLabel}
+                        </Link>
+                      }
+                    />
+                    <SheetClose
+                      render={
+                        <Link href={localizedHref('/breeding')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/70 transition-all hover:bg-muted/50 hover:text-primary">
+                          <Egg className="h-5 w-5 flex-shrink-0" /> {breedingLabel}
                         </Link>
                       }
                     />
