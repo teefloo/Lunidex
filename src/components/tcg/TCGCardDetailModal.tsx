@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -28,6 +29,13 @@ import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
+import { PriceAlertManager } from './PriceAlertManager';
+
+// Lazy-load the heavy Recharts-based chart only when the card detail is open.
+const PriceChart = dynamic(
+  () => import('./PriceChart').then((m) => ({ default: m.PriceChart })),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-xl bg-foreground/5" /> },
+);
 
 interface TCGCardDetailModalProps {
   card: TCGCard | null;
@@ -357,6 +365,16 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     )}
                   </section>
                 )}
+
+                {/* ── Price history chart ──────────────────────────── */}
+                <section className="space-y-3">
+                  <PriceChart cardId={displayCard.id} />
+                </section>
+
+                {/* ── Price alerts ─────────────────────────────────── */}
+                <section className="space-y-3">
+                  <PriceAlertManager cardId={displayCard.id} cardName={displayCard.name} />
+                </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}
                 <div className="flex justify-end border-t border-border/20 pt-5">
