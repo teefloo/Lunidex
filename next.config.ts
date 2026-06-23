@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react'],
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
