@@ -30,6 +30,7 @@ import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
 import { useMounted } from '@/hooks/useMounted';
+import { useAutoGenTheme } from '@/components/providers/GenThemeProvider';
 
 interface LocalizedGqlData {
   pokemon_v2_pokemonspeciesnames: { 
@@ -203,6 +204,20 @@ export function PokemonDetailClient({
       addToHistory({ id: pokemon.id, name: pokemon.name });
     }
   }, [pokemon, addToHistory]);
+
+  // Auto-switch generation theme based on the Pokémon's dex number
+  const pokemonGeneration = pokemon
+    ? pokemon.id <= 151 ? 1
+    : pokemon.id <= 251 ? 2
+    : pokemon.id <= 386 ? 3
+    : pokemon.id <= 493 ? 4
+    : pokemon.id <= 649 ? 5
+    : pokemon.id <= 721 ? 6
+    : pokemon.id <= 809 ? 7
+    : pokemon.id <= 905 ? 8
+    : 9
+    : null;
+  useAutoGenTheme(pokemonGeneration);
 
   // Fetch type relations for all types of the pokemon
   const typeRelationsQueries = useQueries({
