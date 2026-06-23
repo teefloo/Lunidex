@@ -46,9 +46,60 @@ export interface TCGCardLegalities {
   unlimited?: boolean;
 }
 
+/** Per-variant TCGplayer pricing tier (USD). */
+export interface TCGPlayerPriceTier {
+  lowPrice?: number | null;
+  midPrice?: number | null;
+  highPrice?: number | null;
+  marketPrice?: number | null;
+  directLowPrice?: number | null;
+}
+
+/** TCGdex `pricing.tcgplayer` block. Keyed by variant (`normal`, `holofoil`, …) in USD. */
+export interface TCGPlayerPricing {
+  unit?: string;
+  updated?: string;
+  normal?: TCGPlayerPriceTier;
+  holofoil?: TCGPlayerPriceTier;
+  'reverse-holofoil'?: TCGPlayerPriceTier;
+  [variant: string]: TCGPlayerPriceTier | string | undefined;
+}
+
+/** TCGdex `pricing.cardmarket` block (EUR). */
+export interface TCGCardmarketPricing {
+  unit?: string;
+  updated?: string;
+  avg?: number;
+  low?: number;
+  trend?: number;
+  avg1?: number;
+  avg7?: number;
+  avg30?: number;
+}
+
 export interface TCGCardPricing {
-  tcgplayer?: unknown;
-  cardmarket?: unknown;
+  tcgplayer?: TCGPlayerPricing;
+  cardmarket?: TCGCardmarketPricing;
+}
+
+/** A single resolved market value for a card, in one currency. */
+export interface TCGCardValue {
+  amount: number;
+  currency: string;
+}
+
+/**
+ * Slim, owned-independent projection of a card used for collection statistics.
+ * Built server-side (route handler) so the heavy per-card hydration is shared
+ * across users and HTTP-cacheable, while ownership stays purely client-side.
+ */
+export interface TCGCollectionCard {
+  id: string;
+  localId: string;
+  name: string;
+  image?: string;
+  rarity?: string | null;
+  value?: TCGCardValue | null;
 }
 
 export interface TCGPriceSnapshot {

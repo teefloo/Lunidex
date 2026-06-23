@@ -10,10 +10,12 @@ import type {
   TCGCardSortField,
   TCGCardSortOrder,
   TCGCatalogPageResult,
+  TCGCollectionCard,
   TCGSet,
   TCGFilterOptions,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
+import { toCollectionCard } from '@/lib/tcg-collection';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -594,6 +596,55 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
     console.error(`[TCG API] Error fetching cards for set ${setId}:`, error);
     return (await getCachedData<TCGCard[]>(cacheKey, true)) || [];
   }
+};
+
+/** Upper bound on how many cards a single collection-insight request will hydrate. */
+export const TCG_COLLECTION_MAX_CARDS = 600;
+
+/**
+ * Build the slim, owned-independent collection-card projection for a whole set.
+ *
+ * Pricing and rarity only exist on the TCGdex card *detail* endpoint, so every
+ * card has to be hydrated. Each detail call is cached (client-side via idb and,
+ * regardless, deduplicated upstream), the work is bounded by `maxCards`, and the
+ * resulting slim array is small enough to be HTTP-cached by the route handler —
+ * keeping this owned-independent and shareable across users.
+ */
+export const buildSetCollectionCards = async (
+  setId: string,
+  lang = 'en',
+  maxCards = TCG_COLLECTION_MAX_CARDS,
+): Promise<TCGCollectionCard[]> => {
+  const tcgLang = resolveTcgLang(lang);
+  const summaries = await getCardsBySet(setId, tcgLang);
+  if (summaries.length === 0) return [];
+
+  const limited = summaries.slice(0, Math.max(0, maxCards));
+  const hydrated = await mapWithConcurrency(limited, VISUAL_METADATA_CONCURRENCY, async (card) => {
+    const full = await getTCGCard(card.id, tcgLang).catch(() => null);
+    return toCollectionCard(full ?? card);
+  });
+
+  return hydrated;
+};
+
+/**
+ * Client helper: fetch a set's collection cards through the route handler so the
+ * heavy hydration happens server-side and stays HTTP-cacheable. Components must
+ * use this rather than calling the network directly.
+ */
+export const fetchSetCollectionCards = async (
+  setId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCollectionCard[]> => {
+  const params = new URLSearchParams({ setId, lang });
+  const response = await fetch(`/api/tcg/collection/set-cards?${params.toString()}`, { signal });
+  if (!response.ok) {
+    throw new Error(`Failed to load collection cards for ${setId}`);
+  }
+  const data = (await response.json()) as { cards?: TCGCollectionCard[] };
+  return Array.isArray(data.cards) ? data.cards : [];
 };
 
 /**

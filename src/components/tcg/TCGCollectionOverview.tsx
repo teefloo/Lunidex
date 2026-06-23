@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Sparkles, ChevronDown } from 'lucide-react';
+import { Search, Sparkles, ChevronDown, Trophy } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGSet } from '@/types/tcg';
@@ -13,12 +13,14 @@ import {
   computeCollectionStatsFromSets,
 } from '@/lib/tcg-collection';
 import { TCGProgressBar } from './TCGProgressBar';
+import { TCGActiveSetInsights } from './TCGActiveSetInsights';
 
 interface TCGCollectionOverviewProps {
   sets: TCGSet[];
+  resolvedLang?: string;
 }
 
-export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
+export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollectionOverviewProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
@@ -30,6 +32,11 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
   const [sortMode, setSortMode] = useState<'id-asc' | 'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('progress');
 
   const stats = useMemo(() => computeCollectionStatsFromSets(sets, ownedIds), [sets, ownedIds]);
+
+  const activeSets = useMemo(
+    () => sets.filter((set) => tcgActiveSets.includes(set.id)),
+    [sets, tcgActiveSets],
+  );
 
   const setEntries = useMemo(() => {
     return sets
@@ -77,6 +84,71 @@ export function TCGCollectionOverview({ sets }: TCGCollectionOverviewProps) {
 
   return (
     <div className="space-y-8">
+      {/* Recap hero */}
+      <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-4 w-4 text-primary" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/60">
+            {t('tcg.collection_recap_title')}
+          </h2>
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
+              {t('tcg.collection_total_owned')}
+            </p>
+            <p className="mt-1 text-3xl font-black leading-none">{stats.totalOwned}</p>
+          </div>
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
+              {t('tcg.collection_sets_completed')}
+            </p>
+            <p className="mt-1 text-3xl font-black leading-none">
+              {stats.completeSets.length}
+              <span className="text-base text-foreground/30">/{stats.totalSets}</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/40">
+              {t('tcg.collection_overall_progress')}
+            </p>
+            <p className="mt-1 text-3xl font-black leading-none">{stats.percentage}%</p>
+            <TCGProgressBar
+              owned={stats.totalOwned}
+              total={stats.totalCards}
+              size="sm"
+              className="mt-2 w-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Active set insights */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-foreground/40" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/50">
+            {t('tcg.collection_active_insights')}
+          </h2>
+        </div>
+        {activeSets.length === 0 ? (
+          <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[10px] font-bold uppercase tracking-[0.08em] text-foreground/30">
+            {t('tcg.collection_active_insights_hint')}
+          </p>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {activeSets.map((set) => (
+              <TCGActiveSetInsights
+                key={set.id}
+                set={set}
+                ownedIds={ownedIds}
+                resolvedLang={resolvedLang}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">

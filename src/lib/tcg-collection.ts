@@ -1,5 +1,10 @@
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
-import type { TCGCard, TCGSet } from '@/types/tcg';
+import type {
+  TCGCard,
+  TCGCardValue,
+  TCGCollectionCard,
+  TCGSet,
+} from '@/types/tcg';
 
 export function countOwnedInSet(setId: string, ownedIds: Set<string>): number {
   const prefix = `${setId}-`;
@@ -252,4 +257,221 @@ export function formatWishlistCopyPaste(cards: TCGCard[]): string {
   return cards
     .map((c) => `${c.name} #${c.localId} [${c.set?.name ?? ''}]`)
     .join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Valuation
+//
+// TCGdex exposes prices on the card *detail* endpoint only (not the bulk set
+// listing): `pricing.cardmarket` (EUR) and `pricing.tcgplayer.<variant>` (USD).
+// We prefer Cardmarket because the app's primary audience is European and the
+// EUR figures are a single scalar per card; TCGplayer is used as a fallback for
+// cards Cardmarket does not cover. Because the two providers use different
+// currencies we never sum across them — `aggregateCollectionValue` groups totals
+// per currency so the displayed estimate stays honest.
+//
+// Extension point: to add another price source, populate `card.pricing` in
+// `normaliseCard` (src/lib/api/tcg.ts) and extend `getCardMarketValue` below.
+// ---------------------------------------------------------------------------
+
+function toFiniteNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+/**
+ * Resolve a single representative market value for a card.
+ * Prefers Cardmarket trend → average → low (EUR), then falls back to the most
+ * relevant TCGplayer variant market/mid/low price (USD). Returns null when no
+ * price is available (e.g. summary cards that were never hydrated).
+ */
+export function getCardMarketValue(card: TCGCard): TCGCardValue | null {
+  const cardmarket = card.pricing?.cardmarket;
+  if (cardmarket) {
+    const amount =
+      toFiniteNumber(cardmarket.trend) ??
+      toFiniteNumber(cardmarket.avg) ??
+      toFiniteNumber(cardmarket.avg30) ??
+      toFiniteNumber(cardmarket.low);
+    if (typeof amount === 'number') {
+      return { amount, currency: cardmarket.unit || 'EUR' };
+    }
+  }
+
+  const tcgplayer = card.pricing?.tcgplayer;
+  if (tcgplayer) {
+    const currency = tcgplayer.unit || 'USD';
+    for (const variant of ['normal', 'holofoil', 'reverse-holofoil'] as const) {
+      const tier = tcgplayer[variant];
+      if (tier && typeof tier === 'object') {
+        const amount =
+          toFiniteNumber(tier.marketPrice) ??
+          toFiniteNumber(tier.midPrice) ??
+          toFiniteNumber(tier.lowPrice);
+        if (typeof amount === 'number') return { amount, currency };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Project a hydrated card into the slim, owned-independent shape consumed by the
+ * collection statistics UI.
+ */
+export function toCollectionCard(card: TCGCard): TCGCollectionCard {
+  return {
+    id: card.id,
+    localId: card.localId,
+    name: card.name,
+    image: card.image ?? card.imageUrl,
+    rarity: card.rarity ?? null,
+    value: getCardMarketValue(card),
+  };
+}
+
+export function getCollectionCardRarityWeight(card: TCGCollectionCard): number {
+  return getRarityWeight(card.rarity);
+}
+
+export function sortCollectionCardsByRarity(
+  cards: TCGCollectionCard[],
+): TCGCollectionCard[] {
+  return [...cards].sort((a, b) => {
+    const wa = getCollectionCardRarityWeight(a);
+    const wb = getCollectionCardRarityWeight(b);
+    if (wb !== wa) return wb - wa;
+    return a.name.localeCompare(b.name);
+  });
+}
+
+export function getSetCompletionFromCards(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+): { owned: number; total: number; percentage: number } {
+  const total = cards.length;
+  let owned = 0;
+  for (const card of cards) {
+    if (ownedIds.has(card.id)) owned++;
+  }
+  return {
+    owned,
+    total,
+    percentage: total > 0 ? Math.round((owned / total) * 100) : 0,
+  };
+}
+
+/**
+ * Return the rarest cards of a set that are not yet owned, highest rarity first.
+ * Guaranteed to contain only non-owned cards.
+ */
+export function getTopMissingCards(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+  limit = 8,
+): TCGCollectionCard[] {
+  const safeLimit = Math.max(0, Math.floor(limit));
+  if (safeLimit === 0) return [];
+  const missing = cards.filter((card) => !ownedIds.has(card.id));
+  return sortCollectionCardsByRarity(missing).slice(0, safeLimit);
+}
+
+export interface TCGCollectionValueGroup {
+  currency: string;
+  total: number;
+  count: number;
+}
+
+export interface TCGCollectionValuation {
+  /** Per-currency totals for owned cards that have a price. Sorted by total desc. */
+  groups: TCGCollectionValueGroup[];
+  /** Number of owned cards present in `cards`. */
+  ownedCount: number;
+  /** Number of owned cards that contributed a price to `groups`. */
+  pricedCount: number;
+}
+
+/**
+ * Aggregate the estimated value of the owned subset of `cards`, grouped by
+ * currency. Pure and allocation-light so it stays fast on large sets when
+ * memoised by the caller.
+ */
+export function aggregateCollectionValue(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+): TCGCollectionValuation {
+  const totals = new Map<string, { total: number; count: number }>();
+  let ownedCount = 0;
+  let pricedCount = 0;
+
+  for (const card of cards) {
+    if (!ownedIds.has(card.id)) continue;
+    ownedCount++;
+    const value = card.value;
+    if (!value || !Number.isFinite(value.amount)) continue;
+    pricedCount++;
+    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
+    entry.total += value.amount;
+    entry.count++;
+    totals.set(value.currency, entry);
+  }
+
+  const groups = [...totals.entries()]
+    .map(([currency, { total, count }]) => ({
+      currency,
+      total: Math.round(total * 100) / 100,
+      count,
+    }))
+    .sort((a, b) => b.total - a.total);
+
+  return { groups, ownedCount, pricedCount };
+}
+
+export interface TCGActiveSetInsights {
+  completion: { owned: number; total: number; percentage: number };
+  topMissing: TCGCollectionCard[];
+  valuation: TCGCollectionValuation;
+  /** Estimated total value of the full set (all cards, owned or not). */
+  setTotalValue: TCGCollectionValueGroup[];
+}
+
+/**
+ * Aggregate the estimated value of ALL cards in a set (ownership-independent).
+ * Useful as a "set worth" reference even when the user owns 0 cards.
+ */
+export function aggregateSetTotalValue(
+  cards: TCGCollectionCard[],
+): TCGCollectionValueGroup[] {
+  const totals = new Map<string, { total: number; count: number }>();
+  for (const card of cards) {
+    const value = card.value;
+    if (!value || !Number.isFinite(value.amount)) continue;
+    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
+    entry.total += value.amount;
+    entry.count++;
+    totals.set(value.currency, entry);
+  }
+  return [...totals.entries()]
+    .map(([currency, { total, count }]) => ({
+      currency,
+      total: Math.round(total * 100) / 100,
+      count,
+    }))
+    .sort((a, b) => b.total - a.total);
+}
+
+/**
+ * Compute the full insight payload for one active set from its hydrated cards.
+ */
+export function computeActiveSetInsights(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+  topMissingLimit = 8,
+): TCGActiveSetInsights {
+  return {
+    completion: getSetCompletionFromCards(cards, ownedIds),
+    topMissing: getTopMissingCards(cards, ownedIds, topMissingLimit),
+    valuation: aggregateCollectionValue(cards, ownedIds),
+    setTotalValue: aggregateSetTotalValue(cards),
+  };
 }

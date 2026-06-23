@@ -8,6 +8,19 @@ function appendFormat(base: string, ext: string): string {
 }
 
 /**
+ * Build a TCGdex image URL at the requested quality/format from a base image url
+ * (with or without an extension). Returns undefined when no base is provided.
+ */
+export function buildTcgImageUrl(
+  base: string | undefined | null,
+  quality: 'low' | 'high' = 'low',
+  ext: 'webp' | 'png' = 'webp',
+): string | undefined {
+  if (!base) return undefined;
+  return appendFormat(base, `${quality}.${ext}`);
+}
+
+/**
  * Best PNG image URL for a card. satori (next/og) cannot decode WebP, and the
  * raw `imageUrl` from the API lacks the required quality suffix, so OG images
  * must use the `/high.png` variant built from `card.image`.

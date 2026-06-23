@@ -44,7 +44,7 @@ export function TCGCollectionPage() {
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
         ) : (
-          <TCGCollectionOverview sets={sets} />
+          <TCGCollectionOverview sets={sets} resolvedLang={resolvedLang} />
         )}
       </main>
     </div>
