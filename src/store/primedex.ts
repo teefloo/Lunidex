@@ -4,6 +4,7 @@ import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
 import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
+import type { GenTheme } from '@/lib/generation-themes';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -189,6 +190,12 @@ interface PrimeDexStore {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 
+  // Generation theme
+  genTheme: GenTheme;
+  setGenTheme: (theme: GenTheme) => void;
+  autoGenTheme: boolean;
+  setAutoGenTheme: (v: boolean) => void;
+
   // Language
   language: string;
   setLanguage: (lang: string) => void;
@@ -251,6 +258,8 @@ export const SYNCED_KEYS = [
   'soundEnabled',
   'animatedSprites',
   'theme',
+  'genTheme',
+  'autoGenTheme',
   'language',
   'weeklyQuestClaimedWeek',
 ] as const;
@@ -527,6 +536,11 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       theme: 'system',
       setTheme: (theme) => set({ theme }),
+
+      genTheme: 'default',
+      setGenTheme: (theme) => set({ genTheme: theme }),
+      autoGenTheme: false,
+      setAutoGenTheme: (v) => set({ autoGenTheme: v }),
 
       language: 'auto',
       setLanguage: (lang) => set({ language: lang }),

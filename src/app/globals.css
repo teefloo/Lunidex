@@ -968,6 +968,110 @@ h1 { letter-spacing: 0; }
   }
 }
 
+/* ── Generation themes — override primary/accent/background per gen ── */
+
+[data-gen="gen1"] {
+  --primary: oklch(0.52 0.22 28);         /* #E3350D rouge Kanto */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.28 0.12 264);         /* #003A8C bleu Kanto */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.98 0.022 88);     /* #FFF8E7 crème */
+  --foreground: oklch(0.22 0.020 60);
+  --ring: oklch(0.52 0.22 28);
+}
+
+[data-gen="gen2"] {
+  --primary: oklch(0.87 0.17 90);         /* #FFD700 or */
+  --primary-foreground: oklch(0.22 0.040 60);
+  --accent: oklch(0.78 0.000 0);          /* #C0C0C0 argent */
+  --accent-foreground: oklch(0.22 0.020 60);
+  --background: oklch(0.22 0.055 148);    /* #1A3A1A vert foncé */
+  --foreground: oklch(0.93 0.030 88);
+  --card: oklch(0.28 0.055 148);
+  --card-foreground: oklch(0.93 0.030 88);
+  --border: oklch(0.40 0.055 148);
+  --ring: oklch(0.87 0.17 90);
+}
+
+[data-gen="gen3"] {
+  --primary: oklch(0.42 0.13 15);         /* #9B2335 rubis */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.34 0.14 264);         /* #0047AB saphir */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.44 0.09 220);     /* #006994 turquoise */
+  --foreground: oklch(0.97 0.005 85);
+  --card: oklch(0.38 0.09 220);
+  --card-foreground: oklch(0.97 0.005 85);
+  --border: oklch(0.55 0.09 220);
+  --ring: oklch(0.42 0.13 15);
+}
+
+[data-gen="gen4"] {
+  --primary: oklch(0.82 0.055 228);       /* #B0D4F1 bleu glacier */
+  --primary-foreground: oklch(0.22 0.040 264);
+  --accent: oklch(0.58 0.13 310);         /* #9966CC lilas */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.18 0.040 264);    /* #1A1A2E bleu nuit */
+  --foreground: oklch(0.90 0.025 280);
+  --card: oklch(0.24 0.040 264);
+  --card-foreground: oklch(0.90 0.025 280);
+  --border: oklch(0.36 0.055 280);
+  --ring: oklch(0.82 0.055 228);
+}
+
+[data-gen="gen5"] {
+  --primary: oklch(0.52 0.18 22);         /* #CC2222 rouge sang */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.95 0.005 85);         /* #F5F5F5 blanc */
+  --accent-foreground: oklch(0.18 0.010 60);
+  --background: oklch(0.18 0.005 60);     /* #1C1C1C noir */
+  --foreground: oklch(0.95 0.005 85);
+  --card: oklch(0.24 0.008 60);
+  --card-foreground: oklch(0.95 0.005 85);
+  --border: oklch(0.38 0.010 60);
+  --ring: oklch(0.52 0.18 22);
+}
+
+[data-gen="gen6"] {
+  --primary: oklch(0.48 0.18 264);        /* #4169E1 bleu royal */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.56 0.22 28);          /* #FF2400 rouge écarlate */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.96 0.015 255);    /* #F0F4FF */
+  --foreground: oklch(0.22 0.040 264);
+  --ring: oklch(0.48 0.18 264);
+}
+
+[data-gen="gen7"] {
+  --primary: oklch(0.82 0.16 82);         /* #FFB700 jaune soleil */
+  --primary-foreground: oklch(0.22 0.040 60);
+  --accent: oklch(0.36 0.18 310);         /* #6A0DAD violet lune */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.95 0.020 195);    /* #E8F8F8 turquoise pâle */
+  --foreground: oklch(0.22 0.030 220);
+  --ring: oklch(0.82 0.16 82);
+}
+
+[data-gen="gen8"] {
+  --primary: oklch(0.50 0.20 22);         /* #CE1620 rouge bouclier */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.32 0.16 264);         /* #0A4FA6 bleu épée */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.96 0.012 310);    /* #F5F0F8 lavande pâle */
+  --foreground: oklch(0.20 0.025 310);
+  --ring: oklch(0.50 0.20 22);
+}
+
+[data-gen="gen9"] {
+  --primary: oklch(0.56 0.22 28);         /* #FF2400 écarlate */
+  --primary-foreground: oklch(0.98 0.005 85);
+  --accent: oklch(0.32 0.28 305);         /* #8B00FF violet */
+  --accent-foreground: oklch(0.98 0.005 85);
+  --background: oklch(0.97 0.010 22);     /* #FFF0F0 rose pâle */
+  --foreground: oklch(0.22 0.020 330);
+  --ring: oklch(0.56 0.22 28);
+}
+
 .pixel-progress {
   image-rendering: pixelated;
   border-radius: var(--radius);

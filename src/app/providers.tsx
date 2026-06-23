@@ -10,6 +10,7 @@ import { resolveLanguage } from '@/lib/languages';
 import { AuthProvider } from '@/lib/supabase/AuthProvider';
 import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
 import dynamic from 'next/dynamic';
+import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 
@@ -96,11 +97,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
-          <TooltipProvider>
-            <SupabaseSyncBridge />
-            {children}
-            <SettingsModal />
-          </TooltipProvider>
+          <GenThemeProvider>
+            <TooltipProvider>
+              <SupabaseSyncBridge />
+              {children}
+              <SettingsModal />
+            </TooltipProvider>
+          </GenThemeProvider>
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>

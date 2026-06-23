@@ -3,6 +3,7 @@
 import { usePrimeDexStore } from '@/store/primedex';
 import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
 import { DataExportImport } from '@/components/layout/DataExportImport';
+import { GenThemeSelector } from '@/components/settings/GenThemeSelector';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 import { useEffect, useRef, useCallback } from 'react';
@@ -198,6 +199,9 @@ export default function SettingsModal() {
                   ))}
                 </div>
               </div>
+
+              {/* Generation Theme Selector */}
+              <GenThemeSelector />
 
               {/* Data Export & Import */}
               <DataExportImport />
