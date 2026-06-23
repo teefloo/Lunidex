@@ -3,6 +3,7 @@
 import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import CompareBarSlot from "@/components/pokemon/CompareBarSlot";
 import { Toaster } from "@/components/ui/sonner";
+import { InstallPrompt } from "@/components/layout/InstallPrompt";
 
 export function AppContent({ children }: { children: ReactNode }) {
   const shouldRenderAgentation = process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_ENABLE_AGENTATION === "true";
@@ -32,6 +33,7 @@ export function AppContent({ children }: { children: ReactNode }) {
       {children}
       <CompareBarSlot />
       <Toaster />
+      <InstallPrompt />
       {shouldRenderAgentation && Agentation && (
         <Agentation endpoint="http://localhost:4747" />
       )}

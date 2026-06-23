@@ -1057,6 +1057,7 @@ export default {
       none: 'Keine',
       ability_with_name: 'Fähigkeit: {{name}}',
       retreat_cost: 'Rückzugskosten',
+      attacks: 'Angriffe',
       official_portal: 'Offizielles Portal',
       open_card_detail: 'Details von {{name}} ansehen',
       page_title: 'Pokémon TCG-Katalog — PrimeDex',
@@ -1215,6 +1216,15 @@ export default {
       wishlist_empty_desc: 'Karten aus Alben hinzufügen oder Sets als "laufend" markieren',
       no_suggestions: 'Keine Vorschläge verfügbar',
       no_suggestions_desc: 'Markiere Sets als "laufend" in deiner Sammlung, um Vorschläge zu sehen',
+      compare_title: 'Karten vergleichen',
+      compare_cards: 'Karten',
+      compare_clear_all: 'Alle löschen',
+      compare_empty: 'Keine Karten zum Vergleichen',
+      compare_empty_hint: 'Karten aus dem Katalog hinzufügen, um mit dem Vergleich zu beginnen',
+      compare_error: 'Vergleich konnte nicht geladen werden',
+      compare_remove_card: 'Karte entfernen',
+      compare_open: 'Vergleichspanel öffnen',
+      compare_loading: 'Laden…',
     },
     capabilities: {
       abilities: {

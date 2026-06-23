@@ -22,7 +22,7 @@ export const pokemonKeys = {
     pokemon: (name: string, lang: string) => [...pokemonKeys.all, 'abilities', 'pokemon', name, lang] as const,
   },
   tcg: {
-    all: () => ['tcg'] as const,
+    all: () => ['pokemon', 'tcg'] as const,
     cards: (name: string) => [...pokemonKeys.tcg.all(), 'cards', name] as const,
   }
 };
@@ -35,4 +35,5 @@ export const tcgKeys = {
   filterOptions: (language: string) => [...tcgKeys.all(), 'filter-options', language] as const,
   rarities: (setId: string | null | undefined, language: string) =>
     [...tcgKeys.all(), 'rarities', setId ?? 'all', language] as const,
+  compare: (ids: string[]) => [...tcgKeys.all(), 'compare', ids] as const,
 };

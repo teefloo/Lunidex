@@ -8,6 +8,7 @@ import SettingsCard from '@/components/dashboard/SettingsCard';
 import ProfileAndBadges from '@/components/dashboard/ProfileAndBadges';
 import QuizStatistics from '@/components/dashboard/QuizStatistics';
 import PokedexProgress from '@/components/dashboard/PokedexProgress';
+import ActivityHeatMap from '@/components/dashboard/ActivityHeatMap';
 import GeneralActivity from '@/components/dashboard/GeneralActivity';
 import ExtensibleSection from '@/components/dashboard/ExtensibleSection';
 import { useDashboardData } from '@/hooks/useDashboardData';
@@ -66,6 +67,9 @@ export default function DashboardPage() {
 
             {/* Row 2: Pokedex */}
             <PokedexProgress data={data} />
+
+            {/* Row 2.5: Activity Heat Map */}
+            <ActivityHeatMap />
 
             {/* Row 3: Activity + Extensible */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

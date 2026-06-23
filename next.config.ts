@@ -1,8 +1,110 @@
 import type { NextConfig } from "next";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import withPWAInit from "@ducanh2912/next-pwa";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
+
+const withPWA = withPWAInit({
+  dest: "public",
+  register: true,
+  disable: process.env.NODE_ENV === "development",
+  fallbacks: {
+    document: "/offline",
+  },
+  workboxOptions: {
+    skipWaiting: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/pokeapi\.co\/api\/.*$/i,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "pokeapi-data",
+          expiration: {
+            maxEntries: 200,
+            maxAgeSeconds: 86400,
+          },
+          networkTimeoutSeconds: 10,
+        },
+      },
+      {
+        urlPattern: /^https:\/\/api\.tcgdex\.net\/.*$/i,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "tcgdex-data",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 86400,
+          },
+          networkTimeoutSeconds: 10,
+        },
+      },
+      {
+        urlPattern: /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/.*$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "pokeapi-sprites",
+          expiration: {
+            maxEntries: 300,
+            maxAgeSeconds: 604800,
+          },
+        },
+      },
+      {
+        urlPattern: /\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico)$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "static-images",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 604800,
+          },
+        },
+      },
+      {
+        urlPattern: /\/_next\/static.+\.js$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "next-static-js",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 31536000,
+          },
+        },
+      },
+      {
+        urlPattern: /\/_next\/static.+\.css$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "next-static-css",
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 31536000,
+          },
+        },
+      },
+      {
+        urlPattern: ({ url }: { url: URL }) => {
+          const isSameOrigin = self.location.origin === url.origin;
+          if (!isSameOrigin) return false;
+          const pathname = url.pathname;
+          if (pathname.startsWith("/api/")) return false;
+          if (pathname.startsWith("/offline")) return false;
+          return pathname.startsWith("/");
+        },
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "pages",
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 86400,
+          },
+          networkTimeoutSeconds: 10,
+        },
+      },
+    ],
+  },
+});
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -131,4 +233,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

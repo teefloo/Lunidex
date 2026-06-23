@@ -8,6 +8,7 @@ import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
 import { languageToPokemonLanguageId, isSupportedLanguage, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
+import { OG_SIZE } from '@/lib/og/theme';
 
 // Route segment config for performance optimization
 export const revalidate = 3600; // Revalidate every hour
@@ -69,10 +70,11 @@ export async function generateMetadata(
     const flavorTexts = localizedData?.pokemon_v2_pokemonspeciesflavortexts || [];
     const description = normalizeDescription(flavorTexts[0]?.flavor_text);
 
+    const dexNumber = `#${String(pokemon.id).padStart(3, '0')}`;
     const title = `${displayName} | PrimeDex`;
     const seoDescription = description || `Detailed information about ${displayName}, including stats, abilities, types, and evolutions.`;
 
-    const image = pokemon.sprites.other?.['official-artwork'].front_default || pokemon.sprites.front_default;
+    const ogImageUrl = `/api/og/pokemon?name=${encodeURIComponent(name)}&lang=${lang}`;
 
     return {
       title,
@@ -106,13 +108,13 @@ export async function generateMetadata(
           'Stats',
           'Abilities',
         ],
-        images: image ? [{ url: image, width: 475, height: 475, alt: displayName }] : undefined,
+        images: [{ url: ogImageUrl, width: OG_SIZE.width, height: OG_SIZE.height, alt: `${displayName} — ${dexNumber}` }],
       },
       twitter: {
         card: 'summary_large_image',
         title,
         description: seoDescription,
-        images: image ? [image] : undefined,
+        images: [ogImageUrl],
       },
       authors: [{ name: 'PrimeDex', url: 'https://primedex.vercel.app/about' }],
       creator: 'PrimeDex',

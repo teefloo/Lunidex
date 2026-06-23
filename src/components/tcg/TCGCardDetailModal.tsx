@@ -101,6 +101,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
   const pokemonPageHref = category === 'Pokemon' && displayCard.dexId?.[0]
     ? `/pokemon/${displayCard.dexId[0]}?lang=${resolvedLang}`
     : null;
+  const tcgCompareList = store.tcgCompareList ?? [];
   const compared = isTCGCompared(displayCard.id);
   const owned = isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
@@ -241,6 +242,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                       active={compared}
                       onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
                       label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
+                      badge={compared ? tcgCompareList.length : undefined}
                     />
                     <ActionPill active={owned} onClick={() => toggleTCGOwned(displayCard.id)} label={t('tcg.mark_owned')} />
                     <ActionPill active={wishlisted} onClick={() => toggleTCGWishlist(displayCard.id)} label={t('tcg.mark_wishlist')} />
@@ -492,23 +494,30 @@ function ActionPill({
   active,
   onClick,
   label,
+  badge,
 }: {
   active: boolean;
   onClick: () => void;
   label: string;
+  badge?: number;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
+        'relative rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
         active
           ? 'border-primary/60 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
       )}
     >
       {label}
+      {typeof badge === 'number' && badge > 0 && (
+        <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[8px] font-black leading-none text-primary-foreground">
+          {badge}
+        </span>
+      )}
     </button>
   );
 }

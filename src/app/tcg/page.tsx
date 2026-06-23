@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { TCGCompareTrigger } from '@/components/tcg/TCGCompareTrigger';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
@@ -45,6 +46,7 @@ export default function TCGPage() {
         <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
           <TCGResearchDesk initialLatestSet={DEFAULT_LATEST_TCG_SET} />
         </Suspense>
+        <TCGCompareTrigger />
       </main>
     </div>
   );

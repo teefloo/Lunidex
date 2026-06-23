@@ -8,9 +8,9 @@ import { useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAllPokemonDetailed } from '@/lib/api';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { TypeRelations } from '@/lib/api/rest';
-import { 
-  Users, 
-  ShieldCheck, 
+import {
+  Users,
+  ShieldCheck,
   Info,
   Sword,
   X,
@@ -18,12 +18,13 @@ import {
   Zap,
   BarChart3,
   Loader2,
+  Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ShareButton } from '@/components/share/ShareButton';
-import { useMemo, useEffect, useState, SVGProps } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { resolveLanguage } from '@/lib/languages';
 import { toast } from 'sonner';
@@ -35,6 +36,7 @@ import {
 } from '@/lib/auto-complete';
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
+import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
 
 // Dynamic imports for heavy charting library
 const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
@@ -225,7 +227,7 @@ export default function TeamPage() {
                     onClick={clearTeam}
                     className="rounded-full font-black uppercase tracking-widest gap-2"
                   >
-                    <Trash2CustomIcon className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" />
                     {t('team.disband')}
                   </Button>
                 )}
@@ -468,6 +470,17 @@ export default function TeamPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Move Coverage Section */}
+                {pokemonData.length >= 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <MoveCoverageChecker />
+                  </motion.div>
+                )}
               </motion.div>
             )}
           </div>
@@ -565,27 +578,4 @@ export default function TeamPage() {
   );
 }
 
-function Trash2CustomIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      role="img"
-      aria-labelledby="trash-title"
-    >
-      <title id="trash-title">Delete</title>
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-      <line x1="10" x2="10" y1="11" y2="17" />
-      <line x1="14" x2="14" y1="11" y2="17" />
-    </svg>
-  );
-}
 

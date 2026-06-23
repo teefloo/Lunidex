@@ -2,6 +2,7 @@
 
 import { usePrimeDexStore } from '@/store/primedex';
 import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
+import { DataExportImport } from '@/components/layout/DataExportImport';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 import { useEffect, useRef, useCallback } from 'react';
@@ -197,6 +198,9 @@ export default function SettingsModal() {
                   ))}
                 </div>
               </div>
+
+              {/* Data Export & Import */}
+              <DataExportImport />
 
               <div className="mt-8 pt-6 border-t border-border/50 text-center">
                 <p className="text-[10px] text-foreground/30 font-bold tracking-[0.2em] uppercase">
