@@ -428,7 +428,7 @@ export default function PokemonList() {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-red-500/40" />
-        <h3 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.error_loading')}</h3>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.error_loading')}</h2>
         <p className="text-sm text-foreground/70 max-w-md">{(detailedError as Error).message || t('list.error_desc')}</p>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
           <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
@@ -441,7 +441,7 @@ export default function PokemonList() {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-foreground/20" />
-        <h3 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.no_results')}</h3>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.no_results')}</h2>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
           <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
         </Button>
@@ -451,8 +451,6 @@ export default function PokemonList() {
 
   return (
     <div className="space-y-6 pb-20">
-      <h2 className="sr-only">{t('list.title') || 'Pokémon List'}</h2>
-
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
         <h2 className="sr-only">
           {t('list.title', { defaultValue: 'Specimen Catalogue' })}

@@ -22,12 +22,12 @@ export default async function HomeFaqSection() {
           <p className="page-eyebrow justify-center">
             {t('home.faq_eyebrow')}
           </p>
-          <h2
+          <h3
             id="faq-title"
             className="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight"
           >
             {t('home.faq_title')}
-          </h2>
+          </h3>
           <p className="mt-3 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
             {t('home.faq_subtitle')}
           </p>
