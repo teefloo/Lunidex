@@ -127,7 +127,6 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['192.168.2.203:3000', 'localhost:3000', 'localhost:4747', '127.0.0.1:4747'],
   experimental: {
     optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react'],
-    inlineCss: true,
   },
   images: {
     unoptimized: false,

@@ -25,7 +25,7 @@ const displayFont = Pixelify_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-display",
-  display: "optional",
+  display: "swap",
   preload: true,
 });
 
@@ -33,7 +33,7 @@ const bodyFont = Nunito({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-body",
-  display: "optional",
+  display: "swap",
   preload: true,
 });
 
