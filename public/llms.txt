@@ -9,10 +9,49 @@
 - **Distinct abilities**: 300+ across all Pokémon
 - **Languages supported**: 9 (en, fr, de, es, it, ja, ko, zh, pt)
 - **TCG cards indexed**: 25,000+ across all sets
-- **Page load (LCP, p75)**: < 1.0s on 4G (Next.js 16 + edge cache)
+- **Page load (LCP, p75)**: < 2.5s on 4G (Next.js 16 + edge cache)
 - **Data freshness**: revalidated every 3600s (1 hour)
 - **License**: MIT (code), non-commercial fan project
 - **First launched**: January 2024
+
+## Agentic Browsing
+
+### Page Structure
+- Primary URL: https://primedex.vercel.app/en
+- Navigation: Fixed header with language selector, theme toggle, search bar, main navigation links
+- Main content: Pokédex grid (1,025 Pokémon with lazy-loaded cards), hero section with search/filters, recently viewed section, FAQ accordion
+- Layout: Single-page app shell with client-side routing via Next.js App Router
+
+### Key Pages
+- Home (/en): Complete Pokédex listing with type/generation/region filters, search, infinite scroll
+- Pokemon Detail (/en/pokemon/{name}): Full stats, evolution chain, moves, abilities, TCG cards, encounters, competitive builds
+- Team Builder (/en/team): Drag-and-drop 6-Pokémon team with type coverage analysis and synergy scoring
+- Compare (/en/compare): Side-by-side comparison of up to 3 Pokémon with interactive stat radar charts
+- TCG Catalog (/en/tcg): Trading card catalog with set, rarity, type, stage, and HP filters
+- Type Chart (/en/types): Interactive type effectiveness matrix for all 18 types
+- Moves (/en/moves): Complete moves database with power, accuracy, PP, and effect details
+- Quiz (/en/quiz): "Who's That Pokémon?" with 6 modes (Classic, Silhouette, Stats, Time Attack, Survival, Marathon)
+- Battle Simulator (/en/battle): Turn-based battle simulator against AI opponents
+- Breeding Calculator (/en/breeding): Egg move calculator and breeding chain planner
+
+### Interactive Elements
+- Search: Instant search across 1,025 Pokémon by name or National Dex number
+- Filters: Type, generation, region, height, weight, BST range, egg groups, legendary/mythical status
+- Theme: Light/dark/system toggle (persisted to IndexedDB)
+- Language: 9 languages with auto-detection from browser settings
+- Collections: Favorites, caught Pokémon, team slots, compare list (persisted to IndexedDB + Supabase sync)
+- TCG: Card collection tracking, wishlist, price history charts
+
+### Data Sources
+- PokéAPI REST (https://pokeapi.co/api/v2): Pokémon species, stats, moves, abilities, encounters
+- PokéAPI GraphQL (https://beta.pokeapi.co/graphql/v1beta): Localized names, flavor text, batch queries
+- TCGdex API (https://api.tcgdex.net/v2): Trading card catalog, sets, card details
+- Supabase: User authentication, cloud sync for collections and preferences
+
+### Client-Side State
+- Zustand store persisted to IndexedDB via idb-keyval
+- TanStack Query for server state caching (staleTime: 10 min, gcTime: 60 min)
+- Service Worker (PWA) with offline fallback for previously visited pages
 
 ## About
 PrimeDex (https://primedex.vercel.app) is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. The project is available on GitHub at https://github.com/teefloo/Poke and is not affiliated with Nintendo, Game Freak, or The Pokémon Company.

@@ -1,7 +1,5 @@
 'use client';
 
-import '../../styles/pokemon-cards-css.css';
-import '../../styles/tcg-card-overrides.css';
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import Image from 'next/image';
 import type { TCGCard } from '@/types/tcg';
@@ -50,6 +48,11 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    import('../../styles/pokemon-cards-css.css');
+    import('../../styles/tcg-card-overrides.css');
   }, []);
 
   const flushVars = () => {

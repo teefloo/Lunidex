@@ -74,7 +74,7 @@ import { ShareButton } from '@/components/share/ShareButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from '@/lib/i18n';
 import { getLocalizedPokemonData } from '@/lib/api';
-import { ABILITY_BATTLE_DESCRIPTIONS } from '@/lib/ability-battle-descriptions';
+import type { AbilityBattleDesc } from '@/lib/ability-battle-descriptions';
 import { HeldItem } from '@/lib/held-items';
 
 import Image from 'next/image';
@@ -158,6 +158,11 @@ export function PokemonDetailClient({
     soundEnabled
   } = usePrimeDexStore();
   const mounted = useMounted();
+
+  const [abilityDescs, setAbilityDescs] = useState<Record<string, AbilityBattleDesc> | null>(null);
+  useEffect(() => {
+    import('@/lib/ability-battle-descriptions').then(m => setAbilityDescs(m.ABILITY_BATTLE_DESCRIPTIONS));
+  }, []);
 
   const resolvedLang = mounted 
     ? (language === 'auto' ? systemLanguage : language) 
@@ -691,7 +696,7 @@ export function PokemonDetailClient({
                                    || enEffect?.effect 
                                    || description;
 
-                        const battleMapping = ABILITY_BATTLE_DESCRIPTIONS[a.ability.name];
+                        const battleMapping = abilityDescs?.[a.ability.name];
                         if (battleMapping) {
                           battleDesc = battleMapping[resolvedLang as keyof typeof battleMapping] 
                                     || battleMapping.en;

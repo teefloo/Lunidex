@@ -74,7 +74,7 @@ export function PokemonCardSkeleton() {
             <Skeleton className="h-11 w-11 rounded-sm bg-muted/40" />
           </div>
         </div>
-        <Skeleton className="w-28 h-28 rounded-sm bg-muted/40 my-3 mx-auto" />
+        <Skeleton className="h-20 w-20 sm:h-24 sm:w-24 rounded-sm bg-muted/40 my-3 mx-auto" />
         <div className="mt-auto w-full flex flex-col items-center gap-2">
           <Skeleton className="h-3 w-20 bg-muted/40" />
           <Skeleton className="h-6 w-32 bg-muted/40" />
@@ -337,6 +337,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             sizes="(max-width: 640px) 160px, (max-width: 1024px) 128px, 128px"
             className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)]"
             priority={index < 4}
+            fetchPriority={index === 0 ? 'high' : undefined}
           />
         </div>
 
@@ -347,7 +348,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
             {displayName}
           </h3>
-          <div className="mt-1 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
+          <div className="mt-1 flex min-h-[20px] flex-wrap items-center justify-center gap-1 sm:gap-1.5">
             {types.map((typeItem: PokemonCardType, i: number) => {
               const typeName = typeItem?.type?.name;
               if (!typeName) return null;

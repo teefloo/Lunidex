@@ -2,6 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePrimeDexStore } from '@/store/primedex';
+import { useMounted } from '@/hooks/useMounted';
 
 const RecentlyViewed = dynamic(() => import('@/components/pokemon/RecentlyViewed'), {
   ssr: false,
@@ -36,5 +38,12 @@ const RecentlyViewed = dynamic(() => import('@/components/pokemon/RecentlyViewed
 });
 
 export default function ClientRecentlyViewed() {
+  const mounted = useMounted();
+  const history = usePrimeDexStore(s => s.history);
+
+  if (!mounted || history.length === 0) {
+    return null;
+  }
+
   return <RecentlyViewed />;
 }

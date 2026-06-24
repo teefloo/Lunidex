@@ -505,9 +505,15 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         lastVisitDate: new Date().toISOString(),
       })),
       viewCount: {},
-      incrementViewCount: (id) => set((state) => ({
-        viewCount: { ...state.viewCount, [id]: (state.viewCount[id] || 0) + 1 },
-      })),
+      incrementViewCount: (id) => set((state) => {
+        const next = { ...state.viewCount, [id]: (state.viewCount[id] || 0) + 1 };
+        const entries = Object.entries(next);
+        if (entries.length > 500) {
+          const capped = Object.fromEntries(entries.sort((a, b) => b[1] - a[1]).slice(0, 500));
+          return { viewCount: capped };
+        }
+        return { viewCount: next };
+      }),
       recentActions: [],
       addAction: (action) => set((state) => ({
         recentActions: [action, ...state.recentActions].slice(0, 50),

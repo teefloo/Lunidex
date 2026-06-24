@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Pixelify_Sans, VT323, Nunito } from "next/font/google";
+import { Pixelify_Sans, Nunito } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -35,14 +35,6 @@ const bodyFont = Nunito({
   variable: "--font-body",
   display: "swap",
   preload: true,
-});
-
-const monoFont = VT323({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-mono",
-  display: "swap",
-  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -270,7 +262,7 @@ export default async function RootLayout({
   ];
 
   return (
-      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable, monoFont.variable)}>
+      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head>
         <link rel="preconnect" href="https://pokeapi.co" />
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
