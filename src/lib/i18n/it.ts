@@ -503,6 +503,9 @@ export default {
       no_type_weaknesses: 'La tua squadra non ha debolezze di tipo maggiori!',
       stat_deficiencies: 'Carenze Statistiche',
       stat_deficiencies_desc: 'La tua squadra potrebbe beneficiare di Pokémon con valori più alti in:',
+      export_image: 'Esporta immagine',
+      export_tooltip: 'Scarica la tua squadra come PNG',
+      exporting: 'Generazione…',
     },
     compare: {
       title: 'Confronta Pokémon',

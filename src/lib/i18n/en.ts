@@ -532,6 +532,9 @@ export default {
       no_type_weaknesses: 'Your team has no major type weaknesses!',
       stat_deficiencies: 'Stat Deficiencies',
       stat_deficiencies_desc: 'Your team could benefit from Pokémon with higher:',
+      export_image: 'Export Image',
+      export_tooltip: 'Download your team as a PNG image',
+      exporting: 'Generating…',
     },
     compare: {
       title: 'Compare Pokémon',

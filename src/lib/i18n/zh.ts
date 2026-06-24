@@ -503,6 +503,9 @@ export default {
       no_type_weaknesses: '你的队伍没有主要的属性弱点！',
       stat_deficiencies: '能力值不足',
       stat_deficiencies_desc: '你的队伍可以从以下能力值较高的宝可梦中受益：',
+      export_image: '导出图片',
+      export_tooltip: '将队伍下载为PNG图片',
+      exporting: '生成中…',
     },
     compare: {
       title: '宝可梦比较',

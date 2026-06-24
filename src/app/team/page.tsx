@@ -37,6 +37,7 @@ import {
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
+import { TeamExportButton } from '@/components/team/TeamExportButton';
 
 // Dynamic imports for heavy charting library
 const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
@@ -221,6 +222,9 @@ export default function TeamPage() {
                     label={t('detail.share')}
                     className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
                   />
+                )}
+                {pokemonData.length > 0 && (
+                  <TeamExportButton pokemonData={pokemonData} />
                 )}
                 {pokemonData.length > 0 && (
                   <Button

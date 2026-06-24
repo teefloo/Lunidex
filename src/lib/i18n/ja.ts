@@ -503,6 +503,9 @@ export default {
       no_type_weaknesses: 'あなたのチームには大きなタイプの弱点はありません！',
       stat_deficiencies: '不足ステータス',
       stat_deficiencies_desc: 'あなたのチームは、以下のステータスが高いポケモンの恩恵を受ける可能性があります：',
+      export_image: '画像をエクスポート',
+      export_tooltip: 'チームをPNG画像でダウンロード',
+      exporting: '生成中…',
     },
     compare: {
       title: '比較',
