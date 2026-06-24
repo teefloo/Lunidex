@@ -31,6 +31,25 @@ export default {
         noMoves: 'Aucune capacité trouvée pour ce Pokémon.',
       }
     },
+    competitive: {
+      title: 'Compétitif',
+      tier: 'Tier',
+      vgc_tier: 'Format VGC',
+      export_showdown: 'Exporter vers Showdown',
+      copied: 'Copié dans le presse-papier !',
+      tier_description: {
+        AG: 'Any Game Goes — aucune restriction',
+        Uber: 'Banni du jeu standard (Ubers)',
+        OU: 'Overused — Format compétitif standard',
+        UU: 'Underused — Peu utilisé',
+        RU: 'Rarement utilisé',
+        NU: 'Jamais utilisé',
+        PU: 'Partiellement utilisé',
+        LC: 'Little Cup',
+        NFE: 'Pas complètement évolué',
+      },
+      no_data: 'Aucune donnée compétitive disponible',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: 'Le compagnon Pokémon ultime',

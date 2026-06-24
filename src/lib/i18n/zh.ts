@@ -31,6 +31,25 @@ export default {
         noMoves: '未找到该宝可梦的招式。',
       }
     },
+    competitive: {
+      title: '竞技',
+      tier: '梯队',
+      vgc_tier: 'VGC格式',
+      export_showdown: '导出到Showdown',
+      copied: '已复制到剪贴板！',
+      tier_description: {
+        AG: 'Any Game Goes — 无限制',
+        Uber: '禁止在标准赛中使用（Ubers）',
+        OU: 'Overused — 标准竞技格式',
+        UU: 'Underused — 较少使用',
+        RU: '很少使用',
+        NU: '几乎不使用',
+        PU: '部分使用',
+        LC: '小杯赛',
+        NFE: '未完全进化',
+      },
+      no_data: '暂无竞技数据',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '终极宝可梦伴侣',

@@ -31,6 +31,25 @@ export default {
         noMoves: 'Keine Attacken für dieses Pokémon gefunden.',
       }
     },
+    competitive: {
+      title: 'Kompetitiv',
+      tier: 'Tier',
+      vgc_tier: 'VGC-Format',
+      export_showdown: 'Nach Showdown exportieren',
+      copied: 'In die Zwischenablage kopiert!',
+      tier_description: {
+        AG: 'Any Game Goes — keine Einschränkungen',
+        Uber: 'Vom Standardspiel ausgeschlossen (Ubers)',
+        OU: 'Overused — Standardformat für Wettkampf',
+        UU: 'Underused — Selten genutzt',
+        RU: 'Selten verwendet',
+        NU: 'Nie verwendet',
+        PU: 'Teilweise verwendet',
+        LC: 'Little Cup',
+        NFE: 'Nicht vollständig entwickelt',
+      },
+      no_data: 'Keine Wettkampfdaten verfügbar',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: 'Dein ultimativer Begleiter für alles rund um Pokémon',

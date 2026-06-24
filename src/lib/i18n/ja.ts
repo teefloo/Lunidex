@@ -31,6 +31,25 @@ export default {
         noMoves: 'このポケモンの技は見つかりませんでした。',
       }
     },
+    competitive: {
+      title: '対戦',
+      tier: 'ティア',
+      vgc_tier: 'VGCフォーマット',
+      export_showdown: 'Showdownにエクスポート',
+      copied: 'クリップボードにコピーしました！',
+      tier_description: {
+        AG: 'Any Game Goes — 制限なし',
+        Uber: '標準プレイから禁止（Ubers）',
+        OU: 'Overused — 標準的な対戦フォーマット',
+        UU: 'Underused — あまり使われていない',
+        RU: 'Rarely Used — ほとんど使われていない',
+        NU: 'Never Used — ほぼ使われていない',
+        PU: 'Partially Used — 一部のみ使用',
+        LC: 'リトルカップ',
+        NFE: '未完全進化',
+      },
+      no_data: '対戦データがありません',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '究極のポケモンコンパニオン',
