@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Compass, Eye } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import type { DashboardData } from '@/types/dashboard';
 
 interface PokedexProgressProps {
@@ -12,6 +13,7 @@ interface PokedexProgressProps {
 
 export default function PokedexProgress({ data }: PokedexProgressProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const { pokedex } = data;
 
   return (
@@ -111,7 +113,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
             {pokedex.mostViewed.map((p) => (
               <Link
                 key={p.id}
-                href={`/pokemon/${p.name}`}
+                href={localeHref(`/pokemon/${p.name}`)}
                 className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-border/30 bg-muted/20 hover:bg-primary/10 hover:border-primary/20 transition-all group"
               >
                 <div className="w-6 h-6 rounded-full bg-muted/50 flex items-center justify-center">
@@ -144,7 +146,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
             {pokedex.neverViewed.map((p) => (
               <Link
                 key={p.id}
-                href={`/pokemon/${p.name}`}
+                href={localeHref(`/pokemon/${p.name}`)}
                 className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-dashed border-border/40 bg-muted/10 hover:bg-primary/5 hover:border-primary/20 transition-all group"
               >
                 <div className="w-6 h-6 rounded-full bg-muted/30 flex items-center justify-center">

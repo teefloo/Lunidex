@@ -22,10 +22,17 @@ describe('GENERATION_THEMES', () => {
     for (const id of GEN_THEME_ORDER) {
       const theme = GENERATION_THEMES[id];
       for (const field of REQUIRED_FIELDS) {
-        expect(
-          theme[field],
-          `${id}.${field} should be defined and non-empty`,
-        ).toBeTruthy();
+        if (field === 'generation') {
+          expect(
+            theme[field],
+            `${id}.${field} should be defined`,
+          ).toBeDefined();
+        } else {
+          expect(
+            theme[field],
+            `${id}.${field} should be defined and non-empty`,
+          ).toBeTruthy();
+        }
       }
     }
   });

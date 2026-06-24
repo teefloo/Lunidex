@@ -37,6 +37,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -252,6 +253,7 @@ interface BreedingCalculatorProps {
 
 export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   const STEP_LABELS = [t('breeding.step_parents'), t('breeding.step_config'), t('breeding.step_results')];
 
@@ -318,13 +320,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
     return calcBreedingResult(effectiveP1, effectiveP2, targetIVs);
   }, [effectiveP1, effectiveP2, targetIVs]);
 
-  // Breeding chain (simplified — egg moves not loaded here)
-  const breedingChain = useMemo(() => {
-    if (!parent1) return [];
-    return suggestBreedingChain(parent1.name, [], {});
-  }, [parent1]);
-
-  void breedingChain;
+  void suggestBreedingChain;
 
   const canProceed = step === 0 ? (!!parent1 && !!parent2) : true;
 
@@ -743,7 +739,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                     <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: parent1.name })}</p>
                   </div>
                   <Link
-                    href={`/breeding?pokemon=${parent1.name}&tab=egg-moves`}
+                    href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}
                     className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
                   >
                     {t('breeding.btn_explore')} <ExternalLink className="h-3 w-3" />

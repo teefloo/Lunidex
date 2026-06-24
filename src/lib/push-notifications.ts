@@ -6,11 +6,13 @@ import { getSupabaseClient } from './supabase/client';
 // Constants
 // ---------------------------------------------------------------------------
 
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+function getVapidPublicKey(): string | undefined {
+  return process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+}
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -51,7 +53,8 @@ export function isPushSupported(): boolean {
  */
 export async function subscribeToPush(): Promise<PushSubscription | null> {
   if (!isPushSupported()) return null;
-  if (!VAPID_PUBLIC_KEY) {
+  const vapidKey = getVapidPublicKey();
+  if (!vapidKey) {
     console.warn('[push] NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set');
     return null;
   }
@@ -69,7 +72,7 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
     existing ??
     (await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as unknown as ArrayBuffer,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey) as unknown as ArrayBuffer,
     }));
 
   // Persist in Supabase (best-effort — no throw on failure)

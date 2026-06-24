@@ -40,7 +40,11 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    if (!isSupabaseConfigured) return 'Supabase is not configured — PvP mode requires a database connection.';
+    if (!getSupabaseClient()) return 'Unable to connect to Supabase.';
+    return null;
+  });
   const channelRef = useRef<RealtimeChannel | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -51,17 +55,9 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
 
   // Subscribe to Supabase Realtime channel
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setError('Supabase is not configured — PvP mode requires a database connection.');
-      return;
-    }
+    if (error) return;
 
-    const supabase = getSupabaseClient();
-    if (!supabase) {
-      setError('Unable to connect to Supabase.');
-      return;
-    }
-
+    const supabase = getSupabaseClient()!;
     const channelName = `battle:${roomId}`;
     const channel = supabase.channel(channelName, {
       config: { presence: { key: userId } },
@@ -89,7 +85,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
       }
     });
 
-    channel.subscribe(async status => {
+    channel.subscribe(async (status: string) => {
       if (status === 'SUBSCRIBED') {
         setConnected(true);
         // Track presence
@@ -118,7 +114,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
       channel.unsubscribe();
       channelRef.current = null;
     };
-  }, [roomId, userId, playerName]);
+  }, [roomId, userId, playerName, error]);
 
   const sendChat = useCallback(async () => {
     const text = chatInput.trim();

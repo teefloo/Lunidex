@@ -8,6 +8,7 @@ import type { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TYPE_COLORS } from '@/types/pokemon';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 export interface LearnerEntry {
   id: number;
@@ -144,13 +145,14 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
 }
 
 function PokemonLearnerCard({ pokemon }: { pokemon: LearnerEntry }) {
+  const localeHref = useLocaleHref();
   const [imgSrc, setImgSrc] = useState(
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
   );
 
   return (
     <Link
-      href={`/pokemon/${pokemon.name}`}
+      href={localeHref(`/pokemon/${pokemon.name}`)}
       className="group flex flex-col items-center rounded-sm border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
     >
       <div className="relative h-14 w-14">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { Swords, Zap, CloudRain, Sun, CloudSnow, Wind, ChevronDown, RotateCcw, Play, Shield, Flame, Droplets } from 'lucide-react';
 import { PokemonDetail, TYPE_COLORS } from '@/types/pokemon';
@@ -391,19 +391,14 @@ export default function BattleSimulator() {
     isAdaptability: false,
     attackerStatus: 'none',
   });
-  const [damageResult, setDamageResult] = useState<DamageResult | null>(null);
   const [battleLog, setBattleLog] = useState<BattleLogEntry[] | null>(null);
   const [battleWinner, setBattleWinner] = useState<string | null>(null);
   const [simulating, setSimulating] = useState(false);
 
   // Calculate damage whenever inputs change
-  useEffect(() => {
-    if (!attacker || !defender || !selectedMove) {
-      setDamageResult(null);
-      return;
-    }
-    const result = calcDamage(attacker.pokemon, defender.pokemon, selectedMove, options);
-    setDamageResult(result);
+  const damageResult = useMemo(() => {
+    if (!attacker || !defender || !selectedMove) return null;
+    return calcDamage(attacker.pokemon, defender.pokemon, selectedMove, options);
   }, [attacker, defender, selectedMove, options]);
 
   const handleSimulate = useCallback(() => {

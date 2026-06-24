@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -34,7 +35,7 @@ export function InstallPrompt() {
   const handleInstall = useCallback(async () => {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    await deferredPrompt.userChoice;
     setVisible(false);
     setDeferredPrompt(null);
   }, [deferredPrompt]);
@@ -43,7 +44,7 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex max-w-sm items-center gap-3 rounded-lg border border-border bg-card p-4 shadow-lg">
-      <img src="/icon-192.png" alt="" width={40} height={40} className="size-10 shrink-0" />
+      <Image src="/icon-192.png" alt="" width={40} height={40} className="size-10 shrink-0" />
       <div className="flex-1 text-sm">
         <p className="font-semibold text-foreground">Install PrimeDex</p>
         <p className="text-muted-foreground">Add to your home screen for the best experience.</p>

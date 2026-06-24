@@ -1,17 +1,28 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import { getServerT, getServerLanguage } from '@/lib/server-i18n';
+import { buildSubpathLanguages } from '@/lib/seo';
 import Header from '@/components/layout/Header';
 import { BreedingPageClient } from './BreedingPageClient';
 
-export const metadata: Metadata = {
-  title: 'Breeding Calculator | PrimeDex',
-  description: 'Calculate IV inheritance probability, egg moves, and optimal breeding chains for any Pokémon. Gen 6+ Destiny Knot & Everstone mechanics.',
-  keywords: ['Pokémon breeding', 'IV calculator', 'Destiny Knot', 'Everstone', 'egg moves', 'breeding chain', 'PrimeDex'],
-  openGraph: {
-    title: 'Breeding Calculator | PrimeDex',
-    description: 'Calculate IV inheritance probability, egg moves, and optimal breeding chains.',
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const lang = await getServerLanguage();
+  const title = t('breeding.meta_title') || 'Breeding Calculator | PrimeDex';
+  const description = t('breeding.meta_description') || 'Calculate IV inheritance probability, egg moves, and optimal breeding chains for any Pokémon. Gen 6+ Destiny Knot & Everstone mechanics.';
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/${lang}/breeding`,
+      languages: buildSubpathLanguages('/breeding'),
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+  };
+}
 
 interface Props {
   searchParams: Promise<{ pokemon?: string; tab?: string }>;

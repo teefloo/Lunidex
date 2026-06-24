@@ -1,23 +1,29 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import { getServerT, getServerLanguage } from '@/lib/server-i18n';
+import { buildSubpathLanguages } from '@/lib/seo';
 import Header from '@/components/layout/Header';
-import SiteFooter from '@/components/layout/SiteFooter';
 import { BarChart3 } from 'lucide-react';
 import EVIVPageClient from './EVIVPageClient';
 
-export const metadata: Metadata = {
-  title: 'EV/IV Calculator — Competitive Stat Tool | PrimeDex',
-  description:
-    'Calculate the exact IV range for any Pokémon from in-game stats, and plan the perfect EV spread at level 50 or 100. Supports all 25 natures and Gen 9.',
-  keywords: [
-    'IV calculator', 'EV planner', 'Pokémon IVs', 'Pokémon EVs',
-    'competitive pokemon', 'PrimeDex', 'stat calculator', 'nature multiplier',
-  ],
-  openGraph: {
-    title: 'EV/IV Calculator | PrimeDex',
-    description: 'Reverse-engineer IVs from in-game stats and plan your perfect EV spread.',
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getServerT();
+  const lang = await getServerLanguage();
+  const title = t('eviv.meta_title') || 'EV/IV Calculator — Competitive Stat Tool | PrimeDex';
+  const description = t('eviv.meta_description') || 'Calculate the exact IV range for any Pokémon from in-game stats, and plan the perfect EV spread at level 50 or 100.';
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/${lang}/ev-iv`,
+      languages: buildSubpathLanguages('/ev-iv'),
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+  };
+}
 
 export default function EVIVPage() {
   return (
@@ -43,7 +49,6 @@ export default function EVIVPage() {
           <EVIVPageClient />
         </div>
       </main>
-      <SiteFooter />
     </>
   );
 }

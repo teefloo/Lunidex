@@ -158,6 +158,7 @@ export function ShareButton({
         >
           <button
             role="option"
+            aria-selected={false}
             onClick={handleCopyLink}
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left"
           >
@@ -166,6 +167,7 @@ export function ShareButton({
           </button>
           <button
             role="option"
+            aria-selected={false}
             onClick={handleTwitter}
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left text-[#1DA1F2]"
           >
@@ -174,6 +176,7 @@ export function ShareButton({
           </button>
           <button
             role="option"
+            aria-selected={false}
             onClick={handleDiscord}
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left text-indigo-400"
           >

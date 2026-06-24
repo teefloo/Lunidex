@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import type { DashboardData } from '@/types/dashboard';
 import { useMounted } from '@/hooks/useMounted';
 
@@ -55,6 +56,7 @@ interface QuizStatisticsProps {
 
 export default function QuizStatistics({ data }: QuizStatisticsProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const { quiz } = data;
 
@@ -81,7 +83,7 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
           </div>
           <p className="text-sm font-semibold text-foreground/50 mb-4">{t('dashboard.quiz.no_data')}</p>
           <Link
-            href="/quiz"
+            href={localeHref('/quiz')}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-primary text-primary-foreground text-xs font-black uppercase tracking-[0.15em] hover:bg-primary/90 transition-all hover:scale-105"
           >
             <Gamepad2 className="w-4 h-4" />

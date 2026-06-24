@@ -4,11 +4,11 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Search, ChevronDown, ChevronUp, Egg, ExternalLink, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api/rest';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // ---------------------------------------------------------------------------
 // Hooks
@@ -132,6 +132,7 @@ interface EggMoveExplorerProps {
 
 export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const [search, setSearch] = useState('');
 
   const { data: eggMoves, isLoading: movesLoading, error: movesError } = useEggMoves(pokemonName);
@@ -234,7 +235,7 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
       {/* Link to full breeding calculator */}
       <div className="pt-2 border-t border-border/40">
         <Link
-          href={`/breeding?pokemon=${pokemonName}`}
+          href={localeHref(`/breeding?pokemon=${pokemonName}`)}
           className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-primary/70 hover:text-primary transition-colors"
         >
           <Egg className="h-3.5 w-3.5" /> {t('breeding.open_calculator', { name: pokemonName })}

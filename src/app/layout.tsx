@@ -304,4 +304,4 @@ export default async function RootLayout({
   );
 }
 
-const supportedInLanguage = ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh-CN'];
+const supportedInLanguage = ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'];

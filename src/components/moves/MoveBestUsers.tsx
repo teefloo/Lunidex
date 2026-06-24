@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Trophy } from 'lucide-react';
 import { TYPE_COLORS } from '@/types/pokemon';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 interface PokemonWithStat {
   id: number;
@@ -50,9 +51,10 @@ export default function MoveBestUsers({ users, damageClass, labels }: MoveBestUs
 }
 
 function BestUserCard({ pokemon, rank }: { pokemon: PokemonWithStat; rank: number }) {
+  const localeHref = useLocaleHref();
   return (
     <Link
-      href={`/pokemon/${pokemon.name}`}
+      href={localeHref(`/pokemon/${pokemon.name}`)}
       className="group flex flex-col items-center rounded-sm border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
     >
       <div className="relative mb-1">

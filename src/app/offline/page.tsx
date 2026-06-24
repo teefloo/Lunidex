@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function OfflinePage() {
@@ -8,7 +9,7 @@ export default function OfflinePage() {
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 text-center">
-      <img
+      <Image
         src="/icon-512.png"
         alt="PrimeDex"
         width={128}
