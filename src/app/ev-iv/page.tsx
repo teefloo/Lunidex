@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import Header from '@/components/layout/Header';
 import SiteFooter from '@/components/layout/SiteFooter';
-import { BarChart3, Loader2 } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 import EVIVPageClient from './EVIVPageClient';
 
 export const metadata: Metadata = {
@@ -20,24 +18,6 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-
-function Loader() {
-  return (
-    <div className="flex items-center justify-center py-16">
-      <Loader2 className="h-8 w-8 animate-spin text-primary/40" />
-    </div>
-  );
-}
-
-// Lazy-load client components (they depend on TanStack Query + browser APIs)
-const EVIVCalculator = dynamic(
-  () => import('@/components/ev-iv/EVIVCalculator'),
-  { ssr: false, loading: () => <Loader /> }
-);
-const EVPlanner = dynamic(
-  () => import('@/components/ev-iv/EVPlanner'),
-  { ssr: false, loading: () => <Loader /> }
-);
 
 export default function EVIVPage() {
   return (
@@ -60,12 +40,7 @@ export default function EVIVPage() {
             </p>
           </div>
 
-          <Suspense fallback={<Loader />}>
-            <EVIVPageClient
-              IVCalculator={<EVIVCalculator />}
-              Planner={<EVPlanner />}
-            />
-          </Suspense>
+          <EVIVPageClient />
         </div>
       </main>
       <SiteFooter />

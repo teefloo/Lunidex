@@ -1,20 +1,34 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 
-interface Props {
-  IVCalculator: ReactNode;
-  Planner: ReactNode;
+function Loader() {
+  return (
+    <div className="flex items-center justify-center py-16">
+      <Loader2 className="h-8 w-8 animate-spin text-primary/40" />
+    </div>
+  );
 }
+
+const EVIVCalculator = dynamic(
+  () => import('@/components/ev-iv/EVIVCalculator'),
+  { ssr: false, loading: () => <Loader /> }
+);
+const EVPlanner = dynamic(
+  () => import('@/components/ev-iv/EVPlanner'),
+  { ssr: false, loading: () => <Loader /> }
+);
 
 const TABS = [
   { id: 'iv'  as const, labelKey: 'ev_iv.tab_iv'  },
   { id: 'ev'  as const, labelKey: 'ev_iv.tab_ev'  },
 ];
 
-export default function EVIVPageClient({ IVCalculator, Planner }: Props) {
+export default function EVIVPageClient() {
   const { t } = useTranslation();
   const [active, setActive] = useState<'iv' | 'ev'>('iv');
 
@@ -40,7 +54,7 @@ export default function EVIVPageClient({ IVCalculator, Planner }: Props) {
 
       {/* Panel */}
       <div className="bg-card/40 border border-border/40 rounded-sm p-5 md:p-6">
-        {active === 'iv' ? IVCalculator : Planner}
+        {active === 'iv' ? <EVIVCalculator /> : <EVPlanner />}
       </div>
     </div>
   );
