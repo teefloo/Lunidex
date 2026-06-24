@@ -895,6 +895,9 @@ export default {
       no_type_weaknesses: 'Votre équipe n\'a pas de faiblesses de type majeures !',
       stat_deficiencies: 'Déficiences de stats',
       stat_deficiencies_desc: 'Votre équipe pourrait bénéficier de Pokémon avec plus de :',
+      export_image: 'Exporter l\'image',
+      export_tooltip: 'Télécharger votre équipe en PNG',
+      exporting: 'Génération…',
     },
     moves: {
       power_short: 'PUIS',

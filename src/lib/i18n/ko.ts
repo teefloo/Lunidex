@@ -504,6 +504,9 @@ export default {
       no_type_weaknesses: '당신의 팀에는 주요 타입 약점이 없습니다!',
       stat_deficiencies: '부족한 스탯',
       stat_deficiencies_desc: '당신의 팀은 다음 스탯이 높은 포켓몬으로부터 도움을 받을 수 있습니다:',
+      export_image: '이미지 내보내기',
+      export_tooltip: '팀을 PNG로 다운로드',
+      exporting: '생성 중…',
     },
     compare: {
       title: '포켓몬 비교',
