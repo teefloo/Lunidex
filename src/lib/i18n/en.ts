@@ -31,6 +31,25 @@ export default {
         noMoves: 'No moves found for this Pokémon.',
       }
     },
+    competitive: {
+      title: 'Competitive',
+      tier: 'Tier',
+      vgc_tier: 'VGC Format',
+      export_showdown: 'Export to Showdown',
+      copied: 'Copied to clipboard!',
+      tier_description: {
+        AG: 'Any Game Goes — no restrictions apply',
+        Uber: 'Banned from standard play (Ubers)',
+        OU: 'Overused — Standard competitive format',
+        UU: 'Underused',
+        RU: 'Rarely Used',
+        NU: 'Never Used',
+        PU: 'Partially Used',
+        LC: 'Little Cup',
+        NFE: 'Not Fully Evolved',
+      },
+      no_data: 'No competitive data available',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: 'The Ultimate Pokémon Companion',

@@ -31,6 +31,25 @@ export default {
         noMoves: '이 포켓몬에게 배울 기술이 없습니다.',
       }
     },
+    competitive: {
+      title: '경쟁전',
+      tier: '티어',
+      vgc_tier: 'VGC 포맷',
+      export_showdown: 'Showdown으로 내보내기',
+      copied: '클립보드에 복사되었습니다!',
+      tier_description: {
+        AG: 'Any Game Goes — 제한 없음',
+        Uber: '표준 플레이에서 금지됨 (Ubers)',
+        OU: 'Overused — 표준 경쟁전 포맷',
+        UU: 'Underused — 잘 사용되지 않음',
+        RU: '거의 사용되지 않음',
+        NU: '사용되지 않음',
+        PU: '일부 사용',
+        LC: '리틀컵',
+        NFE: '미완전 진화',
+      },
+      no_data: '경쟁전 데이터가 없습니다',
+    },
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '최고의 포켓몬 동반자',
