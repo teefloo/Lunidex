@@ -17,9 +17,11 @@ import {
   Trophy,
   X,
   Zap,
+  ExternalLink,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -451,6 +453,18 @@ function MoveCard({
         <MiniStat label={t('moves.power_short')} value={move.power !== null ? String(move.power) : '—'} />
         <MiniStat label={t('moves.accuracy_short')} value={move.accuracy !== null ? `${move.accuracy}%` : '—'} />
         <MiniStat label={t('moves_page.pp')} value={move.pp !== null ? String(move.pp) : '—'} />
+      </div>
+
+      <div className="mt-3 flex justify-end">
+        <Link
+          href={`/moves/${move.name}`}
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/40 transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+          aria-label={`View details for ${move.localizedName}`}
+        >
+          <ExternalLink className="h-2.5 w-2.5" />
+          {t('moves_page.detail_title')}
+        </Link>
       </div>
     </motion.button>
   );
