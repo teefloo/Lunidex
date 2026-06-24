@@ -5,25 +5,27 @@ import { Egg, Dna } from 'lucide-react';
 import { BreedingCalculator } from '@/components/breeding/BreedingCalculator';
 import { EggMoveExplorer } from '@/components/breeding/EggMoveExplorer';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface BreedingPageClientProps {
   initialPokemon?: string;
   initialTab?: string;
 }
 
-const TABS = [
-  { id: 'calculator', label: 'IV Calculator', icon: Dna },
-  { id: 'egg-moves', label: 'Egg Move Explorer', icon: Egg },
-] as const;
-
-type TabId = typeof TABS[number]['id'];
+type TabId = 'calculator' | 'egg-moves';
 
 export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageClientProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabId>(
     (initialTab as TabId) ?? 'calculator',
   );
   const [explorerPokemon, setExplorerPokemon] = useState(initialPokemon ?? '');
   const [explorerInput, setExplorerInput] = useState(initialPokemon ?? '');
+
+  const TABS = [
+    { id: 'calculator' as TabId, label: t('breeding.tab_calculator'), icon: Dna },
+    { id: 'egg-moves' as TabId, label: t('breeding.tab_egg_moves'), icon: Egg },
+  ];
 
   return (
     <div className="space-y-8">
@@ -35,11 +37,10 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
           </div>
         </div>
         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground/90">
-          Breeding Calculator
+          {t('breeding.title')}
         </h1>
         <p className="text-sm text-foreground/50 font-medium max-w-lg mx-auto">
-          Gen 6+ rules — Destiny Knot, Everstone, Power Items.
-          Compatible with Gen 9 Picnic Breeding.
+          {t('breeding.subtitle')}
         </p>
       </div>
 
@@ -78,14 +79,14 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
             <div className="flex flex-col items-center gap-5 py-8">
               <Egg className="h-12 w-12 text-foreground/15" />
               <div className="w-full max-w-sm space-y-3 text-center">
-                <p className="text-sm font-bold text-foreground/50">Enter a Pokémon to see its egg moves</p>
+                <p className="text-sm font-bold text-foreground/50">{t('breeding.egg_move_prompt')}</p>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={explorerInput}
                     onChange={e => setExplorerInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && explorerInput && setExplorerPokemon(explorerInput.toLowerCase().trim())}
-                    placeholder="e.g. charizard"
+                    placeholder={t('breeding.egg_move_placeholder')}
                     className="flex-1 px-3 h-10 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                   />
                   <button
@@ -94,7 +95,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                     onClick={() => setExplorerPokemon(explorerInput.toLowerCase().trim())}
                     className="px-4 h-10 rounded-sm text-[11px] font-black uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary/90 transition-all"
                   >
-                    Search
+                    {t('breeding.search_btn')}
                   </button>
                 </div>
               </div>
@@ -108,7 +109,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                   onClick={() => { setExplorerPokemon(''); setExplorerInput(''); }}
                   className="text-[10px] font-black uppercase tracking-wider text-foreground/40 hover:text-foreground/70 transition-colors"
                 >
-                  Change Pokémon
+                  {t('breeding.change_pokemon')}
                 </button>
               </div>
               <EggMoveExplorer pokemonName={explorerPokemon} />

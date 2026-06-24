@@ -2,32 +2,13 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
 import Link from 'next/link';
-import { Search, ChevronDown, ChevronUp, Egg, Filter, ExternalLink, Info } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, Egg, ExternalLink, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api/rest';
-import { getPokemonMovesLocalized } from '@/lib/api/graphql';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { TYPE_COLORS } from '@/types/pokemon';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface EggMoveInfo {
-  name: string;
-  type: string;
-  damageClass: string;
-  power: number | null;
-  accuracy: number | null;
-}
-
-interface EggMoveWithSources {
-  move: EggMoveInfo;
-  expanded: boolean;
-}
+import { useTranslation } from '@/lib/i18n';
 
 // ---------------------------------------------------------------------------
 // Hooks
@@ -38,7 +19,6 @@ function useEggMoves(pokemonName: string) {
     queryKey: ['egg-moves', pokemonName],
     queryFn: async () => {
       const detail = await getPokemonDetail(pokemonName);
-      // Filter moves learned by egg method
       const eggMoves = detail.moves
         .filter(m => m.version_group_details.some(vgd => vgd.move_learn_method.name === 'egg'))
         .map(m => ({
@@ -79,10 +59,8 @@ interface EggMoveRowProps {
 }
 
 function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-
-  // For simplicity, we show the move info from the GraphQL localized moves
-  // and indicate which egg groups it's shared with.
 
   return (
     <div className="border border-border/40 rounded-sm overflow-hidden">
@@ -101,7 +79,7 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black uppercase tracking-wider text-foreground/40">
-            {expanded ? 'Hide' : 'Sources'}
+            {expanded ? t('breeding.sources_hide') : t('breeding.sources_show')}
           </span>
           {expanded ? (
             <ChevronUp className="h-3.5 w-3.5 text-foreground/40" />
@@ -116,14 +94,17 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
           <div className="flex items-start gap-2 p-3 rounded-sm bg-blue-500/10 border border-blue-500/20">
             <Info className="h-3.5 w-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-foreground/60">
-              To pass <span className="font-black capitalize">{moveName.replace(/-/g, ' ')}</span> via breeding,
-              breed <span className="font-black capitalize">{pokemonName}</span> with a Pokémon in the same egg group ({eggGroups.join(', ')}) that knows this move.
+              {t('breeding.breed_tip', {
+                move: moveName.replace(/-/g, ' '),
+                pokemon: pokemonName,
+                groups: eggGroups.join(', '),
+              })}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             {eggGroups.map(group => (
               <Badge key={group} variant="outline" className="text-[10px] font-black capitalize border-primary/20 text-primary/70">
-                {group} group
+                {t('breeding.group_badge', { group })}
               </Badge>
             ))}
           </div>
@@ -133,7 +114,7 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-foreground/50 hover:text-primary transition-colors"
           >
-            View on Bulbapedia <ExternalLink className="h-3 w-3" />
+            {t('breeding.view_bulbapedia')} <ExternalLink className="h-3 w-3" />
           </Link>
         </div>
       )}
@@ -150,8 +131,8 @@ interface EggMoveExplorerProps {
 }
 
 export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
-  const [filterGroup, setFilterGroup] = useState<string | null>(null);
 
   const { data: eggMoves, isLoading: movesLoading, error: movesError } = useEggMoves(pokemonName);
   const { data: speciesData, isLoading: speciesLoading } = usePokemonEggGroups(pokemonName);
@@ -179,25 +160,32 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-foreground/40 gap-2">
         <Egg className="h-8 w-8 opacity-30" />
-        <p className="text-sm font-bold uppercase tracking-widest">Error loading egg moves</p>
+        <p className="text-sm font-bold uppercase tracking-widest">{t('breeding.error_loading')}</p>
       </div>
     );
   }
+
+  const moveCount = filteredMoves.length;
+  const moveCountLabel = moveCount === 1
+    ? t('breeding.move_count', { count: moveCount })
+    : t('breeding.move_count_plural', { count: moveCount });
 
   return (
     <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h3 className="font-black text-lg text-foreground/90 capitalize">{pokemonName} Egg Moves</h3>
+          <h3 className="font-black text-lg text-foreground/90 capitalize">
+            {t('breeding.egg_moves_title', { name: pokemonName })}
+          </h3>
           <p className="text-xs text-foreground/50 mt-0.5">
             {eggGroups.length > 0 ? (
-              <>Egg groups: <span className="font-bold">{eggGroups.join(', ')}</span></>
-            ) : 'Egg groups unknown'}
+              <>{t('breeding.egg_groups_label')}: <span className="font-bold">{eggGroups.join(', ')}</span></>
+            ) : t('breeding.egg_groups_unknown')}
           </p>
         </div>
         <Badge variant="outline" className="self-start sm:self-auto font-black text-sm border-primary/20 text-primary/80 px-3 py-1">
-          {filteredMoves.length} move{filteredMoves.length !== 1 ? 's' : ''}
+          {moveCountLabel}
         </Badge>
       </div>
 
@@ -208,7 +196,7 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Filter egg moves…"
+          placeholder={t('breeding.filter_placeholder')}
           className="w-full pl-9 pr-3 h-10 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
         />
       </div>
@@ -219,15 +207,15 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
           <Egg className="h-10 w-10 opacity-20" />
           {eggMoves?.length === 0 ? (
             <>
-              <p className="font-black text-sm uppercase tracking-wider">No Egg Moves</p>
+              <p className="font-black text-sm uppercase tracking-wider">{t('breeding.no_egg_moves')}</p>
               <p className="text-xs text-center max-w-xs">
                 {speciesData?.isLegendary || speciesData?.isMythical
-                  ? 'Legendary and Mythical Pokémon cannot breed and have no egg moves.'
-                  : `${pokemonName} cannot learn any moves via breeding.`}
+                  ? t('breeding.no_egg_moves_legendary')
+                  : t('breeding.no_egg_moves_pokemon', { name: pokemonName })}
               </p>
             </>
           ) : (
-            <p className="font-black text-sm uppercase tracking-wider">No moves match your search</p>
+            <p className="font-black text-sm uppercase tracking-wider">{t('breeding.no_moves_search')}</p>
           )}
         </div>
       ) : (
@@ -249,7 +237,7 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
           href={`/breeding?pokemon=${pokemonName}`}
           className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-primary/70 hover:text-primary transition-colors"
         >
-          <Egg className="h-3.5 w-3.5" /> Open Breeding Calculator for {pokemonName}
+          <Egg className="h-3.5 w-3.5" /> {t('breeding.open_calculator', { name: pokemonName })}
           <ExternalLink className="h-3 w-3" />
         </Link>
       </div>

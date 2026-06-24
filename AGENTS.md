@@ -59,6 +59,9 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 - `src/types/AGENT.md` — type system conventions
 - `src/hooks/AGENT.md` — hook conventions
 - `public/AGENT.md` — static asset conventions
+- `packages/core/src/api/AGENT.md` — shared API client conventions
+- `packages/core/src/store/AGENT.md` — shared store conventions
+- `packages/core/src/types/AGENT.md` — shared type conventions
 
 ## Key Conventions
 
@@ -86,13 +89,22 @@ Per-directory `AGENT.md` files override the root for their subtree. Always read 
 | `/` | Home / Pokedex listing | `revalidate = 3600` |
 | `/pokemon/[name]` | Pokemon detail | `revalidate = 3600`, `generateStaticParams` (first 151) |
 | `/team` | Team builder | |
+| `/team/share` | Shared team view | |
 | `/compare` | Comparison engine (up to 3) | |
 | `/favorites` | Favorites list | |
 | `/quiz` | Quiz game (6 modes) | |
 | `/types` | Interactive type chart | |
-| `/tcg` | TCG catalog, collection, wishlist | |
+| `/tcg` | TCG catalog | |
+| `/tcg/collection` | TCG collection | |
+| `/tcg/collection/[setId]` | TCG set detail | |
+| `/tcg/wishlist` | TCG wishlist | |
+| `/tcg/cards/[id]` | TCG card detail | |
 | `/moves` | Moves database | |
+| `/battle` | Battle simulator | |
+| `/breeding` | Breeding calculator | |
 | `/dashboard` | User dashboard | |
+| `/u/[handle]` | User profile | |
+| `/offline` | PWA offline fallback | |
 | `/about`, `/faq`, `/cookies`, `/legal`, `/privacy`, `/terms` | Static pages | |
 
 - **Providers** (`src/app/providers.tsx`): TanStack Query (staleTime 10 min, gcTime 60 min, retry 1, no refetchOnWindowFocus), theme via store + `next-themes`, i18n.
@@ -125,9 +137,19 @@ npx vitest --ui                     # visual test UI
 - `src/lib/badges.test.ts` — unlock conditions, progress
 - `src/lib/team-analysis.test.ts` — synergy scoring, type analysis
 - `src/lib/auto-complete.test.ts` — autocomplete logic
+- `src/lib/trainer.test.ts` — trainer data helpers
+- `src/lib/tcg-collection.test.ts` — TCG collection logic
+- `src/lib/encounter-utils.test.ts` — encounter data helpers
+- `src/lib/counter-suggestions.test.ts` — counter suggestion logic
+- `src/lib/generation-themes.test.ts` — generation theme data
+- `src/lib/__tests__/push-notifications.test.ts` — push notification helpers
+- `src/lib/__tests__/breeding-engine.test.ts` — breeding calculator logic
+- `src/lib/__tests__/battle-engine.test.ts` — battle simulator logic
 - `src/components/ui/TypeBadge.test.tsx` — render + a11y
 - `src/components/ui/ShinyIcon.test.tsx` — render + a11y
 - `src/components/ui/badge.test.tsx` — render + a11y
+- `src/components/share/__tests__/ShareButton.test.tsx` — share button render + a11y
+- `src/hooks/__tests__/usePriceHistory.test.ts` — price history hook
 
 ## Code Style
 
