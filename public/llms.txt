@@ -17,41 +17,71 @@
 ## Agentic Browsing
 
 ### Page Structure
-- Primary URL: https://primedex.vercel.app/en
-- Navigation: Fixed header with language selector, theme toggle, search bar, main navigation links
-- Main content: Pokédex grid (1,025 Pokémon with lazy-loaded cards), hero section with search/filters, recently viewed section, FAQ accordion
-- Layout: Single-page app shell with client-side routing via Next.js App Router
+- **Type**: Single-page application (Next.js 16 App Router with client-side navigation)
+- **Breakpoints**: Mobile-first responsive (tailwind breakpoints: sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px)
+- **Locale prefix required**: Every route is prefixed with /{lang} where lang ∈ {en, fr, es, de, it, ja, ko, zh, pt}
 
-### Key Pages
-- Home (/en): Complete Pokédex listing with type/generation/region filters, search, infinite scroll
-- Pokemon Detail (/en/pokemon/{name}): Full stats, evolution chain, moves, abilities, TCG cards, encounters, competitive builds
-- Team Builder (/en/team): Drag-and-drop 6-Pokémon team with type coverage analysis and synergy scoring
-- Compare (/en/compare): Side-by-side comparison of up to 3 Pokémon with interactive stat radar charts
-- TCG Catalog (/en/tcg): Trading card catalog with set, rarity, type, stage, and HP filters
-- Type Chart (/en/types): Interactive type effectiveness matrix for all 18 types
-- Moves (/en/moves): Complete moves database with power, accuracy, PP, and effect details
-- Quiz (/en/quiz): "Who's That Pokémon?" with 6 modes (Classic, Silhouette, Stats, Time Attack, Survival, Marathon)
-- Battle Simulator (/en/battle): Turn-based battle simulator against AI opponents
-- Breeding Calculator (/en/breeding): Egg move calculator and breeding chain planner
+### Header Navigation (fixed top, z-50)
+- Logo link → home
+- Search form: `<form role="search">` with `<input type="search" name="search">` — searches all 1025 Pokémon
+- Theme toggle: `<button aria-label="Switch to {mode} mode">` — cycles light/dark/system
+- Language selector: `<select aria-label="Language selector">` — 9 options, flags
+- Main nav: desktop horizontal links, mobile hamburger (`<button aria-label="Open menu">`) triggers sheet/panel
 
-### Interactive Elements
-- Search: Instant search across 1,025 Pokémon by name or National Dex number
-- Filters: Type, generation, region, height, weight, BST range, egg groups, legendary/mythical status
-- Theme: Light/dark/system toggle (persisted to IndexedDB)
-- Language: 9 languages with auto-detection from browser settings
-- Collections: Favorites, caught Pokémon, team slots, compare list (persisted to IndexedDB + Supabase sync)
-- TCG: Card collection tracking, wishlist, price history charts
+### Homepage (/en) — Core Interaction Flow
+1. Hero section: `<h1>` + search bar + filter controls
+2. Filter bar: Buttons for Type (18 types), Generation (gen1–gen9), Region (10 regions)
+3. Pokédex grid: `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-10">` filled with Pokémon cards
+4. Each Pokémon card: `<a href="/en/pokemon/{name}">` containing sprite `<img>`, name, types, National Dex number
+5. "Load More" button at bottom triggers infinite scroll
+6. "Recently Viewed" section (conditionally rendered when history exists)
 
-### Data Sources
-- PokéAPI REST (https://pokeapi.co/api/v2): Pokémon species, stats, moves, abilities, encounters
-- PokéAPI GraphQL (https://beta.pokeapi.co/graphql/v1beta): Localized names, flavor text, batch queries
-- TCGdex API (https://api.tcgdex.net/v2): Trading card catalog, sets, card details
-- Supabase: User authentication, cloud sync for collections and preferences
+### Pokémon Detail Page (/en/pokemon/{name}) Sections
+- Hero: Sprite image, name, National Dex number, type badges, genus
+- Base Stats: Horizontal bar chart (HP, ATK, DEF, SPA, SPD, SPE)
+- Type Matchups: 4-column grid (2× weakness, 2× resistance)
+- Evolution Chain: Tree/cascade of evolution stages with sprites and conditions
+- Abilities: List with descriptions (non-default ones lazy-loaded on click)
+- Moves: Filterable table (by type, category, generation) with learn method
+- Encounters: Location/condition tables per generation
+- TCG Cards: Horizontal scroll of trading cards (if any exist)
+- Competitive: EV spread recommendations, held items, ability/tera type suggestions
 
-### Client-Side State
-- Zustand store persisted to IndexedDB via idb-keyval
-- TanStack Query for server state caching (staleTime: 10 min, gcTime: 60 min)
-- Service Worker (PWA) with offline fallback for previously visited pages
+### Key Interactive Patterns
+- **Client-side navigation**: Links use `<a>` tags with Next.js prefetch (no page reload)
+- **Theme switching**: Sets `class="dark"` on `<html>`, CSS custom properties adjust — smooth transition on `background-color`
+- **Filters**: URL search params updated on filter change (`useRouter.push`); page preserves state on back/forward
+- **Infinite scroll**: IntersectionObserver + TanStack Query `useInfiniteQuery` with `getNextPageParam`
+- **Caching**: TanStack Query `staleTime: 600000`, `gcTime: 3600000`, `retry: 1`, `refetchOnWindowFocus: false`
+- **Persistent state**: Zustand store → IndexedDB via idb-keyval (favorites, team, caught, compare list, view history, settings, filters, TCG collections)
+
+### API Endpoints (all consumed server-side, proxied through Next.js)
+- `GET https://pokeapi.co/api/v2/pokemon-species/{id}` — species data
+- `GET https://pokeapi.co/api/v2/pokemon/{id}` — stats, types, abilities
+- `GET https://pokeapi.co/api/v2/evolution-chain/{id}` — evolution data
+- `GET https://pokeapi.co/api/v2/move/{id}` — move details
+- `POST https://beta.pokeapi.co/graphql/v1beta` — localized names, flavor text
+- `GET https://api.tcgdex.net/v2/en/cards?pokemon={name}` — TCG cards
+- `GET /api/tcg/sets` — TCG set listing (server proxy)
+- Supabase REST via `@supabase/supabase-js` — auth, user collections sync
+
+### Item Identifiers
+- Pokémon: `name` (slug, e.g. "pikachu"), `id` (National Dex number 1–1025)
+- Types: `normal`, `fire`, `water`, `electric`, `grass`, `ice`, `fighting`, `poison`, `ground`, `flying`, `psychic`, `bug`, `rock`, `ghost`, `dragon`, `dark`, `steel`, `fairy`
+- Moves: `name` (slug, e.g. "thunderbolt"), `id` (integer)
+- TCG Cards: `id` (string, e.g. "swsh1-1"), TCG Sets: `id` (string, e.g. "swsh1")
+- Generations: `gen1` through `gen9`
+
+### SEO & Crawlability
+- Sitemap: https://primedex.vercel.app/sitemap.xml
+- Robots: https://primedex.vercel.app/robots.txt
+- AI crawl policy: https://primedex.vercel.app/ai.txt
+- Full content snapshot: https://primedex.vercel.app/llms-full.txt
+- Security: https://primedex.vercel.app/.well-known/security.txt
+- OpenSearch: https://primedex.vercel.app/opensearch.xml
+- JSON-LD structured data: WebSite, Organization, WebApplication, FAQPage
+- hreflang alternates on every page for all 9 supported languages
+- ISR with revalidate=3600 for pokemon listing and detail pages
 
 ## About
 PrimeDex (https://primedex.vercel.app) is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. The project is available on GitHub at https://github.com/teefloo/Poke and is not affiliated with Nintendo, Game Freak, or The Pokémon Company.

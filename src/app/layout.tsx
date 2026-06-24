@@ -25,7 +25,7 @@ const displayFont = Pixelify_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-display",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -33,7 +33,7 @@ const bodyFont = Nunito({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-body",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -264,10 +264,7 @@ export default async function RootLayout({
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head>
-        <link rel="preconnect" href="https://pokeapi.co" />
-        <link rel="preconnect" href="https://raw.githubusercontent.com" />
-        <link rel="preconnect" href="https://api.tcgdex.net" />
-        <link rel="preconnect" href="https://assets.tcgdex.net" />
+        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
         <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
