@@ -276,6 +276,7 @@ export default {
       tcg: '카드',
       dashboard: '대시보드',
       faq: 'FAQ',
+      ev_iv: 'EV/IV 계산기',
     },
     filters: {
       button: '필터',
@@ -1500,6 +1501,30 @@ export default {
       public_hint: '프로필은 다음 위치에서 볼 수 있습니다',
       copy_link: '링크 복사',
       view: '보기',
-    }
+    },
+    ev_iv: {
+      title: 'EV/IV 계산기',
+      tab_iv: 'IV 계산기',
+      tab_ev: 'EV 플래너',
+      pokemon_label: '포켓몬',
+      level_label: '레벨',
+      nature_label: '성격',
+      stats_label: '게임 내 스탯',
+      ev_label: 'EV 배분',
+      total_ev: 'EV 합계',
+      calculate: 'IV 계산',
+      reset: '초기화',
+      max_speed: '스피드 최대화',
+      stat_names: {
+        hp: 'HP',
+        atk: '공격',
+        def: '방어',
+        spatk: '특수공격',
+        spdef: '특수방어',
+        spd: '스피드',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: '완벽한 IV (31)',
+    },
   }
 };

@@ -276,6 +276,7 @@ export default {
       tcg: 'カード',
       dashboard: 'ダッシュボード',
       faq: 'FAQ',
+      ev_iv: 'EV/IV計算機',
     },
     filters: {
       button: 'フィルター',
@@ -1649,6 +1650,30 @@ export default {
       public_hint: 'プロフィールは次の場所で確認できます',
       copy_link: 'リンクをコピー',
       view: '表示',
-    }
+    },
+    ev_iv: {
+      title: 'EV/IV計算機',
+      tab_iv: 'IV計算機',
+      tab_ev: 'EVプランナー',
+      pokemon_label: 'ポケモン',
+      level_label: 'レベル',
+      nature_label: 'せいかく',
+      stats_label: 'ゲーム内のステータス',
+      ev_label: 'EV配分',
+      total_ev: 'EV合計',
+      calculate: 'IVを計算',
+      reset: 'リセット',
+      max_speed: 'すばやさ最大',
+      stat_names: {
+        hp: 'HP',
+        atk: 'こうげき',
+        def: 'ぼうぎょ',
+        spatk: 'とくこう',
+        spdef: 'とくぼう',
+        spd: 'すばやさ',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: '完璧なIV (31)',
+    },
   }
 };

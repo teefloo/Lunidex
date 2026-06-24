@@ -305,6 +305,7 @@ export default {
         tcg: 'TCG Catalog',
         dashboard: 'Dashboard',
         faq: 'FAQ',
+        ev_iv: 'EV/IV Calc',
       },
     filters: {
       button: 'Filters',
@@ -1707,6 +1708,30 @@ export default {
       public_hint: 'Your profile is visible at',
       copy_link: 'Copy link',
       view: 'View',
-    }
+    },
+    ev_iv: {
+      title: 'EV/IV Calculator',
+      tab_iv: 'IV Calculator',
+      tab_ev: 'EV Planner',
+      pokemon_label: 'Pokémon',
+      level_label: 'Level',
+      nature_label: 'Nature',
+      stats_label: 'In-game Stats',
+      ev_label: 'EV Distribution',
+      total_ev: 'Total EVs',
+      calculate: 'Calculate IVs',
+      reset: 'Reset',
+      max_speed: 'Max Speed',
+      stat_names: {
+        hp: 'HP',
+        atk: 'Attack',
+        def: 'Defense',
+        spatk: 'Sp. Atk',
+        spdef: 'Sp. Def',
+        spd: 'Speed',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: 'Perfect IV (31)',
+    },
   }
 };

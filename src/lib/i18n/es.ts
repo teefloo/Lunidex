@@ -276,6 +276,7 @@ export default {
       tcg: 'Cartas',
       dashboard: 'Panel de control',
       faq: 'FAQ',
+      ev_iv: 'Calc. EV/IV',
     },
     filters: {
       button: 'Filtros',
@@ -1649,6 +1650,30 @@ export default {
       public_hint: 'Tu perfil es visible en',
       copy_link: 'Copiar enlace',
       view: 'Ver',
-    }
+    },
+    ev_iv: {
+      title: 'Calculadora EV/IV',
+      tab_iv: 'Calculadora IV',
+      tab_ev: 'Planificador EV',
+      pokemon_label: 'Pokémon',
+      level_label: 'Nivel',
+      nature_label: 'Naturaleza',
+      stats_label: 'Stats en juego',
+      ev_label: 'Distribución de EV',
+      total_ev: 'Total EV',
+      calculate: 'Calcular IVs',
+      reset: 'Reiniciar',
+      max_speed: 'Velocidad máx.',
+      stat_names: {
+        hp: 'PS',
+        atk: 'Ataque',
+        def: 'Defensa',
+        spatk: 'Atq. Esp.',
+        spdef: 'Def. Esp.',
+        spd: 'Velocidad',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: 'IV perfecto (31)',
+    },
   }
 };

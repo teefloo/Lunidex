@@ -276,6 +276,7 @@ export default {
       tcg: 'TCG',
       dashboard: '仪表盘',
       faq: 'FAQ',
+      ev_iv: 'EV/IV计算器',
     },
     filters: {
       button: '筛选',
@@ -1650,6 +1651,30 @@ export default {
       public_hint: '您的个人资料可通过以下地址访问',
       copy_link: '复制链接',
       view: '查看',
-    }
+    },
+    ev_iv: {
+      title: 'EV/IV计算器',
+      tab_iv: 'IV计算器',
+      tab_ev: 'EV规划器',
+      pokemon_label: '宝可梦',
+      level_label: '等级',
+      nature_label: '性格',
+      stats_label: '游戏内能力值',
+      ev_label: 'EV分配',
+      total_ev: 'EV总计',
+      calculate: '计算IV',
+      reset: '重置',
+      max_speed: '速度最大化',
+      stat_names: {
+        hp: 'HP',
+        atk: '攻击',
+        def: '防御',
+        spatk: '特攻',
+        spdef: '特防',
+        spd: '速度',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: '完美IV (31)',
+    },
   }
 };

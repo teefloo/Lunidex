@@ -276,6 +276,7 @@ export default {
       tcg: 'GCC',
       dashboard: 'Cruscotto',
       faq: 'FAQ',
+      ev_iv: 'Calc. EV/IV',
     },
     filters: {
       button: 'Filtri',
@@ -1649,6 +1650,30 @@ export default {
       public_hint: 'Il tuo profilo è visibile su',
       copy_link: 'Copia link',
       view: 'Visualizza',
-    }
+    },
+    ev_iv: {
+      title: 'Calcolatore EV/IV',
+      tab_iv: 'Calcolatore IV',
+      tab_ev: 'Pianificatore EV',
+      pokemon_label: 'Pokémon',
+      level_label: 'Livello',
+      nature_label: 'Natura',
+      stats_label: 'Statistiche in gioco',
+      ev_label: 'Distribuzione EV',
+      total_ev: 'EV totali',
+      calculate: 'Calcola IV',
+      reset: 'Reimposta',
+      max_speed: 'Velocità massima',
+      stat_names: {
+        hp: 'PS',
+        atk: 'Attacco',
+        def: 'Difesa',
+        spatk: 'Att. Spec.',
+        spdef: 'Dif. Spec.',
+        spd: 'Velocità',
+      },
+      iv_range: 'IV: {{min}}–{{max}}',
+      perfect_iv: 'IV perfetto (31)',
+    },
   }
 };

@@ -305,6 +305,7 @@ export default {
         tcg: 'JCC',
         dashboard: 'Tableau de bord',
         faq: 'FAQ',
+        ev_iv: 'Calc. EV/IV',
       },
     filters: {
       button: 'Filtres',
@@ -1707,6 +1708,30 @@ export default {
       public_hint: 'Votre profil est visible à',
       copy_link: 'Copier le lien',
       view: 'Voir',
-    }
+    },
+    ev_iv: {
+      title: 'Calculateur EV/IV',
+      tab_iv: 'Calculateur IV',
+      tab_ev: 'Planificateur EV',
+      pokemon_label: 'Pokémon',
+      level_label: 'Niveau',
+      nature_label: 'Nature',
+      stats_label: 'Stats en jeu',
+      ev_label: 'Répartition des EV',
+      total_ev: 'Total EV',
+      calculate: 'Calculer les IV',
+      reset: 'Réinitialiser',
+      max_speed: 'Vitesse max',
+      stat_names: {
+        hp: 'PV',
+        atk: 'Attaque',
+        def: 'Défense',
+        spatk: 'Atq. Spé.',
+        spdef: 'Déf. Spé.',
+        spd: 'Vitesse',
+      },
+      iv_range: 'IV : {{min}}–{{max}}',
+      perfect_iv: 'IV parfait (31)',
+    },
   }
 };
