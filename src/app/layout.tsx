@@ -25,7 +25,7 @@ const displayFont = Pixelify_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-display",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -33,7 +33,7 @@ const bodyFont = Nunito({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-body",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 
@@ -265,7 +265,10 @@ export default async function RootLayout({
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head>
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
+        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
         <a

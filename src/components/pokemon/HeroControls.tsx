@@ -15,11 +15,11 @@ const AdvancedFiltersWrapper = dynamic(() => import('@/components/pokemon/Advanc
 export default function HeroControls() {
   return (
     <div className="w-full">
-      <div className="mb-4 relative z-20 min-h-[64px]" id="hero-search-bar">
+      <div className="mb-4 relative z-20 h-[64px]" id="hero-search-bar">
         <SearchBar />
       </div>
 
-      <div className="w-full flex min-h-[64px] flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="w-full flex h-[64px] flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         <div className="flex flex-wrap items-center justify-start gap-2.5">
           <FavoriteToggle />
           <CaughtFilter />
@@ -30,7 +30,7 @@ export default function HeroControls() {
         </div>
       </div>
 
-      <div className="mt-5 pt-5 border-t border-dashed border-foreground/15 w-full min-h-[120px] space-y-4 relative z-10">
+      <div className="mt-5 pt-5 border-t border-dashed border-foreground/15 w-full h-[120px] space-y-4 relative z-10">
         <RegionFilter />
         <TypeFilter />
       </div>

@@ -65,7 +65,7 @@ const CHIP_ACTIVE =
 export function PokemonCardSkeleton() {
   return (
     <div className="py-1 px-1">
-      <div className="relative min-h-[18rem] p-4 flex flex-col animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
+      <div className="relative h-[18rem] p-4 flex flex-col animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
           <div className="flex gap-1.5">
@@ -247,7 +247,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
       onMouseEnter={prefetchDetails}
     >
       <article
-        className="relative flex min-h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
+        className="relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
           '--type-color': color,
           backgroundImage: cardBackground,
@@ -321,7 +321,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
 
-        <div className="relative mx-auto h-20 w-20 transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
+        <div className="relative mx-auto h-20 w-20 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
           <div
             className="absolute inset-1 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
             style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
