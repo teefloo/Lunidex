@@ -264,7 +264,7 @@ export default async function RootLayout({
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head>
-        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+        <link rel="preconnect" href="https://raw.githubusercontent.com" />
         <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
