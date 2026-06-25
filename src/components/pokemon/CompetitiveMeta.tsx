@@ -139,7 +139,7 @@ export function CompetitiveMeta({ pokemon, displayName }: Props) {
       <div className="flex items-center justify-between pb-4 border-b border-border/60">
         <h3 className="text-xl font-black text-foreground/90 flex items-center gap-3">
           <div className="p-2 bg-primary/10 rounded-sm">
-            <Trophy className="w-5 h-5 text-primary" />
+            <Trophy className="w-5 h-5 text-foreground" />
           </div>
           {t('competitive.title')}
         </h3>

@@ -463,7 +463,7 @@ export default function PokemonList() {
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
             <div className="flex items-center gap-3">
               <span className="cat-no text-[0.6rem] text-muted-foreground">{t('list.results')}</span>
-              <Badge variant="secondary" className="bg-primary/10 text-primary font-mono font-semibold tracking-wider border-none text-[10px]">
+              <Badge variant="secondary" className="bg-primary/10 text-foreground font-mono font-semibold tracking-wider border-none text-[10px]">
                 {(filteredAndSortedResults?.length ?? 0).toString().padStart(3, '0')}
               </Badge>
               {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (

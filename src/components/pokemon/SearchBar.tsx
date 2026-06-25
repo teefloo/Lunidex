@@ -71,7 +71,7 @@ export default function SearchBar() {
     >
       <div className="relative w-full">
         <div className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 transition-colors duration-300">
-          <Search className={`w-5 h-5 transition-colors duration-300 ${isFocused ? 'text-primary' : 'text-muted-foreground'}`} />
+          <Search className={`w-5 h-5 transition-colors duration-300 ${isFocused ? 'text-foreground' : 'text-muted-foreground'}`} />
         </div>
 
         <Input

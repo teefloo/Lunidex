@@ -170,12 +170,12 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
           </span>
           <span className={cn(
             "text-sm font-black capitalize text-foreground/80 group-hover:text-primary transition-colors tracking-tight",
-            isCurrent && "text-primary font-black"
+            isCurrent && "text-foreground font-black"
           )}>
             {displayName}
           </span>
           {isCurrent && (
-            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-primary mt-1 block">
+            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-foreground mt-1 block">
               Current
             </span>
           )}

@@ -159,7 +159,7 @@ export default function AdvancedFilters() {
                       className={cn(
                         "flex flex-col items-center justify-center p-4 rounded-sm border transition-all duration-200 min-h-[64px]",
                         isActive
-                          ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(255,50,50,0.1)]"
+                          ? "bg-primary/20 border-primary text-foreground shadow-[0_0_15px_rgba(255,50,50,0.1)]"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
                       )}
                     >
@@ -319,7 +319,7 @@ export default function AdvancedFilters() {
                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('filters.min_bst')}
                 </h4>
-                <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none">
+                <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none">
                   {minBaseStats}+ {t('detail.total')}
                 </Badge>
               </div>
@@ -347,7 +347,7 @@ export default function AdvancedFilters() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase">{t('stats.hp_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
                       {minHp}+
                     </Badge>
                   </div>
@@ -362,7 +362,7 @@ export default function AdvancedFilters() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase">{t('stats.attack_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
                       {minAttack}+
                     </Badge>
                   </div>
@@ -377,7 +377,7 @@ export default function AdvancedFilters() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase">{t('stats.defense_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
                       {minDefense}+
                     </Badge>
                   </div>
@@ -392,7 +392,7 @@ export default function AdvancedFilters() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase">{t('stats.speed_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary font-black border-none text-[10px]">
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
                       {minSpeed}+
                     </Badge>
                   </div>

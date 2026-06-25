@@ -109,7 +109,7 @@ export default function SettingsModal() {
               {/* Sound Toggle */}
               <div className="glass-card flex items-center justify-between p-4">
                 <div className="flex items-center gap-4">
-                  <div className={`rounded-lg p-2.5 transition-colors ${soundEnabled ? 'text-primary bg-primary/15' : 'text-foreground/50 bg-muted/55'}`}>
+                  <div className={`rounded-lg p-2.5 transition-colors ${soundEnabled ? 'text-foreground bg-primary/15' : 'text-foreground/50 bg-muted/55'}`}>
                     {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
                   </div>
                   <span className="font-bold text-foreground/80">{t('settings.sound')}</span>
@@ -128,7 +128,7 @@ export default function SettingsModal() {
               {/* Animated Sprites Toggle */}
               <div className="glass-card flex items-center justify-between p-4">
                 <div className="flex items-center gap-4">
-                  <div className={`rounded-lg p-2.5 transition-colors ${animatedSprites ? 'text-primary bg-primary/15' : 'text-foreground/50 bg-muted/55'}`}>
+                  <div className={`rounded-lg p-2.5 transition-colors ${animatedSprites ? 'text-foreground bg-primary/15' : 'text-foreground/50 bg-muted/55'}`}>
                     <Film className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">

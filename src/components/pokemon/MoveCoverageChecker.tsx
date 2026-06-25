@@ -113,7 +113,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
       <div className="glass-panel p-6 rounded-sm">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-primary/10 rounded-sm">
-            <Crosshair className="w-5 h-5 text-primary" />
+            <Crosshair className="w-5 h-5 text-foreground" />
           </div>
           <div>
             <h3 className="text-lg font-black">Type Coverage</h3>
@@ -236,7 +236,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
       <div className="glass-panel p-6 rounded-sm">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-primary/10 rounded-sm">
-            <Swords className="w-5 h-5 text-primary" />
+            <Swords className="w-5 h-5 text-foreground" />
           </div>
           <div>
             <h3 className="text-lg font-black">Per-Pokemon Breakdown</h3>

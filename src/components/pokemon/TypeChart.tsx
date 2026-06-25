@@ -108,7 +108,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-primary/10 rounded-sm">
-              <Grid3x3 className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+              <Grid3x3 className="w-5 h-5 md:w-6 md:h-6 text-foreground" />
             </div>
             <div>
               <h3 className="text-lg md:text-xl font-black tracking-tight">{t('types_page.type_chart')}</h3>

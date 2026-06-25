@@ -95,7 +95,7 @@ export function EncounterLocations({
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-background/40 rounded-sm">
-                    <MapPin className="w-4 h-4 text-primary" />
+                    <MapPin className="w-4 h-4 text-foreground" />
                   </div>
                   <span className="font-black text-base text-foreground/80">
                     {formatLocationName(location.locationArea)}

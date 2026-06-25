@@ -136,8 +136,8 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
           </motion.div>
           
           <div className="mt-6 text-center">
-            <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1 capitalize">{pokemonName}</p>
-            <p className="text-sm font-black text-primary">{heightInMeters.toFixed(1)}m</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-1 capitalize">{pokemonName}</p>
+            <p className="text-sm font-black text-foreground">{heightInMeters.toFixed(1)}m</p>
           </div>
         </div>
 

@@ -86,8 +86,8 @@ export default function FaqSection({
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
               activeCategory === 'all'
-                ? 'border-primary bg-primary/10 text-primary'
-                : 'border-foreground/15 text-foreground/60 hover:border-primary/40 hover:text-foreground/80',
+                ? 'border-primary bg-primary/10 text-foreground'
+                : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
             )}
           >
             {allLabel}
@@ -101,18 +101,18 @@ export default function FaqSection({
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
                 activeCategory === cat.id
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-foreground/15 text-foreground/60 hover:border-primary/40 hover:text-foreground/80',
+                  ? 'border-primary bg-primary/10 text-foreground'
+                  : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
               )}
             >
               {cat.title}
-              <span className="text-xs text-foreground/40">({cat.entries.length})</span>
+              <span className="text-xs text-muted-foreground">({cat.entries.length})</span>
             </button>
           ))}
         </div>
 
         {search && (
-          <p className="text-xs text-foreground/50">
+          <p className="text-xs text-muted-foreground">
             {totalVisible} {totalVisible === 1 ? 'result' : 'results'} for &ldquo;{search}&rdquo;
           </p>
         )}
@@ -160,14 +160,14 @@ export default function FaqSection({
                           className={cn(
                             'flex w-full items-center gap-4 px-5 py-4 md:px-7 md:py-5 text-left font-bold tracking-tight transition-colors',
                             'hover:bg-foreground/[0.02]',
-                            isOpen ? 'text-primary' : 'text-foreground',
+                            'text-foreground',
                           )}
                         >
                           <span className="flex-1 text-base md:text-lg">{entry.q}</span>
                           <ChevronDown
                             className={cn(
                               'h-5 w-5 flex-none text-foreground/40 transition-transform duration-200',
-                              isOpen && 'rotate-180 text-primary',
+                              isOpen && 'rotate-180 text-foreground',
                             )}
                           />
                         </button>
@@ -181,7 +181,7 @@ export default function FaqSection({
                         )}
                       >
                         <div className="overflow-hidden">
-                          <div className="px-5 pb-5 md:px-7 md:pb-6 text-foreground/80 leading-relaxed">
+                          <div className="px-5 pb-5 md:px-7 md:pb-6 text-muted-foreground leading-relaxed">
                             {entry.a}
                           </div>
                         </div>

@@ -26,7 +26,7 @@ export default function PageHeader({
   className,
   iconBgColor = 'bg-primary/10',
   iconBorderColor = 'border-primary/20',
-  iconColor = 'text-primary',
+  iconColor = 'text-foreground',
   gradientFrom = 'from-primary/20',
   centered = false,
 }: PageHeaderProps) {
