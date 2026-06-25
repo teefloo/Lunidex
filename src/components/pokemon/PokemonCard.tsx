@@ -243,7 +243,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     <Link
       href={`/pokemon/${name}`}
       className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
-      style={{ contentVisibility: 'auto', containIntrinsicSize: '18rem' }}
       onMouseEnter={prefetchDetails}
     >
       <article
