@@ -232,8 +232,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const mainType = types[0]?.type?.name || 'normal';
   const color = TYPE_COLORS[mainType] || '#A8A77A';
 
-  const pokemonId = pokemon.id;
-  const pokemonName = pokemon.name;
   const cardBackground = [
     `linear-gradient(165deg, ${hexToRgba(color, 0.07)} 0%, transparent 35%, ${hexToRgba(color, 0.05)} 100%)`,
   ].join(', ');
