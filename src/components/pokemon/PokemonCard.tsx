@@ -243,6 +243,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     <Link
       href={`/pokemon/${name}`}
       className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '18rem' }}
       onMouseEnter={prefetchDetails}
     >
       <article
@@ -333,7 +334,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             alt={displayName}
             fill
             unoptimized={animatedSprites}
-            sizes="(max-width: 640px) 160px, (max-width: 1024px) 128px, 128px"
+            sizes="(max-width: 640px) 96px, 96px"
             className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
             priority={index < 4}
             fetchPriority={index === 0 ? 'high' : undefined}

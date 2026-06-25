@@ -155,14 +155,15 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['192.168.2.203:3000', 'localhost:3000', 'localhost:4747', '127.0.0.1:4747'],
   experimental: {
-    optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react'],
+    optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react', 'recharts', 'sonner', 'cmdk', 'i18next', 'react-i18next'],
+    optimizeCss: true,
   },
   images: {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 86400,
+    deviceSizes: [750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       {
         protocol: 'https',

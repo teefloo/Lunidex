@@ -2,3 +2,8 @@ last 2 versions
 not dead
 not ie > 0
 not op_mini all
+Chrome >= 87
+Firefox >= 78
+Safari >= 14
+Edge >= 88
+iOS >= 14

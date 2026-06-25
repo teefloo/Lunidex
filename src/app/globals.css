@@ -692,6 +692,7 @@ h1 { letter-spacing: 0; }
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.35s ease;
+  will-change: background-position, opacity;
 }
 
 .holo-border:hover::before {
@@ -812,6 +813,7 @@ h1 { letter-spacing: 0; }
 
 /* ── Animations ─────────────────────────────────────────────────── */
 .float-particle {
+  will-change: transform;
   animation: float 8s ease-in-out infinite;
 }
 
@@ -826,10 +828,12 @@ h1 { letter-spacing: 0; }
 }
 
 .animate-fade-in-up {
+  will-change: transform, opacity;
   animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .animate-scale-in {
+  will-change: transform, opacity;
   animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -842,7 +846,9 @@ h1 { letter-spacing: 0; }
 }
 
 .stat-bar-fill {
+  will-change: transform;
   animation: statFill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: left;
 }
 
 /* ── end @layer components ──────────────────────────────────────── */
@@ -895,7 +901,7 @@ h1 { letter-spacing: 0; }
 }
 
 @keyframes statFill {
-  from { width: 0%; }
+  from { transform: scaleX(0); }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────────── */
