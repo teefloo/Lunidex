@@ -594,7 +594,7 @@ h1 { letter-spacing: 0; }
 .gradient-text-premium,
 .gradient-text-hero,
 .gradient-text-syne {
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .gradient-text-vellum {
