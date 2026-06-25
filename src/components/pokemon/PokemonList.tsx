@@ -428,8 +428,8 @@ export default function PokemonList() {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-red-500/40" />
-        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.error_loading')}</h2>
-        <p className="text-sm text-foreground/70 max-w-md">{(detailedError as Error).message || t('list.error_desc')}</p>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.error_loading')}</h2>
+        <p className="text-sm text-muted-foreground max-w-md">{(detailedError as Error).message || t('list.error_desc')}</p>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
           <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
         </Button>
@@ -441,7 +441,7 @@ export default function PokemonList() {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-foreground/20" />
-        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground/80">{t('list.no_results')}</h2>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.no_results')}</h2>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
           <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
         </Button>
@@ -462,12 +462,12 @@ export default function PokemonList() {
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-2">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
             <div className="flex items-center gap-3">
-              <span className="cat-no text-[0.6rem] text-muted-foreground/80">{t('list.results')}</span>
+              <span className="cat-no text-[0.6rem] text-muted-foreground">{t('list.results')}</span>
               <Badge variant="secondary" className="bg-primary/10 text-primary font-mono font-semibold tracking-wider border-none text-[10px]">
                 {(filteredAndSortedResults?.length ?? 0).toString().padStart(3, '0')}
               </Badge>
               {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
-                <span className="text-[10px] text-foreground/55">
+                <span className="text-[10px] text-muted-foreground">
                   {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
                 </span>
               )}
@@ -506,7 +506,7 @@ export default function PokemonList() {
               <>
                 {t('list.load_more')}
                 {!isBasicMode && filteredAndSortedResults && (
-                  <span className="text-foreground/50 font-normal normal-case tracking-normal">
+                    <span className="text-muted-foreground font-normal normal-case tracking-normal">
                     ({displayedPokemon.length} / {filteredAndSortedResults.length})
                   </span>
                 )}

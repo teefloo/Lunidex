@@ -30,7 +30,7 @@ export default function CaughtFilter() {
             "flex items-center justify-center gap-1.5 px-4 min-h-[44px] rounded-sm text-[10px] font-black uppercase tracking-wider transition-all duration-100",
             showCaughtOnly === mode.id
               ? "bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]"
-              : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           )}
         >
           {mode.id === 'caught' && <PokeballIcon className="w-3 h-3" />}

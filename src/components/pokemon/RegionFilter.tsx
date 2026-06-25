@@ -56,7 +56,7 @@ export default function RegionFilter() {
                 "relative px-5 py-3 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "bg-primary text-primary-foreground border-primary/60 shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_45%,transparent)]"
-                  : "bg-card text-foreground/70 hover:text-foreground/90 border-border/60 hover:border-border"
+                   : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"
               )}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

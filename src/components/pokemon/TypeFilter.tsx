@@ -43,7 +43,7 @@ export default function TypeFilter() {
                 "relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "text-primary-foreground border-transparent"
-                  : "bg-card text-foreground/70 hover:text-foreground/90 border-border/60 hover:border-border"
+                   : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"
               )}
               style={isActive ? {
                 backgroundColor: color,

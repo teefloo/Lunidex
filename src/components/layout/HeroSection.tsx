@@ -21,7 +21,7 @@ export default async function HeroSection() {
             {t('home.hero_title')}
           </span>
         </h1>
-        <p className="mt-3 text-base md:text-lg text-foreground/70 max-w-2xl">
+        <p className="mt-3 text-base md:text-lg text-muted-foreground max-w-2xl">
           {description}
         </p>
 

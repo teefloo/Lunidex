@@ -28,7 +28,7 @@ export default async function HomeFaqSection() {
           >
             {t('home.faq_title')}
           </h3>
-          <p className="mt-3 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="mt-3 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             {t('home.faq_subtitle')}
           </p>
         </div>
@@ -48,7 +48,7 @@ export default async function HomeFaqSection() {
                   +
                 </span>
               </summary>
-              <div className="px-5 md:px-6 pb-5 md:pb-6 pt-0 text-foreground/75 leading-relaxed">
+              <div className="px-5 md:px-6 pb-5 md:pb-6 pt-0 text-muted-foreground leading-relaxed">
                 {faq.a}
               </div>
             </details>

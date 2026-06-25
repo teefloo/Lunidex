@@ -76,7 +76,7 @@ export default async function SiteFooter() {
           aria-label={t('footer.legal.title')}
           className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground"
         >
-          <span className="font-semibold uppercase tracking-wide text-foreground/50">
+          <span className="font-semibold uppercase tracking-wide text-muted-foreground">
             {t('footer.legal.title')}
           </span>
           {legalLinks.map((link) => (
@@ -90,7 +90,7 @@ export default async function SiteFooter() {
           ))}
         </nav>
 
-        <p className="mt-6 text-[11px] text-muted-foreground/60 max-w-3xl">
+        <p className="mt-6 text-[11px] text-muted-foreground max-w-3xl">
           {t('footer.disclaimer.text')}
         </p>
       </div>

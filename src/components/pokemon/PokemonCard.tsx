@@ -263,8 +263,8 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
         <div className="relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
           <div className="flex flex-col items-start gap-0.5">
-            <span className="cat-no text-[0.55rem] text-muted-foreground/70 sm:text-[0.6rem]">Cat. No.</span>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/85 sm:text-[11px]">
+            <span className="cat-no text-[0.55rem] text-muted-foreground sm:text-[0.6rem]">Cat. No.</span>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
               #{pokemonId.toString().padStart(3, '0')}
             </span>
           </div>
@@ -279,7 +279,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
                   ? CHIP_ACTIVE
-                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
+                   : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
                 !isTeam && teamFull && 'cursor-not-allowed opacity-30'
               )}
             >
@@ -296,7 +296,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
                   ? CHIP_ACTIVE
-                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90',
+                   : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
                 !isComp && compareFull && 'cursor-not-allowed opacity-30'
               )}
             >
@@ -312,7 +312,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
                   ? CHIP_ACTIVE
-                  : 'border-foreground/15 bg-background/55 text-foreground/65 hover:border-foreground/30 hover:text-foreground/90'
+                  : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground'
               )}
             >
               <Heart className={cn('h-5 w-5 transition-all', isFav && 'fill-current scale-110')} />
@@ -341,7 +341,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         </div>
 
         <div className="relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
-          <p className="latin-name font-display text-[10px] italic text-muted-foreground/80 sm:text-[11px]">
+          <p className="latin-name font-display text-[10px] italic text-muted-foreground sm:text-[11px]">
             {pokemonName.replace(/-/g, ' ')}
           </p>
           <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
@@ -391,11 +391,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             'absolute bottom-1 right-1.5 z-20 flex h-10 w-10 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
             caught
               ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
-              : 'border-foreground/20 bg-background/65 text-foreground/55 hover:border-foreground/40 hover:text-foreground/85'
+              : 'border-foreground/20 bg-background/65 text-muted-foreground hover:border-foreground/40 hover:text-foreground'
           )}
           aria-label={caught ? t('card.caught') : t('card.mark_caught')}
         >
-          <PokeballIcon className={cn('h-5 w-5 sm:h-5 sm:w-5', caught ? 'text-primary-foreground' : 'text-foreground/55')} />
+          <PokeballIcon className={cn('h-5 w-5 sm:h-5 sm:w-5', caught ? 'text-primary-foreground' : 'text-muted-foreground')} />
         </button>
       </article>
     </Link>
