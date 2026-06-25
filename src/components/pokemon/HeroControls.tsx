@@ -30,7 +30,7 @@ export default function HeroControls() {
         </div>
       </div>
 
-      <div className="mt-5 pt-5 border-t border-dashed border-foreground/15 w-full space-y-4 relative z-10 overflow-hidden">
+      <div className="mt-5 pt-5 border-t border-dashed border-foreground/15 w-full space-y-4 relative z-10">
         <RegionFilter />
         <TypeFilter />
       </div>

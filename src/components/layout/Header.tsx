@@ -175,9 +175,7 @@ export default function Header() {
   );
 
   const cycleTheme = () => {
-    if (theme === 'light') setTheme('dark');
-    else if (theme === 'dark') setTheme('system');
-    else setTheme('light');
+    setTheme(isDark ? 'light' : 'dark');
   };
 
   const handleLanguageChange = useCallback((nextLanguage: string | null) => {

@@ -18,11 +18,11 @@ export default function TypeBadge({ type, size = 'md', className }: TypeBadgePro
   return (
     <span
       className={cn(
-        'glass-tag inline-block',
+        'glass-tag type-accent inline-block',
         sizeClasses[size],
         className
       )}
-      style={{ backgroundColor: `${color}d9`, borderColor: color }}
+      style={{ '--type-color': color } as React.CSSProperties}
     >
       {type}
     </span>

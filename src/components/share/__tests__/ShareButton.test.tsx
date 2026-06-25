@@ -88,13 +88,13 @@ describe('ShareButton', () => {
 
     fireEvent.click(screen.getByText('Share on X / Twitter'));
 
-    await waitFor(() => {
-      expect(openSpy).toHaveBeenCalledOnce();
-      const [calledUrl] = openSpy.mock.calls[0] as [string, ...unknown[]];
-      expect(calledUrl).toContain('https://twitter.com/intent/tweet');
-      expect(calledUrl).toContain(encodeURIComponent(defaultProps.url));
-      expect(calledUrl).toContain(encodeURIComponent(defaultProps.title));
-    });
+await waitFor(() => {
+       expect(openSpy).toHaveBeenCalledOnce();
+       const calledUrl = openSpy.mock.calls[0][0] as string;
+       expect(calledUrl).toContain('https://twitter.com/intent/tweet');
+       expect(calledUrl).toContain(encodeURIComponent(defaultProps.url));
+       expect(calledUrl).toContain(encodeURIComponent(defaultProps.title));
+     });
 
     openSpy.mockRestore();
   });

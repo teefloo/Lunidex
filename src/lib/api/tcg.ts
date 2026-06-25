@@ -109,6 +109,8 @@ function throwIfAborted(signal?: AbortSignal) {
 function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
   if (!url) return undefined;
   if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.webp') || url.endsWith('.svg')) return url;
+  // tcgdex.net v2 image base paths intentionally have no extension; do not append .png
+  if (url.includes('tcgdex.net')) return url;
   return `${url}.png`;
 }
 

@@ -383,7 +383,7 @@ function DiscoveryHero({
             <button
               type="button"
               onClick={onClearSearch}
-              className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500"
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-[var(--action-favorite)]"
             >
               {t('tcg.clear')}
             </button>

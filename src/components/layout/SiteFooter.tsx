@@ -56,7 +56,7 @@ export default async function SiteFooter() {
             <Link
               href="/favorites"
               aria-label={t('nav.favorites')}
-              className="text-muted-foreground hover:text-rose-500 transition-colors"
+              className="text-muted-foreground transition-colors hover:text-[var(--action-favorite)]"
             >
               <Heart className="h-4 w-4" />
             </Link>

@@ -1,8 +1,15 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# =============================================================================
+# PrimeDex — .gitignore (Monorepo Next.js 16 + Expo)
+# https://git-scm.com/docs/gitignore
+# =============================================================================
 
-# dependencies
-/node_modules
-/.pnp
+
+# =============================================================================
+# 1. Dependencies
+# =============================================================================
+node_modules/
+.pnp
+.pnp.js
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,54 +17,224 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# npm
+package-lock.json
+npm-shrinkwrap.json
+pnpm-lock.yaml
+yarn.lock
+.yarnrc
+
+
+# =============================================================================
+# 2. Builds / Output
+# =============================================================================
+
+# Next.js
+.next/
+out/
+
+# Production builds
+build/
+dist/
+*.tsbuildinfo
+
+# Expo / React Native
+expo-build/
+.expo/
+.expo-shared/
+*.apk
+*.aab
+*.ipa
+
+# Metro bundler
+metro-cache/
+
+# iOS / Xcode
+ios/build/
+ios/Pods/
+ios/DerivedData/
+ios/*.xcworkspace/xcuserdata
+ios/*.xcworkspace/xcshareddata
+ios/*.pbxuser
+ios/*.mode1v3
+ios/*.mode2v3
+ios/*.perspectivev3
+ios/*.xcuserstate
+ios/*.xccheckout
+ios/*.moved-aside
+ios/*.hmap
+ios/*.ipa
+ios/*.dSYM.zip
+ios/*.dSYM
+
+# Android / Gradle
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+android/*.iml
+android/.idea/
+android/captures/
+android/hs_err_pid*
+android/app/src/main/assets/index.android.bundle
+
+
+# =============================================================================
+# 3. Testing & QA
+# =============================================================================
+coverage/
 /playwright-report/
 /test-results/
 /.playwright-cli/
+.nyc_output/
+*.lcov
+*.coverage
 
-# next.js
-/.next/
-/out/
+# Playwright / Puppeteer traces & screenshots
+playwright/.cache/
+trace.zip
+screenshots/
+*.trace
 
-# production
-/build
 
-# misc
-.DS_Store
+# =============================================================================
+# 4. Environment & Secrets
+# =============================================================================
+.env
+.env.*
+!.env.example
+!.env.template
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# Secret keys, certs, PEM, p12
+*.key
 *.pem
-*.local
+*.p12
+*.pfx
+*.cer
+*.crt
+*.der
+*.jks
+*.keystore
 
-# local editor / agent state
-/.vscode/
-/.idea/
-/.opencode/
-.codex-*.png
-
-# local screenshots and visual QA artifacts
-/header-*.png
-/tcg-*.png
-/tcgp-logo.webp
-
-# debug
+tsconfig.tsbuildinfo
+# =============================================================================
+# 5. Logs & Debug
+# =============================================================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 *.log
+*.log.*
+logs/
 
-# env files (can opt-in for committing if needed)
-.env*
+debug.log
+error.log
 
-# vercel
+
+# =============================================================================
+# 6. IDEs & Editors
+# =============================================================================
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# JetBrains / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+#*#
+.#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+
+
+# =============================================================================
+# 7. Local / Personal tooling
+# =============================================================================
+.local/
+*.local
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache (if any)
+.prettiercache
+
+# TypeScript incremental compilation
+*.tsbuildinfo
+
+# Vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Turborepo
+turbo-
 
-# system
+# =============================================================================
+# 8. Screenshots & Visual QA artifacts
+# =============================================================================
+/header-*.png
+/tcg-*.png
+/tcgp-logo.webp
+*.screenshot.png
+*.diff.png
+
+
+# =============================================================================
+# 9. AI / Agent / Copilot traces
+# =============================================================================
+.opencode/
+.claude/
+.codex-logs/
+.codex-*.png
+.playwright-mcp/
+.agents/
+.memory/
+
+# AI-generated temporary files
+*.ai.md
+*.assistant.md
+
+
+# =============================================================================
+# 10. Misc runtime files
+# =============================================================================
+lockfile-*
+*.pid
+*.seed
+*.pid.lock
 nul
 
-# Local agent artifacts
-.claude/

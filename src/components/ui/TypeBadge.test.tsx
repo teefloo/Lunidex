@@ -9,16 +9,16 @@ describe('TypeBadge', () => {
     expect(screen.getByText('fire')).toBeInTheDocument();
   });
 
-  it('applies the type color to border and background', () => {
+it('applies the type color to border and background', () => {
     render(<TypeBadge type="water" />);
     const badge = screen.getByText('water');
-    expect(badge).toHaveStyle({ borderColor: TYPE_COLORS.water });
+    expect(badge).toHaveStyle({ '--type-color': TYPE_COLORS.water });
   });
 
-  it('falls back to the default color for an unknown type', () => {
+it('falls back to the default color for an unknown type', () => {
     render(<TypeBadge type="mystery" />);
     const badge = screen.getByText('mystery');
-    expect(badge).toHaveStyle({ borderColor: '#A8A77A' });
+    expect(badge).toHaveStyle({ '--type-color': '#A8A77A' });
   });
 
   it('applies size-specific classes', () => {

@@ -477,11 +477,8 @@ export function PokemonDetailClient({
             {pokemon.types.map((typeItem) => (
               <span
                 key={typeItem.type.name}
-                className="glass-tag px-6 py-2 text-sm shadow-lg"
-                style={{ 
-                  backgroundColor: `${TYPE_COLORS[typeItem.type.name]}dd`,
-                  borderColor: TYPE_COLORS[typeItem.type.name]
-                }}
+                className="glass-tag type-accent px-6 py-2 text-sm shadow-lg"
+                style={{ '--type-color': TYPE_COLORS[typeItem.type.name] } as React.CSSProperties}
               >
                 {t(`types.${typeItem.type.name}`)}
               </span>

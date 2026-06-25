@@ -14,7 +14,7 @@ export default function TypeFilter() {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full overflow-x-auto pb-8 pt-4 scrollbar-hide">
+    <div className="w-full overflow-x-auto pb-2 pt-2 scrollbar-hide">
       <div className="flex flex-nowrap lg:flex-wrap gap-2 justify-start lg:justify-center px-4 min-w-max lg:min-w-0 mx-auto max-w-7xl">
         {selectedTypes.length > 0 && (
           <button
