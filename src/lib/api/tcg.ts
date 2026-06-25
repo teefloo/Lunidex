@@ -443,6 +443,7 @@ async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, sign
 }
 
 function needsVisualMetadata(card: TCGCard): boolean {
+  if (!card.image && !card.imageUrl) return true;
   if (!card.rarity || !card.category) return true;
 
   if (card.category === 'Pokemon') {

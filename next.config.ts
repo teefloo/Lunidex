@@ -48,17 +48,46 @@ const withPWA = withPWAInit({
             maxEntries: 300,
             maxAgeSeconds: 604800,
           },
+          cacheableResponse: { statuses: [200] },
         },
       },
       {
-        urlPattern: /\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico)$/i,
-        handler: "CacheFirst",
+        urlPattern: /^https:\/\/assets\.tcgdex\.net\/.*$/i,
+        handler: "NetworkFirst",
         options: {
-          cacheName: "static-images",
+          cacheName: "tcgdex-images-v2",
           expiration: {
-            maxEntries: 100,
+            maxEntries: 500,
             maxAgeSeconds: 604800,
           },
+          cacheableResponse: { statuses: [200] },
+          networkTimeoutSeconds: 10,
+        },
+      },
+      {
+        urlPattern: /^https:\/\/images\.tcgdex\.net\/.*$/i,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "tcgdex-images-v2",
+          expiration: {
+            maxEntries: 500,
+            maxAgeSeconds: 604800,
+          },
+          cacheableResponse: { statuses: [200] },
+          networkTimeoutSeconds: 10,
+        },
+      },
+      {
+        urlPattern: ({ sameOrigin, url }: { sameOrigin: boolean; url: URL }) =>
+          sameOrigin && /\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico)$/i.test(url.pathname),
+        handler: "CacheFirst",
+        options: {
+          cacheName: "static-images-v2",
+          expiration: {
+            maxEntries: 200,
+            maxAgeSeconds: 604800,
+          },
+          cacheableResponse: { statuses: [200] },
         },
       },
       {
