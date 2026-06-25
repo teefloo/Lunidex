@@ -64,11 +64,11 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
   return (
     <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
       <div className="flex items-center gap-3">
-        {set.logo && (
-          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-card/40">
-            <Image src={set.logo} alt={set.name} fill sizes="40px" className="object-contain p-1" />
-          </div>
-        )}
+{set.logo && (
+           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-card/40">
+             <Image src={set.logo} alt={set.name} fill sizes="40px" className="object-contain p-1" unoptimized />
+           </div>
+         )}
         <div className="min-w-0 flex-1">
           <Link href={`/tcg/collection/${set.id}`} className="block truncate text-sm font-bold hover:text-primary">
             {set.name}

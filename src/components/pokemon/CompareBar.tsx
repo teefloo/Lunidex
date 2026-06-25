@@ -60,6 +60,7 @@ export default function CompareBar() {
                         height={40}
                         sizes="40px"
                         className="w-full h-full object-contain filter drop-shadow-md"
+                        unoptimized
                       />
                     ) : (
                       <div className="w-10 h-10 bg-background/50 rounded-lg flex items-center justify-center text-foreground/30 text-xs font-bold">

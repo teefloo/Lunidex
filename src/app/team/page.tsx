@@ -276,6 +276,7 @@ export default function TeamPage() {
                           height={112}
                           sizes="112px"
                           className="w-full h-full object-contain relative z-10 drop-shadow-xl group-hover:scale-110 transition-transform"
+                          unoptimized
                         />
                         </div>
                         

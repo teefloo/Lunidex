@@ -490,6 +490,7 @@ export default function Header() {
                             width={32}
                             height={32}
                             className="object-contain transition-transform drop-shadow-md group-hover/item:scale-110"
+                            unoptimized
                           />
                         </div>
                         <span className="flex-1 truncate font-display text-xs font-semibold italic editorial-italic capitalize text-muted-foreground group-hover/item:text-primary">

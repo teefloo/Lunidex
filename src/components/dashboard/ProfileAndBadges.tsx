@@ -156,6 +156,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
               width={56}
               height={56}
               className="object-contain drop-shadow-md"
+              unoptimized
             />
           ) : (
             <CircleDot className="w-7 h-7 text-foreground/30" />

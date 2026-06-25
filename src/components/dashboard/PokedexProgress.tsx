@@ -123,6 +123,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                     width={24}
                     height={24}
                     className="object-contain group-hover:scale-110 transition-transform"
+                    unoptimized
                   />
                 </div>
                 <span className="text-[9px] font-bold capitalize text-foreground/60 truncate max-w-[80px]">
@@ -156,6 +157,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                     width={24}
                     height={24}
                     className="object-contain opacity-50 group-hover:opacity-100 transition-all grayscale group-hover:grayscale-0"
+                    unoptimized
                   />
                 </div>
                 <span className="text-[9px] font-bold capitalize text-foreground/40 group-hover:text-foreground/70 transition-colors">

@@ -74,6 +74,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                 width={72}
                 height={72}
                 className="object-contain drop-shadow-md"
+                unoptimized
               />
             ) : (
               <Trophy className="h-8 w-8 text-foreground/30" />
@@ -234,6 +235,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                   width={56}
                   height={56}
                   className="object-contain drop-shadow-sm"
+                  unoptimized
                 />
               </div>
             ))}

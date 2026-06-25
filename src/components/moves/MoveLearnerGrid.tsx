@@ -163,6 +163,7 @@ function PokemonLearnerCard({ pokemon }: { pokemon: LearnerEntry }) {
           className="object-contain drop-shadow-lg"
           sizes="56px"
           loading="lazy"
+          unoptimized
           onError={() =>
             setImgSrc(
               `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,

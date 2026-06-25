@@ -337,6 +337,7 @@ export default function ComparePage() {
                         fill
                         sizes="48px"
                         className="object-contain"
+                        unoptimized
                       />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -639,6 +640,7 @@ export default function ComparePage() {
                           height={160}
                           sizes="160px"
                           className="w-full h-full object-contain relative z-10 drop-shadow-2xl group-hover:scale-110 transition-transform"
+                          unoptimized
                         />
                       </div>
                       <h3 className="text-2xl font-black capitalize mb-4">{displayName}</h3>

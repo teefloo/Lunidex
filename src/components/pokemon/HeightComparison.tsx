@@ -125,6 +125,7 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
                 fill
                 sizes="180px"
                 className="object-contain"
+                unoptimized
               />
             </motion.div>
             

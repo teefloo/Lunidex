@@ -192,6 +192,7 @@ export function HeaderSearch({
                         width={32}
                         height={32}
                         className="object-contain drop-shadow-md group-hover/item:scale-110 transition-transform"
+                        unoptimized
                       />
                     </div>
                     <span className="text-xs font-black capitalize flex-1 truncate text-foreground/80 group-hover/item:text-primary">

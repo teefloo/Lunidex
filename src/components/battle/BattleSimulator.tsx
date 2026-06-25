@@ -147,13 +147,14 @@ function PokemonSelector({
                 onMouseDown={() => selectPokemon(s.name)}
                 className="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium capitalize hover:bg-muted/60"
               >
-                <Image
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${s.id}.png`}
-                  alt={s.name}
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
+<Image
+                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${s.id}.png`}
+                   alt={s.name}
+                   width={24}
+                   height={24}
+                   className="object-contain"
+                   unoptimized
+                 />
                 <span>{s.name}</span>
                 <span className="ml-auto font-mono text-[9px] text-muted-foreground/60">
                   #{s.id.toString().padStart(3, '0')}
@@ -175,11 +176,11 @@ function PokemonSelector({
                 : undefined,
             }}
           >
-            {sprite && (
-              <div className="relative h-16 w-16 shrink-0">
-                <Image src={sprite} alt={value.pokemon.name} fill className="object-contain drop-shadow-md" />
-              </div>
-            )}
+{sprite && (
+               <div className="relative h-16 w-16 shrink-0">
+                 <Image src={sprite} alt={value.pokemon.name} fill className="object-contain drop-shadow-md" unoptimized />
+               </div>
+             )}
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm font-bold capitalize italic">
                 {value.pokemon.name}

@@ -105,6 +105,7 @@ function ItemCard({ item, language }: { item: HeldItem; language: string }) {
             height={48}
             className="w-full h-full object-contain filter group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all"
             onError={() => setImgError(true)}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-foreground/30">
@@ -422,6 +423,7 @@ export function PokemonDetailClient({
               sizes="(min-width: 768px) 384px, 288px"
               className="w-full h-full object-contain relative z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-translate-y-4"
               priority
+              unoptimized
             />
           </motion.div>
         </AnimatePresence>

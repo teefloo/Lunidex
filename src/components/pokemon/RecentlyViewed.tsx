@@ -50,6 +50,7 @@ export default function RecentlyViewed() {
                   height={40}
                   sizes="40px"
                   className="w-full h-full object-contain relative z-10 drop-shadow-sm"
+                  unoptimized
                 />
               </div>
               <div className="space-y-0.5 w-full">

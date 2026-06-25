@@ -471,6 +471,7 @@ export default function TypesPage() {
                           width={80}
                           height={80}
                           className="w-full h-full object-contain relative z-10 group-hover:scale-110 transition-transform duration-300"
+                          unoptimized
                         />
                       </div>
                       <span className="font-black capitalize text-xs group-hover:text-primary transition-colors text-center truncate w-full">{p.name}</span>

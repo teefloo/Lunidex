@@ -71,6 +71,7 @@ function BestUserCard({ pokemon, rank }: { pokemon: PokemonWithStat; rank: numbe
             className="object-contain drop-shadow-lg"
             sizes="56px"
             loading="lazy"
+            unoptimized
           />
         </div>
       </div>

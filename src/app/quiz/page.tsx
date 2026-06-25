@@ -798,6 +798,7 @@ function QuizPageContent() {
                               "object-contain transition-all duration-700 ease-out",
                               gameState === 'playing' && quizChallenge === 'silhouette' ? "brightness-0 contrast-100 opacity-90 drop-shadow-[0_0_15px_rgba(0,0,0,1)]" : "brightness-100 drop-shadow-[0_15px_35px_rgba(0,0,0,0.5)]"
                             )}
+                            unoptimized
                           />
                         </div>
                       )}

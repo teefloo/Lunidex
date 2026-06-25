@@ -159,6 +159,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
               width={128}
               height={128}
               className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-500 relative z-10"
+              unoptimized
             />
           ) : (
             <Loader2 className="w-6 h-6 animate-spin text-foreground/20" />
@@ -892,6 +893,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
               width={128}
               height={128}
               className={`w-full h-full object-contain filter ${config.dropShadow} group-hover:scale-110 transition-transform duration-500 relative z-10`}
+              unoptimized
             />
           ) : (
             <Loader2 className="w-6 h-6 animate-spin text-foreground/20" />

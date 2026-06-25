@@ -37,7 +37,22 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { useTranslation } from '@/lib/i18n';
+import i18n from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+
+// Helper function to get localized pokemon name
+const getLocalizedPokemonName = (englishName: string, pokemonList: any[]): string | null => {
+  if (!pokemonList) return null;
+  
+  const pokemon = pokemonList.find(p => p.name === englishName);
+  if (!pokemon) return null;
+  
+  const currentLang = i18n.language || 'en';
+  const localizedNameObj = pokemon.pokemon_v2_pokemonspecy?.[0]?.pokemon_v2_pokemonspeciesnames
+    .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
+  
+  return localizedNameObj?.name || null;
+};
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -83,13 +98,27 @@ function PokemonPicker({ label, selected, onSelect }: PokemonPickerProps) {
     enabled: open || query.length > 0,
   });
 
-  const results = useMemo(() => {
-    if (!query.trim() || !allPokemon) return [];
-    const q = query.toLowerCase();
-    return allPokemon
-      .filter(p => p.name.includes(q) || String(p.id).includes(q))
-      .slice(0, 8);
-  }, [query, allPokemon]);
+const results = useMemo(() => {
+     if (!query.trim() || !allPokemon) return [];
+     const q = query.toLowerCase();
+     return allPokemon
+       .filter(p => {
+         // Check if query matches the English name
+         if (p.name.toLowerCase().includes(q)) return true;
+         
+         // Check if query matches any localized name
+         const species = p.pokemon_v2_pokemonspecy?.[0];
+         if (species?.pokemon_v2_pokemonspeciesnames) {
+           return species.pokemon_v2_pokemonspeciesnames.some(nameObj => 
+             nameObj.name.toLowerCase().includes(q)
+           );
+         }
+         
+         // Also check ID as fallback
+         return String(p.id).includes(q);
+       })
+       .slice(0, 8);
+   }, [query, allPokemon]);
 
   const handleSelect = useCallback(async (name: string, id: number) => {
     try {
@@ -130,28 +159,28 @@ function PokemonPicker({ label, selected, onSelect }: PokemonPickerProps) {
     <div className="flex flex-col gap-2">
       <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{label}</p>
 
-      {selected ? (
-        <div className="flex items-center gap-3 p-3 rounded-sm bg-secondary/30 border border-border/40 group">
-          <div className="relative h-14 w-14 flex-shrink-0 bg-background/50 rounded-sm border border-border/40 flex items-center justify-center overflow-hidden">
-            <Image
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                ''
-              }${selected.name}.png`}
-              alt={selected.name}
-              width={56}
-              height={56}
-              className="object-contain drop-shadow"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              unoptimized
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-black text-sm capitalize text-foreground/90">{selected.name}</p>
-            <p className="text-[10px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
-              {selected.eggGroups.join(' · ') || t('breeding.unknown_groups')}
-            </p>
-            <p className="text-[10px] text-foreground/40 font-semibold uppercase mt-0.5">
-              {selected.isLegendary ? t('breeding.legendary') : selected.isMythical ? t('breeding.mythical') : selected.isDitto ? t('breeding.ditto') : selected.gender}
+{selected ? (
+         <div className="flex items-center gap-3 p-3 rounded-sm bg-secondary/30 border border-border/40 group">
+           <div className="relative h-14 w-14 flex-shrink-0 bg-background/50 rounded-sm border border-border/40 flex items-center justify-center overflow-hidden">
+             <Image
+               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                 ''
+               }${selected.name}.png`}
+               alt={getLocalizedPokemonName(selected.name, allPokemon) || selected.name}
+               width={56}
+               height={56}
+               className="object-contain drop-shadow"
+               onError={(e) => { e.currentTarget.style.display = 'none'; }}
+               unoptimized
+             />
+           </div>
+           <div className="flex-1 min-w-0">
+             <p className="font-black text-sm capitalize text-foreground/90">{getLocalizedPokemonName(selected.name, allPokemon) || selected.name}</p>
+             <p className="text-[10px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
+               {selected.eggGroups.join(' · ') || t('breeding.unknown_groups')}
+             </p>
+             <p className="text-[10px] text-foreground/40 font-semibold uppercase mt-0.5">
+               {selected.isLegendary ? t('breeding.legendary') : selected.isMythical ? t('breeding.mythical') : selected.isDitto ? t('breeding.ditto') : selected.gender}
             </p>
           </div>
           <button
@@ -176,29 +205,37 @@ function PokemonPicker({ label, selected, onSelect }: PokemonPickerProps) {
               className="w-full pl-9 pr-3 h-11 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
             />
           </div>
-          {open && results.length > 0 && (
-            <div className="absolute z-50 top-full mt-1 w-full rounded-sm border border-border/60 bg-card shadow-lg overflow-hidden">
-              {results.map(p => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onMouseDown={() => handleSelect(p.name, p.id)}
-                  className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
-                >
-                  <Image
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
-                    alt={p.name}
-                    width={32}
-                    height={32}
-                    className="object-contain"
-                    unoptimized
-                  />
-                  <span className="font-semibold text-sm capitalize text-foreground/85">{p.name}</span>
-                  <span className="ml-auto font-mono text-[10px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
-                </button>
-              ))}
-            </div>
-          )}
+{open && results.length > 0 && (
+             <div className="absolute z-50 top-full mt-1 w-full rounded-sm border border-border/60 bg-card shadow-lg overflow-hidden">
+               {results.map(p => {
+                 // Get localized name for current language
+                 const currentLang = i18n.language || 'en';
+                 const localizedNameObj = p.pokemon_v2_pokemonspecy?.[0]?.pokemon_v2_pokemonspeciesnames
+                   .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
+                 const displayName = localizedNameObj?.name || p.name;
+                 
+                 return (
+                   <button
+                     key={p.id}
+                     type="button"
+                     onMouseDown={() => handleSelect(p.name, p.id)}
+                     className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
+                   >
+                     <Image
+                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
+                       alt={displayName}
+                       width={32}
+                       height={32}
+                       className="object-contain"
+                       unoptimized
+                     />
+                     <span className="font-semibold text-sm capitalize text-foreground/85">{displayName}</span>
+                     <span className="ml-auto font-mono text-[10px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
+                   </button>
+                 );
+               })}
+             </div>
+           )}
         </div>
       )}
     </div>
@@ -543,11 +580,11 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             </div>
           </div>
 
-          {/* IVs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <IvEditor label={parent1?.name ?? t('breeding.parent_1')} ivs={p1IVs} onChange={setP1IVs} />
-            <IvEditor label={parent2?.name ?? t('breeding.parent_2')} ivs={p2IVs} onChange={setP2IVs} />
-          </div>
+{/* IVs */}
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <IvEditor label={getLocalizedPokemonName(parent1?.name ?? '', allPokemon) ?? (parent1?.name ?? t('breeding.parent_1'))} ivs={p1IVs} onChange={setP1IVs} />
+             <IvEditor label={getLocalizedPokemonName(parent2?.name ?? '', allPokemon) ?? (parent2?.name ?? t('breeding.parent_2'))} ivs={p2IVs} onChange={setP2IVs} />
+           </div>
 
           {/* Target IVs */}
           <div className="space-y-3">
@@ -731,21 +768,21 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                 </div>
               </div>
 
-              {/* Link to Egg Move Explorer */}
-              {parent1 && (
-                <div className="flex items-center justify-between p-4 rounded-sm bg-secondary/20 border border-border/40">
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-wider text-foreground/60">{t('breeding.egg_move_link_title')}</p>
-                    <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: parent1.name })}</p>
-                  </div>
-                  <Link
-                    href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
-                  >
-                    {t('breeding.btn_explore')} <ExternalLink className="h-3 w-3" />
-                  </Link>
-                </div>
-              )}
+{/* Link to Egg Move Explorer */}
+               {parent1 && (
+                 <div className="flex items-center justify-between p-4 rounded-sm bg-secondary/20 border border-border/40">
+                   <div>
+                     <p className="text-xs font-black uppercase tracking-wider text-foreground/60">{t('breeding.egg_move_link_title')}</p>
+                     <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: getLocalizedPokemonName(parent1.name, allPokemon) || parent1.name })}</p>
+                   </div>
+                   <Link
+                     href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}
+                     className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
+                   >
+                     {t('breeding.btn_explore')} <ExternalLink className="h-3 w-3" />
+                   </Link>
+                 </div>
+               )}
             </div>
           )}
 

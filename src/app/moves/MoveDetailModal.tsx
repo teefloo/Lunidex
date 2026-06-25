@@ -368,6 +368,7 @@ function PokemonLearnerCard({
             className="object-contain drop-shadow-lg"
             sizes="56px"
             loading="lazy"
+            unoptimized
             onError={() => setImgSrc(fallbackImg)}
           />
         </div>
