@@ -97,7 +97,7 @@ export default function CookieBanner() {
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-[0.8125rem]">
               {t('legal.banner.description')}
             </p>
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/80 sm:text-xs">
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
               {t('legal.banner.disclaimer')}{' '}
               <Link
                 href={cookiesHref}

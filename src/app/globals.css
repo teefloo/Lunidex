@@ -376,7 +376,7 @@ h1 { letter-spacing: 0; }
   letter-spacing: 0.22em;
   line-height: 1;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--foreground);
   box-shadow: var(--shadow-pixel-sm);
   font-family: var(--font-body);
 }
