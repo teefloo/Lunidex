@@ -162,12 +162,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'tcg.pokemon.com',
+        hostname: 'images.tcgdex.net',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'api.tcgdex.net',
+        hostname: 'tcg.pokemon.com',
         pathname: '/**',
       },
     ],
