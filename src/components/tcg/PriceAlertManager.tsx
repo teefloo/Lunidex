@@ -144,7 +144,7 @@ function CreateAlertForm({ cardId, cardName, onSuccess, onCancel }: CreateFormPr
         <span className="text-xs font-black uppercase tracking-widest text-foreground/50">
           New Alert
         </span>
-        <button type="button" onClick={onCancel} className="text-foreground/40 hover:text-foreground/80">
+        <button type="button" onClick={onCancel} aria-label="Cancel" className="text-foreground/40 hover:text-foreground/80">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -291,7 +291,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
         type="button"
         onClick={() => toggleMutation.mutate()}
         disabled={toggleMutation.isPending}
-        title={alert.is_active ? 'Disable alert' : 'Enable alert'}
+        aria-label={alert.is_active ? 'Disable alert' : 'Enable alert'}
         className="text-foreground/40 hover:text-primary transition-colors disabled:opacity-40"
       >
         {alert.is_active ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
@@ -301,7 +301,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
         type="button"
         onClick={() => deleteMutation.mutate()}
         disabled={deleteMutation.isPending}
-        title="Delete alert"
+        aria-label="Delete alert"
         className="text-foreground/40 hover:text-red-400 transition-colors disabled:opacity-40"
       >
         <Trash2 className="h-4 w-4" />

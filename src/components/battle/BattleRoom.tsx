@@ -260,6 +260,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
             type="button"
             onClick={sendChat}
             disabled={!connected || !chatInput.trim()}
+            aria-label="Send message"
             className="flex h-9 w-9 items-center justify-center rounded-sm border border-primary bg-primary/10 text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Send className="h-3.5 w-3.5" />
