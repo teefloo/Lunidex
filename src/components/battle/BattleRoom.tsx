@@ -149,7 +149,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    });
+    }).catch(() => {});
   }, [roomId]);
 
   if (error) {

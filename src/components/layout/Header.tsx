@@ -155,7 +155,6 @@ export default function Header() {
     { code: 'ko', label: t('languages.ko'), flag: '🇰🇷' },
     { code: 'zh', label: t('languages.zh'), flag: '🇨🇳' },
   ] as const, [t]);
-  const homeAriaLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
   const teamLabel = mounted ? t('nav.team') : 'Team Builder';
   const compareLabel = mounted ? t('nav.compare') : 'Compare';
   const tcgLabel = mounted ? t('nav.tcg') : 'TCG Catalog';
@@ -198,7 +197,7 @@ export default function Header() {
           className="glass-toolbar codex-frame inline-flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 md:max-w-[calc(100vw-3rem)] md:px-4 shadow-[var(--shadow-pixel)]"
         >
           <div className="flex shrink-0 items-center justify-start">
-            <Link href={localizedHref('/')} className="flex items-center gap-2.5 group" aria-label={homeAriaLabel}>
+            <Link href={localizedHref('/')} className="flex items-center gap-2.5 group">
               <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
                 <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
               </div>

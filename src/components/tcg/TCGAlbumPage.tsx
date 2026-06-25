@@ -60,6 +60,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
       <div className="flex flex-wrap items-center gap-4">
         <Link
           href="/tcg/collection"
+          aria-label="Back to TCG collection"
           className="flex h-9 w-9 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />

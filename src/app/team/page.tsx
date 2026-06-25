@@ -568,8 +568,9 @@ export default function TeamPage() {
               <Button 
                 disabled={team.length === 0} 
                 onClick={() => {
-                  navigator.clipboard.writeText(team.join('-'));
-                  toast.success(t('detail.copied'));
+                  navigator.clipboard.writeText(team.join('-')).then(() => {
+                    toast.success(t('detail.copied'));
+                  }).catch(() => {});
                 }}
                 className="w-full rounded-sm font-black uppercase tracking-widest h-12 shadow-lg shadow-primary/20"
               >

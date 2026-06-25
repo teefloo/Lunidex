@@ -141,10 +141,12 @@ export default function AccountCard() {
 
   const handleCopyLink = async () => {
     const url = `${window.location.origin}/u/${publicHandle}`;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success(tt('profile.link_copied', 'Profile link copied!'));
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success(tt('profile.link_copied', 'Profile link copied!'));
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard not available */ }
   };
 
   if (!enabled) return null;

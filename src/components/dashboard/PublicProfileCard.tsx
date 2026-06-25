@@ -39,10 +39,12 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
 
   const handleCopyLink = async () => {
     const url = `${window.location.origin}/u/${profile.handle}`;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success(t('profile.link_copied', { defaultValue: 'Profile link copied!' }));
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success(t('profile.link_copied', { defaultValue: 'Profile link copied!' }));
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard not available */ }
   };
 
   return (
