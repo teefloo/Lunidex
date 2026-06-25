@@ -26,6 +26,7 @@ export function TCGCardImage({ card, alt, fill = true, sizes, className }: TCGCa
       fill={fill}
       sizes={sizes}
       className={className}
+      unoptimized
       onError={() => {
         setImageIndex((prev) => Math.min(prev + 1, imageCandidates.length - 1));
       }}
