@@ -334,7 +334,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             fill
             unoptimized={animatedSprites}
             sizes="(max-width: 640px) 160px, (max-width: 1024px) 128px, 128px"
-            className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)]"
+            className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
             priority={index < 4}
             fetchPriority={index === 0 ? 'high' : undefined}
           />
@@ -388,7 +388,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             if (pokemon.id) toggleCaught(pokemon.id);
           }}
           className={cn(
-            'absolute bottom-1 right-1.5 z-20 flex h-10 w-10 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
+            'absolute bottom-1 right-1.5 z-20 flex h-11 w-11 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
             caught
               ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
               : 'border-foreground/20 bg-background/65 text-muted-foreground hover:border-foreground/40 hover:text-foreground'

@@ -258,7 +258,7 @@ export default function ComparePage() {
                 variant="ghost"
                 size="icon"
                 onClick={() => router.back()}
-                className="rounded-full bg-background/80 border border-border/70"
+                className="rounded-sm bg-background/80 border border-border/70"
                 aria-label={t('common.back')}
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -266,7 +266,7 @@ export default function ComparePage() {
               <Button
                 variant="destructive"
                 onClick={handleClearCompare}
-                className="rounded-full font-black uppercase tracking-widest gap-2"
+                className="rounded-sm font-black uppercase tracking-widest gap-2"
               >
                 <Trash2 className="w-4 h-4" />
                 {t('compare.clear')}
@@ -275,7 +275,7 @@ export default function ComparePage() {
           )}
         />
 
-        <section className="page-surface mb-8 rounded-sm p-5 shadow-xl">
+        <section className="page-surface mb-8 rounded-sm p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="w-full lg:max-w-xl">
               <div className="flex h-12 items-center gap-3 rounded-sm border border-border/50 bg-card/55 px-4 transition focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10">
@@ -299,7 +299,7 @@ export default function ComparePage() {
                 className="rounded-sm font-black uppercase tracking-widest gap-2"
               >
                 <Copy className="h-4 w-4" />
-                {t('team.copy_code')}
+                {t('compare.copy_link')}
               </Button>
               <Button
                 variant="outline"
@@ -348,12 +348,12 @@ export default function ComparePage() {
                     <Plus className="h-4 w-4 text-primary" />
                   </button>
                 );
-              }) : (
-                <div className="rounded-sm border border-dashed border-border/60 px-4 py-6 text-sm font-medium text-foreground/35">
+                }) : (
+                <div className="rounded-sm border-2 border-dashed border-border/60 bg-card px-4 py-6 text-sm font-medium text-muted-foreground">
                   {t('list.no_results')}
                 </div>
               )}
-            </div>
+              </div>
           )}
         </section>
 
@@ -363,29 +363,29 @@ export default function ComparePage() {
             <p className="text-foreground/40 font-semibold tracking-widest uppercase text-sm">{t('list.loading')}</p>
           </div>
         ) : compareData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-32 text-foreground/50 glass-panel rounded-sm border-dashed border-2 border-border/60">
+          <div className="flex flex-col items-center justify-center py-32 text-muted-foreground rounded-sm border-2 border-dashed border-border/60 bg-card">
             <Scale className="w-16 h-16 text-foreground/20 mb-6" />
-            <h3 className="text-2xl font-black mb-2 text-foreground/80">{t('compare.no_compare')}</h3>
-            <p className="text-base text-foreground/50 font-medium mb-8">{t('compare.no_compare_desc')}</p>
+            <h3 className="text-2xl font-black mb-2 text-foreground">{t('compare.no_compare')}</h3>
+            <p className="text-base text-muted-foreground font-medium mb-8">{t('compare.no_compare_desc')}</p>
             <Button onClick={() => router.push('/')} className="rounded-sm font-black uppercase px-8">{t('compare.browse_pokedex')}</Button>
           </div>
         ) : (
           <div className="space-y-12">
             {/* Radar Chart Section */}
             {compareData.length > 0 && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass-panel p-8 rounded-sm overflow-hidden"
+                className="page-surface p-8 rounded-sm overflow-hidden"
               >
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <div className="h-[400px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                        <PolarGrid stroke="rgba(255,255,255,0.1)" />
-                        <PolarAngleAxis 
-                          dataKey="stat" 
-                          tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 'bold' }} 
+                        <PolarGrid stroke="var(--border)" />
+                        <PolarAngleAxis
+                          dataKey="stat"
+                          tick={{ fill: 'color-mix(in oklab, var(--foreground) 55%, transparent)', fontSize: 12, fontWeight: 'bold' }}
                         />
                         {compareData.map((d) => d.pokemon && (
                           <Radar
@@ -416,10 +416,10 @@ export default function ComparePage() {
                         const winnerName = winner.species?.names?.find((n) => n.language.name === resolvedLang)?.name || winner.pokemon.name;
                         return (
                           <div key={key} className="bg-secondary/20 p-4 rounded-sm border border-border/40 flex flex-col gap-1 hover:border-primary/30 transition-all">
-                            <span className="text-[10px] font-black uppercase text-foreground/40">{statLabels[key]}</span>
+                            <span className="text-[10px] font-black uppercase text-muted-foreground">{statLabels[key]}</span>
                             <div className="flex items-center justify-between gap-2">
                               <span className="font-black text-sm capitalize truncate">{winnerName}</span>
-                              <span className="font-black text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">{info.val}</span>
+                              <span className="font-black text-primary bg-primary/10 px-2 py-0.5 rounded-sm text-xs">{info.val}</span>
                             </div>
                           </div>
                         );
@@ -440,7 +440,7 @@ export default function ComparePage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-[10px] font-black uppercase text-foreground/40 mb-1">{t('compare.total_stats')}</p>
+                          <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">{t('compare.total_stats')}</p>
                           <p className="text-2xl font-black text-primary">{bestStats.total.val}</p>
                         </div>
                       </div>
@@ -455,7 +455,7 @@ export default function ComparePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-panel p-8 rounded-sm"
+                className="page-surface p-8 rounded-sm"
               >
                 <div className="mb-8">
                   <h3 className="text-2xl font-black mb-2 tracking-tight flex items-center gap-3">
@@ -464,7 +464,7 @@ export default function ComparePage() {
                     </div>
                     {t('compare.suggestions_title')}
                   </h3>
-                  <p className="text-sm text-foreground/40 font-bold uppercase tracking-widest">{t('compare.suggestions_subtitle')}</p>
+                  <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">{t('compare.suggestions_subtitle')}</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
@@ -474,19 +474,19 @@ export default function ComparePage() {
                       <h4 className="text-sm font-black uppercase tracking-widest text-red-500/60 flex items-center gap-2">
                         <ShieldAlert className="w-4 h-4" /> {t('compare.counters_title')}
                       </h4>
-                      <p className="text-[10px] text-foreground/40 font-bold">{t('compare.counters_desc')}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold">{t('compare.counters_desc')}</p>
                       <div className="space-y-3">
                         {suggestions.counters.map(counter => (
                           <div key={counter.type} className="p-4 rounded-sm bg-red-500/5 border border-red-500/10 space-y-2">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span
-                                  className="glass-tag px-3 py-1 text-[10px]"
-                                  style={{ backgroundColor: `${TYPE_COLORS[counter.type]}d9`, borderColor: TYPE_COLORS[counter.type] }}
+                                  className="glass-tag type-accent px-3 py-1 text-[10px]"
+                                  style={{ '--type-color': TYPE_COLORS[counter.type] } as React.CSSProperties}
                                 >
                                   {t(`types.${counter.type}`)}
                                 </span>
-                                <span className="text-[10px] text-foreground/30 font-bold">
+                                <span className="text-[10px] text-muted-foreground font-bold">
                                   {t('compare.threat_severity', { severity: counter.severity })}
                                 </span>
                               </div>
@@ -514,18 +514,18 @@ export default function ComparePage() {
                       <h4 className="text-sm font-black uppercase tracking-widest text-green-500/60 flex items-center gap-2">
                         <Heart className="w-4 h-4" /> {t('compare.partners_title')}
                       </h4>
-                      <p className="text-[10px] text-foreground/40 font-bold">{t('compare.partners_desc')}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold">{t('compare.partners_desc')}</p>
                       <div className="space-y-3">
                         {suggestions.partners.map(partner => (
                           <div key={partner.type} className="p-4 rounded-sm bg-green-500/5 border border-green-500/10 flex items-center justify-between gap-3">
                             <div className="flex items-center gap-3">
                               <span
-                                className="glass-tag px-3 py-1 text-[10px]"
-                                style={{ backgroundColor: `${TYPE_COLORS[partner.type]}d9`, borderColor: TYPE_COLORS[partner.type] }}
+                                className="glass-tag type-accent px-3 py-1 text-[10px]"
+                                style={{ '--type-color': TYPE_COLORS[partner.type] } as React.CSSProperties}
                               >
                                 {t(`types.${partner.type}`)}
                               </span>
-                              <span className="text-[10px] text-foreground/40 font-bold">
+                              <span className="text-[10px] text-muted-foreground font-bold">
                                 {partner.reason === 'both'
                                   ? t('compare.covers_both')
                                   : partner.reason === 'covers_weakness'
@@ -559,7 +559,7 @@ export default function ComparePage() {
                     <h4 className="text-sm font-black uppercase tracking-widest text-orange-500/60 flex items-center gap-2 mb-4">
                       <AlertTriangle className="w-4 h-4" /> {t('compare.shared_weaknesses')}
                     </h4>
-                    <p className="text-[10px] text-foreground/40 font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
                     <div className="flex flex-wrap gap-2">
                       {suggestions.sharedWeaknesses.map(type => (
                         <span
@@ -580,7 +580,7 @@ export default function ComparePage() {
                     <h4 className="text-sm font-black uppercase tracking-widest text-yellow-500/60 flex items-center gap-2 mb-4">
                       <Zap className="w-4 h-4" /> {t('compare.stat_deficiencies')}
                     </h4>
-                    <p className="text-[10px] text-foreground/40 font-bold mb-4">{t('compare.stat_deficiencies_desc')}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold mb-4">{t('compare.stat_deficiencies_desc')}</p>
                     <div className="flex flex-wrap gap-2">
                       {suggestions.statDeficiencies.map(stat => (
                         <span
@@ -629,7 +629,7 @@ export default function ComparePage() {
                     </button>
 
                     <div className="flex flex-col items-center text-center mb-8 relative z-10">
-                      <div className="text-xs font-black text-foreground/30 mb-2">{formatId(p.id)}</div>
+                      <div className="text-xs font-black text-muted-foreground mb-2">{formatId(p.id)}</div>
                       <div className="relative w-40 h-40 mb-4">
                         <div className="absolute inset-x-6 bottom-4 top-12 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity group-hover:opacity-80" />
                         <Image 
@@ -646,8 +646,8 @@ export default function ComparePage() {
                         {p.types.map((typeItem) => (
                           <span 
                             key={typeItem.type.name} 
-                            className="glass-tag px-4 py-1 text-[10px]"
-                            style={{ backgroundColor: `${TYPE_COLORS[typeItem.type.name]}cc`, borderColor: TYPE_COLORS[typeItem.type.name] }}
+                            className="glass-tag type-accent px-4 py-1 text-[10px]"
+                            style={{ '--type-color': TYPE_COLORS[typeItem.type.name] } as React.CSSProperties}
                           >
                             {t(`types.${typeItem.type.name}`)}
                           </span>
@@ -677,8 +677,8 @@ export default function ComparePage() {
                             <Swords className="w-3 h-3" /> {t('compare.stats')}
                           </h4>
                           <div className={cn(
-                            "px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-tighter",
-                            isOverallBest ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400" : "bg-secondary/50 text-foreground/40"
+                            "px-2 py-0.5 rounded-sm text-[10px] sm:text-[11px] font-black uppercase tracking-tighter",
+                            isOverallBest ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400" : "bg-secondary/50 text-muted-foreground"
                           )}>
                             {t('compare.total')}: {totalStats} {isOverallBest ? t('compare.best') : ''}
                           </div>
@@ -689,7 +689,7 @@ export default function ComparePage() {
                             return (
                               <div key={s.stat.name} className="space-y-1">
                                 <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                                  <span className={cn(isBest ? "text-primary" : "text-foreground/40")}>
+                                  <span className={cn(isBest ? "text-primary" : "text-muted-foreground")}>
                                     {statLabels[s.stat.name]}
                                   </span>
                                   <span className={cn(isBest ? "text-primary font-black" : "text-foreground/70")}>
@@ -697,11 +697,11 @@ export default function ComparePage() {
                                   </span>
                                 </div>
                                 <div className="h-1.5 rounded-full bg-secondary/50 overflow-hidden">
-                                  <motion.div 
+                                  <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${(s.base_stat / 255) * 100}%` }}
-                                    className="h-full rounded-full"
-                                    style={{ backgroundColor: isBest ? 'rgb(255, 50, 50)' : color }}
+                                    className="h-full rounded-sm"
+                                    style={{ backgroundColor: isBest ? 'var(--primary)' : color }}
                                   />
                                 </div>
                               </div>
@@ -712,7 +712,7 @@ export default function ComparePage() {
 
                       {/* Abilities */}
                       <div className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground/40 flex items-center gap-2">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                           <Sparkles className="w-3 h-3" /> {t('detail.abilities')}
                         </h4>
                         <div className="flex flex-wrap gap-2">

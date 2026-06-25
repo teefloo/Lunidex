@@ -15,6 +15,7 @@ import {
   ArrowLeftRight,
   LayoutGrid,
   Egg,
+  Shield,
 } from 'lucide-react';
 import { useEffect, useMemo, useState, useRef, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
@@ -254,8 +255,9 @@ export default function Header() {
             </HeaderLink>
             <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
             <HeaderLink href={localizedHref('/battle')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Swords className="h-3 w-3" /> {battleLabel}
+              <Shield className="h-3 w-3" /> {battleLabel}
             </HeaderLink>
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
             <HeaderLink href={localizedHref('/breeding')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
               <Egg className="h-3 w-3" /> {breedingLabel}
             </HeaderLink>
@@ -285,7 +287,8 @@ export default function Header() {
               <TooltipTrigger>
                   <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} className="hidden sm:block">
                   <div
-                    className="glass-control flex h-10 items-center gap-1.5 px-2.5 text-muted-foreground hover:border-rose-500/25 hover:bg-rose-500/10 hover:text-rose-500 active:scale-95"
+                    className="glass-control flex h-10 items-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-[var(--action-favorite)] active:scale-95"
+                    style={{ '--hover-color': 'var(--action-favorite)' } as React.CSSProperties}
                   >
                     <Heart className="h-3.5 w-3.5" />
                     <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">{favoritesLabel}</span>
