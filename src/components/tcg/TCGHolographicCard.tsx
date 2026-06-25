@@ -193,6 +193,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               height={921}
               sizes={sizes}
               priority={priority}
+              unoptimized
               className={cn('card__image', imageClassName)}
               onError={() => {
                 setImageIndex((current) => {

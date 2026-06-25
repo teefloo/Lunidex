@@ -516,6 +516,7 @@ export function TCGFilters({
                           src={logoSrc}
                           alt={set.name}
                           fill
+                          unoptimized
                           className="object-contain p-2"
                         />
                       ) : (

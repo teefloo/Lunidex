@@ -169,6 +169,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                           alt={card.name}
                           fill
                           sizes="64px"
+                          unoptimized
                           className="object-cover opacity-80 transition-opacity group-hover/card:opacity-100"
                         />
                       )}
