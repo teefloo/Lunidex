@@ -3,7 +3,9 @@
 import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import CompareBarSlot from "@/components/pokemon/CompareBarSlot";
 import { Toaster } from "@/components/ui/sonner";
-import { InstallPrompt } from "@/components/layout/InstallPrompt";
+import dynamic from 'next/dynamic';
+
+const InstallPrompt = dynamic(() => import("@/components/layout/InstallPrompt").then(m => m.InstallPrompt), { ssr: false });
 
 export function AppContent({ children }: { children: ReactNode }) {
   const shouldRenderAgentation = process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_ENABLE_AGENTATION === "true";

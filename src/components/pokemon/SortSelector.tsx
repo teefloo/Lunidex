@@ -34,11 +34,11 @@ export default function SortSelector() {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hidden sm:block">
+      <span id="sort-label" className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hidden sm:block">
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
-        <SelectTrigger aria-label={mounted ? t('sort.label') : 'Sort by'} className="w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
+        <SelectTrigger aria-labelledby="sort-label" className="w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
           <SelectValue>
             {(() => {
               const current = options.find(o => o.value === sortBy);

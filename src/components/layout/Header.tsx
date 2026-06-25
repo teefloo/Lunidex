@@ -300,7 +300,6 @@ export default function Header() {
             <Select value={language} onValueChange={handleLanguageChange}>
               <SelectTrigger
                 size="sm"
-                aria-label={t('header.language_title', { language: languageLabel })}
                 className="glass-control flex !h-10 !w-[96px] items-center justify-between !px-3 !py-0 text-foreground/70 hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
                 style={{ width: 96, minWidth: 96, height: 40, minHeight: 40 }}
               >

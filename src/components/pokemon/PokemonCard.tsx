@@ -231,7 +231,9 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
   const mainType = types[0]?.type?.name || 'normal';
   const color = TYPE_COLORS[mainType] || '#A8A77A';
-  const cardLabel = t('detail.view_card_aria', { name: displayName });
+
+  const pokemonId = pokemon.id;
+  const pokemonName = pokemon.name;
   const cardBackground = [
     `linear-gradient(165deg, ${hexToRgba(color, 0.07)} 0%, transparent 35%, ${hexToRgba(color, 0.05)} 100%)`,
   ].join(', ');
@@ -242,7 +244,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   return (
     <Link
       href={`/pokemon/${name}`}
-      aria-label={cardLabel}
       className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
       onMouseEnter={prefetchDetails}
     >

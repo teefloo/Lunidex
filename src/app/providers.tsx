@@ -66,7 +66,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Load language bundle on demand, then switch
     loadLanguage(resolvedLanguage).then(() => {
       i18n.changeLanguage(resolvedLanguage);
-    });
+    }).catch(() => {});
     // Mirror to localStorage for synchronous initial boot on next reload
     try {
       localStorage.setItem('primedex-lang', resolvedLanguage);

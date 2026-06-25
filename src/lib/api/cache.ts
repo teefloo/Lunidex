@@ -50,7 +50,7 @@ export async function getCachedData<T>(key: string, allowExpired = false): Promi
 
     return item.data;
   } catch (error) {
-    console.error('Cache read error:', error);
+    console.warn('Cache read error:', error);
     return null;
   }
 }
@@ -64,6 +64,6 @@ export async function setCachedData<T>(key: string, data: T): Promise<void> {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Cache write error:', error);
+    console.warn('Cache write error:', error);
   }
 }
