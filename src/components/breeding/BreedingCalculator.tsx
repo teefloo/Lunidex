@@ -49,7 +49,7 @@ const getLocalizedPokemonName = (englishName: string, pokemonList: any[]): strin
   
   const currentLang = i18n.language || 'en';
   const localizedNameObj = pokemon.pokemon_v2_pokemonspecy?.[0]?.pokemon_v2_pokemonspeciesnames
-    .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
+    .find((nameObj: { name: string; pokemon_v2_language: { name: string } }) => nameObj.pokemon_v2_language.name === currentLang);
   
   return localizedNameObj?.name || null;
 };
@@ -108,10 +108,10 @@ const results = useMemo(() => {
          
          // Check if query matches any localized name
          const species = p.pokemon_v2_pokemonspecy?.[0];
-         if (species?.pokemon_v2_pokemonspeciesnames) {
-           return species.pokemon_v2_pokemonspeciesnames.some(nameObj => 
-             nameObj.name.toLowerCase().includes(q)
-           );
+          if (species?.pokemon_v2_pokemonspeciesnames) {
+            return species.pokemon_v2_pokemonspeciesnames.some((nameObj: { name: string; pokemon_v2_language: { name: string } }) => 
+              nameObj.name.toLowerCase().includes(q)
+            );
          }
          
          // Also check ID as fallback
