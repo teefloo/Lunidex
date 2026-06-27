@@ -292,6 +292,12 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
 
+  const { data: allPokemon } = useQuery({
+    queryKey: pokemonKeys.allSearchIndex(),
+    queryFn: getAllPokemonSearchIndex,
+    staleTime: 24 * 60 * 60 * 1000,
+  });
+
   const STEP_LABELS = [t('breeding.step_parents'), t('breeding.step_config'), t('breeding.step_results')];
 
   const HELD_ITEMS: { value: HeldBreedItem; label: string; desc: string }[] = [
