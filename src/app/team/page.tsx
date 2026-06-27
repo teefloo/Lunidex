@@ -259,9 +259,9 @@ export default function TeamPage() {
                         animate={{ scale: 1, opacity: 1 }}
                         className="glass-panel h-full p-4 rounded-sm flex flex-col items-center relative group"
                       >
-                        <button 
+                        <button
                           onClick={() => removeFromTeam(p.id)}
-                          className="absolute top-3 right-3 p-2 rounded-full bg-secondary/50 text-foreground/40 hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all z-20"
+                          className="absolute top-3 right-3 p-2 rounded-full bg-secondary/50 text-foreground/40 hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-all z-20"
                           aria-label={t('card.remove_team')}
                         >
                           <X className="w-4 h-4" />

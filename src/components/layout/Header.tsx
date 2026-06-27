@@ -262,7 +262,7 @@ export default function Header() {
           </nav>
 
           <div className="flex shrink-0 items-center justify-end gap-1 md:gap-1.5">
-            <div ref={searchRef} className="relative group mr-0.5 hidden w-[clamp(180px,13vw,240px)] 2xl:block">
+            <div ref={searchRef} className="relative group mr-0.5 hidden w-[clamp(180px,13vw,240px)] xl:block">
               <div className="relative w-full">
                 <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 transition-colors duration-300 group-hover:text-primary">
                   <Search className="h-3.5 w-3.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />

@@ -377,10 +377,10 @@ export default function ComparePage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="page-surface p-8 rounded-sm overflow-hidden"
+                className="page-surface p-4 md:p-8 rounded-sm overflow-hidden"
               >
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
-                  <div className="h-[400px] w-full">
+                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                  <div className="h-[280px] sm:h-[350px] md:h-[400px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
                         <PolarGrid stroke="var(--border)" />
@@ -456,7 +456,7 @@ export default function ComparePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="page-surface p-8 rounded-sm"
+                className="page-surface p-4 md:p-8 rounded-sm"
               >
                 <div className="mb-8">
                   <h3 className="text-2xl font-black mb-2 tracking-tight flex items-center gap-3">

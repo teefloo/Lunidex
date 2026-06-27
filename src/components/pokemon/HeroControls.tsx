@@ -19,7 +19,7 @@ export default function HeroControls() {
         <SearchBar />
       </div>
 
-      <div className="w-full flex h-[64px] flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex flex-wrap items-center justify-start gap-2.5">
           <FavoriteToggle />
           <CaughtFilter />
