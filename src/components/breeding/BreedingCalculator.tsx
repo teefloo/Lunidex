@@ -210,7 +210,7 @@ const results = useMemo(() => {
                {results.map(p => {
                  // Get localized name for current language
                  const currentLang = i18n.language || 'en';
-                 const localizedNameObj = p.pokemon_v2_pokemonspecy?.[0]?.pokemon_v2_pokemonspeciesnames
+                  const localizedNameObj = p.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames
                    .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
                  const displayName = localizedNameObj?.name || p.name;
                  
