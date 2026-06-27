@@ -41,7 +41,7 @@ import i18n from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // Helper function to get localized pokemon name
-const getLocalizedPokemonName = (englishName: string, pokemonList: any[]): string | null => {
+const getLocalizedPokemonName = (englishName: string, pokemonList: any[] | undefined): string | null => {
   if (!pokemonList) return null;
   
   const pokemon = pokemonList.find(p => p.name === englishName);
