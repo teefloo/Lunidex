@@ -28,16 +28,16 @@ export default function CompareBar() {
 
   return (
     <div className="fixed bottom-[calc(2rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl">
-      <motion.div 
+      <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         className="glass-toolbar flex items-center justify-between gap-4 rounded-sm border-primary/20 p-4"
       >
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide py-1">
+        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pt-4 pb-1">
           <AnimatePresence mode="popLayout">
-            {pokemonQueries.map((q, idx) => {
-              const p = q.data;
+            {pokemonQueries.map((query, idx) => {
+              const pokemon = query.data;
               const id = compareList[idx];
               
               return (
@@ -50,12 +50,12 @@ export default function CompareBar() {
                   className="relative group shrink-0"
                 >
                   <div className="glass-card flex h-14 w-14 items-center justify-center rounded-sm p-2">
-                    {q.isLoading ? (
+                    {query.isLoading ? (
                       <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-sm animate-spin" />
-                    ) : p?.sprites?.front_default ? (
-                      <Image 
-                        src={p.sprites.front_default} 
-                        alt={p.name} 
+                    ) : pokemon?.sprites?.front_default ? (
+                      <Image
+                        src={pokemon.sprites.front_default}
+                        alt={pokemon.name}
                         width={40}
                         height={40}
                         sizes="40px"
@@ -64,7 +64,7 @@ export default function CompareBar() {
                       />
                     ) : (
                       <div className="w-10 h-10 bg-background/50 rounded-lg flex items-center justify-center text-foreground/30 text-xs font-bold">
-                        {p?.name?.charAt(0).toUpperCase() ?? '?'}
+                        {pokemon?.name?.charAt(0).toUpperCase() ?? '?'}
                       </div>
                     )}
                   </div>

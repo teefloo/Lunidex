@@ -17,7 +17,7 @@ import {
   Egg,
   Shield,
 } from 'lucide-react';
-import { useEffect, useMemo, useState, useRef, useCallback, ReactNode } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback, Fragment, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -47,6 +47,17 @@ import {
 import { useMounted } from '@/hooks/useMounted';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
 import AccountMenu from '@/components/auth/AccountMenu';
+
+const NAV_ITEMS = [
+  { path: '/team',     icon: Users,          labelKey: 'nav.team',     fallback: 'Team Builder' },
+  { path: '/compare',  icon: ArrowLeftRight,  labelKey: 'nav.compare',  fallback: 'Compare'      },
+  { path: '/tcg',      icon: LayoutGrid,      labelKey: 'nav.tcg',      fallback: 'TCG Catalog'  },
+  { path: '/types',    icon: Shapes,          labelKey: 'nav.types',    fallback: 'Types'        },
+  { path: '/moves',    icon: Swords,          labelKey: 'nav.moves',    fallback: 'Moves'        },
+  { path: '/quiz',     icon: BrainCircuit,    labelKey: 'nav.quiz',     fallback: 'Quiz'         },
+  { path: '/battle',   icon: Shield,          labelKey: 'nav.battle',   fallback: 'Battle'       },
+  { path: '/breeding', icon: Egg,             labelKey: 'nav.breeding', fallback: 'Breeding'     },
+] as const;
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -141,6 +152,8 @@ export default function Header() {
     }
   }, [isSearchFocused, searchResults, updateDropdownPosition]);
 
+  const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
+
   const languageLabel = mounted ? (language === 'auto' ? t('settings.auto') : language.toUpperCase()) : 'EN';
   const themeLabel = mounted
     ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
@@ -156,18 +169,10 @@ export default function Header() {
     { code: 'ko', label: t('languages.ko'), flag: '🇰🇷' },
     { code: 'zh', label: t('languages.zh'), flag: '🇨🇳' },
   ] as const, [t]);
-  const teamLabel = mounted ? t('nav.team') : 'Team Builder';
-  const compareLabel = mounted ? t('nav.compare') : 'Compare';
-  const tcgLabel = mounted ? t('nav.tcg') : 'TCG Catalog';
-  const typesLabel = mounted ? t('nav.types') : 'Types';
-  const movesLabel = mounted ? t('nav.moves') : 'Moves';
-  const quizLabel = mounted ? t('nav.quiz') : 'Quiz';
-  const battleLabel = mounted ? (t('nav.battle') || 'Battle') : 'Battle';
-  const breedingLabel = mounted ? (t('nav.breeding') || 'Breeding') : 'Breeding';
-  const favoritesLabel = mounted ? t('nav.favorites') : 'Favorites';
-  const menuLabel = mounted ? (t('header.open_menu') || 'Menu') : 'Menu';
+  const favoritesLabel = label('nav.favorites', 'Favorites');
+  const menuLabel = label('header.open_menu', 'Menu');
   const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
-  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
+  const searchPlaceholder = label('search.placeholder', 'Search Pokémon (name or id)...');
 
   const isDark = mounted && (
     theme === 'dark' ||
@@ -228,37 +233,14 @@ export default function Header() {
           </div>
 
           <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-sm border border-border bg-background/40 px-1 py-0.5 lg:flex">
-            <HeaderLink href={localizedHref('/team')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Users className="h-3 w-3" /> {teamLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/compare')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <ArrowLeftRight className="h-3 w-3" /> {compareLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/tcg')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <LayoutGrid className="h-3 w-3" /> {tcgLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/types')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Shapes className="h-3 w-3" /> {typesLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/moves')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Swords className="h-3 w-3" /> {movesLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/quiz')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <BrainCircuit className="h-3 w-3" /> {quizLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/battle')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Shield className="h-3 w-3" /> {battleLabel}
-            </HeaderLink>
-            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-            <HeaderLink href={localizedHref('/breeding')} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
-              <Egg className="h-3 w-3" /> {breedingLabel}
-            </HeaderLink>
+            {NAV_ITEMS.map((item, index) => (
+              <Fragment key={item.path}>
+                {index > 0 && <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />}
+                <HeaderLink href={localizedHref(item.path)} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
+                  <item.icon className="h-3 w-3" /> {label(item.labelKey, item.fallback)}
+                </HeaderLink>
+              </Fragment>
+            ))}
           </nav>
 
           <div className="flex shrink-0 items-center justify-end gap-1 md:gap-1.5">
@@ -302,13 +284,23 @@ export default function Header() {
               <SelectTrigger
                 size="sm"
                 aria-label={languageLabel}
-                className="glass-control flex !h-10 !w-[96px] items-center justify-between !px-3 !py-0 text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
-                style={{ width: 96, minWidth: 96, height: 40, minHeight: 40 }}
+                className="glass-control flex !h-10 !w-10 sm:!w-[96px] items-center justify-center sm:justify-between !px-2.5 sm:!px-3 !py-0 overflow-hidden sm:overflow-visible text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
+                style={{ minHeight: 40 }}
               >
-                <Languages className="h-4 w-4" />
-                <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[10px] font-semibold uppercase leading-none">
-                  {languageLabel}
-                </SelectValue>
+                {/* Custom globe SVG — same on all sizes */}
+                <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
+                  <circle cx="9" cy="9" r="7.2" />
+                  <path d="M2 9h14" />
+                  <path d="M9 1.8C7 4.2 6 6.5 6 9s1 4.8 3 7.2" />
+                  <path d="M9 1.8c2 2.4 3 4.7 3 7.2s-1 4.8-3 7.2" />
+                  <path d="M2.8 5.5h12.4M2.8 12.5h12.4" />
+                </svg>
+                {/* sm+: text label */}
+                <span className="hidden sm:contents">
+                  <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[10px] font-semibold uppercase leading-none">
+                    {languageLabel}
+                  </SelectValue>
+                </span>
               </SelectTrigger>
               <SelectContent className="glass-surface min-w-48 p-1">
                 {languageOptions.map((lang) => (
@@ -391,62 +383,16 @@ export default function Header() {
                         </Link>
                       }
                     />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/team')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <Users className="h-5 w-5 flex-shrink-0" /> {teamLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/compare')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <ArrowLeftRight className="h-5 w-5 flex-shrink-0" /> {compareLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/tcg')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <LayoutGrid className="h-5 w-5 flex-shrink-0" /> {tcgLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/types')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <Shapes className="h-5 w-5 flex-shrink-0" /> {typesLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/moves')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <Swords className="h-5 w-5 flex-shrink-0" /> {movesLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/quiz')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <BrainCircuit className="h-5 w-5 flex-shrink-0" /> {quizLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/battle')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <Swords className="h-5 w-5 flex-shrink-0" /> {battleLabel}
-                        </Link>
-                      }
-                    />
-                    <SheetClose
-                      render={
-                        <Link href={localizedHref('/breeding')} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
-                          <Egg className="h-5 w-5 flex-shrink-0" /> {breedingLabel}
-                        </Link>
-                      }
-                    />
+                    {NAV_ITEMS.map((item) => (
+                      <SheetClose
+                        key={item.path}
+                        render={
+                          <Link href={localizedHref(item.path)} className="flex items-center gap-4 rounded-sm p-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-muted/50 hover:text-primary">
+                            <item.icon className="h-5 w-5 flex-shrink-0" /> {label(item.labelKey, item.fallback)}
+                          </Link>
+                        }
+                      />
+                    ))}
                   </div>
                 </SheetContent>
               </Sheet>

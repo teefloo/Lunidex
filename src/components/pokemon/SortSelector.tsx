@@ -32,19 +32,17 @@ export default function SortSelector() {
 
   type SortValue = typeof options[number]['value'];
 
+  const currentSortLabel = options.find(o => o.value === sortBy)?.label
+    ?? (mounted ? t('sort.placeholder') : 'Select sort');
+
   return (
     <div className="flex items-center gap-3">
       <span id="sort-label" className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
-        <SelectTrigger aria-labelledby="sort-label" className="w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
-          <SelectValue>
-            {(() => {
-              const current = options.find(o => o.value === sortBy);
-              return current ? current.label : (mounted ? t('sort.placeholder') : 'Select sort');
-            })()}
-          </SelectValue>
+        <SelectTrigger aria-labelledby="sort-label" className="w-full sm:w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
+          <SelectValue>{currentSortLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent className="p-1 border border-border/60">
           {options.map((opt) => (

@@ -135,6 +135,31 @@ const withPWA = withPWAInit({
   },
 });
 
+// Dev-only connect-src additions (localhost dev server / Agentation).
+// Excluded from production to avoid leaking infra details and to enforce
+// strict-origin connections.
+const devConnectSrc =
+  process.env.NODE_ENV === 'development'
+    ? ' http://localhost:4747 http://127.0.0.1:4747'
+    : '';
+
+// unsafe-eval is required by Webpack HMR in dev; strip it in production.
+const scriptSrc =
+  process.env.NODE_ENV === 'development'
+    ? "'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com"
+    : "'self' 'unsafe-inline' blob: https://va.vercel-scripts.com";
+
+const csp = [
+  "default-src 'self'",
+  `script-src ${scriptSrc}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
+  "font-src 'self' data:",
+  "media-src 'self' https://raw.githubusercontent.com",
+  `connect-src 'self'${devConnectSrc} https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com https://*.supabase.co wss://*.supabase.co`,
+  "frame-ancestors 'none'",
+].join('; ');
+
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -142,7 +167,7 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
-      { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net; font-src 'self' data:; media-src 'self' https://raw.githubusercontent.com; connect-src 'self' http://localhost:4747 http://127.0.0.1:4747 https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com https://*.supabase.co wss://*.supabase.co;" },
+  { key: 'Content-Security-Policy', value: csp },
 ];
 
 const nextConfig: NextConfig = {

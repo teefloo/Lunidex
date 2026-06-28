@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 
-export default function FavoriteToggle() {
+export default function FavoriteToggle({ className }: { className?: string }) {
   const showFavoritesOnly = usePrimeDexStore(s => s.showFavoritesOnly);
   const setShowFavoritesOnly = usePrimeDexStore(s => s.setShowFavoritesOnly);
   const favorites = usePrimeDexStore(s => s.favorites);
@@ -21,6 +21,7 @@ export default function FavoriteToggle() {
       aria-label={favoritesLabel}
       className={cn(
         "flex items-center justify-center gap-2 px-5 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+        className,
         showFavoritesOnly
           ? "text-primary-foreground border-[color-mix(in_oklab,var(--action-favorite)_55%,transparent)] bg-[var(--action-favorite)] shadow-[2px_2px_0_color-mix(in_oklab,var(--action-favorite)_45%,transparent)]"
           : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"

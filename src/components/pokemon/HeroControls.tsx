@@ -19,11 +19,14 @@ export default function HeroControls() {
         <SearchBar />
       </div>
 
-      <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
-        <div className="flex flex-wrap items-center justify-start gap-2.5">
-          <FavoriteToggle />
-          <CaughtFilter />
-          <AdvancedFiltersWrapper />
+      <div className="w-full flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        {/* Mobile: 2-col grid (Favorites + Filters), then full-width Caught row */}
+        <div className="flex flex-col gap-2 sm:flex sm:flex-row sm:items-center sm:gap-2.5">
+          <div className="grid grid-cols-2 gap-2 sm:contents">
+            <FavoriteToggle className="w-full sm:w-auto" />
+            <AdvancedFiltersWrapper className="w-full sm:w-auto" />
+          </div>
+          <CaughtFilter className="w-full sm:w-auto [&>button]:flex-1" />
         </div>
         <div className="flex-shrink-0">
           <SortSelector />

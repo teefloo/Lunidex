@@ -276,7 +276,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
               style={{ '--chip': 'var(--action-team)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
                   ? CHIP_ACTIVE
                    : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
@@ -293,7 +293,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
               style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
                   ? CHIP_ACTIVE
                    : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
@@ -309,7 +309,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
               style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
               className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground'
@@ -320,7 +320,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
 
-        <div className="relative mx-auto h-20 w-20 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
+        <div className="relative mx-auto h-28 w-28 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
           <div
             className="absolute inset-1 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
             style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
@@ -341,10 +341,10 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         </div>
 
         <div className="relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
-          <p className="latin-name font-display text-[10px] italic text-muted-foreground sm:text-[11px]">
+          <p className="latin-name font-display text-[11px] italic text-muted-foreground sm:text-[11px]">
             {pokemonName.replace(/-/g, ' ')}
           </p>
-          <h3 className="truncate w-full text-center font-display text-sm font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
+          <h3 className="truncate w-full text-center font-display text-base font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
             {displayName}
           </h3>
           <div className="mt-1 flex min-h-[20px] flex-wrap items-center justify-center gap-1 sm:gap-1.5">
@@ -355,7 +355,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               return (
                 <span
                   key={`${typeName}-${i}`}
-                  className="type-bar px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[9px]"
+                  className="type-bar px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[9px]"
                   style={{
                     color: typeColor,
                   }}

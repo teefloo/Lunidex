@@ -8,11 +8,22 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ savedSearches: state.savedSearches });
 }
 
+function isValidSavedSearch(v: unknown): v is TCGSavedSearch {
+  if (typeof v !== 'object' || v === null) return false;
+  const s = v as Record<string, unknown>;
+  return (
+    typeof s.id === 'string' && s.id.length > 0 && s.id.length <= 128 &&
+    typeof s.name === 'string' && s.name.length > 0 && s.name.length <= 100 &&
+    typeof s.query === 'string' && s.query.length <= 500 &&
+    typeof s.createdAt === 'string'
+  );
+}
+
 export async function POST(request: NextRequest) {
   const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  const payload = await readJsonBody<{ search?: TCGSavedSearch }>(request);
+  const payload = await readJsonBody<{ search?: unknown }>(request);
 
-  if (!payload?.search?.id) {
+  if (!isValidSavedSearch(payload?.search)) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 

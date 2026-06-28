@@ -50,7 +50,7 @@ const SHAPES = [
   'wings', 'tentacles', 'heads', 'humanoid', 'bug-wings', 'armor'
 ];
 
-export default function AdvancedFilters() {
+export default function AdvancedFilters({ className }: { className?: string }) {
   const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
   const toggleType = usePrimeDexStore(s => s.toggleType);
   const selectedGeneration = usePrimeDexStore(s => s.selectedGeneration);
@@ -105,7 +105,7 @@ export default function AdvancedFilters() {
         render={
           <Button
             variant="outline"
-            className="relative glass-btn px-6 py-6 rounded-sm gap-2 group hover:border-primary/50 transition-all duration-300"
+            className={cn("relative glass-btn px-6 py-6 rounded-sm gap-2 group hover:border-primary/50 transition-all duration-300", className)}
           />
         }
       >

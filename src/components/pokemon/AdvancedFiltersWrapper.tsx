@@ -8,6 +8,6 @@ const AdvancedFilters = dynamic(() => import('@/components/pokemon/AdvancedFilte
     ssr: false
 });
 
-export default function AdvancedFiltersWrapper() {
-    return <AdvancedFilters />;
+export default function AdvancedFiltersWrapper({ className }: { className?: string }) {
+    return <AdvancedFilters className={className} />;
 }

@@ -64,11 +64,25 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json().catch(() => ({})) as { team?: unknown };
 
+  // Validate team: must be an array of at most 6 plain objects, each with an
+  // integer id. Rejects oversized payloads that would bloat the JSONB column.
+  const rawTeam = body.team;
+  let safeTeam: unknown[] | null = null;
+  if (Array.isArray(rawTeam)) {
+    if (rawTeam.length > 6) {
+      return NextResponse.json({ error: 'Team cannot exceed 6 members' }, { status: 400 });
+    }
+    if (!rawTeam.every((m) => typeof m === 'object' && m !== null && !Array.isArray(m))) {
+      return NextResponse.json({ error: 'Invalid team format' }, { status: 400 });
+    }
+    safeTeam = rawTeam;
+  }
+
   const { data, error } = await supabase
     .from('battle_rooms')
     .insert({
       player1_id: user.id,
-      player1_team: body.team ?? null,
+      player1_team: safeTeam,
       status: 'waiting',
     })
     .select('id, status, created_at')

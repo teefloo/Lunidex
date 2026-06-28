@@ -6,7 +6,7 @@ import { useTranslation } from '@/lib/i18n';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { useMounted } from '@/hooks/useMounted';
 
-export default function CaughtFilter() {
+export default function CaughtFilter({ className }: { className?: string }) {
   const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
   const setShowCaughtOnly = usePrimeDexStore(s => s.setShowCaughtOnly);
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ export default function CaughtFilter() {
   ];
 
   return (
-    <div className="flex bg-card/80 border border-border/60 rounded-sm p-0.5 shadow-[var(--shadow-pixel-sm)]">
+    <div className={cn("flex bg-card/80 border border-border/60 rounded-sm p-0.5 shadow-[var(--shadow-pixel-sm)]", className)}>
       {modes.map((mode) => (
         <button
           key={mode.id}
