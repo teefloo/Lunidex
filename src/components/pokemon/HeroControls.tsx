@@ -6,11 +6,7 @@ import RegionFilter from '@/components/pokemon/RegionFilter';
 import FavoriteToggle from '@/components/pokemon/FavoriteToggle';
 import CaughtFilter from '@/components/pokemon/CaughtFilter';
 import SortSelector from '@/components/pokemon/SortSelector';
-import dynamic from 'next/dynamic';
-
-const AdvancedFiltersWrapper = dynamic(() => import('@/components/pokemon/AdvancedFiltersWrapper'), {
-  ssr: false,
-});
+import AdvancedFiltersWrapper from '@/components/pokemon/AdvancedFiltersWrapper';
 
 export default function HeroControls() {
   return (

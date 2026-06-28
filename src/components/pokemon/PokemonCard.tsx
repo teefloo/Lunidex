@@ -333,7 +333,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             alt={displayName}
             fill
             unoptimized
-            sizes="(max-width: 640px) 96px, 96px"
+            sizes="(max-width: 640px) 112px, 96px"
             className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
             priority={index < 4}
             fetchPriority={index === 0 ? 'high' : undefined}

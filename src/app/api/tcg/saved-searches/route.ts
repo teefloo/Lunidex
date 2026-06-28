@@ -15,7 +15,7 @@ function isValidSavedSearch(v: unknown): v is TCGSavedSearch {
     typeof s.id === 'string' && s.id.length > 0 && s.id.length <= 128 &&
     typeof s.name === 'string' && s.name.length > 0 && s.name.length <= 100 &&
     typeof s.query === 'string' && s.query.length <= 500 &&
-    typeof s.createdAt === 'string'
+    typeof s.createdAt === 'string' && s.createdAt.length <= 64 && !isNaN(Date.parse(s.createdAt))
   );
 }
 
@@ -23,13 +23,14 @@ export async function POST(request: NextRequest) {
   const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
   const payload = await readJsonBody<{ search?: unknown }>(request);
 
-  if (!isValidSavedSearch(payload?.search)) {
+  const search = payload?.search;
+  if (!isValidSavedSearch(search)) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
   const nextState = {
     ...state,
-    savedSearches: [payload.search, ...state.savedSearches.filter((item) => item.id !== payload.search?.id)].slice(0, 20),
+    savedSearches: [search, ...state.savedSearches.filter((item) => item.id !== search.id)].slice(0, 20),
   };
 
   return persistState(nextState);

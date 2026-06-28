@@ -72,7 +72,10 @@ export async function POST(req: NextRequest) {
     if (rawTeam.length > 6) {
       return NextResponse.json({ error: 'Team cannot exceed 6 members' }, { status: 400 });
     }
-    if (!rawTeam.every((m) => typeof m === 'object' && m !== null && !Array.isArray(m))) {
+    if (!rawTeam.every(
+      (m) => typeof m === 'object' && m !== null && !Array.isArray(m) &&
+             Number.isInteger((m as Record<string, unknown>).id)
+    )) {
       return NextResponse.json({ error: 'Invalid team format' }, { status: 400 });
     }
     safeTeam = rawTeam;

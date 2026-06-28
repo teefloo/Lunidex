@@ -7,7 +7,6 @@ import {
   Heart,
   Users,
   BrainCircuit,
-  Languages,
   Shapes,
   Swords,
   Search,
@@ -157,7 +156,7 @@ export default function Header() {
   const languageLabel = mounted ? (language === 'auto' ? t('settings.auto') : language.toUpperCase()) : 'EN';
   const themeLabel = mounted
     ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
-    : t('settings.system');
+    : 'System';
   const languageOptions = useMemo(() => [
     { code: 'auto', label: t('languages.auto'), flag: '🌐' },
     { code: 'en', label: t('languages.en'), flag: '🇺🇸' },
