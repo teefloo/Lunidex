@@ -17,8 +17,7 @@ node_modules/
 !.yarn/releases
 !.yarn/versions
 
-# npm
-package-lock.json
+# npm — note: package-lock.json IS committed for reproducible installs
 npm-shrinkwrap.json
 pnpm-lock.yaml
 yarn.lock
@@ -209,6 +208,9 @@ turbo-
 /header-*.png
 /tcg-*.png
 /tcgp-logo.webp
+/favorites-page.png
+/team-page.png
+/types-page.png
 *.screenshot.png
 *.diff.png
 
@@ -223,6 +225,9 @@ turbo-
 .playwright-mcp/
 .agents/
 .memory/
+memory/
+GEMINI.md
+**/GEMINI.md
 
 # AI-generated temporary files
 *.ai.md

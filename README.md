@@ -15,7 +15,7 @@
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](./LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/teefloo/Poke?style=flat-square)](https://github.com/teefloo/Poke/stargazers)
 
-A high-performance Next.js 16 + React 19 dashboard for the entire National Pokédex: stats, types, evolutions, team building, TCG cards, and a quiz — all in 9 languages.
+A high-performance Next.js 16 + React 19 dashboard for the entire National Pokédex: stats, types, evolutions, team building, TCG cards, and a quiz — all in 8 languages.
 
 [Overview](#overview) · [Features](#features) · [Quick start](#quick-start) · [Routes](#routes) · [Architecture](#architecture) · [Data sources](#data-sources) · [Deployment](#deployment)
 
@@ -31,7 +31,7 @@ A high-performance Next.js 16 + React 19 dashboard for the entire National Poké
 
 ## Overview
 
-PrimeDex is an open-source Pokédex dashboard for competitive players, TCG collectors, and curious fans. It covers all **1,025 Pokémon** across 9 generations, with localized names, side-by-side stat comparisons, a type-coverage team builder, and a 25k+ card TCG catalog.
+PrimeDex is an open-source Pokédex dashboard for competitive players, TCG collectors, and curious fans. It covers all **1,025 Pokémon** across 9 generations, with localized names, side-by-side stat comparisons, a type-coverage team builder, and a 25k+ card TCG catalog — in 8 languages.
 
 Built on [PokéAPI](https://pokeapi.co) (REST + GraphQL) and [TCGdex](https://www.tcgdex.net), with TanStack Query for caching, Zustand for persistent UI state via IndexedDB, and Next.js App Router for server components and per-route static generation.
 
@@ -47,10 +47,13 @@ Built on [PokéAPI](https://pokeapi.co) (REST + GraphQL) and [TCGdex](https://ww
 | **Comparison Engine** | Side-by-side analysis of up to 3 Pokémon with interactive radar charts and base-stat breakdowns. |
 | **Type Chart** | Interactive coverage of all 18 types with strengths, weaknesses, resistances, and immunities. |
 | **Moves Database** | Filterable list with power, accuracy, PP, type, damage class, and detailed effect descriptions. |
+| **Battle Simulator** | Gen 9 damage formula with OHKO/2HKO chances and full AI duels. |
+| **Breeding Calculator** | IV inheritance planner with held items, natures, and suggested breeding chains. |
+| **EV / IV Calculator** | Compute effective stats from EVs, IVs, nature, and level. |
 | **TCG Catalog** | 25k+ cards searchable by set, rarity, type, stage, and HP, with collection and wishlist tracking. |
 | **Quiz** | 6 game modes: Classic, Silhouette, Stats, Time Attack, Survival, and Marathon. |
 | **Living Dex Tracker** | Persistent capture management, fully offline, stored locally in your browser. |
-| **9 Languages** | English, French, German, Spanish, Italian, Japanese, Korean, Simplified Chinese, Brazilian Portuguese. |
+| **8 Languages** | English, French, German, Spanish, Italian, Japanese, Korean, and Simplified Chinese. |
 | **Advanced Search** | Multi-dimensional filtering by generation, type, BST, egg groups, and special status. |
 | **SEO & AEO Ready** | JSON-LD schemas, `hreflang` alternates, `llms.txt` / `ai.txt`, and a generated sitemap. |
 
@@ -70,7 +73,7 @@ npm install
 npm run dev
 ```
 
-The app runs at **http://localhost:3000**. The middleware redirects `/` to your preferred locale based on the `primedex-lang` cookie or your browser's `Accept-Language` header.
+The app runs at **http://localhost:3000**. The proxy (`src/proxy.ts`) 308-redirects `/` to your preferred locale based on the `primedex-lang` cookie or your browser's `Accept-Language` header.
 
 > [!IMPORTANT]
 > `npm run dev` is pinned to `next dev --webpack` for stable HMR with the App Router and `next/dynamic` boundaries. Do not switch to Turbopack — the `next.config.ts` declaration of `turbopack.root` is intentional and must stay.
@@ -106,22 +109,28 @@ The toolbar will be served at http://localhost:4747 (CSP and `allowedDevOrigins`
 
 ## Routes
 
-All routes are locale-prefixed (`/en`, `/fr`, `/ja`…). The middleware handles 308-redirects and rewrites transparently.
+All routes are locale-prefixed (`/en`, `/fr`, `/ja`…). The proxy (`src/proxy.ts`) handles 308-redirects and rewrites transparently — the locale prefix is stripped before the App Router sees the path, so there is no `[locale]` segment in the file tree.
 
 | Path | Description |
 |:---|:---|
 | `/` | Home with hero, featured Pokémon, and the full Pokédex grid. |
 | `/pokemon/[name]` | Detail page with stats, types, evolutions, abilities, moves, and builds. |
 | `/team` | 6-slot team builder with live type coverage and synergy score. |
+| `/team/share` | Shareable read-only view of a team. |
 | `/compare` | Side-by-side comparison of up to 3 Pokémon. |
 | `/favorites` | Personal list of favorited Pokémon. |
 | `/quiz` | "Who's That Pokémon?" with 6 game modes. |
+| `/battle` | Battle simulator (Gen 9 damage formula, OHKO/2HKO, AI duels). |
+| `/breeding` | IV breeding calculator and chain planner. |
+| `/ev-iv` | EV / IV stat calculator. |
 | `/types` | Interactive type chart for all 18 types. |
-| `/moves` | Searchable moves database. |
+| `/moves` `/moves/[name]` | Searchable moves database and per-move detail. |
 | `/tcg` | Pokémon TCG catalog with set, rarity, type, and HP filters. |
 | `/tcg/cards/[id]` | Individual TCG card detail. |
-| `/tcg/collection` | Personal card collection tracker. |
+| `/tcg/collection` `/tcg/collection/[setId]` | Personal card collection tracker, overall and per set. |
 | `/tcg/wishlist` | TCG wishlist. |
+| `/dashboard` | Personal dashboard (favorites, team, collection overview). |
+| `/u/[handle]` | Public user profile. |
 | `/about` | Mission, data sources, and contact info. |
 | `/faq` | Frequently asked questions. |
 | `/cookies` `/legal` `/privacy` `/terms` | Legal pages. |
@@ -144,7 +153,7 @@ Components ──▶ TanStack Query hooks (@/lib/api) ──▶ PokéAPI REST + 
 
 ### Internationalization
 
-- **Supported locales:** `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`, `pt`.
+- **Supported locales:** `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`. (Legacy `/pt/*` URLs 308-redirect to `/en`.)
 - Client code uses `@/lib/i18n` with lazy-loaded language bundles; English is the initial bundle.
 - Server code uses `@/lib/server-i18n` with all bundles baked in for SSG/SSR.
 - Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
@@ -183,8 +192,10 @@ The app reads a small number of environment variables. **None are required for l
 |:---|:---|:---|
 | `NEXT_PUBLIC_APP_URL` | `https://primedex.vercel.app` | Canonical site URL |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | _(unset)_ | Toggle the Agentation dev toolbar |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | _(unset)_ | Google Search Console verification meta tag |
 | `NEXT_PUBLIC_SUPABASE_URL` | _(unset)_ | Supabase project URL (auth + cloud sync) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | _(unset)_ | Supabase public anon key |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | _(unset)_ | Web Push public key (TCG price alerts) |
 
 > [!TIP]
 > Copy `.env.example` to `.env.local` and fill in values as needed. When Supabase variables are empty the app runs fully local-first (IndexedDB), with no account UI.
@@ -210,11 +221,10 @@ The app reads a small number of environment variables. **None are required for l
 ```
 src/
 ├── app/                # Next.js App Router — routes live here
-│   ├── api/            # Route handlers (TCG)
-│   ├── [locale]        # Locale-prefixed routes
+│   ├── api/            # Route handlers (TCG, battle, quiz, smogon)
 │   ├── layout.tsx      # Root layout (RSC)
 │   ├── providers.tsx   # TanStack Query, theme, i18n providers
-│   └── ...
+│   └── ...             # Routes are served under a locale prefix via proxy.ts
 ├── components/         # Reusable UI (pokemon/, team/, tcg/, layout/, ui/)
 ├── lib/                # Pure TS helpers + API barrel
 │   ├── api/            # REST + GraphQL + TCG clients
@@ -224,7 +234,7 @@ src/
 ├── store/primedex.ts   # Zustand store (IDs and primitives only)
 ├── types/pokemon.ts    # Single source of truth for domain types
 ├── hooks/              # Custom React hooks
-└── middleware.ts       # Locale 308-redirects and rewrites
+└── proxy.ts            # Locale 308-redirects and rewrites (Next.js 16 proxy)
 
 public/                 # Static assets (icons, screenshots, sprite fallbacks)
 ```

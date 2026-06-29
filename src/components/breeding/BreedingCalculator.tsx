@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { getPokemonSpecies } from '@/lib/api/rest';
 import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
+import type { GraphQLPokemonSearchIndex } from '@/types/pokemon';
 import { pokemonKeys } from '@/lib/api/keys';
 import {
   type BreederPokemon,
@@ -41,7 +42,7 @@ import i18n from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // Helper function to get localized pokemon name
-const getLocalizedPokemonName = (englishName: string, pokemonList: any[] | undefined): string | null => {
+const getLocalizedPokemonName = (englishName: string, pokemonList: GraphQLPokemonSearchIndex[] | undefined): string | null => {
   if (!pokemonList) return null;
   
   const pokemon = pokemonList.find(p => p.name === englishName);
