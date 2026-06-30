@@ -221,8 +221,8 @@ export default function Header() {
                   </span>
                   <div className="h-[2px] w-7 overflow-hidden bg-foreground/15" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>
                     <div
-                      className="h-full bg-primary transition-[width] duration-700 ease-out"
-                      style={{ width: `${mounted ? progressPercent : 0}%`, willChange: mounted ? 'width' : 'auto' }}
+                      className="h-full w-full origin-left bg-primary transition-transform duration-700 ease-out"
+                      style={{ transform: `scaleX(${mounted ? progressPercent / 100 : 0})`, willChange: mounted ? 'transform' : 'auto' }}
                     />
                   </div>
                   <span className="sr-only">{mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}</span>

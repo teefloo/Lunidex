@@ -87,7 +87,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
             }}
           >
             {imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires raw <img>, not next/image
+              // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires a raw img element, not next/image
               <img
                 src={imageUrl}
                 alt={displayName}

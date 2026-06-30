@@ -335,8 +335,8 @@ export default function TeamPage() {
                         </div>
                       </div>
                       <div className="text-3xl font-black tracking-tighter">
-                        <span className={cn("text-transparent bg-clip-text bg-gradient-to-br", 
-                          synergyScore > 70 ? 'from-green-400 to-green-600' : synergyScore > 40 ? 'from-orange-400 to-orange-600' : 'from-red-400 to-red-600'
+                        <span className={cn(
+                          synergyScore > 70 ? 'text-green-600 dark:text-green-400' : synergyScore > 40 ? 'text-orange-600 dark:text-orange-400' : 'text-red-600 dark:text-red-400'
                         )}>
                           {synergyScore}%
                         </span>

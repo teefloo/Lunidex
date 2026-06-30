@@ -14,7 +14,7 @@ export default function OfflinePage() {
         alt="PrimeDex"
         width={128}
         height={128}
-        className="size-32 animate-bounce"
+        className="size-32 animate-pulse-slow"
       />
       <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">
         You&apos;re Offline

@@ -288,15 +288,15 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
       {/* TCG Collection */}
       {profile.tcgOwnedCount > 0 && (
         <div className="glass-card rounded-sm p-6 relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500/25 to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
           <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2 mb-4">
-            <Library className="h-3.5 w-3.5 text-purple-400" />
+            <Library className="h-3.5 w-3.5 text-primary" />
             {t('profile.tcg_collection', { defaultValue: 'TCG Collection' })}
           </h2>
 
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-black text-purple-400">
+            <span className="text-3xl font-black text-primary">
               {profile.tcgOwnedCount}
             </span>
             <span className="text-xs font-bold uppercase tracking-[0.12em] text-foreground/50 mb-0.5">

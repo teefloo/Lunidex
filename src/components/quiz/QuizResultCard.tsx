@@ -11,13 +11,13 @@ type GameMode = 'time-attack' | 'survival' | 'marathon';
 
 const CHALLENGE_COLORS: Record<QuizChallenge, string> = {
   classic: 'from-blue-500/20 to-blue-600/5 border-blue-500/30',
-  silhouette: 'from-purple-500/20 to-purple-600/5 border-purple-500/30',
+  silhouette: 'from-amber-500/20 to-amber-600/5 border-amber-500/30',
   stats: 'from-emerald-500/20 to-emerald-600/5 border-emerald-500/30',
 };
 
 const CHALLENGE_DOT: Record<QuizChallenge, string> = {
   classic: 'bg-blue-500',
-  silhouette: 'bg-purple-500',
+  silhouette: 'bg-amber-500',
   stats: 'bg-emerald-500',
 };
 

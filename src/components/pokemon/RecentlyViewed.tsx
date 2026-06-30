@@ -38,9 +38,9 @@ export default function RecentlyViewed() {
       </div>
       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
         {history.map((p, idx) => (
-          <Link key={`${p.id}-${idx}`} href={`/pokemon/${p.name}`}>
+          <Link key={`${p.id}-${idx}`} href={`/pokemon/${p.name}`} className="group block min-w-0">
             <div
-              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
+              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 w-full min-w-0 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
             >
               <div className="relative w-10 h-10">
                 <Image
@@ -53,7 +53,7 @@ export default function RecentlyViewed() {
                   unoptimized
                 />
               </div>
-              <div className="space-y-0.5 w-full">
+              <div className="space-y-0.5 w-full min-w-0">
                 <p className="font-mono text-[8px] font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase">
                   {formatId(p.id)}
                 </p>

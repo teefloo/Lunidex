@@ -169,7 +169,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 }}
               >
                 {pokemon && spriteUrl(pokemon) ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires raw <img>, not next/image
+                  // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires a raw img element, not next/image
                   <img
                     src={spriteUrl(pokemon)}
                     alt={pokemon.name}

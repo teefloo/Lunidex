@@ -239,12 +239,19 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const isLegendary = pokemon.is_legendary;
   const isMythical = pokemon.is_mythical;
 
+  const handleToggleCaught = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (pokemon.id) toggleCaught(pokemon.id);
+  };
+
   return (
-    <Link
-      href={`/pokemon/${name}`}
-      className="group/specimen relative block h-full py-1 px-1 outline-none sm:px-2 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
-      onMouseEnter={prefetchDetails}
-    >
+    <div className="group/specimen relative h-full py-1 px-1 sm:px-2">
+      <Link
+        href={`/pokemon/${name}`}
+        className="relative block h-full outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+        onMouseEnter={prefetchDetails}
+      >
       <article
         className="relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
@@ -380,24 +387,22 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (pokemon.id) toggleCaught(pokemon.id);
-          }}
-          className={cn(
-            'absolute bottom-1 right-1.5 z-20 flex h-11 w-11 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-1 sm:right-2',
-            caught
-              ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
-              : 'border-foreground/20 bg-background/65 text-muted-foreground hover:border-foreground/40 hover:text-foreground'
-          )}
-          aria-label={caught ? t('card.caught') : t('card.mark_caught')}
-        >
-          <PokeballIcon className={cn('h-5 w-5 sm:h-5 sm:w-5', caught ? 'text-primary-foreground' : 'text-muted-foreground')} />
-        </button>
       </article>
     </Link>
+
+      <button
+        type="button"
+        onClick={handleToggleCaught}
+        className={cn(
+          'absolute bottom-2 right-2.5 z-20 flex h-11 w-11 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-2 sm:right-3',
+          caught
+            ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
+            : 'border-foreground/20 bg-background/65 text-muted-foreground hover:border-foreground/40 hover:text-foreground'
+        )}
+        aria-label={caught ? t('card.caught') : t('card.mark_caught')}
+      >
+        <PokeballIcon className={cn('h-5 w-5', caught ? 'text-primary-foreground' : 'text-muted-foreground')} />
+      </button>
+    </div>
   );
 });

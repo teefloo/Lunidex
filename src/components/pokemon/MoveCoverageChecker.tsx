@@ -123,12 +123,11 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
           </div>
           <div className="ml-auto text-3xl font-black">
             <span className={cn(
-              "text-transparent bg-clip-text bg-gradient-to-br",
               coverage.uncoveredTypes.length === 0
-                ? 'from-green-400 to-green-600'
+                ? 'text-green-600 dark:text-green-400'
                 : coverage.uncoveredTypes.length <= 3
-                ? 'from-yellow-400 to-yellow-600'
-                : 'from-red-400 to-red-600'
+                ? 'text-yellow-600 dark:text-yellow-400'
+                : 'text-red-600 dark:text-red-400'
             )}>
               {Math.round((coverage.coveredTypes.length / 18) * 100)}%
             </span>

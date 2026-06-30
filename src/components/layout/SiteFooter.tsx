@@ -90,7 +90,7 @@ export default async function SiteFooter() {
           ))}
         </nav>
 
-        <p className="mt-6 text-[11px] text-muted-foreground max-w-3xl">
+        <p className="mt-6 max-w-[65ch] text-[11px] leading-relaxed text-muted-foreground">
           {t('footer.disclaimer.text')}
         </p>
       </div>

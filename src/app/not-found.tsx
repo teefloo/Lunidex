@@ -27,7 +27,7 @@ export default async function NotFound() {
         <NotFoundMiniGame />
 
         <section className="section-frame mx-auto flex w-full max-w-2xl flex-col items-center px-6 py-10 text-center md:px-8 md:py-12 lg:justify-center lg:px-10">
-          <div className="mb-4 text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary via-orange-400 to-amber-300 md:text-8xl">
+          <div className="mb-4 text-7xl font-black text-primary md:text-8xl">
             404
           </div>
           <p className="page-eyebrow justify-center">PrimeDex</p>
