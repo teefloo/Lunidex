@@ -162,10 +162,15 @@ export async function generateMetadata(
 
 export async function generateStaticParams() {
   // Pre-render first 151 pokemons for better SEO and performance
-  const pokemonList = await getAllPokemonNames();
-  return pokemonList.slice(0, 151).map((pokemon) => ({
-    name: pokemon.name,
-  }));
+  try {
+    const pokemonList = await getAllPokemonNames();
+    return pokemonList.slice(0, 151).map((pokemon) => ({
+      name: pokemon.name,
+    }));
+  } catch (error) {
+    console.warn('generateStaticParams: failed to fetch pokemon list, falling back to on-demand rendering', error);
+    return [];
+  }
 }
 
 export default async function PokemonPage({ params, searchParams }: Props) {

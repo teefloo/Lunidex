@@ -38,7 +38,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
   const lastmod = new Date();
 
-  const pokemonList = await getAllPokemonNames();
+  let pokemonList: { name: string; url: string }[] = [];
+  try {
+    pokemonList = await getAllPokemonNames();
+  } catch (error) {
+    console.warn('sitemap: failed to fetch pokemon list, generating static routes only', error);
+  }
 
   const pokemonUrls: MetadataRoute.Sitemap = pokemonList.map((pokemon) => {
     const id = pokemon.url.split('/').filter(Boolean).pop();

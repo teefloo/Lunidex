@@ -34,11 +34,6 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function formatPrice(value: number | null | undefined): string {
-  if (value == null) return '—';
-  return `$${value.toFixed(2)}`;
-}
-
 function toChartData(history: PriceHistoryEntry[]) {
   return history.map((entry) => ({
     date: formatDate(entry.recorded_at),

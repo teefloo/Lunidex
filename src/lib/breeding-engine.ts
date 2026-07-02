@@ -261,7 +261,6 @@ export function getIvBreakdown(
   p1HeldItem?: HeldBreedItem,
   p2HeldItem?: HeldBreedItem,
 ): IVSlotResult[] {
-  const inheritedCount = hasDestinyKnot ? 5 : 3;
   const results: IVSlotResult[] = [];
 
   for (const stat of IV_STATS) {

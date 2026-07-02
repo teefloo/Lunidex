@@ -65,9 +65,18 @@ export const getAllPokemonNames = async (): Promise<{ name: string; url: string 
   const cached = await getCachedData<{ name: string; url: string }[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await apiClient.get<PokemonListResponse>('/pokemon?limit=2000');
-  await setCachedData(cacheKey, data.results);
-  return data.results;
+  try {
+    const { data } = await apiClient.get<PokemonListResponse>('/pokemon?limit=2000', {
+      timeout: 30000,
+      'axios-retry': { retries: 3 },
+    });
+    await setCachedData(cacheKey, data.results);
+    return data.results;
+  } catch (error) {
+    const stale = await getCachedData<{ name: string; url: string }[]>(cacheKey, true);
+    if (stale) return stale;
+    throw error;
+  }
 };
 
 export const getPokemonByGeneration = async (id: string): Promise<{ name: string; url: string }[]> => {

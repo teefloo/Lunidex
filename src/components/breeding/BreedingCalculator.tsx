@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -121,7 +121,7 @@ const results = useMemo(() => {
        .slice(0, 8);
    }, [query, allPokemon]);
 
-  const handleSelect = useCallback(async (name: string, id: number) => {
+  const handleSelect = useCallback(async (name: string) => {
     try {
       const species = await getPokemonSpecies(name);
       const genderRate = species.gender_rate;
@@ -219,7 +219,7 @@ const results = useMemo(() => {
                    <button
                      key={p.id}
                      type="button"
-                     onMouseDown={() => handleSelect(p.name, p.id)}
+                     onMouseDown={() => handleSelect(p.name)}
                      className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
                    >
                      <Image
@@ -342,21 +342,21 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
   const [p2Gender, setP2Gender] = useState<'male' | 'female' | 'genderless'>('male');
 
   // Build effective parents
-  const effectiveP1: BreederPokemon | null = parent1 ? {
+  const effectiveP1: BreederPokemon | null = useMemo(() => parent1 ? {
     ...parent1,
     ivs: p1IVs,
     heldItem: p1Item,
     nature: p1Nature,
     gender: parent1.isGenderless ? 'genderless' : p1Gender,
-  } : null;
+  } : null, [parent1, p1IVs, p1Item, p1Nature, p1Gender]);
 
-  const effectiveP2: BreederPokemon | null = parent2 ? {
+  const effectiveP2: BreederPokemon | null = useMemo(() => parent2 ? {
     ...parent2,
     ivs: p2IVs,
     heldItem: p2Item,
     nature: p2Nature,
     gender: parent2.isGenderless ? 'genderless' : p2Gender,
-  } : null;
+  } : null, [parent2, p2IVs, p2Item, p2Nature, p2Gender]);
 
   // Real-time compatibility
   const compatibility = useMemo(() => {
@@ -381,6 +381,40 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
     setP2Nature(p.nature as Nature);
     setP2Gender(p.gender === 'genderless' ? 'genderless' : 'male');
   };
+
+  useEffect(() => {
+    if (!initialPokemon) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const species = await getPokemonSpecies(initialPokemon);
+        if (cancelled) return;
+        const genderRate = species.gender_rate;
+        handleParent1Select({
+          name: initialPokemon,
+          ivs: { hp: 31, atk: 31, def: 31, spa: 0, spd: 31, spe: 31 },
+          nature: 'jolly',
+          gender: genderRate === -1 ? 'genderless' : 'female',
+          eggGroups: species.egg_groups.map(g => g.name),
+          isGenderless: genderRate === -1,
+          isDitto: initialPokemon === 'ditto',
+          isLegendary: species.is_legendary,
+          isMythical: species.is_mythical,
+        });
+      } catch {
+        if (cancelled) return;
+        handleParent1Select({
+          name: initialPokemon,
+          ivs: { hp: 31, atk: 31, def: 31, spa: 0, spd: 31, spe: 31 },
+          nature: 'jolly',
+          gender: 'female',
+          eggGroups: [],
+          isDitto: initialPokemon === 'ditto',
+        });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [initialPokemon]);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

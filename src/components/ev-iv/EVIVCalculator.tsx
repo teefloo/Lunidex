@@ -115,7 +115,6 @@ export default function EVIVCalculator() {
   const [actualStats, setActualStats]   = useState<BaseStats>({ ...DEFAULT_STATS });
   const [evs, setEvs]                   = useState<BaseStats>({ ...DEFAULT_EVS });
   const [results, setResults]           = useState<Record<StatKey, IVRange> | null>(null);
-  const [error, setError]               = useState('');
 
   const { data: baseStats, isFetching, isError } = useQuery({
     queryKey: ['pokemon-base-stats', pokemonName],
@@ -129,7 +128,6 @@ export default function EVIVCalculator() {
     const trimmed = pokemonInput.trim();
     if (!trimmed) return;
     setResults(null);
-    setError('');
     setPokemonName(trimmed);
   };
 
@@ -288,7 +286,6 @@ export default function EVIVCalculator() {
             setActualStats({ ...DEFAULT_STATS });
             setEvs({ ...DEFAULT_EVS });
             setResults(null);
-            setError('');
           }}
           className="h-11 px-4 rounded-sm border-border/60 font-bold uppercase tracking-widest text-xs"
         >

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
@@ -46,8 +47,11 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
       <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
       <link rel="preload" href="/pokemon-cards/css/all-cards.css" as="style" />
       {/* Non-blocking CSS: load as print, then swap to all once fetched.
-          Inline script keeps this working in a server component (no client handler). */}
-      <script
+          next/script (not a raw <script> tag) so it still runs after a
+          client-side navigation into /tcg, not just on a full page load. */}
+      <Script
+        id="tcg-cards-css-loader"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='/pokemon-cards/css/all-cards.css';l.media='print';l.onload=function(){this.media='all';};document.head.appendChild(l);})();`,
         }}

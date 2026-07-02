@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { Egg, Dna } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
+import { Egg, Dna, Search } from 'lucide-react';
 import { BreedingCalculator } from '@/components/breeding/BreedingCalculator';
 import { EggMoveExplorer } from '@/components/breeding/EggMoveExplorer';
+import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
+import { pokemonKeys } from '@/lib/api/keys';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import i18n from '@/lib/i18n';
 
 interface BreedingPageClientProps {
   initialPokemon?: string;
@@ -21,6 +26,35 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
   );
   const [explorerPokemon, setExplorerPokemon] = useState(initialPokemon ?? '');
   const [explorerInput, setExplorerInput] = useState(initialPokemon ?? '');
+  const [explorerOpen, setExplorerOpen] = useState(false);
+
+  const { data: explorerAllPokemon } = useQuery({
+    queryKey: pokemonKeys.allSearchIndex(),
+    queryFn: getAllPokemonSearchIndex,
+    staleTime: 24 * 60 * 60 * 1000,
+    enabled: explorerOpen || explorerInput.length > 0,
+  });
+
+  const explorerResults = useMemo(() => {
+    if (!explorerInput.trim() || !explorerAllPokemon) return [];
+    const q = explorerInput.toLowerCase();
+    return explorerAllPokemon
+      .filter(p => {
+        if (p.name.toLowerCase().includes(q)) return true;
+        const species = p.pokemon_v2_pokemonspecy;
+        if (species?.pokemon_v2_pokemonspeciesnames) {
+          return species.pokemon_v2_pokemonspeciesnames.some(nameObj => nameObj.name.toLowerCase().includes(q));
+        }
+        return String(p.id).includes(q);
+      })
+      .slice(0, 8);
+  }, [explorerInput, explorerAllPokemon]);
+
+  const selectExplorerPokemon = (name: string) => {
+    setExplorerPokemon(name);
+    setExplorerInput(name);
+    setExplorerOpen(false);
+  };
 
   const TABS = [
     { id: 'calculator' as TabId, label: t('breeding.tab_calculator'), icon: Dna },
@@ -80,15 +114,50 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
               <Egg className="h-12 w-12 text-foreground/15" />
               <div className="w-full max-w-sm space-y-3 text-center">
                 <p className="text-sm font-bold text-foreground/50">{t('breeding.egg_move_prompt')}</p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={explorerInput}
-                    onChange={e => setExplorerInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && explorerInput && setExplorerPokemon(explorerInput.toLowerCase().trim())}
-                    placeholder={t('breeding.egg_move_placeholder')}
-                    className="flex-1 px-3 h-10 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                  />
+                <div className="relative flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />
+                    <input
+                      type="text"
+                      value={explorerInput}
+                      onChange={e => { setExplorerInput(e.target.value); setExplorerOpen(true); }}
+                      onFocus={() => setExplorerOpen(true)}
+                      onBlur={() => setTimeout(() => setExplorerOpen(false), 150)}
+                      onKeyDown={e => e.key === 'Enter' && explorerInput && setExplorerPokemon(explorerInput.toLowerCase().trim())}
+                      placeholder={t('breeding.egg_move_placeholder')}
+                      className="w-full pl-9 pr-3 h-10 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                    />
+                    {explorerOpen && explorerResults.length > 0 && (
+                      <div className="absolute z-50 top-full mt-1 w-full rounded-sm border border-border/60 bg-card shadow-lg overflow-hidden text-left">
+                        {explorerResults.map(p => {
+                          const currentLang = i18n.language || 'en';
+                          const localizedNameObj = p.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames
+                            .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
+                          const displayName = localizedNameObj?.name || p.name;
+
+                          return (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onMouseDown={() => selectExplorerPokemon(p.name)}
+                              className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
+                            >
+                              <Image
+                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
+                                alt={displayName}
+                                width={32}
+                                height={32}
+                                className="object-contain"
+                                unoptimized
+                              />
+                              <span className="font-semibold text-sm capitalize text-foreground/85">{displayName}</span>
+                              <span className="ml-auto font-mono text-[10px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                   <button
                     type="button"
                     disabled={!explorerInput.trim()}
