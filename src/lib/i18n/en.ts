@@ -1751,6 +1751,8 @@ export default {
     },
     breeding: {
       title: 'Breeding Calculator',
+      meta_title: 'Breeding Calculator',
+      meta_description: 'Calculate IV inheritance probability, egg moves, and optimal breeding chains for any Pokémon. Gen 6+ Destiny Knot & Everstone mechanics.',
       subtitle: 'Gen 6+ rules — Destiny Knot, Everstone, Power Items. Compatible with Gen 9 Picnic Breeding.',
       tab_calculator: 'IV Calculator',
       tab_egg_moves: 'Egg Move Explorer',

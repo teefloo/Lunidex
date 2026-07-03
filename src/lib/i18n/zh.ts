@@ -1757,6 +1757,8 @@ export default {
     },
     breeding: {
       title: '培育计算器',
+      meta_title: '培育计算器',
+      meta_description: '计算任意宝可梦的个体值遗传概率、遗传技能和最佳培育链。支持第6代以上的红线与永恒之石机制。',
       subtitle: '第6代以上规则 — 红线、永恒之石、力量道具。支持第9代野餐培育。',
       tab_calculator: 'IV计算器',
       tab_egg_moves: '遗传技能探索器',

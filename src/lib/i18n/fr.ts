@@ -1752,6 +1752,8 @@ export default {
     },
     breeding: {
       title: 'Calculateur d\'Élevage',
+      meta_title: 'Calculateur d\'Élevage',
+      meta_description: 'Calculez la probabilité d\'héritage des CVs, les capacités œuf et les chaînes d\'élevage optimales pour n\'importe quel Pokémon. Mécaniques Nœud Câlin et Pierre Immobile de la Gen 6+.',
       subtitle: 'Règles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l\'Élevage Pique-Nique Gen 9.',
       tab_calculator: 'Calculateur de CVs',
       tab_egg_moves: 'Explorateur Capacités Œuf',

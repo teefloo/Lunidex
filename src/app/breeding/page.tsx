@@ -7,7 +7,7 @@ import { BreedingPageClient } from './BreedingPageClient';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('breeding.meta_title') || 'Breeding Calculator | PrimeDex';
+  const title = t('breeding.meta_title') || 'Breeding Calculator';
   const description = t('breeding.meta_description') || 'Calculate IV inheritance probability, egg moves, and optimal breeding chains for any Pokémon. Gen 6+ Destiny Knot & Everstone mechanics.';
   return {
     title,

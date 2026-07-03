@@ -1752,6 +1752,8 @@ export default {
     },
     breeding: {
       title: 'Zucht-Rechner',
+      meta_title: 'Zucht-Rechner',
+      meta_description: 'Berechne die Vererbungswahrscheinlichkeit von WP-Werten, Ei-Attacken und optimale Zuchtketten für jedes Pokémon. Gen 6+ Liebesknoten- und Ewigstein-Mechaniken.',
       subtitle: 'Gen 6+ Regeln — Liebesknoten, Ewigstein, Kraft-Items. Kompatibel mit Gen 9 Picknick-Zucht.',
       tab_calculator: 'IV-Rechner',
       tab_egg_moves: 'Ei-Attacken-Explorer',

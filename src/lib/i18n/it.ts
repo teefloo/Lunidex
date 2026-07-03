@@ -1756,6 +1756,8 @@ export default {
     },
     breeding: {
       title: 'Calcolatore di Allevamento',
+      meta_title: 'Calcolatore di Allevamento',
+      meta_description: 'Calcola la probabilità di ereditarietà degli IV, le mosse uovo e le catene di allevamento ottimali per qualsiasi Pokémon. Meccaniche Filo d\'Amore e Pietraeterna di Gen 6+.',
       subtitle: 'Regole Gen 6+ — Filo d\'Amore, Pietraeterna, Oggetti Potere. Compatibile con l\'Allevamento Picnic Gen 9.',
       tab_calculator: 'Calcolatore IV',
       tab_egg_moves: 'Esplora Mosse Uovo',

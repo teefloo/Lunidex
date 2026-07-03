@@ -1756,6 +1756,8 @@ export default {
     },
     breeding: {
       title: 'Calculadora de Cría',
+      meta_title: 'Calculadora de Cría',
+      meta_description: 'Calcula la probabilidad de herencia de IVs, movimientos huevo y cadenas de cría óptimas para cualquier Pokémon. Mecánicas de Hilo de Amor y Piedra Perenne de Gen 6+.',
       subtitle: 'Reglas de Gen 6+ — Hilo de Amor, Piedra Perenne, Objetos Poder. Compatible con la Cría de Picnic de Gen 9.',
       tab_calculator: 'Calculadora de IVs',
       tab_egg_moves: 'Explorador de Movimientos Huevo',

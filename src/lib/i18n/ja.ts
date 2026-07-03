@@ -1756,6 +1756,8 @@ export default {
     },
     breeding: {
       title: '育成計算機',
+      meta_title: '育成計算機',
+      meta_description: '任意のポケモンの個体値遺伝確率、タマゴ技、最適な育成チェーンを計算。第6世代以降のひかりのこな・かわらずのいしのメカニクスに対応。',
       subtitle: '第6世代以降のルール — ひかりのこな、かわらずのいし、パワー系アイテム。第9世代のピクニック育成にも対応。',
       tab_calculator: 'IV計算機',
       tab_egg_moves: 'タマゴわざ検索',

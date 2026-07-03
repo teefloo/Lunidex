@@ -1756,6 +1756,8 @@ export default {
     },
     breeding: {
       title: '교배 계산기',
+      meta_title: '교배 계산기',
+      meta_description: '모든 포켓몬의 개체값 유전 확률, 알 기술, 최적의 교배 체인을 계산하세요. 6세대 이상 빨간실 및 영원의돌 메커니즘 지원.',
       subtitle: '6세대+ 규칙 — 빨간실, 영원의돌, 파워 아이템. 9세대 피크닉 교배 지원.',
       tab_calculator: 'IV 계산기',
       tab_egg_moves: '알 기술 탐색기',
