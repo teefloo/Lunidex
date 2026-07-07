@@ -16,7 +16,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
   const currentLang = await getServerLanguage();
-  const fallbackTitle = 'TCG Card - PrimeDex';
+  const fallbackTitle = 'TCG Card | PrimeDex';
   const fallbackDesc = 'Pokemon TCG card details.';
 
   if (!card) {

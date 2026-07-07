@@ -71,7 +71,8 @@ export async function generateMetadata(
     const description = normalizeDescription(flavorTexts[0]?.flavor_text);
 
     const dexNumber = `#${String(pokemon.id).padStart(3, '0')}`;
-    const title = `${displayName} | PrimeDex`;
+    const title = displayName;
+    const socialTitle = `${displayName} | PrimeDex`;
     const seoDescription = description || `Detailed information about ${displayName}, including stats, abilities, types, and evolutions.`;
 
     const ogImageUrl = `/api/og/pokemon?name=${encodeURIComponent(name)}&lang=${lang}`;
@@ -89,7 +90,7 @@ export async function generateMetadata(
         },
       },
       openGraph: {
-        title,
+        title: socialTitle,
         description: seoDescription,
         type: 'article',
         url: `/${lang}/pokemon/${name}`,
@@ -112,7 +113,7 @@ export async function generateMetadata(
       },
       twitter: {
         card: 'summary_large_image',
-        title,
+        title: socialTitle,
         description: seoDescription,
         images: [ogImageUrl],
       },
@@ -155,7 +156,7 @@ export async function generateMetadata(
     };
   } catch {
     return {
-      title: 'Pokemon Not Found | PrimeDex',
+      title: 'Pokemon Not Found',
     };
   }
 }

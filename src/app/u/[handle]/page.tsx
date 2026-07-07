@@ -22,12 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const profile = await getPublicProfileByHandle(handle);
   if (!profile) {
     return {
-      title: t('profile.not_found_title', { defaultValue: 'Profile Not Found' }) + ' | PrimeDex',
+      title: t('profile.not_found_title', { defaultValue: 'Profile Not Found' }),
       robots: { index: false, follow: true },
     };
   }
 
-  const title = `${profile.displayName} (@${profile.handle}) — PrimeDex`;
+  const title = `${profile.displayName} (@${profile.handle})`;
   const description = t('profile.meta_description', {
     defaultValue: `${profile.displayName}'s PrimeDex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught, ${profile.unlockedBadges.length} badges unlocked.`,
     name: profile.displayName,

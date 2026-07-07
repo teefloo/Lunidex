@@ -8,8 +8,8 @@ import EVIVPageClient from './EVIVPageClient';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('eviv.meta_title') || 'EV/IV Calculator — Competitive Stat Tool | PrimeDex';
-  const description = t('eviv.meta_description') || 'Calculate the exact IV range for any Pokémon from in-game stats, and plan the perfect EV spread at level 50 or 100.';
+  const title = t('ev_iv.meta_title');
+  const description = t('ev_iv.meta_description');
   return {
     title,
     description,
