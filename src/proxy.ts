@@ -29,7 +29,18 @@ export function proxy(request: NextRequest) {
     // server-side `searchParams` readers (OG image routes, share pages) lose it.
     const rewriteUrl = new URL(finalPath, request.url);
     rewriteUrl.search = request.nextUrl.search;
-    const response = NextResponse.rewrite(rewriteUrl);
+
+    // Forward the URL's locale as a request header so this exact render uses
+    // it immediately. The Set-Cookie below only affects *future* requests —
+    // without this header, a first visit to a localized URL (or any crawler
+    // that doesn't carry the cookie) would render in the cookie's/default
+    // language while the canonical/hreflang tags claim `urlLocale`.
+    const forwardedHeaders = new Headers(request.headers);
+    forwardedHeaders.set('x-primedex-lang', urlLocale);
+
+    const response = NextResponse.rewrite(rewriteUrl, {
+      request: { headers: forwardedHeaders },
+    });
     if (cookieLang !== urlLocale) {
       response.cookies.set(COOKIE_NAME, urlLocale, {
         path: '/',

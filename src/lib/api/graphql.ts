@@ -1,6 +1,6 @@
 ﻿import { graphqlClient } from './client';
 import { getCachedData, setCachedData } from './cache';
-import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData } from '@/types/pokemon';
+import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData, GraphQLItemData } from '@/types/pokemon';
 
 const BATCH_SIZE = 200;
 const SEARCH_BATCH_SIZE = 250;
@@ -636,6 +636,104 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
     return results;
   } catch (error) {
     const cached = await getCachedData<GraphQLAbilityPokemonData[]>(cacheKey, true);
+    if (cached) return cached;
+    throw error;
+  }
+};
+
+export const getAllItems = async (languageId: number): Promise<GraphQLItemData[]> => {
+  const cacheKey = `all-items-v1-${languageId}`;
+  const cached = await getCachedData<GraphQLItemData[]>(cacheKey, true);
+  if (cached) return cached;
+
+  try {
+    const query = `
+      query GetAllItems($languageId: Int!) {
+        pokemon_v2_item(
+          limit: 2000
+          order_by: {id: asc}
+          where: {pokemon_v2_itemcategory: {id: {_is_null: false}}, pokemon_v2_itemnames: {language_id: {_eq: $languageId}}}
+        ) {
+          id
+          name
+          cost
+          pokemon_v2_itemcategory {
+            name
+          }
+          pokemon_v2_itemnames(where: {language_id: {_eq: $languageId}}) {
+            name
+          }
+          pokemon_v2_itemeffecttexts(where: {language_id: {_eq: $languageId}}) {
+            effect
+            short_effect
+          }
+          pokemon_v2_itemflavortexts(where: {language_id: {_eq: $languageId}}, limit: 1) {
+            flavor_text
+          }
+        }
+      }
+    `;
+
+    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
+      query,
+      variables: { languageId },
+    });
+
+    if (!data?.data?.pokemon_v2_item) {
+      throw new Error(`Invalid GraphQL response in getAllItems: ${describeGraphQLResponse(data)}`);
+    }
+
+    const results = data.data.pokemon_v2_item;
+    await setCachedData(cacheKey, results);
+    return results;
+  } catch (error) {
+    const cached = await getCachedData<GraphQLItemData[]>(cacheKey, true);
+    if (cached) return cached;
+    throw error;
+  }
+};
+
+export const getItemDetail = async (name: string, languageId: number): Promise<GraphQLItemData | null> => {
+  const cacheKey = `item-detail-v1-${name}-${languageId}`;
+  const cached = await getCachedData<GraphQLItemData>(cacheKey, true);
+  if (cached) return cached;
+
+  try {
+    const query = `
+      query GetItemDetail($name: String!, $languageId: Int!) {
+        pokemon_v2_item(where: {name: {_eq: $name}}) {
+          id
+          name
+          cost
+          pokemon_v2_itemcategory {
+            name
+          }
+          pokemon_v2_itemnames(where: {language_id: {_eq: $languageId}}) {
+            name
+          }
+          pokemon_v2_itemeffecttexts(where: {language_id: {_eq: $languageId}}) {
+            effect
+            short_effect
+          }
+          pokemon_v2_itemflavortexts(where: {language_id: {_eq: $languageId}}, limit: 1) {
+            flavor_text
+          }
+        }
+      }
+    `;
+
+    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
+      query,
+      variables: { name, languageId },
+    });
+
+    const result = data?.data?.pokemon_v2_item?.[0];
+    if (!result) return null;
+
+    await setCachedData(cacheKey, result);
+    return result;
+  } catch (error) {
+    const cached = await getCachedData<GraphQLItemData>(cacheKey, true);
     if (cached) return cached;
     throw error;
   }

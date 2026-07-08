@@ -15,6 +15,8 @@ import {
   LayoutGrid,
   Egg,
   Shield,
+  Package,
+  Sparkles,
 } from 'lucide-react';
 import { useEffect, useMemo, useState, useRef, useCallback, Fragment, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
@@ -53,6 +55,8 @@ const NAV_ITEMS = [
   { path: '/tcg',      icon: LayoutGrid,      labelKey: 'nav.tcg',      fallback: 'TCG Catalog'  },
   { path: '/types',    icon: Shapes,          labelKey: 'nav.types',    fallback: 'Types'        },
   { path: '/moves',    icon: Swords,          labelKey: 'nav.moves',    fallback: 'Moves'        },
+  { path: '/items',    icon: Package,         labelKey: 'nav.items',    fallback: 'Items'        },
+  { path: '/abilities', icon: Sparkles,       labelKey: 'nav.abilities', fallback: 'Abilities'   },
   { path: '/quiz',     icon: BrainCircuit,    labelKey: 'nav.quiz',     fallback: 'Quiz'         },
   { path: '/battle',   icon: Shield,          labelKey: 'nav.battle',   fallback: 'Battle'       },
   { path: '/breeding', icon: Egg,             labelKey: 'nav.breeding', fallback: 'Breeding'     },

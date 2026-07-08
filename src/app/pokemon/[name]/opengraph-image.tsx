@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 

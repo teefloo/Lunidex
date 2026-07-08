@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
-import NotFoundMiniGame from '@/components/layout/NotFoundMiniGame';
+import NotFoundMiniGame from '@/components/layout/NotFoundMiniGameLazy';
 import { getServerT } from '@/lib/server-i18n';
 import '@/styles/not-found.css';
 

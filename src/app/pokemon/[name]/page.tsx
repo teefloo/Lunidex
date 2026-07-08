@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
-import { getAllPokemonNames, getPokemonDetail, getPokemonSpecies, getLocalizedPokemonData, getPokemonEncounters } from '@/lib/api';
+import { getAllPokemonNames, getPokemonEncounters } from '@/lib/api';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
@@ -162,10 +163,11 @@ export async function generateMetadata(
 }
 
 export async function generateStaticParams() {
-  // Pre-render first 151 pokemons for better SEO and performance
+  // Pre-render the full National Dex (1025) for SEO/perf; regional forms and
+  // other variants past the base dex stay on-demand via `dynamicParams`.
   try {
     const pokemonList = await getAllPokemonNames();
-    return pokemonList.slice(0, 151).map((pokemon) => ({
+    return pokemonList.slice(0, 1025).map((pokemon) => ({
       name: pokemon.name,
     }));
   } catch (error) {

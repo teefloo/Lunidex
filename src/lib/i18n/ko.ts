@@ -135,21 +135,25 @@ export default {
       privacy: {
         nav_label: '개인정보 처리방침',
         title: '개인정보 처리방침',
+        meta_title: '개인정보 처리방침',
         meta_description: 'PrimeDex의 개인정보 처리방침',
       },
       terms: {
         nav_label: '이용약관',
         title: '이용약관',
+        meta_title: '이용약관',
         meta_description: 'PrimeDex의 이용약관',
       },
       legal_notice: {
         nav_label: '법적 고지',
         title: '법적 고지',
+        meta_title: '법적 고지',
         meta_description: 'PrimeDex의 법적 고지',
       },
       cookies: {
         nav_label: '쿠키 정책',
         title: '쿠키 정책',
+        meta_title: '쿠키 정책',
         meta_description: 'PrimeDex의 쿠키 정책',
       },
       banner: {

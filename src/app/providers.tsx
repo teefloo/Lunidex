@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
@@ -95,17 +96,19 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ThemeProvider>
-          <GenThemeProvider>
-            <TooltipProvider>
-              <SupabaseSyncBridge />
-              {children}
-              <SettingsModal />
-            </TooltipProvider>
-          </GenThemeProvider>
-        </ThemeProvider>
-      </AuthProvider>
+      <MotionConfig reducedMotion="user">
+        <AuthProvider>
+          <ThemeProvider>
+            <GenThemeProvider>
+              <TooltipProvider>
+                <SupabaseSyncBridge />
+                {children}
+                <SettingsModal />
+              </TooltipProvider>
+            </GenThemeProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </MotionConfig>
     </QueryClientProvider>
   );
 }

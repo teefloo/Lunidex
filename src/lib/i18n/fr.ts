@@ -135,21 +135,25 @@ export default {
       privacy: {
         nav_label: 'Confidentialité',
         title: 'Politique de confidentialité',
+        meta_title: 'Politique de confidentialité',
         meta_description: 'Politique de confidentialité de PrimeDex : données collectées, finalités, durées de conservation et vos droits RGPD/CCPA.',
       },
       terms: {
         nav_label: 'CGU',
         title: "Conditions générales d'utilisation",
+        meta_title: "Conditions générales d'utilisation",
         meta_description: "Conditions générales d'utilisation de PrimeDex : règles d'usage, propriété intellectuelle, responsabilité et droit applicable.",
       },
       legal_notice: {
         nav_label: 'Mentions légales',
         title: 'Mentions légales',
+        meta_title: 'Mentions légales',
         meta_description: "Mentions légales de PrimeDex conformément à l'article 6 de la LCEN : éditeur, hébergeur, activité.",
       },
       cookies: {
         nav_label: 'Cookies',
         title: 'Politique de cookies',
+        meta_title: 'Politique de cookies',
         meta_description: 'Politique de cookies de PrimeDex : inventaire des cookies, finalités, durées et gestion.',
       },
       banner: {

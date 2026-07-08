@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/server-i18n';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';

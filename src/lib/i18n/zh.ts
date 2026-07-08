@@ -135,21 +135,25 @@ export default {
       privacy: {
         nav_label: '隐私政策',
         title: '隐私政策',
+        meta_title: '隐私政策',
         meta_description: 'PrimeDex 的隐私政策',
       },
       terms: {
         nav_label: '服务条款',
         title: '服务条款',
+        meta_title: '服务条款',
         meta_description: 'PrimeDex 的服务条款',
       },
       legal_notice: {
         nav_label: '法律声明',
         title: '法律声明',
+        meta_title: '法律声明',
         meta_description: 'PrimeDex 的法律声明',
       },
       cookies: {
         nav_label: 'Cookie 政策',
         title: 'Cookie 政策',
+        meta_title: 'Cookie 政策',
         meta_description: 'PrimeDex 的 Cookie 政策',
       },
       banner: {

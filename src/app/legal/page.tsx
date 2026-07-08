@@ -3,8 +3,7 @@ import Header from '@/components/layout/Header';
 import LegalDocumentView from '@/components/legal/LegalDocumentView';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages } from '@/lib/seo';
-import { enLegal } from '@/lib/i18n/legal/en';
-import { frLegal } from '@/lib/i18n/legal/fr';
+import { getLegalDocuments } from '@/lib/i18n/legal';
 import type { LegalDocument } from '@/lib/i18n/legal-types';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function LegalNoticePage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const doc: LegalDocument = lang === 'fr' ? frLegal.legalNotice : enLegal.legalNotice;
+  const doc: LegalDocument = getLegalDocuments(lang).legalNotice;
 
   return (
     <div className="app-page">

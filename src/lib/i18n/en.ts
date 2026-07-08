@@ -135,21 +135,25 @@ export default {
       privacy: {
         nav_label: 'Privacy',
         title: 'Privacy Policy',
+        meta_title: 'Privacy Policy',
         meta_description: 'Privacy policy of PrimeDex: what data is collected, why, how it is used, and your GDPR/CCPA rights.',
       },
       terms: {
         nav_label: 'Terms',
         title: 'Terms of Service',
+        meta_title: 'Terms of Service',
         meta_description: 'Terms of service for PrimeDex: usage rules, intellectual property, liability, and applicable law.',
       },
       legal_notice: {
         nav_label: 'Legal notice',
         title: 'Legal Notice',
+        meta_title: 'Legal Notice',
         meta_description: 'Legal notice of PrimeDex in accordance with Article 6 of the French LCEN: publisher, hosting provider, activity.',
       },
       cookies: {
         nav_label: 'Cookies',
         title: 'Cookie Policy',
+        meta_title: 'Cookie Policy',
         meta_description: 'Cookie policy of PrimeDex: inventory of cookies, purposes, durations, and how to manage them.',
       },
       banner: {
@@ -331,6 +335,7 @@ export default {
         team: 'Team Builder',
         types: 'Types',
         moves: 'Moves',
+        items: 'Items',
         abilities: 'Abilities',
         tcg: 'TCG Catalog',
         dashboard: 'Dashboard',

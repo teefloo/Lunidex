@@ -461,3 +461,23 @@ export interface AbilityPokemonLearner {
   isHidden: boolean;
   slot: number;
 }
+
+export interface GraphQLItemData {
+  id: number;
+  name: string;
+  cost: number;
+  pokemon_v2_itemcategory: { name: string } | null;
+  pokemon_v2_itemnames: Array<{ name: string }>;
+  pokemon_v2_itemeffecttexts: Array<{ effect: string; short_effect: string }>;
+  pokemon_v2_itemflavortexts: Array<{ flavor_text: string }>;
+}
+
+export interface ItemListItem {
+  id: number;
+  name: string;
+  localizedName: string;
+  category: string | null;
+  cost: number;
+  shortEffect: string;
+  spriteUrl: string;
+}

@@ -109,8 +109,9 @@ function throwIfAborted(signal?: AbortSignal) {
 function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
   if (!url) return undefined;
   if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.webp') || url.endsWith('.svg')) return url;
-  // tcgdex.net v2 image base paths intentionally have no extension; do not append .png
-  if (url.includes('tcgdex.net')) return url;
+  // Card image paths (e.g. /en/sv/sv03/001) resolve without an extension on tcgdex.net.
+  // Logo/symbol paths (ending in /logo or /symbol) require .png to return the actual image.
+  if (url.includes('tcgdex.net') && !url.endsWith('/logo') && !url.endsWith('/symbol')) return url;
   return `${url}.png`;
 }
 

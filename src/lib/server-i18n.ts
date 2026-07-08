@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { createInstance } from 'i18next';
 import type { i18n as I18nInstance, TFunction, TOptions } from 'i18next';
 
@@ -49,7 +49,22 @@ async function readLanguageCookie(): Promise<string | null> {
   }
 }
 
+// `proxy.ts` forwards the URL's locale segment (e.g. `/fr/...`) as this
+// request header so the current render uses it immediately — the cookie it
+// also sets only takes effect on the *next* request.
+async function readLanguageHeader(): Promise<string | null> {
+  try {
+    const store = await headers();
+    return store.get('x-primedex-lang');
+  } catch {
+    return null;
+  }
+}
+
 export async function getServerLanguage(): Promise<SupportedLanguage> {
+  const headerLang = await readLanguageHeader();
+  if (isSupportedLanguage(headerLang ?? '')) return headerLang as SupportedLanguage;
+
   const cookieLang = await readLanguageCookie();
   return isSupportedLanguage(cookieLang ?? '') ? (cookieLang as SupportedLanguage) : 'en';
 }
