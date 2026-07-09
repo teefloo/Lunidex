@@ -641,18 +641,37 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
   }
 };
 
+// Categories excluded from the browse grid: spin-off/debug/crafting items with
+// auto-generated or obscure names (e.g. "dynamax-crystal-and458") that have no
+// artwork in the sprites repo and aren't relevant to a core-series Pokédex.
+const EXCLUDED_ITEM_CATEGORIES = [
+  'unused',
+  'plot-advancement',
+  'data-cards',
+  'miracle-shooter',
+  'dynamax-crystals',
+  'tm-materials',
+  'picnic',
+  'sandwich-ingredients',
+  'curry-ingredients',
+  'all-machines',
+];
+
 export const getAllItems = async (languageId: number): Promise<GraphQLItemData[]> => {
-  const cacheKey = `all-items-v1-${languageId}`;
+  const cacheKey = `all-items-v2-${languageId}`;
   const cached = await getCachedData<GraphQLItemData[]>(cacheKey, true);
   if (cached) return cached;
 
   try {
     const query = `
-      query GetAllItems($languageId: Int!) {
+      query GetAllItems($languageId: Int!, $excludedCategories: [String!]) {
         pokemon_v2_item(
           limit: 2000
           order_by: {id: asc}
-          where: {pokemon_v2_itemcategory: {id: {_is_null: false}}, pokemon_v2_itemnames: {language_id: {_eq: $languageId}}}
+          where: {
+            pokemon_v2_itemcategory: {id: {_is_null: false}, name: {_nin: $excludedCategories}}
+            pokemon_v2_itemnames: {language_id: {_eq: $languageId}}
+          }
         ) {
           id
           name
@@ -676,7 +695,7 @@ export const getAllItems = async (languageId: number): Promise<GraphQLItemData[]
 
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
       query,
-      variables: { languageId },
+      variables: { languageId, excludedCategories: EXCLUDED_ITEM_CATEGORIES },
     });
 
     if (!data?.data?.pokemon_v2_item) {
