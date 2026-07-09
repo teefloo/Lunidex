@@ -250,8 +250,8 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                   className="group flex items-center gap-4 rounded-sm border border-border/15 bg-card/30 p-4 transition-all hover:border-primary/20 hover:bg-card/50 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px"
                 >
                   {set.logo && (
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-sm bg-card/40">
-                      <Image src={set.logo} alt={set.name} width={48} height={48} unoptimized className="object-contain p-1" />
+                    <div className="relative flex items-center justify-center h-12 w-12 shrink-0 overflow-hidden rounded-sm bg-card/40">
+                      <Image src={set.logo} alt={set.name} width={48} height={48} unoptimized className="max-h-full max-w-full object-contain p-1" />
                     </div>
                   )}
                   <div className="min-w-0 flex-1">

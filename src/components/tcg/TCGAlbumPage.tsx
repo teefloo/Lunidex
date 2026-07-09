@@ -67,8 +67,8 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
         </Link>
         <div className="flex items-center gap-3">
           {set.logo && (
-            <div className="relative h-10 w-10 shrink-0">
-              <Image src={set.logo} alt={set.name} width={40} height={40} unoptimized className="object-contain" />
+            <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
+              <Image src={set.logo} alt={set.name} width={40} height={40} unoptimized className="max-h-full max-w-full object-contain" />
             </div>
           )}
           <div>
