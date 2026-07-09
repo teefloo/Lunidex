@@ -14,6 +14,7 @@ const withPWA = withPWAInit({
   },
   workboxOptions: {
     skipWaiting: true,
+    importScripts: ["/push-worker.js"],
     runtimeCaching: [
       {
         urlPattern: /^https:\/\/pokeapi\.co\/api\/.*$/i,

@@ -9,6 +9,7 @@ const TABS = [
   { href: '/tcg', key: 'tcg.nav_catalog' },
   { href: '/tcg/collection', key: 'tcg.nav_collection' },
   { href: '/tcg/wishlist', key: 'tcg.nav_wishlist' },
+  { href: '/tcg/deck-builder', key: 'tcg.nav_deck_builder' },
 ] as const;
 
 export function TCGPageTabs() {

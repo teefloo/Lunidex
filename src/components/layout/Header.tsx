@@ -260,8 +260,16 @@ export default function Header() {
                   onChange={(event) => setLocalSearch(event.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  className="h-10 w-full rounded-sm border border-border/70 bg-background/50 pl-9 pr-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[var(--shadow-pixel-sm)] transition-all duration-100 placeholder:text-muted-foreground placeholder:normal-case placeholder:tracking-normal focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/70 bg-background/50 pl-9 pr-10 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[var(--shadow-pixel-sm)] transition-all duration-100 placeholder:text-muted-foreground placeholder:normal-case placeholder:tracking-normal focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent('primedex:open-command-palette'))}
+                  aria-label={t('command_palette.title', { defaultValue: 'Command Palette' })}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  ⌘K
+                </button>
               </div>
 
             </div>

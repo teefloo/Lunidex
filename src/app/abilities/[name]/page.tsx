@@ -32,18 +32,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       || `Details about the ${displayName} ability.`;
 
     return {
-      title: `${localizedName} — Ability | PrimeDex`,
+      title: `${localizedName} — Ability`,
       description,
       alternates: { canonical: `/${lang}/abilities/${name}` },
       openGraph: {
-        title: `${localizedName} — Ability | PrimeDex`,
+        title: `${localizedName} — Ability`,
         description,
         url: `/${lang}/abilities/${name}`,
         type: 'website',
       },
     };
   } catch {
-    return { title: `${displayName} — Ability | PrimeDex` };
+    return { title: `${displayName} — Ability` };
   }
 }
 
@@ -104,7 +104,7 @@ export default async function AbilityDetailPage({ params }: Props) {
               </h1>
               {ability.is_main_series && (
                 <Badge variant="outline" className="mt-3 border-border/70 text-foreground/60">
-                  {t('abilities_page.main_series', { defaultValue: 'Main Series' })}
+                  {t('abilities_page.main_series')}
                 </Badge>
               )}
             </div>
@@ -120,18 +120,24 @@ export default async function AbilityDetailPage({ params }: Props) {
               <div className="mb-3 flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" />
                 <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
-                  {t('abilities_page.effect_label', { defaultValue: 'Effect' })}
+                  {t('abilities_page.effect')}
                 </h2>
               </div>
               <p className="text-sm leading-7 text-foreground/70">
                 {effectEntry?.effect?.replace(/\n|\f/g, ' ').trim()
                   || effectEntry?.short_effect?.replace(/\n|\f/g, ' ').trim()
-                  || t('abilities_page.no_description', { defaultValue: 'No description available.' })}
+                  || t('moves_page.no_description')}
               </p>
             </section>
 
             {flavorEntry && (
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <Info className="h-4 w-4 text-primary" />
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                    {t('abilities_page.flavor_text')}
+                  </h2>
+                </div>
                 <p className="text-sm italic leading-7 text-foreground/55">
                   &ldquo;{flavorEntry.flavor_text.replace(/\n|\f/g, ' ').trim()}&rdquo;
                 </p>
@@ -143,7 +149,7 @@ export default async function AbilityDetailPage({ params }: Props) {
                 <div className="mb-4 flex items-center gap-2">
                   <Users className="h-4 w-4 text-primary" />
                   <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
-                    {t('abilities_page.pokemon_with_ability', { defaultValue: 'Pokémon With This Ability' })} ({learners.length})
+                    {t('abilities_page.pokemon_with_ability')} ({learners.length})
                   </h2>
                 </div>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
@@ -178,13 +184,13 @@ export default async function AbilityDetailPage({ params }: Props) {
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
                 <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
-                  {t('abilities_page.info_label', { defaultValue: 'Ability Info' })}
+                  {t('abilities_page.pokemon_with_ability')}
                 </h2>
               </div>
               <dl className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <dt className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/35">
-                    {t('abilities_page.pokemon_count', { defaultValue: 'Pokémon' })}
+                    {t('list.pokemon')}
                   </dt>
                   <dd className="text-sm font-bold">{learners.length}</dd>
                 </div>

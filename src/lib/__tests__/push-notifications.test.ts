@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // Mock Supabase client — must be before the import under test
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/supabase/client', () => ({
+vi.mock('../supabase/client', () => ({
   getSupabaseClient: vi.fn(() => ({
     auth: {
       getSession: vi.fn().mockResolvedValue({
@@ -131,6 +131,24 @@ describe('push-notifications', () => {
     expect(callBody.payload.title).toBe('Test alert');
     expect(callBody.payload.body).toBe('Price dropped!');
     expect(callBody.subscription.endpoint).toBe(mockSubscription.endpoint);
+
+    const headers = fetchMock.mock.calls[0][1].headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer test-token');
+  });
+
+  it('sendPushNotification returns false without an authenticated session', async () => {
+    const { getSupabaseClient } = await import('../supabase/client');
+    vi.mocked(getSupabaseClient).mockReturnValueOnce({
+      auth: { getSession: vi.fn().mockResolvedValue({ data: { session: null } }) },
+    } as unknown as ReturnType<typeof getSupabaseClient>);
+
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await sendPushNotification(mockSubscription, { title: 'x', body: 'y' });
+
+    expect(result).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   // -------------------------------------------------------------------------

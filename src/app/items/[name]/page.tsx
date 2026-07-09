@@ -26,18 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const displayName = formatName(name);
 
   const item = await getItemDetail(name, langId).catch(() => null);
-  if (!item) return { title: `${displayName} — Item | PrimeDex` };
+  if (!item) return { title: `${displayName} — Item` };
 
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
   const description = item.pokemon_v2_itemeffecttexts?.[0]?.short_effect
     || `Details about the ${displayName} item.`;
 
   return {
-    title: `${localizedName} — Item | PrimeDex`,
+    title: `${localizedName} — Item`,
     description,
     alternates: { canonical: `/${lang}/items/${name}` },
     openGraph: {
-      title: `${localizedName} — Item | PrimeDex`,
+      title: `${localizedName} — Item`,
       description,
       url: `/${lang}/items/${name}`,
       type: 'website',

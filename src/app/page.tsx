@@ -3,6 +3,7 @@ import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
 import HeroSection from '@/components/layout/HeroSection';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
+import PokemonOfTheDay from '@/components/pokemon/PokemonOfTheDay';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
@@ -139,6 +140,7 @@ export default async function Home() {
 
         <main id="main-content" className="relative z-10 pt-28 pb-8 md:pt-32">
           <HeroSection />
+          <PokemonOfTheDay />
 
           <PokemonList />
           <ClientRecentlyViewed />

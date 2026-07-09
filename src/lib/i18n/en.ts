@@ -1068,6 +1068,7 @@ export default {
         nav_catalog: 'Catalog',
         nav_collection: 'Collection',
         nav_wishlist: 'Wishlist',
+        nav_deck_builder: 'Deck Builder',
         page_eyebrow: 'Catalog',
         page_title: 'Pokémon TCG Catalog — PrimeDex',
         page_description: 'Browse the complete Pokémon Trading Card Game catalog. Search Pokémon, Trainer, and Energy cards, filter by set, rarity, type, stage, and HP, and open any card instantly.',

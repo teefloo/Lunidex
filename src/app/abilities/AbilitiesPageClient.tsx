@@ -274,13 +274,13 @@ function AbilityCard({
         </div>
 
         <p className="mt-3 line-clamp-3 text-sm leading-6 text-foreground/45">
-          {ability.shortEffect || t('abilities_page.no_description', { defaultValue: 'No description available.' })}
+          {ability.shortEffect || t('moves_page.no_description')}
         </p>
 
         {ability.generationId !== null && (
           <div className="mt-3">
             <Badge variant="outline" className="border-border/70 text-[10px] text-foreground/55">
-              {t('moves_page.generation', { defaultValue: 'Gen' })} {ability.generationId}
+              {t('moves_page.generation')} {ability.generationId}
             </Badge>
           </div>
         )}

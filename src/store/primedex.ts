@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
-import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
+import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
+import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import type { GenTheme } from '@/lib/generation-themes';
 
@@ -127,6 +128,20 @@ interface PrimeDexStore {
   upsertTCGCardNote: (entry: TCGUserCardEntry) => void;
   removeTCGCardNote: (cardId: string) => void;
 
+  tcgDecks: TCGDeck[];
+  createTCGDeck: (name: string) => string;
+  deleteTCGDeck: (deckId: string) => void;
+  renameTCGDeck: (deckId: string, name: string) => void;
+  addCardToTCGDeck: (deckId: string, cardId: string, isEnergy: boolean) => void;
+  removeCardFromTCGDeck: (deckId: string, cardId: string) => void;
+
+  nuzlockeRuns: NuzlockeRun[];
+  createNuzlockeRun: (name: string, game: string) => string;
+  deleteNuzlockeRun: (runId: string) => void;
+  addNuzlockeEncounter: (runId: string, encounter: Omit<NuzlockeEncounter, 'id' | 'caughtAt'>) => void;
+  updateNuzlockeEncounterStatus: (runId: string, encounterId: string, status: NuzlockeEncounterStatus) => void;
+  removeNuzlockeEncounter: (runId: string, encounterId: string) => void;
+
   // Team
   team: number[];
   addToTeam: (id: number) => void;
@@ -242,6 +257,8 @@ export const SYNCED_KEYS = [
   'tcgActiveSets',
   'tcgSavedSearches',
   'tcgCardNotes',
+  'tcgDecks',
+  'nuzlockeRuns',
   'team',
   'history',
   'badges',
@@ -418,6 +435,97 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       })),
       removeTCGCardNote: (cardId) => set((state) => ({
         tcgCardNotes: state.tcgCardNotes.filter((note) => note.cardId !== cardId),
+      })),
+
+      tcgDecks: [],
+      createTCGDeck: (name) => {
+        const id = `deck-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        set((state) => ({
+          tcgDecks: [
+            ...state.tcgDecks,
+            { id, name, cards: [], createdAt: new Date().toISOString() },
+          ],
+        }));
+        return id;
+      },
+      deleteTCGDeck: (deckId) => set((state) => ({
+        tcgDecks: state.tcgDecks.filter((deck) => deck.id !== deckId),
+      })),
+      renameTCGDeck: (deckId, name) => set((state) => ({
+        tcgDecks: state.tcgDecks.map((deck) => (deck.id === deckId ? { ...deck, name } : deck)),
+      })),
+      addCardToTCGDeck: (deckId, cardId, isEnergy) => set((state) => ({
+        tcgDecks: state.tcgDecks.map((deck) => {
+          if (deck.id !== deckId) return deck;
+          const totalCount = deck.cards.reduce((sum, c) => sum + c.quantity, 0);
+          if (totalCount >= 60) return deck;
+          const existing = deck.cards.find((c) => c.cardId === cardId);
+          if (existing) {
+            if (!isEnergy && existing.quantity >= 4) return deck;
+            return {
+              ...deck,
+              cards: deck.cards.map((c) => (c.cardId === cardId ? { ...c, quantity: c.quantity + 1 } : c)),
+            };
+          }
+          return { ...deck, cards: [...deck.cards, { cardId, quantity: 1 }] };
+        }),
+      })),
+      removeCardFromTCGDeck: (deckId, cardId) => set((state) => ({
+        tcgDecks: state.tcgDecks.map((deck) => {
+          if (deck.id !== deckId) return deck;
+          const existing = deck.cards.find((c) => c.cardId === cardId);
+          if (!existing) return deck;
+          if (existing.quantity <= 1) {
+            return { ...deck, cards: deck.cards.filter((c) => c.cardId !== cardId) };
+          }
+          return {
+            ...deck,
+            cards: deck.cards.map((c) => (c.cardId === cardId ? { ...c, quantity: c.quantity - 1 } : c)),
+          };
+        }),
+      })),
+
+      nuzlockeRuns: [],
+      createNuzlockeRun: (name, game) => {
+        const id = `nuzlocke-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        set((state) => ({
+          nuzlockeRuns: [
+            ...state.nuzlockeRuns,
+            { id, name, game, encounters: [], createdAt: new Date().toISOString() },
+          ],
+        }));
+        return id;
+      },
+      deleteNuzlockeRun: (runId) => set((state) => ({
+        nuzlockeRuns: state.nuzlockeRuns.filter((run) => run.id !== runId),
+      })),
+      addNuzlockeEncounter: (runId, encounter) => set((state) => ({
+        nuzlockeRuns: state.nuzlockeRuns.map((run) => {
+          if (run.id !== runId) return run;
+          const id = `encounter-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+          return {
+            ...run,
+            encounters: [
+              ...run.encounters,
+              { ...encounter, id, caughtAt: new Date().toISOString() },
+            ],
+          };
+        }),
+      })),
+      updateNuzlockeEncounterStatus: (runId, encounterId, status) => set((state) => ({
+        nuzlockeRuns: state.nuzlockeRuns.map((run) => {
+          if (run.id !== runId) return run;
+          return {
+            ...run,
+            encounters: run.encounters.map((enc) => (enc.id === encounterId ? { ...enc, status } : enc)),
+          };
+        }),
+      })),
+      removeNuzlockeEncounter: (runId, encounterId) => set((state) => ({
+        nuzlockeRuns: state.nuzlockeRuns.map((run) => {
+          if (run.id !== runId) return run;
+          return { ...run, encounters: run.encounters.filter((enc) => enc.id !== encounterId) };
+        }),
       })),
 
       // Team

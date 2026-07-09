@@ -270,3 +270,15 @@ export interface TCGUserCardEntry {
   note?: string;
   updatedAt: string;
 }
+
+export interface TCGDeckCard {
+  cardId: string;
+  quantity: number;
+}
+
+export interface TCGDeck {
+  id: string;
+  name: string;
+  cards: TCGDeckCard[];
+  createdAt: string;
+}

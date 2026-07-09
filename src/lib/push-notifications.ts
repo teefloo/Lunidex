@@ -161,9 +161,16 @@ export async function sendPushNotification(
   payload: { title: string; body: string; url?: string },
 ): Promise<boolean> {
   try {
+    const supabase = getSupabaseClient();
+    const session = supabase ? (await supabase.auth.getSession()).data.session : null;
+    if (!session?.access_token) return false;
+
     const res = await fetch('/api/push/send', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
       body: JSON.stringify({ subscription: subscription.toJSON(), payload }),
     });
     return res.ok;

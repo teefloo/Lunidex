@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Bell, BellOff, Trash2, Plus, X, TrendingDown, TrendingUp } from 'lucide-react';
+import { Bell, BellOff, Trash2, Plus, X, TrendingDown, TrendingUp, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { getSupabaseClient } from '@/lib/supabase/client';
-import { subscribeToPush } from '@/lib/push-notifications';
+import { subscribeToPush, sendPushNotification, isPushSupported } from '@/lib/push-notifications';
 import { cn } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
@@ -243,6 +243,24 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
     onError: () => toast.error('Failed to update alert'),
   });
 
+  const testMutation = useMutation({
+    mutationFn: async () => {
+      if (!isPushSupported()) throw new Error('Push not supported in this browser');
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      if (!subscription) throw new Error('No active push subscription — enable notifications first');
+      const symbolLocal = alert.currency === 'EUR' ? '€' : '$';
+      const ok = await sendPushNotification(subscription, {
+        title: `PrimeDex — ${alert.card_name}`,
+        body: `Test alert: ${alert.alert_type} ${symbolLocal}${threshold?.toFixed(2) ?? '?'}`,
+        url: `/tcg/cards/${alert.card_id}`,
+      });
+      if (!ok) throw new Error('Send failed');
+    },
+    onSuccess: () => toast.success('Test notification sent!'),
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   return (
     <div
       className={cn(
@@ -287,6 +305,17 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
       </div>
 
       {/* Actions */}
+      <button
+        type="button"
+        onClick={() => testMutation.mutate()}
+        disabled={testMutation.isPending}
+        aria-label="Send test notification"
+        title="Send test notification"
+        className="text-foreground/40 hover:text-primary transition-colors disabled:opacity-40"
+      >
+        <Send className="h-4 w-4" />
+      </button>
+
       <button
         type="button"
         onClick={() => toggleMutation.mutate()}

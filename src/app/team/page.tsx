@@ -38,6 +38,7 @@ import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
 import { TeamExportButton } from '@/components/team/TeamExportButton';
+import { ShowdownImportDialog } from '@/components/team/ShowdownImportDialog';
 
 // Dynamic imports for heavy charting library
 const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
@@ -226,6 +227,7 @@ export default function TeamPage() {
                 {pokemonData.length > 0 && (
                   <TeamExportButton pokemonData={pokemonData} />
                 )}
+                {team.length < 6 && <ShowdownImportDialog />}
                 {pokemonData.length > 0 && (
                   <Button
                     variant="destructive"
