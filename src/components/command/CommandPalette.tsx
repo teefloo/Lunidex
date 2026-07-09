@@ -41,7 +41,7 @@ import {
   getAllMoves,
   getAllAbilities,
 } from '@/lib/api/graphql';
-import type { GraphQLItemData, GraphQLMoveData, GraphQLAbilityData } from '@/types/pokemon';
+
 import { pokemonKeys } from '@/lib/api/keys';
 import { resolveLanguage } from '@/lib/languages';
 import { formatName } from '@/lib/utils';

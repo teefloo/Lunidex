@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { Sun, Moon, Heart, Search } from 'lucide-react';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -28,11 +28,7 @@ export function HeaderActions() {
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
 
-  const [isMac, setIsMac] = useState(false);
-
-  useEffect(() => {
-    setIsMac(typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac'));
-  }, []);
+  const isMac = mounted && typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac');
 
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
 
