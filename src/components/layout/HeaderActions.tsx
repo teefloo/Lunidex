@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Sun, Moon, Heart, Search } from 'lucide-react';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -27,6 +27,12 @@ export function HeaderActions() {
   const changeLanguage = useChangeLanguage();
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
+
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac'));
+  }, []);
 
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
 
@@ -72,7 +78,7 @@ export function HeaderActions() {
             className="glass-control mr-0.5 hidden h-10 items-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-primary active:scale-95 md:flex"
           >
             <Search className="h-3.5 w-3.5" />
-            <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold">⌘K</kbd>
+            <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
           </button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="text-xs font-bold">{searchPlaceholder}</TooltipContent>

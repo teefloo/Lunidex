@@ -14,6 +14,7 @@ import dynamic from 'next/dynamic';
 import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
+const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
 
 function SupabaseSyncBridge() {
   useSupabaseSync();
@@ -103,6 +104,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <TooltipProvider>
                 <SupabaseSyncBridge />
                 {children}
+                <CommandPalette />
                 <SettingsModal />
               </TooltipProvider>
             </GenThemeProvider>
