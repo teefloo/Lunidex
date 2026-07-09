@@ -329,6 +329,7 @@ export default {
     nav: {
       home: '首页',
       search: '搜索',
+      more: '更多',
       favorites: '收藏',
       compare: '比较',
       quiz: '问答',

@@ -329,6 +329,7 @@ export default {
       nav: {
         home: 'Home',
         search: 'Search',
+        more: 'More',
         favorites: 'Favorites',
         compare: 'Compare',
         quiz: 'Quiz',

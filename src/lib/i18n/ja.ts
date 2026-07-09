@@ -329,6 +329,7 @@ export default {
     nav: {
       home: 'ホーム',
       search: '検索',
+      more: 'その他',
       favorites: 'お気に入り',
       compare: '比較',
       quiz: 'クイズ',

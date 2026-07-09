@@ -17,17 +17,12 @@ import {
   Shield,
   Package,
   Sparkles,
+  ChevronDown,
 } from 'lucide-react';
-import { useEffect, useMemo, useState, useRef, useCallback, Fragment, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
+import { useMemo, useCallback, Fragment, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { getFormDisplayName } from '@/lib/form-names';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
-import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
-import { pokemonKeys } from '@/lib/api/keys';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -37,6 +32,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetTrigger,
@@ -49,18 +50,23 @@ import { useMounted } from '@/hooks/useMounted';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
 import AccountMenu from '@/components/auth/AccountMenu';
 
-const NAV_ITEMS = [
+const PRIMARY_NAV_ITEMS = [
   { path: '/team',     icon: Users,          labelKey: 'nav.team',     fallback: 'Team Builder' },
   { path: '/compare',  icon: ArrowLeftRight,  labelKey: 'nav.compare',  fallback: 'Compare'      },
   { path: '/tcg',      icon: LayoutGrid,      labelKey: 'nav.tcg',      fallback: 'TCG Catalog'  },
   { path: '/types',    icon: Shapes,          labelKey: 'nav.types',    fallback: 'Types'        },
   { path: '/moves',    icon: Swords,          labelKey: 'nav.moves',    fallback: 'Moves'        },
+] as const;
+
+const SECONDARY_NAV_ITEMS = [
   { path: '/items',    icon: Package,         labelKey: 'nav.items',    fallback: 'Items'        },
   { path: '/abilities', icon: Sparkles,       labelKey: 'nav.abilities', fallback: 'Abilities'   },
   { path: '/quiz',     icon: BrainCircuit,    labelKey: 'nav.quiz',     fallback: 'Quiz'         },
   { path: '/battle',   icon: Shield,          labelKey: 'nav.battle',   fallback: 'Battle'       },
   { path: '/breeding', icon: Egg,             labelKey: 'nav.breeding', fallback: 'Breeding'     },
 ] as const;
+
+const NAV_ITEMS = [...PRIMARY_NAV_ITEMS, ...SECONDARY_NAV_ITEMS] as const;
 
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
@@ -95,65 +101,12 @@ export default function Header() {
   const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const { t } = useTranslation();
   const mounted = useMounted();
-  const router = useRouter();
   const changeLanguage = useChangeLanguage();
-  const [localSearch, setLocalSearch] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const searchRef = useRef<HTMLDivElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
-
-  const updateDropdownPosition = useCallback(() => {
-    if (searchRef.current) {
-      const rect = searchRef.current.getBoundingClientRect();
-      setDropdownStyle({
-        position: 'fixed',
-        top: `${rect.bottom + 8}px`,
-        right: `${window.innerWidth - rect.right}px`,
-        zIndex: 9999,
-      });
-    }
-  }, []);
-
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
   const localizedHref = (path: string) => {
     const normalized = path.startsWith('/') ? path : `/${path}`;
     return normalized === '/' ? `/${resolvedLang}` : `/${resolvedLang}${normalized}`;
   };
-
-  const { data: allPokemon } = useQuery({
-    queryKey: pokemonKeys.allSearchIndex(),
-    queryFn: () => getAllPokemonSearchIndex(),
-    enabled: localSearch.trim().length > 0,
-    staleTime: 24 * 60 * 60 * 1000,
-  });
-
-  const searchResults = useMemo(() => {
-    if (!localSearch || !allPokemon) return [];
-
-    const searchLower = localSearch.toLowerCase();
-
-    return allPokemon
-      .filter((pokemon) => {
-        const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
-        const localized = speciesNames.find((speciesName) => speciesName.pokemon_v2_language?.name === resolvedLang);
-        const name = (localized?.name || pokemon.name).toLowerCase();
-
-        return name.includes(searchLower) || pokemon.name.includes(searchLower);
-      })
-      .slice(0, 5);
-  }, [localSearch, allPokemon, resolvedLang]);
-
-  useEffect(() => {
-    if (isSearchFocused && searchResults.length > 0) {
-      updateDropdownPosition();
-      window.addEventListener('scroll', updateDropdownPosition, true);
-      window.addEventListener('resize', updateDropdownPosition);
-      return () => {
-        window.removeEventListener('scroll', updateDropdownPosition, true);
-        window.removeEventListener('resize', updateDropdownPosition);
-      };
-    }
-  }, [isSearchFocused, searchResults, updateDropdownPosition]);
 
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
 
@@ -236,53 +189,66 @@ export default function Header() {
           </div>
 
           <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-sm border border-border bg-background/40 px-1 py-0.5 lg:flex">
-            {NAV_ITEMS.map((item, index) => (
+            {PRIMARY_NAV_ITEMS.map((item, index) => (
               <Fragment key={item.path}>
                 {index > 0 && <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />}
-                <HeaderLink href={localizedHref(item.path)} variant="ghost" size="sm" className="gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-primary">
+                <HeaderLink href={localizedHref(item.path)} variant="ghost" size="sm" className="gap-1 px-1.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground hover:text-primary">
                   <item.icon className="h-3 w-3" /> {label(item.labelKey, item.fallback)}
                 </HeaderLink>
               </Fragment>
             ))}
+            <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[popup-open]:text-primary"
+              >
+                {label('nav.more', 'More')}
+                <ChevronDown className="h-2.5 w-2.5 transition-transform group-data-[popup-open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {SECONDARY_NAV_ITEMS.map((item) => (
+                  <DropdownMenuItem
+                    key={item.path}
+                    render={
+                      <Link
+                        href={localizedHref(item.path)}
+                        className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground hover:text-primary"
+                      >
+                        <item.icon className="h-3.5 w-3.5" /> {label(item.labelKey, item.fallback)}
+                      </Link>
+                    }
+                  />
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           <div className="flex shrink-0 items-center justify-end gap-1 md:gap-1.5">
-            <div ref={searchRef} className="relative group mr-0.5 hidden w-[clamp(180px,13vw,240px)] xl:block">
-              <div className="relative w-full">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 transition-colors duration-300 group-hover:text-primary">
-                  <Search className="h-3.5 w-3.5 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />
-                </div>
-                  <input
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  aria-label={searchPlaceholder}
-                  value={localSearch || ''}
-                  onChange={(event) => setLocalSearch(event.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                  className="h-10 w-full rounded-sm border border-border/70 bg-background/50 pl-9 pr-10 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-foreground shadow-[var(--shadow-pixel-sm)] transition-all duration-100 placeholder:text-muted-foreground placeholder:normal-case placeholder:tracking-normal focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
+            <Tooltip>
+              <TooltipTrigger>
                 <button
                   type="button"
                   onClick={() => window.dispatchEvent(new CustomEvent('primedex:open-command-palette'))}
                   aria-label={t('command_palette.title', { defaultValue: 'Command Palette' })}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  className="glass-control mr-0.5 hidden h-10 items-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-primary active:scale-95 md:flex"
                 >
-                  ⌘K
+                  <Search className="h-3.5 w-3.5" />
+                  <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold">⌘K</kbd>
                 </button>
-              </div>
-
-            </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs font-bold">
+                {searchPlaceholder}
+              </TooltipContent>
+            </Tooltip>
 
             <Tooltip>
               <TooltipTrigger>
                   <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} className="hidden sm:block">
                   <div
-                    className="glass-control flex h-10 items-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-[var(--action-favorite)] active:scale-95"
+                    className="glass-control flex h-10 w-10 items-center justify-center text-muted-foreground transition-all hover:text-[var(--action-favorite)] active:scale-95"
                     style={{ '--hover-color': 'var(--action-favorite)' } as React.CSSProperties}
                   >
                     <Heart className="h-3.5 w-3.5" />
-                    <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">{favoritesLabel}</span>
                   </div>
                 </Link>
               </TooltipTrigger>
@@ -410,58 +376,6 @@ export default function Header() {
             </div>
           </div>
           </div>
-
-          {isSearchFocused && localSearch && searchResults.length > 0 && (
-              <div
-                className="glass-surface !overflow-hidden p-2 w-72"
-                style={dropdownStyle}
-                role="listbox"
-                aria-label={t('search.results_aria', { defaultValue: 'Search results' })}
-              >
-                <div className="flex flex-col gap-1">
-                  {searchResults.map((pokemon) => {
-                    const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
-                    const localized = speciesNames.find((speciesName) => speciesName.pokemon_v2_language?.name === resolvedLang);
-                    const baseLocalizedName = localized?.name || pokemon.name;
-                    const displayName = pokemon.name.includes('-')
-                      ? getFormDisplayName(pokemon.name, baseLocalizedName, resolvedLang)
-                      : baseLocalizedName;
-
-                    return (
-                      <button
-                        key={pokemon.name}
-                        type="button"
-                        onClick={() => {
-                          router.push(`/pokemon/${pokemon.name}`);
-                          setLocalSearch('');
-                          setIsSearchFocused(false);
-                        }}
-                        role="option"
-                        aria-selected={false}
-                        className="flex w-full cursor-pointer items-center gap-3 rounded-sm p-2.5 text-left transition-colors hover:bg-muted/70 group/item"
-                      >
-                        <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm border border-border/60 bg-muted/60 p-1">
-                          <Image
-                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
-                            alt={displayName}
-                            width={32}
-                            height={32}
-                            className="object-contain transition-transform drop-shadow-md group-hover/item:scale-110"
-                            unoptimized
-                          />
-                        </div>
-                        <span className="flex-1 truncate font-display text-xs font-semibold italic editorial-italic capitalize text-muted-foreground group-hover/item:text-primary">
-                          {displayName}
-                        </span>
-                        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                          No. {pokemon.id.toString().padStart(3, '0')}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
         </div>
       </header>
     </>
