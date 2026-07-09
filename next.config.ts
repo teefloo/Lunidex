@@ -254,16 +254,22 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: securityHeaders,
       },
-      {
-        // Next.js immutable hashed chunks (JS/CSS) — safe to cache aggressively
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
+      // Next.js immutable hashed chunks (JS/CSS) — safe to cache aggressively.
+      // Dev-mode chunk filenames aren't content-hashed, so this must be
+      // production-only or the browser never picks up rebuilt code.
+      ...(process.env.NODE_ENV === 'production'
+        ? [
+            {
+              source: '/_next/static/:path*',
+              headers: [
+                {
+                  key: 'Cache-Control',
+                  value: 'public, max-age=31536000, immutable',
+                },
+              ],
+            },
+          ]
+        : []),
       {
         // Cache SVG and image assets
         source: '/(.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico))',
