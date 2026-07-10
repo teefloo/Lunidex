@@ -1,10 +1,11 @@
-import { useState, type ComponentProps } from 'react';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
   ScrollView,
   Text,
   TextInput,
+  type TextInputProps,
   View,
   StyleSheet,
 } from 'react-native';
@@ -209,7 +210,7 @@ export default function AccountScreen() {
 function Field({
   palette,
   ...props
-}: ComponentProps<typeof TextInput> & { palette: ReturnType<typeof useTheme>['palette'] }) {
+}: TextInputProps & { palette: ReturnType<typeof useTheme>['palette'] }) {
   return (
     <TextInput
       placeholderTextColor={palette.textFaint}

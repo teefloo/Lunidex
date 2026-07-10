@@ -65,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const start = periodStartDate(periodParam);
 
   // Ranking is done in Postgres (window functions over best-per-user) so ranks
-  // stay correct regardless of table size — see migration 0003.
+  // stay correct regardless of table size — see the leaderboard RPC migration.
   const { data, error } = await supabase.rpc('quiz_leaderboard_top', {
     p_start: start,
     p_limit: LEADERBOARD_TOP_N,
@@ -193,4 +193,3 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json({ ok: true, score, improved: true });
 }
-

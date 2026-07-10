@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import webpush from 'web-push';
 import { getSupabaseServerClient, bearerToken } from '@/lib/supabase/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { rateLimit } from '@/lib/rate-limit';
 
 interface SendPushPayload {
   subscription?: {
@@ -42,6 +43,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  if (!rateLimit(`push-send:${user.id}`, 5)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   if (!ensureVapidConfigured()) {
     return NextResponse.json({ error: 'Push notifications are not configured on this server' }, { status: 503 });
   }
@@ -53,8 +58,37 @@ export async function POST(request: NextRequest) {
   if (!subscription?.endpoint || !subscription.keys?.p256dh || !subscription.keys.auth) {
     return NextResponse.json({ error: 'A valid subscription is required' }, { status: 400 });
   }
-  if (!payload?.title || !payload.body) {
+  let endpoint: URL;
+  try {
+    endpoint = new URL(subscription.endpoint);
+  } catch {
+    return NextResponse.json({ error: 'Invalid subscription endpoint' }, { status: 400 });
+  }
+  if (endpoint.protocol !== 'https:') {
+    return NextResponse.json({ error: 'Invalid subscription endpoint' }, { status: 400 });
+  }
+  if (
+    typeof payload?.title !== 'string' ||
+    typeof payload.body !== 'string' ||
+    !payload.title ||
+    !payload.body ||
+    payload.title.length > 120 ||
+    payload.body.length > 1000
+  ) {
     return NextResponse.json({ error: 'payload.title and payload.body are required' }, { status: 400 });
+  }
+  if (payload.url && (!payload.url.startsWith('/') || payload.url.startsWith('//'))) {
+    return NextResponse.json({ error: 'payload.url must be a relative URL' }, { status: 400 });
+  }
+
+  const { data: ownedSubscription, error: subscriptionError } = await supabase
+    .from('user_push_subscriptions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('subscription->>endpoint', subscription.endpoint)
+    .maybeSingle();
+  if (subscriptionError || !ownedSubscription) {
+    return NextResponse.json({ error: 'Subscription is not registered for this user' }, { status: 403 });
   }
 
   try {

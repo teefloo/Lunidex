@@ -1,5 +1,5 @@
 -- PrimeDex — public profiles
--- Run this in the Supabase SQL Editor after 0003_quiz_leaderboard_rpc.sql,
+-- Run this in the Supabase SQL Editor after 20240101000004_quiz_leaderboard_rpc.sql,
 -- or via `supabase db push`.
 --
 -- Adds opt-in public profile support: a unique handle, a public flag, and
@@ -229,3 +229,8 @@ create policy "profiles_select_public"
 create index if not exists profiles_handle_lookup
   on public.profiles (lower(public_handle))
   where public_handle is not null and is_public = true;
+
+-- Email is an account identifier, not public profile data.  PostgREST column
+-- privileges are required here because row-level policies cannot hide columns
+-- from a permitted row.
+revoke select (email) on public.profiles from anon, authenticated;

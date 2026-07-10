@@ -1,5 +1,5 @@
 -- PrimeDex — daily challenge leaderboard ranking functions
--- Run this in the Supabase SQL Editor after 0002_quiz_scores.sql, or via
+-- Run this in the Supabase SQL Editor after 20240101000003_quiz_scores.sql, or via
 -- `supabase db push`.
 --
 -- These functions push the "best score per user, ranked" computation into

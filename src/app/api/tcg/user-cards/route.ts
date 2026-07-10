@@ -12,7 +12,13 @@ export async function POST(request: NextRequest) {
   const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
   const payload = await readJsonBody<{ cardId?: string; state?: string; note?: string }>(request);
 
-  if (!payload?.cardId || !isValidOwnedState(payload.state)) {
+  if (typeof payload?.cardId !== 'string' || !payload.cardId || !isValidOwnedState(payload.state)) {
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  }
+  if (payload.note !== undefined && typeof payload.note !== 'string') {
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  }
+  if (payload.cardId.length > 128 || (payload.note?.length ?? 0) > 500) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
@@ -68,8 +74,14 @@ function removeEntry(
 }
 
 function persistState(state: ReturnType<typeof decodeTCGUserState>) {
+  const encoded = encodeTCGUserState(state);
+  // Browsers enforce a roughly 4 KiB per-cookie limit. Fail explicitly rather
+  // than returning success while silently dropping an oversized Set-Cookie.
+  if (encoded.length > 3500) {
+    return NextResponse.json({ error: 'TCG state is too large' }, { status: 413 });
+  }
   const response = NextResponse.json(state);
-  response.cookies.set(TCG_USER_STATE_COOKIE, encodeTCGUserState(state), {
+  response.cookies.set(TCG_USER_STATE_COOKIE, encoded, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',

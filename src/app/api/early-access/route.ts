@@ -10,9 +10,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'invalid_email' }, { status: 400 });
   }
 
-  // No storage backend wired yet — logged so signups aren't silently dropped
-  // until this is connected to Supabase or an email provider.
-  console.info('[early-access] signup', email);
-
-  return NextResponse.json({ ok: true });
+  // Do not claim success or log the address until a persistence/email provider
+  // is configured; logs are not an appropriate store for personal data.
+  return NextResponse.json({ error: 'early_access_unavailable' }, { status: 503 });
 }

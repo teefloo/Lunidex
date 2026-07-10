@@ -69,15 +69,22 @@ export async function POST(request: NextRequest) {
 
   const payload = await readJsonBody<CreateAlertPayload>(request);
 
-  if (!payload?.card_id || !payload.card_name) {
+  if (
+    typeof payload?.card_id !== 'string' ||
+    typeof payload.card_name !== 'string' ||
+    !payload.card_id ||
+    !payload.card_name ||
+    payload.card_id.length > 128 ||
+    payload.card_name.length > 256
+  ) {
     return NextResponse.json({ error: 'card_id and card_name are required' }, { status: 400 });
   }
   if (!isValidAlertType(payload.alert_type)) {
     return NextResponse.json({ error: 'alert_type must be "below" or "above"' }, { status: 400 });
   }
   const currency = isValidCurrency(payload.currency) ? payload.currency : 'USD';
-  const hasTcg = typeof payload.threshold_usd === 'number';
-  const hasCm = typeof payload.threshold_eur === 'number';
+  const hasTcg = typeof payload.threshold_usd === 'number' && Number.isFinite(payload.threshold_usd) && payload.threshold_usd > 0;
+  const hasCm = typeof payload.threshold_eur === 'number' && Number.isFinite(payload.threshold_eur) && payload.threshold_eur > 0;
   if (!hasTcg && !hasCm) {
     return NextResponse.json({ error: 'At least one threshold is required' }, { status: 400 });
   }

@@ -18,7 +18,7 @@ export default function PokemonDetailScreen() {
   const { name: param } = useLocalSearchParams<{ name: string }>();
   const { data, isLoading, isError } = usePokemonDetail(param);
 
-  const id = data?.id ?? Number(param) || 0;
+  const id = data?.id ?? (Number(param) || 0);
   const types = data?.types?.map((ty) => ty.type.name) ?? [];
   const heroColor = types[0] ? typeColor(types[0]) : palette.primary;
 

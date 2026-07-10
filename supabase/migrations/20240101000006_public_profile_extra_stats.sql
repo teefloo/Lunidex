@@ -1,5 +1,5 @@
 -- PrimeDex — public profile extra stats
--- Run this in the Supabase SQL Editor after 0004_public_profiles.sql,
+-- Run this in the Supabase SQL Editor after 20240101000005_public_profiles.sql,
 -- or via `supabase db push`.
 --
 -- Adds three more denormalized columns to public.profiles so the public
@@ -9,7 +9,7 @@
 --   * Living Dex breakdown by gen   (caught_by_gen, int[9])
 --
 -- These mirror user_state.data fields and are kept in sync by the same
--- trigger / RPC machinery introduced in 0004.
+-- trigger / RPC machinery introduced in 20240101000005.
 
 -- ---------------------------------------------------------------------------
 -- 1. New columns on public.profiles
