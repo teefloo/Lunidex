@@ -194,7 +194,11 @@ export function TCGFilters({
   }, [buildUniqueRarityOptions, filterOptions?.rarities]);
 
   const rarityOptions = useMemo(() => {
-    const source = selectedSet ? setRarities : allRarityOptions;
+    // Promo is represented by the card's `wPromo` variant and is not present
+    // in TCGdex's CardBrief set listing. Keep it available when a set is
+    // selected so promo cards can be discovered even when the set rarity
+    // sampler only returns regular rarities.
+    const source = selectedSet ? [...setRarities, 'Promo'] : allRarityOptions;
     return buildUniqueRarityOptions(source).sort((a, b) => a.localeCompare(b));
   }, [allRarityOptions, buildUniqueRarityOptions, selectedSet, setRarities]);
 
