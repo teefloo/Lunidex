@@ -62,6 +62,7 @@ export const TCG_GLOBAL_RARITIES = [
 ];
 
 const VISUAL_METADATA_CONCURRENCY = 8;
+const POKEMON_CARD_PAGE_SIZE = 100;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   selectedCategory: 'all',
@@ -252,6 +253,59 @@ function matchesRarityFilter(card: TCGCard, selectedRarity: string): boolean {
   }
 
   return cardRarity === rarityKey;
+}
+
+export function matchesTcgRarityFilter(card: TCGCard, selectedRarity: string): boolean {
+  return matchesRarityFilter(card, selectedRarity);
+}
+
+export function mergeTcgCardPages(pages: TCGCard[][]): TCGCard[] {
+  const seenIds = new Set<string>();
+  const cards: TCGCard[] = [];
+
+  for (const page of pages) {
+    for (const card of page) {
+      if (!card.id || seenIds.has(card.id)) continue;
+      seenIds.add(card.id);
+      cards.push(card);
+    }
+  }
+
+  return cards;
+}
+
+async function fetchAllCardSearchPages(
+  filters: TCGCardFilters,
+  lang: string,
+  pageSize = POKEMON_CARD_PAGE_SIZE,
+): Promise<TCGCard[]> {
+  const pages: TCGCard[][] = [];
+  let page = 1;
+  let previousPageSignature = '';
+
+  while (true) {
+    // TCGdex documents a default page size of 100. Request exactly that
+    // amount and continue when a full page is returned, including when the
+    // service caps a larger requested page size.
+    const query = buildCardQueryParams(filters, page, pageSize - 1).toString();
+    const { data } = await tcgClient.get<TCGCard[]>(`/${lang}/cards?${query}`);
+    const pageCards = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+    const pageSignature = pageCards.map((card) => card.id).join('|');
+
+    if (pageSignature && pageSignature === previousPageSignature) {
+      break;
+    }
+
+    pages.push(pageCards);
+    if (pageCards.length < pageSize) {
+      break;
+    }
+
+    previousPageSignature = pageSignature;
+    page += 1;
+  }
+
+  return mergeTcgCardPages(pages);
 }
 
 function matchesTrainerType(card: TCGCard, selectedTypes: string[]): boolean {
@@ -708,7 +762,7 @@ export const searchCards = async (
 
     if (!hasLocalOnlyFilters && !requiresLocalSorting && !requiresFullDatasetSort) {
       if (fetchAll) {
-        const ALL_PAGE_SIZE = 250;
+        const ALL_PAGE_SIZE = 100;
         const allCards: TCGCard[] = [];
         let remotePage = 1;
         let hasMoreRemote = true;
@@ -893,42 +947,24 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v6-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v7-${tcgLang}-${pokemonName}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
     if (cached) return cached;
 
-    const { data } = await tcgClient.get<TCGCard[]>(
-      `/${tcgLang}/cards?${buildCardQueryParams(
-        {
-          selectedCategory: 'Pokemon',
-          searchTerm: pokemonName,
-          sortBy: 'name',
-          sortOrder: 'asc',
-        },
-        1,
-        100,
-      ).toString()}`,
-    );
+    const searchFilters: TCGCardFilters = {
+      selectedCategory: 'Pokemon',
+      searchTerm: pokemonName,
+      sortBy: 'name',
+      sortOrder: 'asc',
+    };
 
-    let cards = Array.isArray(data) ? data.filter((card) => card.image).map((card) => normaliseCard(card)) : [];
+    let cards = (await fetchAllCardSearchPages(searchFilters, tcgLang)).filter((card) => card.image);
 
     if (cards.length === 0 && tcgLang !== 'en' && englishName) {
-      const { data: fallbackData } = await tcgClient.get<TCGCard[]>(
-        `/en/cards?${buildCardQueryParams(
-          {
-            selectedCategory: 'Pokemon',
-            searchTerm: englishName,
-            sortBy: 'name',
-            sortOrder: 'asc',
-          },
-          1,
-          100,
-        ).toString()}`,
-      );
-
-      cards = Array.isArray(fallbackData) ? fallbackData.filter((card) => card.image).map((card) => normaliseCard(card)) : [];
+      cards = (await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en'))
+        .filter((card) => card.image);
     }
 
     const enriched = await Promise.all(
