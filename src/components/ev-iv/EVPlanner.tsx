@@ -146,27 +146,29 @@ export default function EVPlanner() {
         <div className="flex gap-2">
           <input
             type="text"
+            name="pokemon"
+            autoComplete="off"
             value={pokemonInput}
             onChange={(e) => setPokemonInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="garchomp"
-            className="flex-1 h-10 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/55 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
           />
           <Button
             variant="outline"
-            size="sm"
+            size="icon-touch"
             onClick={handleSearch}
             disabled={isFetching}
-            className="h-10 px-3 rounded-sm border-border/60"
+            className="rounded-sm border-border/60"
             aria-label="Search"
           >
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        {isFetching && <p className="text-[11px] text-foreground/40 animate-pulse">Loading…</p>}
-        {isError   && <p className="text-[11px] text-red-400">Pokémon not found.</p>}
+        {isFetching && <p className="text-[11px] text-foreground/55 animate-pulse" aria-live="polite">Loading…</p>}
+        {isError   && <p className="text-[11px] text-red-400" role="alert">Pokémon not found.</p>}
         {baseStats && !isFetching && (
-          <p className="text-[11px] text-emerald-400 font-semibold capitalize">{pokemonName} loaded</p>
+          <p className="text-[11px] text-emerald-400 font-semibold capitalize" aria-live="polite">{pokemonName} loaded</p>
         )}
       </div>
 
@@ -220,7 +222,8 @@ export default function EVPlanner() {
         <Button
           variant="outline"
           onClick={handleReset}
-          className="flex-1 h-10 rounded-sm border-border/60 font-bold uppercase tracking-widest text-xs"
+          size="touch"
+          className="flex-1 rounded-sm border-border/60 font-bold uppercase tracking-widest text-xs"
         >
           <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
           {t('ev_iv.reset')}
@@ -228,7 +231,8 @@ export default function EVPlanner() {
         <Button
           variant="outline"
           onClick={handleMaxSpeed}
-          className="flex-1 h-10 rounded-sm border-border/60 font-bold uppercase tracking-widest text-xs text-blue-400 border-blue-500/30 hover:bg-blue-500/5"
+          size="touch"
+          className="flex-1 rounded-sm border-border/60 font-bold uppercase tracking-widest text-xs text-blue-400 border-blue-500/30 hover:bg-blue-500/5"
         >
           <Zap className="h-3.5 w-3.5 mr-1.5" />
           {t('ev_iv.max_speed')}

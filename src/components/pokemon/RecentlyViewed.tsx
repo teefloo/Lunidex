@@ -28,9 +28,9 @@ export default function RecentlyViewed() {
         </h2>
         <Button
           variant="ghost"
-          size="sm"
+          size="touch"
           onClick={clearHistory}
-          className="h-8 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive transition-colors gap-1.5"
+          className="px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive transition-colors gap-1.5"
           aria-label={t('recently_viewed.clear')}
         >
           <Trash2 className="w-3.5 h-3.5" /> {t('recently_viewed.clear')}

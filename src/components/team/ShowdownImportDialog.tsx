@@ -95,16 +95,18 @@ export function ShowdownImportDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full text-[10px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
-        >
-          <ClipboardPaste className="w-2.5 h-2.5" />
-          {t('team.import_showdown', { defaultValue: 'Import Showdown' })}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button
+            variant="outline"
+            size="touch"
+            className="rounded-full text-[10px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10 sm:text-[11px]"
+          >
+            <ClipboardPaste className="h-2.5 w-2.5" />
+            {t('team.import_showdown', { defaultValue: 'Import Showdown' })}
+          </Button>
+        }
+      />
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t('team.import_showdown', { defaultValue: 'Import Showdown' })}</DialogTitle>

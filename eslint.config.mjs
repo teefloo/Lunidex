@@ -24,6 +24,7 @@ const eslintConfig = defineConfig([
     // Custom ignores:
     "**/*_Conflict.*",
     "tmp/**",
+    ".claude/**",
   ]),
 ]);
 

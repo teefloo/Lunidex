@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-transparent bg-clip-padding text-sm font-semibold transition-all duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 touch-target items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-transparent bg-clip-padding text-sm font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -31,7 +31,9 @@ const buttonVariants = cva(
         xs: "h-9 px-3 text-xs",
         sm: "h-10 px-3.5 text-sm",
         lg: "h-12 px-5 text-sm",
+        touch: "min-h-11 min-w-11 px-4",
         icon: "size-11",
+        "icon-touch": "size-11",
         "icon-xs": "size-9",
         "icon-sm": "size-10",
         "icon-lg": "size-12",

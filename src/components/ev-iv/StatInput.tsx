@@ -60,7 +60,9 @@ export default function StatInput({
             const n = Math.min(max, Math.max(min, Number(e.target.value) || 0));
             onChange(n);
           }}
-          className="w-full h-9 rounded-sm bg-card/50 border border-border/60 px-2.5 text-sm font-semibold text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all disabled:opacity-40"
+          inputMode="numeric"
+          name={`stat-${label.toLowerCase().replace(/\s+/g, '-')}`}
+          className="touch-target w-full rounded-sm bg-card/50 border border-border/60 px-2.5 text-sm font-semibold text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow] disabled:opacity-40"
           aria-label={label}
         />
       )}

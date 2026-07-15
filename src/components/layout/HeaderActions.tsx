@@ -83,7 +83,7 @@ export function HeaderActions() {
       <Tooltip>
         <TooltipTrigger>
           <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} className="hidden sm:block">
-            <div className="glass-control flex h-10 w-10 items-center justify-center text-muted-foreground transition-all hover:text-[var(--action-favorite)] active:scale-95">
+            <div className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground transition-[color,transform] hover:text-[var(--action-favorite)] active:scale-95">
               <Heart className="h-3.5 w-3.5" />
             </div>
           </Link>
@@ -95,8 +95,8 @@ export function HeaderActions() {
         <SelectTrigger
           size="sm"
           aria-label={languageLabel}
-          className="glass-control flex !h-10 !w-10 sm:!w-[96px] items-center justify-center sm:justify-between !px-2.5 sm:!px-3 !py-0 overflow-hidden sm:overflow-visible text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
-          style={{ minHeight: 40 }}
+          className="glass-control touch-target flex !h-11 !w-11 sm:!w-[96px] items-center justify-center sm:justify-between !px-2.5 sm:!px-3 !py-0 overflow-hidden sm:overflow-visible text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
+          style={{ minHeight: 44 }}
         >
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
             <circle cx="9" cy="9" r="7.2" />
@@ -126,8 +126,8 @@ export function HeaderActions() {
           <button
             type="button"
             onClick={cycleTheme}
-            className="glass-control flex h-10 w-10 items-center justify-center text-muted-foreground hover:border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 active:scale-95"
-            aria-label={themeLabel}
+            className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground hover:border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 active:scale-95"
+            aria-label={isDark ? t('settings.switch_to_light', { defaultValue: `Switch to light theme — current theme: ${themeLabel}` }) : t('settings.switch_to_dark', { defaultValue: `Switch to dark theme — current theme: ${themeLabel}` })}
             suppressHydrationWarning
           >
             {!mounted ? (

@@ -29,7 +29,7 @@ export default function EVIVPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-24 pb-16 px-4 md:px-6">
+      <main className="min-h-dvh pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-2xl mx-auto space-y-8">
           {/* Page header */}
           <div className="text-center space-y-3">

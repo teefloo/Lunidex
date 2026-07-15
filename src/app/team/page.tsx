@@ -263,7 +263,7 @@ export default function TeamPage() {
                       >
                         <button
                           onClick={() => removeFromTeam(p.id)}
-                          className="absolute top-3 right-3 p-2 rounded-full bg-secondary/50 text-foreground/40 hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-all z-20"
+                          className="touch-target absolute top-2 right-2 z-20 rounded-full bg-secondary/50 p-2 text-foreground/55 hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-[color,background-color,opacity]"
                           aria-label={t('card.remove_team')}
                         >
                           <X className="w-4 h-4" />
@@ -297,7 +297,7 @@ export default function TeamPage() {
                         
                         <Link
                           href={`/pokemon/${p.name}`}
-                          className="mt-auto inline-flex w-full items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/10 hover:text-primary h-8 text-[10px] font-black uppercase tracking-widest"
+                          className="touch-target mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color] outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/10 hover:text-primary text-[10px] font-black uppercase tracking-widest"
                         >
                           {t('team.details')}
                         </Link>
@@ -348,9 +348,9 @@ export default function TeamPage() {
                     <div className="w-full h-3 bg-card/50 rounded-full overflow-hidden mb-8 border border-border/40">
                       <motion.div 
                         initial={{ width: 0 }}
-                        animate={{ width: `${synergyScore}%` }}
+                        animate={{ scaleX: synergyScore / 100 }}
                         transition={{ duration: 1, ease: "easeOut" }}
-                        className={cn("h-full", scoreColor)}
+                        className={cn("h-full origin-left", scoreColor)}
                       />
                     </div>
 
@@ -586,5 +586,4 @@ export default function TeamPage() {
     </div>
   );
 }
-
 

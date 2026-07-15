@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -36,6 +36,7 @@ export default function AbilitiesPageClient() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('name');
+  const [visibleCount, setVisibleCount] = useState(48);
 
   const {
     data: rawAbilities,
@@ -85,6 +86,14 @@ export default function AbilitiesPageClient() {
     });
   }, [abilities, searchTerm, sortBy]);
 
+  useEffect(() => {
+    // Reset pagination when a new filter result set is selected.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisibleCount(48);
+  }, [searchTerm, sortBy]);
+
+  const visibleAbilities = filteredAbilities.slice(0, visibleCount);
+
   const stats = {
     total: abilities.length,
     visible: filteredAbilities.length,
@@ -117,7 +126,7 @@ export default function AbilitiesPageClient() {
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('abilities_page.filters', { defaultValue: 'Filters' })}
                 </div>
-                <Button variant="ghost" size="xs" onClick={clearFilters} className="h-8 px-2.5 text-[10px] uppercase tracking-[0.18em] text-foreground/50">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[10px] uppercase tracking-[0.18em] text-foreground/60">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset', { defaultValue: 'Reset' })}
                 </Button>
@@ -133,13 +142,15 @@ export default function AbilitiesPageClient() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder={t('abilities_page.search_placeholder', { defaultValue: 'Search abilities...' })}
-                    className="relative z-0 h-11 w-full rounded-sm border border-border/70 bg-muted/40 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    name="ability-search"
+                    autoComplete="off"
+                    className="relative z-0 h-11 w-full rounded-sm border border-border/70 bg-muted/40 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/55 transition-[border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                   />
                   {searchTerm && (
                     <button
                       type="button"
                       onClick={() => setSearchTerm('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-foreground/30 transition-colors hover:text-foreground"
+                      className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/55 transition-colors hover:text-foreground"
                       aria-label={t('search.clear', { defaultValue: 'Clear search' })}
                     >
                       <X className="h-4 w-4" />
@@ -159,7 +170,7 @@ export default function AbilitiesPageClient() {
                         type="button"
                         onClick={() => setSortBy(option.key)}
                         className={cn(
-                          'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                          'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
                             ? 'border-primary/35 bg-primary/15 text-primary'
                             : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -226,10 +237,20 @@ export default function AbilitiesPageClient() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   <AnimatePresence mode="popLayout">
-                    {filteredAbilities.map((ability, index) => (
+                    {visibleAbilities.map((ability, index) => (
                       <AbilityCard key={ability.id} ability={ability} index={index} t={t} />
                     ))}
                   </AnimatePresence>
+                  {visibleCount < filteredAbilities.length && (
+                    <div className="col-span-full flex flex-col items-center gap-2 pt-3">
+                      <p className="text-xs text-muted-foreground" aria-live="polite">
+                        {t('abilities_page.showing_results', { defaultValue: `Showing ${visibleAbilities.length} of ${filteredAbilities.length}` })}
+                      </p>
+                      <Button type="button" size="touch" variant="outline" onClick={() => setVisibleCount((count) => count + 48)}>
+                        {t('common.show_more', { defaultValue: 'Show more' })}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

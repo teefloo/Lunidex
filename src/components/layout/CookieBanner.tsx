@@ -101,7 +101,7 @@ export default function CookieBanner() {
               {t('legal.banner.disclaimer')}{' '}
               <Link
                 href={cookiesHref}
-                className="rounded-sm text-foreground/90 underline underline-offset-2 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+                className="touch-target inline-flex items-center rounded-sm text-foreground/90 underline underline-offset-2 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
               >
                 {t('legal.banner.policy_link')}
               </Link>
@@ -110,10 +110,10 @@ export default function CookieBanner() {
         </div>
 
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2.5">
-          <Button type="button" variant="ghost" size="sm" onClick={handleReject}>
+          <Button type="button" variant="ghost" size="touch" onClick={handleReject}>
             {t('legal.banner.reject')}
           </Button>
-          <Button type="button" variant="default" size="sm" onClick={handleAccept}>
+          <Button type="button" variant="default" size="touch" onClick={handleAccept}>
             {t('legal.banner.accept')}
           </Button>
         </div>

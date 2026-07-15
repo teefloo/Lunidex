@@ -283,7 +283,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isTeam ? t('card.remove_team') : t('card.add_team')}
               style={{ '--chip': 'var(--action-team)' } as CSSProperties}
               className={cn(
-                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'touch-target flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-[color,background-color,border-color,box-shadow,transform] duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isTeam
                   ? CHIP_ACTIVE
                    : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
@@ -300,7 +300,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isComp ? t('card.remove_compare') : t('card.add_compare')}
               style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
               className={cn(
-                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'touch-target flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-[color,background-color,border-color,box-shadow,transform] duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isComp
                   ? CHIP_ACTIVE
                    : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground',
@@ -316,7 +316,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               aria-label={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
               style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
               className={cn(
-                'flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-sm border p-1 transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
+                'touch-target flex h-11 w-11 items-center justify-center rounded-sm border p-1 transition-[color,background-color,border-color,box-shadow,transform] duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background',
                 isFav
                   ? CHIP_ACTIVE
                   : 'border-foreground/15 bg-background/55 text-muted-foreground hover:border-foreground/30 hover:text-foreground'

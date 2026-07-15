@@ -65,6 +65,36 @@ describe('TCG card pagination', () => {
     expect(cards).toHaveLength(102);
     expect(cards.at(-1)?.id).toBe('promo-102');
   });
+
+  it('builds an asset URL when a card detail has no image field', async () => {
+    const missingImageCard = {
+      ...makeCard('2024sv-1'),
+      image: undefined,
+      localId: '1',
+      set: { id: '2024sv', name: "McDonald's Collection 2024" },
+    };
+
+    mockGet.mockImplementation(async (url: string) => {
+      if (url.includes('/cards?')) return { data: [missingImageCard] };
+      if (url.includes('/cards/2024sv-1')) return { data: missingImageCard };
+      if (url.includes('/sets/2024sv')) {
+        return {
+          data: {
+            id: '2024sv',
+            name: "McDonald's Collection 2024",
+            serie: { id: 'mc', name: "McDonald's Collection" },
+            cardCount: { total: 15 },
+          },
+        };
+      }
+
+      return { data: null };
+    });
+
+    const cards = await getPokemonCards('Pikachu');
+
+    expect(cards[0]?.imageUrl).toBe('https://assets.tcgdex.net/en/mc/2024sv/1');
+  });
 });
 
 describe('TCG promo rarity', () => {

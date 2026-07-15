@@ -175,18 +175,21 @@
   --action-legendary: oklch(0.87 0.090 80);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
 [role="slider"] {
   touch-action: none;
+}
+
+button,
+a,
+select,
+[role="button"],
+[role="tab"] {
+  touch-action: manipulation;
 }
 
 html {
   color-scheme: light;
   max-width: 100%;
-  overflow-x: clip;
 }
 
 .dark html,
@@ -195,9 +198,8 @@ html.dark {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   max-width: 100%;
-  overflow-x: clip;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
@@ -260,16 +262,7 @@ h1 { letter-spacing: 0; }
 .app-page {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
-  overflow-x: clip;
-}
-
-@supports not (overflow: clip) {
-  html,
-  body,
-  .app-page {
-    overflow-x: hidden;
-  }
+  min-height: 100dvh;
 }
 
 .page-shell {
@@ -722,52 +715,6 @@ h1 { letter-spacing: 0; }
   cursor: pointer;
 }
 
-.pokemon-holo-card[data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__glare {
-  clip-path: var(--clip);
-}
-
-.pokemon-holo-card[data-art-window="pokemon-modern"][data-rarity="rare holo"][data-subtypes^="stage"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-modern"][data-rarity="rare holo"][data-subtypes^="stage"] .card__glare,
-.pokemon-holo-card[data-art-window="pokemon-modern"][data-rarity="rare holo cosmos"][data-subtypes^="stage"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-modern"][data-rarity="rare holo cosmos"][data-subtypes^="stage"] .card__glare {
-  clip-path: var(--clip-stage);
-}
-
-.pokemon-holo-card[data-art-window="pokemon-wotc"][data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-wotc"][data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-wotc"][data-rarity="rare holo cosmos"] .card__glare {
-  clip-path: inset(13.7% 10.2% 52.6% 10.2% round 1.8% / 1.2%);
-}
-
-.pokemon-holo-card[data-art-window="pokemon-ex"][data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-ex"][data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-ex"][data-rarity="rare holo cosmos"] .card__glare,
-.pokemon-holo-card[data-art-window="pokemon-dp-hgss"][data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-dp-hgss"][data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-dp-hgss"][data-rarity="rare holo cosmos"] .card__glare {
-  clip-path: inset(12.2% 8.7% 51.9% 8.7% round 2% / 1.4%);
-}
-
-.pokemon-holo-card[data-art-window="pokemon-bw"][data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-bw"][data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-art-window="pokemon-bw"][data-rarity="rare holo cosmos"] .card__glare {
-  clip-path: inset(10.8% 8.1% 52.2% 8.1% round 2.2% / 1.5%);
-}
-
-.pokemon-holo-card[data-art-window="energy"][data-rarity="rare holo"] .card__shine,
-.pokemon-holo-card[data-art-window="energy"][data-rarity="rare holo"] .card__glare,
-.pokemon-holo-card[data-rarity="rare holo cosmos"] .card__shine,
-.pokemon-holo-card[data-art-window="energy"][data-rarity="rare holo cosmos"] .card__glare {
-  clip-path: inset(17.5% 9% 39.5% 9% round 2.55% / 1.5%);
-}
-
 .pokemon-holo-card .card__front {
   position: relative;
 }
@@ -786,11 +733,6 @@ h1 { letter-spacing: 0; }
   width: 100%;
 }
 
-.pokemon-holo-card[data-holo-effect="false"] .card__shine,
-.pokemon-holo-card[data-holo-effect="false"] .card__glare {
-  opacity: 0 !important;
-}
-
 .pokemon-holo-card.interactive:not(.interacting) .card__translater,
 .pokemon-holo-card.interactive:not(.interacting) .card__rotator,
 .pokemon-holo-card.interactive:not(.interacting) .card__shine,
@@ -800,6 +742,15 @@ h1 { letter-spacing: 0; }
     opacity 0.2s ease,
     box-shadow 0.26s ease,
     filter 0.26s ease;
+}
+
+.pokemon-holo-card .card__translater,
+.pokemon-holo-card .card__rotator,
+.pokemon-holo-card .card__shine,
+.pokemon-holo-card .card__glare {
+  transition-property: transform, opacity, filter;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── Toast (sonner) ─────────────────────────────────────────────── */
@@ -934,6 +885,21 @@ h1 { letter-spacing: 0; }
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@utility touch-target {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  touch-action: manipulation;
+}
+
+@utility scroll-snap-x {
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+}
+
+@utility scroll-snap-align-start {
+  scroll-snap-align: start;
 }
 
 /* ── Selection ──────────────────────────────────────────────────── */

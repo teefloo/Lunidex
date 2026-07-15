@@ -125,6 +125,7 @@ function normaliseSet(raw: RawSet): TCGSet {
   return {
     id: raw.id,
     name: raw.name,
+    serie: raw.serie,
     logo: fixTcgdexImageUrl(raw.logo),
     symbol: fixTcgdexImageUrl(raw.symbol),
     releaseDate: raw.releaseDate,
@@ -168,6 +169,28 @@ function normaliseCard(card: TCGCard): TCGCard {
       : card.abilities
         ? normaliseAbility(card.abilities)
         : card.abilities,
+  };
+}
+
+async function resolveCardImage(card: TCGCard, lang: string, signal?: AbortSignal): Promise<TCGCard> {
+  if (card.image || card.imageUrl) return card;
+
+  const setId = card.set?.id ?? card.id.split('-')[0];
+  const idLocalId = card.id.startsWith(`${setId}-`) ? card.id.slice(setId.length + 1) : undefined;
+  const localId = idLocalId || card.localId || card.number;
+  if (!setId || !localId) return card;
+
+  throwIfAborted(signal);
+  const set = await getSetById(setId, lang);
+  throwIfAborted(signal);
+
+  const serieId = set?.serie?.id;
+  if (!serieId) return card;
+
+  return {
+    ...card,
+    image: undefined,
+    imageUrl: `https://assets.tcgdex.net/${lang}/${serieId}/${setId}/${encodeURIComponent(localId)}`,
   };
 }
 
@@ -463,7 +486,7 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
  */
 export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSignal): Promise<TCGCard | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-card-v5-${cardId}-${tcgLang}`;
+  const cacheKey = `tcg-card-v8-${cardId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
@@ -473,7 +496,7 @@ export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSign
 
     const { data } = await getWithOptionalSignal<TCGCard>(`/${tcgLang}/cards/${cardId}`, signal);
     if (data) {
-      const card = normaliseCard(data);
+      const card = await resolveCardImage(normaliseCard(data), tcgLang, signal);
       await setCachedData(cacheKey, card);
       return card;
     }
@@ -760,7 +783,7 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
  */
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-v5-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-v8-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
@@ -808,8 +831,8 @@ export const searchCards = async (
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
   const cacheKey = fetchAll
-    ? `tcg-catalog-all-v10-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
-    : `tcg-catalog-v10-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
+    ? `tcg-catalog-all-v11-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    : `tcg-catalog-v11-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
 
   try {
     const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
@@ -1002,7 +1025,7 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v7-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v10-${tcgLang}-${pokemonName}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
@@ -1015,11 +1038,10 @@ export const getPokemonCards = async (
       sortOrder: 'asc',
     };
 
-    let cards = (await fetchAllCardSearchPages(searchFilters, tcgLang)).filter((card) => card.image);
+    let cards = await fetchAllCardSearchPages(searchFilters, tcgLang);
 
     if (cards.length === 0 && tcgLang !== 'en' && englishName) {
-      cards = (await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en'))
-        .filter((card) => card.image);
+      cards = await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en');
     }
 
     const enriched = await Promise.all(
@@ -1043,6 +1065,7 @@ interface RawSet {
   logo?: string;
   symbol?: string;
   releaseDate?: string;
+  serie?: { id: string; name: string };
   cardCount?: { total?: number };
   totalCards?: number;
   legalities?: { unlimited?: string; standard?: string; expanded?: string };

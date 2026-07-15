@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, type KeyboardEvent } from 'react';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -44,6 +44,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
   const { t } = useTranslation();
   const [hoveredCell, setHoveredCell] = useState<{ atk: string; def: string } | null>(null);
   const [lastHoveredCell, setLastHoveredCell] = useState<{ atk: string; def: string } | null>(null);
+  const [selectedCell, setSelectedCell] = useState<{ atk: string; def: string } | null>(null);
   const [collapsed, setCollapsed] = useState(false);
 
   const handleCellHover = useCallback((atk: string, def: string) => {
@@ -55,12 +56,45 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
     setHoveredCell(null);
   }, []);
 
-  const isHighlighted = useCallback((type: string) => {
-    if (!hoveredCell) return false;
-    return type === hoveredCell.atk || type === hoveredCell.def;
-  }, [hoveredCell]);
+  const selectCell = useCallback((atk: string, def: string) => {
+    const cell = { atk, def };
+    setSelectedCell(cell);
+    setLastHoveredCell(cell);
+  }, []);
 
-  const activeCell = hoveredCell || lastHoveredCell;
+  const handleCellKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>, atk: string, def: string) => {
+    const atkIndex = TYPE_ORDER.indexOf(atk as TypeName);
+    const defIndex = TYPE_ORDER.indexOf(def as TypeName);
+    let nextAtk = atkIndex;
+    let nextDef = defIndex;
+
+    if (event.key === 'ArrowUp') nextAtk = Math.max(0, atkIndex - 1);
+    if (event.key === 'ArrowDown') nextAtk = Math.min(TYPE_ORDER.length - 1, atkIndex + 1);
+    if (event.key === 'ArrowLeft') nextDef = Math.max(0, defIndex - 1);
+    if (event.key === 'ArrowRight') nextDef = Math.min(TYPE_ORDER.length - 1, defIndex + 1);
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectCell(atk, def);
+      return;
+    }
+
+    if (nextAtk !== atkIndex || nextDef !== defIndex) {
+      event.preventDefault();
+      const nextCell = `${TYPE_ORDER[nextAtk]}-${TYPE_ORDER[nextDef]}`;
+      selectCell(TYPE_ORDER[nextAtk], TYPE_ORDER[nextDef]);
+      document.querySelector<HTMLElement>(`[data-type-cell="${nextCell}"]`)?.focus();
+    }
+  }, [selectCell]);
+
+  const highlightedCell = hoveredCell ?? selectedCell;
+
+  const isHighlighted = useCallback((type: string) => {
+    if (!highlightedCell) return false;
+    return type === highlightedCell.atk || type === highlightedCell.def;
+  }, [highlightedCell]);
+
+  const activeCell = selectedCell || hoveredCell || lastHoveredCell;
 
   const tooltipInfo = useMemo(() => {
     if (!activeCell) return null;
@@ -69,7 +103,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
   }, [activeCell]);
 
   const getCellBg = (value: number, atkType: string, defType: string): string => {
-    if (hoveredCell && (atkType === hoveredCell.atk || defType === hoveredCell.def)) {
+    if (highlightedCell && (atkType === highlightedCell.atk || defType === highlightedCell.def)) {
       if (value === 2) return 'bg-emerald-500/70';
       if (value === 0.5) return 'bg-red-500/50';
       if (value === 0) return 'bg-zinc-800/90';
@@ -118,8 +152,9 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-sm bg-card/50 border border-border/50 hover:bg-card/70 transition-colors"
+            className="touch-target rounded-sm border border-border/50 bg-card/50 p-2 hover:bg-card/70 transition-colors"
             aria-label={collapsed ? t('types_page.expand') : t('types_page.collapse')}
           >
             {collapsed ? <ChevronDown className="w-4 h-4 text-foreground/50" /> : <ChevronUp className="w-4 h-4 text-foreground/50" />}
@@ -131,7 +166,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 px-4 py-3 bg-primary/10  border border-primary/20 rounded-sm flex items-center gap-3 text-sm"
+            className="mt-4 flex items-center gap-3 rounded-sm border border-primary/20 bg-primary/10 px-4 py-3 text-sm"
+            aria-live="polite"
           >
             <span className="font-black uppercase text-xs px-2 py-1 rounded-md" style={{ backgroundColor: TYPE_COLORS[tooltipInfo.atk] + '30', color: TYPE_COLORS[tooltipInfo.atk] }}>
               {t(`types.${tooltipInfo.atk}`)}
@@ -159,7 +195,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           </motion.div>
         ) : (
           <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-[10px] font-bold text-foreground/30 uppercase tracking-wider">
-            {t('types_page.hover_hint', { defaultValue: 'Hover over a cell to see the multiplier' })}
+            <span className="sm:hidden">{t('types_page.touch_hint', { defaultValue: 'Tap a cell to see its multiplier' })}</span>
+            <span className="hidden sm:inline">{t('types_page.pointer_hint', { defaultValue: 'Hover or select a cell to see the multiplier' })}</span>
           </div>
         )}
 
@@ -187,7 +224,10 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
       >
         <div className="bg-background/50 p-3 md:p-5">
           <div className="rounded-sm overflow-hidden border border-border/40">
-            <div className="overflow-x-auto scrollbar-hide">
+            <div className="scroll-snap-x overflow-x-auto scrollbar-hide" aria-describedby="type-chart-scroll-hint">
+              <p id="type-chart-scroll-hint" className="mb-2 px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground sm:hidden">
+                {t('types_page.scroll_hint', { defaultValue: 'Swipe horizontally to explore the full matrix' })}
+              </p>
               <div className="min-w-[750px]">
                 <table className="w-full border-separate border-spacing-[2px]" style={{ tableLayout: 'fixed' }} role="grid" aria-label={t('types_page.type_chart')}>
                   <colgroup>
@@ -209,14 +249,15 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                         <th
                           key={defType}
                           className={cn(
-                            'p-0.5 transition-all duration-200',
+                            'p-0.5 transition-[transform,background-color] duration-200',
                             isHighlighted(defType) && 'scale-110'
                           )}
                         >
                           <button
+                            type="button"
                             onClick={() => onTypeClick?.(defType)}
                             className={cn(
-                              'w-full flex flex-col items-center gap-1 py-2 px-1 rounded-lg transition-all duration-200 group',
+                              'touch-target flex min-h-11 w-full flex-col items-center gap-1 rounded-lg px-1 py-2 transition-[transform,background-color] duration-200 group',
                               isHighlighted(defType) ? 'bg-card/70' : 'hover:bg-card/50'
                             )}
                             aria-label={t(`types.${defType}`)}
@@ -241,9 +282,10 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                           isHighlighted(atkType) && 'bg-card/50'
                         )}>
                           <button
+                            type="button"
                             onClick={() => onTypeClick?.(atkType)}
                             className={cn(
-                              'flex items-center gap-1.5 py-2 px-2 rounded-lg transition-all duration-200 w-full group',
+                              'touch-target flex min-h-11 w-full items-center gap-1.5 rounded-lg px-2 py-2 transition-[transform,background-color] duration-200 group',
                               isHighlighted(atkType) ? 'bg-card/70' : 'hover:bg-card/50'
                             )}
                             aria-label={t(`types.${atkType}`)}
@@ -259,9 +301,10 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                         </td>
                         {TYPE_ORDER.map((defType) => {
                           const val = EFFECTIVENESS[atkType][defType];
+                          const isSelected = selectedCell?.atk === atkType && selectedCell?.def === defType;
                           const isHovered = hoveredCell?.atk === atkType && hoveredCell?.def === defType;
-                          const isRowHighlighted = hoveredCell?.atk === atkType;
-                          const isColHighlighted = hoveredCell?.def === defType;
+                          const isRowHighlighted = highlightedCell?.atk === atkType;
+                          const isColHighlighted = highlightedCell?.def === defType;
                           
                           return (
                             <td
@@ -272,7 +315,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                             >
                               <div
                                 className={cn(
-                                  'w-full aspect-square rounded-md flex items-center justify-center transition-all duration-150 cursor-default',
+                                  'flex aspect-square w-full cursor-pointer items-center justify-center rounded-md transition-[transform,box-shadow,background-color] duration-150',
                                   getCellBg(val, atkType, defType),
                                   getCellTextColor(val),
                                   'text-xs sm:text-sm md:text-base',
@@ -284,6 +327,12 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                                   val === 1 && 'border border-border/30'
                                 )}
                                 role="gridcell"
+                                tabIndex={selectedCell ? (isSelected ? 0 : -1) : (atkType === TYPE_ORDER[0] && defType === TYPE_ORDER[0] ? 0 : -1)}
+                                aria-selected={isSelected}
+                                data-type-cell={`${atkType}-${defType}`}
+                                onClick={() => selectCell(atkType, defType)}
+                                onFocus={() => selectCell(atkType, defType)}
+                                onKeyDown={(event) => handleCellKeyDown(event, atkType, defType)}
                                 aria-label={`${t(`types.${atkType}`)} vs ${t(`types.${defType}`)}: ${val}×`}
                               >
                                 {getCellLabel(val)}

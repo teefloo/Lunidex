@@ -6,7 +6,7 @@ import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { getTCGHoloData } from '@/lib/tcg-holo';
-import { getTCGCardImageCandidates } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates, isOptimizableTcgImage } from '@/lib/tcg-images';
 
 interface TCGHolographicCardProps {
   card: TCGCard;
@@ -51,8 +51,10 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   }, []);
 
   useEffect(() => {
-    import('../../styles/pokemon-cards-css.css');
-    import('../../styles/tcg-card-overrides.css');
+    if (document.querySelector('link[href="/pokemon-cards/css/all-cards.css"]')) return;
+
+    void import('../../styles/pokemon-cards-css.css');
+    void import('../../styles/tcg-card-overrides.css');
   }, []);
 
   const flushVars = () => {
@@ -118,14 +120,14 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
       '--pointer-from-center': distanceFromCenter.toFixed(3),
       '--pointer-from-top': (percentY / 100).toFixed(3),
       '--pointer-from-left': (percentX / 100).toFixed(3),
-      '--card-opacity': holoData.hasHoloEffect ? '1' : '0',
+      '--card-opacity': '1',
       '--rotate-x': `${Math.round(-(centerX / 3.5))}deg`,
       '--rotate-y': `${Math.round(centerY / 3.5)}deg`,
       '--background-x': `${adjust(percentX, 0, 100, 37, 63)}%`,
       '--background-y': `${adjust(percentY, 0, 100, 33, 67)}%`,
-      '--card-scale': noFrame ? '1' : '1.08',
+      '--card-scale': '1',
       '--translate-x': '0px',
-      '--translate-y': noFrame ? '0px' : '-8px',
+      '--translate-y': '0px',
     });
   };
 
@@ -137,14 +139,14 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
       '--pointer-from-center': '0.9',
       '--pointer-from-top': '0.11',
       '--pointer-from-left': '0.25',
-      '--card-opacity': holoData.hasHoloEffect ? '1' : '0',
+      '--card-opacity': '1',
       '--rotate-x': '7deg',
       '--rotate-y': '-19deg',
       '--background-x': '44%',
       '--background-y': '36%',
-      '--card-scale': noFrame ? '1' : '1.08',
+      '--card-scale': '1',
       '--translate-x': '0px',
-      '--translate-y': noFrame ? '0px' : '-8px',
+      '--translate-y': '0px',
     });
   };
 
@@ -193,7 +195,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               height={921}
               sizes={sizes}
               priority={priority}
-              unoptimized
+              unoptimized={!isOptimizableTcgImage(imageCandidates[imageIndex] ?? '')}
               className={cn('card__image', imageClassName)}
               onError={() => {
                 setImageIndex((current) => {

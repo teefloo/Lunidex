@@ -92,7 +92,7 @@ export default function CompareBar() {
             variant="ghost" 
             size="icon" 
             onClick={clearCompare}
-            className="hover:bg-destructive/10 hover:text-destructive rounded-sm min-w-[44px] min-h-[44px]"
+            className="touch-target hover:bg-destructive/10 hover:text-destructive rounded-sm"
             aria-label={t('compare.clear')}
             title={t('compare.clear')}
           >
@@ -112,7 +112,7 @@ export default function CompareBar() {
           ) : (
             <Link
               href="/compare"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm bg-primary px-6 font-black uppercase tracking-widest gap-2 text-primary-foreground  transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="touch-target inline-flex min-h-12 items-center justify-center rounded-sm bg-primary px-6 font-black uppercase tracking-widest gap-2 text-primary-foreground transition-[filter,background-color] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ArrowLeftRight className="w-4 h-4" />
               {t('nav.compare')}
@@ -123,4 +123,3 @@ export default function CompareBar() {
     </div>
   );
 }
-

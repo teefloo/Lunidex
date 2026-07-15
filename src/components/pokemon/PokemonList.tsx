@@ -418,7 +418,7 @@ export default function PokemonList() {
 
   if (isDataLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
         {Array.from({ length: 10 }).map((_, i) => <PokemonCardSkeleton key={i} />)}
       </div>
     );
@@ -480,7 +480,7 @@ export default function PokemonList() {
       )}
 
       <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
           {displayedPokemon.map((p, idx) => (
             <div key={p.id} className="pokemon-grid-item">
               <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />

@@ -172,6 +172,10 @@ export interface TCGCardCount {
 export interface TCGSet {
   id: string;
   name: string;
+  serie?: {
+    id: string;
+    name: string;
+  };
   logo?: string;
   symbol?: string;
   releaseDate?: string;
