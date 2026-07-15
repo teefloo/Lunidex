@@ -39,9 +39,10 @@ export default function EVIVPageClient() {
         {TABS.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setActive(tab.id)}
             className={cn(
-              'flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-[2px] transition-all duration-200',
+              'touch-target flex min-h-11 flex-1 items-center justify-center text-[11px] font-black uppercase tracking-widest rounded-[2px] transition-[color,background-color,box-shadow] duration-200',
               active === tab.id
                 ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-foreground/50 hover:text-foreground hover:bg-card/50',

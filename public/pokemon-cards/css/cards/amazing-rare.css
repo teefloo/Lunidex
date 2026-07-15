@@ -149,7 +149,7 @@
 */
 
 .card:not(.masked)[data-rarity="amazing rare"] .card__shine {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 }
 
 .card:not(.masked)[data-rarity="amazing rare"] .card__glare {

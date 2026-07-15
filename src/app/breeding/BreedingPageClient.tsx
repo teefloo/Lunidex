@@ -88,7 +88,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
               type="button"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-all',
+                'touch-target flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
                 activeTab === tab.id
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'text-foreground/50 hover:text-foreground/80',
@@ -125,7 +125,9 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                       onBlur={() => setTimeout(() => setExplorerOpen(false), 150)}
                       onKeyDown={e => e.key === 'Enter' && explorerInput && setExplorerPokemon(explorerInput.toLowerCase().trim())}
                       placeholder={t('breeding.egg_move_placeholder')}
-                      className="w-full pl-9 pr-3 h-10 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                      name="egg-move-pokemon"
+                      autoComplete="off"
+                      className="touch-target w-full rounded-sm border border-border/60 bg-background/50 pl-9 pr-3 text-sm font-semibold placeholder:text-foreground/55 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-[border-color,box-shadow]"
                     />
                     {explorerOpen && explorerResults.length > 0 && (
                       <div className="absolute z-50 top-full mt-1 w-full rounded-sm border border-border/60 bg-card shadow-lg overflow-hidden text-left">
@@ -140,7 +142,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                               key={p.id}
                               type="button"
                               onMouseDown={() => selectExplorerPokemon(p.name)}
-                              className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
+                              className="touch-target flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-muted/60 transition-colors"
                             >
                               <Image
                                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`}
@@ -162,7 +164,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                     type="button"
                     disabled={!explorerInput.trim()}
                     onClick={() => setExplorerPokemon(explorerInput.toLowerCase().trim())}
-                    className="px-4 h-10 rounded-sm text-[11px] font-black uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary/90 transition-all"
+                    className="touch-target min-h-11 rounded-sm bg-primary px-4 text-[11px] font-black uppercase tracking-wider text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40 hover:bg-primary/90 transition-[background-color]"
                   >
                     {t('breeding.search_btn')}
                   </button>
@@ -176,7 +178,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                 <button
                   type="button"
                   onClick={() => { setExplorerPokemon(''); setExplorerInput(''); }}
-                  className="text-[10px] font-black uppercase tracking-wider text-foreground/40 hover:text-foreground/70 transition-colors"
+                  className="touch-target inline-flex items-center text-[10px] font-black uppercase tracking-wider text-foreground/55 hover:text-foreground/80 transition-colors"
                 >
                   {t('breeding.change_pokemon')}
                 </button>

@@ -2,6 +2,22 @@ import type { TCGCard } from '@/types/tcg';
 
 const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
 
+const OPTIMIZABLE_TCG_HOSTS = new Set([
+  'assets.tcgdex.net',
+  'images.tcgdex.net',
+  'images.pokemontcg.io',
+]);
+
+export function isOptimizableTcgImage(src: string): boolean {
+  if (src.startsWith('/')) return true;
+  if (/\.gif(?:$|\?)/i.test(src)) return false;
+  try {
+    return OPTIMIZABLE_TCG_HOSTS.has(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
+
 function appendFormat(base: string, ext: string): string {
   const stripped = base.replace(/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i, '');
   return `${stripped}/${ext}`;
@@ -31,15 +47,23 @@ export function getTCGCardPngImage(card: TCGCard): string | undefined {
 }
 
 export function getTCGCardImageCandidates(card: TCGCard): string[] {
+  const setId = card.set?.id;
+  const localId = card.localId || card.number;
+  const pokemonTcgFallbacks = setId && localId
+    ? [
+        `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}_hires.png`,
+        `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}.png`,
+      ]
+    : [];
   const candidates = [
     card.image ? appendFormat(card.image, 'high.webp') : null,
     card.image ? appendFormat(card.image, 'high.png') : null,
     card.image ? appendFormat(card.image, 'high.jpg') : null,
     card.image ?? null,
     card.imageUrl ?? null,
+    ...pokemonTcgFallbacks,
     TCG_CARD_PLACEHOLDER,
   ];
 
   return [...new Set(candidates.filter((value): value is string => Boolean(value)))];
 }
-

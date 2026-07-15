@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -71,6 +71,7 @@ export default function MovesPageClient() {
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortKey>('name');
   const [selectedMove, setSelectedMove] = useState<MoveListItem | null>(null);
+  const [visibleCount, setVisibleCount] = useState(48);
 
   const {
     data: rawMoves,
@@ -138,6 +139,14 @@ export default function MovesPageClient() {
     });
   }, [moves, searchTerm, selectedType, selectedClass, sortBy]);
 
+  useEffect(() => {
+    // Reset pagination when a new filter result set is selected.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisibleCount(48);
+  }, [searchTerm, selectedType, selectedClass, sortBy]);
+
+  const visibleMoves = filteredMoves.slice(0, visibleCount);
+
   const stats = useMemo(() => ({
     total: moves.length,
     visible: filteredMoves.length,
@@ -192,7 +201,7 @@ export default function MovesPageClient() {
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('moves_page.catalog_filters')}
                 </div>
-                <Button variant="ghost" size="xs" onClick={clearFilters} className="h-8 px-2.5 text-[10px] uppercase tracking-[0.18em] text-foreground/50">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[10px] uppercase tracking-[0.18em] text-foreground/60">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset')}
                 </Button>
@@ -225,7 +234,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSortBy(option.key)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -254,7 +263,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedType(active ? null : type)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-transparent text-primary-foreground shadow-[0_0_16px_rgba(227,53,13,0.14)]'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -284,7 +293,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedClass(active ? null : damageClass)}
                           className={cn(
-                            'inline-flex h-8 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -365,7 +374,7 @@ export default function MovesPageClient() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   <AnimatePresence mode="popLayout">
-                    {filteredMoves.map((move, index) => (
+                    {visibleMoves.map((move, index) => (
                       <MoveCard
                         key={move.id}
                         move={move}
@@ -375,6 +384,16 @@ export default function MovesPageClient() {
                       />
                     ))}
                   </AnimatePresence>
+                  {visibleCount < filteredMoves.length && (
+                    <div className="col-span-full flex flex-col items-center gap-2 pt-3">
+                      <p className="text-xs text-muted-foreground" aria-live="polite">
+                        {t('moves_page.showing_results', { defaultValue: `Showing ${visibleMoves.length} of ${filteredMoves.length}` })}
+                      </p>
+                      <Button type="button" size="touch" variant="outline" onClick={() => setVisibleCount((count) => count + 48)}>
+                        {t('common.show_more', { defaultValue: 'Show more' })}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -387,7 +406,7 @@ export default function MovesPageClient() {
   );
 }
 
-function MoveCard({
+export function MoveCard({
   move,
   index,
   onClick,
@@ -401,8 +420,7 @@ function MoveCard({
   const typeColor = TYPE_COLORS[move.type] || '#6B7280';
 
   return (
-    <motion.button
-      type="button"
+    <motion.article
       layout
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -410,9 +428,7 @@ function MoveCard({
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      className="group relative overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-border/90 hover:bg-card/60"
-      aria-label={move.localizedName}
+      className="group relative overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-[border-color,background-color,transform,opacity] duration-300 hover:border-border/90 hover:bg-card/60"
     >
       <div
         className="absolute inset-x-0 top-0 h-1.5 rounded-t-[1.5rem]"
@@ -455,18 +471,26 @@ function MoveCard({
         <MiniStat label={t('moves_page.pp')} value={move.pp !== null ? String(move.pp) : '—'} />
       </div>
 
-      <div className="mt-3 flex justify-end">
+      <div className="mt-3 flex flex-wrap justify-end gap-2">
+        <Button
+          type="button"
+          size="touch"
+          variant="ghost"
+          onClick={onClick}
+          className="h-11 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/65 hover:text-primary"
+        >
+          {t('moves_page.preview', { defaultValue: 'Preview' })}
+        </Button>
         <Link
           href={`/moves/${move.name}`}
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/40 transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+          className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
           aria-label={`View details for ${move.localizedName}`}
         >
           <ExternalLink className="h-2.5 w-2.5" />
           {t('moves_page.detail_title')}
         </Link>
       </div>
-    </motion.button>
+    </motion.article>
   );
 }
 
@@ -568,7 +592,7 @@ function SearchInput({
         <button
           type="button"
           onClick={onClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-foreground/30 transition-colors hover:text-foreground"
+          className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/55 transition-colors hover:text-foreground"
           aria-label={clearLabel}
         >
           <X className="h-4 w-4" />

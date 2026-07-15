@@ -419,7 +419,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Step indicator */}
-      <div className="flex items-center justify-center gap-0">
+      <div className="flex flex-col items-stretch justify-center gap-1 min-[400px]:flex-row min-[400px]:items-center min-[400px]:gap-0">
         {STEP_LABELS.map((label, i) => (
           <div key={label} className="flex items-center">
             <button
@@ -427,7 +427,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               onClick={() => i < step && setStep(i)}
               disabled={i > step}
               className={cn(
-                'flex items-center gap-2 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-all',
+                'touch-target flex min-h-11 min-w-0 items-center gap-2 rounded-sm px-3 py-2 text-center text-[10px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow] min-[400px]:px-4',
                 i === step && 'bg-primary text-primary-foreground',
                 i < step && 'text-primary/70 hover:text-primary cursor-pointer',
                 i > step && 'text-foreground/30 cursor-default',
@@ -440,7 +440,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               {label}
             </button>
             {i < STEP_LABELS.length - 1 && (
-              <ChevronRight className="h-3.5 w-3.5 text-foreground/20 mx-1" />
+              <ChevronRight className="mx-1 hidden h-3.5 w-3.5 text-foreground/20 min-[400px]:block" />
             )}
           </div>
         ))}
@@ -547,7 +547,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               disabled={!canProceed}
               onClick={() => setStep(1)}
               className={cn(
-                'flex items-center gap-2 px-6 py-2.5 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] transition-all',
+                'touch-target flex min-h-11 items-center gap-2 rounded-sm px-6 text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
                 canProceed
                   ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                   : 'bg-muted text-foreground/30 cursor-not-allowed',
@@ -586,7 +586,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       onClick={() => setP1Item(item.value)}
                       title={item.desc}
                       className={cn(
-                        'px-3 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-wider border transition-all',
+                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p1Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
@@ -607,7 +607,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       onClick={() => setP2Item(item.value)}
                       title={item.desc}
                       className={cn(
-                        'px-3 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-wider border transition-all',
+                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p2Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
@@ -637,7 +637,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                   type="button"
                   onClick={() => setTargetIVs(prev => ({ ...prev, [stat]: !prev[stat] }))}
                   className={cn(
-                    'px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider border transition-all',
+                    'touch-target min-h-11 rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                     targetIVs[stat]
                       ? 'bg-primary/15 border-primary/30 text-primary'
                       : 'border-border/40 text-foreground/50 hover:border-border/70',
@@ -662,7 +662,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             <select
               value={targetNature}
               onChange={e => setTargetNature(e.target.value as Nature)}
-              className="w-full max-w-xs px-3 py-2 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary capitalize"
+              className="touch-target w-full max-w-xs rounded-sm border border-border/60 bg-background/50 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary capitalize"
             >
               {NATURES.map(n => {
                 const effect = NATURE_EFFECTS[n];
@@ -676,14 +676,14 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             <button
               type="button"
               onClick={() => setStep(0)}
-              className="flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] border border-border/60 text-foreground/60 hover:border-border/80 hover:text-foreground/80 transition-all"
+              className="touch-target flex min-h-11 items-center gap-2 rounded-sm border border-border/60 px-4 text-[11px] font-black uppercase tracking-[0.15em] text-foreground/65 hover:border-border/80 hover:text-foreground/80 transition-[color,border-color]"
             >
               <ChevronLeft className="h-3.5 w-3.5" /> {t('breeding.btn_back')}
             </button>
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
+              className="touch-target flex min-h-11 items-center gap-2 rounded-sm bg-primary px-6 text-[11px] font-black uppercase tracking-[0.15em] text-primary-foreground hover:bg-primary/90 transition-[background-color]"
             >
               {t('breeding.btn_see_results')} <ChevronRight className="h-3.5 w-3.5" />
             </button>

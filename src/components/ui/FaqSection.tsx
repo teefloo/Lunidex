@@ -70,7 +70,7 @@ export default function FaqSection({
           {search && (
             <button
               onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground transition-colors"
+              className="touch-target absolute right-1 top-1/2 -translate-y-1/2 text-foreground/55 hover:text-foreground transition-colors"
               aria-label="Clear search"
             >
               <X className="h-4 w-4" />
@@ -83,8 +83,8 @@ export default function FaqSection({
             role="radio"
             aria-checked={activeCategory === 'all'}
             onClick={() => setActiveCategory('all')}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
+              className={cn(
+              'touch-target inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
               activeCategory === 'all'
                 ? 'border-primary bg-primary/10 text-foreground'
                 : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
@@ -99,7 +99,7 @@ export default function FaqSection({
               aria-checked={activeCategory === cat.id}
               onClick={() => setActiveCategory(cat.id)}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
+                'touch-target inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
                 activeCategory === cat.id
                   ? 'border-primary bg-primary/10 text-foreground'
                   : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
@@ -112,7 +112,7 @@ export default function FaqSection({
         </div>
 
         {search && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground" aria-live="polite">
             {totalVisible} {totalVisible === 1 ? 'result' : 'results'} for &ldquo;{search}&rdquo;
           </p>
         )}
@@ -152,7 +152,7 @@ export default function FaqSection({
                         isOpen && 'ring-1 ring-primary/20',
                       )}
                     >
-                      <h3>
+                      <h3 id={`${itemKey}-heading`}>
                         <button
                           type="button"
                           onClick={() => toggle(itemKey)}

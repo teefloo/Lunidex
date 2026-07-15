@@ -20,9 +20,9 @@ export function TCGOwnedButton({ cardId, className, size = 'md' }: TCGOwnedButto
   const isOwned = mounted && ownedSet.has(cardId);
 
   const sizeClasses = {
-    sm: 'h-6 w-6 text-[9px]',
-    md: 'h-8 w-8 text-[10px]',
-    lg: 'h-10 w-10 text-xs',
+    sm: 'size-11 text-[9px]',
+    md: 'size-11 text-[10px]',
+    lg: 'size-11 text-xs',
   };
 
   return (
@@ -34,7 +34,7 @@ export function TCGOwnedButton({ cardId, className, size = 'md' }: TCGOwnedButto
         toggle(cardId);
       }}
       className={cn(
-        'inline-flex items-center justify-center rounded-sm border transition-all duration-100 hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5',
+        'touch-target inline-flex items-center justify-center rounded-sm border transition-[color,background-color,border-color,box-shadow,transform] duration-100 hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5',
         sizeClasses[size],
         isOwned
           ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-400 shadow-[var(--shadow-pixel-sm)]'

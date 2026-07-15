@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { Github, Heart } from 'lucide-react';
 
-import { getServerT } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { GITHUB_REPO_URL } from '@/lib/site';
 
 export default async function SiteFooter() {
   const t = await getServerT();
+  const language = await getServerLanguage();
+  const localizedHref = (href: string) => `/${language}${href}`;
   const year = new Date().getFullYear();
 
   const navigationLinks = [
@@ -44,8 +46,8 @@ export default async function SiteFooter() {
             {navigationLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
-                className="hover:text-foreground transition-colors"
+                href={localizedHref(link.href)}
+                className="touch-target inline-flex items-center hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>
@@ -54,9 +56,9 @@ export default async function SiteFooter() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/favorites"
+              href={localizedHref('/favorites')}
               aria-label={t('nav.favorites')}
-              className="text-muted-foreground transition-colors hover:text-[var(--action-favorite)]"
+              className="touch-target inline-flex items-center justify-center text-muted-foreground transition-colors hover:text-[var(--action-favorite)]"
             >
               <Heart className="h-4 w-4" />
             </Link>
@@ -65,7 +67,7 @@ export default async function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               aria-label={t('footer.resources.github')}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="touch-target inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
             >
               <Github className="h-4 w-4" />
             </a>
@@ -82,8 +84,8 @@ export default async function SiteFooter() {
           {legalLinks.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
-              className="hover:text-foreground transition-colors"
+              href={localizedHref(link.href)}
+              className="touch-target inline-flex items-center hover:text-foreground transition-colors"
             >
               {link.label}
             </Link>

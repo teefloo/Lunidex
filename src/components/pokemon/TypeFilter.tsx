@@ -14,7 +14,7 @@ export default function TypeFilter() {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full overflow-x-auto pb-2 pt-2 scrollbar-hide">
+    <div role="region" aria-label={t('filters.types')} className="scroll-snap-x w-full overflow-x-auto pb-2 pt-2 scrollbar-hide">
       <div className="flex flex-nowrap lg:flex-wrap gap-2 justify-start lg:justify-center px-4 min-w-max lg:min-w-0 mx-auto max-w-7xl">
         {selectedTypes.length > 0 && (
           <button
@@ -40,7 +40,7 @@ export default function TypeFilter() {
               onClick={() => toggleType(type)}
               aria-label={label}
               className={cn(
-                "relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+                "scroll-snap-align-start relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "text-primary-foreground border-transparent"
                    : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"

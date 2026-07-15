@@ -349,19 +349,19 @@ Shine & Glare Effects
 .card[data-rarity="rare holo"] .card__glare:after,
 .card[data-rarity="rare holo cosmos"] .card__glare:after,
 .card[data-rarity$="reverse holo"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 }
 
 .card[data-rarity="rare holo"][data-subtypes^="stage"] .card__glare:after,
 .card[data-rarity="rare holo cosmos"][data-subtypes^="stage"] .card__glare:after,
 .card[data-rarity$="reverse holo"][data-subtypes^="stage"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-stage);
 }
 
 .card[data-rarity="rare holo"][data-supertype="trainer"] .card__glare:after,
 .card[data-rarity="rare holo cosmos"][data-supertype="trainer"] .card__glare:after,
 .card[data-rarity$="reverse holo"][data-supertype="trainer"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-trainer);
 }
 
 
@@ -427,13 +427,13 @@ Shine & Glare Effects
 
 .card[data-rarity="rare holo"][data-subtypes^="stage"] .card__shine,
 .card[data-rarity="rare holo"][data-subtypes^="stage"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-stage);
 }
 .card[data-rarity="rare holo"][data-subtypes^="supporter"] .card__shine,
 .card[data-rarity="rare holo"][data-subtypes^="supporter"] .card__glare:after,
 .card[data-rarity="rare holo"][data-subtypes^="item"] .card__shine,
 .card[data-rarity="rare holo"][data-subtypes^="item"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-trainer);
 }
 
 
@@ -457,7 +457,7 @@ Shine & Glare Effects
   --bar-color: hsla(0, 0%, 70%, 1);
   --bar-bg: hsla(0, 0%, 0%, 1);
 
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 
   background-image: 
     repeating-linear-gradient( 110deg, 
@@ -741,11 +741,11 @@ Shine & Glare Effects
 
 .card[data-rarity="rare holo cosmos"][data-subtypes^="stage"] .card__shine,
 .card[data-rarity="rare holo cosmos"][data-subtypes^="stage"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-stage);
 }
 .card[data-rarity="rare holo cosmos"][data-subtypes^="supporter"] .card__shine,
 .card[data-rarity="rare holo cosmos"][data-subtypes^="supporter"] .card__glare:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-trainer);
 }
 
 
@@ -763,7 +763,7 @@ Shine & Glare Effects
 
   --space: 4%;
 
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 
   background-image: 
     url("/pokemon-cards/img/cosmos-bottom.png"), 
@@ -1081,7 +1081,7 @@ Shine & Glare Effects
 */
 
 .card:not(.masked)[data-rarity="amazing rare"] .card__shine {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 }
 
 .card:not(.masked)[data-rarity="amazing rare"] .card__glare {
@@ -1108,7 +1108,7 @@ Shine & Glare Effects
 }
 
 .card[data-rarity="radiant rare"] .card__shine:after {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 }
 
 
@@ -2857,10 +2857,10 @@ Shine & Glare Effects
 */
 
 .card[data-rarity="rare shiny"] .card__shine {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip);
 }
 .card[data-rarity="rare shiny"][data-subtypes^="stage"] .card__shine {
-  clip-path: var(--clip-borders);
+  clip-path: var(--clip-stage);
 }
 
 .card[data-rarity="rare shiny"] .card__shine,

@@ -172,31 +172,33 @@ export default function EVIVCalculator() {
         <div className="flex gap-2">
           <input
             type="text"
+            name="pokemon"
+            autoComplete="off"
             value={pokemonInput}
             onChange={(e) => setPokemonInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="pikachu"
-            className="flex-1 h-10 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/55 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
           />
           <Button
             variant="outline"
-            size="sm"
+            size="icon-touch"
             onClick={handleSearch}
             disabled={isFetching}
-            className="h-10 px-3 rounded-sm border-border/60"
+            className="rounded-sm border-border/60"
             aria-label="Search"
           >
             <Search className="h-4 w-4" />
           </Button>
         </div>
         {isFetching && (
-          <p className="text-[11px] text-foreground/40 animate-pulse">Loading…</p>
+          <p className="text-[11px] text-foreground/55 animate-pulse" aria-live="polite">Loading…</p>
         )}
         {isError && (
-          <p className="text-[11px] text-red-400">Pokémon not found. Check the name and retry.</p>
+          <p className="text-[11px] text-red-400" role="alert">Pokémon not found. Check the name and retry.</p>
         )}
         {baseStats && !isFetching && (
-          <p className="text-[11px] text-emerald-400 font-semibold">
+          <p className="text-[11px] text-emerald-400 font-semibold" aria-live="polite">
             Base stats loaded for <span className="capitalize">{pokemonName}</span>
           </p>
         )}
@@ -210,11 +212,13 @@ export default function EVIVCalculator() {
           </label>
           <input
             type="number"
+            name="level"
+            inputMode="numeric"
             min={1}
             max={100}
             value={level}
             onChange={(e) => setLevel(Math.min(100, Math.max(1, Number(e.target.value) || 1)))}
-            className="w-full h-10 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-semibold text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+            className="touch-target w-full rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-semibold text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
           />
         </div>
         <NatureSelector

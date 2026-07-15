@@ -45,7 +45,7 @@ export const TCGCardItem = memo(function TCGCardItem({
       <TCGHolographicCard
         card={card}
         onClick={onClick}
-        priority={index < 6}
+        priority={index < 2}
         noFrame={isList}
         className={cn(
           'w-full',
@@ -57,20 +57,20 @@ export const TCGCardItem = memo(function TCGCardItem({
       <div className={cn('min-w-0 flex-1 space-y-3', isList && 'py-1')}>
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="truncate text-[9px] font-black uppercase tracking-tight text-foreground sm:text-[10px]">
+            <h3 className="truncate text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
               {card.name}
             </h3>
-            <p className="mt-0.5 truncate text-[6px] font-black uppercase tracking-[0.1em] text-foreground/35 sm:text-[7px]">
+            <p className="mt-0.5 truncate text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-[11px]">
               {card.set?.name ?? t('tcg.unknown')}
             </p>
           </div>
 
-          <span className="shrink-0 rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-[6px] font-black uppercase tracking-[0.1em] text-foreground/40 sm:text-[7px]">
+          <span className="min-w-0 max-w-[48%] break-words rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-right text-[10px] font-black uppercase leading-tight tracking-[0.1em] text-foreground/70 sm:max-w-none sm:shrink-0 sm:text-[11px]">
             {card.rarity ?? t('tcg.none')}
           </span>
         </div>
 
-        <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[6px] font-black uppercase tracking-[0.08em] text-foreground/40 sm:text-[7px]">
+        <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[10px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-[11px]">
           {card.category && (
             <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
               {card.category}
@@ -90,7 +90,7 @@ export const TCGCardItem = memo(function TCGCardItem({
             toggleTCGOwned(card.id);
           }}
           className={cn(
-            'inline-flex h-6 w-full items-center justify-center gap-1 rounded-lg border text-[6px] font-black uppercase tracking-[0.08em] transition-colors',
+            'touch-target inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border text-[10px] font-black uppercase tracking-[0.08em] transition-[color,background-color,border-color]',
             owned
               ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
               : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',

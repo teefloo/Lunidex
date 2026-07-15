@@ -22,13 +22,13 @@ export function TCGPageTabs() {
   };
 
   return (
-    <div className="glass-toolbar inline-flex w-fit items-center gap-0.5 p-0.5 mx-auto mb-8">
+    <div className="glass-toolbar mx-auto mb-8 grid w-full grid-cols-2 items-stretch gap-0.5 p-0.5 sm:inline-flex sm:w-fit sm:items-center">
       {TABS.map((tab) => (
         <Link
           key={tab.href}
           href={tab.href}
           className={cn(
-            'relative rounded-sm px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] transition-all duration-100 hover:-translate-x-px hover:-translate-y-px',
+            'touch-target relative flex min-h-11 items-center justify-center rounded-sm px-2 text-center text-[10px] font-black uppercase tracking-[0.12em] transition-[color,background-color,border-color,box-shadow,transform] duration-100 hover:-translate-x-px hover:-translate-y-px sm:px-3.5',
             isActive(tab.href)
               ? 'border border-primary/40 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
               : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',

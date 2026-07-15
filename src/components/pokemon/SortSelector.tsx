@@ -41,7 +41,7 @@ export default function SortSelector() {
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
-        <SelectTrigger aria-labelledby="sort-label" className="w-full sm:w-[200px] rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider h-10 focus:ring-primary/20 hover:border-border transition-all shadow-[var(--shadow-pixel-sm)]">
+        <SelectTrigger aria-labelledby="sort-label" className="touch-target w-full rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider focus:ring-primary/20 hover:border-border transition-[border-color,box-shadow] shadow-[var(--shadow-pixel-sm)] sm:w-[200px]">
           <SelectValue>{currentSortLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent className="p-1 border border-border/60">

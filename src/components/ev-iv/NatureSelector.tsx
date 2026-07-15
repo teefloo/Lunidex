@@ -51,13 +51,14 @@ interface NatureSelectorProps {
 export default function NatureSelector({ value, onChange, label }: NatureSelectorProps) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/60">
         {label}
       </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as NatureName)}
-        className="w-full h-10 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+        name="nature"
+        className="touch-target w-full rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
       >
         {NATURES.map((n) => (
           <option key={n.name} value={n.name}>

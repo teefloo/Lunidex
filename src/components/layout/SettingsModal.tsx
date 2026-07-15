@@ -1,13 +1,12 @@
 'use client';
 
 import { usePrimeDexStore } from '@/store/primedex';
-import { X, Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
+import { Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
 import { DataExportImport } from '@/components/layout/DataExportImport';
 import { GenThemeSelector } from '@/components/settings/GenThemeSelector';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
-import { useEffect, useRef, useCallback } from 'react';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function SettingsModal() {
   const isSettingsOpen = usePrimeDexStore(s => s.isSettingsOpen);
@@ -21,26 +20,6 @@ export default function SettingsModal() {
   const language = usePrimeDexStore(s => s.language);
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  const handleEscape = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape' && isSettingsOpen) {
-      toggleSettings();
-    }
-  }, [isSettingsOpen, toggleSettings]);
-
-  useEffect(() => {
-    if (isSettingsOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-      closeButtonRef.current?.focus();
-      return () => {
-        document.removeEventListener('keydown', handleEscape);
-        document.body.style.overflow = '';
-      };
-    }
-  }, [isSettingsOpen, handleEscape]);
 
   const themeOptions = [
     { value: 'light' as const, label: t('settings.light'), icon: Sun },
@@ -65,45 +44,19 @@ export default function SettingsModal() {
   ];
 
   return (
-    <AnimatePresence>
-      {isSettingsOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('settings.title')}
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-foreground/22 "
-            onClick={toggleSettings}
-          />
-
-          <motion.div
-            ref={dialogRef}
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            onClick={(e) => e.stopPropagation()}
-            className="glass-surface relative w-full max-w-sm rounded-sm p-8 overflow-hidden"
-          >
+    <Dialog
+      open={isSettingsOpen}
+      onOpenChange={(open) => {
+        if (!open && isSettingsOpen) toggleSettings();
+      }}
+    >
+      <DialogContent className="max-w-sm rounded-sm p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:p-8">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/10 to-transparent" />
 
-            <div className="relative z-10 flex justify-between items-center mb-8 pb-4 border-b border-border/60">
-              <h2 className="text-2xl font-black text-foreground tracking-tight">{t('settings.title')}</h2>
-              <button
-                ref={closeButtonRef}
-                onClick={toggleSettings}
-                className="rounded-full border border-transparent p-2 text-foreground/50 transition-colors hover:bg-muted/55 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label={t('settings.close')}
-                title={t('settings.close')}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            <DialogHeader className="relative z-10 mb-8 border-b border-border/60 pb-4">
+              <DialogTitle className="text-2xl font-black tracking-tight text-foreground">{t('settings.title')}</DialogTitle>
+              <DialogDescription className="sr-only">{t('settings.title')}</DialogDescription>
+            </DialogHeader>
 
             <div className="relative z-10 space-y-8">
               {/* Sound Toggle */}
@@ -115,8 +68,9 @@ export default function SettingsModal() {
                   <span className="font-bold text-foreground/80">{t('settings.sound')}</span>
                 </div>
                 <button
+                  type="button"
                   onClick={toggleSound}
-                  className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${soundEnabled ? 'bg-primary' : 'bg-muted/70'}`}
+                  className={`touch-target relative h-11 w-14 rounded-full transition-[background-color] duration-300 ${soundEnabled ? 'bg-primary' : 'bg-muted/70'}`}
                   aria-label={soundEnabled ? t('settings.sound_disable') : t('settings.sound_enable')}
                   role="switch"
                   aria-checked={soundEnabled}
@@ -137,8 +91,9 @@ export default function SettingsModal() {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={toggleAnimatedSprites}
-                  className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${animatedSprites ? 'bg-primary' : 'bg-muted/70'}`}
+                  className={`touch-target relative h-11 w-14 rounded-full transition-[background-color] duration-300 ${animatedSprites ? 'bg-primary' : 'bg-muted/70'}`}
                   aria-label={animatedSprites ? t('settings.animated_sprites_disable') : t('settings.animated_sprites_enable')}
                   role="switch"
                   aria-checked={animatedSprites}
@@ -159,8 +114,9 @@ export default function SettingsModal() {
                   {themeOptions.map(({ value, label, icon: Icon }) => (
                     <button
                       key={value}
+                      type="button"
                       onClick={() => setTheme(value)}
-                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-sm text-xs font-bold transition-all duration-300 ${theme === value
+                      className={`touch-target flex min-h-11 flex-1 flex-col items-center gap-2 rounded-sm px-2 py-3 text-xs font-bold transition-[color,background-color,box-shadow] duration-300 ${theme === value
                         ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                         : 'text-foreground/50 hover:bg-muted/55 hover:text-foreground/80'
                         }`}
@@ -185,8 +141,9 @@ export default function SettingsModal() {
                   {languageOptions.map((lang) => (
                     <button
                       key={lang.code}
+                      type="button"
                       onClick={() => handleLanguageChange(lang.code)}
-                      className={`flex items-center justify-center gap-2 py-2 px-2 rounded-sm text-xs font-bold transition-all duration-300 ${language === lang.code
+                      className={`touch-target flex min-h-11 items-center justify-center gap-2 rounded-sm px-2 py-2 text-xs font-bold transition-[color,background-color,box-shadow] duration-300 ${language === lang.code
                         ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                         : 'text-foreground/50 hover:bg-muted/55 hover:text-foreground/80'
                         }`}
@@ -212,10 +169,7 @@ export default function SettingsModal() {
                 </p>
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+      </DialogContent>
+    </Dialog>
   );
 }
-

@@ -24,7 +24,7 @@ export default function RegionFilter() {
 
   return (
     <div className="w-full pb-4 pt-2">
-      <div className="flex flex-nowrap items-center gap-2 md:gap-2.5 justify-start lg:justify-center px-4 mx-auto w-full max-w-7xl overflow-x-auto scrollbar-hide lg:flex-wrap">
+      <div role="region" aria-label={t('regions.title')} className="scroll-snap-x flex flex-nowrap items-center gap-2 md:gap-2.5 justify-start lg:justify-center px-4 mx-auto w-full max-w-7xl overflow-x-auto scrollbar-hide lg:flex-wrap">
         <div className="hidden sm:flex items-center gap-2 mr-1 px-3 py-2 bg-primary/10 rounded-sm border border-primary/20 shrink-0">
           <Map className="w-3.5 h-3.5 text-primary/70" />
           <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-primary/60">{t('regions.title')}</span>
@@ -53,7 +53,7 @@ export default function RegionFilter() {
               onClick={() => setSelectedGeneration(isActive ? null : parseInt(region.gen))}
               aria-label={label}
               className={cn(
-                "relative px-5 py-3 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+                "scroll-snap-align-start relative px-5 py-3 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "bg-primary text-primary-foreground border-primary/60 shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_45%,transparent)]"
                    : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"

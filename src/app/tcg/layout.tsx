@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
@@ -45,21 +44,8 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
       <link rel="preconnect" href="https://assets.tcgdex.net" />
       <link rel="dns-prefetch" href="https://api.tcgdex.net" />
       <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
-      <link rel="preload" href="/pokemon-cards/css/all-cards.css" as="style" />
-      {/* Non-blocking CSS: load as print, then swap to all once fetched.
-          next/script (not a raw <script> tag) so it still runs after a
-          client-side navigation into /tcg, not just on a full page load. */}
-      <Script
-        id="tcg-cards-css-loader"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='/pokemon-cards/css/all-cards.css';l.media='print';l.onload=function(){this.media='all';};document.head.appendChild(l);})();`,
-        }}
-      />
-      <noscript>
-        {/* eslint-disable-next-line @next/next/no-css-tags -- fallback when JS is disabled */}
-        <link rel="stylesheet" href="/pokemon-cards/css/all-cards.css" />
-      </noscript>
+      {/* eslint-disable-next-line @next/next/no-css-tags -- required for the upstream effect stylesheet */}
+      <link rel="stylesheet" href="/pokemon-cards/css/all-cards.css" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
