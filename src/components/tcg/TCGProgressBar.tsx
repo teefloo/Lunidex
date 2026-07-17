@@ -27,7 +27,7 @@ export function TCGProgressBar({
       <div className={cn('flex-1 overflow-hidden rounded-none bg-muted/40', heights[size])}>
         <div
           className={cn(
-            'h-full transition-all duration-700 ease-out',
+            'h-full transition-[width,background-color] duration-700 ease-out',
             isComplete
               ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
               : 'bg-gradient-to-r from-primary/60 to-primary',

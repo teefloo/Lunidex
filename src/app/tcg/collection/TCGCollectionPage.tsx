@@ -27,21 +27,37 @@ export function TCGCollectionPage() {
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell pt-24 pb-24 relative">
+      <main className="page-shell relative pt-24 pb-24" aria-labelledby="tcg-collection-title">
         <TCGPageTabs />
         <TCGDataLangBanner resolvedLang={resolvedLang} />
         <div className="mb-6">
-          <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
+          <h1 id="tcg-collection-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
             {t('tcg.collection_title')}
           </h1>
-          <p className="mt-1 text-sm font-bold uppercase tracking-[0.08em] text-foreground/40">
+          <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">
             {t('tcg.collection_subtitle')}
           </p>
         </div>
 
         {setsLoading || !sets ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+          <div className="space-y-8" aria-busy="true" aria-live="polite">
+            <span className="sr-only">{t('tcg.collection_loading')}</span>
+            <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
+              <div className="h-3 w-32 animate-pulse rounded-sm bg-primary/20" />
+              <div className="mt-5 grid gap-4 sm:grid-cols-3">
+                {Array.from({ length: 3 }, (_, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="h-2 w-20 animate-pulse rounded-sm bg-foreground/10" />
+                    <div className="h-8 w-16 animate-pulse rounded-sm bg-foreground/10" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 4 }, (_, index) => (
+                <div key={index} className="h-24 animate-pulse rounded-sm border border-border/20 bg-card/30" />
+              ))}
+            </div>
           </div>
         ) : (
           <TCGCollectionOverview sets={sets} resolvedLang={resolvedLang} />
