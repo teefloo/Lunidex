@@ -6,7 +6,7 @@ import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { getTCGHoloData } from '@/lib/tcg-holo';
-import { getTCGCardImageCandidates, isOptimizableTcgImage } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 
 interface TCGHolographicCardProps {
   card: TCGCard;
@@ -195,7 +195,11 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               height={921}
               sizes={sizes}
               priority={priority}
-              unoptimized={!isOptimizableTcgImage(imageCandidates[imageIndex] ?? '')}
+              // TCG CDNs are already optimized and Vercel's image proxy can
+              // reject these remote assets (402), leaving every card on the
+              // desktop grid as a placeholder. Load the authorized CDN URL
+              // directly instead.
+              unoptimized
               className={cn('card__image', imageClassName)}
               onError={() => {
                 setImageIndex((current) => {
