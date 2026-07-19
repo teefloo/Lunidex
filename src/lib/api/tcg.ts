@@ -737,11 +737,12 @@ export const fetchSetCollectionCards = async (
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = `tcg-all-sets-v7-${tcgLang}`;
+  // The set list changes when a new expansion releases. Keep IndexedDB as an
+  // offline fallback, but always give the live API the first opportunity to
+  // provide the latest list.
+  const cachedSets = await getCachedData<TCGSet[]>(cacheKey);
 
   try {
-    const cached = await getCachedData<TCGSet[]>(cacheKey);
-    if (cached) return cached;
-
     const { data } = await tcgClient.get<RawSet[]>(`/${tcgLang}/sets`);
     const sets = data.map(normaliseSet);
 
@@ -770,11 +771,14 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
       return dateB - dateA;
     });
 
-    await setCachedData(cacheKey, sortedSets);
-    return sortedSets;
+    if (sortedSets.length > 0 || !cachedSets?.length) {
+      await setCachedData(cacheKey, sortedSets);
+    }
+    return sortedSets.length > 0 ? sortedSets : (cachedSets ?? []);
   } catch (error) {
     console.error('[TCG API] Error fetching all sets:', error);
-    return (await getCachedData<TCGSet[]>(cacheKey, true)) || [];
+    const fallbackSets = cachedSets ?? (await getCachedData<TCGSet[]>(cacheKey, true));
+    return fallbackSets ?? [];
   }
 };
 
@@ -930,21 +934,19 @@ export const searchCards = async (
  */
 export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> => {
   const tcgLang = resolveTcgLang(lang);
-    const cacheKey = `tcg-filter-options-v7-${tcgLang}`;
+  const cacheKey = `tcg-filter-options-v7-${tcgLang}`;
+  const cached = await getCachedData<TCGFilterOptions>(cacheKey);
 
   try {
-    const cached = await getCachedData<TCGFilterOptions>(cacheKey);
-    if (cached) return cached;
-
     const sets = await getAllSets(tcgLang);
     const options: TCGFilterOptions = {
-      categories: TCG_CARD_CATEGORIES,
+      categories: cached?.categories ?? TCG_CARD_CATEGORIES,
       sets,
-      pokemonTypes: TCG_POKEMON_TYPES,
-      trainerTypes: TCG_TRAINER_TYPES,
-      energyTypes: TCG_ENERGY_TYPES,
-      stages: TCG_POKEMON_STAGES,
-      rarities: TCG_GLOBAL_RARITIES,
+      pokemonTypes: cached?.pokemonTypes ?? TCG_POKEMON_TYPES,
+      trainerTypes: cached?.trainerTypes ?? TCG_TRAINER_TYPES,
+      energyTypes: cached?.energyTypes ?? TCG_ENERGY_TYPES,
+      stages: cached?.stages ?? TCG_POKEMON_STAGES,
+      rarities: cached?.rarities ?? TCG_GLOBAL_RARITIES,
     };
 
     await setCachedData(cacheKey, options);
@@ -952,7 +954,7 @@ export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> =
   } catch (error) {
     console.error('[TCG API] Error fetching filter options:', error);
     return (
-      (await getCachedData<TCGFilterOptions>(cacheKey, true)) ?? {
+      cached ?? (await getCachedData<TCGFilterOptions>(cacheKey, true)) ?? {
         categories: TCG_CARD_CATEGORIES,
         sets: [],
         pokemonTypes: TCG_POKEMON_TYPES,
