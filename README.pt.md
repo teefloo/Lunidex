@@ -1,167 +1,162 @@
 <!-- prettier-ignore -->
 <div align="center">
 
+<img src="./public/icon.svg" alt="Logótipo do PrimeDex" width="80" />
+
 # PrimeDex
 
-### Um dashboard moderno de Pokédex construído com Next.js 16, React 19 e PokeAPI.
+**Uma Pokédex rápida e local-first, e um espaço Pokémon TCG para treinadores, colecionadores e fãs curiosos.**
 
-[PokeAPI](https://pokeapi.co/) · [TCGdex](https://www.tcgdex.net/) · [Vercel](https://vercel.com/) · [Licença](./LICENSE)
+[![Live](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Mobile](https://img.shields.io/badge/Mobile-Expo-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
+
+[Visão geral](#visão-geral) · [Começar](#começar) · [Funcionalidades](#funcionalidades) · [Arquitetura](#arquitetura) · [Configuração](#configuração) · [Implantação](#implantação)
 
 </div>
 
 <!-- README-I18N:START -->
-**English** · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · [汉语](./README.zh.md) · **Português**
+
+[English](./README.md) · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · [中文](./README.zh.md) · **Português**
+
 <!-- README-I18N:END -->
 
-[Visão geral](#visao-geral) · [Funcionalidades](#funcionalidades) · [Início rápido](#inicio-rapido) · [Rotas](#rotas) · [Arquitetura](#arquitetura) · [Fontes de dados](#fontes-de-dados) · [Implantação](#implantacao)
+## Visão geral
 
-## <a id="visao-geral"></a>Visão geral
+O PrimeDex é um monorepo open source composto por uma aplicação web Next.js, pelo pacote TypeScript partilhado `@primedex/core` e por um companheiro móvel Expo. Reúne a Pokédex Nacional, ferramentas de preparação competitiva, ferramentas de coleção Pokémon TCG e acompanhamento de progresso pessoal sem exigir uma conta.
 
-PrimeDex é um dashboard de Pokédex multilíngue (9 idiomas) construído com Next.js 16 (App Router) e React 19. Ele consome a PokeAPI para dados de Pokémon, a TCGdex para o conjunto de cartas, e oferece comparações lado a lado, montagem de times, gerenciamento de favoritos, um quiz de tipos e um modo escuro completo. Todo o estado persistente (idioma, tema, favoritos, time, capturados, filtros) é salvo no IndexedDB via Zustand, então o app permanece rápido e funcional offline.
+A aplicação web cobre os **1.025 Pokémon de nove gerações**. A sua interface está disponível em inglês, francês, espanhol, alemão, italiano, japonês, coreano e chinês simplificado; este repositório também disponibiliza esta tradução portuguesa do README.
 
-## <a id="funcionalidades"></a>Funcionalidades
+> [!NOTE]
+> O PrimeDex é um projeto de fãs não comercial. Os dados, nomes e imagens Pokémon pertencem à Nintendo, Game Freak, Creatures e The Pokémon Company. O PrimeDex não é afiliado nem aprovado por estas empresas.
 
-- **Navegação multilíngue** entre 9 idiomas com roteamento por prefixo, detecção automática via cookie e cabeçalho `Accept-Language`.
-- **Geração 1 estática**: a rota `/pokemon/[name]` pré-renderiza os 151 primeiros Pokémon com `revalidate = 3600`.
-- **TanStack Query** com `staleTime` de 10 min e `gcTime` de 60 min para reduzir fetches repetidos.
-- **Estado persistente em IndexedDB** (favoritos, time, capturados, histórico, filtros) através de `idb-keyval`.
-- **Tema escuro/claro** com `next-themes`, persistido no store e sincronizado sem flash inicial.
-- **Componentes pesados sob demanda** (`EvolutionChain`, `AdvancedInfo`, etc.) carregados via `next/dynamic`.
-- **Painel TCG** com busca, filtros de conjunto e visualização de cartas em grade.
-- **Quiz de tipos**, comparação de dois Pokémon e ferramenta de análise de times com cálculo de fraquezas.
+## Funcionalidades
 
-## <a id="inicio-rapido"></a>Início rápido
+| Área | O que pode fazer |
+| --- | --- |
+| **Pokédex** | Explorar e filtrar os 1.025 Pokémon; consultar estatísticas, habilidades, movimentos, evoluções, formas, encontros, sprites e informação competitiva. |
+| **Ferramentas de treino** | Criar equipas de seis, analisar cobertura, comparar Pokémon, explorar a tabela de tipos, planear EV e IV, calcular criação e simular batalhas da nona geração. |
+| **Referência** | Pesquisar movimentos, habilidades e itens, e usar verificações de cobertura e sugestões de counters. |
+| **Progresso pessoal** | Guardar favoritos, Living Dex, equipas, páginas recentes, estatísticas do quiz e definições em armazenamento local persistente; exportar ou importar o estado em JSON. |
+| **Modos de jogo** | Jogar o quiz de seis modos, acompanhar uma corrida Nuzlocke e partilhar equipas em modo só de leitura. |
+| **Espaço TCG** | Descobrir cartas e conjuntos, gerir coleção e lista de desejos, comparar cartas, acompanhar preços e alertas, e construir baralhos de 60 cartas. |
+| **Offline e móvel** | Instalar a PWA e reutilizar recursos já guardados em cache. A aplicação Expo inclui atualmente Pokédex, detalhe, favoritos, equipas, conta, tema e idiomas. |
+
+## Começar
+
+### Pré-requisitos
+
+- [Node.js](https://nodejs.org/) 20 ou posterior
+- npm 10 ou posterior
 
 ```bash
+git clone https://github.com/teefloo/Poke.git
+cd Poke
 npm install
-npm run dev   # next dev --webpack (não turbopack) — http://localhost:3000
+npm run dev
 ```
 
-Variáveis de ambiente opcionais (todas têm valores padrão):
+Abra [http://localhost:3000](http://localhost:3000). O PrimeDex redireciona URLs sem prefixo para uma rota de idioma como `/en`, com base no cookie `primedex-lang` ou no cabeçalho `Accept-Language` do navegador. A interface web não disponibiliza atualmente uma rota em português.
+
+> [!IMPORTANT]
+> O desenvolvimento usa webpack intencionalmente: `npm run dev` executa `next dev --webpack`. Mantenha este comando mesmo que a configuração Next também declare uma raiz Turbopack.
+
+| Comando | Descrição |
+| --- | --- |
+| `npm run dev` | Inicia o servidor de desenvolvimento Next.js na porta 3000. |
+| `npm run build` | Cria a build de produção. |
+| `npm run start` | Serve a build de produção. |
+| `npm run lint` | Executa ESLint 9. |
+| `npm run typecheck` | Verifica TypeScript sem produzir ficheiros. |
+| `npm run test` | Executa Vitest em jsdom. |
+
+### Aplicação móvel
+
+O companheiro Expo encontra-se em [`apps/mobile`](./apps/mobile) e consome o pacote partilhado [`@primedex/core`](./packages/core).
 
 ```bash
-NEXT_PUBLIC_AGENTATION=false   # devtools do Agentation em http://localhost:4747
+cd apps/mobile
+npx expo start
 ```
 
-## <a id="rotas"></a>Rotas
+O menu Expo permite abrir iOS, Android, web ou Expo Go. Consulte o [README móvel](./apps/mobile/README.md) para os ecrãs suportados.
 
-| Rota              | Descrição                                              |
-| ----------------- | ------------------------------------------------------ |
-| `/`               | Listagem de Pokémon com filtros e busca                |
-| `/pokemon/[name]` | Página de detalhes (estática para a Geração 1)         |
-| `/team`           | Construtor e analisador de times (até 6)               |
-| `/compare`        | Comparação lado a lado de dois Pokémon                 |
-| `/favorites`      | Lista pessoal de Pokémon favoritos e capturados        |
-| `/quiz`           | Quiz de tipos com pontuação                            |
-| `/types`          | Matriz de eficácia de tipos                            |
-| `/tcg`            | Cartas e conjuntos do TCG Pokémon                      |
-| `/about`          | Sobre o projeto, créditos e fontes                     |
-| `/cookies`        | Política de cookies                                    |
+## Configuração
 
-## <a id="arquitetura"></a>Arquitetura
+Não é necessária nenhuma variável de ambiente para navegar pela Pokédex localmente. Crie um `.env.local` não versionado apenas para ativar uma integração opcional.
 
-```
-┌──────────────────────────────────────────────┐
-│ Next.js 16 (App Router, RSC por padrão)      │
-├──────────────────────────────────────────────┤
-│ Camada de UI (Tailwind v4 + shadcn/ui)       │
-│  └── Componentes cliente: filtros, time, quiz │
-├──────────────────────────────────────────────┤
-│ TanStack Query (cache, hidratação, retry=1)  │
-├──────────────────────────────────────────────┤
-│ Camada de API (@/lib/api)                    │
-│  ├── REST + GraphQL → pokeapi.co             │
-│  └── REST → api.tcgdex.net                   │
-├──────────────────────────────────────────────┤
-│ Estado: Zustand + idb-keyval (IndexedDB)     │
-└──────────────────────────────────────────────┘
-```
+| Variável | Finalidade |
+| --- | --- |
+| `NEXT_PUBLIC_APP_URL` | Substitui o URL público canónico; o padrão é `https://primedex.vercel.app`. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Ativa autenticação Supabase e sincronização cloud opcionais. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública associada ao URL Supabase. |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Ativa subscrições push para alertas de preço TCG. |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Adiciona metadados de verificação do Google Search Console. |
+| `NEXT_PUBLIC_ENABLE_AGENTATION` | Ativa a barra de revisão de UI Agentation durante o desenvolvimento. |
 
-### Stack técnica
+> [!TIP]
+> Sem Supabase, o PrimeDex continua plenamente utilizável em modo local-first: favoritos, equipas, capturas, filtros e progresso TCG ficam no armazenamento do navegador. No móvel, use `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_ANON_KEY` em `apps/mobile/.env`.
 
-- **Framework**: Next.js 16 (App Router), React 19, TypeScript
-- **Estilização**: Tailwind CSS v4, `tailwindcss-animate`, `base-ui` primitives
-- **Dados**: TanStack Query v5, Axios, GraphQL via `graphql-request`
-- **Estado**: Zustand com persistência em IndexedDB (`idb-keyval`)
-- **i18n**: `i18next` no cliente (carregamento preguiçoso), `server-i18n` no servidor
-- **Tema**: `next-themes` + tokens CSS
-- **Gráficos**: Recharts para radar e barras
-- **Qualidade**: ESLint v9 (flat config), Prettier, Vitest + Testing Library
+<details>
+<summary><strong>Ativar Agentation em desenvolvimento</strong></summary>
 
-## <a id="fontes-de-dados"></a>Fontes de dados
-
-| Fonte                            | Uso                                                    |
-| -------------------------------- | ------------------------------------------------------ |
-| [PokeAPI REST](https://pokeapi.co/) | Espécies, movimentos, habilidades, tipos, evoluções  |
-| [PokeAPI GraphQL](https://pokeapi.co/api/v2/graphql)   | Consultas agregadas (time de criaturas, habitats) |
-| [TCGdex](https://www.tcgdex.net/) | Cartas e conjuntos do TCG                              |
-
-Todo o acesso passa pelo barramento `@/lib/api/`. Nunca faça `fetch` ou `axios` direto em componentes; as chaves de query são construídas a partir de `@/lib/api/keys`.
-
-## <a id="implantacao"></a>Implantação
-
-A aplicação é implantada na Vercel. O `vercel.json` está mínimo (`{"name": "poke-app"}`); toda a configuração (domínios, env, proteções) é gerenciada no painel da Vercel.
+Adicione este valor a `.env.local` e reinicie o servidor:
 
 ```bash
-npm run build      # next build
-npm run start      # produção local
+NEXT_PUBLIC_ENABLE_AGENTATION=true
 ```
 
-Não há CI por enquanto — o pipeline vive na Vercel. Builds de preview são gerados para cada branch automaticamente.
+A ferramenta funciona em `http://localhost:4747`; a origem de desenvolvimento e a CSP já estão configuradas.
 
-### Cache e revalidação
+</details>
 
-- `revalidate = 3600` na rota `/pokemon/[name]` para a Geração 1.
-- `generateStaticParams` materializa os 151 primeiros Pokémon no build.
-- Demais rotas usam TanStack Query (`staleTime: 10min`, `gcTime: 60min`).
+## Arquitetura
 
-## Estrutura do projeto
-
-```
-src/
-├── app/                # App Router: rotas, layouts, páginas
-│   ├── [lang]/         # Segmento dinâmico de idioma
-│   ├── pokemon/[name]/ # Página de detalhes (ISR)
-│   └── tcg/            # Painel TCG
-├── components/
-│   ├── pokemon/        # Cartões, detalhes, cadeia evolutiva
-│   ├── layout/         # Header, footer, nav
-│   └── ui/             # primitivos shadcn (base-nova)
-├── lib/
-│   ├── api/            # Clientes REST + GraphQL
-│   ├── i18n/           # bundles preguiçosos (cliente)
-│   ├── server-i18n.ts  # todos os bundles (servidor)
-│   └── utils/          # formatadores, helpers
-├── store/              # Zustand: favoritos, time, capturados
-├── hooks/              # useLocaleHref, useTheme, usePersistedStore
-└── types/              # pokemon.ts (fonte de verdade)
+```text
+Poke/
+├── src/                 Aplicação web Next.js 16 (App Router)
+├── packages/core/       @primedex/core: API, estado, tipos, i18n, helpers, Supabase
+├── apps/mobile/         Companheiro Expo / React Native
+├── supabase/migrations/ Migrações opcionais do esquema Supabase
+└── public/              Ícones PWA, capturas e recursos estáticos
 ```
 
-## Acessibilidade
+```text
+Componentes React de servidor e cliente
+  ├── Hooks TanStack Query (@/lib/api) ──▶ PokéAPI REST + GraphQL, TCGdex
+  └── Seletores Zustand (@/store/primedex) ──▶ IndexedDB web / AsyncStorage móvel
+```
 
-- WCAG 2.2 AA como linha de base.
-- Todo controle só com ícone recebe `aria-label`.
-- Toda imagem traz `alt` (ou `alt=""` quando decorativa).
-- Foco visível em todos os elementos interativos.
-- Suporte completo a navegação por teclado.
+- **Interface:** Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, Base UI e Framer Motion. Server Components são o padrão.
+- **Dados:** clientes API centralizados usam Axios com tentativas; TanStack Query gere a cache e as chaves de query são centralizadas.
+- **Estado:** Zustand persiste dados pessoais como IDs e primitivas em IndexedDB na web e AsyncStorage no móvel.
+- **Idiomas e resiliência:** i18next carrega os bundles cliente sob demanda e as traduções do servidor alimentam a renderização estática. A PWA guarda em cache o shell e recursos selecionados de PokéAPI, TCGdex, imagens e Next.
 
-## Contribuindo
+## Fontes de dados
 
-1. Faça um fork do repositório.
-2. Crie uma branch a partir de `main` (`git checkout -b feat/minha-feature`).
-3. Siga as convenções descritas em `AGENTS.md` e nos `AGENT.md` das subárvores.
-4. Rode `npm run lint`, `npm run typecheck` e `npm run test` antes de abrir o PR.
-5. Abra um Pull Request descrevendo a mudança e o motivo.
+| Fonte | Utilização |
+| --- | --- |
+| [PokéAPI](https://pokeapi.co/) REST e GraphQL | Pokémon, textos de espécies, movimentos, habilidades, tipos, evoluções e encontros. |
+| [TCGdex](https://www.tcgdex.net/) | Cartas Pokémon TCG, conjuntos, imagens, raridades e informações do catálogo. |
+| [Supabase](https://supabase.com/) | Autenticação opcional, sincronização cloud, perfis públicos, dados de jogo e alertas de preço TCG. |
 
-## Aviso legal
+Os componentes não consultam estes serviços diretamente: os pedidos passam pela camada API do projeto.
 
-Pokémon, seus nomes, artes e marcas registradas são propriedade da Nintendo, Game Freak e The Pokémon Company. Este projeto é um derivado não oficial feito por fãs, sem afiliação. Os dados vêm de fontes públicas (PokeAPI, TCGdex); o código está sob a licença indicada em `./LICENSE`.
+## Implantação
 
-## Contato
+O PrimeDex está configurado para Vercel e pode correr em qualquer plataforma que suporte um runtime Next.js e otimização de imagens.
 
-- Repositório: [github.com/estebandeloge/Poke](https://github.com/estebandeloge/Poke)
-- Texto de segurança: [`./public/.well-known/security.txt`](./public/.well-known/security.txt)
+```bash
+npm run build
+npm run start
+```
 
-## Licença
+No Vercel, importe o repositório, mantenha as definições padrão do Next.js e adicione variáveis públicas opcionais no painel. [`vercel.json`](./vercel.json) é intencionalmente mínimo.
 
-Distribuído sob a licença indicada em [`./LICENSE`](./LICENSE).
+## Agradecimentos
+
+O PrimeDex apoia-se em [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) e nos projetos open source usados na aplicação.
+
+Pokémon e todas as propriedades relacionadas são marcas dos respetivos titulares. Este projeto de fãs é não oficial e não comercial.

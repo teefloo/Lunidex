@@ -1,270 +1,162 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="PrimeDex 标志" align="center" width="80" />
+<img src="./public/icon.svg" alt="PrimeDex 标志" width="80" />
 
 # PrimeDex
 
-**为追求速度、数据和设计的训练师打造的、最完整的在线宝可梦图鉴。**
+**为训练家、收藏者和好奇粉丝打造的快速、本地优先宝可梦图鉴与 Pokémon TCG 工作空间。**
 
 [![Live](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](./LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/teefloo/Poke?style=flat-square)](https://github.com/teefloo/Poke/stargazers)
+[![Mobile](https://img.shields.io/badge/Mobile-Expo-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
-基于 Next.js 16 + React 19 的高性能仪表盘，覆盖全国图鉴：种族值、属性、进化、队伍构筑、TCG 卡牌与猜谜游戏，9 种语言可用。
-
-[概述](#概述) · [功能](#功能) · [快速开始](#快速开始) · [路由](#路由) · [架构](#架构) · [数据源](#数据源) · [部署](#部署)
-
-![PrimeDex — 桌面预览](./public/screenshot-desktop.png)
+[概览](#概览) · [快速开始](#快速开始) · [功能](#功能) · [架构](#架构) · [配置](#配置) · [部署](#部署)
 
 </div>
 
 <!-- README-I18N:START -->
 
-[English](./README.md) · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **汉语** · [Português](./README.pt.md)
+[English](./README.md) · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · **中文** · [Português](./README.pt.md)
 
 <!-- README-I18N:END -->
 
-## 概述
+## 概览
 
-PrimeDex 是面向对战玩家、TCG 收藏者和好奇粉丝的开源宝可梦图鉴仪表盘。它覆盖 9 个世代共 **1,025 只**宝可梦，提供 9 种语言的本地化名称、并排的种族值比较、基于属性联防的队伍构筑器，以及包含 25,000+ 张卡牌的 TCG 目录。
+PrimeDex 是一个开源单体仓库，由 Next.js Web 应用、共享 TypeScript 包 `@primedex/core` 和 Expo 移动端伴侣应用组成。它将全国图鉴、对战准备工具、Pokémon TCG 收藏工具和个人进度追踪整合在一起，无需创建账户。
 
-应用基于官方的 [PokéAPI](https://pokeapi.co)（REST + GraphQL）和 [TCGdex](https://www.tcgdex.net) 构建，使用 TanStack Query 缓存、Zustand（IndexedDB）维持持久化 UI 状态、Next.js App Router 实现服务端组件与按路由的静态生成。
+Web 应用涵盖**九个世代的 1,025 只宝可梦**。界面支持英语、法语、西班牙语、德语、意大利语、日语、韩语和简体中文；本仓库还提供葡萄牙语 README 翻译。
 
 > [!NOTE]
-> 本项目为非商业粉丝项目。宝可梦数据、名称与图像的版权归 Nintendo、Game Freak 和 The Pokémon Company 所有。
+> PrimeDex 是非商业性粉丝项目。宝可梦数据、名称和图像归 Nintendo、Game Freak、Creatures 和 The Pokémon Company 所有。PrimeDex 未与它们关联，也未得到其认可。
 
 ## 功能
 
-- **完整的全国图鉴** — 1,025 只宝可梦、所有形态、所有世代，附带本地化名称与说明文字。
-- **队伍构筑器** — 组建 6 只宝可梦的队伍，实时分析属性联防、检测共享弱点，并给出协同评分。
-- **对比引擎** — 最多 3 只宝可梦的并排分析，配备交互式雷达图与种族值细分。
-- **属性相克表** — 交互式展示 18 种属性的相克关系：优势、弱点、抗性与免疫。
-- **招式数据库** — 可按威力、命中、PP、属性、分类与详细效果描述进行筛选。
-- **TCG 卡牌目录** — 25,000+ 张卡牌，可按系列、稀有度、属性、阶段与 HP 检索，并支持收藏与愿望单跟踪。
-- **猜谜游戏** — 6 种游戏模式：经典、剪影、种族值、限时、生存与马拉松。
-- **Living Dex 追踪** — 持久的捕获管理，完全离线，存储在浏览器本地。
-- **9 种语言** — 英语、法语、德语、西班牙语、意大利语、日语、韩语、简体中文、巴西葡萄牙语。
-- **高级搜索** — 按世代、属性、种族值总和、蛋组与特殊状态进行多维筛选。
-- **SEO & AEO 就绪** — JSON-LD（`WebApplication`、`ItemList`、`FAQPage`、`HowTo`）、`hreflang` 替代标签、`llms.txt` / `ai.txt` 发现机制，以及自动生成的站点地图。
+| 领域 | 可以做什么 |
+| --- | --- |
+| **宝可梦图鉴** | 浏览和筛选全部 1,025 只宝可梦；查看种族值、特性、招式、进化、形态、遭遇地点、精灵图和对战信息。 |
+| **培养工具** | 创建六只宝可梦的队伍并分析属性覆盖，比较宝可梦，探索属性表，规划努力值和个体值，计算孵化概率，并模拟第九世代对战。 |
+| **资料库** | 搜索招式、特性和道具，使用招式覆盖检查和克制建议。 |
+| **个人进度** | 将收藏、Living Dex、队伍、最近浏览、测验统计和设置持久化到本地存储，并以 JSON 导入或导出。 |
+| **游戏模式** | 体验六种模式的测验，追踪 Nuzlocke 挑战，并以只读链接分享队伍。 |
+| **TCG 工作空间** | 发现卡牌和卡组，管理收藏和心愿单，比较卡牌，查看价格历史和提醒，并构建 60 张卡牌的套牌。 |
+| **离线和移动端** | 安装 PWA 并从缓存中重用已使用的资源。Expo 应用目前支持图鉴、详情、收藏、队伍、账户、主题和语言设置。 |
 
 ## 快速开始
 
-### 前提条件
+### 前置条件
 
-- [Node.js](https://nodejs.org) 20+
-- npm 10+（随 Node.js 一起安装）
-- 兼容 POSIX 的 Shell（脚本采用 `bash` 风格调用）
-
-### 本地运行
+- [Node.js](https://nodejs.org/) 20 或更高版本
+- npm 10 或更高版本
 
 ```bash
-# 1. 克隆仓库
 git clone https://github.com/teefloo/Poke.git
 cd Poke
-
-# 2. 安装依赖
 npm install
-
-# 3. 启动开发服务器（使用 webpack，而非 Turbopack）
 npm run dev
 ```
 
-应用现在运行在 <http://localhost:3000>。中间件会根据 `primedex-lang` Cookie 或浏览器的 `Accept-Language` 请求头，将 `/` 重定向到你的首选语言。
+打开 [http://localhost:3000](http://localhost:3000)。PrimeDex 会根据 `primedex-lang` Cookie 或浏览器的 `Accept-Language` 请求头，将无前缀 URL 重定向到如 `/zh` 的语言路径。
 
 > [!IMPORTANT]
-> `npm run dev` 固定使用 `next dev --webpack`，以确保 App Router 与 `next/dynamic` 边界下 HMR 的稳定性。**请勿**在本地切换为 Turbopack——`next.config.ts` 中关于 `turbopack.root` 的声明是刻意的，必须保留。
+> 开发环境有意使用 webpack：`npm run dev` 会执行 `next dev --webpack`。即使 Next 配置中也声明了 Turbopack root，也请保留该命令。
 
-### Agentation 开发工具（可选）
+| 命令 | 说明 |
+| --- | --- |
+| `npm run dev` | 在 3000 端口启动 Next.js 开发服务器。 |
+| `npm run build` | 创建生产构建。 |
+| `npm run start` | 启动生产构建。 |
+| `npm run lint` | 运行 ESLint 9。 |
+| `npm run typecheck` | 在不生成文件的情况下检查 TypeScript。 |
+| `npm run test` | 在 jsdom 中运行 Vitest。 |
 
-PrimeDex 内置了用于 AI 辅助 UI 审查的 [Agentation](https://github.com/tldraw/agentation)。要启用它，请在 `.env.local` 中添加以下内容：
+### 移动应用
+
+Expo 伴侣应用位于 [`apps/mobile`](./apps/mobile)，并使用共享包 [`@primedex/core`](./packages/core)。
+
+```bash
+cd apps/mobile
+npx expo start
+```
+
+通过 Expo 提示可打开 iOS、Android、Web 或 Expo Go。有关当前支持的页面，请参阅[移动端 README](./apps/mobile/README.md)。
+
+## 配置
+
+本地浏览图鉴不需要任何环境变量。仅在启用可选集成时创建不提交的 `.env.local`。
+
+| 变量 | 用途 |
+| --- | --- |
+| `NEXT_PUBLIC_APP_URL` | 覆盖规范公共 URL；默认值为 `https://primedex.vercel.app`。 |
+| `NEXT_PUBLIC_SUPABASE_URL` | 启用可选的 Supabase 身份验证和云端同步。 |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 与 Supabase URL 配套的公开匿名密钥。 |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | 启用 TCG 价格提醒的浏览器 Push 订阅。 |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | 添加 Google Search Console 验证元数据。 |
+| `NEXT_PUBLIC_ENABLE_AGENTATION` | 在开发期间启用 Agentation UI 审查工具栏。 |
+
+> [!TIP]
+> 即使没有 Supabase，PrimeDex 仍可完全以本地优先模式使用：收藏、队伍、捕获、筛选和 TCG 进度都会保留在浏览器存储中。移动端请在 `apps/mobile/.env` 中使用 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
+
+<details>
+<summary><strong>在开发环境中启用 Agentation</strong></summary>
+
+将以下值添加到 `.env.local` 后重启开发服务器：
 
 ```bash
 NEXT_PUBLIC_ENABLE_AGENTATION=true
 ```
 
-工具栏将运行在 <http://localhost:4747>（CSP 和 `allowedDevOrigins` 已预配置）。
+该工具运行在 `http://localhost:4747`；开发 Origin 和 CSP 已预先配置。
 
-## 技术栈
-
-| 层级            | 工具                                                                                |
-| --------------- | ----------------------------------------------------------------------------------- |
-| 框架            | [Next.js 16](https://nextjs.org)（App Router），[React 19](https://react.dev)        |
-| 语言            | [TypeScript 5](https://www.typescriptlang.org)（strict，100% 类型安全）              |
-| 样式            | [Tailwind CSS v4](https://tailwindcss.com)，[`tw-animate-css`](https://github.com/Wombosvideo/tw-animate-css) |
-| UI 基础组件     | [`@base-ui/react`](https://base-ui.com)，`shadcn/ui`（`base-nova` 预设）              |
-| 动画            | [Framer Motion](https://www.framer.com/motion/)                                     |
-| 数据获取        | [TanStack Query v5](https://tanstack.com/query)                                     |
-| 客户端状态      | [Zustand](https://zustand.docs.pmnd.rs/) + [`idb-keyval`](https://github.com/jakearchibald/idb-keyval)（IndexedDB） |
-| 图表            | [Recharts](https://recharts.org)                                                    |
-| 国际化          | [i18next](https://www.i18next.com/) + `react-i18next`                                |
-| HTTP            | [Axios](https://axios-http.com) + `axios-retry`（指数回退）                          |
-| 工具链          | ESLint v9（flat config）、Vitest + Testing Library、Puppeteer（视觉 QA）             |
-
-## 路由
-
-所有路由都带语言前缀（`/en`、`/fr`、`/ja`…）。中间件会透明地处理 308 重定向与重写。
-
-| 路径                          | 描述                                                                          |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `/`                           | 首页，含 Hero、推荐宝可梦与完整的图鉴网格。                                   |
-| `/pokemon/[name]`             | 详情页，包含种族值、属性、进化、特性、招式与配招方案。                       |
-| `/team`                       | 6 槽队伍构筑器，实时属性联防分析与协同评分。                                  |
-| `/compare`                    | 最多 3 只宝可梦的并排对比。                                                   |
-| `/favorites`                  | 个人收藏的宝可梦列表。                                                        |
-| `/quiz`                       | “这是哪只宝可梦？”猜谜游戏，含 6 种模式。                                    |
-| `/types`                      | 18 种属性的交互式属性表。                                                     |
-| `/moves`                      | 可检索的招式数据库。                                                          |
-| `/tcg`                        | 宝可梦 TCG 卡牌目录，可按系列、稀有度、属性与 HP 筛选。                      |
-| `/tcg/cards/[id]`             | 单张 TCG 卡牌详情。                                                           |
-| `/tcg/collection`             | 个人卡牌收藏追踪。                                                            |
-| `/tcg/wishlist`               | TCG 愿望单。                                                                  |
-| `/about`                      | 项目宗旨、数据源与联系方式。                                                  |
-| `/faq`                        | 常见问题。                                                                    |
-| `/cookies` `/legal` `/privacy` `/terms` | 法律页面。                                                          |
-
-动态页面 `/pokemon/[name]` 为前 151 只宝可梦使用 `generateStaticParams`，并通过 `revalidate = 3600` 进行增量静态再生。
+</details>
 
 ## 架构
 
-### 数据流
-
+```text
+Poke/
+├── src/                 Next.js 16 App Router Web 应用
+├── packages/core/       @primedex/core：API、状态、类型、i18n、工具函数、Supabase
+├── apps/mobile/         Expo / React Native 伴侣应用
+├── supabase/migrations/ 可选的 Supabase 数据库迁移
+└── public/              PWA 图标、截图和静态资源
 ```
-Components ──▶ TanStack Query hooks (@/lib/api) ──▶ PokéAPI REST + GraphQL
-              └─ Zustand 选择器 (@/store/primedex) ──▶ IndexedDB (idb-keyval)
+
+```text
+React 服务端和客户端组件
+  ├── TanStack Query hooks (@/lib/api) ──▶ PokéAPI REST + GraphQL、TCGdex
+  └── Zustand selectors (@/store/primedex) ──▶ Web IndexedDB / 移动端 AsyncStorage
 ```
 
-- 所有 HTTP 请求都通过 `@/lib/api` 统一出口，组件从不直接使用 `fetch` 或 `axios`。
-- Query key 在 `@/lib/api/keys` 集中管理，以保证稳定的缓存失效。
-- Zustand Store 仅保存 ID 与基本类型数据（收藏、队伍、捕获、筛选、历史、设置），并持久化到 IndexedDB。**不会**将本地状态保存到 `localStorage`。
-- 重型组件（`EvolutionChain`、`AdvancedInfo`、`PokemonCards`）通过 `next/dynamic` 加载，以保持首屏轻量。
+- **界面：** 使用 Next.js 16、React 19、TypeScript 5、Tailwind CSS 4、Base UI 和 Framer Motion。默认采用 Server Components。
+- **数据：** 集中式 API 客户端使用带重试的 Axios。TanStack Query 负责缓存，查询键集中管理。
+- **状态：** Zustand 将个人数据以 ID 和基础值形式保存到 Web 的 IndexedDB 或移动端的 AsyncStorage。
+- **多语言和韧性：** i18next 按需加载客户端语言包，服务端翻译用于静态渲染。PWA 会缓存应用外壳及部分 PokéAPI、TCGdex、图片和 Next 资源。
 
-### 国际化
+## 数据来源
 
-- 支持的语言：`en`、`fr`、`es`、`de`、`it`、`ja`、`ko`、`zh`、`pt`。
-- 客户端代码使用 `@/lib/i18n`，语言包按需懒加载；英语是初始包。
-- 服务端代码使用 `@/lib/server-i18n`，所有语言包内置以支持 SSG/SSR。
-- 每个页面声明 `hreflang` 替代语言以及指向 `/en` 的 `x-default`。
-- `primedex-lang` Cookie 将用户偏好保存 1 年。
+| 来源 | 用途 |
+| --- | --- |
+| [PokéAPI](https://pokeapi.co/) REST 和 GraphQL | 宝可梦、图鉴文本、招式、特性、属性、进化和遭遇数据。 |
+| [TCGdex](https://www.tcgdex.net/) | Pokémon TCG 卡牌、系列、图片、稀有度和目录信息。 |
+| [Supabase](https://supabase.com/) | 可选身份验证、云端同步、公开资料、游戏数据和 TCG 价格提醒。 |
 
-### 性能
-
-- 默认使用 Server Components；`"use client"` 仅保留给需要交互的叶子组件。
-- 所有图片使用 `next/image`（AVIF + WebP），并配有严格的 `remotePatterns` 白名单。
-- 为 `/pokemon/[name]`（前 151 只）做静态生成 + 每小时 ISR。
-- `/_next/static` 不可变缓存，图片 1 天缓存，`sitemap.xml` 与 `llms.txt` 1 小时缓存。
-- TanStack Query 默认值：`staleTime` 10 分钟，`gcTime` 60 分钟，`retry` 1，不启用 `refetchOnWindowFocus`。
-
-### 安全
-
-- 每条路由都启用加固的响应头：`X-Content-Type-Options`、`X-Frame-Options: DENY`、带 `preload` 的 HSTS、严格的 `Referrer-Policy`、锁定的 `Permissions-Policy`。
-- 强制实施严格的 Content-Security-Policy。来源：见 `next.config.ts`。
-- Axios 重试机制结合指数回退处理瞬时网络错误和 HTTP 429。
-
-## 数据源
-
-| 数据源                                                                  | 用途                                                |
-| ----------------------------------------------------------------------- | --------------------------------------------------- |
-| [PokéAPI](https://pokeapi.co)（REST）                                   | 宝可梦、招式、特性、属性、遭遇                      |
-| [PokéAPI GraphQL](https://beta.pokeapi.co/graphql)                      | 物种本地化名称与说明文字                            |
-| [TCGdex](https://www.tcgdex.net)                                        | 宝可梦 TCG 卡牌、系列与稀有度                        |
-| [PokeAPI 精灵图](https://github.com/PokeAPI/sprites)                    | 官方插画与动态精灵图                                |
-
-所有数据均在服务端获取并每 3,600 秒重新校验。每个宝可梦页面都会显示数据来源说明。
-
-## 配置
-
-应用读取少量环境变量。**本地开发不需要任何环境变量**。
-
-| 变量                                | 默认值                          | 用途                                          |
-| ----------------------------------- | ------------------------------- | --------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`               | `https://primedex.vercel.app`   | 站点规范 URL                                  |
-| `NEXT_PUBLIC_ENABLE_AGENTATION`     | _(未设置)_                      | 切换 Agentation 开发工具栏                    |
-
-## 脚本
-
-| 命令                                 | 说明                                                       |
-| ------------------------------------ | ---------------------------------------------------------- |
-| `npm run dev`                        | 使用 webpack 在 `:3000` 启动开发服务器。                   |
-| `npm run build`                      | 生产构建。                                                 |
-| `npm run start`                      | 运行生产构建。                                             |
-| `npm run lint`                       | 使用项目 flat config 的 ESLint v9。                        |
-| `npm run typecheck`                  | 对整个项目执行 `tsc --noEmit`。                            |
-| `npm run test`                       | Vitest（jsdom）——见 `vitest.config.ts`。                   |
-| `npx vitest path/to/file.test.ts`    | 运行单个测试文件。                                         |
-| `npx vitest --ui`                    | 打开 Vitest UI。                                           |
-
-> [!NOTE]
-> 在添加测试之前，请确保 `src/test/setup.ts` 存在。Vitest 配置已指向该文件，但目前它是一个空壳。没有它，`npm run test` 将无法启动。
-
-## 项目结构
-
-```
-src/
-├── app/                # Next.js App Router — 路由位于此处
-│   ├── api/            # 路由处理器（TCG）
-│   ├── [locale]        # 带语言前缀的路由
-│   ├── layout.tsx      # 根布局（RSC）
-│   ├── providers.tsx   # TanStack Query、主题、国际化 Provider
-│   └── ...
-├── components/         # 可复用 UI（pokemon/、team/、tcg/、layout/、ui/）
-├── lib/                # 纯 TS 工具 + API 统一出口
-│   ├── api/            # REST + GraphQL + TCG 客户端
-│   ├── i18n/           # 语言包（客户端懒加载）
-│   ├── server-i18n.ts  # 服务端翻译
-│   └── ...
-├── store/primedex.ts   # Zustand Store（仅 ID 与基本类型）
-├── types/pokemon.ts    # 领域类型的唯一真实来源
-├── hooks/              # 自定义 React Hook
-└── middleware.ts       # 语言 308 重定向与重写
-
-public/                 # 静态资源（图标、截图、精灵图兜底）
-```
+组件不会直接请求这些服务；所有请求都经过项目的 API 层。
 
 ## 部署
 
-PrimeDex 是标准的 Next.js 16 应用，可部署到任何支持 Next.js standalone 输出的平台。
-
-### Vercel（推荐）
-
-仓库自带一份最简的 `vercel.json`（`{"name": "poke-app"}`）。在 Vercel 上导入项目，接受框架默认设置，生产构建即可开箱即用。`/pokemon/[name]` 上的 `revalidate = 3600` 会自动生效。
-
-### 其他平台
+PrimeDex 已为 Vercel 配置，也可运行在支持 Next.js 服务器运行时和图片优化的任意平台上。
 
 ```bash
 npm run build
-npm run start  # 在 :3000 启动生产服务器
+npm run start
 ```
 
-请确保宿主机支持 Next.js 图像优化 API（或将图像预渲染到 CDN）。
-
-## 贡献
-
-欢迎提交 Issue、功能请求和 Pull Request。对于任何非微小的改动，请先开 Issue 讨论方案。
-
-提交 Pull Request 时：
-
-- 在本地运行 `npm run lint` 与 `npm run typecheck`。
-- 在行为变化时新增或更新测试。
-- 遵循 [`AGENTS.md`](./AGENTS.md) 以及各子目录的 `AGENT.md` 中的约定。
+在 Vercel 中导入仓库，保留标准 Next.js 设置，并在控制台添加可选的公共环境变量。[`vercel.json`](./vercel.json) 有意保持最小化。
 
 ## 致谢
 
-- [PokéAPI](https://pokeapi.co) — 该系列最权威的开源数据源。
-- [TCGdex](https://www.tcgdex.net) — 卡牌浏览器使用的开源 TCG 目录。
-- [Vercel](https://vercel.com) — 托管与边缘网络。
-- [shadcn/ui](https://ui.shadcn.com) — 锚定设计系统的 `base-nova` 预设。
+PrimeDex 基于 [PokéAPI](https://pokeapi.co/)、[TCGdex](https://www.tcgdex.net/)、[Vercel](https://vercel.com/) 以及应用中使用的开源项目构建。
 
-## 联系方式
-
-- Issue：<https://github.com/teefloo/Poke/issues>
-- 安全披露：见 [`.well-known/security.txt`](./public/.well-known/security.txt)
-- 作者：Esteban Deloge（<contact@primedex.app>）
-
-## 商标
-
-宝可梦、宝可梦角色名称及相关权利均为 Nintendo、Game Freak 与 The Pokémon Company 的商标。PrimeDex 是仅用于教育与娱乐目的的非官方粉丝项目，与上述实体不存在任何关联、认可或赞助关系。
+Pokémon 和所有相关资产均为其各自所有者的商标。本项目为非官方、非商业的粉丝项目。

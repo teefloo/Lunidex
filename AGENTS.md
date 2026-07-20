@@ -1,218 +1,103 @@
-# AGENTS.md
+# PrimeDex Agent Guide
 
-PrimeDex — a Next.js 16 (App Router) + React 19 Pokédex dashboard with TanStack Query, Zustand (IndexedDB), and 9 locales. Monorepo with shared `@primedex/core` package and an Expo React Native mobile app.
+## Project overview
 
-## Quick Commands
+PrimeDex is a localized Pokémon dashboard for trainers and TCG collectors. It is an npm-workspaces monorepo with three main parts:
+
+- `src/` — the Next.js 16 / React 19 web application, using the App Router, Tailwind CSS v4, TanStack Query, and Zustand.
+- `packages/core/` — platform-neutral API clients, domain types, persistence adapters, Zustand state, i18n data, and Supabase utilities shared by the web and mobile apps.
+- `apps/mobile/` — the Expo 53 / React Native app, which imports `@primedex/core` rather than duplicating business logic.
+
+`supabase/migrations/` contains the database schema and row-level-security policies. The web app primarily uses PokéAPI (REST and GraphQL) and TCGdex; it is designed to work local-first when Supabase credentials are absent.
+
+## Instruction scope
+
+- This file applies throughout the repository. Before editing a subtree, look for a closer `AGENTS.md`, `AGENT.md`, or `GEMINI.md`; the closest relevant instructions take precedence.
+- Current tracked, local guidance exists in `packages/core/src/store/GEMINI.md` and in the Pokémon detail, quiz, team, and type-chart route directories under `src/app/`.
+- User instructions override repository guidance. Preserve unrelated work already present in the working tree.
+
+## Prerequisites and setup
+
+CI uses Node.js 22. Use npm and the committed `package-lock.json`; do not introduce another package manager or lockfile.
 
 ```bash
-npm install          # install all workspace deps
-npm run dev          # next dev --webpack (NOT turbopack) — http://localhost:3000
-npm run build        # next build (production)
-npm run start        # next start (production server)
-npm run lint         # eslint v9 flat config with eslint-config-next
-npm run test         # vitest via ./node_modules/vitest/vitest.mjs (jsdom)
-npm run typecheck    # tsc --noEmit
+npm ci                         # reproducible clean install (preferred in CI)
+npm install                     # update the local workspace installation
+cp .env.example .env.local      # optional web configuration
+cp apps/mobile/.env.example apps/mobile/.env  # optional mobile configuration
 ```
+
+The Supabase variables are optional. Without `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, the web app remains local-first with IndexedDB. Mobile uses the equivalent `EXPO_PUBLIC_*` variables and AsyncStorage. Never commit `.env`, `.env.local`, credentials, or tokens.
+
+Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only to enable the development overlay. It runs on port 4747, which is already allowed in development configuration; do not change CSP or `allowedDevOrigins` merely for that tool.
+
+## Commands
+
+Run commands from the repository root unless stated otherwise.
 
 | Task | Command |
-|------|---------|
-| Typecheck one path | `npx tsc --noEmit` |
+| --- | --- |
+| Start the web app | `npm run dev` |
+| Production web build | `npm run build` |
+| Serve a production build | `npm run start` |
+| Lint web, core, and mobile sources | `npm run lint` |
+| Type-check the web app | `npm run typecheck` |
+| Run the Vitest suite | `npm run test -- --run` |
+| Run one test file | `npx vitest run src/lib/auto-complete.test.ts` |
+| Run tests matching a name | `npx vitest run -t "<test name>"` |
 | Lint one file | `npx eslint path/to/file.tsx` |
-| Run one test file | `npx vitest path/to/file.test.ts` |
-| Run matching tests | `npx vitest run -t "<test name>"` |
-| Test UI | `npx vitest --ui` |
+| Type-check shared core | `npx tsc --project packages/core/tsconfig.json --noEmit` |
+| Start Expo | `npm run start --workspace=@primedex/mobile` |
+| Type-check Expo | `npm run typecheck --workspace=@primedex/mobile` |
 
-## Project Structure
+`npm run dev` intentionally uses `next dev --webpack`, not Turbopack. Keep that flag even though `next.config.ts` contains a `turbopack.root` setting.
 
-```
-Poke/                            root (npm workspaces)
-├── src/                         Next.js 16 web app
-│   ├── app/                     App Router routes + layouts
-│   ├── components/              ui/ (primitives), pokemon/, layout/, tcg/, auth/, dashboard/
-│   ├── lib/                     utilities, i18n, API layer (api/)
-│   ├── store/                   Zustand store (primedex.ts)
-│   ├── types/                   domain types (pokemon.ts, tcg.ts, dashboard.ts)
-│   ├── hooks/                   custom hooks
-│   ├── styles/                  CSS overrides
-│   └── test/                    Vitest setup (setup.ts)
-├── packages/core/               @primedex/core — shared business logic (web + mobile)
-│   └── src/                     api/, store/, types/, i18n/, lib/, supabase/, platform/
-├── apps/mobile/                 @primedex/mobile — Expo React Native port
-│   ├── app/                     Expo Router file-based routes
-│   └── src/                     mobile-specific UI
-└── supabase/migrations/         SQL migrations for Supabase
-```
+The checked-in GitHub Actions workflow runs `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run test` for pushes and pull requests targeting `master`. Run the relevant checks for every change; before a commit, run all three root quality checks plus any applicable workspace check.
 
-## Subtree Instructions (read closest first)
+## Tests
 
-Per-directory `AGENT.md` files override the root for their subtree. Always read the closest one before editing:
+Vitest is configured for jsdom in `vitest.config.ts`; `src/test/setup.ts` loads `@testing-library/jest-dom/vitest`. Tests normally live alongside the code they cover, for example `src/lib/team-analysis.test.ts` or `src/components/ui/TypeBadge.test.tsx`.
 
-- `src/AGENT.md` — scope and conventions for the src/ tree
-- `src/app/AGENT.md` — route conventions, key files, RSC patterns
-- `src/components/AGENT.md` — component organization
-- `src/components/ui/AGENT.md` — presentational primitives
-- `src/components/pokemon/AGENT.md` — domain component data flow
-- `src/components/layout/AGENT.md` — cross-route UI conventions
-- `src/lib/AGENT.md` — utility file inventory and conventions
-- `src/lib/api/AGENT.md` — API layer file inventory, endpoints, conventions
-- `src/store/AGENT.md` — state management conventions
-- `src/types/AGENT.md` — type system conventions
-- `src/hooks/AGENT.md` — hook conventions
-- `public/AGENT.md` — static asset conventions
-- `packages/core/src/api/AGENT.md` — shared API client conventions
-- `packages/core/src/store/AGENT.md` — shared store conventions
-- `packages/core/src/types/AGENT.md` — shared type conventions
+- Add or update tests for behavioral changes, including changes to shared core logic.
+- Use Testing Library for React component tests. Mock `next/navigation`, `next/image`, and complex UI primitives where that keeps the test focused.
+- Prefer focused tests while iterating, then run the full suite. Fix related lint and type errors rather than leaving a known regression.
 
-## Key Conventions
+## Web architecture and data flow
 
-- **RSC by default.** Only add `"use client"` to leaves that need interactivity; per `src/app/AGENT.md`, `Header` is rendered per-page, not in the root layout.
-- **Tailwind v4 only.** Uses `@import "tailwindcss"` in `src/app/globals.css`. No `tailwind.config.js` — do not create one.
-- **Images:** always `next/image`; raw `<img>` is prohibited.
-- **Imports:** use the `@/` alias (`tsconfig.json` paths → `src/`). Use named exports.
-- **API:** all requests go through `@/lib/api/` barrel; never call `fetch`/`axios` directly in components. REST + GraphQL hit `https://pokeapi.co`; TCG hits `https://api.tcgdex.net`. Query keys are built from `@/lib/api/keys`.
-- **Types:** `src/types/pokemon.ts` is the source of truth. No `any` or `Record<string, unknown>`. Prefer interfaces for object shapes, type aliases for unions.
-- **i18n:** client code uses `@/lib/i18n` (lazy-loaded language bundles, English is the initial bundle); server code uses `@/lib/server-i18n` (all bundles baked in). User-facing strings go through `t()`.
-- **State:** Zustand store in `src/store/primedex.ts` holds IDs/primitives only, persisted via `idb-keyval` (IndexedDB, **not** localStorage). Check `_hasHydrated` before trusting persisted state in effects. Use selectors to avoid re-renders.
-- **Heavy components** (`EvolutionChain`, `AdvancedInfo`, etc.) are loaded via `next/dynamic`.
-- **shadcn/ui style is `base-nova`;** some primitives come from `@base-ui/react` (see `components.json`).
-- **Accessibility:** WCAG 2.2 AA; every icon-only control needs `aria-label`, every image an `alt`.
-- **Utilities:** keep pure when possible. Reuse `cn()` for class joining (`@/lib/utils`).
-- **Hooks:** one hook per file. Use `useMounted` when browser APIs would cause hydration mismatches. Prefer SSR-safe derived state.
+- Prefer React Server Components. Add `"use client"` only to the interactive leaf that needs browser APIs, hooks, or local state. Render the header per page rather than adding it to the root layout.
+- Routes live in `src/app/`; feature routes contain their `page.tsx`, route-specific layouts/errors, and client leaves. API handlers live below `src/app/api/` and must remain server-side.
+- `src/app/providers.tsx` owns TanStack Query defaults, i18n, authentication/sync, theme, and shared client UI. Query defaults are a 10-minute stale time, 60-minute garbage-collection time, one retry, and no refetch on window focus.
+- Web API exports are centralized in `src/lib/api.ts`; use that façade and the modules under `src/lib/api/` rather than making ad hoc client-side `fetch` or Axios requests. The mobile app uses the equivalent `@primedex/core` API modules.
+- Web domain types live in `src/types/`; shared mobile/web types live in `packages/core/src/types/`. Keep type changes deliberate across both boundaries.
+- Persistent web state belongs in `src/store/primedex.ts`. Store compact IDs and primitives, not complete API objects. It persists through IndexedDB, so check `_hasHydrated` before effects or UI decisions that rely on persisted data. Select individual Zustand slices to limit re-renders. The language preference is deliberately mirrored to a cookie and localStorage for server/client locale handoff.
+- Shared core persistence uses platform adapters: web resolves `platform/*.ts`; Expo resolves `platform/*.native.ts` through Metro. Do not add `Platform.OS` conditionals to shared domain logic.
 
-## Routing & Architecture
+## Localization, routing, and SEO
 
-- **Locale prefix is required.** `src/proxy.ts` rewrites `/<lang>/...` → `/...` and 308-redirects unprefixed paths based on the `primedex-lang` cookie or `Accept-Language`. Supported: `en, fr, es, de, it, ja, ko, zh, pt`. Use `useLocaleHref` to build internal links with the current prefix.
-- **Routes** (under `src/app/`):
+- The supported locale prefixes are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep this list synchronized with `src/lib/languages.ts`, translation bundles, metadata, and tests.
+- `src/proxy.ts` 308-redirects unprefixed web routes to a locale and rewrites prefixed routes internally. Build client-side internal URLs with `useLocaleHref` so the prefix remains intact.
+- Client code uses `@/lib/i18n`, which starts in English and lazy-loads the other bundles. Server code uses `@/lib/server-i18n`. Put user-facing text behind `t()` / the established translation helpers.
+- Preserve the existing sitemap, `hreflang`, JSON-LD, `llms.txt`, `ai.txt`, and OpenSearch outputs when altering routes or metadata.
 
-| Route | Description | Notes |
-|-------|-------------|-------|
-| `/` | Home / Pokedex listing | `revalidate = 3600` |
-| `/pokemon/[name]` | Pokemon detail | `revalidate = 3600`, `generateStaticParams` (first 151) |
-| `/team` | Team builder | |
-| `/team/share` | Shared team view | |
-| `/compare` | Comparison engine (up to 3) | |
-| `/favorites` | Favorites list | |
-| `/quiz` | Quiz game (6 modes) | |
-| `/types` | Interactive type chart | |
-| `/tcg` | TCG catalog | |
-| `/tcg/collection` | TCG collection | |
-| `/tcg/collection/[setId]` | TCG set detail | |
-| `/tcg/wishlist` | TCG wishlist | |
-| `/tcg/cards/[id]` | TCG card detail | |
-| `/moves` | Moves database | |
-| `/battle` | Battle simulator | |
-| `/breeding` | Breeding calculator | |
-| `/dashboard` | User dashboard | |
-| `/u/[handle]` | User profile | |
-| `/offline` | PWA offline fallback | |
-| `/about`, `/faq`, `/cookies`, `/legal`, `/privacy`, `/terms` | Static pages | |
+## Code and UI conventions
 
-- **Providers** (`src/app/providers.tsx`): TanStack Query (staleTime 10 min, gcTime 60 min, retry 1, no refetchOnWindowFocus), theme via store + `next-themes`, i18n.
-- **Data flow:** components consume TanStack Query hooks from `@/lib/api/`; persistent UI state (favorites, team, caught, filters, history, settings) from `@/store/primedex`.
-- **API routes:** `/api/tcg/` proxies for TCGdex.
-- **SEO:** dynamic sitemap with hreflang, JSON-LD (WebSite, Organization, FAQPage, etc.), `llms.txt`, `ai.txt`, `opensearch.xml`.
+- TypeScript is strict. Do not introduce `any` or broad `Record<string, unknown>` types. Prefer interfaces for object shapes and type aliases for unions.
+- Use the `@/` import alias in the web app. Follow the local export style; new reusable components and utilities should normally use named exports.
+- Keep utilities pure where practical, use `cn()` from `@/lib/utils` for class joining, and keep one custom hook per file.
+- Use Tailwind v4 through `@import "tailwindcss"` in `src/app/globals.css`. Do not create a `tailwind.config.js` or add Prettier configuration.
+- Web images must use `next/image` with meaningful `alt` text; mobile images use the established Expo image components. Every icon-only control needs an accessible name. Maintain WCAG 2.2 AA behavior.
+- Load expensive interactive details with `next/dynamic` when the surrounding code already follows that pattern. Use `useMounted` or an SSR-safe derivation when browser state could create a hydration mismatch.
+- The component library follows the `base-nova` shadcn style and may use `@base-ui/react`. Reuse existing primitives before adding a dependency.
 
-## Testing Instructions
+## Security, deployment, and pull requests
 
-Tests live next to the code they cover (e.g., `src/lib/auto-complete.test.ts`). The Vitest setup file `src/test/setup.ts` imports `@testing-library/jest-dom/vitest` — without it, `npm run test` fails to start.
+- Supabase uses public client variables only; authorization is enforced by RLS policies. Keep secrets server-side and out of source control.
+- Security headers and CSP are intentionally strict in `next.config.ts`. Do not add remote domains or weaken a directive without maintainer approval.
+- Deployments run on Vercel from Git. `npm run build` is the production build; Vercel settings live in the dashboard, while `vercel.json` only identifies the project.
+- Keep commits focused and avoid committing generated output, editor settings, local agent artifacts, screenshots, or dependency caches. The repository has no Prettier setup.
+- Pull request titles follow `[component] Brief description`, for example `[pokemon] Add shiny toggle to card`.
+- AI-authored commits must include this trailer:
 
-```bash
-npm run test                        # run all tests
-npx vitest path/to/file.test.ts     # run one test file
-npx vitest run -t "<test name>"     # run matching test name
-npx vitest --ui                     # visual test UI
-```
-
-**Conventions:**
-- Use `@testing-library/react` for component tests.
-- Mock `next/navigation`, `next/image`, and UI primitives heavily in component tests.
-- Add or update tests for the code you change, even if nobody asked.
-- Fix any test or type errors until the whole suite is green.
-
-**Existing test files:**
-- `src/lib/utils.test.ts` — formatting helpers, `cn()`
-- `src/lib/languages.test.ts` — locale maps, language resolution
-- `src/lib/seo.test.ts` — JSON-LD, hreflang, locale hrefs
-- `src/lib/pokemon-utils.test.ts` — type colors, gradients, rarity
-- `src/lib/badges.test.ts` — unlock conditions, progress
-- `src/lib/team-analysis.test.ts` — synergy scoring, type analysis
-- `src/lib/auto-complete.test.ts` — autocomplete logic
-- `src/lib/trainer.test.ts` — trainer data helpers
-- `src/lib/tcg-collection.test.ts` — TCG collection logic
-- `src/lib/encounter-utils.test.ts` — encounter data helpers
-- `src/lib/counter-suggestions.test.ts` — counter suggestion logic
-- `src/lib/generation-themes.test.ts` — generation theme data
-- `src/lib/__tests__/push-notifications.test.ts` — push notification helpers
-- `src/lib/__tests__/breeding-engine.test.ts` — breeding calculator logic
-- `src/lib/__tests__/battle-engine.test.ts` — battle simulator logic
-- `src/components/ui/TypeBadge.test.tsx` — render + a11y
-- `src/components/ui/ShinyIcon.test.tsx` — render + a11y
-- `src/components/ui/badge.test.tsx` — render + a11y
-- `src/components/share/__tests__/ShareButton.test.tsx` — share button render + a11y
-- `src/hooks/__tests__/usePriceHistory.test.ts` — price history hook
-
-## Code Style
-
-- **TypeScript 5** strict mode. No `any`, no `Record<string, unknown>`.
-- **ESLint v9** flat config with `eslint-config-next` (core-web-vitals + typescript). No Prettier configured.
-- **Named exports** for all components and utilities.
-- **File organization:** components in `src/components/{ui,pokemon,layout,tcg,auth,dashboard}/`; utilities in `src/lib/`; types in `src/types/`; hooks in `src/hooks/`.
-- **Class joining:** use `cn()` from `@/lib/utils` (clsx + tailwind-merge).
-- **Environment variables:** `NEXT_PUBLIC_*` for client, no server-only vars exposed. Never commit `.env.local`.
-
-## Build & Deployment
-
-- **Build:** `npm run build` → Next.js production build with `compress: true`.
-- **Deploy:** Vercel (auto-deploys from Git). Deploy config lives in Vercel dashboard, not `vercel.json`.
-- **Image optimization:** `sharp` for processing; images served via `next/image`.
-- **Caching:** `/_next/static` immutable (1 year), images 1 day with stale-while-revalidate, TanStack Query staleTime 10 min.
-- **Security headers:** X-Content-Type-Options: nosniff, X-Frame-Options: DENY, HSTS, strict CSP with explicit allowlists.
-- **Mobile:** `apps/mobile/` uses Expo ~53 with Expo Router; `npm run dev --workspace=apps/mobile`.
-
-## Monorepo
-
-npm workspaces. Root `package.json` declares:
-```json
-"workspaces": ["packages/*", "apps/*"]
-```
-
-- **`@primedex/core`** (`packages/core/`): platform-agnostic business logic shared between web and mobile. Contains API clients, store, types, i18n bundles, Supabase layer, pure helpers. Uses platform adapters (`platform/storage.ts` for web, `platform/storage.native.ts` for mobile).
-- **`@primedex/mobile`** (`apps/mobile/`): Expo React Native port. Uses `expo-router`, `expo-image`, `react-native-reanimated`.
-- **Overrides:** `next.postcss` pinned to `8.5.14` in root `package.json`.
-
-## Security
-
-- Never commit secrets, API keys, or tokens. All secrets go in `.env.local` (gitignored).
-- Environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` for Supabase.
-- Supabase RLS policies enforce `auth.uid() = user_id` on all tables.
-- Content-Security-Policy is strict — don't add domains to CSP manually; ask the maintainer.
-- Agentation dev tool on port 4747 is pre-wired in CSP and `allowedDevOrigins`. Don't modify it.
-
-## Repo-Specific Quirks
-
-- **Dev uses webpack, not turbopack.** The `dev` script forces `--webpack`. `next.config.ts` still declares `turbopack.root`; leave it alone.
-- **Agentation dev tool** runs on `http://localhost:4747` (CSP and `allowedDevOrigins` are pre-wired for it). Toggled via `NEXT_PUBLIC_ENABLE_AGENTATION=true` in `.env.local`. Don't add 4747 to CSP yourself.
-- **Tests live next to the code they cover** (e.g., `src/lib/auto-complete.test.ts`). The Vitest setup file `src/test/setup.ts` exists and imports `@testing-library/jest-dom/vitest` — without it, `npm run test` fails to start.
-- **No CI yet** — no `.github/` directory. `vercel.json` only has `{"name": "poke-app"}`; deploy config lives in the Vercel dashboard.
-- **No project-level opencode config** — `.opencode/` is gitignored (has its own `node_modules`).
-- **`GEMINI.md` is a separate mandate document** at the repo root and in some subtrees; treat its rules as authoritative when they overlap.
-- **Local editor / agent artifacts** are gitignored: `.vscode/`, `.opencode/`, `*.local`, `header-*.png`, `tcg-*.png`, `tcgp-logo.webp`. Don't commit them.
-- **No Prettier** — the project uses ESLint only. Don't add a Prettier config.
-- **Next.js overrides** — `postcss` is pinned to `8.5.14` via `overrides` in root `package.json`.
-
-## PR Guidelines
-
-- Title format: `[component] Brief description` (e.g., `[pokemon] Add shiny toggle to card`)
-- Always run `npm run lint` and `npm run test` before committing.
-- Run `npm run typecheck` to verify no type regressions.
-- Add or update tests for the code you change.
-- Keep commits focused — one logical change per commit.
-- Follow existing code patterns; don't introduce new libraries without discussion.
-
-## Commit Attribution
-
-AI-authored commits MUST include the trailer:
-
-```
-Co-authored-by: Gemini CLI <agent@gemini.google.com>
-```
+  ```text
+  Co-authored-by: Gemini CLI <agent@gemini.google.com>
+  ```
