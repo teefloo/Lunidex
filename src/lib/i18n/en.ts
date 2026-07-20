@@ -1132,6 +1132,7 @@ export default {
       showing_english_fallback: 'Showing English content',
       filter_category: 'Category',
       filter_set: 'Set',
+      all_collections: 'All Collections',
       filter_rarity: 'Rarity',
       filter_pokemon: 'Pokémon filters',
       filter_trainer: 'Trainer filters',

@@ -908,6 +908,7 @@ export default {
       try_english: '切换到英语',
       showing_english_fallback: '正在显示英语内容',
       filter_set: '扩展包',
+      all_collections: '所有收藏',
       filter_rarity: '稀有度',
       filter_hp: 'HP阈值',
       filter_phase: '进化阶段',

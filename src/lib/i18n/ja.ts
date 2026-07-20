@@ -1077,6 +1077,7 @@ export default {
       try_english: '英語に切り替え',
       showing_english_fallback: '英語のコンテンツを表示中',
       filter_set: '拡張パック',
+      all_collections: 'すべてのコレクション',
       filter_rarity: 'レアリティ',
       filter_hp: 'HP閾値',
       filter_phase: '進化フェーズ',
