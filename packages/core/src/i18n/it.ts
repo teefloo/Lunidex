@@ -908,6 +908,7 @@ export default {
       try_english: 'Passa all\'inglese',
       showing_english_fallback: 'Contenuti in inglese mostrati',
       filter_set: 'Set espansione',
+      all_collections: 'Tutte le collezioni',
       filter_rarity: 'Livello rarità',
       filter_hp: 'Soglia HP',
       filter_phase: 'Fase evolutiva',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
 import { SITE_URL, SITE_NAME, SITE_TAGLINE, GITHUB_REPO_URL, GITHUB_ISSUES_URL, TWITTER_HANDLE, DISCORD_URL } from '@/lib/site';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -23,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/about`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
@@ -50,7 +51,7 @@ export default async function AboutPage() {
     description: t('about.meta_description'),
     isPartOf: { '@id': `${baseUrl}/#website` },
     about: { '@id': `${baseUrl}/#organization` },
-    primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}/opengraph-image` },
+    primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}${DEFAULT_OG_IMAGE.url}` },
   };
 
   const aboutSection = [

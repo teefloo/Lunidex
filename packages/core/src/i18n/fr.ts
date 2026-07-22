@@ -921,6 +921,7 @@ export default {
       try_english: 'Passer en anglais',
       showing_english_fallback: 'Contenu anglais affiché',
       filter_set: 'Extension',
+      all_collections: 'Toutes les collections',
       filter_rarity: 'Niveau de rareté',
       filter_hp: 'Seuil HP',
       filter_phase: 'Phase d\'évolution',

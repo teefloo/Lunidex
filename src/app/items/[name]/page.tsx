@@ -9,6 +9,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getItemDetail } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       url: `/${lang}/items/${name}`,
       type: 'website',
-      images: [{ url: itemSpriteUrl(name) }],
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

@@ -908,6 +908,7 @@ export default {
       try_english: '영어로 전환',
       showing_english_fallback: '영어 콘텐츠 표시 중',
       filter_set: '확장 세트',
+      all_collections: '모든 컬렉션',
       filter_rarity: '희귀도',
       filter_hp: 'HP 기준값',
       filter_phase: '진화 단계',

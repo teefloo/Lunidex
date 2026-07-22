@@ -10,6 +10,7 @@ import { getAbilityPokemon } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { formatName } from '@/lib/utils';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -40,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         url: `/${lang}/abilities/${name}`,
         type: 'website',
+        images: [DEFAULT_OG_IMAGE],
       },
     };
   } catch {

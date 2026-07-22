@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildSubpathLanguages } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import Header from '@/components/layout/Header';
 import { BreedingPageClient } from './BreedingPageClient';
 
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

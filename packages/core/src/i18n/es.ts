@@ -908,6 +908,7 @@ export default {
       try_english: 'Cambiar a inglés',
       showing_english_fallback: 'Mostrando contenido en inglés',
       filter_set: 'Set de expansión',
+      all_collections: 'Todas las colecciones',
       filter_rarity: 'Nivel de rareza',
       filter_hp: 'Umbral de HP',
       filter_phase: 'Fase de evolución',

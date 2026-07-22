@@ -1077,6 +1077,7 @@ export default {
       try_english: 'Zu Englisch wechseln',
       showing_english_fallback: 'Englischer Inhalt wird angezeigt',
       filter_set: 'Erweiterungsset',
+      all_collections: 'Alle Kollektionen',
       filter_rarity: 'Seltenheitsstufe',
       filter_hp: 'HP-Schwellenwert',
       filter_phase: 'Entwicklungsphase',

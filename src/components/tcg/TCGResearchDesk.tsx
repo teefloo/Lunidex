@@ -15,7 +15,7 @@ import { useTranslation } from '@/lib/i18n';
 import { persistLanguageCookie } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
-import type { TCGCard, TCGCardFilters } from '@/types/tcg';
+import type { TCGCard, TCGCardFilters, TCGSet } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCardItem } from './TCGCardItem';
@@ -202,8 +202,13 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
         title={t('tcg.discover_title')}
         subtitle={t('tcg.discover_subtitle')}
         searchTerm={effectiveFilters.searchTerm ?? ''}
-        latestSetName={activeSetName ?? t('tcg.unknown')}
+        collections={setOptions}
+        selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
+        onCollectionChange={(selectedSet) => updateFilters({
+          ...effectiveFilters,
+          selectedSet,
+        })}
         onSortChange={(sortBy, sortOrder) => {
           updateFilters({
             ...effectiveFilters,
@@ -289,8 +294,10 @@ function DiscoveryHero({
   title,
   subtitle,
   searchTerm,
-  latestSetName,
+  collections,
+  selectedCollectionId,
   sortValue,
+  onCollectionChange,
   onSortChange,
   onSearchChange,
   onClearSearch,
@@ -299,8 +306,10 @@ function DiscoveryHero({
   title: string;
   subtitle: string;
   searchTerm: string;
-  latestSetName: string;
+  collections: TCGSet[];
+  selectedCollectionId: string | null;
   sortValue: string;
+  onCollectionChange: (setId: string | null) => void;
   onSortChange: (sortBy: NonNullable<TCGCardFilters['sortBy']>, sortOrder: NonNullable<TCGCardFilters['sortOrder']>) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
@@ -311,9 +320,22 @@ function DiscoveryHero({
   return (
     <section className="page-surface px-5 py-6 sm:px-8 sm:py-7">
       <div className="space-y-4">
-        <div className="page-eyebrow">
-          <Sparkles className="h-3.5 w-3.5" />
-          {latestSetName}
+        <div className="relative inline-flex max-w-full">
+          <Sparkles className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
+          <select
+            value={selectedCollectionId ?? ''}
+            onChange={(event) => onCollectionChange(event.target.value || null)}
+            className="page-eyebrow max-w-full cursor-pointer appearance-none py-2 pl-7 pr-8 transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
+            aria-label={t('tcg.filter_set')}
+          >
+            <option value="">{t('tcg.all_collections')}</option>
+            {collections.map((collection) => (
+              <option key={collection.id} value={collection.id}>
+                {collection.name}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/55" />
         </div>
         <div className="space-y-3">
           <h1 className="page-title text-4xl leading-none sm:text-5xl xl:text-6xl">

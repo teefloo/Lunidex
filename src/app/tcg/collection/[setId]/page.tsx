@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getSetById } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage } from '@/lib/server-i18n';
-import { buildSubpathLanguages, buildBreadcrumbJsonLd } from '@/lib/seo';
+import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { TCGSetAlbumPage } from './TCGSetAlbumPage';
 
 interface PageProps {
@@ -36,6 +36,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       title,
       description,
       url: `/${currentLang}/tcg/collection/${setId}`,
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       title,

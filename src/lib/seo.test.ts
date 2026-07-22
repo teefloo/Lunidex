@@ -5,6 +5,7 @@ import {
   buildInLanguage,
   localeHref,
   buildWebPageJsonLd,
+  DEFAULT_OG_IMAGE,
 } from './seo';
 import { SITE_URL } from './site';
 import { supportedLanguages } from '@/lib/languages';
@@ -103,5 +104,15 @@ describe('buildWebPageJsonLd', () => {
     });
     expect(ld).not.toHaveProperty('about');
     expect(ld).not.toHaveProperty('keywords');
+  });
+});
+
+describe('DEFAULT_OG_IMAGE', () => {
+  it('points to the selected 1200x630 PrimeDex artwork', () => {
+    expect(DEFAULT_OG_IMAGE).toMatchObject({
+      url: '/og/primedex-og.jpg',
+      width: 1200,
+      height: 630,
+    });
   });
 });
