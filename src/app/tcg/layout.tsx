@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/tcg`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',

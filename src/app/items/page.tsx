@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ItemsPageClient from './ItemsPageClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildSubpathLanguages } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -22,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: `/${lang}/items`,
+      images: [DEFAULT_OG_IMAGE],
       type: 'website',
     },
   };

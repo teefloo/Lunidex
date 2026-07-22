@@ -19,6 +19,7 @@ import MoveLearnerGrid from '@/components/moves/MoveLearnerGrid';
 import MoveBestUsers from '@/components/moves/MoveBestUsers';
 import type { LearnerEntry } from '@/components/moves/MoveLearnerGrid';
 import { REST_API_BASE } from '@/lib/api/client';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -112,6 +113,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       url: `/${lang}/moves/${name}`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary',

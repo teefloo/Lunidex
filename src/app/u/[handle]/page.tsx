@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublicProfileByHandle } from '@/lib/api/public-profile';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
+import { buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import { languageToMetadataLocale } from '@/lib/languages';
 import PublicProfileCard from '@/components/dashboard/PublicProfileCard';
@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: profilePath,
       locale: languageToMetadataLocale[lang],
       siteName: 'PrimeDex',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary',

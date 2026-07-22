@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/moves`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',

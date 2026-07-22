@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import DeckBuilderClient from './DeckBuilderClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildSubpathLanguages } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -23,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/tcg/deck-builder`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

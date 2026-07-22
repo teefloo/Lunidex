@@ -2,19 +2,14 @@ import { ImageResponse } from 'next/og';
 import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
+import { loadDefaultOgImage } from '@/lib/og/default-image';
+import { loadOgFonts } from '@/lib/og/fonts';
+import { OG_SIZE, OG_THEME, OG_TYPE_COLORS } from '@/lib/og/theme';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const alt = 'Pokémon Details — PrimeDex';
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = 'image/png';
-
-const TYPE_COLORS: Record<string, string> = {
-  normal: '#A8A77A', fire: '#EE8130', water: '#6390F0', electric: '#F7D02C',
-  grass: '#7AC74C', ice: '#96D9D6', fighting: '#C22E28', poison: '#A33EA1',
-  ground: '#E2BF65', flying: '#A98FF3', psychic: '#F95587', bug: '#A6B91A',
-  rock: '#B6A136', ghost: '#735797', dragon: '#6F35FC', dark: '#705746',
-  steel: '#B7B7CE', fairy: '#D685AD',
-};
 
 export default async function Image({ params }: { params: { name: string } }) {
   const name = params.name;
@@ -30,8 +25,9 @@ export default async function Image({ params }: { params: { name: string } }) {
     const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
     const artwork = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
     const mainType = pokemon.types[0].type.name;
-    const mainColor = TYPE_COLORS[mainType] || '#A8A77A';
+    const mainColor = OG_TYPE_COLORS[mainType] || OG_THEME.border;
     const totalStats = pokemon.stats.reduce((sum: number, s: { base_stat: number }) => sum + s.base_stat, 0);
+    const fonts = await loadOgFonts('en', `${displayName} PrimeDex BST ${totalStats}`);
 
     return new ImageResponse(
       (
@@ -40,8 +36,8 @@ export default async function Image({ params }: { params: { name: string } }) {
             height: '100%',
             width: '100%',
             display: 'flex',
-            background: `linear-gradient(135deg, #1a1a2e 0%, ${mainColor}33 50%, #1a1a2e 100%)`,
-            fontFamily: 'sans-serif',
+            background: `linear-gradient(135deg, ${OG_THEME.backgroundAccent} 0%, ${mainColor}33 50%, ${OG_THEME.background} 100%)`,
+            fontFamily: 'Nunito',
             position: 'relative',
           }}
         >
@@ -77,7 +73,7 @@ export default async function Image({ params }: { params: { name: string } }) {
               style={{
                 fontSize: '18px',
                 fontWeight: 700,
-                color: 'rgba(255, 255, 255, 0.4)',
+                color: OG_THEME.textDim,
                 letterSpacing: '4px',
                 marginBottom: '8px',
                 display: 'flex',
@@ -91,7 +87,7 @@ export default async function Image({ params }: { params: { name: string } }) {
               style={{
                 fontSize: '72px',
                 fontWeight: 900,
-                color: 'white',
+                color: OG_THEME.text,
                 letterSpacing: '-3px',
                 lineHeight: 1,
                 marginBottom: '16px',
@@ -109,8 +105,8 @@ export default async function Image({ params }: { params: { name: string } }) {
                   style={{
                     padding: '6px 16px',
                     borderRadius: '9999px',
-                    background: TYPE_COLORS[typeItem.type.name] || '#888',
-                    color: 'white',
+                    background: OG_TYPE_COLORS[typeItem.type.name] || OG_THEME.border,
+                    color: OG_THEME.background,
                     fontSize: '14px',
                     fontWeight: 800,
                     textTransform: 'uppercase',
@@ -128,7 +124,7 @@ export default async function Image({ params }: { params: { name: string } }) {
               style={{
                 fontSize: '16px',
                 fontWeight: 600,
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: OG_THEME.textMuted,
                 display: 'flex',
                 gap: '16px',
               }}
@@ -146,9 +142,7 @@ export default async function Image({ params }: { params: { name: string } }) {
                 left: '60px',
                 fontSize: '20px',
                 fontWeight: 900,
-                background: 'linear-gradient(135deg, #e94560, #ff8a00)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                color: OG_THEME.primary,
                 display: 'flex',
               }}
             >
@@ -182,35 +176,13 @@ export default async function Image({ params }: { params: { name: string } }) {
           </div>
         </div>
       ),
-      { ...size }
+      { ...size, fonts }
     );
   } catch {
     // Fallback OG image if pokemon fetch fails
+    const image = await loadDefaultOgImage();
     return new ImageResponse(
-      (
-        <div
-          style={{
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #e94560 100%)',
-            fontFamily: 'sans-serif',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '64px',
-              fontWeight: 900,
-              color: 'white',
-              display: 'flex',
-            }}
-          >
-            PrimeDex
-          </div>
-        </div>
-      ),
+      <img src={image} alt={alt} width={size.width} height={size.height} style={{ objectFit: 'cover' }} />,
       { ...size }
     );
   }

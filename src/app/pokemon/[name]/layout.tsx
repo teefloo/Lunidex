@@ -5,6 +5,7 @@ import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages, languageToMetadataLocale } from '@/lib/languages';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 type Props = {
   params: Promise<{ name: string }>;
@@ -28,8 +29,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const types = pokemon.types
       .map((type) => t(`types.${type.type.name}`, { defaultValue: type.type.name }))
       .join(', ');
-    const artwork = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
-
     const title = t('meta.pokemon_title', { name: displayName });
     const description = t('meta.pokemon_description', { name: displayName, types });
     const languages: Record<string, string> = {};
@@ -48,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title,
         description,
         url: `/${lang}/pokemon/${name}`,
-        images: artwork ? [{ url: artwork, width: 475, height: 475, alt: `${displayName} official artwork` }] : undefined,
+        images: [DEFAULT_OG_IMAGE],
         type: 'article',
         locale: languageToMetadataLocale[lang],
       },
@@ -56,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: 'summary_large_image',
         title,
         description,
-        images: artwork ? [artwork] : undefined,
+        images: [DEFAULT_OG_IMAGE.url],
       },
       keywords: [
         displayName.toLowerCase(),

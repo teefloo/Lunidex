@@ -1,4 +1,4 @@
-import { SITE_URL } from './site';
+import { SITE_NAME, SITE_TAGLINE, SITE_URL } from './site';
 import { OG_SIZE } from '@/lib/og/theme';
 import { supportedLanguages, languageToMetadataLocale, type SupportedLanguage } from '@/lib/languages';
 
@@ -6,6 +6,13 @@ type BreadcrumbItem = {
   name: string;
   path: string;
 };
+
+export const DEFAULT_OG_IMAGE = {
+  url: '/og/primedex-og.jpg',
+  width: OG_SIZE.width,
+  height: OG_SIZE.height,
+  alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
+} as const;
 
 function normalizePath(item: { path: string; lang?: SupportedLanguage }): string {
   const raw = item.path.startsWith('/') ? item.path : `/${item.path}`;

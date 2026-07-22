@@ -7,6 +7,7 @@ import { TCGCompareTrigger } from '@/components/tcg/TCGCompareTrigger';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -26,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/tcg`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',

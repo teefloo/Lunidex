@@ -4,7 +4,7 @@ import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import FaqSection from '@/components/ui/FaqSection';
 import { SITE_URL, SITE_NAME, GITHUB_REPO_URL, GITHUB_ISSUES_URL } from '@/lib/site';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { HelpCircle, Github, MessageCircleQuestion } from 'lucide-react';
 
 type FaqEntry = { q: string; a: string };
@@ -33,6 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `/${lang}/faq`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
@@ -87,7 +88,7 @@ export default async function FaqPage() {
     publisher: { '@id': `${baseUrl}/#organization` },
     datePublished: LAST_UPDATED,
     dateModified: LAST_UPDATED,
-    primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}/opengraph-image` },
+    primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}${DEFAULT_OG_IMAGE.url}` },
     mainEntity: [...data, ...features, ...privacy].map((entry) => ({
       '@type': 'Question',
       name: entry.q,

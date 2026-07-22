@@ -8,6 +8,7 @@ import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
+import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
   SITE_URL,
   SITE_NAME,
@@ -100,14 +101,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: SITE_NAME,
       locale: languageToOpenGraphLocale[lang],
       url: `/${lang}`,
-      images: [
-        {
-          url: "/opengraph-image",
-          width: 1200,
-          height: 630,
-          alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
-        },
-      ],
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
@@ -115,14 +109,7 @@ export async function generateMetadata(): Promise<Metadata> {
       creator: TWITTER_HANDLE,
       title: t("meta.twitter_title"),
       description: t("meta.twitter_description"),
-      images: [
-        {
-          url: "/opengraph-image",
-          width: 1200,
-          height: 630,
-          alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
-        },
-      ],
+      images: [DEFAULT_OG_IMAGE],
     },
     icons: {
       icon: [
@@ -198,7 +185,7 @@ export default async function RootLayout({
         width: 512,
         height: 512,
       },
-      image: `${baseUrl}/opengraph-image`,
+      image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
       description: SITE_DESCRIPTION,
       foundingDate: '2024',
       sameAs: SOCIAL_PROFILES,
@@ -223,7 +210,7 @@ export default async function RootLayout({
       operatingSystem: 'All',
       browserRequirements: 'Requires modern browser with JavaScript enabled',
       description: SITE_DESCRIPTION,
-      image: `${baseUrl}/opengraph-image`,
+      image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
       screenshot: [
         `${baseUrl}/screenshot-desktop.png`,
         `${baseUrl}/screenshot-mobile.png`,

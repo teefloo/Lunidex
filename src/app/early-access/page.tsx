@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL, SITE_NAME, GITHUB_REPO_URL, DISCORD_URL } from '@/lib/site';
-import { buildSubpathLanguages } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import EarlyAccessForm from '@/components/early-access/EarlyAccessForm';
 import { Github, MessageCircle, ShieldCheck, Sparkles, Zap } from 'lucide-react';
@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: DESCRIPTION,
       url: `/${lang}/early-access`,
       type: 'website',
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
