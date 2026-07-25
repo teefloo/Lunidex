@@ -37,7 +37,7 @@ export default function AccountMenu() {
                 aria-label={tt('auth.signin_cta', 'Sign in')}
               >
                 <LogIn className="h-3.5 w-3.5" />
-                <span className="hidden text-[9px] font-black uppercase tracking-[0.15em] xl:inline">
+                <span className="hidden text-[11px] font-black uppercase tracking-[0.15em] xl:inline">
                   {tt('auth.signin_cta', 'Sign in')}
                 </span>
               </button>

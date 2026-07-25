@@ -463,16 +463,16 @@ export default function PokemonList() {
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
             <div className="flex items-center gap-3">
               <span className="cat-no text-[0.6rem] text-muted-foreground">{t('list.results')}</span>
-              <Badge variant="secondary" className="bg-primary/10 text-foreground font-mono font-semibold tracking-wider border-none text-[10px]">
+              <Badge variant="secondary" className="bg-primary/10 text-foreground font-mono font-semibold tracking-wider border-none text-[11px]">
                 {(filteredAndSortedResults?.length ?? 0).toString().padStart(3, '0')}
               </Badge>
               {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground">
                   {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
                 </span>
               )}
             </div>
-            <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 text-[11px] md:text-[10px] font-bold uppercase tracking-[0.18em] gap-1.5">
+            <Button variant="ghost" size="sm" onClick={resetFilters} className="h-7 text-[11px] md:text-[11px] font-bold uppercase tracking-[0.18em] gap-1.5">
               <RotateCcw className="w-3 h-3" /> {t('filters.clear_all')}
             </Button>
           </div>

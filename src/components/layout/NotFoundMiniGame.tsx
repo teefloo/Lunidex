@@ -622,16 +622,16 @@ export default function NotFoundMiniGame() {
             }}
           />
 
-          <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white/75 backdrop-blur">
+          <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] text-white/75 backdrop-blur">
             {statusLabel}
           </div>
 
-          <div className="pointer-events-none absolute right-3 top-3 z-10 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white/75 backdrop-blur">
+          <div className="pointer-events-none absolute right-3 top-3 z-10 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] text-white/75 backdrop-blur">
             {exitLabel}
           </div>
 
           <div className="pointer-events-none absolute inset-x-3 bottom-3 z-10">
-            <div className="mb-2 rounded-full border border-white/10 bg-slate-950/65 px-3 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/75 backdrop-blur">
+            <div className="mb-2 rounded-full border border-white/10 bg-slate-950/65 px-3 py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-white/75 backdrop-blur">
               {message}
             </div>
             <div className="h-2 rounded-full bg-black/35">
@@ -642,7 +642,7 @@ export default function NotFoundMiniGame() {
           {hud.status === 'won' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/54 px-5 text-center ">
               <div className="max-w-sm rounded-sm border border-white/12 bg-slate-950/76 p-5 text-white shadow-2xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-amber-200">
+                <p className="text-[11px] font-black uppercase tracking-[0.24em] text-amber-200">
                   {statusLabel}
                 </p>
                 <h3 className="mt-2 text-2xl font-black">
@@ -671,7 +671,7 @@ export default function NotFoundMiniGame() {
 
         <div className="grid gap-3 md:grid-cols-3">
           <div className="glass-card rounded-sm p-3 md:min-h-28">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-foreground/40">
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-foreground/40">
               {t('common.not_found_goal', { defaultValue: 'Goal' })}
             </p>
             <p className="mt-2 text-sm leading-6 text-foreground/65">
@@ -682,7 +682,7 @@ export default function NotFoundMiniGame() {
           </div>
 
           <div className="glass-card rounded-sm p-3 md:min-h-28">
-            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-foreground/40">
+            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.22em] text-foreground/40">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               <span>{t('common.not_found_controls', { defaultValue: 'Controls' })}</span>
             </div>
@@ -694,7 +694,7 @@ export default function NotFoundMiniGame() {
           </div>
 
           <div className="glass-card rounded-sm p-3 md:min-h-28">
-            <div className="flex items-center justify-between gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-foreground/40">
+            <div className="flex items-center justify-between gap-2 text-[11px] font-black uppercase tracking-[0.22em] text-foreground/40">
               <span>{t('common.not_found_progress', { defaultValue: 'Sequence' })}</span>
               <span>{collectedCount}/{FRAGMENT_TOTAL}</span>
             </div>
@@ -771,7 +771,7 @@ function Metric({
   return (
     <div className="glass-card flex flex-col items-center gap-1 rounded-sm px-3 py-2 text-center">
       <Icon className="h-4 w-4 text-primary" />
-      <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/40">{label}</span>
+      <span className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/40">{label}</span>
       <span className="text-lg font-black tabular-nums">{value}</span>
     </div>
   );

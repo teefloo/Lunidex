@@ -30,7 +30,7 @@ export default function BattleClient() {
   return (
     <div className="mt-8 flex flex-col gap-10">
       <section>
-        <h2 className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+        <h2 className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
           Damage Calculator
         </h2>
         <Suspense>
@@ -39,7 +39,7 @@ export default function BattleClient() {
       </section>
 
       <section>
-        <h2 className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+        <h2 className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
           PvP Battle Room
         </h2>
         <Suspense>

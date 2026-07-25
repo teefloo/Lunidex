@@ -51,7 +51,7 @@ interface NatureSelectorProps {
 export default function NatureSelector({ value, onChange, label }: NatureSelectorProps) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/60">
+      <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/60">
         {label}
       </label>
       <select

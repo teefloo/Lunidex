@@ -568,27 +568,6 @@ h1 { letter-spacing: 0; }
   animation: shimmerSlide 2.4s ease-in-out infinite;
 }
 
-/* Pixel dot grid noise overlay */
-.noise-overlay {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(oklch(0.42 0.045 60 / 0.04) 1px, transparent 1px),
-    radial-gradient(oklch(0.42 0.045 60 / 0.025) 1px, transparent 1px);
-  background-position: 0 0, 8px 8px;
-  background-size: 16px 16px;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.dark .noise-overlay {
-  background-image:
-    radial-gradient(oklch(0.92 0.022 85 / 0.04) 1px, transparent 1px),
-    radial-gradient(oklch(0.92 0.022 85 / 0.025) 1px, transparent 1px);
-  mix-blend-mode: screen;
-}
-
 /* Text helpers — all resolve to foreground (gradient effects retired) */
 .gradient-text-primary,
 .gradient-text-premium,

@@ -147,7 +147,7 @@ export function CompetitiveMeta({ pokemon, displayName }: Props) {
           href={`https://www.smogon.com/dex/sv/pokemon/${pokemon.name}/`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-foreground/40 hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest text-foreground/40 hover:text-primary transition-colors"
         >
           Smogon <ExternalLink className="w-3 h-3" />
         </a>
@@ -166,7 +166,7 @@ export function CompetitiveMeta({ pokemon, displayName }: Props) {
           {/* Single-format tier */}
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex flex-col gap-1.5">
-              <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">
+              <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">
                 {t('competitive.tier')}
               </p>
               <span
@@ -179,7 +179,7 @@ export function CompetitiveMeta({ pokemon, displayName }: Props) {
 
             {doublesTier && doublesTier !== 'NFE' && (
               <div className="flex flex-col gap-1.5">
-                <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">
+                <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">
                   {t('competitive.vgc_tier')}
                 </p>
                 <span className="inline-flex items-center px-4 py-1.5 rounded-sm text-sm font-black uppercase tracking-wider bg-secondary/40 border border-border/40 text-foreground/80">
@@ -200,7 +200,7 @@ export function CompetitiveMeta({ pokemon, displayName }: Props) {
 
       {/* Showdown export */}
       <div className="pt-4 border-t border-border/60 space-y-3">
-        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">
+        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">
           {t('competitive.export_showdown')}
         </p>
         <pre className="text-[11px] text-foreground/70 bg-secondary/30 border border-border/40 rounded-sm px-4 py-3 overflow-x-auto leading-relaxed font-mono whitespace-pre">

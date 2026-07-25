@@ -27,7 +27,7 @@ export default function CaughtFilter({ className }: { className?: string }) {
           onClick={() => setShowCaughtOnly(mode.id)}
           aria-label={mode.label}
           className={cn(
-            "flex items-center justify-center gap-1.5 px-4 min-h-[44px] rounded-sm text-[10px] font-black uppercase tracking-wider transition-all duration-100",
+            "flex items-center justify-center gap-1.5 px-4 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100",
             showCaughtOnly === mode.id
               ? "bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

@@ -117,7 +117,7 @@ function ItemCard({ item, language }: { item: HeldItem; language: string }) {
         <span className="font-black text-sm text-foreground/90 truncate group-hover:text-primary transition-colors">
           {itemName}
         </span>
-        <span className="text-[10px] text-foreground/60 leading-tight mt-1 line-clamp-2">
+        <span className="text-[11px] text-foreground/60 leading-tight mt-1 line-clamp-2">
           {itemDesc}
         </span>
       </div>
@@ -523,34 +523,34 @@ export function PokemonDetailClient({
         >          <Tabs defaultValue="about" className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
               <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-5 lg:grid-cols-10 overflow-x-scroll">
-                <TabsTrigger value="about" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="about" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.about')}
                 </TabsTrigger>
-                <TabsTrigger value="stats" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="stats" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.stats')}
                 </TabsTrigger>
-                <TabsTrigger value="evolution" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="evolution" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.evolution')}
                 </TabsTrigger>
-                <TabsTrigger value="moves" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="moves" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.moveset')}
                 </TabsTrigger>
-                <TabsTrigger value="breeding" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="breeding" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.breeding')}
                 </TabsTrigger>
-                <TabsTrigger value="builds" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="builds" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.builds')}
                 </TabsTrigger>
-                <TabsTrigger value="locations" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="locations" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.where_to_find')}
                 </TabsTrigger>
-                <TabsTrigger value="cards" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="cards" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.cards')}
                 </TabsTrigger>
-                <TabsTrigger value="sprites" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="sprites" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <Images className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1" /> {t('detail.sprites')}
                 </TabsTrigger>
-                <TabsTrigger value="competitive" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[10px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="competitive" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('competitive.title')}
                 </TabsTrigger>
               </TabsList>
@@ -575,33 +575,33 @@ export function PokemonDetailClient({
                 <div className="grid grid-cols-2 gap-3 mt-6">
                   <div className="bg-secondary/30 border border-border/40 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
                     <Weight className="w-5 h-5 text-foreground/40 mb-2 group-hover:text-primary transition-colors" />
-                    <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.weight')}</p>
+                    <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.weight')}</p>
                     <p className="text-lg font-black text-foreground/90">{pokemon.weight / 10} kg</p>
                   </div>
                   <div className="bg-secondary/30 border border-border/40 p-4 rounded-sm flex flex-col items-center justify-center text-center group hover:bg-secondary/50 transition-colors">
                     <Ruler className="w-5 h-5 text-foreground/40 mb-2 group-hover:text-primary transition-colors" />
-                    <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.height')}</p>
+                    <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-1">{t('detail.height')}</p>
                     <p className="text-lg font-black text-foreground/90">{pokemon.height / 10} m</p>
                   </div>
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border/60">
-                  <h3 className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <h3 className="text-[11px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.pokedex_data')}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm flex flex-col gap-2">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.order')}</p>
+                      <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.order')}</p>
                       <p className="text-lg font-black text-foreground/90">#{pokemon.order}</p>
                     </div>
                     <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm flex flex-col gap-2">
-                      <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.default_form')}</p>
+                      <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.default_form')}</p>
                       <p className="text-lg font-black text-foreground/90">{pokemon.is_default ? t('detail.yes') : t('detail.no')}</p>
                     </div>
                     <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.forms')}</p>
-                        <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">{forms.length}</span>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.forms')}</p>
+                        <span className="text-[11px] font-black text-foreground/40 uppercase tracking-widest">{forms.length}</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {forms.map((form) => (
@@ -616,8 +616,8 @@ export function PokemonDetailClient({
                     </div>
                     <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.game_indices')}</p>
-                        <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.game_indices')}</p>
+                        <span className="text-[11px] font-black text-foreground/40 uppercase tracking-widest">
                           {gameIndices.length} {t('detail.game_appearances')}
                         </span>
                       </div>
@@ -634,8 +634,8 @@ export function PokemonDetailClient({
                     </div>
                     <div className="bg-secondary/20 border border-border/40 p-4 rounded-sm md:col-span-2 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.held_items')}</p>
-                        <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">{heldItems.length}</span>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest">{t('detail.held_items')}</p>
+                        <span className="text-[11px] font-black text-foreground/40 uppercase tracking-widest">{heldItems.length}</span>
                       </div>
                       {heldItems.length > 0 ? (
                         <div className="space-y-3">
@@ -667,7 +667,7 @@ export function PokemonDetailClient({
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border/60">
-                  <h3 className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <h3 className="text-[11px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.abilities')}
                   </h3>
                   <div className="grid grid-cols-1 gap-3">
@@ -707,7 +707,7 @@ export function PokemonDetailClient({
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="font-black text-sm text-foreground/80 group-hover:text-primary transition-colors">{localizedName}</span>
-                              {a.is_hidden && <span className="px-1.5 py-0.5 bg-primary/20 text-[11px] md:text-[10px] font-black text-primary uppercase tracking-tighter rounded">{t('detail.hidden')}</span>}
+                              {a.is_hidden && <span className="px-1.5 py-0.5 bg-primary/20 text-[11px] md:text-[11px] font-black text-primary uppercase tracking-tighter rounded">{t('detail.hidden')}</span>}
                             </div>
                             {abilityQueries[originalIdx]?.isLoading && <Loader2 className="w-3 h-3 animate-spin text-primary/50" />}
                           </div>
@@ -729,7 +729,7 @@ export function PokemonDetailClient({
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border/60">
-                  <h3 className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <h3 className="text-[11px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.recommended_items')}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -818,14 +818,14 @@ export function PokemonDetailClient({
                   <div className="space-y-8">
                     {effectiveness.weaknesses.length > 0 && (
                       <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60 mb-4 flex items-center gap-2">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-red-500/60 mb-4 flex items-center gap-2">
                           <ShieldAlert className="w-3 h-3" /> {t('detail.receives_double')}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.weaknesses.map(([type, multiplier]) => (
                             <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
-                              <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black opacity-40">x{multiplier}</span>
+                              <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="text-[11px] md:text-[11px] font-black opacity-40">x{multiplier}</span>
                             </div>
                           ))}
                         </div>
@@ -834,20 +834,20 @@ export function PokemonDetailClient({
 
                     {effectiveness.resistances.length > 0 && (
                       <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60 mb-4 flex items-center gap-2">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-500/60 mb-4 flex items-center gap-2">
                           <ShieldCheck className="w-3 h-3" /> {t('detail.resists_damage')}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.resistances.map(([type, multiplier]) => (
                             <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
-                              <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black opacity-40">x{multiplier}</span>
+                              <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="text-[11px] md:text-[11px] font-black opacity-40">x{multiplier}</span>
                             </div>
                           ))}
                           {effectiveness.immunities.map(([type]) => (
                             <div key={type} className="flex items-center justify-between p-2 rounded-sm bg-background/40 border border-blue-500/20">
-                              <span className="text-[10px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black text-blue-400">{t('detail.immune')}</span>
+                              <span className="text-[11px] font-bold uppercase truncate" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="text-[11px] md:text-[11px] font-black text-blue-400">{t('detail.immune')}</span>
                             </div>
                           ))}
                         </div>
@@ -856,14 +856,14 @@ export function PokemonDetailClient({
 
                     {effectiveness.immunities.length > 0 && (
                       <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-4 flex items-center gap-2">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-4 flex items-center gap-2">
                           <Zap className="w-3 h-3" /> {t('detail.immunities')}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {effectiveness.immunities.map(([type]) => (
                             <div key={type} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border/40 bg-secondary/20">
-                              <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[11px] md:text-[10px] font-black opacity-40">x0</span>
+                              <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="text-[11px] md:text-[11px] font-black opacity-40">x0</span>
                             </div>
                           ))}
                         </div>
@@ -902,7 +902,7 @@ export function PokemonDetailClient({
                       <h3 className="text-xl font-black text-foreground/90">{t('detail.breeding')}</h3>
                       <Link
                         href={`/breeding?pokemon=${pokemon.name}`}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
                       >
                         <Egg className="h-3.5 w-3.5" /> Breeding Calculator
                         <ExternalLink className="h-3 w-3" />
@@ -911,13 +911,13 @@ export function PokemonDetailClient({
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.egg_groups')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.egg_groups')}</p>
                         <p className="text-sm font-black text-foreground/90">
                           {species.egg_groups?.map(g => t(`egg_groups.${g.name}`)).join(', ') || t('detail.no_evolution')}
                         </p>
                       </div>
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.gender_ratio')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.gender_ratio')}</p>
                         <p className="text-sm font-black text-foreground/90">
                           {genderRate !== null ? (
                             genderRate === -1
@@ -927,22 +927,22 @@ export function PokemonDetailClient({
                         </p>
                       </div>
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.catch_rate')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.catch_rate')}</p>
                         <p className="text-sm font-black text-foreground/90">{species.capture_rate || '-'}</p>
                       </div>
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_happiness')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_happiness')}</p>
                         <p className="text-sm font-black text-foreground/90">{species.base_happiness || '-'}</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/60">
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.growth_rate')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.growth_rate')}</p>
                         <p className="text-sm font-black text-foreground/90">{species.growth_rate ? t(`growth_rates.${species.growth_rate.name}`) : '-'}</p>
                       </div>
                       <div className="bg-secondary/30 p-4 rounded-sm border border-border/40">
-                        <p className="text-[10px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_exp')}</p>
+                        <p className="text-[11px] text-foreground/50 uppercase font-bold tracking-widest mb-2">{t('detail.base_exp')}</p>
                         <p className="text-sm font-black text-foreground/90">{pokemon.base_experience || '-'}</p>
                       </div>
                     </div>
@@ -1007,7 +1007,7 @@ export function PokemonDetailClient({
             )}
           >
             <Zap className={cn("w-4 h-4", pokemon?.id && isCaught(pokemon.id) && "fill-current")} />
-            <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+            <span className="text-[11px] font-black uppercase tracking-widest leading-none">
               {pokemon?.id && isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
             </span>
           </Button>

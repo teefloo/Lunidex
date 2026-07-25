@@ -47,7 +47,7 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
         </div>
 
         {error.digest && (
-          <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/25">
+          <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/25">
             {t('common.error_id', { defaultValue: 'Error ID' })}: {error.digest}
           </p>
         )}

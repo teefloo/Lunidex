@@ -166,7 +166,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
           )}
         </div>
         <div className="mt-4 text-center">
-          <span className="text-[10px] font-black text-foreground/30 uppercase tracking-[0.2em] block mb-0.5">
+          <span className="text-[11px] font-black text-foreground/30 uppercase tracking-[0.2em] block mb-0.5">
             {pokemonData ? formatId(pokemonData.id) : ''}
           </span>
           <span className={cn(
@@ -176,7 +176,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
             {displayName}
           </span>
           {isCurrent && (
-            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-foreground mt-1 block">
+            <span className="text-[11px] sm:text-[11px] font-black uppercase tracking-widest text-foreground mt-1 block">
               Current
             </span>
           )}
@@ -870,7 +870,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
         <div className="w-24 h-24 md:w-32 md:h-32 bg-secondary/30 border border-border/40 rounded-sm flex items-center justify-center">
           <AlertCircle className="w-6 h-6 text-red-400/60" />
         </div>
-        <span className="mt-2 text-[10px] sm:text-[11px] font-black text-red-400/60 uppercase tracking-wider">
+        <span className="mt-2 text-[11px] sm:text-[11px] font-black text-red-400/60 uppercase tracking-wider">
           {t('detail.load_error', { defaultValue: 'Error' })}
         </span>
       </div>
@@ -900,10 +900,10 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
           )}
         </div>
         <div className="mt-3 text-center">
-          <span className={`px-2 py-0.5 ${config.badgeBg} ${config.badgeText} text-[10px] sm:text-[11px] font-black uppercase tracking-wider rounded-full border ${config.badgeBorder} mb-1 inline-block`}>
+          <span className={`px-2 py-0.5 ${config.badgeBg} ${config.badgeText} text-[11px] sm:text-[11px] font-black uppercase tracking-wider rounded-full border ${config.badgeBorder} mb-1 inline-block`}>
             {config.badge}
           </span>
-          <span className="text-[10px] font-black text-foreground/30 uppercase tracking-[0.2em] block mb-0.5">
+          <span className="text-[11px] font-black text-foreground/30 uppercase tracking-[0.2em] block mb-0.5">
             {pokemonData ? formatId(pokemonData.id) : ''}
           </span>
           <span className={`text-xs font-black capitalize text-foreground/80 ${config.textHover} transition-colors tracking-tight`}>

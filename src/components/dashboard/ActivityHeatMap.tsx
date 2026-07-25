@@ -199,13 +199,13 @@ export default function ActivityHeatMap() {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
         <div className="p-3 rounded-sm border border-border/50 bg-card/50">
-          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
             {t('dashboard.activity_heatmap.total_actions')}
           </p>
           <p className="text-xl font-black text-foreground tabular-nums">{totalCount}</p>
         </div>
         <div className="p-3 rounded-sm border border-border/50 bg-card/50">
-          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
             {t('dashboard.activity_heatmap.most_active')}
           </p>
           {mostActiveDay ? (
@@ -213,14 +213,14 @@ export default function ActivityHeatMap() {
               <p className="text-sm font-black text-foreground tabular-nums">
                 {mostActiveDay.count}
               </p>
-              <p className="text-[9px] font-medium text-foreground/40">{mostActiveDay.date}</p>
+              <p className="text-[11px] font-medium text-foreground/40">{mostActiveDay.date}</p>
             </>
           ) : (
             <p className="text-xl font-black text-foreground tabular-nums">-</p>
           )}
         </div>
         <div className="p-3 rounded-sm border border-border/50 bg-card/50">
-          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
             {t('dashboard.activity_heatmap.streak')}
           </p>
           <p className="text-xl font-black text-foreground tabular-nums">
@@ -240,7 +240,7 @@ export default function ActivityHeatMap() {
             {weeks.map((week, wi) => (
               <div
                 key={wi}
-                className="text-[8px] font-bold text-foreground/30 text-center"
+                className="text-[11px] font-bold text-foreground/30 text-center"
                 style={{ width: 12 }}
               >
                 {week.monthLabel}
@@ -258,7 +258,7 @@ export default function ActivityHeatMap() {
                   className="flex items-center justify-end pr-1"
                   style={{ height: 12 }}
                 >
-                  <span className="text-[8px] font-bold text-foreground/30">
+                  <span className="text-[11px] font-bold text-foreground/30">
                     {i % 2 === 1 ? label.slice(0, 2) : ''}
                   </span>
                 </div>
@@ -313,16 +313,16 @@ export default function ActivityHeatMap() {
             transform: 'translate(-50%, -100%)',
           }}
         >
-          <p className="text-[10px] font-bold tabular-nums">
+          <p className="text-[11px] font-bold tabular-nums">
             {t('dashboard.activity_heatmap.tooltip_count', { count: tooltip.count })}
           </p>
-          <p className="text-[9px] text-foreground/50">{tooltip.date}</p>
+          <p className="text-[11px] text-foreground/50">{tooltip.date}</p>
         </div>
       )}
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-2">
-        <span className="text-[9px] font-bold text-foreground/30">{t('dashboard.activity_heatmap.less')}</span>
+        <span className="text-[11px] font-bold text-foreground/30">{t('dashboard.activity_heatmap.less')}</span>
         {[0, 1, 2, 3, 4, 5].map((level) => (
           <div
             key={level}
@@ -330,7 +330,7 @@ export default function ActivityHeatMap() {
             style={{ width: 12, height: 12 }}
           />
         ))}
-        <span className="text-[9px] font-bold text-foreground/30">{t('dashboard.activity_heatmap.more')}</span>
+        <span className="text-[11px] font-bold text-foreground/30">{t('dashboard.activity_heatmap.more')}</span>
       </div>
     </div>
   );

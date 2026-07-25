@@ -114,7 +114,7 @@ export default function NuzlockeClient() {
 
         <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="page-surface p-4 space-y-4 xl:sticky xl:top-24 xl:h-fit">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
               {t('nuzlocke.my_runs', { defaultValue: 'My Runs' })}
             </h3>
             <div className="space-y-2">
@@ -154,7 +154,7 @@ export default function NuzlockeClient() {
                   >
                     <div className="min-w-0">
                       <p className="truncate text-xs font-bold text-foreground/85">{run.name}</p>
-                      <p className="text-[10px] text-foreground/40">{run.game} · {run.encounters.length} {t('nuzlocke.encounters', { defaultValue: 'encounters' })}</p>
+                      <p className="text-[11px] text-foreground/40">{run.game} · {run.encounters.length} {t('nuzlocke.encounters', { defaultValue: 'encounters' })}</p>
                     </div>
                     <button
                       type="button"
@@ -186,24 +186,24 @@ export default function NuzlockeClient() {
                 <div className="page-surface p-4 grid grid-cols-4 gap-3 text-center">
                   <div>
                     <p className="text-2xl font-black text-foreground/90">{stats.total}</p>
-                    <p className="text-[10px] font-bold uppercase text-foreground/40">{t('nuzlocke.total', { defaultValue: 'Total' })}</p>
+                    <p className="text-[11px] font-bold uppercase text-foreground/40">{t('nuzlocke.total', { defaultValue: 'Total' })}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-black text-green-500">{stats.alive}</p>
-                    <p className="text-[10px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_alive', { defaultValue: 'Alive' })}</p>
+                    <p className="text-[11px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_alive', { defaultValue: 'Alive' })}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-black text-red-500">{stats.dead}</p>
-                    <p className="text-[10px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_dead', { defaultValue: 'Dead' })}</p>
+                    <p className="text-[11px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_dead', { defaultValue: 'Dead' })}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-black text-foreground/50">{stats.boxed}</p>
-                    <p className="text-[10px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_boxed', { defaultValue: 'Boxed' })}</p>
+                    <p className="text-[11px] font-bold uppercase text-foreground/40">{t('nuzlocke.status_boxed', { defaultValue: 'Boxed' })}</p>
                   </div>
                 </div>
 
                 <div className="page-surface p-4 space-y-3">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                     {t('nuzlocke.add_encounter', { defaultValue: 'Add Encounter' })}
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -262,7 +262,7 @@ export default function NuzlockeClient() {
                 </div>
 
                 <div className="page-surface p-4">
-                  <h3 className="mb-3 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                  <h3 className="mb-3 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                     {t('nuzlocke.encounter_list', { defaultValue: 'Encounters' })}
                   </h3>
                   {selectedRun.encounters.length === 0 ? (

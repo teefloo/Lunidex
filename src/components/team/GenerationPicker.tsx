@@ -37,7 +37,7 @@ export default function GenerationPicker({ value, onChange, label }: GenerationP
       <SelectPrimitive.Trigger
         aria-label={label}
         className={cn(
-          'flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/30 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40'
+          'flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/30 px-3 py-1.5 text-[11px] font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40'
         )}
       >
         <span className="text-foreground/40">{label}</span>
@@ -60,7 +60,7 @@ export default function GenerationPicker({ value, onChange, label }: GenerationP
                 key={String(option.value)}
                 value={String(option.value)}
                 className={cn(
-                  'flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-widest text-foreground/70 outline-none transition-colors data-[highlighted]:bg-primary/10 data-[selected]:text-primary'
+                  'flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-[11px] font-black uppercase tracking-widest text-foreground/70 outline-none transition-colors data-[highlighted]:bg-primary/10 data-[selected]:text-primary'
                 )}
               >
                 <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>

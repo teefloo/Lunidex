@@ -41,12 +41,12 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
               {ICON_MAP[metric.icon] || <BarChart3 className="w-4 h-4" />}
             </div>
             <p className="text-lg md:text-xl font-black text-foreground tabular-nums">{metric.value}</p>
-            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-foreground/50">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-foreground/50">
               {metric.label}
             </p>
             {metric.subtitle && (
               <span className={cn(
-                'text-[8px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full',
+                'text-[11px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full',
                 metric.subtitle === 'TCG'
                   ? 'bg-indigo-500/15 text-indigo-500'
                   : 'bg-muted/60 text-foreground/40'

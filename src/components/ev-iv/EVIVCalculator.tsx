@@ -166,7 +166,7 @@ export default function EVIVCalculator() {
     <div className="space-y-6">
       {/* Pokémon search */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+        <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
           {t('ev_iv.pokemon_label')}
         </label>
         <div className="flex gap-2">
@@ -207,7 +207,7 @@ export default function EVIVCalculator() {
       {/* Level + Nature */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+          <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
             {t('ev_iv.level_label')}
           </label>
           <input
@@ -230,7 +230,7 @@ export default function EVIVCalculator() {
 
       {/* Actual stats */}
       <div className="space-y-3">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
           {t('ev_iv.stats_label')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -250,7 +250,7 @@ export default function EVIVCalculator() {
       {/* EV distribution */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
             {t('ev_iv.ev_label')}
           </p>
           <span

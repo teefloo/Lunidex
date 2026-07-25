@@ -242,7 +242,7 @@ export function TeamExportButton({ pokemonData }: TeamExportButtonProps) {
       onClick={handleExport}
       disabled={isExporting || pokemonData.length === 0}
       title={t('team.export_tooltip')}
-      className="rounded-full text-[10px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
+      className="rounded-full text-[11px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
     >
       {isExporting ? (
         <Loader2 className="w-2.5 h-2.5 animate-spin" />

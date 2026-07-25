@@ -100,7 +100,7 @@ export function ShowdownImportDialog() {
           <Button
             variant="outline"
             size="touch"
-            className="rounded-full text-[10px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10 sm:text-[11px]"
+            className="rounded-full text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10 sm:text-[11px]"
           >
             <ClipboardPaste className="h-2.5 w-2.5" />
             {t('team.import_showdown', { defaultValue: 'Import Showdown' })}
@@ -150,7 +150,7 @@ export function ShowdownImportDialog() {
                     <p className="text-sm font-black text-foreground/90">
                       {parsed.nickname ? `${parsed.nickname} (${parsed.species})` : parsed.species}
                       {!pokemonId && (
-                        <span className="ml-2 text-[10px] font-bold uppercase text-yellow-500">
+                        <span className="ml-2 text-[11px] font-bold uppercase text-yellow-500">
                           {t('team.import_unrecognized', { defaultValue: 'Species not recognized' })}
                         </span>
                       )}

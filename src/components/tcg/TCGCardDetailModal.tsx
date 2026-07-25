@@ -188,7 +188,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                 sizes="(min-width: 1024px) 460px, (min-width: 640px) 320px, 240px"
               />
 
-              <div className="mt-5 flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.24em] text-foreground/40">
+              <div className="mt-5 flex items-center justify-between gap-3 text-[11px] font-black uppercase tracking-[0.24em] text-foreground/40">
                 <span className="truncate">{displayCard.set?.name || t('tcg.unknown')}</span>
                 <span className="shrink-0">#{displayCard.localId}</span>
               </div>
@@ -204,26 +204,26 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                 {/* ── Identity ─────────────────────────────────────── */}
                 <header className="space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className={cn('rounded-sm border px-3 py-1 text-[10px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
+                    <span className={cn('rounded-sm border px-3 py-1 text-[11px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
                       {categoryLabel}
                     </span>
                     {displayCard.rarity && (
-                      <span className="rounded-sm border border-border/30 bg-card/35 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-foreground/45">
+                      <span className="rounded-sm border border-border/30 bg-card/35 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-foreground/45">
                         {displayCard.rarity}
                       </span>
                     )}
                     {displayCard.stage && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
                         {getStageLabel(displayCard.stage, t)}
                       </span>
                     )}
                     {displayCard.trainerType && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
                         {getTrainerTypeLabel(displayCard.trainerType, t)}
                       </span>
                     )}
                     {displayCard.energyType && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
                         {getEnergyTypeLabel(displayCard.energyType, t)}
                       </span>
                     )}
@@ -262,11 +262,11 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                 {marketValue && (
                   <div className="flex items-center justify-between rounded-sm border border-primary/20 bg-primary/5 px-5 py-4">
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/40">
+                      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/40">
                         {t('tcg.market_price')}
                       </p>
                       <p className="mt-1 text-2xl font-black leading-none text-primary">{marketValueLabel}</p>
-                      <p className="mt-1.5 text-[9px] font-bold text-foreground/30">
+                      <p className="mt-1.5 text-[11px] font-bold text-foreground/30">
                         via {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
                       </p>
                     </div>
@@ -382,7 +382,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                     href={`https://api.tcgdex.net/v2/${resolvedLang}/cards/${displayCard.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-sm border border-border/40 bg-card/60 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/10 hover:text-primary shadow-[var(--shadow-pixel-sm)]"
+                    className="inline-flex items-center gap-2 rounded-sm border border-border/40 bg-card/60 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/10 hover:text-primary shadow-[var(--shadow-pixel-sm)]"
                   >
                     {t('tcg.open_raw_data')}
                     <ExternalLink className="h-3 w-3" />
@@ -407,7 +407,7 @@ interface InfoItemProps {
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-[9px] font-black uppercase tracking-[0.2em] text-foreground/30">{children}</span>
+      <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.2em] text-foreground/30">{children}</span>
       <div className="h-px flex-1 bg-border/20" />
     </div>
   );
@@ -418,7 +418,7 @@ function InfoItem({ icon: Icon, label, value }: InfoItemProps) {
     <div className="rounded-sm border border-border/40 bg-card/35 p-4">
       <div className="mb-1 flex items-center gap-2">
         <Icon className="h-3 w-3 text-primary" />
-        <span className="text-[9px] font-black uppercase tracking-widest text-foreground/30">{label}</span>
+        <span className="text-[11px] font-black uppercase tracking-widest text-foreground/30">{label}</span>
       </div>
       <span className="block break-words text-xs font-bold leading-snug text-foreground/80">
         {value}
@@ -458,7 +458,7 @@ function AttackPanel({ attack }: { attack: TCGCardAttack }) {
             {attack.cost?.map((cost, costIndex) => (
               <span
                 key={`${cost}-${costIndex}`}
-                className="rounded-sm border border-border/60 bg-card/55 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/50"
+                className="rounded-sm border border-border/60 bg-card/55 px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/50"
               >
                 {cost}
               </span>
@@ -524,7 +524,7 @@ function ActionPill({
       type="button"
       onClick={onClick}
       className={cn(
-        'relative rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
+        'relative rounded-sm border px-4 py-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
         active
           ? 'border-primary/60 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -532,7 +532,7 @@ function ActionPill({
     >
       {label}
       {typeof badge === 'number' && badge > 0 && (
-        <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[8px] font-black leading-none text-primary-foreground">
+        <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-black leading-none text-primary-foreground">
           {badge}
         </span>
       )}

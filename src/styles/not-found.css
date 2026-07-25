@@ -11,6 +11,7 @@
   touch-action: none;
 }
 
+/* Tilemap ground for the game scene — justified as an actual map/canvas surface */
 .not-found-game-board::before {
   content: "";
   position: absolute;

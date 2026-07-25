@@ -260,7 +260,7 @@ export default async function MoveDetailPage({ params }: Props) {
         <div className="mb-6">
           <Link
             href="/moves"
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('moves_page.back_to_moves')}
@@ -280,7 +280,7 @@ export default async function MoveDetailPage({ params }: Props) {
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
                 #{String(move.id).padStart(4, '0')}
               </p>
               <h1 className="mt-1 text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
@@ -331,7 +331,7 @@ export default async function MoveDetailPage({ params }: Props) {
             <section className="rounded-sm border border-border/70 bg-card/35 p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('moves_page.full_effect_label')}
                 </h2>
               </div>
@@ -347,7 +347,7 @@ export default async function MoveDetailPage({ params }: Props) {
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-primary" />
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('moves_page.flavor_text_label')}
                   </h2>
                 </div>
@@ -384,7 +384,7 @@ export default async function MoveDetailPage({ params }: Props) {
             <div className="rounded-sm border border-border/70 bg-card/35 p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('moves_page.detail_title')}
                 </h2>
               </div>
@@ -421,7 +421,7 @@ export default async function MoveDetailPage({ params }: Props) {
               <div className="rounded-sm border border-border/70 bg-card/35 p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <Cpu className="h-4 w-4 text-primary" />
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('moves_page.learners_by_tm')}
                   </h2>
                 </div>
@@ -430,7 +430,7 @@ export default async function MoveDetailPage({ params }: Props) {
                     <Badge
                       key={m.version_group.name}
                       variant="outline"
-                      className="border-border/70 text-[10px] text-foreground/55"
+                      className="border-border/70 text-[11px] text-foreground/55"
                     >
                       {m.version_group.name}
                     </Badge>
@@ -456,7 +456,7 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-center justify-between gap-2">
-      <dt className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/35">{label}</dt>
+      <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">{label}</dt>
       <dd className="text-sm font-bold" style={color ? { color } : undefined}>
         {value}
       </dd>

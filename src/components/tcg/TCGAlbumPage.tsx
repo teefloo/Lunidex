@@ -75,7 +75,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
             <h1 className="text-lg font-black uppercase tracking-tight sm:text-xl">
               {set.name}
             </h1>
-            <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-foreground/40">
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/40">
               {t('tcg.collection_owned')} — {completion.owned}/{completion.total}
             </p>
           </div>
@@ -100,7 +100,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
               onClick={() => setRarityFilter(rarityFilter === r.rarity ? null : r.rarity)}
               className="rounded-lg border border-border/20 bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:bg-card/50"
             >
-              <span className="block text-[9px] font-black uppercase tracking-[0.08em] text-foreground/40">
+              <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-foreground/40">
                 {r.rarity}
               </span>
               <span className={getRarityColor(r.rarity)}>
@@ -127,7 +127,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
           <button
             type="button"
             onClick={() => setShowMissingOnly((prev) => !prev)}
-            className={`shrink-0 rounded-sm border px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] transition-colors ${
+            className={`shrink-0 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em] transition-colors ${
               showMissingOnly
                 ? 'border-rose-500/50 bg-rose-500/20 text-rose-300'
                 : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'

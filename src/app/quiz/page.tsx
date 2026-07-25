@@ -492,12 +492,12 @@ function QuizPageContent() {
                   <div className="space-y-4 bg-card/50 dark:bg-card/35 p-5 md:p-6 rounded-sm border border-border/50 dark:border-border/40">
                     <div className="flex items-center gap-2 mb-3 justify-center">
                       <Filter className="w-4 h-4 text-primary" />
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50">{t('quiz.customize')}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/50">{t('quiz.customize')}</span>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2 text-left relative">
-                        <label htmlFor="quiz-gen-select" className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.generation')}</label>
+                        <label htmlFor="quiz-gen-select" className="text-[11px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.generation')}</label>
                         <Select value={selectedGen || ''} onValueChange={(value) => setSelectedGen(value || null)}>
                           <SelectTrigger id="quiz-gen-select" className="w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
                             <SelectValue placeholder={t('quiz.all_generations')} />
@@ -512,7 +512,7 @@ function QuizPageContent() {
                       </div>
 
                       <div className="space-y-2 text-left relative">
-                        <label htmlFor="quiz-type-select" className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.types')}</label>
+                        <label htmlFor="quiz-type-select" className="text-[11px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.types')}</label>
                         <Select value={selectedType || ''} onValueChange={(value) => setSelectedType(value || null)}>
                           <SelectTrigger id="quiz-type-select" className="w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium">
                             <SelectValue placeholder={t('quiz.all_types')} />
@@ -543,11 +543,11 @@ function QuizPageContent() {
                         className="h-24 md:h-26 rounded-sm flex flex-col items-center justify-center gap-2 group bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 relative overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="flex items-center gap-2 font-bold uppercase tracking-[0.12em] text-[10px] md:text-xs text-foreground/60 group-hover:text-primary transition-colors">
+                        <div className="flex items-center gap-2 font-bold uppercase tracking-[0.12em] text-[11px] md:text-xs text-foreground/60 group-hover:text-primary transition-colors">
                           {mode.icon}
                           {mode.name}
                         </div>
-                        <span className="text-[10px] sm:text-[11px] opacity-40 font-semibold tracking-wider">{mode.desc}</span>
+                        <span className="text-[11px] sm:text-[11px] opacity-40 font-semibold tracking-wider">{mode.desc}</span>
                       </motion.button>
                     ))}
                   </div>
@@ -557,7 +557,7 @@ function QuizPageContent() {
                     <Button
                       variant="outline"
                       onClick={() => startGame(quizChallenge, 'time-attack')}
-                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5"
+                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[11px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5"
                     >
                       <Timer className="w-4 h-4 text-blue-400" />
                       {t('quiz.time_attack')} <span className="opacity-50 ml-1">(30s)</span>
@@ -566,7 +566,7 @@ function QuizPageContent() {
                     <Button
                       variant="outline"
                       onClick={() => startGame(quizChallenge, 'survival')}
-                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[10px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-red-500/30 hover:bg-red-500/5"
+                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[11px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-red-500/30 hover:bg-red-500/5"
                     >
                       <Heart className="w-4 h-4 text-red-400" />
                       {t('quiz.survival')} <span className="opacity-50 ml-1">(3 {t('quiz.lives')})</span>
@@ -577,15 +577,15 @@ function QuizPageContent() {
                   {quizHighScores && (
                     <div className="pt-6 border-t border-border/50 dark:border-border/40 grid grid-cols-3 gap-3">
                       <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.classic')}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.classic')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.classic}</p>
                       </div>
                       <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.silhouette')}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.silhouette')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.silhouette}</p>
                       </div>
                       <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.stats_mode')}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.stats_mode')}</p>
                         <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.stats}</p>
                       </div>
                     </div>
@@ -631,10 +631,10 @@ function QuizPageContent() {
                           {badge.icon}
                         </div>
                         <div className="space-y-0.5">
-                          <div className={cn("text-[10px] font-bold uppercase tracking-[0.08em]", isUnlocked ? "text-primary" : "text-foreground/30")}>
+                          <div className={cn("text-[11px] font-bold uppercase tracking-[0.08em]", isUnlocked ? "text-primary" : "text-foreground/30")}>
                             {badge.name}
                           </div>
-                          {isUnlocked && <div className="text-[9px] font-medium opacity-50 leading-tight text-foreground/60">{badge.desc}</div>}
+                          {isUnlocked && <div className="text-[11px] font-medium opacity-50 leading-tight text-foreground/60">{badge.desc}</div>}
                         </div>
                       </div>
                     );
@@ -653,7 +653,7 @@ function QuizPageContent() {
                   <div className="flex items-center gap-2 bg-card/60 dark:bg-card/50 px-4 py-2.5 rounded-[1rem] border border-border/50 dark:border-border/40 min-w-[100px] md:min-w-[120px] relative">
                     {gameMode === 'marathon' ? <Flame className="w-5 h-5 text-orange-500" /> : <Trophy className="w-5 h-5 text-yellow-500" />}
                     <div className="flex flex-col items-start leading-[1.1]">
-                      <span className="text-[10px] font-bold text-foreground/50 uppercase tracking-[0.15em]">{t('quiz.score_current')}</span>
+                      <span className="text-[11px] font-bold text-foreground/50 uppercase tracking-[0.15em]">{t('quiz.score_current')}</span>
                       <span className="font-black text-xl md:text-2xl tabular-nums text-foreground drop-shadow-md">{score}</span>
                     </div>
                   </div>
@@ -662,7 +662,7 @@ function QuizPageContent() {
                   <div className="flex items-center gap-2 bg-card/60 dark:bg-card/50 px-4 py-2.5 rounded-[1rem] border border-border/50 dark:border-border/40 min-w-[100px] md:min-w-[120px] opacity-70">
                     <Gamepad2 className="w-5 h-5 text-primary/70" />
                     <div className="flex flex-col items-start leading-[1.1]">
-                      <span className="text-[10px] font-bold text-foreground/50 uppercase tracking-[0.15em]">{t('quiz.score_high')}</span>
+                      <span className="text-[11px] font-bold text-foreground/50 uppercase tracking-[0.15em]">{t('quiz.score_high')}</span>
                       <span className="font-black text-xl md:text-2xl tabular-nums text-foreground/70">{isDaily ? '-' : quizHighScores[quizChallenge]}</span>
                     </div>
                   </div>
@@ -677,7 +677,7 @@ function QuizPageContent() {
                     )}>
                       <Timer className={cn("w-5 h-5", timeLeft < 10 ? "text-red-500" : "text-blue-400")} />
                       <div className="flex flex-col items-start leading-[1.1]">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{t('quiz.timer')}</span>
+                        <span className="text-[11px] font-bold uppercase tracking-[0.15em] opacity-60">{t('quiz.timer')}</span>
                         <span className="font-black text-xl md:text-2xl tabular-nums tracking-tight">{timeLeft}s</span>
                       </div>
                     </div>
@@ -706,7 +706,7 @@ function QuizPageContent() {
                   {gameMode === 'marathon' && (
                     <div className="flex items-center gap-2 bg-card/60 dark:bg-card/50 px-4 py-2.5 rounded-[1rem] border border-border/50 dark:border-border/40">
                       <div className="flex flex-col items-start leading-[1.1]">
-                        <span className="text-[10px] font-bold text-red-400/60 uppercase tracking-[0.15em]">{t('quiz.errors')}</span>
+                        <span className="text-[11px] font-bold text-red-400/60 uppercase tracking-[0.15em]">{t('quiz.errors')}</span>
                         <span className="font-black text-xl md:text-2xl tabular-nums text-red-400">{wrongAnswers}<span className="text-sm text-foreground/30">/5</span></span>
                       </div>
                     </div>
@@ -716,7 +716,7 @@ function QuizPageContent() {
                   {isDaily && (
                     <div className="flex items-center gap-2 bg-orange-500/10 px-4 py-2.5 rounded-[1rem] border border-orange-500/20">
                       <div className="flex flex-col items-start leading-[1.1]">
-                        <span className="text-[10px] font-bold text-orange-500/80 uppercase tracking-[0.15em]">{t('quiz.progress')}</span>
+                        <span className="text-[11px] font-bold text-orange-500/80 uppercase tracking-[0.15em]">{t('quiz.progress')}</span>
                         <span className="font-black text-xl md:text-2xl tabular-nums text-orange-400">{dailyIndex}<span className="text-sm text-orange-500/40">/10</span></span>
                       </div>
                     </div>
@@ -741,7 +741,7 @@ function QuizPageContent() {
                       className="flex flex-col items-center gap-4 relative z-10"
                     >
                       <Loader2 className="w-14 h-14 animate-spin text-primary/50 drop-shadow-[0_0_15px_rgba(227,53,13,0.3)]" />
-                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/40 animate-pulse">{t('quiz.loading')}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-foreground/40 animate-pulse">{t('quiz.loading')}</span>
                     </motion.div>
                   ) : currentPokemon ? (
                     <motion.div
@@ -754,7 +754,7 @@ function QuizPageContent() {
                       {quizChallenge === 'stats' ? (
                         <div className="bg-background/90  border border-border/60 dark:border-border/40 p-5 md:p-6 rounded-sm w-full max-w-[18rem] md:max-w-md space-y-4 shadow-2xl relative">
                           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
-                          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-foreground/60 mb-4 text-center">{t('quiz.who_stats')}</p>
+                          <p className="text-[11px] md:text-xs font-bold uppercase tracking-[0.25em] text-foreground/60 mb-4 text-center">{t('quiz.who_stats')}</p>
                           {[
                             { label: t('stats.hp_short'), val: currentPokemon.stats[0].base_stat, color: '#FF4757' },
                             { label: t('stats.attack_short'), val: currentPokemon.stats[1].base_stat, color: '#FFA502' },
@@ -764,7 +764,7 @@ function QuizPageContent() {
                             { label: t('stats.speed_short'), val: currentPokemon.stats[5].base_stat, color: '#FF6B81' },
                           ].map(s => (
                             <div key={s.label} className="space-y-1.5">
-                              <div className="flex justify-between text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-foreground/80">
+                              <div className="flex justify-between text-[11px] sm:text-[11px] font-bold uppercase tracking-wider text-foreground/80">
                                 <span>{s.label}</span>
                                 <span className={gameState === 'answered' ? 'text-primary drop-shadow-[0_0_5px_rgba(227,53,13,0.5)]' : 'opacity-30'}>
                                   {gameState === 'answered' ? s.val : '???'}
@@ -811,11 +811,11 @@ function QuizPageContent() {
                             transition={{ type: 'spring', bounce: 0.5 }}
                           >
                             {isCorrect ? (
-                              <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-5 md:px-6 py-2.5 md:py-3 rounded-full shadow-sm flex items-center gap-2 font-bold uppercase tracking-[0.15em] text-[10px] md:text-xs">
+                              <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-5 md:px-6 py-2.5 md:py-3 rounded-full shadow-sm flex items-center gap-2 font-bold uppercase tracking-[0.15em] text-[11px] md:text-xs">
                                 <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" /> {t('quiz.correct')}
                               </div>
                             ) : (
-                              <div className="bg-red-500/20 border border-red-500/40 text-red-400 px-5 md:px-6 py-2.5 md:py-3 rounded-full shadow-sm flex items-center gap-2 font-bold uppercase tracking-[0.15em] text-[10px] md:text-xs">
+                              <div className="bg-red-500/20 border border-red-500/40 text-red-400 px-5 md:px-6 py-2.5 md:py-3 rounded-full shadow-sm flex items-center gap-2 font-bold uppercase tracking-[0.15em] text-[11px] md:text-xs">
                                 <AlertCircle className="w-4 h-4 md:w-5 md:h-5" /> {t('quiz.wrong')}
                               </div>
                             )}

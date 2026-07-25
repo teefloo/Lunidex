@@ -176,7 +176,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
           description={`Level ${trainerLevel.level} Trainer — ${data.pokedex.caughtPercent}% Dex completed`}
           label={t('detail.share')}
           variant="outline"
-          className="rounded-full text-[10px] font-black uppercase border-border/50 text-foreground/60 hover:bg-primary/10 shrink-0"
+          className="rounded-full text-[11px] font-black uppercase border-border/50 text-foreground/60 hover:bg-primary/10 shrink-0"
         />
       </div>
 
@@ -194,7 +194,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             {t('dashboard.trainer.level', { level: trainerLevel.level })}
           </span>
         </div>
-        <p className="text-[10px] font-bold text-foreground/40 mb-2">
+        <p className="text-[11px] font-bold text-foreground/40 mb-2">
           {t(trainerLevel.titleKey)}
         </p>
         <div className="h-2.5 rounded-full bg-muted/60 overflow-hidden pixel-progress">
@@ -203,7 +203,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             style={{ width: `${xpProgress.percent}%` }}
           />
         </div>
-        <p className="text-[9px] font-semibold text-foreground/40 mt-1 text-right">
+        <p className="text-[11px] font-semibold text-foreground/40 mt-1 text-right">
           {t('dashboard.trainer.xp_bar', { current: xpProgress.current, max: xpProgress.max })}
         </p>
       </div>
@@ -240,11 +240,11 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
                 )}>
                   <BadgeIcon iconName={badge.icon} />
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-[0.08em] leading-tight">
+                <span className="text-[11px] font-bold uppercase tracking-[0.08em] leading-tight">
                   {t(badge.nameKey)}
                 </span>
                 {tier && (
-                  <span className={cn('text-[8px] font-black uppercase tracking-wider', tierStyle?.text)}>
+                  <span className={cn('text-[11px] font-black uppercase tracking-wider', tierStyle?.text)}>
                     {t(TIER_LABELS[tier])}
                   </span>
                 )}
@@ -261,7 +261,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
         {/* Next badge */}
         {badges.next && (
           <div className="mt-4 p-3 rounded-sm border border-dashed border-border/60 bg-muted/30">
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-2">
               {t('dashboard.badges.next_badge')}
             </p>
             <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
                     }}
                   />
                 </div>
-                <p className="text-[9px] font-semibold text-foreground/40 mt-0.5">
+                <p className="text-[11px] font-semibold text-foreground/40 mt-0.5">
                   {badges.next.progressCurrent} / {badges.next.progressMax}
                 </p>
               </div>
@@ -304,7 +304,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             {t('dashboard.weekly.title')}
           </h4>
           {questComplete && (
-            <span className="text-[9px] font-bold uppercase tracking-wider text-green-500">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-green-500">
               {t('dashboard.weekly.complete')}
             </span>
           )}
@@ -317,7 +317,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             <p className="text-xs font-bold text-foreground/70 truncate">
               {t(weeklyQuest.nameKey)}
             </p>
-            <p className="text-[9px] text-foreground/40 mt-0.5">
+            <p className="text-[11px] text-foreground/40 mt-0.5">
               {t(weeklyQuest.descKey)}
             </p>
             <div className="mt-1.5 h-1.5 rounded-full bg-muted/70 overflow-hidden">
@@ -335,7 +335,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
                 }}
               />
             </div>
-            <p className="text-[9px] font-semibold text-foreground/40 mt-0.5">
+            <p className="text-[11px] font-semibold text-foreground/40 mt-0.5">
               {weeklyQuest.progress} / {weeklyQuest.target}
             </p>
           </div>
@@ -343,17 +343,17 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
             {questComplete && !questClaimed ? (
               <button
                 onClick={() => claimWeeklyQuest()}
-                className="text-[9px] font-bold uppercase tracking-wider text-green-500 hover:text-green-400 transition-colors px-2 py-1 rounded bg-green-500/10 hover:bg-green-500/20"
+                className="text-[11px] font-bold uppercase tracking-wider text-green-500 hover:text-green-400 transition-colors px-2 py-1 rounded bg-green-500/10 hover:bg-green-500/20"
               >
                 {t('dashboard.weekly.xp_reward', { amount: weeklyQuest.xpReward })}
               </button>
             ) : questClaimed ? (
-              <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/30 flex items-center gap-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/30 flex items-center gap-1">
                 <Check className="w-3 h-3" />
                 {t('dashboard.weekly.complete')}
               </span>
             ) : (
-              <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/30">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/30">
                 {t('dashboard.weekly.xp_reward', { amount: weeklyQuest.xpReward })}
               </span>
             )}

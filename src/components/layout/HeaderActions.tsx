@@ -74,7 +74,7 @@ export function HeaderActions() {
             className="glass-control mr-0.5 hidden h-10 items-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-primary active:scale-95 md:flex"
           >
             <Search className="h-3.5 w-3.5" />
-            <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[9px] font-bold">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
+            <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[11px] font-bold">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
           </button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="text-xs font-bold">{searchPlaceholder}</TooltipContent>
@@ -106,7 +106,7 @@ export function HeaderActions() {
             <path d="M2.8 5.5h12.4M2.8 12.5h12.4" />
           </svg>
           <span className="hidden sm:contents">
-            <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[10px] font-semibold uppercase leading-none">{languageLabel}</SelectValue>
+            <SelectValue suppressHydrationWarning className="min-w-[24px] justify-center text-center font-mono text-[11px] font-semibold uppercase leading-none">{languageLabel}</SelectValue>
           </span>
         </SelectTrigger>
         <SelectContent className="glass-surface min-w-48 p-1">

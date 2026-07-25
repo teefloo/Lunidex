@@ -26,7 +26,7 @@ export function HeaderLogo() {
             <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground md:text-base">Dex</span>
           </div>
           <div className="flex h-3 items-center gap-1.5 px-0.5">
-            <span suppressHydrationWarning className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:text-[10px]">
+            <span suppressHydrationWarning className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:text-[11px]">
               {mounted ? caughtCount.toString().padStart(3, '0') : '000'} <span className="text-muted-foreground">/</span> 1025
             </span>
             <div className="h-[2px] w-7 overflow-hidden bg-foreground/15" role="progressbar" aria-valuenow={mounted ? progressPercent : 0} aria-valuemin={0} aria-valuemax={100} aria-label={mounted ? `${caughtCount} of 1025 Pokémon caught, ${progressPercent}% complete` : 'Loading progress'}>

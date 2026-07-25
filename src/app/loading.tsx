@@ -12,7 +12,7 @@ export default async function Loading() {
       <h2 className="mt-3 text-2xl font-black uppercase tracking-[0.28em] text-foreground/40 animate-pulse">
         {t('loading.title')}
       </h2>
-      <p className="mt-2 text-[10px] font-bold text-foreground/20 uppercase tracking-widest">
+      <p className="mt-2 text-[11px] font-bold text-foreground/20 uppercase tracking-widest">
         {t('loading.subtitle')}
       </p>
     </div>

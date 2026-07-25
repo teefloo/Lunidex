@@ -60,17 +60,17 @@ export const TCGCardItem = memo(function TCGCardItem({
             <h3 className="truncate text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
               {card.name}
             </h3>
-            <p className="mt-0.5 truncate text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-[11px]">
+            <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">
               {card.set?.name ?? t('tcg.unknown')}
             </p>
           </div>
 
-          <span className="min-w-0 max-w-[48%] break-words rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-right text-[10px] font-black uppercase leading-tight tracking-[0.1em] text-foreground/70 sm:max-w-none sm:shrink-0 sm:text-[11px]">
+          <span className="min-w-0 max-w-[48%] break-words rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-right text-[11px] font-black uppercase leading-tight tracking-[0.1em] text-foreground/70 sm:max-w-none sm:shrink-0 sm:text-xs">
             {card.rarity ?? t('tcg.none')}
           </span>
         </div>
 
-        <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[10px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-[11px]">
+        <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[11px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-xs">
           {card.category && (
             <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
               {card.category}
@@ -90,7 +90,7 @@ export const TCGCardItem = memo(function TCGCardItem({
             toggleTCGOwned(card.id);
           }}
           className={cn(
-            'touch-target inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border text-[10px] font-black uppercase tracking-[0.08em] transition-[color,background-color,border-color]',
+            'touch-target inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border text-[11px] font-black uppercase tracking-[0.08em] transition-[color,background-color,border-color]',
             owned
               ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
               : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',

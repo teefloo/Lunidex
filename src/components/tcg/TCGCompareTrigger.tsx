@@ -31,7 +31,7 @@ export function TCGCompareTrigger() {
         title={t('tcg.compare_open')}
       >
         <Swords className="h-5 w-5" />
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-black leading-none text-white">
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black leading-none text-white">
           {tcgCompareList.length}
         </span>
       </button>

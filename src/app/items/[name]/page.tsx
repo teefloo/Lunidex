@@ -74,7 +74,7 @@ export default async function ItemDetailPage({ params }: Props) {
         <div className="mb-6">
           <Link
             href="/items"
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('items_page.back_to_items', { defaultValue: 'Back to Items' })}
@@ -95,7 +95,7 @@ export default async function ItemDetailPage({ params }: Props) {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
                 #{String(item.id).padStart(4, '0')}
               </p>
               <h1 className="mt-1 text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
@@ -122,7 +122,7 @@ export default async function ItemDetailPage({ params }: Props) {
             <section className="rounded-sm border border-border/70 bg-card/35 p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('items_page.effect_label', { defaultValue: 'Effect' })}
                 </h2>
               </div>
@@ -146,14 +146,14 @@ export default async function ItemDetailPage({ params }: Props) {
             <div className="rounded-sm border border-border/70 bg-card/35 p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Package className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('items_page.info_label', { defaultValue: 'Item Info' })}
                 </h2>
               </div>
               <dl className="space-y-3">
                 {item.pokemon_v2_itemcategory && (
                   <div className="flex items-center justify-between gap-2">
-                    <dt className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-foreground/35">
+                    <dt className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">
                       <Tag className="h-3 w-3" />
                       {t('items_page.category_label', { defaultValue: 'Category' })}
                     </dt>
@@ -161,7 +161,7 @@ export default async function ItemDetailPage({ params }: Props) {
                   </div>
                 )}
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/35">
+                  <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">
                     {t('items_page.cost_label', { defaultValue: 'Cost' })}
                   </dt>
                   <dd className="text-sm font-bold">{item.cost > 0 ? `₽${item.cost.toLocaleString()}` : '—'}</dd>

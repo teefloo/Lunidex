@@ -87,7 +87,7 @@ export default async function AbilityDetailPage({ params }: Props) {
         <div className="mb-6">
           <Link
             href="/abilities"
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('abilities_page.back_to_abilities', { defaultValue: 'Back to Abilities' })}
@@ -98,7 +98,7 @@ export default async function AbilityDetailPage({ params }: Props) {
           <div className="absolute inset-x-0 top-0 h-1.5 bg-primary" />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
                 #{String(ability.id).padStart(3, '0')}
               </p>
               <h1 className="mt-1 text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
@@ -121,7 +121,7 @@ export default async function AbilityDetailPage({ params }: Props) {
             <section className="rounded-sm border border-border/70 bg-card/35 p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('abilities_page.effect')}
                 </h2>
               </div>
@@ -136,7 +136,7 @@ export default async function AbilityDetailPage({ params }: Props) {
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <Info className="h-4 w-4 text-primary" />
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('abilities_page.flavor_text')}
                   </h2>
                 </div>
@@ -150,7 +150,7 @@ export default async function AbilityDetailPage({ params }: Props) {
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="mb-4 flex items-center gap-2">
                   <Users className="h-4 w-4 text-primary" />
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('abilities_page.pokemon_with_ability')} ({learners.length})
                   </h2>
                 </div>
@@ -171,7 +171,7 @@ export default async function AbilityDetailPage({ params }: Props) {
                         <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
                         <span className="truncate">{pokemonName}</span>
                         {learner.is_hidden && (
-                          <span className="ml-auto shrink-0 text-[9px] font-black uppercase tracking-wider text-foreground/30">H</span>
+                          <span className="ml-auto shrink-0 text-[11px] font-black uppercase tracking-wider text-foreground/30">H</span>
                         )}
                       </Link>
                     );
@@ -185,13 +185,13 @@ export default async function AbilityDetailPage({ params }: Props) {
             <div className="rounded-sm border border-border/70 bg-card/35 p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('abilities_page.pokemon_with_ability')}
                 </h2>
               </div>
               <dl className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground/35">
+                  <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">
                     {t('list.pokemon')}
                   </dt>
                   <dd className="text-sm font-bold">{learners.length}</dd>

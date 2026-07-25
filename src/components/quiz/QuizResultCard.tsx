@@ -127,7 +127,7 @@ export default function QuizResultCard({
         {/* Streak + Badges */}
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-1">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-1">
               {t('quiz.streak')}
             </p>
             <div className="flex items-baseline gap-1">
@@ -138,7 +138,7 @@ export default function QuizResultCard({
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-1">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-1">
               {t('quiz.achievements')}
             </p>
             <div className="flex items-baseline gap-1">

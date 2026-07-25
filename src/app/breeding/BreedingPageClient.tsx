@@ -88,7 +88,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
               type="button"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'touch-target flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm text-[10px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
+                'touch-target flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
                 activeTab === tab.id
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'text-foreground/50 hover:text-foreground/80',
@@ -153,7 +153,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                                 unoptimized
                               />
                               <span className="font-semibold text-sm capitalize text-foreground/85">{displayName}</span>
-                              <span className="ml-auto font-mono text-[10px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
+                              <span className="ml-auto font-mono text-[11px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
                             </button>
                           );
                         })}
@@ -178,7 +178,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                 <button
                   type="button"
                   onClick={() => { setExplorerPokemon(''); setExplorerInput(''); }}
-                  className="touch-target inline-flex items-center text-[10px] font-black uppercase tracking-wider text-foreground/55 hover:text-foreground/80 transition-colors"
+                  className="touch-target inline-flex items-center text-[11px] font-black uppercase tracking-wider text-foreground/55 hover:text-foreground/80 transition-colors"
                 >
                   {t('breeding.change_pokemon')}
                 </button>

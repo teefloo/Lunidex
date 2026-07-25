@@ -93,14 +93,14 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
       {isLoading && (
         <div className="mt-4 flex items-center gap-2">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/60">
+          <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-foreground/60">
             {t('tcg.collection_loading')}
           </span>
         </div>
       )}
 
       {isError && (
-        <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.1em] text-rose-400/85">
+        <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.1em] text-rose-400/85">
           {t('tcg.collection_insights_error')}
         </p>
       )}
@@ -111,7 +111,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
           <div className="mt-4 grid min-w-0 grid-cols-2 gap-3 border-t border-border/15 pt-3">
             {/* Owned value */}
             <div className="min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+              <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
                 {t('tcg.collection_value_estimate')}
               </p>
               {insights.valuation.groups.length > 0 ? (
@@ -119,7 +119,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   <p className="mt-1 break-words text-base font-black leading-tight text-primary sm:text-lg">
                     {insights.valuation.groups.map((g) => formatCurrency(g)).join(' · ')}
                   </p>
-                  <p className="mt-0.5 text-[10px] font-bold text-foreground/55">
+                  <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
                     {t('tcg.collection_value_coverage', {
                       priced: insights.valuation.pricedCount,
                       owned: insights.valuation.ownedCount,
@@ -127,7 +127,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   </p>
                 </>
               ) : (
-                <p className="mt-1 text-[10px] font-bold text-foreground/55">
+                <p className="mt-1 text-[11px] font-bold text-foreground/55">
                   {t('tcg.collection_value_none_owned')}
                 </p>
               )}
@@ -135,13 +135,13 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
             {/* Set total value */}
             {insights.setTotalValue.length > 0 && (
               <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+                <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
                   {t('tcg.collection_set_total_value')}
                 </p>
                 <p className="mt-1 break-words text-base font-black leading-tight sm:text-lg">
                   {insights.setTotalValue.map((g) => formatCurrency(g)).join(' · ')}
                 </p>
-                <p className="mt-0.5 text-[10px] font-bold text-foreground/55">
+                <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
                   {insights.setTotalValue[0].count} / {insights.completion.total} {t('tcg.cards')}
                 </p>
               </div>
@@ -150,11 +150,11 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
 
           {/* Top missing */}
           <div className="mt-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_top_missing')}
             </p>
             {insights.topMissing.length === 0 ? (
-              <p className="mt-2 text-[10px] font-bold text-emerald-400/70">
+              <p className="mt-2 text-[11px] font-bold text-emerald-400/70">
                 {t('tcg.collection_no_missing')}
               </p>
             ) : (
@@ -182,11 +182,11 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                         />
                       )}
                     </div>
-                    <p className={`mt-1 truncate text-[9px] font-black uppercase tracking-[0.04em] ${getRarityColor(card.rarity)}`}>
+                    <p className={`mt-1 truncate text-[11px] font-black uppercase tracking-[0.04em] ${getRarityColor(card.rarity)}`}>
                       {getRarityLabel(card.rarity)}
                     </p>
                     {card.value && (
-                      <p className="truncate text-[9px] font-bold text-foreground/60">
+                      <p className="truncate text-[11px] font-bold text-foreground/60">
                         {formatCardValue(card.value)}
                       </p>
                     )}

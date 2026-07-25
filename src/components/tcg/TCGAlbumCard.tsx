@@ -42,14 +42,14 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
         />
       ) : (
         <div className="flex h-full items-center justify-center">
-          <span className="text-[9px] font-bold uppercase text-foreground/30">{card.name}</span>
+          <span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span>
         </div>
       )}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
-        <p className="truncate text-[8px] font-black uppercase text-white drop-shadow-md">
+        <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">
           {card.name}
         </p>
-        <p className="text-[7px] text-white/60">#{card.localId}</p>
+        <p className="text-[11px] text-white/60">#{card.localId}</p>
       </div>
       <div className="absolute right-1 top-1">
         <TCGRarityBadge rarity={card.rarity} />
@@ -57,7 +57,7 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onClick }: TCGAl
       {owned && (
         <div className="absolute right-1 top-8">
           <div className="flex h-4 w-4 items-center justify-center rounded-none bg-emerald-500/80">
-            <span className="text-[7px] font-black text-white">&#10003;</span>
+            <span className="text-[11px] font-black text-white">&#10003;</span>
           </div>
         </div>
       )}

@@ -40,18 +40,18 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
             className="h-full rounded-full bg-gradient-to-r from-primary via-teal-400 to-emerald-400 transition-all duration-1000 ease-out"
             style={{ width: `${pokedex.caughtPercent}%` }}
           />
-          <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
             {pokedex.caughtPercent}%
           </span>
         </div>
-        <p className="text-[10px] font-semibold text-foreground/40 text-center">
+        <p className="text-[11px] font-semibold text-foreground/40 text-center">
           {t('dashboard.pokedex.progress', { count: pokedex.caughtCount, total: pokedex.totalPokemon })}
         </p>
       </div>
 
       {/* By generation */}
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
           {t('dashboard.pokedex.by_generation')}
         </p>
         <div className="space-y-2">
@@ -59,14 +59,14 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
             const percent = gen.total > 0 ? Math.round((gen.caught / gen.total) * 100) : 0;
             return (
               <div key={gen.id} className="flex items-center gap-2">
-                <span className="w-12 text-[9px] font-bold text-foreground/60 shrink-0">{gen.name}</span>
+                <span className="w-12 text-[11px] font-bold text-foreground/60 shrink-0">{gen.name}</span>
                 <div className="flex-1 h-2 rounded-full bg-muted/60 overflow-hidden">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-700"
                     style={{ width: `${percent}%` }}
                   />
                 </div>
-                <span className="w-14 text-right text-[9px] font-bold text-foreground/50 tabular-nums shrink-0">
+                <span className="w-14 text-right text-[11px] font-bold text-foreground/50 tabular-nums shrink-0">
                   {gen.caught}/{gen.total}
                 </span>
               </div>
@@ -77,7 +77,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
 
       {/* By type */}
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
           {t('dashboard.pokedex.by_type')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
@@ -92,10 +92,10 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: type.color }}
                 />
-                <span className="text-[8px] font-bold capitalize text-foreground/60 flex-1 truncate">
+                <span className="text-[11px] font-bold capitalize text-foreground/60 flex-1 truncate">
                   {type.name}
                 </span>
-                <span className="text-[8px] font-bold text-foreground/40 tabular-nums">{percent}%</span>
+                <span className="text-[11px] font-bold text-foreground/40 tabular-nums">{percent}%</span>
               </div>
             );
           })}
@@ -105,7 +105,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
       {/* Most viewed */}
       {pokedex.mostViewed.length > 0 && (
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3 flex items-center gap-1.5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3 flex items-center gap-1.5">
             <Eye className="w-3 h-3" />
             {t('dashboard.pokedex.most_viewed')}
           </p>
@@ -126,10 +126,10 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                     unoptimized
                   />
                 </div>
-                <span className="text-[9px] font-bold capitalize text-foreground/60 truncate max-w-[80px]">
+                <span className="text-[11px] font-bold capitalize text-foreground/60 truncate max-w-[80px]">
                   {p.name}
                 </span>
-                <span className="text-[8px] font-bold text-foreground/30">×{p.count}</span>
+                <span className="text-[11px] font-bold text-foreground/30">×{p.count}</span>
               </Link>
             ))}
           </div>
@@ -139,7 +139,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
       {/* Never viewed */}
       {pokedex.neverViewed.length > 0 && (
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3 flex items-center gap-1.5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3 flex items-center gap-1.5">
             <Compass className="w-3 h-3" />
             {t('dashboard.pokedex.never_viewed')}
           </p>
@@ -160,13 +160,13 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                     unoptimized
                   />
                 </div>
-                <span className="text-[9px] font-bold capitalize text-foreground/40 group-hover:text-foreground/70 transition-colors">
+                <span className="text-[11px] font-bold capitalize text-foreground/40 group-hover:text-foreground/70 transition-colors">
                   {p.name}
                 </span>
               </Link>
             ))}
           </div>
-          <p className="text-[8px] font-medium text-foreground/30 mt-2 text-center">
+          <p className="text-[11px] font-medium text-foreground/30 mt-2 text-center">
             {t('dashboard.pokedex.never_viewed_hint')}
           </p>
         </div>

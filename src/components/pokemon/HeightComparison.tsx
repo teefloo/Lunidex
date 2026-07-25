@@ -93,7 +93,7 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
             </div>
           </motion.div>
           <div className="mt-6 text-center">
-            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-1">{t('detail.human')}</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-foreground/40 mb-1">{t('detail.human')}</p>
             <p className="text-sm font-black text-foreground/60">{humanHeight.toFixed(1)}m</p>
           </div>
         </div>
@@ -137,7 +137,7 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
           </motion.div>
           
           <div className="mt-6 text-center">
-            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-1 capitalize">{pokemonName}</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-foreground/60 mb-1 capitalize">{pokemonName}</p>
             <p className="text-sm font-black text-foreground">{heightInMeters.toFixed(1)}m</p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export function HeightComparison({ pokemonHeight, pokemonName, pokemonImage }: H
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
       </div>
       
-      <p className="mt-6 text-[10px] text-foreground/30 font-bold uppercase tracking-[0.2em] text-center max-w-xs">
+      <p className="mt-6 text-[11px] text-foreground/30 font-bold uppercase tracking-[0.2em] text-center max-w-xs">
         {heightInMeters > humanHeight
           ? t('detail.height_taller', { name: pokemonName })
           : t('detail.height_shorter', { name: pokemonName })}

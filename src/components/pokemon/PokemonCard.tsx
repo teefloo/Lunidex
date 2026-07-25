@@ -271,7 +271,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         <div className="relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
           <div className="flex flex-col items-start gap-0.5">
             <span className="cat-no text-[0.55rem] text-muted-foreground sm:text-[0.6rem]">Cat. No.</span>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
               #{pokemonId.toString().padStart(3, '0')}
             </span>
           </div>
@@ -362,7 +362,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
               return (
                 <span
                   key={`${typeName}-${i}`}
-                  className="type-bar px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[9px]"
+                  className="type-bar px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[11px]"
                   style={{
                     color: typeColor,
                   }}
@@ -373,7 +373,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             })}
             {(isLegendary || isMythical) && (
               <span
-                className="type-bar rounded-sm border px-1.5 py-0.5 font-mono text-[8px] font-semibold uppercase tracking-[0.16em] sm:text-[9px]"
+                className="type-bar rounded-sm border px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] sm:text-[11px]"
                 style={{
                   borderColor: 'color-mix(in oklab, var(--action-legendary) 55%, transparent)',
                   background: 'color-mix(in oklab, var(--action-legendary) 15%, transparent)',

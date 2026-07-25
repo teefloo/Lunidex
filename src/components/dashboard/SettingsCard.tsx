@@ -48,7 +48,7 @@ export default function SettingsCard() {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-foreground/80">{t('settings.animated_sprites')}</span>
-              <span className="text-[10px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
+              <span className="text-[11px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
             </div>
           </div>
           <button

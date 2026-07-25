@@ -197,11 +197,11 @@ export default function MovesPageClient() {
           <aside className="xl:sticky xl:top-24 xl:h-[calc(100vh-7rem)]">
             <div className="page-surface h-full overflow-hidden p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('moves_page.catalog_filters')}
                 </div>
-                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[10px] uppercase tracking-[0.18em] text-foreground/60">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/60">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset')}
                 </Button>
@@ -234,7 +234,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSortBy(option.key)}
                           className={cn(
-                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -263,7 +263,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedType(active ? null : type)}
                           className={cn(
-                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-transparent text-primary-foreground shadow-[0_0_16px_rgba(227,53,13,0.14)]'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -293,7 +293,7 @@ export default function MovesPageClient() {
                           type="button"
                           onClick={() => setSelectedClass(active ? null : damageClass)}
                           className={cn(
-                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -308,7 +308,7 @@ export default function MovesPageClient() {
                 </FilterSection>
 
               <div className="rounded-sm border border-border/70 bg-background/60 p-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                     {t('moves_page.catalog_filters_hint')}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-foreground/45">
@@ -334,7 +334,7 @@ export default function MovesPageClient() {
 
             <div className="page-surface p-4">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   {isFetching && !isLoading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                   ) : (
@@ -348,7 +348,7 @@ export default function MovesPageClient() {
                       {t('moves_page.active_filters', { count: activeFiltersCount })}
                     </Badge>
                   )}
-                  <Badge variant="ghost" className="text-[10px] text-foreground/45">
+                  <Badge variant="ghost" className="text-[11px] text-foreground/45">
                     {selectedType ? t(`types.${selectedType}`) : t('moves_page.all_types')}
                   </Badge>
                 </div>
@@ -437,7 +437,7 @@ export function MoveCard({
 
       <div className="flex items-start justify-between gap-3 pt-1.5">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
             #{String(move.id).padStart(3, '0')}
           </p>
           <h3 className="mt-1 truncate text-sm font-black uppercase tracking-tight text-foreground/90 transition-colors group-hover:text-primary">
@@ -451,11 +451,11 @@ export function MoveCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <Badge variant="outline" className="border-border/70 text-[10px] text-foreground/55">
+        <Badge variant="outline" className="border-border/70 text-[11px] text-foreground/55">
           {t(`moves.damage_class.${move.damage_class}`)}
         </Badge>
         {move.generation_id !== null && (
-          <Badge variant="ghost" className="text-[10px] text-foreground/45">
+          <Badge variant="ghost" className="text-[11px] text-foreground/45">
             {t('moves_page.generation')} {move.generation_id}
           </Badge>
         )}
@@ -477,13 +477,13 @@ export function MoveCard({
           size="touch"
           variant="ghost"
           onClick={onClick}
-          className="h-11 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/65 hover:text-primary"
+          className="h-11 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65 hover:text-primary"
         >
           {t('moves_page.preview', { defaultValue: 'Preview' })}
         </Button>
         <Link
           href={`/moves/${move.name}`}
-          className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+          className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
           aria-label={`View details for ${move.localizedName}`}
         >
           <ExternalLink className="h-2.5 w-2.5" />
@@ -497,7 +497,7 @@ export function MoveCard({
 function SmallStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-sm border border-border/70 bg-muted/40 px-3 py-2 text-center">
-      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
       <p className="mt-1 text-sm font-black text-foreground/80">{value}</p>
     </div>
   );
@@ -506,7 +506,7 @@ function SmallStat({ label, value }: { label: string; value: number }) {
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-sm border border-border/70 bg-muted/40 px-3 py-2 text-center">
-      <p className="text-[9px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">{label}</p>
       <p className="mt-1 text-sm font-black text-foreground/80">{value}</p>
     </div>
   );
@@ -527,7 +527,7 @@ function StatTile({
         <Icon className="h-5 w-5 text-primary" />
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</p>
         <p className="mt-1 truncate text-lg font-black text-foreground/90">{value}</p>
       </div>
     </div>
@@ -550,10 +550,10 @@ function FilterSection({
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon className="h-4 w-4 text-primary" />
-          <h4 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{title}</h4>
+          <h4 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">{title}</h4>
         </div>
         {badge && (
-          <span className="rounded-sm border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-primary">
+          <span className="rounded-sm border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.18em] text-primary">
             {badge}
           </span>
         )}

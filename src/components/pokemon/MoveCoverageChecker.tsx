@@ -117,7 +117,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
           </div>
           <div>
             <h3 className="text-lg font-black">Type Coverage</h3>
-            <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
+            <p className="text-[11px] font-bold text-foreground/40 uppercase tracking-widest">
               {coverage.coveredTypes.length} / 18 types covered
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
               <div
                 key={type}
                 className={cn(
-                  "px-2 py-2 rounded-sm text-center text-[10px] font-black uppercase border transition-all",
+                  "px-2 py-2 rounded-sm text-center text-[11px] font-black uppercase border transition-all",
                   isCovered
                     ? "border-border/40 shadow-sm"
                     : "border-red-500/20 bg-red-500/5 opacity-50"
@@ -180,7 +180,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
             </div>
             <div>
               <h3 className="text-lg font-black">Coverage Gaps</h3>
-              <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
+              <p className="text-[11px] font-bold text-foreground/40 uppercase tracking-widest">
                 {coverage.uncoveredTypes.length} types not covered
               </p>
             </div>
@@ -190,7 +190,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
             {coverage.uncoveredTypes.map(type => (
               <span
                 key={type}
-                className="px-3 py-1.5 rounded-sm border border-red-500/20 bg-red-500/5 text-[10px] font-black uppercase"
+                className="px-3 py-1.5 rounded-sm border border-red-500/20 bg-red-500/5 text-[11px] font-black uppercase"
                 style={{ color: TYPE_COLORS[type] }}
               >
                 {type}
@@ -200,7 +200,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
 
           {coverage.suggestions.length > 0 && (
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-3">
+              <p className="text-[11px] font-black uppercase tracking-widest text-primary/60 mb-3">
                 Suggested Moves
               </p>
               <div className="space-y-2">
@@ -211,14 +211,14 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
                   >
                     <span className="text-xs font-black text-foreground/60">{s.pokemonName}</span>
                     <span
-                      className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase"
+                      className="px-2 py-0.5 rounded-lg text-[11px] font-black uppercase"
                       style={{ backgroundColor: `${TYPE_COLORS[s.moveType]}cc`, color: 'white' }}
                     >
                       {s.moveType}
                     </span>
-                    <span className="text-[10px] text-foreground/40">covers</span>
+                    <span className="text-[11px] text-foreground/40">covers</span>
                     <span
-                      className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase"
+                      className="px-2 py-0.5 rounded-lg text-[11px] font-black uppercase"
                       style={{ backgroundColor: `${TYPE_COLORS[s.coversType]}cc`, color: 'white' }}
                     >
                       {s.coversType}
@@ -239,7 +239,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
           </div>
           <div>
             <h3 className="text-lg font-black">Per-Pokemon Breakdown</h3>
-            <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
+            <p className="text-[11px] font-bold text-foreground/40 uppercase tracking-widest">
               Which types each member covers
             </p>
           </div>
@@ -250,7 +250,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
             <div key={pm.pokemonId} className="p-4 rounded-sm bg-secondary/20 border border-border/40">
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-sm font-black">{pm.pokemonName}</span>
-                <span className="text-[10px] text-foreground/40">
+                <span className="text-[11px] text-foreground/40">
                   {pm.coveredTypes.length} types / {pm.offensiveMoves.length} offensive moves
                 </span>
               </div>
@@ -258,14 +258,14 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
                 {pm.coveredTypes.map(type => (
                   <span
                     key={type}
-                    className="px-2 py-0.5 rounded-lg text-[10px] font-black uppercase"
+                    className="px-2 py-0.5 rounded-lg text-[11px] font-black uppercase"
                     style={{ backgroundColor: `${TYPE_COLORS[type]}cc`, color: 'white' }}
                   >
                     {type}
                   </span>
                 ))}
                 {pm.coveredTypes.length === 0 && (
-                  <span className="text-[10px] text-foreground/30 italic">No super-effective coverage</span>
+                  <span className="text-[11px] text-foreground/30 italic">No super-effective coverage</span>
                 )}
               </div>
               {pm.offensiveMoves.length > 0 && (
@@ -273,14 +273,14 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
                   {pm.offensiveMoves.slice(0, 8).map((m, i) => (
                     <span
                       key={`${m.name}-${i}`}
-                      className="px-1.5 py-0.5 rounded text-[9px] border border-border/30 text-foreground/50"
+                      className="px-1.5 py-0.5 rounded text-[11px] border border-border/30 text-foreground/50"
                     >
                       {m.name}
                       {m.power > 0 && <span className="ml-1 text-foreground/30">({m.power})</span>}
                     </span>
                   ))}
                   {pm.offensiveMoves.length > 8 && (
-                    <span className="px-1.5 py-0.5 text-[9px] text-foreground/30">
+                    <span className="px-1.5 py-0.5 text-[11px] text-foreground/30">
                       +{pm.offensiveMoves.length - 8} more
                     </span>
                   )}

@@ -40,7 +40,7 @@ export function TCGRarityBadge({ rarity, className }: TCGRarityBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-sm border px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.1em]',
+        'inline-flex items-center rounded-sm border px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.1em]',
         tone?.bg ?? 'bg-card/40',
         tone?.text ?? 'text-foreground/60',
         tone?.border ?? 'border-border/30',

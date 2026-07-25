@@ -25,7 +25,7 @@ function StatBox({
   return (
     <div className="flex flex-col items-center gap-1.5 rounded-sm border border-border/70 bg-card/50 p-3 text-center">
       <Icon className="h-4 w-4 text-primary" />
-      <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</span>
+      <span className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</span>
       <span className="text-lg font-black text-foreground/90">{value}</span>
     </div>
   );

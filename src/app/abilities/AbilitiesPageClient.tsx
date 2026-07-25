@@ -122,11 +122,11 @@ export default function AbilitiesPageClient() {
           <aside className="xl:sticky xl:top-24 xl:h-fit">
             <div className="page-surface p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('abilities_page.filters', { defaultValue: 'Filters' })}
                 </div>
-                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[10px] uppercase tracking-[0.18em] text-foreground/60">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/60">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset', { defaultValue: 'Reset' })}
                 </Button>
@@ -170,7 +170,7 @@ export default function AbilitiesPageClient() {
                         type="button"
                         onClick={() => setSortBy(option.key)}
                         className={cn(
-                          'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                          'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
                             ? 'border-primary/35 bg-primary/15 text-primary'
                             : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -189,7 +189,7 @@ export default function AbilitiesPageClient() {
           <section className="min-w-0 space-y-6">
             <div className="page-surface p-4">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   {isFetching && !isLoading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                   ) : (
@@ -284,7 +284,7 @@ function AbilityCard({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/30">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
               #{String(ability.id).padStart(3, '0')}
             </p>
             <h3 className="mt-1 truncate text-sm font-black uppercase tracking-tight text-foreground/90 transition-colors group-hover:text-primary">
@@ -300,7 +300,7 @@ function AbilityCard({
 
         {ability.generationId !== null && (
           <div className="mt-3">
-            <Badge variant="outline" className="border-border/70 text-[10px] text-foreground/55">
+            <Badge variant="outline" className="border-border/70 text-[11px] text-foreground/55">
               {t('moves_page.generation')} {ability.generationId}
             </Badge>
           </div>

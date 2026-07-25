@@ -30,7 +30,7 @@ export default function RecentlyViewed() {
           variant="ghost"
           size="touch"
           onClick={clearHistory}
-          className="px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive transition-colors gap-1.5"
+          className="px-3 text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive transition-colors gap-1.5"
           aria-label={t('recently_viewed.clear')}
         >
           <Trash2 className="w-3.5 h-3.5" /> {t('recently_viewed.clear')}
@@ -53,11 +53,11 @@ export default function RecentlyViewed() {
                   unoptimized
                 />
               </div>
-              <div className="space-y-0.5 w-full min-w-0">
-                <p className="font-mono text-[8px] font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase">
+              <div className="space-y-0.5 w-full min-w-0 overflow-hidden">
+                <p className="font-mono text-[11px] font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase">
                   {formatId(p.id)}
                 </p>
-                <p className="text-[10px] font-display font-semibold italic editorial-italic capitalize truncate max-w-full text-foreground/80 group-hover:text-primary transition-colors">
+                <p className="text-[11px] font-display font-semibold italic editorial-italic capitalize truncate max-w-full text-foreground/80 group-hover:text-primary transition-colors">
                   {p.name}
                 </p>
               </div>

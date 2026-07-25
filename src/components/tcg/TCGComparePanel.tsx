@@ -75,7 +75,7 @@ export function TCGComparePanel({ isOpen, onClose }: TCGComparePanelProps) {
               <h2 className="text-sm font-display font-black uppercase tracking-tight text-foreground">
                 {t('tcg.compare_title')}
               </h2>
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-foreground/35">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground/35">
                 {tcgCompareList.length}/4 {t('tcg.compare_cards')}
               </p>
             </div>
@@ -85,7 +85,7 @@ export function TCGComparePanel({ isOpen, onClose }: TCGComparePanelProps) {
               <button
                 type="button"
                 onClick={() => clearTCGCompare()}
-                className="rounded-sm border border-border/50 bg-card/60 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-foreground/45 transition-colors hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-400"
+                className="rounded-sm border border-border/50 bg-card/60 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/45 transition-colors hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-400"
                 aria-label={t('tcg.compare_clear_all')}
               >
                 <Trash2 className="mr-1 inline h-3 w-3" />
@@ -129,7 +129,7 @@ export function TCGComparePanel({ isOpen, onClose }: TCGComparePanelProps) {
                   key={`empty-${i}`}
                   className="flex aspect-[2.15/3] items-center justify-center rounded-sm border border-dashed border-border/40 bg-card/25"
                 >
-                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-foreground/25">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground/25">
                     {t('tcg.compare_loading')}
                   </p>
                 </div>
@@ -181,10 +181,10 @@ function CompareCardSlot({
 
       <div className="flex flex-1 flex-col gap-2.5 p-3">
         <div className="min-w-0">
-          <h3 className="truncate text-[10px] font-black uppercase tracking-tight text-foreground">
+          <h3 className="truncate text-[11px] font-black uppercase tracking-tight text-foreground">
             {card.name}
           </h3>
-          <p className="mt-0.5 truncate text-[7px] font-black uppercase tracking-[0.1em] text-foreground/35">
+          <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/35">
             {card.set?.name ?? t('tcg.unknown')}
           </p>
         </div>
@@ -192,7 +192,7 @@ function CompareCardSlot({
         <div className="flex flex-wrap items-center gap-1">
           <TCGRarityBadge rarity={card.rarity} />
           {typeof card.hp === 'number' && (
-            <span className="rounded-sm border border-border/50 bg-card/65 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.1em] text-foreground/40">
+            <span className="rounded-sm border border-border/50 bg-card/65 px-1.5 py-0.5 text-[11px] font-black uppercase tracking-[0.1em] text-foreground/40">
               HP {card.hp}
             </span>
           )}
@@ -203,7 +203,7 @@ function CompareCardSlot({
             <button
               type="button"
               onClick={onToggleAttacks}
-              className="flex w-full items-center justify-between rounded-sm border border-border/30 bg-card/30 px-2 py-1 text-[7px] font-black uppercase tracking-[0.16em] text-foreground/40 transition-colors hover:bg-card/50"
+              className="flex w-full items-center justify-between rounded-sm border border-border/30 bg-card/30 px-2 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/40 transition-colors hover:bg-card/50"
             >
               <span className="flex items-center gap-1">
                 <Swords className="h-2.5 w-2.5" />
@@ -216,11 +216,11 @@ function CompareCardSlot({
                 {attacks.map((attack, idx) => (
                   <div key={`${attack.name}-${idx}`} className="rounded-sm bg-card/25 px-2 py-1.5">
                     <div className="flex items-center justify-between gap-1">
-                      <span className="truncate text-[8px] font-bold text-foreground/70">
+                      <span className="truncate text-[11px] font-bold text-foreground/70">
                         {attack.name}
                       </span>
                       {attack.damage && (
-                        <span className="shrink-0 text-[9px] font-black text-primary/70">
+                        <span className="shrink-0 text-[11px] font-black text-primary/70">
                           {attack.damage}
                         </span>
                       )}
@@ -247,10 +247,10 @@ function CompareCardSlot({
         {weaknesses.length > 0 && (
           <div className="flex items-center gap-1.5">
             <Shield className="h-2.5 w-2.5 shrink-0 text-foreground/30" />
-            <span className="text-[7px] font-bold uppercase tracking-[0.1em] text-foreground/35">
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-foreground/35">
               {t('detail.weaknesses')}:
             </span>
-            <span className="text-[7px] font-bold text-foreground/50">
+            <span className="text-[11px] font-bold text-foreground/50">
               {weaknesses.map((w) => `${w.type} ${w.value}`).join(' · ')}
             </span>
           </div>
@@ -259,10 +259,10 @@ function CompareCardSlot({
         {retreatCost > 0 && (
           <div className="flex items-center gap-1.5">
             <Zap className="h-2.5 w-2.5 shrink-0 text-foreground/30" />
-            <span className="text-[7px] font-bold uppercase tracking-[0.1em] text-foreground/35">
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-foreground/35">
               {t('tcg.retreat_cost')}:
             </span>
-            <span className="text-[7px] font-bold text-foreground/50">
+            <span className="text-[11px] font-bold text-foreground/50">
               {Array.from({ length: retreatCost }).map(() => '●').join(' ')}
             </span>
           </div>
@@ -274,7 +274,7 @@ function CompareCardSlot({
               <p className="text-[6px] font-black uppercase tracking-[0.16em] text-foreground/30">
                 {t('tcg.market_price')}
               </p>
-              <p className="text-[10px] font-black leading-tight text-primary">
+              <p className="text-[11px] font-black leading-tight text-primary">
                 {formatMarketValue(marketValue.amount, marketValue.currency)}
               </p>
             </div>

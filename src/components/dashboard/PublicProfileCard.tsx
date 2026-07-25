@@ -89,7 +89,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
               @{profile.handle}
             </p>
             {profile.memberSince && (
-              <p className="text-[10px] font-semibold text-foreground/40 mt-1 flex items-center gap-1 justify-center sm:justify-start">
+              <p className="text-[11px] font-semibold text-foreground/40 mt-1 flex items-center gap-1 justify-center sm:justify-start">
                 <Calendar className="h-3 w-3" />
                 {t('profile.member_since', { defaultValue: 'Member since' })}{' '}
                 {new Date(profile.memberSince).toLocaleDateString()}
@@ -140,7 +140,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
             className="h-full rounded-full bg-gradient-to-r from-primary via-orange-400 to-yellow-400"
           />
         </div>
-        <p className="text-[10px] font-bold text-foreground/40 mt-1.5 text-right">
+        <p className="text-[11px] font-bold text-foreground/40 mt-1.5 text-right">
           {profile.caughtPercent}%
         </p>
       </div>
@@ -161,7 +161,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
               const percent = total > 0 ? Math.round((caught / total) * 100) : 0;
               return (
                 <div key={i} className="flex items-center gap-3">
-                  <span className="w-12 flex-none text-[10px] font-black uppercase tracking-[0.1em] text-foreground/50">
+                  <span className="w-12 flex-none text-[11px] font-black uppercase tracking-[0.1em] text-foreground/50">
                     {t('profile.gen_short', { defaultValue: 'Gen' })} {i + 1}
                   </span>
                   <div className="h-2.5 flex-1 rounded-full bg-muted/60 overflow-hidden pixel-progress">
@@ -172,7 +172,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                       className="h-full rounded-full bg-gradient-to-r from-primary to-orange-400"
                     />
                   </div>
-                  <span className="w-14 flex-none text-right text-[10px] font-bold text-foreground/40 tabular-nums">
+                  <span className="w-14 flex-none text-right text-[11px] font-bold text-foreground/40 tabular-nums">
                     {caught}/{total}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                 <div className="p-1.5 rounded-lg bg-primary/20 shadow-[0_0_10px_rgba(227,53,13,0.2)]">
                   <Trophy className="h-4 w-4" />
                 </div>
-                <span className="text-[8px] font-bold uppercase tracking-[0.08em] leading-tight text-foreground/60">
+                <span className="text-[11px] font-bold uppercase tracking-[0.08em] leading-tight text-foreground/60">
                   {BADGE_ICON_MAP[badgeId] ?? badgeId}
                 </span>
               </div>
@@ -260,7 +260,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
               <p className="text-2xl font-black text-green-400">
                 {profile.quizBestScore}
               </p>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
                 {t('profile.best_score', { defaultValue: 'Best Score' })}
               </p>
             </div>
@@ -269,7 +269,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
                 <Flame className="h-5 w-5 text-orange-400" />
                 {profile.quizBestStreak}
               </p>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
                 {t('profile.best_streak', { defaultValue: 'Best Streak' })}
               </p>
             </div>
@@ -277,7 +277,7 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
               <p className="text-2xl font-black text-green-400">
                 {profile.quizTotalCorrect}
               </p>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/50 mt-1">
                 {t('profile.total_correct', { defaultValue: 'Correct Answers' })}
               </p>
             </div>

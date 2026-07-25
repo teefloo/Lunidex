@@ -87,7 +87,7 @@ export default function SettingsModal() {
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-foreground/80">{t('settings.animated_sprites')}</span>
-                    <span className="text-[10px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
+                    <span className="text-[11px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
                   </div>
                 </div>
                 <button
@@ -164,7 +164,7 @@ export default function SettingsModal() {
               <DataExportImport />
 
               <div className="mt-8 pt-6 border-t border-border/50 text-center">
-                <p className="text-[10px] text-foreground/30 font-bold tracking-[0.2em] uppercase">
+                <p className="text-[11px] text-foreground/30 font-bold tracking-[0.2em] uppercase">
                   {t('settings.version')}
                 </p>
               </div>

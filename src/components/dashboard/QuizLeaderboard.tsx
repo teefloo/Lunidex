@@ -92,7 +92,7 @@ export default function QuizLeaderboard({ refreshKey = 0 }: QuizLeaderboardProps
             onClick={() => setPeriod(value)}
             aria-pressed={period === value}
             className={cn(
-              'rounded-sm px-2 py-1.5 text-[10px] font-black uppercase tracking-[0.15em] transition-colors',
+              'rounded-sm px-2 py-1.5 text-[11px] font-black uppercase tracking-[0.15em] transition-colors',
               period === value
                 ? 'bg-primary text-primary-foreground'
                 : 'text-foreground/50 hover:text-foreground/80',
@@ -128,7 +128,7 @@ export default function QuizLeaderboard({ refreshKey = 0 }: QuizLeaderboardProps
             <>
               <div className="flex items-center gap-2 py-1">
                 <span className="h-px flex-1 bg-border/40" />
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-foreground/30">
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/30">
                   {t('quiz.leaderboard.your_rank')}
                 </span>
                 <span className="h-px flex-1 bg-border/40" />

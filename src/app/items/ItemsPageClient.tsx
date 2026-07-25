@@ -134,11 +134,11 @@ export default function ItemsPageClient() {
           <aside className="xl:sticky xl:top-24 xl:h-[calc(100vh-7rem)]">
             <div className="page-surface h-full overflow-hidden p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('items_page.filters', { defaultValue: 'Filters' })}
                 </div>
-                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[10px] uppercase tracking-[0.18em] text-foreground/60">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/60">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset', { defaultValue: 'Reset' })}
                 </Button>
@@ -183,7 +183,7 @@ export default function ItemsPageClient() {
                         type="button"
                         onClick={() => setSortBy(option.key)}
                         className={cn(
-                          'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                          'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
                             ? 'border-primary/35 bg-primary/15 text-primary'
                             : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -198,7 +198,7 @@ export default function ItemsPageClient() {
 
                 <div className="rounded-sm border border-border/70 bg-card/35 p-4">
                   <div className="mb-3 flex items-center gap-2">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                       {t('items_page.filter_by_category', { defaultValue: 'Category' })}
                     </h4>
                   </div>
@@ -211,7 +211,7 @@ export default function ItemsPageClient() {
                           type="button"
                           onClick={() => setSelectedCategory(active ? null : category)}
                           className={cn(
-                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
+                            'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
                               ? 'border-primary/35 bg-primary/15 text-primary'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
@@ -231,7 +231,7 @@ export default function ItemsPageClient() {
           <section className="min-w-0 space-y-6">
             <div className="page-surface p-4">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                   {isFetching && !isLoading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                   ) : (
@@ -355,12 +355,12 @@ function ItemCard({
 
         <div className="mt-3 flex items-center justify-between gap-2">
           {item.category && (
-            <Badge variant="outline" className="border-border/70 text-[10px] text-foreground/55">
+            <Badge variant="outline" className="border-border/70 text-[11px] text-foreground/55">
               {formatName(item.category)}
             </Badge>
           )}
           {item.cost > 0 && (
-            <span className="text-[10px] font-black text-foreground/40">₽{item.cost.toLocaleString()}</span>
+            <span className="text-[11px] font-black text-foreground/40">₽{item.cost.toLocaleString()}</span>
           )}
         </div>
       </Link>

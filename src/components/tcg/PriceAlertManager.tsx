@@ -294,7 +294,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
           <span className="ml-1 text-foreground/40 font-normal">{alert.currency}</span>
         </p>
         {alert.last_triggered_at && (
-          <p className="text-[10px] text-foreground/35">
+          <p className="text-[11px] text-foreground/35">
             Last triggered{' '}
             {new Date(alert.last_triggered_at).toLocaleDateString('en-US', {
               month: 'short',

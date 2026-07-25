@@ -48,13 +48,13 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
       {/* Visit stats */}
       <div className="flex gap-4">
         <div className="flex-1 p-3 rounded-sm border border-border/50 bg-card/50">
-          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">
             {t('dashboard.activity.visits')}
           </p>
           <p className="text-xl font-black text-foreground tabular-nums">{activity.visitCount}</p>
         </div>
         <div className="flex-1 p-3 rounded-sm border border-border/50 bg-card/50">
-          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1 flex items-center gap-1">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1 flex items-center gap-1">
             <Calendar className="w-3 h-3" />
             {t('dashboard.activity.last_visit')}
           </p>
@@ -66,7 +66,7 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
 
       {/* Recent actions */}
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
           {t('dashboard.activity.recent_actions')}
         </p>
         {activity.recentActions.length > 0 ? (
@@ -84,12 +84,12 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
                     {action.label}
                   </p>
                   {action.details && (
-                    <p className="text-[9px] font-medium text-foreground/40 truncate">
+                    <p className="text-[11px] font-medium text-foreground/40 truncate">
                       {action.details}
                     </p>
                   )}
                 </div>
-                <span className="text-[9px] font-bold text-foreground/30 shrink-0 tabular-nums">
+                <span className="text-[11px] font-bold text-foreground/30 shrink-0 tabular-nums">
                   {formatDate(action.date)}
                 </span>
               </div>

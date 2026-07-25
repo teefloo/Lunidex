@@ -113,14 +113,14 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">
-                    <span className="text-[9px] font-bold uppercase text-foreground/30">{card.name}</span>
+                    <span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span>
                   </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
-                  <p className="truncate text-[8px] font-black uppercase text-white drop-shadow-md">
+                  <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">
                     {card.name}
                   </p>
-                  <p className="text-[7px] text-white/60">{card.set?.name}</p>
+                  <p className="text-[11px] text-white/60">{card.set?.name}</p>
                 </div>
                 <div className="absolute right-1 top-1">
                   <TCGRarityBadge rarity={card.rarity} />
@@ -156,7 +156,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as WishlistSort)}
-              className="h-8 rounded-full border border-border/40 bg-card/60 px-3 text-[9px] font-bold uppercase tracking-[0.06em] text-foreground focus:border-primary/40 focus:outline-none"
+              className="h-8 rounded-full border border-border/40 bg-card/60 px-3 text-[11px] font-bold uppercase tracking-[0.06em] text-foreground focus:border-primary/40 focus:outline-none"
             >
               <option value="rarity">{t('tcg.wishlist_sort_rarity')}</option>
               <option value="set">{t('tcg.wishlist_sort_set')}</option>
@@ -166,7 +166,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
               type="button"
               onClick={handleCopy}
               className={cn(
-                'flex h-8 items-center gap-1.5 rounded-full border px-3 text-[9px] font-black uppercase tracking-[0.08em] transition-colors',
+                'flex h-8 items-center gap-1.5 rounded-full border px-3 text-[11px] font-black uppercase tracking-[0.08em] transition-colors',
                 copied
                   ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-500'
                   : 'border-border/40 bg-card/60 text-foreground/50 hover:border-primary/30 hover:text-primary',
@@ -216,7 +216,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold">{card.name}</p>
-                  <p className="truncate text-[10px] font-bold uppercase tracking-[0.06em] text-foreground/40">
+                  <p className="truncate text-[11px] font-bold uppercase tracking-[0.06em] text-foreground/40">
                     {card.set?.name} — #{card.localId}
                   </p>
                 </div>

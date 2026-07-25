@@ -123,7 +123,7 @@ function PokemonSelector({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
 
       {/* Search input */}
       <div className="relative">
@@ -156,7 +156,7 @@ function PokemonSelector({
                    unoptimized
                  />
                 <span>{s.name}</span>
-                <span className="ml-auto font-mono text-[9px] text-muted-foreground/60">
+                <span className="ml-auto font-mono text-[11px] text-muted-foreground/60">
                   #{s.id.toString().padStart(3, '0')}
                 </span>
               </button>
@@ -189,7 +189,7 @@ function PokemonSelector({
                 {types.map(t => (
                   <span
                     key={t.type.name}
-                    className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-white"
+                    className="rounded px-1.5 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide text-white"
                     style={{ background: TYPE_COLORS[t.type.name] }}
                   >
                     {t.type.name}
@@ -203,7 +203,7 @@ function PokemonSelector({
           <div className="grid grid-cols-3 gap-px border-t border-border/40 bg-border/40">
             {value.pokemon.stats.slice(0, 6).map(s => (
               <div key={s.stat.name} className="flex flex-col items-center bg-card px-2 py-1.5">
-                <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   {s.stat.name.replace('special-', 'sp.').replace('attack', 'atk').replace('defense', 'def')}
                 </span>
                 <span className="font-mono text-xs font-bold">{s.base_stat}</span>
@@ -214,7 +214,7 @@ function PokemonSelector({
           {/* Move count */}
           {value.moves.length > 0 && (
             <div className="border-t border-border/40 px-3 py-2">
-              <p className="font-mono text-[9px] text-muted-foreground">
+              <p className="font-mono text-[11px] text-muted-foreground">
                 {value.moves.length} offensive moves loaded
               </p>
             </div>
@@ -223,7 +223,7 @@ function PokemonSelector({
       )}
 
       {loading && (
-        <p className="font-mono text-[10px] text-muted-foreground animate-pulse">Loading...</p>
+        <p className="font-mono text-[11px] text-muted-foreground animate-pulse">Loading...</p>
       )}
     </div>
   );
@@ -243,7 +243,7 @@ function MoveSelector({
   onSelect: (m: BattleMove) => void;
 }) {
   if (moves.length === 0) {
-    return <p className="font-mono text-[10px] text-muted-foreground/60">Select an attacker first</p>;
+    return <p className="font-mono text-[11px] text-muted-foreground/60">Select an attacker first</p>;
   }
 
   return (
@@ -254,7 +254,7 @@ function MoveSelector({
           type="button"
           onClick={() => onSelect(m)}
           className={cn(
-            'rounded-sm border px-2.5 py-1 font-mono text-[10px] font-semibold capitalize transition-all',
+            'rounded-sm border px-2.5 py-1 font-mono text-[11px] font-semibold capitalize transition-all',
             selected?.name === m.name
               ? 'border-primary bg-primary/10 text-primary'
               : 'border-border/60 bg-muted/30 text-foreground/70 hover:border-border hover:bg-muted/60'
@@ -293,7 +293,7 @@ function DamageBar({ result }: { result: DamageResult }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[10px] text-muted-foreground">
+        <span className="font-mono text-[11px] text-muted-foreground">
           {result.minPercent}% – {result.maxPercent}% of max HP
         </span>
         <span className={cn('font-mono text-xs font-bold', verdictColor)}>{verdict}</span>
@@ -311,7 +311,7 @@ function DamageBar({ result }: { result: DamageResult }) {
         {/* 100% marker */}
         <div className="absolute inset-y-0 left-[calc(100%-1px)] w-px bg-red-500/60" />
       </div>
-      <div className="flex justify-between font-mono text-[9px] text-muted-foreground/60">
+      <div className="flex justify-between font-mono text-[11px] text-muted-foreground/60">
         <span>Min: {result.min}</span>
         <span>Avg: {result.average}</span>
         <span>Max: {result.max}</span>
@@ -340,11 +340,11 @@ function BattleLog({ log }: { log: BattleLogEntry[] }) {
           className="rounded-sm border border-border/30 bg-muted/20 px-3 py-2"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               Turn {entry.turn}
             </span>
             <span className={cn(
-              'font-mono text-[9px] font-semibold uppercase tracking-wide',
+              'font-mono text-[11px] font-semibold uppercase tracking-wide',
               entry.effectiveness === 'super' ? 'text-red-400'
               : entry.effectiveness === 'immune' ? 'text-muted-foreground/40'
               : entry.effectiveness === 'resist' ? 'text-blue-400'
@@ -368,7 +368,7 @@ function BattleLog({ log }: { log: BattleLogEntry[] }) {
               style={{ width: `${Math.max(0, entry.defenderRemainingPercent)}%` }}
             />
           </div>
-          <p className="mt-0.5 font-mono text-[9px] text-muted-foreground/60">
+          <p className="mt-0.5 font-mono text-[11px] text-muted-foreground/60">
             {entry.defender} HP: {entry.defenderRemainingHp} ({entry.defenderRemainingPercent}%)
           </p>
         </div>
@@ -448,7 +448,7 @@ export default function BattleSimulator() {
 
       {/* Move selector */}
       <div className="rounded-sm border border-border/60 bg-card p-4">
-        <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           Move (from attacker&apos;s moveset)
         </p>
         <MoveSelector
@@ -460,13 +460,13 @@ export default function BattleSimulator() {
 
       {/* Options */}
       <div className="rounded-sm border border-border/60 bg-card p-4">
-        <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           Battle conditions
         </p>
         <div className="flex flex-wrap gap-4">
           {/* Weather */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/70">Weather</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Weather</p>
             <div className="flex gap-1">
               {weatherOptions.map(w => (
                 <button
@@ -474,7 +474,7 @@ export default function BattleSimulator() {
                   type="button"
                   onClick={() => setOptions(o => ({ ...o, weather: w }))}
                   className={cn(
-                    'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[9px] capitalize transition-all',
+                    'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
                     options.weather === w
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
@@ -489,7 +489,7 @@ export default function BattleSimulator() {
 
           {/* Terrain */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/70">Terrain</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Terrain</p>
             <div className="flex flex-wrap gap-1">
               {terrainOptions.map(t => (
                 <button
@@ -497,7 +497,7 @@ export default function BattleSimulator() {
                   type="button"
                   onClick={() => setOptions(o => ({ ...o, terrain: t }))}
                   className={cn(
-                    'rounded-sm border px-2 py-1 font-mono text-[9px] capitalize transition-all',
+                    'rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
                     options.terrain === t
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
@@ -511,7 +511,7 @@ export default function BattleSimulator() {
 
           {/* Toggles */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/70">Modifiers</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Modifiers</p>
             <div className="flex flex-wrap gap-1">
               {[
                 { key: 'isCritical', label: 'Critical', icon: <Zap className="h-3 w-3" /> },
@@ -534,7 +534,7 @@ export default function BattleSimulator() {
                       }))
                     }
                     className={cn(
-                      'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[9px] transition-all',
+                      'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] transition-all',
                       isActive
                         ? 'border-primary bg-primary/10 text-primary'
                         : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
@@ -553,7 +553,7 @@ export default function BattleSimulator() {
       {/* Damage result */}
       {damageResult && selectedMove && (
         <div className="rounded-sm border border-primary/30 bg-card p-4">
-          <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+          <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
             Damage Result — {selectedMove.name}
           </p>
           <DamageBar result={damageResult} />
@@ -564,7 +564,7 @@ export default function BattleSimulator() {
       <div className="rounded-sm border border-border/60 bg-card p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
               AI Duel Mode
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground/70">
@@ -576,7 +576,7 @@ export default function BattleSimulator() {
               <button
                 type="button"
                 onClick={() => { setBattleLog(null); setBattleWinner(null); }}
-                className="flex items-center gap-1.5 rounded-sm border border-border/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:border-border hover:bg-muted/40"
+                className="flex items-center gap-1.5 rounded-sm border border-border/60 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:border-border hover:bg-muted/40"
               >
                 <RotateCcw className="h-3 w-3" /> Reset
               </button>
@@ -585,7 +585,7 @@ export default function BattleSimulator() {
               type="button"
               onClick={handleSimulate}
               disabled={!attacker || !defender || simulating}
-              className="flex items-center gap-1.5 rounded-sm border border-primary bg-primary/10 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-sm border border-primary bg-primary/10 px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {simulating ? (
                 <Droplets className="h-3 w-3 animate-spin" />
@@ -607,7 +607,7 @@ export default function BattleSimulator() {
 
         {battleLog && battleLog.length > 0 && (
           <div className="mt-4">
-            <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60">
+            <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground/60">
               Battle Log
             </p>
             <BattleLog log={battleLog} />

@@ -46,11 +46,11 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
                 setLanguage('en');
                 persistLanguageCookie('en');
               }}
-              className="inline-flex h-8 items-center rounded-sm border border-amber-300/40 bg-amber-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-amber-100 transition-colors hover:border-amber-200/60 hover:bg-amber-500/25"
+              className="inline-flex h-8 items-center rounded-sm border border-amber-300/40 bg-amber-500/15 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-amber-100 transition-colors hover:border-amber-200/60 hover:bg-amber-500/25"
             >
               {t('tcg.try_english')}
             </button>
-            <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200/70">
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200/70">
               {t('tcg.showing_english_fallback')}
             </span>
           </div>
@@ -84,7 +84,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
               setLanguage('en');
               persistLanguageCookie('en');
             }}
-            className="inline-flex h-8 items-center rounded-sm border border-sky-300/40 bg-sky-500/15 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
+            className="inline-flex h-8 items-center rounded-sm border border-sky-300/40 bg-sky-500/15 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
           >
             {t('tcg.try_english')}
           </button>

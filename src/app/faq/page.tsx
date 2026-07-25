@@ -191,7 +191,7 @@ export default async function FaqPage() {
                       href={`#${section.id}`}
                       className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:border-primary hover:text-primary transition-colors"
                     >
-                      <span className="font-mono text-[10px] text-foreground/45">
+                      <span className="font-mono text-[11px] text-foreground/45">
                         {(idx + 1).toString().padStart(2, '0')}
                       </span>
                       {section.title}

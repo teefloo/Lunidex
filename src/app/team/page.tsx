@@ -209,7 +209,7 @@ export default function TeamPage() {
                     size="sm"
                     onClick={handleAutoComplete}
                     disabled={isAutoCompleting}
-                    className="rounded-full text-[10px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
+                    className="rounded-full text-[11px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
                   >
                     {isAutoCompleting ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Zap className="w-2.5 h-2.5" />}
                     {t('team.auto_complete')}
@@ -287,7 +287,7 @@ export default function TeamPage() {
                         {p.types.map((typeItem) => (
                           <span 
                             key={typeItem.type.name} 
-                            className="px-2 py-0.5 rounded-lg border border-border/40 text-[10px] sm:text-[11px] font-black uppercase"
+                            className="px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase"
                             style={{ backgroundColor: `${TYPE_COLORS[typeItem.type.name]}cc`, color: 'white' }}
                           >
                             {t(`types.${typeItem.type.name}`)}
@@ -297,7 +297,7 @@ export default function TeamPage() {
                         
                         <Link
                           href={`/pokemon/${p.name}`}
-                          className="touch-target mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color] outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/10 hover:text-primary text-[10px] font-black uppercase tracking-widest"
+                          className="touch-target mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color] outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/10 hover:text-primary text-[11px] font-black uppercase tracking-widest"
                         >
                           {t('team.details')}
                         </Link>
@@ -333,7 +333,7 @@ export default function TeamPage() {
                         </div>
                         <div>
                           <h3 className="text-xl font-black">{t('team.synergy')}</h3>
-                          <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">{t('team.cohesion')}</p>
+                          <p className="text-[11px] font-bold text-foreground/40 uppercase tracking-widest">{t('team.cohesion')}</p>
                         </div>
                       </div>
                       <div className="text-3xl font-black tracking-tighter">
@@ -365,7 +365,7 @@ export default function TeamPage() {
                       </div>
                       
                       <div className="p-4 rounded-sm bg-secondary/20 border border-border/40">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-red-500/60 mb-3">{t('team.main_weaknesses')}</p>
+                        <p className="text-[11px] font-black uppercase tracking-widest text-red-500/60 mb-3">{t('team.main_weaknesses')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.weaknesses.slice(0, 3).map(([type]) => (
                             <div 
@@ -373,10 +373,10 @@ export default function TeamPage() {
                               className="px-3 py-1.5 rounded-sm border border-border/40 shadow-sm text-primary-foreground flex items-center gap-2"
                               style={{ backgroundColor: TYPE_COLORS[type] }}
                             >
-                              <span className="text-[10px] font-black uppercase">{t(`types.${type}`)}</span>
+                              <span className="text-[11px] font-black uppercase">{t(`types.${type}`)}</span>
                             </div>
                           ))}
-                          {analysis.weaknesses.length === 0 && <p className="text-[10px] italic text-foreground/30">{t('team.no_major_weaknesses')}</p>}
+                          {analysis.weaknesses.length === 0 && <p className="text-[11px] italic text-foreground/30">{t('team.no_major_weaknesses')}</p>}
                         </div>
                       </div>
                     </div>
@@ -434,23 +434,23 @@ export default function TeamPage() {
                       
                       <div className="space-y-4">
                         <div>
-                          <p className="text-[10px] font-black text-red-500/60 uppercase mb-2">{t('team.weaknesses')}</p>
+                          <p className="text-[11px] font-black text-red-500/60 uppercase mb-2">{t('team.weaknesses')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.weaknesses.map(([type, val]) => (
                               <div key={type} className="px-3 py-1.5 rounded-sm border border-red-500/10 bg-red-500/5 flex items-center gap-2">
-                                <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                                <span className="text-[10px] font-bold opacity-40">{val}</span>
+                                <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                                <span className="text-[11px] font-bold opacity-40">{val}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <p className="text-[10px] font-black text-green-500/60 uppercase mb-2">{t('team.resistances')}</p>
+                          <p className="text-[11px] font-black text-green-500/60 uppercase mb-2">{t('team.resistances')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.resistances.map(([type, val]) => (
                               <div key={type} className="px-3 py-1.5 rounded-sm border border-green-500/10 bg-green-500/5 flex items-center gap-2">
-                                <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                                <span className="text-[10px] font-bold opacity-40">+{val}</span>
+                                <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                                <span className="text-[11px] font-bold opacity-40">+{val}</span>
                               </div>
                             ))}
                           </div>
@@ -465,12 +465,12 @@ export default function TeamPage() {
                       </h4>
                       
                       <div className="space-y-4">
-                        <p className="text-[10px] font-black text-yellow-500/60 uppercase mb-2">{t('team.super_effective_coverage')}</p>
+                        <p className="text-[11px] font-black text-yellow-500/60 uppercase mb-2">{t('team.super_effective_coverage')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.coverage.map(([type, val]) => (
                             <div key={type} className="px-3 py-1.5 rounded-sm border border-yellow-500/10 bg-yellow-500/5 flex items-center gap-2">
-                              <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
-                              <span className="text-[10px] font-bold opacity-40">{val}</span>
+                              <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="text-[11px] font-bold opacity-40">{val}</span>
                             </div>
                           ))}
                         </div>
@@ -503,52 +503,52 @@ export default function TeamPage() {
               
               <div className="space-y-6">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('team.types_present')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('team.types_present')}</p>
                   <div className="flex flex-wrap gap-2">
                     {Array.from(analysis?.typeCoverage || []).map(t_name => (
-                      <span key={t_name} className="px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm" style={{ backgroundColor: TYPE_COLORS[t_name] }}>
+                      <span key={t_name} className="px-3 py-1 rounded-lg text-[11px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm" style={{ backgroundColor: TYPE_COLORS[t_name] }}>
                         {t(`types.${t_name}`)}
                       </span>
                     ))}
-                    {(analysis?.typeCoverage.size || 0) === 0 && <span className="text-[10px] text-foreground/20 italic">{t('team.no_pokemon')}</span>}
+                    {(analysis?.typeCoverage.size || 0) === 0 && <span className="text-[11px] text-foreground/20 italic">{t('team.no_pokemon')}</span>}
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('team.missing_types')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('team.missing_types')}</p>
                   <div className="flex flex-wrap gap-2 opacity-40">
                     {analysis?.missingTypes.slice(0, 12).map(t_name => (
-                      <span key={t_name} className="px-2 py-1 rounded-lg border border-border/60 text-[10px] sm:text-[11px] font-bold uppercase">
+                      <span key={t_name} className="px-2 py-1 rounded-lg border border-border/60 text-[11px] sm:text-[11px] font-bold uppercase">
                         {t(`types.${t_name}`)}
                       </span>
                     ))}
-                    {(analysis?.missingTypes.length || 0) > 12 && <span className="text-[10px] sm:text-[11px] font-bold">...</span>}
+                    {(analysis?.missingTypes.length || 0) > 12 && <span className="text-[11px] sm:text-[11px] font-bold">...</span>}
                   </div>
                 </div>
 
                 {analysis && (
                   <div className="pt-4 border-t border-border/40 space-y-6">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-3">{t('team.coverage_gaps')}</p>
-                      <p className="text-[10px] text-foreground/50 mb-4">{t('team.coverage_gaps_desc')}</p>
+                      <p className="text-[11px] font-black uppercase tracking-widest text-primary/60 mb-3">{t('team.coverage_gaps')}</p>
+                      <p className="text-[11px] text-foreground/50 mb-4">{t('team.coverage_gaps_desc')}</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.suggestions.types.map(type => (
                           <div key={type} className="flex-1 min-w-[80px] p-3 rounded-sm bg-secondary/20 border border-border/40 text-center group hover:border-primary/30 transition-all cursor-default">
-                            <span className="text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                            <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                           </div>
                         ))}
-                        {analysis.suggestions.types.length === 0 && <p className="text-[10px] italic text-foreground/30">{t('team.no_type_weaknesses')}</p>}
+                        {analysis.suggestions.types.length === 0 && <p className="text-[11px] italic text-foreground/30">{t('team.no_type_weaknesses')}</p>}
                       </div>
                     </div>
 
                     {analysis.suggestions.statFocus.length > 0 && (
                       <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-orange-500/60 mb-3">{t('team.stat_deficiencies')}</p>
-                        <p className="text-[10px] text-foreground/50 mb-4">{t('team.stat_deficiencies_desc')}</p>
+                        <p className="text-[11px] font-black uppercase tracking-widest text-orange-500/60 mb-3">{t('team.stat_deficiencies')}</p>
+                        <p className="text-[11px] text-foreground/50 mb-4">{t('team.stat_deficiencies_desc')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.suggestions.statFocus.map(stat => (
                             <div key={stat} className="px-3 py-2 rounded-sm bg-orange-500/5 border border-orange-500/10 text-center">
-                              <span className="text-[10px] font-black uppercase text-orange-500">{t(`stats.${stat.toLowerCase().replace(' ', '_')}`)}</span>
+                              <span className="text-[11px] font-black uppercase text-orange-500">{t(`stats.${stat.toLowerCase().replace(' ', '_')}`)}</span>
                             </div>
                           ))}
                         </div>
@@ -565,7 +565,7 @@ export default function TeamPage() {
               <p className="text-xs text-foreground/50 mb-6 leading-relaxed relative z-10">
                 {t('team.export_desc')}
               </p>
-              <div className="bg-background/50 p-3 rounded-sm border border-border/40 font-mono text-[10px] text-foreground/60 break-all mb-4 relative z-10">
+              <div className="bg-background/50 p-3 rounded-sm border border-border/40 font-mono text-[11px] text-foreground/60 break-all mb-4 relative z-10">
                 {team.length > 0 ? team.join('-') : t('team.empty_team')}
               </div>
               <Button 

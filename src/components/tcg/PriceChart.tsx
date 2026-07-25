@@ -233,7 +233,7 @@ export function PriceChart({ cardId }: PriceChartProps) {
       </div>
 
       {/* Data source note */}
-      <p className="text-right text-[10px] text-foreground/30">
+      <p className="text-right text-[11px] text-foreground/30">
         TCGPlayer (USD) · Cardmarket (EUR) · updated every 6h
       </p>
     </div>

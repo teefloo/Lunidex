@@ -116,7 +116,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <div className="flex items-center gap-2">
                   <Info className="h-4 w-4 text-primary" />
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('moves_page.effect')}
                   </h3>
                 </div>
@@ -129,7 +129,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                       {t('moves_page.learners_title')}
                     </h3>
                   </div>
@@ -214,7 +214,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
               <div className="rounded-sm border border-border/70 bg-card/35 p-4">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                     {t('moves_page.generation')}
                   </h3>
                 </div>
@@ -372,11 +372,11 @@ function PokemonLearnerCard({
             onError={() => setImgSrc(fallbackImg)}
           />
         </div>
-        <span className="mt-1 w-full truncate text-[10px] font-bold text-foreground/60 group-hover:text-foreground">
+        <span className="mt-1 w-full truncate text-[11px] font-bold text-foreground/60 group-hover:text-foreground">
           {pokemon.localizedName}
         </span>
         {showLevel && pokemon.level !== undefined && pokemon.level !== null && (
-          <span className="mt-0.5 text-[10px] font-bold text-primary/70">
+          <span className="mt-0.5 text-[11px] font-bold text-primary/70">
             Lv. {pokemon.level}
           </span>
         )}
@@ -406,7 +406,7 @@ function MoveStatBox({
   return (
     <div className="flex flex-col items-center gap-1.5 rounded-sm border border-border/70 bg-card/50 p-3">
       <Icon className="h-4 w-4 text-primary" />
-      <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</span>
+      <span className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">{label}</span>
       <span className="text-lg font-black text-foreground">{value ?? '-'}</span>
     </div>
   );

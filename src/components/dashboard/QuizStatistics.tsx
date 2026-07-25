@@ -43,7 +43,7 @@ function StatCard({ icon, label, value, accent }: StatCardProps) {
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50">{label}</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50">{label}</p>
         <p className="text-lg md:text-xl font-black text-foreground mt-0.5 tabular-nums">{value}</p>
       </div>
     </div>
@@ -145,10 +145,10 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
             >
               <div className={cn('flex items-center justify-center gap-1 mb-1', cat.color)}>
                 {cat.icon}
-                <span className="text-[9px] font-bold uppercase tracking-[0.1em]">{cat.key}</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em]">{cat.key}</span>
               </div>
               <p className="text-base font-black text-foreground tabular-nums">{stats.bestScore}</p>
-              <p className="text-[9px] font-semibold text-foreground/40">
+              <p className="text-[11px] font-semibold text-foreground/40">
                 {stats.averageScore} avg · {stats.totalSessions} sessions
               </p>
             </div>
@@ -159,7 +159,7 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
       {/* Progression chart */}
       {chartData.length > 1 && mounted && (
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-3">
             {t('dashboard.quiz.progression_chart')}
           </p>
           <div className="h-48">

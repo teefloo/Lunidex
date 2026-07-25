@@ -140,7 +140,7 @@ export default function EVPlanner() {
     <div className="space-y-6">
       {/* Pokémon search */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+        <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
           {t('ev_iv.pokemon_label')}
         </label>
         <div className="flex gap-2">
@@ -177,7 +177,7 @@ export default function EVPlanner() {
 
       {/* IVs */}
       <div className="space-y-3">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">IVs</p>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">IVs</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {STAT_KEYS.map((key) => (
             <StatInput
@@ -195,7 +195,7 @@ export default function EVPlanner() {
       {/* EVs */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
             {t('ev_iv.ev_label')}
           </p>
           <span className={`text-[11px] font-black tabular-nums ${totalEVs > 510 ? 'text-red-400' : 'text-foreground/50'}`}>
@@ -242,7 +242,7 @@ export default function EVPlanner() {
       {/* Stat preview */}
       {stats50 && stats100 && (
         <div className="border-t border-border/30 pt-4 space-y-3">
-          <div className="grid grid-cols-3 gap-px bg-border/30 rounded-sm overflow-hidden text-[10px] font-black uppercase tracking-widest">
+          <div className="grid grid-cols-3 gap-px bg-border/30 rounded-sm overflow-hidden text-[11px] font-black uppercase tracking-widest">
             <div className="bg-card/50 px-3 py-2 text-foreground/40">Stat</div>
             <div className="bg-card/50 px-3 py-2 text-center text-foreground/40">Lv 50</div>
             <div className="bg-card/50 px-3 py-2 text-center text-foreground/40">Lv 100</div>
@@ -254,7 +254,7 @@ export default function EVPlanner() {
                 key={key}
                 className={`grid grid-cols-3 gap-px rounded-sm overflow-hidden text-sm ${isMaxed ? 'ring-1 ring-primary/30' : ''}`}
               >
-                <div className={`px-3 py-2 text-[10px] font-bold uppercase tracking-widest ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground/50'}`}>
+                <div className={`px-3 py-2 text-[11px] font-bold uppercase tracking-widest ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground/50'}`}>
                   {statLabel[key]}
                 </div>
                 <div className={`px-3 py-2 text-center font-black tabular-nums ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground/80'}`}>

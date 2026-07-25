@@ -89,7 +89,7 @@ export default function BattleRoomSection() {
   if (!userId) {
     return (
       <div className="flex h-20 items-center justify-center">
-        <span className="font-mono text-[10px] text-muted-foreground animate-pulse">Initialising…</span>
+        <span className="font-mono text-[11px] text-muted-foreground animate-pulse">Initialising…</span>
       </div>
     );
   }
@@ -142,13 +142,13 @@ export default function BattleRoomSection() {
             onChange={e => setJoinInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && joinRoom()}
             placeholder="Room ID or link..."
-            className="h-11 flex-1 min-w-0 rounded-sm border border-border/70 bg-background/50 px-3 font-mono text-[10px] placeholder:text-muted-foreground/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="h-11 flex-1 min-w-0 rounded-sm border border-border/70 bg-background/50 px-3 font-mono text-[11px] placeholder:text-muted-foreground/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
           <button
             type="button"
             onClick={joinRoom}
             disabled={!joinInput.trim()}
-            className="flex h-11 items-center gap-2 rounded-sm border border-border/70 px-3 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:border-border hover:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-11 items-center gap-2 rounded-sm border border-border/70 px-3 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:border-border hover:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <LogIn className="h-3.5 w-3.5" />
             Join

@@ -158,7 +158,7 @@ const results = useMemo(() => {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{label}</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{label}</p>
 
 {selected ? (
          <div className="flex items-center gap-3 p-3 rounded-sm bg-secondary/30 border border-border/40 group">
@@ -177,17 +177,17 @@ const results = useMemo(() => {
            </div>
            <div className="flex-1 min-w-0">
              <p className="font-black text-sm capitalize text-foreground/90">{getLocalizedPokemonName(selected.name, allPokemon) || selected.name}</p>
-             <p className="text-[10px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
+             <p className="text-[11px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
                {selected.eggGroups.join(' · ') || t('breeding.unknown_groups')}
              </p>
-             <p className="text-[10px] text-foreground/40 font-semibold uppercase mt-0.5">
+             <p className="text-[11px] text-foreground/40 font-semibold uppercase mt-0.5">
                {selected.isLegendary ? t('breeding.legendary') : selected.isMythical ? t('breeding.mythical') : selected.isDitto ? t('breeding.ditto') : selected.gender}
             </p>
           </div>
           <button
             type="button"
             onClick={() => setQuery('')}
-            className="text-[10px] font-black uppercase tracking-wider text-primary/60 hover:text-primary transition-colors px-2 py-1 rounded-sm border border-transparent hover:border-primary/20"
+            className="text-[11px] font-black uppercase tracking-wider text-primary/60 hover:text-primary transition-colors px-2 py-1 rounded-sm border border-transparent hover:border-primary/20"
           >
             {t('breeding.change')}
           </button>
@@ -231,7 +231,7 @@ const results = useMemo(() => {
                        unoptimized
                      />
                      <span className="font-semibold text-sm capitalize text-foreground/85">{displayName}</span>
-                     <span className="ml-auto font-mono text-[10px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
+                     <span className="ml-auto font-mono text-[11px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
                    </button>
                  );
                })}
@@ -256,10 +256,10 @@ interface IvEditorProps {
 function IvEditor({ label, ivs, onChange }: IvEditorProps) {
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{label} IVs</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{label} IVs</p>
       {IV_STATS.map(stat => (
         <div key={stat} className="flex items-center gap-3">
-          <span className={cn('w-8 text-[10px] font-black uppercase tracking-wider', STAT_COLORS[stat])}>
+          <span className={cn('w-8 text-[11px] font-black uppercase tracking-wider', STAT_COLORS[stat])}>
             {STAT_LABELS[stat]}
           </span>
           <div className="flex-1">
@@ -427,14 +427,14 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               onClick={() => i < step && setStep(i)}
               disabled={i > step}
               className={cn(
-                'touch-target flex min-h-11 min-w-0 items-center gap-2 rounded-sm px-3 py-2 text-center text-[10px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow] min-[400px]:px-4',
+                'touch-target flex min-h-11 min-w-0 items-center gap-2 rounded-sm px-3 py-2 text-center text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow] min-[400px]:px-4',
                 i === step && 'bg-primary text-primary-foreground',
                 i < step && 'text-primary/70 hover:text-primary cursor-pointer',
                 i > step && 'text-foreground/30 cursor-default',
               )}
             >
               <span className={cn(
-                'flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black',
+                'flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black',
                 i === step ? 'bg-primary-foreground/20' : i < step ? 'bg-primary/15' : 'bg-foreground/10',
               )}>{i + 1}</span>
               {label}
@@ -470,7 +470,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       type="button"
                       onClick={() => setP1Gender(g)}
                       className={cn(
-                        'flex-1 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider border transition-all',
+                        'flex-1 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider border transition-all',
                         p1Gender === g
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70',
@@ -492,7 +492,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       type="button"
                       onClick={() => setP2Gender(g)}
                       className={cn(
-                        'flex-1 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider border transition-all',
+                        'flex-1 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider border transition-all',
                         p2Gender === g
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70',
@@ -574,7 +574,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
           {/* Held Items */}
           <div className="space-y-3">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.held_items')}</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.held_items')}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-bold text-foreground/60 mb-2 capitalize">{parent1?.name ?? t('breeding.parent_1')}</p>
@@ -586,7 +586,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       onClick={() => setP1Item(item.value)}
                       title={item.desc}
                       className={cn(
-                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
+                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p1Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
@@ -607,7 +607,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                       onClick={() => setP2Item(item.value)}
                       title={item.desc}
                       className={cn(
-                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
+                        'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p2Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
                           : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
@@ -629,7 +629,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
           {/* Target IVs */}
           <div className="space-y-3">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_ivs')}</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_ivs')}</p>
             <div className="flex flex-wrap gap-2">
               {IV_STATS.map(stat => (
                 <button
@@ -637,7 +637,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                   type="button"
                   onClick={() => setTargetIVs(prev => ({ ...prev, [stat]: !prev[stat] }))}
                   className={cn(
-                    'touch-target min-h-11 rounded-sm border px-4 py-2 text-[10px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
+                    'touch-target min-h-11 rounded-sm border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                     targetIVs[stat]
                       ? 'bg-primary/15 border-primary/30 text-primary'
                       : 'border-border/40 text-foreground/50 hover:border-border/70',
@@ -652,9 +652,9 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
           {/* Target Nature */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_nature')}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_nature')}</p>
               {(p1Item === 'everstone' || p2Item === 'everstone') && (
-                <Badge variant="outline" className="text-[9px] font-black border-green-500/30 text-green-400 bg-green-500/10">
+                <Badge variant="outline" className="text-[11px] font-black border-green-500/30 text-green-400 bg-green-500/10">
                   {t('breeding.nature_guaranteed')}
                 </Badge>
               )}
@@ -717,19 +717,19 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               {/* Main stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.probability')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.probability')}</p>
                   <p className="text-2xl font-black text-primary tabular-nums">
                     {(compatibility.targetIvProbability * 100).toFixed(2)}%
                   </p>
                 </div>
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.expected_eggs')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.expected_eggs')}</p>
                   <p className="text-2xl font-black text-foreground/90 tabular-nums">
                     {compatibility.expectedEggs === Infinity ? '∞' : `~${compatibility.expectedEggs}`}
                   </p>
                 </div>
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.iv_slots')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.iv_slots')}</p>
                   <p className="text-2xl font-black text-blue-400 tabular-nums">{compatibility.ivSlotsInherited}</p>
                 </div>
                 <div className={cn(
@@ -738,7 +738,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                     ? 'bg-green-500/10 border-green-500/20'
                     : 'bg-secondary/30 border-border/40',
                 )}>
-                  <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.nature')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.nature')}</p>
                   <p className={cn(
                     'text-sm font-black capitalize',
                     compatibility.natureGuaranteed ? 'text-green-400' : 'text-foreground/60',
@@ -750,16 +750,16 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
               {/* IV Breakdown table */}
               <div className="space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.iv_breakdown')}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.iv_breakdown')}</p>
                 <div className="rounded-sm border border-border/40 overflow-hidden">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-secondary/30 border-b border-border/40">
-                        <th className="px-4 py-2.5 text-left text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_stat')}</th>
-                        <th className="px-4 py-2.5 text-left text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_best_source')}</th>
-                        <th className="px-4 py-2.5 text-center text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p1_iv')}</th>
-                        <th className="px-4 py-2.5 text-center text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p2_iv')}</th>
-                        <th className="px-4 py-2.5 text-center text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_target')}</th>
+                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_stat')}</th>
+                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_best_source')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p1_iv')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p2_iv')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_target')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/20">
@@ -818,7 +818,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                    </div>
                    <Link
                      href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}
-                     className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[10px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
+                     className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
                    >
                      {t('breeding.btn_explore')} <ExternalLink className="h-3 w-3" />
                    </Link>

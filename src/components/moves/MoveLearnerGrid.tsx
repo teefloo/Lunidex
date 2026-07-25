@@ -79,7 +79,7 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-primary" />
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
             {labels.title.replace('{{moveName}}', moveName)}
           </h3>
         </div>
@@ -101,7 +101,7 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
                   setFilter(key);
                   setShowAll(false);
                 }}
-                className={`inline-flex h-8 items-center gap-1.5 rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.16em] transition-all ${
+                className={`inline-flex h-8 items-center gap-1.5 rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-all ${
                   active
                     ? 'border-primary/35 bg-primary/15 text-primary'
                     : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground'
@@ -132,7 +132,7 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAll(true)}
-                className="h-9 px-4 text-[10px] uppercase tracking-[0.18em]"
+                className="h-9 px-4 text-[11px] uppercase tracking-[0.18em]"
               >
                 {labels.showAll.replace('{{count}}', String(allByMethod.length))}
               </Button>
@@ -171,11 +171,11 @@ function PokemonLearnerCard({ pokemon }: { pokemon: LearnerEntry }) {
           }
         />
       </div>
-      <span className="mt-1 w-full truncate text-[10px] font-bold text-foreground/60 group-hover:text-foreground">
+      <span className="mt-1 w-full truncate text-[11px] font-bold text-foreground/60 group-hover:text-foreground">
         {pokemon.localizedName}
       </span>
       {pokemon.learnMethod === 'level-up' && pokemon.level != null && pokemon.level > 0 && (
-        <span className="mt-0.5 text-[9px] font-bold text-primary/70">Lv. {pokemon.level}</span>
+        <span className="mt-0.5 text-[11px] font-bold text-primary/70">Lv. {pokemon.level}</span>
       )}
       <div className="mt-1 flex gap-1">
         {pokemon.types.map((type) => (

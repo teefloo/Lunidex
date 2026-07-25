@@ -342,7 +342,7 @@ export default function ComparePage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-black capitalize">{displayName}</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">
+                      <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
                         {formatId(pokemon.id)}
                       </p>
                     </div>
@@ -417,7 +417,7 @@ export default function ComparePage() {
                         const winnerName = winner.species?.names?.find((n) => n.language.name === resolvedLang)?.name || winner.pokemon.name;
                         return (
                           <div key={key} className="bg-secondary/20 p-4 rounded-sm border border-border/40 flex flex-col gap-1 hover:border-primary/30 transition-all">
-                            <span className="text-[10px] font-black uppercase text-muted-foreground">{statLabels[key]}</span>
+                            <span className="text-[11px] font-black uppercase text-muted-foreground">{statLabels[key]}</span>
                             <div className="flex items-center justify-between gap-2">
                               <span className="font-black text-sm capitalize truncate">{winnerName}</span>
                               <span className="font-black text-primary bg-primary/10 px-2 py-0.5 rounded-sm text-xs">{info.val}</span>
@@ -434,14 +434,14 @@ export default function ComparePage() {
                             <Trophy className="w-6 h-6" />
                           </div>
                           <div>
-                            <p className="text-[10px] font-black uppercase text-primary tracking-widest">{t('compare.overall_champion')}</p>
+                            <p className="text-[11px] font-black uppercase text-primary tracking-widest">{t('compare.overall_champion')}</p>
                             <h4 className="text-xl font-black capitalize">
                               {compareData[bestStats.total.index]?.species?.names?.find((n) => n.language.name === resolvedLang)?.name || compareData[bestStats.total.index]?.pokemon?.name}
                             </h4>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">{t('compare.total_stats')}</p>
+                          <p className="text-[11px] font-black uppercase text-muted-foreground mb-1">{t('compare.total_stats')}</p>
                           <p className="text-2xl font-black text-primary">{bestStats.total.val}</p>
                         </div>
                       </div>
@@ -475,19 +475,19 @@ export default function ComparePage() {
                       <h4 className="text-sm font-black uppercase tracking-widest text-red-500/60 flex items-center gap-2">
                         <ShieldAlert className="w-4 h-4" /> {t('compare.counters_title')}
                       </h4>
-                      <p className="text-[10px] text-muted-foreground font-bold">{t('compare.counters_desc')}</p>
+                      <p className="text-[11px] text-muted-foreground font-bold">{t('compare.counters_desc')}</p>
                       <div className="space-y-3">
                         {suggestions.counters.map(counter => (
                           <div key={counter.type} className="p-4 rounded-sm bg-red-500/5 border border-red-500/10 space-y-2">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span
-                                  className="glass-tag type-accent px-3 py-1 text-[10px]"
+                                  className="glass-tag type-accent px-3 py-1 text-[11px]"
                                   style={{ '--type-color': TYPE_COLORS[counter.type] } as React.CSSProperties}
                                 >
                                   {t(`types.${counter.type}`)}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground font-bold">
+                                <span className="text-[11px] text-muted-foreground font-bold">
                                   {t('compare.threat_severity', { severity: counter.severity })}
                                 </span>
                               </div>
@@ -496,7 +496,7 @@ export default function ComparePage() {
                               {counter.threatTypes.map(threat => (
                                 <span
                                   key={threat}
-                                  className="px-2 py-0.5 rounded-sm text-[9px] font-black uppercase bg-red-500/10 border border-red-500/15"
+                                  className="px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15"
                                   style={{ color: TYPE_COLORS[threat] }}
                                 >
                                   {t(`types.${threat}`)}
@@ -515,18 +515,18 @@ export default function ComparePage() {
                       <h4 className="text-sm font-black uppercase tracking-widest text-green-500/60 flex items-center gap-2">
                         <Heart className="w-4 h-4" /> {t('compare.partners_title')}
                       </h4>
-                      <p className="text-[10px] text-muted-foreground font-bold">{t('compare.partners_desc')}</p>
+                      <p className="text-[11px] text-muted-foreground font-bold">{t('compare.partners_desc')}</p>
                       <div className="space-y-3">
                         {suggestions.partners.map(partner => (
                           <div key={partner.type} className="p-4 rounded-sm bg-green-500/5 border border-green-500/10 flex items-center justify-between gap-3">
                             <div className="flex items-center gap-3">
                               <span
-                                className="glass-tag type-accent px-3 py-1 text-[10px]"
+                                className="glass-tag type-accent px-3 py-1 text-[11px]"
                                 style={{ '--type-color': TYPE_COLORS[partner.type] } as React.CSSProperties}
                               >
                                 {t(`types.${partner.type}`)}
                               </span>
-                              <span className="text-[10px] text-muted-foreground font-bold">
+                              <span className="text-[11px] text-muted-foreground font-bold">
                                 {partner.reason === 'both'
                                   ? t('compare.covers_both')
                                   : partner.reason === 'covers_weakness'
@@ -541,7 +541,7 @@ export default function ComparePage() {
                                 const term = partner.type;
                                 setCompareSearch(term);
                               }}
-                              className="rounded-sm text-[10px] font-black uppercase gap-1 text-primary hover:bg-primary/10 shrink-0"
+                              className="rounded-sm text-[11px] font-black uppercase gap-1 text-primary hover:bg-primary/10 shrink-0"
                               aria-label={t('compare.add_to_compare')}
                             >
                               <Plus className="w-3 h-3" />
@@ -560,12 +560,12 @@ export default function ComparePage() {
                     <h4 className="text-sm font-black uppercase tracking-widest text-orange-500/60 flex items-center gap-2 mb-4">
                       <AlertTriangle className="w-4 h-4" /> {t('compare.shared_weaknesses')}
                     </h4>
-                    <p className="text-[10px] text-muted-foreground font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
+                    <p className="text-[11px] text-muted-foreground font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
                     <div className="flex flex-wrap gap-2">
                       {suggestions.sharedWeaknesses.map(type => (
                         <span
                           key={type}
-                          className="px-3 py-1.5 rounded-sm border border-orange-500/10 bg-orange-500/5 text-[10px] font-black uppercase"
+                          className="px-3 py-1.5 rounded-sm border border-orange-500/10 bg-orange-500/5 text-[11px] font-black uppercase"
                           style={{ color: TYPE_COLORS[type] }}
                         >
                           {t(`types.${type}`)}
@@ -581,12 +581,12 @@ export default function ComparePage() {
                     <h4 className="text-sm font-black uppercase tracking-widest text-yellow-500/60 flex items-center gap-2 mb-4">
                       <Zap className="w-4 h-4" /> {t('compare.stat_deficiencies')}
                     </h4>
-                    <p className="text-[10px] text-muted-foreground font-bold mb-4">{t('compare.stat_deficiencies_desc')}</p>
+                    <p className="text-[11px] text-muted-foreground font-bold mb-4">{t('compare.stat_deficiencies_desc')}</p>
                     <div className="flex flex-wrap gap-2">
                       {suggestions.statDeficiencies.map(stat => (
                         <span
                           key={stat}
-                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[10px] font-black uppercase text-yellow-500"
+                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[11px] font-black uppercase text-yellow-500"
                         >
                           {t(`stats.${stat}`)}
                         </span>
@@ -648,7 +648,7 @@ export default function ComparePage() {
                         {p.types.map((typeItem) => (
                           <span 
                             key={typeItem.type.name} 
-                            className="glass-tag type-accent px-4 py-1 text-[10px]"
+                            className="glass-tag type-accent px-4 py-1 text-[11px]"
                             style={{ '--type-color': TYPE_COLORS[typeItem.type.name] } as React.CSSProperties}
                           >
                             {t(`types.${typeItem.type.name}`)}
@@ -662,12 +662,12 @@ export default function ComparePage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div className="bg-secondary/20 p-3 rounded-sm flex flex-col items-center">
                           <Ruler className="w-4 h-4 text-foreground/30 mb-1" />
-                          <span className="text-[10px] font-bold text-foreground/40 uppercase mb-1">{t('compare.height')}</span>
+                          <span className="text-[11px] font-bold text-foreground/40 uppercase mb-1">{t('compare.height')}</span>
                           <span className="font-black text-sm">{p.height / 10} m</span>
                         </div>
                         <div className="bg-secondary/20 p-3 rounded-sm flex flex-col items-center">
                           <Weight className="w-4 h-4 text-foreground/30 mb-1" />
-                          <span className="text-[10px] font-bold text-foreground/40 uppercase mb-1">{t('compare.weight')}</span>
+                          <span className="text-[11px] font-bold text-foreground/40 uppercase mb-1">{t('compare.weight')}</span>
                           <span className="font-black text-sm">{p.weight / 10} kg</span>
                         </div>
                       </div>
@@ -675,11 +675,11 @@ export default function ComparePage() {
                       {/* Stats */}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground/40 flex items-center gap-2">
+                          <h4 className="text-[11px] font-black uppercase tracking-widest text-foreground/40 flex items-center gap-2">
                             <Swords className="w-3 h-3" /> {t('compare.stats')}
                           </h4>
                           <div className={cn(
-                            "px-2 py-0.5 rounded-sm text-[10px] sm:text-[11px] font-black uppercase tracking-tighter",
+                            "px-2 py-0.5 rounded-sm text-[11px] sm:text-[11px] font-black uppercase tracking-tighter",
                             isOverallBest ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400" : "bg-secondary/50 text-muted-foreground"
                           )}>
                             {t('compare.total')}: {totalStats} {isOverallBest ? t('compare.best') : ''}
@@ -690,7 +690,7 @@ export default function ComparePage() {
                             const isBest = bestStats[s.stat.name]?.index === idx;
                             return (
                               <div key={s.stat.name} className="space-y-1">
-                                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
+                                <div className="flex justify-between items-center text-[11px] sm:text-[11px] font-bold uppercase tracking-wider">
                                   <span className={cn(isBest ? "text-primary" : "text-muted-foreground")}>
                                     {statLabels[s.stat.name]}
                                   </span>
@@ -714,17 +714,17 @@ export default function ComparePage() {
 
                       {/* Abilities */}
                       <div className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                        <h4 className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                           <Sparkles className="w-3 h-3" /> {t('detail.abilities')}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {p.abilities.map((a) => (
                             <div 
                               key={a.ability.name} 
-                              className="px-3 py-1.5 bg-secondary/20 border border-border/40 rounded-sm text-[10px] font-bold capitalize"
+                              className="px-3 py-1.5 bg-secondary/20 border border-border/40 rounded-sm text-[11px] font-bold capitalize"
                             >
                               {a.ability.name.replace('-', ' ')}
-                              {a.is_hidden && <span className="ml-1 opacity-40 text-[10px] sm:text-[11px]">{t('detail.hidden')}</span>}
+                              {a.is_hidden && <span className="ml-1 opacity-40 text-[11px] sm:text-[11px]">{t('detail.hidden')}</span>}
                             </div>
                           ))}
                         </div>

@@ -57,7 +57,7 @@ export function SpriteGallery({ pokemon }: SpriteGalleryProps) {
             size="sm"
             onClick={() => setShowShiny(!showShiny)}
             className={cn(
-              'rounded-sm text-[10px] font-black uppercase tracking-wider gap-1.5 transition-all',
+              'rounded-sm text-[11px] font-black uppercase tracking-wider gap-1.5 transition-all',
               showShiny
                 ? 'bg-yellow-500/15 border-yellow-500/30 text-yellow-400'
                 : 'bg-secondary/30 border-border/40 text-foreground/50'
@@ -71,7 +71,7 @@ export function SpriteGallery({ pokemon }: SpriteGalleryProps) {
             size="sm"
             onClick={() => setShowAnimated(!showAnimated)}
             className={cn(
-              'rounded-sm text-[10px] font-black uppercase tracking-wider gap-1.5 transition-all',
+              'rounded-sm text-[11px] font-black uppercase tracking-wider gap-1.5 transition-all',
               showAnimated
                 ? 'bg-blue-500/15 border-blue-500/30 text-blue-400'
                 : 'bg-secondary/30 border-border/40 text-foreground/50'
@@ -93,7 +93,7 @@ export function SpriteGallery({ pokemon }: SpriteGalleryProps) {
       <div className="space-y-8">
         {Array.from(groups.entries()).map(([group, sprites]) => (
           <div key={group}>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 mb-3 flex items-center gap-2">
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 mb-3 flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
               {group}
             </h4>
@@ -114,7 +114,7 @@ export function SpriteGallery({ pokemon }: SpriteGalleryProps) {
                       unoptimized
                     />)}
                   </div>
-                  <span className="text-[9px] font-bold text-foreground/50 uppercase tracking-wider text-center leading-tight">
+                  <span className="text-[11px] font-bold text-foreground/50 uppercase tracking-wider text-center leading-tight">
                     {sprite.label}
                   </span>
                   {sprite.isAnimated && (

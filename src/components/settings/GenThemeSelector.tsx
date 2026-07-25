@@ -50,7 +50,7 @@ export function GenThemeSelector() {
                   {id === 'default' ? 'Défaut' : `Gen ${theme.generation} — ${theme.name}`}
                 </span>
                 <span
-                  className={`text-[9px] font-normal truncate leading-tight ${
+                  className={`text-[11px] font-normal truncate leading-tight ${
                     isActive ? 'text-primary-foreground/70' : 'text-foreground/40'
                   }`}
                 >
@@ -66,7 +66,7 @@ export function GenThemeSelector() {
       <div className="glass-card flex items-center justify-between p-4">
         <div className="flex flex-col gap-0.5">
           <span className="font-bold text-foreground/80 text-sm">Thème auto selon le Pokémon</span>
-          <span className="text-[10px] text-foreground/40">
+          <span className="text-[11px] text-foreground/40">
             Change automatiquement selon la génération consultée
           </span>
         </div>

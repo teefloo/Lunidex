@@ -144,7 +144,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
           <div className="grid gap-4 pb-6 xl:grid-cols-2">
             {/* Generation Filter */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
                 {t('filters.generation')}
               </h4>
               <div className="grid grid-cols-2 xs:grid-cols-3 gap-2">
@@ -164,7 +164,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                       )}
                     >
                       <span className="text-xs font-black">{label}</span>
-                      <span className="text-[10px] font-medium opacity-60 uppercase">{regionLabel}</span>
+                      <span className="text-[11px] font-medium opacity-60 uppercase">{regionLabel}</span>
                     </button>
                   );
                 })}
@@ -173,7 +173,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Types Filter */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
                 {t('filters.types')}
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -194,7 +194,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                       style={isActive ? { backgroundColor: color } : {}}
                     >
                       {isActive && <Check className="w-3 h-3 relative z-10" />}
-                      <span className="text-[10px] font-black uppercase tracking-wider relative z-10">{label}</span>
+                      <span className="text-[11px] font-black uppercase tracking-wider relative z-10">{label}</span>
                     </button>
                   );
                 })}
@@ -203,14 +203,14 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Legendary & Mythical Status */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                 {t('filters.special')}
               </h4>
               <div className="grid grid-cols-1 gap-3">
                 <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-sm font-bold">{t('filters.legendary')}</span>
-                    <span className="text-[10px] text-foreground/40 font-medium">{t('filters.legendary_desc')}</span>
+                    <span className="text-[11px] text-foreground/40 font-medium">{t('filters.legendary_desc')}</span>
                   </div>
                    <Switch
                      id="filter-legendary"
@@ -221,7 +221,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-sm font-bold">{t('filters.mythical')}</span>
-                    <span className="text-[10px] text-foreground/40 font-medium">{t('filters.mythical_desc')}</span>
+                    <span className="text-[11px] text-foreground/40 font-medium">{t('filters.mythical_desc')}</span>
                   </div>
                   <Switch
                      id="filter-mythical"
@@ -234,7 +234,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Egg Groups Filter */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
                 {t('filters.egg_groups')}
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -246,7 +246,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                       key={group}
                       onClick={() => toggleEggGroup(group)}
                       className={cn(
-                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
+                        "px-3 py-2.5 rounded-full border text-[11px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -261,7 +261,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Colors Filter */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
                 {t('filters.colors')}
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -273,7 +273,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                       key={color}
                       onClick={() => toggleColor(color)}
                       className={cn(
-                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
+                        "px-3 py-2.5 rounded-full border text-[11px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -288,7 +288,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Shapes Filter */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40 flex items-center gap-2">
                 {t('filters.shapes')}
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -300,7 +300,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                       key={shape}
                       onClick={() => toggleShape(shape)}
                       className={cn(
-                        "px-3 py-2.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
+                        "px-3 py-2.5 rounded-full border text-[11px] font-black uppercase tracking-wider transition-all duration-200 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground border-transparent shadow-lg shadow-primary/20"
                           : "bg-secondary/20 border-border/40 text-foreground/60 hover:border-border/70 hover:text-foreground"
@@ -316,7 +316,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
             {/* Min BST Slider */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('filters.min_bst')}
                 </h4>
                 <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none">
@@ -330,7 +330,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 step={10}
                 className="py-4"
               />
-              <div className="flex justify-between text-[10px] sm:text-[11px] font-black text-foreground/20 uppercase tracking-widest">
+              <div className="flex justify-between text-[11px] sm:text-[11px] font-black text-foreground/20 uppercase tracking-widest">
                 <span>0</span>
                 <span>400 ({t('filters.avg')})</span>
                 <span>800</span>
@@ -339,15 +339,15 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
             {/* Individual Stats Sliders */}
             <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                 {t('filters.min_stats')}
               </h4>
 
               <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase">{t('stats.hp_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
+                    <span className="text-[11px] font-bold uppercase">{t('stats.hp_short')}</span>
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[11px]">
                       {minHp}+
                     </Badge>
                   </div>
@@ -361,8 +361,8 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase">{t('stats.attack_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
+                    <span className="text-[11px] font-bold uppercase">{t('stats.attack_short')}</span>
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[11px]">
                       {minAttack}+
                     </Badge>
                   </div>
@@ -376,8 +376,8 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase">{t('stats.defense_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
+                    <span className="text-[11px] font-bold uppercase">{t('stats.defense_short')}</span>
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[11px]">
                       {minDefense}+
                     </Badge>
                   </div>
@@ -391,8 +391,8 @@ export default function AdvancedFilters({ className }: { className?: string }) {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase">{t('stats.speed_short')}</span>
-                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[10px]">
+                    <span className="text-[11px] font-bold uppercase">{t('stats.speed_short')}</span>
+                    <Badge variant="secondary" className="bg-primary/10 text-foreground font-black border-none text-[11px]">
                       {minSpeed}+
                     </Badge>
                   </div>
@@ -409,7 +409,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
             {/* Height Slider */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('filters.height')}
                 </h4>
                 <div className="flex gap-2">
@@ -437,7 +437,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
             {/* Weight Slider */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
                   {t('filters.weight')}
                 </h4>
                 <div className="flex gap-2">

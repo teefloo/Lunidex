@@ -23,7 +23,7 @@ it('falls back to the default color for an unknown type', () => {
 
   it('applies size-specific classes', () => {
     const { rerender } = render(<TypeBadge type="grass" size="sm" />);
-    expect(screen.getByText('grass').className).toContain('text-[10px]');
+    expect(screen.getByText('grass').className).toContain('text-[11px]');
 
     rerender(<TypeBadge type="grass" size="lg" />);
     expect(screen.getByText('grass').className).toContain('px-4');

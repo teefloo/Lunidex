@@ -106,7 +106,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
         <div className="flex flex-col items-center justify-center p-12 gap-4 text-center">
           <Trophy className="w-10 h-10 text-foreground/20" />
           <p className="text-sm font-black uppercase tracking-widest text-foreground/40">{t('builds.no_builds')}</p>
-          <p className="text-[10px] text-foreground/30 max-w-xs">{t('builds.no_builds_desc')}</p>
+          <p className="text-[11px] text-foreground/30 max-w-xs">{t('builds.no_builds_desc')}</p>
         </div>
       ) : (
         builds.map((build, idx) => (
@@ -129,7 +129,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-background/40 rounded-sm border border-border/40">
                 <Trophy className="w-4 h-4 text-yellow-500" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-foreground/60">{t('builds.recommended')}</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-foreground/60">{t('builds.recommended')}</span>
               </div>
             </div>
 
@@ -146,7 +146,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                         {localizedMoveName}
                       </span>
                       <span 
-                        className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm"
+                        className="px-2 py-0.5 rounded text-[11px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm"
                         style={{ backgroundColor: TYPE_COLORS[move.type.name] }}
                       >
                         {t(`types.${move.type.name}`)}
@@ -156,12 +156,12 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                     <div className="flex gap-4">
                       <div className="flex items-center gap-1.5">
                         <Zap className="w-3 h-3 text-yellow-500/60" />
-                        <span className="text-[10px] font-bold text-foreground/40 uppercase">{t('moves.power_short')}</span>
+                        <span className="text-[11px] font-bold text-foreground/40 uppercase">{t('moves.power_short')}</span>
                         <span className="text-xs font-black">{move.power || '--'}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Target className="w-3 h-3 text-blue-500/60" />
-                        <span className="text-[10px] font-bold text-foreground/40 uppercase">{t('moves.accuracy_short')}</span>
+                        <span className="text-[11px] font-bold text-foreground/40 uppercase">{t('moves.accuracy_short')}</span>
                         <span className="text-xs font-black">{move.accuracy || '--'}%</span>
                       </div>
                       <div className="ml-auto flex items-center gap-1">
@@ -170,7 +170,7 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
                           move.damage_class.name === 'physical' ? 'bg-orange-500' : 
                           move.damage_class.name === 'special' ? 'bg-blue-500' : 'bg-gray-500'
                         )} />
-                        <span className="text-[10px] sm:text-[11px] font-black uppercase text-foreground/30">{t(`moves.damage_class.${move.damage_class.name}`)}</span>
+                        <span className="text-[11px] sm:text-[11px] font-black uppercase text-foreground/30">{t(`moves.damage_class.${move.damage_class.name}`)}</span>
                       </div>
                     </div>
                   </div>

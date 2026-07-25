@@ -142,7 +142,7 @@ export default function TypesPage() {
                 <div className="p-2 bg-secondary/30 rounded-sm">
                   <Flame className="w-4 h-4 text-foreground/60" />
                 </div>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 {Object.keys(TYPE_COLORS).map((type) => (
@@ -161,7 +161,7 @@ export default function TypesPage() {
                       className="w-2.5 h-2.5 rounded-sm shadow-sm"
                       style={{ backgroundColor: TYPE_COLORS[type] }}
                     />
-                    <span className="text-[10px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
+                    <span className="text-[11px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
                   </button>
                 ))}
               </div>
@@ -279,7 +279,7 @@ export default function TypesPage() {
               <div className="p-2 bg-secondary/30 rounded-sm">
                 <Flame className="w-4 h-4 text-foreground/60" />
               </div>
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
               {Object.keys(TYPE_COLORS).map((type) => (
@@ -299,7 +299,7 @@ export default function TypesPage() {
                     className="w-2.5 h-2.5 rounded-sm shadow-sm"
                     style={{ backgroundColor: TYPE_COLORS[type] }}
                   />
-                  <span className="text-[10px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
+                  <span className="text-[11px] font-black uppercase tracking-wider">{t(`types.${type}`)}</span>
                 </motion.button>
               ))}
             </div>
@@ -347,14 +347,14 @@ export default function TypesPage() {
                   </div>
                   <div>
                     <h3 className="text-3xl md:text-4xl font-black capitalize tracking-tight">{t(`types.${selectedType}`)}</h3>
-                    <p className="text-foreground/40 font-bold uppercase tracking-widest text-[10px] mt-1">{t('types_page.elemental_mastery')}</p>
+                    <p className="text-foreground/40 font-bold uppercase tracking-widest text-[11px] mt-1">{t('types_page.elemental_mastery')}</p>
                   </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Offensive strengths */}
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-500/60 flex items-center gap-2">
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-yellow-500/60 flex items-center gap-2">
                       <Sword className="w-3.5 h-3.5" /> {t('types_page.strong_against')}
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -364,7 +364,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.1 }}
-                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[10px] font-black uppercase hover:bg-yellow-500/10 transition-colors"
+                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[11px] font-black uppercase hover:bg-yellow-500/10 transition-colors"
                           style={{ color: TYPE_COLORS[t_rel.name] }}
                         >
                           {t(`types.${t_rel.name}`)}
@@ -375,7 +375,7 @@ export default function TypesPage() {
 
                   {/* Defensive strengths */}
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500/60 flex items-center gap-2">
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-500/60 flex items-center gap-2">
                       <ShieldCheck className="w-3.5 h-3.5" /> {t('types_page.resists')}
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -385,7 +385,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.15 }}
-                          className="px-3 py-1.5 rounded-sm bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase hover:bg-green-500/10 transition-colors"
+                          className="px-3 py-1.5 rounded-sm bg-green-500/5 border border-green-500/10 text-[11px] font-black uppercase hover:bg-green-500/10 transition-colors"
                           style={{ color: TYPE_COLORS[t_rel.name] }}
                         >
                           {t(`types.${t_rel.name}`)}
@@ -397,7 +397,7 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.2 }}
-                          className="px-3 py-1.5 rounded-sm bg-blue-500/5 border border-blue-500/10 text-[10px] font-black uppercase hover:bg-blue-500/10 transition-colors text-blue-400"
+                          className="px-3 py-1.5 rounded-sm bg-blue-500/5 border border-blue-500/10 text-[11px] font-black uppercase hover:bg-blue-500/10 transition-colors text-blue-400"
                         >
                           {t(`types.${t_rel.name}`)} ({t('types_page.immune')})
                         </motion.div>
@@ -415,10 +415,10 @@ export default function TypesPage() {
                   <ShieldAlert className="w-4 h-4 text-red-500" />
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60 mb-2">{t('types_page.weak_to')}</h4>
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-red-500/60 mb-2">{t('types_page.weak_to')}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {typeRels?.damage_relations.double_damage_from.map(t_rel => (
-                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-red-500/5 border border-red-500/10 text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
+                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-red-500/5 border border-red-500/10 text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
                         {t(`types.${t_rel.name}`)}
                       </span>
                     ))}
@@ -430,10 +430,10 @@ export default function TypesPage() {
                   <Sword className="w-4 h-4 text-blue-500" />
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-2">{t('types_page.not_effective_against')}</h4>
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-2">{t('types_page.not_effective_against')}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {typeRels?.damage_relations.half_damage_to.map(t_rel => (
-                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-blue-500/5 border border-blue-500/10 text-[10px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
+                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-blue-500/5 border border-blue-500/10 text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
                         {t(`types.${t_rel.name}`)}
                       </span>
                     ))}
@@ -470,12 +470,12 @@ export default function TypesPage() {
                           alt={p.name}
                           width={80}
                           height={80}
-                          className="w-full h-full object-contain relative z-10 group-hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-contain relative z-10"
                           unoptimized
                         />
                       </div>
                       <span className="font-black capitalize text-xs group-hover:text-primary transition-colors text-center truncate w-full">{p.name}</span>
-                      <span className="text-[9px] font-bold text-foreground/40 mt-0.5 uppercase tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
+                      <span className="text-[11px] font-bold text-foreground/40 mt-0.5 uppercase tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
                     </motion.div>
                   </Link>
                 ))}

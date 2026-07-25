@@ -146,7 +146,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </div>
             <div>
               <h3 className="text-lg md:text-xl font-black tracking-tight">{t('types_page.type_chart')}</h3>
-              <p className="text-foreground/40 text-[10px] font-bold uppercase tracking-widest mt-0.5">
+              <p className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest mt-0.5">
                 {t('types_page.type_chart_desc')}
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </span>
           </motion.div>
         ) : (
-          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-[10px] font-bold text-foreground/30 uppercase tracking-wider">
+          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-[11px] font-bold text-foreground/30 uppercase tracking-wider">
             <span className="sm:hidden">{t('types_page.touch_hint', { defaultValue: 'Tap a cell to see its multiplier' })}</span>
             <span className="hidden sm:inline">{t('types_page.pointer_hint', { defaultValue: 'Hover or select a cell to see the multiplier' })}</span>
           </div>
@@ -210,7 +210,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div className={cn('w-3 h-3 rounded-sm', item.color)} />
-              <span className={cn('text-[10px] font-bold uppercase tracking-wider', item.textColor)}>{item.label}</span>
+              <span className={cn('text-[11px] font-bold uppercase tracking-wider', item.textColor)}>{item.label}</span>
             </div>
           ))}
         </div>
@@ -225,7 +225,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
         <div className="bg-background/50 p-3 md:p-5">
           <div className="rounded-sm overflow-hidden border border-border/40">
             <div className="scroll-snap-x overflow-x-auto scrollbar-hide" aria-describedby="type-chart-scroll-hint">
-              <p id="type-chart-scroll-hint" className="mb-2 px-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground sm:hidden">
+              <p id="type-chart-scroll-hint" className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground sm:hidden">
                 {t('types_page.scroll_hint', { defaultValue: 'Swipe horizontally to explore the full matrix' })}
               </p>
               <div className="min-w-[750px]">
@@ -239,7 +239,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                   <thead>
                     <tr>
                       <th className="p-2 sticky left-0 z-30 bg-background/95  rounded-lg shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]">
-                        <div className="flex items-center justify-center text-[9px] font-black text-foreground/30 uppercase tracking-wider gap-1">
+                        <div className="flex items-center justify-center text-[11px] font-black text-foreground/30 uppercase tracking-wider gap-1">
                           <span className="text-primary/60">ATK</span>
                           <span className="text-foreground/15">╲</span>
                           <span className="text-foreground/40">DEF</span>
@@ -266,7 +266,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                               className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full shadow-sm ring-1 ring-foreground/10 group-hover:ring-foreground/30 transition-all"
                               style={{ backgroundColor: TYPE_COLORS[defType] }}
                             />
-                            <span className="text-[7px] md:text-[8px] font-black uppercase tracking-tight text-foreground/50 leading-none truncate max-w-[2.5rem]">
+                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/50 leading-none truncate max-w-[2.5rem]">
                               {t(`types.${defType}`).slice(0, 4)}
                             </span>
                           </button>
@@ -294,7 +294,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                               className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full shadow-sm ring-1 ring-foreground/10 group-hover:ring-foreground/30 transition-all flex-shrink-0"
                               style={{ backgroundColor: TYPE_COLORS[atkType] }}
                             />
-                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-tight text-foreground/60 leading-none truncate max-w-[3rem]">
+                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/60 leading-none truncate max-w-[3rem]">
                               {t(`types.${atkType}`).slice(0, 5)}
                             </span>
                           </button>

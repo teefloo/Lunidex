@@ -46,7 +46,7 @@ export default function FavoritesPage() {
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-64 gap-4">
             <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-            <p className="text-foreground/30 font-black tracking-[0.2em] uppercase text-[10px]">{t('favorites.loading')}</p>
+            <p className="text-foreground/30 font-black tracking-[0.2em] uppercase text-[11px]">{t('favorites.loading')}</p>
           </div>
         ) : favoritePokemon.length === 0 ? (
           <motion.div 

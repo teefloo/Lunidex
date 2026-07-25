@@ -73,7 +73,7 @@ export default async function PokemonOfTheDay() {
         </Link>
 
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+          <p className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-primary">
             <Sparkles className="h-3 w-3" />
             {t('home.pokemon_of_the_day', { defaultValue: 'Pokémon of the Day' })}
           </p>
@@ -84,7 +84,7 @@ export default async function PokemonOfTheDay() {
             {pokemon.types.map((typeItem) => (
               <span
                 key={typeItem.type.name}
-                className="rounded-sm px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white"
+                className="rounded-sm px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wider text-white"
                 style={{ backgroundColor: TYPE_COLORS[typeItem.type.name] || '#6B7280' }}
               >
                 {t(`types.${typeItem.type.name}`, { defaultValue: typeItem.type.name })}
@@ -92,7 +92,7 @@ export default async function PokemonOfTheDay() {
             ))}
             <Link
               href="/quiz"
-              className="ml-1 inline-flex items-center gap-1.5 rounded-sm border border-border/60 bg-background/40 px-2.5 py-0.5 text-[10px] font-bold text-foreground/60 transition-colors hover:border-primary/40 hover:text-primary"
+              className="ml-1 inline-flex items-center gap-1.5 rounded-sm border border-border/60 bg-background/40 px-2.5 py-0.5 text-[11px] font-bold text-foreground/60 transition-colors hover:border-primary/40 hover:text-primary"
             >
               <BrainCircuit className="h-3 w-3" />
               {t('home.play_daily_quiz', { defaultValue: 'Play the daily quiz' })}

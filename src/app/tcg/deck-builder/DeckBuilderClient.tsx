@@ -96,7 +96,7 @@ export default function DeckBuilderClient() {
 
         <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="page-surface p-4 space-y-4 xl:sticky xl:top-24 xl:h-fit">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
               {t('tcg.deck_builder.my_decks', { defaultValue: 'My Decks' })}
             </h3>
             <div className="flex gap-2">
@@ -128,7 +128,7 @@ export default function DeckBuilderClient() {
                   >
                     <div className="min-w-0">
                       <p className="truncate text-xs font-bold text-foreground/85">{deck.name}</p>
-                      <p className="text-[10px] text-foreground/40">
+                      <p className="text-[11px] text-foreground/40">
                         {deck.cards.reduce((sum, c) => sum + c.quantity, 0)}/{MAX_DECK_SIZE}
                       </p>
                     </div>
@@ -227,7 +227,7 @@ export default function DeckBuilderClient() {
                                 unoptimized
                               />
                             )}
-                            <p className="mt-1 truncate text-[10px] font-bold text-foreground/70 group-hover:text-primary">
+                            <p className="mt-1 truncate text-[11px] font-bold text-foreground/70 group-hover:text-primary">
                               {card.name}
                             </p>
                             <div className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100">
@@ -245,7 +245,7 @@ export default function DeckBuilderClient() {
                 </div>
 
                 <div className="page-surface p-4">
-                  <h3 className="mb-3 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                  <h3 className="mb-3 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                     {t('tcg.deck_builder.deck_list', { defaultValue: 'Deck List' })}
                   </h3>
                   {deckCardsWithData.length === 0 ? (

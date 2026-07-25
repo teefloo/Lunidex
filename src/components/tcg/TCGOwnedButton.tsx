@@ -20,8 +20,8 @@ export function TCGOwnedButton({ cardId, className, size = 'md' }: TCGOwnedButto
   const isOwned = mounted && ownedSet.has(cardId);
 
   const sizeClasses = {
-    sm: 'size-11 text-[9px]',
-    md: 'size-11 text-[10px]',
+    sm: 'size-11 text-[11px]',
+    md: 'size-11 text-[11px]',
     lg: 'size-11 text-xs',
   };
 

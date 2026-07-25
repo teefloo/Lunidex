@@ -99,13 +99,13 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_total_owned')}
             </p>
             <p className="mt-1 text-3xl font-black leading-none">{stats.totalOwned}</p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_sets_completed')}
             </p>
             <p className="mt-1 text-3xl font-black leading-none">
@@ -114,7 +114,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_overall_progress')}
             </p>
             <p className="mt-1 text-3xl font-black leading-none">{stats.percentage}%</p>
@@ -137,7 +137,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
           </h2>
         </div>
         {activeSets.length === 0 ? (
-          <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[10px] font-bold uppercase tracking-[0.08em] text-foreground/30">
+          <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/30">
             {t('tcg.collection_active_insights_hint')}
           </p>
         ) : (
@@ -157,19 +157,19 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
       {/* Stats */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
-          <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+          <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
             {t('tcg.collection_total_owned')}
           </p>
           <p className="mt-1 text-2xl font-black">{stats.totalOwned}</p>
         </div>
         <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
-          <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+          <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
             {t('tcg.collection_total_cards')}
           </p>
           <p className="mt-1 text-2xl font-black">{stats.totalCards}</p>
         </div>
         <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
-          <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+          <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
             {t('tcg.collection_overall_progress')}
           </p>
           <TCGProgressBar
@@ -181,7 +181,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
           <p className="mt-1 text-xl font-black">{stats.percentage}%</p>
         </div>
         <div className="rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
-          <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60">
+          <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
             {t('tcg.collection_active_sets_plural')}
           </p>
           <p className="mt-1 text-2xl font-black">{activeSets.length}</p>
@@ -210,7 +210,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('tcg.collection_search_sets')}
                 aria-label={t('tcg.collection_search_sets')}
-                className="min-h-11 min-w-0 flex-1 bg-transparent text-[10px] font-bold text-foreground placeholder:text-foreground/45 focus:outline-none"
+                className="min-h-11 min-w-0 flex-1 bg-transparent text-[11px] font-bold text-foreground placeholder:text-foreground/45 focus:outline-none"
               />
             </div>
             <div className="flex min-h-11 w-full items-center gap-1 rounded-sm border border-border/30 bg-card/40 pl-3 pr-2 focus-within:border-primary/40 sm:w-auto">
@@ -222,7 +222,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                 value={sortMode}
                 onChange={(e) => setSortMode(e.target.value as typeof sortMode)}
                 aria-label={t('tcg.collection_sort_label')}
-                className="min-h-11 min-w-0 flex-1 appearance-none bg-transparent py-2 text-[10px] font-bold text-foreground/75 transition-[background-color,color] hover:bg-card/60 focus:outline-none sm:w-36"
+                className="min-h-11 min-w-0 flex-1 appearance-none bg-transparent py-2 text-[11px] font-bold text-foreground/75 transition-[background-color,color] hover:bg-card/60 focus:outline-none sm:w-36"
               >
                 <option value="id-asc">{t('tcg.collection_sort_id')}</option>
                 <option value="progress">{t('tcg.collection_sort_default')}</option>
@@ -239,7 +239,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
               aria-pressed={filterInProgress}
               aria-controls={setListId}
               aria-label={t('tcg.collection_filter_in_progress')}
-              className={`touch-target min-h-11 w-full shrink-0 rounded-sm border px-3 text-[10px] font-bold transition-[border-color,background-color,color] sm:w-auto ${
+              className={`touch-target min-h-11 w-full shrink-0 rounded-sm border px-3 text-[11px] font-bold transition-[border-color,background-color,color] sm:w-auto ${
                 filterInProgress
                   ? 'border-primary/40 bg-primary/15 text-primary'
                   : 'border-border/30 bg-card/40 text-foreground/70 hover:border-primary/30 hover:text-primary/60'
@@ -266,7 +266,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                 setFilterInProgress(false);
                 setSortMode('progress');
               }}
-              className="touch-target min-h-11 rounded-sm border border-primary/40 bg-primary/10 px-4 text-[10px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,border-color] hover:border-primary/60 hover:bg-primary/15"
+              className="touch-target min-h-11 rounded-sm border border-primary/40 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,border-color] hover:border-primary/60 hover:bg-primary/15"
             >
               {t('tcg.collection_reset_filters')}
             </button>
@@ -302,14 +302,14 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                         size="sm"
                         className="mt-2"
                       />
-                      <p className="mt-1 text-[10px] font-bold text-foreground/60">
+                      <p className="mt-1 text-[11px] font-bold text-foreground/60">
                         {missing} {t('tcg.collection_missing_count')}
                       </p>
                     </div>
                   </Link>
                   <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end sm:justify-center">
                     {isComplete && (
-                      <span className="rounded-sm border border-emerald-500/30 bg-emerald-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-[0.08em] text-emerald-400">
+                      <span className="rounded-sm border border-emerald-500/30 bg-emerald-500/15 px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-emerald-400">
                         {t('tcg.collection_complete')}
                       </span>
                     )}
@@ -318,7 +318,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                       onClick={() => toggleTCGActiveSet(set.id)}
                       aria-pressed={isActive}
                       aria-label={t(isActive ? 'tcg.collection_active_set_remove' : 'tcg.collection_active_set_add', { name: set.name })}
-                      className={`touch-target min-h-11 rounded-sm border px-3 text-[10px] font-black uppercase tracking-[0.06em] transition-[border-color,background-color,color] ${
+                      className={`touch-target min-h-11 rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.06em] transition-[border-color,background-color,color] ${
                         isActive
                           ? 'border-primary/30 bg-primary/10 text-primary'
                           : 'border-border/35 text-foreground/55 hover:border-primary/30 hover:text-primary/70'

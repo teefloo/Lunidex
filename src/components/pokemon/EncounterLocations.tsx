@@ -82,7 +82,7 @@ export function EncounterLocations({
             <h3 className="text-lg md:text-xl font-black text-foreground/90">
               {versionGroupLabel(group.versionGroup)}
             </h3>
-            <span className="ml-auto text-[10px] font-black uppercase tracking-widest text-foreground/40">
+            <span className="ml-auto text-[11px] font-black uppercase tracking-widest text-foreground/40">
               {group.locations.length} {t('detail.encounter.areas')}
             </span>
           </div>
@@ -125,7 +125,7 @@ export function EncounterLocations({
                       </div>
 
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] text-foreground/50 font-bold uppercase tracking-wider">
+                        <span className="text-[11px] text-foreground/50 font-bold uppercase tracking-wider">
                           {entry.minLevel === entry.maxLevel
                             ? t('detail.encounter.level', { level: entry.minLevel })
                             : t('detail.encounter.level_range', {
@@ -133,7 +133,7 @@ export function EncounterLocations({
                                 max: entry.maxLevel,
                               })}
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-green-500/70">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-green-500/70">
                           {formatName(entry.version)}
                         </span>
                       </div>
@@ -143,7 +143,7 @@ export function EncounterLocations({
                           {entry.conditions.map((condition) => (
                             <span
                               key={condition}
-                              className="px-2 py-0.5 rounded-sm bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary/80"
+                              className="px-2 py-0.5 rounded-sm bg-primary/10 border border-primary/20 text-[11px] font-bold text-primary/80"
                             >
                               {formatName(condition)}
                             </span>

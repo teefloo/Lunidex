@@ -107,7 +107,7 @@ describe('TCG card pagination', () => {
 
     const options = await getFilterOptions('en');
 
-    expect(options.sets.map((set) => set.id)).toEqual(['latest-set']);
+    expect(options.sets?.map((set) => set.id)).toEqual(['latest-set']);
   });
 
   it('merges pages without losing cards or duplicating overlapping results', () => {

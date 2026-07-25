@@ -266,7 +266,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
                 applyQuickPreset('latest');
                 setIsFiltersOpen(false);
               }}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
             >
               <Sparkles className="h-3.5 w-3.5" />
               {t('tcg.latest_cards')}
@@ -373,7 +373,7 @@ function DiscoveryHero({
                   ];
                   onSortChange(sortBy, sortOrder);
                 }}
-                className="h-11 w-full appearance-none rounded-sm border border-border/50 bg-card/50 px-4 pr-11 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
+                className="h-11 w-full appearance-none rounded-sm border border-border/50 bg-card/50 px-4 pr-11 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
                 aria-label={t('tcg.sort_label')}
               >
                 <option value="name-asc">{t('tcg.sort_name_asc')}</option>
@@ -396,7 +396,7 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={onOpenFilters}
-            className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+            className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
           >
             <Filter className="h-3.5 w-3.5" />
             {t('tcg.filters')}
@@ -405,7 +405,7 @@ function DiscoveryHero({
             <button
               type="button"
               onClick={onClearSearch}
-              className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-[var(--action-favorite)]"
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-[var(--action-favorite)]"
             >
               {t('tcg.clear')}
             </button>
@@ -429,7 +429,7 @@ function ResultSummary({
   return (
     <div className="rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3">
       <div className="space-y-1">
-        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35">
+        <div className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/35">
           {isFetching ? t('tcg.refreshing') : t('tcg.cards_found')}
         </div>
         <div className="text-sm font-semibold text-foreground/70">
@@ -495,7 +495,7 @@ function EmptyState({
               setLanguage('en');
               persistLanguageCookie('en');
             }}
-            className="inline-flex h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
+            className="inline-flex h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
           >
             {t('tcg.try_english')}
           </button>
@@ -503,21 +503,21 @@ function EmptyState({
         <button
           type="button"
           onClick={onClear}
-          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.reset_filters')}
         </button>
         <button
           type="button"
           onClick={onLatest}
-          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.latest_cards')}
         </button>
         <button
           type="button"
           onClick={onPikachu}
-          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[10px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+          className="inline-flex h-11 items-center rounded-sm border border-border/45 bg-card/55 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
         >
           {t('tcg.search_pikachu')}
         </button>

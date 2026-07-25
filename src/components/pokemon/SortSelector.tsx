@@ -37,7 +37,7 @@ export default function SortSelector() {
 
   return (
     <div className="flex items-center gap-3">
-      <span id="sort-label" className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">
+      <span id="sort-label" className="text-[11px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>

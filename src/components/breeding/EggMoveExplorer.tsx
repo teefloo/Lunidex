@@ -78,7 +78,7 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-wider text-foreground/40">
+          <span className="text-[11px] font-black uppercase tracking-wider text-foreground/40">
             {expanded ? t('breeding.sources_hide') : t('breeding.sources_show')}
           </span>
           {expanded ? (
@@ -103,7 +103,7 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
           </div>
           <div className="flex flex-wrap gap-2">
             {eggGroups.map(group => (
-              <Badge key={group} variant="outline" className="text-[10px] font-black capitalize border-primary/20 text-primary/70">
+              <Badge key={group} variant="outline" className="text-[11px] font-black capitalize border-primary/20 text-primary/70">
                 {t('breeding.group_badge', { group })}
               </Badge>
             ))}
@@ -112,7 +112,7 @@ function EggMoveRow({ moveName, pokemonName, eggGroups }: EggMoveRowProps) {
             href={`https://bulbapedia.bulbagarden.net/wiki/${moveName.replace(/-/g, '_').replace(/\b\w/g, c => c.toUpperCase())}_(move)`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-foreground/50 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-foreground/50 hover:text-primary transition-colors"
           >
             {t('breeding.view_bulbapedia')} <ExternalLink className="h-3 w-3" />
           </Link>

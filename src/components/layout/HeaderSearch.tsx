@@ -148,7 +148,7 @@ export function HeaderSearch({
               : undefined
           }
           role="combobox"
-          className="w-full min-w-0 rounded-full border border-border/60 bg-card/60 py-2 pl-9 pr-4 text-left text-[10px] font-semibold text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)]  transition-all duration-300 placeholder:text-foreground/35 focus:border-primary/35 focus:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-xs"
+          className="w-full min-w-0 rounded-full border border-border/60 bg-card/60 py-2 pl-9 pr-4 text-left text-[11px] font-semibold text-foreground shadow-[0_10px_24px_-24px_rgba(24,36,54,0.28)]  transition-all duration-300 placeholder:text-foreground/35 focus:border-primary/35 focus:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-xs"
         />
       </div>
 

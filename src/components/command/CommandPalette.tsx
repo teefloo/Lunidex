@@ -261,7 +261,7 @@ export function CommandPalette() {
                     </div>
                     <span className="flex-1 truncate">{localizedName}</span>
                     {item.pokemon_v2_itemcategory?.name && (
-                      <span className="hidden text-[10px] text-foreground/30 capitalize sm:inline">
+                      <span className="hidden text-[11px] text-foreground/30 capitalize sm:inline">
                         {item.pokemon_v2_itemcategory.name.replace(/-/g, ' ')}
                       </span>
                     )}
@@ -285,7 +285,7 @@ export function CommandPalette() {
                       <Swords className="h-3.5 w-3.5 text-muted-foreground" />
                     </div>
                     <span className="flex-1 truncate">{localizedName}</span>
-                    <span className="text-[10px] font-medium uppercase tracking-tight text-foreground/30">
+                    <span className="text-[11px] font-medium uppercase tracking-tight text-foreground/30">
                       {move.pokemon_v2_type.name}
                     </span>
                   </CommandItem>
@@ -337,7 +337,7 @@ export function CommandPalette() {
                       />
                     </div>
                     <span className="flex-1 truncate">{displayName}</span>
-                    <span className="text-[10px] text-foreground/30">#{String(pokemon.id).padStart(3, '0')}</span>
+                    <span className="text-[11px] text-foreground/30">#{String(pokemon.id).padStart(3, '0')}</span>
                   </CommandItem>
                 );
               })}
