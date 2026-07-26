@@ -1245,6 +1245,8 @@ export default {
       sort_hp_asc: 'PS ascendente',
       sort_rarity_asc: 'Rareza ascendente',
       sort_rarity_desc: 'Rareza descendente',
+      sort_price_asc: 'Precio ascendente',
+      sort_price_desc: 'Precio descendente',
       results_count: '{{count}} resultados',
       filter_card_type: 'Tipo de carta',
       filter_card_set: 'Colección',

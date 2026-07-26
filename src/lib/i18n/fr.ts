@@ -1249,6 +1249,8 @@ export default {
       sort_hp_asc: 'PV croissant',
       sort_rarity_asc: 'Rareté croissante',
       sort_rarity_desc: 'Rareté décroissante',
+      sort_price_asc: 'Prix croissant',
+      sort_price_desc: 'Prix décroissant',
       results_count: '{{count}} résultats',
       filter_card_type: 'Type de carte',
       filter_card_set: 'Extension',

@@ -19,7 +19,8 @@ vi.mock('./cache', () => ({
   setCachedData: mockSetCachedData,
 }));
 
-import { getAllSets, getFilterOptions } from './tcg';
+import { getAllSets, getFilterOptions, sortCardsByReleaseDate } from './tcg';
+import type { TCGCard } from '@/types/tcg';
 
 function makeRawSet(id: string, name: string) {
   return {
@@ -86,5 +87,18 @@ describe('TCG set freshness', () => {
     const options = await getFilterOptions('en');
 
     expect((options.sets ?? []).map((set) => set.id)).toEqual(['latest-set']);
+  });
+});
+
+describe('Pokémon card ordering', () => {
+  it('sorts cards by release date from newest to oldest', () => {
+    const cards = [
+      { id: 'old-2', localId: '2', name: 'Old 2', set: { id: 'old', name: 'Old', releaseDate: '2020-01-01' } },
+      { id: 'new-1', localId: '1', name: 'New 1', set: { id: 'new', name: 'New', releaseDate: '2024-01-01' } },
+      { id: 'missing', localId: '3', name: 'Missing date' },
+      { id: 'old-1', localId: '1', name: 'Old 1', set: { id: 'old', name: 'Old', releaseDate: '2020-01-01' } },
+    ] satisfies TCGCard[];
+
+    expect(sortCardsByReleaseDate(cards).map((card) => card.id)).toEqual(['new-1', 'old-1', 'old-2', 'missing']);
   });
 });

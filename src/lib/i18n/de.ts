@@ -1248,6 +1248,8 @@ export default {
       sort_hp_asc: 'KP aufsteigend',
       sort_rarity_asc: 'Seltenheit aufsteigend',
       sort_rarity_desc: 'Seltenheit absteigend',
+      sort_price_asc: 'Preis aufsteigend',
+      sort_price_desc: 'Preis absteigend',
       results_count: '{{count}} Ergebnisse',
       filter_card_type: 'Kartentyp',
       filter_card_set: 'Erweiterung',

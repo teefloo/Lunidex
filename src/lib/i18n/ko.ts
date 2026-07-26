@@ -1288,6 +1288,8 @@ export default {
       sort_hp_asc: 'HP 오름차순',
       sort_rarity_asc: '희귀도 오름차순',
       sort_rarity_desc: '희귀도 내림차순',
+      sort_price_asc: '가격 낮은순',
+      sort_price_desc: '가격 높은순',
       results_count: '{{count}}개 결과',
       filter_card_type: '카드 타입',
       filter_card_set: '확장팩',

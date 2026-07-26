@@ -1249,6 +1249,8 @@ export default {
       sort_hp_asc: 'HP昇順',
       sort_rarity_asc: 'レアリティ昇順',
       sort_rarity_desc: 'レアリティ降順',
+      sort_price_asc: '価格の安い順',
+      sort_price_desc: '価格の高い順',
       results_count: '{{count}}件の結果',
       filter_card_type: 'カードタイプ',
       filter_card_set: '拡張パック',

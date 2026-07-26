@@ -1245,6 +1245,8 @@ export default {
       sort_hp_asc: 'HP升序',
       sort_rarity_asc: '稀有度升序',
       sort_rarity_desc: '稀有度降序',
+      sort_price_asc: '价格从低到高',
+      sort_price_desc: '价格从高到低',
       results_count: '{{count}}个结果',
       filter_card_type: '卡牌类型',
       filter_card_set: '卡牌扩充包',

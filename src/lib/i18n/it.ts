@@ -1249,6 +1249,8 @@ export default {
       sort_hp_asc: 'PS crescente',
       sort_rarity_asc: 'Rarità crescente',
       sort_rarity_desc: 'Rarità decrescente',
+      sort_price_asc: 'Prezzo crescente',
+      sort_price_desc: 'Prezzo decrescente',
       results_count: '{{count}} risultati',
       filter_card_type: 'Tipo carta',
       filter_card_set: 'Espansione',

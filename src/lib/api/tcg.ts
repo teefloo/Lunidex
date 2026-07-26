@@ -11,6 +11,7 @@ import type {
   TCGCardSortOrder,
   TCGCatalogPageResult,
   TCGCollectionCard,
+  TCGPlayerPriceTier,
   TCGSet,
   TCGFilterOptions,
 } from '@/types/tcg';
@@ -540,10 +541,28 @@ function needsVisualMetadata(card: TCGCard): boolean {
 }
 
 function getMarketPrice(card: TCGCard): number | undefined {
-  const tcgplayer = card.pricing?.tcgplayer as { market?: number; mid?: number; low?: number } | undefined;
-  const cardmarket = card.pricing?.cardmarket as { averageSellPrice?: number; trendPrice?: number } | undefined;
+  const tcgplayer = card.pricing?.tcgplayer;
+  const cardmarket = card.pricing?.cardmarket as {
+    avg?: number;
+    trend?: number;
+    averageSellPrice?: number;
+    trendPrice?: number;
+  } | undefined;
 
-  return tcgplayer?.market ?? tcgplayer?.mid ?? tcgplayer?.low ?? cardmarket?.trendPrice ?? cardmarket?.averageSellPrice;
+  const tierPrice = (tier: TCGPlayerPriceTier | string | undefined) => {
+    if (!tier || typeof tier === 'string') return undefined;
+    return tier.marketPrice ?? tier.midPrice ?? tier.lowPrice;
+  };
+  const variants = ['normal', 'holofoil', 'reverse-holofoil'];
+  const tcgplayerPrice = variants
+    .map((variant) => tierPrice(tcgplayer?.[variant]))
+    .find((price): price is number => typeof price === 'number');
+
+  return tcgplayerPrice
+    ?? cardmarket?.trend
+    ?? cardmarket?.trendPrice
+    ?? cardmarket?.avg
+    ?? cardmarket?.averageSellPrice;
 }
 
 function hasMarketPrice(card: TCGCard): boolean {
@@ -589,7 +608,14 @@ function compareCards(a: TCGCard, b: TCGCard, sortBy: TCGCardSortField, sortOrde
       result = compareDates(a.set?.releaseDate, b.set?.releaseDate);
       break;
     case 'marketPrice':
-      result = (getMarketPrice(a) ?? -1) - (getMarketPrice(b) ?? -1);
+      {
+        const priceA = getMarketPrice(a);
+        const priceB = getMarketPrice(b);
+        if (priceA === undefined && priceB === undefined) return 0;
+        if (priceA === undefined) return 1;
+        if (priceB === undefined) return -1;
+        result = priceA - priceB;
+      }
       break;
     case 'updated':
       result = compareDates(a.updated, b.updated);
@@ -832,6 +858,7 @@ export const searchCards = async (
     Boolean(filters.releaseStart || filters.releaseEnd);
   const sortBy = filters.sortBy ?? 'name';
   const sortOrder = filters.sortOrder ?? 'asc';
+  const requiresPriceHydration = sortBy === 'marketPrice';
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
   const cacheKey = fetchAll
@@ -892,10 +919,10 @@ export const searchCards = async (
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
-      const hydrated = hasLocalOnlyFilters
+      const hydrated = hasLocalOnlyFilters || requiresPriceHydration
         ? await Promise.all(
             normalized.map(async (card) => {
-              if (!shouldHydrateForLocalFilters(card, filters)) {
+              if (!requiresPriceHydration && !shouldHydrateForLocalFilters(card, filters)) {
                 return card;
               }
 
@@ -1031,7 +1058,7 @@ export const getPokemonCards = async (
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
-    if (cached) return cached;
+    if (cached) return sortCardsByReleaseDate(cached);
 
     const searchFilters: TCGCardFilters = {
       selectedCategory: 'Pokemon',
@@ -1053,13 +1080,28 @@ export const getPokemonCards = async (
       }),
     );
 
-    await setCachedData(cacheKey, enriched);
-    return enriched;
+    const sorted = sortCardsByReleaseDate(enriched);
+    await setCachedData(cacheKey, sorted);
+    return sorted;
   } catch (error) {
     console.error(`[TCG API] Error fetching cards for ${pokemonName}:`, error);
-    return (await getCachedData<TCGCard[]>(cacheKey, true)) || [];
+    const staleCached = await getCachedData<TCGCard[]>(cacheKey, true);
+    return staleCached ? sortCardsByReleaseDate(staleCached) : [];
   }
 };
+
+/** Sort a Pokémon's TCG appearances from the newest expansion to the oldest. */
+export function sortCardsByReleaseDate(cards: TCGCard[]): TCGCard[] {
+  return [...cards].sort((a, b) => {
+    const dateA = a.set?.releaseDate ? new Date(a.set.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
+    const dateB = b.set?.releaseDate ? new Date(b.set.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
+    const safeDateA = Number.isNaN(dateA) ? Number.NEGATIVE_INFINITY : dateA;
+    const safeDateB = Number.isNaN(dateB) ? Number.NEGATIVE_INFINITY : dateB;
+
+    if (safeDateA !== safeDateB) return safeDateB - safeDateA;
+    return compareCollectorNumbers(a.localId, b.localId);
+  });
+}
 
 interface RawSet {
   id: string;

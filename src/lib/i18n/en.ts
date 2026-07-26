@@ -1160,6 +1160,8 @@ export default {
       sort_hp_asc: 'HP Low to High',
       sort_rarity_asc: 'Rarity A-Z',
       sort_rarity_desc: 'Rarity Z-A',
+      sort_price_asc: 'Price low to high',
+      sort_price_desc: 'Price high to low',
       catalog_loading: 'Loading catalog',
       catalog_loading_subtitle: 'Streaming cards from TCGdex...',
       load_more_cards: 'Load more cards',

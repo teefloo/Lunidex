@@ -386,6 +386,8 @@ function DiscoveryHero({
                 <option value="hp-asc">{t('tcg.sort_hp_asc')}</option>
                 <option value="rarity-asc">{t('tcg.sort_rarity_asc')}</option>
                 <option value="rarity-desc">{t('tcg.sort_rarity_desc')}</option>
+                <option value="marketPrice-asc">{t('tcg.sort_price_asc')}</option>
+                <option value="marketPrice-desc">{t('tcg.sort_price_desc')}</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
                 <ChevronDown className="h-4 w-4 text-foreground/30" />
