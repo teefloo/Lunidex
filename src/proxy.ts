@@ -51,6 +51,16 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
+  // Next.js runs proxy again for the internal rewrite above. Preserve the
+  // locale header on that second pass so the rewritten route can render
+  // without being redirected back to its localized public URL.
+  const rewrittenLocale = request.headers.get('x-primedex-lang');
+  if (isSupportedLanguage(rewrittenLocale ?? '')) {
+    return NextResponse.next({
+      request: { headers: request.headers },
+    });
+  }
+
   const acceptLang = request.headers.get('accept-language');
   const targetLocale = cookieLang ?? detectLocaleFromAcceptLanguage(acceptLang);
 

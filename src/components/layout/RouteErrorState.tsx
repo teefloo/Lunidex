@@ -33,13 +33,13 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
         </p>
 
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
-          <Button onClick={reset} className="rounded-full font-black uppercase tracking-[0.16em]">
+          <Button onClick={reset} className="font-black uppercase tracking-[0.16em]">
             <RefreshCw className="h-4 w-4" />
             {t('common.retry', { defaultValue: 'Retry' })}
           </Button>
           <Link
             href="/"
-            className={cn(buttonVariants({ variant: 'outline' }), 'rounded-full font-black uppercase tracking-[0.16em]')}
+            className={cn(buttonVariants({ variant: 'outline' }), 'font-black uppercase tracking-[0.16em]')}
           >
             <Home className="h-4 w-4" />
             {t('nav.home')}
@@ -47,7 +47,7 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
         </div>
 
         {error.digest && (
-          <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/25">
+          <p className="cat-no mt-8 font-bold text-foreground/45">
             {t('common.error_id', { defaultValue: 'Error ID' })}: {error.digest}
           </p>
         )}

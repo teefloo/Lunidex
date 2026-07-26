@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { Heart, Menu, X } from 'lucide-react';
-import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { NAV_ITEMS } from './nav-items';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
@@ -17,11 +17,9 @@ import {
 } from '@/components/ui/sheet';
 
 export function HeaderMobileNav() {
-  const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const mounted = useMounted();
   const { t } = useTranslation();
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
   const favoritesLabel = label('nav.favorites', 'Favorites');

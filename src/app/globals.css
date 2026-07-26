@@ -302,15 +302,6 @@ h1 { letter-spacing: 0; }
   box-shadow: var(--shadow-pixel);
 }
 
-.page-surface:hover,
-.section-frame:hover,
-.glass-panel:hover,
-.glass-surface:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: calc(var(--pixel-shadow-offset) + 2px) calc(var(--pixel-shadow-offset) + 2px) 0 var(--pixel-shadow);
-  border-color: var(--primary);
-}
-
 .glass-card,
 .glass-control,
 .glass-toolbar,
@@ -889,13 +880,17 @@ h1 { letter-spacing: 0; }
 
 /* ── Reduced motion ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  body,
+  .glass-control,
+  .glass-btn,
+  .type-glow,
+  .pokemon-holo-card,
+  .pokemon-holo-card * {
+    transition-duration: 0.001ms !important;
   }
 
   body::before {
@@ -903,11 +898,21 @@ h1 { letter-spacing: 0; }
   }
 
   .float-particle,
+  .codex-shimmer::after,
   .animate-pulse-glow,
   .animate-pulse-slow,
+  .holo-border::before,
   .pokemon-holo-card .card__translater,
   .pokemon-holo-card .card__rotator {
     animation: none !important;
+    transform: none !important;
+  }
+
+  .animate-fade-in-up,
+  .animate-scale-in,
+  .stat-bar-fill {
+    animation: none !important;
+    opacity: 1 !important;
     transform: none !important;
   }
 }

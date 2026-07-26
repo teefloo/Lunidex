@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 
 export function HeaderLogo() {
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
-  const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const mounted = useMounted();
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = useClientLanguage();
   const caughtCount = mounted ? caughtPokemon.length : 0;
   const progressPercent = Math.round((caughtCount / 1025) * 100);
 

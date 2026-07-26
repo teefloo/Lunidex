@@ -7,6 +7,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import AccountMenu from '@/components/auth/AccountMenu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -21,11 +22,10 @@ export function HeaderActions() {
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const mounted = useMounted();
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
 
   const isMac = mounted && typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac');

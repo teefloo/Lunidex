@@ -7,11 +7,11 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { resolveLanguage } from '@/lib/languages';
 import { AuthProvider } from '@/lib/supabase/AuthProvider';
 import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
 import dynamic from 'next/dynamic';
 import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
@@ -25,10 +25,10 @@ function SupabaseSyncBridge() {
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = usePrimeDexStore(s => s.theme);
   const setSystemLanguage = usePrimeDexStore(s => s.setSystemLanguage);
-  const language = usePrimeDexStore(s => s.language);
   const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const _hasHydrated = usePrimeDexStore(s => s._hasHydrated);
-  const resolvedLanguage = resolveLanguage(language, systemLanguage);
+  const routeLanguage = useClientLanguage();
+  const resolvedLanguage = routeLanguage;
   const langDetectedRef = useRef(false);
 
   useEffect(() => {

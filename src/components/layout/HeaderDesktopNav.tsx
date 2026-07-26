@@ -3,8 +3,8 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
-import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { HeaderLink } from './HeaderLink';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
@@ -16,11 +16,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function HeaderDesktopNav() {
-  const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const mounted = useMounted();
   const { t } = useTranslation();
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
 
