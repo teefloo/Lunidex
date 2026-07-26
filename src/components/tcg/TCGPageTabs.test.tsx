@@ -7,11 +7,11 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('TCGPageTabs mobile layout', () => {
-  it('keeps four tabs in a two-column mobile grid with touch-sized links', () => {
+  it('keeps the TCG and friends tabs touch-sized on mobile', () => {
     render(<TCGPageTabs />);
     const tabs = screen.getAllByRole('link');
 
-    expect(tabs).toHaveLength(4);
+    expect(tabs).toHaveLength(5);
     expect(tabs.every((tab) => tab.className.includes('min-h-11'))).toBe(true);
   });
 });

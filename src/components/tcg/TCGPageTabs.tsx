@@ -12,6 +12,7 @@ const TABS = [
   { href: '/tcg/collection', key: 'tcg.nav_collection' },
   { href: '/tcg/wishlist', key: 'tcg.nav_wishlist' },
   { href: '/tcg/deck-builder', key: 'tcg.nav_deck_builder' },
+  { href: '/friends', key: 'friends.title' },
 ] as const;
 
 const FALLBACK_LABELS: Record<(typeof TABS)[number]['key'], string> = {
@@ -19,6 +20,7 @@ const FALLBACK_LABELS: Record<(typeof TABS)[number]['key'], string> = {
   'tcg.nav_collection': 'Collection',
   'tcg.nav_wishlist': 'Wishlist',
   'tcg.nav_deck_builder': 'Deck builder',
+  'friends.title': 'Friends',
 };
 
 type TCGPageTabLabels = Record<(typeof TABS)[number]['key'], string>;

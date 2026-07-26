@@ -120,6 +120,9 @@ screenshots/
 *.jks
 *.keystore
 
+# Supabase CLI local project metadata
+supabase/.temp/
+
 tsconfig.tsbuildinfo
 # =============================================================================
 # 5. Logs & Debug
@@ -242,4 +245,3 @@ lockfile-*
 *.seed
 *.pid.lock
 nul
-

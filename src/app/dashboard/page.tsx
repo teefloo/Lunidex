@@ -2,6 +2,7 @@
 
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
+import Link from 'next/link';
 import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
 import AccountCard from '@/components/dashboard/AccountCard';
 import SettingsCard from '@/components/dashboard/SettingsCard';
@@ -11,14 +12,17 @@ import PokedexProgress from '@/components/dashboard/PokedexProgress';
 import ActivityHeatMap from '@/components/dashboard/ActivityHeatMap';
 import GeneralActivity from '@/components/dashboard/GeneralActivity';
 import ExtensibleSection from '@/components/dashboard/ExtensibleSection';
+import FriendPrivacyCard from '@/components/friends/FriendPrivacyCard';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import { BarChart3, AlertCircle } from 'lucide-react';
+import { BarChart3, AlertCircle, Users } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { useEffect } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const { incrementVisit } = usePrimeDexStore();
   const { data, isLoading, isError } = useDashboardData();
 
@@ -40,6 +44,20 @@ export default function DashboardPage() {
 
         <div className="mb-6">
           <AccountCard />
+        </div>
+
+        <div className="mb-6">
+          <FriendPrivacyCard />
+        </div>
+
+        <div className="mb-6">
+          <Link href={localeHref('/friends')} className="glass-card flex items-center gap-3 rounded-sm p-5 transition-colors hover:border-primary/30 hover:bg-primary/5">
+            <span className="rounded-sm border border-primary/20 bg-primary/10 p-2 text-primary"><Users className="h-5 w-5" /></span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-black text-foreground/85">{t('friends.title', { defaultValue: 'Friends' })}</span>
+              <span className="block text-xs text-foreground/50">{t('friends.subtitle', { defaultValue: 'Manage friends and explore shared TCG collections.' })}</span>
+            </span>
+          </Link>
         </div>
 
         <div className="mb-6">

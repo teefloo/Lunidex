@@ -44,6 +44,7 @@ export default async function TCGPage() {
     'tcg.nav_collection': t('tcg.nav_collection'),
     'tcg.nav_wishlist': t('tcg.nav_wishlist'),
     'tcg.nav_deck_builder': t('tcg.nav_deck_builder'),
+    'friends.title': t('friends.title', { defaultValue: 'Friends' }),
   } as const;
 
   return (

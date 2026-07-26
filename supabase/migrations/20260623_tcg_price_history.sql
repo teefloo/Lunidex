@@ -58,9 +58,11 @@ CREATE TABLE user_push_subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   subscription JSONB NOT NULL,    -- PushSubscription JSON
-  created_at TIMESTAMPTZ DEFAULT now(),
-  UNIQUE (user_id, (subscription->>'endpoint'))
+  created_at TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE UNIQUE INDEX user_push_subscriptions_user_endpoint_unique
+  ON user_push_subscriptions (user_id, ((subscription->>'endpoint')));
 
 ALTER TABLE user_push_subscriptions ENABLE ROW LEVEL SECURITY;
 

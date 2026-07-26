@@ -33,9 +33,19 @@ alter table public.profiles
   add column if not exists member_since     timestamptz;
 
 -- Unique handle (case-insensitive enforced via lowercase check + unique index).
-alter table public.profiles
-  add constraint profiles_public_handle_format
-    check (public_handle is null or (length(public_handle) >= 3 and length(public_handle) <= 30 and public_handle ~ '^[a-z0-9][a-z0-9-]*[a-z0-9]$'));
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.profiles'::regclass
+      and conname = 'profiles_public_handle_format'
+  ) then
+    alter table public.profiles
+      add constraint profiles_public_handle_format
+        check (public_handle is null or (length(public_handle) >= 3 and length(public_handle) <= 30 and public_handle ~ '^[a-z0-9][a-z0-9-]*[a-z0-9]$'));
+  end if;
+end $$;
 
 create unique index if not exists profiles_public_handle_unique
   on public.profiles (lower(public_handle))
