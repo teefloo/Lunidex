@@ -56,8 +56,8 @@ export const TCGCardItem = memo(function TCGCardItem({
 
       <div className={cn('min-w-0 flex-1 space-y-3', isList && 'py-1')}>
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="truncate text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
+          <div className="min-w-0 flex-1">
+            <h3 className="line-clamp-2 max-w-full overflow-hidden break-words text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
               {card.name}
             </h3>
             <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">

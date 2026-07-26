@@ -16,7 +16,7 @@ import {
   Star
 } from 'lucide-react';
 import { TYPE_ICONS } from '@/lib/pokemon-utils';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
@@ -78,6 +78,12 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } }
 };
 
+const typeBadgeClassName = 'glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]';
+
+function typeBadgeStyle(type: string): CSSProperties {
+  return { '--type-color': TYPE_COLORS[type] ?? 'var(--primary)' } as CSSProperties;
+}
+
 export default function TypesPage() {
   const { t } = useTranslation();
   const [selectedType, setSelectedType] = useState<string>('fire');
@@ -126,7 +132,7 @@ export default function TypesPage() {
             icon={Target}
             title={t('types_page.title')}
             subtitle={t('types_page.subtitle')}
-            eyebrow={t('types_page.eyebrow', { defaultValue: 'PrimeDex' })}
+            eyebrow={null}
             className="mt-16 md:mt-20"
           />
 
@@ -142,7 +148,7 @@ export default function TypesPage() {
                 <div className="p-2 bg-secondary/30 rounded-sm">
                   <Flame className="w-4 h-4 text-foreground/60" />
                 </div>
-                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h2>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 {Object.keys(TYPE_COLORS).map((type) => (
@@ -262,7 +268,7 @@ export default function TypesPage() {
           icon={Target}
           title={t('types_page.title')}
           subtitle={t('types_page.subtitle')}
-          eyebrow={t('types_page.eyebrow', { defaultValue: 'PrimeDex' })}
+          eyebrow={null}
           className="mt-16 md:mt-20"
         />
 
@@ -279,7 +285,7 @@ export default function TypesPage() {
               <div className="p-2 bg-secondary/30 rounded-sm">
                 <Flame className="w-4 h-4 text-foreground/60" />
               </div>
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h3>
+              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h2>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
               {Object.keys(TYPE_COLORS).map((type) => (
@@ -346,7 +352,7 @@ export default function TypesPage() {
                     })()}
                   </div>
                   <div>
-                    <h3 className="text-3xl md:text-4xl font-black capitalize tracking-tight">{t(`types.${selectedType}`)}</h3>
+                    <h2 className="text-3xl md:text-4xl font-black capitalize tracking-tight">{t(`types.${selectedType}`)}</h2>
                     <p className="text-foreground/40 font-bold uppercase tracking-widest text-[11px] mt-1">{t('types_page.elemental_mastery')}</p>
                   </div>
                 </div>
@@ -364,8 +370,8 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.1 }}
-                          className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[11px] font-black uppercase hover:bg-yellow-500/10 transition-colors"
-                          style={{ color: TYPE_COLORS[t_rel.name] }}
+                          className={typeBadgeClassName}
+                          style={typeBadgeStyle(t_rel.name)}
                         >
                           {t(`types.${t_rel.name}`)}
                         </motion.div>
@@ -385,8 +391,8 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.15 }}
-                          className="px-3 py-1.5 rounded-sm bg-green-500/5 border border-green-500/10 text-[11px] font-black uppercase hover:bg-green-500/10 transition-colors"
-                          style={{ color: TYPE_COLORS[t_rel.name] }}
+                          className={typeBadgeClassName}
+                          style={typeBadgeStyle(t_rel.name)}
                         >
                           {t(`types.${t_rel.name}`)}
                         </motion.div>
@@ -397,7 +403,8 @@ export default function TypesPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.2 }}
-                          className="px-3 py-1.5 rounded-sm bg-blue-500/5 border border-blue-500/10 text-[11px] font-black uppercase hover:bg-blue-500/10 transition-colors text-blue-400"
+                          className={typeBadgeClassName}
+                          style={typeBadgeStyle(t_rel.name)}
                         >
                           {t(`types.${t_rel.name}`)} ({t('types_page.immune')})
                         </motion.div>
@@ -418,7 +425,7 @@ export default function TypesPage() {
                   <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-red-500/60 mb-2">{t('types_page.weak_to')}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {typeRels?.damage_relations.double_damage_from.map(t_rel => (
-                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-red-500/5 border border-red-500/10 text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
+                      <span key={t_rel.name} className={typeBadgeClassName} style={typeBadgeStyle(t_rel.name)}>
                         {t(`types.${t_rel.name}`)}
                       </span>
                     ))}
@@ -433,7 +440,7 @@ export default function TypesPage() {
                   <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-2">{t('types_page.not_effective_against')}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {typeRels?.damage_relations.half_damage_to.map(t_rel => (
-                      <span key={t_rel.name} className="px-2.5 py-1 rounded-lg bg-blue-500/5 border border-blue-500/10 text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[t_rel.name] }}>
+                      <span key={t_rel.name} className={typeBadgeClassName} style={typeBadgeStyle(t_rel.name)}>
                         {t(`types.${t_rel.name}`)}
                       </span>
                     ))}
@@ -444,12 +451,12 @@ export default function TypesPage() {
 
             {/* Emblematic Pokemon */}
             <motion.div variants={itemVariants} className="space-y-6">
-              <h3 className="text-xl font-black px-2 flex items-center gap-3">
+              <h2 className="text-xl font-black px-2 flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-sm">
                   <Star className="w-5 h-5 text-primary" />
                 </div>
                 {t('types_page.emblematic')}
-              </h3>
+              </h2>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {emblematicPokemon.map((p, idx) => (
@@ -475,7 +482,7 @@ export default function TypesPage() {
                         />
                       </div>
                       <span className="font-black capitalize text-xs group-hover:text-primary transition-colors text-center truncate w-full">{p.name}</span>
-                      <span className="text-[11px] font-bold text-foreground/40 mt-0.5 uppercase tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
+                      <span className="text-[11px] font-bold text-foreground/40 mt-0.5 tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
                     </motion.div>
                   </Link>
                 ))}
@@ -485,27 +492,27 @@ export default function TypesPage() {
             {/* Learning Tips */}
             <motion.div variants={itemVariants} className="page-surface p-6 md:p-8 rounded-sm relative overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
-              <h3 className="text-lg font-black mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-black mb-4 flex items-center gap-2">
                 <Info className="w-5 h-5 text-primary" />
                 {t('types_page.tips_title', { type: t(`types.${selectedType}`) })}
-              </h3>
+              </h2>
               <div className="space-y-3">
-                <div className="flex gap-4 p-4 rounded-sm bg-background/40 border border-border/40">
+                <div className="flex min-w-0 gap-4 py-2">
                   <div className="p-2 bg-red-500/10 rounded-sm h-fit flex-shrink-0">
                     <ShieldAlert className="w-4 h-4 text-red-500" />
                   </div>
-                  <p className="text-xs text-foreground/60 leading-relaxed">
+                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/60 leading-relaxed">
                     {t('types_page.watch_out', {
                       types: typeRels?.damage_relations.double_damage_from.map(t_rel => t(`types.${t_rel.name}`)).join(', '),
                       type: t(`types.${selectedType}`)
                     })}
                   </p>
                 </div>
-                <div className="flex gap-4 p-4 rounded-sm bg-background/40 border border-border/40">
+                <div className="flex min-w-0 gap-4 py-2">
                   <div className="p-2 bg-blue-500/10 rounded-sm h-fit flex-shrink-0">
                     <Sword className="w-4 h-4 text-blue-500" />
                   </div>
-                  <p className="text-xs text-foreground/60 leading-relaxed">
+                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/60 leading-relaxed">
                     {t('types_page.not_effective', {
                       type: t(`types.${selectedType}`),
                       types: typeRels?.damage_relations.half_damage_to.map(t_rel => t(`types.${t_rel.name}`)).join(', ')
@@ -520,5 +527,3 @@ export default function TypesPage() {
     </div>
   );
 }
-
-

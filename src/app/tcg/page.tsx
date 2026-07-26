@@ -37,13 +37,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function TCGPage() {
+export default async function TCGPage() {
+  const t = await getServerT();
+  const initialTabLabels = {
+    'tcg.nav_catalog': t('tcg.nav_catalog'),
+    'tcg.nav_collection': t('tcg.nav_collection'),
+    'tcg.nav_wishlist': t('tcg.nav_wishlist'),
+    'tcg.nav_deck_builder': t('tcg.nav_deck_builder'),
+  } as const;
+
   return (
     <div className="app-page">
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
         <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
-          <TCGPageTabs />
+          <TCGPageTabs initialLabels={initialTabLabels} />
         </Suspense>
         <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
           <TCGResearchDesk initialLatestSet={DEFAULT_LATEST_TCG_SET} />

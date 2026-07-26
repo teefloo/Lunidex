@@ -1,30 +1,45 @@
 'use client';
 
-import { useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { useMounted } from '@/hooks/useMounted';
 
 const FALLBACK_LANG: SupportedLanguage = 'en';
 
+function subscribeToDocumentLanguage(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['lang'],
+  });
+  return () => observer.disconnect();
+}
+
+function getDocumentLanguage(): SupportedLanguage {
+  const htmlLanguage = document.documentElement.lang;
+  return isSupportedLanguage(htmlLanguage)
+    ? (htmlLanguage as SupportedLanguage)
+    : FALLBACK_LANG;
+}
+
 export function useClientLanguage(): SupportedLanguage {
+  const mounted = useMounted();
   const pathname = usePathname();
   const documentLanguage = useSyncExternalStore(
-    () => () => {},
-    () => {
-      const htmlLanguage = document.documentElement.lang;
-      return isSupportedLanguage(htmlLanguage)
-        ? (htmlLanguage as SupportedLanguage)
-        : FALLBACK_LANG;
-    },
+    subscribeToDocumentLanguage,
+    getDocumentLanguage,
     () => FALLBACK_LANG,
   );
 
-  return useMemo<SupportedLanguage>(() => {
-    const pathSeg = pathname.split('/').filter(Boolean)[0];
-    return isSupportedLanguage(pathSeg ?? '')
-      ? (pathSeg as SupportedLanguage)
-      : documentLanguage;
-  }, [documentLanguage, pathname]);
+  if (!mounted) return FALLBACK_LANG;
+
+  const publicPathname = typeof window === 'undefined' ? pathname : window.location.pathname;
+  const pathLanguage = publicPathname.split('/').filter(Boolean)[0];
+
+  return isSupportedLanguage(pathLanguage ?? '')
+    ? (pathLanguage as SupportedLanguage)
+    : documentLanguage;
 }
 
 export function useLocaleHref(): (path: string) => string {

@@ -325,7 +325,7 @@ function DiscoveryHero({
           <select
             value={selectedCollectionId ?? ''}
             onChange={(event) => onCollectionChange(event.target.value || null)}
-            className="page-eyebrow max-w-full cursor-pointer appearance-none py-2 pl-7 pr-8 transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
+            className="glass-control max-w-full cursor-pointer appearance-none px-3 py-2 pl-7 pr-8 text-sm font-semibold transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
             aria-label={t('tcg.filter_set')}
           >
             <option value="">{t('tcg.all_collections')}</option>
@@ -373,7 +373,7 @@ function DiscoveryHero({
                   ];
                   onSortChange(sortBy, sortOrder);
                 }}
-                className="h-11 w-full appearance-none rounded-sm border border-border/50 bg-card/50 px-4 pr-11 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
+                className="h-11 w-full appearance-none rounded-sm border border-border/50 bg-card/50 px-4 pr-11 text-sm font-semibold text-foreground/75 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10"
                 aria-label={t('tcg.sort_label')}
               >
                 <option value="name-asc">{t('tcg.sort_name_asc')}</option>

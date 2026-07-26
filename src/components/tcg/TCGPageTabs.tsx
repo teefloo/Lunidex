@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useMounted } from '@/hooks/useMounted';
+import { isSupportedLanguage } from '@/lib/languages';
 
 const TABS = [
   { href: '/tcg', key: 'tcg.nav_catalog' },
@@ -12,13 +14,28 @@ const TABS = [
   { href: '/tcg/deck-builder', key: 'tcg.nav_deck_builder' },
 ] as const;
 
-export function TCGPageTabs() {
+const FALLBACK_LABELS: Record<(typeof TABS)[number]['key'], string> = {
+  'tcg.nav_catalog': 'Catalog',
+  'tcg.nav_collection': 'Collection',
+  'tcg.nav_wishlist': 'Wishlist',
+  'tcg.nav_deck_builder': 'Deck builder',
+};
+
+type TCGPageTabLabels = Record<(typeof TABS)[number]['key'], string>;
+
+interface TCGPageTabsProps {
+  initialLabels?: TCGPageTabLabels;
+}
+
+export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
+  const mounted = useMounted();
+  const normalizedPathname = normalizePathname(pathname);
 
   const isActive = (href: string) => {
-    if (href === '/tcg') return pathname === '/tcg';
-    return pathname.startsWith(href);
+    if (href === '/tcg') return normalizedPathname === '/tcg';
+    return normalizedPathname.startsWith(href);
   };
 
   return (
@@ -34,9 +51,15 @@ export function TCGPageTabs() {
               : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',
           )}
         >
-          {t(tab.key)}
+          {mounted ? t(tab.key) : initialLabels[tab.key]}
         </Link>
       ))}
     </div>
   );
+}
+
+function normalizePathname(pathname: string): string {
+  const [firstSegment, ...rest] = pathname.split('/').filter(Boolean);
+  if (!isSupportedLanguage(firstSegment ?? '')) return pathname;
+  return rest.length > 0 ? `/${rest.join('/')}` : '/';
 }

@@ -145,8 +145,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
               <Grid3x3 className="w-5 h-5 md:w-6 md:h-6 text-foreground" />
             </div>
             <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tight">{t('types_page.type_chart')}</h3>
-              <p className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest mt-0.5">
+              <h2 className="text-lg md:text-xl font-black tracking-tight">{t('types_page.type_chart')}</h2>
+              <p className="text-sm text-muted-foreground mt-0.5">
                 {t('types_page.type_chart_desc')}
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </span>
           </motion.div>
         ) : (
-          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-[11px] font-bold text-foreground/30 uppercase tracking-wider">
+          <div className="mt-4 px-4 py-2.5 bg-card/35 border border-border/40 rounded-sm text-xs font-bold text-muted-foreground">
             <span className="sm:hidden">{t('types_page.touch_hint', { defaultValue: 'Tap a cell to see its multiplier' })}</span>
             <span className="hidden sm:inline">{t('types_page.pointer_hint', { defaultValue: 'Hover or select a cell to see the multiplier' })}</span>
           </div>
@@ -217,15 +217,18 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
       </div>
 
       {/* Matrix */}
-      <motion.div
-        animate={{ height: collapsed ? 0 : 'auto', opacity: collapsed ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-        className="overflow-hidden"
-      >
-        <div className="bg-background/50 p-3 md:p-5">
+      {!collapsed && (
+          <motion.div
+            key="type-chart-matrix"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+        <div className="p-3 md:p-5">
           <div className="rounded-sm overflow-hidden border border-border/40">
             <div className="scroll-snap-x overflow-x-auto scrollbar-hide" aria-describedby="type-chart-scroll-hint">
-              <p id="type-chart-scroll-hint" className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground sm:hidden">
+              <p id="type-chart-scroll-hint" className="mb-2 px-1 text-xs font-bold text-muted-foreground sm:hidden">
                 {t('types_page.scroll_hint', { defaultValue: 'Swipe horizontally to explore the full matrix' })}
               </p>
               <div className="min-w-[750px]">
@@ -348,7 +351,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             </div>
           </div>
         </div>
-      </motion.div>
+          </motion.div>
+      )}
     </motion.div>
   );
 }

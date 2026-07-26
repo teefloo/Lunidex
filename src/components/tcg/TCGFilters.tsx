@@ -860,7 +860,7 @@ export function TCGFilters({
               <select
                 value={filters.ownedState ?? 'all'}
                 onChange={(event) => updateFilter('ownedState', event.target.value)}
-                className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold uppercase tracking-[0.14em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+            className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold tracking-[0.04em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
               >
                 <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
                 <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
@@ -924,7 +924,7 @@ interface FilterSectionProps {
 function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }: FilterSectionProps) {
   return (
     <div className={cn(
-      'overflow-hidden rounded-sm border transition-all duration-300',
+      'overflow-hidden rounded-sm border transition-[background-color,border-color,box-shadow] duration-300',
       isOpen
         ? 'border-border/60 bg-card/55 shadow-[0_18px_60px_rgba(0,0,0,0.2)]'
         : 'border-border/40 bg-card/25 hover:bg-card/50',
@@ -955,10 +955,10 @@ function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }:
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="px-4 pb-4">
               <div className="mb-4 h-px w-full bg-card/60" />

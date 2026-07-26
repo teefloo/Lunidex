@@ -5,7 +5,7 @@ interface PageHeaderProps {
   icon: LucideIcon;
   title: string;
   subtitle?: string;
-  eyebrow?: string;
+  eyebrow?: string | null;
   description?: string;
   badge?: React.ReactNode;
   className?: string;
@@ -30,7 +30,7 @@ export default function PageHeader({
   gradientFrom = 'from-primary/20',
   centered = false,
 }: PageHeaderProps) {
-  const resolvedEyebrow = eyebrow ?? 'PrimeDex';
+  const resolvedEyebrow = eyebrow === undefined ? 'PrimeDex' : eyebrow;
   const resolvedDescription = description ?? subtitle;
 
   return (
@@ -45,7 +45,7 @@ export default function PageHeader({
             </div>
             <div className={cn('min-w-0 flex-1 space-y-2', centered && 'max-w-3xl')}>
               <div className="space-y-1">
-                <p className="page-eyebrow">{resolvedEyebrow}</p>
+                {resolvedEyebrow && <p className="page-eyebrow">{resolvedEyebrow}</p>}
                 <h1 className="page-title break-words text-3xl sm:text-4xl md:text-5xl lg:text-6xl">{title}</h1>
               </div>
               {resolvedDescription && (
