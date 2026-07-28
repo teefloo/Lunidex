@@ -11,6 +11,21 @@ export function pickSyncState(): PersistedState {
   return Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState;
 }
 
+/**
+ * Builds the JSONB payload written to the server without discarding keys that
+ * this client does not understand yet. Web and mobile clients can be upgraded
+ * independently, so an older client must preserve newer remote fields.
+ */
+export function buildSyncPayload(remote: unknown, snapshot: PersistedState): object {
+  if (typeof remote !== 'object' || remote === null || Array.isArray(remote)) {
+    return snapshot;
+  }
+
+  const knownKeys = new Set<string>(SYNCED_KEYS);
+  const unknownEntries = Object.entries(remote).filter(([key]) => !knownKeys.has(key));
+  return { ...Object.fromEntries(unknownEntries), ...snapshot };
+}
+
 /** Applies a (possibly partial) server snapshot onto the live store. */
 export function applySyncState(snapshot: Partial<PersistedState>): void {
   usePrimeDexStore.setState(snapshot);

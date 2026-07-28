@@ -2,13 +2,18 @@
 // Scheduled every 6 hours via Supabase cron scheduler.
 //
 // Env vars required (set in Supabase Secrets):
-//   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+//   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET
 //   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT (mailto:…)
 //
 // Deploy: supabase functions deploy poll-tcg-prices --no-verify-jwt
+// The scheduler must send `Authorization: Bearer <CRON_SECRET>` in every POST.
 
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {
+  hasValidSchedulerAuthorization,
+  isSafePushEndpoint,
+} from './security.ts';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -130,6 +135,11 @@ async function sendWebPush(
   vapidSubject: string,
 ): Promise<boolean> {
   try {
+    if (!await isSafePushEndpoint(subscription.endpoint)) {
+      console.error('[push] rejected unsafe subscription endpoint');
+      return false;
+    }
+
     // Encode keys
     const pubKeyBytes = base64UrlDecode(vapidPublicKey);
     const privKeyBytes = base64UrlDecode(vapidPrivateKey);
@@ -172,11 +182,13 @@ async function sendWebPush(
         TTL: '86400',
       },
       body,
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
     });
 
     return res.status === 201 || res.status === 202;
-  } catch (err) {
-    console.error('[push] send error', err);
+  } catch {
+    console.error('[push] send error');
     return false;
   }
 }
@@ -202,13 +214,29 @@ function base64UrlDecode(input: string): Uint8Array {
 // ---------------------------------------------------------------------------
 
 serve(async (req) => {
-  // Validate cron secret to prevent unauthorised triggers
+  // This function is deployed without Supabase JWT verification because it is
+  // scheduler-only. Treat an absent scheduler secret as a configuration outage,
+  // never as permission to run with the service-role client.
   const cronSecret = Deno.env.get('CRON_SECRET');
-  if (cronSecret) {
-    const authHeader = req.headers.get('Authorization');
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
+  if (!cronSecret?.trim()) {
+    return new Response(JSON.stringify({ error: 'Scheduler authentication is not configured' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { Allow: 'POST', 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (!await hasValidSchedulerAuthorization(req.headers.get('Authorization'), cronSecret)) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';

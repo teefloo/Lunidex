@@ -10,6 +10,7 @@ import {
 } from 'react';
 import type { Session, User, AuthError, Provider } from '@supabase/supabase-js';
 import { getSupabaseClient } from './client';
+import { normalizeDisplayName } from '@/lib/json-ld';
 
 type AuthResult = { error: AuthError | null };
 
@@ -88,13 +89,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       user: session?.user ?? null,
       signUp: async (email, password, name) => {
-        const trimmedName = name?.trim();
+        const normalizedName = name === undefined ? undefined : normalizeDisplayName(name);
+        if (name !== undefined && !normalizedName) {
+          return {
+            error: {
+              name: 'ValidationError',
+              message: 'Enter a display name containing visible characters.',
+            } as AuthError,
+          };
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: redirectTo,
-            data: trimmedName ? { name: trimmedName, display_name: trimmedName } : undefined,
+            data: normalizedName ? { name: normalizedName, display_name: normalizedName } : undefined,
           },
         });
         return { error };

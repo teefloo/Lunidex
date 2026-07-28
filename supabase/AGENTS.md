@@ -13,7 +13,7 @@ This directory contains the database migrations and the Supabase Edge Functions 
 ## Edge Functions
 
 - Functions run in Deno and must keep their imports and APIs Deno-compatible. The `poll-tcg-prices` function reads Supabase secrets and polls TCGdex pricing data.
-- Required secrets for `poll-tcg-prices` are `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT`.
+- Required secrets for `poll-tcg-prices` are `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, and `CRON_SECRET`.
 - Deploy the function only after reviewing secret configuration and authentication requirements:
 
 ```bash
@@ -21,6 +21,7 @@ supabase functions deploy poll-tcg-prices --no-verify-jwt
 ```
 
 - The function is intended for scheduled execution. Keep external fetches bounded, handle partial upstream failures, and avoid logging personal data or credentials.
+- When deployed without JWT verification, the scheduler must make an authenticated `POST` with `Authorization: Bearer <CRON_SECRET>`; an absent secret must fail closed.
 
 ## Verification
 

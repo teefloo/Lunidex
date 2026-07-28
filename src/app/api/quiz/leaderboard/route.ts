@@ -13,7 +13,6 @@ import {
   isLeaderboardPeriod,
   LEADERBOARD_TOP_N,
   sanitizePseudo,
-  todayISODate,
   type LeaderboardEntry,
   type LeaderboardPeriod,
   type LeaderboardResponse,
@@ -155,41 +154,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     '';
   const pseudo = sanitizePseudo(profileName);
 
-  const date = todayISODate();
+  // This is deliberately a single database operation. A read followed by an
+  // upsert can race with another submission and incorrectly report whether a
+  // score improved. The RPC derives auth.uid() and current_date server-side.
+  const { data, error } = await supabase.rpc('submit_quiz_score', {
+    p_mode: body.mode,
+    p_challenge: body.challenge,
+    p_score: score,
+    p_pseudo: pseudo,
+  });
 
-  // Keep the best score for the day: only write when we'd improve on the
-  // existing row. RLS still guarantees the row belongs to this user.
-  const { data: existing } = await supabase
-    .from('quiz_scores')
-    .select('score')
-    .eq('user_id', user.id)
-    .eq('date', date)
-    .eq('mode', body.mode)
-    .eq('challenge', body.challenge)
-    .maybeSingle();
-
-  const existingScore = typeof existing?.score === 'number' ? existing.score : null;
-  if (existingScore !== null && existingScore >= score) {
-    return NextResponse.json({ ok: true, score: existingScore, improved: false });
-  }
-
-  const { error: upsertError } = await supabase
-    .from('quiz_scores')
-    .upsert(
-      {
-        user_id: user.id,
-        pseudo,
-        mode: body.mode,
-        challenge: body.challenge,
-        score,
-        date,
-      },
-      { onConflict: 'user_id,date,mode,challenge' },
-    );
-
-  if (upsertError) {
+  const result = Array.isArray(data) ? data[0] : data;
+  if (error || !result || typeof result.score !== 'number' || typeof result.improved !== 'boolean') {
     return NextResponse.json({ error: 'Failed to submit score' }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, score, improved: true });
+  return NextResponse.json({ ok: true, score: result.score, improved: result.improved });
 }

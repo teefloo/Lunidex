@@ -18,7 +18,7 @@ export async function getPublicProfileByHandle(
   if (!supabase) return null;
 
   const { data, error } = await supabase
-    .from('profiles')
+    .from('public_profiles')
     .select(
       'id, name, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_best_streak, quiz_total_correct, tcg_owned_count, caught_by_gen, member_since',
     )
@@ -68,7 +68,7 @@ export async function isHandleTaken(
   if (!supabase) return false;
 
   let query = supabase
-    .from('profiles')
+    .from('public_profiles')
     .select('id', { count: 'exact', head: true })
     .ilike('public_handle', handle);
 

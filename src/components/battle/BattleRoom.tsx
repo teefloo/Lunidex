@@ -35,6 +35,7 @@ interface BattleRoomProps {
 // ---------------------------------------------------------------------------
 
 export default function BattleRoom({ roomId, userId, playerName = 'Player' }: BattleRoomProps) {
+  const [authenticatedUserId, setAuthenticatedUserId] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [playersOnline, setPlayersOnline] = useState<string[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
@@ -47,6 +48,25 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
   });
   const channelRef = useRef<RealtimeChannel | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const participantId = authenticatedUserId ?? userId;
+
+  // Prefer the authenticated Supabase identity over a caller-supplied prop for
+  // presence and broadcasts. The prop remains the local-only fallback when a
+  // database connection is intentionally unavailable.
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    const supabase = getSupabaseClient();
+    if (!supabase) return;
+
+    let active = true;
+    void supabase.auth.getUser().then(({ data }) => {
+      if (active) setAuthenticatedUserId(data.user?.id ?? null);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Scroll chat to bottom on new messages
   useEffect(() => {
@@ -60,7 +80,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
     const supabase = getSupabaseClient()!;
     const channelName = `battle:${roomId}`;
     const channel = supabase.channel(channelName, {
-      config: { presence: { key: userId } },
+      config: { presence: { key: participantId } },
     });
 
     // Presence: track who is online
@@ -97,7 +117,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
           event: 'battle',
           payload: {
             type: 'join',
-            userId,
+            userId: participantId,
             data: { name: playerName },
             timestamp: Date.now(),
           } satisfies BattlePayload,
@@ -114,7 +134,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
       channel.unsubscribe();
       channelRef.current = null;
     };
-  }, [roomId, userId, playerName, error]);
+  }, [roomId, participantId, playerName, error]);
 
   const sendChat = useCallback(async () => {
     const text = chatInput.trim();
@@ -125,8 +145,8 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
     setChatMessages(prev => [
       ...prev,
       {
-        id: `${userId}-${Date.now()}`,
-        userId,
+        id: `${participantId}-${Date.now()}`,
+        userId: participantId,
         text,
         timestamp: Date.now(),
       },
@@ -137,12 +157,12 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
       event: 'battle',
       payload: {
         type: 'chat',
-        userId,
+        userId: participantId,
         data: { text },
         timestamp: Date.now(),
       } satisfies BattlePayload,
     });
-  }, [chatInput, userId]);
+  }, [chatInput, participantId]);
 
   const copyRoomLink = useCallback(() => {
     const url = `${window.location.origin}/battle?room=${roomId}`;
@@ -202,7 +222,7 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
               key={id}
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
-                id === userId ? 'bg-green-500' : 'bg-blue-500'
+                id === participantId ? 'bg-green-500' : 'bg-blue-500'
               )}
             />
           ))}
@@ -229,12 +249,12 @@ export default function BattleRoom({ roomId, userId, playerName = 'Player' }: Ba
                 key={msg.id}
                 className={cn(
                   'rounded px-2 py-1 text-xs',
-                  msg.userId === userId
+                  msg.userId === participantId
                     ? 'ml-auto max-w-[75%] bg-primary/15 text-primary'
                     : 'mr-auto max-w-[75%] bg-muted/50 text-foreground/85'
                 )}
               >
-                {msg.userId !== userId && (
+                {msg.userId !== participantId && (
                   <span className="mb-0.5 block font-mono text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">
                     Opponent
                   </span>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getPublicProfileByHandle } from '@/lib/api/public-profile';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 import { languageToMetadataLocale } from '@/lib/languages';
 import PublicProfileCard from '@/components/dashboard/PublicProfileCard';
@@ -96,11 +97,11 @@ export default async function PublicProfilePage({ params }: Props) {
       <Header />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(profilePageJsonLd) }}
       />
       <main className="page-shell py-8 relative z-10 mt-16 md:mt-20">
         <PublicProfileCard profile={profile} />

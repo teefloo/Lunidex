@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getSupabaseClient } from './client';
 import { AuthContext } from './AuthProvider';
-import { applySyncState, mergeSyncState, pickSyncState } from './sync-state';
+import { applySyncState, buildSyncPayload, mergeSyncState, pickSyncState } from './sync-state';
 
 const TABLE = 'user_state';
 const DEBOUNCE_MS = 1200;
@@ -29,6 +29,7 @@ export function useSupabaseSync(): void {
 
   const lastPushedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const remoteSnapshotRef = useRef<unknown>({});
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -38,13 +39,14 @@ export function useSupabaseSync(): void {
     const userId = user.id;
 
     const push = async (snapshot: ReturnType<typeof pickSyncState>) => {
-      const serialized = JSON.stringify(snapshot);
+      const payload = buildSyncPayload(remoteSnapshotRef.current, snapshot);
+      const serialized = JSON.stringify(payload);
       if (serialized === lastPushedRef.current) return;
       lastPushedRef.current = serialized;
 
       const { error } = await supabase
         .from(TABLE)
-        .upsert({ user_id: userId, data: snapshot }, { onConflict: 'user_id' });
+        .upsert({ user_id: userId, data: payload }, { onConflict: 'user_id' });
 
       if (error) {
         // Allow a retry on the next change.
@@ -68,7 +70,8 @@ export function useSupabaseSync(): void {
         return;
       }
 
-      const remote = (data?.data ?? {}) as Partial<ReturnType<typeof pickSyncState>>;
+      remoteSnapshotRef.current = data?.data ?? {};
+      const remote = remoteSnapshotRef.current as Partial<ReturnType<typeof pickSyncState>>;
       const merged = mergeSyncState(pickSyncState(), remote);
       applySyncState(merged);
 
@@ -94,6 +97,7 @@ export function useSupabaseSync(): void {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       unsubscribe?.();
       lastPushedRef.current = null;
+      remoteSnapshotRef.current = {};
     };
   }, [enabled, user, hasHydrated]);
 }
