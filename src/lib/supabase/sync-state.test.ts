@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSyncPayload, pickSyncState } from './sync-state';
+import { buildSyncPayload, getInitialSyncState, pickSyncState } from './sync-state';
 
 describe('buildSyncPayload', () => {
   it('preserves remote fields that this client does not know while replacing its own synced fields', () => {
@@ -23,5 +23,13 @@ describe('buildSyncPayload', () => {
 
     expect(buildSyncPayload(['not-an-object'], snapshot)).toEqual(snapshot);
     expect(buildSyncPayload(null, snapshot)).toEqual(snapshot);
+  });
+
+  it('provides a clean persisted baseline for a different account', () => {
+    const initial = getInitialSyncState();
+
+    expect(initial.favorites).toEqual([]);
+    expect(initial.team).toEqual([]);
+    expect(initial.compareList).toEqual([]);
   });
 });

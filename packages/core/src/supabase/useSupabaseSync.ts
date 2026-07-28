@@ -5,10 +5,47 @@ import { notify } from '../platform/notify';
 import { usePrimeDexStore } from '../store/primedex';
 import { getSupabaseClient } from './client';
 import { useAuth } from './AuthProvider';
-import { applySyncState, buildSyncPayload, mergeSyncState, pickSyncState } from './sync-state';
+import {
+  applySyncState,
+  buildSyncPayload,
+  getInitialSyncState,
+  mergeSyncState,
+  pickSyncState,
+} from './sync-state';
 
 const TABLE = 'user_state';
 const DEBOUNCE_MS = 1200;
+const ANONYMOUS_STORAGE_KEY = 'primedex-storage:anonymous';
+
+function storageKeyForUser(userId: string | null): string {
+  return userId ? `primedex-storage:user:${userId}` : ANONYMOUS_STORAGE_KEY;
+}
+
+async function storageHasSnapshot(name: string): Promise<boolean> {
+  const storage = usePrimeDexStore.persist.getOptions().storage;
+  return (await storage?.getItem(name)) !== null;
+}
+
+async function switchPersistenceScope(userId: string | null): Promise<boolean> {
+  const name = storageKeyForUser(userId);
+  const hasSnapshot = await storageHasSnapshot(name);
+  usePrimeDexStore.persist.setOptions({ name });
+
+  if (hasSnapshot) {
+    await usePrimeDexStore.persist.rehydrate();
+  } else {
+    applySyncState(getInitialSyncState());
+  }
+
+  return hasSnapshot;
+}
+
+async function preserveAnonymousSnapshot(snapshot: ReturnType<typeof pickSyncState>): Promise<void> {
+  if (await storageHasSnapshot(ANONYMOUS_STORAGE_KEY)) return;
+
+  usePrimeDexStore.persist.setOptions({ name: ANONYMOUS_STORAGE_KEY });
+  applySyncState(snapshot);
+}
 
 /**
  * Bridges the local Zustand store with the signed-in user's `user_state` row.
@@ -28,10 +65,19 @@ export function useSupabaseSync(): void {
   const lastPushedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const remoteSnapshotRef = useRef<unknown>({});
+  const activeUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
-    if (!enabled || !supabase || !user || !hasHydrated) return;
+    if (!hasHydrated) return;
+
+    if (!enabled || !supabase || !user) {
+      if (activeUserIdRef.current !== null) {
+        activeUserIdRef.current = null;
+        void switchPersistenceScope(null);
+      }
+      return;
+    }
 
     let cancelled = false;
     const userId = user.id;
@@ -70,7 +116,22 @@ export function useSupabaseSync(): void {
 
       remoteSnapshotRef.current = data?.data ?? {};
       const remote = remoteSnapshotRef.current as Partial<ReturnType<typeof pickSyncState>>;
-      const merged = mergeSyncState(pickSyncState(), remote);
+      const local = pickSyncState();
+      const hasPreviousAccount = activeUserIdRef.current !== null && activeUserIdRef.current !== userId;
+
+      if (!hasPreviousAccount) {
+        await preserveAnonymousSnapshot(local);
+      }
+
+      const hasAccountSnapshot = await switchPersistenceScope(userId);
+      const localForMerge = hasAccountSnapshot
+        ? pickSyncState()
+        : hasPreviousAccount
+          ? getInitialSyncState()
+          : local;
+      const merged = mergeSyncState(localForMerge, remote);
+      applySyncState(merged);
+      activeUserIdRef.current = userId;
       applySyncState(merged);
 
       // Persist the reconciled snapshot so the server reflects the merge.

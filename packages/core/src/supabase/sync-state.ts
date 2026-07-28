@@ -11,6 +11,12 @@ export function pickSyncState(): PersistedState {
   return Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState;
 }
 
+/** Returns the persisted defaults without carrying state from another account. */
+export function getInitialSyncState(): PersistedState {
+  const state = usePrimeDexStore.getInitialState();
+  return Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState;
+}
+
 /**
  * Builds the JSONB payload written to the server without discarding keys that
  * this client does not understand yet. Web and mobile clients can be upgraded
