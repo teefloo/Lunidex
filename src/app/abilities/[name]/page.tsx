@@ -86,7 +86,7 @@ export default async function AbilityDetailPage({ params }: Props) {
       <main className="page-shell pb-20 pt-8">
         <div className="mb-6">
           <Link
-            href="/abilities"
+            href={`/${lang}/abilities`}
             className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -165,7 +165,7 @@ export default async function AbilityDetailPage({ params }: Props) {
                     return (
                       <Link
                         key={pokemon.id}
-                        href={`/pokemon/${pokemon.name}`}
+                        href={`/${lang}/pokemon/${pokemon.name}`}
                         className="flex items-center gap-2 rounded-sm border border-border/60 bg-background/40 px-2.5 py-2 text-xs font-bold text-foreground/70 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
                       >
                         <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />

@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import type { TCGCard } from '@/types/tcg';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 
 export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
   const router = useRouter();
+  const localeHref = useLocaleHref();
   const { t } = useTranslation();
 
   if (!card) {
@@ -23,7 +25,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
           </p>
           <button
             type="button"
-            onClick={() => router.push('/tcg')}
+            onClick={() => router.push(localeHref('/tcg'))}
             className="glass-control mt-8 inline-flex items-center gap-2 px-5 py-2.5 text-xs font-black uppercase tracking-[0.2em]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -46,7 +48,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
           <ArrowLeft className="h-4 w-4" />
           {t('common.back')}
         </button>
-        <TCGCardDetailModal card={card} isOpen onClose={() => router.push('/tcg')} />
+        <TCGCardDetailModal card={card} isOpen onClose={() => router.push(localeHref('/tcg'))} />
       </div>
     </div>
   );

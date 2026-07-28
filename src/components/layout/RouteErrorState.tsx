@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
 import { Button, buttonVariants } from '@/components/ui/button';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +16,7 @@ interface RouteErrorStateProps {
 
 export default function RouteErrorState({ error, reset, scope }: RouteErrorStateProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   return (
     <div className="app-page min-h-screen px-4 py-24 text-foreground">
@@ -38,7 +40,7 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
             {t('common.retry', { defaultValue: 'Retry' })}
           </Button>
           <Link
-            href="/"
+            href={localeHref('/')}
             className={cn(buttonVariants({ variant: 'outline' }), 'font-black uppercase tracking-[0.16em]')}
           >
             <Home className="h-4 w-4" />

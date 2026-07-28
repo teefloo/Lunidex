@@ -4,6 +4,7 @@ import { useQuery, useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
 import { useParams, useRouter } from 'next/navigation';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import {
   Loader2,
   ArrowLeft,
@@ -148,6 +149,7 @@ export function PokemonDetailClient({
   const params = useParams();
   const name = params?.name as string;
   const router = useRouter();
+  const localeHref = useLocaleHref();
   const [showShiny, setShowShiny] = useState(false);
   const [playingCry, setPlayingCry] = useState<'latest' | 'legacy' | null>(null);
   const { 
@@ -347,7 +349,7 @@ export function PokemonDetailClient({
       {/* Hero Section */}
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push(localeHref('/'))}
           className="fixed top-[calc(6rem+env(safe-area-inset-top))] left-4 md:left-12 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55  rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
           aria-label={t('common.back') || 'Go back'}
         >

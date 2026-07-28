@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { useMounted } from '@/hooks/useMounted';
@@ -44,9 +44,9 @@ export function useClientLanguage(): SupportedLanguage {
 
 export function useLocaleHref(): (path: string) => string {
   const lang = useClientLanguage();
-  return (path: string) => {
+  return useCallback((path: string) => {
     const normalized = path.startsWith('/') ? path : `/${path}`;
     if (normalized === '/') return `/${lang}`;
     return `/${lang}${normalized}`;
-  };
+  }, [lang]);
 }

@@ -73,7 +73,7 @@ export default async function ItemDetailPage({ params }: Props) {
       <main className="page-shell pb-20 pt-8">
         <div className="mb-6">
           <Link
-            href="/items"
+            href={`/${lang}/items`}
             className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

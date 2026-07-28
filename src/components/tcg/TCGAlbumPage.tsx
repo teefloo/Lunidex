@@ -5,6 +5,7 @@ import { ArrowLeft, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -25,6 +26,7 @@ interface TCGAlbumPageProps {
 
 export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
   const ownedIds = useMemo(() => new Set(ownedList), [ownedList]);
@@ -59,7 +61,7 @@ export function TCGAlbumPage({ set, cards }: TCGAlbumPageProps) {
       {/* Header */}
       <div className="flex flex-wrap items-center gap-4">
         <Link
-          href="/tcg/collection"
+          href={localeHref('/tcg/collection')}
           aria-label="Back to TCG collection"
           className="flex h-9 w-9 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
         >

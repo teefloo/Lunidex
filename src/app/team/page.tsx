@@ -39,6 +39,7 @@ import dynamic from 'next/dynamic';
 import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
 import { TeamExportButton } from '@/components/team/TeamExportButton';
 import { ShowdownImportDialog } from '@/components/team/ShowdownImportDialog';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // Dynamic imports for heavy charting library
 const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
@@ -60,6 +61,7 @@ export default function TeamPage() {
     DEFAULT_AUTO_COMPLETE_OPTIONS.targetGeneration
   );
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
 
@@ -296,14 +298,14 @@ export default function TeamPage() {
                         </div>
                         
                         <Link
-                          href={`/pokemon/${p.name}`}
+                          href={localeHref(`/pokemon/${p.name}`)}
                           className="touch-target mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color] outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/10 hover:text-primary text-[11px] font-black uppercase tracking-widest"
                         >
                           {t('team.details')}
                         </Link>
                       </motion.div>
                     ) : (
-                      <Link href="/" className="block h-full">
+                      <Link href={localeHref('/')} className="block h-full">
                         <div className="h-full rounded-sm border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-foreground/20 hover:border-primary/30 hover:text-primary/40 hover:bg-primary/5 transition-all group">
                           <div className="p-4 rounded-full bg-secondary/30 mb-3 group-hover:scale-110 transition-transform">
                             <Plus className="w-8 h-8" />
@@ -586,4 +588,3 @@ export default function TeamPage() {
     </div>
   );
 }
-

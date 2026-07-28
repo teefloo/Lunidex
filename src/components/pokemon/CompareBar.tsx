@@ -8,6 +8,7 @@ import { X, ArrowLeftRight, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import Image from 'next/image';
 
 export default function CompareBar() {
@@ -15,6 +16,7 @@ export default function CompareBar() {
   const removeFromCompare = usePrimeDexStore(s => s.removeFromCompare);
   const clearCompare = usePrimeDexStore(s => s.clearCompare);
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   const pokemonQueries = useQueries({
     queries: compareList.map(id => ({
@@ -111,7 +113,7 @@ export default function CompareBar() {
             </Button>
           ) : (
             <Link
-              href="/compare"
+              href={localeHref('/compare')}
               className="touch-target inline-flex min-h-12 items-center justify-center rounded-sm bg-primary px-6 font-black uppercase tracking-widest gap-2 text-primary-foreground transition-[filter,background-color] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ArrowLeftRight className="w-4 h-4" />

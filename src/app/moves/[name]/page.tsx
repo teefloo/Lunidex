@@ -126,6 +126,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function MoveDetailPage({ params }: Props) {
   const { name } = await params;
   const t = await getServerT();
+  const lang = await getServerLanguage();
 
   const move = await fetchMoveDetail(name);
   if (!move) notFound();
@@ -259,7 +260,7 @@ export default async function MoveDetailPage({ params }: Props) {
         {/* Back link */}
         <div className="mb-6">
           <Link
-            href="/moves"
+            href={`/${lang}/moves`}
             className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

@@ -16,6 +16,7 @@ import {
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -351,6 +352,7 @@ function noticeText(t: ReturnType<typeof useTranslation>['t'], notice: MazeNotic
 export default function NotFoundMiniGame() {
   const { t } = useTranslation();
   const router = useRouter();
+  const localeHref = useLocaleHref();
   const [initialRound] = useState(() => createMazeRound(null, 'playing'));
   const [layout, setLayout] = useState<MazeLayout>(() => initialRound.layout);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -521,14 +523,14 @@ export default function NotFoundMiniGame() {
 
     const timeoutId = window.setTimeout(() => {
       startTransition(() => {
-        router.push('/');
+        router.push(localeHref('/'));
       });
     }, REDIRECT_DELAY_MS);
 
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [hud.status, router]);
+  }, [hud.status, localeHref, router]);
 
   const holdDirection = useCallback((direction: MazeDirection) => {
     padDirectionRef.current = direction;

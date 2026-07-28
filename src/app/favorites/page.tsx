@@ -11,10 +11,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 export default function FavoritesPage() {
   const { favorites } = usePrimeDexStore();
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   const { data: allNames, isLoading } = useQuery({
     queryKey: ['allPokemonNames'],
@@ -63,7 +65,7 @@ export default function FavoritesPage() {
               {t('favorites.empty_desc')}
             </p>
             <Link
-              href="/"
+              href={localeHref('/')}
               className="glass-btn px-8 py-4 flex min-h-12 items-center gap-2 hover:scale-105 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Home className="w-5 h-5" />

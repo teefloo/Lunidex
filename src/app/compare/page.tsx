@@ -34,6 +34,7 @@ import { cn, formatId } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { resolveLanguage } from '@/lib/languages';
 import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
@@ -58,6 +59,7 @@ export default function ComparePage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const [compareSearch, setCompareSearch] = useState('');
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
@@ -368,7 +370,7 @@ export default function ComparePage() {
             <Scale className="w-16 h-16 text-foreground/20 mb-6" />
             <h3 className="text-2xl font-black mb-2 text-foreground">{t('compare.no_compare')}</h3>
             <p className="text-base text-muted-foreground font-medium mb-8">{t('compare.no_compare_desc')}</p>
-            <Button onClick={() => router.push('/')} className="rounded-sm font-black uppercase px-8">{t('compare.browse_pokedex')}</Button>
+            <Button onClick={() => router.push(localeHref('/'))} className="rounded-sm font-black uppercase px-8">{t('compare.browse_pokedex')}</Button>
           </div>
         ) : (
           <div className="space-y-12">
@@ -740,5 +742,4 @@ export default function ComparePage() {
     </div>
   );
 }
-
 

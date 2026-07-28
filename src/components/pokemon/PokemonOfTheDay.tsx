@@ -6,6 +6,7 @@ import { getPokemonDetailCached, getPokemonSpeciesCached, getLocalizedPokemonDat
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { getBaseSpeciesName } from '@/lib/form-names';
+import { localeHref } from '@/lib/seo';
 
 const NATIONAL_DEX_SIZE = 1025;
 
@@ -56,7 +57,7 @@ export default async function PokemonOfTheDay() {
         <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: color }} />
 
         <Link
-          href={`/pokemon/${pokemon.name}`}
+          href={localeHref(`/pokemon/${pokemon.name}`, lang)}
           className="relative shrink-0 h-24 w-24 md:h-32 md:w-32 group"
         >
           {artwork && (
@@ -77,7 +78,7 @@ export default async function PokemonOfTheDay() {
             <Sparkles className="h-3 w-3" />
             {t('home.pokemon_of_the_day', { defaultValue: 'Pokémon of the Day' })}
           </p>
-          <Link href={`/pokemon/${pokemon.name}`} className="mt-1 block text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors">
+          <Link href={localeHref(`/pokemon/${pokemon.name}`, lang)} className="mt-1 block text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors">
             {displayName}
           </Link>
           <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -91,7 +92,7 @@ export default async function PokemonOfTheDay() {
               </span>
             ))}
             <Link
-              href="/quiz"
+              href={localeHref('/quiz', lang)}
               className="ml-1 inline-flex items-center gap-1.5 rounded-sm border border-border/60 bg-background/40 px-2.5 py-0.5 text-[11px] font-bold text-foreground/60 transition-colors hover:border-primary/40 hover:text-primary"
             >
               <BrainCircuit className="h-3 w-3" />
