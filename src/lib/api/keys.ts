@@ -29,8 +29,13 @@ export const pokemonKeys = {
 
 export const tcgKeys = {
   all: () => ['tcg'] as const,
-  catalog: (filters: TCGCardFilters, language: string, pageSize: number) =>
-    [...tcgKeys.all(), 'catalog', language, pageSize, filters] as const,
+  catalog: (
+    filters: TCGCardFilters,
+    language: string,
+    pageSize: number,
+    localCardIds?: { owned: readonly string[]; wishlist: readonly string[] },
+  ) =>
+    [...tcgKeys.all(), 'catalog', language, pageSize, filters, localCardIds] as const,
   card: (cardId: string, language: string) => [...tcgKeys.all(), 'card', cardId, language] as const,
   filterOptions: (language: string) => [...tcgKeys.all(), 'filter-options', language] as const,
   rarities: (setId: string | null | undefined, language: string) =>

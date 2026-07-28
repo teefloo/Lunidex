@@ -111,12 +111,17 @@ function QuizPageContent() {
   const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
   const [sessionBadges, setSessionBadges] = useState(0);
   const initialBadgeCountRef = useRef(0);
+  const gameStateRef = useRef<GameState>('idle');
 
   const { t } = useTranslation();
   const { user } = useAuth();
   const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore();
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
+
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
 
   const { data: allNames } = useQuery({
     queryKey: ['allPokemonSearchIndex'],
@@ -145,7 +150,7 @@ function QuizPageContent() {
         setGameState('loading');
         setQuizChallenge('classic');
         setGameMode('marathon');
-        
+
         try {
           const detail = await getPokemonDetail(targetPokemon);
           setCurrentPokemon(detail);
@@ -186,7 +191,7 @@ function QuizPageContent() {
   }, [allNames, filteredPool, isDaily, dailyIndex]);
 
   const startNewRound = useCallback(async () => {
-    if (gameState === 'finished') return;
+    if (gameStateRef.current === 'finished') return;
     if (isDaily && dailyIndex >= 9) {
       setGameState('finished');
       return;
@@ -205,11 +210,11 @@ function QuizPageContent() {
 
       const otherOptions: string[] = [];
       const mainPool = allNames || [];
-      
+
       const today = new Date().toISOString().split('T')[0];
       const rngSeed = isDaily ? `${today}-${dailyIndex}` : Math.random().toString();
       const rng = seededRandom(`options-${rngSeed}`);
-      
+
       while (otherOptions.length < 3) {
         const idx = Math.floor(rng() * mainPool.length);
         const p = mainPool[idx];
@@ -224,7 +229,7 @@ function QuizPageContent() {
       toast.error(t('quiz.fetch_failed'));
       setGameState('idle');
     }
-  }, [allNames, getNextPokemon, isDaily, dailyIndex, gameState, t]);
+  }, [allNames, getNextPokemon, isDaily, dailyIndex, t]);
 
   const startGame = async (challenge: QuizChallenge, mode: GameMode = 'marathon', daily: boolean = false) => {
     setGameState('loading');
@@ -233,61 +238,72 @@ function QuizPageContent() {
     setQuizChallenge(challenge);
     setGameMode(mode);
     
-    let pool: Array<{ name: string; url?: string }> = allNames
-      ?.map((p) => ({ name: p.name }))
-      .filter((p) => !p.name.includes('-primal') && !p.name.includes('-ultra')) || [];
-    
-    if (selectedGen || selectedType) {
-      const genPool = selectedGen ? await getPokemonByGeneration(selectedGen) : null;
-      const typePool = selectedType ? await getPokemonByType(selectedType) : null;
+    try {
+      let pool: Array<{ name: string; url?: string }> = allNames
+        ?.map((p) => ({ name: p.name }))
+        .filter((p) => !p.name.includes('-primal') && !p.name.includes('-ultra')) || [];
       
-      if (genPool && typePool) {
-        pool = genPool.filter(p1 => typePool!.some(p2 => p2.name === p1.name));
-      } else if (genPool) {
-        pool = genPool;
-      } else if (typePool) {
-        pool = typePool;
-      }
-    }
+      if (selectedGen || selectedType) {
+        const genPool = selectedGen ? await getPokemonByGeneration(selectedGen) : null;
+        const typePool = selectedType ? await getPokemonByType(selectedType) : null;
 
-    if (pool.length < 4) {
-      toast.error(t('quiz.not_enough'));
+        if (genPool && typePool) {
+          pool = genPool.filter(p1 => typePool.some(p2 => p2.name === p1.name));
+        } else if (genPool) {
+          pool = genPool;
+        } else if (typePool) {
+          pool = typePool;
+        }
+      }
+
+      if (pool.length < 4) {
+        toast.error(t('quiz.not_enough'));
+        setGameState('idle');
+        return;
+      }
+
+      const mainPool = allNames || [];
+      if (mainPool.length < 4) {
+        toast.error(t('quiz.not_enough'));
+        setGameState('idle');
+        return;
+      }
+
+      setFilteredPool(pool);
+      setScore(0);
+      setLives(3);
+      setTimeLeft(30);
+      setWrongAnswers(0);
+      setTotalQuestions(0);
+      setCorrectCount(0);
+      setSessionStreak(0);
+      setSessionBadges(0);
+      initialBadgeCountRef.current = badges.length;
+
+      const today = new Date().toISOString().split('T')[0];
+      const firstRng = daily ? seededRandom(`${today}-0`) : Math.random;
+      const firstPokemon = pool[Math.floor(firstRng() * pool.length)];
+
+      const detail = await getPokemonDetail(firstPokemon.name);
+      setCurrentPokemon(detail);
+
+      const otherOptions: string[] = [];
+      const optionsRng = daily ? seededRandom(`options-${today}-0`) : Math.random;
+
+      while (otherOptions.length < 3) {
+        const idx = Math.floor(optionsRng() * mainPool.length);
+        const p = mainPool[idx];
+        if (p.name !== firstPokemon.name && !otherOptions.includes(p.name)) {
+          otherOptions.push(p.name);
+        }
+      }
+
+      setOptions([firstPokemon.name, ...otherOptions].sort(() => optionsRng() - 0.5));
+      setGameState('playing');
+    } catch {
+      toast.error(t('quiz.fetch_failed'));
       setGameState('idle');
-      return;
     }
-
-    setFilteredPool(pool);
-    setScore(0);
-    setLives(3);
-    setTimeLeft(30);
-    setWrongAnswers(0);
-    setTotalQuestions(0);
-    setCorrectCount(0);
-    setSessionStreak(0);
-    setSessionBadges(0);
-    initialBadgeCountRef.current = badges.length;
-    
-    const today = new Date().toISOString().split('T')[0];
-    const firstRng = daily ? seededRandom(`${today}-0`) : Math.random;
-    const firstPokemon = pool[Math.floor((typeof firstRng === 'function' ? firstRng() : Math.random()) * pool.length)];
-    
-    const detail = await getPokemonDetail(firstPokemon.name);
-    setCurrentPokemon(detail);
-
-    const otherOptions: string[] = [];
-    const mainPool = allNames || [];
-    const optionsRng = daily ? seededRandom(`options-${today}-0`) : Math.random;
-
-    while (otherOptions.length < 3) {
-      const idx = Math.floor((typeof optionsRng === 'function' ? optionsRng() : Math.random()) * mainPool.length);
-      const p = mainPool[idx];
-      if (p.name !== firstPokemon.name && !otherOptions.includes(p.name)) {
-        otherOptions.push(p.name);
-      }
-    }
-
-    setOptions([firstPokemon.name, ...otherOptions].sort(() => (typeof optionsRng === 'function' ? optionsRng() : Math.random()) - 0.5));
-    setGameState('playing');
   };
 
   const handleAnswer = (option: string) => {
@@ -347,6 +363,8 @@ function QuizPageContent() {
         } else {
           setTimeout(startNewRound, 2000);
         }
+      } else if (gameMode === 'time-attack') {
+        setTimeout(startNewRound, 2000);
       }
     }
   };
@@ -402,6 +420,7 @@ function QuizPageContent() {
       const timer = setInterval(() => {
         setTimeLeft(t => {
           if (t <= 1) {
+            gameStateRef.current = 'finished';
             setGameState('finished');
             clearInterval(timer);
             return 0;

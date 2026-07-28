@@ -74,14 +74,14 @@ function calcStat(base: number, iv: number, ev: number, level: number, mult: num
   );
 }
 
-function findIVRange(
+export function findIVRange(
   statKey: StatKey,
   base: number,
   actualStat: number,
   ev: number,
   level: number,
   natureMult: number
-): IVRange {
+): IVRange | null {
   const matches: number[] = [];
   for (let iv = 0; iv <= 31; iv++) {
     const computed =
@@ -90,7 +90,10 @@ function findIVRange(
         : calcStat(base, iv, ev, level, natureMult);
     if (computed === actualStat) matches.push(iv);
   }
-  if (matches.length === 0) return { min: 0, max: 31 };
+  // An observed stat can be impossible for the supplied Pokémon, level, EVs,
+  // and nature. Returning a range here would incorrectly present an estimate
+  // as valid, so callers must render an explicit no-solution state instead.
+  if (matches.length === 0) return null;
   return { min: matches[0], max: matches[matches.length - 1] };
 }
 
@@ -100,6 +103,10 @@ function findIVRange(
 
 const DEFAULT_STATS: BaseStats = { hp: 0, atk: 0, def: 0, spatk: 0, spdef: 0, spd: 0 };
 const DEFAULT_EVS: BaseStats  = { hp: 0, atk: 0, def: 0, spatk: 0, spdef: 0, spd: 0 };
+
+export function hasCompleteActualStats(stats: BaseStats): boolean {
+  return STAT_KEYS.every((key) => Number.isInteger(stats[key]) && stats[key] >= 1);
+}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -114,7 +121,7 @@ export default function EVIVCalculator() {
   const [nature, setNature]             = useState<NatureName>('hardy');
   const [actualStats, setActualStats]   = useState<BaseStats>({ ...DEFAULT_STATS });
   const [evs, setEvs]                   = useState<BaseStats>({ ...DEFAULT_EVS });
-  const [results, setResults]           = useState<Record<StatKey, IVRange> | null>(null);
+  const [results, setResults]           = useState<Record<StatKey, IVRange | null> | null>(null);
 
   const { data: baseStats, isFetching, isError } = useQuery({
     queryKey: ['pokemon-base-stats', pokemonName],
@@ -144,7 +151,7 @@ export default function EVIVCalculator() {
       spd: spdMult,
     };
 
-    const calc: Record<StatKey, IVRange> = {} as Record<StatKey, IVRange>;
+    const calc: Record<StatKey, IVRange | null> = {} as Record<StatKey, IVRange | null>;
     for (const key of STAT_KEYS) {
       calc[key] = findIVRange(key, baseStats[key], actualStats[key], evs[key], level, mults[key]);
     }
@@ -152,6 +159,7 @@ export default function EVIVCalculator() {
   }, [baseStats, nature, actualStats, evs, level]);
 
   const totalEVs = STAT_KEYS.reduce((s, k) => s + evs[k], 0);
+  const hasCompleteStats = hasCompleteActualStats(actualStats);
 
   const statLabelKey: Record<StatKey, string> = {
     hp:    t('ev_iv.stat_names.hp'),
@@ -275,10 +283,15 @@ export default function EVIVCalculator() {
       </div>
 
       {/* Actions */}
+      {baseStats && !hasCompleteStats && (
+        <p className="text-xs text-foreground/65" role="status">
+          {t('ev_iv.complete_stats_required', { defaultValue: 'Enter an in-game value for each stat before calculating IVs.' })}
+        </p>
+      )}
       <div className="flex gap-3">
         <Button
           onClick={handleCalculate}
-          disabled={!baseStats || totalEVs > 510}
+          disabled={!baseStats || totalEVs > 510 || !hasCompleteStats}
           className="flex-1 h-11 rounded-sm font-bold uppercase tracking-widest text-xs"
         >
           <Calculator className="h-4 w-4 mr-2" />
@@ -301,14 +314,29 @@ export default function EVIVCalculator() {
       {results && (
         <div className="space-y-2 pt-2 border-t border-border/30">
           {STAT_KEYS.map((key) => (
-            <IVResult
-              key={key}
-              label={statLabelKey[key]}
-              min={results[key].min}
-              max={results[key].max}
-              rangeLabel={t('ev_iv.iv_range')}
-              perfectLabel={t('ev_iv.perfect_iv')}
-            />
+            results[key] ? (
+              <IVResult
+                key={key}
+                label={statLabelKey[key]}
+                min={results[key].min}
+                max={results[key].max}
+                rangeLabel={t('ev_iv.iv_range')}
+                perfectLabel={t('ev_iv.perfect_iv')}
+              />
+            ) : (
+              <div
+                key={key}
+                className="flex items-center justify-between px-3 py-2 rounded-sm border border-red-500/30 bg-red-500/10"
+                role="status"
+              >
+                <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/60 w-16 shrink-0">
+                  {statLabelKey[key]}
+                </span>
+                <span className="text-xs font-black text-red-400">
+                  {t('ev_iv.no_iv_match', { defaultValue: 'No matching IV range' })}
+                </span>
+              </div>
+            )
           ))}
         </div>
       )}

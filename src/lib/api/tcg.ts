@@ -450,8 +450,10 @@ function serializeLocalOnlyFilters(filters: TCGCardFilters) {
   const regulationMark = filters.regulationMark ?? '';
   const priceRange = `${filters.priceMin ?? ''}:${filters.priceMax ?? ''}`;
   const releaseRange = `${filters.releaseStart ?? ''}:${filters.releaseEnd ?? ''}`;
+  const legalities = [...(filters.legalities ?? [])].sort().join('|');
+  const ownedState = filters.ownedState ?? 'all';
 
-  return [selectedRarity, selectedTrainerTypes, selectedEnergyTypes, illustrator, regulationMark, priceRange, releaseRange].join('::');
+  return [selectedRarity, selectedTrainerTypes, selectedEnergyTypes, illustrator, regulationMark, priceRange, releaseRange, legalities, ownedState].join('::');
 }
 
 function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): boolean {
@@ -855,19 +857,24 @@ export const searchCards = async (
     Boolean(filters.illustrator) ||
     Boolean(filters.regulationMark) ||
     Boolean(filters.priceMin !== undefined || filters.priceMax !== undefined) ||
-    Boolean(filters.releaseStart || filters.releaseEnd);
+    Boolean(filters.releaseStart || filters.releaseEnd) ||
+    Boolean(filters.legalities?.length) ||
+    Boolean(filters.ownedState && filters.ownedState !== 'all');
   const sortBy = filters.sortBy ?? 'name';
   const sortOrder = filters.sortOrder ?? 'asc';
   const requiresPriceHydration = sortBy === 'marketPrice';
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
+  const dependsOnLocalOwnership = Boolean(filters.ownedState && filters.ownedState !== 'all');
   const cacheKey = fetchAll
     ? `tcg-catalog-all-v11-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
-    : `tcg-catalog-v11-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}`;
+    : `tcg-catalog-v11-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
 
   try {
-    const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
-    if (cached) return cached;
+    if (!dependsOnLocalOwnership) {
+      const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
+      if (cached) return cached;
+    }
 
     if (!hasLocalOnlyFilters && !requiresLocalSorting && !requiresFullDatasetSort) {
       if (fetchAll) {
@@ -890,7 +897,7 @@ export const searchCards = async (
         const pageCards = await hydrateCardsForVisualEffects(sorted, tcgLang, signal);
         const result = { cards: pageCards, hasMore: false };
 
-        await setCachedData(cacheKey, result);
+        if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
         return result;
       }
 
@@ -904,7 +911,7 @@ export const searchCards = async (
         hasMore: Array.isArray(data) ? data.length > safeLimit : false,
       };
 
-      await setCachedData(cacheKey, result);
+      if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
       return result;
     }
 
@@ -920,16 +927,14 @@ export const searchCards = async (
       throwIfAborted(signal);
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
       const hydrated = hasLocalOnlyFilters || requiresPriceHydration
-        ? await Promise.all(
-            normalized.map(async (card) => {
+        ? await mapWithConcurrency(normalized, VISUAL_METADATA_CONCURRENCY, async (card) => {
               if (!requiresPriceHydration && !shouldHydrateForLocalFilters(card, filters)) {
                 return card;
               }
 
               const fullCard = await getTCGCard(card.id, tcgLang, signal);
               return fullCard ?? card;
-            }),
-          )
+            })
         : normalized;
       const filterCtx: LocalFilterContext | undefined = (ownedIds || wishlistIds) ? { ownedIds, wishlistIds } : undefined;
       const pageCards = hydrated.filter((card) => cardMatchesLocalFilters(card, filters, filterCtx));
@@ -947,12 +952,16 @@ export const searchCards = async (
       hasMore: fetchAll ? false : hasMoreRemote || sortedCards.length > (page - 1) * limit + safeLimit,
     };
 
-    await setCachedData(cacheKey, result);
+    if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
     return result;
   } catch (error) {
     if (signal?.aborted) throw error;
     console.error('[TCG API] Error in searchCards:', error);
-    return (await getCachedData<TCGCatalogPageResult>(cacheKey, true)) || { cards: [], hasMore: false };
+    const staleCached = dependsOnLocalOwnership
+      ? null
+      : await getCachedData<TCGCatalogPageResult>(cacheKey, true);
+    if (staleCached) return staleCached;
+    throw error;
   }
 };
 

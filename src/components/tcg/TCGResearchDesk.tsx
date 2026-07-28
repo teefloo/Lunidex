@@ -123,9 +123,12 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }, [pathname, router, searchParams, urlFilters]);
 
-  const { data: cardsData, isLoading, isFetching } = useQuery({
-    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 0),
-    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds, true),
+  const ownershipQueryKey = effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all'
+    ? { owned: tcgOwnedCards, wishlist: tcgWishlistCards }
+    : undefined;
+  const { data: cardsData, isLoading, isFetching, isError } = useQuery({
+    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 48, ownershipQueryKey),
+    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds),
     enabled: mounted,
     staleTime: 5 * 60 * 1000,
   });
@@ -234,6 +237,10 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
 
           {isLoading ? (
             <CardGridSkeleton />
+          ) : isError ? (
+            <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80">
+              {t('tcg.catalog_load_error', { defaultValue: 'Unable to load cards. Please try again.' })}
+            </p>
           ) : cards.length > 0 ? (
             <>
               <CardResults

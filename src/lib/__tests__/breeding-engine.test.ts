@@ -128,22 +128,17 @@ describe('calcBreedingResult — Destiny Knot', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Test 5 — 6IV both parents + Destiny Knot → probability = 1
+// Test 5 — exact Gen 6+ inheritance probabilities
 // ---------------------------------------------------------------------------
 describe('calcIvProbability — perfect parents', () => {
-  test('6IV parents + Destiny Knot + targeting all IVs → probability > 0.9', () => {
-    // With both parents at 31 IVs and Destiny Knot (5 inherited slots out of 6),
-    // the probability is very high but not exactly 1 because the 6th non-inherited
-    // slot has a 1/32 chance of being 31. Result ≈ (5/6 + 1/6 * 1/32)^6 ≈ 0.348
-    // However, when targeting ALL 6 IVs, probability is still high.
+  test('6IV parents + Destiny Knot + targeting all IVs requires the one random IV to be 31', () => {
     const p = calcIvProbability(
       MAX_IVS,
       MAX_IVS,
       { hp: true, atk: true, def: true, spa: true, spd: true, spe: true },
       true,
     );
-    expect(p).toBeGreaterThan(0);
-    expect(p).toBeLessThanOrEqual(1);
+    expect(p).toBeCloseTo(1 / 32);
   });
 
   test('6IV parents + Destiny Knot + targeting 1 IV → probability near 1', () => {
@@ -154,9 +149,8 @@ describe('calcIvProbability — perfect parents', () => {
       { hp: true },
       true,
     );
-    // P = 5/6 * 1 + 1/6 * 1/32 ≈ 0.838
-    expect(p).toBeGreaterThan(0.8);
-    expect(p).toBeLessThanOrEqual(1);
+    // Five of six slots inherit a 31; the sixth must randomly roll 31.
+    expect(p).toBeCloseTo((5 / 6) + (1 / 6) * (1 / 32));
   });
 
   test('6IV parents without Destiny Knot + targeting all IVs → probability < 1', () => {
@@ -178,9 +172,20 @@ describe('calcIvProbability — perfect parents', () => {
       { hp: true },
       true,
     );
-    // Inherited always gives 0; only random (not inherited) gives 1/32
-    expect(p).toBeGreaterThan(0);
-    expect(p).toBeLessThanOrEqual(1 / 32);
+    // The requested IV is only random when it is the one non-inherited slot.
+    expect(p).toBeCloseTo(1 / 192);
+  });
+
+  test('a Power item guarantees its holder’s selected IV and keeps the remaining slots distinct', () => {
+    const p = calcIvProbability(
+      { ...MAX_IVS, hp: 0 },
+      MAX_IVS,
+      { hp: true, atk: true, def: true, spa: true, spd: true, spe: true },
+      true,
+      'power-weight',
+    );
+
+    expect(p).toBe(0);
   });
 });
 

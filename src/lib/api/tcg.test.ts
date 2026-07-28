@@ -19,7 +19,7 @@ vi.mock('./cache', () => ({
   setCachedData: mockSetCachedData,
 }));
 
-import { getAllSets, getFilterOptions, sortCardsByReleaseDate } from './tcg';
+import { getAllSets, getFilterOptions, searchCards, sortCardsByReleaseDate } from './tcg';
 import type { TCGCard } from '@/types/tcg';
 
 function makeRawSet(id: string, name: string) {
@@ -100,5 +100,45 @@ describe('Pokémon card ordering', () => {
     ] satisfies TCGCard[];
 
     expect(sortCardsByReleaseDate(cards).map((card) => card.id)).toEqual(['new-1', 'old-1', 'old-2', 'missing']);
+  });
+});
+
+describe('TCG catalog filtering and failures', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
+  it('applies owned-state filters with the current local ownership state', async () => {
+    mockGet.mockResolvedValue({
+      data: [
+        { id: 'owned-card', localId: '1', name: 'Owned card', image: 'https://example.test/owned.png', rarity: 'Common', category: 'Pokemon', stage: 'Basic' },
+        { id: 'other-card', localId: '2', name: 'Other card', image: 'https://example.test/other.png', rarity: 'Common', category: 'Pokemon', stage: 'Basic' },
+      ],
+    });
+
+    const result = await searchCards(
+      { selectedCategory: 'all', ownedState: 'owned' },
+      'en',
+      1,
+      2,
+      undefined,
+      new Set(['owned-card']),
+      new Set(),
+    );
+
+    expect(result.cards.map((card) => card.id)).toEqual(['owned-card']);
+    expect(mockSetCachedData).not.toHaveBeenCalled();
+  });
+
+  it('rejects a catalog request without stale data instead of presenting an empty catalog', async () => {
+    mockGet.mockRejectedValue(new Error('TCGdex unavailable'));
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    await expect(searchCards({ selectedCategory: 'all' })).rejects.toThrow('TCGdex unavailable');
+    consoleError.mockRestore();
   });
 });

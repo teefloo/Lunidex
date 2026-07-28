@@ -169,17 +169,16 @@ export function checkCompatibility(p1: BreederPokemon, p2: BreederPokemon): Comp
  * comes out as 31, given the parents' IV pools and Destiny Knot usage.
  *
  * Algorithm (Gen 6+):
- *  - With Destiny Knot: 5 random IV slots are chosen from the combined pool of 12 (6 + 6).
- *    Each slot is filled from the corresponding parent's value.
- *  - Without Destiny Knot: 3 random IV slots are inherited (same logic, pool = 6 from each parent).
+ *  - With Destiny Knot: 5 distinct IV stats are selected; each is inherited
+ *    from one of the parents with equal probability.
+ *  - Without Destiny Knot: 3 distinct IV stats are inherited by the same rule.
  *  - Power Items guarantee one specific IV from the holding parent.
  *  - Remaining non-inherited slots are random 0–31 (probability 1/32 to hit 31).
  *
- * We compute the probability analytically:
- *  For each target stat with value 31, we need the child to have 31.
- *  A stat can be 31 via:
- *    a) It is one of the inherited slots AND the inherited value is 31.
- *    b) It is NOT inherited AND it randomly rolls 31 (1/32).
+ * We enumerate the possible inherited-stat subsets and parent sources exactly.
+ * The inherited slots are selected without replacement, so multiplying the
+ * marginal probability for each IV would incorrectly treat those slots as
+ * independent.
  */
 export function calcIvProbability(
   parent1IVs: IVSet,
@@ -193,48 +192,119 @@ export function calcIvProbability(
   if (targetStats.length === 0) return 1;
 
   const inheritedSlots = hasDestinyKnot ? 5 : 3;
-  const totalSlots = 6;
+  const powerItemChoices = getPowerItemChoices(p1HeldItem, p2HeldItem);
 
-  // Determine power item guarantees
-  const guaranteedFromP1 = p1HeldItem && POWER_ITEM_IV[p1HeldItem] ? POWER_ITEM_IV[p1HeldItem] : null;
-  const guaranteedFromP2 = p2HeldItem && POWER_ITEM_IV[p2HeldItem] ? POWER_ITEM_IV[p2HeldItem] : null;
+  return powerItemChoices.reduce(
+    (probability, choice) => probability + choice.probability * calcProbabilityForPowerItem(
+      parent1IVs,
+      parent2IVs,
+      targetStats,
+      inheritedSlots,
+      choice,
+    ),
+    0,
+  );
+}
 
-  // For each target stat, calculate probability of being 31
-  // We assume independence across slots (approximation; true result requires combinatorics
-  // over which slots are selected, but this gives a very close estimate).
+interface PowerItemChoice {
+  stat: IVStat | null;
+  source: 'parent1' | 'parent2' | null;
+  probability: number;
+}
 
-  let probability = 1;
+function getPowerItemChoices(
+  p1HeldItem?: HeldBreedItem,
+  p2HeldItem?: HeldBreedItem,
+): PowerItemChoice[] {
+  const p1Stat = p1HeldItem ? POWER_ITEM_IV[p1HeldItem] : undefined;
+  const p2Stat = p2HeldItem ? POWER_ITEM_IV[p2HeldItem] : undefined;
 
-  for (const stat of targetStats) {
-    // If this stat is guaranteed by a power item
-    if (stat === guaranteedFromP1) {
-      probability *= parent1IVs[stat] === 31 ? 1 : 0;
-      continue;
-    }
-    if (stat === guaranteedFromP2) {
-      probability *= parent2IVs[stat] === 31 ? 1 : 0;
-      continue;
-    }
+  if (p1Stat && p2Stat) {
+    // When both parents hold Power items, one item's forced inheritance is
+    // selected at random; the other does not apply to that egg.
+    return [
+      { stat: p1Stat, source: 'parent1', probability: 0.5 },
+      { stat: p2Stat, source: 'parent2', probability: 0.5 },
+    ];
+  }
+  if (p1Stat) return [{ stat: p1Stat, source: 'parent1', probability: 1 }];
+  if (p2Stat) return [{ stat: p2Stat, source: 'parent2', probability: 1 }];
+  return [{ stat: null, source: null, probability: 1 }];
+}
 
-    // For non-guaranteed stats: probabilistic
-    // P(stat = 31) = P(inherited) * P(correct value | inherited) + P(not inherited) * (1/32)
-    // P(inherited for this slot) ≈ inheritedSlots / totalSlots
-    const pInherited = inheritedSlots / totalSlots;
+function calcProbabilityForPowerItem(
+  parent1IVs: IVSet,
+  parent2IVs: IVSet,
+  targetStats: IVStat[],
+  inheritedSlots: number,
+  powerItem: PowerItemChoice,
+): number {
+  const availableStats = powerItem.stat
+    ? IV_STATS.filter((stat) => stat !== powerItem.stat)
+    : IV_STATS;
+  const inheritedStatSets = combinations(availableStats, inheritedSlots - (powerItem.stat ? 1 : 0));
+  const randomTargetProbability = 1 / 32;
 
-    // P(31 | inherited) = P(p1 chosen AND p1 has 31) + P(p2 chosen AND p2 has 31)
-    const p1Has31 = parent1IVs[stat] === 31;
-    const p2Has31 = parent2IVs[stat] === 31;
+  return inheritedStatSets.reduce((total, inheritedSet) => {
+    const inheritedSources = powerItem.stat
+      ? new Map<IVStat, 'parent1' | 'parent2'>([[powerItem.stat, powerItem.source!]])
+      : new Map<IVStat, 'parent1' | 'parent2'>();
 
-    // Each parent has equal chance of being the source for an inherited slot
-    const pCorrectGivenInherited = (p1Has31 ? 0.5 : 0) + (p2Has31 ? 0.5 : 0);
-    const pNotInherited = 1 - pInherited;
-    const pRandom31 = 1 / 32;
+    return total + probabilityForSources(
+      inheritedSet,
+      0,
+      inheritedSources,
+      parent1IVs,
+      parent2IVs,
+      targetStats,
+      randomTargetProbability,
+    ) / inheritedStatSets.length;
+  }, 0);
+}
 
-    const pStat31 = pInherited * pCorrectGivenInherited + pNotInherited * pRandom31;
-    probability *= pStat31;
+function probabilityForSources(
+  inheritedStats: IVStat[],
+  index: number,
+  inheritedSources: Map<IVStat, 'parent1' | 'parent2'>,
+  parent1IVs: IVSet,
+  parent2IVs: IVSet,
+  targetStats: IVStat[],
+  randomTargetProbability: number,
+): number {
+  if (index === inheritedStats.length) {
+    return targetStats.reduce((probability, stat) => {
+      const source = inheritedSources.get(stat);
+      if (!source) return probability * randomTargetProbability;
+      const inheritedValue = source === 'parent1' ? parent1IVs[stat] : parent2IVs[stat];
+      return inheritedValue === 31 ? probability : 0;
+    }, 1);
   }
 
-  return probability;
+  const stat = inheritedStats[index];
+  inheritedSources.set(stat, 'parent1');
+  const fromParent1 = probabilityForSources(
+    inheritedStats, index + 1, inheritedSources, parent1IVs, parent2IVs, targetStats, randomTargetProbability,
+  );
+  inheritedSources.set(stat, 'parent2');
+  const fromParent2 = probabilityForSources(
+    inheritedStats, index + 1, inheritedSources, parent1IVs, parent2IVs, targetStats, randomTargetProbability,
+  );
+  inheritedSources.delete(stat);
+
+  return (fromParent1 + fromParent2) / 2;
+}
+
+function combinations<T>(items: T[], size: number): T[][] {
+  if (size === 0) return [[]];
+  if (size > items.length) return [];
+
+  const result: T[][] = [];
+  for (let index = 0; index <= items.length - size; index++) {
+    for (const remainder of combinations(items.slice(index + 1), size - 1)) {
+      result.push([items[index], ...remainder]);
+    }
+  }
+  return result;
 }
 
 /**
