@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { memo, useCallback } from 'react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -87,6 +88,7 @@ export function PokemonCardSkeleton() {
 
 export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialData }: PokemonCardProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const queryClient = useQueryClient();
   const mounted = useMounted();
 
@@ -257,7 +259,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         } as CSSProperties}
       >
         <Link
-          href={`/pokemon/${name}`}
+          href={localeHref(`/pokemon/${name}`)}
           aria-label={displayName}
           className="absolute inset-0 z-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           onMouseEnter={prefetchDetails}

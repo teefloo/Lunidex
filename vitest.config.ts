@@ -10,7 +10,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    exclude: ['**/node_modules/**', '**/.claude/worktrees/**', '**/.hatch-runs/**'],
+    exclude: ['**/node_modules/**', '**/.claude/worktrees/**', '**/.hatch-runs/**', 'supabase/functions/**'],
   },
   resolve: {
     // Mirror the tsconfig path mapping so `@/...` imports that now live in the
