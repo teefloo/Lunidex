@@ -377,8 +377,26 @@ export function PokemonDetailClient({
             )}
             title={t('detail.shiny')}
             aria-label={showShiny ? t('detail.show_normal') || 'Show normal version' : t('detail.show_shiny') || 'Show shiny version'}
+            aria-pressed={showShiny}
           >
             <ShinyIcon className={cn("w-5 h-5", showShiny && "fill-current")} />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => toggleCaught(pokemon.id)}
+            className={cn(
+              "rounded-full transition-all h-12 w-12",
+              isCaught(pokemon.id)
+                ? "bg-primary text-primary-foreground shadow-[0_4px_16px_rgba(227,53,13,0.4)]"
+                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
+            )}
+            title={isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
+            aria-label={isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
+            aria-pressed={isCaught(pokemon.id)}
+          >
+            <Zap className={cn("w-5 h-5", isCaught(pokemon.id) && "fill-current")} />
           </Button>
 
           <Button
@@ -394,8 +412,46 @@ export function PokemonDetailClient({
             )}
             title={isFav ? t('card.remove_favorite') : t('card.add_favorite')}
             aria-label={isFav ? t('card.remove_favorite') || 'Remove from favorites' : t('card.add_favorite') || 'Add to favorites'}
+            aria-pressed={isFav}
           >
             <Heart className={cn("w-5 h-5 transition-transform", isFav && "fill-current scale-110")} />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => isInCompare(pokemon.id) ? removeFromCompare(pokemon.id) : addToCompare(pokemon.id)}
+            style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
+            className={cn(
+              "rounded-full transition-all h-12 w-12",
+              isInCompare(pokemon.id)
+                ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
+                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
+            )}
+            title={isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
+            aria-label={isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
+            aria-pressed={isInCompare(pokemon.id)}
+          >
+            <Swords className={cn("w-5 h-5", isInCompare(pokemon.id) && "fill-current")} />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={!isInTeam(pokemon.id) && team.length >= 6}
+            onClick={() => isInTeam(pokemon.id) ? removeFromTeam(pokemon.id) : addToTeam(pokemon.id)}
+            style={{ '--chip': 'var(--action-team)' } as CSSProperties}
+            className={cn(
+              "rounded-full transition-all h-12 w-12",
+              isInTeam(pokemon.id)
+                ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
+                : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
+            )}
+            title={isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}
+            aria-label={isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}
+            aria-pressed={isInTeam(pokemon.id)}
+          >
+            <Star className={cn("w-5 h-5", isInTeam(pokemon.id) && "fill-current")} />
           </Button>
         </div>
 
@@ -992,7 +1048,7 @@ export function PokemonDetailClient({
         </motion.div>
       </div>
       {/* Mobile Fixed Bottom Action Bar */}
-      <div className="sm:hidden fixed bottom-6 left-4 right-4 z-[100] animate-in fade-in slide-in-from-bottom-10 duration-700">
+      <div className="md:hidden fixed bottom-6 left-4 right-4 z-[100] animate-in fade-in slide-in-from-bottom-10 duration-700">
         <div className="glass-toolbar p-2 flex items-center justify-between gap-1.5">
           {/* Catch Toggle */}
           <Button
@@ -1005,6 +1061,8 @@ export function PokemonDetailClient({
                 ? "bg-primary text-primary-foreground shadow-[0_4px_16px_rgba(227,53,13,0.4)]"
                 : "bg-card/50 text-foreground/70"
             )}
+            aria-label={pokemon?.id && isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
+            aria-pressed={!!(pokemon?.id && isCaught(pokemon.id))}
           >
             <Zap className={cn("w-4 h-4", pokemon?.id && isCaught(pokemon.id) && "fill-current")} />
             <span className="text-[11px] font-black uppercase tracking-widest leading-none">

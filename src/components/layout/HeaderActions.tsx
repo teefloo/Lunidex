@@ -2,7 +2,7 @@
 
 import { useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { Sun, Moon, Heart, Search } from 'lucide-react';
+import { Sun, Moon, Heart, Search, Settings } from 'lucide-react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
@@ -21,6 +21,7 @@ import {
 export function HeaderActions() {
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
+  const toggleSettings = usePrimeDexStore(s => s.toggleSettings);
   const language = usePrimeDexStore(s => s.language);
   const mounted = useMounted();
   const { t } = useTranslation();
@@ -50,6 +51,7 @@ export function HeaderActions() {
     : 'System';
   const searchPlaceholder = label('search.placeholder', 'Search Pokémon (name or id)...');
   const favoritesLabel = label('nav.favorites', 'Favorites');
+  const settingsLabel = label('header.open_settings', 'Open Settings');
 
   const languageOptions = useMemo(() => [
     { code: 'auto', label: t('languages.auto'), flag: '🌐' },
@@ -140,6 +142,20 @@ export function HeaderActions() {
           </button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="text-xs font-bold">{themeLabel}</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger>
+          <button
+            type="button"
+            onClick={toggleSettings}
+            aria-label={settingsLabel}
+            className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary active:scale-95"
+          >
+            <Settings className="h-4 w-4 md:h-[18px] md:w-[18px]" aria-hidden="true" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-xs font-bold">{settingsLabel}</TooltipContent>
       </Tooltip>
 
       <AccountMenu />

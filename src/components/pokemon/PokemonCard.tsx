@@ -247,11 +247,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
   return (
     <div className="group/specimen relative h-full py-1 px-1 sm:px-2">
-      <Link
-        href={`/pokemon/${name}`}
-        className="relative block h-full outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
-        onMouseEnter={prefetchDetails}
-      >
       <article
         className="relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
@@ -261,6 +256,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           boxShadow: cardShadow,
         } as CSSProperties}
       >
+        <Link
+          href={`/pokemon/${name}`}
+          aria-label={displayName}
+          className="absolute inset-0 z-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          onMouseEnter={prefetchDetails}
+        />
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-60 transition-opacity duration-500 group-hover/specimen:opacity-80"
           style={{
@@ -268,14 +269,14 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           }}
         />
 
-        <div className="relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
+        <div className="pointer-events-none relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
           <div className="flex flex-col items-start gap-0.5">
             <span className="cat-no text-[0.55rem] text-muted-foreground sm:text-[0.6rem]">Cat. No.</span>
             <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
               #{pokemonId.toString().padStart(3, '0')}
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="pointer-events-auto flex items-center gap-1">
             <button
               type="button"
               onClick={toggleTeam}
@@ -327,7 +328,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
 
-        <div className="relative mx-auto h-28 w-28 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
+        <div className="pointer-events-none relative mx-auto h-28 w-28 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
           <div
             className="absolute inset-1 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
             style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
@@ -347,7 +348,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           />
         </div>
 
-        <div className="relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
+        <div className="pointer-events-none relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
           <p className="latin-name font-display text-[11px] italic text-muted-foreground sm:text-[11px]">
             {pokemonName.replace(/-/g, ' ')}
           </p>
@@ -386,9 +387,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             )}
           </div>
         </div>
-
       </article>
-    </Link>
 
       <button
         type="button"

@@ -93,36 +93,41 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {sortedSuggestions.slice(0, 30).map((card, i) => (
-              <motion.button
+              <motion.div
                 key={card.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: Math.min(i * 0.02, 0.4) }}
-                type="button"
-                onClick={() => {
-                  setSelectedCard(card);
-                  setIsModalOpen(true);
-                }}
                 className="group relative aspect-[2.15/3] overflow-hidden rounded-lg border border-border/20 bg-card/60 text-left transition-all hover:border-primary/30"
               >
-                {card.image ? (
-                  <TCGCardImage
-                    card={card}
-                    sizes="(min-width: 1280px) 12vw, (min-width: 768px) 20vw, 40vw"
-                    className="object-contain opacity-80 transition-opacity group-hover:opacity-100"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCard(card);
+                    setIsModalOpen(true);
+                  }}
+                  aria-label={t('tcg.open_card_detail', { name: card.name })}
+                  className="relative h-full w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                >
+                  {card.image ? (
+                    <TCGCardImage
+                      card={card}
+                      sizes="(min-width: 1280px) 12vw, (min-width: 768px) 20vw, 40vw"
+                      className="object-contain opacity-80 transition-opacity group-hover:opacity-100"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span>
+                    </div>
+                  )}
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
+                    <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">
+                      {card.name}
+                    </p>
+                    <p className="text-[11px] text-white/60">{card.set?.name}</p>
                   </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
-                  <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">
-                    {card.name}
-                  </p>
-                  <p className="text-[11px] text-white/60">{card.set?.name}</p>
-                </div>
-                <div className="absolute right-1 top-1">
+                </button>
+                <div className="pointer-events-none absolute right-1 top-1">
                   <TCGRarityBadge rarity={card.rarity} />
                 </div>
                 <div className="absolute left-1 top-1">
@@ -132,12 +137,13 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
                       e.stopPropagation();
                       toggleTCGWishlist(card.id);
                     }}
-                    className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 group-hover:opacity-100"
+                    aria-label={t('tcg.compare_remove_card')}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
                   >
                     <Trash2 className="h-2.5 w-2.5" />
                   </button>
                 </div>
-              </motion.button>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -191,47 +197,52 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
         ) : (
           <div className="divide-y divide-border/20 rounded-sm border border-border/30 bg-card/40">
             {sortedManual.map((card) => (
-              <button
+              <div
                 key={card.id}
-                type="button"
-                onClick={() => {
-                  setSelectedCard(card);
-                  setIsModalOpen(true);
-                }}
                 className="flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-muted/40"
               >
-                <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">
-                  {card.image ? (
-                    <TCGCardImage
-                      card={card}
-                      fill
-                      sizes="40px"
-                      className="object-contain"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-muted/40">
-                      <span className="text-[6px] font-bold text-foreground/20">N/A</span>
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold">{card.name}</p>
-                  <p className="truncate text-[11px] font-bold uppercase tracking-[0.06em] text-foreground/40">
-                    {card.set?.name} — #{card.localId}
-                  </p>
-                </div>
-                <TCGRarityBadge rarity={card.rarity} />
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
+                    setSelectedCard(card);
+                    setIsModalOpen(true);
+                  }}
+                  aria-label={t('tcg.open_card_detail', { name: card.name })}
+                  className="flex min-w-0 flex-1 items-center gap-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">
+                    {card.image ? (
+                      <TCGCardImage
+                        card={card}
+                        fill
+                        sizes="40px"
+                        className="object-contain"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-muted/40">
+                        <span className="text-[6px] font-bold text-foreground/20">N/A</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold">{card.name}</p>
+                    <p className="truncate text-[11px] font-bold uppercase tracking-[0.06em] text-foreground/40">
+                      {card.set?.name} — #{card.localId}
+                    </p>
+                  </div>
+                  <TCGRarityBadge rarity={card.rarity} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
                     toggleTCGWishlist(card.id);
                   }}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400"
+                  aria-label={t('tcg.compare_remove_card')}
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
-              </button>
+              </div>
             ))}
           </div>
         )}
