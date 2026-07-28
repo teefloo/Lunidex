@@ -19,7 +19,7 @@ export function HeaderLogo() {
         <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
           <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
         </div>
-        <div className="flex flex-col items-start gap-0.5 max-[359px]:hidden">
+        <div className="flex flex-col items-start gap-0.5 max-[479px]:hidden">
           <div className="flex items-baseline leading-none tracking-tight">
             <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base">Prime</span>
             <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground md:text-base">Dex</span>
