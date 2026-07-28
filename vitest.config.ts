@@ -19,9 +19,11 @@ export default defineConfig({
     alias: [
       { find: /^@\/types\/(.*)$/, replacement: core('types/$1') },
       { find: /^@\/store\/(.*)$/, replacement: core('store/$1') },
+      { find: '@/lib/api/route-helpers', replacement: path.resolve(__dirname, './src/lib/api/route-helpers') },
       { find: /^@\/lib\/api$/, replacement: core('api/index') },
       { find: /^@\/lib\/api\/(.*)$/, replacement: core('api/$1') },
       { find: /^@\/lib\/i18n\/(.*)$/, replacement: core('i18n/$1') },
+      { find: '@/lib/supabase/server', replacement: path.resolve(__dirname, './src/lib/supabase/server') },
       { find: /^@\/lib\/supabase\/(.*)$/, replacement: core('supabase/$1') },
       {
         find: /^@\/lib\/(languages|utils|pokemon-utils|team-analysis|auto-complete|badges|tcg-rarity)$/,

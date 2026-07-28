@@ -24,3 +24,9 @@ jobs:
       - run: npm run typecheck
 
       - run: npm run test
+
+      - run: npm run build
+
+      - run: npx tsc --project packages/core/tsconfig.json --noEmit
+
+      - run: npm run typecheck --workspace=@primedex/mobile
