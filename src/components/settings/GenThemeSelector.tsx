@@ -29,11 +29,12 @@ export function GenThemeSelector() {
 
           return (
             <button
+              type="button"
               key={id}
               onClick={() => setGenTheme(id)}
               aria-pressed={isActive}
               title={`${theme.name} — ${theme.game}`}
-              className={`relative flex items-center gap-2.5 py-2 px-3 rounded-sm text-xs font-bold transition-all duration-200 text-left ${
+              className={`touch-target relative flex min-w-0 items-center gap-2.5 rounded-sm px-3 py-2 text-left text-xs font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
                 isActive
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                   : 'text-foreground/60 hover:bg-muted/55 hover:text-foreground/90'
@@ -71,10 +72,9 @@ export function GenThemeSelector() {
           </span>
         </div>
         <button
+          type="button"
           onClick={() => setAutoGenTheme(!autoGenTheme)}
-          className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${
-            autoGenTheme ? 'bg-primary' : 'bg-muted/70'
-          }`}
+          className="touch-target flex h-11 w-14 shrink-0 items-center justify-center rounded-sm border-transparent bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           aria-label={
             autoGenTheme
               ? 'Désactiver le thème automatique'
@@ -83,11 +83,9 @@ export function GenThemeSelector() {
           role="switch"
           aria-checked={autoGenTheme}
         >
-          <span
-            className={`absolute top-1 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${
-              autoGenTheme ? 'left-8' : 'left-1'
-            }`}
-          />
+          <span className={`relative block h-7 w-12 rounded-full border border-foreground/15 transition-[background-color,border-color] duration-300 ${autoGenTheme ? 'border-primary/60 bg-primary' : 'bg-muted/70'}`}>
+            <span className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform duration-300 ${autoGenTheme ? 'translate-x-5' : ''}`} />
+          </span>
         </button>
       </div>
     </div>

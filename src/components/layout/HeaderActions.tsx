@@ -97,7 +97,7 @@ export function HeaderActions() {
         <SelectTrigger
           size="sm"
           aria-label={languageLabel}
-          className="glass-control touch-target flex !h-11 !w-11 sm:!w-[96px] items-center justify-center sm:justify-between !px-2.5 sm:!px-3 !py-0 overflow-hidden sm:overflow-visible text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
+          className="glass-control touch-target flex !h-11 !w-14 gap-1 sm:!w-[96px] items-center justify-center sm:justify-between !px-2 sm:!px-3 !py-0 overflow-hidden sm:overflow-visible text-muted-foreground hover:border-indigo-500/20 hover:bg-indigo-500/10 hover:text-indigo-500 active:scale-95"
           style={{ minHeight: 44 }}
         >
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">

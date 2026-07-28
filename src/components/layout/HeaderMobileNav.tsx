@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, Menu, X } from 'lucide-react';
+import { Heart, Menu } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
@@ -24,7 +24,6 @@ export function HeaderMobileNav() {
   const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
   const favoritesLabel = label('nav.favorites', 'Favorites');
   const menuLabel = label('header.open_menu', 'Menu');
-  const closeMenuLabel = label('common.close', 'Close');
   const homeMenuLabel = mounted ? `${t('header.home_aria')} - PrimeDex` : 'Go to Home - PrimeDex';
 
   return (
@@ -38,18 +37,6 @@ export function HeaderMobileNav() {
           }
         />
         <SheetContent side="right" className="w-[85vw] max-w-[350px] p-0 pt-[calc(0.5rem+env(safe-area-inset-top))] pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <SheetClose
-            render={
-              <button
-                type="button"
-                className="touch-target absolute right-3 top-[calc(0.5rem+env(safe-area-inset-top))] z-10 flex h-11 w-11 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted/55 hover:text-foreground active:scale-95"
-                aria-label={closeMenuLabel}
-                title={closeMenuLabel}
-              >
-                <X className="h-5 w-5" />
-              </button>
-            }
-          />
           <SheetHeader className="border-b border-foreground/15 p-6">
             <SheetTitle className="flex items-baseline text-left font-display tracking-tight">
               <span className="text-2xl font-extrabold gradient-text-hero">Prime</span>

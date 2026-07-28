@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ChevronDown,
@@ -33,6 +33,7 @@ interface TCGResearchDeskProps {
 export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const visibleBatchSize = mounted && window.innerWidth < 768 ? 24 : 48;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -128,14 +129,37 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
     : undefined;
   const { data: cardsData, isLoading, isFetching, isError } = useQuery({
     queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 48, ownershipQueryKey),
-    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds),
+    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds, true),
     enabled: mounted,
     staleTime: 5 * 60 * 1000,
   });
 
   const cards = useMemo(() => cardsData?.cards ?? [], [cardsData]);
   const totalCards = cards.length;
+  const [visibleCardCount, setVisibleCardCount] = useState(48);
+  const loadMoreRef = useRef<HTMLButtonElement | null>(null);
+  const visibleCards = useMemo(
+    () => cards.slice(0, visibleCardCount),
+    [cards, visibleCardCount],
+  );
   const sortValue = `${effectiveFilters.sortBy ?? 'id'}-${effectiveFilters.sortOrder ?? 'asc'}`;
+
+  useEffect(() => {
+    const loadMoreButton = loadMoreRef.current;
+    if (!loadMoreButton || visibleCardCount >= totalCards) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCardCount((current) => Math.min(current + visibleBatchSize, totalCards));
+        }
+      },
+      { rootMargin: '320px 0px' },
+    );
+
+    observer.observe(loadMoreButton);
+    return () => observer.disconnect();
+  }, [totalCards, visibleCardCount, visibleBatchSize]);
 
   const updateFilters = useCallback((next: TCGCardFilters) => {
     setHasUserEditedFilters(true);
@@ -244,9 +268,19 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
           ) : cards.length > 0 ? (
             <>
               <CardResults
-                cards={cards}
+                cards={visibleCards}
                 onCardClick={openCard}
               />
+              {visibleCards.length < totalCards && (
+                <button
+                  ref={loadMoreRef}
+                  type="button"
+                  onClick={() => setVisibleCardCount((current) => Math.min(current + visibleBatchSize, totalCards))}
+                  className="mx-auto flex min-h-11 items-center justify-center rounded-sm border border-border/45 bg-card/55 px-5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/35 hover:bg-primary/10 hover:text-primary"
+                >
+                  {t('tcg.load_more_cards', { defaultValue: 'Load more cards' })}
+                </button>
+              )}
             </>
           ) : (
             <EmptyState

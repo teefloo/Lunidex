@@ -70,12 +70,14 @@ export default function SettingsModal() {
                 <button
                   type="button"
                   onClick={toggleSound}
-                  className={`touch-target relative h-11 w-14 rounded-full transition-[background-color] duration-300 ${soundEnabled ? 'bg-primary' : 'bg-muted/70'}`}
+                  className="touch-target flex h-11 w-14 shrink-0 items-center justify-center rounded-sm border-transparent bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   aria-label={soundEnabled ? t('settings.sound_disable') : t('settings.sound_enable')}
                   role="switch"
                   aria-checked={soundEnabled}
                 >
-                  <span className={`absolute top-1 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${soundEnabled ? 'left-8' : 'left-1'}`} />
+                  <span className={`relative block h-7 w-12 rounded-full border border-foreground/15 transition-[background-color,border-color] duration-300 ${soundEnabled ? 'border-primary/60 bg-primary' : 'bg-muted/70'}`}>
+                    <span className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform duration-300 ${soundEnabled ? 'translate-x-5' : ''}`} />
+                  </span>
                 </button>
               </div>
 
@@ -93,12 +95,14 @@ export default function SettingsModal() {
                 <button
                   type="button"
                   onClick={toggleAnimatedSprites}
-                  className={`touch-target relative h-11 w-14 rounded-full transition-[background-color] duration-300 ${animatedSprites ? 'bg-primary' : 'bg-muted/70'}`}
+                  className="touch-target flex h-11 w-14 shrink-0 items-center justify-center rounded-sm border-transparent bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   aria-label={animatedSprites ? t('settings.animated_sprites_disable') : t('settings.animated_sprites_enable')}
                   role="switch"
                   aria-checked={animatedSprites}
                 >
-                  <span className={`absolute top-1 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${animatedSprites ? 'left-8' : 'left-1'}`} />
+                  <span className={`relative block h-7 w-12 rounded-full border border-foreground/15 transition-[background-color,border-color] duration-300 ${animatedSprites ? 'border-primary/60 bg-primary' : 'bg-muted/70'}`}>
+                    <span className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform duration-300 ${animatedSprites ? 'translate-x-5' : ''}`} />
+                  </span>
                 </button>
               </div>
 

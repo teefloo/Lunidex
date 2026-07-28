@@ -63,6 +63,7 @@ export function useSupabaseSync(): void {
   const user = ctx?.user ?? null;
   const enabled = ctx?.enabled ?? false;
   const hasHydrated = usePrimeDexStore((s) => s._hasHydrated);
+  const userId = user?.id ?? null;
 
   const lastPushedRef = useRef<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -73,7 +74,7 @@ export function useSupabaseSync(): void {
     const supabase = getSupabaseClient();
     if (!hasHydrated) return;
 
-    if (!enabled || !supabase || !user) {
+    if (!enabled || !supabase || !userId) {
       if (activeUserIdRef.current !== null) {
         activeUserIdRef.current = null;
         void switchPersistenceScope(null);
@@ -82,8 +83,6 @@ export function useSupabaseSync(): void {
     }
 
     let cancelled = false;
-    const userId = user.id;
-
     const push = async (snapshot: ReturnType<typeof pickSyncState>) => {
       const payload = buildSyncPayload(remoteSnapshotRef.current, snapshot);
       const serialized = JSON.stringify(payload);
@@ -159,5 +158,8 @@ export function useSupabaseSync(): void {
       lastPushedRef.current = null;
       remoteSnapshotRef.current = {};
     };
-  }, [enabled, user, hasHydrated]);
+  // Depend on the stable account id, not the mutable Supabase User object.
+  // Token refreshes can replace that object and would otherwise re-run the
+  // initial remote merge, bringing deleted local entries back via union merge.
+  }, [enabled, userId, hasHydrated]);
 }

@@ -108,7 +108,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const removeFromTeam = usePrimeDexStore(s => s.removeFromTeam);
   const toggleCaught = usePrimeDexStore(s => s.toggleCaught);
 
-  const resolvedLang = language === 'auto' ? systemLanguage : language;
+  // Keep the first client render identical to SSR. The persisted/system
+  // language can be different (for example `fr` in the browser while the
+  // server rendered the default `en` bundle), so only apply it after mount.
+  const resolvedLang = mounted
+    ? (language === 'auto' ? systemLanguage : language)
+    : 'en';
 
   const pokemonGql = initialData?.pokemon as GqlPokemonData | undefined;
   const hasUsableData = !!(initialData?.pokemon?.id &&

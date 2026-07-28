@@ -11,6 +11,7 @@ import {
 import type { Session, User, AuthError, Provider } from '@supabase/supabase-js';
 import { getSupabaseClient } from './client';
 import { normalizeDisplayName } from '@/lib/json-ld';
+import { isSupportedLanguage } from '@/lib/languages';
 
 type AuthResult = { error: AuthError | null };
 
@@ -26,6 +27,7 @@ interface AuthContextValue {
   signInWithOAuth: (provider: Provider) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<AuthResult>;
+  updatePassword: (password: string) => Promise<AuthResult>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -77,11 +79,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithOAuth: noop,
         signOut: async () => {},
         resetPassword: noop,
+        updatePassword: noop,
       };
     }
 
     const redirectTo =
       typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : undefined;
+    const resetRedirectTo = typeof window !== 'undefined'
+      ? (() => {
+        const locale = window.location.pathname.split('/').filter(Boolean)[0];
+        const localizedPrefix = isSupportedLanguage(locale ?? '') ? `/${locale}` : '/en';
+        return `${window.location.origin}${localizedPrefix}/auth/reset-password`;
+      })()
+      : undefined;
 
     return {
       enabled: true,
@@ -125,8 +135,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       resetPassword: async (email) => {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo,
+          redirectTo: resetRedirectTo,
         });
+        return { error };
+      },
+      updatePassword: async (password) => {
+        const { error } = await supabase.auth.updateUser({ password });
         return { error };
       },
     };
