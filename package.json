@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "test": "node ./node_modules/vitest/vitest.mjs",
