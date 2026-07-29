@@ -59,7 +59,7 @@ export default {
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '终极宝可梦伴侣',
-      footer_copyright: '© {{year}} PrimeDex. 保留所有权利。',
+      footer_copyright: '© {{year}} Lunidex. 保留所有权利。',
       footer_data: '数据由 PokéAPI 提供。',
       faq_eyebrow: '常见问题',
       faq_title: '关于 PrimeDex 的问题',
@@ -330,6 +330,7 @@ export default {
       home: '首页',
       search: '搜索',
       more: '更多',
+      tools: '工具',
       favorites: '收藏',
       compare: '比较',
       quiz: '问答',

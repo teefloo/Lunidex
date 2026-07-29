@@ -14,14 +14,10 @@ export default async function SiteFooter() {
   const navigationLinks = [
     { href: '/', label: t('nav.home') },
     { href: '/team', label: t('nav.team') },
-    { href: '/compare', label: t('nav.compare') },
     { href: '/tcg', label: t('nav.tcg') },
-    { href: '/types', label: t('nav.types') },
-    { href: '/moves', label: t('nav.moves') },
+    { href: '/tcg/collection', label: t('tcg.nav_collection') },
     { href: '/quiz', label: t('nav.quiz') },
-    { href: '/favorites', label: t('nav.favorites') },
     { href: '/faq', label: t('nav.faq') },
-    { href: '/ev-iv', label: t('nav.ev_iv') },
   ];
 
   const legalLinks = [

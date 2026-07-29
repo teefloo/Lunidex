@@ -123,14 +123,14 @@ export function buildShareMeta(data: ShareData): {
       const params = new URLSearchParams({ name: data.name });
       if (data.lang) params.set('lang', data.lang);
       url = `${SITE_URL}/api/og/pokemon?${params.toString()}`;
-      alt = `${data.name} — PrimeDex Pokémon card`;
+      alt = `${data.name} — ${SITE_NAME} Pokémon card`;
       break;
     }
     case 'team': {
       const params = new URLSearchParams({ code: data.code });
       if (data.lang) params.set('lang', data.lang);
       url = `${SITE_URL}/api/og/team?${params.toString()}`;
-      alt = 'My PrimeDex team';
+      alt = `My ${SITE_NAME} team`;
       break;
     }
     case 'quiz': {
@@ -144,7 +144,7 @@ export function buildShareMeta(data: ShareData): {
       if (data.badges !== undefined) params.set('badges', String(data.badges));
       if (data.lang) params.set('lang', data.lang);
       url = `${SITE_URL}/api/og/quiz-result?${params.toString()}`;
-      alt = `Quiz result — ${data.score}/${data.total} on PrimeDex`;
+      alt = `Quiz result — ${data.score}/${data.total} on ${SITE_NAME}`;
       break;
     }
     case 'profile': {
@@ -156,14 +156,14 @@ export function buildShareMeta(data: ShareData): {
       if (data.quiz !== undefined) params.set('quiz', String(data.quiz));
       if (data.lang) params.set('lang', data.lang);
       url = `${SITE_URL}/api/og/profile?${params.toString()}`;
-      alt = `${data.trainer ?? 'Trainer'} — PrimeDex profile`;
+      alt = `${data.trainer ?? 'Trainer'} — ${SITE_NAME} profile`;
       break;
     }
     case 'tcg-card': {
       const params = new URLSearchParams({ id: data.id });
       if (data.lang) params.set('lang', data.lang);
       url = `${SITE_URL}/api/og/tcg-card?${params.toString()}`;
-      alt = 'Pokémon TCG card — PrimeDex';
+      alt = `Pokémon TCG card — ${SITE_NAME}`;
       break;
     }
   }

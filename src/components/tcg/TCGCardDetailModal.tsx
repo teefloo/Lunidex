@@ -29,7 +29,6 @@ import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
-import { PriceAlertManager } from './PriceAlertManager';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -369,11 +368,6 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                 {/* ── Price history chart ──────────────────────────── */}
                 <section className="space-y-3">
                   <PriceChart cardId={displayCard.id} />
-                </section>
-
-                {/* ── Price alerts ─────────────────────────────────── */}
-                <section className="space-y-3">
-                  <PriceAlertManager cardId={displayCard.id} cardName={displayCard.name} />
                 </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}

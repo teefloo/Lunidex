@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient, bearerToken } from '@/lib/supabase/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
 
+// Price polling is intentionally paused for the public launch. The scheduled
+// sender does not yet use standards-compliant web-push payload encryption.
+const PRICE_ALERTS_ENABLED = false;
+
+function unavailableResponse() {
+  return NextResponse.json(
+    { error: 'Price alerts are temporarily unavailable' },
+    { status: 410 },
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -28,6 +39,7 @@ function isValidCurrency(v: unknown): v is 'USD' | 'EUR' {
 // ---------------------------------------------------------------------------
 
 export async function GET(request: NextRequest) {
+  if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
   if (!supabase) {
     return NextResponse.json({ alerts: [] });
@@ -57,6 +69,7 @@ export async function GET(request: NextRequest) {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
+  if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
@@ -116,6 +129,7 @@ export async function POST(request: NextRequest) {
 // ---------------------------------------------------------------------------
 
 export async function DELETE(request: NextRequest) {
+  if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
@@ -150,6 +164,7 @@ export async function DELETE(request: NextRequest) {
 // ---------------------------------------------------------------------------
 
 export async function PATCH(request: NextRequest) {
+  if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });

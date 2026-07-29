@@ -37,7 +37,7 @@ export default function BattlePage() {
         <PageHeader
           icon={SwordsIcon}
           title="Battle Simulator"
-          description="Gen 9 damage calculator · AI duel mode · PvP via Realtime"
+          description="Gen 9 damage calculator and AI duel mode"
         />
         <BattleClient />
       </main>

@@ -59,7 +59,7 @@ export default {
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '究極のポケモンコンパニオン',
-      footer_copyright: '© {{year}} PrimeDex. All rights reserved.',
+      footer_copyright: '© {{year}} Lunidex. All rights reserved.',
       footer_data: 'Data provided by PokéAPI.',
       faq_eyebrow: 'よくある質問',
       faq_title: 'PrimeDex について',
@@ -330,6 +330,7 @@ export default {
       home: 'ホーム',
       search: '検索',
       more: 'その他',
+      tools: 'ツール',
       favorites: 'お気に入り',
       compare: '比較',
       quiz: 'クイズ',

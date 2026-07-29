@@ -8,14 +8,14 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL } from '@/lib/site';
-import { getServerT } from '@/lib/server-i18n';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const queryClient = new QueryClient();
-  const t = await getServerT();
+  const [t, lang] = await Promise.all([getServerT(), getServerLanguage()]);
   const baseUrl = SITE_URL;
 
   await Promise.all([
@@ -42,14 +42,14 @@ export default async function Home() {
     '@id': `${baseUrl}/#pokedex-list`,
     name: 'Complete Pokédex — All 1025 Pokémon',
     description: 'The complete National Pokédex listing all 1025 Pokémon across 9 generations with stats, types, and official artwork.',
-    url: `${baseUrl}/en`,
+    url: `${baseUrl}/${lang}`,
     numberOfItems: 1025,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',
     itemListElement: topPokemon.map((slug, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: slug.charAt(0).toUpperCase() + slug.slice(1),
-      url: `${baseUrl}/en/pokemon/${slug}`,
+      url: `${baseUrl}/${lang}/pokemon/${slug}`,
       image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${[25, 6, 150, 384, 493, 445, 448, 133, 143, 149, 94, 65, 68, 131, 130][index]}.png`,
     })),
   };
@@ -58,9 +58,9 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     '@id': `${baseUrl}/#faq`,
-    url: `${baseUrl}/en`,
+    url: `${baseUrl}/${lang}`,
     name: t('home.faq_title'),
-    inLanguage: 'en',
+    inLanguage: lang,
     mainEntity: [
       { '@type': 'Question', name: t('home.faq_q1'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a1') } },
       { '@type': 'Question', name: t('home.faq_q2'), acceptedAnswer: { '@type': 'Answer', text: t('home.faq_a2') } },
@@ -75,12 +75,12 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
     '@id': `${baseUrl}/#howto-team-builder`,
-    name: 'How to build a competitive Pokémon team with PrimeDex',
-    description: 'Step-by-step guide to building a balanced 6-Pokémon team using the PrimeDex team builder tool, optimized for type coverage, stat synergy, and role distribution.',
+    name: `How to build a competitive Pokémon team with ${SITE_NAME}`,
+    description: `Step-by-step guide to building a balanced 6-Pokémon team using the ${SITE_NAME} team builder, optimized for type coverage, stat synergy, and role distribution.`,
     totalTime: 'PT5M',
     estimatedCost: { '@type': 'MonetaryAmount', currency: 'USD', value: '0' },
     tool: [
-      { '@type': 'HowToTool', name: 'PrimeDex team builder' },
+      { '@type': 'HowToTool', name: `${SITE_NAME} team builder` },
       { '@type': 'HowToTool', name: 'PokeAPI type data' },
     ],
     step: [
@@ -88,8 +88,8 @@ export default async function Home() {
         '@type': 'HowToStep',
         position: 1,
         name: 'Open the team builder',
-        text: 'Navigate to /en/team to access the drag-and-drop team builder.',
-        url: `${baseUrl}/en/team`,
+        text: 'Navigate to the team builder to access the drag-and-drop team builder.',
+        url: `${baseUrl}/${lang}/team`,
       },
       {
         '@type': 'HowToStep',
@@ -138,7 +138,7 @@ export default async function Home() {
       <div className="app-page">
         <Header />
 
-        <main id="main-content" className="relative z-10 pt-28 pb-8 md:pt-32">
+        <main className="relative z-10 pt-28 pb-8 md:pt-32">
           <HeroSection />
           <PokemonOfTheDay />
 

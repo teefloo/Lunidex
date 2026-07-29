@@ -37,7 +37,8 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { language, systemLanguage } = usePrimeDexStore();
+  const language = usePrimeDexStore((s) => s.language);
+  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
   const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
   const tcgWishlistCards = usePrimeDexStore((s) => s.tcgWishlistCards);
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);

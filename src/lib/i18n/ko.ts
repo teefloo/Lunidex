@@ -59,7 +59,7 @@ export default {
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: '최고의 포켓몬 동반자',
-      footer_copyright: '© {{year}} PrimeDex. 모든 권리 보유.',
+      footer_copyright: '© {{year}} Lunidex. 모든 권리 보유.',
       footer_data: 'PokéAPI에서 제공하는 데이터.',
       faq_eyebrow: '자주 묻는 질문',
       faq_title: 'PrimeDex에 대한 질문',
@@ -330,6 +330,7 @@ export default {
       home: '홈',
       search: '검색',
       more: '더보기',
+      tools: '도구',
       favorites: '즐겨찾기',
       compare: '비교',
       quiz: '퀴즈',

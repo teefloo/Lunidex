@@ -30,7 +30,7 @@ export default function PageHeader({
   gradientFrom = 'from-primary/20',
   centered = false,
 }: PageHeaderProps) {
-  const resolvedEyebrow = eyebrow === undefined ? 'PrimeDex' : eyebrow;
+  const resolvedEyebrow = eyebrow === undefined ? 'Lunidex' : eyebrow;
   const resolvedDescription = description ?? subtitle;
 
   return (

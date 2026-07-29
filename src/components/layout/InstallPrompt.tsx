@@ -46,7 +46,7 @@ export function InstallPrompt() {
     <div className="fixed inset-x-3 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-50 flex max-w-sm items-center gap-3 rounded-lg border border-border bg-card p-4 shadow-lg sm:inset-x-auto sm:right-4">
       <Image src="/icon-192.png" alt="" width={40} height={40} className="size-10 shrink-0" />
       <div className="flex-1 text-sm">
-        <p className="font-semibold text-foreground">Install PrimeDex</p>
+        <p className="font-semibold text-foreground">Install Lunidex</p>
         <p className="text-muted-foreground">Add to your home screen for the best experience.</p>
       </div>
       <div className="flex shrink-0 gap-2">

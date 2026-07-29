@@ -18,6 +18,7 @@ import {
 import type { FriendRelation } from '@/types/friends';
 
 const FRIENDS_QUERY_KEY = ['friends', 'relations'];
+const EMPTY_RELATIONS: FriendRelation[] = [];
 
 function RelationRow({ relation, userId }: { relation: FriendRelation; userId: string }) {
   const { t } = useTranslation();
@@ -102,7 +103,7 @@ export default function FriendsClient() {
     onError: (error) => toast.error(error instanceof Error ? error.message : t('friends.errors.send', { defaultValue: 'Could not send friend request.' })),
   });
 
-  const relations = relationsQuery.data ?? [];
+  const relations = relationsQuery.data ?? EMPTY_RELATIONS;
   const incoming = useMemo(() => relations.filter((relation) => relation.status === 'pending' && relation.addresseeId === user?.id), [relations, user?.id]);
   const outgoing = useMemo(() => relations.filter((relation) => relation.status === 'pending' && relation.requesterId === user?.id), [relations, user?.id]);
   const friends = useMemo(() => relations.filter((relation) => relation.status === 'accepted'), [relations]);

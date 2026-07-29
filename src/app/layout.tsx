@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
-import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
@@ -154,7 +153,7 @@ export default async function RootLayout({
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
       name: SITE_NAME,
-      alternateName: ['PrimeDex', 'Prime Dex', 'PrimeDex Pokédex'],
+      alternateName: ['Lunidex', 'Luni Dex', 'Lunidex Pokédex'],
       url: baseUrl,
       description: SITE_DESCRIPTION,
       inLanguage: supportedInLanguage,
@@ -227,7 +226,7 @@ export default async function RootLayout({
       },
       author: { '@id': `${baseUrl}/#organization` },
       publisher: { '@id': `${baseUrl}/#organization` },
-      softwareVersion: '1.0.0',
+      softwareVersion: '0.1.0',
     },
     {
       '@context': 'https://schema.org',
@@ -267,7 +266,6 @@ export default async function RootLayout({
                {children}
              </div>
              <SiteFooter />
-              <ClientCookieBanner />
            </AppContent>
          </Providers>
         <script

@@ -15,6 +15,10 @@ import {
   isSafePushEndpoint,
 } from './security.ts';
 
+// The public V1 does not offer automatic price alerts. Keep the deployed
+// scheduler fail-closed until compliant encrypted web-push delivery exists.
+const PRICE_ALERTS_ENABLED = false;
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -214,6 +218,13 @@ function base64UrlDecode(input: string): Uint8Array {
 // ---------------------------------------------------------------------------
 
 serve(async (req) => {
+  if (!PRICE_ALERTS_ENABLED) {
+    return new Response(JSON.stringify({ error: 'Price alerts are temporarily disabled' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   // This function is deployed without Supabase JWT verification because it is
   // scheduler-only. Treat an absent scheduler secret as a configuration outage,
   // never as permission to run with the service-role client.

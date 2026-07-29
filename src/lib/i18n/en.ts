@@ -59,7 +59,7 @@ export default {
     home: {
       hero_title: 'PrimeDex',
       hero_subtitle: 'The Ultimate Pokémon Companion',
-      footer_copyright: '© {{year}} PrimeDex. All rights reserved.',
+      footer_copyright: '© {{year}} Lunidex. All rights reserved.',
       footer_data: 'Data provided by PokéAPI.',
       faq_eyebrow: 'Frequently Asked',
       faq_title: 'Questions about PrimeDex',
@@ -330,6 +330,7 @@ export default {
         home: 'Home',
         search: 'Search',
         more: 'More',
+        tools: 'Tools',
         favorites: 'Favorites',
         compare: 'Compare',
         quiz: 'Quiz',

@@ -35,7 +35,7 @@ export function HeaderDesktopNav() {
       <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
       <DropdownMenu>
         <DropdownMenuTrigger className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[popup-open]:text-primary">
-          {label('nav.more', 'More')}
+          {label('nav.tools', 'Tools')}
           <ChevronDown className="h-2.5 w-2.5 transition-transform group-data-[popup-open]:rotate-180" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

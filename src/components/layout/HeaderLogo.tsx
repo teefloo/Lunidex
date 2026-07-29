@@ -15,14 +15,14 @@ export function HeaderLogo() {
 
   return (
     <div className="flex shrink-0 items-center justify-start">
-      <Link href={`/${resolvedLang}`} aria-label="PrimeDex" className="touch-target flex items-center gap-2.5 group">
+      <Link href={`/${resolvedLang}`} aria-label="Lunidex" className="touch-target flex items-center gap-2.5 group">
         <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
           <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
         </div>
         <div className="flex flex-col items-start gap-0.5 max-[479px]:hidden">
           <div className="flex items-baseline leading-none tracking-tight">
-            <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base">Prime</span>
-            <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground md:text-base">Dex</span>
+            <span className="font-display text-[1.05rem] font-extrabold gradient-text-hero md:text-base">Luni</span>
+            <span className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground md:text-base">dex</span>
           </div>
           <div className="flex h-3 items-center gap-1.5 px-0.5">
             <span suppressHydrationWarning className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:text-[11px]">

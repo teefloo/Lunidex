@@ -37,7 +37,7 @@ export default function EmptyState({
       <div className="mb-6 rounded-sm border border-border/70 bg-background/70 p-6 shadow-[var(--shadow-pixel)]">
         <Icon aria-hidden="true" className="h-16 w-16 text-foreground/20" />
       </div>
-      <p className="page-eyebrow mb-3 justify-center">PrimeDex</p>
+      <p className="page-eyebrow mb-3 justify-center">Lunidex</p>
       <h3 className="mb-2 text-2xl font-black tracking-tight text-foreground/70">{title}</h3>
       <p className="mb-8 max-w-md px-6 text-center text-sm font-medium text-foreground/40">
         {description}

@@ -1,8 +1,11 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://primedex.vercel.app';
-export const SITE_NAME = 'PrimeDex';
-export const SITE_TAGLINE = 'The Ultimate Online Pokédex';
+// Keep the current deployment URL until the Lunidex domain is purchased.
+// Storage keys intentionally retain their legacy PrimeDex prefix so existing
+// local collections continue to load after the public rebrand.
+export const SITE_NAME = 'Lunidex';
+export const SITE_TAGLINE = 'Pokémon Companion for Players and Collectors';
 export const SITE_DESCRIPTION =
-  'The most complete Pokédex online. Browse all 1025 Pokémon with detailed stats, types, evolutions, abilities, moves, team builder, and competitive builds.';
+  'A free Pokémon companion for players and TCG collectors. Explore the Pokédex, build teams, track cards, and complete your collection.';
 export const SITE_KEYWORDS = [
   'pokedex',
   'pokemon',
@@ -54,7 +57,7 @@ export const FEATURE_LIST = [
   'Pokémon TCG catalog with set, rarity, type, and HP filters',
   "Who's That Pokémon? quiz with 6 game modes",
   'Living Dex Tracker with local storage persistence',
-  'Localized in 9 languages including Japanese, Korean, and Chinese',
+  'Localized in 8 languages including Japanese, Korean, and Chinese',
   'Advanced search filtering by generation, type, BST, and egg groups',
   'Free and open-source under the MIT license',
 ];

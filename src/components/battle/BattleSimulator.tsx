@@ -12,6 +12,7 @@ import {
   DamageResult,
   BattleLogEntry,
 } from '@/lib/battle-engine';
+import { getAllPokemonNames, getMoveDetail, getPokemonDetail } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
@@ -45,9 +46,8 @@ function PokemonSelector({
     if (q.length < 2) { setSuggestions([]); return; }
     setLoading(true);
     try {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=2000`);
-      const data = await res.json() as { results: { name: string; url: string }[] };
-      const matches = data.results
+      const pokemon = await getAllPokemonNames();
+      const matches = pokemon
         .filter(p => p.name.includes(q.toLowerCase()))
         .slice(0, 8)
         .map(p => {
@@ -71,8 +71,7 @@ function PokemonSelector({
     setLoading(true);
     setOpen(false);
     try {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-      const pokemon = await res.json() as PokemonDetail;
+      const pokemon = await getPokemonDetail(name);
 
       // Fetch move details for up to 8 offensive moves
       const offensiveMoveSlots = pokemon.moves
@@ -82,21 +81,15 @@ function PokemonSelector({
       const movesRaw = await Promise.all(
         offensiveMoveSlots.slice(0, 8).map(async m => {
           try {
-            const mr = await fetch(m.move.url);
-            const md = await mr.json() as {
-              name: string;
-              power: number | null;
-              accuracy: number | null;
-              damage_class: { name: string };
-              type: { name: string };
-            };
-            return {
+            const md = await getMoveDetail(m.move.name);
+            const move: BattleMove = {
               name: md.name,
               type: md.type.name,
               power: md.power ?? 0,
               damage_class: md.damage_class.name as 'physical' | 'special' | 'status',
               accuracy: md.accuracy,
-            } satisfies BattleMove;
+            };
+            return move;
           } catch {
             return null;
           }

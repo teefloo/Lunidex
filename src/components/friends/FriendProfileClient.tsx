@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, BarChart3, EyeOff, Layers, Loader2, ShieldAlert, Users, type LucideIcon } from 'lucide-react';
@@ -21,8 +20,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const PAGE_SIZE = 36;
-const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
-
 interface FriendProfileClientProps {
   friendId: string;
 }

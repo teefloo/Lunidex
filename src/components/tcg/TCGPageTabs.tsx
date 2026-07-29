@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { isSupportedLanguage } from '@/lib/languages';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 const TABS = [
   { href: '/tcg', key: 'tcg.nav_catalog' },
@@ -33,6 +34,7 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
   const pathname = usePathname();
   const { t } = useTranslation();
   const mounted = useMounted();
+  const localizedHref = useLocaleHref();
   const normalizedPathname = normalizePathname(pathname);
 
   const isActive = (href: string) => {
@@ -45,7 +47,7 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
       {TABS.map((tab) => (
         <Link
           key={tab.href}
-          href={tab.href}
+          href={localizedHref(tab.href)}
           className={cn(
             'touch-target relative flex min-h-11 min-w-0 items-center justify-center rounded-sm px-2 text-center text-[11px] font-black uppercase leading-tight tracking-[0.12em] transition-[color,background-color,border-color,box-shadow,transform] duration-100 hover:-translate-x-px hover:-translate-y-px sm:px-3.5',
             isActive(tab.href)
