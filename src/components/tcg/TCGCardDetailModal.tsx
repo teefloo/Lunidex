@@ -40,9 +40,10 @@ interface TCGCardDetailModalProps {
   card: TCGCard | null;
   isOpen: boolean;
   onClose: () => void;
+  onWishlistAdded?: () => void;
 }
 
-export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModalProps) {
+export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: TCGCardDetailModalProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -138,6 +139,11 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
     } catch {
       window.prompt(t('detail.copied'), url);
     }
+  };
+
+  const handleWishlist = () => {
+    toggleTCGWishlist(displayCard.id);
+    if (!wishlisted && !owned) onWishlistAdded?.();
   };
 
   return createPortal(
@@ -252,7 +258,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose }: TCGCardDetailModal
                       badge={compared ? tcgCompareList.length : undefined}
                     />
                     <ActionPill active={owned} onClick={() => toggleTCGOwned(displayCard.id)} label={t('tcg.mark_owned')} />
-                    <ActionPill active={wishlisted} onClick={() => toggleTCGWishlist(displayCard.id)} label={t('tcg.mark_wishlist')} />
+                    <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
                   </div>
                 </header>

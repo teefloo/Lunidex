@@ -1172,6 +1172,9 @@ export default {
       page_subheading: 'Erkunde die komplette Pokémon-Sammelkartenspiel-Sammlung',
       discover_title: 'Entdecken',
       discover_subtitle: 'Suche Karten, durchstöbere die neuesten Erweiterungen und öffne Details mit einem Tipp.',
+      activation: {
+        start_title: 'Starte deine Sammlung', start_description: 'Wähle ein Set, füge deine Karten hinzu und sieh deinen Fortschritt sofort. Kein Konto erforderlich.', search_sets: 'Set suchen', search_sets_placeholder: 'Setname', search_results: 'Suchergebnisse', latest_sets: 'Neueste Sets', sets_load_error: 'Sets können derzeit nicht geladen werden.', no_sets_found: 'Kein Set passt zu dieser Suche.', show_latest_sets: 'Neueste Sets anzeigen', card_total: '{{count}} Karten', choose_set: 'Dieses Set wählen', search_cards_instead: 'Ich möchte lieber eine Karte suchen', album_title: 'Füge deine erste Karte hinzu', album_description: 'Tippe auf „Ich habe diese Karte“, um deinen Fortschritt in diesem Set zu beginnen.', owned_action: 'Ich habe diese Karte', remove_owned: 'Aus meiner Sammlung entfernen', confirm_remove: 'Entfernen bestätigen', view_card: 'Karte ansehen', first_card_added: 'Karte hinzugefügt · {{owned}} / {{total}} Karten in diesem Set', continue_adding: 'Weiter hinzufügen', sync_title: 'Nimm deine Sammlung mit', sync_description: 'Deine Sammlung ist auf diesem Gerät gespeichert. Erstelle ein Konto, um sie auf anderen Geräten wiederzufinden.', create_account: 'Konto erstellen',
+      },
       back_to_catalog: 'Zurück zum Katalog',
       nav_catalog: 'Katalog',
       nav_collection: 'Sammlung',

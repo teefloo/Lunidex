@@ -1169,6 +1169,9 @@ export default {
       page_subheading: '探索宝可梦集换式卡牌游戏完整收藏',
       discover_title: '发现',
       discover_subtitle: '搜索卡牌，浏览最新扩充包，一键查看详情。',
+      activation: {
+        start_title: '开始收藏', start_description: '选择一个扩充包，添加你拥有的卡牌，并立即查看收藏进度。无需账户。', search_sets: '搜索扩充包', search_sets_placeholder: '扩充包名称', search_results: '搜索结果', latest_sets: '最新扩充包', sets_load_error: '目前无法加载扩充包。', no_sets_found: '没有与搜索匹配的扩充包。', show_latest_sets: '查看最新扩充包', card_total: '{{count}} 张卡牌', choose_set: '选择此扩充包', search_cards_instead: '我想搜索卡牌', album_title: '添加第一张卡牌', album_description: '点击“我拥有这张卡牌”，开始在此扩充包中的收藏进度。', owned_action: '我拥有这张卡牌', remove_owned: '从收藏中移除', confirm_remove: '确认移除', view_card: '查看卡牌', first_card_added: '卡牌已添加 · 此扩充包 {{owned}} / {{total}} 张', continue_adding: '继续添加', sync_title: '随时查看你的收藏', sync_description: '你的收藏保存在此设备上。创建账户即可在其他设备上查看。', create_account: '创建账户',
+      },
       back_to_catalog: '返回目录',
       nav_catalog: '目录',
       nav_collection: '收藏',

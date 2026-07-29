@@ -1173,6 +1173,9 @@ export default {
       page_subheading: 'ポケモンカードゲームの完全コレクションを探索',
       discover_title: '発見',
       discover_subtitle: 'カードを検索し、最新の拡張パックを閲覧し、ワンタップで詳細を表示します。',
+      activation: {
+        start_title: 'コレクションを始めよう', start_description: '拡張パックを選び、持っているカードを追加すると、すぐに進捗を確認できます。アカウントは不要です。', search_sets: '拡張パックを検索', search_sets_placeholder: '拡張パック名', search_results: '検索結果', latest_sets: '最新の拡張パック', sets_load_error: '現在、拡張パックを読み込めません。', no_sets_found: 'この検索に一致する拡張パックはありません。', show_latest_sets: '最新の拡張パックを見る', card_total: '{{count}} 枚', choose_set: 'この拡張パックを選ぶ', search_cards_instead: 'カードを検索する', album_title: '最初のカードを追加', album_description: '「このカードを持っている」をタップして、この拡張パックの進捗を始めましょう。', owned_action: 'このカードを持っている', remove_owned: 'コレクションから削除', confirm_remove: '削除を確認', view_card: 'カードを見る', first_card_added: 'カードを追加しました · この拡張パック {{owned}} / {{total}} 枚', continue_adding: 'さらに追加する', sync_title: 'どこでもコレクションを', sync_description: 'コレクションはこの端末に保存されています。アカウントを作成すると他の端末でも確認できます。', create_account: 'アカウントを作成',
+      },
       back_to_catalog: 'カタログに戻る',
       nav_catalog: 'カタログ',
       nav_collection: 'コレクション',

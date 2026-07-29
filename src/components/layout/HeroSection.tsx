@@ -1,5 +1,6 @@
 import { getServerT } from '@/lib/server-i18n';
 import HeroControls from '@/components/pokemon/HeroControls';
+import { TCGCollectionStartLink } from '@/components/tcg/TCGCollectionStartLink';
 
 export default async function HeroSection() {
   const t = await getServerT();
@@ -24,6 +25,10 @@ export default async function HeroSection() {
         <p className="mt-3 text-base md:text-lg text-muted-foreground max-w-2xl">
           {description}
         </p>
+
+        <div className="mt-6">
+          <TCGCollectionStartLink />
+        </div>
 
         <div className="mt-8 md:mt-10">
           <HeroControls />
