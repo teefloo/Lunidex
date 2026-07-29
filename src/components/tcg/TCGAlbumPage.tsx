@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,6 +20,7 @@ import { TCGAlbumCard } from './TCGAlbumCard';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { useAuth } from '@/lib/supabase/AuthProvider';
+import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import AuthModal from '@/components/auth/AuthModal';
 
 interface TCGAlbumPageProps {
@@ -41,9 +42,15 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [firstValueReached, setFirstValueReached] = useState(false);
   const [activationComplete, setActivationComplete] = useState(false);
+  const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isSyncPromptDismissed, setIsSyncPromptDismissed] = useState(false);
   const { enabled: syncEnabled, user } = useAuth();
+
+  useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
+  useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
+  useEffect(() => { if (activationComplete && activationMethod) { trackProductEvent('tcg_activation_completed', activationMethod); markProductActivation(); } }, [activationComplete, activationMethod]);
+  useEffect(() => { if (activation && activationComplete && syncEnabled && !user && !isSyncPromptDismissed) trackProductEvent('tcg_sync_prompt_shown'); }, [activation, activationComplete, syncEnabled, user, isSyncPromptDismissed]);
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
@@ -77,6 +84,8 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
       setFirstValueReached(true);
       return;
     }
+    trackReturnAfterActivation('owned_add');
+    setActivationMethod('second_owned_card');
     setActivationComplete(true);
   };
 
@@ -197,17 +206,17 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
           <h2 className="text-base font-bold">{t('tcg.activation.sync_title')}</h2>
           <p className="mt-2 text-sm leading-6 text-foreground/65">{t('tcg.activation.sync_description')}</p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <button type="button" onClick={() => setIsAuthOpen(true)} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            <button type="button" onClick={() => { trackProductEvent('tcg_sync_prompt_actioned', 'create_account'); setIsAuthOpen(true); }} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
               {t('tcg.activation.create_account')}
             </button>
-            <button type="button" onClick={() => setIsSyncPromptDismissed(true)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/65 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            <button type="button" onClick={() => { trackProductEvent('tcg_sync_prompt_actioned', 'continue_local'); setIsSyncPromptDismissed(true); }} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/65 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
               {t('tcg.activation.continue_without_account', { defaultValue: 'Continue without an account' })}
             </button>
           </div>
         </aside>
       )}
 
-      {selectedCard && <TCGCardDetailModal card={selectedCard} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onWishlistAdded={() => { if (firstValueReached) setActivationComplete(true); }} />}
+      {selectedCard && <TCGCardDetailModal card={selectedCard} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
       <AuthModal open={isAuthOpen} onOpenChange={setIsAuthOpen} />
     </div>
   );

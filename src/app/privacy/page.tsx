@@ -5,6 +5,7 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages } from '@/lib/seo';
 import { getLegalDocuments } from '@/lib/i18n/legal';
 import type { LegalDocument } from '@/lib/i18n/legal-types';
+import { MeasurementNotice } from '@/components/legal/MeasurementNotice';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -33,6 +34,7 @@ export default async function PrivacyPage() {
       <main className="page-shell py-20">
         <div className="max-w-3xl mx-auto">
           <LegalDocumentView doc={doc} />
+          <MeasurementNotice lang={lang} />
           <p className="mt-12 text-xs text-muted-foreground">{t('legal.common.fallback_notice')}</p>
         </div>
       </main>

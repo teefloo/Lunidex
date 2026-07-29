@@ -158,8 +158,8 @@ export default {
       },
       banner: {
         title: 'Cookies on PrimeDex',
-        description: 'We use only two strictly necessary cookies to remember your preferences. We do not use any analytics, advertising, or profiling cookie.',
-        accept: 'Accept',
+        description: 'Choose separately whether to enable Vercel audience and performance measurement and Supabase product measurement. Both remain disabled until you consent.',
+        accept: 'Accept all',
         reject: 'Reject all',
         manage: 'Manage my preferences',
         policy_link: 'Cookie policy',

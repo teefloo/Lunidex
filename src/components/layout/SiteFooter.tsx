@@ -4,6 +4,7 @@ import { Github, Heart } from 'lucide-react';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { GITHUB_REPO_URL } from '@/lib/site';
+import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferencesButton';
 
 export default async function SiteFooter() {
   const t = await getServerT();
@@ -86,6 +87,7 @@ export default async function SiteFooter() {
               {link.label}
             </Link>
           ))}
+          <ConsentPreferencesButton label={t('legal.banner.manage', { defaultValue: 'Manage preferences' })} />
         </nav>
 
         <p className="mt-6 max-w-[65ch] text-[11px] leading-relaxed text-muted-foreground">

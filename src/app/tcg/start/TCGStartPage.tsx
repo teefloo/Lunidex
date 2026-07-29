@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
@@ -13,6 +13,7 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGSet } from '@/types/tcg';
+import { getTcgStartSource, trackProductEvent } from '@/lib/product-measurement';
 
 const LATEST_SET_LIMIT = 12;
 
@@ -39,6 +40,7 @@ export function TCGStartPage() {
   const systemLanguage = usePrimeDexStore((state) => state.systemLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
+  const searchTracked = useRef(false);
   const resolvedLanguage = mounted ? (language === 'auto' ? systemLanguage || 'en' : language) : 'en';
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
@@ -58,6 +60,12 @@ export function TCGStartPage() {
     if (!normalizedQuery) return sorted.slice(0, LATEST_SET_LIMIT);
     return sorted.filter((set) => set.name.toLocaleLowerCase(resolvedLanguage).includes(normalizedQuery));
   }, [normalizedQuery, resolvedLanguage, sets]);
+
+  useEffect(() => {
+    if (!mounted || !hasHydrated || ownedCards.length > 0) return;
+    const source = getTcgStartSource(window.location.search);
+    if (source) trackProductEvent('tcg_start_opened', source);
+  }, [mounted, hasHydrated, ownedCards.length]);
 
   if (!mounted || !hasHydrated) {
     return (
@@ -114,7 +122,7 @@ export function TCGStartPage() {
               <input
                 id="set-search"
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => { const value = event.target.value; setQuery(value); if (!searchTracked.current && value.trim()) { searchTracked.current = true; const length = value.trim().length; trackProductEvent('tcg_set_search_used', length <= 3 ? 'length_1_3' : length <= 8 ? 'length_4_8' : 'length_9_plus'); } }}
                 type="search"
                 placeholder={t('tcg.activation.search_sets_placeholder')}
                 className="h-12 w-full rounded-sm border border-border/50 bg-card/60 pl-12 pr-4 text-base text-foreground placeholder:text-foreground/35 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -154,6 +162,7 @@ export function TCGStartPage() {
                     <Link
                       key={set.id}
                       href={localeHref(`/tcg/collection/${set.id}?activation=1`)}
+                      onClick={() => trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list')}
                       className="group flex min-h-20 items-center gap-4 rounded-sm border border-border/30 bg-card/40 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                     >
                       <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-muted/40 p-1">

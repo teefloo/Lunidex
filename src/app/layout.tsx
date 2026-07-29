@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
+import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
@@ -266,6 +267,7 @@ export default async function RootLayout({
                {children}
              </div>
              <SiteFooter />
+             <ClientCookieBanner />
            </AppContent>
          </Providers>
         <script

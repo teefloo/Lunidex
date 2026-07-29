@@ -24,6 +24,7 @@ export default defineConfig({
       { find: /^@\/lib\/api\/(.*)$/, replacement: core('api/$1') },
       { find: /^@\/lib\/i18n\/(.*)$/, replacement: core('i18n/$1') },
       { find: '@/lib/supabase/server', replacement: path.resolve(__dirname, './src/lib/supabase/server') },
+      { find: '@/lib/supabase/product-metrics-server', replacement: path.resolve(__dirname, './src/lib/supabase/product-metrics-server') },
       { find: /^@\/lib\/supabase\/(.*)$/, replacement: core('supabase/$1') },
       {
         find: /^@\/lib\/(languages|utils|pokemon-utils|team-analysis|auto-complete|badges|tcg-rarity)$/,

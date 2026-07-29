@@ -8,7 +8,7 @@ const store = new Map<string, Entry>();
 function evict(): void {
   const now = Date.now();
   for (const [key, entry] of store) {
-    if (now > entry.resetAt) store.delete(key);
+    if (now >= entry.resetAt) store.delete(key);
   }
 }
 
@@ -18,16 +18,20 @@ function evict(): void {
  * Replace with an Upstash/Redis-backed solution for production-grade limiting.
  */
 export function rateLimit(key: string, maxRequests: number): boolean {
-  if (store.size > 10_000) evict();
+  evict();
   const now = Date.now();
   const entry = store.get(key);
-  if (!entry || now > entry.resetAt) {
+  if (!entry || now >= entry.resetAt) {
     store.set(key, { count: 1, resetAt: now + WINDOW_MS });
     return true;
   }
   if (entry.count >= maxRequests) return false;
   entry.count++;
   return true;
+}
+
+export function getRateLimitEntryCount(): number {
+  return store.size;
 }
 
 export function ipKey(request: NextRequest): string {

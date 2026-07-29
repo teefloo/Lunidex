@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookieおよびトラッカー',
           paragraphs: [
-            'PrimeDexはサービスの運営に厳密に必要な2つのCookieのみを設定します。現在、分析、広告、プロファイリングのCookieは設定していません。詳細はCookieポリシーをご覧ください。',
+            'PrimeDexはサービスに厳密に必要な保存機能を使用します。同意をいただいた場合に限り、Vercel Web AnalyticsとSpeed Insightsが利用状況と性能を測定し、Supabaseにはプロダクト測定の日次カウンターのみが送られます。目的と選択はCookieポリシーをご覧ください。',
           ],
           list: [
             'primedex-lang(期間:1年):お好みの言語を記憶します。',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. 使用されるCookieの一覧',
-      intro: 'PrimeDexはサービスの運営に厳密に必要な2つのCookieのみを設定します。分析、広告、プロファイリングのCookieは設定されていません。',
+      intro: 'PrimeDexはサービスに厳密に必要な保存機能を使用します。Vercelの利用状況・性能測定とSupabaseのプロダクト測定は、それぞれの同意まで無効です。',
       table: {
         headers: ['Cookie', '目的', '種類', '有効期間', '発行者'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         '第三者サービスを追加することを決定した場合、本ポリシーは更新される場合があります。その場合、厳密に必要ではないCookieを設置する前に、Cookieバナーを通じてお客様の同意を求めます。',
       ],
       list: [
-        '分析用Cookie(Google Analytics、Matomo、Plausibleなど)はインストールされていません。',
+        'Vercel Web AnalyticsとSpeed Insightsは利用状況・性能への同意後にのみ読み込まれ、Supabaseはプロダクト測定への個別同意後にのみ集計済みの日次カウンターを受け取ります。',
         '広告用Cookie(Meta Pixel、Google Ads、TikTok Pixelなど)はインストールされていません。',
         'ソーシャルネットワーク用Cookie(Facebook、Twitterのシェアボタンなど)はインストールされていません。',
         'リターゲティングまたはプロファイリング用のスクリプトは読み込まれません。',

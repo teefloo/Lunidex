@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookie e tracker',
           paragraphs: [
-            'PrimeDex imposta solo due cookie strettamente necessari per il funzionamento del servizio. Attualmente non viene impostato alcun cookie di analisi, pubblicità o profilazione. Per maggiori informazioni, consulta la nostra politica sui cookie.',
+            'PrimeDex utilizza archiviazione strettamente necessaria al servizio. Con il tuo consenso, Vercel Web Analytics e Speed Insights misurano pubblico e prestazioni, mentre Supabase riceve solo contatori giornalieri di misurazione del prodotto. Consulta la politica sui cookie per finalità e scelte distinte.',
           ],
           list: [
             'primedex-lang (durata: 1 anno): memorizza la tua lingua preferita.',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. Inventario dei cookie utilizzati',
-      intro: 'PrimeDex imposta solo due cookie, entrambi strettamente necessari per il funzionamento del servizio. Nessun cookie di analisi, pubblicità o profilazione è attualmente impostato.',
+      intro: 'PrimeDex utilizza archiviazione strettamente necessaria al servizio. La misurazione di pubblico e prestazioni di Vercel e la misurazione del prodotto di Supabase restano disattivate fino al consenso corrispondente.',
       table: {
         headers: ['Cookie', 'Finalità', 'Tipo', 'Durata', 'Editore'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         'Questa politica può essere aggiornata se decidiamo di aggiungere un servizio di terze parti. In tal caso, il tuo consenso verrà richiesto tramite il banner dei cookie prima dell\'installazione di qualsiasi cookie non strettamente necessario.',
       ],
       list: [
-        'Nessun cookie di analisi (Google Analytics, Matomo, Plausible, ecc.) è installato.',
+        'Vercel Web Analytics e Speed Insights vengono caricati solo dopo il consenso a pubblico e prestazioni; Supabase riceve solo contatori giornalieri aggregati del prodotto dopo il consenso separato alla misurazione del prodotto.',
         'Nessun cookie pubblicitario (Meta Pixel, Google Ads, TikTok Pixel, ecc.) è installato.',
         'Nessun cookie di social network (pulsanti di condivisione Facebook, Twitter, ecc.) è installato.',
         'Nessuno script di retargeting o profilazione viene caricato.',

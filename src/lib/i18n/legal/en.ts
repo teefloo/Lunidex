@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookies and Trackers',
           paragraphs: [
-            'PrimeDex sets only two strictly necessary cookies for the operation of the service. No analytics, advertising, or profiling cookie is currently set. For more information, see our cookie policy.',
+            'PrimeDex uses strictly necessary storage for the service. With your consent, Vercel Web Analytics and Speed Insights measure audience and performance, while Supabase stores only daily product-measurement counters. See our cookie policy for the separate purposes and choices.',
           ],
           list: [
             'primedex-lang (duration: 1 year): remembers your preferred language.',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. Inventory of Cookies Used',
-      intro: 'PrimeDex sets only two cookies, both strictly necessary for the operation of the service. No analytics, advertising, or profiling cookie is set.',
+      intro: 'PrimeDex uses strictly necessary storage for the service. Vercel audience and performance measurement and Supabase product measurement remain disabled until you grant the corresponding consent.',
       table: {
         headers: ['Cookie', 'Purpose', 'Type', 'Duration', 'Publisher'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         'This policy may be updated if we decide to add a third-party service. In that case, your consent will be requested via the cookie banner before any non-strictly-necessary cookie is placed.',
       ],
       list: [
-        'No analytics cookie (Google Analytics, Matomo, Plausible, etc.) is installed.',
+        'Vercel Web Analytics and Speed Insights are loaded only after audience and performance consent; Supabase receives only daily aggregated product counters after separate product-measurement consent.',
         'No advertising cookie (Meta Pixel, Google Ads, TikTok Pixel, etc.) is installed.',
         'No social network cookie (Facebook, Twitter share buttons, etc.) is installed.',
         'No retargeting or profiling script is loaded.',

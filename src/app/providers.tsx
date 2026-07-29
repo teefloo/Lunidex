@@ -12,6 +12,7 @@ import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
 import dynamic from 'next/dynamic';
 import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { VercelInsights } from '@/components/analytics/VercelInsights';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
@@ -104,6 +105,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <TooltipProvider>
                 <SupabaseSyncBridge />
                 {children}
+                <VercelInsights />
                 <CommandPalette />
                 <SettingsModal />
               </TooltipProvider>

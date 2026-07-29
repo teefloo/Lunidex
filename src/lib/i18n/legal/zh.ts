@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookie 和跟踪器',
           paragraphs: [
-            'PrimeDex 仅设置两个服务运行所必需的严格必要 Cookie。目前不设置任何分析、广告或用户画像 Cookie。更多信息请参阅我们的 Cookie 政策。',
+            'PrimeDex 使用服务严格必要的存储。仅在您同意后，Vercel Web Analytics 和 Speed Insights 才衡量受众和性能；Supabase 仅接收每日产品衡量计数。请参阅 Cookie 政策了解独立的目的和选择。',
           ],
           list: [
             'primedex-lang（时长：1年）：记住您偏好的语言。',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. 使用的 Cookie 清单',
-      intro: 'PrimeDex 仅设置两个 Cookie，均为服务运行所严格必需。目前不设置任何分析、广告或用户画像 Cookie。',
+      intro: 'PrimeDex 使用服务严格必要的存储。Vercel 的受众和性能衡量以及 Supabase 的产品衡量在获得各自同意前均保持禁用。',
       table: {
         headers: ['Cookie', '目的', '类型', '时长', '发布者'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         '如果我们决定添加第三方服务，本政策可能会更新。在这种情况下，在设置任何非严格必要的 Cookie 之前，将通过 Cookie 横幅征求您的同意。',
       ],
       list: [
-        '未安装任何分析 Cookie（Google Analytics、Matomo、Plausible 等）。',
+        'Vercel Web Analytics 和 Speed Insights 仅在受众和性能同意后加载；Supabase 仅在单独同意产品衡量后接收汇总的每日产品计数。',
         '未安装任何广告 Cookie（Meta Pixel、Google Ads、TikTok Pixel 等）。',
         '未安装任何社交网络 Cookie（Facebook、Twitter 分享按钮等）。',
         '未加载任何重定向或用户画像脚本。',

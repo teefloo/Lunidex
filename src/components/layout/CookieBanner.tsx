@@ -1,40 +1,55 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Cookie } from 'lucide-react';
 
 import i18n, { useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { Button } from '@/components/ui/button';
+import { getProductConsent, setProductConsent, type ProductConsent } from '@/lib/product-measurement';
 
 const STORAGE_KEY = 'primedex-cookie-consent';
 
-type Consent = 'accepted' | 'rejected' | 'custom';
+const preferenceLabels: Record<SupportedLanguage, { audience: string; product: string; save: string; customize: string }> = {
+  en: { audience: 'Vercel Web Analytics and Speed Insights', product: 'Supabase product measurement', save: 'Save my choices', customize: 'Customize' },
+  fr: { audience: 'Vercel Web Analytics et Speed Insights', product: 'Mesure produit Supabase', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
+  es: { audience: 'Vercel Web Analytics y Speed Insights', product: 'Medición de producto de Supabase', save: 'Guardar mis elecciones', customize: 'Personalizar' },
+  de: { audience: 'Vercel Web Analytics und Speed Insights', product: 'Supabase-Produktmessung', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
+  it: { audience: 'Vercel Web Analytics e Speed Insights', product: 'Misurazione del prodotto Supabase', save: 'Salva le mie scelte', customize: 'Personalizza' },
+  ja: { audience: 'Vercel Web Analytics と Speed Insights', product: 'Supabase プロダクト測定', save: '選択を保存', customize: 'カスタマイズ' },
+  ko: { audience: 'Vercel Web Analytics 및 Speed Insights', product: 'Supabase 제품 측정', save: '선택 저장', customize: '맞춤 설정' },
+  zh: { audience: 'Vercel Web Analytics 和 Speed Insights', product: 'Supabase 产品衡量', save: '保存我的选择', customize: '自定义' },
+};
 
-function readStoredConsent(): Consent | null {
+function readStoredConsent(): ProductConsent | null {
   if (typeof window === 'undefined') return null;
   try {
-    const value = window.localStorage.getItem(STORAGE_KEY);
-    if (value === 'accepted' || value === 'rejected' || value === 'custom') {
-      return value;
-    }
+    const legacy = window.localStorage.getItem(STORAGE_KEY);
+    if (legacy === 'accepted' || legacy === 'rejected' || legacy === 'custom') return null;
+    const value = getProductConsent();
+    if (value.productMeasurement !== 'unset' || value.audiencePerformance !== 'unset') return value;
   } catch {
     // localStorage may be unavailable (private mode, quota, etc.)
   }
   return null;
 }
 
-function writeStoredConsent(consent: Consent): void {
+function writeStoredConsent(consent: ProductConsent): void {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, consent);
+    window.localStorage.removeItem(STORAGE_KEY);
+    setProductConsent(consent);
   } catch {
     // ignore — see above
   }
 }
 
-const subscribe = () => () => {};
+function subscribe(listener: () => void) {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener('primedex-consent-changed', listener);
+  return () => window.removeEventListener('primedex-consent-changed', listener);
+}
 
 function getSnapshot(): boolean {
   return readStoredConsent() === null;
@@ -51,22 +66,38 @@ function getCurrentLanguage(): SupportedLanguage {
 
 export default function CookieBanner() {
   const { t } = useTranslation();
-  const [language] = useState<SupportedLanguage>(getCurrentLanguage);
-  const [postActionVisible, setPostActionVisible] = useState(false);
+  const language = getCurrentLanguage();
+  const [customizing, setCustomizing] = useState(false);
+  const [audiencePerformance, setAudiencePerformance] = useState(false);
+  const [productMeasurement, setProductMeasurement] = useState(false);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const firstPreferenceRef = useRef<HTMLInputElement | null>(null);
   const initialVisible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const visible = initialVisible && !postActionVisible;
+  const visible = initialVisible;
 
-  // No dynamic padding manipulation — the fixed-position banner
-  // floats above content, so no CLS reservation is needed.
+  useEffect(() => {
+    const openPreferences = (event: Event) => {
+      openerRef.current = (event as CustomEvent<{ opener?: HTMLElement }>).detail?.opener ?? null;
+      setCustomizing(true);
+    };
+    window.addEventListener('primedex-open-consent-preferences', openPreferences);
+    return () => window.removeEventListener('primedex-open-consent-preferences', openPreferences);
+  }, []);
 
-  const handleAccept = () => {
-    writeStoredConsent('accepted');
-    setPostActionVisible(true);
+  useEffect(() => {
+    if (visible && customizing) firstPreferenceRef.current?.focus();
+  }, [customizing, visible]);
+
+  const restoreFocus = () => window.setTimeout(() => openerRef.current?.focus(), 0);
+
+  const save = (audience: boolean, product: boolean) => {
+    writeStoredConsent({ version: 2, policyVersion: '2026-07-29', chosenAt: new Date().toISOString(), audiencePerformance: audience ? 'granted' : 'denied', productMeasurement: product ? 'granted' : 'denied' });
+    restoreFocus();
   };
+  const handleAccept = () => save(true, true);
 
   const handleReject = () => {
-    writeStoredConsent('rejected');
-    setPostActionVisible(true);
+    save(false, false);
   };
 
   if (!visible) {
@@ -74,12 +105,13 @@ export default function CookieBanner() {
   }
 
   const cookiesHref = `/${language}/cookies`;
+  const labels = preferenceLabels[language];
 
   return (
     <div
       role="dialog"
       aria-live="polite"
-      aria-label={t('legal.banner.title')}
+      aria-labelledby="cookie-consent-title"
       className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
     >
       <div className="glass-panel mx-auto w-full max-w-xl p-4 sm:p-5">
@@ -91,7 +123,7 @@ export default function CookieBanner() {
             <Cookie className="h-4 w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="font-display text-sm font-semibold tracking-tight text-foreground sm:text-base">
+            <h2 id="cookie-consent-title" className="font-display text-sm font-semibold tracking-tight text-foreground sm:text-base">
               {t('legal.banner.title')}
             </h2>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-[0.8125rem]">
@@ -109,12 +141,27 @@ export default function CookieBanner() {
           </div>
         </div>
 
+        {customizing && (
+          <fieldset className="mt-4 space-y-3 rounded-sm border border-border/40 p-3">
+            <legend className="px-1 text-sm font-semibold">{t('legal.banner.manage', { defaultValue: 'Manage preferences' })}</legend>
+            <label className="flex min-h-11 items-start gap-3 text-sm">
+              <input ref={firstPreferenceRef} type="checkbox" checked={audiencePerformance} onChange={(event) => setAudiencePerformance(event.target.checked)} />
+              <span>{labels.audience}</span>
+            </label>
+            <label className="flex min-h-11 items-start gap-3 text-sm">
+              <input type="checkbox" checked={productMeasurement} onChange={(event) => setProductMeasurement(event.target.checked)} />
+              <span>{labels.product}</span>
+            </label>
+            <Button type="button" size="touch" onClick={() => save(audiencePerformance, productMeasurement)}>{labels.save}</Button>
+          </fieldset>
+        )}
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2.5">
           <Button type="button" variant="ghost" size="touch" onClick={handleReject}>
-            {t('legal.banner.reject')}
+            {t('legal.banner.reject', { defaultValue: 'Reject all' })}
           </Button>
+          <Button type="button" variant="ghost" size="touch" onClick={() => setCustomizing(true)}>{labels.customize}</Button>
           <Button type="button" variant="default" size="touch" onClick={handleAccept}>
-            {t('legal.banner.accept')}
+            {t('legal.banner.accept', { defaultValue: 'Accept all' })}
           </Button>
         </div>
       </div>

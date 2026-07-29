@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookies und Tracker',
           paragraphs: [
-            'PrimeDex setzt nur zwei für den Betrieb des Dienstes unbedingt erforderliche Cookies. Es werden derzeit keine Analyse-, Werbe- oder Profiling-Cookies gesetzt. Weitere Informationen finden Sie in unserer Cookie-Richtlinie.',
+            'PrimeDex verwendet für den Dienst unbedingt erforderliche Speicherungen. Mit Ihrer Einwilligung messen Vercel Web Analytics und Speed Insights Reichweite und Leistung; Supabase erhält nur tägliche Zähler zur Produktmessung. Getrennte Zwecke und Auswahlmöglichkeiten finden Sie in der Cookie-Richtlinie.',
           ],
           list: [
             'primedex-lang (Dauer: 1 Jahr): merkt sich Ihre bevorzugte Sprache.',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. Übersicht der verwendeten Cookies',
-      intro: 'PrimeDex setzt nur zwei Cookies, beide unbedingt erforderlich für den Betrieb des Dienstes. Es werden keine Analyse-, Werbe- oder Profiling-Cookies gesetzt.',
+      intro: 'PrimeDex verwendet für den Dienst unbedingt erforderliche Speicherungen. Die Reichweiten- und Leistungsmessung von Vercel sowie die Produktmessung von Supabase bleiben bis zur jeweiligen Einwilligung deaktiviert.',
       table: {
         headers: ['Cookie', 'Zweck', 'Typ', 'Dauer', 'Herausgeber'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         'Diese Richtlinie kann aktualisiert werden, falls wir uns entscheiden, einen Drittanbieterdienst hinzuzufügen. In diesem Fall wird Ihre Einwilligung über das Cookie-Banner eingeholt, bevor nicht unbedingt erforderliche Cookies gesetzt werden.',
       ],
       list: [
-        'Es wird kein Analyse-Cookie (Google Analytics, Matomo, Plausible usw.) installiert.',
+        'Vercel Web Analytics und Speed Insights werden erst nach Einwilligung für Reichweite und Leistung geladen; Supabase erhält erst nach gesonderter Einwilligung nur aggregierte tägliche Produktzähler.',
         'Es wird kein Werbe-Cookie (Meta Pixel, Google Ads, TikTok Pixel usw.) installiert.',
         'Es wird kein Social-Media-Cookie (Facebook-, Twitter-Share-Buttons usw.) installiert.',
         'Es wird kein Retargeting- oder Profiling-Skript geladen.',
