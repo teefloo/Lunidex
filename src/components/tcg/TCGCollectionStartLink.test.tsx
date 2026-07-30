@@ -14,6 +14,6 @@ describe('TCGCollectionStartLink', () => {
     act(() => { usePrimeDexStore.setState({ tcgOwnedCards: ['sv01-1'], tcgActiveSets: ['sv01'], _hasHydrated: true }); });
     render(<TCGCollectionStartLink />);
 
-    expect(screen.getByRole('link', { name: /resume my collection/i })).toHaveAttribute('href', '/fr/tcg/collection/sv01');
+    expect(screen.getByRole('link', { name: /resume my collection/i })).toHaveAttribute('href', '/fr/tcg/collection');
   });
 });
