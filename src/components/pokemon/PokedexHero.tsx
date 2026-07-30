@@ -9,11 +9,11 @@ export default async function PokedexHero() {
       <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
         <h1 id="pokedex-title" className="page-title font-display tracking-[-0.01em] text-foreground">
           <span className="block font-display text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.92] font-extrabold gradient-text-hero">
-            {t('home.hero_title')}
+            {t('pokedex.title')}
           </span>
         </h1>
         <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-lg">
-          {t('home.hero_subtitle', { defaultValue: 'The Ultimate Pokémon Companion' })}
+          {t('pokedex.description')}
         </p>
         <div className="mt-8 md:mt-10">
           <HeroControls />

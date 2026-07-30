@@ -19,14 +19,14 @@ export default async function HomeHero() {
             {t('lunidex_home.hero_body', { defaultValue: 'Your TCG collection and Pokémon teams, finally together in one simple, personal space.' })}
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <HomeCollectionEntry />
+            <HomeCollectionEntry locale={language} startLabel={t('lunidex_home.cta_start')} resumeLabel={t('lunidex_home.cta_resume')} />
             <Link href={localeHref('/pokedex', language)} className="inline-flex min-h-12 items-center justify-center rounded-sm border border-border/70 px-5 text-sm font-bold text-foreground/80 transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
               {t('lunidex_home.cta_pokedex', { defaultValue: 'Explore the Pokédex' })}
             </Link>
           </div>
           <p className="mt-4 text-sm font-semibold text-foreground/55">{t('lunidex_home.start_without_account', { defaultValue: 'Start without an account.' })}</p>
         </div>
-        <HomeCollectionPreview />
+        <HomeCollectionPreview locale={language} copy={{ startLabel: t('lunidex_home.cta_start'), resumeLabel: t('lunidex_home.cta_resume'), previewEyebrow: t('lunidex_home.preview_eyebrow'), previewTitle: t('lunidex_home.preview_title'), previewBody: t('lunidex_home.preview_body'), previewNote: t('lunidex_home.preview_note'), previewOwnedEyebrow: t('lunidex_home.preview_owned_eyebrow'), previewOwnedTitle: t('lunidex_home.preview_owned_title'), previewOwnedCountOne: t('lunidex_home.preview_owned_count_one'), previewOwnedCountOther: t('lunidex_home.preview_owned_count_other'), noAccount: t('lunidex_home.no_account') }} />
       </div>
     </section>
   );

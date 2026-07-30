@@ -305,7 +305,7 @@ export default function TeamPage() {
                         </Link>
                       </motion.div>
                     ) : (
-                      <Link href={localeHref('/')} className="block h-full">
+                      <Link href={localeHref('/pokedex')} className="block h-full">
                         <div className="h-full rounded-sm border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-foreground/20 hover:border-primary/30 hover:text-primary/40 hover:bg-primary/5 transition-all group">
                           <div className="p-4 rounded-full bg-secondary/30 mb-3 group-hover:scale-110 transition-transform">
                             <Plus className="w-8 h-8" />

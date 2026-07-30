@@ -81,6 +81,7 @@ export default {
       key_facts_source: 'Source',
       key_facts_title: 'Le Pokédex le plus complet du web ouvert',
     },
+    pokedex: { title: 'Pokédex', description: 'Explorez les Pokémon, leurs types, statistiques et évolutions.', meta_title: 'Pokédex — Explorer les Pokémon', meta_description: 'Explorez les Pokémon, leurs types, statistiques, évolutions et plus encore avec Lunidex.' },
     lunidex_home: {
       hero_title: 'Collectionnez vos cartes. Jouez vos Pokémon.',
       hero_body: 'Votre collection TCG et vos équipes Pokémon, enfin réunies dans un espace simple et personnel.',

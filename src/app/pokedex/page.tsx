@@ -16,8 +16,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
-  const title = t('home.hero_title', { defaultValue: 'Pokédex' });
-  const description = t('home.hero_subtitle', { defaultValue: 'The Ultimate Pokémon Companion' });
+  const title = t('pokedex.meta_title');
+  const description = t('pokedex.meta_description');
 
   return {
     title,
@@ -33,7 +33,7 @@ export default async function PokedexPage() {
   const queryClient = new QueryClient();
   const [t, lang] = await Promise.all([getServerT(), getServerLanguage()]);
   const baseUrl = SITE_URL;
-  const pokedexTitle = t('home.hero_title', { defaultValue: 'Pokédex' });
+  const pokedexTitle = t('pokedex.title');
 
   await Promise.all([
     queryClient.prefetchInfiniteQuery({
@@ -74,7 +74,7 @@ export default async function PokedexPage() {
     lang,
     path: `/${lang}/pokedex`,
     name: pokedexTitle,
-    description: t('home.hero_subtitle', { defaultValue: 'The Ultimate Pokémon Companion' }),
+    description: t('pokedex.meta_description'),
   });
 
   return (

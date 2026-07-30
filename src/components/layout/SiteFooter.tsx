@@ -18,7 +18,6 @@ export default async function SiteFooter() {
     { href: '/tcg', label: t('nav.tcg') },
     { href: '/tcg/collection', label: t('tcg.nav_collection') },
     { href: '/quiz', label: t('nav.quiz') },
-    { href: '/faq', label: t('nav.faq') },
   ];
 
   const legalLinks = [

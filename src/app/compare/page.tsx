@@ -370,7 +370,7 @@ export default function ComparePage() {
             <Scale className="w-16 h-16 text-foreground/20 mb-6" />
             <h3 className="text-2xl font-black mb-2 text-foreground">{t('compare.no_compare')}</h3>
             <p className="text-base text-muted-foreground font-medium mb-8">{t('compare.no_compare_desc')}</p>
-            <Button onClick={() => router.push(localeHref('/'))} className="rounded-sm font-black uppercase px-8">{t('compare.browse_pokedex')}</Button>
+            <Button onClick={() => router.push(localeHref('/pokedex'))} className="rounded-sm font-black uppercase px-8">{t('compare.browse_pokedex')}</Button>
           </div>
         ) : (
           <div className="space-y-12">
@@ -742,4 +742,3 @@ export default function ComparePage() {
     </div>
   );
 }
-
