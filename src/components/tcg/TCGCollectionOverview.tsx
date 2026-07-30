@@ -1,7 +1,6 @@
 'use client';
 
 import { useId, useMemo, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Sparkles, ChevronDown, Trophy } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
@@ -15,6 +14,8 @@ import {
 } from '@/lib/tcg-collection';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGActiveSetInsights } from './TCGActiveSetInsights';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
+import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 
 interface TCGCollectionOverviewProps {
   sets: TCGSet[];
@@ -289,7 +290,13 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                   >
                     {set.logo && (
                       <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card/40">
-                        <Image src={set.logo} alt="" width={48} height={48} unoptimized className="max-h-full max-w-full object-contain p-1" />
+                        <TCGImageWithFallback
+                          candidates={getTCGSetImageCandidates(set)}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="max-h-full max-w-full object-contain p-1"
+                        />
                       </div>
                     )}
                     <div className="min-w-0 flex-1">

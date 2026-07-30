@@ -16,7 +16,6 @@ import {
   BadgeDollarSign,
   PenLine,
 } from 'lucide-react';
-import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
@@ -33,6 +32,8 @@ import {
 import { tcgKeys } from '@/lib/api/keys';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
+import { getTCGSetImageCandidates } from '@/lib/tcg-images';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
 
@@ -500,7 +501,9 @@ export function TCGFilters({
             ) : (
               setOptions.map((set) => {
                 const isActive = filters.selectedSet === set.id;
-                const logoSrc = resolveTcgdexAssetSrc(set.logo) || resolveTcgdexAssetSrc(set.symbol);
+                const logoCandidates = set.logo
+                  ? getTCGSetImageCandidates(set)
+                  : getTCGSetImageCandidates(set, 'symbol');
 
                 return (
                   <button
@@ -515,12 +518,11 @@ export function TCGFilters({
                     )}
                   >
                     <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border border-border/40 bg-muted/50 p-2">
-                      {logoSrc ? (
-                        <Image
-                          src={logoSrc}
+                      {logoCandidates.length > 0 ? (
+                        <TCGImageWithFallback
+                          candidates={logoCandidates}
                           alt={set.name}
                           fill
-                          unoptimized
                           className="object-contain p-2"
                         />
                       ) : (
@@ -1013,12 +1015,6 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
       )}
     </div>
   );
-}
-
-function resolveTcgdexAssetSrc(asset?: string | null) {
-  if (!asset) return null;
-  if (asset.endsWith('.webp') || asset.endsWith('.png')) return asset;
-  return `${asset}.webp`;
 }
 
 export type { TCGFiltersProps };

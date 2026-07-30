@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSetCollectionCards } from '@/lib/api/tcg';
@@ -13,10 +12,11 @@ import {
 } from '@/lib/tcg-collection';
 import type { TCGCardValue } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
-import { buildTcgImageUrl } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
 import type { TCGSet } from '@/types/tcg';
 import { TCGProgressBar } from './TCGProgressBar';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 
 interface TCGActiveSetInsightsProps {
   set: TCGSet;
@@ -68,7 +68,13 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
       <div className="flex min-w-0 items-center gap-3">
         {set.logo && (
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card/40">
-            <Image src={set.logo} alt="" width={40} height={40} className="max-h-full max-w-full object-contain p-1" unoptimized />
+            <TCGImageWithFallback
+              candidates={getTCGSetImageCandidates(set)}
+              alt=""
+              width={40}
+              height={40}
+              className="max-h-full max-w-full object-contain p-1"
+            />
           </div>
         )}
         <div className="min-w-0 flex-1">
@@ -161,7 +167,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
               <div className="relative">
                 <div className="scroll-snap-x scrollbar-hide flex gap-2 overflow-x-auto pb-1 pr-6">
                 {insights.topMissing.map((card) => {
-                  const thumb = buildTcgImageUrl(card.image, 'low', 'webp');
+                  const thumbCandidates = getTCGCardImageCandidates(card, 'low');
                   return (
                   <Link
                     key={card.id}
@@ -171,13 +177,12 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                     title={`${card.name} — ${getRarityLabel(card.rarity)}`}
                   >
                     <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-sm border border-border/20 bg-card/40">
-                      {thumb && (
-                        <Image
-                          src={thumb}
+                      {thumbCandidates.length > 0 && (
+                        <TCGImageWithFallback
+                          candidates={thumbCandidates}
                           alt={card.name}
                           fill
                           sizes="64px"
-                          unoptimized
                           className="object-cover opacity-80 transition-opacity group-hover/card:opacity-100"
                         />
                       )}

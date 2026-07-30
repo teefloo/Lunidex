@@ -117,7 +117,26 @@ function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
   return `${url}.png`;
 }
 
-function normaliseSet(raw: RawSet): TCGSet {
+function localizeTcgdexAssetUrl(url: string | undefined, lang: string): string | undefined {
+  if (!url) return url;
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== 'assets.tcgdex.net' && parsed.hostname !== 'images.tcgdex.net') return url;
+
+    const segments = parsed.pathname.split('/');
+    const languageIndex = 1;
+    if (!/^[a-z]{2}(?:-[a-z]{2})?$/.test(segments[languageIndex] ?? '')) return url;
+
+    segments[languageIndex] = lang;
+    parsed.pathname = segments.join('/');
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
+function normaliseSet(raw: RawSet, lang = 'en'): TCGSet {
   const fromCardsArray = Array.isArray(raw.cards) ? raw.cards.length : undefined;
   const fromCardCount = typeof raw.cardCount?.total === 'number' ? raw.cardCount.total : undefined;
   const fromTotalCards = typeof raw.totalCards === 'number' ? raw.totalCards : undefined;
@@ -127,8 +146,8 @@ function normaliseSet(raw: RawSet): TCGSet {
     id: raw.id,
     name: raw.name,
     serie: raw.serie,
-    logo: fixTcgdexImageUrl(raw.logo),
-    symbol: fixTcgdexImageUrl(raw.symbol),
+    logo: localizeTcgdexAssetUrl(fixTcgdexImageUrl(raw.logo), lang),
+    symbol: localizeTcgdexAssetUrl(fixTcgdexImageUrl(raw.symbol), lang),
     releaseDate: raw.releaseDate,
     cardCount: raw.cardCount as TCGSet['cardCount'],
     totalCards: count,
@@ -152,11 +171,11 @@ function normaliseAbility(ability: TCGCardAbility): TCGCardAbility {
   };
 }
 
-function normaliseCard(card: TCGCard): TCGCard {
+function normaliseCard(card: TCGCard, lang = 'en'): TCGCard {
   return {
     ...card,
-    image: fixTcgdexImageUrl(card.image),
-    imageUrl: fixTcgdexImageUrl(card.imageUrl),
+    image: localizeTcgdexAssetUrl(fixTcgdexImageUrl(card.image), lang),
+    imageUrl: localizeTcgdexAssetUrl(fixTcgdexImageUrl(card.imageUrl), lang),
     category: normaliseCardCategory(card.category),
     source: card.source ?? 'TCGames',
     effect: card.effect ?? card.flavorText ?? card.description,
@@ -318,7 +337,7 @@ async function fetchAllCardSearchPages(
     // service caps a larger requested page size.
     const query = buildCardQueryParams(filters, page, pageSize - 1).toString();
     const { data } = await tcgClient.get<TCGCard[]>(`/${lang}/cards?${query}`);
-    const pageCards = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+    const pageCards = Array.isArray(data) ? data.map((card) => normaliseCard(card, lang)) : [];
     const pageSignature = pageCards.map((card) => card.id).join('|');
 
     if (pageSignature && pageSignature === previousPageSignature) {
@@ -489,7 +508,7 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
  */
 export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSignal): Promise<TCGCard | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-card-v8-${cardId}-${tcgLang}`;
+  const cacheKey = `tcg-card-v9-${cardId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
@@ -499,7 +518,7 @@ export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSign
 
     const { data } = await getWithOptionalSignal<TCGCard>(`/${tcgLang}/cards/${cardId}`, signal);
     if (data) {
-      const card = await resolveCardImage(normaliseCard(data), tcgLang, signal);
+      const card = await resolveCardImage(normaliseCard(data, tcgLang), tcgLang, signal);
       await setCachedData(cacheKey, card);
       return card;
     }
@@ -690,14 +709,14 @@ async function mapWithConcurrency<T, R>(
  */
 export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-cards-v3-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-cards-v4-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
     if (cached) return cached;
 
     const { data } = await tcgClient.get<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
-    const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' })) || [];
+    const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
 
     await setCachedData(cacheKey, cards);
     return cards;
@@ -764,7 +783,7 @@ export const fetchSetCollectionCards = async (
  */
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-all-sets-v7-${tcgLang}`;
+  const cacheKey = `tcg-all-sets-v8-${tcgLang}`;
   // The set list changes when a new expansion releases. Keep IndexedDB as an
   // offline fallback, but always give the live API the first opportunity to
   // provide the latest list.
@@ -772,7 +791,7 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
 
   try {
     const { data } = await tcgClient.get<RawSet[]>(`/${tcgLang}/sets`);
-    const sets = data.map(normaliseSet);
+    const sets = data.map((set) => normaliseSet(set, tcgLang));
 
     const enrichedSets = await mapWithConcurrency(sets, 10, async (set) => {
       try {
@@ -815,14 +834,14 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
  */
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-v8-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-v9-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
     if (cached) return cached;
 
     const { data } = await tcgClient.get<RawSet>(`/${tcgLang}/sets/${setId}`);
-    const set = normaliseSet(data);
+    const set = normaliseSet(data, tcgLang);
     await setCachedData(cacheKey, set);
     return set;
   } catch (error) {
@@ -867,8 +886,8 @@ export const searchCards = async (
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
   const dependsOnLocalOwnership = Boolean(filters.ownedState && filters.ownedState !== 'all');
   const cacheKey = fetchAll
-    ? `tcg-catalog-all-v11-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
-    : `tcg-catalog-v11-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
+    ? `tcg-catalog-all-v12-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    : `tcg-catalog-v12-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
 
   try {
     if (!dependsOnLocalOwnership) {
@@ -887,7 +906,7 @@ export const searchCards = async (
           const pageQuery = buildCardQueryParams(queryFilters, remotePage, ALL_PAGE_SIZE - 1).toString();
           const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
           throwIfAborted(signal);
-          const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+          const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
           allCards.push(...normalized);
           hasMoreRemote = normalized.length === ALL_PAGE_SIZE;
           remotePage += 1;
@@ -903,7 +922,7 @@ export const searchCards = async (
 
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${query}`, signal);
       throwIfAborted(signal);
-      const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+      const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
       const sorted = [...normalized].sort((a, b) => compareCards(a, b, filters.sortBy ?? 'name', filters.sortOrder ?? 'asc'));
       const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, safeLimit), tcgLang, signal);
       const result = {
@@ -925,7 +944,7 @@ export const searchCards = async (
       const pageQuery = buildCardQueryParams(queryFilters, remotePage, safeLimit).toString();
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
-      const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card)) : [];
+      const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
       const hydrated = hasLocalOnlyFilters || requiresPriceHydration
         ? await mapWithConcurrency(normalized, VISUAL_METADATA_CONCURRENCY, async (card) => {
               if (!requiresPriceHydration && !shouldHydrateForLocalFilters(card, filters)) {

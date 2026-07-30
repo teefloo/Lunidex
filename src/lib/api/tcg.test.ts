@@ -88,6 +88,25 @@ describe('TCG set freshness', () => {
 
     expect((options.sets ?? []).map((set) => set.id)).toEqual(['latest-set']);
   });
+
+  it('localizes set logos without corrupting universal symbols', async () => {
+    const localizedSet = {
+      ...makeRawSet('me1', 'Nuit Noire'),
+      logo: 'https://assets.tcgdex.net/en/me/me1/logo',
+      symbol: 'https://assets.tcgdex.net/univ/me/me1/symbol',
+    };
+    mockGet.mockImplementation(async (url: string) => {
+      if (url === '/fr/sets' || url === '/fr/sets/me1') {
+        return { data: url === '/fr/sets' ? [localizedSet] : localizedSet };
+      }
+      throw new Error(`Unexpected TCG API request: ${url}`);
+    });
+
+    const [set] = await getAllSets('fr');
+
+    expect(set.logo).toBe('https://assets.tcgdex.net/fr/me/me1/logo.png');
+    expect(set.symbol).toBe('https://assets.tcgdex.net/univ/me/me1/symbol.png');
+  });
 });
 
 describe('Pokémon card ordering', () => {

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
@@ -18,6 +17,8 @@ import {
 } from '@/lib/tcg-collection';
 import { TCGAlbumCard } from './TCGAlbumCard';
 import { TCGProgressBar } from './TCGProgressBar';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
+import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { useAuth } from '@/lib/supabase/AuthProvider';
 import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
@@ -105,7 +106,13 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
         <div className="flex items-center gap-3">
           {set.logo && (
             <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
-              <Image src={set.logo} alt={set.name} width={40} height={40} unoptimized className="max-h-full max-w-full object-contain" />
+              <TCGImageWithFallback
+                candidates={getTCGSetImageCandidates(set)}
+                alt={set.name}
+                width={40}
+                height={40}
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
           )}
           <div>

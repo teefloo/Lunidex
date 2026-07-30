@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { getTCGCardImageCandidates } from './tcg-images';
+import { getTCGCardImageCandidates, getTCGSetImageCandidates } from './tcg-images';
 import type { TCGCard } from '@/types/tcg';
 
 describe('getTCGCardImageCandidates', () => {
-  it('adds the Pokémon TCG API fallback for cards with an unavailable TCGdex image', () => {
+  it('does not replace a TCGdex image with a generic Pokémon card back', () => {
     const card: TCGCard = {
       id: 'cel25-4A',
       localId: '4A',
@@ -14,7 +14,48 @@ describe('getTCGCardImageCandidates', () => {
 
     const candidates = getTCGCardImageCandidates(card);
 
-    expect(candidates).toContain('https://images.pokemontcg.io/cel25/4A_hires.png');
+    expect(candidates).not.toContain('https://images.pokemontcg.io/cel25/4A_hires.png');
     expect(candidates.at(-1)).toBe('/images/card-placeholder.svg');
+  });
+
+  it('tries the localized TCGdex asset before the English fallback', () => {
+    const card: TCGCard = {
+      id: 'me1-001',
+      localId: '001',
+      name: 'Tropius',
+      image: 'https://assets.tcgdex.net/fr/me/me1/001',
+    };
+
+    const candidates = getTCGCardImageCandidates(card);
+
+    expect(candidates[0]).toBe('https://assets.tcgdex.net/fr/me/me1/001/high.webp');
+    expect(candidates[1]).toBe('https://assets.tcgdex.net/en/me/me1/001/high.webp');
+  });
+
+  it('uses low-resolution candidates for collection thumbnails', () => {
+    const card: TCGCard = {
+      id: 'me1-001',
+      localId: '001',
+      name: 'Tropius',
+      image: 'https://assets.tcgdex.net/fr/me/me1/001',
+    };
+
+    const candidates = getTCGCardImageCandidates(card, 'low');
+
+    expect(candidates[0]).toBe('https://assets.tcgdex.net/fr/me/me1/001/low.webp');
+    expect(candidates).not.toContain('https://assets.tcgdex.net/fr/me/me1/001/high.webp');
+  });
+
+  it('provides an English fallback for localized set logos', () => {
+    const candidates = getTCGSetImageCandidates({
+      id: 'me1',
+      name: 'Nuit Noire',
+      logo: 'https://assets.tcgdex.net/fr/me/me1/logo.png',
+    });
+
+    expect(candidates[0]).toBe('https://assets.tcgdex.net/fr/me/me1/logo.png');
+    expect(candidates[1]).toBe('https://assets.tcgdex.net/en/me/me1/logo.png');
+    expect(candidates).not.toContain('https://assets.tcgdex.net/fr/me/me1/logo/high.png');
+    expect(candidates).not.toContain('https://assets.tcgdex.net/fr/me/me1/logo/logo.png');
   });
 });
