@@ -8,9 +8,10 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPokemonList } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { SITE_URL } from '@/lib/site';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
+import { DEFAULT_OG_IMAGE, buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
+import { languageToOpenGraphLocale } from '@/lib/languages';
 
 export const revalidate = 3600;
 
@@ -25,6 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: `/${language}/pokedex`,
       languages: buildSubpathLanguages('/pokedex'),
+    },
+    openGraph: {
+      title, description, url: `/${language}/pokedex`, locale: languageToOpenGraphLocale[language], type: 'website', siteName: SITE_NAME,
+      images: [{ ...DEFAULT_OG_IMAGE, alt: t('pokedex.og_alt') }],
+    },
+    twitter: {
+      card: 'summary_large_image', title, description,
+      images: [{ ...DEFAULT_OG_IMAGE, alt: t('pokedex.og_alt') }],
     },
   };
 }
@@ -57,8 +66,8 @@ export default async function PokedexPage() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     '@id': `${baseUrl}/${lang}/pokedex#pokedex-list`,
-    name: 'Complete Pokédex — All Pokémon',
-    description: 'A complete Pokédex with Pokémon types, statistics, evolutions, and official artwork.',
+    name: t('pokedex.item_list_name'),
+    description: t('pokedex.item_list_description'),
     url: `${baseUrl}/${lang}/pokedex`,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',
     itemListElement: topPokemon.map((slug, index) => ({

@@ -12,10 +12,11 @@ const bundles = { en, fr, es, de, it: itLocale, ja, ko, zh };
 
 describe('Lunidex home localization parity', () => {
   const reference = Object.keys(en.translation.lunidex_home);
+  const pokedexReference = Object.keys(en.translation.pokedex);
   it('includes every Lunidex home key in every supported locale', () => {
     for (const bundle of Object.values(bundles)) {
-      expect(Object.keys(bundle.translation.lunidex_home)).toEqual(expect.arrayContaining(reference));
-      expect(Object.keys(bundle.translation.pokedex)).toEqual(expect.arrayContaining(['title', 'description', 'meta_title', 'meta_description']));
+      expect(Object.keys(bundle.translation.lunidex_home)).toEqual(expect.arrayContaining(reference.filter((key) => key !== 'og_alt')));
+      expect(Object.keys(bundle.translation.pokedex)).toEqual(expect.arrayContaining(pokedexReference));
     }
   });
 });

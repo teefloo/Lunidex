@@ -65,7 +65,7 @@ export default function FavoritesPage() {
               {t('favorites.empty_desc')}
             </p>
             <Link
-              href={localeHref('/')}
+              href={localeHref('/pokedex')}
               className="glass-btn px-8 py-4 flex min-h-12 items-center gap-2 hover:scale-105 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Home className="w-5 h-5" />

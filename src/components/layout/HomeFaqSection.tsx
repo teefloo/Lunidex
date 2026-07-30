@@ -1,13 +1,9 @@
 import { getServerT } from '@/lib/server-i18n';
+import { getLunidexHomeFaqs } from '@/lib/lunidex-home-content';
 
 export default async function HomeFaqSection() {
   const t = await getServerT();
-  const faqs = [
-    { q: t('lunidex_home.faq_q1'), a: t('lunidex_home.faq_a1') },
-    { q: t('lunidex_home.faq_q2'), a: t('lunidex_home.faq_a2') },
-    { q: t('lunidex_home.faq_q3'), a: t('lunidex_home.faq_a3') },
-    { q: t('lunidex_home.faq_q4'), a: t('lunidex_home.faq_a4') },
-  ];
+  const faqs = getLunidexHomeFaqs(t);
 
   return (
     <section
@@ -38,7 +34,7 @@ export default async function HomeFaqSection() {
               className="group section-frame overflow-hidden [&_summary::-webkit-details-marker]:hidden"
             >
               <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 md:p-6 font-bold text-base md:text-lg select-none hover:text-primary transition-colors">
-                <span className="flex-1">{faq.q}</span>
+                <span className="flex-1">{faq.question}</span>
                 <span
                   aria-hidden="true"
                   className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-foreground/15 text-sm transition-transform group-open:rotate-45"
@@ -47,7 +43,7 @@ export default async function HomeFaqSection() {
                 </span>
               </summary>
               <div className="px-5 md:px-6 pb-5 md:pb-6 pt-0 text-muted-foreground leading-relaxed">
-                {faq.a}
+                {faq.answer}
               </div>
             </details>
           ))}
