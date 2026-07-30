@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import { Github, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
-import { GITHUB_REPO_URL } from '@/lib/site';
 import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferencesButton';
 
 export default async function SiteFooter() {
@@ -14,6 +13,7 @@ export default async function SiteFooter() {
 
   const navigationLinks = [
     { href: '/', label: t('nav.home') },
+    { href: '/pokedex', label: t('nav.pokedex') },
     { href: '/team', label: t('nav.team') },
     { href: '/tcg', label: t('nav.tcg') },
     { href: '/tcg/collection', label: t('tcg.nav_collection') },
@@ -59,15 +59,6 @@ export default async function SiteFooter() {
             >
               <Heart className="h-4 w-4" />
             </Link>
-            <a
-              href={GITHUB_REPO_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={t('footer.resources.github')}
-              className="touch-target inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Github className="h-4 w-4" />
-            </a>
           </div>
         </div>
 

@@ -1,12 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const DEFAULT_OG_IMAGE_PATH = join(process.cwd(), 'public', 'og', 'primedex-og.jpg');
+const DEFAULT_OG_IMAGE_PATH = join(process.cwd(), 'public', 'og', 'lunidex-og.jpg');
 
 let defaultOgImagePromise: Promise<string> | null = null;
 
 /**
- * Loads the selected PrimeDex OG artwork as a data URI for next/og.
+ * Loads the selected Lunidex OG artwork as a data URI for next/og.
  * The public asset is part of the deployment and reading it locally avoids a
  * network self-fetch while the route is statically rendered.
  */

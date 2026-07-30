@@ -8,7 +8,7 @@ type BreadcrumbItem = {
 };
 
 export const DEFAULT_OG_IMAGE = {
-  url: '/og/primedex-og.jpg',
+  url: '/og/lunidex-og.jpg',
   width: OG_SIZE.width,
   height: OG_SIZE.height,
   alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
@@ -206,7 +206,5 @@ export function buildWebPageJsonLd({
     ...(about ? { about: { '@type': 'Thing', name: about } } : {}),
     ...(keywords ? { keywords } : {}),
     isPartOf: { '@id': `${SITE_URL}/#website` },
-    author: { '@id': `${SITE_URL}/#organization` },
-    publisher: { '@id': `${SITE_URL}/#organization` },
   };
 }

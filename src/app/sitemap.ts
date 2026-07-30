@@ -11,6 +11,7 @@ type StaticEntry = {
 
 export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: '', changeFrequency: 'weekly', priority: 1.0 },
+  { path: 'pokedex', changeFrequency: 'weekly', priority: 0.9 },
   { path: 'team', changeFrequency: 'weekly', priority: 0.7 },
   { path: 'compare', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'quiz', changeFrequency: 'monthly', priority: 0.6 },

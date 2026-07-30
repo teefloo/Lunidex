@@ -81,6 +81,17 @@ export default {
       key_facts_source: 'Source',
       key_facts_title: 'Le Pokédex le plus complet du web ouvert',
     },
+    lunidex_home: {
+      hero_title: 'Collectionnez vos cartes. Jouez vos Pokémon.',
+      hero_body: 'Votre collection TCG et vos équipes Pokémon, enfin réunies dans un espace simple et personnel.',
+      cta_start: 'Commencer ma collection', cta_resume: 'Reprendre ma collection', cta_pokedex: 'Explorer le Pokédex', start_without_account: 'Commencez sans compte.', no_account: 'Aucun compte nécessaire.',
+      preview_eyebrow: 'Aperçu collection', preview_title: 'Votre collection, en un coup d’œil.', preview_body: 'Choisissez une extension, ajoutez vos cartes et suivez votre progression à votre rythme.', preview_note: 'Aperçu de l’interface', preview_owned_eyebrow: 'Votre collection', preview_owned_title: 'Votre collection vous attend.', preview_owned_count_one: '{{count}} carte enregistrée sur cet appareil', preview_owned_count_other: '{{count}} cartes enregistrées sur cet appareil',
+      tools_eyebrow: 'Outils de jeu', tools_title: 'Explorez les Pokémon. Composez votre équipe.', tools_body: 'Consultez le Pokédex et préparez des équipes équilibrées dans le même espace.', tools_pokedex_title: 'Explorer le Pokédex', tools_pokedex_body: 'Retrouvez les Pokémon, leurs types, statistiques et évolutions.', tools_team_title: 'Construire une équipe', tools_team_body: 'Composez une équipe et vérifiez sa couverture de types.',
+      steps_eyebrow: 'Une collection simple à suivre', steps_title: 'Ajoutez vos cartes, gardez le fil.', steps_one_title: 'Choisissez une extension', steps_one_body: 'Partez d’une extension que vous collectionnez.', steps_two_title: 'Ajoutez vos cartes', steps_two_body: 'Marquez simplement les cartes que vous possédez.', steps_three_title: 'Suivez votre progression', steps_three_body: 'Visualisez l’avancement de chaque extension.',
+      trust_title: 'Commencez sans compte.', trust_body: 'Vos cartes sont d’abord enregistrées dans ce navigateur, sur cet appareil. Vous pourrez créer un compte plus tard pour activer la synchronisation lorsqu’elle est disponible.', independent: 'Lunidex est un projet indépendant et non officiel.', about: 'En savoir plus sur Lunidex',
+      faq_eyebrow: 'Questions fréquentes', faq_title: 'Questions sur Lunidex', faq_subtitle: 'L’essentiel pour suivre vos cartes et préparer vos équipes.', faq_q1: 'Faut-il un compte pour commencer ?', faq_a1: 'Non. Vous pouvez commencer à suivre vos cartes sans compte.', faq_q2: 'Où sont enregistrées mes cartes ?', faq_a2: 'Vos cartes sont enregistrées dans ce navigateur, sur cet appareil. Elles peuvent être perdues si vous effacez les données du navigateur. La synchronisation est facultative et proposée seulement lorsqu’elle est disponible.', faq_q3: 'Comment suivre une extension ?', faq_a3: 'Choisissez une extension, ajoutez les cartes que vous possédez et consultez votre progression.', faq_q4: 'Puis-je aussi préparer une équipe Pokémon ?', faq_a4: 'Oui. Le Pokédex et l’outil Équipe sont accessibles depuis Lunidex.',
+      meta_title: 'Lunidex — Collection TCG et équipes Pokémon', meta_description: 'Suivez votre collection de cartes TCG, explorez le Pokédex et préparez vos équipes Pokémon dans un espace simple et personnel. Commencez sans compte.', og_title: 'Lunidex — Collectionnez vos cartes. Jouez vos Pokémon.',
+    },
     footer: {
       navigation: {
         title: 'Navigation',

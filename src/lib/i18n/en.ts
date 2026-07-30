@@ -81,6 +81,17 @@ export default {
       key_facts_source: 'Source',
       key_facts_title: 'The most complete Pokédex on the open web',
     },
+    lunidex_home: {
+      hero_title: 'Collect your cards. Play your Pokémon.',
+      hero_body: 'Your TCG collection and Pokémon teams, finally together in one simple, personal space.',
+      cta_start: 'Start my collection', cta_resume: 'Resume my collection', cta_pokedex: 'Explore the Pokédex', start_without_account: 'Start without an account.', no_account: 'No account required.',
+      preview_eyebrow: 'Collection preview', preview_title: 'Your collection, at a glance.', preview_body: 'Choose a set, add your cards, and follow your progress at your own pace.', preview_note: 'Interface preview', preview_owned_eyebrow: 'Your collection', preview_owned_title: 'Your collection is ready.', preview_owned_count_one: '{{count}} card saved on this device', preview_owned_count_other: '{{count}} cards saved on this device',
+      tools_eyebrow: 'Game tools', tools_title: 'Explore Pokémon. Build your team.', tools_body: 'Browse the Pokédex and prepare balanced teams in the same place.', tools_pokedex_title: 'Explore the Pokédex', tools_pokedex_body: 'Browse Pokémon, their types, stats, and evolutions.', tools_team_title: 'Build a team', tools_team_body: 'Create a team and check its type coverage.',
+      steps_eyebrow: 'A simple collection to follow', steps_title: 'Add your cards, keep track.', steps_one_title: 'Choose a set', steps_one_body: 'Start with a set you collect.', steps_two_title: 'Add your cards', steps_two_body: 'Simply mark the cards you own.', steps_three_title: 'Track your progress', steps_three_body: 'See the progress of every set.',
+      trust_title: 'Start without an account.', trust_body: 'Your cards are first saved in this browser on this device. You can create an account later to enable synchronization when it is available.', independent: 'Lunidex is an independent, unofficial project.', about: 'Learn more about Lunidex',
+      faq_eyebrow: 'Frequently asked', faq_title: 'Questions about Lunidex', faq_subtitle: 'The essentials for tracking cards and preparing teams.', faq_q1: 'Do I need an account to start?', faq_a1: 'No. You can start tracking your cards without an account.', faq_q2: 'Where are my cards saved?', faq_a2: 'Your cards are saved in this browser on this device. They can be lost if you clear your browser data. Synchronization is optional and offered only when it is available.', faq_q3: 'How do I track a set?', faq_a3: 'Choose a set, add the cards you own, and view your progress.', faq_q4: 'Can I also prepare a Pokémon team?', faq_a4: 'Yes. The Pokédex and Team tool are available from Lunidex.',
+      meta_title: 'Lunidex — TCG collection and Pokémon teams', meta_description: 'Track your TCG card collection, explore the Pokédex, and prepare your Pokémon teams in one simple, personal space. Start without an account.', og_title: 'Lunidex — Collect your cards. Play your Pokémon.',
+    },
     footer: {
       navigation: {
         title: 'Navigation',
