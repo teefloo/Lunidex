@@ -83,7 +83,7 @@ export default async function PokedexPage() {
       <script id="pokedex-webpage-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }} />
       <div className="app-page">
         <Header />
-        <main id="main-content" className="relative z-10 pt-28 pb-8 md:pt-32">
+        <main className="relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
           <PokemonOfTheDay />
           <PokemonList />

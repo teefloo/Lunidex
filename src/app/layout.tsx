@@ -15,10 +15,7 @@ import {
   SITE_TAGLINE,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-  GITHUB_ISSUES_URL,
-  TWITTER_HANDLE,
   PRIMARY_COLOR,
-  SOCIAL_PROFILES,
   FEATURE_LIST,
 } from "@/lib/site";
 
@@ -103,14 +100,6 @@ export async function generateMetadata(): Promise<Metadata> {
       url: `/${lang}`,
       images: [DEFAULT_OG_IMAGE],
     },
-    twitter: {
-      card: "summary_large_image",
-      site: TWITTER_HANDLE,
-      creator: TWITTER_HANDLE,
-      title: t("meta.twitter_title"),
-      description: t("meta.twitter_description"),
-      images: [DEFAULT_OG_IMAGE],
-    },
     icons: {
       icon: [
         { url: "/icon.svg", type: "image/svg+xml", sizes: "any" },
@@ -159,44 +148,7 @@ export default async function RootLayout({
       description: SITE_DESCRIPTION,
       inLanguage: supportedInLanguage,
       keywords: SITE_KEYWORDS.join(', '),
-      publisher: { '@id': `${baseUrl}/#organization` },
-      potentialAction: [
-        {
-          '@type': 'SearchAction',
-          target: {
-            '@type': 'EntryPoint',
-            urlTemplate: `${baseUrl}/?search={search_term_string}`,
-          },
-          'query-input': 'required name=search_term_string',
-        },
-      ],
       mainEntity: { '@id': `${baseUrl}/#webapp` },
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      '@id': `${baseUrl}/#organization`,
-      name: SITE_NAME,
-      legalName: SITE_NAME,
-      url: baseUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/icon-512.png`,
-        width: 512,
-        height: 512,
-      },
-      image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
-      description: SITE_DESCRIPTION,
-      foundingDate: '2024',
-      sameAs: SOCIAL_PROFILES,
-      contactPoint: [
-        {
-          '@type': 'ContactPoint',
-          contactType: 'customer support',
-          url: GITHUB_ISSUES_URL,
-          availableLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
-        },
-      ],
     },
     {
       '@context': 'https://schema.org',
@@ -211,49 +163,16 @@ export default async function RootLayout({
       browserRequirements: 'Requires modern browser with JavaScript enabled',
       description: SITE_DESCRIPTION,
       image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
-      screenshot: [
-        `${baseUrl}/screenshot-desktop.png`,
-        `${baseUrl}/screenshot-mobile.png`,
-      ],
       featureList: FEATURE_LIST.join(', '),
       keywords: SITE_KEYWORDS.join(', '),
       inLanguage: supportedInLanguage,
-      isAccessibleForFree: true,
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-        availability: 'https://schema.org/InStock',
-      },
-      author: { '@id': `${baseUrl}/#organization` },
-      publisher: { '@id': `${baseUrl}/#organization` },
       softwareVersion: '0.1.0',
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      '@id': `${baseUrl}/#speakable`,
-      url: baseUrl,
-      name: SITE_NAME,
-      inLanguage: lang,
-      speakable: {
-        '@type': 'SpeakableSpecification',
-        xpath: [
-          '/html/head/title',
-          '/html/head/meta[@name="description"]/@content',
-          '//h1',
-          '//h2[contains(@class, "hero-title")]',
-        ],
-      },
     },
   ];
 
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
-      <head>
-        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
-        <link rel="dns-prefetch" href="https://beta.pokeapi.co" />
-      </head>
+      <head />
       <body className="antialiased bg-background text-foreground font-body">
         <a
           href="#main-content"

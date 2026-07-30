@@ -34,20 +34,17 @@ export const SITE_KEYWORDS = [
 
 export const GITHUB_REPO_URL = 'https://github.com/teefloo/Poke';
 export const GITHUB_ISSUES_URL = 'https://github.com/teefloo/Poke/issues';
-
+// Retained temporarily for secondary pages; public home metadata and footer do not use them.
 export const TWITTER_HANDLE = '@primedex';
 export const TWITTER_URL = 'https://twitter.com/primedex';
 export const DISCORD_URL = 'https://discord.gg/primedex';
+export const SOCIAL_PROFILES = [GITHUB_REPO_URL, TWITTER_URL, DISCORD_URL];
+
 
 export const PRIMARY_COLOR = '#E8916B';
 export const BACKGROUND_COLOR = '#211A17';
 export const ACCENT_COLOR = '#A8C5E0';
 
-export const SOCIAL_PROFILES = [
-  GITHUB_REPO_URL,
-  TWITTER_URL,
-  DISCORD_URL,
-];
 
 export const FEATURE_LIST = [
   'Complete Pokédex of all 1025 Pokémon across 9 generations',
