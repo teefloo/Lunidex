@@ -4,7 +4,7 @@ import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
 describe('navigation scope', () => {
   it('keeps the five launch journeys in primary navigation', () => {
     expect(PRIMARY_NAV_ITEMS.map((item) => item.path)).toEqual([
-      '/',
+      '/pokedex',
       '/team',
       '/tcg',
       '/tcg/collection',

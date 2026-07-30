@@ -22,7 +22,7 @@ export interface NavItem {
 }
 
 export const PRIMARY_NAV_ITEMS: NavItem[] = [
-  { path: '/',                 icon: BookOpen,    labelKey: 'nav.pokedex',            fallback: 'Pokédex' },
+  { path: '/pokedex',          icon: BookOpen,    labelKey: 'nav.pokedex',            fallback: 'Pokédex' },
   { path: '/team',             icon: Users,       labelKey: 'nav.team',               fallback: 'Team' },
   { path: '/tcg',              icon: LayoutGrid,  labelKey: 'nav.tcg',                fallback: 'TCG' },
   { path: '/tcg/collection',   icon: Package,     labelKey: 'tcg.nav_collection',    fallback: 'Collection' },
