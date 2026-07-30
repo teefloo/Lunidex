@@ -38,7 +38,7 @@ Les URLs canoniques, `hreflang`, sitemap et JSON-LD sont construits à partir de
 4. Parcours collection en trois étapes.
 5. Réassurance d'usage local et de synchronisation facultative.
 6. FAQ courte.
-7. Footer adapté sans lien GitHub, avec avertissement de non-affiliation.
+7. Footer adapté sans lien GitHub ni lien vers la FAQ générale non rebrandée, avec avertissement de non-affiliation.
 
 L'accueil ne charge ni grille Pokédex, ni recherche, ni filtres, ni listes de Pokémon, ni données TCG distantes au-dessus du pli.
 
@@ -150,7 +150,7 @@ Le CTA utilise le résolveur de la section 5 : sans cartes, `/{locale}/tcg/start
 | Mention | `Lunidex est un projet indépendant et non officiel.` | `Lunidex is an independent, unofficial project.` |
 | Lien | `En savoir plus sur Lunidex` | `Learn more about Lunidex` |
 
-Le lien mène à `/{locale}/about` et reste secondaire.
+Le lien secondaire vers `/{locale}/about` est retiré de cette implémentation : cette page présente encore publiquement l'ancienne identité et des affirmations obsolètes. Il pourra être réintroduit après son rebranding séparé.
 
 ## 8. FAQ
 
