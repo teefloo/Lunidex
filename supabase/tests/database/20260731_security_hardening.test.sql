@@ -1,11 +1,17 @@
 begin;
 
+create extension if not exists pgtap with schema extensions;
+
 select plan(22);
 
 -- The test runner is privileged. These deterministic IDs avoid fixtures with
 -- personal data; replication_role is limited to this rolled-back transaction
 -- so the FK setup cannot affect the database outside this test.
 set local session_replication_role = replica;
+insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data)
+values
+  ('00000000-0000-0000-0000-000000000101', 'authenticated', 'authenticated', 'security-test-101@example.invalid', '{}'::jsonb, '{}'::jsonb),
+  ('00000000-0000-0000-0000-000000000202', 'authenticated', 'authenticated', 'security-test-202@example.invalid', '{}'::jsonb, '{}'::jsonb);
 insert into public.user_state (user_id, data) values
   ('00000000-0000-0000-0000-000000000101', '{"owner": "one"}'::jsonb),
   ('00000000-0000-0000-0000-000000000202', '{"owner": "two"}'::jsonb);
@@ -29,7 +35,10 @@ select policy_cmd_is('public', 'friendships', 'friendships_update_recipient', 'U
 -- `acldefault` makes a missing ACL visible as PostgreSQL's implicit PUBLIC grant.
 select results_eq(
   $$
-    select coalesce(string_agg(p.oid::regprocedure::text || ':' || coalesce(r.rolname, 'PUBLIC'), ',' order by p.oid::regprocedure::text, coalesce(r.rolname, 'PUBLIC')), '')
+    select coalesce(string_agg(
+      (n.nspname || '.' || regexp_replace(p.oid::regprocedure::text, '^.*\.', '') || ':' || coalesce(r.rolname::text, 'PUBLIC')) collate "C",
+      ',' order by p.oid::regprocedure::text collate "C", coalesce(r.rolname::text, 'PUBLIC') collate "C"
+    ), '') collate "C"
     from pg_proc p
     join pg_namespace n on n.oid = p.pronamespace
     cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) acl
@@ -41,11 +50,11 @@ select results_eq(
   $$,
   $$
     values (
-      'analytics.increment_daily_metric(text,text,text):service_role,' ||
+      ('analytics.increment_daily_metric(text,text,text):service_role,' ||
       'public.respond_to_friend_request(uuid,text):authenticated,' ||
       'public.send_friend_request(text):authenticated,' ||
       'public.set_public_profile(text,boolean):authenticated,' ||
-      'public.submit_quiz_score(text,text,integer,text):authenticated'
+      'public.submit_quiz_score(text,text,integer,text):authenticated') collate "C"
     )
   $$,
   'all SECURITY DEFINER function EXECUTE ACLs are explicit and minimal'

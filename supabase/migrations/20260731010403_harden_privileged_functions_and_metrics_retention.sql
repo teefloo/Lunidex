@@ -18,19 +18,69 @@ alter function public.send_friend_request(text) set search_path = pg_catalog, pu
 alter function public.respond_to_friend_request(uuid, text) set search_path = pg_catalog, public;
 alter function public.submit_quiz_score(text, text, integer, text) set search_path = pg_catalog, public;
 
-revoke all on function public.handle_new_user() from public, anon, authenticated;
-revoke all on function public.sync_public_profile_from_user_state() from public, anon, authenticated;
-revoke all on function public.sync_friend_directory() from public, anon, authenticated;
-revoke all on function public.sync_friend_snapshots() from public, anon, authenticated;
+revoke all on function public.handle_new_user() from public, anon, authenticated, service_role;
+revoke all on function public.sync_public_profile_from_user_state() from public, anon, authenticated, service_role;
+revoke all on function public.sync_friend_directory() from public, anon, authenticated, service_role;
+revoke all on function public.sync_friend_snapshots() from public, anon, authenticated, service_role;
 
-revoke all on function public.set_public_profile(text, boolean) from public, anon, authenticated;
+revoke all on function public.set_public_profile(text, boolean) from public, anon, authenticated, service_role;
 grant execute on function public.set_public_profile(text, boolean) to authenticated;
-revoke all on function public.send_friend_request(text) from public, anon, authenticated;
+revoke all on function public.send_friend_request(text) from public, anon, authenticated, service_role;
 grant execute on function public.send_friend_request(text) to authenticated;
-revoke all on function public.respond_to_friend_request(uuid, text) from public, anon, authenticated;
+revoke all on function public.respond_to_friend_request(uuid, text) from public, anon, authenticated, service_role;
 grant execute on function public.respond_to_friend_request(uuid, text) to authenticated;
-revoke all on function public.submit_quiz_score(text, text, integer, text) from public, anon, authenticated;
+revoke all on function public.submit_quiz_score(text, text, integer, text) from public, anon, authenticated, service_role;
 grant execute on function public.submit_quiz_score(text, text, integer, text) to authenticated;
+
+-- Keep the public projection safe under the caller's RLS context. The anon
+-- column grant is limited to exactly the fields selected by the view; the
+-- existing `profiles_select_public` policy still requires is_public = true.
+create or replace view public.public_profiles
+with (security_barrier = true, security_invoker = true)
+as
+select
+  id,
+  name,
+  public_handle,
+  is_public,
+  avatar_pokemon_id,
+  caught_count,
+  total_pokemon,
+  unlocked_badges,
+  team_ids,
+  quiz_best_score,
+  quiz_best_streak,
+  quiz_total_correct,
+  tcg_owned_count,
+  caught_by_gen,
+  member_since
+from public.profiles
+where is_public = true;
+
+grant select (
+  id,
+  name,
+  public_handle,
+  is_public,
+  avatar_pokemon_id,
+  caught_count,
+  total_pokemon,
+  unlocked_badges,
+  team_ids,
+  quiz_best_score,
+  quiz_best_streak,
+  quiz_total_correct,
+  tcg_owned_count,
+  caught_by_gen,
+  member_since
+) on table public.profiles to anon;
+
+-- The custom schema must be visible to PostgREST for the server route's
+-- schema-qualified RPC call. Object ACLs below remain the authorization gate.
+grant usage on schema analytics to anon, authenticated, service_role;
+alter role authenticator set pgrst.db_schemas = 'public, storage, graphql_public, analytics';
+notify pgrst, 'reload config';
+notify pgrst, 'reload schema';
 
 -- The original responder relied on a non-matching UPDATE predicate when there
 -- was no JWT. Make the authentication boundary explicit before the privileged
