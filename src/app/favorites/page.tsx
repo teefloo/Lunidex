@@ -41,7 +41,7 @@ export default function FavoritesPage() {
           icon={Heart}
           title={t('favorites.title')}
           subtitle={`${t('favorites.subtitle')} ${t('favorites.count', { count: favoritePokemon.length })}`}
-          eyebrow={t('favorites.eyebrow', { defaultValue: 'PrimeDex' })}
+          eyebrow={t('favorites.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
         />
 
@@ -85,7 +85,7 @@ export default function FavoritesPage() {
         <div className="py-16 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/20" />
-            <span className="text-lg font-black gradient-text-primary tracking-tighter">PrimeDex</span>
+            <span className="text-lg font-black gradient-text-primary tracking-tighter">Lunidex</span>
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/20" />
           </div>
           <p className="text-[11px] font-semibold text-foreground/25 tracking-wider">

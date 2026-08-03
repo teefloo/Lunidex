@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const move = await fetchMoveDetail(name);
 
   if (!move) {
-    return { title: `${name} — Move | PrimeDex` };
+    return { title: `${name} — Move | Lunidex` };
   }
 
   const localizedName = move.name
@@ -103,13 +103,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = effectEntry?.short_effect ?? t('moves_page.no_description_detail');
 
   return {
-    title: `${localizedName} — Move | PrimeDex`,
+    title: `${localizedName} — Move | Lunidex`,
     description,
     alternates: {
       canonical: `/${lang}/moves/${name}`,
     },
     openGraph: {
-      title: `${localizedName} — Move | PrimeDex`,
+      title: `${localizedName} — Move | Lunidex`,
       description,
       url: `/${lang}/moves/${name}`,
       type: 'website',
@@ -117,7 +117,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary',
-      title: `${localizedName} — Move | PrimeDex`,
+      title: `${localizedName} — Move | Lunidex`,
       description,
     },
   };

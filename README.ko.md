@@ -1,9 +1,9 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="PrimeDex 로고" width="80" />
+<img src="./public/icon.svg" alt="Lunidex 로고" width="80" />
 
-# PrimeDex
+# Lunidex
 
 **트레이너, 컬렉터, 호기심 많은 팬을 위한 빠른 로컬 우선 포켓몬 도감 및 Pokémon TCG 작업 공간입니다.**
 
@@ -25,12 +25,12 @@
 
 ## 개요
 
-PrimeDex는 Next.js 웹 앱, 공유 TypeScript 패키지 `@primedex/core`, Expo 모바일 컴패니언으로 구성된 오픈 소스 모노레포입니다. 계정 생성 없이 전국도감, 경쟁전 준비 도구, Pokémon TCG 컬렉션 도구, 개인 진행 상황 추적 기능을 한곳에 제공합니다.
+Lunidex는 Next.js 웹 앱, 공유 TypeScript 패키지 `@primedex/core`, Expo 모바일 컴패니언으로 구성된 오픈 소스 모노레포입니다. 계정 생성 없이 전국도감, 경쟁전 준비 도구, Pokémon TCG 컬렉션 도구, 개인 진행 상황 추적 기능을 한곳에 제공합니다.
 
 웹 앱은 **9세대 1,025마리 포켓몬**을 다룹니다. 인터페이스는 영어, 프랑스어, 스페인어, 독일어, 이탈리아어, 일본어, 한국어, 중국어 간체를 지원하며, 이 저장소에는 포르투갈어 README 번역도 포함되어 있습니다.
 
 > [!NOTE]
-> PrimeDex는 비상업적 팬 프로젝트입니다. 포켓몬의 데이터, 이름, 이미지는 Nintendo, Game Freak, Creatures 및 The Pokémon Company에 귀속됩니다. PrimeDex는 이들 회사와 제휴하거나 보증을 받지 않았습니다.
+> Lunidex는 비상업적 팬 프로젝트입니다. 포켓몬의 데이터, 이름, 이미지는 Nintendo, Game Freak, Creatures 및 The Pokémon Company에 귀속됩니다. Lunidex는 이들 회사와 제휴하거나 보증을 받지 않았습니다.
 
 ## 기능
 
@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000)을 엽니다. PrimeDex는 `primedex-lang` 쿠키 또는 브라우저의 `Accept-Language` 헤더를 기준으로 접두사가 없는 URL을 `/ko` 같은 로케일 경로로 리디렉션합니다.
+[http://localhost:3000](http://localhost:3000)을 엽니다. Lunidex는 `primedex-lang` 쿠키 또는 브라우저의 `Accept-Language` 헤더를 기준으로 접두사가 없는 URL을 `/ko` 같은 로케일 경로로 리디렉션합니다.
 
 > [!IMPORTANT]
 > 개발에서는 의도적으로 webpack을 사용합니다. `npm run dev`는 `next dev --webpack`을 실행합니다. Next 구성에 Turbopack root가 선언되어 있어도 이 명령을 유지하세요.
@@ -97,7 +97,7 @@ Expo 안내에서 iOS, Android, 웹 또는 Expo Go를 열 수 있습니다. 지�
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 중 Agentation UI 검토 도구 모음을 켭니다. |
 
 > [!TIP]
-> Supabase 없이도 PrimeDex는 로컬 우선 방식으로 완전히 사용할 수 있습니다. 즐겨찾기, 팀, 포획, 필터, TCG 진행도는 브라우저 저장소에 남습니다. 모바일에서는 `apps/mobile/.env`에 `EXPO_PUBLIC_SUPABASE_URL`과 `EXPO_PUBLIC_SUPABASE_ANON_KEY`를 사용하세요.
+> Supabase 없이도 Lunidex는 로컬 우선 방식으로 완전히 사용할 수 있습니다. 즐겨찾기, 팀, 포획, 필터, TCG 진행도는 브라우저 저장소에 남습니다. 모바일에서는 `apps/mobile/.env`에 `EXPO_PUBLIC_SUPABASE_URL`과 `EXPO_PUBLIC_SUPABASE_ANON_KEY`를 사용하세요.
 
 <details>
 <summary><strong>개발에서 Agentation 켜기</strong></summary>
@@ -146,7 +146,7 @@ React 서버 및 클라이언트 컴포넌트
 
 ## 배포
 
-PrimeDex는 Vercel에 맞게 구성되어 있으며 Next.js 서버 런타임과 이미지 최적화를 지원하는 모든 호스트에서 실행할 수 있습니다.
+Lunidex는 Vercel에 맞게 구성되어 있으며 Next.js 서버 런타임과 이미지 최적화를 지원하는 모든 호스트에서 실행할 수 있습니다.
 
 ```bash
 npm run build
@@ -157,6 +157,6 @@ Vercel에서 저장소를 가져오고 기본 Next.js 설정을 유지한 뒤, �
 
 ## 감사의 말
 
-PrimeDex는 [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) 및 애플리케이션에서 사용하는 오픈 소스 프로젝트의 도움으로 만들어졌습니다.
+Lunidex는 [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) 및 애플리케이션에서 사용하는 오픈 소스 프로젝트의 도움으로 만들어졌습니다.
 
 Pokémon 및 관련 자산은 각 소유자의 상표입니다. 이 팬 프로젝트는 비공식적이고 비상업적입니다.

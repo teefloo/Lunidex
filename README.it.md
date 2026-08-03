@@ -1,9 +1,9 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="Logo PrimeDex" width="80" />
+<img src="./public/icon.svg" alt="Logo Lunidex" width="80" />
 
-# PrimeDex
+# Lunidex
 
 **Un Pokédex veloce, local-first e uno spazio Pokémon TCG per allenatori, collezionisti e fan curiosi.**
 
@@ -25,12 +25,12 @@
 
 ## Panoramica
 
-PrimeDex è un monorepo open source composto da un'applicazione web Next.js, dal pacchetto TypeScript condiviso `@primedex/core` e da un'app mobile Expo. Riunisce il Pokédex nazionale, gli strumenti per la preparazione competitiva, gli strumenti per le collezioni Pokémon TCG e il monitoraggio dei progressi personali, senza richiedere un account.
+Lunidex è un monorepo open source composto da un'applicazione web Next.js, dal pacchetto TypeScript condiviso `@primedex/core` e da un'app mobile Expo. Riunisce il Pokédex nazionale, gli strumenti per la preparazione competitiva, gli strumenti per le collezioni Pokémon TCG e il monitoraggio dei progressi personali, senza richiedere un account.
 
 L'app web copre **1.025 Pokémon di nove generazioni**. L'interfaccia è disponibile in inglese, francese, spagnolo, tedesco, italiano, giapponese, coreano e cinese semplificato; questo repository offre anche una traduzione portoghese del README.
 
 > [!NOTE]
-> PrimeDex è un progetto di fan non commerciale. Dati, nomi e immagini Pokémon appartengono a Nintendo, Game Freak, Creatures e The Pokémon Company. PrimeDex non è affiliato né approvato da tali società.
+> Lunidex è un progetto di fan non commerciale. Dati, nomi e immagini Pokémon appartengono a Nintendo, Game Freak, Creatures e The Pokémon Company. Lunidex non è affiliato né approvato da tali società.
 
 ## Funzionalità
 
@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-Apri [http://localhost:3000](http://localhost:3000). PrimeDex reindirizza gli URL senza prefisso a un percorso locale come `/it`, usando il cookie `primedex-lang` o l'header `Accept-Language` del browser.
+Apri [http://localhost:3000](http://localhost:3000). Lunidex reindirizza gli URL senza prefisso a un percorso locale come `/it`, usando il cookie `primedex-lang` o l'header `Accept-Language` del browser.
 
 > [!IMPORTANT]
 > Lo sviluppo usa webpack intenzionalmente: `npm run dev` esegue `next dev --webpack`. Mantieni questo comando anche se la configurazione Next dichiara anche una root Turbopack.
@@ -97,7 +97,7 @@ Non è richiesta alcuna variabile d'ambiente per consultare il Pokédex in local
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Abilita la barra di revisione UI Agentation durante lo sviluppo. |
 
 > [!TIP]
-> Senza Supabase, PrimeDex resta pienamente utilizzabile in modalità local-first: preferiti, squadre, catture, filtri e progressi TCG restano nel browser. Per mobile usa `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `apps/mobile/.env`.
+> Senza Supabase, Lunidex resta pienamente utilizzabile in modalità local-first: preferiti, squadre, catture, filtri e progressi TCG restano nel browser. Per mobile usa `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `apps/mobile/.env`.
 
 <details>
 <summary><strong>Abilitare Agentation in sviluppo</strong></summary>
@@ -146,7 +146,7 @@ I componenti non interrogano questi servizi direttamente: le richieste passano a
 
 ## Distribuzione
 
-PrimeDex è configurato per Vercel e può essere eseguito su qualsiasi piattaforma che supporti un runtime Next.js e l'ottimizzazione delle immagini.
+Lunidex è configurato per Vercel e può essere eseguito su qualsiasi piattaforma che supporti un runtime Next.js e l'ottimizzazione delle immagini.
 
 ```bash
 npm run build
@@ -157,6 +157,6 @@ Su Vercel importa il repository, mantieni le impostazioni standard di Next.js e 
 
 ## Ringraziamenti
 
-PrimeDex si basa su [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) e sui progetti open source utilizzati nell'applicazione.
+Lunidex si basa su [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) e sui progetti open source utilizzati nell'applicazione.
 
 Pokémon e tutte le proprietà correlate sono marchi dei rispettivi titolari. Questo progetto di fan è non ufficiale e non commerciale.

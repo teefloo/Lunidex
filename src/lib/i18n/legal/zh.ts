@@ -3,9 +3,9 @@ import type { LegalDocument } from '../legal-types';
 const privacy: LegalDocument = {
   title: '隐私政策',
   intro:
-    '本政策依据《通用数据保护条例》(GDPR)和《加州消费者隐私法》(CCPA)，说明您使用 PrimeDex 时我们如何处理您的个人数据。',
+    '本政策依据《通用数据保护条例》(GDPR)和《加州消费者隐私法》(CCPA)，说明您使用 Lunidex 时我们如何处理您的个人数据。',
   preamble:
-    'PrimeDex 是一个非商业性的粉丝网站，与任天堂、Game Freak、宝可梦公司或 Creatures Inc. 没有任何关联。我们非常重视您的隐私保护。本政策将完全透明地说明收集哪些数据、原因、使用方式、保留时长以及您所拥有的权利。',
+    'Lunidex 是一个非商业性的粉丝网站，与任天堂、Game Freak、宝可梦公司或 Creatures Inc. 没有任何关联。我们非常重视您的隐私保护。本政策将完全透明地说明收集哪些数据、原因、使用方式、保留时长以及您所拥有的权利。',
   lastUpdated: '2026年6月4日',
   effectiveDate: '2026年6月4日',
   sections: [
@@ -14,13 +14,13 @@ const privacy: LegalDocument = {
       title: '1. 数据控制者',
       intro: '您个人数据的控制者为：',
       paragraphs: [
-        'PrimeDex 由个人以个人、非商业方式发布。不存在法人实体、商业注册号或独立的法定代表人。',
+        'Lunidex 由个人以个人、非商业方式发布。不存在法人实体、商业注册号或独立的法定代表人。',
         '发布者在 GDPR 第 4(7) 条的意义上作为数据控制者行事，决定处理您个人数据的目的和方式。',
       ],
       table: {
         headers: ['角色', '身份', '联系方式'],
         rows: [
-          ['发布者（数据控制者）', '个人 — PrimeDex', 'estdel3012@gmail.com'],
+          ['发布者（数据控制者）', '个人 — Lunidex', 'estdel3012@gmail.com'],
           ['托管服务商（数据处理者）', 'Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA', 'privacy@vercel.com'],
           ['数据保护官', '未指定（低风险处理）', 'estdel3012@gmail.com'],
         ],
@@ -33,7 +33,7 @@ const privacy: LegalDocument = {
     {
       id: 'data',
       title: '2. 收集的数据',
-      intro: 'PrimeDex 仅收集运营服务所需的最少数据。',
+      intro: 'Lunidex 仅收集运营服务所需的最少数据。',
       subsections: [
         {
           id: 'data-personal',
@@ -77,7 +77,7 @@ const privacy: LegalDocument = {
           id: 'data-technical',
           title: '2.3. 自动传输的技术数据',
           paragraphs: [
-            '每次连接到 PrimeDex 时，您的浏览器会自动与我们的基础设施及数据处理者交换技术信息。这些数据是建立和正常运行通信所必需的：',
+            '每次连接到 Lunidex 时，您的浏览器会自动与我们的基础设施及数据处理者交换技术信息。这些数据是建立和正常运行通信所必需的：',
           ],
           table: {
             headers: ['类别', '数据', '目的', '法律依据（GDPR）'],
@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookie 和跟踪器',
           paragraphs: [
-            'PrimeDex 使用服务严格必要的存储。仅在您同意后，Vercel Web Analytics 和 Speed Insights 才衡量受众和性能；Supabase 仅接收每日产品衡量计数。请参阅 Cookie 政策了解独立的目的和选择。',
+            'Lunidex 使用服务严格必要的存储。仅在您同意后，Vercel Web Analytics 和 Speed Insights 才衡量受众和性能；Supabase 仅接收每日产品衡量计数。请参阅 Cookie 政策了解独立的目的和选择。',
           ],
           list: [
             'primedex-lang（时长：1年）：记住您偏好的语言。',
@@ -123,7 +123,7 @@ const privacy: LegalDocument = {
       title: '4. 数据接收方和处理者',
       intro: '您的数据仅与服务运行所严格必需的处理者共享。不进行任何商业性转让。',
       paragraphs: [
-        'PrimeDex 不会出于商业或营销目的向第三方出售、出租或转让任何个人数据。不进行任何具有法律效力的用户画像或自动化决策。',
+        'Lunidex 不会出于商业或营销目的向第三方出售、出租或转让任何个人数据。不进行任何具有法律效力的用户画像或自动化决策。',
       ],
       table: {
         headers: ['数据处理者', '服务', '国家', '转移保障措施'],
@@ -166,7 +166,7 @@ const privacy: LegalDocument = {
       id: 'security',
       title: '7. 安全',
       paragraphs: [
-        'PrimeDex 实施适当的技术和组织措施，以保护您的数据免受未经授权的访问、篡改、泄露或破坏。',
+        'Lunidex 实施适当的技术和组织措施，以保护您的数据免受未经授权的访问、篡改、泄露或破坏。',
       ],
       list: [
         '全站 HTTPS/TLS 1.3 加密（启用 HSTS）。',
@@ -201,7 +201,7 @@ const privacy: LegalDocument = {
       id: 'children',
       title: '9. 未成年人保护',
       paragraphs: [
-        'PrimeDex 面向家庭受众，未成年人也可能浏览本网站。未经父母同意，本网站不会故意收集16岁以下（或当地法律适用年龄以下）儿童的任何个人数据。',
+        'Lunidex 面向家庭受众，未成年人也可能浏览本网站。未经父母同意，本网站不会故意收集16岁以下（或当地法律适用年龄以下）儿童的任何个人数据。',
         '本网站不提供任何儿童专属板块，不提供消息功能，也不收集能直接识别未成年人身份的信息。若家长认为其子女提供了个人信息，可联系我们要求删除。',
         '根据《儿童在线隐私保护法》（COPPA）和 GDPR，本网站不会故意收集13岁以下（COPPA）或16岁以下（GDPR，除非成员国设定更低年龄）儿童的数据。',
       ],
@@ -210,7 +210,7 @@ const privacy: LegalDocument = {
       id: 'third-parties',
       title: '10. 第三方服务与外部链接',
       paragraphs: [
-        'PrimeDex 依赖第三方 API 和服务（PokéAPI、TCGdex、Scrydex、GitHub）来提供所显示的数据。这些服务有其自身的隐私政策，我们建议您查阅。',
+        'Lunidex 依赖第三方 API 和服务（PokéAPI、TCGdex、Scrydex、GitHub）来提供所显示的数据。这些服务有其自身的隐私政策，我们建议您查阅。',
         '本网站还可能提供指向外部网站的链接（例如宝可梦官方页面、YouTube 视频、商店）。我们对这些第三方网站的内容或隐私实践不承担任何责任。',
       ],
     },
@@ -242,9 +242,9 @@ const privacy: LegalDocument = {
 const terms: LegalDocument = {
   title: '服务条款',
   intro:
-    '本服务条款规定了您访问和使用 PrimeDex 的相关规则。访问本网站即表示您同意受本条款约束。',
+    '本服务条款规定了您访问和使用 Lunidex 的相关规则。访问本网站即表示您同意受本条款约束。',
   preamble:
-    'PrimeDex 是一个个人的、免费的、无广告的、未货币化的粉丝项目，以宝可梦世界观为主题，"按现状"提供，用于娱乐和信息目的。使用本网站即构成对本条款的接受。',
+    'Lunidex 是一个个人的、免费的、无广告的、未货币化的粉丝项目，以宝可梦世界观为主题，"按现状"提供，用于娱乐和信息目的。使用本网站即构成对本条款的接受。',
   lastUpdated: '2026年6月4日',
   effectiveDate: '2026年6月4日',
   sections: [
@@ -252,14 +252,14 @@ const terms: LegalDocument = {
       id: 'object',
       title: '1. 目的',
       paragraphs: [
-        'PrimeDex 是一个非商业性网站，收录与宝可梦（编号、属性、能力值、描述、进化、特性、精灵图）以及同一世界观的集换式卡牌游戏（TCG）卡牌相关的数据。这是一个纯粹以信息和娱乐为目的的粉丝项目。',
+        'Lunidex 是一个非商业性网站，收录与宝可梦（编号、属性、能力值、描述、进化、特性、精灵图）以及同一世界观的集换式卡牌游戏（TCG）卡牌相关的数据。这是一个纯粹以信息和娱乐为目的的粉丝项目。',
         '本网站免费提供且无广告。使用本服务无需购买、订阅或注册。',
       ],
     },
     {
       id: 'affiliation',
       title: '2. 非关联声明及知识产权',
-      intro: 'PrimeDex 与以下各方没有任何关联、赞助、支持或认可关系：',
+      intro: 'Lunidex 与以下各方没有任何关联、赞助、支持或认可关系：',
       list: [
         '任天堂株式会社。',
         'Game Freak 株式会社。',
@@ -268,23 +268,23 @@ const terms: LegalDocument = {
         '宝可梦中心、Wizards of the Coast（Hasbro），或任何其他与宝可梦商标相关的权利人。',
       ],
       paragraphs: [
-        '与宝可梦世界观相关的商标、名称、精灵图、插图、声音、视频及任何其他内容，均归其各自权利人独家所有。PrimeDex 不对其主张任何所有权。',
+        '与宝可梦世界观相关的商标、名称、精灵图、插图、声音、视频及任何其他内容，均归其各自权利人独家所有。Lunidex 不对其主张任何所有权。',
         '对宝可梦商标和内容的使用是出于非商业性粉丝项目目的，这在大多数司法管辖区构成本质上被允许的描述性和信息性使用。若权利人认为任何内容侵犯其权利，我们承诺在收到发送至 estdel3012@gmail.com 的通知后及时移除。',
-        '本网站的源代码依据 MIT 许可证（开源）发布。这并不授予对宝可梦商标的任何权利：MIT 许可证仅适用于 PrimeDex 作者编写的代码。',
+        '本网站的源代码依据 MIT 许可证（开源）发布。这并不授予对宝可梦商标的任何权利：MIT 许可证仅适用于 Lunidex 作者编写的代码。',
       ],
     },
     {
       id: 'sources',
       title: '3. 数据来源',
       paragraphs: [
-        'PrimeDex 显示的数据完全来自公开的、社区维护的第三方来源：PokéAPI（pokeapi.co，由 Paul Hallett 维护）和 TCGdex（api.tcgdex.net）。图片由 Scrydex 和 GitHub（raw.githubusercontent.com）托管。',
+        'Lunidex 显示的数据完全来自公开的、社区维护的第三方来源：PokéAPI（pokeapi.co，由 Paul Hallett 维护）和 TCGdex（api.tcgdex.net）。图片由 Scrydex 和 GitHub（raw.githubusercontent.com）托管。',
         '我们努力显示准确且最新的数据，但不保证不存在错误、遗漏或与数据源的同步延迟。数据仅供参考，不能替代官方来源。',
       ],
     },
     {
       id: 'usage',
       title: '4. 授权与禁止用途',
-      intro: '您被授权将 PrimeDex 用于个人、非商业和信息目的。特别禁止以下行为：',
+      intro: '您被授权将 Lunidex 用于个人、非商业和信息目的。特别禁止以下行为：',
       list: [
         '对网站访问进行任何商业、广告或转售用途。',
         '任何超出正常使用范围的大规模或自动化抓取行为（例如每分钟超过60次请求，或整体复制数据库）。',
@@ -299,7 +299,7 @@ const terms: LegalDocument = {
       id: 'availability',
       title: '5. 服务可用性',
       paragraphs: [
-        'PrimeDex 按"现状"和"可用性"提供。发布者努力保持网站全天候可访问，但不保证不间断的可用性。',
+        'Lunidex 按"现状"和"可用性"提供。发布者努力保持网站全天候可访问，但不保证不间断的可用性。',
         '服务可能因维护、更新、技术问题或不可抗力而暂时中断。不得以此为由要求任何赔偿。',
       ],
     },
@@ -308,9 +308,9 @@ const terms: LegalDocument = {
       title: '6. 责任',
       intro: '在适用法律允许的范围内：',
       list: [
-        'PrimeDex 不对因使用或无法使用本网站而产生的间接、附带、特殊或后果性损害承担责任。',
+        'Lunidex 不对因使用或无法使用本网站而产生的间接、附带、特殊或后果性损害承担责任。',
         '发布者不保证所显示数据的准确性、完整性或时效性。',
-        '发布者不对通过 PrimeDex 链接访问的第三方网站内容承担责任。',
+        '发布者不对通过 Lunidex 链接访问的第三方网站内容承担责任。',
         '用户对其如何使用本网站提供的信息独自承担责任。',
       ],
       paragraphs: [
@@ -321,7 +321,7 @@ const terms: LegalDocument = {
       id: 'accountability',
       title: '7. 举报非法内容',
       paragraphs: [
-        '若您认为 PrimeDex 上显示的任何内容侵犯了您的权利（知识产权、诽谤等），可联系 estdel3012@gmail.com，并说明：相关内容的性质、其确切网址、您的身份（权利人或代理人）以及任何支持性证据。',
+        '若您认为 Lunidex 上显示的任何内容侵犯了您的权利（知识产权、诽谤等），可联系 estdel3012@gmail.com，并说明：相关内容的性质、其确切网址、您的身份（权利人或代理人）以及任何支持性证据。',
         '我们承诺在合理时间内审查任何举报，并在适当情况下移除或修改相关内容。',
       ],
     },
@@ -356,18 +356,18 @@ const legalNotice: LegalDocument = {
   intro:
     '本法律声明依据2004年6月21日法国《数字经济信任法》（LCEN）第6条发布。',
   preamble:
-    'PrimeDex 由个人以个人、非商业方式发布。该项目背后没有任何法人实体：这是一个粉丝项目。',
+    'Lunidex 由个人以个人、非商业方式发布。该项目背后没有任何法人实体：这是一个粉丝项目。',
   lastUpdated: '2026年6月4日',
   effectiveDate: '2026年6月4日',
   sections: [
     {
       id: 'editor',
       title: '1. 网站发布者',
-      intro: 'PrimeDex 由以下主体发布：',
+      intro: 'Lunidex 由以下主体发布：',
       table: {
         headers: ['字段', '内容'],
         rows: [
-          ['名称', 'PrimeDex（个人项目名称）'],
+          ['名称', 'Lunidex（个人项目名称）'],
           ['状态', '个人 — 个人非商业项目'],
           ['出版负责人', '个人发布者'],
           ['联系方式', 'estdel3012@gmail.com'],
@@ -379,7 +379,7 @@ const legalNotice: LegalDocument = {
       },
       callout: {
         type: 'warning',
-        text: '由于不存在法人实体，PrimeDex 未在商业登记簿（RCS）或手工业登记簿（RM）中注册。发布者以其个人民事责任行事。',
+        text: '由于不存在法人实体，Lunidex 未在商业登记簿（RCS）或手工业登记簿（RM）中注册。发布者以其个人民事责任行事。',
       },
     },
     {
@@ -401,7 +401,7 @@ const legalNotice: LegalDocument = {
       id: 'activity',
       title: '3. 活动性质与服务内容',
       paragraphs: [
-        'PrimeDex 是一个免费、无广告、未货币化的在线图鉴及 TCG 卡牌目录网站。本网站出于严格的信息和娱乐目的，显示与宝可梦世界观相关的公开数据（编号、属性、能力值、精灵图、卡牌）。',
+        'Lunidex 是一个免费、无广告、未货币化的在线图鉴及 TCG 卡牌目录网站。本网站出于严格的信息和娱乐目的，显示与宝可梦世界观相关的公开数据（编号、属性、能力值、精灵图、卡牌）。',
         '本服务免费提供，无需注册，不收集个人数据，不涉及商业交易。',
       ],
     },
@@ -409,7 +409,7 @@ const legalNotice: LegalDocument = {
       id: 'affiliation-notice',
       title: '4. 非关联声明',
       paragraphs: [
-        'PrimeDex 是一个非商业性、独立、无关联的粉丝项目。与宝可梦世界观相关的商标、名称、精灵图、插图及其他所有元素均归任天堂、Game Freak、Creatures Inc. 和宝可梦公司独家所有。',
+        'Lunidex 是一个非商业性、独立、无关联的粉丝项目。与宝可梦世界观相关的商标、名称、精灵图、插图及其他所有元素均归任天堂、Game Freak、Creatures Inc. 和宝可梦公司独家所有。',
         '不应从本网站推断出与上述权利人存在任何关联、合作、赞助或官方认可关系。更多信息请参阅我们的服务条款。',
       ],
     },
@@ -433,7 +433,7 @@ const legalNotice: LegalDocument = {
 const cookies: LegalDocument = {
   title: 'Cookie 政策',
   intro:
-    '本政策依据 CNIL 指南和 GDPR，详细说明您浏览 PrimeDex 时在您设备上设置的 Cookie 和跟踪器。',
+    '本政策依据 CNIL 指南和 GDPR，详细说明您浏览 Lunidex 时在您设备上设置的 Cookie 和跟踪器。',
   preamble:
     'Cookie 是网站服务器放置在您设备上的小型文本文件。部分 Cookie 是网站正常运行所严格必需的；其他 Cookie 则需要您的事先同意。',
   lastUpdated: '2026年6月4日',
@@ -442,12 +442,12 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. 使用的 Cookie 清单',
-      intro: 'PrimeDex 使用服务严格必要的存储。Vercel 的受众和性能衡量以及 Supabase 的产品衡量在获得各自同意前均保持禁用。',
+      intro: 'Lunidex 使用服务严格必要的存储。Vercel 的受众和性能衡量以及 Supabase 的产品衡量在获得各自同意前均保持禁用。',
       table: {
         headers: ['Cookie', '目的', '类型', '时长', '发布者'],
         rows: [
-          ['primedex-lang', '记住您偏好的语言', '严格必要（法国数据保护法第82条）', '1年', 'PrimeDex'],
-          ['tcg-user-state', '保留您在 TCG 页面的界面状态（筛选、排序）', '严格必要', '1年', 'PrimeDex'],
+          ['primedex-lang', '记住您偏好的语言', '严格必要（法国数据保护法第82条）', '1年', 'Lunidex'],
+          ['tcg-user-state', '保留您在 TCG 页面的界面状态（筛选、排序）', '严格必要', '1年', 'Lunidex'],
         ],
       },
       callout: {
@@ -463,10 +463,10 @@ const cookies: LegalDocument = {
           id: 'lang',
           title: '2.1. primedex-lang',
           paragraphs: [
-            '此 Cookie 记住您选择显示网站所用的语言。若无此 Cookie，您每次访问时都会看到默认语言（英语）的 PrimeDex。它不包含任何个人数据：仅存储一个字母值（如 "en"、"fr"、"de" 等）。',
+            '此 Cookie 记住您选择显示网站所用的语言。若无此 Cookie，您每次访问时都会看到默认语言（英语）的 Lunidex。它不包含任何个人数据：仅存储一个字母值（如 "en"、"fr"、"de" 等）。',
           ],
           list: [
-            '发布者：PrimeDex。',
+            '发布者：Lunidex。',
             '有效期：最长1年。',
             '类型：服务器端 HTTP Cookie（通过 Set-Cookie 标头设置）。',
             '法律依据：合法利益（GDPR 第6.1(f)条）— CNIL 同意豁免。',
@@ -479,7 +479,7 @@ const cookies: LegalDocument = {
             '此 Cookie 保留 TCG 目录页面的界面状态（活动筛选器、显示模式、最近排序），以便您每次访问都能找到自己的偏好设置。',
           ],
           list: [
-            '发布者：PrimeDex。',
+            '发布者：Lunidex。',
             '有效期：最长1年。',
             '类型：客户端 Cookie（localStorage，由浏览器端管理）。',
             '法律依据：合法利益（GDPR 第6.1(f)条）— CNIL 同意豁免。',
@@ -491,7 +491,7 @@ const cookies: LegalDocument = {
       id: 'no-third-party',
       title: '3. 无第三方 Cookie',
       paragraphs: [
-        'PrimeDex 不设置任何第三方 Cookie。具体而言：',
+        'Lunidex 不设置任何第三方 Cookie。具体而言：',
         '如果我们决定添加第三方服务，本政策可能会更新。在这种情况下，在设置任何非严格必要的 Cookie 之前，将通过 Cookie 横幅征求您的同意。',
       ],
       list: [
@@ -505,7 +505,7 @@ const cookies: LegalDocument = {
       id: 'localstorage',
       title: '4. 本地存储（IndexedDB 和 localStorage）',
       paragraphs: [
-        '除 Cookie 外，PrimeDex 还使用本地存储技术（IndexedDB、localStorage）来保存您的偏好设置和使用数据。这些数据保留在您的设备上，从不会传输至服务器。',
+        '除 Cookie 外，Lunidex 还使用本地存储技术（IndexedDB、localStorage）来保存您的偏好设置和使用数据。这些数据保留在您的设备上，从不会传输至服务器。',
         '有关这些数据（收藏夹、队伍、TCG 收藏、测验分数、显示偏好）的更多信息，请参阅我们的隐私政策（第 2.2 节"本地存储的数据"）。',
       ],
     },

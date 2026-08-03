@@ -10,8 +10,8 @@ import { MeasurementNotice } from '@/components/legal/MeasurementNotice';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('legal.privacy.meta_title') || 'Privacy Policy — PrimeDex';
-  const description = t('legal.privacy.meta_description') || 'Privacy policy for PrimeDex.';
+  const title = t('legal.privacy.meta_title') || 'Privacy Policy — Lunidex';
+  const description = t('legal.privacy.meta_description') || 'Privacy policy for Lunidex.';
   return {
     title,
     description,

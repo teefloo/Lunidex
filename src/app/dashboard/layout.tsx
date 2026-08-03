@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Living Dex', path: '/dashboard' },
   ], lang);
   return (

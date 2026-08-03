@@ -1,10 +1,11 @@
 # API Route Handler Guide
 
-This directory contains server-side Next.js Route Handlers. They expose PrimeDex integrations for Pokémon, TCG, Supabase-backed features, Open Graph images, push notifications, and other server-only workflows.
+This directory contains Lunidex's server-side Next.js Route Handlers. They expose integrations for Pokémon, TCG, Supabase-backed features, Open Graph images, push notifications, and other server-only workflows.
 
 ## Implementation rules
 
 - Keep handlers server-side. Never import route handlers into client components and never expose service-role keys or other secrets.
+- `SUPABASE_SERVICE_ROLE_KEY` is an optional server-only Vercel/runtime variable used by protected integrations such as product metrics; never add it to `NEXT_PUBLIC_*`, logs, responses, tests, or mobile configuration.
 - Use `NextRequest` and `NextResponse`, await the App Router `params` promise, and return explicit status codes for invalid, unauthenticated, unavailable, or upstream-failed requests.
 - Validate and bound every query parameter, path parameter, JSON body, and user-controlled URL before using it or passing it to an upstream service.
 - Reuse `@/lib/api` for PokéAPI, GraphQL, TCGdex, and related external data access. Reuse `@/lib/api/route-helpers`, `@/lib/rate-limit`, and the established Supabase server helpers instead of creating parallel utilities.

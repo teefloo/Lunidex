@@ -1,6 +1,6 @@
-# PrimeDex
+# Lunidex
 
-> The most complete online Pokédex on the open web. Browse all 1025 Pokémon with detailed base stats, evolution chains, abilities, moves, type matchups, competitive builds, team builder, side-by-side comparison, and TCG cards. Available in 9 languages, free, fast, and beautifully designed.
+> The most complete online Pokédex on the open web. Browse all 1025 Pokémon with detailed base stats, evolution chains, abilities, moves, type matchups, competitive builds, team builder, side-by-side comparison, and TCG cards. Available in 8 languages, free, fast, and beautifully designed.
 
 ## Short Facts
 - **Pokémon covered**: 1,025 (Generations I–IX, complete National Dex)
@@ -45,7 +45,7 @@
 
 - [PokéAPI](https://pokeapi.co) — Pokémon species, base stats, moves, abilities, encounters, evolution chains. REST + GraphQL endpoints.
 - [TCGdex](https://www.tcgdex.net) — Pokémon Trading Card Game catalog (cards, sets, rarities, images).
-- [PokéAPI GraphQL](https://beta.pokeapi.co/graphql) — Localized species names and flavor text in 9 languages.
+- [PokéAPI GraphQL](https://beta.pokeapi.co/graphql) — Localized species names and flavor text in 8 languages.
 
 ## Source Code
 
@@ -55,11 +55,11 @@
 
 ## About
 
-PrimeDex is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
+Lunidex is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
 
 ## Core Features
 
-- Complete Pokédex of all 1025 Pokémon across 9 generations with localized names in 9 languages
+- Complete Pokédex of all 1025 Pokémon across 9 generations with localized names in 8 languages
 - Team Builder with type coverage analysis, shared weakness detection, and synergy scoring
 - Side-by-side comparison of up to 3 Pokémon with interactive stat radar charts
 - Type Chart with strengths, weaknesses, resistances, and immunities for all 18 types
@@ -73,7 +73,7 @@ PrimeDex is a high-performance, open-source Pokémon dashboard built with Next.j
 
 - **Type**: Single-page application (Next.js 16 App Router with client-side navigation)
 - **Breakpoints**: Mobile-first responsive (tailwind breakpoints: sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px)
-- **Locale prefix required**: Every route is prefixed with /{lang} where lang ∈ {en, fr, es, de, it, ja, ko, zh, pt}
+- **Locale prefix required**: Every route is prefixed with /{lang} where lang ∈ {en, fr, es, de, it, ja, ko, zh}
 
 ## Header Navigation (fixed top, z-50)
 
@@ -136,7 +136,7 @@ Example: [Pikachu](https://primedex.vercel.app/en/pikachu)
 
 ## Languages
 
-The site is fully localized in 9 languages: [English](https://primedex.vercel.app/en), [French](https://primedex.vercel.app/fr), [German](https://primedex.vercel.app/de), [Spanish](https://primedex.vercel.app/es), [Italian](https://primedex.vercel.app/it), [Japanese](https://primedex.vercel.app/ja), [Korean](https://primedex.vercel.app/ko), [Chinese](https://primedex.vercel.app/zh), and [Portuguese](https://primedex.vercel.app/pt). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
+The site is fully localized in 8 languages: [English](https://primedex.vercel.app/en), [French](https://primedex.vercel.app/fr), [German](https://primedex.vercel.app/de), [Spanish](https://primedex.vercel.app/es), [Italian](https://primedex.vercel.app/it), [Japanese](https://primedex.vercel.app/ja), [Korean](https://primedex.vercel.app/ko), [Chinese](https://primedex.vercel.app/zh). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
 
 ## Licensing
 

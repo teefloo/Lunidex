@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CollectionLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'TCG', path: '/tcg' },
     { name: 'Collection', path: '/tcg/collection' },
   ], lang);

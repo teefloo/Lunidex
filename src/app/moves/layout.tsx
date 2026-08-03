@@ -38,7 +38,7 @@ export default async function MovesLayout({
   const t = await getServerT();
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: t('moves_page.title'), path: '/moves' },
   ], lang);
   return (

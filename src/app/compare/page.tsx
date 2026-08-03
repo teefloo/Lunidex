@@ -252,7 +252,7 @@ export default function ComparePage() {
           icon={Scale}
           title={t('compare.title')}
           subtitle={t('compare.comparing', { count: activeCompareIds.length })}
-          eyebrow={t('compare.eyebrow', { defaultValue: 'PrimeDex' })}
+          eyebrow={t('compare.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
           badge={(
             <div className="flex items-center gap-3">

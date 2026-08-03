@@ -172,7 +172,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
         </div>
         <ShareButton
           url={`${SITE_URL}/dashboard?utm_source=share&utm_medium=social`}
-          title={`${displayName} on PrimeDex`}
+          title={`${displayName} on Lunidex`}
           description={`Level ${trainerLevel.level} Trainer — ${data.pokedex.caughtPercent}% Dex completed`}
           label={t('detail.share')}
           variant="outline"

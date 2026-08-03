@@ -28,7 +28,7 @@ export default async function FriendsPage() {
   const lang = await getServerLanguage();
   const t = await getServerT();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: t('friends.title', { defaultValue: 'Friends' }), path: '/friends' },
   ], lang);
 

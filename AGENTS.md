@@ -1,14 +1,20 @@
-# PrimeDex Agent Guide
+# Lunidex Agent Guide
 
 ## Project overview
 
-PrimeDex is a localized Pokémon dashboard for trainers and TCG collectors. It is an npm-workspaces monorepo with three main parts:
+Lunidex is a localized, local-first Pokémon dashboard for trainers and TCG collectors. It is an npm-workspaces monorepo with three main parts:
 
 - `src/` — the Next.js 16 / React 19 web application, using the App Router, Tailwind CSS v4, TanStack Query, and Zustand.
 - `packages/core/` — platform-neutral API clients, domain types, persistence adapters, Zustand state, i18n data, and Supabase utilities shared by the web and mobile apps.
 - `apps/mobile/` — the Expo 53 / React Native app, which imports `@primedex/core` rather than duplicating business logic.
 
 `supabase/migrations/` contains the database schema and row-level-security policies. The web app primarily uses PokéAPI (REST and GraphQL) and TCGdex; it is designed to work local-first when Supabase credentials are absent.
+
+## Brand and technical identifiers
+
+- **Lunidex** is the current product and user-facing brand. Use it in documentation, UI copy, metadata, and agent descriptions.
+- Preserve historical technical identifiers unless an explicit migration is planned: `@primedex/core`, `@primedex/mobile`, `primedex-*` storage and cookie keys, `usePrimeDexStore`, `src/store/primedex.ts`, slugs, bundle identifiers, file paths, and existing deployment domains.
+- Do not rename Supabase, Vercel, Expo, or local-storage identifiers merely as part of a visible rebrand; changing them can break deep links, persisted data, published mobile builds, or deployments.
 
 ## Instruction scope
 
@@ -27,7 +33,7 @@ cp .env.example .env.local      # optional web configuration
 cp apps/mobile/.env.example apps/mobile/.env  # optional mobile configuration
 ```
 
-The Supabase variables are optional. Without `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, the web app remains local-first with IndexedDB. Mobile uses the equivalent `EXPO_PUBLIC_*` variables and AsyncStorage. Never commit `.env`, `.env.local`, credentials, or tokens.
+The Supabase variables are optional. Without `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, the web app remains local-first with IndexedDB. Mobile uses the equivalent `EXPO_PUBLIC_*` variables and AsyncStorage. The supported web locales are English, French, Spanish, German, Italian, Japanese, Korean, and Chinese. Never commit `.env`, `.env.local`, credentials, or tokens.
 
 Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only to enable the development overlay. It runs on port 4747, which is already allowed in development configuration; do not change CSP or `allowedDevOrigins` merely for that tool.
 
@@ -91,7 +97,7 @@ Vitest is configured for jsdom in `vitest.config.ts`; `src/test/setup.ts` loads 
 
 ## Security, deployment, and pull requests
 
-- Supabase uses public client variables only; authorization is enforced by RLS policies. Keep secrets server-side and out of source control.
+- Supabase uses public client variables in browser code; authorization is enforced by RLS policies. `SUPABASE_SERVICE_ROLE_KEY` is server-only, configured through Vercel or the server environment, and must never enter client bundles, source control, logs, or chat.
 - Security headers and CSP are intentionally strict in `next.config.ts`. Do not add remote domains or weaken a directive without maintainer approval.
 - Deployments run on Vercel from Git. `npm run build` is the production build; Vercel settings live in the dashboard, while `vercel.json` only identifies the project.
 - Keep commits focused and avoid committing generated output, editor settings, local agent artifacts, screenshots, or dependency caches. The repository has no Prettier setup.

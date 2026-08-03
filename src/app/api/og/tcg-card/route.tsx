@@ -22,14 +22,14 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
 
   const card = id ? await getTCGCard(id, lang).catch(() => null) : null;
 
-  const name = card?.name ?? 'PrimeDex';
+  const name = card?.name ?? 'Lunidex';
   const rarity = card?.rarity ?? '';
   const setName = card?.set?.name ?? '';
   const imageUrl = card ? (getTCGCardPngImage(card) ?? '') : '';
   const rarityLabel = t('tcg.rarity');
   const host = new URL(SITE_URL).host;
 
-  const subsetText = [name, rarity, setName, rarityLabel, host, 'PrimeDex'].join(' ');
+  const subsetText = [name, rarity, setName, rarityLabel, host, 'Lunidex'].join(' ');
   const fonts = await loadOgFonts(lang, subsetText);
 
   return new ImageResponse(
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 alignSelf: 'flex-start',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
 
             <div

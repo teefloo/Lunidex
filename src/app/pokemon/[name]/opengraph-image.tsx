@@ -7,7 +7,7 @@ import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS } from '@/lib/og/theme';
 
 export const runtime = 'nodejs';
-export const alt = 'Pokémon Details — PrimeDex';
+export const alt = 'Pokémon Details — Lunidex';
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
@@ -27,7 +27,7 @@ export default async function Image({ params }: { params: { name: string } }) {
     const mainType = pokemon.types[0].type.name;
     const mainColor = OG_TYPE_COLORS[mainType] || OG_THEME.border;
     const totalStats = pokemon.stats.reduce((sum: number, s: { base_stat: number }) => sum + s.base_stat, 0);
-    const fonts = await loadOgFonts('en', `${displayName} PrimeDex BST ${totalStats}`);
+    const fonts = await loadOgFonts('en', `${displayName} Lunidex BST ${totalStats}`);
 
     return new ImageResponse(
       (
@@ -146,7 +146,7 @@ export default async function Image({ params }: { params: { name: string } }) {
                 display: 'flex',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
           </div>
 

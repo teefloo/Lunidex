@@ -1,6 +1,6 @@
-# PrimeDex — Types Module Context
+# Lunidex — Types Module Context
 
-This directory (`src/app/types`) manages the interactive Pokémon type chart and elemental mastery analysis for the PrimeDex application.
+This directory (`src/app/types`) manages the interactive Pokémon type chart and elemental mastery analysis for the Lunidex application.
 
 ## Directory Overview
 
@@ -15,7 +15,7 @@ The `types` module provides a comprehensive interface for users to explore Poké
   - Multi-language support through `useTranslation`.
 - **`layout.tsx`**: A server-side wrapper that defines SEO metadata and includes JSON-LD structured data for search engine optimization.
 
-## Project Context (PrimeDex)
+## Project Context (Lunidex)
 
 - **Framework**: Next.js (App Router)
 - **Styling**: Tailwind CSS, shadcn/ui, Lucide Icons

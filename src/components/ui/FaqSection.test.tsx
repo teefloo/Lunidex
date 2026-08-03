@@ -10,7 +10,7 @@ describe('FaqSection accessibility', () => {
           id: 'general',
           title: 'General',
           intro: 'Intro',
-          entries: [{ q: 'What is PrimeDex?', a: 'A Pokédex.' }],
+          entries: [{ q: 'What is Lunidex?', a: 'A Pokédex.' }],
         }]}
         allLabel="All"
         searchPlaceholder="Search"
@@ -18,7 +18,7 @@ describe('FaqSection accessibility', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'What is PrimeDex?' }));
+    fireEvent.click(screen.getByRole('button', { name: 'What is Lunidex?' }));
     const region = document.querySelector('[role="region"][aria-labelledby^="general-"]');
     expect(region).toBeInTheDocument();
     if (!region) throw new Error('Expanded answer region not found');

@@ -11,7 +11,7 @@ export default function OfflinePage() {
     <div className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 text-center">
       <Image
         src="/icon-512.png"
-        alt="PrimeDex"
+        alt="Lunidex"
         width={128}
         height={128}
         className="size-32 animate-pulse-slow"

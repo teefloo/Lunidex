@@ -11,7 +11,7 @@ const SwordsIcon = Swords as LucideIcon;
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('battle.meta_title') || 'Battle Simulator — PrimeDex';
+  const title = t('battle.meta_title') || 'Battle Simulator — Lunidex';
   const description = t('battle.meta_description') || 'Simulate Pokémon battles with Gen 9 damage formula. Calculate damage, OHKO/2HKO chances, and run full AI duels.';
   return {
     title,

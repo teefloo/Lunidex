@@ -1,6 +1,8 @@
-# 🧠 PrimeDex Store Context
+# 🧠 Lunidex Store Context
 
-This directory manages the shared global state and persistence layer of the PrimeDex dashboard using **Zustand** and platform-specific storage adapters.
+This directory manages the shared global state and persistence layer of the Lunidex dashboard using **Zustand** and platform-specific storage adapters.
+
+The brand is Lunidex, but the technical store name `usePrimeDexStore`, the `@primedex/core` import, and existing `primedex-*` persistence keys are compatibility-sensitive and must not be renamed without an explicit migration.
 
 ## 🚀 Core Responsibilities
 - **Persistence**: Managed via `zustand/middleware/persist` and the local `platform/storage` adapter. The web adapter uses IndexedDB through `idb-keyval`; Expo resolves `platform/storage.native.ts` and uses AsyncStorage.

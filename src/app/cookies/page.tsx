@@ -10,8 +10,8 @@ import { MeasurementNotice } from '@/components/legal/MeasurementNotice';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('legal.cookies.meta_title') || 'Cookie Policy — PrimeDex';
-  const description = t('legal.cookies.meta_description') || 'Cookie policy for PrimeDex.';
+  const title = t('legal.cookies.meta_title') || 'Cookie Policy — Lunidex';
+  const description = t('legal.cookies.meta_description') || 'Cookie policy for Lunidex.';
   return {
     title,
     description,

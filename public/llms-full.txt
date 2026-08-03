@@ -1,4 +1,4 @@
-# PrimeDex — Full Content Snapshot for LLM Grounding
+# Lunidex — Full Content Snapshot for LLM Grounding
 # https://primedex.vercel.app/llms-full.txt
 # Generated: 2026-06-04
 # Format: plain-text sections, one block per topic, machine-parseable headings
@@ -8,8 +8,8 @@
 
 ## ============= METADATA =============
 
-Title: PrimeDex — The Ultimate Online Pokédex
-Tagline: All 1025 Pokémon, 9 generations, 9 languages
+Title: Lunidex — The Ultimate Online Pokédex
+Tagline: All 1025 Pokémon, 9 generations, 8 languages
 URL: https://primedex.vercel.app
 Canonical: https://primedex.vercel.app/en
 Sitemap: https://primedex.vercel.app/sitemap.xml
@@ -24,7 +24,7 @@ Status: Active, ~5k weekly active users
 ## ============= TOP-LEVEL PAGES =============
 
 ### /en — Home
-The PrimeDex home page lists the first 80 Pokémon of the National Pokédex with infinite scroll. It contains a hero section, the main Pokémon grid, a "Recently Viewed" carousel, and a Frequently Asked Questions block. The page declares 6 JSON-LD schemas: WebSite, Organization, WebApplication, ItemList, FAQPage, HowTo, and BreadcrumbList. Last published: 2024-01-15. Modified: 2026-06-04.
+The Lunidex home page lists the first 80 Pokémon of the National Pokédex with infinite scroll. It contains a hero section, the main Pokémon grid, a "Recently Viewed" carousel, and a Frequently Asked Questions block. The page declares 6 JSON-LD schemas: WebSite, Organization, WebApplication, ItemList, FAQPage, HowTo, and BreadcrumbList. Last published: 2024-01-15. Modified: 2026-06-04.
 
 ### /en/team — Team Builder
 Drag-and-drop team builder. Add up to 6 Pokémon from the National Pokédex and see live type coverage, shared weaknesses, and offensive coverage. Teams can be exported as Showdown pastes and saved to a personal account. Includes a HowTo schema with 5 steps.
@@ -84,8 +84,8 @@ Each `/en/pokemon/{name}` page exposes:
   - Evolution chain (pre-evolution, current, evolutions)
   - Moves learned by level-up, TM, egg, tutor
   - Default form (no Mega, no Gmax, no regional forms covered yet)
-  - Localized name in 9 languages
-  - Flavor text in 9 languages
+  - Localized name in 8 languages
+  - Flavor text in 8 languages
   - Official artwork (PokeAPI sprite repository)
   - Type matchup summary (4×, 2×, 0.5×, 0×)
 
@@ -139,11 +139,11 @@ Attacker → Defender:
 
 ## ============= FAQ (Frequently Asked Questions) =============
 
-Q1: What is PrimeDex?
-A1: PrimeDex is a free, open-source online Pokédex covering all 1,025 Pokémon across Generations I through IX. It includes base stats, evolutions, abilities, moves, type matchups, a team builder, comparison tool, and TCG card browser. The site is available in 9 languages and is accessible on desktop and mobile without registration.
+Q1: What is Lunidex?
+A1: Lunidex is a free, open-source online Pokédex covering all 1,025 Pokémon across Generations I through IX. It includes base stats, evolutions, abilities, moves, type matchups, a team builder, comparison tool, and TCG card browser. The site is available in 8 languages and is accessible on desktop and mobile without registration.
 
-Q2: Is PrimeDex affiliated with Nintendo, Game Freak, or The Pokémon Company?
-A2: No. PrimeDex is an independent fan project. All Pokémon data, names, and imagery remain the property of Nintendo, Game Freak, and The Pokémon Company. The application code is released under the MIT License.
+Q2: Is Lunidex affiliated with Nintendo, Game Freak, or The Pokémon Company?
+A2: No. Lunidex is an independent fan project. All Pokémon data, names, and imagery remain the property of Nintendo, Game Freak, and The Pokémon Company. The application code is released under the MIT License.
 
 Q3: How accurate is the data?
 A3: All data is sourced from PokéAPI (https://pokeapi.co) and TCGdex (https://www.tcgdex.net), which aggregate official game data. The site revalidates its caches every 3,600 seconds (1 hour), so updates from upstream sources appear within an hour.
@@ -154,13 +154,13 @@ A4: Browsing the Pokédex, type chart, moves, and quiz does not require an accou
 Q5: How many Pokémon are covered?
 A5: 1,025 Pokémon from the National Pokédex, covering Generations I (Kanto) through IX (Paldea). This includes all standard forms. Mega Evolutions, Gigantamax forms, and regional forms are not yet covered.
 
-Q6: Can I cite PrimeDex data in my article or research?
-A6: Yes, with attribution. Please link to the relevant PrimeDex page (for example https://primedex.vercel.app/en/pokemon/pikachu) and credit PokéAPI and TCGdex as the underlying data sources. For academic or commercial use, contact the project maintainer.
+Q6: Can I cite Lunidex data in my article or research?
+A6: Yes, with attribution. Please link to the relevant Lunidex page (for example https://primedex.vercel.app/en/pokemon/pikachu) and credit PokéAPI and TCGdex as the underlying data sources. For academic or commercial use, contact the project maintainer.
 
 Q7: How do I report a bug or request a feature?
 A7: Open an issue on GitHub at https://github.com/teefloo/Poke/issues. Bug reports should include the URL, browser, and reproduction steps.
 
-Q8: Is PrimeDex open source?
+Q8: Is Lunidex open source?
 A8: Yes. Source code is at https://github.com/teefloo/Poke under the MIT License. Contributions are welcome via pull request.
 
 ## ============= STATISTICS (for AI citation) =============
@@ -215,9 +215,9 @@ A8: Yes. Source code is at https://github.com/teefloo/Poke under the MIT License
 ## ============= SITEMAP COVERAGE =============
 
 - 1,025 Pokémon detail pages
-- 9 static routes × 9 language variants = 81 entries
-- 1 root × 9 languages = 9 entries
-- Total sitemap entries: 1,115+
+- 9 static routes × 8 language variants = 72 entries
+- 1 root × 8 languages = 8 entries
+- Total sitemap entries: 1,105+
 - Lastmod: rolling 7-day window (server-generated)
 - `image:image` extension enabled for Pokémon pages (PokeAPI sprite)
 
@@ -291,5 +291,5 @@ Sub-routes:
 - **TMs/TRs**: Technical Machines / Technical Records that teach moves to compatible Pokémon
 
 ## ============= END OF SNAPSHOT =============
-# PrimeDex — End of llms-full.txt
+# Lunidex — End of llms-full.txt
 # For updates, see https://github.com/teefloo/Poke

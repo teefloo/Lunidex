@@ -1,6 +1,6 @@
-# PrimeDex — Team Builder Module
+# Lunidex — Team Builder Module
 
-This directory contains the core logic and UI for the Pokémon Team Builder feature of PrimeDex. It allows users to create, analyze, export, import, and share custom Pokémon teams.
+This directory contains the core logic and UI for the Pokémon Team Builder feature of Lunidex. It allows users to create, analyze, export, import, and share custom Pokémon teams.
 
 ## Directory Overview
 
@@ -41,7 +41,7 @@ This module is implemented as a Next.js route (`/team`) within the App Router ar
 
 ## Building and Running
 
-This module is part of the PrimeDex Next.js application.
+This module is part of the Lunidex Next.js application. Keep the historical `usePrimeDexStore` identifier and related persistence keys unchanged.
 - **Build:** `npm run build`
 - **Develop:** `npm run dev`
 - **Lint:** `npm run lint`

@@ -1,9 +1,9 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="PrimeDex ロゴ" width="80" />
+<img src="./public/icon.svg" alt="Lunidex ロゴ" width="80" />
 
-# PrimeDex
+# Lunidex
 
 **トレーナー、コレクター、好奇心旺盛なファンのための、高速なローカルファーストのポケモン図鑑と Pokémon TCG ワークスペース。**
 
@@ -25,12 +25,12 @@
 
 ## 概要
 
-PrimeDex は、Next.js の Web アプリ、共有 TypeScript パッケージ `@primedex/core`、Expo モバイルコンパニオンから成るオープンソースのモノレポです。アカウント作成を必須にせず、全国図鑑、対戦準備ツール、Pokémon TCG コレクションツール、個人の進行状況追跡をまとめています。
+Lunidex は、Next.js の Web アプリ、共有 TypeScript パッケージ `@primedex/core`、Expo モバイルコンパニオンから成るオープンソースのモノレポです。アカウント作成を必須にせず、全国図鑑、対戦準備ツール、Pokémon TCG コレクションツール、個人の進行状況追跡をまとめています。
 
 Web アプリは**9 世代・1,025 種のポケモン**を収録しています。UI は英語、フランス語、スペイン語、ドイツ語、イタリア語、日本語、韓国語、簡体字中国語に対応しています。このリポジトリにはポルトガル語版 README もあります。
 
 > [!NOTE]
-> PrimeDex は非営利のファンプロジェクトです。ポケモンのデータ、名称、画像は Nintendo、Game Freak、Creatures、The Pokémon Company に帰属します。PrimeDex はこれらの企業と提携・公認されていません。
+> Lunidex は非営利のファンプロジェクトです。ポケモンのデータ、名称、画像は Nintendo、Game Freak、Creatures、The Pokémon Company に帰属します。Lunidex はこれらの企業と提携・公認されていません。
 
 ## 機能
 
@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) を開きます。PrimeDex は、`primedex-lang` Cookie またはブラウザの `Accept-Language` ヘッダーを使い、接頭辞のない URL を `/ja` のようなロケール URL へリダイレクトします。
+[http://localhost:3000](http://localhost:3000) を開きます。Lunidex は、`primedex-lang` Cookie またはブラウザの `Accept-Language` ヘッダーを使い、接頭辞のない URL を `/ja` のようなロケール URL へリダイレクトします。
 
 > [!IMPORTANT]
 > 開発では意図的に webpack を使用します。`npm run dev` は `next dev --webpack` を実行します。Next 設定に Turbopack root があっても、このコマンドを変更しないでください。
@@ -97,7 +97,7 @@ Expo の案内から iOS、Android、Web、Expo Go を開けます。対応画�
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 開発中に Agentation UI レビューツールバーを有効にします。 |
 
 > [!TIP]
-> Supabase がなくても、PrimeDex はローカルファーストで完全に利用できます。お気に入り、チーム、捕獲、フィルター、TCG の進行はブラウザに保存されます。モバイルでは `apps/mobile/.env` に `EXPO_PUBLIC_SUPABASE_URL` と `EXPO_PUBLIC_SUPABASE_ANON_KEY` を使用します。
+> Supabase がなくても、Lunidex はローカルファーストで完全に利用できます。お気に入り、チーム、捕獲、フィルター、TCG の進行はブラウザに保存されます。モバイルでは `apps/mobile/.env` に `EXPO_PUBLIC_SUPABASE_URL` と `EXPO_PUBLIC_SUPABASE_ANON_KEY` を使用します。
 
 <details>
 <summary><strong>開発時に Agentation を有効にする</strong></summary>
@@ -146,7 +146,7 @@ React Server / Client Components
 
 ## デプロイ
 
-PrimeDex は Vercel 用に設定されており、Next.js サーバーランタイムと画像最適化をサポートするホストで実行できます。
+Lunidex は Vercel 用に設定されており、Next.js サーバーランタイムと画像最適化をサポートするホストで実行できます。
 
 ```bash
 npm run build
@@ -157,6 +157,6 @@ Vercel ではリポジトリをインポートし、標準の Next.js 設定を�
 
 ## 謝辞
 
-PrimeDex は [PokéAPI](https://pokeapi.co/)、[TCGdex](https://www.tcgdex.net/)、[Vercel](https://vercel.com/)、およびアプリケーションで使用するオープンソースプロジェクトによって支えられています。
+Lunidex は [PokéAPI](https://pokeapi.co/)、[TCGdex](https://www.tcgdex.net/)、[Vercel](https://vercel.com/)、およびアプリケーションで使用するオープンソースプロジェクトによって支えられています。
 
 ポケモンおよび関連するすべてのプロパティは各権利者の商標です。本プロジェクトは非公式かつ非営利のファンプロジェクトです。

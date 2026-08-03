@@ -38,14 +38,14 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
 
   const displayName = pokemon
     ? pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
-    : 'PrimeDex';
+    : 'Lunidex';
   const dexNumber = pokemon ? formatDexNumber(pokemon.id) : '';
   const types = pokemon?.types.map((ty) => ty.type.name) ?? [];
   const bst = pokemon ? totalStats(pokemon) : 0;
   const imageUrl = pokemon ? artworkUrl(pokemon) : '';
   const host = new URL(SITE_URL).host;
 
-  const subsetText = [displayName, dexNumber, host, 'PrimeDex', 'BST']
+  const subsetText = [displayName, dexNumber, host, 'Lunidex', 'BST']
     .concat(types)
     .join(' ');
   const fonts = await loadOgFonts(lang, subsetText);
@@ -145,7 +145,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 alignSelf: 'flex-start',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
 
             {/* Pokemon number */}

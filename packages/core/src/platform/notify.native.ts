@@ -5,6 +5,6 @@ import { Alert } from 'react-native';
  * rare sync-failure path; richer in-app toasts can replace this later.
  */
 export const notify = {
-  error: (message: string) => Alert.alert('PrimeDex', message),
+  error: (message: string) => Alert.alert('Lunidex', message),
   success: () => {},
 };

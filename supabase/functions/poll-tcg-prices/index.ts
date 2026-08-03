@@ -391,7 +391,7 @@ serve(async (req) => {
       const direction = alert.alert_type === 'below' ? 'below' : 'above';
       const symbol = alert.currency === 'EUR' ? '€' : '$';
       const notifPayload = JSON.stringify({
-        title: `PrimeDex — Price Alert: ${alert.card_name}`,
+        title: `Lunidex — Price Alert: ${alert.card_name}`,
         body: `Price is ${direction} ${symbol}${threshold.toFixed(2)} — current: ${symbol}${currentPrice.toFixed(2)}`,
         url: `/tcg/cards/${alert.card_id}`,
       });

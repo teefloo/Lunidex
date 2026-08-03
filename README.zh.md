@@ -1,9 +1,9 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="PrimeDex 标志" width="80" />
+<img src="./public/icon.svg" alt="Lunidex 标志" width="80" />
 
-# PrimeDex
+# Lunidex
 
 **为训练家、收藏者和好奇粉丝打造的快速、本地优先宝可梦图鉴与 Pokémon TCG 工作空间。**
 
@@ -25,12 +25,12 @@
 
 ## 概览
 
-PrimeDex 是一个开源单体仓库，由 Next.js Web 应用、共享 TypeScript 包 `@primedex/core` 和 Expo 移动端伴侣应用组成。它将全国图鉴、对战准备工具、Pokémon TCG 收藏工具和个人进度追踪整合在一起，无需创建账户。
+Lunidex 是一个开源单体仓库，由 Next.js Web 应用、共享 TypeScript 包 `@primedex/core` 和 Expo 移动端伴侣应用组成。它将全国图鉴、对战准备工具、Pokémon TCG 收藏工具和个人进度追踪整合在一起，无需创建账户。
 
 Web 应用涵盖**九个世代的 1,025 只宝可梦**。界面支持英语、法语、西班牙语、德语、意大利语、日语、韩语和简体中文；本仓库还提供葡萄牙语 README 翻译。
 
 > [!NOTE]
-> PrimeDex 是非商业性粉丝项目。宝可梦数据、名称和图像归 Nintendo、Game Freak、Creatures 和 The Pokémon Company 所有。PrimeDex 未与它们关联，也未得到其认可。
+> Lunidex 是非商业性粉丝项目。宝可梦数据、名称和图像归 Nintendo、Game Freak、Creatures 和 The Pokémon Company 所有。Lunidex 未与它们关联，也未得到其认可。
 
 ## 功能
 
@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-打开 [http://localhost:3000](http://localhost:3000)。PrimeDex 会根据 `primedex-lang` Cookie 或浏览器的 `Accept-Language` 请求头，将无前缀 URL 重定向到如 `/zh` 的语言路径。
+打开 [http://localhost:3000](http://localhost:3000)。Lunidex 会根据 `primedex-lang` Cookie 或浏览器的 `Accept-Language` 请求头，将无前缀 URL 重定向到如 `/zh` 的语言路径。
 
 > [!IMPORTANT]
 > 开发环境有意使用 webpack：`npm run dev` 会执行 `next dev --webpack`。即使 Next 配置中也声明了 Turbopack root，也请保留该命令。
@@ -97,7 +97,7 @@ npx expo start
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 在开发期间启用 Agentation UI 审查工具栏。 |
 
 > [!TIP]
-> 即使没有 Supabase，PrimeDex 仍可完全以本地优先模式使用：收藏、队伍、捕获、筛选和 TCG 进度都会保留在浏览器存储中。移动端请在 `apps/mobile/.env` 中使用 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
+> 即使没有 Supabase，Lunidex 仍可完全以本地优先模式使用：收藏、队伍、捕获、筛选和 TCG 进度都会保留在浏览器存储中。移动端请在 `apps/mobile/.env` 中使用 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
 
 <details>
 <summary><strong>在开发环境中启用 Agentation</strong></summary>
@@ -146,7 +146,7 @@ React 服务端和客户端组件
 
 ## 部署
 
-PrimeDex 已为 Vercel 配置，也可运行在支持 Next.js 服务器运行时和图片优化的任意平台上。
+Lunidex 已为 Vercel 配置，也可运行在支持 Next.js 服务器运行时和图片优化的任意平台上。
 
 ```bash
 npm run build
@@ -157,6 +157,6 @@ npm run start
 
 ## 致谢
 
-PrimeDex 基于 [PokéAPI](https://pokeapi.co/)、[TCGdex](https://www.tcgdex.net/)、[Vercel](https://vercel.com/) 以及应用中使用的开源项目构建。
+Lunidex 基于 [PokéAPI](https://pokeapi.co/)、[TCGdex](https://www.tcgdex.net/)、[Vercel](https://vercel.com/) 以及应用中使用的开源项目构建。
 
 Pokémon 和所有相关资产均为其各自所有者的商标。本项目为非官方、非商业的粉丝项目。

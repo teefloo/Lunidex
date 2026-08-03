@@ -42,7 +42,7 @@ export default async function TeamLayout({
   const baseUrl = SITE_URL;
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Team Builder', path: '/team' },
   ], lang);
   return (
@@ -53,7 +53,7 @@ export default async function TeamLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'Pokémon Team Builder — PrimeDex',
+            name: 'Pokémon Team Builder — Lunidex',
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
             description: 'Build your ultimate Pokémon team with type coverage analysis, weakness detection, and synergy scores.',

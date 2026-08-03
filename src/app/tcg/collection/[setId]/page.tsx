@@ -16,11 +16,11 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const currentLang = await getServerLanguage();
   const tcgSet = await getSetById(setId, lang ?? currentLang ?? 'en').catch(() => null);
   const title = tcgSet
-    ? `${tcgSet.name} — Pokémon TCG Set | PrimeDex`
-    : 'TCG Set | PrimeDex';
+    ? `${tcgSet.name} — Pokémon TCG Set | Lunidex`
+    : 'TCG Set | Lunidex';
   const description = tcgSet
     ? `${tcgSet.name} Pokémon TCG set, released ${tcgSet.releaseDate || 'TBA'}. Browse cards, track progress, mark cards as owned or wishlisted.`
-    : 'Browse a Pokémon TCG set on PrimeDex.';
+    : 'Browse a Pokémon TCG set on Lunidex.';
   return {
     title,
     description,
@@ -50,7 +50,7 @@ export default async function SetAlbumPage({ params }: PageProps) {
   const lang = await getServerLanguage();
   const tcgSet = await getSetById(setId).catch(() => null);
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'TCG', path: '/tcg' },
     { name: 'Collection', path: '/tcg/collection' },
     { name: tcgSet?.name ?? setId, path: `/tcg/collection/${setId}` },

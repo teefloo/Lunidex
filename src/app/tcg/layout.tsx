@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TcgLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'TCG Catalog', path: '/tcg' },
   ], lang);
   return (
@@ -53,7 +53,7 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            name: 'PrimeDex Pokémon TCG Catalog',
+            name: 'Lunidex Pokémon TCG Catalog',
             description: 'Complete Pokémon Trading Card Game catalog. Search Pokémon, Trainer, and Energy cards, filter by set, rarity, type, stage, and HP.',
             url: `${SITE_URL}/${lang}/tcg`,
             isPartOf: { '@id': `${SITE_URL}/#website` },

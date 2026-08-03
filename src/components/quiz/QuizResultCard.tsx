@@ -41,7 +41,7 @@ export default function QuizResultCard({
   const { t } = useTranslation();
 
   const ogUrl = `${SITE_URL}/api/og/quiz-result?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}`;
-  const shareText = t('quiz.share_text', { score, total, defaultValue: `I scored ${score}/${total} in PrimeDex Quiz!` });
+  const shareText = t('quiz.share_text', { score, total, defaultValue: `I scored ${score}/${total} in Lunidex Quiz!` });
   const shareUrl = `${SITE_URL}/quiz?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}`;
 
   const handleShareTwitter = () => {
@@ -89,7 +89,7 @@ export default function QuizResultCard({
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="px-3 py-1 bg-primary text-primary-foreground border border-primary/50 font-pixel text-sm tracking-wider">
-            PrimeDex
+            Lunidex
           </div>
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/50">
             {t('quiz.title')}

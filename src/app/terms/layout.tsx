@@ -26,7 +26,7 @@ export default async function TermsLayout({
 }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Terms of Service', path: '/terms' },
   ], lang);
   return (

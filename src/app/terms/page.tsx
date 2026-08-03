@@ -9,8 +9,8 @@ import type { LegalDocument } from '@/lib/i18n/legal-types';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('legal.terms.meta_title') || 'Terms of Service — PrimeDex';
-  const description = t('legal.terms.meta_description') || 'Terms of service for PrimeDex.';
+  const title = t('legal.terms.meta_title') || 'Terms of Service — Lunidex';
+  const description = t('legal.terms.meta_description') || 'Terms of service for Lunidex.';
   return {
     title,
     description,

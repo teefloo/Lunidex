@@ -80,7 +80,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   }));
   const host = new URL(SITE_URL).host;
 
-  const subsetText = [title, synergyLabel, coverageLabel, emptyLabel, host, 'PrimeDex']
+  const subsetText = [title, synergyLabel, coverageLabel, emptyLabel, host, 'Lunidex']
     .concat(typeLabels.map((ty) => ty.label))
     .join(' ');
   const fonts = await loadOgFonts(lang, subsetText);
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 letterSpacing: '1px',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
             <div
               style={{

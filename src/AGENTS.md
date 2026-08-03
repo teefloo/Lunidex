@@ -1,6 +1,8 @@
 # Web Application Source Guide
 
-This directory contains the Next.js 16 / React 19 web application for PrimeDex. It uses the App Router, Tailwind CSS v4, TanStack Query, Zustand, and the shared locale-aware routing layer.
+This directory contains the Next.js 16 / React 19 web application for Lunidex. It uses the App Router, Tailwind CSS v4, TanStack Query, Zustand, and the shared locale-aware routing layer.
+
+Lunidex is the visible brand. Preserve technical compatibility identifiers such as `src/store/primedex.ts`, `usePrimeDexStore`, `primedex-*` cookies/storage keys, route slugs, and established domains unless a migration is explicitly planned.
 
 ## Architecture
 
@@ -22,6 +24,7 @@ This directory contains the Next.js 16 / React 19 web application for PrimeDex. 
 - Store compact IDs and user primitives, not complete API response objects. Check `_hasHydrated` before using persisted state in rendering or effects.
 - Select individual Zustand slices where possible to avoid unnecessary re-renders.
 - Keep Supabase credentials and server-only clients out of browser bundles.
+- The app is local-first: it must remain usable without Supabase variables. Vercel provides optional public Supabase variables and the server-only `SUPABASE_SERVICE_ROLE_KEY` for protected integrations; never expose the latter to client code.
 
 ## Verification
 

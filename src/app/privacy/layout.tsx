@@ -26,7 +26,7 @@ export default async function PrivacyLayout({
 }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Privacy Policy', path: '/privacy' },
   ], lang);
   return (

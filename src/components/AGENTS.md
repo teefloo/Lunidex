@@ -1,6 +1,6 @@
 # Web Components Guide
 
-This directory contains reusable PrimeDex UI, feature components, layout primitives, and client interaction leaves.
+This directory contains reusable Lunidex UI, feature components, layout primitives, and client interaction leaves.
 
 ## Component boundaries
 

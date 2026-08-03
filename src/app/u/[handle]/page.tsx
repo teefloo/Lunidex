@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${profile.displayName} (@${profile.handle})`;
   const description = t('profile.meta_description', {
-    defaultValue: `${profile.displayName}'s PrimeDex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught, ${profile.unlockedBadges.length} badges unlocked.`,
+    defaultValue: `${profile.displayName}'s Lunidex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught, ${profile.unlockedBadges.length} badges unlocked.`,
     name: profile.displayName,
     count: profile.caughtCount,
     total: profile.totalPokemon,
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'profile',
       url: profilePath,
       locale: languageToMetadataLocale[lang],
-      siteName: 'PrimeDex',
+      siteName: 'Lunidex',
       images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
@@ -76,9 +76,9 @@ export default async function PublicProfilePage({ params }: Props) {
   const jsonLd = buildWebPageJsonLd({
     lang,
     path: profilePath,
-    name: `${profile.displayName} — PrimeDex`,
+    name: `${profile.displayName} — Lunidex`,
     headline: `${profile.displayName}'s Profile`,
-    description: `${profile.displayName}'s PrimeDex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught.`,
+    description: `${profile.displayName}'s Lunidex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught.`,
   });
 
   const profilePageJsonLd = {

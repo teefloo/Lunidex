@@ -108,7 +108,7 @@ describe('buildWebPageJsonLd', () => {
 });
 
 describe('DEFAULT_OG_IMAGE', () => {
-  it('points to the selected 1200x630 PrimeDex artwork', () => {
+  it('points to the selected 1200x630 Lunidex artwork', () => {
     expect(DEFAULT_OG_IMAGE).toMatchObject({
       url: '/og/lunidex-og.jpg',
       width: 1200,

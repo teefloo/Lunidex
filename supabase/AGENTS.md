@@ -1,6 +1,8 @@
 # Supabase Guide
 
-This directory contains the database migrations and the Supabase Edge Functions used by PrimeDex. The web and mobile clients remain local-first when public Supabase configuration is absent.
+This directory contains the database migrations and Supabase Edge Functions used by Lunidex. The web and mobile clients remain local-first when public Supabase configuration is absent; Supabase adds optional authentication, sync, profiles, game data, and product integrations.
+
+Lunidex is the visible product brand. Keep historical database-facing names, migration filenames, RPC names, store paths, and `primedex-*` identifiers stable unless a compatibility migration is explicitly planned.
 
 ## Migrations
 
@@ -32,3 +34,5 @@ npm run lint
 npm run typecheck
 npm run test -- --run
 ```
+
+Production deployments are connected to Vercel and should receive only the public Supabase variables in client code. Configure `SUPABASE_SERVICE_ROLE_KEY` only as a sensitive server-side Vercel/runtime variable; never commit it, expose it to mobile, or place it in `NEXT_PUBLIC_*`.

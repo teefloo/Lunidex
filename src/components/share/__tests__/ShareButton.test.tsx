@@ -13,7 +13,7 @@ vi.mock('sonner', () => ({
 // ─── Helpers ───────────────────────────────────────────────────────────────
 const defaultProps = {
   url: 'https://primedex.vercel.app/pokemon/pikachu?utm_source=share&utm_medium=social',
-  title: 'Pikachu | PrimeDex',
+  title: 'Pikachu | Lunidex',
   description: 'Electric-type Pokémon #025',
 };
 

@@ -3,9 +3,9 @@ import type { LegalDocument } from '../legal-types';
 const privacy: LegalDocument = {
   title: 'Informativa sulla Privacy',
   intro:
-    'Questa informativa descrive come trattiamo i tuoi dati personali quando utilizzi PrimeDex, in conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR) e il California Consumer Privacy Act (CCPA).',
+    'Questa informativa descrive come trattiamo i tuoi dati personali quando utilizzi Lunidex, in conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR) e il California Consumer Privacy Act (CCPA).',
   preamble:
-    'PrimeDex è un sito web di fan, non commerciale, non affiliato a Nintendo, Game Freak, The Pokémon Company o Creatures Inc. Prendiamo molto sul serio la protezione della tua privacy. Questa informativa spiega, in piena trasparenza, quali dati vengono raccolti, perché, come vengono utilizzati, per quanto tempo vengono conservati e quali sono i tuoi diritti.',
+    'Lunidex è un sito web di fan, non commerciale, non affiliato a Nintendo, Game Freak, The Pokémon Company o Creatures Inc. Prendiamo molto sul serio la protezione della tua privacy. Questa informativa spiega, in piena trasparenza, quali dati vengono raccolti, perché, come vengono utilizzati, per quanto tempo vengono conservati e quali sono i tuoi diritti.',
   lastUpdated: '4 giugno 2026',
   effectiveDate: '4 giugno 2026',
   sections: [
@@ -14,13 +14,13 @@ const privacy: LegalDocument = {
       title: '1. Titolare del trattamento',
       intro: 'Il titolare del trattamento dei tuoi dati personali è:',
       paragraphs: [
-        'PrimeDex è pubblicato da una persona fisica a titolo personale e non commerciale. Non esiste alcuna persona giuridica, alcun numero di registrazione commerciale, né un rappresentante legale distinto.',
+        'Lunidex è pubblicato da una persona fisica a titolo personale e non commerciale. Non esiste alcuna persona giuridica, alcun numero di registrazione commerciale, né un rappresentante legale distinto.',
         'L\'editore agisce come titolare del trattamento ai sensi dell\'articolo 4.7 del GDPR. Determina le finalità e i mezzi del trattamento dei tuoi dati personali.',
       ],
       table: {
         headers: ['Ruolo', 'Identità', 'Contatto'],
         rows: [
-          ['Editore (Titolare del trattamento)', 'Persona fisica — PrimeDex', 'estdel3012@gmail.com'],
+          ['Editore (Titolare del trattamento)', 'Persona fisica — Lunidex', 'estdel3012@gmail.com'],
           ['Hosting (Responsabile del trattamento)', 'Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA', 'privacy@vercel.com'],
           ['Responsabile della protezione dei dati', 'Non designato (trattamento a basso rischio)', 'estdel3012@gmail.com'],
         ],
@@ -33,7 +33,7 @@ const privacy: LegalDocument = {
     {
       id: 'data',
       title: '2. Dati raccolti',
-      intro: 'PrimeDex raccoglie solo il minimo indispensabile di dati necessari al funzionamento del servizio.',
+      intro: 'Lunidex raccoglie solo il minimo indispensabile di dati necessari al funzionamento del servizio.',
       subsections: [
         {
           id: 'data-personal',
@@ -77,7 +77,7 @@ const privacy: LegalDocument = {
           id: 'data-technical',
           title: '2.3. Dati tecnici trasmessi automaticamente',
           paragraphs: [
-            'Ad ogni connessione a PrimeDex, il tuo browser scambia automaticamente informazioni tecniche con la nostra infrastruttura e i nostri responsabili del trattamento. Questi dati sono strettamente necessari per l\'instaurazione e il corretto funzionamento della comunicazione:',
+            'Ad ogni connessione a Lunidex, il tuo browser scambia automaticamente informazioni tecniche con la nostra infrastruttura e i nostri responsabili del trattamento. Questi dati sono strettamente necessari per l\'instaurazione e il corretto funzionamento della comunicazione:',
           ],
           table: {
             headers: ['Categoria', 'Dati', 'Finalità', 'Base giuridica (GDPR)'],
@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookie e tracker',
           paragraphs: [
-            'PrimeDex utilizza archiviazione strettamente necessaria al servizio. Con il tuo consenso, Vercel Web Analytics e Speed Insights misurano pubblico e prestazioni, mentre Supabase riceve solo contatori giornalieri di misurazione del prodotto. Consulta la politica sui cookie per finalità e scelte distinte.',
+            'Lunidex utilizza archiviazione strettamente necessaria al servizio. Con il tuo consenso, Vercel Web Analytics e Speed Insights misurano pubblico e prestazioni, mentre Supabase riceve solo contatori giornalieri di misurazione del prodotto. Consulta la politica sui cookie per finalità e scelte distinte.',
           ],
           list: [
             'primedex-lang (durata: 1 anno): memorizza la tua lingua preferita.',
@@ -123,7 +123,7 @@ const privacy: LegalDocument = {
       title: '4. Destinatari e responsabili del trattamento',
       intro: 'I tuoi dati vengono condivisi solo con i responsabili del trattamento strettamente necessari per il funzionamento del servizio. Nessun trasferimento commerciale viene effettuato.',
       paragraphs: [
-        'PrimeDex non vende, affitta o trasferisce alcun dato personale a terzi per scopi commerciali o di marketing. Non viene effettuata alcuna profilazione o decisione automatizzata che produca effetti giuridici.',
+        'Lunidex non vende, affitta o trasferisce alcun dato personale a terzi per scopi commerciali o di marketing. Non viene effettuata alcuna profilazione o decisione automatizzata che produca effetti giuridici.',
       ],
       table: {
         headers: ['Responsabile del trattamento', 'Servizio', 'Paese', 'Garanzie di trasferimento'],
@@ -166,7 +166,7 @@ const privacy: LegalDocument = {
       id: 'security',
       title: '7. Sicurezza',
       paragraphs: [
-        'PrimeDex implementa misure tecniche e organizzative appropriate per proteggere i tuoi dati da accesso, modifica, divulgazione o distruzione non autorizzati.',
+        'Lunidex implementa misure tecniche e organizzative appropriate per proteggere i tuoi dati da accesso, modifica, divulgazione o distruzione non autorizzati.',
       ],
       list: [
         'Crittografia HTTPS/TLS 1.3 su tutto il sito (HSTS abilitato).',
@@ -201,7 +201,7 @@ const privacy: LegalDocument = {
       id: 'children',
       title: '9. Protezione dei minori',
       paragraphs: [
-        'PrimeDex è rivolto a un pubblico familiare e può essere consultato da minori. Il sito non raccoglie consapevolmente alcun dato personale da bambini di età inferiore a 16 anni (o l\'età applicabile secondo la legge locale) senza il consenso dei genitori.',
+        'Lunidex è rivolto a un pubblico familiare e può essere consultato da minori. Il sito non raccoglie consapevolmente alcun dato personale da bambini di età inferiore a 16 anni (o l\'età applicabile secondo la legge locale) senza il consenso dei genitori.',
         'Il sito non offre alcuna sezione riservata ai bambini, non offre messaggistica e non raccoglie informazioni che identifichino direttamente un minore. I genitori che ritengono che il proprio figlio abbia fornito informazioni personali possono contattarci per richiederne la cancellazione.',
         'In conformità con il COPPA (Children\'s Online Privacy Protection Act) e il GDPR, nessun dato viene raccolto consapevolmente da bambini di età inferiore a 13 anni (COPPA) o 16 anni (GDPR, salvo che lo Stato membro stabilisca un\'età inferiore).',
       ],
@@ -210,7 +210,7 @@ const privacy: LegalDocument = {
       id: 'third-parties',
       title: '10. Servizi di terze parti e link esterni',
       paragraphs: [
-        'PrimeDex si basa su API e servizi di terze parti per fornire i dati visualizzati (PokéAPI, TCGdex, Scrydex, GitHub). Questi servizi hanno le proprie politiche sulla privacy, che ti invitiamo a consultare.',
+        'Lunidex si basa su API e servizi di terze parti per fornire i dati visualizzati (PokéAPI, TCGdex, Scrydex, GitHub). Questi servizi hanno le proprie politiche sulla privacy, che ti invitiamo a consultare.',
         'Il sito può anche offrire link a siti esterni (ad es. la pagina ufficiale di Pokémon, video di YouTube, negozi). Non siamo responsabili del contenuto o delle pratiche sulla privacy di questi siti di terze parti.',
       ],
     },
@@ -242,9 +242,9 @@ const privacy: LegalDocument = {
 const terms: LegalDocument = {
   title: 'Termini di Servizio',
   intro:
-    'Questi termini di servizio (TDS) disciplinano il tuo accesso e utilizzo di PrimeDex. Accedendo al sito, accetti di essere vincolato da questi termini.',
+    'Questi termini di servizio (TDS) disciplinano il tuo accesso e utilizzo di Lunidex. Accedendo al sito, accetti di essere vincolato da questi termini.',
   preamble:
-    'PrimeDex è un progetto di fan personale, gratuito, senza pubblicità e non monetizzato. È fornito "così com\'è", per scopi di intrattenimento e informazione sull\'universo Pokémon. Qualsiasi utilizzo del sito costituisce accettazione di questi TDS.',
+    'Lunidex è un progetto di fan personale, gratuito, senza pubblicità e non monetizzato. È fornito "così com\'è", per scopi di intrattenimento e informazione sull\'universo Pokémon. Qualsiasi utilizzo del sito costituisce accettazione di questi TDS.',
   lastUpdated: '4 giugno 2026',
   effectiveDate: '4 giugno 2026',
   sections: [
@@ -252,14 +252,14 @@ const terms: LegalDocument = {
       id: 'object',
       title: '1. Oggetto',
       paragraphs: [
-        'PrimeDex è un sito web non commerciale che cataloga dati relativi ai Pokémon (numeri, tipi, statistiche, descrizioni, evoluzioni, abilità, sprite) e alle carte del gioco di carte collezionabili (TCG) dello stesso universo. È un progetto di fan a scopo puramente informativo e ricreativo.',
+        'Lunidex è un sito web non commerciale che cataloga dati relativi ai Pokémon (numeri, tipi, statistiche, descrizioni, evoluzioni, abilità, sprite) e alle carte del gioco di carte collezionabili (TCG) dello stesso universo. È un progetto di fan a scopo puramente informativo e ricreativo.',
         'Il sito è fornito gratuitamente e senza pubblicità. Non è richiesto alcun acquisto, abbonamento o registrazione per utilizzare il servizio.',
       ],
     },
     {
       id: 'affiliation',
       title: '2. Non affiliazione e proprietà intellettuale',
-      intro: 'PrimeDex non è in alcun modo affiliato, sponsorizzato, supportato o approvato da:',
+      intro: 'Lunidex non è in alcun modo affiliato, sponsorizzato, supportato o approvato da:',
       list: [
         'Nintendo Co., Ltd.',
         'Game Freak Inc.',
@@ -268,23 +268,23 @@ const terms: LegalDocument = {
         'Pokémon Center, Wizards of the Coast (Hasbro), o qualsiasi altro titolare di diritti relativo al marchio Pokémon.',
       ],
       paragraphs: [
-        'Marchi, nomi, sprite, illustrazioni, suoni, video e qualsiasi altro contenuto relativo all\'universo Pokémon rimangono di proprietà esclusiva dei rispettivi titolari dei diritti. PrimeDex non rivendica alcuna proprietà su di essi.',
+        'Marchi, nomi, sprite, illustrazioni, suoni, video e qualsiasi altro contenuto relativo all\'universo Pokémon rimangono di proprietà esclusiva dei rispettivi titolari dei diritti. Lunidex non rivendica alcuna proprietà su di essi.',
         'L\'uso dei marchi e dei contenuti Pokémon è effettuato per scopi di progetto di fan non commerciale, il che, nella maggior parte delle giurisdizioni, costituisce un uso descrittivo e informativo intrinsecamente consentito. Se un titolare di diritti ritiene che un contenuto violi i propri diritti, ci impegniamo a rimuoverlo prontamente dopo notifica a estdel3012@gmail.com.',
-        'Il codice sorgente del sito è rilasciato sotto Licenza MIT (open source). Questo non concede alcun diritto sui marchi Pokémon: la Licenza MIT si applica solo al codice scritto dall\'autore di PrimeDex.',
+        'Il codice sorgente del sito è rilasciato sotto Licenza MIT (open source). Questo non concede alcun diritto sui marchi Pokémon: la Licenza MIT si applica solo al codice scritto dall\'autore di Lunidex.',
       ],
     },
     {
       id: 'sources',
       title: '3. Fonti dei dati',
       paragraphs: [
-        'I dati visualizzati da PrimeDex provengono esclusivamente da fonti pubbliche di terze parti gestite dalla community: PokéAPI (pokeapi.co, mantenuta da Paul Hallett) e TCGdex (api.tcgdex.net). Le immagini sono ospitate da Scrydex e GitHub (raw.githubusercontent.com).',
+        'I dati visualizzati da Lunidex provengono esclusivamente da fonti pubbliche di terze parti gestite dalla community: PokéAPI (pokeapi.co, mantenuta da Paul Hallett) e TCGdex (api.tcgdex.net). Le immagini sono ospitate da Scrydex e GitHub (raw.githubusercontent.com).',
         'Ci impegniamo a mostrare dati accurati e aggiornati, ma non garantiamo l\'assenza di errori, omissioni o ritardi di sincronizzazione con le fonti. I dati sono forniti a scopo informativo e non sostituiscono le fonti ufficiali.',
       ],
     },
     {
       id: 'usage',
       title: '4. Usi autorizzati e vietati',
-      intro: 'Sei autorizzato a utilizzare PrimeDex per scopi personali, non commerciali e informativi. In particolare, è vietato:',
+      intro: 'Sei autorizzato a utilizzare Lunidex per scopi personali, non commerciali e informativi. In particolare, è vietato:',
       list: [
         'Qualsiasi uso commerciale, pubblicitario o di rivendita dell\'accesso al sito.',
         'Qualsiasi tentativo di scraping massivo o automatizzato oltre il normale utilizzo (ad es. più di 60 richieste al minuto, o copia integrale del database).',
@@ -299,7 +299,7 @@ const terms: LegalDocument = {
       id: 'availability',
       title: '5. Disponibilità del servizio',
       paragraphs: [
-        'PrimeDex è fornito "così com\'è" e "come disponibile". L\'editore si impegna a mantenere il sito accessibile 24 ore su 24, 7 giorni su 7, ma non garantisce una disponibilità ininterrotta.',
+        'Lunidex è fornito "così com\'è" e "come disponibile". L\'editore si impegna a mantenere il sito accessibile 24 ore su 24, 7 giorni su 7, ma non garantisce una disponibilità ininterrotta.',
         'Il servizio può essere temporaneamente interrotto per manutenzione, aggiornamenti, problemi tecnici o cause di forza maggiore. Nessun risarcimento può essere richiesto su questa base.',
       ],
     },
@@ -308,9 +308,9 @@ const terms: LegalDocument = {
       title: '6. Responsabilità',
       intro: 'Nei limiti consentiti dalla legge applicabile:',
       list: [
-        'PrimeDex non può essere ritenuto responsabile per danni indiretti, incidentali, speciali o consequenziali derivanti dall\'uso o dall\'impossibilità di utilizzare il sito.',
+        'Lunidex non può essere ritenuto responsabile per danni indiretti, incidentali, speciali o consequenziali derivanti dall\'uso o dall\'impossibilità di utilizzare il sito.',
         'L\'editore non garantisce l\'accuratezza, completezza o tempestività dei dati visualizzati.',
-        'L\'editore non può essere ritenuto responsabile per il contenuto di siti di terze parti accessibili tramite link da PrimeDex.',
+        'L\'editore non può essere ritenuto responsabile per il contenuto di siti di terze parti accessibili tramite link da Lunidex.',
         'L\'utente è l\'unico responsabile dell\'uso che fa delle informazioni fornite dal sito.',
       ],
       paragraphs: [
@@ -321,7 +321,7 @@ const terms: LegalDocument = {
       id: 'accountability',
       title: '7. Segnalazione di contenuti illegali',
       paragraphs: [
-        'Se ritieni che un contenuto visualizzato su PrimeDex violi i tuoi diritti (proprietà intellettuale, diffamazione, ecc.), puoi contattarci a estdel3012@gmail.com specificando: la natura del contenuto in questione, il suo URL esatto, il tuo status (titolare di diritti o rappresentante) e qualsiasi prova a supporto.',
+        'Se ritieni che un contenuto visualizzato su Lunidex violi i tuoi diritti (proprietà intellettuale, diffamazione, ecc.), puoi contattarci a estdel3012@gmail.com specificando: la natura del contenuto in questione, il suo URL esatto, il tuo status (titolare di diritti o rappresentante) e qualsiasi prova a supporto.',
         'Ci impegniamo a esaminare qualsiasi segnalazione entro un termine ragionevole e, se del caso, a rimuovere o modificare il contenuto in questione.',
       ],
     },
@@ -356,18 +356,18 @@ const legalNotice: LegalDocument = {
   intro:
     'Queste note legali sono pubblicate in conformità con l\'articolo 6 della Legge francese per la Fiducia nell\'Economia Digitale (LCEN) del 21 giugno 2004.',
   preamble:
-    'PrimeDex è pubblicato da una persona fisica a titolo personale e non commerciale. Nessuna persona giuridica è dietro questo progetto: è un progetto di fan.',
+    'Lunidex è pubblicato da una persona fisica a titolo personale e non commerciale. Nessuna persona giuridica è dietro questo progetto: è un progetto di fan.',
   lastUpdated: '4 giugno 2026',
   effectiveDate: '4 giugno 2026',
   sections: [
     {
       id: 'editor',
       title: '1. Editore del sito',
-      intro: 'PrimeDex è pubblicato da:',
+      intro: 'Lunidex è pubblicato da:',
       table: {
         headers: ['Campo', 'Valore'],
         rows: [
-          ['Nome', 'PrimeDex (nome del progetto personale)'],
+          ['Nome', 'Lunidex (nome del progetto personale)'],
           ['Stato', 'Persona fisica — progetto personale non commerciale'],
           ['Direttore della pubblicazione', 'L\'editore individuale'],
           ['Contatto', 'estdel3012@gmail.com'],
@@ -379,7 +379,7 @@ const legalNotice: LegalDocument = {
       },
       callout: {
         type: 'warning',
-        text: 'In assenza di persona giuridica, PrimeDex non è registrato nel Registro delle Imprese (RCS) o nel Registro Artigiani (RM). L\'editore agisce sotto la propria responsabilità civile personale.',
+        text: 'In assenza di persona giuridica, Lunidex non è registrato nel Registro delle Imprese (RCS) o nel Registro Artigiani (RM). L\'editore agisce sotto la propria responsabilità civile personale.',
       },
     },
     {
@@ -401,7 +401,7 @@ const legalNotice: LegalDocument = {
       id: 'activity',
       title: '3. Attività e natura del servizio',
       paragraphs: [
-        'PrimeDex è un Pokédex online e catalogo di carte TCG, gratuito, senza pubblicità e non monetizzato. Il sito mostra dati pubblici relativi all\'universo Pokémon (numeri, tipi, statistiche, sprite, carte) a scopo strettamente informativo e ricreativo.',
+        'Lunidex è un Pokédex online e catalogo di carte TCG, gratuito, senza pubblicità e non monetizzato. Il sito mostra dati pubblici relativi all\'universo Pokémon (numeri, tipi, statistiche, sprite, carte) a scopo strettamente informativo e ricreativo.',
         'Il servizio è fornito gratuitamente, senza registrazione, senza raccolta di dati personali e senza transazione commerciale.',
       ],
     },
@@ -409,7 +409,7 @@ const legalNotice: LegalDocument = {
       id: 'affiliation-notice',
       title: '4. Non affiliazione',
       paragraphs: [
-        'PrimeDex è un progetto di fan non commerciale, indipendente e non affiliato. Marchi, nomi, sprite, illustrazioni e tutti gli altri elementi relativi all\'universo Pokémon rimangono di proprietà esclusiva di Nintendo, Game Freak, Creatures Inc. e The Pokémon Company.',
+        'Lunidex è un progetto di fan non commerciale, indipendente e non affiliato. Marchi, nomi, sprite, illustrazioni e tutti gli altri elementi relativi all\'universo Pokémon rimangono di proprietà esclusiva di Nintendo, Game Freak, Creatures Inc. e The Pokémon Company.',
         'Nessuna affiliazione, partnership, sponsorizzazione o approvazione ufficiale da parte dei suddetti titolari di diritti deve essere dedotta dal sito. Per maggiori informazioni, consulta i nostri TDS.',
       ],
     },
@@ -433,7 +433,7 @@ const legalNotice: LegalDocument = {
 const cookies: LegalDocument = {
   title: 'Politica sui Cookie',
   intro:
-    'Questa politica descrive i cookie e i tracker installati sul tuo dispositivo quando navighi su PrimeDex, in conformità con le linee guida CNIL e il GDPR.',
+    'Questa politica descrive i cookie e i tracker installati sul tuo dispositivo quando navighi su Lunidex, in conformità con le linee guida CNIL e il GDPR.',
   preamble:
     'Un cookie è un piccolo file di testo installato sul tuo dispositivo dal server di un sito web. Alcuni cookie sono strettamente necessari per il funzionamento del sito; altri richiedono il tuo previo consenso.',
   lastUpdated: '4 giugno 2026',
@@ -442,12 +442,12 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. Inventario dei cookie utilizzati',
-      intro: 'PrimeDex utilizza archiviazione strettamente necessaria al servizio. La misurazione di pubblico e prestazioni di Vercel e la misurazione del prodotto di Supabase restano disattivate fino al consenso corrispondente.',
+      intro: 'Lunidex utilizza archiviazione strettamente necessaria al servizio. La misurazione di pubblico e prestazioni di Vercel e la misurazione del prodotto di Supabase restano disattivate fino al consenso corrispondente.',
       table: {
         headers: ['Cookie', 'Finalità', 'Tipo', 'Durata', 'Editore'],
         rows: [
-          ['primedex-lang', 'Memorizza la tua lingua preferita', 'Strettamente necessario (Art. 82 legge francese sulla protezione dei dati)', '1 anno', 'PrimeDex'],
-          ['tcg-user-state', 'Conserva lo stato dell\'interfaccia sulle pagine TCG (filtri, ordinamenti)', 'Strettamente necessario', '1 anno', 'PrimeDex'],
+          ['primedex-lang', 'Memorizza la tua lingua preferita', 'Strettamente necessario (Art. 82 legge francese sulla protezione dei dati)', '1 anno', 'Lunidex'],
+          ['tcg-user-state', 'Conserva lo stato dell\'interfaccia sulle pagine TCG (filtri, ordinamenti)', 'Strettamente necessario', '1 anno', 'Lunidex'],
         ],
       },
       callout: {
@@ -463,10 +463,10 @@ const cookies: LegalDocument = {
           id: 'lang',
           title: '2.1. primedex-lang',
           paragraphs: [
-            'Questo cookie memorizza la lingua in cui hai scelto di visualizzare il sito. Senza di esso, vedresti PrimeDex nella lingua predefinita (inglese) ad ogni visita. Non contiene alcun dato personale: viene memorizzato solo un valore alfabetico ("en", "fr", "de", ecc.).',
+            'Questo cookie memorizza la lingua in cui hai scelto di visualizzare il sito. Senza di esso, vedresti Lunidex nella lingua predefinita (inglese) ad ogni visita. Non contiene alcun dato personale: viene memorizzato solo un valore alfabetico ("en", "fr", "de", ecc.).',
           ],
           list: [
-            'Editore: PrimeDex.',
+            'Editore: Lunidex.',
             'Durata: massimo 1 anno.',
             'Tipo: cookie HTTP lato server (impostato tramite l\'intestazione Set-Cookie).',
             'Base giuridica: interesse legittimo (Art. 6.1.f GDPR) — esenzione dal consenso CNIL.',
@@ -479,7 +479,7 @@ const cookies: LegalDocument = {
             'Questo cookie conserva lo stato dell\'interfaccia sulle pagine del catalogo TCG (filtri attivi, modalità di visualizzazione, ultimi ordinamenti) in modo che tu possa ritrovare le tue preferenze da una visita all\'altra.',
           ],
           list: [
-            'Editore: PrimeDex.',
+            'Editore: Lunidex.',
             'Durata: massimo 1 anno.',
             'Tipo: cookie lato client (localStorage, gestito dal browser).',
             'Base giuridica: interesse legittimo (Art. 6.1.f GDPR) — esenzione dal consenso CNIL.',
@@ -491,7 +491,7 @@ const cookies: LegalDocument = {
       id: 'no-third-party',
       title: '3. Assenza di cookie di terze parti',
       paragraphs: [
-        'PrimeDex non imposta alcun cookie di terze parti. In particolare:',
+        'Lunidex non imposta alcun cookie di terze parti. In particolare:',
         'Questa politica può essere aggiornata se decidiamo di aggiungere un servizio di terze parti. In tal caso, il tuo consenso verrà richiesto tramite il banner dei cookie prima dell\'installazione di qualsiasi cookie non strettamente necessario.',
       ],
       list: [
@@ -505,7 +505,7 @@ const cookies: LegalDocument = {
       id: 'localstorage',
       title: '4. Archiviazione locale (IndexedDB e localStorage)',
       paragraphs: [
-        'Oltre ai cookie, PrimeDex utilizza tecnologie di archiviazione locale (IndexedDB, localStorage) per conservare le tue preferenze e i dati di utilizzo. Questi dati rimangono sul tuo dispositivo e non vengono mai trasmessi a un server.',
+        'Oltre ai cookie, Lunidex utilizza tecnologie di archiviazione locale (IndexedDB, localStorage) per conservare le tue preferenze e i dati di utilizzo. Questi dati rimangono sul tuo dispositivo e non vengono mai trasmessi a un server.',
         'Per maggiori informazioni su questi dati (preferiti, squadre, collezione TCG, punteggi quiz, preferenze di visualizzazione), consulta la nostra informativa sulla privacy (sezione 2.2 "Dati memorizzati localmente").',
       ],
     },

@@ -1,6 +1,6 @@
 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="icon-title icon-desc">
   <title id="icon-title">Pokeball</title>
-  <desc id="icon-desc">PrimeDex favicon shaped like a Pokeball.</desc>
+  <desc id="icon-desc">Lunidex favicon shaped like a Pokeball.</desc>
   <circle cx="16" cy="16" r="15" fill="white" stroke="black" stroke-width="2"/>
   <path d="M1.5 16C1.5 7.99187 7.99187 1.5 16 1.5C24.0081 1.5 30.5 7.99187 30.5 16H1.5Z" fill="#EF4444" stroke="black" stroke-width="2"/>
   <circle cx="16" cy="16" r="5" fill="black"/>

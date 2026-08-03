@@ -73,7 +73,7 @@ export async function generateMetadata(
 
     const dexNumber = `#${String(pokemon.id).padStart(3, '0')}`;
     const title = displayName;
-    const socialTitle = `${displayName} | PrimeDex`;
+    const socialTitle = `${displayName} | Lunidex`;
     const seoDescription = description || `Detailed information about ${displayName}, including stats, abilities, types, and evolutions.`;
 
     const ogImageUrl = `/api/og/pokemon?name=${encodeURIComponent(name)}&lang=${lang}`;
@@ -96,17 +96,17 @@ export async function generateMetadata(
         type: 'article',
         url: `/${lang}/pokemon/${name}`,
         locale: languageToMetadataLocale[lang],
-        siteName: 'PrimeDex',
+        siteName: 'Lunidex',
         publishedTime: '2024-01-15T00:00:00Z',
         modifiedTime: new Date().toISOString(),
-        authors: ['PrimeDex'],
+        authors: ['Lunidex'],
         section: 'Pokédex',
         tags: [
           displayName,
           'Pokemon',
           'Pokedex',
           ...pokemon.types.map(t => t.type.name),
-          'PrimeDex',
+          'Lunidex',
           'Stats',
           'Abilities',
         ],
@@ -118,38 +118,38 @@ export async function generateMetadata(
         description: seoDescription,
         images: [ogImageUrl],
       },
-      authors: [{ name: 'PrimeDex', url: 'https://primedex.vercel.app/about' }],
-      creator: 'PrimeDex',
-      publisher: 'PrimeDex',
+      authors: [{ name: 'Lunidex', url: 'https://primedex.vercel.app/about' }],
+      creator: 'Lunidex',
+      publisher: 'Lunidex',
       keywords: [
         displayName,
         'Pokemon',
         'Pokedex',
         ...pokemon.types.map(t => t.type.name),
-        'PrimeDex',
+        'Lunidex',
         'Stats',
         'Abilities'
       ],
       other: {
         'article:published_time': '2024-01-15T00:00:00Z',
         'article:modified_time': new Date().toISOString(),
-        'article:author': 'PrimeDex',
+        'article:author': 'Lunidex',
         'article:section': 'Pokédex',
         'pokemon:dex': String(pokemon.id),
         'pokemon:generation': String(pokemon.id <= 151 ? 1 : pokemon.id <= 251 ? 2 : pokemon.id <= 386 ? 3 : pokemon.id <= 493 ? 4 : pokemon.id <= 649 ? 5 : pokemon.id <= 721 ? 6 : pokemon.id <= 809 ? 7 : pokemon.id <= 905 ? 8 : 9),
         'pokemon:types': pokemon.types.map(t => t.type.name).join(','),
-        'citation_title': `${displayName} — Pokédex Entry | PrimeDex`,
-        'citation_publisher': 'PrimeDex',
-        'citation_author': 'PrimeDex',
+        'citation_title': `${displayName} — Pokédex Entry | Lunidex`,
+        'citation_publisher': 'Lunidex',
+        'citation_author': 'Lunidex',
         'citation_language': lang,
         'citation_release_date': '2024-01-15',
         'citation_online_date': '2026-06-04',
         'DC.title': displayName,
-        'DC.creator': 'PrimeDex',
+        'DC.creator': 'Lunidex',
         'DC.subject': pokemon.types.map(t => t.type.name).join(', '),
         'DC.description': seoDescription,
         'DC.language': languageToMetadataLocale[lang],
-        'DC.publisher': 'PrimeDex',
+        'DC.publisher': 'Lunidex',
         'DC.contributor': 'PokéAPI (https://pokeapi.co)',
         'DC.date': new Date().toISOString(),
         'DC.type': 'InteractiveResource',

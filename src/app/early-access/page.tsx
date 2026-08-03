@@ -146,7 +146,7 @@ export default async function EarlyAccessPage() {
               Un projet ouvert, pas une boîte noire
             </h2>
             <p className="mt-4 text-foreground/70 leading-relaxed max-w-xl mx-auto">
-              Le code est public : vous pouvez vérifier vous-même ce que PrimeDex fait de vos
+              Le code est public : vous pouvez vérifier vous-même ce que Lunidex fait de vos
               données avant de nous confier votre e-mail.
             </p>
             <ul className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-semibold">

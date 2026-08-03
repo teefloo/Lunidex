@@ -168,7 +168,7 @@ export default async function PokemonLayout({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'PrimeDex', item: `${baseUrl}/${lang}` },
+        { '@type': 'ListItem', position: 1, name: 'Lunidex', item: `${baseUrl}/${lang}` },
         { '@type': 'ListItem', position: 2, name: 'Pokédex', item: `${baseUrl}/${lang}` },
         { '@type': 'ListItem', position: 3, name: displayName, item: `${baseUrl}/${lang}/pokemon/${name}` },
       ],

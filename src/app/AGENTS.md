@@ -1,6 +1,8 @@
 # App Router Guide
 
-This directory contains PrimeDex's Next.js App Router routes. Each feature route should keep its page, layout, loading/error boundaries, and client leaves close to the route that owns them.
+This directory contains Lunidex's Next.js App Router routes. Each feature route should keep its page, layout, loading/error boundaries, and client leaves close to the route that owns them.
+
+Use Lunidex in visible route copy and metadata. Keep historical technical names, locale-independent slugs, and existing domains stable unless an explicit migration is included.
 
 ## Route structure
 

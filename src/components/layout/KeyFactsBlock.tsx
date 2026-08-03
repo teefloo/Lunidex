@@ -25,7 +25,7 @@ const STATS: Stat[] = [
   {
     value: '9',
     label: 'Interface languages supported',
-    source: { name: 'PrimeDex', url: 'https://primedex.vercel.app' },
+    source: { name: 'Lunidex', url: 'https://primedex.vercel.app' },
   },
 ];
 

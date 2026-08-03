@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FavoritesLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Favorites', path: '/favorites' },
   ], lang);
   return (

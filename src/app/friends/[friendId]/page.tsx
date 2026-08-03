@@ -32,7 +32,7 @@ export default async function FriendPage({ params }: FriendPageProps) {
   const lang = await getServerLanguage();
   const t = await getServerT();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: t('friends.title', { defaultValue: 'Friends' }), path: '/friends' },
     { name: t('friends.profile_title', { defaultValue: 'Friend profile' }), path: `/friends/${friendId}` },
   ], lang);

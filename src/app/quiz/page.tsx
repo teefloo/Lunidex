@@ -447,7 +447,7 @@ function QuizPageContent() {
             icon={Gamepad2}
             title={t('quiz.title')}
             subtitle={t('quiz.subtitle')}
-            eyebrow={t('quiz.eyebrow', { defaultValue: 'PrimeDex' })}
+            eyebrow={t('quiz.eyebrow', { defaultValue: 'Lunidex' })}
           />
         ) : null}
 

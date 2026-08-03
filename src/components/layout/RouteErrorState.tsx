@@ -24,13 +24,13 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
         <div className="mb-5 rounded-sm border border-destructive/20 bg-destructive/10 p-4 text-destructive">
           <AlertTriangle className="h-8 w-8" />
         </div>
-        <p className="page-eyebrow justify-center">{scope ?? 'PrimeDex'}</p>
+        <p className="page-eyebrow justify-center">{scope ?? 'Lunidex'}</p>
         <h1 className="mb-3 text-2xl font-black tracking-tight">
           {t('common.error_title', { defaultValue: 'Something went wrong' })}
         </h1>
         <p className="mb-8 max-w-md text-sm leading-6 text-foreground/55">
           {t('common.error_desc', {
-            defaultValue: 'PrimeDex could not load this section. Please retry or return to the Pokédex.',
+            defaultValue: 'Lunidex could not load this section. Please retry or return to the Pokédex.',
           })}
         </p>
 

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
 
   const host = new URL(SITE_URL).host;
 
-  const subsetText = [trainer, 'PrimeDex', 'Trainer', 'Level', 'Badges', 'Dex', 'Quiz', host].join(
+  const subsetText = [trainer, 'Lunidex', 'Trainer', 'Level', 'Badges', 'Dex', 'Quiz', host].join(
     ' ',
   );
   const fonts = await loadOgFonts(lang, subsetText);
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 letterSpacing: '1px',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
             <div
               style={{

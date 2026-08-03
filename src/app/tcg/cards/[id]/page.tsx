@@ -16,7 +16,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
   const currentLang = await getServerLanguage();
-  const fallbackTitle = 'TCG Card | PrimeDex';
+  const fallbackTitle = 'TCG Card | Lunidex';
   const fallbackDesc = 'Pokemon TCG card details.';
 
   if (!card) {
@@ -36,8 +36,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const setLabel = setName ? ` from ${setName}` : '';
   const rarityLabel = rarity ? ` (${rarity})` : '';
   const typeLabel = typeInfo ? ` [${typeInfo}]` : '';
-  const title = `${card.name} - ${setName || 'TCG'} | PrimeDex`;
-  const description = `${card.name}${typeLabel}${rarityLabel}${setLabel}. HP ${card.hp ?? '?'}. Card details, attacks, abilities, and pricing on PrimeDex.`;
+  const title = `${card.name} - ${setName || 'TCG'} | Lunidex`;
+  const description = `${card.name}${typeLabel}${rarityLabel}${setLabel}. HP ${card.hp ?? '?'}. Card details, attacks, abilities, and pricing on Lunidex.`;
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
   const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${lang ?? currentLang}`;
 
@@ -102,7 +102,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'PrimeDex', item: `${SITE_URL}/${currentLang}` },
+      { '@type': 'ListItem', position: 1, name: 'Lunidex', item: `${SITE_URL}/${currentLang}` },
       { '@type': 'ListItem', position: 2, name: 'TCG Catalog', item: `${SITE_URL}/${currentLang}/tcg` },
       ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${currentLang}/tcg/collection/${setId}` }] : []),
       { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${currentLang}/tcg/cards/${card.id}` },

@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CompareLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Compare', path: '/compare' },
   ], lang);
   return (

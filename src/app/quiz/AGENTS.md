@@ -1,6 +1,6 @@
-# PrimeDex Quiz Module (Trial Chambers)
+# Lunidex Quiz Module (Trial Chambers)
 
-This directory contains the implementation of the **Trial Chambers**, a gamified Pokémon knowledge testing suite within the PrimeDex application.
+This directory contains the implementation of the **Trial Chambers**, a gamified Pokémon knowledge testing suite within the Lunidex application.
 
 ## 🌟 Overview
 

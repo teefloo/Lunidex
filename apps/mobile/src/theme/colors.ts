@@ -1,5 +1,5 @@
 /**
- * PrimeDex mobile palette. Kept intentionally close to the web app's identity
+ * Lunidex mobile palette. Kept intentionally close to the web app's identity
  * (deep indigo night surface, vivid accent) while respecting native contrast.
  */
 export interface ThemePalette {

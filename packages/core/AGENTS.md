@@ -1,6 +1,8 @@
 # Shared Core Package Guide
 
-`@primedex/core` is the platform-neutral workspace package shared by the Next.js web app and the Expo mobile app. It contains API clients, domain types, the shared Zustand store, i18n data, pure helpers, and Supabase utilities.
+`@primedex/core` is Lunidex's platform-neutral workspace package, shared by the Next.js web app and the Expo mobile app. It contains API clients, domain types, the shared Zustand store, i18n data, pure helpers, and Supabase utilities.
+
+Lunidex is the user-facing brand. Do not rename the historical package name `@primedex/core`, its import paths, or related `primedex-*` persistence identifiers without an explicit compatibility migration.
 
 ## Package boundaries
 

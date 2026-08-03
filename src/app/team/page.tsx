@@ -193,7 +193,7 @@ export default function TeamPage() {
           icon={Users}
           title={t('team.title')}
           subtitle={`${t('team.subtitle')} (${pokemonData.length}/6)`}
-          eyebrow={t('team.eyebrow', { defaultValue: 'PrimeDex' })}
+          eyebrow={t('team.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
           badge={(
             <div className="flex flex-col items-end gap-3">

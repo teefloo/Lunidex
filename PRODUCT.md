@@ -1,8 +1,8 @@
-# PrimeDex Product Context
+# Lunidex Product Context
 
 ## Product
 
-PrimeDex is a Pokémon companion web application. The TCG collection surface is a product tool/dashboard rather than a marketing page.
+Lunidex is a Pokémon companion web application. The TCG collection surface is a product tool/dashboard rather than a marketing page.
 
 ## Users and purpose
 
@@ -12,7 +12,7 @@ The page is used on mobile and desktop with equal importance. Users should be ab
 
 ## Brand personality
 
-PrimeDex should feel playful, tactile, nostalgic, and energetic while remaining practical. The existing PrimeDex visual language—warm palette, pixel-style shadows, compact uppercase labels, card-inspired surfaces, and TCG imagery—is part of the product identity and must be preserved.
+Lunidex should feel playful, tactile, nostalgic, and energetic while remaining practical. The existing Lunidex visual language—warm palette, pixel-style shadows, compact uppercase labels, card-inspired surfaces, and TCG imagery—is part of the product identity and must be preserved.
 
 ## Anti-references
 

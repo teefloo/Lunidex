@@ -26,7 +26,7 @@ export default async function LegalNoticeLayout({
 }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Legal Notice', path: '/legal' },
   ], lang);
   return (

@@ -25,7 +25,7 @@ export const GENERATION_THEMES: Record<GenTheme, GenerationTheme> = {
   default: {
     id: 'default',
     name: 'Default',
-    game: 'PrimeDex',
+    game: 'Lunidex',
     generation: 0,
     primaryColor: '#C87941',
     accentColor: '#7AABCC',

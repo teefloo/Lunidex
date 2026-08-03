@@ -82,7 +82,7 @@ async function buildTeamCanvas(
   ctx.fillStyle = TEXT_PRIMARY;
   ctx.font = 'bold 20px sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('PrimeDex — ' + t('team.title'), 20, 28);
+  ctx.fillText('Lunidex — ' + t('team.title'), 20, 28);
 
   // Load all sprites in parallel
   const slots = Array.from({ length: SLOT_COUNT }, (_, i) => pokemonData[i] ?? null);

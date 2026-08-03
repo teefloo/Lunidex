@@ -1,6 +1,8 @@
-# PrimeDex Mobile Guide
+# Lunidex Mobile Guide
 
-This directory contains the Expo 53 / React Native mobile application. It owns mobile screens, navigation, native presentation, and platform configuration; it reuses `@primedex/core` for business logic instead of duplicating web behavior.
+This directory contains the Lunidex Expo 53 / React Native mobile application. It owns mobile screens, navigation, native presentation, and platform configuration; it reuses `@primedex/core` for business logic instead of duplicating web behavior.
+
+Lunidex is the visible product name. Keep `@primedex/core`, `@primedex/mobile`, Expo schemes, bundle identifiers, deep-link slugs, and other `primedex-*` identifiers unchanged unless an explicit migration covers published builds and persisted data.
 
 ## Architecture
 
@@ -9,6 +11,7 @@ This directory contains the Expo 53 / React Native mobile application. It owns m
 - `metro.config.js` watches the repository root and resolves hoisted workspace dependencies. Keep the workspace alias and core package imports working when adding files.
 - Platform-specific seams live in `packages/core/src/platform`: `.ts` serves web and `.native.ts` serves Expo. Do not introduce platform checks into shared business logic.
 - Mobile persistence uses AsyncStorage and Supabase variables use `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`. Secrets and service-role keys must never ship in the app.
+- The shared i18n data supports the eight web locales: English, French, Spanish, German, Italian, Japanese, Korean, and Chinese.
 
 ## UI conventions
 

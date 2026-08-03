@@ -9,10 +9,10 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: 'PrimeDex', body: event.data.text() };
+    payload = { title: 'Lunidex', body: event.data.text() };
   }
 
-  const title = payload.title || 'PrimeDex';
+  const title = payload.title || 'Lunidex';
   const options = {
     body: payload.body || '',
     icon: '/icon-192.png',

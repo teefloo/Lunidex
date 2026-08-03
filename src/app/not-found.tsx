@@ -8,7 +8,7 @@ import '@/styles/not-found.css';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   return {
-    title: t('common.not_found_title', { defaultValue: 'Page Not Found' }) + ' | PrimeDex',
+    title: t('common.not_found_title', { defaultValue: 'Page Not Found' }) + ' | Lunidex',
     description: t('common.not_found_desc', {
       defaultValue: "The Pokémon you're looking for might have fled! The page doesn't exist or has been moved.",
     }),
@@ -31,7 +31,7 @@ export default async function NotFound() {
           <div className="mb-4 text-7xl font-black text-primary md:text-8xl">
             404
           </div>
-          <p className="page-eyebrow justify-center">PrimeDex</p>
+          <p className="page-eyebrow justify-center">Lunidex</p>
           <h1 className="mb-4 text-2xl font-black md:text-3xl">
             {t('common.not_found_title', { defaultValue: 'Page Not Found' })}
           </h1>
@@ -59,7 +59,7 @@ export default async function NotFound() {
           </nav>
 
           <div className="mt-12 space-y-1 text-xs text-foreground/30">
-            <p>{t('common.more_tools', { defaultValue: 'More tools from PrimeDex:' })}</p>
+            <p>{t('common.more_tools', { defaultValue: 'More tools from Lunidex:' })}</p>
             <div className="flex flex-wrap justify-center gap-2">
               <Link href={`/${lang}/compare`} className="transition-colors hover:text-foreground/50 underline">
                 {t('nav.compare')}

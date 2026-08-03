@@ -336,7 +336,7 @@ function noticeText(t: ReturnType<typeof useTranslation>['t'], notice: MazeNotic
       });
     case 'won':
       return t('common.not_found_maze_won', {
-        defaultValue: 'Route cleared. Returning to PrimeDex...',
+        defaultValue: 'Route cleared. Returning to Lunidex...',
       });
     case 'exploring':
       return exitUnlocked
@@ -587,7 +587,7 @@ export default function NotFoundMiniGame() {
           </h2>
           <p className="page-subtitle max-w-xl text-sm md:text-base">
             {t('common.not_found_game_desc', {
-              defaultValue: 'Recover the 4-0-4 fragments, unlock the portal, and find the way back to PrimeDex.',
+              defaultValue: 'Recover the 4-0-4 fragments, unlock the portal, and find the way back to Lunidex.',
             })}
           </p>
         </div>

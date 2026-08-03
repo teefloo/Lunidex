@@ -251,7 +251,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
       if (!subscription) throw new Error('No active push subscription — enable notifications first');
       const symbolLocal = alert.currency === 'EUR' ? '€' : '$';
       const ok = await sendPushNotification(subscription, {
-        title: `PrimeDex — ${alert.card_name}`,
+        title: `Lunidex — ${alert.card_name}`,
         body: `Test alert: ${alert.alert_type} ${symbolLocal}${threshold?.toFixed(2) ?? '?'}`,
         url: `/tcg/cards/${alert.card_id}`,
       });

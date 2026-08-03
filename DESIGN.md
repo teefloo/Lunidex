@@ -1,5 +1,5 @@
 ---
-name: PrimeDex
+name: Lunidex
 description: A Pokémon companion dashboard and TCG collection tool with a warm, pixel-inspired visual language
 colors:
   primary: "oklch(0.72 0.110 45)"
@@ -117,13 +117,13 @@ components:
     padding: "0.5rem 0.75rem"
 ---
 
-# Design System: PrimeDex
+# Design System: Lunidex
 
 ## Overview
 
 **Creative North Star: "The Cozy Pokédex Workshop"**
 
-PrimeDex is a Pokémon companion dashboard that lives at the intersection of a collector's field journal and a warm, well-worn game cartridge from the early 2000s. The visual language draws on pixel-art charm without committing to strict retro: chunky hard shadows (no blur), tight tracking on uppercase labels, specimen-catalogue framing, and a warm cream-and-umber palette that feels like curling up with a notebook and a stack of cards. Every surface has presence — thick borders, pixel-offset shadows, subtle paper grain — but nothing competes with the Pokémon themselves. The design recedes just enough for the sprites, type colors, and TCG artwork to take center stage.
+Lunidex is a Pokémon companion dashboard that lives at the intersection of a collector's field journal and a warm, well-worn game cartridge from the early 2000s. The visual language draws on pixel-art charm without committing to strict retro: chunky hard shadows (no blur), tight tracking on uppercase labels, specimen-catalogue framing, and a warm cream-and-umber palette that feels like curling up with a notebook and a stack of cards. Every surface has presence — thick borders, pixel-offset shadows, subtle paper grain — but nothing competes with the Pokémon themselves. The design recedes just enough for the sprites, type colors, and TCG artwork to take center stage.
 
 **Mode: Operate.** This is a functional dashboard for collectors and trainers. Scanability, consistency, and real usage patterns outrank decoration. Brand lives in precise details: the pixel shadow on a button, the catalog-number on a card, the tight uppercase tracking on a type badge.
 
@@ -209,7 +209,7 @@ Interactive elements use `touch-target` utility (`min-width: 2.75rem`, `min-heig
 
 ## Elevation & Depth
 
-PrimeDex uses **hard pixel shadows exclusively** — there are no blurred, soft, or ambient shadows in the system. Depth is conveyed through:
+Lunidex uses **hard pixel shadows exclusively** — there are no blurred, soft, or ambient shadows in the system. Depth is conveyed through:
 
 - **Pixel shadow** (`4px 4px 0 var(--pixel-shadow)`): Primary surface elevation. Used on `.codex-frame`, `.page-surface`, `.section-frame`, `.glass-panel`. Creates a chunky, tangible offset.
 - **Small pixel shadow** (`2px 2px 0 var(--pixel-shadow)`): Secondary elevation. Used on `.glass-card`, `.glass-toolbar`, `.glass-tag`, `.glass-btn`. Subtle lift for smaller elements.

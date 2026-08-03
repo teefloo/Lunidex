@@ -59,7 +59,7 @@ export default function ResetPasswordPage() {
             <Lock className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>
-            <p className="page-eyebrow">PrimeDex</p>
+            <p className="page-eyebrow">Lunidex</p>
             <h1 className="text-2xl font-black tracking-tight">
               {tt('auth.reset_title', 'Change your password')}
             </h1>
@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
         ) : user ? (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <p className="text-sm leading-6 text-foreground/60">
-              {tt('auth.reset_subtitle', 'Choose a new password for your PrimeDex account.')}
+              {tt('auth.reset_subtitle', 'Choose a new password for your Lunidex account.')}
             </p>
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/60">

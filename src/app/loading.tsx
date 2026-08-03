@@ -8,7 +8,7 @@ export default async function Loading() {
         <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
         <span className="sr-only">{t('loading.title')}</span>
       </div>
-      <p className="page-eyebrow mt-8 justify-center">PrimeDex</p>
+      <p className="page-eyebrow mt-8 justify-center">Lunidex</p>
       <h2 className="mt-3 text-2xl font-black uppercase tracking-[0.28em] text-foreground/40 animate-pulse">
         {t('loading.title')}
       </h2>

@@ -54,7 +54,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const host = new URL(SITE_URL).host;
 
   const subsetText = [
-    'PrimeDex',
+    'Lunidex',
     String(score),
     String(total),
     challengeLabel,
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 letterSpacing: '1px',
               }}
             >
-              PrimeDex
+              Lunidex
             </div>
             <div
               style={{

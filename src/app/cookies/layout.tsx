@@ -26,7 +26,7 @@ export default async function CookiePolicyLayout({
 }) {
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Cookie Policy', path: '/cookies' },
   ], lang);
   return (

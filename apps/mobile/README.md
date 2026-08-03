@@ -1,6 +1,6 @@
-# PrimeDex Mobile (Expo / React Native)
+# Lunidex Mobile (Expo / React Native)
 
-Native iOS & Android port of PrimeDex. It reuses the **exact** business logic of
+Native iOS & Android port of Lunidex. It reuses the **exact** business logic of
 the web app through the shared [`@primedex/core`](../../packages/core) workspace
 package — API clients, the Zustand store, types, the Supabase layer and the i18n
 bundles are imported, never duplicated. Only the UI is written from scratch for

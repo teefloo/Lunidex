@@ -38,7 +38,7 @@ export default async function TypesLayout({
   const baseUrl = SITE_URL;
   const lang = await getServerLanguage();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'PrimeDex', path: '/' },
+    { name: 'Lunidex', path: '/' },
     { name: 'Type Chart', path: '/types' },
   ], lang);
   return (
@@ -49,7 +49,7 @@ export default async function TypesLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'Pokémon Type Chart — PrimeDex',
+            name: 'Pokémon Type Chart — Lunidex',
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
             description: 'Interactive type chart showing strengths, weaknesses, resistances, and immunities for all 18 Pokémon types.',

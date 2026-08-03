@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   return {
     title:
-      t('profile.not_found_title', { defaultValue: 'Profile Not Found' }) + ' | PrimeDex',
+      t('profile.not_found_title', { defaultValue: 'Profile Not Found' }) + ' | Lunidex',
     description: t('profile.not_found_desc', {
       defaultValue: 'This profile does not exist or is not public.',
     }),
