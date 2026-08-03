@@ -20,7 +20,11 @@ export function HeaderMobileNav() {
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
-  const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
+  const label = (key: string, fallback: string) => {
+    if (!mounted) return fallback;
+    const translated = t(key);
+    return translated && translated !== key ? translated : fallback;
+  };
   const menuLabel = label('header.open_menu', 'Menu');
   const toolsLabel = label('nav.tools', 'Tools');
 

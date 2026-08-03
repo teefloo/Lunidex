@@ -332,6 +332,7 @@ export default {
       home: '홈',
       search: '검색',
       more: '더보기',
+      pokedex: '포켓몬 도감',
       tools: '도구',
       favorites: '즐겨찾기',
       compare: '비교',

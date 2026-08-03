@@ -538,6 +538,7 @@ export function TCGFilters({
                           candidates={logoCandidates}
                           alt={set.name}
                           fill
+                          sizes="48px"
                           className="object-contain p-2"
                         />
                       ) : (

@@ -332,6 +332,7 @@ export default {
       home: '首页',
       search: '搜索',
       more: '更多',
+      pokedex: '宝可梦图鉴',
       tools: '工具',
       favorites: '收藏',
       compare: '比较',

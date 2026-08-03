@@ -20,7 +20,11 @@ export function HeaderDesktopNav() {
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
-  const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
+  const label = (key: string, fallback: string) => {
+    if (!mounted) return fallback;
+    const translated = t(key);
+    return translated && translated !== key ? translated : fallback;
+  };
 
   return (
     <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-sm border border-border bg-background/40 px-1 py-0.5 lg:flex">

@@ -111,6 +111,7 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
                 alt={set.name}
                 width={40}
                 height={40}
+                sizes="40px"
                 className="max-h-full max-w-full object-contain"
               />
             </div>

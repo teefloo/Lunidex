@@ -23,7 +23,6 @@ export function TCGImageWithFallback({ candidates, ...props }: TCGImageWithFallb
       {...props}
       src={src}
       alt={props.alt}
-      unoptimized
       onError={(event) => {
         props.onError?.(event);
         setFallbackState((current) => {

@@ -73,6 +73,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
               alt=""
               width={40}
               height={40}
+              sizes="40px"
               className="max-h-full max-w-full object-contain p-1"
             />
           </div>

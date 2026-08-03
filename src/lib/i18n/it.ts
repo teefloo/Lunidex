@@ -332,6 +332,7 @@ export default {
       home: 'Home',
       search: 'Cerca',
       more: 'Altro',
+      pokedex: 'Pokédex',
       tools: 'Strumenti',
       favorites: 'Preferiti',
       compare: 'Confronta',

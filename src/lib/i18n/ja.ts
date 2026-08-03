@@ -332,6 +332,7 @@ export default {
       home: 'ホーム',
       search: '検索',
       more: 'その他',
+      pokedex: 'ポケモン図鑑',
       tools: 'ツール',
       favorites: 'お気に入り',
       compare: '比較',

@@ -295,6 +295,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                           alt=""
                           width={48}
                           height={48}
+                          sizes="48px"
                           className="max-h-full max-w-full object-contain p-1"
                         />
                       </div>

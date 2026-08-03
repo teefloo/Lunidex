@@ -9,8 +9,7 @@ vi.mock('next/image', () => ({
   default: (props: ComponentProps<'img'> & { fill?: boolean; unoptimized?: boolean }) => {
     const { fill, unoptimized, alt = '', ...imageProps } = props;
     void fill;
-    void unoptimized;
-    return <img {...imageProps} alt={alt} />;
+    return <img {...imageProps} alt={alt} data-unoptimized={String(unoptimized ?? false)} />;
   },
 }));
 
@@ -18,7 +17,9 @@ describe('TCGImageWithFallback', () => {
   it('advances through candidates after image errors', () => {
     render(<TCGImageWithFallback candidates={['/first.png', '/second.png']} alt="Card" width={64} height={88} />);
 
-    fireEvent.error(screen.getByRole('img', { name: 'Card' }));
+    const image = screen.getByRole('img', { name: 'Card' });
+    expect(image).toHaveAttribute('data-unoptimized', 'false');
+    fireEvent.error(image);
 
     expect(screen.getByRole('img', { name: 'Card' })).toHaveAttribute('src', '/second.png');
   });
