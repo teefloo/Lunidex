@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const displayName = formatName(name);
 
   const item = await getItemDetail(name, langId).catch(() => null);
-  if (!item) return { title: `${displayName} — Item` };
+  if (!item) notFound();
 
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
   const description = item.pokemon_v2_itemeffecttexts?.[0]?.short_effect

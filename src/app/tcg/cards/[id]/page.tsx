@@ -16,18 +16,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const { lang } = await searchParams;
   const card = await getTCGCard(id, lang ?? 'en');
   const currentLang = await getServerLanguage();
-  const fallbackTitle = 'TCG Card | Lunidex';
-  const fallbackDesc = 'Pokemon TCG card details.';
 
   if (!card) {
-    return {
-      title: fallbackTitle,
-      description: fallbackDesc,
-      alternates: {
-        canonical: `/${currentLang}/tcg/cards/${id}`,
-        languages: buildSubpathLanguages(`/tcg/cards/${id}`),
-      },
-    };
+    notFound();
   }
 
   const setName = card.set?.name ?? '';

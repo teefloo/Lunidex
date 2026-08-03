@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getSetById } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage } from '@/lib/server-i18n';
@@ -15,6 +16,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const { lang } = await searchParams;
   const currentLang = await getServerLanguage();
   const tcgSet = await getSetById(setId, lang ?? currentLang ?? 'en').catch(() => null);
+  if (!tcgSet) notFound();
   const title = tcgSet
     ? `${tcgSet.name} — Pokémon TCG Set | Lunidex`
     : 'TCG Set | Lunidex';
@@ -49,6 +51,7 @@ export default async function SetAlbumPage({ params }: PageProps) {
   const { setId } = await params;
   const lang = await getServerLanguage();
   const tcgSet = await getSetById(setId).catch(() => null);
+  if (!tcgSet) notFound();
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: 'Lunidex', path: '/' },
     { name: 'TCG', path: '/tcg' },

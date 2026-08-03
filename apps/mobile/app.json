@@ -6,9 +6,10 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "backgroundColor": "#0b1020",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.primedex.app"
@@ -20,7 +21,12 @@
       "bundler": "metro",
       "output": "single"
     },
-    "plugins": ["expo-router", "expo-localization"],
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-image",
+      "expo-status-bar"
+    ],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true

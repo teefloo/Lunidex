@@ -1,10 +1,10 @@
-import { Text } from 'react-native';
+import { Text, type ColorValue } from 'react-native';
 import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { usePalette } from '@/theme/ThemeProvider';
 
 /** Bottom-tab shell. Emoji glyphs keep the icon set dependency-free for now. */
-function TabIcon({ glyph, color }: { glyph: string; color: string }) {
+function TabIcon({ glyph, color }: { glyph: string; color: ColorValue }) {
   return <Text style={{ fontSize: 20, color }}>{glyph}</Text>;
 }
 

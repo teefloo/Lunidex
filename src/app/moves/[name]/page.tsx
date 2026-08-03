@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const move = await fetchMoveDetail(name);
 
   if (!move) {
-    return { title: `${name} — Move | Lunidex` };
+    notFound();
   }
 
   const localizedName = move.name

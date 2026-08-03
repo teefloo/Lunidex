@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
-    return { title: `${displayName} — Ability` };
+    notFound();
   }
 }
 

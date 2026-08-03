@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { connection } from "next/server";
 import { Pixelify_Sans, Nunito } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
@@ -46,6 +47,7 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
+  await connection();
   const t = await getServerT();
   const lang = await getServerLanguage();
   return {
@@ -134,6 +136,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await connection();
   const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
 

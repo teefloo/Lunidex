@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { connection } from 'next/server';
 import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/server-i18n';
 import { getBaseSpeciesName } from '@/lib/form-names';
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  await connection();
   const name = (await params).name;
   const t = await getServerT();
   const lang = await getServerLanguage();
@@ -82,6 +84,7 @@ export default async function PokemonLayout({
   children: React.ReactNode;
   params: Promise<{ name: string }>;
 }) {
+  await connection();
   const { name } = await params;
   const speciesLangCode = await getServerPokemonLanguage();
   const lang = await getServerLanguage();

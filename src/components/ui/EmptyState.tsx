@@ -1,7 +1,7 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import EmptyStateMotion from './EmptyStateMotion';
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -22,13 +22,8 @@ export default function EmptyState({
   onAction,
   className,
 }: EmptyStateProps) {
-  const reduceMotion = useReducedMotion();
-
   return (
-    <motion.div
-      initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
-      animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-      transition={reduceMotion ? undefined : { duration: 0.5 }}
+    <EmptyStateMotion
       className={cn(
         'section-frame flex flex-col items-center justify-center rounded-sm border-dashed border border-border/70 py-24 text-foreground/50 md:py-28',
         className
@@ -59,6 +54,6 @@ export default function EmptyState({
           <span className="font-black uppercase tracking-[0.15em] text-sm">{actionLabel}</span>
         </button>
       )}
-    </motion.div>
+    </EmptyStateMotion>
   );
 }

@@ -22,10 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const profile = await getPublicProfileByHandle(handle);
   if (!profile) {
-    return {
-      title: t('profile.not_found_title', { defaultValue: 'Profile Not Found' }),
-      robots: { index: false, follow: true },
-    };
+    notFound();
   }
 
   const title = `${profile.displayName} (@${profile.handle})`;

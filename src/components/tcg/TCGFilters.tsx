@@ -47,6 +47,9 @@ interface TCGFiltersProps {
   autoApplyInitialSet?: boolean;
 }
 
+const FILTER_CONTROL_FOCUS_CLASS =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+
 export function TCGFilters({
   filters,
   onChange,
@@ -367,6 +370,7 @@ export function TCGFilters({
                       <button
                         key={set.id}
                         type="button"
+                        aria-pressed={isActive}
                         onClick={() => {
                           onSimpleSetChange?.(set.id);
                           if (!onSimpleSetChange) {
@@ -374,6 +378,7 @@ export function TCGFilters({
                           }
                         }}
                         className={cn(
+                          FILTER_CONTROL_FOCUS_CLASS,
                           'flex w-full items-center justify-between rounded-sm border px-3 py-2 text-left text-xs font-bold transition-colors',
                           isActive
                             ? 'border-primary/35 bg-primary/12 text-primary'
@@ -407,8 +412,10 @@ export function TCGFilters({
                       <button
                         key={rarity}
                         type="button"
+                        aria-pressed={isActive}
                         onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
                         className={cn(
+                          FILTER_CONTROL_FOCUS_CLASS,
                           'rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-colors',
                           isActive
                             ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
@@ -432,7 +439,10 @@ export function TCGFilters({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-border/45 bg-card/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55"
+                className={cn(
+                  FILTER_CONTROL_FOCUS_CLASS,
+                  'inline-flex items-center gap-1.5 rounded-sm border border-border/45 bg-card/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55',
+                )}
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 {t('filters.reset')}
@@ -476,7 +486,10 @@ export function TCGFilters({
             <button
               type="button"
               onClick={clearAllFilters}
-              className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-primary"
+              className={cn(
+                FILTER_CONTROL_FOCUS_CLASS,
+                'inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-primary',
+              )}
             >
               <RotateCcw className="h-3.5 w-3.5" />
               {t('filters.reset')}
@@ -509,9 +522,11 @@ export function TCGFilters({
                   <button
                     key={set.id}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => updateFilter('selectedSet', isActive ? null : set.id)}
                     className={cn(
-                      'group relative flex items-center gap-3 overflow-hidden rounded-sm border p-3 text-left transition-all duration-300',
+                      FILTER_CONTROL_FOCUS_CLASS,
+                      'group relative flex items-center gap-3 overflow-hidden rounded-sm border p-3 text-left transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-300',
                       isActive
                         ? 'border-primary/40 bg-primary/15 text-primary shadow-[0_0_30px_rgba(227,53,13,0.14)]'
                         : 'border-border/40 bg-card/35 text-foreground/65 hover:border-border/70 hover:bg-card/60 hover:text-foreground',
@@ -579,6 +594,7 @@ export function TCGFilters({
                   <button
                     key={rarity}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => {
                       onSimpleRarityChange?.(rarity);
                       if (!onSimpleRarityChange) {
@@ -586,7 +602,8 @@ export function TCGFilters({
                       }
                     }}
                     className={cn(
-                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      FILTER_CONTROL_FOCUS_CLASS,
+                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity] min-h-[44px]',
                       isActive
                         ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -615,6 +632,7 @@ export function TCGFilters({
                   <button
                     key={type}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => {
                       const nextTypes = filters.selectedTypes ?? [];
                       updateFilter(
@@ -625,7 +643,8 @@ export function TCGFilters({
                       );
                     }}
                     className={cn(
-                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      FILTER_CONTROL_FOCUS_CLASS,
+                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity] min-h-[44px]',
                       isActive
                         ? 'border-emerald-400/40 bg-emerald-500/20 text-emerald-300 shadow-[0_0_16px_rgba(16,185,129,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -639,30 +658,32 @@ export function TCGFilters({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-hp-min" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.hp_min')}
                 </label>
                 <input
+                  id="tcg-hp-min"
                   type="number"
                   inputMode="numeric"
                   placeholder="0"
                   value={typeof filters.minHp === 'number' ? filters.minHp : ''}
                   onChange={(event) => updateFilter('minHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-hp-max" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.hp_max')}
                 </label>
                 <input
+                  id="tcg-hp-max"
                   type="number"
                   inputMode="numeric"
                   placeholder="340"
                   value={typeof filters.maxHp === 'number' ? filters.maxHp : ''}
                   onChange={(event) => updateFilter('maxHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -674,9 +695,11 @@ export function TCGFilters({
                   <button
                     key={stage}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => updateFilter('selectedPhase', isActive ? null : stage)}
                     className={cn(
-                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                      FILTER_CONTROL_FOCUS_CLASS,
+                      'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity] min-h-[44px]',
                       isActive
                         ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                         : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -704,6 +727,7 @@ export function TCGFilters({
                 <button
                   key={type}
                   type="button"
+                  aria-pressed={isActive}
                   onClick={() => {
                     const nextTypes = filters.selectedTrainerTypes ?? [];
                     updateFilter(
@@ -714,7 +738,8 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                    FILTER_CONTROL_FOCUS_CLASS,
+                    'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity] min-h-[44px]',
                     isActive
                       ? 'border-amber-400/40 bg-amber-500/20 text-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -741,6 +766,7 @@ export function TCGFilters({
                 <button
                   key={type}
                   type="button"
+                  aria-pressed={isActive}
                   onClick={() => {
                     const nextTypes = filters.selectedEnergyTypes ?? [];
                     updateFilter(
@@ -751,7 +777,8 @@ export function TCGFilters({
                     );
                   }}
                   className={cn(
-                    'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all min-h-[44px]',
+                    FILTER_CONTROL_FOCUS_CLASS,
+                    'rounded-sm border px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity] min-h-[44px]',
                     isActive
                       ? 'border-cyan-400/40 bg-cyan-500/20 text-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.18)]'
                       : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -773,96 +800,103 @@ export function TCGFilters({
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-illustrator" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.illustrator', { defaultValue: 'Illustrator' })}
                 </label>
                 <input
+                  id="tcg-illustrator"
                   type="text"
                   placeholder={t('tcg.illustrator_placeholder', { defaultValue: 'Any illustrator' })}
                   value={filters.illustrator ?? ''}
                   onChange={(event) => updateFilter('illustrator', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-regulation-mark" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.regulation', { defaultValue: 'Regulation mark' })}
                 </label>
                 <input
+                  id="tcg-regulation-mark"
                   type="text"
                   placeholder={t('tcg.regulation_placeholder', { defaultValue: 'G, H, I...' })}
                   value={filters.regulationMark ?? ''}
                   onChange={(event) => updateFilter('regulationMark', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-price-min" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.price_min', { defaultValue: 'Price min' })}
                 </label>
                 <input
+                  id="tcg-price-min"
                   type="number"
                   inputMode="decimal"
                   placeholder="0"
                   value={typeof filters.priceMin === 'number' ? filters.priceMin : ''}
                   onChange={(event) => updateFilter('priceMin', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-price-max" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.price_max', { defaultValue: 'Price max' })}
                 </label>
                 <input
+                  id="tcg-price-max"
                   type="number"
                   inputMode="decimal"
                   placeholder="999"
                   value={typeof filters.priceMax === 'number' ? filters.priceMax : ''}
                   onChange={(event) => updateFilter('priceMax', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-release-start" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.release_start', { defaultValue: 'Release from' })}
                 </label>
                 <input
+                  id="tcg-release-start"
                   type="date"
                   value={filters.releaseStart ?? ''}
                   onChange={(event) => updateFilter('releaseStart', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-release-end" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                   {t('tcg.release_end', { defaultValue: 'Release to' })}
                 </label>
                 <input
+                  id="tcg-release-end"
                   type="date"
                   value={filters.releaseEnd ?? ''}
                   onChange={(event) => updateFilter('releaseEnd', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+              <label htmlFor="tcg-owned-state" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
                 {t('tcg.owned_state', { defaultValue: 'Collection state' })}
               </label>
               <select
+                id="tcg-owned-state"
                 value={filters.ownedState ?? 'all'}
                 onChange={(event) => updateFilter('ownedState', event.target.value)}
-            className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold tracking-[0.04em] transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold tracking-[0.04em] transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
               >
                 <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
                 <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
@@ -883,6 +917,7 @@ export function TCGFilters({
                     <button
                       key={state}
                       type="button"
+                      aria-pressed={isActive}
                       onClick={() => {
                         const next = filters.legalities ?? [];
                         updateFilter(
@@ -891,7 +926,8 @@ export function TCGFilters({
                         );
                       }}
                       className={cn(
-                        'rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-all',
+                        FILTER_CONTROL_FOCUS_CLASS,
+                        'rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity]',
                         isActive
                           ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -934,7 +970,8 @@ function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }:
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-4 py-3.5 text-left"
+        aria-expanded={isOpen}
+        className={cn(FILTER_CONTROL_FOCUS_CLASS, 'flex w-full items-center justify-between px-4 py-3.5 text-left')}
       >
         <div className="flex min-w-0 items-center gap-2.5">
           <span className={cn('flex h-8 w-8 items-center justify-center rounded-sm border', isOpen ? 'border-primary/20 bg-primary/10' : 'border-border/50 bg-card/35')}>
@@ -998,7 +1035,8 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
           setValue(nextValue);
           onChange(nextValue);
         }}
-        className="w-full rounded-sm border border-border/50 bg-muted/40 py-3.5 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+        aria-label={placeholder}
+        className="w-full rounded-sm border border-border/50 bg-muted/40 py-3.5 pl-11 pr-11 text-sm text-foreground placeholder:text-foreground/30 transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
       />
       {value && (
         <button
@@ -1007,7 +1045,10 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
             setValue('');
             onClear();
           }}
-          className="absolute inset-y-0 right-0 flex items-center pr-4 text-foreground/30 transition-colors hover:text-foreground"
+          className={cn(
+            FILTER_CONTROL_FOCUS_CLASS,
+            'absolute inset-y-0 right-0 flex items-center pr-4 text-foreground/30 transition-colors hover:text-foreground',
+          )}
           aria-label={clearLabel}
         >
           <X className="h-4 w-4" />

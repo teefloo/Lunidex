@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
-import { getAllPokemonNames, getPokemonEncounters } from '@/lib/api';
+import { connection } from 'next/server';
+import { getPokemonEncounters } from '@/lib/api';
 import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
@@ -11,8 +12,8 @@ import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
 import { languageToPokemonLanguageId, isSupportedLanguage, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { OG_SIZE } from '@/lib/og/theme';
 
-// Route segment config for performance optimization
-export const revalidate = 3600; // Revalidate every hour
+// This route reads the locale from request headers/cookies and also accepts
+// request search params, so it cannot be safely pre-rendered as ISR.
 export const dynamicParams = true; // Allow dynamic params for non-static pages
 
 const normalizeDescription = (value?: string | null) =>
@@ -45,6 +46,7 @@ interface Props {
 export async function generateMetadata(
   { params, searchParams }: Props
 ): Promise<Metadata> {
+  await connection();
   const { name } = await params;
   const sParams = await searchParams;
   const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
@@ -156,27 +158,12 @@ export async function generateMetadata(
       },
     };
   } catch {
-    return {
-      title: 'Pokemon Not Found',
-    };
-  }
-}
-
-export async function generateStaticParams() {
-  // Pre-render the full National Dex (1025) for SEO/perf; regional forms and
-  // other variants past the base dex stay on-demand via `dynamicParams`.
-  try {
-    const pokemonList = await getAllPokemonNames();
-    return pokemonList.slice(0, 1025).map((pokemon) => ({
-      name: pokemon.name,
-    }));
-  } catch (error) {
-    console.warn('generateStaticParams: failed to fetch pokemon list, falling back to on-demand rendering', error);
-    return [];
+    notFound();
   }
 }
 
 export default async function PokemonPage({ params, searchParams }: Props) {
+  await connection();
   const { name } = await params;
   const sParams = await searchParams;
   const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
