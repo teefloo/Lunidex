@@ -3,6 +3,7 @@ import HomeHero from '@/components/home/HomeHero';
 import HomeGameTools from '@/components/home/HomeGameTools';
 import HomeCollectionSteps from '@/components/home/HomeCollectionSteps';
 import HomeTrustSection from '@/components/home/HomeTrustSection';
+import { HomeMotionSection } from '@/components/home/HomeMotionSection';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
 import Header from '@/components/layout/Header';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -39,5 +40,25 @@ export default async function Home() {
     buildLunidexHomeFaqJsonLd(t, language),
   ];
 
-  return <div className="app-page"><Header /><main className="relative z-10 pt-28 md:pt-32"><HomeHero /><HomeGameTools /><HomeCollectionSteps /><HomeTrustSection /><HomeFaqSection /></main><script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /></div>;
+  return (
+    <div className="app-page">
+      <Header />
+      <main className="relative z-10 pt-28 md:pt-32">
+        <HomeHero />
+        <HomeMotionSection>
+          <HomeGameTools />
+        </HomeMotionSection>
+        <HomeMotionSection delay={0.04}>
+          <HomeCollectionSteps />
+        </HomeMotionSection>
+        <HomeMotionSection delay={0.08}>
+          <HomeTrustSection />
+        </HomeMotionSection>
+        <HomeMotionSection delay={0.12}>
+          <HomeFaqSection />
+        </HomeMotionSection>
+      </main>
+      <script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    </div>
+  );
 }

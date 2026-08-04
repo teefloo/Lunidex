@@ -1,0 +1,120 @@
+<style>
+  .comparison-intro { max-width: 760px; margin-bottom: 1.5rem; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(3, minmax(290px, 1fr)); gap: 1rem; align-items: start; }
+  @media (max-width: 980px) { .comparison-grid { grid-template-columns: 1fr; } }
+  .visual-card { min-width: 0; }
+  .visual-card .card-image { padding: 0.8rem; aspect-ratio: 1 / 0.92; }
+  .visual-card .card-body { min-height: 8.5rem; }
+  .preview { width: 100%; height: 100%; overflow: hidden; border-radius: 10px; position: relative; font-family: ui-sans-serif, system-ui, sans-serif; }
+  .preview-nav { height: 1.55rem; display: flex; align-items: center; justify-content: space-between; padding: 0 0.55rem; font-size: 0.42rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+  .preview-logo { display: flex; align-items: center; gap: 0.25rem; font-size: 0.55rem; letter-spacing: -0.02em; text-transform: none; }
+  .preview-logo-mark { width: 0.62rem; height: 0.62rem; border-radius: 50%; display: inline-block; }
+  .preview-nav-links { display: flex; gap: 0.4rem; opacity: 0.62; }
+  .preview-main { padding: 0.85rem 0.7rem 0.65rem; }
+  .preview-hero { display: grid; grid-template-columns: 1.06fr 0.94fr; gap: 0.5rem; align-items: center; min-height: 8rem; }
+  .preview-kicker { font-size: 0.4rem; font-weight: 900; letter-spacing: 0.13em; text-transform: uppercase; opacity: 0.68; }
+  .preview h4 { margin: 0.28rem 0 0.35rem; font-family: Georgia, serif; font-size: 1.08rem; line-height: 0.95; letter-spacing: -0.05em; }
+  .preview p { margin: 0; font-size: 0.43rem; line-height: 1.45; opacity: 0.66; }
+  .preview-cta { display: inline-flex; margin-top: 0.55rem; padding: 0.28rem 0.45rem; border-radius: 3px; font-size: 0.4rem; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; }
+  .mini-deck { display: flex; justify-content: center; align-items: end; gap: 0.08rem; min-height: 6.2rem; }
+  .mini-tcg { width: 2.35rem; height: 3.35rem; border-radius: 0.22rem; border: 2px solid rgba(255,255,255,0.66); box-shadow: 0.15rem 0.22rem 0 rgba(38, 26, 20, 0.22); transform: rotate(-7deg); position: relative; overflow: hidden; }
+  .mini-tcg:nth-child(2) { transform: translateY(-0.25rem); z-index: 2; }
+  .mini-tcg:nth-child(3) { transform: rotate(7deg); }
+  .mini-tcg::before { content: ''; position: absolute; inset: 0.25rem; border: 1px solid rgba(255,255,255,0.52); border-radius: 0.12rem; }
+  .mini-tcg::after { content: '✦'; position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,0.82); font-size: 1.05rem; }
+  .mini-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; margin-top: 0.55rem; }
+  .mini-tool { min-height: 2.2rem; padding: 0.35rem; border-radius: 3px; font-size: 0.43rem; font-weight: 800; }
+  .mini-tool span { display: block; margin-top: 0.18rem; font-weight: 500; opacity: 0.62; }
+
+  .preview--tactile { background: #fbf0da; color: #3b2923; border: 1px solid #dec4a0; box-shadow: 0 0.3rem 0 #dcc3a6; }
+  .preview--tactile .preview-nav { border-bottom: 1px solid rgba(59,41,35,0.15); }
+  .preview--tactile .preview-logo-mark { background: #c96f51; box-shadow: 0.12rem 0.12rem 0 #3b2923; }
+  .preview--tactile .preview-cta { background: #c96f51; color: #fff6e7; box-shadow: 0.12rem 0.12rem 0 #3b2923; }
+  .preview--tactile .mini-tcg { background: linear-gradient(145deg, #e5966d 0 34%, #f9d36e 35% 58%, #809b85 59%); }
+  .preview--tactile .mini-tcg:nth-child(2) { background: linear-gradient(145deg, #9bb7c8 0 38%, #6c86a8 39% 68%, #e5b467 69%); }
+  .preview--tactile .mini-tcg:nth-child(3) { background: linear-gradient(145deg, #b98cc0 0 42%, #dd8b9c 43% 67%, #efc875 68%); }
+  .preview--tactile .mini-tool { background: rgba(255,255,255,0.54); border: 1px solid rgba(59,41,35,0.16); box-shadow: 0.1rem 0.1rem 0 #dec4a0; }
+  .preview--tactile .mini-tool::before { content: '✦'; color: #c96f51; margin-right: 0.2rem; }
+
+  .preview--console { background: #1d2930; color: #f7f1df; border: 1px solid #516971; background-image: linear-gradient(rgba(151, 199, 183, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(151, 199, 183, 0.08) 1px, transparent 1px); background-size: 0.75rem 0.75rem; }
+  .preview--console .preview-nav { border-bottom: 1px solid #516971; background: rgba(12, 20, 24, 0.72); }
+  .preview--console .preview-logo { font-family: ui-monospace, SFMono-Regular, monospace; color: #a7e1c7; }
+  .preview--console .preview-logo-mark { border-radius: 1px; background: #f0c75e; box-shadow: 0.08rem 0.08rem 0 #a7e1c7; }
+  .preview--console .preview-kicker { color: #f0c75e; }
+  .preview--console h4 { font-family: ui-monospace, SFMono-Regular, monospace; letter-spacing: -0.08em; text-transform: uppercase; }
+  .preview--console .preview-cta { background: #a7e1c7; color: #1d2930; border-radius: 1px; box-shadow: 0.12rem 0.12rem 0 #f0c75e; }
+  .preview--console .mini-tcg { border-radius: 1px; border-color: #a7e1c7; background: #476a77; box-shadow: 0.14rem 0.14rem 0 #0b1114; }
+  .preview--console .mini-tcg:nth-child(2) { background: #9a6075; }
+  .preview--console .mini-tcg:nth-child(3) { background: #b8893a; }
+  .preview--console .mini-tcg::before { border-radius: 0; border-color: rgba(240,199,94,0.72); }
+  .preview--console .mini-tcg::after { content: '001'; font-family: ui-monospace, SFMono-Regular, monospace; color: #f0c75e; font-size: 0.52rem; }
+  .preview--console .mini-tool { border: 1px solid #516971; background: rgba(12, 20, 24, 0.64); color: #a7e1c7; border-radius: 1px; }
+  .preview--console .mini-tool span { color: #f7f1df; }
+
+  .preview--atmosphere { background: #eee9e1; color: #2b2d35; border: 1px solid #d2c9bd; overflow: hidden; }
+  .preview--atmosphere::before, .preview--atmosphere::after { content: ''; position: absolute; width: 7rem; height: 7rem; border-radius: 50%; filter: blur(15px); opacity: 0.48; pointer-events: none; }
+  .preview--atmosphere::before { top: -3rem; right: -1.5rem; background: #df9b76; }
+  .preview--atmosphere::after { bottom: -3.3rem; left: -2rem; background: #9eb7c7; }
+  .preview--atmosphere .preview-nav, .preview--atmosphere .preview-main { position: relative; z-index: 1; }
+  .preview--atmosphere .preview-nav { border-bottom: 1px solid rgba(43,45,53,0.1); background: rgba(255,255,255,0.28); }
+  .preview--atmosphere .preview-logo-mark { background: #d47a58; }
+  .preview--atmosphere h4 { font-family: Georgia, serif; font-weight: 500; }
+  .preview--atmosphere .preview-cta { background: #2b2d35; color: #f6eee4; border-radius: 999px; padding-inline: 0.6rem; }
+  .preview--atmosphere .mini-deck { transform: rotate(3deg); }
+  .preview--atmosphere .mini-tcg { border-radius: 0.35rem; border-color: rgba(255,255,255,0.9); box-shadow: 0 0.35rem 0.75rem rgba(43,45,53,0.2); }
+  .preview--atmosphere .mini-tcg::after { content: '✦'; }
+  .preview--atmosphere .mini-tcg:nth-child(1) { background: linear-gradient(145deg, #e9a27f, #d77974 52%, #9ca9c6); }
+  .preview--atmosphere .mini-tcg:nth-child(2) { background: linear-gradient(145deg, #99c1bd, #7b9cae 52%, #d4a772); }
+  .preview--atmosphere .mini-tcg:nth-child(3) { background: linear-gradient(145deg, #bea0ca, #c875a5 52%, #e2b477); }
+  .preview--atmosphere .mini-tool { background: rgba(255,255,255,0.58); border: 1px solid rgba(43,45,53,0.12); border-radius: 0.4rem; backdrop-filter: blur(5px); }
+  .preview--atmosphere .mini-tool::after { content: '↗'; float: right; color: #d47a58; }
+  .variant-chip { display: inline-flex; align-items: center; gap: 0.25rem; margin-bottom: 0.55rem; padding: 0.2rem 0.38rem; border-radius: 999px; background: var(--bg-tertiary); color: var(--text-secondary); font-size: 0.66rem; font-weight: 700; }
+  .variant-chip i { display: block; width: 0.42rem; height: 0.42rem; border-radius: 50%; background: currentColor; }
+  .visual-card.selected .variant-chip { color: var(--accent); background: var(--selected-bg); }
+</style>
+
+<div class="comparison-intro">
+  <h2>Three homepage directions</h2>
+  <p class="subtitle">A simple visual preview of the same Lunidex homepage, with the same content and structure. Click a card to mark the direction that feels closest.</p>
+</div>
+
+<div class="comparison-grid">
+  <div class="card visual-card" data-choice="tactile-cards" role="button" tabindex="0" aria-label="Choose Tactile Cards direction" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="preview preview--tactile">
+        <div class="preview-nav"><div class="preview-logo"><span class="preview-logo-mark"></span>Lunidex</div><div class="preview-nav-links"><span>Pokédex</span><span>Team</span></div></div>
+        <div class="preview-main">
+          <div class="preview-hero"><div><div class="preview-kicker">Collect & play</div><h4>Collect your cards.<br>Play your Pokémon.</h4><p>Your collection and teams, together in one simple space.</p><span class="preview-cta">Start collecting →</span></div><div class="mini-deck"><span class="mini-tcg"></span><span class="mini-tcg"></span><span class="mini-tcg"></span></div></div>
+          <div class="mini-tools"><div class="mini-tool">Pokédex<span>Browse Pokémon</span></div><div class="mini-tool">Build a team<span>Check coverage</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><span class="variant-chip"><i></i>01 · Recommended</span><h3>Living TCG cards</h3><p>Warm, tactile and familiar. The existing card preview becomes the visual anchor with pixel edges and subtle hover shine.</p></div>
+  </div>
+
+  <div class="card visual-card" data-choice="console-pokedex" role="button" tabindex="0" aria-label="Choose Console Pokedex direction" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="preview preview--console">
+        <div class="preview-nav"><div class="preview-logo"><span class="preview-logo-mark"></span>LUNIDEX // 001</div><div class="preview-nav-links"><span>DATA</span><span>TEAM</span></div></div>
+        <div class="preview-main">
+          <div class="preview-hero"><div><div class="preview-kicker">Trainer console / online</div><h4>Collect.<br>Play.<br>Track.</h4><p>One local-first space for Pokémon and TCG progress.</p><span class="preview-cta">Open console →</span></div><div class="mini-deck"><span class="mini-tcg"></span><span class="mini-tcg"></span><span class="mini-tcg"></span></div></div>
+          <div class="mini-tools"><div class="mini-tool">[ POKÉDEX ]<span>Search database</span></div><div class="mini-tool">[ TEAM ]<span>Run analysis</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><span class="variant-chip"><i></i>02 · Console</span><h3>Pokédex console</h3><p>More pixel and more character. A denser grid and mono labels make the page feel like a polished trainer interface.</p></div>
+  </div>
+
+  <div class="card visual-card" data-choice="soft-atmosphere" role="button" tabindex="0" aria-label="Choose Soft Atmosphere direction" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="preview preview--atmosphere">
+        <div class="preview-nav"><div class="preview-logo"><span class="preview-logo-mark"></span>Lunidex</div><div class="preview-nav-links"><span>Explore</span><span>My space</span></div></div>
+        <div class="preview-main">
+          <div class="preview-hero"><div><div class="preview-kicker">Your Pokémon space</div><h4>A softer way to collect.</h4><p>Cards, teams and discoveries brought together with a little more atmosphere.</p><span class="preview-cta">Enter Lunidex ↗</span></div><div class="mini-deck"><span class="mini-tcg"></span><span class="mini-tcg"></span><span class="mini-tcg"></span></div></div>
+          <div class="mini-tools"><div class="mini-tool">Explore<span>Find a favorite</span></div><div class="mini-tool">Prepare<span>Build your team</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><span class="variant-chip"><i></i>03 · Atmosphere</span><h3>Soft animated atmosphere</h3><p>More mood and depth through blurred color fields and floating surfaces. Elegant, but visually stronger in the background.</p></div>
+  </div>
+</div>

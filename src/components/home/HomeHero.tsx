@@ -8,7 +8,7 @@ export default async function HomeHero() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
 
   return (
-    <section aria-labelledby="home-title" className="mx-auto w-full max-w-6xl px-5 pb-12 pt-6 md:px-8 md:pb-16 md:pt-10">
+    <section aria-labelledby="home-title" className="home-hero-shell mx-auto w-full max-w-6xl px-5 pb-12 pt-6 md:px-8 md:pb-16 md:pt-10">
       <div className="grid items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Lunidex</p>
@@ -20,7 +20,7 @@ export default async function HomeHero() {
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
             <HomeCollectionEntry locale={language} startLabel={t('lunidex_home.cta_start')} resumeLabel={t('lunidex_home.cta_resume')} />
-            <Link href={localeHref('/pokedex', language)} className="inline-flex min-h-12 items-center justify-center rounded-sm border border-border/70 px-5 text-sm font-bold text-foreground/80 transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            <Link href={localeHref('/pokedex', language)} className="inline-flex min-h-12 items-center justify-center rounded-sm border border-border/70 bg-card px-5 text-sm font-bold text-foreground/80 transition-[border-color,color,filter] hover:border-primary/50 hover:text-primary hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
               {t('lunidex_home.cta_pokedex', { defaultValue: 'Explore the Pokédex' })}
             </Link>
           </div>

@@ -1063,3 +1063,77 @@ h1 { letter-spacing: 0; }
 .pixel-progress > div {
   border-radius: var(--radius);
 }
+
+/* ── Lunidex home visual accents ─────────────────────────────────── */
+
+.home-hero-shell {
+  isolation: isolate;
+  position: relative;
+}
+
+.home-hero-shell::before {
+  content: '';
+  position: absolute;
+  inset: -1.5rem -2.5rem -2.5rem;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--primary) 26%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--primary) 26%, transparent) 1px, transparent 1px);
+  background-position: center top;
+  background-size: 1.35rem 1.35rem;
+  mask-image: radial-gradient(ellipse at center, black 0%, black 54%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, black 54%, transparent 100%);
+  opacity: 0.58;
+}
+
+.home-hero-shell::after {
+  content: '';
+  position: absolute;
+  top: 3rem;
+  right: 5%;
+  z-index: 0;
+  width: min(22rem, 48vw);
+  height: min(22rem, 48vw);
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--primary) 18%, transparent), transparent 68%);
+  filter: blur(12px);
+  opacity: 0.55;
+}
+
+.home-hero-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home-card-preview::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  border: 1px solid color-mix(in oklab, var(--primary) 58%, transparent);
+  border-radius: 4.55% / 3.5%;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+}
+
+.home-card-preview:hover::after {
+  opacity: 0.72;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card-preview::after {
+    transition: none;
+  }
+}
+
+.dark .home-hero-shell::before {
+  opacity: 0.38;
+}
+
+.dark .home-hero-shell::after {
+  opacity: 0.35;
+}

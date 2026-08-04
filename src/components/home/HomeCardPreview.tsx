@@ -62,7 +62,7 @@ export function HomeCardPreview({ card, rotationClass, sizes }: HomeCardPreviewP
   return (
     <div
       aria-hidden="true"
-      className={`group relative aspect-[2.15/3] min-w-0 shadow-[0_4px_10px_rgba(0,0,0,0.2)] [perspective:900px] ${rotationClass}`}
+      className={`home-card-preview group relative aspect-[2.15/3] min-w-0 shadow-[0_4px_10px_rgba(0,0,0,0.2)] [perspective:900px] ${rotationClass}`}
       data-testid="home-card-preview"
       onPointerCancel={(event) => resetCardStyle(event.currentTarget)}
       onPointerLeave={(event) => resetCardStyle(event.currentTarget)}

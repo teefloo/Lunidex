@@ -15,6 +15,14 @@ colors:
   action-compare: "oklch(0.68 0.090 250)"
   action-team: "oklch(0.72 0.090 162)"
   action-legendary: "oklch(0.82 0.090 80)"
+  action-caught: "var(--primary)"
+  dark:
+    background: "oklch(0.16 0.012 50)"
+    foreground: "oklch(1.0 0 0)"
+    card: "oklch(0.22 0.015 55)"
+    primary: "oklch(0.80 0.100 45)"
+    border: "oklch(0.40 0.030 60)"
+    pixel-shadow: "oklch(0.10 0.010 50)"
   type-normal: "oklch(0.78 0.025 80)"
   type-fire: "oklch(0.78 0.090 40)"
   type-water: "oklch(0.80 0.060 235)"
@@ -53,7 +61,7 @@ typography:
     lineHeight: 1.1
     letterSpacing: 0
   body:
-    fontFamily: "'Nunito', 'Nunito Fallback', 'Hiragino Sans', ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'Nunito', 'Nunito Fallback', 'Hiragino Sans', 'Noto Sans CJK JP', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.72
@@ -134,11 +142,14 @@ Lunidex is a Pokémon companion dashboard that lives at the intersection of a co
 - Warm, desaturated OKLCH color space: cream backgrounds, umber text, amber primary
 - Tight uppercase tracking (`0.14em–0.22em`) on labels, badges, and catalog numbers
 - Dual-typeface system: Pixelify Sans for headings (playful pixel), Nunito for body text (warm readability)
-- Fractal-noise SVG grain overlay adds tactile paper texture to backgrounds
+- Fractal-noise SVG grain overlay adds tactile paper texture to backgrounds (multiply in light, screen in dark)
 - Type colors used as semantic accents via CSS custom properties and `color-mix()`
 - Every interactive element has a pixel-precise hover shift (`-1px -1px`) and a pressed state (`2px 2px`)
 - Responsive grid layouts that adapt from 1 to 5 columns depending on viewport
-- Per-generation color themes via `[data-gen]` attribute selectors
+- Per-generation color themes via `[data-gen]` attribute selectors that re-skin primary, accent, background, and ring
+- Full dark-mode palette with lifted type colors and action accents for legibility on umber surfaces
+- Motion is brief, decorative, and disabled entirely under `prefers-reduced-motion`
+- Scroll-snap utilities (`scroll-snap-x`, `scroll-snap-align-start`) and a 8px square scrollbar for TCG/markets horizontal rails
 
 ## Colors
 
@@ -165,6 +176,40 @@ The palette is warm, desaturated, and cozy — like reading a field guide by lam
 - **Compare Blue** (`oklch(0.68 0.090 250)`)
 - **Team Green** (`oklch(0.72 0.090 162)`)
 - **Legendary Gold** (`oklch(0.82 0.090 80)`)
+- **Caught** (`var(--primary)`): completion/capture state; intentionally reuses the primary amber so "caught" reads as the system's positive state.
+
+### Dark Mode
+
+The `.dark` class flips the whole system onto a warm umber canvas rather than a neutral gray-black:
+
+- **Background** (`oklch(0.16 0.012 50)`), **Foreground** (`oklch(1 0 0)`): deep warm brown-black with pure-white text.
+- **Card** (`oklch(0.22 0.015 55)`), **Popover** (same): elevated surfaces lift the card color.
+- **Primary** (`oklch(0.80 0.100 45)`): amber lifted for contrast; `--ring` mirrors it.
+- **Accent** (`oklch(0.87 0.040 235)`): sky lifted to stay visible.
+- **Secondary / Muted** (`oklch(0.32 0.018 55)`), **Muted Foreground** (`oklch(0.85 0.060 65)`).
+- **Destructive** (`oklch(0.70 0.090 20)`): unchanged.
+- **Border** (`oklch(0.40 0.030 60)`), **Deep Border** (`oklch(0.50 0.035 60)`).
+- **Type colors are lifted** (e.g. fire `oklch(0.82 0.095 42)`, water `oklch(0.82 0.065 238)`) so badges keep their hue on dark cards.
+- **Action accents are lifted** for legibility (favorite `oklch(0.75 0.100 22)`, compare `oklch(0.74 0.095 252)`, team `oklch(0.78 0.095 164)`, legendary `oklch(0.87 0.090 80)`).
+- **Pixel shadow** (`oklch(0.10 0.010 50)`): the dark shadow darkens into the background.
+- **Grain**: `mix-blend-mode: screen` at `0.10` opacity (light uses `multiply` at `0.18`).
+- `theme-color` meta mirrors the two schemes: `#F4EAD5` light, `#211A17` dark.
+
+### Generation Themes
+
+Nine attribute-scoped themes (`[data-gen="gen1"]` … `[data-gen="gen9"]`) re-skin the app per Pokémon generation by overriding `--primary`, `--primary-foreground`, `--accent`, `--accent-foreground`, `--background`, `--foreground`, `--card`, `--border`, and `--ring`:
+
+- **gen1** — Kanto red/blue on cream
+- **gen2** — Gold/silver on deep forest green (dark card surfaces)
+- **gen3** — Ruby/sapphire on turquoise (dark card surfaces)
+- **gen4** — Glacier blue/lilac on night blue (dark card surfaces)
+- **gen5** — Blood red/white on near-black (dark card surfaces)
+- **gen6** — Royal blue/scarlet on pale blue
+- **gen7** — Sun yellow/moon purple on pale turquoise
+- **gen8** — Shield red/sword blue on pale lavender
+- **gen9** — Scarlet/violet on pale rose
+
+Components are never modified per theme — the overrides cascade through the existing custom properties, so a themed page is identical structurally.
 
 ### Named Rules
 
@@ -175,10 +220,15 @@ The palette is warm, desaturated, and cozy — like reading a field guide by lam
 ## Typography
 
 **Display Font:** Pixelify Sans (with Pixelify Sans Fallback → Arial → system-ui)
-**Body Font:** Nunito (with Nunito Fallback → Hiragino Sans → system-ui)
-**Label Font:** System monospace stack
+**Body Font:** Nunito (with Nunito Fallback → Hiragino Sans → Noto Sans CJK JP → Microsoft YaHei → system-ui)
+**Label Font:** System monospace stack (`--font-mono`)
 
 **Character:** The pairing is deliberate contrast — Pixelify Sans brings playfulness and pixel-era warmth to headings, while Nunito provides clean, rounded readability for body copy. Monospace is reserved for specimen metadata (catalog numbers, type labels, stats), creating a field-journal authenticity.
+
+Pixelify Sans is loaded at `400`, `500`, `600`, `700`; Nunito at `400`, `600`, `700`. Both use `font-display: optional` with preload and per-font metric-matching fallbacks (`@font-face` `size-adjust`/overscope) to prevent CLS. The body stack extends into CJK fallbacks (Hiragino Sans, Noto Sans CJK JP, Microsoft YaHei) so the eight supported locales render without font gaps.
+
+### Editorial typography helpers
+Beyond the six hierarchy levels, `.page-eyebrow`, `.page-title`, `.page-subtitle`, `.page-divider`, and `.editorial-ornament` compose editorial page headers; `.rule-line`, `.cat-no`, `.latin-name`, `.field-stamp`, and `.specimen-badge` handle specimen framing. All resolve through the same custom properties — no per-component token redefinition.
 
 ### Hierarchy
 - **Display** (700, `clamp(2.75rem, 9vw, 6.5rem)`, `0.92`): Hero titles. Massive, tight-cropped, and deliberately oversized. `text-wrap: balance` prevents orphans.
@@ -211,9 +261,9 @@ Interactive elements use `touch-target` utility (`min-width: 2.75rem`, `min-heig
 
 Lunidex uses **hard pixel shadows exclusively** — there are no blurred, soft, or ambient shadows in the system. Depth is conveyed through:
 
-- **Pixel shadow** (`4px 4px 0 var(--pixel-shadow)`): Primary surface elevation. Used on `.codex-frame`, `.page-surface`, `.section-frame`, `.glass-panel`. Creates a chunky, tangible offset.
-- **Small pixel shadow** (`2px 2px 0 var(--pixel-shadow)`): Secondary elevation. Used on `.glass-card`, `.glass-toolbar`, `.glass-tag`, `.glass-btn`. Subtle lift for smaller elements.
-- **Interactive elevation**: On hover, the offset increases by `2px` and the element translates `-1px -1px` up and left, simulating the element thickening. On active/press, it collapses to `translate(2px, 2px)` with no shadow — the button is "pressed down" to the surface.
+- **Pixel shadow** (`4px 4px 0 var(--pixel-shadow)`): Primary surface elevation. Used on `.codex-frame`, `.page-surface`, `.section-frame`, `.glass-panel`, `.glass-surface`, `.cn-toast`. Creates a chunky, tangible offset. Tokenized as `--shadow-pixel` (offset driven by `--pixel-shadow-offset: 4px`).
+- **Small pixel shadow** (`2px 2px 0 var(--pixel-shadow)`): Secondary elevation. Used on `.glass-card`, `.glass-toolbar`, `.glass-tag`, `.glass-btn`, `.glass-control`, `.type-accent`, `.page-eyebrow`, `.field-stamp`, `.specimen-badge`, `.editorial-pill`. Tokenized as `--shadow-pixel-sm`. Subtle lift for smaller elements.
+- **Interactive elevation**: On hover, the offset increases by `2px` and the element translates `-1px -1px` up and left, simulating the element thickening. On active/press, it collapses to `translate(2px, 2px)` with no shadow — the button is "pressed down" to the surface. Cards (`--type-glow`) shift `-2px -2px` on hover with the enlarged offset.
 
 The shadow color (`--pixel-shadow`) adapts to dark mode: `oklch(0.86 0.035 80)` in light, `oklch(0.10 0.010 50)` in dark.
 
@@ -221,15 +271,34 @@ The shadow color (`--pixel-shadow`) adapts to dark mode: `oklch(0.86 0.035 80)` 
 
 **The Flat-By-Default Rule.** Every surface is flat on load. Elevation is a state response — hover, active, and focus. No element is persistently elevated above another without user interaction.
 
+## Motion
+
+Motion is short, physical, and decorative — never a substitute for state, never continuous. All of it is disabled under `prefers-reduced-motion`.
+
+### Entrances
+- **`.animate-fade-in-up`**: Entry fade + upward drift (`0.5s`, `ease-out`), used on page headers and hero content.
+- **`.animate-scale-in`**: Sprite/card pop-in (`0.3s` spring-like ease) for Pokémon art.
+- **`.animate-pulse-slow`**: Gentle 3s foreground pulse, restricted to loading stubs.
+
+### Ambient
+- **`.float-particle`**: Drifting particles over hero/404 scenes — sine-waved translate with staggered delays (`-2s`/`-4s`), `16s` loop.
+- **`.animate-pulse-glow`**: Text-level shimmer on special specimen accents.
+- **`.stat-bar-fill`**: Metric bars scale from `0` to full in `0.6s` with a bounce ease on mount.
+
+### Shimmer & Sweeps
+- **`.codex-shimmer`**: Skeleton sweep (`shimmerSlide`, `2.4s`) described under Components → Loading.
+- **`.holo-border`**: Holographic TCG border sweep (`holographicShimmer`, `7s`) fading in on hover.
+- **Keyframes** live centrally in `globals.css` so every animation resolves through the same tokens.
+
 ## Shapes
 
-The form language is almost aggressively square: `0.125rem` border radius is so small it barely rounds the corners. This is intentional — it echoes pixel-art's visible corner steps and gives every panel, card, and badge a blocky, tactile silhouette.
+The form language is almost aggressively square: `0.125rem` border radius is so small it barely rounds the corners. Tailwind v4 maps the radius scale down too (`--radius-sm: 0`, `--radius-md: var(--radius)` i.e. `0.125rem`, `--radius-lg: 0.25rem`), so `rounded-sm` is perfectly square — the default for components. This is intentional — it echoes pixel-art's visible corner steps and gives every panel, card, and badge a blocky, tactile silhouette.
 
-Borders are always `2px` or `3px` solid, creating a clear boundary between surfaces. The hard edge reinforces the pixel-art thesis and prevents the floating-card look.
+Borders are always `2px` or `3px` solid, creating a clear boundary between surfaces. The canonical size is `--border-width: 3px`, used on the largest surfaces (`.page-surface`, `.section-frame`, `.glass-panel`, `.codex-frame`, `.glass-btn`, `.cn-toast`); small controls and tags use a hardcoded `2px`. The hard edge reinforces the pixel-art thesis and prevents the floating-card look.
 
 Pills (fully rounded, `9999px`) are reserved for decorative elements and non-UI shapes — the Pokéball, cloud shapes, the sun in the 404 scene. No UI container uses a pill shape.
 
-The only exception is the holographic TCG card border (`.holo-border`), which uses a multi-stop gradient mask for the shimmer effect.
+The only exception is the holographic TCG card border (`.holo-border`), which uses a multi-stop gradient mask for the shimmer effect (`holographicShimmer` 7s sweep, fading in on hover).
 
 ## Components
 
@@ -238,10 +307,10 @@ The only exception is the holographic TCG card border (`.holo-border`), which us
 - **Primary**: Card background with default border. On hover, border shifts to primary amber, shadow deepens, and the button shifts `-1px -1px`.
 - **Active**: Translates `2px 2px` with no shadow — pressed into the surface.
 - **Focus-visible**: `2px solid var(--ring)` with `2px` offset.
-- **Variants**: Active state (`.glass-btn-active`) fills with amber primary.
+- **Variants**: Active state (`.glass-btn-active`) fills with amber primary. The compact control (`.glass-control`) reuses the same frame but tints its border/fill toward `--hover-color` on hover (e.g. a delete control warming red).
 - **Content**: Always uppercase with tracking on label elements. Never lowercase.
 
-### Cards (`.glass-card`, `.page-surface`, `.section-frame`, `.codex-frame`)
+### Cards (`.glass-card`, `.glass-surface`, `.page-surface`, `.section-frame`, `.codex-frame`)
 - **Corner style**: Square (`0.125rem` radius).
 - **Background**: Card surface (`--card` or `--background` depending on nesting).
 - **Shadow**: One of two pixel shadow sizes depending on hierarchy level (larger for page-level surfaces, smaller for nested cards).
@@ -249,8 +318,27 @@ The only exception is the holographic TCG card border (`.holo-border`), which us
 - **Internal Padding**: Scales with context — `p-3` to `p-8` depending on content density. Standard card padding is `p-4` to `p-6`.
 - **Hover**: Translates `-1px -1px` with deepened shadow and primary-tinted border.
 
+### Editorial Page Headers
+- **`.page-eyebrow`**: Label-style kicker — `0.625rem`, 700, `0.22em`, uppercase, bordered card frame with small pixel shadow. Opens editorial pages alongside `.editorial-ornament` dividers and `.rule-line` separators.
+- **`.page-title`**: Display-font headline, 700, zero tracking, `line-height: 1`, balanced wrapping.
+- **`.page-subtitle`**: Muted body copy capped at `44rem`.
+- **`.page-divider` / `.soft-divider`**: `2px` full-width rule in `--border`.
+- **`.editorial-ornament`**: Centered ornament — a Pixelify glyph (`__glyph`) flanked by two capped rules, aligned on a display-font baseline.
+
+### Specimen Framing
+- **`.field-stamp`**: Museum-tag corner mark — `2px` primary border, primary `10%` fill, monospace uppercase `0.18em`, plus `2px 2px 0` pixel shadow.
+- **`.cat-no`**: Monospace catalog number (`0.65rem`, `0.18em`, uppercase, muted); `.cat-no__num` tints the digits primary.
+- **`.latin-name`**: Display-font italic secondary label.
+- **`.rule-line`**: Flex rule with caps monospace label between two `2px` rules.
+- **`.specimen-badge`**: Tiny monospace corner count on background surface (`2px` border, small pixel shadow).
+- **`.editorial-pill`**: Monospace uppercase tag (`0.65rem`, `0.14em`) on background surface.
+
+### Loading (`.codex-shimmer`)
+- Skeleton surfaces use a static `6%` foreground fill with a repeating amber sweep (`codex-shimmer::after`, `20%` primary mix) animating over `2.4s` via `shimmerSlide`. Disabled under reduced motion.
+
 ### Type Badges (`.glass-tag`, `.type-accent`)
 - **Shape**: Square with `.glass-tag` styling — `2px` border mixed with `--type-color`, background at `15%` opacity of type color, text at `80%` type color.
+- **`.type-accent`**: Variant that mixes the type hue into the border at `45%` and the fill at `18%` over card, giving a slightly stronger color presence.
 - **Sizes**: `sm` (`px-2 py-0.5 text-[11px]`), `md` (`px-3 py-1 text-[11px]`), `lg` (`px-4 py-1.5 text-xs`).
 - **Text**: Always uppercase, semibold or bold, with `0.06em` tracking. Size controlled by variant.
 
@@ -265,11 +353,18 @@ The only exception is the holographic TCG card border (`.holo-border`), which us
 - **Responsive**: On mobile, extra controls collapse behind a hamburger menu. Desktop shows full horizontal navigation.
 - **Typography**: Label-style text — small, uppercase, tracked.
 
-### Pokémon Cards (`.group/specimen`)
+### Pokémon Cards (`.group/specimen`, `.type-glow`)
 - **Background**: Type-tinted linear gradient at `7%` opacity from the card's primary type color. The type's hue is perceptible as a subtle tint.
-- **Hover**: Moves up `-2px -2px` with an enhanced pixel shadow and a radial glow behind the sprite.
+- **Hover**: Moves up `-2px -2px` with an enhanced pixel shadow (`type-glow`) and a radial glow behind the sprite.
 - **Action chips**: Three small square buttons at the bottom of the card — team, compare, favorite — that adopt their respective action accent color on activation. Colors come from `--action-favorite`, `--action-compare`, `--action-team`.
 - **Sprite**: Brightened with `drop-shadow` and scales to `105%` on card hover. Uses `image-rendering: pixelated` for the classic sprite look.
+
+### Toast (`.cn-toast`)
+- Sonner toasts adopt the pixel frame: `--radius` corners, `3px` border, popover surface, `4px 4px 0` pixel shadow.
+
+### Home Hero & Preview Accents
+- **`.home-hero-shell`**: Hero backdrop — a radial-masked pixel grid (`::before`, primary at `26%`, `1.35rem` cells, `0.58` opacity) plus a soft radial primary glow (`::after`, `18%`, blurred `12px`, top-right, `0.55`). In dark mode opacities drop to `0.38` / `0.35`.
+- **`.home-card-preview`**: Preview card hover ring — a primary inset border (`58%` mix) that fades/scales in over `180ms` (`::after`), transition disabled under reduced motion.
 
 ## Do's and Don'ts
 

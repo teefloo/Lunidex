@@ -21,7 +21,7 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
   const isResume = entry.mode === 'resume';
 
   return (
-    <aside className="min-h-[22rem] rounded-sm border border-border/60 bg-card/45 p-5 shadow-[var(--shadow-pixel)] sm:p-6" aria-labelledby="collection-preview-title">
+    <aside className="min-h-[22rem] rounded-sm border border-border/60 bg-[var(--card)] p-5 shadow-[var(--shadow-pixel)] sm:p-6" aria-labelledby="collection-preview-title">
       <div aria-hidden="true" className="mb-6 grid grid-cols-3 items-center gap-3 px-1">
         {[0, 1, 2].map((index) => {
           const card = featuredCards[index];
@@ -37,7 +37,7 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
           ) : (
             <div
               key={`card-placeholder-${index}`}
-              className={`aspect-[2.15/3] min-w-0 bg-card/35 [border-radius:4.55%_/_3.5%] ${rotationClass}`}
+              className={`aspect-[2.15/3] min-w-0 bg-card [border-radius:4.55%_/_3.5%] ${rotationClass}`}
             />
           );
         })}
