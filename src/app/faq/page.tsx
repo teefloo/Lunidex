@@ -3,14 +3,19 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import FaqSection from '@/components/ui/FaqSection';
-import { SITE_URL, SITE_NAME, GITHUB_REPO_URL, GITHUB_ISSUES_URL } from '@/lib/site';
+import {
+  SITE_URL,
+  SITE_NAME,
+  GITHUB_DISCUSSIONS_URL,
+  GITHUB_ISSUES_URL,
+} from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { HelpCircle, Github, MessageCircleQuestion } from 'lucide-react';
 
 type FaqEntry = { q: string; a: string };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-06-05';
+const LAST_UPDATED = '2026-08-04';
 const FAQ_COUNT = 12;
 
 export const revalidate = 3600;
@@ -47,6 +52,13 @@ export default async function FaqPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
+  const formattedLastUpdated = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(
+    new Date(`${LAST_UPDATED}T00:00:00Z`),
+  );
+  const lastUpdatedLabel = t('faq.last_updated', {
+    date: formattedLastUpdated,
+    count: FAQ_COUNT,
+  });
 
   const data: FaqEntry[] = [
     { q: t('faq.q1'), a: t('faq.a1') },
@@ -106,35 +118,37 @@ export default async function FaqPage() {
   ];
 
   const faqFooter = (
-    <aside className="mt-16">
+    <aside className="mt-16" data-od-id="faq-footer">
       <div className="editorial-ornament mb-6">
-        <span className="editorial-ornament__glyph">epilogue</span>
+        <span aria-hidden="true" className="editorial-ornament__glyph">✦</span>
       </div>
       <div className="page-surface p-8 md:p-10 text-center">
-        <p className="cat-no text-center mb-3">End of Document</p>
-        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-          <span className="gradient-text-hero">{t('faq.still_questions_title')}</span>
+        <p className="cat-no mb-3 text-center">
+          <span className="cat-no__num">{String(FAQ_COUNT).padStart(2, '0')}</span>
+        </p>
+        <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+          {t('faq.still_questions_title')}
         </h2>
         <p className="mt-3 text-foreground/70 max-w-xl mx-auto">
           {t('faq.still_questions_body')}
         </p>
         <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
           <a
-            href={GITHUB_REPO_URL}
+            href={GITHUB_DISCUSSIONS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-primary-foreground shadow-[0_14px_34px_-24px_color-mix(in_oklab,var(--primary)_55%,transparent)] hover:-translate-y-0.5 transition-all duration-200"
+            className="glass-btn glass-btn-active touch-target inline-flex items-center justify-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em]"
           >
-            <Github className="w-3.5 h-3.5" />
+            <Github aria-hidden="true" className="h-3.5 w-3.5" />
             {t('faq.still_questions_cta_github')}
           </a>
           <a
             href={GITHUB_ISSUES_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-border/60 bg-card/70  px-5 py-3 text-xs font-black uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:border-primary/25 transition-all duration-200"
+            className="glass-btn touch-target inline-flex items-center justify-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em]"
           >
-            <MessageCircleQuestion className="w-3.5 h-3.5" />
+            <MessageCircleQuestion aria-hidden="true" className="h-3.5 w-3.5" />
             {t('faq.still_questions_cta_issues')}
           </a>
         </div>
@@ -155,33 +169,34 @@ export default async function FaqPage() {
       <div className="app-page">
         <Header />
         <main className="page-shell pt-28 pb-24 relative">
-          <PageHeader
-            icon={HelpCircle}
-            title={t('faq.heading')}
-            subtitle={t('faq.subtitle')}
-            eyebrow={t('faq.eyebrow')}
-            centered
-            className="mb-12"
-            badge={
-              <p className="cat-no whitespace-nowrap hidden sm:block">
-                Cat. No. <span className="cat-no__num">FAQ</span>
-                <span className="mx-1.5 text-foreground/30">·</span>
-                Updated {LAST_UPDATED}
-              </p>
-            }
-          />
+          <header data-od-id="faq-header">
+            <PageHeader
+              icon={HelpCircle}
+              title={t('faq.heading')}
+              subtitle={t('faq.subtitle')}
+              eyebrow={t('faq.eyebrow')}
+              centered
+              className="mb-12"
+              badge={
+                <p className="cat-no hidden max-w-xs whitespace-normal text-center sm:block">
+                  {lastUpdatedLabel}
+                </p>
+              }
+            />
+          </header>
 
           <article className="mx-auto w-full max-w-4xl px-5 md:px-8">
             <nav
               aria-label={t('faq.toc_title')}
               className="section-frame p-5 md:p-6"
+              data-od-id="faq-index"
             >
               <div className="flex items-center justify-between gap-3 mb-4">
                 <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">
                   {t('faq.toc_title')}
                 </p>
                 <p className="cat-no">
-                  <span className="cat-no__num">{String(FAQ_COUNT).padStart(2, '0')}</span> entries
+                  <span className="cat-no__num">{String(FAQ_COUNT).padStart(2, '0')}</span> FAQ
                 </p>
               </div>
               <ul className="flex flex-wrap gap-2">
@@ -189,7 +204,7 @@ export default async function FaqPage() {
                   <li key={section.id}>
                     <a
                       href={`#${section.id}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:border-primary hover:text-primary transition-colors"
+                      className="glass-btn touch-target inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-foreground/80"
                     >
                       <span className="font-mono text-[11px] text-foreground/45">
                         {(idx + 1).toString().padStart(2, '0')}
@@ -202,14 +217,22 @@ export default async function FaqPage() {
             </nav>
 
             <div className="rule-line my-10 md:my-12">
-              FAQ · Chapter Index
+              {t('faq.toc_title')}
             </div>
 
             <FaqSection
               categories={categories}
-              allLabel={t('faq.toc_title')}
+              allLabel={t('faq.all_label')}
               searchPlaceholder={t('faq.search_placeholder')}
               tocLabel={t('faq.toc_title')}
+              clearSearchLabel={t('faq.search_clear')}
+              filterLabel={t('faq.filter_label')}
+              resultsFoundOne={t('faq.results_found_one')}
+              resultsFoundOther={t('faq.results_found_other')}
+              noResultsTitle={t('faq.no_results_title')}
+              noResultsBody={t('faq.no_results_body')}
+              expandAnswerLabel={t('faq.expand_answer')}
+              collapseAnswerLabel={t('faq.collapse_answer')}
             />
 
             {faqFooter}

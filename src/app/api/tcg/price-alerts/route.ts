@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServerClient, bearerToken } from '@/lib/supabase/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { getNeonClient } from '@/lib/neon/server';
 
 // Price polling is intentionally paused for the public launch. The scheduled
 // sender does not yet use standards-compliant web-push payload encryption.
@@ -26,6 +27,29 @@ interface CreateAlertPayload {
   currency?: string;
 }
 
+type NumericValue = number | string | null;
+
+interface PriceAlertRow {
+  id: string;
+  card_id: string;
+  card_name: string;
+  alert_type: 'below' | 'above';
+  threshold_usd: NumericValue;
+  threshold_eur: NumericValue;
+  currency: 'USD' | 'EUR';
+  is_active: boolean;
+  last_triggered_at: string | null;
+  created_at: string;
+}
+
+function toPriceAlert(row: PriceAlertRow) {
+  return {
+    ...row,
+    threshold_usd: row.threshold_usd === null ? null : Number(row.threshold_usd),
+    threshold_eur: row.threshold_eur === null ? null : Number(row.threshold_eur),
+  };
+}
+
 function isValidAlertType(v: unknown): v is 'below' | 'above' {
   return v === 'below' || v === 'above';
 }
@@ -40,28 +64,23 @@ function isValidCurrency(v: unknown): v is 'USD' | 'EUR' {
 
 export async function GET(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
-  const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ alerts: [] });
-  }
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
-  const { data, error } = await supabase
-    .from('tcg_price_alerts')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  const rows = await sql`
+    select id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
+      currency, is_active, last_triggered_at, created_at
+    from public.tcg_price_alerts
+    where user_id = ${user.id}::uuid
+    order by created_at desc
+  ` as PriceAlertRow[];
 
-  if (error) {
-    console.error('[price-alerts GET]', error);
-    return NextResponse.json({ error: 'Failed to fetch alerts' }, { status: 500 });
-  }
-
-  return NextResponse.json({ alerts: data ?? [] });
+  return NextResponse.json({ alerts: rows.map(toPriceAlert) });
 }
 
 // ---------------------------------------------------------------------------
@@ -70,15 +89,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
-  const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
   const payload = await readJsonBody<CreateAlertPayload>(request);
 
@@ -102,26 +119,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'At least one threshold is required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
-    .from('tcg_price_alerts')
-    .insert({
-      user_id: user.id,
-      card_id: payload.card_id,
-      card_name: payload.card_name,
-      alert_type: payload.alert_type,
-      threshold_usd: payload.threshold_usd ?? null,
-      threshold_eur: payload.threshold_eur ?? null,
-      currency,
-    })
-    .select()
-    .single();
+  const rows = await sql`
+    insert into public.tcg_price_alerts (
+      user_id, card_id, card_name, alert_type,
+      threshold_usd, threshold_eur, currency
+    )
+    values (
+      ${user.id}::uuid, ${payload.card_id}, ${payload.card_name}, ${payload.alert_type},
+      ${payload.threshold_usd ?? null}, ${payload.threshold_eur ?? null}, ${currency}
+    )
+    returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
+      currency, is_active, last_triggered_at, created_at
+  ` as PriceAlertRow[];
+  const data = rows[0];
+  if (!data) return NextResponse.json({ error: 'Failed to create alert' }, { status: 500 });
 
-  if (error) {
-    console.error('[price-alerts POST]', error);
-    return NextResponse.json({ error: 'Failed to create alert' }, { status: 500 });
-  }
-
-  return NextResponse.json({ alert: data }, { status: 201 });
+  return NextResponse.json({ alert: toPriceAlert(data) }, { status: 201 });
 }
 
 // ---------------------------------------------------------------------------
@@ -130,31 +143,23 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
-  const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
   const id = request.nextUrl.searchParams.get('id');
   if (!id) {
     return NextResponse.json({ error: 'Missing alert id' }, { status: 400 });
   }
 
-  const { error } = await supabase
-    .from('tcg_price_alerts')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', user.id); // RLS backup
-
-  if (error) {
-    console.error('[price-alerts DELETE]', error);
-    return NextResponse.json({ error: 'Failed to delete alert' }, { status: 500 });
-  }
+  await sql`
+    delete from public.tcg_price_alerts
+    where id = ${id}::uuid and user_id = ${user.id}::uuid
+  `;
 
   return NextResponse.json({ ok: true });
 }
@@ -165,33 +170,28 @@ export async function DELETE(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
-  const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
   const payload = await readJsonBody<{ id?: string; is_active?: boolean }>(request);
   if (!payload?.id || typeof payload.is_active !== 'boolean') {
     return NextResponse.json({ error: 'id and is_active are required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
-    .from('tcg_price_alerts')
-    .update({ is_active: payload.is_active })
-    .eq('id', payload.id)
-    .eq('user_id', user.id)
-    .select()
-    .single();
+  const rows = await sql`
+    update public.tcg_price_alerts
+    set is_active = ${payload.is_active}
+    where id = ${payload.id}::uuid and user_id = ${user.id}::uuid
+    returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
+      currency, is_active, last_triggered_at, created_at
+  ` as PriceAlertRow[];
+  const data = rows[0];
+  if (!data) return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
 
-  if (error) {
-    console.error('[price-alerts PATCH]', error);
-    return NextResponse.json({ error: 'Failed to update alert' }, { status: 500 });
-  }
-
-  return NextResponse.json({ alert: data });
+  return NextResponse.json({ alert: toPriceAlert(data) });
 }

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { usePrimeDexStore } from '@primedex/core';
-import { useAuth } from '@primedex/core/supabase/AuthProvider';
+import { useAuth } from '@primedex/core/neon/AuthProvider';
 import { supportedLanguages } from '@primedex/core/lib/languages';
 import { Screen } from '@/components/Screen';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -139,7 +139,7 @@ export default function AccountScreen() {
             <Text style={{ color: palette.textMuted }}>
               {t('account.localOnly', {
                 defaultValue:
-                  'Running locally. Your collection is saved on this device. Add Supabase keys to enable accounts and cloud sync.',
+                  'Running locally. Your collection is saved on this device. Add Neon Auth settings to enable accounts and cloud sync.',
               })}
             </Text>
           </View>

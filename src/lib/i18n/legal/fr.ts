@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. Cookies et traceurs',
           paragraphs: [
-            "Lunidex utilise des stockages strictement nécessaires au service. Avec votre consentement, Vercel Web Analytics et Speed Insights mesurent l'audience et la performance, et Supabase ne reçoit que des compteurs quotidiens de mesure produit. Consultez la politique cookies pour les finalités et les choix distincts.",
+            "Lunidex utilise des stockages strictement nécessaires au service. Avec votre consentement, Vercel Web Analytics et Speed Insights mesurent l'audience et la performance, et Neon ne reçoit que des compteurs quotidiens de mesure produit. Consultez la politique cookies pour les finalités et les choix distincts.",
           ],
           list: [
             "primedex-lang (durée : 1 an) : mémorise votre langue préférée.",
@@ -443,7 +443,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. Inventaire des cookies utilisés',
-      intro: "Lunidex utilise des stockages strictement nécessaires au service. La mesure d'audience et de performance Vercel et la mesure produit Supabase restent désactivées jusqu'à votre consentement correspondant.",
+      intro: "Lunidex utilise des stockages strictement nécessaires au service. La mesure d'audience et de performance Vercel et la mesure produit Neon restent désactivées jusqu'à votre consentement correspondant.",
       table: {
         headers: ['Cookie', 'Finalité', 'Type', 'Durée', 'Éditeur'],
         rows: [
@@ -496,7 +496,7 @@ const cookies: LegalDocument = {
         "Cette politique pourra être mise à jour si nous décidons d'ajouter un service tiers. Le cas échéant, votre consentement sera demandé via le bandeau cookies avant tout dépôt de cookie non strictement nécessaire.",
       ],
       list: [
-        "Vercel Web Analytics et Speed Insights ne sont chargés qu'après consentement audience et performance ; Supabase ne reçoit que des compteurs produit quotidiens agrégés après le consentement distinct à la mesure produit.",
+        "Vercel Web Analytics et Speed Insights ne sont chargés qu'après consentement audience et performance ; Neon ne reçoit que des compteurs produit quotidiens agrégés après le consentement distinct à la mesure produit.",
         "Aucun cookie publicitaire (Meta Pixel, Google Ads, TikTok Pixel, etc.) n'est installé.",
         "Aucun cookie de réseaux sociaux (boutons de partage Facebook, Twitter, etc.) n'est installé.",
         "Aucun script de retargeting ou de profilage n'est chargé.",

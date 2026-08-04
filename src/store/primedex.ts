@@ -225,8 +225,8 @@ interface PrimeDexStore {
 
 /**
  * Keys that make up a user's persisted snapshot. Single source of truth shared
- * by the local IndexedDB persistence (`partialize` below) and the Supabase sync
- * layer (`src/lib/supabase/sync-state.ts`). Add a key here and it is both stored
+ * by the local IndexedDB persistence (`partialize` below) and the Neon sync
+ * layer (`src/lib/supabase/sync-state.ts`, retained for compatibility). Add a key here and it is both stored
  * locally and synced to the signed-in user's `user_state` row.
  */
 export const SYNCED_KEYS = [

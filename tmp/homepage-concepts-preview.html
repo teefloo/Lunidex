@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lunidex — 4 concepts homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Nunito:wght@400..900&display=swap" rel="stylesheet" />
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Tokens — copiés de src/app/globals.css (mode clair)
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --background: oklch(0.945 0.028 85);
+  --foreground: oklch(0.17 0.045 60);
+  --card: oklch(0.985 0.012 85);
+  --card-foreground: oklch(0.17 0.045 60);
+  --primary: oklch(0.72 0.110 45);
+  --primary-foreground: oklch(0.22 0.060 45);
+  --muted-foreground: oklch(0.17 0.060 70);
+  --border: oklch(0.74 0.060 75);
+  --border-strong: oklch(0.68 0.055 75);
+  --ring: oklch(0.72 0.110 45);
+  --pixel-shadow: oklch(0.86 0.035 80);
+  --shadow-pixel: 4px 4px 0 var(--pixel-shadow);
+  --shadow-pixel-sm: 2px 2px 0 var(--pixel-shadow);
+  --radius: 0.125rem;
+  --border-width: 3px;
+  --body-noise: oklch(0.30 0.030 60 / 0.025);
+
+  --type-normal: oklch(0.78 0.025 80);
+  --type-fire: oklch(0.78 0.090 40);
+  --type-water: oklch(0.80 0.060 235);
+  --type-electric: oklch(0.88 0.090 85);
+  --type-grass: oklch(0.80 0.075 148);
+  --type-ice: oklch(0.88 0.045 205);
+  --type-fighting: oklch(0.74 0.075 35);
+  --type-poison: oklch(0.76 0.080 320);
+  --type-ground: oklch(0.80 0.055 70);
+  --type-flying: oklch(0.84 0.045 285);
+  --type-psychic: oklch(0.80 0.085 355);
+  --type-bug: oklch(0.82 0.065 130);
+  --type-rock: oklch(0.75 0.040 75);
+  --type-ghost: oklch(0.70 0.065 305);
+  --type-dragon: oklch(0.74 0.070 270);
+  --type-dark: oklch(0.68 0.030 60);
+  --type-steel: oklch(0.82 0.018 245);
+  --type-fairy: oklch(0.88 0.055 355);
+
+  --font-display: 'Pixelify Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* grain papier (canvas uniquement) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+/* ── primitives système ─────────────────────────────────────── */
+.codex-frame {
+  position: relative;
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glass-card {
+  position: relative;
+  border: 2px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+}
+.glass-btn:hover { transform: translate(-1px, -1px); border-color: var(--primary); box-shadow: 3px 3px 0 var(--pixel-shadow); }
+.glass-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.glass-btn--active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+.glass-btn--ghost { background: transparent; }
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--card);
+  padding: 0.42rem 0.84rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.field-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.45rem 0.875rem 0.45rem 0.625rem;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-pixel-sm);
+}
+.field-stamp::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--primary);
+}
+
+.cat-no { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-foreground); }
+.cat-no__num { color: var(--primary); font-weight: 700; }
+
+.rule-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.rule-line::before, .rule-line::after { content: ""; flex: 1; height: 2px; background: var(--border); }
+
+.editorial-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  font-family: var(--font-display);
+  color: color-mix(in oklab, var(--primary) 75%, var(--foreground) 25%);
+}
+.editorial-ornament::before, .editorial-ornament::after { content: ""; flex: 1; height: 2px; background: var(--border); max-width: 7rem; }
+
+.specimen-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius);
+  background: var(--background);
+  border: 2px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.glass-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--card);
+  padding: 0.3rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  white-space: nowrap;
+}
+
+/* carte TCG factice (art = sprite, comme placeholder) */
+.card-mock {
+  --tc: var(--type-normal);
+  position: relative;
+  aspect-ratio: 2.15 / 3;
+  border-radius: 4.55% / 3.5%;
+  border: 2px solid var(--border-strong);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
+  display: flex;
+  flex-direction: column;
+  padding: 7% 6%;
+  overflow: hidden;
+  background-image: linear-gradient(150deg, color-mix(in oklab, var(--tc) 9%, var(--card)), var(--card) 55%);
+}
+.card-mock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, color-mix(in oklab, var(--tc) 16%, transparent) 46%, transparent 62%);
+  pointer-events: none;
+}
+.card-mock__top { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.14em; color: var(--muted-foreground); }
+.card-mock__stage { width: 0.55rem; height: 0.55rem; background: var(--tc); }
+.card-mock__art { flex: 1; display: flex; align-items: center; justify-content: center; }
+.card-mock__art img { width: 78%; height: 78%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(2px 2px 0 color-mix(in oklab, var(--tc) 35%, transparent)); }
+.card-mock__foot { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 0.62rem; font-weight: 700; }
+.card-mock__foot .hp { font-size: 0.5rem; color: var(--muted-foreground); }
+
+/* ── coquille de présentation ───────────────────────────────── */
+.shell-top {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  padding: 0.75rem 1rem;
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  backdrop-filter: none;
+  border-bottom: 2px solid var(--border);
+}
+.shell-top__inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.shell-top .brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.shell-top .brand .dot { width: 0.7rem; height: 0.7rem; background: var(--primary); box-shadow: 2px 2px 0 var(--pixel-shadow); }
+.shell-top nav { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.shell-top nav a {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border: 2px solid transparent;
+}
+.shell-top nav a:hover { color: var(--primary); border-color: var(--border); border-radius: var(--radius); }
+
+main { position: relative; z-index: 1; max-width: 72rem; margin: 0 auto; padding: 2.5rem 1rem 5rem; }
+
+.concept {
+  scroll-margin-top: 5rem;
+  margin-top: 4rem;
+}
+.concept:first-of-type { margin-top: 0; }
+
+.concept__head { display: grid; gap: 1rem; grid-template-columns: auto 1fr; align-items: start; margin-bottom: 1.5rem; }
+.concept__num {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+  border: var(--border-width) solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  min-width: 4rem;
+  text-align: center;
+}
+.concept__title { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 700; line-height: 1; }
+.concept__title small { display: block; font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 0.35rem; }
+.concept__intent { margin-top: 0.4rem; max-width: 46rem; font-size: 0.9rem; color: color-mix(in oklab, var(--foreground) 72%, transparent); }
+.concept__intent b { color: var(--foreground); }
+
+/* cadre de mockup */
+.mockup {
+  position: relative;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: 1.5rem;
+}
+.mockup__label {
+  position: absolute;
+  top: -0.65rem;
+  left: 1rem;
+  background: var(--background);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+.mockup__note { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-foreground); margin-top: 1rem; }
+
+/* ── Concept A : Frontispice ────────────────────────────────── */
+.concept-a__canvas {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+}
+.concept-a__canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent 0 26px, color-mix(in oklab, var(--border) 22%, transparent) 26px 27px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.concept-a__inner { position: relative; padding: clamp(1.5rem, 4vw, 3rem); }
+
+.dropcap::first-letter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4em;
+  line-height: 0.9;
+  color: var(--primary);
+  padding-right: 0.04em;
+}
+
+/* ── Concept B : Boot cartouche ─────────────────────────────── */
+.screen {
+  position: relative;
+  border: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel);
+  padding: clamp(1rem, 3vw, 1.75rem);
+}
+.screen__corner { position: absolute; width: 0.9rem; height: 0.9rem; border: 2px solid var(--primary); }
+.screen__corner.tl { top: -0.55rem; left: -0.55rem; border-right: none; border-bottom: none; }
+.screen__corner.tr { top: -0.55rem; right: -0.55rem; border-left: none; border-bottom: none; }
+.screen__corner.bl { bottom: -0.55rem; left: -0.55rem; border-right: none; border-top: none; }
+.screen__corner.br { bottom: -0.55rem; right: -0.55rem; border-left: none; border-top: none; }
+
+.hud-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.hud-line .ok { color: color-mix(in oklab, var(--type-grass) 80%, var(--foreground)); }
+
+.caret { animation: blink 1.1s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+}
+
+.sprite-line {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 0.75rem;
+  padding: 0.5rem 0 0;
+}
+.sprite-slot { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.sprite-slot img {
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  height: clamp(2.6rem, 5vw, 3.6rem);
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(3px 3px 0 var(--pixel-shadow));
+  transition: transform 0.15s ease;
+}
+.sprite-slot:hover img { transform: translate(-1px, -1px) scale(1.08); }
+.sprite-slot span { font-family: var(--font-mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-foreground); }
+.ground-strip {
+  height: 8px;
+  margin-top: 0.25rem;
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--type-grass) 30%, transparent),
+    color-mix(in oklab, var(--type-grass) 12%, transparent));
+  border-bottom: 2px solid color-mix(in oklab, var(--type-grass) 60%, var(--border));
+}
+
+.waypoint { display: flex; align-items: center; gap: 1rem; }
+.waypoint__num {
+  flex: none;
+  width: 2.6rem; height: 2.6rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--foreground);
+}
+.waypoint__track { flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px); position: relative; }
+.waypoint__track::after { content: ""; position: absolute; right: 0; top: -3px; border: 3px solid var(--border); border-left: none; border-bottom: none; }
+
+/* ── Concept C : Carte des types ────────────────────────────── */
+.badge-marquee {
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
+  padding: 0.6rem 0;
+}
+.badge-marquee__track {
+  display: flex;
+  gap: 0.6rem;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.badge-marquee:hover .badge-marquee__track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .badge-marquee__track { animation: none; flex-wrap: wrap; width: auto; } }
+
+.badge-marquee__track .glass-tag { background: color-mix(in oklab, var(--tc) 15%, var(--card)); border-color: color-mix(in oklab, var(--tc) 45%, var(--border)); color: color-mix(in oklab, var(--tc) 80%, var(--foreground)); }
+
+.type-rule { border-left: 3px solid var(--tc); }
+
+.type-word { color: var(--tc); }
+
+.badge-chip {
+  --tc: var(--type-normal);
+  width: 3.2rem; height: 3.2rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius);
+  border: 2px solid color-mix(in oklab, var(--tc) 60%, var(--border));
+  background: color-mix(in oklab, var(--tc) 22%, var(--card));
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--tc) 85%, var(--foreground));
+}
+.badge-track { display: flex; align-items: center; gap: 0.75rem; }
+.badge-track__line { flex: 1; height: 3px; background: var(--border); position: relative; }
+.badge-track__line.filled { background: var(--primary); }
+.badge-track__line::after { content: ""; position: absolute; right: 0; top: 50%; width: 0.55rem; height: 0.55rem; background: var(--primary); transform: translateY(-50%); }
+
+/* ── Concept D : Console ────────────────────────────────────── */
+.status-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding: 0.7rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.status-strip .readout { display: inline-flex; align-items: baseline; gap: 0.45rem; }
+.status-strip .readout b { font-size: 0.85rem; color: var(--foreground); }
+.status-strip .readout b.amber { color: var(--primary); }
+
+.viewport {
+  position: relative;
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--background) 60%, var(--card));
+  box-shadow: var(--shadow-pixel);
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+.viewport__status {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 0.9rem;
+}
+
+.instrument {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.1rem 1.25rem;
+}
+.instrument__icon {
+  width: 3.2rem; height: 3.2rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--background);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.instrument__readout { text-align: right; font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-foreground); line-height: 1.5; }
+.instrument__readout b { display: block; font-size: 1rem; color: var(--foreground); }
+
+.checklist { display: flex; flex-direction: column; }
+.checklist__item { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; padding: 1rem 0; border-bottom: 2px solid var(--border); }
+.checklist__item:last-child { border-bottom: none; }
+.checklist__box {
+  width: 1.4rem; height: 1.4rem;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-pixel-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.checklist__box.done { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+
+.spec-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.spec-table td { padding: 0.5rem 0.25rem; border-bottom: 2px solid var(--border); }
+.spec-table td:first-child { color: var(--muted-foreground); width: 42%; }
+.spec-table td:last-child { text-align: right; font-weight: 700; color: var(--foreground); }
+.spec-table tr:last-child td { border-bottom: none; }
+
+/* ── layout générique des mockups ───────────────────────────── */
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(1.5rem, 4vw, 2.5rem); align-items: center; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero-title { font-family: var(--font-display); font-weight: 700; line-height: 0.92; letter-spacing: -0.01em; font-size: clamp(2.2rem, 6vw, 3.6rem); text-wrap: balance; color: var(--foreground); }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--primary); }
+.hero-body { margin-top: 1rem; max-width: 34rem; font-size: 0.95rem; color: color-mix(in oklab, var(--foreground) 70%, transparent); }
+.hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.hero-note { margin-top: 0.9rem; font-size: 0.8rem; font-weight: 700; color: color-mix(in oklab, var(--foreground) 55%, transparent); }
+
+.section-title { font-family: var(--font-display); font-weight: 700; line-height: 1; font-size: clamp(1.4rem, 3.5vw, 2.1rem); margin-top: 0.6rem; text-wrap: balance; }
+.section-body { margin-top: 0.6rem; max-width: 38rem; color: color-mix(in oklab, var(--foreground) 65%, transparent); font-size: 0.9rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+
+/* cartes inclinées — interaction tilt identique à HomeCardPreview */
+.tilt-card {
+  --glow-x: 50%; --glow-y: 50%; --rot-x: 0deg; --rot-y: 0deg;
+  perspective: 900px;
+}
+.tilt-card__inner {
+  position: relative;
+  transform: perspective(900px) rotateX(var(--rot-x)) rotateY(var(--rot-y)) translateZ(0);
+  transition: transform 0.2s ease-out;
+  border-radius: 4.55% / 3.5%;
+  overflow: hidden;
+}
+.tilt-card__inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  background: radial-gradient(circle at var(--glow-x) var(--glow-y), color-mix(in oklab, var(--primary) 34%, transparent), transparent 42%);
+}
+.tilt-card:hover .tilt-card__inner::after { opacity: 1; }
+
+.card-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; align-items: center; }
+.card-stack .tilt-card:nth-child(1) { transform: rotate(-2deg); }
+.card-stack .tilt-card:nth-child(3) { transform: rotate(2deg); }
+.card-stack .tilt-card > .tilt-card__inner { box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+.specimen-caption { display: flex; justify-content: space-between; align-items: center; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-foreground); }
+.specimen-caption em { font-style: normal; color: var(--foreground); }
+
+.concept-footer-note {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+.concept-footer-note .rule-line { max-width: 30rem; }
+</style>
+</head>
+<body>
+
+<header class="shell-top">
+  <div class="shell-top__inner">
+    <div class="brand"><span class="dot"></span>Lunidex <span class="font-mono" style="font-size:0.6rem;letter-spacing:0.22em;color:var(--muted-foreground);font-weight:700;">/ HOME REDESIGN — 4 CONCEPTS</span></div>
+    <nav>
+      <a href="#concept-a">A · Frontispice</a>
+      <a href="#concept-b">B · Boot cartouche</a>
+      <a href="#concept-c">C · Carte des types</a>
+      <a href="#concept-d">D · Console</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═════════════════════════════════════════════════════════
+       CONCEPT A — THE FRONTISPIECE (édition imprimée)
+  ═════════════════════════════════════════════════════════ -->
+  <section class="concept" id="concept-a">
+    <div class="concept__head">
+      <div class="concept__num">A</div>
+      <div>
+        <div class="concept__title"><small>Concept A — édition imprimée</small>“The Frontispiece”</div>
+        <p class="concept__intent"><b>Intention :</b> la page d'accueil devient la page de titre et les planches d'un guide de terrain imprimé : papier réglé, numéros de catalogue, tampons de spécimen, filets ornementaux. C'est le versant « carnet de terrain » de l'ADN Lunidex, poussé à son terme.</p>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Hero — frontispice</span>
+      <div class="concept-a__canvas">
+        <div class="concept-a__inner">
+          <div class="hero-grid">
+            <div>
+              <p class="hero-eyebrow">Lunidex — Guide de terrain n° 001</p>
+              <h1 class="hero-title mt-4 dropcap">Collectez vos cartes. Jouez vos Pokémon.</h1>
+              <p class="hero-body">Votre collection TCG et vos équipes Pokémon, enfin réunies dans un seul espace simple et personnel.</p>
+              <div class="hero-ctas">
+                <button class="glass-btn glass-btn--active">Commencer ▸</button>
+                <button class="glass-btn glass-btn--ghost">Explorer le Pokédex</button>
+              </div>
+              <p class="hero-note">Commencez sans compte.</p>
+            </div>
+            <div>
+              <div class="codex-frame" style="padding:1rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
+                  <span class="field-stamp">Échantillon — 3 cartes</span>
+                  <span class="cat-no">PL. I · FIG. 01–03</span>
+                </div>
+                <div class="card-stack">
+                  <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-fire);"><div class="card-mock__top"><span>SWSH1 · 006</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" alt="" /></div><div class="card-mock__foot"><span>Charizard</span><span class="hp">HP 170</span></div></div></div></div>
+                  <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-electric);"><div class="card-mock__top"><span>SWSH1 · 025</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="" /></div><div class="card-mock__foot"><span>Pikachu</span><span class="hp">HP 60</span></div></div></div></div>
+                  <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-psychic);"><div class="card-mock__top"><span>SWSH1 · 150</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="" /></div><div class="card-mock__foot"><span>Mewtwo</span><span class="hp">HP 130</span></div></div></div></div>
+                </div>
+                <div class="specimen-caption"><span><em>FIG. 01</em> — Charizard ex</span><span><em>FIG. 02</em> — Pikachu</span><span><em>FIG. 03</em> — Mewtwo</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Canvas : papier réglé + grain · cartes montées en planches avec légendes FIG. · tampon « ÉCHANTILLON »</p>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Section — planche d'outils</span>
+      <div>
+        <div class="editorial-ornament" aria-hidden="true"><span class="font-mono" style="letter-spacing:0.22em;font-size:0.6rem;">✦</span></div>
+        <p class="hero-eyebrow mt-6" style="text-align:center;">Planche II — Outils de jeu</p>
+        <h2 class="section-title" style="text-align:center;">Explorez les Pokémon. Bâtissez votre équipe.</h2>
+        <div class="mt-6" style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+          <div class="glass-card" style="padding:1.25rem;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="cat-no"><span class="cat-no__num">SPC 01</span> · Pokédex</span><span class="specimen-badge">7 205 entrées</span></div>
+            <p class="font-display" style="font-size:1.4rem;font-weight:700;margin-top:1.5rem;">Explorer le Pokédex</p>
+            <p style="margin-top:0.4rem;font-size:0.85rem;color:color-mix(in oklab,var(--foreground) 65%,transparent);">Parcourez les Pokémon, leurs types, statistiques et évolutions.</p>
+          </div>
+          <div class="glass-card" style="padding:1.25rem;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="cat-no"><span class="cat-no__num">SPC 02</span> · Équipe</span><span class="specimen-badge">6 membres max</span></div>
+            <p class="font-display" style="font-size:1.4rem;font-weight:700;margin-top:1.5rem;">Construire une équipe</p>
+            <p style="margin-top:0.4rem;font-size:0.85rem;color:color-mix(in oklab,var(--foreground) 65%,transparent);">Créez une équipe et vérifiez sa couverture de types.</p>
+          </div>
+        </div>
+        <div class="concept-footer-note"><div class="rule-line"><span>fin de planche</span></div></div>
+      </div>
+      <p class="mockup__note">Filet ornemental · numéros de spécimen SPC 01/02 · badges mono · titres en Pixelify Sans</p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════
+       CONCEPT B — THE CARTRIDGE BOOT (écran de jeu)
+  ═════════════════════════════════════════════════════════ -->
+  <section class="concept" id="concept-b">
+    <div class="concept__head">
+      <div class="concept__num">B</div>
+      <div>
+        <div class="concept__title"><small>Concept B — hardware de jeu</small>“The Cartridge Boot”</div>
+        <p class="concept__intent"><b>Intention :</b> la page devient la séquence de démarrage d'une cartouche : écran avec biseau, coins HUD, ligne de statut, line-up de sprites, « PRESS START ». C'est le versant « cartouche des années 2000 » de l'ADN, avec l'ambre en curseur de menu.</p>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Hero — écran de titre</span>
+      <div class="screen">
+        <span class="screen__corner tl"></span><span class="screen__corner tr"></span>
+        <span class="screen__corner bl"></span><span class="screen__corner br"></span>
+        <div class="hud-line"><span>LUNIDEX · VER. 2.4.1</span><span class="ok">● STATUT : PRÊT</span><span>CARTOUCHE : OK</span></div>
+        <div class="hero-grid">
+          <div>
+            <p class="hero-eyebrow">Lunidex</p>
+            <h1 class="hero-title mt-4">Collectez vos cartes. Jouez vos Pokémon.</h1>
+            <p class="hero-body">Votre collection TCG et vos équipes Pokémon, enfin réunies dans un seul espace simple et personnel.</p>
+            <div class="hero-ctas">
+              <button class="glass-btn glass-btn--active">Press start <span class="caret">▮</span></button>
+              <button class="glass-btn glass-btn--ghost">Explorer le Pokédex</button>
+            </div>
+            <p class="hero-note">Commencez sans compte.</p>
+          </div>
+          <div>
+            <div class="codex-frame" style="padding:1rem 1rem 0.4rem;">
+              <div class="sprite-line">
+                <div class="sprite-slot"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="" /><span>Pikachu</span></div>
+                <div class="sprite-slot"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" alt="" /><span>Charizard</span></div>
+                <div class="sprite-slot"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png" alt="" /><span>Blastoise</span></div>
+                <div class="sprite-slot"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png" alt="" /><span>Vénusaur</span></div>
+              </div>
+              <div class="ground-strip"></div>
+              <div class="specimen-caption" style="margin-top:0.7rem;"><span>ÉQUIPE DE DÉMO</span><span>4 / 6</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Biseau d'écran + coins HUD ambre · ligne de statut mono · line-up de sprites pixelés sur sol teinté · curseur clignotant</p>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Étapes — points de passage</span>
+      <div class="codex-frame" style="padding:clamp(1.25rem,3vw,2rem);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;">
+          <div>
+            <p class="hero-eyebrow">Menu — Progression</p>
+            <h2 class="section-title">Trois étapes. Une collection.</h2>
+          </div>
+          <span class="specimen-badge">Zone 01</span>
+        </div>
+        <div class="mt-8" style="display:flex;flex-direction:column;gap:0.25rem;">
+          <div class="waypoint">
+            <div class="waypoint__num">01</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.1rem;">Ajoutez vos cartes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Scannez ou cherchez vos cartes TCG.</p></div>
+            <div class="waypoint__track"></div>
+          </div>
+          <div class="waypoint">
+            <div class="waypoint__num">02</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.1rem;">Suivez votre collection</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Progression, favoris, complétion par set.</p></div>
+            <div class="waypoint__track"></div>
+          </div>
+          <div class="waypoint">
+            <div class="waypoint__num">03</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.1rem;">Jouez avec vos équipes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Couverture de types et batailles.</p></div>
+            <div class="waypoint__track"></div>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Façon carte du monde : points de passage numérotés reliés par une route en pointillés</p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════
+       CONCEPT C — THE TYPE-CHART MAP (couleurs de types)
+  ═════════════════════════════════════════════════════════ -->
+  <section class="concept" id="concept-c">
+    <div class="concept__head">
+      <div class="concept__num">C</div>
+      <div>
+        <div class="concept__title"><small>Concept C — système de types</small>“The Type-Chart Map”</div>
+        <p class="concept__intent"><b>Intention :</b> les couleurs de types — « l'expression chromatique complète » du système — deviennent le principe d'organisation : chaque section reçoit une identité de type, et la page se lit comme une carte de région que l'on traverse. L'ambre reste réservée aux actions.</p>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Hero — ruban de types + accent</span>
+      <div class="badge-marquee">
+        <div class="badge-marquee__track" id="marquee-track"></div>
+      </div>
+      <div class="mt-6 hero-grid">
+        <div>
+          <p class="hero-eyebrow">Lunidex — Carte des types</p>
+          <h1 class="hero-title mt-4">Collectez vos <span class="type-word" style="--tc:var(--type-water);">cartes</span>. Jouez vos <span class="type-word" style="--tc:var(--type-fighting);">Pokémon</span>.</h1>
+          <p class="hero-body">Votre collection TCG et vos équipes Pokémon, enfin réunies dans un seul espace simple et personnel.</p>
+          <div class="hero-ctas">
+            <button class="glass-btn glass-btn--active">Commencer ▸</button>
+            <button class="glass-btn glass-btn--ghost">Explorer le Pokédex</button>
+          </div>
+          <p class="hero-note">Commencez sans compte.</p>
+        </div>
+        <div class="glass-card type-rule" style="--tc:var(--type-water);padding:1.1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="cat-no">FENÊTRE SPÉCIMEN</span>
+            <span class="glass-tag" style="--tc:var(--type-water);background:color-mix(in oklab,var(--type-water) 15%,var(--card));border-color:color-mix(in oklab,var(--type-water) 45%,var(--border));color:color-mix(in oklab,var(--type-water) 80%,var(--foreground));">EAU</span>
+          </div>
+          <div class="mt-6" style="display:flex;justify-content:center;">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png" alt="" style="width:7rem;height:7rem;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(4px 4px 0 var(--pixel-shadow));" />
+          </div>
+          <div class="specimen-caption"><span><em>Lapras</em> — 131</span><span>ICE / WATER</span></div>
+          <div class="mt-6" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <span class="glass-tag" style="--tc:var(--type-ice);background:color-mix(in oklab,var(--type-ice) 15%,var(--card));border-color:color-mix(in oklab,var(--type-ice) 45%,var(--border));color:color-mix(in oklab,var(--type-ice) 80%,var(--foreground));">GLACE</span>
+            <span class="glass-tag" style="--tc:var(--type-dragon);background:color-mix(in oklab,var(--type-dragon) 15%,var(--card));border-color:color-mix(in oklab,var(--type-dragon) 45%,var(--border));color:color-mix(in oklab,var(--type-dragon) 80%,var(--foreground));">DRAGON</span>
+            <span class="glass-tag" style="--tc:var(--type-psychic);background:color-mix(in oklab,var(--type-psychic) 15%,var(--card));border-color:color-mix(in oklab,var(--type-psychic) 45%,var(--border));color:color-mix(in oklab,var(--type-psychic) 80%,var(--foreground));">PSY</span>
+            <span class="glass-tag" style="--tc:var(--type-dark);background:color-mix(in oklab,var(--type-dark) 15%,var(--card));border-color:color-mix(in oklab,var(--type-dark) 45%,var(--border));color:color-mix(in oklab,var(--type-dark) 80%,var(--foreground));">TÉNÈBRES</span>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Marquee des 18 badges de type (paused au survol) · un mot-clé accentué en couleur de type plate · filet latéral teinté</p>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Étapes — parcours de badges</span>
+      <div class="glass-card type-rule" style="--tc:var(--type-grass);padding:clamp(1.25rem,3vw,2rem);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;">
+          <div>
+            <p class="hero-eyebrow">Badge n° 1 · Plante</p>
+            <h2 class="section-title">Trois étapes. Une collection.</h2>
+          </div>
+          <span class="glass-tag" style="--tc:var(--type-grass);background:color-mix(in oklab,var(--type-grass) 15%,var(--card));border-color:color-mix(in oklab,var(--type-grass) 45%,var(--border));color:color-mix(in oklab,var(--type-grass) 80%,var(--foreground));">ARÈNE : DÉMARRAGE</span>
+        </div>
+        <div class="mt-8" style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div class="badge-track">
+            <div class="badge-chip" style="--tc:var(--type-grass);">01</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Ajoutez vos cartes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Scannez ou cherchez vos cartes TCG.</p></div>
+            <div class="badge-track__line filled"></div>
+          </div>
+          <div class="badge-track">
+            <div class="badge-chip" style="--tc:var(--type-water);">02</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Suivez votre collection</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Progression, favoris, complétion par set.</p></div>
+            <div class="badge-track__line filled"></div>
+          </div>
+          <div class="badge-track">
+            <div class="badge-chip" style="--tc:var(--type-fire);">03</div>
+            <div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Jouez avec vos équipes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Couverture de types et batailles.</p></div>
+            <div class="badge-track__line"></div>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Badges façon arènes : chaque étape a sa teinte de type, piste remplie en ambre</p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════
+       CONCEPT D — THE TRAINER'S CONSOLE (panneau d'instruments)
+  ═════════════════════════════════════════════════════════ -->
+  <section class="concept" id="concept-d">
+    <div class="concept__head">
+      <div class="concept__num">D</div>
+      <div>
+        <div class="concept__title"><small>Concept D — tableau de bord</small>“The Trainer's Console”</div>
+        <p class="concept__intent"><b>Intention :</b> la page d'accueil devient le panneau d'instruments de l'appareil Pokédex : bandeau de statut vivant (données du store Zustand), modules-instruments, checklist de calibration, plaque de spécifications. C'est le plus « Operate » des quatre — le produit, pas une page marketing.</p>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Bandeau de statut + hero console</span>
+      <div class="codex-frame">
+        <div class="status-strip">
+          <span class="readout">POSSÉDÉES <b class="amber">042</b></span>
+          <span class="readout">FAVORIS <b>007</b></span>
+          <span class="readout">ÉQUIPE <b>06 / 06</b></span>
+          <span class="readout">MODE <b>LOCAL</b></span>
+          <span class="readout">SYNC <b>OFF</b></span>
+        </div>
+      </div>
+      <div class="mt-6 hero-grid">
+        <div>
+          <p class="hero-eyebrow">Lunidex — Console</p>
+          <h1 class="hero-title mt-4">Collectez vos cartes. Jouez vos Pokémon.</h1>
+          <p class="hero-body">Votre collection TCG et vos équipes Pokémon, enfin réunies dans un seul espace simple et personnel.</p>
+          <div class="hero-ctas">
+            <button class="glass-btn glass-btn--active">Commencer ▸</button>
+            <button class="glass-btn glass-btn--ghost">Explorer le Pokédex</button>
+          </div>
+          <p class="hero-note">Commencez sans compte.</p>
+        </div>
+        <div class="viewport">
+          <div class="viewport__status"><span>STOCKAGE : 3 EMPLACEMENTS — PRÊT</span><span>000 / 042</span></div>
+          <div class="card-stack">
+            <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-fire);"><div class="card-mock__top"><span>SWSH1 · 006</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" alt="" /></div><div class="card-mock__foot"><span>Charizard</span><span class="hp">HP 170</span></div></div></div></div>
+            <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-electric);"><div class="card-mock__top"><span>SWSH1 · 025</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="" /></div><div class="card-mock__foot"><span>Pikachu</span><span class="hp">HP 60</span></div></div></div></div>
+            <div class="tilt-card"><div class="tilt-card__inner"><div class="card-mock" style="--tc:var(--type-water);"><div class="card-mock__top"><span>SWSH1 · 009</span><span class="card-mock__stage"></span></div><div class="card-mock__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png" alt="" /></div><div class="card-mock__foot"><span>Blastoise</span><span class="hp">HP 160</span></div></div></div></div>
+          </div>
+          <div class="specimen-caption" style="margin-top:0.9rem;"><span>FENÊTRE SPÉCIMEN</span><span>GLISSER POUR FAIRE DÉFILER</span></div>
+        </div>
+      </div>
+      <p class="mockup__note">Bandeau de statut mono alimenté par le store (comme la jauge du header) · viewport avec HUD et guides d'emplacements</p>
+    </div>
+
+    <div class="mockup">
+      <span class="mockup__label">Modules d'instruments + plaque</span>
+      <div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+        <div class="glass-card instrument">
+          <div class="instrument__icon">DEX</div>
+          <div><p class="font-display" style="font-weight:700;font-size:1.2rem;">Pokédex</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Types, stats, évolutions.</p></div>
+          <div class="instrument__readout">MOD 01<b>151 / 1025</b></div>
+        </div>
+        <div class="glass-card instrument">
+          <div class="instrument__icon">TEAM</div>
+          <div><p class="font-display" style="font-weight:700;font-size:1.2rem;">Équipe</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Couverture de types.</p></div>
+          <div class="instrument__readout">MOD 02<b>06 / 06</b></div>
+        </div>
+      </div>
+      <div class="mt-6 codex-frame" style="padding:clamp(1.25rem,3vw,1.75rem);">
+        <div style="display:grid;gap:2rem;grid-template-columns:1.2fr 1fr;align-items:start;">
+          <div>
+            <p class="hero-eyebrow">Calibration</p>
+            <h2 class="section-title">Trois étapes. Aucune configuration.</h2>
+            <div class="mt-6 checklist">
+              <div class="checklist__item"><div class="checklist__box done">✓</div><div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Ajoutez vos cartes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Scannez ou cherchez vos cartes TCG.</p></div></div>
+              <div class="checklist__item"><div class="checklist__box">2</div><div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Suivez votre collection</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Progression, favoris, complétion par set.</p></div></div>
+              <div class="checklist__item"><div class="checklist__box">3</div><div><p class="font-display" style="font-weight:700;font-size:1.05rem;">Jouez avec vos équipes</p><p style="font-size:0.8rem;color:color-mix(in oklab,var(--foreground) 60%,transparent);">Couverture de types et batailles.</p></div></div>
+            </div>
+          </div>
+          <div class="glass-card" style="padding:1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="cat-no">PLAQUE — SPÉCIFICATIONS</span><span class="specimen-badge">FAB. LUNIDEX</span></div>
+            <table class="spec-table mt-4">
+              <tr><td>Données</td><td>100 % locales</td></tr>
+              <tr><td>Compte requis</td><td>Optionnel</td></tr>
+              <tr><td>Synchronisation</td><td>Désactivée</td></tr>
+              <tr><td>Export</td><td>Oui — JSON</td></tr>
+              <tr><td>Statut</td><td style="color:var(--primary);">PRÊT</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p class="mockup__note">Instruments avec code module + readout mono · checklist de calibration avec cases pixel · plaque type étiquette d'appareil pour la promesse local-first</p>
+    </div>
+  </section>
+
+  <div class="concept-footer-note" style="margin-top:4rem;">
+    <div class="rule-line"><span>fin — preview statique · tokens réels de globals.css · sprites PokeAPI</span></div>
+  </div>
+
+</main>
+
+<script>
+// ── Marquee Concept C : les 18 types, doublés pour une boucle sans couture
+(function () {
+  var types = [
+    ['Normal', 'var(--type-normal)'], ['Feu', 'var(--type-fire)'], ['Eau', 'var(--type-water)'],
+    ['Électrik', 'var(--type-electric)'], ['Plante', 'var(--type-grass)'], ['Glace', 'var(--type-ice)'],
+    ['Combat', 'var(--type-fighting)'], ['Poison', 'var(--type-poison)'], ['Sol', 'var(--type-ground)'],
+    ['Vol', 'var(--type-flying)'], ['Psy', 'var(--type-psychic)'], ['Insecte', 'var(--type-bug)'],
+    ['Roche', 'var(--type-rock)'], ['Spectre', 'var(--type-ghost)'], ['Dragon', 'var(--type-dragon)'],
+    ['Ténèbres', 'var(--type-dark)'], ['Acier', 'var(--type-steel)'], ['Fée', 'var(--type-fairy)']
+  ];
+  var track = document.getElementById('marquee-track');
+  var set = types.concat(types);
+  set.forEach(function (t) {
+    var s = document.createElement('span');
+    s.className = 'glass-tag';
+    s.style.setProperty('--tc', t[1]);
+    s.textContent = t[0];
+    track.appendChild(s);
+  });
+})();
+
+// ── Tilt des cartes — même logique que HomeCardPreview
+(function () {
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.tilt-card').forEach(function (card) {
+    var inner = card.querySelector('.tilt-card__inner');
+    card.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch' || prefersReducedMotion) return;
+      var r = card.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      var x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      var y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+      card.style.setProperty('--glow-x', (x * 100).toFixed(1) + '%');
+      card.style.setProperty('--glow-y', (y * 100).toFixed(1) + '%');
+      card.style.setProperty('--rot-x', ((0.5 - y) * 10).toFixed(2) + 'deg');
+      card.style.setProperty('--rot-y', ((x - 0.5) * 10).toFixed(2) + 'deg');
+    });
+    card.addEventListener('pointerleave', function () {
+      card.style.setProperty('--glow-x', '50%');
+      card.style.setProperty('--glow-y', '50%');
+      card.style.setProperty('--rot-x', '0deg');
+      card.style.setProperty('--rot-y', '0deg');
+    });
+  });
+})();
+</script>
+</body>
+</html>

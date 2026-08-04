@@ -12,14 +12,14 @@ import { getProductConsent, setProductConsent, type ProductConsent } from '@/lib
 const STORAGE_KEY = 'primedex-cookie-consent';
 
 const preferenceLabels: Record<SupportedLanguage, { audience: string; product: string; save: string; customize: string }> = {
-  en: { audience: 'Vercel Web Analytics and Speed Insights', product: 'Supabase product measurement', save: 'Save my choices', customize: 'Customize' },
-  fr: { audience: 'Vercel Web Analytics et Speed Insights', product: 'Mesure produit Supabase', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
-  es: { audience: 'Vercel Web Analytics y Speed Insights', product: 'Medición de producto de Supabase', save: 'Guardar mis elecciones', customize: 'Personalizar' },
-  de: { audience: 'Vercel Web Analytics und Speed Insights', product: 'Supabase-Produktmessung', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
-  it: { audience: 'Vercel Web Analytics e Speed Insights', product: 'Misurazione del prodotto Supabase', save: 'Salva le mie scelte', customize: 'Personalizza' },
-  ja: { audience: 'Vercel Web Analytics と Speed Insights', product: 'Supabase プロダクト測定', save: '選択を保存', customize: 'カスタマイズ' },
-  ko: { audience: 'Vercel Web Analytics 및 Speed Insights', product: 'Supabase 제품 측정', save: '선택 저장', customize: '맞춤 설정' },
-  zh: { audience: 'Vercel Web Analytics 和 Speed Insights', product: 'Supabase 产品衡量', save: '保存我的选择', customize: '自定义' },
+  en: { audience: 'Vercel Web Analytics and Speed Insights', product: 'Neon product measurement', save: 'Save my choices', customize: 'Customize' },
+  fr: { audience: 'Vercel Web Analytics et Speed Insights', product: 'Mesure produit Neon', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
+  es: { audience: 'Vercel Web Analytics y Speed Insights', product: 'Medición de producto de Neon', save: 'Guardar mis elecciones', customize: 'Personalizar' },
+  de: { audience: 'Vercel Web Analytics und Speed Insights', product: 'Neon-Produktmessung', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
+  it: { audience: 'Vercel Web Analytics e Speed Insights', product: 'Misurazione del prodotto Neon', save: 'Salva le mie scelte', customize: 'Personalizza' },
+  ja: { audience: 'Vercel Web Analytics と Speed Insights', product: 'Neon プロダクト測定', save: '選択を保存', customize: 'カスタマイズ' },
+  ko: { audience: 'Vercel Web Analytics 및 Speed Insights', product: 'Neon 제품 측정', save: '선택 저장', customize: '맞춤 설정' },
+  zh: { audience: 'Vercel Web Analytics 和 Speed Insights', product: 'Neon 产品衡量', save: '保存我的选择', customize: '自定义' },
 };
 
 function readStoredConsent(): ProductConsent | null {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bell, BellOff, Trash2, Plus, X, TrendingDown, TrendingUp, Send } from 'lucide-react';
 import { toast } from 'sonner';
-import { getSupabaseClient } from '@/lib/supabase/client';
+import { getNeonAccessToken, isNeonAuthConfigured } from '@/lib/neon/client';
 import { subscribeToPush, sendPushNotification, isPushSupported } from '@/lib/push-notifications';
 import { cn } from '@/lib/utils';
 
@@ -35,10 +35,8 @@ interface PriceAlertManagerProps {
 // ---------------------------------------------------------------------------
 
 async function getAuthHeader(): Promise<string | null> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return null;
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token ? `Bearer ${session.access_token}` : null;
+  const token = await getNeonAccessToken();
+  return token ? `Bearer ${token}` : null;
 }
 
 async function fetchAlerts(cardId: string): Promise<PriceAlert[]> {
@@ -345,17 +343,15 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
 
 export function PriceAlertManager({ cardId, cardName }: PriceAlertManagerProps) {
   const [showForm, setShowForm] = useState(false);
-  const supabase = getSupabaseClient();
-
   const { data: alerts, isPending } = useQuery({
     queryKey: ['price-alerts', cardId],
     queryFn: () => fetchAlerts(cardId),
     staleTime: 60 * 1000,
-    enabled: Boolean(supabase),
+    enabled: isNeonAuthConfigured,
   });
 
-  // Don't render if Supabase isn't configured (unauthenticated mode)
-  if (!supabase) return null;
+  // Don't render if Neon Auth isn't configured (unauthenticated mode)
+  if (!isNeonAuthConfigured) return null;
 
   return (
     <div className="space-y-3">

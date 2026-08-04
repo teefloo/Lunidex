@@ -2,8 +2,8 @@
  * Public surface of @primedex/core — the platform-agnostic business logic
  * shared by the web (Next.js) and mobile (Expo) apps.
  *
- * UI-free: data types, the Zustand store, API clients, the Supabase layer and
- * pure helpers. Persistence and Supabase credentials are injected through the
+ * UI-free: data types, the Zustand store, API clients, Neon Auth helpers and
+ * pure helpers. Persistence and Neon endpoints are injected through the
  * `./platform/*` adapters (a `.native.ts` variant is resolved by Metro on
  * React Native).
  *
@@ -17,8 +17,9 @@ export * from './types/dashboard';
 
 export * from './store/primedex';
 
-export * from './supabase/client';
+// Historical path retained so existing consumers keep their persisted-state contract.
 export * from './supabase/sync-state';
-export * from './supabase/useSupabaseSync';
+export * from './neon/client';
+export * from './neon/useNeonSync';
 
 export { default as apiClient, graphqlClient } from './api/client';

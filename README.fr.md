@@ -90,14 +90,19 @@ Aucune variable d’environnement n’est nécessaire pour parcourir le Pokédex
 | Variable | Rôle |
 | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Remplace l’URL canonique publique ; la valeur par défaut est `https://primedex.vercel.app`. |
-| `NEXT_PUBLIC_SUPABASE_URL` | Active l’authentification Supabase et la synchronisation cloud facultatives. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique associée à l’URL Supabase. |
+| `NEXT_PUBLIC_NEON_AUTH_URL` | Endpoint public Neon Auth utilisé par le client web. |
+| `NEON_AUTH_BASE_URL` | Endpoint Neon Auth serveur utilisé par le proxy `/api/auth`. |
+| `NEON_AUTH_JWKS_URL` | Endpoint JWKS serveur utilisé pour vérifier les jetons Neon Auth. |
+| `NEON_AUTH_COOKIE_SECRET` | Secret serveur du cookie du proxy Neon Auth. |
+| `DATABASE_URL` | Connexion Neon serveur fournie par l’intégration Vercel. |
+| `NEON_DATABASE_URL` | Connexion Neon serveur locale, jamais exposée au navigateur. |
+| `SUPABASE_DB_URL` | URL locale de l’ancienne source, uniquement pour les scripts d’export. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Active les abonnements push pour les alertes de prix TCG. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Ajoute la métadonnée de validation Google Search Console. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Active la barre d’analyse UI Agentation en développement. |
 
 > [!TIP]
-> Sans Supabase, Lunidex reste pleinement utilisable en mode local-first : favoris, équipes, captures, filtres et progression TCG restent dans le stockage du navigateur. Sur mobile, utilisez `EXPO_PUBLIC_SUPABASE_URL` et `EXPO_PUBLIC_SUPABASE_ANON_KEY` dans `apps/mobile/.env`.
+> Sans Neon, Lunidex reste pleinement utilisable en mode local-first : favoris, équipes, captures, filtres et progression TCG restent dans le stockage du navigateur. Sur mobile, utilisez `EXPO_PUBLIC_NEON_AUTH_URL` et `EXPO_PUBLIC_APP_URL` dans `apps/mobile/.env`.
 
 <details>
 <summary><strong>Activer Agentation en développement</strong></summary>
@@ -117,9 +122,10 @@ L’outil fonctionne sur `http://localhost:4747` ; son origine de développement
 ```text
 Poke/
 ├── src/                 Application web Next.js 16 (App Router)
-├── packages/core/       @primedex/core : API, état, types, i18n, helpers, Supabase
+├── packages/core/       @primedex/core : API, état, types, i18n, helpers, Neon
 ├── apps/mobile/         Compagnon Expo / React Native
-├── supabase/migrations/ Migrations facultatives du schéma Supabase
+├── neon/migrations/     Migrations du schéma applicatif Neon
+├── supabase/migrations/ Anciennes migrations conservées pour comparaison/retour arrière
 └── public/              Icônes PWA, captures et ressources statiques
 ```
 
@@ -140,7 +146,7 @@ Composants React serveur et client
 | --- | --- |
 | [PokéAPI](https://pokeapi.co/) REST et GraphQL | Pokémon, textes d’espèce, attaques, talents, types, évolutions et rencontres. |
 | [TCGdex](https://www.tcgdex.net/) | Cartes Pokémon TCG, extensions, images, raretés et informations de catalogue. |
-| [Supabase](https://supabase.com/) | Authentification facultative, synchronisation cloud, profils publics, données de jeu et alertes de prix TCG. |
+| [Neon](https://neon.com/) | PostgreSQL, Neon Auth, synchronisation cloud, profils publics, données de jeu et métriques serveur. |
 
 Les composants n’appellent pas directement ces services : les requêtes passent par la couche API du projet.
 

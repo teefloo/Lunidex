@@ -124,7 +124,7 @@ Example: [Pikachu](https://primedex.vercel.app/en/pikachu)
 - `POST https://beta.pokeapi.co/graphql/v1beta` — localized names, flavor text
 - `GET https://api.tcgdex.net/v2/en/cards?pokemon={name}` — TCG cards
 - `GET /api/tcg/sets` — TCG set listing (server proxy)
-- Supabase REST via `@supabase/supabase-js` — auth, user collections sync
+- Neon PostgreSQL and Neon Auth — authenticated application data and user collection sync
 
 ## Item Identifiers
 

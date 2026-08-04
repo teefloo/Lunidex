@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 
-const rpc = vi.fn();
-vi.mock('@/lib/supabase/product-metrics-server', () => ({ isProductMetricsConfigured: false, getProductMetricsClient: () => ({ schema: () => ({ rpc }) }) }));
+vi.mock('@/lib/neon/server', () => ({ getNeonClient: () => null }));
 import { POST } from './route';
 
 function request(body: string, headers: Record<string, string> = {}) { return new NextRequest('https://example.test/api/analytics/product', { method: 'POST', headers: { origin: 'https://example.test', host: 'example.test', 'sec-fetch-site': 'same-origin', 'content-type': 'application/json', ...headers }, body }); }

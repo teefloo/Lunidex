@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, BarChart3, EyeOff, Layers, Loader2, ShieldAlert, Users, type LucideIcon } from 'lucide-react';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';

@@ -101,17 +101,24 @@ No environment variables are required to browse the Pokédex locally. Copy [`.en
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Overrides the canonical public URL. Keep the existing deployment URL unless a real custom domain has been configured. |
-| `NEXT_PUBLIC_SUPABASE_URL` | Enables optional Supabase authentication and cloud state sync. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anonymous key paired with the Supabase URL; RLS still enforces access. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only key used by the aggregated product-metrics endpoint. Never expose it to the browser or use a `NEXT_PUBLIC_*` name. |
+| `NEXT_PUBLIC_NEON_AUTH_URL` | Public Neon Auth endpoint used by the web client. |
+| `NEON_AUTH_BASE_URL` | Server-only Neon Auth endpoint used by the `/api/auth` proxy. |
+| `NEON_AUTH_JWKS_URL` | Server-only JWKS endpoint used to verify Neon Auth tokens. |
+| `NEON_AUTH_COOKIE_SECRET` | Server-only cookie secret for the Neon Auth proxy. |
+| `NEON_DATABASE_URL` | Local server-only Neon connection string for the application API and migration scripts. Never expose it to the browser. |
+| `DATABASE_URL` | Server-only Neon connection string supplied by the Vercel Neon integration in Preview/Production. Never expose it to the browser. |
+| `SUPABASE_DB_URL` | Local-only source URL for the one-time migration/export scripts; never configure it in the application. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Enables browser push subscriptions for TCG price alerts. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Adds Google Search Console verification metadata. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Enables the Agentation UI-review toolbar during development. |
 
 > [!TIP]
-> Without Supabase configuration, Lunidex remains usable in local-first mode: favorites, teams, captures, filters, and TCG progress stay in browser storage. Mobile uses `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `apps/mobile/.env`.
+> Without Neon configuration, Lunidex remains usable in local-first mode: favorites, teams, captures, filters, and TCG progress stay in browser storage. Mobile uses `EXPO_PUBLIC_NEON_AUTH_URL` and `EXPO_PUBLIC_APP_URL` in `apps/mobile/.env`.
 
-For Vercel, configure public variables in the project settings. Add `SUPABASE_SERVICE_ROLE_KEY` only as a sensitive server variable, normally for **Production**; do not paste it into source files, issues, logs, or chat. The API returns an unavailable response when this optional server integration is not configured.
+For Vercel, configure the Neon integration's sensitive `DATABASE_URL` plus the
+Neon Auth base URL, JWKS URL, and cookie secret in Preview and Production. Do
+not paste connection strings or keys into source files, issues, logs, or chat.
+The web data API returns an unavailable response when Neon is not configured.
 
 <details>
 <summary><strong>Enable Agentation in development</strong></summary>
@@ -131,9 +138,10 @@ The helper runs on `http://localhost:4747`; its development-origin and CSP suppo
 ```text
 Poke/
 ├── src/                 Next.js 16 App Router web application
-├── packages/core/       @primedex/core: API, state, types, i18n, helpers, Supabase
+├── packages/core/       @primedex/core: API, state, types, i18n, helpers, Neon
 ├── apps/mobile/         Expo / React Native companion
-├── supabase/migrations/ Optional Supabase schema migrations
+├── neon/migrations/     Neon application schema migrations
+├── supabase/migrations/ Archived source migrations for rollback/comparison
 └── public/              PWA icons, screenshots, and static assets
 ```
 
@@ -155,7 +163,7 @@ React Server and Client Components
 | --- | --- |
 | [PokéAPI](https://pokeapi.co/) REST and GraphQL | Pokémon, species text, moves, abilities, types, evolution data, and encounters. |
 | [TCGdex](https://www.tcgdex.net/) | Pokémon TCG cards, sets, images, rarities, and catalog information. |
-| [Supabase](https://supabase.com/) | Optional authentication, cloud synchronization, public profiles, game data, and TCG-price alert support. |
+| [Neon](https://neon.com/) | PostgreSQL, Neon Auth, cloud synchronization, public profiles, game data, and server-side metrics. |
 
 The web client talks to these services through the project API layer rather than fetching directly from components.
 

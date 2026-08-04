@@ -33,6 +33,7 @@ export const SITE_KEYWORDS = [
 ];
 
 export const GITHUB_REPO_URL = 'https://github.com/teefloo/Poke';
+export const GITHUB_DISCUSSIONS_URL = `${GITHUB_REPO_URL}/discussions`;
 export const GITHUB_ISSUES_URL = 'https://github.com/teefloo/Poke/issues';
 // Retained temporarily for secondary pages; public home metadata and footer do not use them.
 export const TWITTER_HANDLE = '@primedex';

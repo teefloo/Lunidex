@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProductMetricsClient, isProductMetricsConfigured } from '@/lib/supabase/product-metrics-server';
+import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
 
@@ -42,8 +42,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (values.slice(0, expectedArity).some((value) => typeof value !== 'string') || values.slice(expectedArity).some((value) => value !== undefined)) return new NextResponse(null, { status: 400, headers });
   if (values.some((value) => value !== undefined && (typeof value !== 'string' || value.length === 0 || value.length > 32))) return new NextResponse(null, { status: 400, headers });
   if (values.some((value, index) => value !== undefined && !allowed[event][index]?.includes(value as never))) return new NextResponse(null, { status: 400, headers });
-  if (!isProductMetricsConfigured) return new NextResponse(null, { status: 503, headers });
-  const client = getProductMetricsClient();
-  const { error } = await client!.schema('analytics').rpc('increment_daily_metric', { p_event_name: event, p_property_a: payload.propertyA ?? '', p_property_b: payload.propertyB ?? '' });
-  return error ? new NextResponse(null, { status: 503, headers }) : new NextResponse(null, { status: 204, headers });
+  const sql = getNeonClient();
+  if (!sql) return new NextResponse(null, { status: 503, headers });
+  try {
+    await sql`
+      select analytics.increment_daily_metric(
+        ${event}, ${payload.propertyA ?? ''}, ${payload.propertyB ?? ''}
+      )
+    `;
+    return new NextResponse(null, { status: 204, headers });
+  } catch {
+    return new NextResponse(null, { status: 503, headers });
+  }
 }

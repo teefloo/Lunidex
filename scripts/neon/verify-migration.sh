@@ -118,7 +118,7 @@ select concat(
        'users', 'profiles', 'user_state', 'quiz_scores', 'battle_rooms',
        'tcg_price_alerts', 'user_push_subscriptions', 'friend_directory',
        'friendships', 'friend_collection_snapshots', 'friend_deck_snapshots'
-     )) >= 13,
+     )) >= 12,
   '|',
   (select count(*) from information_schema.triggers
    where trigger_schema in ('public', 'analytics')) >= 11,

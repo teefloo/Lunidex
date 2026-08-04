@@ -20,7 +20,7 @@ import { TCGProgressBar } from './TCGProgressBar';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import AuthModal from '@/components/auth/AuthModal';
 

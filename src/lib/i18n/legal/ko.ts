@@ -93,7 +93,7 @@ const privacy: LegalDocument = {
           id: 'data-cookies',
           title: '2.4. 쿠키 및 추적기',
           paragraphs: [
-            'Lunidex는 서비스에 엄격히 필요한 저장소를 사용합니다. 동의한 경우에만 Vercel Web Analytics와 Speed Insights가 이용 및 성능을 측정하고, Supabase에는 제품 측정용 일일 카운터만 전송됩니다. 별도 목적과 선택은 쿠키 정책을 참조하세요.',
+            'Lunidex는 서비스에 엄격히 필요한 저장소를 사용합니다. 동의한 경우에만 Vercel Web Analytics와 Speed Insights가 이용 및 성능을 측정하고, Neon에는 제품 측정용 일일 카운터만 전송됩니다. 별도 목적과 선택은 쿠키 정책을 참조하세요.',
           ],
           list: [
             'primedex-lang(기간: 1년): 선호하는 언어를 기억합니다.',
@@ -442,7 +442,7 @@ const cookies: LegalDocument = {
     {
       id: 'inventory',
       title: '1. 사용되는 쿠키 목록',
-      intro: 'Lunidex는 서비스에 엄격히 필요한 저장소를 사용합니다. Vercel의 이용·성능 측정과 Supabase 제품 측정은 각각의 동의 전까지 비활성화됩니다.',
+      intro: 'Lunidex는 서비스에 엄격히 필요한 저장소를 사용합니다. Vercel의 이용·성능 측정과 Neon 제품 측정은 각각의 동의 전까지 비활성화됩니다.',
       table: {
         headers: ['쿠키', '목적', '유형', '기간', '발행자'],
         rows: [
@@ -495,7 +495,7 @@ const cookies: LegalDocument = {
         '제3자 서비스를 추가하기로 결정하는 경우 본 정책이 업데이트될 수 있습니다. 이 경우, 반드시 필요하지 않은 쿠키를 설치하기 전에 쿠키 배너를 통해 귀하의 동의를 요청합니다.',
       ],
       list: [
-        'Vercel Web Analytics와 Speed Insights는 이용·성능 동의 후에만 로드되며, Supabase는 제품 측정에 별도로 동의한 후에만 집계된 일일 제품 카운터를 받습니다.',
+        'Vercel Web Analytics와 Speed Insights는 이용·성능 동의 후에만 로드되며, Neon은 제품 측정에 별도로 동의한 후에만 집계된 일일 제품 카운터를 받습니다.',
         '광고 쿠키(Meta Pixel, Google Ads, TikTok Pixel 등)는 설치되지 않습니다.',
         '소셜 미디어 쿠키(Facebook, Twitter 공유 버튼 등)는 설치되지 않습니다.',
         '리타겟팅 또는 프로파일링 스크립트는 로드되지 않습니다.',

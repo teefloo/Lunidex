@@ -4,8 +4,8 @@ import { Trophy, Gamepad2, Zap, EyeOff, BrainCircuit, Heart, Users, Shapes, Back
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useAuth } from '@/lib/supabase/AuthProvider';
-import { getSupabaseClient } from '@/lib/supabase/client';
+import { useAuth } from '@/lib/neon/AuthProvider';
+import { fetchAppApi } from '@/lib/app-api';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useState, useEffect } from 'react';
 import { computeTotalXP, getTrainerLevel, getXPProgress, computeWeeklyQuest } from '@/lib/trainer';
@@ -59,16 +59,15 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
 
   useEffect(() => {
     if (!user) return;
-    const supabase = getSupabaseClient();
-    if (!supabase) return;
-    supabase
-      .from('profiles')
-      .select('public_handle')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(({ data: row }) => {
-        if (row?.public_handle) setPublicHandle(row.public_handle);
-      });
+    void fetchAppApi('/api/profile', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const payload = (await response.json()) as {
+          profile?: { public_handle?: string | null } | null;
+        };
+        if (payload.profile?.public_handle) setPublicHandle(payload.profile.public_handle);
+      })
+      .catch(() => {});
   }, [user]);
 
   const displayName = publicHandle

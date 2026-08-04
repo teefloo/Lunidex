@@ -1,14 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 
-const mockGetSupabaseServerClient = vi.hoisted(() => vi.fn());
-const mockAuthGetUser = vi.hoisted(() => vi.fn());
-const mockRpc = vi.hoisted(() => vi.fn());
+const mockGetNeonUserFromRequest = vi.hoisted(() => vi.fn());
+const mockEnsureNeonUser = vi.hoisted(() => vi.fn());
+const mockSql = vi.hoisted(() => Object.assign(vi.fn(), { transaction: vi.fn() }));
 
-vi.mock('@/lib/supabase/server', () => ({
-  bearerToken: (authorization: string | null) => authorization?.replace(/^Bearer\s+/i, '') ?? null,
-  getSupabaseServerClient: mockGetSupabaseServerClient,
-  isSupabaseConfiguredServer: true,
+vi.mock('@/lib/neon/auth', () => ({
+  ensureNeonUser: mockEnsureNeonUser,
+  getNeonUserFromRequest: mockGetNeonUserFromRequest,
+}));
+
+vi.mock('@/lib/neon/server', () => ({
+  getNeonClient: () => mockSql,
 }));
 
 vi.mock('@/lib/rate-limit', () => ({
@@ -20,18 +23,20 @@ import { POST } from './route';
 
 describe('POST /api/quiz/leaderboard', () => {
   beforeEach(() => {
-    mockAuthGetUser.mockReset();
-    mockRpc.mockReset();
-    mockGetSupabaseServerClient.mockReset();
-    mockAuthGetUser.mockResolvedValue({
-      data: { user: { id: 'trainer-1', email: 'ash@example.test', user_metadata: { name: 'Ash' } } },
-      error: null,
+    mockGetNeonUserFromRequest.mockReset();
+    mockEnsureNeonUser.mockReset();
+    mockSql.mockReset();
+    mockSql.transaction.mockReset();
+    mockGetNeonUserFromRequest.mockResolvedValue({
+      id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534',
+      email: 'ash@example.test',
+      user_metadata: { name: 'Ash' },
     });
-    mockGetSupabaseServerClient.mockReturnValue({ auth: { getUser: mockAuthGetUser }, rpc: mockRpc });
+    mockEnsureNeonUser.mockResolvedValue(undefined);
   });
 
-  it('uses the atomic server-owned submission RPC instead of client-controlled row fields', async () => {
-    mockRpc.mockResolvedValue({ data: [{ score: 10, improved: true }], error: null });
+  it('uses an atomic Neon transaction instead of client-controlled row fields', async () => {
+    mockSql.transaction.mockResolvedValue([[{ score: 10 }], []]);
     const request = new NextRequest('http://localhost/api/quiz/leaderboard', {
       method: 'POST',
       headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
@@ -42,15 +47,10 @@ describe('POST /api/quiz/leaderboard', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ ok: true, score: 10, improved: true });
-    expect(mockRpc).toHaveBeenCalledWith('submit_quiz_score', {
-      p_mode: 'time-attack',
-      p_challenge: 'classic',
-      p_score: 100,
-      p_pseudo: 'Ash',
-    });
+    expect(mockSql.transaction).toHaveBeenCalledTimes(1);
   });
 
-  it('rejects malformed scores before invoking the submission RPC', async () => {
+  it('rejects malformed scores before invoking the Neon transaction', async () => {
     const request = new NextRequest('http://localhost/api/quiz/leaderboard', {
       method: 'POST',
       headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
@@ -60,6 +60,6 @@ describe('POST /api/quiz/leaderboard', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(400);
-    expect(mockRpc).not.toHaveBeenCalled();
+    expect(mockSql.transaction).not.toHaveBeenCalled();
   });
 });

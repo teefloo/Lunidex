@@ -1,6 +1,6 @@
 'use client';
 
-import { getSupabaseClient } from './client';
+import { getNeonAccessToken } from '@/lib/neon/client';
 import type {
   LeaderboardChallenge,
   LeaderboardMode,
@@ -8,12 +8,9 @@ import type {
   LeaderboardResponse,
 } from '@/lib/leaderboard';
 
-/** Returns the current access token, or null when signed out / unconfigured. */
+/** Returns the current Neon JWT, or null when signed out / unconfigured. */
 async function getAccessToken(): Promise<string | null> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return null;
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? null;
+  return getNeonAccessToken();
 }
 
 export interface SubmitScoreInput {
@@ -24,7 +21,7 @@ export interface SubmitScoreInput {
 
 /**
  * Submits a daily score for the signed-in user. No-ops (returns false) when
- * Supabase is unconfigured or the user is not authenticated. The score is
+ * Neon Auth is unconfigured or the user is not authenticated. The score is
  * re-validated and clamped server-side, so this is best-effort from the client.
  */
 export async function submitDailyScore(input: SubmitScoreInput): Promise<boolean> {

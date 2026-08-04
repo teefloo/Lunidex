@@ -1,10 +1,8 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 import { notify } from '../platform/notify';
 import { usePrimeDexStore } from '../store/primedex';
-import { getSupabaseClient } from './client';
-import { useAuth } from './AuthProvider';
+import { fetchAppApi } from '../neon/client';
+import { useAuth } from '../neon/AuthProvider';
 import {
   advanceSyncMetadata,
   applySyncState,
@@ -17,18 +15,18 @@ import {
   type SyncMetadata,
 } from './sync-state';
 
-const TABLE = 'user_state';
 const DEBOUNCE_MS = 1200;
 const ANONYMOUS_STORAGE_KEY = 'primedex-storage:anonymous';
 const SYNC_METADATA_PREFIX = 'primedex-sync-metadata:';
 const DEVICE_ID_STORAGE_KEY = 'primedex-sync-device-id';
 
 type Snapshot = ReturnType<typeof pickSyncState>;
-interface PersistedMetadataRecord { state?: { metadata?: unknown; deviceId?: unknown }; }
+interface PersistedMetadataRecord { state?: { metadata?: unknown; deviceId?: unknown } }
 interface MetadataStorage {
   getItem: (name: string) => Promise<PersistedMetadataRecord | null>;
   setItem: (name: string, value: PersistedMetadataRecord) => Promise<void>;
 }
+interface RemoteState { data: unknown; updatedAt: string | null }
 
 function storageKeyForUser(userId: string | null): string {
   return userId ? `primedex-storage:user:${userId}` : ANONYMOUS_STORAGE_KEY;
@@ -73,11 +71,25 @@ async function preserveAnonymousSnapshot(snapshot: Snapshot): Promise<void> {
   usePrimeDexStore.persist.setOptions({ name: ANONYMOUS_STORAGE_KEY });
   applySyncState(snapshot);
 }
+async function loadRemoteState(): Promise<RemoteState> {
+  const response = await fetchAppApi('/api/user-state', { cache: 'no-store' });
+  if (!response.ok) throw new Error(`User state unavailable (${response.status})`);
+  const payload = await response.json() as { data?: unknown; updatedAt?: unknown };
+  return { data: payload.data ?? {}, updatedAt: typeof payload.updatedAt === 'string' ? payload.updatedAt : null };
+}
+async function saveRemoteState(data: object, expectedUpdatedAt: string | null): Promise<boolean> {
+  const response = await fetchAppApi('/api/user-state', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data, expectedUpdatedAt }),
+  });
+  return response.ok;
+}
 
-/** Local-first sync with field stamps and collection tombstones. */
-export function useSupabaseSync(): void {
+/** Local-first sync with field stamps and collection tombstones via Neon API. */
+export function useNeonSync(): void {
   const { user, enabled } = useAuth();
-  const hasHydrated = usePrimeDexStore((s) => s._hasHydrated);
+  const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const userId = user?.id ?? null;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeUserIdRef = useRef<string | null>(null);
@@ -87,9 +99,8 @@ export function useSupabaseSync(): void {
   const applyingRemoteRef = useRef(false);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
     if (!hasHydrated) return;
-    if (!enabled || !supabase || !userId) {
+    if (!enabled || !userId) {
       if (activeUserIdRef.current !== null) {
         activeUserIdRef.current = null;
         metadataRef.current = null;
@@ -98,6 +109,7 @@ export function useSupabaseSync(): void {
       }
       return;
     }
+
     let cancelled = false;
     let unsubscribe: (() => void) | undefined;
     const applyReconciliation = async (state: Snapshot, metadata: SyncMetadata): Promise<void> => {
@@ -114,25 +126,19 @@ export function useSupabaseSync(): void {
       for (let attempt = 0; attempt < 3 && !cancelled; attempt += 1) {
         const local = pickSyncState();
         const localMetadata = metadataRef.current ?? normalizeSyncMetadata(undefined, local);
-        const { data: remoteRow, error: loadError } = await supabase
-          .from(TABLE).select('data, updated_at').eq('user_id', userId).maybeSingle();
-        if (loadError) { console.warn('[supabase-sync] failed to load before save:', loadError.message); return; }
-        const remoteSnapshot = remoteRow?.data ?? {};
-        const reconciled = reconcileSyncState(local, remoteSnapshot as Partial<Snapshot>, localMetadata,
-          extractSyncMetadata(remoteSnapshot), { deviceId });
-        await applyReconciliation(reconciled.state, reconciled.metadata);
-        const payload = buildSyncPayload(remoteSnapshot, reconciled.state, reconciled.metadata);
-        if (!remoteRow) {
-          const { error } = await supabase.from(TABLE).insert({ user_id: userId, data: payload });
-          if (!error) return;
-          if (attempt === 2) console.warn('[supabase-sync] failed to create:', error.message);
-          continue;
+        let remoteRow: RemoteState;
+        try {
+          remoteRow = await loadRemoteState();
+        } catch (error) {
+          console.warn('[neon-sync] failed to load before save:', error instanceof Error ? error.message : 'unknown error');
+          return;
         }
-        const { data: updated, error } = await supabase.from(TABLE)
-          .update({ data: payload }).eq('user_id', userId).eq('updated_at', remoteRow.updated_at)
-          .select('updated_at').maybeSingle();
-        if (!error && updated) return;
-        if (error && attempt === 2) console.warn('[supabase-sync] failed to save:', error.message);
+        const reconciled = reconcileSyncState(local, remoteRow.data as Partial<Snapshot>, localMetadata,
+          extractSyncMetadata(remoteRow.data), { deviceId });
+        await applyReconciliation(reconciled.state, reconciled.metadata);
+        const payload = buildSyncPayload(remoteRow.data, reconciled.state, reconciled.metadata);
+        if (await saveRemoteState(payload, remoteRow.updatedAt)) return;
+        if (attempt === 2) console.warn('[neon-sync] failed to save after conflict retries');
       }
     };
     const schedulePush = (): void => {
@@ -151,13 +157,21 @@ export function useSupabaseSync(): void {
         : hasPreviousAccount ? getInitialSyncState() : local;
       const metadataScope = hasAccountSnapshot || hasPreviousAccount ? userId : null;
       const localMetadata = await readMetadata(metadataScope);
-      const { data: remoteRow, error } = await supabase.from(TABLE)
-        .select('data, updated_at').eq('user_id', userId).maybeSingle();
+      let remoteRow: RemoteState;
+      try {
+        remoteRow = await loadRemoteState();
+      } catch (error) {
+        if (cancelled) return;
+        console.warn('[neon-sync] failed to load:', error instanceof Error ? error.message : 'unknown error');
+        notify.error('Could not load your saved data.');
+        return;
+      }
       if (cancelled) return;
-      if (error) { console.warn('[supabase-sync] failed to load:', error.message); notify.error('Could not load your saved data.'); return; }
-      const remoteSnapshot = remoteRow?.data ?? {};
-      const reconciled = reconcileSyncState(localForMerge, remoteSnapshot as Partial<Snapshot>, localMetadata,
-        extractSyncMetadata(remoteSnapshot), { deviceId, preferLocalLegacyValues: !hasAccountSnapshot && !hasPreviousAccount });
+      const reconciled = reconcileSyncState(localForMerge, remoteRow.data as Partial<Snapshot>, localMetadata,
+        extractSyncMetadata(remoteRow.data), {
+          deviceId,
+          preferLocalLegacyValues: !hasAccountSnapshot && !hasPreviousAccount,
+        });
       await applyReconciliation(reconciled.state, reconciled.metadata);
       activeUserIdRef.current = userId;
       unsubscribe = usePrimeDexStore.subscribe(() => {
@@ -167,7 +181,12 @@ export function useSupabaseSync(): void {
           previousSnapshotRef.current = next;
           return;
         }
-        const metadata = advanceSyncMetadata(metadataRef.current ?? normalizeSyncMetadata(undefined, previous), previous, next, deviceId);
+        const metadata = advanceSyncMetadata(
+          metadataRef.current ?? normalizeSyncMetadata(undefined, previous),
+          previous,
+          next,
+          deviceId,
+        );
         metadataRef.current = metadata;
         previousSnapshotRef.current = next;
         void writeMetadata(userId, metadata);
@@ -176,7 +195,7 @@ export function useSupabaseSync(): void {
       await push();
     };
     void init();
-    const onOnline = (): void => schedulePush();
+    const onOnline = (): void => { schedulePush(); };
     if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
     return () => {
       cancelled = true;
@@ -186,3 +205,6 @@ export function useSupabaseSync(): void {
     };
   }, [enabled, userId, hasHydrated]);
 }
+
+// Kept as a source-compatible alias for existing deep imports.
+export { useNeonSync as useSupabaseSync };

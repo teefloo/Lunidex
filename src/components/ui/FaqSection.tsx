@@ -13,6 +13,14 @@ interface FaqSectionProps {
   allLabel: string;
   searchPlaceholder: string;
   tocLabel: string;
+  clearSearchLabel: string;
+  filterLabel: string;
+  resultsFoundOne: string;
+  resultsFoundOther: string;
+  noResultsTitle: string;
+  noResultsBody: string;
+  expandAnswerLabel: string;
+  collapseAnswerLabel: string;
 }
 
 export default function FaqSection({
@@ -20,6 +28,14 @@ export default function FaqSection({
   allLabel,
   searchPlaceholder,
   tocLabel,
+  clearSearchLabel,
+  filterLabel,
+  resultsFoundOne,
+  resultsFoundOther,
+  noResultsTitle,
+  noResultsBody,
+  expandAnswerLabel,
+  collapseAnswerLabel,
 }: FaqSectionProps) {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -51,74 +67,110 @@ export default function FaqSection({
 
   const clearSearch = useCallback(() => {
     setSearch('');
+    setExpanded(null);
     searchRef.current?.focus();
   }, []);
 
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    setExpanded(null);
+  }, []);
+
+  const handleCategoryChange = useCallback((categoryId: string) => {
+    setActiveCategory(categoryId);
+    setExpanded(null);
+  }, []);
+
+  const resultMessage = (totalVisible === 1 ? resultsFoundOne : resultsFoundOther)
+    .replace('{{count}}', String(totalVisible))
+    .replace('{{query}}', search.trim());
+
   return (
-    <div className="space-y-14">
-      <div className="space-y-4">
+    <div className="space-y-12">
+      <div className="section-frame p-4 md:p-5" data-od-id="faq-search">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40 pointer-events-none" />
+          <label htmlFor="faq-question-search" className="sr-only">
+            {searchPlaceholder}
+          </label>
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45"
+          />
           <Input
+            id="faq-question-search"
             ref={searchRef}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(event) => handleSearchChange(event.target.value)}
             placeholder={searchPlaceholder}
             aria-label={searchPlaceholder}
-            className="pl-10 pr-9"
+            className="h-12 pl-11 pr-14"
           />
           {search && (
             <button
+              type="button"
               onClick={clearSearch}
-              className="touch-target absolute right-1 top-1/2 -translate-y-1/2 text-foreground/55 hover:text-foreground transition-colors"
-              aria-label="Clear search"
+              className="glass-btn touch-target absolute right-1.5 top-1/2 inline-flex -translate-y-1/2 items-center justify-center border-transparent bg-transparent text-foreground/55 shadow-none hover:border-primary hover:bg-card hover:text-foreground hover:shadow-[var(--shadow-pixel-sm)]"
+              aria-label={clearSearchLabel}
             >
-              <X className="h-4 w-4" />
+              <X aria-hidden="true" className="h-4 w-4" />
             </button>
           )}
         </div>
 
-        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={tocLabel}>
-          <button
-            role="radio"
-            aria-checked={activeCategory === 'all'}
-            onClick={() => setActiveCategory('all')}
-              className={cn(
-              'touch-target inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
-              activeCategory === 'all'
-                ? 'border-primary bg-primary/10 text-foreground'
-                : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
+        <div className="mt-4 border-t-2 border-dashed border-foreground/15 pt-4" data-od-id="faq-categories">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="cat-no">{filterLabel}</p>
+            {search.trim() && (
+              <p className="cat-no" aria-live="polite">
+                <span className="cat-no__num">{totalVisible}</span>
+              </p>
             )}
-          >
-            {allLabel}
-          </button>
-          {categories.map((cat) => (
+          </div>
+
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={tocLabel}>
             <button
-              key={cat.id}
+              type="button"
               role="radio"
-              aria-checked={activeCategory === cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              aria-checked={activeCategory === 'all'}
+              onClick={() => handleCategoryChange('all')}
               className={cn(
-                'touch-target inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors',
-                activeCategory === cat.id
-                  ? 'border-primary bg-primary/10 text-foreground'
-                  : 'border-foreground/15 text-muted-foreground hover:border-primary/40 hover:text-foreground/80',
+                'glass-btn touch-target inline-flex min-h-11 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold',
+                activeCategory === 'all'
+                  ? 'glass-btn-active'
+                  : 'text-muted-foreground',
               )}
             >
-              {cat.title}
-              <span className="text-xs text-muted-foreground">({cat.entries.length})</span>
+              {allLabel}
             </button>
-          ))}
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                role="radio"
+                aria-checked={activeCategory === cat.id}
+                onClick={() => handleCategoryChange(cat.id)}
+                className={cn(
+                  'glass-btn touch-target inline-flex min-h-11 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold',
+                  activeCategory === cat.id
+                    ? 'glass-btn-active'
+                    : 'text-muted-foreground',
+                )}
+              >
+                {cat.title}
+                <span className="font-mono text-[0.65rem] text-current opacity-65">{cat.entries.length}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {search && (
-          <p className="text-xs text-muted-foreground" aria-live="polite">
-            {totalVisible} {totalVisible === 1 ? 'result' : 'results'} for &ldquo;{search}&rdquo;
+        {search.trim() && (
+          <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
+            {resultMessage}
           </p>
         )}
       </div>
 
-      <div className="space-y-14" data-od-id="faq-accordion">
+      <div className="space-y-12" data-od-id="faq-accordion">
         {filtered.map((cat) => {
           if (cat.entries.length === 0) return null;
           return (
@@ -141,25 +193,31 @@ export default function FaqSection({
               </header>
 
               <div className="space-y-3">
-                {cat.entries.map((entry) => {
+                {cat.entries.map((entry, index) => {
                   const itemKey = `${cat.id}-${entry.q}`;
+                  const itemId = `${cat.id}-${index + 1}`;
+                  const headingId = `faq-question-${itemId}`;
+                  const answerId = `faq-answer-${itemId}`;
                   const isOpen = expanded === itemKey;
                   return (
                     <div
                       key={itemKey}
+                      data-category={cat.id}
+                      data-od-id={`faq-item-${itemId}`}
                       className={cn(
-                        'section-frame transition-colors',
-                        isOpen && 'ring-1 ring-primary/20',
+                        'glass-card overflow-hidden transition-colors focus-within:border-primary',
+                        isOpen && 'border-primary ring-2 ring-primary/15',
                       )}
                     >
-                      <h3 id={`${itemKey}-heading`}>
+                      <h3 id={headingId}>
                         <button
                           type="button"
                           onClick={() => toggle(itemKey)}
                           aria-expanded={isOpen}
+                          aria-controls={answerId}
+                          title={isOpen ? collapseAnswerLabel : expandAnswerLabel}
                           className={cn(
-                            'flex w-full items-center gap-4 px-5 py-4 md:px-7 md:py-5 text-left font-bold tracking-tight transition-colors',
-                            'hover:bg-foreground/[0.02]',
+                            'flex min-h-16 w-full items-center gap-4 px-4 py-4 text-left font-bold tracking-tight transition-colors hover:bg-foreground/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary md:min-h-[4.5rem] md:px-6 md:py-5',
                             'text-foreground',
                           )}
                         >
@@ -169,19 +227,22 @@ export default function FaqSection({
                               'h-5 w-5 flex-none text-foreground/40 transition-transform duration-200',
                               isOpen && 'rotate-180 text-foreground',
                             )}
+                            aria-hidden="true"
                           />
                         </button>
                       </h3>
                       <div
+                        id={answerId}
                         role="region"
-                        aria-labelledby={`${itemKey}-heading`}
+                        aria-labelledby={headingId}
+                        aria-hidden={!isOpen}
                         className={cn(
-                          'grid transition-[grid-template-rows] duration-200 ease-in-out',
+                          'grid transition-[grid-template-rows] duration-200 ease-in-out motion-reduce:transition-none',
                           isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
                         )}
                       >
                         <div className="overflow-hidden">
-                          <div className="px-5 pb-5 md:px-7 md:pb-6 text-muted-foreground leading-relaxed">
+                          <div className="border-t-2 border-dashed border-foreground/15 px-4 pb-5 pt-4 text-muted-foreground leading-relaxed md:px-6 md:pb-6 md:pt-5">
                             {entry.a}
                           </div>
                         </div>
@@ -195,10 +256,10 @@ export default function FaqSection({
         })}
 
         {totalVisible === 0 && (
-          <div className="text-center py-12 text-foreground/50">
-            <Search className="h-8 w-8 mx-auto mb-3 opacity-40" />
-            <p className="text-sm font-semibold">No results found</p>
-            <p className="text-xs mt-1">Try a different search term or category</p>
+          <div className="section-frame px-5 py-12 text-center text-foreground/60" role="status">
+            <Search aria-hidden="true" className="mx-auto mb-3 h-8 w-8 opacity-40" />
+            <p className="font-display text-xl font-bold text-foreground">{noResultsTitle}</p>
+            <p className="mt-2 text-sm">{noResultsBody}</p>
           </div>
         )}
       </div>

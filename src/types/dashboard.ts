@@ -147,7 +147,7 @@ export interface WeeklyQuest {
 // Public profile (read-only, SEO-indexable)
 // ---------------------------------------------------------------------------
 
-/** Row shape returned by Supabase for public profile queries. */
+/** Row shape returned by the Neon-backed public profile query. */
 export interface PublicProfileRow {
   id: string;
   name: string | null;

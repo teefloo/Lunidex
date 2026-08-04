@@ -4,15 +4,15 @@ import { getLocales } from 'expo-localization';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
 import { usePrimeDexStore } from '@primedex/core';
-import { AuthProvider } from '@primedex/core/supabase/AuthProvider';
-import { useSupabaseSync } from '@primedex/core/supabase/useSupabaseSync';
+import { AuthProvider } from '@primedex/core/neon/AuthProvider';
+import { useNeonSync } from '@primedex/core/neon/useNeonSync';
 import { resolveLanguage } from '@primedex/core/lib/languages';
 import i18n, { loadLanguage } from '@/i18n';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 
-/** Mirrors the local store to the signed-in user's Supabase row (no-op offline). */
-function SupabaseSyncBridge() {
-  useSupabaseSync();
+/** Mirrors the local store to the signed-in user's Neon row (no-op offline). */
+function NeonSyncBridge() {
+  useNeonSync();
   return null;
 }
 
@@ -66,7 +66,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <AuthProvider>
         <ThemeProvider>
           <LocaleBridge>
-            <SupabaseSyncBridge />
+            <NeonSyncBridge />
             {children}
           </LocaleBridge>
         </ThemeProvider>

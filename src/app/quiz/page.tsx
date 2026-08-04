@@ -38,7 +38,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { resolveLanguage } from '@/lib/languages';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { submitDailyScore } from '@/lib/supabase/leaderboard-client';
 import QuizLeaderboard from '@/components/dashboard/QuizLeaderboard';
 import QuizResultCard from '@/components/quiz/QuizResultCard';
@@ -399,7 +399,7 @@ function QuizPageContent() {
 
   // Submit the daily challenge score to the online leaderboard — only when the
   // daily run finishes and the user is signed in. The score is re-validated and
-  // clamped server-side; no-ops entirely when Supabase is unconfigured.
+  // clamped server-side; no-ops entirely when Neon is unconfigured.
   useEffect(() => {
     if (gameState !== 'finished' || !isDaily || !user) return;
     let cancelled = false;
@@ -504,7 +504,7 @@ function QuizPageContent() {
                     {t('quiz.daily')}
                   </Button>
 
-                  {/* Online daily leaderboard (hidden when Supabase is unconfigured) */}
+                  {/* Online daily leaderboard (hidden when Neon is unconfigured) */}
                   <QuizLeaderboard refreshKey={leaderboardRefresh} />
 
                   {/* Filters Section */}

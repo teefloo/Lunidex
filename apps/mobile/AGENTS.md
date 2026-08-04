@@ -7,10 +7,10 @@ Lunidex is the visible product name. Keep `@primedex/core`, `@primedex/mobile`, 
 ## Architecture
 
 - Screens and Expo Router routes live in `app/`; mobile UI components, hooks, providers, and theme code live in `src/`.
-- Import shared APIs, types, store logic, Supabase helpers, and i18n bundles from `@primedex/core`. Do not copy web utilities into mobile.
+- Import shared APIs, types, store logic, Neon helpers, and i18n bundles from `@primedex/core`. Do not copy web utilities into mobile.
 - `metro.config.js` watches the repository root and resolves hoisted workspace dependencies. Keep the workspace alias and core package imports working when adding files.
 - Platform-specific seams live in `packages/core/src/platform`: `.ts` serves web and `.native.ts` serves Expo. Do not introduce platform checks into shared business logic.
-- Mobile persistence uses AsyncStorage and Supabase variables use `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`. Secrets and service-role keys must never ship in the app.
+- Mobile persistence uses AsyncStorage and Neon Auth uses the public `EXPO_PUBLIC_NEON_AUTH_URL` plus the public application URL. Secrets and database connection strings must never ship in the app.
 - The shared i18n data supports the eight web locales: English, French, Spanish, German, Italian, Japanese, Korean, and Chinese.
 
 ## UI conventions
@@ -29,4 +29,4 @@ npm run typecheck --workspace=@primedex/mobile
 npm run lint --workspace=@primedex/mobile
 ```
 
-For accounts and cloud sync, copy `apps/mobile/.env.example` to `apps/mobile/.env` and provide only the public Expo Supabase variables. The app remains local-first when they are absent.
+For accounts and cloud sync, copy `apps/mobile/.env.example` to `apps/mobile/.env` and provide only the public Neon Auth/application URLs. The app remains local-first when they are absent.

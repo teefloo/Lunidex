@@ -13,8 +13,7 @@ type SupportedResource =
   | 'abilities'
   | 'items'
   | 'tcg-card'
-  | 'tcg-set'
-  | 'public-profile';
+  | 'tcg-set';
 
 interface ResourceProbe {
   kind: SupportedResource;
@@ -53,26 +52,6 @@ function getResourceProbe(pathname: string, locale: string): ResourceProbe | nul
       return { kind: 'abilities', url: `${POKEAPI_BASE_URL}/ability/${encodedIdentifier}` };
     case 'items':
       return { kind: 'items', url: `${POKEAPI_BASE_URL}/item/${encodedIdentifier}` };
-    case 'u': {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      if (!supabaseUrl || !supabaseAnonKey) return null;
-
-      const profileUrl = new URL('/rest/v1/public_profiles', supabaseUrl);
-      profileUrl.searchParams.set('select', 'id');
-      profileUrl.searchParams.set('public_handle', `eq.${identifier}`);
-      profileUrl.searchParams.set('is_public', 'eq.true');
-      profileUrl.searchParams.set('limit', '1');
-
-      return {
-        kind: 'public-profile',
-        url: profileUrl.toString(),
-        headers: {
-          apikey: supabaseAnonKey,
-          Authorization: `Bearer ${supabaseAnonKey}`,
-        },
-      };
-    }
     default:
       return null;
   }
@@ -113,16 +92,11 @@ async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
 
   try {
     const response = await fetch(probe.url, {
-      method: probe.kind === 'public-profile' ? 'GET' : 'HEAD',
+      method: 'HEAD',
       headers: probe.headers,
       signal: controller.signal,
     });
     if (response.status === 404) return false;
-    if (probe.kind === 'public-profile') {
-      if (!response.ok) return null;
-      const rows: unknown = await response.json();
-      return Array.isArray(rows) && rows.length > 0;
-    }
     return true;
   } catch {
     // The page fetch remains the source of truth when the probe times out or
@@ -148,6 +122,11 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // API routes, including the Neon Auth proxy, are intentionally unlocalized.
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next();
+  }
 
   const segments = pathname.split('/').filter(Boolean);
   const firstSegment = segments[0];

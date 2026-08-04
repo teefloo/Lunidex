@@ -14,7 +14,6 @@
   "dependencies": {
     "@primedex/core": "*",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@supabase/supabase-js": "^2.108.2",
     "@tanstack/react-query": "^5.90.21",
     "axios": "^1.19.0",
     "axios-retry": "^4.5.0",

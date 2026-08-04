@@ -1,23 +1,31 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Loader2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useRouter } from 'next/navigation';
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
-  const { loading, user, updatePassword } = useAuth();
+  const { loading, updatePassword } = useAuth();
   const router = useRouter();
   const localeHref = useLocaleHref();
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
+  const [hasResetToken, setHasResetToken] = useState(false);
+  const [hasCheckedResetToken, setHasCheckedResetToken] = useState(false);
+
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get('token');
+    setHasResetToken(Boolean(token));
+    setHasCheckedResetToken(true);
+  }, []);
 
   const tt = (key: string, fallback: string) => {
     const value = t(key, { defaultValue: fallback });
@@ -66,12 +74,12 @@ export default function ResetPasswordPage() {
           </div>
         </div>
 
-        {loading ? (
+        {loading || !hasCheckedResetToken ? (
           <div className="flex items-center gap-2 text-sm text-foreground/60" role="status">
             <Loader2 className="h-4 w-4 animate-spin" />
             {tt('auth.reset_loading', 'Verifying your reset link…')}
           </div>
-        ) : user ? (
+        ) : hasResetToken ? (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <p className="text-sm leading-6 text-foreground/60">
               {tt('auth.reset_subtitle', 'Choose a new password for your Lunidex account.')}

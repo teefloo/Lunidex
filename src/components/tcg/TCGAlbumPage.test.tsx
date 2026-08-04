@@ -22,7 +22,7 @@ vi.mock('@/lib/i18n', () => ({
     },
   }),
 }));
-vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => authState }));
+vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => authState }));
 vi.mock('@/components/auth/AuthModal', () => ({ default: () => null }));
 vi.mock('next/image', () => ({ default: () => <div /> }));
 vi.mock('./TCGImageWithFallback', () => ({ TCGImageWithFallback: () => <div /> }));

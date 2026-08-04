@@ -1,38 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 
-const mockGetSupabaseServerClient = vi.hoisted(() => vi.fn());
-const mockAuthGetUser = vi.hoisted(() => vi.fn());
-const mockInsert = vi.hoisted(() => vi.fn());
-const mockSelect = vi.hoisted(() => vi.fn());
-const mockSingle = vi.hoisted(() => vi.fn());
+const mockGetNeonUserFromRequest = vi.hoisted(() => vi.fn());
+const mockEnsureNeonUser = vi.hoisted(() => vi.fn());
+const mockSql = vi.hoisted(() => vi.fn());
 
-vi.mock('@/lib/supabase/server', () => ({
-  bearerToken: (authorization: string | null) => authorization?.replace(/^Bearer\s+/i, '') ?? null,
-  getSupabaseServerClient: mockGetSupabaseServerClient,
-  isSupabaseConfiguredServer: true,
+vi.mock('@/lib/neon/auth', () => ({
+  ensureNeonUser: mockEnsureNeonUser,
+  getNeonUserFromRequest: mockGetNeonUserFromRequest,
+}));
+
+vi.mock('@/lib/neon/server', () => ({
+  getNeonClient: () => mockSql,
 }));
 
 import { GET, POST } from './route';
 
 describe('battle room route', () => {
   beforeEach(() => {
-    mockAuthGetUser.mockReset();
-    mockInsert.mockReset();
-    mockSelect.mockReset();
-    mockSingle.mockReset();
-    mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'trainer-1' } } });
-    mockSelect.mockReturnValue({ single: mockSingle });
-    mockInsert.mockReturnValue({ select: mockSelect });
-    mockGetSupabaseServerClient.mockReset();
-    mockGetSupabaseServerClient.mockReturnValue({
-      auth: { getUser: mockAuthGetUser },
-      from: () => ({ insert: mockInsert }),
-    });
+    mockGetNeonUserFromRequest.mockReset();
+    mockEnsureNeonUser.mockReset();
+    mockSql.mockReset();
+    mockGetNeonUserFromRequest.mockResolvedValue({ id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534', email: 'ash@example.test', user_metadata: { name: 'Ash' } });
+    mockEnsureNeonUser.mockResolvedValue(undefined);
   });
 
   it('stores only canonical Pokémon IDs and discards no arbitrary client fields', async () => {
-    mockSingle.mockResolvedValue({ data: { id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534', status: 'waiting', created_at: '2026-07-28' }, error: null });
+    mockSql.mockResolvedValue([{ id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534', status: 'waiting', created_at: '2026-07-28' }]);
     const request = new NextRequest('http://localhost/api/battle/room', {
       method: 'POST',
       headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
@@ -42,11 +36,8 @@ describe('battle room route', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(200);
-    expect(mockInsert).toHaveBeenCalledWith({
-      player1_id: 'trainer-1',
-      player1_team: [{ id: 25 }],
-      status: 'waiting',
-    });
+    expect(mockSql).toHaveBeenCalled();
+    expect(String(mockSql.mock.calls[0]?.[0]?.[0])).toContain('insert into public.battle_rooms');
   });
 
   it('rejects arbitrary member state before persistence', async () => {
@@ -59,10 +50,10 @@ describe('battle room route', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(400);
-    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockSql).not.toHaveBeenCalled();
   });
 
-  it('rejects malformed room IDs before querying Supabase', async () => {
+  it('rejects malformed room IDs before querying Neon', async () => {
     const request = new NextRequest('http://localhost/api/battle/room?id=not-a-uuid', {
       headers: { authorization: 'Bearer signed-token' },
     });

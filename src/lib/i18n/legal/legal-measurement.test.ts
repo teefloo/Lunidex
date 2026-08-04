@@ -38,6 +38,6 @@ describe('legal measurement disclosures', () => {
     for (const claim of contradictoryClaims) expect(legalText).not.toMatch(claim);
     for (const claim of contradictoryClaims) expect(bundleText).not.toMatch(claim);
     expect(legalText).toMatch(/Vercel/);
-    expect(legalText).toMatch(/Supabase/);
+    expect(legalText).toMatch(/Neon/);
   });
 });

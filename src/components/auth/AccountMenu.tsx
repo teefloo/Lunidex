@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { LogIn } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import AuthModal from './AuthModal';
@@ -20,7 +20,7 @@ export default function AccountMenu() {
     return value === key ? fallback : value;
   };
 
-  // Supabase not configured → keep the app fully local, render nothing.
+  // Neon Auth not configured → keep the app fully local, render nothing.
   if (!enabled) return null;
 
   if (!user) {

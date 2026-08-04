@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  bearerToken,
-  getSupabaseServerClient,
-  isSupabaseConfiguredServer,
-} from '@/lib/supabase/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { getNeonClient } from '@/lib/neon/server';
 import {
   clampScore,
   isLeaderboardChallenge,
@@ -47,52 +44,59 @@ function toEntry(row: LeaderboardRpcRow): LeaderboardEntry {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  if (!isSupabaseConfiguredServer) {
-    return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
-  }
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
 
   const periodParam = request.nextUrl.searchParams.get('period') ?? 'day';
   if (!isLeaderboardPeriod(periodParam)) {
     return NextResponse.json({ error: 'Invalid period' }, { status: 400 });
   }
 
-  const supabase = getSupabaseServerClient();
-  if (!supabase) {
-    return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
-  }
-
   const start = periodStartDate(periodParam);
 
-  // Ranking is done in Postgres (window functions over best-per-user) so ranks
-  // stay correct regardless of table size — see the leaderboard RPC migration.
-  const { data, error } = await supabase.rpc('quiz_leaderboard_top', {
-    p_start: start,
-    p_limit: LEADERBOARD_TOP_N,
-  });
-  if (error) {
-    return NextResponse.json({ error: 'Failed to load leaderboard' }, { status: 500 });
-  }
-
-  const entries = ((data as LeaderboardRpcRow[] | null) ?? []).map(toEntry);
+  const data = await sql`
+    with best as (
+      select distinct on (qs.user_id)
+        qs.user_id, qs.pseudo, qs.score, qs.date
+      from public.quiz_scores qs
+      where ${start}::date is null or qs.date >= ${start}::date
+      order by qs.user_id, qs.score desc, qs.date asc
+    )
+    select row_number() over (order by best.score desc, best.date asc) as rank,
+      best.user_id, best.pseudo, best.score, best.date
+    from best
+    order by rank
+    limit ${LEADERBOARD_TOP_N}
+  ` as LeaderboardRpcRow[];
+  const entries = data.map(toEntry);
 
   // Identify the caller (if signed in) to surface their rank, even outside top N.
   let userRank: number | null = null;
   let userEntry: LeaderboardEntry | null = null;
-  const token = bearerToken(request.headers.get('authorization'));
-  if (token) {
-    const authed = getSupabaseServerClient(token);
-    const { data: userData } = (await authed?.auth.getUser()) ?? { data: { user: null } };
-    const userId = userData?.user?.id ?? null;
-    if (userId) {
-      const { data: rankData } = await supabase.rpc('quiz_leaderboard_user_rank', {
-        p_user: userId,
-        p_start: start,
-      });
-      const row = Array.isArray(rankData) ? (rankData[0] as LeaderboardRpcRow | undefined) : undefined;
-      if (row) {
-        userEntry = toEntry(row);
-        userRank = userEntry.rank;
-      }
+  const currentUser = await getNeonUserFromRequest(request);
+  if (currentUser) {
+    const rankRows = await sql`
+      with best as (
+        select distinct on (qs.user_id)
+          qs.user_id, qs.pseudo, qs.score, qs.date
+        from public.quiz_scores qs
+        where ${start}::date is null or qs.date >= ${start}::date
+        order by qs.user_id, qs.score desc, qs.date asc
+      ),
+      ranked as (
+        select row_number() over (order by best.score desc, best.date asc) as rank,
+          best.user_id, best.pseudo, best.score, best.date
+        from best
+      )
+      select rank, user_id, pseudo, score, date
+      from ranked
+      where user_id = ${currentUser.id}::uuid
+      limit 1
+    ` as LeaderboardRpcRow[];
+    const row = rankRows[0];
+    if (row) {
+      userEntry = toEntry(row);
+      userRank = userEntry.rank;
     }
   }
 
@@ -110,26 +114,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
-  if (!isSupabaseConfiguredServer) {
-    return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
-  }
-
-  const token = bearerToken(request.headers.get('authorization'));
-  if (!token) {
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
-
-  const supabase = getSupabaseServerClient(token);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 404 });
-  }
-
-  // Resolve the user from the token — never trust a user_id from the body.
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  const user = userData?.user;
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-  }
+  await ensureNeonUser(sql, user);
 
   const body = await readJsonBody<{ mode?: unknown; challenge?: unknown; score?: unknown }>(request);
   if (!body) {
@@ -154,20 +145,30 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     '';
   const pseudo = sanitizePseudo(profileName);
 
-  // This is deliberately a single database operation. A read followed by an
-  // upsert can race with another submission and incorrectly report whether a
-  // score improved. The RPC derives auth.uid() and current_date server-side.
-  const { data, error } = await supabase.rpc('submit_quiz_score', {
-    p_mode: body.mode,
-    p_challenge: body.challenge,
-    p_score: score,
-    p_pseudo: pseudo,
-  });
+  const [insertedRows, currentRows] = await sql.transaction((tx) => [
+    tx`
+      insert into public.quiz_scores (user_id, pseudo, mode, challenge, score, date)
+      values (${user.id}::uuid, ${pseudo}, ${body.mode}, ${body.challenge}, ${score}, current_date)
+      on conflict (user_id, date, mode, challenge) do update
+      set score = excluded.score, pseudo = excluded.pseudo
+      where excluded.score > public.quiz_scores.score
+      returning score
+    `,
+    tx`
+      select score
+      from public.quiz_scores
+      where user_id = ${user.id}::uuid
+        and date = current_date
+        and mode = ${body.mode}
+        and challenge = ${body.challenge}
+      limit 1
+    `,
+  ]) as [Array<{ score: number }>, Array<{ score: number }>];
 
-  const result = Array.isArray(data) ? data[0] : data;
-  if (error || !result || typeof result.score !== 'number' || typeof result.improved !== 'boolean') {
+  const result = insertedRows[0] ?? currentRows[0];
+  if (!result || typeof result.score !== 'number') {
     return NextResponse.json({ error: 'Failed to submit score' }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, score: result.score, improved: result.improved });
+  return NextResponse.json({ ok: true, score: result.score, improved: insertedRows.length > 0 });
 }

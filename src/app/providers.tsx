@@ -7,8 +7,8 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { AuthProvider } from '@/lib/supabase/AuthProvider';
-import { useSupabaseSync } from '@/lib/supabase/useSupabaseSync';
+import { AuthProvider } from '@/lib/neon/AuthProvider';
+import { useNeonSync } from '@/lib/neon/useNeonSync';
 import dynamic from 'next/dynamic';
 import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
@@ -17,8 +17,8 @@ import { VercelInsights } from '@/components/analytics/VercelInsights';
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
 
-function SupabaseSyncBridge() {
-  useSupabaseSync();
+function NeonSyncBridge() {
+  useNeonSync();
   return null;
 }
 
@@ -103,7 +103,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <ThemeProvider>
             <GenThemeProvider>
               <TooltipProvider>
-                <SupabaseSyncBridge />
+                <NeonSyncBridge />
                 {children}
                 <VercelInsights />
                 <CommandPalette />

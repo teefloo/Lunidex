@@ -4,16 +4,14 @@
  * POST /api/battle/room  — create a new battle room
  * GET  /api/battle/room?id=<uuid>  — fetch room state
  *
- * ─── Supabase SQL schema ───────────────────────────────────────────────────
+ * ─── Neon SQL schema ──────────────────────────────────────────────────────
  *
- * Run this migration in your Supabase project (SQL Editor or supabase/migrations):
+ * The table is created by `neon/migrations/0001_lunidex_app.sql`:
  *
- * -- supabase/migrations/20240101000000_battle_rooms.sql
- *
- * CREATE TABLE IF NOT EXISTS battle_rooms (
+ * CREATE TABLE IF NOT EXISTS public.battle_rooms (
  *   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
- *   player1_id   UUID REFERENCES auth.users(id),
- *   player2_id   UUID REFERENCES auth.users(id),
+ *   player1_id   UUID REFERENCES app.users(id),
+ *   player2_id   UUID REFERENCES app.users(id),
  *   player1_team JSONB,
  *   player2_team JSONB,
  *   state        JSONB    DEFAULT '{}',
@@ -21,27 +19,16 @@
  *   created_at   TIMESTAMPTZ DEFAULT now()
  * );
  *
- * ALTER TABLE battle_rooms ENABLE ROW LEVEL SECURITY;
- *
- * CREATE POLICY "Players can see their rooms" ON battle_rooms
- *   FOR SELECT USING (auth.uid() IN (player1_id, player2_id));
- *
- * CREATE POLICY "Players can update their rooms" ON battle_rooms
- *   FOR UPDATE USING (auth.uid() IN (player1_id, player2_id));
- *
- * -- Optional: auto-delete rooms older than 2 hours (requires pg_cron extension)
- * -- SELECT cron.schedule(
- * --   'cleanup-battle-rooms',
- * --   '0 * * * *',
- * --   $$DELETE FROM battle_rooms WHERE created_at < NOW() - INTERVAL '2 hours'$$
- * -- );
+ * Authorization is enforced in this route after Neon Auth verifies the
+ * bearer token. An optional cleanup job can be scheduled by the deployment.
  *
  * ──────────────────────────────────────────────────────────────────────────
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServerClient, isSupabaseConfiguredServer, bearerToken } from '@/lib/supabase/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { getNeonClient } from '@/lib/neon/server';
 
 const MAX_TEAM_SIZE = 6;
 const MIN_POKEMON_ID = 1;
@@ -50,6 +37,22 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3
 
 interface BattleTeamMember {
   id: number;
+}
+
+interface BattleRoomRow {
+  id: string;
+  player1_id: string | null;
+  player2_id: string | null;
+  status: 'waiting' | 'active' | 'finished';
+  state: unknown;
+  created_at: string;
+}
+
+interface BattleChatMessage {
+  id: string;
+  userId: string;
+  text: string;
+  timestamp: number;
 }
 
 function isPlainObject(value: unknown): value is object {
@@ -80,23 +83,13 @@ function parseTeam(value: unknown): BattleTeamMember[] | null {
 
 // POST /api/battle/room — create a room
 export async function POST(req: NextRequest) {
-  if (!isSupabaseConfiguredServer) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const token = bearerToken(req.headers.get('authorization'));
-  const supabase = getSupabaseServerClient(token ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
   const body = await readJsonBody<{ team?: unknown }>(req);
   if (!body) {
@@ -111,20 +104,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const { data, error } = await supabase
-    .from('battle_rooms')
-    .insert({
-      player1_id: user.id,
-      player1_team: safeTeam,
-      status: 'waiting',
-    })
-    .select('id, status, created_at')
-    .single();
-
-  if (error) {
-    console.error('[battle/room POST]', error);
-    return NextResponse.json({ error: 'Failed to create battle room' }, { status: 500 });
-  }
+  const rows = await sql`
+    insert into public.battle_rooms (player1_id, player1_team, status)
+    values (
+      ${user.id}::uuid,
+      ${safeTeam ? JSON.stringify(safeTeam) : null}::jsonb,
+      'waiting'
+    )
+    returning id, status, created_at
+  ` as Array<{ id: string; status: string; created_at: string }>;
+  const data = rows[0];
+  if (!data) return NextResponse.json({ error: 'Failed to create battle room' }, { status: 500 });
 
   return NextResponse.json({ roomId: data.id, status: data.status, createdAt: data.created_at });
 }
@@ -139,37 +129,93 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid room id' }, { status: 400 });
   }
 
-  if (!isSupabaseConfiguredServer) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const token = bearerToken(req.headers.get('authorization'));
-  const supabase = getSupabaseServerClient(token ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  await ensureNeonUser(sql, user);
 
-  // RLS will enforce that the user is player1 or player2
-  const { data, error } = await supabase
-    .from('battle_rooms')
-    .select('id, player1_id, player2_id, status, state, created_at')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
-    }
-    return NextResponse.json({ error: 'Failed to load battle room' }, { status: 500 });
-  }
+  const rows = await sql`
+    select id, player1_id, player2_id, status, state, created_at
+    from public.battle_rooms
+    where id = ${id}::uuid
+      and ${user.id}::uuid in (player1_id, player2_id)
+    limit 1
+  ` as BattleRoomRow[];
+  const data = rows[0];
+  if (!data) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
 
   return NextResponse.json(data);
+}
+
+// PATCH /api/battle/room?id=<uuid> — join or append chat
+export async function PATCH(req: NextRequest) {
+  const id = req.nextUrl.searchParams.get('id');
+  if (!id || !UUID_PATTERN.test(id)) {
+    return NextResponse.json({ error: 'Invalid room id' }, { status: 400 });
+  }
+
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+  const user = await getNeonUserFromRequest(req);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  await ensureNeonUser(sql, user);
+
+  const body = await readJsonBody<{ action?: unknown; text?: unknown }>(req);
+  if (!body || (body.action !== 'join' && body.action !== 'chat')) {
+    return NextResponse.json({ error: 'Invalid battle action' }, { status: 400 });
+  }
+
+  if (body.action === 'join') {
+    const rows = await sql`
+      update public.battle_rooms
+      set
+        player2_id = case
+          when player1_id <> ${user.id}::uuid and player2_id is null then ${user.id}::uuid
+          else player2_id
+        end,
+        status = case
+          when player1_id is not null and (
+            player2_id is not null or (player1_id <> ${user.id}::uuid and player2_id is null)
+          ) then 'active'
+          else status
+        end
+      where id = ${id}::uuid
+        and (${user.id}::uuid in (player1_id, player2_id) or player2_id is null)
+      returning id, player1_id, player2_id, status, state, created_at
+    ` as BattleRoomRow[];
+    if (!rows[0]) return NextResponse.json({ error: 'Room not found or unavailable' }, { status: 404 });
+    return NextResponse.json(rows[0]);
+  }
+
+  if (typeof body.text !== 'string') {
+    return NextResponse.json({ error: 'Chat message is required' }, { status: 400 });
+  }
+  const text = body.text.trim();
+  if (!text || text.length > 500) {
+    return NextResponse.json({ error: 'Chat message must contain 1 to 500 characters' }, { status: 400 });
+  }
+
+  const timestamp = Date.now();
+  const message: BattleChatMessage = {
+    id: `${user.id}-${timestamp}`,
+    userId: user.id,
+    text,
+    timestamp,
+  };
+  const rows = await sql`
+    update public.battle_rooms
+    set state = jsonb_set(
+      coalesce(state, '{}'::jsonb),
+      '{chat}',
+      coalesce(state->'chat', '[]'::jsonb) || ${JSON.stringify([message])}::jsonb
+    )
+    where id = ${id}::uuid
+      and ${user.id}::uuid in (player1_id, player2_id)
+    returning id, player1_id, player2_id, status, state, created_at
+  ` as BattleRoomRow[];
+  if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
+  return NextResponse.json(rows[0]);
 }

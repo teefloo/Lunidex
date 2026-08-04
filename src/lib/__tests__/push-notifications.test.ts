@@ -1,30 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // ---------------------------------------------------------------------------
-// Mock Supabase client — must be before the import under test
+// Mock the application API helpers — must be before the import under test
 // ---------------------------------------------------------------------------
 
-vi.mock('../supabase/client', () => ({
-  getSupabaseClient: vi.fn(() => ({
-    auth: {
-      getSession: vi.fn().mockResolvedValue({
-        data: {
-          session: {
-            access_token: 'test-token',
-            user: { id: 'user-123' },
-          },
-        },
-      }),
-    },
-    from: vi.fn(() => ({
-      upsert: vi.fn().mockResolvedValue({ error: null }),
-      delete: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          eq: vi.fn().mockResolvedValue({ error: null }),
-        })),
-      })),
-    })),
-  })),
+const mockGetAppAccessToken = vi.hoisted(() => vi.fn().mockResolvedValue('test-token'));
+
+vi.mock('../app-api', () => ({
+  getAppAccessToken: mockGetAppAccessToken,
+  fetchAppApi: vi.fn(),
 }));
 
 // ---------------------------------------------------------------------------
@@ -85,6 +69,7 @@ describe('push-notifications', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    mockGetAppAccessToken.mockResolvedValue('test-token');
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
   });
@@ -137,10 +122,7 @@ describe('push-notifications', () => {
   });
 
   it('sendPushNotification returns false without an authenticated session', async () => {
-    const { getSupabaseClient } = await import('../supabase/client');
-    vi.mocked(getSupabaseClient).mockReturnValueOnce({
-      auth: { getSession: vi.fn().mockResolvedValue({ data: { session: null } }) },
-    } as unknown as ReturnType<typeof getSupabaseClient>);
+    mockGetAppAccessToken.mockResolvedValueOnce(null);
 
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);

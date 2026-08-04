@@ -24,7 +24,7 @@ The Quiz module is a high-performance, interactive feature that challenges users
 - **Stats**: A technical mode where players must identify a Pokémon based solely on its base stat distribution bars.
 
 ### Daily Challenge
-A special seeded mode that provides the same 10-question sequence to all players on a given day. Results are tracked separately, use `seededRandom` for consistent cross-player experiences, and can be submitted to the authenticated online leaderboard when Supabase is configured.
+A special seeded mode that provides the same 10-question sequence to all players on a given day. Results are tracked separately, use `seededRandom` for consistent cross-player experiences, and can be submitted to the authenticated online leaderboard when Neon is configured.
 
 ## 🛠️ Technical Implementation
 

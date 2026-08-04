@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Trophy, Medal, Loader2, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { fetchLeaderboard } from '@/lib/supabase/leaderboard-client';
 import {
   LEADERBOARD_PERIODS,
@@ -53,7 +53,7 @@ function LeaderboardRow({ entry, isCurrentUser }: { entry: LeaderboardEntry; isC
 
 /**
  * Daily challenge leaderboard with Day / Week / All-time tabs. Renders nothing
- * when Supabase is unconfigured, keeping the app local-first.
+ * when Neon is unconfigured, keeping the app local-first.
  */
 export default function QuizLeaderboard({ refreshKey = 0 }: QuizLeaderboardProps) {
   const { t } = useTranslation();

@@ -1,6 +1,6 @@
 'use client';
 
-import { getSupabaseClient } from './supabase/client';
+import { fetchAppApi, getAppAccessToken } from './app-api';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -43,11 +43,11 @@ export function isPushSupported(): boolean {
 
 /**
  * Requests notification permission, subscribes via the service worker's
- * PushManager, and stores the resulting subscription in Supabase so the
- * Edge Function can reach this device.
+ * PushManager, and stores the resulting subscription in the application
+ * database so the server can reach this device.
  *
  * Returns the PushSubscription, or null if the user denies permission or
- * Supabase is not configured.
+ * the application is not authenticated.
  *
  * @throws if serviceWorker registration fails.
  */
@@ -75,7 +75,7 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
       applicationServerKey: urlBase64ToUint8Array(vapidKey) as unknown as ArrayBuffer,
     }));
 
-  // Persist in Supabase (best-effort — no throw on failure)
+  // Persist in the application database (best-effort — no throw on failure)
   await storePushSubscription(subscription);
 
   return subscription;
@@ -86,7 +86,8 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
 // ---------------------------------------------------------------------------
 
 /**
- * Unsubscribes from push and removes the subscription from Supabase.
+ * Unsubscribes from push and removes the subscription from the application
+ * database.
  */
 export async function unsubscribeFromPush(): Promise<void> {
   if (!isPushSupported()) return;
@@ -100,46 +101,38 @@ export async function unsubscribeFromPush(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
-// Supabase persistence
+// Application database persistence
 // ---------------------------------------------------------------------------
 
 async function storePushSubscription(subscription: PushSubscription): Promise<void> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return;
+  try {
+    const token = await getAppAccessToken();
+    if (!token) return;
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) return;
-
-  const { error } = await supabase.from('user_push_subscriptions').upsert(
-    {
-      user_id: session.user.id,
-      subscription: subscription.toJSON(),
-    },
-    { onConflict: 'user_id, (subscription->>\'endpoint\')' },
-  );
-
-  if (error) {
-    console.error('[push] Failed to store subscription:', error.message);
+    const response = await fetchAppApi('/api/push/subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription: subscription.toJSON() }),
+    });
+    if (!response.ok) console.error('[push] Failed to store subscription:', response.status);
+  } catch (error) {
+    console.error('[push] Failed to store subscription:', error);
   }
 }
 
 async function removePushSubscription(subscription: PushSubscription): Promise<void> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return;
+  try {
+    const token = await getAppAccessToken();
+    if (!token) return;
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) return;
-
-  const endpoint = subscription.endpoint;
-
-  const { error } = await supabase
-    .from('user_push_subscriptions')
-    .delete()
-    .eq('user_id', session.user.id)
-    .eq('subscription->>endpoint', endpoint);
-
-  if (error) {
-    console.error('[push] Failed to remove subscription:', error.message);
+    const response = await fetchAppApi('/api/push/subscription', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: subscription.endpoint }),
+    });
+    if (!response.ok) console.error('[push] Failed to remove subscription:', response.status);
+  } catch (error) {
+    console.error('[push] Failed to remove subscription:', error);
   }
 }
 
@@ -161,15 +154,14 @@ export async function sendPushNotification(
   payload: { title: string; body: string; url?: string },
 ): Promise<boolean> {
   try {
-    const supabase = getSupabaseClient();
-    const session = supabase ? (await supabase.auth.getSession()).data.session : null;
-    if (!session?.access_token) return false;
+    const accessToken = await getAppAccessToken();
+    if (!accessToken) return false;
 
     const res = await fetch('/api/push/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.access_token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ subscription: subscription.toJSON(), payload }),
     });

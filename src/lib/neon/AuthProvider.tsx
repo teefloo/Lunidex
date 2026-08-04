@@ -1,0 +1,212 @@
+'use client';
+
+import {
+  createContext,
+  useContext,
+  useMemo,
+  type ReactNode,
+} from 'react';
+import { isSupportedLanguage } from '@/lib/languages';
+import { normalizeDisplayName } from '@/lib/json-ld';
+import { getNeonAuthClient, isNeonAuthConfigured } from './client';
+
+export interface AppUser {
+  id: string;
+  email: string;
+  created_at?: string;
+  user_metadata: {
+    name?: string;
+    display_name?: string;
+  };
+}
+
+export interface AppSession {
+  user: AppUser;
+  expires_at: number | null;
+}
+
+export interface AuthErrorLike {
+  name: string;
+  message: string;
+}
+
+type AuthResult = { error: AuthErrorLike | null };
+
+interface AuthContextValue {
+  enabled: boolean;
+  loading: boolean;
+  session: AppSession | null;
+  user: AppUser | null;
+  signUp: (email: string, password: string, name?: string) => Promise<AuthResult>;
+  signIn: (email: string, password: string) => Promise<AuthResult>;
+  signInWithOAuth: (provider: 'google' | 'github') => Promise<AuthResult>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<AuthResult>;
+  updatePassword: (password: string) => Promise<AuthResult>;
+}
+
+export const AuthContext = createContext<AuthContextValue | null>(null);
+
+function normalizeError(error: unknown): AuthErrorLike | null {
+  if (!error) return null;
+  if (error instanceof Error) return { name: error.name, message: error.message };
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === 'string') return { name: 'AuthError', message };
+  }
+
+  return { name: 'AuthError', message: 'Authentication failed.' };
+}
+
+function mapUser(user: {
+  id: string;
+  email: string;
+  name?: string | null;
+  createdAt?: Date | string;
+}): AppUser {
+  const name = user.name?.trim() || undefined;
+  return {
+    id: user.id,
+    email: user.email,
+    created_at: user.createdAt ? new Date(user.createdAt).toISOString() : undefined,
+    user_metadata: name ? { name, display_name: name } : {},
+  };
+}
+
+function DisabledAuthProvider({ children }: { children: ReactNode }) {
+  const value = useMemo<AuthContextValue>(() => {
+    const noop = async (): Promise<AuthResult> => ({
+      error: { name: 'NotConfigured', message: 'Neon Auth is not configured.' },
+    });
+
+    return {
+      enabled: false,
+      loading: false,
+      session: null,
+      user: null,
+      signUp: noop,
+      signIn: noop,
+      signInWithOAuth: noop as AuthContextValue['signInWithOAuth'],
+      signOut: async () => {},
+      resetPassword: noop,
+      updatePassword: noop,
+    };
+  }, []);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+type ConnectedAuthClient = NonNullable<ReturnType<typeof getNeonAuthClient>>;
+
+function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {
+  const authState = client.useSession();
+  const sessionData = authState.data;
+  const { session, user } = useMemo(() => {
+    const mappedUser = sessionData?.user ? mapUser(sessionData.user) : null;
+    const mappedSession: AppSession | null = sessionData?.session && mappedUser
+      ? {
+        user: mappedUser,
+        expires_at: Math.floor(new Date(sessionData.session.expiresAt).getTime() / 1000),
+      }
+      : null;
+    return { session: mappedSession, user: mappedUser };
+  }, [sessionData]);
+
+  const redirectTo = typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}`
+    : undefined;
+  const resetRedirectTo = typeof window !== 'undefined'
+    ? (() => {
+      const locale = window.location.pathname.split('/').filter(Boolean)[0];
+      const prefix = isSupportedLanguage(locale ?? '') ? `/${locale}` : '/en';
+      return `${window.location.origin}${prefix}/auth/reset-password`;
+    })()
+    : undefined;
+
+  const value = useMemo<AuthContextValue>(() => ({
+    enabled: true,
+    loading: authState.isPending,
+    session,
+    user,
+    signUp: async (email, password, name) => {
+      const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
+      if (!normalizedName) {
+        return {
+          error: {
+            name: 'ValidationError',
+            message: 'Enter a display name containing visible characters.',
+          },
+        };
+      }
+
+      try {
+        const result = await client.signUp.email({
+          email,
+          password,
+          name: normalizedName,
+          callbackURL: redirectTo,
+        });
+        return { error: normalizeError(result.error) };
+      } catch (error) {
+        return { error: normalizeError(error) };
+      }
+    },
+    signIn: async (email, password) => {
+      try {
+        const result = await client.signIn.email({ email, password, callbackURL: redirectTo });
+        return { error: normalizeError(result.error) };
+      } catch (error) {
+        return { error: normalizeError(error) };
+      }
+    },
+    signInWithOAuth: async (provider) => {
+      try {
+        const result = await client.signIn.social({ provider, callbackURL: redirectTo });
+        return { error: normalizeError(result.error) };
+      } catch (error) {
+        return { error: normalizeError(error) };
+      }
+    },
+    signOut: async () => {
+      await client.signOut();
+    },
+    resetPassword: async (email) => {
+      try {
+        const result = await client.requestPasswordReset({ email, redirectTo: resetRedirectTo });
+        return { error: normalizeError(result.error) };
+      } catch (error) {
+        return { error: normalizeError(error) };
+      }
+    },
+    updatePassword: async (password) => {
+      const token = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('token')
+        : null;
+      if (!token) {
+        return { error: { name: 'InvalidToken', message: 'The password reset link is invalid or expired.' } };
+      }
+
+      try {
+        const result = await client.resetPassword({ newPassword: password, token });
+        return { error: normalizeError(result.error) };
+      } catch (error) {
+        return { error: normalizeError(error) };
+      }
+    },
+  }), [authState.isPending, client, redirectTo, resetRedirectTo, session, user]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const client = getNeonAuthClient();
+  if (!isNeonAuthConfigured || !client) return <DisabledAuthProvider>{children}</DisabledAuthProvider>;
+  return <ConnectedAuthProvider client={client}>{children}</ConnectedAuthProvider>;
+}
+
+export function useAuth(): AuthContextValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within an <AuthProvider>');
+  return ctx;
+}

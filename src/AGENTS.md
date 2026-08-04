@@ -23,8 +23,8 @@ Lunidex is the visible brand. Preserve technical compatibility identifiers such 
 - Use the façade in `src/lib/api.ts` and its API modules instead of ad hoc client-side requests.
 - Store compact IDs and user primitives, not complete API response objects. Check `_hasHydrated` before using persisted state in rendering or effects.
 - Select individual Zustand slices where possible to avoid unnecessary re-renders.
-- Keep Supabase credentials and server-only clients out of browser bundles.
-- The app is local-first: it must remain usable without Supabase variables. Vercel provides optional public Supabase variables and the server-only `SUPABASE_SERVICE_ROLE_KEY` for protected integrations; never expose the latter to client code.
+- Keep Neon connection strings, Auth secrets, and server-only clients out of browser bundles.
+- The app is local-first: it must remain usable without Neon variables. Vercel provides the server-only Neon database/Auth configuration; never expose connection strings, JWKS configuration, or cookie secrets to client code.
 
 ## Verification
 

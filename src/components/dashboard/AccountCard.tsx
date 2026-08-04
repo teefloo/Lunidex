@@ -7,8 +7,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/lib/supabase/AuthProvider';
-import { getSupabaseClient } from '@/lib/supabase/client';
+import { useAuth } from '@/lib/neon/AuthProvider';
+import { fetchAppApi } from '@/lib/app-api';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import AuthModal from '@/components/auth/AuthModal';
@@ -17,7 +17,7 @@ import { HANDLE_REGEX, HANDLE_MIN_LENGTH, HANDLE_MAX_LENGTH } from '@/types/dash
 /**
  * Account panel shown on the dashboard. Surfaces the signed-in identity and the
  * sign-out action (the avatar in the header now links here instead of opening a
- * popover). Renders nothing when Supabase is unconfigured.
+ * popover). Renders nothing when Neon Auth is unconfigured.
  *
  * When the user is signed in, a "Public Profile" section is shown with:
  * - A handle input (3-30 lowercase alphanumeric + hyphens)
@@ -52,18 +52,15 @@ export default function AccountCard() {
     if (!user || !enabled) return;
 
     const loadProfile = async () => {
-      const supabase = getSupabaseClient();
-      if (!supabase) return;
-
-      const { data } = await supabase
-        .from('profiles')
-        .select('public_handle, is_public')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (data) {
-        setPublicHandle(data.public_handle ?? '');
-        setIsPublic(data.is_public ?? false);
+      const response = await fetchAppApi('/api/profile', { cache: 'no-store' });
+      if (response.ok) {
+        const payload = (await response.json()) as {
+          profile?: { public_handle?: string | null; is_public?: boolean } | null;
+        };
+        if (payload.profile) {
+          setPublicHandle(payload.profile.public_handle ?? '');
+          setIsPublic(payload.profile.is_public ?? false);
+        }
       }
       setProfileLoaded(true);
     };
@@ -96,21 +93,23 @@ export default function AccountCard() {
   );
 
   const saveProfile = async (handle: string, publicFlag: boolean) => {
-    const supabase = getSupabaseClient();
-    if (!supabase || !user) return;
+    if (!user) return;
 
     setIsSaving(true);
     try {
-      const { error } = await supabase.rpc('set_public_profile', {
-        p_handle: handle || null,
-        p_is_public: publicFlag,
+      const response = await fetchAppApi('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ handle: handle || null, isPublic: publicFlag }),
       });
 
-      if (error) {
-        if (error.message.includes('Handle already taken')) {
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: unknown } | null;
+        const errorMessage = typeof payload?.error === 'string' ? payload.error : 'Failed to update profile';
+        if (errorMessage.includes('Handle already taken')) {
           setHandleError(tt('profile.handle_taken', 'This handle is already taken'));
         } else {
-          toast.error(error.message);
+          toast.error(errorMessage);
         }
         return;
       }

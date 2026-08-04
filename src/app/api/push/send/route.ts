@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import webpush from 'web-push';
-import { getSupabaseServerClient, bearerToken } from '@/lib/supabase/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
+import { getNeonUserFromRequest } from '@/lib/neon/auth';
+import { getNeonClient } from '@/lib/neon/server';
 
 interface SendPushPayload {
   subscription?: {
@@ -27,19 +28,17 @@ function ensureVapidConfigured() {
 
 // Sends a single push notification. Requires authentication so this route
 // can't be used as an open push-spam relay; in production the actual price
-// checks that trigger sends should run from a scheduled Supabase Edge
-// Function iterating `tcg_price_alerts` + `user_push_subscriptions`, calling
+// checks that trigger sends should run from a scheduled server job iterating
+// `tcg_price_alerts` + `user_push_subscriptions`, calling
 // this same web-push logic server-side. This route also doubles as the
 // manual "send test notification" path used by the client-side helper in
 // `src/lib/push-notifications.ts`.
 export async function POST(request: NextRequest) {
-  const supabase = getSupabaseServerClient(bearerToken(request.headers.get('Authorization')) ?? undefined);
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
+  const sql = getNeonClient();
+  if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const user = await getNeonUserFromRequest(request);
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -81,13 +80,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'payload.url must be a relative URL' }, { status: 400 });
   }
 
-  const { data: ownedSubscription, error: subscriptionError } = await supabase
-    .from('user_push_subscriptions')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('subscription->>endpoint', subscription.endpoint)
-    .maybeSingle();
-  if (subscriptionError || !ownedSubscription) {
+  const ownedRows = await sql`
+    select id
+    from public.user_push_subscriptions
+    where user_id = ${user.id}::uuid
+      and subscription ->> 'endpoint' = ${subscription.endpoint}
+    limit 1
+  `;
+  if (ownedRows.length === 0) {
     return NextResponse.json({ error: 'Subscription is not registered for this user' }, { status: 403 });
   }
 

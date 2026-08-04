@@ -27,7 +27,7 @@ describe('CookieBanner', () => {
     activate(opener);
     const audience = await screen.findByRole('checkbox', { name: 'Vercel Web Analytics and Speed Insights' });
     expect(audience).toHaveFocus();
-    expect(screen.getByRole('checkbox', { name: 'Supabase product measurement' })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Neon product measurement' })).not.toBeChecked();
   });
 
   it('supports separate choices, keyboard activation, saving and focus restoration', async () => {
@@ -35,7 +35,7 @@ describe('CookieBanner', () => {
     const opener = screen.getByRole('button', { name: 'Manage preferences' });
     activate(opener);
     const audience = await screen.findByRole('checkbox', { name: 'Vercel Web Analytics and Speed Insights' });
-    const product = screen.getByRole('checkbox', { name: 'Supabase product measurement' });
+    const product = screen.getByRole('checkbox', { name: 'Neon product measurement' });
     fireEvent.click(audience);
     expect(audience).toBeChecked();
     expect(product).not.toBeChecked();
@@ -61,6 +61,6 @@ describe('CookieBanner', () => {
     activate(screen.getByRole('button', { name: 'Customize' }));
     const audience = await screen.findByRole('checkbox', { name: 'Vercel Web Analytics and Speed Insights' });
     expect(audience).not.toBeChecked();
-    expect(screen.getByRole('checkbox', { name: 'Supabase product measurement' })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Neon product measurement' })).not.toBeChecked();
   });
 });

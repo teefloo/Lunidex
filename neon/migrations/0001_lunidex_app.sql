@@ -1,16 +1,16 @@
 -- Lunidex application schema for Neon PostgreSQL.
 --
 -- This is intentionally not a copy of Supabase's internal auth, storage,
--- realtime, graphql_public or vault schemas. Supabase Auth remains the
--- identity provider during the first migration phase, so app.users stores only
--- the stable Supabase user IDs needed by foreign keys. Password hashes and
--- refresh tokens never leave Supabase Auth.
+-- realtime, graphql_public or vault schemas. Neon Auth owns authentication;
+-- app.users stores the stable Neon Auth IDs needed by foreign keys. Password
+-- hashes and refresh tokens are managed by Neon Auth and never enter this
+-- application schema.
 --
 -- Authorization is kept at the authenticated server/API boundary in this
 -- phase. The database connection string is server-only; do not expose Neon
--- directly to browsers or mobile clients. Supabase RLS policies that depend on
--- auth.uid(), auth.jwt(), anon and authenticated are therefore not replayed
--- here. See docs/neon-migration.md before enabling any direct Data API access.
+-- directly to browsers or mobile clients. The former Supabase RLS policies that
+-- depended on auth.uid(), auth.jwt(), anon and authenticated are therefore not
+-- replayed here. API routes authenticate with Neon Auth and enforce ownership.
 
 begin;
 

@@ -1,6 +1,6 @@
 # Web Library Guide
 
-This directory contains the web application's API façade, pure domain helpers, localization, SEO, Supabase integration, and feature utilities.
+This directory contains the web application's API façade, pure domain helpers, localization, SEO, Neon integration, and feature utilities.
 
 ## Boundaries
 
@@ -8,7 +8,7 @@ This directory contains the web application's API façade, pure domain helpers, 
 - Keep pure calculations deterministic and side-effect free where possible. Feature logic such as team analysis, battle, breeding, filtering, badges, and TCG collection belongs here rather than inside route components.
 - Use `@/lib/i18n` in client code and `@/lib/server-i18n` in server code. Keep the eight supported locales synchronized with `src/lib/languages.ts` and translation bundles.
 - Use the established SEO helpers for canonical URLs, alternate languages, breadcrumbs, JSON-LD, and Open Graph metadata.
-- Keep `src/lib/supabase/server.ts` and other server-only helpers out of client imports. Browser Supabase access must use the public client and RLS-backed operations.
+- Keep `src/lib/neon/server.ts`, `src/lib/neon/server-auth.ts`, and other server-only helpers out of client imports. Browser Auth access must use the Neon Auth client and server API routes.
 - Validate external data at boundaries and use explicit interfaces or unions. Do not introduce `any` or broad `Record<string, unknown>` types.
 
 ## Testing
