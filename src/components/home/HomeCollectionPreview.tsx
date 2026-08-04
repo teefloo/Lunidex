@@ -4,6 +4,8 @@ import { useMounted } from '@/hooks/useMounted';
 import { resolveCollectionEntry } from '@/lib/tcg-collection-entry';
 import { usePrimeDexStore } from '@/store/primedex';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
+import { HomeCardPreview } from './HomeCardPreview';
+import { useHomeFeaturedCards } from './useHomeFeaturedCards';
 
 interface HomeCollectionPreviewProps {
   locale: string;
@@ -14,17 +16,33 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
+  const { cards: featuredCards } = useHomeFeaturedCards(mounted);
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });
   const isResume = entry.mode === 'resume';
 
   return (
     <aside className="min-h-[22rem] rounded-sm border border-border/60 bg-card/45 p-5 shadow-[var(--shadow-pixel)] sm:p-6" aria-labelledby="collection-preview-title">
-      <div aria-hidden="true" className="mb-6 grid grid-cols-3 gap-3">
-        {[0, 1, 2].map((index) => (
-          <div key={index} className="aspect-[2/3] rounded-sm border border-primary/25 bg-primary/5" />
-        ))}
+      <div aria-hidden="true" className="mb-6 grid grid-cols-3 items-center gap-3 px-1">
+        {[0, 1, 2].map((index) => {
+          const card = featuredCards[index];
+          const rotationClass = index === 0 ? '-rotate-2' : index === 2 ? 'rotate-2' : 'rotate-0';
+
+          return card ? (
+            <HomeCardPreview
+              key={card.id}
+              card={card}
+              rotationClass={rotationClass}
+              sizes="(min-width: 1024px) 9rem, 28vw"
+            />
+          ) : (
+            <div
+              key={`card-placeholder-${index}`}
+              className={`aspect-[2.15/3] min-w-0 bg-card/35 [border-radius:4.55%_/_3.5%] ${rotationClass}`}
+            />
+          );
+        })}
       </div>
-      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-primary">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
         {isResume ? copy.previewOwnedEyebrow : copy.previewEyebrow}
       </p>
       <h2 id="collection-preview-title" className="mt-2 text-2xl font-black tracking-tight text-foreground">

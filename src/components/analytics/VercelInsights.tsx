@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import type { ComponentProps } from 'react';
 import { useSyncExternalStore } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { getProductConsent, subscribeProductConsent } from '@/lib/product-measurement';
+import { getProductConsent, getServerProductConsent, subscribeProductConsent } from '@/lib/product-measurement';
 
 type AnalyticsEvent = Parameters<NonNullable<ComponentProps<typeof Analytics>['beforeSend']>>[0];
 
@@ -19,7 +19,7 @@ function redact(event: AnalyticsEvent): AnalyticsEvent | null {
 }
 
 export function VercelInsights() {
-  const consent = useSyncExternalStore(subscribeProductConsent, getProductConsent, getProductConsent);
+  const consent = useSyncExternalStore(subscribeProductConsent, getProductConsent, getServerProductConsent);
   if (consent.audiencePerformance !== 'granted') return null;
   return <><Analytics beforeSend={redact} /><SpeedInsights /></>;
 }

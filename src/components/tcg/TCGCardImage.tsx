@@ -26,9 +26,6 @@ export function TCGCardImage({ card, alt, fill = true, sizes, className }: TCGCa
       fill={fill}
       sizes={sizes}
       className={className}
-      // Avoid the Vercel image proxy for TCG CDN assets. It can return 402
-      // for these URLs, which makes collection and catalog cards disappear.
-      unoptimized
       onError={() => {
         setImageIndex((prev) => Math.min(prev + 1, imageCandidates.length - 1));
       }}

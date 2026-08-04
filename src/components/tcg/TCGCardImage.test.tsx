@@ -9,7 +9,7 @@ vi.mock('next/image', () => ({
       role="img"
       aria-label={props.alt ?? ''}
       data-src={String(props.src)}
-      data-unoptimized={String(props.unoptimized)}
+      data-unoptimized={String(props.unoptimized ?? false)}
     />
   ),
 }));
@@ -24,7 +24,7 @@ const card: TCGCard = {
 };
 
 describe('TCGCardImage', () => {
-  it('loads the TCG CDN image directly without the Next image proxy', () => {
+  it('keeps TCG CDN images on the optimized Next image path', () => {
     render(<TCGCardImage card={card} alt="Pikachu card" />);
 
     const image = screen.getByRole('img', { name: 'Pikachu card' });
@@ -32,6 +32,6 @@ describe('TCGCardImage', () => {
       'data-src',
       'https://assets.tcgdex.net/en/base/basep/24/high.webp',
     );
-    expect(image).toHaveAttribute('data-unoptimized', 'true');
+    expect(image).toHaveAttribute('data-unoptimized', 'false');
   });
 });

@@ -123,6 +123,9 @@ screenshots/
 # Supabase CLI local project metadata
 supabase/.temp/
 
+# Local database exports and migration artifacts
+.neon-migration/
+
 tsconfig.tsbuildinfo
 # =============================================================================
 # 5. Logs & Debug

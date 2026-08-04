@@ -55,6 +55,11 @@ export function getProductConsent(): ProductConsent {
   return cachedConsent;
 }
 
+/** Stable snapshot used by useSyncExternalStore while React hydrates. */
+export function getServerProductConsent(): ProductConsent {
+  return defaultConsent;
+}
+
 let cachedConsent: ProductConsent = defaultConsent;
 
 export function setProductConsent(next: ProductConsent): void {

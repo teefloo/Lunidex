@@ -15,7 +15,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node ./node_modules/vitest/vitest.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:neon:export": "bash scripts/neon/export-supabase.sh",
+    "db:neon:import": "bash scripts/neon/import-to-neon.sh",
+    "db:neon:verify": "bash scripts/neon/verify-migration.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

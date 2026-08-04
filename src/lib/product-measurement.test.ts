@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getProductConsent, getTcgStartSource, markProductActivation, setProductConsent, trackProductEvent, trackReturnAfterActivation } from './product-measurement';
+import { getProductConsent, getServerProductConsent, getTcgStartSource, markProductActivation, setProductConsent, trackProductEvent, trackReturnAfterActivation } from './product-measurement';
 
 const consent = { version: 2 as const, policyVersion: '2026-07-29' as const, chosenAt: '2026-07-30T00:00:00.000Z', audiencePerformance: 'denied' as const, productMeasurement: 'granted' as const };
 
@@ -9,6 +9,12 @@ describe('product measurement consent and return', () => {
     localStorage.setItem('primedex-cookie-consent', 'accepted');
     localStorage.setItem('primedex-consent-v2', JSON.stringify({ version: 1, productMeasurement: 'granted' }));
     expect(getProductConsent().productMeasurement).toBe('unset');
+  });
+  it('keeps the server snapshot at the consent default during hydration', () => {
+    setProductConsent({ ...consent, audiencePerformance: 'granted' });
+    expect(getProductConsent().audiencePerformance).toBe('granted');
+    expect(getServerProductConsent().audiencePerformance).toBe('unset');
+    expect(getServerProductConsent().productMeasurement).toBe('unset');
   });
   it('uses only declared start sources and does not call every visit direct', () => {
     expect(getTcgStartSource('?source=home_cta')).toBe('home_cta');

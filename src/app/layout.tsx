@@ -8,6 +8,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
+import { ClientJsonLd } from "@/components/layout/ClientJsonLd";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
@@ -192,10 +193,9 @@ export default async function RootLayout({
              <ClientCookieBanner />
            </AppContent>
          </Providers>
-        <script
+        <ClientJsonLd
           id="primedex-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          data={jsonLd}
         />
       </body>
     </html>
