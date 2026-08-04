@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: '安装 Lunidex',
+      install_description: '将 Lunidex 添加到主屏幕，享受更快速的应用般体验。',
+      install_action: '安装',
+      dismiss_action: '暂不',
+      ios_title: '在 iPhone 上安装 Lunidex',
+      ios_safari_description: '点击分享，然后选择“添加到主屏幕”即可安装 Lunidex。',
+      ios_browser_description: '请在 Safari 中打开此页面，将 Lunidex 添加到主屏幕。',
+      ios_safari_required: '此安装需要使用 Safari。',
+      ios_share_step: '分享',
+      ios_home_screen_step: '添加到主屏幕',
+      ios_open_safari: '在 Safari 中打开',
+      ios_copy_link: '复制链接',
+      ios_link_copied: '链接已复制',
+      ios_done: '知道了',
+    },
     types_page: {
       title: '属性大师',
       subtitle: '掌握属性，征服每场对战',

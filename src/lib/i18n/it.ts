@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Installa Lunidex',
+      install_description: 'Aggiungi Lunidex alla schermata Home per un’esperienza più rapida, come un’app.',
+      install_action: 'Installa',
+      dismiss_action: 'Non ora',
+      ios_title: 'Installa Lunidex su iPhone',
+      ios_safari_description: 'Tocca Condividi e scegli «Aggiungi alla schermata Home» per installare Lunidex.',
+      ios_browser_description: 'Apri questa pagina in Safari per installare Lunidex sulla schermata Home.',
+      ios_safari_required: 'Per questa installazione è necessario Safari.',
+      ios_share_step: 'Condividi',
+      ios_home_screen_step: 'Aggiungi alla schermata Home',
+      ios_open_safari: 'Apri in Safari',
+      ios_copy_link: 'Copia link',
+      ios_link_copied: 'Link copiato',
+      ios_done: 'Fatto',
+    },
     types_page: {
       title: 'Maestro dei Tipi',
       subtitle: 'Padroneggia gli elementi e vinci ogni lotta',

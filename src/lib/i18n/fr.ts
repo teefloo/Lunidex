@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Installer Lunidex',
+      install_description: 'Ajoutez Lunidex à votre écran d’accueil pour une expérience plus rapide, comme une application.',
+      install_action: 'Installer',
+      dismiss_action: 'Plus tard',
+      ios_title: 'Installer Lunidex sur votre iPhone',
+      ios_safari_description: 'Touchez Partager, puis « Sur l’écran d’accueil » pour installer Lunidex.',
+      ios_browser_description: 'Ouvrez cette page dans Safari pour installer Lunidex sur votre écran d’accueil.',
+      ios_safari_required: 'Safari est nécessaire pour cette installation.',
+      ios_share_step: 'Partager',
+      ios_home_screen_step: 'Sur l’écran d’accueil',
+      ios_open_safari: 'Ouvrir dans Safari',
+      ios_copy_link: 'Copier le lien',
+      ios_link_copied: 'Lien copié',
+      ios_done: 'Compris',
+    },
     types_page: {
       title: 'Maître des Types',
       subtitle: 'Maîtrisez les éléments et conquérez chaque combat',

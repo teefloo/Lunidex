@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Install Lunidex',
+      install_description: 'Add Lunidex to your home screen for a faster, app-like experience.',
+      install_action: 'Install',
+      dismiss_action: 'Not now',
+      ios_title: 'Install Lunidex on your iPhone',
+      ios_safari_description: 'Tap Share, then choose Add to Home Screen to install Lunidex.',
+      ios_browser_description: 'Open this page in Safari to install Lunidex on your home screen.',
+      ios_safari_required: 'Safari is required for this installation.',
+      ios_share_step: 'Share',
+      ios_home_screen_step: 'Add to Home Screen',
+      ios_open_safari: 'Open in Safari',
+      ios_copy_link: 'Copy link',
+      ios_link_copied: 'Link copied',
+      ios_done: 'Got it',
+    },
     types_page: {
       title: 'Type Master',
       subtitle: 'Master the elements and conquer every battle',

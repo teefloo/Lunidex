@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Lunidexをインストール',
+      install_description: 'ホーム画面に追加すると、アプリのようにすばやく利用できます。',
+      install_action: 'インストール',
+      dismiss_action: '今はしない',
+      ios_title: 'iPhoneにLunidexをインストール',
+      ios_safari_description: '共有をタップして「ホーム画面に追加」を選ぶとインストールできます。',
+      ios_browser_description: 'Lunidexをホーム画面に追加するには、このページをSafariで開いてください。',
+      ios_safari_required: 'このインストールにはSafariが必要です。',
+      ios_share_step: '共有',
+      ios_home_screen_step: 'ホーム画面に追加',
+      ios_open_safari: 'Safariで開く',
+      ios_copy_link: 'リンクをコピー',
+      ios_link_copied: 'リンクをコピーしました',
+      ios_done: 'わかりました',
+    },
     types_page: {
       title: 'タイプマスター',
       subtitle: '属性を極めてバトルを制そう',

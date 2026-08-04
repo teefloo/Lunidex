@@ -63,6 +63,11 @@ export async function generateMetadata(): Promise<Metadata> {
     creator: SITE_NAME,
     publisher: SITE_NAME,
     applicationName: SITE_NAME,
+    appleWebApp: {
+      capable: true,
+      title: SITE_NAME,
+      statusBarStyle: 'black-translucent',
+    },
     category: "games",
     classification: "Games, Entertainment, Education",
     referrer: "strict-origin-when-cross-origin",

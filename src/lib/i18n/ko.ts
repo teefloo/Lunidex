@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Lunidex 설치',
+      install_description: '홈 화면에 추가하면 앱처럼 더 빠르게 사용할 수 있습니다.',
+      install_action: '설치',
+      dismiss_action: '나중에',
+      ios_title: 'iPhone에 Lunidex 설치',
+      ios_safari_description: '공유를 누른 다음 ‘홈 화면에 추가’를 선택하면 Lunidex를 설치할 수 있습니다.',
+      ios_browser_description: '홈 화면에 Lunidex를 설치하려면 이 페이지를 Safari에서 여세요.',
+      ios_safari_required: '이 설치에는 Safari가 필요합니다.',
+      ios_share_step: '공유',
+      ios_home_screen_step: '홈 화면에 추가',
+      ios_open_safari: 'Safari에서 열기',
+      ios_copy_link: '링크 복사',
+      ios_link_copied: '링크가 복사되었습니다',
+      ios_done: '확인',
+    },
     types_page: {
       title: '타입 마스터',
       subtitle: '속성을 마스터하고 모든 배틀에서 승리하세요',

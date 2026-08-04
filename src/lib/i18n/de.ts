@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Lunidex installieren',
+      install_description: 'Füge Lunidex zum Home-Bildschirm hinzu – für eine schnellere Nutzung wie in einer App.',
+      install_action: 'Installieren',
+      dismiss_action: 'Nicht jetzt',
+      ios_title: 'Lunidex auf deinem iPhone installieren',
+      ios_safari_description: 'Tippe auf Teilen und wähle „Zum Home-Bildschirm“, um Lunidex zu installieren.',
+      ios_browser_description: 'Öffne diese Seite in Safari, um Lunidex auf deinem Home-Bildschirm zu installieren.',
+      ios_safari_required: 'Für diese Installation wird Safari benötigt.',
+      ios_share_step: 'Teilen',
+      ios_home_screen_step: 'Zum Home-Bildschirm',
+      ios_open_safari: 'In Safari öffnen',
+      ios_copy_link: 'Link kopieren',
+      ios_link_copied: 'Link kopiert',
+      ios_done: 'Verstanden',
+    },
     types_page: {
       title: 'Typen-Meister',
       subtitle: 'Meistere die Elemente und besiege jeden Gegner',

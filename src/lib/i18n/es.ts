@@ -1,6 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pwa: {
+      install_title: 'Instalar Lunidex',
+      install_description: 'Añade Lunidex a tu pantalla de inicio para disfrutar de una experiencia más rápida, como una app.',
+      install_action: 'Instalar',
+      dismiss_action: 'Ahora no',
+      ios_title: 'Instalar Lunidex en tu iPhone',
+      ios_safari_description: 'Toca Compartir y elige «Añadir a pantalla de inicio» para instalar Lunidex.',
+      ios_browser_description: 'Abre esta página en Safari para instalar Lunidex en tu pantalla de inicio.',
+      ios_safari_required: 'Safari es necesario para esta instalación.',
+      ios_share_step: 'Compartir',
+      ios_home_screen_step: 'Añadir a pantalla de inicio',
+      ios_open_safari: 'Abrir en Safari',
+      ios_copy_link: 'Copiar enlace',
+      ios_link_copied: 'Enlace copiado',
+      ios_done: 'Entendido',
+    },
     types_page: {
       title: 'Maestro de Tipos',
       subtitle: 'Domina los elementos y conquista cada batalla',
