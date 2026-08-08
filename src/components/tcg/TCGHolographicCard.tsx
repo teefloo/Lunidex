@@ -1,12 +1,12 @@
 'use client';
 
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import Image from 'next/image';
 import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { getTCGHoloData } from '@/lib/tcg-holo';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 
 interface TCGHolographicCardProps {
   card: TCGCard;
@@ -34,7 +34,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   const animationFrameRef = useRef<number | null>(null);
   const pendingVarsRef = useRef<Record<string, string> | null>(null);
   const [interacting, setInteracting] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
 
   const holoData = useMemo(() => getTCGHoloData(card), [card]);
   const staticStyle = useMemo(() => getInitialHoloStyle(card.id), [card.id]);
@@ -190,8 +189,8 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
           aria-label={t('tcg.open_card_detail', { name: card.name })}
         >
           <div className="card__front">
-            <Image
-              src={imageCandidates[imageIndex] ?? imageCandidates.at(-1) ?? '/images/card-placeholder.svg'}
+            <TCGImageWithFallback
+              candidates={imageCandidates}
               alt={card.name}
               width={660}
               height={921}
@@ -203,12 +202,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               // directly instead.
               unoptimized
               className={cn('card__image', imageClassName)}
-              onError={() => {
-                setImageIndex((current) => {
-                  if (current >= imageCandidates.length - 1) return current;
-                  return current + 1;
-                });
-              }}
             />
             <div className="card__shine" aria-hidden="true" />
             <div className="card__glare" aria-hidden="true" />
