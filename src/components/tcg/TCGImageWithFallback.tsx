@@ -21,6 +21,7 @@ export function TCGImageWithFallback({ candidates, ...props }: TCGImageWithFallb
   return (
     <Image
       {...props}
+      key={`${candidatesKey}:${src}`}
       src={src}
       alt={props.alt}
       onError={(event) => {

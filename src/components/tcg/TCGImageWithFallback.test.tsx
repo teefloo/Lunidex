@@ -36,4 +36,18 @@ describe('TCGImageWithFallback', () => {
 
     expect(screen.getByRole('img', { name: 'Next card' })).toHaveAttribute('src', '/next.png');
   });
+
+  it('ignores an error from the previous image after candidates change', () => {
+    const { rerender } = render(
+      <TCGImageWithFallback candidates={['/first.png', '/first-fallback.png']} alt="Card" width={64} height={88} />,
+    );
+    const previousImage = screen.getByRole('img', { name: 'Card' });
+
+    rerender(
+      <TCGImageWithFallback candidates={['/next.png', '/next-fallback.png']} alt="Card" width={64} height={88} />,
+    );
+    fireEvent.error(previousImage);
+
+    expect(screen.getByRole('img', { name: 'Card' })).toHaveAttribute('src', '/next.png');
+  });
 });

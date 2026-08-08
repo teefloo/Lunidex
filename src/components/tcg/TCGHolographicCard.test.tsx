@@ -34,12 +34,10 @@ describe('TCGHolographicCard', () => {
     const { rerender } = render(
       <TCGHolographicCard card={card('https://assets.tcgdex.net/fr/me/me04/001', 'Previous Tropius')} />,
     );
-    const previousImage = screen.getByRole('img', { name: 'Previous Tropius' });
-
     for (let index = 0; index < 6; index += 1) {
-      fireEvent.error(previousImage);
+      fireEvent.error(screen.getByRole('img', { name: 'Previous Tropius' }));
     }
-    expect(previousImage).toHaveAttribute('src', '/images/card-placeholder.svg');
+    expect(screen.getByRole('img', { name: 'Previous Tropius' })).toHaveAttribute('src', '/images/card-placeholder.svg');
 
     rerender(
       <TCGHolographicCard card={card('https://assets.tcgdex.net/fr/me/me05/001', 'Tropius')} />,
