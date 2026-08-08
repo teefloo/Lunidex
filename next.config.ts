@@ -53,35 +53,6 @@ const withPWA = withPWAInit({
         },
       },
       {
-        urlPattern: /^https:\/\/assets\.tcgdex\.net\/.*$/i,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "tcgdex-images-v3",
-          expiration: {
-            maxEntries: 500,
-            maxAgeSeconds: 604800,
-          },
-          // Cross-origin <img> requests can return opaque responses (status 0).
-          // Rejecting them makes Workbox surface ERR_FAILED and triggers the
-          // card placeholder during client-side navigation.
-          cacheableResponse: { statuses: [0, 200] },
-          networkTimeoutSeconds: 10,
-        },
-      },
-      {
-        urlPattern: /^https:\/\/images\.tcgdex\.net\/.*$/i,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "tcgdex-images-v3",
-          expiration: {
-            maxEntries: 500,
-            maxAgeSeconds: 604800,
-          },
-          cacheableResponse: { statuses: [0, 200] },
-          networkTimeoutSeconds: 10,
-        },
-      },
-      {
         urlPattern: ({ sameOrigin, url }: { sameOrigin: boolean; url: URL }) =>
           sameOrigin && /\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico)$/i.test(url.pathname),
         handler: "CacheFirst",
