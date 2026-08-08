@@ -19,7 +19,7 @@ vi.mock('./cache', () => ({
   setCachedData: mockSetCachedData,
 }));
 
-import { getAllSets, getFilterOptions, searchCards, sortCardsByReleaseDate } from './tcg';
+import { getAllSets, getFilterOptions, getPokemonCards, searchCards, sortCardsByReleaseDate } from './tcg';
 import type { TCGCard } from '@/types/tcg';
 
 function makeRawSet(id: string, name: string) {
@@ -110,6 +110,14 @@ describe('TCG set freshness', () => {
 });
 
 describe('Pokémon card ordering', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
   it('sorts cards by release date from newest to oldest', () => {
     const cards = [
       { id: 'old-2', localId: '2', name: 'Old 2', set: { id: 'old', name: 'Old', releaseDate: '2020-01-01' } },
@@ -119,6 +127,26 @@ describe('Pokémon card ordering', () => {
     ] satisfies TCGCard[];
 
     expect(sortCardsByReleaseDate(cards).map((card) => card.id)).toEqual(['new-1', 'old-1', 'old-2', 'missing']);
+  });
+
+  it('returns search summaries without blocking on every card detail', async () => {
+    mockGet.mockResolvedValueOnce({
+      data: [
+        { id: 'pikachu-1', localId: '1', name: 'Pikachu', image: 'https://example.test/pikachu-1' },
+        { id: 'pikachu-2', localId: '2', name: 'Pikachu V', image: 'https://example.test/pikachu-2' },
+      ],
+    });
+
+    const cards = await getPokemonCards('Pikachu');
+
+    expect(cards.map((card) => card.id)).toEqual(['pikachu-1', 'pikachu-2']);
+    expect(mockGet).toHaveBeenCalledTimes(1);
+    expect(mockGet).toHaveBeenCalledWith(expect.stringContaining('/en/cards?'));
+    expect(mockGet).not.toHaveBeenCalledWith(expect.stringMatching(/\/en\/cards\/[^?]/));
+    expect(mockSetCachedData).toHaveBeenCalledWith(
+      'tcg-pokemon-cards-v11-en-Pikachu',
+      expect.arrayContaining([expect.objectContaining({ id: 'pikachu-1' })]),
+    );
   });
 });
 

@@ -1074,7 +1074,12 @@ export const getRaritiesForSet = async (setId: string, lang = 'en'): Promise<str
 };
 
 /**
- * Fetch cards by Pokémon name with English fallback and detail enrichment.
+ * Fetch card summaries by Pokémon name with an English fallback.
+ *
+ * The search endpoint already provides the identity and image needed by the
+ * grid. Fetching every card detail here blocks the entire grid behind hundreds
+ * of requests for popular Pokémon; details are hydrated on demand by the card
+ * modal instead.
  */
 export const getPokemonCards = async (
   pokemonName: string,
@@ -1082,7 +1087,7 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v10-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v11-${tcgLang}-${pokemonName}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
@@ -1101,14 +1106,7 @@ export const getPokemonCards = async (
       cards = await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en');
     }
 
-    const enriched = await Promise.all(
-      cards.map(async (card) => {
-        const fullDetails = await getTCGCard(card.id, tcgLang);
-        return fullDetails || card;
-      }),
-    );
-
-    const sorted = sortCardsByReleaseDate(enriched);
+    const sorted = sortCardsByReleaseDate(cards);
     await setCachedData(cacheKey, sorted);
     return sorted;
   } catch (error) {
