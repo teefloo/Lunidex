@@ -21,6 +21,7 @@ import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -56,10 +57,17 @@ export function TCGResearchDesk({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
-  const tcgWishlistCards = usePrimeDexStore((s) => s.tcgWishlistCards);
+  const {
+    language,
+    systemLanguage,
+    tcgOwnedCards,
+    tcgWishlistCards,
+  } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+    tcgOwnedCards: state.tcgOwnedCards,
+    tcgWishlistCards: state.tcgWishlistCards,
+  })));
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);

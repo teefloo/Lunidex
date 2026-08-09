@@ -11,8 +11,7 @@ import { TCGComparePanel } from './TCGComparePanel';
 export function TCGCompareTrigger() {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const store = usePrimeDexStore();
-  const tcgCompareList = store.tcgCompareList ?? [];
+  const tcgCompareList = usePrimeDexStore((state) => state.tcgCompareList);
   const [panelOpen, setPanelOpen] = useState(false);
 
   if (!mounted || tcgCompareList.length === 0) return null;

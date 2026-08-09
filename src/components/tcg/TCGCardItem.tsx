@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGHolographicCard } from './TCGHolographicCard';
 
@@ -27,11 +28,12 @@ export const TCGCardItem = memo(function TCGCardItem({
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
-  const store = usePrimeDexStore();
-  const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
-  const isTCGOwned = store.isTCGOwned ?? (() => false);
+  const { toggleTCGOwned, isTCGOwned } = usePrimeDexStore(useShallow((state) => ({
+    toggleTCGOwned: state.toggleTCGOwned,
+    isTCGOwned: state.tcgOwnedCards.includes(card.id),
+  })));
 
-  const owned = mounted ? isTCGOwned(card.id) : false;
+  const owned = mounted && isTCGOwned;
   const isList = variant === 'list';
 
   return (
@@ -44,7 +46,8 @@ export const TCGCardItem = memo(function TCGCardItem({
       <TCGHolographicCard
         card={card}
         onClick={onClick}
-        priority={index < 2}
+        priority={index === 0}
+        quality="low"
         noFrame={isList}
         className={cn(
           'w-full',

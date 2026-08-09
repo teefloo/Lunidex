@@ -12,6 +12,25 @@ import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 3600;
 
+async function loadInitialCatalog(language: string) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+  try {
+    return await searchCards(
+      { ...DEFAULT_TCG_CARD_FILTERS, selectedSet: DEFAULT_LATEST_TCG_SET.id },
+      language,
+      1,
+      24,
+      controller.signal,
+    );
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
@@ -42,12 +61,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TCGPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const initialCatalog = await searchCards(
-    { ...DEFAULT_TCG_CARD_FILTERS, selectedSet: DEFAULT_LATEST_TCG_SET.id },
-    lang,
-    1,
-    24,
-  ).catch(() => null);
+  const initialCatalog = await loadInitialCatalog(lang);
   const initialTabLabels = {
     'tcg.nav_catalog': t('tcg.nav_catalog'),
     'tcg.nav_collection': t('tcg.nav_collection'),

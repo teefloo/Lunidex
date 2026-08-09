@@ -14,6 +14,7 @@ interface TCGHolographicCardProps {
   imageClassName?: string;
   onClick?: (card: TCGCard) => void;
   priority?: boolean;
+  quality?: 'low' | 'high';
   sizes?: string;
   noFrame?: boolean;
 }
@@ -26,6 +27,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   imageClassName,
   onClick,
   priority = false,
+  quality = 'high',
   sizes = '(min-width: 1280px) 260px, (min-width: 768px) 30vw, 45vw',
   noFrame = false,
 }: TCGHolographicCardProps) {
@@ -37,7 +39,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
 
   const holoData = useMemo(() => getTCGHoloData(card), [card]);
   const staticStyle = useMemo(() => getInitialHoloStyle(card.id), [card.id]);
-  const imageCandidates = useMemo(() => getTCGCardImageCandidates(card), [card]);
+  const imageCandidates = useMemo(() => getTCGCardImageCandidates(card, quality), [card, quality]);
   const setId = card.set?.id ?? card.id.split('-')[0] ?? '';
   const cardNumber = card.localId ?? card.number ?? '';
 

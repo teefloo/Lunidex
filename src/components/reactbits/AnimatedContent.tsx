@@ -1,11 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export interface AnimatedContentProps {
   children: ReactNode;
@@ -16,15 +12,9 @@ export interface AnimatedContentProps {
   threshold?: number;
 }
 
-function prefersReducedMotion() {
-  return typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 /**
- * ReactBits AnimatedContent, adapted so server-rendered content is visible
- * before enhancement and remains visible when motion is reduced or unavailable.
+ * Lightweight scroll reveal that keeps server-rendered content visible before
+ * hydration and avoids shipping an animation runtime for static sections.
  */
 export function AnimatedContent({
   children,
@@ -35,48 +25,52 @@ export function AnimatedContent({
   threshold = 0.12,
 }: AnimatedContentProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isEnhanced, setIsEnhanced] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || prefersReducedMotion()) {
+    if (!element) {
       return undefined;
     }
 
-    const axis = direction === 'horizontal' ? 'x' : 'y';
-    const fromValue = { [axis]: distance, opacity: 0 };
-    const toValue = { [axis]: 0, opacity: 1 };
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const rect = element.getBoundingClientRect();
+    const revealImmediately = reducedMotion
+      || !('IntersectionObserver' in window)
+      || rect.top <= window.innerHeight * (1 - threshold);
+    const enhancementFrame = window.requestAnimationFrame(() => {
+      setIsEnhanced(true);
+      if (revealImmediately) setIsVisible(true);
+    });
 
-    try {
-      const context = gsap.context(() => {
-        gsap.fromTo(element, fromValue, {
-          ...toValue,
-          duration: 0.6,
-          delay,
-          ease: 'power2.out',
-          immediateRender: false,
-          clearProps: 'transform,opacity',
-          scrollTrigger: {
-            trigger: element,
-            start: `top ${(1 - threshold) * 100}%`,
-            once: true,
-            fastScrollEnd: true,
-          },
-        });
-      }, element);
-
-      return () => context.revert();
-    } catch {
-      element.style.removeProperty('opacity');
-      element.style.removeProperty('transform');
-      return undefined;
+    if (revealImmediately) {
+      return () => window.cancelAnimationFrame(enhancementFrame);
     }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      setIsVisible(true);
+      observer.disconnect();
+    }, { rootMargin: `${Math.round(threshold * 100)}% 0px` });
+
+    observer.observe(element);
+    return () => {
+      window.cancelAnimationFrame(enhancementFrame);
+      observer.disconnect();
+    };
   }, [delay, direction, distance, threshold]);
 
-  return (
-    <div ref={ref} className={cn(className)}>
-      {children}
-    </div>
-  );
+  const hiddenTransform = direction === 'horizontal'
+    ? `translateX(${distance}px)`
+    : `translateY(${distance}px)`;
+  const style: CSSProperties = {
+    opacity: isEnhanced && !isVisible ? 0 : 1,
+    transform: isEnhanced && !isVisible ? hiddenTransform : 'translate(0, 0)',
+    transitionDelay: `${delay}s`,
+  };
+
+  return <div ref={ref} style={style} className={cn('motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-out', className)}>{children}</div>;
 }
 
 export default AnimatedContent;

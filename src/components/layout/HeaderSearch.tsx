@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { KeyboardEvent } from 'react';
@@ -152,15 +151,8 @@ export function HeaderSearch({
         />
       </div>
 
-      <AnimatePresence>
-        {isSearchFocused && localSearch && searchResults.length > 0 && (
-          <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-          className="glass-surface absolute left-0 top-full z-50 mt-2 w-64 !overflow-hidden rounded-sm p-2"
-        >
+      {isSearchFocused && localSearch && searchResults.length > 0 && (
+          <div className="glass-surface absolute left-0 top-full z-50 mt-2 w-64 !overflow-hidden rounded-sm p-2 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-200">
             <div id={SEARCH_LISTBOX_ID} role="listbox" aria-label={searchPlaceholder} className="flex flex-col gap-1">
               {searchResults.map((pokemon, index) => {
                 const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
@@ -202,9 +194,8 @@ export function HeaderSearch({
                 );
               })}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+      )}
     </div>
   );
 }

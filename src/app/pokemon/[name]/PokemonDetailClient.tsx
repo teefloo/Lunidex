@@ -467,7 +467,7 @@ export function PokemonDetailClient({
           {formatId(pokemon.id)}
         </div>
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={showShiny ? 'shiny' : 'normal'}
             initial={{ y: 50, opacity: 0, scale: 0.9 }}
@@ -492,7 +492,7 @@ export function PokemonDetailClient({
 
       <div className="container mx-auto px-4 md:px-6 relative z-30 max-w-6xl">
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
+          initial={false}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
           className="text-center mb-16"
