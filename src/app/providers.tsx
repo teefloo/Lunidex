@@ -1,12 +1,11 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, useEffect, useRef } from 'react';
-import { MotionConfig } from 'framer-motion';
+import { useState, useEffect, useRef, type ComponentType, type ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthProvider } from '@/lib/neon/AuthProvider';
 import { useNeonSync } from '@/lib/neon/useNeonSync';
 import dynamic from 'next/dynamic';
@@ -20,6 +19,70 @@ const CommandPalette = dynamic(() => import('@/components/command/CommandPalette
 function NeonSyncBridge() {
   useNeonSync();
   return null;
+}
+
+type MotionConfigProps = {
+  children: ReactNode;
+  reducedMotion?: 'always' | 'never' | 'user';
+};
+
+function routeNeedsMotionConfig(pathname: string): boolean {
+  const pathWithoutLocale = pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '') || '/';
+  return /^\/(?:abilities|compare|favorites|items|moves|pokemon|quiz|team|types)(?:\/|$)/.test(pathWithoutLocale)
+    || pathWithoutLocale.startsWith('/u/')
+    || pathWithoutLocale.startsWith('/tcg/wishlist');
+}
+
+function MotionConfigBoundary({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const shouldLoad = routeNeedsMotionConfig(pathname);
+  const [MotionConfig, setMotionConfig] = useState<ComponentType<MotionConfigProps> | null>(null);
+
+  useEffect(() => {
+    if (!shouldLoad || MotionConfig) return;
+
+    let active = true;
+    void import('framer-motion').then((module) => {
+      if (!active) return;
+      setMotionConfig(() => module.MotionConfig as ComponentType<MotionConfigProps>);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [MotionConfig, shouldLoad]);
+
+  if (!shouldLoad || !MotionConfig) return <>{children}</>;
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+}
+
+function DeferredOverlays() {
+  const isSettingsOpen = usePrimeDexStore((state) => state.isSettingsOpen);
+  const [commandPaletteRequested, setCommandPaletteRequested] = useState(false);
+
+  useEffect(() => {
+    const requestCommandPalette = () => setCommandPaletteRequested(true);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        requestCommandPalette();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('primedex:open-command-palette', requestCommandPalette);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('primedex:open-command-palette', requestCommandPalette);
+    };
+  }, []);
+
+  return (
+    <>
+      {commandPaletteRequested && <CommandPalette initialOpen />}
+      {isSettingsOpen && <SettingsModal />}
+    </>
+  );
 }
 
 
@@ -98,21 +161,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="user">
+      <MotionConfigBoundary>
         <AuthProvider>
           <ThemeProvider>
             <GenThemeProvider>
-              <TooltipProvider>
-                <NeonSyncBridge />
-                {children}
-                <VercelInsights />
-                <CommandPalette />
-                <SettingsModal />
-              </TooltipProvider>
+              <NeonSyncBridge />
+              {children}
+              <VercelInsights />
+              <DeferredOverlays />
             </GenThemeProvider>
           </ThemeProvider>
         </AuthProvider>
-      </MotionConfig>
+      </MotionConfigBoundary>
     </QueryClientProvider>
   );
 }

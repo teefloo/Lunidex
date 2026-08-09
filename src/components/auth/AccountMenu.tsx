@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { LogIn } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import AuthModal from './AuthModal';
+const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });
 
 export default function AccountMenu() {
   const { enabled, loading, user } = useAuth();
@@ -26,13 +26,11 @@ export default function AccountMenu() {
   if (!user) {
     return (
       <>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <button
+        <button
                 type="button"
                 onClick={() => setAuthOpen(true)}
                 disabled={loading}
+                title={tt('auth.signin_cta', 'Sign in')}
                 className="glass-control touch-target flex min-h-11 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95 disabled:opacity-50"
                 aria-label={tt('auth.signin_cta', 'Sign in')}
               >
@@ -40,14 +38,8 @@ export default function AccountMenu() {
                 <span className="hidden text-[11px] font-black uppercase tracking-[0.15em] xl:inline">
                   {tt('auth.signin_cta', 'Sign in')}
                 </span>
-              </button>
-            }
-          />
-          <TooltipContent side="bottom" className="text-xs font-bold">
-            {tt('auth.signin_cta', 'Sign in')}
-          </TooltipContent>
-        </Tooltip>
-        <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+        </button>
+        {authOpen && <AuthModal open onOpenChange={setAuthOpen} />}
       </>
     );
   }

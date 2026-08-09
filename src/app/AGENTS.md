@@ -1,28 +1,24 @@
-# App Router Guide
+# App Router guide
 
-This directory contains Lunidex's Next.js App Router routes. Each feature route should keep its page, layout, loading/error boundaries, and client leaves close to the route that owns them.
-
-Use Lunidex in visible route copy and metadata. Keep historical technical names, locale-independent slugs, and existing domains stable unless an explicit migration is included.
+This guide supplements `src/AGENTS.md` for routes under `src/app/`. Feature-specific guides in deeper directories take precedence for their routes.
 
 ## Route structure
 
-- Prefer server components for `page.tsx` and `layout.tsx`; isolate browser APIs, hooks, event handlers, and interactive state in a focused `'use client'` leaf.
-- API handlers belong under `src/app/api/` and follow that directory's server-only rules. Do not place server secrets or database writes in a client route component.
-- Use `layout.tsx` for route metadata and shared JSON-LD, `error.tsx` for recoverable route failures, and `loading.tsx` or a local skeleton for asynchronous boundaries.
-- Check for a closer route-specific `AGENTS.md` before changing Pokémon detail, quiz, team, or type-chart code. Those local guides take precedence over this file.
+- Prefer a Server Component for `page.tsx` and `layout.tsx`. Keep browser APIs, hooks, event handlers, animations, and interactive state in a focused `'use client'` leaf. A route may intentionally be client-rendered when its feature is an interactive tool.
+- Keep a feature's page, layout, loading/error boundary, and client leaves close together. Use `layout.tsx` for route metadata/shared JSON-LD, `loading.tsx` for async boundaries, and `error.tsx` for recoverable failures.
+- App Router `params` and `searchParams` are promises in this Next.js version; await them before use in server pages, metadata, and Route Handlers.
+- Validate dynamic route parameters and use `notFound()` or the established error boundary for missing upstream data. Keep route-specific redirects and canonical slugs stable.
 
 ## Localization and SEO
 
-- The proxy supplies locale-aware routing for `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep internal client links locale-prefixed with `useLocaleHref`.
-- Use `getServerT` / `getServerLanguage` for server metadata and `useTranslation` for client UI. Do not hard-code user-facing route text.
-- Preserve canonical and alternate-language URLs, Open Graph/Twitter metadata, breadcrumbs, JSON-LD, and route-specific `robots` behavior when changing a page.
-- Dynamic routes must validate route parameters and use `notFound()` or the established error boundary for missing upstream data.
+- Use the eight supported locale prefixes and locale helpers from the parent guide. Never construct a new client-side internal path without preserving its locale.
+- Use server translation helpers for metadata/JSON-LD and client translation hooks for UI. Preserve canonical URLs, `hreflang`, Open Graph/Twitter data, breadcrumbs, structured data, and route `robots` settings.
 
 ## Data and performance
 
-- Fetch initial route data on the server when it improves first render, then pass it to client components as stable initial props. Use TanStack Query for follow-up interactive data.
-- Use `@/lib/api` rather than ad hoc browser requests and keep remote response objects out of Zustand persistence.
-- Dynamically load browser-only charts and expensive visualizations when they are not needed for the server render.
+- Fetch critical route data on the server when that is the established pattern, pass stable initial props to client leaves, and use TanStack Query for subsequent interactive data.
+- Use `@/lib/api` and its modules rather than ad hoc browser requests. Dynamically load browser-only charts or expensive visualizations when the route already follows that pattern.
+- Keep authenticated/personalized data out of public caches and preserve local-first fallbacks when Neon is unavailable.
 
 ## Verification
 

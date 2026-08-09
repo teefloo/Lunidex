@@ -46,6 +46,17 @@ describe('getTCGCardImageCandidates', () => {
     expect(candidates).not.toContain('https://assets.tcgdex.net/fr/me/me1/001/high.webp');
   });
 
+  it('uses only the placeholder when a legacy set has no artwork', () => {
+    const card: TCGCard = {
+      id: '2011bw-1',
+      localId: '1',
+      name: 'Snivy',
+      set: { id: '2011bw', name: "McDonald's Collection 2011" },
+    };
+
+    expect(getTCGCardImageCandidates(card)).toEqual(['/images/card-placeholder.svg']);
+  });
+
   it('provides an English fallback for localized set logos', () => {
     const candidates = getTCGSetImageCandidates({
       id: 'me1',

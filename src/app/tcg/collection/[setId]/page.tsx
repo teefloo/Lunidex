@@ -2,27 +2,31 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getSetById } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
-import { getServerLanguage } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import { TCGSetAlbumPage } from './TCGSetAlbumPage';
 
 interface PageProps {
   params: Promise<{ setId: string }>;
-  searchParams: Promise<{ lang?: string }>;
 }
 
-export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { setId } = await params;
-  const { lang } = await searchParams;
   const currentLang = await getServerLanguage();
-  const tcgSet = await getSetById(setId, lang ?? currentLang ?? 'en').catch(() => null);
+  const t = await getServerT();
+  const tcgSet = await getSetById(setId, currentLang).catch(() => null);
   if (!tcgSet) notFound();
-  const title = tcgSet
-    ? `${tcgSet.name} — Pokémon TCG Set | Lunidex`
-    : 'TCG Set | Lunidex';
-  const description = tcgSet
-    ? `${tcgSet.name} Pokémon TCG set, released ${tcgSet.releaseDate || 'TBA'}. Browse cards, track progress, mark cards as owned or wishlisted.`
-    : 'Browse a Pokémon TCG set on Lunidex.';
+  const releaseDate = tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' });
+  const title = t('tcg.set_meta_title', {
+    name: tcgSet.name,
+    defaultValue: `${tcgSet.name} — Pokémon TCG Set | Lunidex`,
+  });
+  const description = t('tcg.set_meta_description', {
+    name: tcgSet.name,
+    releaseDate,
+    defaultValue: `Browse the ${tcgSet.name} Pokémon TCG set, released ${releaseDate}. Explore cards and track your collection on Lunidex.`,
+  });
   return {
     title,
     description,
@@ -50,33 +54,41 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 export default async function SetAlbumPage({ params }: PageProps) {
   const { setId } = await params;
   const lang = await getServerLanguage();
-  const tcgSet = await getSetById(setId).catch(() => null);
+  const t = await getServerT();
+  const tcgSet = await getSetById(setId, lang).catch(() => null);
   if (!tcgSet) notFound();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'Lunidex', path: '/' },
-    { name: 'TCG', path: '/tcg' },
-    { name: 'Collection', path: '/tcg/collection' },
+    { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
+    { name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), path: '/tcg' },
+    { name: t('tcg.collection_title', { defaultValue: 'Collection' }), path: '/tcg/collection' },
     { name: tcgSet?.name ?? setId, path: `/tcg/collection/${setId}` },
   ], lang);
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
       {tcgSet ? (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: serializeJsonLd({
               '@context': 'https://schema.org',
               '@type': 'CollectionPage',
-              name: `${tcgSet.name} — Pokémon TCG Set`,
-              description: `Browse all cards from the ${tcgSet.name} Pokémon TCG set.`,
+              name: t('tcg.set_meta_title', {
+                name: tcgSet.name,
+                defaultValue: `${tcgSet.name} — Pokémon TCG Set | Lunidex`,
+              }),
+              description: t('tcg.set_meta_description', {
+                name: tcgSet.name,
+                releaseDate: tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' }),
+                defaultValue: `Browse the ${tcgSet.name} Pokémon TCG set on Lunidex.`,
+              }),
               url: `${SITE_URL}/${lang}/tcg/collection/${setId}`,
-              isPartOf: { '@id': `${SITE_URL}/tcg#collectionpage` },
+              isPartOf: { '@id': `${SITE_URL}/${lang}/tcg` },
               about: { '@type': 'ProductGroup', name: tcgSet.name },
-              keywords: `${tcgSet.name}, Pokemon TCG set, TCG cards`,
+              keywords: `${tcgSet.name}, Pokémon TCG, ${t('tcg.cards', { defaultValue: 'cards' })}`,
             }),
           }}
         />

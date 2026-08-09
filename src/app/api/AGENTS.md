@@ -1,34 +1,28 @@
-# API Route Handler Guide
+# Route Handler guide
 
-This directory contains Lunidex's server-side Next.js Route Handlers. They expose integrations for Pokémon, TCG, Neon-backed features, Open Graph images, push notifications, and other server-only workflows.
+This guide supplements the App Router guide for `src/app/api/`. These handlers are server-side boundaries for PokéAPI/TCGdex access, Neon-backed features, authentication, push notifications, and generated Open Graph images.
 
-## Implementation rules
+## Handler rules
 
-- Keep handlers server-side. Never import route handlers into client components and never expose service-role keys or other secrets.
-- `DATABASE_URL` is the sensitive Neon connection string supplied by the Vercel
-  integration; keep it server-only and never add it to `NEXT_PUBLIC_*`, logs,
-  responses, tests, or mobile configuration. `SUPABASE_SERVICE_ROLE_KEY` is
-  only for the archived migration tooling; it is not used by the application runtime.
-- Use `NextRequest` and `NextResponse`, await the App Router `params` promise, and return explicit status codes for invalid, unauthenticated, unavailable, or upstream-failed requests.
-- Validate and bound every query parameter, path parameter, JSON body, and user-controlled URL before using it or passing it to an upstream service.
-- Reuse `@/lib/api` for PokéAPI, GraphQL, TCGdex, and related external data access. Reuse `@/lib/api/route-helpers`, `@/lib/rate-limit`, and the established Neon server helpers instead of creating parallel utilities.
-- Authenticate from the request token/session and derive the user ID server-side. Do not trust a `user_id` supplied in a request body.
-- Apply rate limits to public or mutation-heavy endpoints and avoid logging emails, tokens, subscriptions, or other personal data.
+- Keep handlers server-side. Never expose `DATABASE_URL`, `NEON_DATABASE_URL`, Neon Auth secrets, service-role keys, or VAPID private keys; never import a handler into a client component.
+- The application runtime uses Neon Auth and Neon PostgreSQL. `src/lib/supabase` is a retained compatibility path, and `SUPABASE_SERVICE_ROLE_KEY` is not a web runtime credential.
+- Use `NextRequest`/`NextResponse`, await promise-based `params`, validate and bound every path/query/body value, and return explicit status codes for invalid, unauthenticated, unavailable, upstream-failed, and successful cases.
+- For authenticated handlers, derive the user from the request session/token with the established Neon helpers. Never trust a client-supplied `user_id`.
+- Reuse `@/lib/api`, `@/lib/api/route-helpers`, `@/lib/rate-limit`, and the existing Neon server helpers. Apply rate limits to public or mutation-heavy endpoints and avoid logging personal data, tokens, emails, or credentials.
 
 ## Runtime and caching
 
-- Choose `runtime = 'edge'` only when the handler and its dependencies are Edge-compatible. Open Graph handlers using `next/og` and the bundled fonts currently use Node.js because of the Edge bundle-size limit.
-- Declare `revalidate` or `Cache-Control` only when the response is safe to cache. Do not cache personalized or authenticated responses publicly.
-- Preserve graceful local-first behavior when Neon is not configured; return the route's established unavailable response rather than throwing during module initialization.
+- Use `runtime = 'edge'` only when all dependencies are Edge-compatible. The current `next/og` handlers with bundled fonts explicitly use Node.js because of their bundle/runtime constraints.
+- Add `revalidate` or public `Cache-Control` only for responses that are safe to share. Never publicly cache personalized or authenticated responses.
+- Preserve the established 503/unavailable behavior when Neon is unconfigured instead of throwing during module initialization.
 
 ## Verification
 
-Run from the repository root:
+Add focused tests for parsing, validation, authentication/ownership, rate limits, status codes, caching, and failure responses when changing a handler. Run from the repository root:
 
 ```bash
+npx vitest run src/app/api/tcg/price-alerts/route.test.ts
+npm run test -- --run
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```
-
-Add focused tests for parsing, validation, authentication, rate limits, and failure responses when changing a handler.

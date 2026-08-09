@@ -6,6 +6,14 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
+const CANONICAL_HOST = 'lunidex.app';
+const LEGACY_HOSTS = new Set([
+  'www.lunidex.app',
+  'primedex.vercel.app',
+  'poke-app-lake.vercel.app',
+  'lunidex-teeflo.vercel.app',
+  'lunidex-teeflo-teeflo.vercel.app',
+]);
 
 type SupportedResource =
   | 'pokemon'
@@ -70,16 +78,20 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
   if (!identifier) return null;
 
   const encodedIdentifier = encodeURIComponent(identifier);
+  // TCGdex has partial locale coverage. The page/API layer falls back to
+  // English card data, so probe the English catalog to keep valid localized
+  // alternates from being rejected as 404s by the proxy.
+  const probeLocale = 'en';
   if (segments[2] === 'cards') {
     return {
       kind: 'tcg-card',
-      url: `${TCGDEX_BASE_URL}/${locale}/cards/${encodedIdentifier}`,
+      url: `${TCGDEX_BASE_URL}/${probeLocale}/cards/${encodedIdentifier}`,
     };
   }
   if (segments[2] === 'collection') {
     return {
       kind: 'tcg-set',
-      url: `${TCGDEX_BASE_URL}/${locale}/sets/${encodedIdentifier}`,
+      url: `${TCGDEX_BASE_URL}/${probeLocale}/sets/${encodedIdentifier}`,
     };
   }
 
@@ -122,6 +134,13 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (LEGACY_HOSTS.has(request.nextUrl.hostname)) {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.protocol = 'https:';
+    canonicalUrl.hostname = CANONICAL_HOST;
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
 
   // API routes, including the Neon Auth proxy, are intentionally unlocalized.
   if (pathname.startsWith('/api/')) {

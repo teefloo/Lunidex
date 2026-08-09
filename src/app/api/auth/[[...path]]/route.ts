@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getNeonAuthServer, type NeonAuthHandler } from '@/lib/neon/server-auth';
 
-type AuthRouteContext = Parameters<NeonAuthHandler['GET']>[1];
+type AuthRouteContext = { params: Promise<{ path?: string[] }> };
 
 function unavailableResponse(): Response {
   return NextResponse.json({ error: 'Neon Auth is not configured' }, { status: 503 });
@@ -11,7 +11,9 @@ function createHandler(method: keyof NeonAuthHandler) {
   return async (request: Request, context: AuthRouteContext): Promise<Response> => {
     const auth = getNeonAuthServer();
     if (!auth) return unavailableResponse();
-    return auth.handler()[method](request, context);
+    const params = await context.params;
+    const normalizedContext = { params: Promise.resolve({ path: params.path ?? [] }) };
+    return auth.handler()[method](request, normalizedContext as Parameters<NeonAuthHandler[typeof method]>[1]);
   };
 }
 

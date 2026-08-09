@@ -1,17 +1,26 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { useState } from 'react';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import Image from 'next/image';
 import type { TCGCard } from '@/types/tcg';
-import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
+
+const TCGCardDetailModal = dynamic(
+  () => import('./TCGCardDetailModal').then((module) => module.TCGCardDetailModal),
+  { ssr: false },
+);
 
 export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
   const router = useRouter();
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const imageCandidates = card ? getTCGCardImageCandidates(card, 'high') : [];
 
   if (!card) {
     return (
@@ -51,13 +60,15 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
         </button>
         <article className="mb-8 grid gap-8 rounded-sm border border-border/70 bg-card/50 p-6 md:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] md:p-8">
           <div className="flex items-center justify-center rounded-sm border border-border/50 bg-background/50 p-4">
-            <Image
-              src={card.imageUrl || card.image || '/images/card-placeholder.svg'}
+            <TCGImageWithFallback
+              candidates={imageCandidates}
               alt={`${card.name} Pokémon TCG card`}
               width={245}
               height={342}
               sizes="(max-width: 768px) 70vw, 280px"
               priority
+              loading="eager"
+              fetchPriority="high"
               className="h-auto max-h-[420px] w-auto object-contain"
             />
           </div>
@@ -72,14 +83,71 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
               {card.description || card.flavorText || t('tcg.detail_empty')}
             </p>
             <dl className="mt-6 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
-              {card.hp && <div><dt className="text-foreground/40">{t('common.hp', { defaultValue: 'HP' })}</dt><dd className="font-bold">{card.hp}</dd></div>}
-              {card.rarity && <div><dt className="text-foreground/40">{t('tcg.rarity')}</dt><dd className="font-bold">{card.rarity}</dd></div>}
-              {card.localId && <div><dt className="text-foreground/40">{t('tcg.collector_no')}</dt><dd className="font-bold">#{card.localId}</dd></div>}
+              {card.hp && <div><dt className="text-foreground/60">{t('common.hp', { defaultValue: 'HP' })}</dt><dd className="font-bold">{card.hp}</dd></div>}
+              {card.rarity && <div><dt className="text-foreground/60">{t('tcg.rarity')}</dt><dd className="font-bold">{card.rarity}</dd></div>}
+              {card.localId && <div><dt className="text-foreground/60">{t('tcg.collector_no')}</dt><dd className="font-bold">#{card.localId}</dd></div>}
+              {card.category && <div><dt className="text-foreground/60">{t('tcg.card_category')}</dt><dd className="font-bold">{card.category}</dd></div>}
+              {card.illustrator && <div><dt className="text-foreground/60">{t('tcg.illustrator')}</dt><dd className="font-bold">{card.illustrator}</dd></div>}
+              {card.types && card.types.length > 0 && <div><dt className="text-foreground/60">{t('tcg.pokemon_types')}</dt><dd className="font-bold">{card.types.join(', ')}</dd></div>}
             </dl>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/35 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/20"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {t('tcg.open_card_detail', { name: card.name })}
+            </button>
           </div>
         </article>
-        <TCGCardDetailModal card={card} isOpen onClose={() => router.push(localeHref('/tcg'))} />
+
+        <div className="grid gap-8 lg:grid-cols-2">
+          {getAbilities(card).length > 0 && (
+            <section className="glass-surface rounded-sm p-6 sm:p-8">
+              <h2 className="text-lg font-black uppercase tracking-[0.14em] text-foreground">{t('tcg.abilities')}</h2>
+              <div className="mt-5 space-y-4">
+                {getAbilities(card).map((ability, index) => (
+                  <article key={`${ability.name || 'ability'}-${index}`} className="rounded-sm border border-border/45 bg-card/40 p-4">
+                    <h3 className="font-bold text-primary">{ability.name || t('tcg.unknown')}</h3>
+                    <p className="mt-2 text-sm leading-7 text-foreground/60">{ability.effect || ability.text || t('tcg.none')}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {card.attacks && card.attacks.length > 0 && (
+            <section className="glass-surface rounded-sm p-6 sm:p-8">
+              <h2 className="text-lg font-black uppercase tracking-[0.14em] text-foreground">{t('detail.moveset')}</h2>
+              <div className="mt-5 space-y-4">
+                {card.attacks.map((attack, index) => (
+                  <article key={`${attack.name || 'attack'}-${index}`} className="rounded-sm border border-border/45 bg-card/40 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="font-bold text-primary">{attack.name || t('tcg.unknown')}</h3>
+                      {attack.damage && <span className="font-black text-foreground/60">{attack.damage}</span>}
+                    </div>
+                    {attack.cost && attack.cost.length > 0 && <p className="mt-2 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65">{attack.cost.join(' · ')}</p>}
+                    {(attack.effect || attack.text) && <p className="mt-2 text-sm leading-7 text-foreground/60">{attack.effect || attack.text}</p>}
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {isModalOpen && (
+          <TCGCardDetailModal
+            card={card}
+            isOpen
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
       </div>
     </div>
   );
+}
+
+function getAbilities(card: TCGCard) {
+  if (!card.abilities) return [];
+  return Array.isArray(card.abilities) ? card.abilities : [card.abilities];
 }

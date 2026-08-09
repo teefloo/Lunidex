@@ -370,11 +370,13 @@ export function TCGResearchDesk({
         </SheetContent>
       </Sheet>
 
-      <TCGCardDetailModal
-        card={selectedCard}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <TCGCardDetailModal
+          card={selectedCard}
+          isOpen
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

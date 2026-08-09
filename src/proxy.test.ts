@@ -36,4 +36,15 @@ describe('locale proxy matcher', () => {
       expect.objectContaining({ method: 'HEAD' }),
     );
   });
+
+  it('redirects legacy deployment domains to the canonical Lunidex host', async () => {
+    const response = await proxy(
+      new NextRequest('https://primedex.vercel.app/fr/tcg/cards/basep-1?utm_source=legacy'),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      'https://lunidex.app/fr/tcg/cards/basep-1?utm_source=legacy',
+    );
+  });
 });

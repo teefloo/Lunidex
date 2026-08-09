@@ -6,7 +6,7 @@ interface TCGImageCard {
   number?: string;
   image?: string;
   imageUrl?: string;
-  set?: Pick<TCGSet, 'id'>;
+  set?: Pick<TCGSet, 'id' | 'logo' | 'symbol'>;
 }
 
 const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
@@ -14,6 +14,7 @@ const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
 const OPTIMIZABLE_TCG_HOSTS = new Set([
   'assets.tcgdex.net',
   'images.tcgdex.net',
+  'images.scrydex.com',
   'images.pokemontcg.io',
 ]);
 
@@ -101,7 +102,8 @@ export function getTCGCardImageCandidates(
 ): string[] {
   const setId = card.set?.id;
   const localId = card.localId || card.number;
-  const pokemonTcgFallbacks = setId && localId
+  const hasSetArtwork = Boolean(card.set?.logo || card.set?.symbol);
+  const pokemonTcgFallbacks = setId && localId && hasSetArtwork
     ? [
         `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}_hires.png`,
         `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}.png`,

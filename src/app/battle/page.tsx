@@ -11,17 +11,19 @@ const SwordsIcon = Swords as LucideIcon;
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const title = t('battle.meta_title') || 'Battle Simulator — Lunidex';
-  const description = t('battle.meta_description') || 'Simulate Pokémon battles with Gen 9 damage formula. Calculate damage, OHKO/2HKO chances, and run full AI duels.';
+  const title = (t('battle.meta_title', { defaultValue: 'Battle Simulator' }) || 'Battle Simulator')
+    .replace(/\s*(?:[|—-]\s*)Lunidex\s*$/i, '')
+    .trim();
+  const description = t('battle.meta_description', { defaultValue: 'Simulate Pokémon battles with the Gen 9 damage formula, calculate damage and KO chances, and run full AI duels.' });
   return {
-    title,
+    title: { absolute: `${title} | Lunidex` },
     description,
     alternates: {
       canonical: `/${lang}/battle`,
       languages: buildSubpathLanguages('/battle'),
     },
     openGraph: {
-      title,
+      title: `${title} | Lunidex`,
       description,
       type: 'website',
       images: [DEFAULT_OG_IMAGE],
@@ -38,7 +40,7 @@ export default async function BattlePage() {
       <main className="mx-auto max-w-5xl px-4 pb-16 pt-24 md:px-6 md:pt-28">
         <PageHeader
           icon={SwordsIcon}
-          title={t('battle.meta_title', { defaultValue: 'Battle Simulator — Lunidex' })}
+          title={t('battle.meta_title', { defaultValue: 'Battle Simulator' })}
           description={t('battle.meta_description', { defaultValue: 'Gen 9 damage calculator and AI duel mode' })}
         />
         <BattleClient />

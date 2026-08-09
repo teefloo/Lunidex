@@ -3,12 +3,15 @@
 import {
   createContext,
   useContext,
+  useCallback,
+  useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react';
 import { isSupportedLanguage } from '@/lib/languages';
 import { normalizeDisplayName } from '@/lib/json-ld';
-import { getNeonAuthClient, isNeonAuthConfigured } from './client';
+import { getNeonAuthClient, isNeonAuthConfigured, loadNeonAuthClient } from './client';
 
 export interface AppUser {
   id: string;
@@ -74,6 +77,27 @@ function mapUser(user: {
   };
 }
 
+type ConnectedAuthClient = NonNullable<ReturnType<typeof getNeonAuthClient>>;
+type SessionData = Awaited<ReturnType<ConnectedAuthClient['getSession']>>['data'];
+
+function getRedirectTo(): string | undefined {
+  return typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}`
+    : undefined;
+}
+
+function getResetRedirectTo(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const locale = window.location.pathname.split('/').filter(Boolean)[0];
+  const prefix = isSupportedLanguage(locale ?? '') ? `/${locale}` : '/en';
+  return `${window.location.origin}${prefix}/auth/reset-password`;
+}
+
+function isAuthSensitivePath(): boolean {
+  if (typeof window === 'undefined') return false;
+  return /\/(?:dashboard|favorites|friends|team|tcg\/(?:collection|wishlist))(?:\/|$)/.test(window.location.pathname);
+}
+
 function DisabledAuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => {
     const noop = async (): Promise<AuthResult> => ({
@@ -97,10 +121,162 @@ function DisabledAuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-type ConnectedAuthClient = NonNullable<ReturnType<typeof getNeonAuthClient>>;
+function DeferredAuthProvider({
+  children,
+  onLoaded,
+}: {
+  children: ReactNode;
+  onLoaded: (client: ConnectedAuthClient) => void;
+}) {
+  const [loading, setLoading] = useState(false);
+  const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
+    const cachedClient = getNeonAuthClient();
+    if (cachedClient) {
+      onLoaded(cachedClient);
+      return cachedClient;
+    }
+
+    setLoading(true);
+    try {
+      const loadedClient = await loadNeonAuthClient();
+      if (loadedClient) onLoaded(loadedClient);
+      return loadedClient;
+    } finally {
+      setLoading(false);
+    }
+  }, [onLoaded]);
+
+  useEffect(() => {
+    if (isAuthSensitivePath()) void loadClient();
+  }, [loadClient]);
+
+  const redirectTo = getRedirectTo();
+  const resetRedirectTo = getResetRedirectTo();
+  const value = useMemo<AuthContextValue>(() => {
+    const unavailable = (): AuthResult => ({
+      error: { name: 'AuthUnavailable', message: 'Authentication is temporarily unavailable.' },
+    });
+
+    return {
+      enabled: true,
+      loading,
+      session: null,
+      user: null,
+      signUp: async (email, password, name) => {
+        const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
+        if (!normalizedName) {
+          return {
+            error: {
+              name: 'ValidationError',
+              message: 'Enter a display name containing visible characters.',
+            },
+          };
+        }
+
+        const client = await loadClient();
+        if (!client) return unavailable();
+        try {
+          const result = await client.signUp.email({
+            email,
+            password,
+            name: normalizedName,
+            callbackURL: redirectTo,
+          });
+          return { error: normalizeError(result.error) };
+        } catch (error) {
+          return { error: normalizeError(error) };
+        }
+      },
+      signIn: async (email, password) => {
+        const client = await loadClient();
+        if (!client) return unavailable();
+        try {
+          const result = await client.signIn.email({ email, password, callbackURL: redirectTo });
+          return { error: normalizeError(result.error) };
+        } catch (error) {
+          return { error: normalizeError(error) };
+        }
+      },
+      signInWithOAuth: async (provider) => {
+        const client = await loadClient();
+        if (!client) return unavailable();
+        try {
+          const result = await client.signIn.social({ provider, callbackURL: redirectTo });
+          return { error: normalizeError(result.error) };
+        } catch (error) {
+          return { error: normalizeError(error) };
+        }
+      },
+      signOut: async () => {
+        const client = await loadClient();
+        if (client) await client.signOut();
+      },
+      resetPassword: async (email) => {
+        const client = await loadClient();
+        if (!client) return unavailable();
+        try {
+          const result = await client.requestPasswordReset({ email, redirectTo: resetRedirectTo });
+          return { error: normalizeError(result.error) };
+        } catch (error) {
+          return { error: normalizeError(error) };
+        }
+      },
+      updatePassword: async (password) => {
+        const token = typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('token')
+          : null;
+        if (!token) {
+          return { error: { name: 'InvalidToken', message: 'The password reset link is invalid or expired.' } };
+        }
+
+        const client = await loadClient();
+        if (!client) return unavailable();
+        try {
+          const result = await client.resetPassword({ newPassword: password, token });
+          return { error: normalizeError(result.error) };
+        } catch (error) {
+          return { error: normalizeError(error) };
+        }
+      },
+    };
+  }, [loading, loadClient, redirectTo, resetRedirectTo]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+function useClientSession(client: ConnectedAuthClient): { data: SessionData; isPending: boolean } {
+  const [state, setState] = useState<{ data: SessionData; isPending: boolean }>({
+    data: null,
+    isPending: true,
+  });
+
+  useEffect(() => {
+    let active = true;
+    const refresh = async () => {
+      try {
+        const result = await client.getSession();
+        if (active) setState({ data: result.data, isPending: false });
+      } catch {
+        if (active) setState({ data: null, isPending: false });
+      }
+    };
+
+    void refresh();
+    const refreshOnFocus = () => void refresh();
+    window.addEventListener('focus', refreshOnFocus);
+    const intervalId = window.setInterval(refreshOnFocus, 30_000);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', refreshOnFocus);
+      window.clearInterval(intervalId);
+    };
+  }, [client]);
+
+  return state;
+}
 
 function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {
-  const authState = client.useSession();
+  const authState = useClientSession(client);
   const sessionData = authState.data;
   const { session, user } = useMemo(() => {
     const mappedUser = sessionData?.user ? mapUser(sessionData.user) : null;
@@ -113,16 +289,8 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     return { session: mappedSession, user: mappedUser };
   }, [sessionData]);
 
-  const redirectTo = typeof window !== 'undefined'
-    ? `${window.location.origin}${window.location.pathname}`
-    : undefined;
-  const resetRedirectTo = typeof window !== 'undefined'
-    ? (() => {
-      const locale = window.location.pathname.split('/').filter(Boolean)[0];
-      const prefix = isSupportedLanguage(locale ?? '') ? `/${locale}` : '/en';
-      return `${window.location.origin}${prefix}/auth/reset-password`;
-    })()
-    : undefined;
+  const redirectTo = getRedirectTo();
+  const resetRedirectTo = getResetRedirectTo();
 
   const value = useMemo<AuthContextValue>(() => ({
     enabled: true,
@@ -200,8 +368,9 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const client = getNeonAuthClient();
-  if (!isNeonAuthConfigured || !client) return <DisabledAuthProvider>{children}</DisabledAuthProvider>;
+  const [client, setClient] = useState<ConnectedAuthClient | null>(() => getNeonAuthClient());
+  if (!isNeonAuthConfigured) return <DisabledAuthProvider>{children}</DisabledAuthProvider>;
+  if (!client) return <DeferredAuthProvider onLoaded={setClient}>{children}</DeferredAuthProvider>;
   return <ConnectedAuthProvider client={client}>{children}</ConnectedAuthProvider>;
 }
 

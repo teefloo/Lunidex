@@ -1,108 +1,112 @@
 # Lunidex Agent Guide
 
-## Project overview
+## Scope and hierarchy
 
-Lunidex is a localized, local-first Pokémon dashboard for trainers and TCG collectors. It is an npm-workspaces monorepo with three main parts:
-
-- `src/` — the Next.js 16 / React 19 web application, using the App Router, Tailwind CSS v4, TanStack Query, and Zustand.
-- `packages/core/` — platform-neutral API clients, domain types, persistence adapters, Zustand state, i18n data, and Supabase utilities shared by the web and mobile apps.
-- `apps/mobile/` — the Expo 53 / React Native app, which imports `@primedex/core` rather than duplicating business logic.
-
-`supabase/migrations/` contains the database schema and row-level-security policies. The web app primarily uses PokéAPI (REST and GraphQL) and TCGdex; it is designed to work local-first when Supabase credentials are absent.
-
-## Brand and technical identifiers
-
-- **Lunidex** is the current product and user-facing brand. Use it in documentation, UI copy, metadata, and agent descriptions.
-- Preserve historical technical identifiers unless an explicit migration is planned: `@primedex/core`, `@primedex/mobile`, `primedex-*` storage and cookie keys, `usePrimeDexStore`, `src/store/primedex.ts`, slugs, bundle identifiers, file paths, and existing deployment domains.
-- Do not rename Supabase, Vercel, Expo, or local-storage identifiers merely as part of a visible rebrand; changing them can break deep links, persisted data, published mobile builds, or deployments.
-
-## Instruction scope
-
-- This file applies throughout the repository. Before editing a subtree, look for a closer `AGENTS.md`, `AGENT.md`, or `GEMINI.md`; the closest relevant instructions take precedence.
-- Current tracked, local guidance exists in `packages/core/src/store/GEMINI.md` and in the Pokémon detail, quiz, team, and type-chart route directories under `src/app/`.
-- User instructions override repository guidance. Preserve unrelated work already present in the working tree.
-
-## Prerequisites and setup
-
-CI uses Node.js 22. Use npm and the committed `package-lock.json`; do not introduce another package manager or lockfile.
+This file applies to the repository unless a closer `AGENTS.md` adds more specific rules. Before editing a subtree, check for the nearest guide with:
 
 ```bash
-npm ci                         # reproducible clean install (preferred in CI)
-npm install                     # update the local workspace installation
-cp .env.example .env.local      # optional web configuration
-cp apps/mobile/.env.example apps/mobile/.env  # optional mobile configuration
+rg --files -g 'AGENTS.md' -g 'AGENT.md' -g 'GEMINI.md'
 ```
 
-The Supabase variables are optional. Without `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, the web app remains local-first with IndexedDB. Mobile uses the equivalent `EXPO_PUBLIC_*` variables and AsyncStorage. The supported web locales are English, French, Spanish, German, Italian, Japanese, Korean, and Chinese. Never commit `.env`, `.env.local`, credentials, or tokens.
+The nearest applicable guide supplements this one; it should describe only the local constraints that differ. User instructions take precedence. Preserve unrelated work already present in the working tree.
 
-Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only to enable the development overlay. It runs on port 4747, which is already allowed in development configuration; do not change CSP or `allowedDevOrigins` merely for that tool.
+## Project overview
+
+Lunidex is a localized, local-first Pokémon dashboard and Pokémon TCG workspace. This private npm-workspaces monorepo contains:
+
+- `src/`: the Next.js 16 / React 19 web application.
+- `packages/core/`: the shared TypeScript API clients, domain types, Zustand store, i18n data, pure helpers, Neon helpers, and compatibility sync modules.
+- `apps/mobile/`: the Expo 57 / React Native companion, which consumes `@primedex/core`.
+- `neon/migrations/`: the application schema used by the Neon-backed runtime.
+- `supabase/`: retained Supabase source migrations and a separate Deno Edge Function; it is not the web application's runtime authentication/database path.
+
+The web and mobile apps remain usable without cloud configuration. The web uses IndexedDB and the mobile app uses AsyncStorage for local persistence. Remote Pokémon data comes from PokéAPI and Pokémon TCG data from TCGdex through the centralized API layers.
+
+## Compatibility-sensitive names
+
+Use `Lunidex` for visible product copy, documentation, metadata, and agent descriptions. Preserve these historical technical identifiers unless a deliberate compatibility migration is part of the task:
+
+- `primedex`, `@primedex/core`, `@primedex/mobile` and their import paths;
+- `usePrimeDexStore`, `src/store/primedex.ts`, `primedex-*` storage/cookie keys, route slugs, Expo schemes, bundle identifiers, and existing public domains.
+
+Do not rename those identifiers as part of a visible rebrand. Deep links, persisted data, published mobile builds, and deployments depend on them.
+
+## Setup and environment
+
+- Use Node.js 22 and npm with the committed `package-lock.json`. Do not add a second package manager or lockfile.
+- Install reproducibly with `npm ci`; use `npm install` only when intentionally updating the local workspace installation.
+- Copy `.env.example` to `.env.local` for optional web configuration. Copy `apps/mobile/.env.example` to `apps/mobile/.env` for optional mobile configuration. These files are ignored and must never be committed.
+- The web runtime uses Neon variables: `NEXT_PUBLIC_NEON_AUTH_URL` is public; `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_COOKIE_SECRET`, `NEON_DATABASE_URL`, and Vercel's server-only `DATABASE_URL` are not public. Mobile uses `EXPO_PUBLIC_NEON_AUTH_URL` and `EXPO_PUBLIC_APP_URL`.
+- `SUPABASE_DB_URL` is only for the Neon migration tooling. `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, VAPID private material/subject, and `CRON_SECRET` belong only to the separately deployed Supabase Edge Function. The browser-facing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, when configured, is public by design. Do not add Supabase runtime credentials to web or mobile bundles.
+- Without Neon configuration, authentication, cloud sync, and server-backed features degrade to their established unavailable/local-first behavior.
+- Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only for the development overlay. Its local port is 4747 and the required development origins/CSP entries already exist; do not weaken production security headers for it.
 
 ## Commands
 
-Run commands from the repository root unless stated otherwise.
+Run root commands from the repository root:
 
-| Task | Command |
+| Purpose | Command |
 | --- | --- |
-| Start the web app | `npm run dev` |
-| Production web build | `npm run build` |
+| Web development | `npm run dev` |
+| Production build | `npm run build` |
 | Serve a production build | `npm run start` |
 | Lint web, core, and mobile sources | `npm run lint` |
-| Type-check the web app | `npm run typecheck` |
-| Run the Vitest suite | `npm run test -- --run` |
+| Type-check the web workspace | `npm run typecheck` |
+| Run Vitest once | `npm run test -- --run` |
 | Run one test file | `npx vitest run src/lib/auto-complete.test.ts` |
-| Run tests matching a name | `npx vitest run -t "<test name>"` |
-| Lint one file | `npx eslint path/to/file.tsx` |
+| Run tests by name | `npx vitest run -t "<test name>"` |
 | Type-check shared core | `npx tsc --project packages/core/tsconfig.json --noEmit` |
 | Start Expo | `npm run start --workspace=@primedex/mobile` |
 | Type-check Expo | `npm run typecheck --workspace=@primedex/mobile` |
+| Lint Expo | `npm run lint --workspace=@primedex/mobile` |
+| Export source data for Neon migration | `npm run db:neon:export` |
+| Import the prepared export into Neon | `npm run db:neon:import` |
+| Compare source and Neon after migration | `npm run db:neon:verify` |
 
-`npm run dev` intentionally uses `next dev --webpack`, not Turbopack. Keep that flag even though `next.config.ts` contains a `turbopack.root` setting.
+`npm run dev` and `npm run build` intentionally pass `--webpack`; keep that flag even though `next.config.ts` also declares a Turbopack root. The Neon migration commands require PostgreSQL client binaries and the environment described in `scripts/neon/AGENTS.md`; the import command changes a target database and is never a casual validation step.
 
-The checked-in GitHub Actions workflow runs `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run test` for pushes and pull requests targeting `master`. Run the relevant checks for every change; before a commit, run all three root quality checks plus any applicable workspace check.
+## Verification and CI
 
-## Tests
+The checked-in workflow `.github/workflows/ci.yml` runs, in order, `npm ci`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, the core TypeScript check, and the mobile type-check. Run the checks relevant to the change; for a broad handoff, use the same sequence as CI.
 
-Vitest is configured for jsdom in `vitest.config.ts`; `src/test/setup.ts` loads `@testing-library/jest-dom/vitest`. Tests normally live alongside the code they cover, for example `src/lib/team-analysis.test.ts` or `src/components/ui/TypeBadge.test.tsx`.
+- Add or update tests for behavioral changes. Tests use Vitest with jsdom and `src/test/setup.ts`; React component tests use Testing Library.
+- Keep focused tests close to the implementation or in the established nearby `__tests__` directory. Mock Next.js modules or complex UI primitives only when that keeps the test focused.
+- Fix related lint, type, and test failures instead of documenting them as expected regressions.
+- Schema, migration, Edge Function, and Neon-specific validation is described by the closest database guide; do not substitute a web-only check for a database safety check.
 
-- Add or update tests for behavioral changes, including changes to shared core logic.
-- Use Testing Library for React component tests. Mock `next/navigation`, `next/image`, and complex UI primitives where that keeps the test focused.
-- Prefer focused tests while iterating, then run the full suite. Fix related lint and type errors rather than leaving a known regression.
+## Application architecture
 
-## Web architecture and data flow
+- Prefer React Server Components. Add `'use client'` only at the smallest leaf that needs hooks, browser APIs, event handlers, animation, or local state. Route pages may be client components when the feature itself is interactive.
+- Web routes live in `src/app/`; server-only Route Handlers live under `src/app/api/`. Reusable UI belongs in `src/components/`, pure/domain helpers and API modules in `src/lib/`, and web persistence in `src/store/primedex.ts`.
+- Use the `@/` alias for web imports. Use `@primedex/core` and its supported export-map deep imports for shared logic. Do not copy web business logic into mobile.
+- `src/app/providers.tsx` owns shared client providers and TanStack Query defaults: 10-minute stale time, 60-minute garbage-collection time, one retry, and no refetch on window focus.
+- API access is centralized in `src/lib/api.ts` and its modules. Do not add ad hoc client-side `fetch` or Axios calls in presentational components.
+- Persist only IDs, primitives, filters, and small user-owned records. Never put complete PokéAPI, TCGdex, GraphQL, or other remote response objects in Zustand persistence. Check `_hasHydrated` before making UI/effect decisions based on persisted state and select individual store slices where practical.
+- `packages/core/src/platform/*.ts` and matching `*.native.ts` files are the platform seam. Keep their contracts equivalent and keep React Native dependencies out of shared domain logic.
 
-- Prefer React Server Components. Add `"use client"` only to the interactive leaf that needs browser APIs, hooks, or local state. Render the header per page rather than adding it to the root layout.
-- Routes live in `src/app/`; feature routes contain their `page.tsx`, route-specific layouts/errors, and client leaves. API handlers live below `src/app/api/` and must remain server-side.
-- `src/app/providers.tsx` owns TanStack Query defaults, i18n, authentication/sync, theme, and shared client UI. Query defaults are a 10-minute stale time, 60-minute garbage-collection time, one retry, and no refetch on window focus.
-- Web API exports are centralized in `src/lib/api.ts`; use that façade and the modules under `src/lib/api/` rather than making ad hoc client-side `fetch` or Axios requests. The mobile app uses the equivalent `@primedex/core` API modules.
-- Web domain types live in `src/types/`; shared mobile/web types live in `packages/core/src/types/`. Keep type changes deliberate across both boundaries.
-- Persistent web state belongs in `src/store/primedex.ts`. Store compact IDs and primitives, not complete API objects. It persists through IndexedDB, so check `_hasHydrated` before effects or UI decisions that rely on persisted data. Select individual Zustand slices to limit re-renders. The language preference is deliberately mirrored to a cookie and localStorage for server/client locale handoff.
-- Shared core persistence uses platform adapters: web resolves `platform/*.ts`; Expo resolves `platform/*.native.ts` through Metro. Do not add `Platform.OS` conditionals to shared domain logic.
+## Routing, localization, SEO, and UI
 
-## Localization, routing, and SEO
+- The supported web locales are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep `src/lib/languages.ts`, core language data, translation bundles, proxy routing, metadata, sitemap, tests, and alternate-language links synchronized.
+- `src/proxy.ts` redirects unprefixed routes and rewrites locale-prefixed routes. Build client-side internal URLs with `useLocaleHref` or the established locale helper so the locale prefix is retained.
+- Use `@/lib/i18n` / `useTranslation` in client code and `@/lib/server-i18n` / server translation helpers in server components and metadata. Do not hard-code new user-facing language strings.
+- Preserve canonical URLs, `hreflang`, JSON-LD, Open Graph output, `llms.txt`, `ai.txt`, OpenSearch output, and established route `robots` behavior when changing routes or metadata.
+- TypeScript is strict. Avoid `any` and broad unstructured records; use explicit interfaces, unions, and validated boundary data. Follow the existing export style and use named exports for new reusable code.
+- Tailwind CSS 4 is loaded through `@import "tailwindcss"` in `src/app/globals.css`. Reuse the `base-nova` component primitives and `cn()` before adding dependencies. Do not add `tailwind.config.js` or Prettier configuration.
+- Use `next/image` with meaningful alt text on the web and the established Expo image components on mobile. Icon-only controls need accessible names, visible keyboard focus, and touch-sized targets. Preserve SSR-safe output and reduced-motion behavior when adding interaction or animation.
 
-- The supported locale prefixes are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep this list synchronized with `src/lib/languages.ts`, translation bundles, metadata, and tests.
-- `src/proxy.ts` 308-redirects unprefixed web routes to a locale and rewrites prefixed routes internally. Build client-side internal URLs with `useLocaleHref` so the prefix remains intact.
-- Client code uses `@/lib/i18n`, which starts in English and lazy-loads the other bundles. Server code uses `@/lib/server-i18n`. Put user-facing text behind `t()` / the established translation helpers.
-- Preserve the existing sitemap, `hreflang`, JSON-LD, `llms.txt`, `ai.txt`, and OpenSearch outputs when altering routes or metadata.
+## Security and data boundaries
 
-## Code and UI conventions
+- Neon connection strings, auth cookie/JWKS secrets, service-role keys, VAPID private keys, cron credentials, and local database URLs are server/operation secrets. Never commit, log, expose, or place them in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*` variables.
+- The application authenticates through Neon Auth and enforces ownership in server/API code. The historical `src/lib/supabase` and `packages/core/src/supabase` paths are compatibility names; do not infer that the web runtime uses Supabase Auth or Supabase RLS.
+- Keep security headers and CSP in `next.config.ts` strict. Add a remote origin or weaken a directive only when the project requirement is explicit and the complete impact is reviewed.
+- Treat authenticated, personalized, and mutation responses as non-public. Apply the established validation, authentication, rate limiting, and unavailable responses in Route Handlers.
+- Generated PWA files such as `public/sw.js`, `public/workbox-*.js`, and `public/fallback-*.js` come from the build; edit their source/configuration instead of hand-editing generated output.
 
-- TypeScript is strict. Do not introduce `any` or broad `Record<string, unknown>` types. Prefer interfaces for object shapes and type aliases for unions.
-- Use the `@/` import alias in the web app. Follow the local export style; new reusable components and utilities should normally use named exports.
-- Keep utilities pure where practical, use `cn()` from `@/lib/utils` for class joining, and keep one custom hook per file.
-- Use Tailwind v4 through `@import "tailwindcss"` in `src/app/globals.css`. Do not create a `tailwind.config.js` or add Prettier configuration.
-- Web images must use `next/image` with meaningful `alt` text; mobile images use the established Expo image components. Every icon-only control needs an accessible name. Maintain WCAG 2.2 AA behavior.
-- Load expensive interactive details with `next/dynamic` when the surrounding code already follows that pattern. Use `useMounted` or an SSR-safe derivation when browser state could create a hydration mismatch.
-- The component library follows the `base-nova` shadcn style and may use `@base-ui/react`. Reuse existing primitives before adding a dependency.
+## Delivery rules
 
-## Security, deployment, and pull requests
-
-- Supabase uses public client variables in browser code; authorization is enforced by RLS policies. `SUPABASE_SERVICE_ROLE_KEY` is server-only, configured through Vercel or the server environment, and must never enter client bundles, source control, logs, or chat.
-- Security headers and CSP are intentionally strict in `next.config.ts`. Do not add remote domains or weaken a directive without maintainer approval.
-- Deployments run on Vercel from Git. `npm run build` is the production build; Vercel settings live in the dashboard, while `vercel.json` only identifies the project.
-- Keep commits focused and avoid committing generated output, editor settings, local agent artifacts, screenshots, or dependency caches. The repository has no Prettier setup.
-- Pull request titles follow `[component] Brief description`, for example `[pokemon] Add shiny toggle to card`.
-- AI-authored commits must include this trailer:
+- Do not push, merge, force-push, deploy, apply a production migration, or invoke another consequential external action without explicit confirmation.
+- Keep commits focused. Pull request titles use `[component] Brief description`, for example `[pokemon] Add shiny toggle to card`.
+- AI-authored commits must include:
 
   ```text
   Co-authored-by: Gemini CLI <agent@gemini.google.com>

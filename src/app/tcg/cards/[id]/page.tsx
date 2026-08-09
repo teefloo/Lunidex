@@ -1,21 +1,23 @@
 import type { Metadata } from 'next';
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { getTCGCard } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
-import { getServerLanguage } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildInLanguage, buildSubpathLanguages } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 interface PageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ lang?: string }>;
 }
 
-export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const { lang } = await searchParams;
-  const card = await getTCGCard(id, lang ?? 'en');
   const currentLang = await getServerLanguage();
+  const t = await getServerT();
+  const card = await getPageCard(id, currentLang);
 
   if (!card) {
     notFound();
@@ -23,14 +25,21 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   const setName = card.set?.name ?? '';
   const rarity = card.rarity ?? '';
-  const typeInfo = card.types?.join('/') ?? card.category ?? '';
-  const setLabel = setName ? ` from ${setName}` : '';
-  const rarityLabel = rarity ? ` (${rarity})` : '';
-  const typeLabel = typeInfo ? ` [${typeInfo}]` : '';
-  const title = `${card.name} - ${setName || 'TCG'} | Lunidex`;
-  const description = `${card.name}${typeLabel}${rarityLabel}${setLabel}. HP ${card.hp ?? '?'}. Card details, attacks, abilities, and pricing on Lunidex.`;
+  const rarityLabel = isMeaningfulCardValue(rarity)
+    ? rarity
+    : t('tcg.unknown', { defaultValue: 'Unknown' });
+  const title = t('tcg.card_meta_title', {
+    name: card.name,
+    set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
+  });
+  const description = t('tcg.card_meta_description', {
+    name: card.name,
+    rarity: rarityLabel,
+    set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
+    hp: card.hp ?? '?',
+  });
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
-  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${lang ?? currentLang}`;
+  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${currentLang}`;
 
   return {
     title,
@@ -55,17 +64,25 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   };
 }
 
-export default async function TCGCardPage({ params, searchParams }: PageProps) {
+export default async function TCGCardPage({ params }: PageProps) {
   const { id } = await params;
-  const { lang } = await searchParams;
-  const card = await getTCGCard(id, lang ?? 'en');
-  if (!card) notFound();
-
   const currentLang = await getServerLanguage();
+  const t = await getServerT();
+  const card = await getPageCard(id, currentLang);
+  if (!card) notFound();
 
   const imageUrl = card.imageUrl || card.image || `${SITE_URL}/images/card-placeholder.svg`;
   const setName = card.set?.name ?? '';
   const setId = card.set?.id ?? '';
+  const rarityLabel = isMeaningfulCardValue(card.rarity)
+    ? card.rarity
+    : t('tcg.unknown', { defaultValue: 'Unknown' });
+  const productDescription = t('tcg.card_meta_description', {
+    name: card.name,
+    rarity: rarityLabel,
+    set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
+    hp: card.hp ?? '?',
+  });
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -75,7 +92,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
     mpn: card.localId,
     identifier: card.id,
     image: imageUrl,
-    description: `${card.name} Pokémon TCG card${setName ? ` from ${setName}` : ''}${card.rarity ? ` (${card.rarity})` : ''}.`,
+    description: productDescription,
     brand: { '@type': 'Brand', name: 'Pokémon' },
     manufacturer: { '@type': 'Organization', name: 'The Pokémon Company' },
     category: 'Trading Card',
@@ -94,8 +111,8 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Lunidex', item: `${SITE_URL}/${currentLang}` },
-      { '@type': 'ListItem', position: 2, name: 'TCG Catalog', item: `${SITE_URL}/${currentLang}/tcg` },
+      { '@type': 'ListItem', position: 1, name: t('common.home', { defaultValue: 'Lunidex' }), item: `${SITE_URL}/${currentLang}` },
+      { '@type': 'ListItem', position: 2, name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), item: `${SITE_URL}/${currentLang}/tcg` },
       ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${currentLang}/tcg/collection/${setId}` }] : []),
       { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${currentLang}/tcg/cards/${card.id}` },
     ],
@@ -105,13 +122,19 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <TCGCardDetailRoute card={card} />
     </>
   );
 }
+
+function isMeaningfulCardValue(value: string | undefined): value is string {
+  return Boolean(value && !['none', 'n/a', 'unknown'].includes(value.trim().toLowerCase()));
+}
+
+const getPageCard = cache((cardId: string, lang: string) => getTCGCard(cardId, lang));

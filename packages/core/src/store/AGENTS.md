@@ -1,43 +1,26 @@
-# 🧠 Lunidex Store Context
+# Shared store guide
 
-This directory manages the shared global state and persistence layer of the Lunidex dashboard using **Zustand** and platform-specific storage adapters.
+This guide applies only to the platform-neutral Zustand store in `packages/core/src/store/`. It supplements `packages/core/AGENTS.md`; the web-only store in `src/store/` has its own guide and must not be treated as the same shape.
 
-The brand is Lunidex, but the technical store name `usePrimeDexStore`, the `@primedex/core` import, and existing `primedex-*` persistence keys are compatibility-sensitive and must not be renamed without an explicit migration.
+## Persistence contract
 
-## 🚀 Core Responsibilities
-- **Persistence**: Managed via `zustand/middleware/persist` and the local `platform/storage` adapter. The web adapter uses IndexedDB through `idb-keyval`; Expo resolves `platform/storage.native.ts` and uses AsyncStorage.
-- **Data Governance**: Do not persist complete PokéAPI or TCG API responses. Store compact identifiers, primitives, and the small user-owned records required by the app (for example saved searches, notes, decks, and quiz sessions).
-- **State Domains**:
-  - **Collection**: Favorites, Caught status, and Achievement Badges.
-  - **Composition**: Team management (max 6) and Comparison lists (max 3).
-  - **Filtering**: Extensive Pokémon search parameters (Types, Generations, Base Stats, Height/Weight ranges, etc.).
-  - **TCG and Nuzlocke**: Owned and wished-for cards, saved searches, decks, notes, and Nuzlocke runs.
-  - **Localization and activity**: UI language, system-level locale mapping, quiz history, streaks, visits, and recent actions.
-  - **Gaming**: High scores for classic, silhouette, stats, and time-attack quiz modes.
+- The store persists through `platform/storage`: IndexedDB via `idb-keyval` on the web and AsyncStorage on Expo. Keep storage details out of store actions.
+- Persist only compact IDs, primitives, filters, and small user-owned records. Never persist full PokéAPI, TCGdex, GraphQL, or other remote response objects.
+- `SYNCED_KEYS` defines the persisted/synchronized snapshot used by the core Neon sync path. Treat additions, removals, defaults, and serialized shapes as compatibility changes and coordinate consumers before changing them.
+- `_hasHydrated` is asynchronous. Consumers must wait for it before making persisted-state UI or effect decisions.
 
-## 🛠 Usage & Integration
+## State invariants
 
-### Store Access
-The shared store is exported from `@primedex/core` (or its store deep import). The web application also has its own web-specific store at `src/store/primedex.ts`.
-```typescript
-import { usePrimeDexStore } from '@primedex/core';
+- Use atomic store actions such as `toggleCaught`, `addToTeam`, and `resetFilters` instead of editing arrays in components.
+- Keep updates immutable and preserve the existing limits: teams contain at most 6 Pokémon, the Pokémon comparison list at most 3 entries, and the TCG comparison list at most 4 cards.
+- Keep the store independent of React Native APIs and remote caches. Fetch remote details through the API layer and store only the user-owned result needed for later rendering.
+- Select individual slices in consumers where practical to avoid unrelated re-renders.
 
-const favorites = usePrimeDexStore((state) => state.favorites);
-const addFavorite = usePrimeDexStore((state) => state.addFavorite);
-```
+## Verification
 
-### Hydration
-Since the store uses asynchronous storage (IndexedDB on web and AsyncStorage on Expo), always check `_hasHydrated` before rendering components that depend on persisted state to avoid UI flickers or mismatches.
+When store behavior changes, add focused Vitest coverage for the affected persistence shape, hydration, limits, reset behavior, or action. From the repository root run:
 
-## 📐 Engineering Standards
-1. **No Large Blobs**: Never store full Pokémon objects. Use the PokéAPI (REST/GraphQL) to fetch details by ID.
-2. **Atomic Updates**: Prefer atomic actions (e.g., `toggleCaught`) over manual array manipulation in components.
-3. **Immutability**: Always use the Zustand `set` function with immutable updates.
-4. **Validation**: Team and Comparison list sizes are strictly enforced within the store logic (6 and 3 respectively).
-
-## 🧪 Quality Assurance
-The repository uses **Vitest** for automated tests. There is currently no dedicated test file alongside this shared store; run the full suite from the repository root with:
 ```bash
+npx tsc --project packages/core/tsconfig.json --noEmit
 npm run test -- --run
 ```
-When adding store behavior, cover persistence, list limits, hydration, and filter-reset behavior with focused tests.

@@ -218,6 +218,18 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value:
+              '(www\\.lunidex\\.app|primedex\\.vercel\\.app|poke-app-lake\\.vercel\\.app|lunidex-teeflo\\.vercel\\.app|lunidex-teeflo-teeflo\\.vercel\\.app)',
+          },
+        ],
+        destination: 'https://lunidex.app/:path*',
+        permanent: true,
+      },
+      {
         source: '/pokedex',
         destination: '/',
         permanent: true,

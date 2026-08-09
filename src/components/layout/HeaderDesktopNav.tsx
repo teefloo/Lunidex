@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
@@ -8,23 +8,40 @@ import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { HeaderLink } from './HeaderLink';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
 
 export function HeaderDesktopNav() {
   const mounted = useMounted();
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const toolsRef = useRef<HTMLDivElement>(null);
+
   const label = (key: string, fallback: string) => {
     if (!mounted) return fallback;
     const translated = t(key);
     return translated && translated !== key ? translated : fallback;
   };
+
+  useEffect(() => {
+    if (!isToolsOpen) return;
+
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (event.target instanceof Node && !toolsRef.current?.contains(event.target)) {
+        setIsToolsOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsToolsOpen(false);
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isToolsOpen]);
 
   return (
     <nav className="hidden min-w-0 flex-none items-center justify-center gap-0 rounded-sm border border-border bg-background/40 px-1 py-0.5 lg:flex">
@@ -37,24 +54,33 @@ export function HeaderDesktopNav() {
         </Fragment>
       ))}
       <span aria-hidden="true" className="h-2.5 w-px bg-foreground/15" />
-      <DropdownMenu>
-        <DropdownMenuTrigger className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[popup-open]:text-primary">
+      <div ref={toolsRef} className="relative">
+        <button
+          type="button"
+          aria-expanded={isToolsOpen}
+          aria-haspopup="menu"
+          onClick={() => setIsToolsOpen((open) => !open)}
+          className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
           {label('nav.tools', 'Tools')}
-          <ChevronDown className="h-2.5 w-2.5 transition-transform group-data-[popup-open]:rotate-180" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          {SECONDARY_NAV_ITEMS.map((item) => (
-            <DropdownMenuItem
-              key={item.path}
-              render={
-                <Link href={localizedHref(item.path)} className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground hover:text-primary">
-                  <item.icon className="h-3.5 w-3.5" /> {label(item.labelKey, item.fallback)}
-                </Link>
-              }
-            />
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <ChevronDown className={`h-2.5 w-2.5 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {isToolsOpen && (
+          <div role="menu" className="glass-surface absolute left-0 top-full z-50 mt-1 min-w-44 overflow-hidden p-1 text-popover-foreground shadow-[var(--shadow-pixel)]">
+            {SECONDARY_NAV_ITEMS.map((item) => (
+              <Link
+                key={item.path}
+                href={localizedHref(item.path)}
+                role="menuitem"
+                onClick={() => setIsToolsOpen(false)}
+                className="relative flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground outline-hidden transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground"
+              >
+                <item.icon className="h-3.5 w-3.5 shrink-0" /> {label(item.labelKey, item.fallback)}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

@@ -1,28 +1,26 @@
-# Web Components Guide
+# Web components guide
 
-This directory contains reusable Lunidex UI, feature components, layout primitives, and client interaction leaves.
+This guide supplements `src/AGENTS.md` for reusable UI under `src/components/`. `src/components/tcg/AGENTS.md` adds rules for the TCG feature.
 
 ## Component boundaries
 
-- Prefer server components for static composition. Add `'use client'` only to the component that needs hooks, browser APIs, animations, or local state.
-- Reuse the existing `src/components/ui` primitives and the `base-nova` shadcn style before introducing a new primitive or dependency.
-- Keep domain-heavy calculations in `src/lib` and keep route orchestration in `src/app`; components should receive focused props or use the established hooks.
-- Use `cn()` for class composition and follow the existing Tailwind v4 patterns in `src/app/globals.css`.
-- Use `next/image` for web images with meaningful alt text. Every icon-only button or control needs an accessible name and visible keyboard behavior.
-- Keep user-facing text localized through `@/lib/i18n`; do not hard-code a new language-specific label in a reusable component.
+- Prefer Server Components for static composition. Add `'use client'` only to the component that needs hooks, browser APIs, event handlers, animations, or local state.
+- Keep route orchestration in `src/app` and domain-heavy calculations/API normalization in `src/lib`; components should receive focused props or use established hooks.
+- Reuse `src/components/ui`, the `base-nova` shadcn primitives, `cn()`, and the Tailwind 4 patterns in `src/app/globals.css` before adding a primitive or dependency.
+- Use `next/image` with meaningful alt text and keep remote hosts in `next.config.ts`. Localize reusable UI through `@/lib/i18n`; do not add language-specific labels directly in a component.
 
 ## Interaction and performance
 
-- Select individual Zustand values rather than subscribing to an entire store when practical.
-- Use TanStack Query defaults and the centralized API façade. Do not add ad hoc `fetch` calls to presentational components.
-- Load expensive charts, editors, and browser-only visualizations with `next/dynamic` when the surrounding feature follows that pattern.
-- Preserve SSR-safe initial output. Use `useMounted` or a stable derivation when browser state could cause a hydration mismatch.
-- Keep animations purposeful, interruptible, and accessible. Respect reduced-motion behavior when adding custom motion.
+- Select individual Zustand values rather than subscribing to an entire store where practical. Fetch through TanStack Query and `@/lib/api`, not ad hoc requests in presentational components.
+- Use `next/dynamic` for expensive browser-only charts, editors, or visualizations when the surrounding feature follows that pattern.
+- Preserve SSR-safe initial output, visible keyboard focus, touch-sized controls, and meaningful error/loading states. New animation must be purposeful, interruptible, and reduced-motion aware.
 
 ## Tests
 
-Place component tests beside the implementation or in a nearby `__tests__` directory. Use Testing Library, mock `next/navigation`, `next/image`, and complex UI primitives when that keeps the test focused, then run:
+Place component tests beside the implementation or in a nearby `__tests__` directory. Use Testing Library and mock Next.js modules or complex UI primitives only when needed. Run a focused test while iterating, then:
 
 ```bash
 npm run test -- --run
+npm run lint
+npm run typecheck
 ```

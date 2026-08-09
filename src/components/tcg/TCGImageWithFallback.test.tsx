@@ -18,7 +18,7 @@ describe('TCGImageWithFallback', () => {
     render(<TCGImageWithFallback candidates={['/first.png', '/second.png']} alt="Card" width={64} height={88} />);
 
     const image = screen.getByRole('img', { name: 'Card' });
-    expect(image).toHaveAttribute('data-unoptimized', 'false');
+    expect(image).toHaveAttribute('data-unoptimized', 'true');
     fireEvent.error(image);
 
     expect(screen.getByRole('img', { name: 'Card' })).toHaveAttribute('src', '/second.png');

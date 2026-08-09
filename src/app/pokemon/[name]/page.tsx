@@ -9,7 +9,7 @@ import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData }
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
 import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
-import { languageToPokemonLanguageId, isSupportedLanguage, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
+import { languageToPokemonLanguageId, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { OG_SIZE } from '@/lib/og/theme';
 
 // This route reads the locale from request headers/cookies and also accepts
@@ -25,6 +25,9 @@ const buildPokemonPath = (name: string, searchParams: ResolvedSearchParams) => {
   const query = new URLSearchParams();
 
   for (const [key, value] of Object.entries(searchParams)) {
+    // Locale is encoded in the path. Keeping ?lang= would create a second
+    // URL variant whose presentation language can contradict its canonical.
+    if (key === 'lang') continue;
     if (typeof value === 'string') {
       query.set(key, value);
     } else if (Array.isArray(value)) {
@@ -44,14 +47,11 @@ interface Props {
 }
 
 export async function generateMetadata(
-  { params, searchParams }: Props
+  { params }: Props
 ): Promise<Metadata> {
   await connection();
   const { name } = await params;
-  const sParams = await searchParams;
-  const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
-  const cookieLang = await getServerLanguage();
-  const lang: SupportedLanguage = urlLang ?? cookieLang;
+  const lang = await getServerLanguage();
   const speciesLangCode = await getServerPokemonLanguage();
   const baseName = getBaseSpeciesName(name);
 
@@ -100,7 +100,6 @@ export async function generateMetadata(
         locale: languageToMetadataLocale[lang],
         siteName: 'Lunidex',
         publishedTime: '2024-01-15T00:00:00Z',
-        modifiedTime: new Date().toISOString(),
         authors: ['Lunidex'],
         section: 'Pokédex',
         tags: [
@@ -134,7 +133,6 @@ export async function generateMetadata(
       ],
       other: {
         'article:published_time': '2024-01-15T00:00:00Z',
-        'article:modified_time': new Date().toISOString(),
         'article:author': 'Lunidex',
         'article:section': 'Pokédex',
         'pokemon:dex': String(pokemon.id),
@@ -153,7 +151,6 @@ export async function generateMetadata(
         'DC.language': languageToMetadataLocale[lang],
         'DC.publisher': 'Lunidex',
         'DC.contributor': 'PokéAPI (https://pokeapi.co)',
-        'DC.date': new Date().toISOString(),
         'DC.type': 'InteractiveResource',
       },
     };
@@ -166,9 +163,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   await connection();
   const { name } = await params;
   const sParams = await searchParams;
-  const urlLang = isSupportedLanguage((sParams.lang as string) ?? '') ? (sParams.lang as SupportedLanguage) : null;
-  const cookieLang = await getServerLanguage();
-  const lang: SupportedLanguage = urlLang ?? cookieLang;
+  const lang = await getServerLanguage();
   const langId = languageToPokemonLanguageId[lang];
 
   const baseName = getBaseSpeciesName(name);

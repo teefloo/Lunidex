@@ -35,19 +35,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   const profilePath = `/u/${handle}`;
+  const localizedProfilePath = `/${lang}${profilePath}`;
 
   return {
     title,
     description,
     alternates: {
-      canonical: profilePath,
+      canonical: localizedProfilePath,
       languages: buildSubpathLanguages(profilePath),
     },
     openGraph: {
       title,
       description,
       type: 'profile',
-      url: profilePath,
+      url: localizedProfilePath,
       locale: languageToMetadataLocale[lang],
       siteName: 'Lunidex',
       images: [DEFAULT_OG_IMAGE],
@@ -70,9 +71,10 @@ export default async function PublicProfilePage({ params }: Props) {
   }
 
   const profilePath = `/u/${handle}`;
+  const localizedProfilePath = `/${lang}${profilePath}`;
   const jsonLd = buildWebPageJsonLd({
     lang,
-    path: profilePath,
+    path: localizedProfilePath,
     name: `${profile.displayName} — Lunidex`,
     headline: `${profile.displayName}'s Profile`,
     description: `${profile.displayName}'s Lunidex profile — ${profile.caughtCount}/${profile.totalPokemon} Pokémon caught.`,
@@ -80,12 +82,12 @@ export default async function PublicProfilePage({ params }: Props) {
 
   const profilePageJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfilePage',
+      '@type': 'ProfilePage',
     mainEntity: {
       '@type': 'Person',
       name: profile.displayName,
       description: `${profile.caughtCount}/${profile.totalPokemon} Pokémon caught, ${profile.unlockedBadges.length} badges.`,
-      url: `${SITE_URL}${profilePath}`,
+      url: `${SITE_URL}${localizedProfilePath}`,
     },
   };
 

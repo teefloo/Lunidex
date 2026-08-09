@@ -1,24 +1,24 @@
-# Web Store Guide
+# Web store guide
 
-This directory contains the web-specific Zustand store used by the Next.js application. It is intentionally separate from the platform-neutral store in `packages/core/src/store`.
+This guide applies to the web-only Zustand store in `src/store/primedex.ts`. It is separate from the platform-neutral store in `packages/core/src/store/`.
 
 ## Persistence and synchronization
 
-- `src/store/primedex.ts` uses Zustand `persist` with the web IndexedDB adapter from `idb-keyval`.
-- Persist only compact user state: IDs, primitives, filters, and small user-owned records. Never persist full PokéAPI, TCGdex, or GraphQL response objects.
-- `SYNCED_KEYS` is the contract shared by local persistence and `src/lib/supabase/sync-state.ts` (a compatibility path for the Neon sync layer). Add a new synchronized field deliberately and keep its default, hydration, and server representation aligned.
-- `_hasHydrated` becomes true after asynchronous rehydration. Do not make persisted-state decisions before it is available, and use stable SSR-safe output to avoid hydration mismatches.
-- Prefer store actions such as `toggleCaught`, `addToTeam`, and `resetFilters` over array manipulation in components. Keep updates immutable and preserve the team limit of 6 and comparison limit of 3.
+- Persistence uses Zustand `persist` with the IndexedDB adapter from `idb-keyval`. Keep browser storage details in this module and do not make the shared core store depend on them.
+- Persist only IDs, primitives, filters, and small user-owned records. Never persist full PokéAPI, TCGdex, GraphQL, or other remote responses.
+- `SYNCED_KEYS` is the compatibility contract for local persistence and the Neon sync implementation reached through `src/lib/supabase/sync-state.ts`. When changing a synchronized field, align its default, hydration, server representation, and the corresponding core consumer deliberately; the web and core store shapes are not identical.
+- `_hasHydrated` becomes true after asynchronous rehydration. Do not make persisted-state decisions before it is available, and keep the initial render SSR-safe.
 
-## Usage
+## Usage and invariants
 
-- Select individual state slices with `usePrimeDexStore(selector)` to limit re-renders.
-- Keep API fetching in TanStack Query and `@/lib/api`; the store should hold user choices and compact results, not remote cache data.
-- Treat authentication and cloud sync as best-effort. The web app must remain usable with no Neon variables and local IndexedDB only.
+- Prefer actions such as `toggleCaught`, `addToTeam`, and `resetFilters` over array manipulation in components. Keep updates immutable.
+- Preserve the existing limits: teams contain at most 6 Pokémon, the Pokémon comparison list at most 3 entries, and the TCG comparison list at most 4 cards.
+- Keep API fetching in TanStack Query and `@/lib/api`; the store holds user choices and compact user-owned results, not the remote cache.
+- Auth and cloud sync are best-effort. The web app must remain usable with no Neon variables and local IndexedDB only.
 
 ## Verification
 
-When changing store behavior, add or update focused Vitest coverage for limits, reset behavior, persistence shape, and hydration. From the repository root run:
+When store behavior changes, add focused Vitest coverage for the persistence shape, limits, reset behavior, and hydration, then run:
 
 ```bash
 npm run lint

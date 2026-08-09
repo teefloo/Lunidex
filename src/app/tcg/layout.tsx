@@ -41,15 +41,12 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
   ], lang);
   return (
     <>
-      {/* Resource hints for the TCG card-image CDN and the heavy card CSS.
-          Lives here (not in a head.tsx — unsupported in the App Router) so it
-          renders into <head> for every /tcg route. */}
+      {/* Resource hints for the TCG card-image CDN. Holographic card CSS is
+          loaded only by the catalog and detail modal. */}
       <link rel="preconnect" href="https://api.tcgdex.net" />
       <link rel="preconnect" href="https://assets.tcgdex.net" />
       <link rel="dns-prefetch" href="https://api.tcgdex.net" />
       <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
-      {/* eslint-disable-next-line @next/next/no-css-tags -- required for the upstream effect stylesheet */}
-      <link rel="stylesheet" href="/pokemon-cards/css/all-cards.css" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

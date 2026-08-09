@@ -2,11 +2,16 @@
 
 import { useState } from 'react';
 import { Swords } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { TCGComparePanel } from './TCGComparePanel';
+
+const TCGComparePanel = dynamic(
+  () => import('./TCGComparePanel').then((module) => module.TCGComparePanel),
+  { ssr: false },
+);
 
 export function TCGCompareTrigger() {
   const { t } = useTranslation();
@@ -35,7 +40,7 @@ export function TCGCompareTrigger() {
         </span>
       </button>
 
-      <TCGComparePanel isOpen={panelOpen} onClose={() => setPanelOpen(false)} />
+      {panelOpen && <TCGComparePanel isOpen onClose={() => setPanelOpen(false)} />}
     </>
   );
 }

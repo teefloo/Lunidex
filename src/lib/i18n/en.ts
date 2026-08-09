@@ -72,6 +72,10 @@ export default {
       },
       no_data: 'No competitive data available',
     },
+    battle: {
+      meta_title: 'Battle Simulator',
+      meta_description: 'Simulate Pokémon battles with the Gen 9 damage formula, calculate damage and KO chances, and run full AI duels.',
+    },
     home: {
       hero_title: 'Lunidex',
       hero_subtitle: 'The Ultimate Pokémon Companion',
@@ -1001,7 +1005,7 @@ export default {
     },
     moves_page: {
       title: 'Moves',
-      subtitle: 'Explore every move in the Pokémon universe',
+      subtitle: 'Explore every Pokémon move, with effects, types, power, accuracy, and the Pokémon that can learn it.',
       search_placeholder: 'Search moves by name...',
       no_results: 'No moves found',
       no_results_desc: 'Try adjusting your search or filters',
@@ -1082,7 +1086,7 @@ export default {
     abilities_page: {
       badge: 'Explore Abilities',
       title: 'Abilities',
-      subtitle: 'Every ability at your fingertips — discover effects, strategies, and all Pokémon that can have them',
+      subtitle: 'Explore every Pokémon ability, its effects and strategies, plus the full list of Pokémon that can have it.',
       search_placeholder: 'Search abilities by name or effect...',
       sort_id: 'ID',
       sort_name: 'Name',
@@ -1110,7 +1114,7 @@ export default {
         nav_wishlist: 'Wishlist',
         nav_deck_builder: 'Deck Builder',
         page_eyebrow: 'Catalog',
-        page_title: 'Pokémon TCG Catalog — Lunidex',
+        page_title: 'Pokémon TCG Catalog',
         page_description: 'Browse the complete Pokémon Trading Card Game catalog. Search Pokémon, Trainer, and Energy cards, filter by set, rarity, type, stage, and HP, and open any card instantly.',
         page_heading: 'TCG Catalog',
         page_subheading: 'Explore every Pokémon, Trainer, and Energy card in a searchable archive.',
@@ -1277,6 +1281,10 @@ export default {
       open_raw_data: 'Open raw data',
       detail_empty: 'No effect or flavor text available.',
       open_card_detail: 'Open {{name}} card',
+      card_meta_title: '{{name}} — Pokémon TCG card from {{set}} | Lunidex',
+      card_meta_description: '{{name}} ({{rarity}}) from {{set}}. HP {{hp}}. View card details, attacks, abilities, and pricing on Lunidex.',
+      set_meta_title: '{{name}} — Pokémon TCG Set | Lunidex',
+      set_meta_description: 'Browse the {{name}} Pokémon TCG set, released {{releaseDate}}. Explore cards and track your collection on Lunidex.',
       card_row_hint: 'Open the card to view full details.',
       retreat_cost: 'Retreat cost',
       attacks: 'Attacks',

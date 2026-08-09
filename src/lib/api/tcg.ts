@@ -204,6 +204,11 @@ async function resolveCardImage(card: TCGCard, lang: string, signal?: AbortSigna
   const set = await getSetById(setId, lang);
   throwIfAborted(signal);
 
+  // Some legacy TCGdex sets expose neither artwork nor a card image. Do not
+  // synthesize a URL for those sets: the asset host returns HTML 404s, which
+  // browsers block as cross-origin image responses.
+  if (!set?.logo && !set?.symbol) return card;
+
   const serieId = set?.serie?.id;
   if (!serieId) return card;
 
@@ -526,6 +531,15 @@ export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSign
     return null;
   } catch (error) {
     if (signal?.aborted) throw error;
+
+    // TCGdex does not publish every card in every supported UI language.
+    // Keep the localized route indexable with the English card payload rather
+    // than turning a valid alternate URL into a 404.
+    if (tcgLang !== 'en') {
+      const fallbackCard = await getTCGCard(cardId, 'en', signal);
+      if (fallbackCard) return fallbackCard;
+    }
+
     console.error(`[TCG API] Error fetching card ${cardId}:`, error);
     return await getCachedData<TCGCard>(cacheKey, true);
   }
@@ -721,6 +735,11 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
     await setCachedData(cacheKey, cards);
     return cards;
   } catch (error) {
+    if (tcgLang !== 'en') {
+      const fallbackCards = await getCardsBySet(setId, 'en');
+      if (fallbackCards.length > 0) return fallbackCards;
+    }
+
     console.error(`[TCG API] Error fetching cards for set ${setId}:`, error);
     return (await getCachedData<TCGCard[]>(cacheKey, true)) || [];
   }

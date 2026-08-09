@@ -1,38 +1,25 @@
-# Supabase Guide
+# Supabase compatibility and Edge Function guide
 
-This directory contains the database migrations and Supabase Edge Functions used by Lunidex. The web and mobile clients remain local-first when public Supabase configuration is absent; Supabase adds optional authentication, sync, profiles, game data, and product integrations.
+This guide applies to `supabase/`. The current web/mobile runtime uses Neon Auth and Neon PostgreSQL; this directory contains retained Supabase source migrations for comparison/rollback and a separately deployed Supabase Edge Function. Do not use this directory as evidence that the application runtime still uses Supabase Auth or Supabase RLS.
 
-Lunidex is the visible product brand. Keep historical database-facing names, migration filenames, RPC names, store paths, and `primedex-*` identifiers stable unless a compatibility migration is explicitly planned.
+## Boundaries
 
-## Migrations
+- Read `supabase/migrations/AGENTS.md` before touching SQL migrations and `supabase/functions/AGENTS.md` before touching the Deno function.
+- Treat migration filenames, table/RPC signatures, RLS policies, grants, indexes, function owners, search paths, and retention behavior as compatibility/security interfaces.
+- Keep `SECURITY_AUDIT.md` and its reviewed security assumptions aligned with any security-sensitive migration change.
+- The web's historical `src/lib/supabase` and `packages/core/src/supabase` paths are compatibility names for sync/leaderboard behavior; do not replace Neon runtime code with Supabase clients as part of a documentation or schema change.
 
-- Apply migrations in timestamp order. Existing migrations cover battle rooms, user state, profiles, quiz scores and leaderboard RPCs, public profile data, TCG price history, and friends.
-- Treat RLS policies, grants, indexes, and RPC signatures as production interfaces. Review the complete migration history before changing a table or policy.
-- Protect user-owned rows with RLS and use the authenticated user from `auth.uid()`. Public profile and leaderboard reads must expose only the columns and rows intended for public access.
-- Keep JSONB user-state changes compatible with both `src/store/primedex.ts` and `packages/core/src/store/primedex.ts`; update the corresponding synchronized keys and migrations together when necessary.
-- Use the Supabase CLI or SQL editor deliberately. Never commit local credentials, `.env` files, service-role keys, or generated secrets.
+## Secrets and external operations
 
-## Edge Functions
+- `SUPABASE_DB_URL` is used by the one-time export/Neon migration tooling, not by the browser or mobile runtime.
+- The `poll-tcg-prices` function reads `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, VAPID variables, and `CRON_SECRET` from Supabase secrets. Never commit or log them.
+- There is no Supabase CLI package script or checked-in `supabase/config.toml` in this repository. Do not present `supabase db push`, `supabase db reset`, or deployment as a routine local command; use a configured disposable/staging project and explicit approval for any external operation.
+- The documented function deployment command changes external state and requires confirmation:
 
-- Functions run in Deno and must keep their imports and APIs Deno-compatible. The `poll-tcg-prices` function reads Supabase secrets and polls TCGdex pricing data.
-- Required secrets for `poll-tcg-prices` are `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, and `CRON_SECRET`.
-- Deploy the function only after reviewing secret configuration and authentication requirements:
-
-```bash
-supabase functions deploy poll-tcg-prices --no-verify-jwt
-```
-
-- The function is intended for scheduled execution. Keep external fetches bounded, handle partial upstream failures, and avoid logging personal data or credentials.
-- When deployed without JWT verification, the scheduler must make an authenticated `POST` with `Authorization: Bearer <CRON_SECRET>`; an absent secret must fail closed.
+  ```bash
+  supabase functions deploy poll-tcg-prices --no-verify-jwt
+  ```
 
 ## Verification
 
-For schema changes, inspect RLS and migration ordering, then run the relevant local Supabase checks or apply the migration in a disposable project before deployment. Coordinate client type and sync changes with the web and core package checks:
-
-```bash
-npm run lint
-npm run typecheck
-npm run test -- --run
-```
-
-Production deployments are connected to Vercel and should receive only the public Supabase variables in client code. Configure `SUPABASE_SERVICE_ROLE_KEY` only as a sensitive server-side Vercel/runtime variable; never commit it, expose it to mobile, or place it in `NEXT_PUBLIC_*`.
+Run the relevant static/Node tests from the root, plus the native Supabase/Deno checks only in an environment that actually provides them. Coordinate any data-contract change with the root lint, type-check, test, build, and applicable Neon checks.

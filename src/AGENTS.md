@@ -1,34 +1,32 @@
-# Web Application Source Guide
+# Web application source guide
 
-This directory contains the Next.js 16 / React 19 web application for Lunidex. It uses the App Router, Tailwind CSS v4, TanStack Query, Zustand, and the shared locale-aware routing layer.
+This guide supplements the repository guide for `src/`, the Next.js 16 / React 19 web application.
 
-Lunidex is the visible brand. Preserve technical compatibility identifiers such as `src/store/primedex.ts`, `usePrimeDexStore`, `primedex-*` cookies/storage keys, route slugs, and established domains unless a migration is explicitly planned.
+## Boundaries
 
-## Architecture
+- Routes live in `src/app/`; server-only Route Handlers live in `src/app/api/` and follow that directory's guide.
+- Reusable UI belongs in `src/components/`. API clients, pure helpers, localization, SEO, and feature calculations belong in `src/lib/`. Web-persisted Zustand state belongs in `src/store/primedex.ts`.
+- Shared business logic and platform-neutral state belong in `packages/core`; do not duplicate it in web-only modules.
+- Prefer Server Components and add `'use client'` only at the smallest interactive boundary. Keep server-only Neon clients, connection strings, auth secrets, and database operations out of client bundles.
+- Use the `@/` alias for web imports, the centralized `@/lib/api` façade for remote data, and the existing named-export style for new reusable modules.
 
-- Routes live under `src/app/`; API route handlers live under `src/app/api/` and remain server-side.
-- Reusable UI belongs in `src/components/`; domain helpers and API clients belong in `src/lib/`.
-- Web-persisted state belongs in `src/store/primedex.ts`; shared platform-neutral state belongs in `packages/core/`.
-- Use the `@/` alias for web imports. Keep server-only code out of client components and add `'use client'` only at the smallest interactive boundary.
-
-## Routing and localization
+## Locale-aware web behavior
 
 - Supported locale prefixes are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`.
-- `src/proxy.ts` redirects unprefixed routes and rewrites locale-prefixed routes. Use `useLocaleHref` or the established locale helpers for client-side internal links.
-- Put browser-visible strings behind `@/lib/i18n`; use `@/lib/server-i18n` in server components and metadata.
-- Preserve canonical URLs, alternate-language metadata, sitemap output, JSON-LD, `llms.txt`, `ai.txt`, and OpenSearch output when changing routes.
+- `src/proxy.ts` redirects unprefixed paths and rewrites prefixed paths. Use `useLocaleHref` or the established locale helpers for internal client links.
+- Use `@/lib/i18n` / `useTranslation` in client code and `@/lib/server-i18n` / server helpers in Server Components and metadata. Keep user-facing strings out of new hard-coded component text.
+- Preserve canonical/alternate metadata, JSON-LD, sitemap, `llms.txt`, `ai.txt`, and OpenSearch behavior when changing routes.
 
-## Data and state
+## State and data
 
-- Use the façade in `src/lib/api.ts` and its API modules instead of ad hoc client-side requests.
-- Store compact IDs and user primitives, not complete API response objects. Check `_hasHydrated` before using persisted state in rendering or effects.
-- Select individual Zustand slices where possible to avoid unnecessary re-renders.
-- Keep Neon connection strings, Auth secrets, and server-only clients out of browser bundles.
-- The app is local-first: it must remain usable without Neon variables. Vercel provides the server-only Neon database/Auth configuration; never expose connection strings, JWKS configuration, or cookie secrets to client code.
+- `src/store/primedex.ts` uses IndexedDB persistence and contains web-only features in addition to the shared store. Store IDs, primitives, filters, and small user-owned records, not API response blobs.
+- Wait for `_hasHydrated` before persisted-state decisions and use individual Zustand selectors where practical.
+- The app is local-first. Neon Auth, sync, profiles, leaderboard, price alerts, and other server-backed features must retain their existing unavailable behavior when Neon is not configured.
+- Keep `SYNCED_KEYS`, `src/lib/supabase/sync-state.ts`, and the corresponding core state deliberate when changing synchronized fields; the `supabase` path is a compatibility identifier.
 
-## Verification
+## Web verification
 
-Run these commands from the repository root after web changes:
+Run from the repository root after web changes:
 
 ```bash
 npm run lint
@@ -36,4 +34,4 @@ npm run typecheck
 npm run test -- --run
 ```
 
-Tests use Vitest with jsdom and Testing Library. Colocate component tests with the code they cover and mock Next.js modules or complex UI primitives when needed.
+Add or update focused Vitest/Testing Library coverage for behavioral changes. The full CI also runs the production build, core type-check, and mobile type-check documented at the root.

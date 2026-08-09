@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, type ComponentType, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -42,9 +42,16 @@ interface TCGCardDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onWishlistAdded?: () => void;
+  priority?: boolean;
 }
 
-export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: TCGCardDetailModalProps) {
+export function TCGCardDetailModal({
+  card,
+  isOpen,
+  onClose,
+  onWishlistAdded,
+  priority = true,
+}: TCGCardDetailModalProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
@@ -60,6 +67,11 @@ export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: T
   const isTCGOwned = store.isTCGOwned ?? (() => false);
   const isTCGWishlist = store.isTCGWishlist ?? (() => false);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+
+  useEffect(() => {
+    void import('../../styles/pokemon-cards-css.css');
+    void import('../../styles/tcg-card-overrides.css');
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -190,7 +202,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: T
             <div className="relative w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[460px]">
               <TCGHolographicCard
                 card={displayCard}
-                priority
+                priority={priority}
                 noFrame
                 sizes="(min-width: 1024px) 460px, (min-width: 640px) 320px, 240px"
               />
@@ -375,7 +387,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: T
 
                 {/* ── Price history chart ──────────────────────────── */}
                 <section className="space-y-3">
-                  <PriceChart cardId={displayCard.id} />
+                  <DeferredPriceChart cardId={displayCard.id} />
                 </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}
@@ -397,6 +409,38 @@ export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: T
       </motion.section>
     </div>,
     document.body,
+  );
+}
+
+function DeferredPriceChart({ cardId }: { cardId: string }) {
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldLoad(true);
+        observer.disconnect();
+      },
+      { rootMargin: '160px 0px' },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="min-h-48">
+      {shouldLoad ? (
+        <PriceChart cardId={cardId} />
+      ) : (
+        <div className="h-48 animate-pulse rounded-xl bg-foreground/5" aria-hidden="true" />
+      )}
+    </div>
   );
 }
 

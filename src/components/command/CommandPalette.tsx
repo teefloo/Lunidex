@@ -74,11 +74,11 @@ const PAGE_ITEMS: StaticCommandItem[] = [
 
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 
-export function CommandPalette() {
+export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean }) {
   const { t } = useTranslation();
   const router = useRouter();
   const mounted = useMounted();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen);
   const [search, setSearch] = useState('');
 
   const language = usePrimeDexStore((s) => s.language);

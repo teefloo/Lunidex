@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import type { TCGCard } from '@/types/tcg';
-import { getTCGCardImageCandidates } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates, isOptimizableTcgImage } from '@/lib/tcg-images';
 
 interface TCGCardImageProps {
   card: TCGCard;
@@ -28,6 +28,10 @@ export function TCGCardImage({ card, alt, fill = true, priority = false, sizes, 
       priority={priority}
       sizes={sizes}
       className={className}
+      // TCGdex already serves card-sized CDN variants. Bypassing Vercel's
+      // image proxy avoids quota failures while keeping fallback candidates;
+      // non-CDN fallbacks (such as CardTrader) still use Next image resizing.
+      unoptimized={isOptimizableTcgImage(src)}
       onError={() => {
         setImageIndex((prev) => Math.min(prev + 1, imageCandidates.length - 1));
       }}
