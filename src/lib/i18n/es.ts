@@ -109,6 +109,23 @@ export default {
       steps_eyebrow: 'Una colección fácil de seguir', steps_title: 'Añade tus cartas y no pierdas el hilo.', steps_one_title: 'Elige una expansión', steps_one_body: 'Empieza con una expansión que colecciones.', steps_two_title: 'Añade tus cartas', steps_two_body: 'Marca simplemente las cartas que tienes.', steps_three_title: 'Sigue tu progreso', steps_three_body: 'Consulta el avance de cada expansión.', trust_title: 'Empieza sin cuenta.', trust_body: 'Tus cartas se guardan primero en este navegador y dispositivo. Más adelante podrás crear una cuenta para activar la sincronización cuando esté disponible.', independent: 'Lunidex es un proyecto independiente y no oficial.', about: 'Más información sobre Lunidex',
       faq_eyebrow: 'Preguntas frecuentes', faq_title: 'Preguntas sobre Lunidex', faq_subtitle: 'Lo esencial para seguir cartas y preparar equipos.', faq_q1: '¿Necesito una cuenta para empezar?', faq_a1: 'No. Puedes empezar a seguir tus cartas sin cuenta.', faq_q2: '¿Dónde se guardan mis cartas?', faq_a2: 'Tus cartas se guardan en este navegador y dispositivo. Pueden perderse si borras los datos del navegador. La sincronización es opcional y solo se ofrece cuando está disponible.', faq_q3: '¿Cómo sigo una expansión?', faq_a3: 'Elige una expansión, añade las cartas que tienes y consulta tu progreso.', faq_q4: '¿También puedo preparar un equipo Pokémon?', faq_a4: 'Sí. La Pokédex y la herramienta Equipo están disponibles en Lunidex.', meta_title: 'Lunidex — Colección TCG y equipos Pokémon', meta_description: 'Sigue tu colección de cartas TCG, explora la Pokédex y prepara tus equipos Pokémon en un espacio sencillo y personal. Empieza sin cuenta.', og_title: 'Lunidex — Colecciona tus cartas. Juega con tus Pokémon.', og_alt: 'Interfaz de colección y herramientas conectadas de Lunidex',
     },
+    lunidex_archive: {
+      hero_eyebrow: 'El índice Lunidex',
+      hero_title: 'Colecciona tus cartas. Conoce tus Pokémon. Crea tu equipo.',
+      hero_cta_primary: 'Empezar a coleccionar',
+      hero_cta_secondary: 'Explorar Lunidex',
+      collection_eyebrow: 'Archivo de colección',
+      collection_title: 'Cada carta. Una colección.',
+      collection_body: 'Elige una expansión, marca tus cartas y deja que tu archivo cobre forma.',
+      pokedex_eyebrow: 'Pokédex',
+      pokedex_title: 'Cada Pokémon. Un solo lugar.',
+      team_eyebrow: 'Creador de equipos',
+      team_title: 'Crea. Equilibra. Combate.',
+      final_eyebrow: 'Tu próximo capítulo',
+      final_title: 'Tu colección empieza aquí.',
+      final_body: 'Empieza en este navegador y vuelve cuando aparezca una nueva carta, un Pokémon o una idea para tu equipo.',
+      open_lunidex: 'Abrir Lunidex',
+    },
     footer: {
       navigation: {
         title: 'Navegación',

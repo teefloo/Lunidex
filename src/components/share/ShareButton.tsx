@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, type ComponentProps } from 'react';
 import { Share, Link2, Twitter, MessageSquare, Check, ChevronDown } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 import { Button } from '@/components/ui/button';
 

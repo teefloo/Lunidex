@@ -32,7 +32,7 @@ import { PokemonDetail } from '@/types/pokemon';
 import { useTranslation } from '@/lib/i18n';
 import { getFormDisplayName } from '@/lib/form-names';
 import { usePrimeDexStore } from '@/store/primedex';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';

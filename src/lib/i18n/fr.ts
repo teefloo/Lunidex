@@ -113,6 +113,23 @@ export default {
       faq_eyebrow: 'Questions fréquentes', faq_title: 'Questions sur Lunidex', faq_subtitle: 'L’essentiel pour suivre vos cartes et préparer vos équipes.', faq_q1: 'Faut-il un compte pour commencer ?', faq_a1: 'Non. Vous pouvez commencer à suivre vos cartes sans compte.', faq_q2: 'Où sont enregistrées mes cartes ?', faq_a2: 'Vos cartes sont enregistrées dans ce navigateur, sur cet appareil. Elles peuvent être perdues si vous effacez les données du navigateur. La synchronisation est facultative et proposée seulement lorsqu’elle est disponible.', faq_q3: 'Comment suivre une extension ?', faq_a3: 'Choisissez une extension, ajoutez les cartes que vous possédez et consultez votre progression.', faq_q4: 'Puis-je aussi préparer une équipe Pokémon ?', faq_a4: 'Oui. Le Pokédex et l’outil Équipe sont accessibles depuis Lunidex.',
       meta_title: 'Lunidex — Collection TCG et équipes Pokémon', meta_description: 'Suivez votre collection de cartes TCG, explorez le Pokédex et préparez vos équipes Pokémon dans un espace simple et personnel. Commencez sans compte.', og_title: 'Lunidex — Collectionnez vos cartes. Jouez vos Pokémon.', og_alt: 'Interface Lunidex de collection et d’outils connectés',
     },
+    lunidex_archive: {
+      hero_eyebrow: 'L’index Lunidex',
+      hero_title: 'Collectionnez vos cartes. Connaissez vos Pokémon. Construisez votre équipe.',
+      hero_cta_primary: 'Commencer à collectionner',
+      hero_cta_secondary: 'Explorer Lunidex',
+      collection_eyebrow: 'Archive collection',
+      collection_title: 'Chaque carte. Une collection.',
+      collection_body: 'Choisissez une extension, marquez vos cartes et regardez votre archive prendre forme.',
+      pokedex_eyebrow: 'Pokédex',
+      pokedex_title: 'Chaque Pokémon. Un seul endroit.',
+      team_eyebrow: 'Constructeur d’équipe',
+      team_title: 'Composez. Équilibrez. Combattez.',
+      final_eyebrow: 'Votre prochain chapitre',
+      final_title: 'Votre collection commence ici.',
+      final_body: 'Commencez dans ce navigateur, puis revenez chaque fois qu’une nouvelle carte, un Pokémon ou une idée d’équipe vous inspire.',
+      open_lunidex: 'Ouvrir Lunidex',
+    },
     footer: {
       navigation: {
         title: 'Navigation',

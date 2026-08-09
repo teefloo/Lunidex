@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -32,19 +32,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CollectionLayout({ children }: { children: React.ReactNode }) {
-  const lang = await getServerLanguage();
-  const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'Lunidex', path: '/' },
-    { name: 'TCG', path: '/tcg' },
-    { name: 'Collection', path: '/tcg/collection' },
-  ], lang);
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-      />
-      {children}
-    </>
-  );
+  return children;
 }

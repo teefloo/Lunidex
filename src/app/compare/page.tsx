@@ -36,7 +36,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { resolveLanguage } from '@/lib/languages';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import dynamic from 'next/dynamic';
 
 // Dynamic imports for heavy charting library

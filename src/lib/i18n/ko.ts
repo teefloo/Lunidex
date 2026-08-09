@@ -103,6 +103,23 @@ export default {
     },
     pokedex: { title: '포켓몬 도감', description: '포켓몬의 타입, 능력치, 진화를 살펴보세요.', meta_title: '포켓몬 도감 — 포켓몬 탐색', meta_description: 'Lunidex에서 1025마리의 모든 포켓몬을 검색하세요. 타입, 능력치, 진화, 특성, 기술과 공식 일러스트를 자세히 확인할 수 있습니다.', og_alt: '컬렉션과 연결된 도구를 보여 주는 Lunidex 화면', item_list_name: '완전한 포켓몬 도감 — 모든 포켓몬', item_list_description: '포켓몬 타입, 능력치, 진화, 공식 일러스트를 담은 완전한 도감입니다.' },
     lunidex_home: { hero_title: '카드를 모으세요. 포켓몬을 플레이하세요.', hero_body: 'TCG 컬렉션과 포켓몬 팀을 단순하고 개인적인 한 공간에 모았습니다.', cta_start: '내 컬렉션 시작하기', cta_resume: '내 컬렉션 이어하기', cta_pokedex: '포켓몬 도감 탐색', start_without_account: '계정 없이 시작하세요.', no_account: '계정이 필요하지 않습니다.', preview_eyebrow: '컬렉션 미리보기', preview_title: '한눈에 보는 내 컬렉션.', preview_body: '확장팩을 고르고 카드를 추가해 나만의 속도로 진행 상황을 확인하세요.', preview_note: '인터페이스 미리보기', preview_owned_eyebrow: '내 컬렉션', preview_owned_title: '컬렉션이 기다리고 있습니다.', preview_owned_count_one: '이 기기에 저장된 카드 {{count}}장', preview_owned_count_other: '이 기기에 저장된 카드 {{count}}장', tools_eyebrow: '게임 도구', tools_title: '포켓몬을 탐색하세요. 팀을 만드세요.', tools_body: '포켓몬 도감을 살펴보고 같은 공간에서 균형 잡힌 팀을 준비하세요.', tools_pokedex_title: '포켓몬 도감 탐색', tools_pokedex_body: '포켓몬, 타입, 능력치, 진화를 살펴보세요.', tools_team_title: '팀 만들기', tools_team_body: '팀을 만들고 타입 상성을 확인하세요.', steps_eyebrow: '따라가기 쉬운 컬렉션', steps_title: '카드를 추가하고 흐름을 유지하세요.', steps_one_title: '확장팩 선택', steps_one_body: '수집하는 확장팩으로 시작하세요.', steps_two_title: '카드 추가', steps_two_body: '보유한 카드를 표시하세요.', steps_three_title: '진행 상황 확인', steps_three_body: '각 확장팩의 진행 상황을 확인하세요.', trust_title: '계정 없이 시작하세요.', trust_body: '카드는 먼저 이 기기의 브라우저에 저장됩니다. 동기화가 제공될 때 나중에 계정을 만들어 활성화할 수 있습니다.', independent: 'Lunidex는 독립적인 비공식 프로젝트입니다.', about: 'Lunidex 알아보기', faq_eyebrow: '자주 묻는 질문', faq_title: 'Lunidex에 대한 질문', faq_subtitle: '카드와 팀을 위한 핵심 정보.', faq_q1: '시작하려면 계정이 필요한가요?', faq_a1: '아니요. 계정 없이 카드를 기록할 수 있습니다.', faq_q2: '카드는 어디에 저장되나요?', faq_a2: '이 기기의 브라우저에 저장되며 브라우저 데이터를 지우면 사라질 수 있습니다. 동기화는 선택 사항이며 제공될 때만 이용할 수 있습니다.', faq_q3: '확장팩은 어떻게 추적하나요?', faq_a3: '확장팩을 고르고 보유 카드를 추가한 뒤 진행 상황을 확인하세요.', faq_q4: '포켓몬 팀도 준비할 수 있나요?', faq_a4: '네. Lunidex에서 도감과 팀 도구를 이용할 수 있습니다.', meta_title: 'Lunidex — TCG 컬렉션과 포켓몬 팀', meta_description: 'TCG 카드 컬렉션을 추적하고 도감을 탐색하며 포켓몬 팀을 준비하세요. 계정 없이 시작할 수 있습니다.', og_title: 'Lunidex — 카드를 모으세요. 포켓몬을 플레이하세요.' },
+    lunidex_archive: {
+      hero_eyebrow: 'Lunidex 인덱스',
+      hero_title: '카드를 모으세요. 포켓몬을 알아가세요. 팀을 만드세요.',
+      hero_cta_primary: '컬렉션 시작하기',
+      hero_cta_secondary: 'Lunidex 탐색',
+      collection_eyebrow: '컬렉션 아카이브',
+      collection_title: '모든 카드. 하나의 컬렉션.',
+      collection_body: '확장팩을 고르고 보유 카드를 표시하며 나만의 아카이브를 완성해 보세요.',
+      pokedex_eyebrow: '포켓몬 도감',
+      pokedex_title: '모든 포켓몬. 하나의 공간.',
+      team_eyebrow: '팀 빌더',
+      team_title: '만들고. 균형을 맞추고. 배틀하세요.',
+      final_eyebrow: '다음 장으로',
+      final_title: '컬렉션은 여기서 시작됩니다.',
+      final_body: '이 브라우저에서 시작하고 새로운 카드, 포켓몬 또는 팀 아이디어가 떠오를 때 다시 찾아오세요.',
+      open_lunidex: 'Lunidex 열기',
+    },
     footer: {
       navigation: {
         title: '네비게이션',

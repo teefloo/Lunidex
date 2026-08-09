@@ -103,6 +103,23 @@ export default {
     },
     pokedex: { title: '宝可梦图鉴', description: '探索宝可梦、它们的属性、能力值与进化。', meta_title: '宝可梦图鉴 — 探索宝可梦', meta_description: '使用 Lunidex 搜索全部 1025 只宝可梦，查看属性、能力值、进化、特性、招式和官方插图。', og_alt: '展示收藏与关联工具的 Lunidex 界面', item_list_name: '完整宝可梦图鉴 — 全部宝可梦', item_list_description: '包含属性、能力值、进化和官方插图的完整宝可梦图鉴。' },
     lunidex_home: { hero_title: '收集你的卡牌。畅玩你的宝可梦。', hero_body: '将你的 TCG 收藏和宝可梦队伍汇集在一个简单、属于你的空间中。', cta_start: '开始我的收藏', cta_resume: '继续我的收藏', cta_pokedex: '探索宝可梦图鉴', start_without_account: '无需账户即可开始。', no_account: '无需账户。', preview_eyebrow: '收藏预览', preview_title: '一眼了解你的收藏。', preview_body: '选择一个扩展包，添加你的卡牌，并按自己的节奏追踪进度。', preview_note: '界面预览', preview_owned_eyebrow: '你的收藏', preview_owned_title: '你的收藏正在等你。', preview_owned_count_one: '此设备已保存 {{count}} 张卡牌', preview_owned_count_other: '此设备已保存 {{count}} 张卡牌', tools_eyebrow: '游戏工具', tools_title: '探索宝可梦。组建你的队伍。', tools_body: '浏览宝可梦图鉴，并在同一空间准备平衡的队伍。', tools_pokedex_title: '探索宝可梦图鉴', tools_pokedex_body: '浏览宝可梦、属性、能力值和进化。', tools_team_title: '组建队伍', tools_team_body: '组建队伍并检查属性覆盖。', steps_eyebrow: '易于追踪的收藏', steps_title: '添加卡牌，保持进度。', steps_one_title: '选择扩展包', steps_one_body: '从你正在收集的扩展包开始。', steps_two_title: '添加卡牌', steps_two_body: '标记你拥有的卡牌。', steps_three_title: '追踪进度', steps_three_body: '查看每个扩展包的进度。', trust_title: '无需账户即可开始。', trust_body: '卡牌首先保存在此设备的浏览器中。同步可用时，你可以稍后创建账户来启用它。', independent: 'Lunidex 是一个独立的非官方项目。', about: '了解 Lunidex', faq_eyebrow: '常见问题', faq_title: '关于 Lunidex 的问题', faq_subtitle: '追踪卡牌和准备队伍的要点。', faq_q1: '开始需要账户吗？', faq_a1: '不需要。无需账户即可开始追踪卡牌。', faq_q2: '我的卡牌保存在哪里？', faq_a2: '卡牌保存在此设备的浏览器中。清除浏览器数据时可能会丢失。同步是可选功能，仅在可用时提供。', faq_q3: '如何追踪扩展包？', faq_a3: '选择扩展包，添加你拥有的卡牌并查看进度。', faq_q4: '我也可以准备宝可梦队伍吗？', faq_a4: '可以。Lunidex 提供图鉴和队伍工具。', meta_title: 'Lunidex — TCG 收藏和宝可梦队伍', meta_description: '追踪你的 TCG 卡牌收藏，探索图鉴并准备宝可梦队伍。无需账户即可开始。', og_title: 'Lunidex — 收集你的卡牌。畅玩你的宝可梦。' },
+    lunidex_archive: {
+      hero_eyebrow: 'Lunidex 索引',
+      hero_title: '收集卡牌。了解宝可梦。组建队伍。',
+      hero_cta_primary: '开始收藏',
+      hero_cta_secondary: '探索 Lunidex',
+      collection_eyebrow: '收藏档案',
+      collection_title: '每一张卡。一个收藏。',
+      collection_body: '选择扩展包，标记你拥有的卡牌，让你的收藏逐渐成形。',
+      pokedex_eyebrow: '宝可梦图鉴',
+      pokedex_title: '每一只宝可梦。一个地方。',
+      team_eyebrow: '队伍构建器',
+      team_title: '组建。平衡。对战。',
+      final_eyebrow: '你的下一章',
+      final_title: '你的收藏从这里开始。',
+      final_body: '先在此浏览器中开始，当下一张卡牌、下一只宝可梦或新的队伍想法出现时，再回来继续。',
+      open_lunidex: '打开 Lunidex',
+    },
     footer: {
       navigation: {
         title: '导航',

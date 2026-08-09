@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import {
   X,
   Zap,

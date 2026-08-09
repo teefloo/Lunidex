@@ -15,7 +15,7 @@ export function HeaderLogo() {
 
   return (
     <div className="flex shrink-0 items-center justify-start">
-      <Link href={`/${resolvedLang}`} aria-label="Lunidex" className="touch-target flex items-center gap-2.5 group">
+      <Link prefetch={false} href={`/${resolvedLang}`} aria-label="Lunidex" className="touch-target flex items-center gap-2.5 group">
         <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
           <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
         </div>

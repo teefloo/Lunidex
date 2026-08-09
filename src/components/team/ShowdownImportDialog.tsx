@@ -16,7 +16,7 @@ import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonNames } from '@/lib/api/rest';
 import { parseShowdownPaste, type ParsedShowdownSet } from '@/lib/showdown-parser';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 interface MatchedSet {
   parsed: ParsedShowdownSet;

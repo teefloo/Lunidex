@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Trophy, Target, Zap, Users, Calendar, Copy, Check, Flame, Layers, Library } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import type { PublicProfile } from '@/types/dashboard';

@@ -26,7 +26,7 @@ const displayFont = Pixelify_Sans({
   weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "optional",
-  preload: true,
+  preload: false,
 });
 
 const bodyFont = Nunito({
@@ -34,7 +34,7 @@ const bodyFont = Nunito({
   weight: ["400", "600", "700"],
   variable: "--font-body",
   display: "optional",
-  preload: true,
+  preload: false,
 });
 
 export const viewport: Viewport = {

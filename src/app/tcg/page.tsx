@@ -8,7 +8,9 @@ import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { DEFAULT_TCG_CARD_FILTERS, searchCards } from '@/lib/api/tcg';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
-import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 3600;
 
@@ -69,24 +71,42 @@ export default async function TCGPage() {
     'tcg.nav_deck_builder': t('tcg.nav_deck_builder'),
     'friends.title': t('friends.title', { defaultValue: 'Friends' }),
   } as const;
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
+    { name: t('tcg.page_title'), path: '/tcg' },
+  ], lang);
+  const collectionPage = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: t('tcg.page_title'),
+    description: t('tcg.page_description'),
+    url: `${SITE_URL}/${lang}/tcg`,
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    about: { '@type': 'Thing', name: 'Pokémon Trading Card Game' },
+    inLanguage: buildInLanguage(lang),
+  };
 
   return (
-    <div className="app-page">
-      <Header />
-      <main className="page-shell pt-24 pb-24 relative">
-        <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
-          <TCGPageTabs initialLabels={initialTabLabels} />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
-          <TCGResearchDesk
-            initialLatestSet={DEFAULT_LATEST_TCG_SET}
-            initialCards={initialCatalog?.cards ?? []}
-            initialHasMore={initialCatalog?.hasMore ?? false}
-            initialLanguage={lang}
-          />
-        </Suspense>
-        <TCGCompareTrigger />
-      </main>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(collectionPage) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
+      <div className="app-page">
+        <Header />
+        <main className="page-shell pt-24 pb-24 relative">
+          <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
+            <TCGPageTabs initialLabels={initialTabLabels} />
+          </Suspense>
+          <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
+            <TCGResearchDesk
+              initialLatestSet={DEFAULT_LATEST_TCG_SET}
+              initialCards={initialCatalog?.cards ?? []}
+              initialHasMore={initialCatalog?.hasMore ?? false}
+              initialLanguage={lang}
+            />
+          </Suspense>
+          <TCGCompareTrigger />
+        </main>
+      </div>
+    </>
   );
 }

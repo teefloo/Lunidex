@@ -1,16 +1,18 @@
-import type { Metadata } from 'next';
-import HomeHero from '@/components/home/HomeHero';
-import HomeGameTools from '@/components/home/HomeGameTools';
-import HomeCollectionSteps from '@/components/home/HomeCollectionSteps';
-import HomeTrustSection from '@/components/home/HomeTrustSection';
-import { HomeMotionSection } from '@/components/home/HomeMotionSection';
-import HomeFaqSection from '@/components/layout/HomeFaqSection';
-import Header from '@/components/layout/Header';
+import type { Metadata, Viewport } from 'next';
+import HomeArchiveExperience from '@/components/home/HomeArchiveExperience';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { DEFAULT_OG_IMAGE, buildWebPageJsonLd } from '@/lib/seo';
 import { SITE_NAME } from '@/lib/site';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { buildLunidexHomeFaqJsonLd } from '@/lib/lunidex-home-content';
+
+export const viewport: Viewport = {
+  colorScheme: 'dark',
+  themeColor: '#080d11',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
@@ -42,22 +44,7 @@ export default async function Home() {
 
   return (
     <div className="app-page">
-      <Header />
-      <main className="relative z-10 pt-28 md:pt-32">
-        <HomeHero />
-        <HomeMotionSection>
-          <HomeGameTools />
-        </HomeMotionSection>
-        <HomeMotionSection delay={0.04}>
-          <HomeCollectionSteps />
-        </HomeMotionSection>
-        <HomeMotionSection delay={0.08}>
-          <HomeTrustSection />
-        </HomeMotionSection>
-        <HomeMotionSection delay={0.12}>
-          <HomeFaqSection />
-        </HomeMotionSection>
-      </main>
+      <HomeArchiveExperience />
       <script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     </div>
   );

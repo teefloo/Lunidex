@@ -15,6 +15,7 @@ export function HeaderLink({ children, href, variant, size, className, ...props 
   return (
     <Link
       href={href}
+      prefetch={false}
       className={cn(
         'touch-target inline-flex items-center justify-center whitespace-nowrap rounded-sm border border-transparent text-sm font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
         variant === 'ghost' && 'hover:border-border/60 hover:bg-muted/70 hover:text-foreground',

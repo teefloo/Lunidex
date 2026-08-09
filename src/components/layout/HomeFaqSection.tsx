@@ -9,7 +9,7 @@ export default async function HomeFaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="relative py-12 md:py-20"
+      className="home-faq-section relative py-12 md:py-20"
     >
       <div className="mx-auto w-full max-w-4xl px-5 md:px-8">
         <div className="text-center mb-10">

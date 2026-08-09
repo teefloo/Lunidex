@@ -9,10 +9,10 @@ export default async function Loading() {
         <span className="sr-only">{t('loading.title')}</span>
       </div>
       <p className="page-eyebrow mt-8 justify-center">Lunidex</p>
-      <h2 className="mt-3 text-2xl font-black uppercase tracking-[0.28em] text-foreground/40 animate-pulse">
+      <h2 className="mt-3 text-2xl font-black uppercase tracking-[0.28em] text-foreground/75 animate-pulse">
         {t('loading.title')}
       </h2>
-      <p className="mt-2 text-[11px] font-bold text-foreground/20 uppercase tracking-widest">
+      <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
         {t('loading.subtitle')}
       </p>
     </div>

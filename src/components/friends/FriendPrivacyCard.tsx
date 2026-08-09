@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Eye, EyeOff, ShieldCheck, UserPlus } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { getFriendPrivacySettings, updateFriendPrivacySettings } from '@/lib/friends';

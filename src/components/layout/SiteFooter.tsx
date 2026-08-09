@@ -28,7 +28,7 @@ export default async function SiteFooter() {
   ];
 
   return (
-    <footer className="relative z-0 mt-16 border-t border-foreground/10">
+    <footer className="site-footer relative z-0 mt-16 border-t border-foreground/10">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2.5">
@@ -43,6 +43,7 @@ export default async function SiteFooter() {
               <Link
                 key={link.href}
                 href={localizedHref(link.href)}
+                prefetch={link.href !== '/'}
                 className="touch-target inline-flex items-center hover:text-foreground transition-colors"
               >
                 {link.label}

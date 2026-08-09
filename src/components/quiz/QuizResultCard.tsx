@@ -4,7 +4,7 @@ import { Trophy, Flame, Share2, Download, Twitter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/site';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 type QuizChallenge = 'classic' | 'silhouette' | 'stats';
 type GameMode = 'time-attack' | 'survival' | 'marathon';

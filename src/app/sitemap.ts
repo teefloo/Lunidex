@@ -5,8 +5,10 @@ import { supportedLanguages } from '@/lib/languages';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
 const TCG_CARD_PAGE_SIZE = 250;
-const TCG_CARD_MAX_PAGES = 100;
+const TCG_CARD_MAX_PAGES = 200;
 const TCG_CARD_BATCH_SIZE = 10;
+const TCG_CARD_PAGE_RETRIES = 3;
+const TCG_CARD_PAGE_TIMEOUT_MS = 8000;
 
 type StaticEntry = {
   path: string;
@@ -49,29 +51,38 @@ async function getTcgCardPage(page: number): Promise<string[] | null> {
     'sort:field': 'id',
     'sort:order': 'ASC',
   });
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  for (let attempt = 0; attempt < TCG_CARD_PAGE_RETRIES; attempt += 1) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), TCG_CARD_PAGE_TIMEOUT_MS);
 
-  try {
-    const response = await fetch(`${TCG_CARD_LIST_URL}?${params.toString()}`, {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    });
-    if (!response.ok) return null;
+    try {
+      const response = await fetch(`${TCG_CARD_LIST_URL}?${params.toString()}`, {
+        next: { revalidate: 3600 },
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        if (attempt === TCG_CARD_PAGE_RETRIES - 1) return null;
+        continue;
+      }
 
-    const data = await response.json() as unknown;
-    if (!Array.isArray(data)) return [];
+      const data = await response.json() as unknown;
+      if (!Array.isArray(data)) return [];
 
-    return data.flatMap((card) => {
-      if (!card || typeof card !== 'object' || !('id' in card)) return [];
-      const id = (card as { id?: unknown }).id;
-      return typeof id === 'string' && id.length > 0 ? [id] : [];
-    });
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
+      return data.flatMap((card) => {
+        if (!card || typeof card !== 'object' || !('id' in card)) return [];
+        const id = (card as { id?: unknown }).id;
+        return typeof id === 'string' && id.length > 0 ? [id] : [];
+      });
+    } catch {
+      if (attempt === TCG_CARD_PAGE_RETRIES - 1) return null;
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
   }
+
+  return null;
 }
 
 async function getTcgCardIds(): Promise<string[]> {

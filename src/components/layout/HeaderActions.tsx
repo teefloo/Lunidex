@@ -70,7 +70,7 @@ export function HeaderActions() {
             <kbd className="rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[11px] font-bold">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
       </button>
 
-      <Link href={localizedHref('/favorites')} aria-label={t('nav.favorites')} title={favoritesLabel} className="hidden sm:block">
+      <Link prefetch={false} href={localizedHref('/favorites')} aria-label={t('nav.favorites')} title={favoritesLabel} className="hidden sm:block">
             <div className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground transition-[color,transform] hover:text-[var(--action-favorite)] active:scale-95">
               <Heart className="h-3.5 w-3.5" />
             </div>

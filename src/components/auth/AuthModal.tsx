@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
 import {
   Dialog,

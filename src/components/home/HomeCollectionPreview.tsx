@@ -21,7 +21,7 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
   const isResume = entry.mode === 'resume';
 
   return (
-    <aside className="min-h-[22rem] rounded-sm border border-border/60 bg-[var(--card)] p-5 shadow-[var(--shadow-pixel)] sm:p-6" aria-labelledby="collection-preview-title">
+    <aside className="home-collection-preview" aria-labelledby="collection-preview-title">
       <div aria-hidden="true" className="mb-6 grid grid-cols-3 items-center gap-3 px-1">
         {[0, 1, 2].map((index) => {
           const card = featuredCards[index];
@@ -32,7 +32,6 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
               key={card.id}
               card={card}
               rotationClass={rotationClass}
-              priority={index === 0}
               sizes="(min-width: 1024px) 9rem, 28vw"
             />
           ) : (
@@ -46,9 +45,9 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
       <p className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
         {isResume ? copy.previewOwnedEyebrow : copy.previewEyebrow}
       </p>
-      <h2 id="collection-preview-title" className="mt-2 text-2xl font-black tracking-tight text-foreground">
+      <h3 id="collection-preview-title" className="mt-2 text-2xl font-black tracking-tight text-foreground">
         {isResume ? copy.previewOwnedTitle : copy.previewTitle}
-      </h2>
+      </h3>
       <p className="mt-2 text-sm leading-6 text-foreground/65">
         {isResume
           ? (ownedCount === 1 ? copy.previewOwnedCountOne : copy.previewOwnedCountOther).replace('{{count}}', String(ownedCount))

@@ -113,6 +113,23 @@ export default {
       faq_eyebrow: 'Frequently asked', faq_title: 'Questions about Lunidex', faq_subtitle: 'The essentials for tracking cards and preparing teams.', faq_q1: 'Do I need an account to start?', faq_a1: 'No. You can start tracking your cards without an account.', faq_q2: 'Where are my cards saved?', faq_a2: 'Your cards are saved in this browser on this device. They can be lost if you clear your browser data. Synchronization is optional and offered only when it is available.', faq_q3: 'How do I track a set?', faq_a3: 'Choose a set, add the cards you own, and view your progress.', faq_q4: 'Can I also prepare a Pokémon team?', faq_a4: 'Yes. The Pokédex and Team tool are available from Lunidex.',
       meta_title: 'Lunidex — TCG collection and Pokémon teams', meta_description: 'Track your TCG card collection, explore the Pokédex, and prepare your Pokémon teams in one simple, personal space. Start without an account.', og_title: 'Lunidex — Collect your cards. Play your Pokémon.', og_alt: 'Lunidex collection and connected tools interface',
     },
+    lunidex_archive: {
+      hero_eyebrow: 'The Lunidex index',
+      hero_title: 'Collect your cards. Know your Pokémon. Build your team.',
+      hero_cta_primary: 'Start collecting',
+      hero_cta_secondary: 'Explore Lunidex',
+      collection_eyebrow: 'Collection archive',
+      collection_title: 'Every card. One collection.',
+      collection_body: 'Choose a set, mark the cards you own, and watch the archive take shape.',
+      pokedex_eyebrow: 'Pokédex',
+      pokedex_title: 'Every Pokémon. One place.',
+      team_eyebrow: 'Team builder',
+      team_title: 'Build. Balance. Battle.',
+      final_eyebrow: 'Your next chapter',
+      final_title: 'Your collection starts here.',
+      final_body: 'Start locally in this browser, then come back whenever the next card, Pokémon, or team idea finds you.',
+      open_lunidex: 'Open Lunidex',
+    },
     footer: {
       navigation: {
         title: 'Navigation',

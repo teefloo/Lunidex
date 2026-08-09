@@ -7,7 +7,6 @@ import { TCGCardImage } from '@/components/tcg/TCGCardImage';
 interface HomeCardPreviewProps {
   card: TCGCard;
   rotationClass: string;
-  priority?: boolean;
   sizes: string;
 }
 
@@ -59,7 +58,7 @@ function handleCardPointerMove(event: PointerEvent<HTMLDivElement>) {
   element.style.setProperty('will-change', 'transform');
 }
 
-export function HomeCardPreview({ card, rotationClass, priority = false, sizes }: HomeCardPreviewProps) {
+export function HomeCardPreview({ card, rotationClass, sizes }: HomeCardPreviewProps) {
   return (
     <div
       aria-hidden="true"
@@ -77,7 +76,7 @@ export function HomeCardPreview({ card, rotationClass, priority = false, sizes }
           transform: 'perspective(900px) rotateX(var(--card-rotate-x)) rotateY(var(--card-rotate-y)) translateZ(0)',
         }}
       >
-        <TCGCardImage card={card} alt="" priority={priority} sizes={sizes} className="object-contain" />
+        <TCGCardImage card={card} alt="" sizes={sizes} className="object-contain" />
         <span
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 motion-reduce:transition-none"
           style={{

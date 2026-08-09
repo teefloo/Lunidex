@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bell, BellOff, Trash2, Plus, X, TrendingDown, TrendingUp, Send } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { getNeonAccessToken, isNeonAuthConfigured } from '@/lib/neon/client';
 import { subscribeToPush, sendPushNotification, isPushSupported } from '@/lib/push-notifications';
 import { cn } from '@/lib/utils';

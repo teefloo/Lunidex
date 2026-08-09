@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext, useEffect, useRef } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { usePrimeDexStore } from '@/store/primedex';
 import { fetchAppApi } from '@/lib/app-api';
 import { AuthContext } from '@/lib/neon/AuthProvider';

@@ -3,7 +3,7 @@
 import { SYNCED_KEYS, type PersistedState } from '@/store/primedex';
 import { pickSyncState, applySyncState } from '@/lib/supabase/sync-state';
 import { useTranslation } from '@/lib/i18n';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { useRef, useState, useCallback } from 'react';
 import { Download, Upload, AlertTriangle, Check, X, FileJson } from 'lucide-react';
 import { cn } from '@/lib/utils';

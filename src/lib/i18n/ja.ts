@@ -103,6 +103,23 @@ export default {
     },
     pokedex: { title: 'ポケモン図鑑', description: 'ポケモンのタイプ、能力値、進化を調べましょう。', meta_title: 'ポケモン図鑑 — ポケモンを探す', meta_description: 'Lunidexで全1025匹のポケモンを検索。タイプ、能力値、進化、特性、技、公式イラストを詳しく確認できます。', og_alt: 'コレクションと連携ツールを表す Lunidex の画面', item_list_name: '完全ポケモン図鑑 — すべてのポケモン', item_list_description: 'タイプ、能力値、進化、公式イラストを含む完全なポケモン図鑑。' },
     lunidex_home: { hero_title: 'カードを集めよう。ポケモンで遊ぼう。', hero_body: 'TCG コレクションとポケモンチームを、シンプルで自分だけの場所にまとめます。', cta_start: 'コレクションを始める', cta_resume: 'コレクションを再開する', cta_pokedex: 'ポケモン図鑑を見る', start_without_account: 'アカウントなしで始められます。', no_account: 'アカウントは不要です。', preview_eyebrow: 'コレクションのプレビュー', preview_title: 'コレクションをひと目で。', preview_body: '拡張パックを選び、カードを追加して進み具合を追跡します。', preview_note: '画面イメージ', preview_owned_eyebrow: 'あなたのコレクション', preview_owned_title: 'コレクションの続きがあります。', preview_owned_count_one: 'この端末に {{count}} 枚のカードを保存', preview_owned_count_other: 'この端末に {{count}} 枚のカードを保存', tools_eyebrow: 'ゲームツール', tools_title: 'ポケモンを探す。チームを作る。', tools_body: 'ポケモン図鑑を見て、バランスのよいチームを同じ場所で準備できます。', tools_pokedex_title: 'ポケモン図鑑を見る', tools_pokedex_body: 'ポケモン、タイプ、能力値、進化を調べます。', tools_team_title: 'チームを作る', tools_team_body: 'チームを組み、タイプ相性を確認します。', steps_eyebrow: '続けやすいコレクション', steps_title: 'カードを追加して、進み具合を確認。', steps_one_title: '拡張パックを選ぶ', steps_one_body: '集めている拡張パックから始めます。', steps_two_title: 'カードを追加', steps_two_body: '持っているカードをマークします。', steps_three_title: '進み具合を追跡', steps_three_body: '各拡張パックの進み具合を確認します。', trust_title: 'アカウントなしで始められます。', trust_body: 'カードはまずこの端末のブラウザに保存されます。利用可能な場合は、後からアカウントを作成して同期を有効にできます。', independent: 'Lunidex は独立した非公式プロジェクトです。', about: 'Lunidex について', faq_eyebrow: 'よくある質問', faq_title: 'Lunidex について', faq_subtitle: 'カードとチームの基本。', faq_q1: '開始にアカウントは必要ですか？', faq_a1: 'いいえ。アカウントなしでカードを記録できます。', faq_q2: 'カードはどこに保存されますか？', faq_a2: 'この端末のブラウザに保存されます。ブラウザデータを削除すると失われる場合があります。同期は任意で、利用可能な場合のみ提供されます。', faq_q3: '拡張パックを追跡するには？', faq_a3: '拡張パックを選び、持っているカードを追加して進み具合を確認します。', faq_q4: 'ポケモンチームも準備できますか？', faq_a4: 'はい。Lunidex では図鑑とチームツールを利用できます。', meta_title: 'Lunidex — TCG コレクションとポケモンチーム', meta_description: 'TCG コレクションを追跡し、図鑑を見て、ポケモンチームを準備しましょう。アカウントなしで始められます。', og_title: 'Lunidex — カードを集めよう。ポケモンで遊ぼう。', og_alt: 'コレクションと連携ツールを表す Lunidex の画面' },
+    lunidex_archive: {
+      hero_eyebrow: 'Lunidex インデックス',
+      hero_title: 'カードを集める。ポケモンを知る。チームを組む。',
+      hero_cta_primary: 'コレクションを始める',
+      hero_cta_secondary: 'Lunidexを見る',
+      collection_eyebrow: 'コレクションアーカイブ',
+      collection_title: 'すべてのカードを、ひとつのコレクションに。',
+      collection_body: '拡張パックを選び、持っているカードを記録して、コレクションを形にしていきます。',
+      pokedex_eyebrow: 'ポケモン図鑑',
+      pokedex_title: 'すべてのポケモンを、ひとつの場所に。',
+      team_eyebrow: 'チームビルダー',
+      team_title: '組む。整える。戦う。',
+      final_eyebrow: '次の章へ',
+      final_title: 'あなたのコレクションはここから始まる。',
+      final_body: 'このブラウザで始めて、次のカードやポケモン、チームのアイデアに出会ったらいつでも戻れます。',
+      open_lunidex: 'Lunidexを開く',
+    },
     footer: {
       navigation: {
         title: 'ナビゲーション',

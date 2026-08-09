@@ -27,7 +27,7 @@ import { ShareButton } from '@/components/share/ShareButton';
 import { useMemo, useEffect, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { resolveLanguage } from '@/lib/languages';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
 import {
   rankAutoCompleteCandidates,
