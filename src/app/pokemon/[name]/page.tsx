@@ -120,7 +120,7 @@ export async function generateMetadata(
         description: seoDescription,
         images: [ogImageUrl],
       },
-      authors: [{ name: 'Lunidex', url: 'https://primedex.vercel.app/about' }],
+      authors: [{ name: 'Lunidex', url: 'https://lunidex.app/about' }],
       creator: 'Lunidex',
       publisher: 'Lunidex',
       keywords: [

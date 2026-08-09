@@ -15,6 +15,7 @@ import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
 import { getFormDisplayName, getBaseSpeciesName } from '@/lib/form-names';
 import { cn, formatId } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 interface EvolutionChainProps {
   url: string;
@@ -108,6 +109,7 @@ function detectFormType(formName: string): string {
 
 function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean }) {
   const { language, systemLanguage } = usePrimeDexStore();
+  const localeHref = useLocaleHref();
   const resolvedLang = language === 'auto' ? systemLanguage : language;
 
   const { data: pokemonData, isError: pokemonError } = useQuery({
@@ -134,7 +136,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
   const hasPartialData = pokemonData || speciesData;
 
   return (
-    <Link href={`/pokemon/${name}`} className="relative z-10 hover:z-20">
+    <Link href={localeHref(`/pokemon/${name}`)} className="relative z-10 hover:z-20">
       <motion.div
         whileHover={{ y: -5, scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -188,6 +190,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
 
 function AlternateFormItem({ form }: { form: AlternateForm }) {
   const store = usePrimeDexStore();
+  const localeHref = useLocaleHref();
   const resolvedLang = store.language === 'auto' ? store.systemLanguage : store.language;
   const { t } = useTranslation();
 
@@ -878,7 +881,7 @@ function AlternateFormItem({ form }: { form: AlternateForm }) {
   }
 
   return (
-    <Link href={`/pokemon/${form.name}`} className="relative z-10 hover:z-20">
+    <Link href={localeHref(`/pokemon/${form.name}`)} className="relative z-10 hover:z-20">
       <motion.div
         whileHover={{ y: -5, scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

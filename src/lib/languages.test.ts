@@ -71,17 +71,17 @@ describe('getLanguageId', () => {
 describe('getLanguageAlternates', () => {
   it('normalizes paths without a leading slash', () => {
     const alts = getLanguageAlternates('foo');
-    expect(alts['en-US']).toBe('/foo');
+    expect(alts.en).toBe('/en/foo');
   });
 
   it('includes an x-default entry and all locales', () => {
     const alts = getLanguageAlternates('/bar');
-    expect(alts['x-default']).toBe('/bar');
+    expect(alts['x-default']).toBe('/en/bar');
     expect(Object.keys(alts)).toHaveLength(supportedLanguages.length + 1);
   });
 
   it('defaults to root path', () => {
     const alts = getLanguageAlternates();
-    expect(alts['en-US']).toBe('/');
+    expect(alts.en).toBe('/en');
   });
 });

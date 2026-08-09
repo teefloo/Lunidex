@@ -88,6 +88,7 @@ export default async function PokemonLayout({
   const { name } = await params;
   const speciesLangCode = await getServerPokemonLanguage();
   const lang = await getServerLanguage();
+  const t = await getServerT();
   const baseUrl = SITE_URL;
   let webPageJsonLd = null;
   let breadcrumbJsonLd = null;
@@ -105,7 +106,9 @@ export default async function PokemonLayout({
     const imageUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
     const totalStats = pokemon.stats.reduce((sum: number, s: { base_stat: number }) => sum + s.base_stat, 0);
     const typesArr = pokemon.types.map((typeItem: { type: { name: string } }) => typeItem.type.name);
-    const typesString = typesArr.join('/');
+    const typesString = typesArr.map((type) => t(`types.${type}`, { defaultValue: type })).join('/');
+    const pageTitle = t('meta.pokemon_title', { name: displayName });
+    const pageDescription = t('meta.pokemon_description', { name: displayName, types: typesString });
     const statProperties = pokemon.stats.map((s: { stat: { name: string }; base_stat: number }) => ({
       '@type': 'PropertyValue',
       name: s.stat.name,
@@ -116,14 +119,11 @@ export default async function PokemonLayout({
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       '@id': `${baseUrl}/${lang}/pokemon/${name}#webpage`,
-      name: `${displayName} — Complete Pokémon Guide`,
-      headline: `${displayName} — Stats, Evolutions, Moves & Builds`,
-      description: `Comprehensive data for ${displayName}: base stat total of ${totalStats}, ${typesString} type. Full evolution chain, competitive builds, moveset analysis, abilities, and TCG cards.`,
+      name: pageTitle,
+      headline: pageTitle,
+      description: pageDescription,
       url: `${baseUrl}/${lang}/pokemon/${name}`,
       inLanguage: languageToMetadataLocale[lang],
-      datePublished: '2024-01-15T00:00:00Z',
-      dateModified: new Date().toISOString(),
-      lastReviewed: new Date().toISOString(),
       primaryImageOfPage: imageUrl ? {
         '@type': 'ImageObject',
         url: imageUrl,
@@ -151,14 +151,19 @@ export default async function PokemonLayout({
           ...statProperties,
         ],
       },
-      author: { '@id': `${baseUrl}/#organization` },
+      author: {
+        '@type': 'Organization',
+        '@id': `${baseUrl}/#organization`,
+        name: 'Lunidex',
+        url: baseUrl,
+      },
       publisher: { '@id': `${baseUrl}/#organization` },
       sourceOrganization: {
         '@type': 'Organization',
         name: 'PokéAPI',
         url: 'https://pokeapi.co',
       },
-      keywords: `${displayName}, Pokemon, ${typesArr.join(', ')}, Pokedex, stats, evolution, moveset, competitive builds`,
+      keywords: `${displayName}, Pokémon, ${typesString}, Pokédex`,
       isPartOf: { '@id': `${baseUrl}/#website` },
       speakable: {
         '@type': 'SpeakableSpecification',
@@ -172,7 +177,7 @@ export default async function PokemonLayout({
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Lunidex', item: `${baseUrl}/${lang}` },
-        { '@type': 'ListItem', position: 2, name: 'Pokédex', item: `${baseUrl}/${lang}` },
+        { '@type': 'ListItem', position: 2, name: t('nav.pokedex', { defaultValue: 'Pokédex' }), item: `${baseUrl}/${lang}` },
         { '@type': 'ListItem', position: 3, name: displayName, item: `${baseUrl}/${lang}/pokemon/${name}` },
       ],
     };

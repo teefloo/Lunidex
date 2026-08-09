@@ -7,7 +7,7 @@
 
 **트레이너, 컬렉터, 호기심 많은 팬을 위한 빠른 로컬 우선 포켓몬 도감 및 Pokémon TCG 작업 공간입니다.**
 
-[![Live](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
+[![Live](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -89,7 +89,7 @@ Expo 안내에서 iOS, Android, 웹 또는 Expo Go를 열 수 있습니다. 지�
 
 | 변수 | 용도 |
 | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | 표준 공개 URL을 바꿉니다. 기본값은 `https://primedex.vercel.app`입니다. |
+| `NEXT_PUBLIC_APP_URL` | 표준 공개 URL을 바꿉니다. 기본값은 `https://lunidex.app`입니다. |
 | `NEXT_PUBLIC_SUPABASE_URL` | 선택적인 Supabase 인증 및 클라우드 동기화를 켭니다. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase URL과 함께 쓰는 공개 익명 키입니다. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | TCG 가격 알림용 브라우저 Push 구독을 켭니다. |

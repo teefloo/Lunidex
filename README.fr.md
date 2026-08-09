@@ -7,7 +7,7 @@
 
 **Un Pokédex rapide, local-first et un espace Pokémon TCG pour les dresseurs, collectionneurs et fans curieux.**
 
-[![En ligne](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
+[![En ligne](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -89,7 +89,7 @@ Aucune variable d’environnement n’est nécessaire pour parcourir le Pokédex
 
 | Variable | Rôle |
 | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Remplace l’URL canonique publique ; la valeur par défaut est `https://primedex.vercel.app`. |
+| `NEXT_PUBLIC_APP_URL` | Remplace l’URL canonique publique ; la valeur par défaut est `https://lunidex.app`. |
 | `NEXT_PUBLIC_NEON_AUTH_URL` | Endpoint public Neon Auth utilisé par le client web. |
 | `NEON_AUTH_BASE_URL` | Endpoint Neon Auth serveur utilisé par le proxy `/api/auth`. |
 | `NEON_AUTH_JWKS_URL` | Endpoint JWKS serveur utilisé pour vérifier les jetons Neon Auth. |

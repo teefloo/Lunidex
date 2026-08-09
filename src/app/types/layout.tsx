@@ -37,6 +37,7 @@ export default async function TypesLayout({
 }) {
   const baseUrl = SITE_URL;
   const lang = await getServerLanguage();
+  const t = await getServerT();
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: 'Lunidex', path: '/' },
     { name: 'Type Chart', path: '/types' },
@@ -49,15 +50,13 @@ export default async function TypesLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'Pokémon Type Chart — Lunidex',
+            name: t('meta.types_title'),
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
-            description: 'Interactive type chart showing strengths, weaknesses, resistances, and immunities for all 18 Pokémon types.',
+            description: t('meta.types_description'),
             url: `${baseUrl}/${lang}/types`,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '1025', bestRating: '5' },
             isAccessibleForFree: true,
-            featureList: 'Type effectiveness matrix, dual-type combinations, filter by generation',
           }),
         }}
       />

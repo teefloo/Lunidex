@@ -10,7 +10,7 @@ import { getAbilityPokemon } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { formatName } from '@/lib/utils';
-import { DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -21,6 +21,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
+  const t = await getServerT();
   const lang = await getServerLanguage();
   const displayName = formatName(name);
 
@@ -29,13 +30,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const localizedName = ability.names.find((n) => n.language.name === lang)?.name
       || ability.names.find((n) => n.language.name === 'en')?.name
       || displayName;
-    const description = ability.effect_entries.find((e) => e.language.name === 'en')?.short_effect
-      || `Details about the ${displayName} ability.`;
+    const description = ability.effect_entries.find((e) => e.language.name === lang)?.short_effect
+      || ability.effect_entries.find((e) => e.language.name === 'en')?.short_effect
+      || t('abilities_page.subtitle', { defaultValue: `Details about the ${displayName} ability.` });
 
     return {
       title: `${localizedName} — Ability`,
       description,
-      alternates: { canonical: `/${lang}/abilities/${name}` },
+      alternates: {
+        canonical: `/${lang}/abilities/${name}`,
+        languages: buildSubpathLanguages(`/abilities/${name}`),
+      },
       openGraph: {
         title: `${localizedName} — Ability`,
         description,

@@ -16,6 +16,7 @@ import {
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import Header from '@/components/layout/Header';
@@ -28,19 +29,26 @@ import type { AbilityListItem, GraphQLAbilityData } from '@/types/pokemon';
 
 type SortKey = 'name' | 'id';
 
-export default function AbilitiesPageClient() {
+export default function AbilitiesPageClient({
+  initialAbilities = [],
+  initialLanguageId,
+}: {
+  initialAbilities?: GraphQLAbilityData[];
+  initialLanguageId: number;
+}) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const getLanguageId = usePrimeDexStore((state) => state.getLanguageId);
-  const languageId = mounted ? getLanguageId() : 9;
+  const languageId = mounted ? getLanguageId() : initialLanguageId;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('name');
   const [visibleCount, setVisibleCount] = useState(48);
 
   const {
-    data: rawAbilities,
-    isLoading,
+    data: queriedAbilities,
+    isLoading: queryIsLoading,
     isFetching,
     isError,
     error,
@@ -53,6 +61,9 @@ export default function AbilitiesPageClient() {
     retry: 2,
     refetchOnMount: 'always',
   });
+
+  const rawAbilities = queriedAbilities ?? (!mounted ? initialAbilities : undefined);
+  const isLoading = queryIsLoading && !rawAbilities;
 
   const abilities = useMemo<AbilityListItem[]>(() => {
     if (!rawAbilities) return [];
@@ -238,7 +249,7 @@ export default function AbilitiesPageClient() {
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   <AnimatePresence mode="popLayout">
                     {visibleAbilities.map((ability, index) => (
-                      <AbilityCard key={ability.id} ability={ability} index={index} t={t} />
+                      <AbilityCard key={ability.id} ability={ability} index={index} t={t} localeHref={localeHref} />
                     ))}
                   </AnimatePresence>
                   {visibleCount < filteredAbilities.length && (
@@ -265,10 +276,12 @@ function AbilityCard({
   ability,
   index,
   t,
+  localeHref,
 }: {
   ability: AbilityListItem;
   index: number;
   t: (key: string, options?: Record<string, unknown>) => string;
+  localeHref: (path: string) => string;
 }) {
   return (
     <motion.div
@@ -279,7 +292,7 @@ function AbilityCard({
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
     >
       <Link
-        href={`/abilities/${ability.name}`}
+        href={localeHref(`/abilities/${ability.name}`)}
         className="group relative block overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-card/60"
       >
         <div className="flex items-start justify-between gap-3">

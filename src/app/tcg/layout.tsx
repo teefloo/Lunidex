@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,9 +32,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TcgLayout({ children }: { children: React.ReactNode }) {
   const lang = await getServerLanguage();
+  const t = await getServerT();
+  const title = t('tcg.page_title');
+  const description = t('tcg.page_description');
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'Lunidex', path: '/' },
-    { name: 'TCG Catalog', path: '/tcg' },
+    { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
+    { name: title, path: '/tcg' },
   ], lang);
   return (
     <>
@@ -53,13 +56,12 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            name: 'Lunidex Pokémon TCG Catalog',
-            description: 'Complete Pokémon Trading Card Game catalog. Search Pokémon, Trainer, and Energy cards, filter by set, rarity, type, stage, and HP.',
+            name: title,
+            description,
             url: `${SITE_URL}/${lang}/tcg`,
             isPartOf: { '@id': `${SITE_URL}/#website` },
             about: { '@type': 'Thing', name: 'Pokémon Trading Card Game' },
-            keywords: 'Pokemon TCG, Pokemon cards, TCG catalog, Pokemon sets, Pokemon rarities',
-            inLanguage: 'en-US',
+            inLanguage: buildInLanguage(lang),
           }),
         }}
       />

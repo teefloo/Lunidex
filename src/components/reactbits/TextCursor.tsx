@@ -39,7 +39,7 @@ export default function TextCursor({
 }: TextCursorProps) {
   const [trail, setTrail] = useState<TrailPoint[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const lastMoveTimeRef = useRef(Date.now());
+  const lastMoveTimeRef = useRef<number>(0);
   const idCounter = useRef(0);
 
   const handleMouseMove = (e: PointerEvent<HTMLDivElement>) => {

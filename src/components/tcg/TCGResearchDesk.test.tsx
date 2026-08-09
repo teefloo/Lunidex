@@ -27,6 +27,7 @@ const translations = vi.hoisted(() => ({
   'tcg.all_collections': 'Toutes les collections',
   'tcg.filter_set': 'Extension',
   'tcg.discover_title': 'Découvrir',
+  'tcg.page_title': 'Catalogue Pokémon TCG',
   'tcg.discover_subtitle': 'Explorez les cartes',
   'tcg.search_placeholder': 'Rechercher',
   'tcg.sort_label': 'Trier les cartes',
@@ -65,6 +66,17 @@ vi.mock('@tanstack/react-query', () => ({
       },
     isFetching: false,
     isLoading: false,
+  }),
+  useInfiniteQuery: () => ({
+    data: {
+      pages: [{ cards: [{ id: 'latest-set-1', localId: '1', name: 'Pikachu' }], hasMore: false }],
+    },
+    isFetching: false,
+    isLoading: false,
+    isError: false,
+    hasNextPage: false,
+    fetchNextPage: vi.fn(),
+    isFetchingNextPage: false,
   }),
 }));
 

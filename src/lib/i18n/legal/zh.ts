@@ -515,7 +515,7 @@ const cookies: LegalDocument = {
       intro: '您可以随时控制和删除 Cookie：',
       list: [
         '通过您的浏览器设置（见下文）。',
-        '清除 primedex.vercel.app 网站的浏览数据。',
+        '清除 lunidex.app 网站的浏览数据。',
         '点击 Cookie 横幅上的"管理我的偏好"按钮（如有显示）。',
         '在浏览器中禁用 JavaScript（但会导致服务严重降级）。',
       ],

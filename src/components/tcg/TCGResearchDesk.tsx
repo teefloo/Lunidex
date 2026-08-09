@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   ChevronDown,
   Search,
@@ -9,6 +9,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
@@ -17,23 +18,41 @@ import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCar
 import { tcgKeys } from '@/lib/api/keys';
 import type { TCGCard, TCGCardFilters, TCGSet } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
-import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCardItem } from './TCGCardItem';
-import { TCGFilters } from './TCGFilters';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
+
+const TCGCardDetailModal = dynamic(
+  () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
+  { ssr: false },
+);
+
+const TCGFilters = dynamic(
+  () => import('./TCGFilters').then((module) => ({ default: module.TCGFilters })),
+  {
+    ssr: false,
+    loading: () => <div className="h-32 animate-pulse rounded-sm bg-card/40" />,
+  },
+);
 
 interface TCGResearchDeskProps {
   initialLatestSet?: {
     id: string;
     name: string;
   } | null;
+  initialCards?: TCGCard[];
+  initialHasMore?: boolean;
+  initialLanguage?: string;
 }
 
-export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProps) {
+export function TCGResearchDesk({
+  initialLatestSet = null,
+  initialCards = [],
+  initialHasMore = false,
+  initialLanguage = 'en',
+}: TCGResearchDeskProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const visibleBatchSize = mounted && window.innerWidth < 768 ? 24 : 48;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -44,7 +63,13 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : initialLanguage;
+
+  useEffect(() => {
+    // Load the bundled card rules once for the catalog instead of once per card.
+    void import('../../styles/pokemon-cards-css.css');
+    void import('../../styles/tcg-card-overrides.css');
+  }, []);
 
   const [filters, setFilters] = useState<TCGCardFilters>(() => normalizeFilters({
     ...DEFAULT_TCG_CARD_FILTERS,
@@ -128,31 +153,44 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
   const ownershipQueryKey = effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all'
     ? { owned: tcgOwnedCards, wishlist: tcgWishlistCards }
     : undefined;
-  const { data: cardsData, isLoading, isFetching, isError } = useQuery({
-    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 48, ownershipQueryKey),
-    queryFn: async ({ signal }) => searchCards(effectiveFilters, resolvedLang, 1, 48, signal, ownedIds, wishlistIds, true),
+  const initialCatalogData = useMemo(() => ({
+    pages: [{ cards: initialCards, hasMore: initialHasMore }],
+    pageParams: [1],
+  }), [initialCards, initialHasMore]);
+
+  const {
+    data: cardsData,
+    isLoading,
+    isFetching,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 24, ownershipQueryKey),
+    queryFn: async ({ pageParam, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, 24, signal, ownedIds, wishlistIds, false),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length + 1 : undefined,
     enabled: mounted,
     staleTime: 5 * 60 * 1000,
+    initialData: initialCards.length > 0 && initialLanguage === resolvedLang ? initialCatalogData : undefined,
+    initialDataUpdatedAt: 0,
   });
 
-  const cards = useMemo(() => cardsData?.cards ?? [], [cardsData]);
+  const cards = useMemo(() => cardsData?.pages.flatMap((page) => page.cards) ?? [], [cardsData]);
   const totalCards = cards.length;
-  const [visibleCardCount, setVisibleCardCount] = useState(48);
   const loadMoreRef = useRef<HTMLButtonElement | null>(null);
-  const visibleCards = useMemo(
-    () => cards.slice(0, visibleCardCount),
-    [cards, visibleCardCount],
-  );
+  const visibleCards = cards;
   const sortValue = `${effectiveFilters.sortBy ?? 'id'}-${effectiveFilters.sortOrder ?? 'asc'}`;
 
   useEffect(() => {
     const loadMoreButton = loadMoreRef.current;
-    if (!loadMoreButton || visibleCardCount >= totalCards) return;
+    if (!loadMoreButton || !hasNextPage || isFetchingNextPage) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisibleCardCount((current) => Math.min(current + visibleBatchSize, totalCards));
+          void fetchNextPage();
         }
       },
       { rootMargin: '320px 0px' },
@@ -160,7 +198,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
 
     observer.observe(loadMoreButton);
     return () => observer.disconnect();
-  }, [totalCards, visibleCardCount, visibleBatchSize]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, totalCards]);
 
   const updateFilters = useCallback((next: TCGCardFilters) => {
     setHasUserEditedFilters(true);
@@ -227,7 +265,7 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
     <div className="space-y-6 pb-24">
       <TCGDataLangBanner resolvedLang={resolvedLang} />
       <DiscoveryHero
-        title={t('tcg.discover_title')}
+        title={t('tcg.page_title')}
         subtitle={t('tcg.discover_subtitle')}
         searchTerm={effectiveFilters.searchTerm ?? ''}
         collections={setOptions}
@@ -272,14 +310,15 @@ export function TCGResearchDesk({ initialLatestSet = null }: TCGResearchDeskProp
                 cards={visibleCards}
                 onCardClick={openCard}
               />
-              {visibleCards.length < totalCards && (
+              {hasNextPage && (
                 <button
                   ref={loadMoreRef}
                   type="button"
-                  onClick={() => setVisibleCardCount((current) => Math.min(current + visibleBatchSize, totalCards))}
+                  onClick={() => void fetchNextPage()}
+                  disabled={isFetchingNextPage}
                   className="mx-auto flex min-h-11 items-center justify-center rounded-sm border border-border/45 bg-card/55 px-5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/35 hover:bg-primary/10 hover:text-primary"
                 >
-                  {t('tcg.load_more_cards', { defaultValue: 'Load more cards' })}
+                  {isFetchingNextPage ? t('tcg.refreshing', { defaultValue: 'Loading…' }) : t('tcg.load_more_cards', { defaultValue: 'Load more cards' })}
                 </button>
               )}
             </>

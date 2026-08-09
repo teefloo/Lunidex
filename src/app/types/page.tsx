@@ -20,6 +20,7 @@ import { useState, useMemo, type CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -86,6 +87,7 @@ function typeBadgeStyle(type: string): CSSProperties {
 
 export default function TypesPage() {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const [selectedType, setSelectedType] = useState<string>('fire');
 
   const { data: typeRels, isLoading: isTypeRelationsLoading } = useQuery({
@@ -460,7 +462,7 @@ export default function TypesPage() {
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {emblematicPokemon.map((p, idx) => (
-                  <Link key={p.id} href={`/pokemon/${p.name}`}>
+                  <Link key={p.id} href={localeHref(`/pokemon/${p.name}`)}>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}

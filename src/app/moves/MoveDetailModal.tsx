@@ -22,6 +22,7 @@ import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getMovePokemonLearners } from '@/lib/api/graphql';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
@@ -350,11 +351,12 @@ function PokemonLearnerCard({
   onClose: () => void;
   showLevel?: boolean;
 }) {
+  const localeHref = useLocaleHref();
   const [imgSrc, setImgSrc] = useState(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`);
   const fallbackImg = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
 
   return (
-    <Link href={`/pokemon/${pokemon.name}`} onClick={onClose} className="group">
+    <Link href={localeHref(`/pokemon/${pokemon.name}`)} onClick={onClose} className="group">
       <motion.div
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.98 }}

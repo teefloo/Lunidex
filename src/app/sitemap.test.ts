@@ -7,6 +7,8 @@ describe('launch sitemap routes', () => {
 
     expect(paths).toContain('tcg');
     expect(paths).toContain('team');
+    expect(paths).toContain('battle');
+    expect(paths).toContain('nuzlocke');
     expect(paths).not.toContain('early-access');
     expect(paths).not.toContain('privacy');
     expect(paths).not.toContain('terms');

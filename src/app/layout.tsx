@@ -8,7 +8,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
-import { ClientJsonLd } from "@/components/layout/ClientJsonLd";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
@@ -99,6 +99,12 @@ export async function generateMetadata(): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
+    verification: {
+      google: [
+        process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? 'pqXHKXVMghO__JyQJLu-0jC6jNnSgzAa_VsvtSrN_gg',
+        'OlofqSclwmIgxXtYfQ9NKsg6bf4jieDY_4P2b4xn8uc',
+      ],
+    },
     openGraph: {
       title: t("meta.og_title"),
       description: t("meta.og_description"),
@@ -128,7 +134,6 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     other: {
-      ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ? { "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION } : {}),
       "og:locale:alternate": supportedLanguages
         .filter((l) => l !== lang)
         .map((l) => languageToOpenGraphLocale[l])
@@ -198,9 +203,10 @@ export default async function RootLayout({
              <ClientCookieBanner />
            </AppContent>
          </Providers>
-        <ClientJsonLd
+        <script
           id="primedex-jsonld"
-          data={jsonLd}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       </body>
     </html>

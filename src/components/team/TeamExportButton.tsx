@@ -202,7 +202,7 @@ async function buildTeamCanvas(
   ctx.fillStyle = 'rgba(255,255,255,0.22)';
   ctx.font = '13px sans-serif';
   ctx.textAlign = 'right';
-  ctx.fillText('primedex.vercel.app', CANVAS_WIDTH - 16, CANVAS_HEIGHT - 10);
+  ctx.fillText('lunidex.app', CANVAS_WIDTH - 16, CANVAS_HEIGHT - 10);
 
   return canvas;
 }

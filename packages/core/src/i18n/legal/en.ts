@@ -515,7 +515,7 @@ const cookies: LegalDocument = {
       intro: 'You can control and delete cookies at any time:',
       list: [
         'Via your browser settings (see below).',
-        'By clearing browsing data for the site primedex.vercel.app.',
+        'By clearing browsing data for the site lunidex.app.',
         'By clicking the "Manage my preferences" button on the cookie banner, if displayed.',
         'By disabling JavaScript in your browser (at the cost of major service degradation).',
       ],

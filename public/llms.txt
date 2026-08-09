@@ -7,39 +7,39 @@
 - **Total base stats in database**: 1,025 × 6 = 6,150 stat entries
 - **Distinct types**: 18 (Normal, Fire, Water, Electric, Grass, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, Fairy)
 - **Distinct abilities**: 300+ across all Pokémon
-- **Languages supported**: 9 (en, fr, de, es, it, ja, ko, zh, pt)
-- **TCG cards indexed**: 25,000+ across all sets
-- **Page load (LCP, p75)**: < 2.5s on 4G (Next.js 16 + edge cache)
+- **Languages supported**: 8 (en, fr, es, de, it, ja, ko, zh)
+- **TCG catalog**: cards available across the supported TCGdex sets
+- **Performance**: current Core Web Vitals should be validated with PageSpeed Insights; no field metric is asserted here
 - **Data freshness**: revalidated every 3600s (1 hour)
 - **License**: MIT (code), non-commercial fan project
 - **First launched**: January 2024
 
 ## Primary URLs
 
-- [Home (Pokédex listing)](https://primedex.vercel.app/en)
-- [Team Builder](https://primedex.vercel.app/en/team)
-- [Compare](https://primedex.vercel.app/en/compare)
-- [Type Chart](https://primedex.vercel.app/en/types)
-- [Moves Database](https://primedex.vercel.app/en/moves)
-- [Quiz](https://primedex.vercel.app/en/quiz)
-- [TCG Catalog](https://primedex.vercel.app/en/tcg)
-- [TCG Collection](https://primedex.vercel.app/en/tcg/collection)
-- [TCG Wishlist](https://primedex.vercel.app/en/tcg/wishlist)
-- [Breeding Calculator](https://primedex.vercel.app/en/breeding)
-- [Battle Simulator](https://primedex.vercel.app/en/battle)
-- [Favorites](https://primedex.vercel.app/en/favorites)
-- [About](https://primedex.vercel.app/en/about)
-- [FAQ](https://primedex.vercel.app/en/faq)
-- [Privacy Policy](https://primedex.vercel.app/en/privacy)
-- [Terms of Service](https://primedex.vercel.app/en/terms)
+- [Home (Pokédex listing)](https://lunidex.app/en)
+- [Team Builder](https://lunidex.app/en/team)
+- [Compare](https://lunidex.app/en/compare)
+- [Type Chart](https://lunidex.app/en/types)
+- [Moves Database](https://lunidex.app/en/moves)
+- [Quiz](https://lunidex.app/en/quiz)
+- [TCG Catalog](https://lunidex.app/en/tcg)
+- [TCG Collection](https://lunidex.app/en/tcg/collection)
+- [TCG Wishlist](https://lunidex.app/en/tcg/wishlist)
+- [Breeding Calculator](https://lunidex.app/en/breeding)
+- [Battle Simulator](https://lunidex.app/en/battle)
+- [Favorites](https://lunidex.app/en/favorites)
+- [About](https://lunidex.app/en/about)
+- [FAQ](https://lunidex.app/en/faq)
+- [Privacy Policy](https://lunidex.app/en/privacy)
+- [Terms of Service](https://lunidex.app/en/terms)
 
 ## SEO & Crawlability
 
-- [Sitemap](https://primedex.vercel.app/sitemap.xml)
-- [Robots.txt](https://primedex.vercel.app/robots.txt)
-- [AI crawl policy](https://primedex.vercel.app/ai.txt)
-- [Full content snapshot for LLMs](https://primedex.vercel.app/llms-full.txt)
-- [OpenSearch](https://primedex.vercel.app/opensearch.xml)
+- [Sitemap](https://lunidex.app/sitemap.xml)
+- [Robots.txt](https://lunidex.app/robots.txt)
+- [AI crawl policy](https://lunidex.app/ai.txt)
+- [Full content snapshot for LLMs](https://lunidex.app/llms-full.txt)
+- [OpenSearch](https://lunidex.app/opensearch.xml)
 
 ## Data Sources
 
@@ -77,7 +77,7 @@ Lunidex is a high-performance, open-source Pokémon dashboard built with Next.js
 
 ## Header Navigation (fixed top, z-50)
 
-- Logo link → [home](https://primedex.vercel.app/en)
+- Logo link → [home](https://lunidex.app/en)
 - Search form: `<form role="search">` with `<input type="search" name="search">` — searches all 1025 Pokémon
 - Theme toggle: `<button aria-label="Switch to {mode} mode">` — cycles light/dark/system
 - Language selector: `<select aria-label="Language selector">` — 9 options, flags
@@ -87,14 +87,14 @@ Lunidex is a high-performance, open-source Pokémon dashboard built with Next.js
 
 1. Hero section: `<h1>` + search bar + filter controls
 2. Filter bar: Buttons for Type (18 types), Generation (gen1–gen9), Region (10 regions)
-3. Pokédex grid filled with [Pokémon cards](https://primedex.vercel.app/en/pikachu)
+3. Pokédex grid filled with [Pokémon cards](https://lunidex.app/en/pikachu)
 4. Each Pokémon card: `<a href="/en/pokemon/{name}">` containing sprite `<img>`, name, types, National Dex number
 5. "Load More" button at bottom triggers infinite scroll
 6. "Recently Viewed" section (conditionally rendered when history exists)
 
 ## Pokémon Detail Page Sections
 
-Example: [Pikachu](https://primedex.vercel.app/en/pikachu)
+Example: [Pikachu](https://lunidex.app/en/pikachu)
 
 - Hero: Sprite image, name, National Dex number, type badges, genus
 - Base Stats: Horizontal bar chart (HP, ATK, DEF, SPA, SPD, SPE)
@@ -136,7 +136,7 @@ Example: [Pikachu](https://primedex.vercel.app/en/pikachu)
 
 ## Languages
 
-The site is fully localized in 8 languages: [English](https://primedex.vercel.app/en), [French](https://primedex.vercel.app/fr), [German](https://primedex.vercel.app/de), [Spanish](https://primedex.vercel.app/es), [Italian](https://primedex.vercel.app/it), [Japanese](https://primedex.vercel.app/ja), [Korean](https://primedex.vercel.app/ko), [Chinese](https://primedex.vercel.app/zh). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
+The site is fully localized in 8 languages: [English](https://lunidex.app/en), [French](https://lunidex.app/fr), [German](https://lunidex.app/de), [Spanish](https://lunidex.app/es), [Italian](https://lunidex.app/it), [Japanese](https://lunidex.app/ja), [Korean](https://lunidex.app/ko), [Chinese](https://lunidex.app/zh). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
 
 ## Licensing
 

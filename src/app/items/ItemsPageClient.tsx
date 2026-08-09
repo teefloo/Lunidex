@@ -17,6 +17,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { cn, formatName } from '@/lib/utils';
 import Header from '@/components/layout/Header';
@@ -32,11 +33,18 @@ const itemSpriteUrl = (name: string) => `https://raw.githubusercontent.com/PokeA
 
 type SortKey = 'name' | 'id' | 'cost';
 
-export default function ItemsPageClient() {
+export default function ItemsPageClient({
+  initialItems = [],
+  initialLanguageId,
+}: {
+  initialItems?: GraphQLItemData[];
+  initialLanguageId: number;
+}) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const getLanguageId = usePrimeDexStore((state) => state.getLanguageId);
-  const languageId = mounted ? getLanguageId() : 9;
+  const languageId = mounted ? getLanguageId() : initialLanguageId;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -44,8 +52,8 @@ export default function ItemsPageClient() {
   const [visibleCount, setVisibleCount] = useState(48);
 
   const {
-    data: rawItems,
-    isLoading,
+    data: queriedItems,
+    isLoading: queryIsLoading,
     isFetching,
     isError,
     error,
@@ -58,6 +66,9 @@ export default function ItemsPageClient() {
     retry: 2,
     refetchOnMount: 'always',
   });
+
+  const rawItems = queriedItems ?? (!mounted ? initialItems : undefined);
+  const isLoading = queryIsLoading && !rawItems;
 
   const items = useMemo<ItemListItem[]>(() => {
     if (!rawItems) return [];
@@ -280,7 +291,7 @@ export default function ItemsPageClient() {
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   <AnimatePresence mode="popLayout">
                     {visibleItems.map((item, index) => (
-                      <ItemCard key={item.id} item={item} index={index} t={t} />
+                      <ItemCard key={item.id} item={item} index={index} t={t} localeHref={localeHref} />
                     ))}
                   </AnimatePresence>
                   {visibleCount < filteredItems.length && (
@@ -307,10 +318,12 @@ function ItemCard({
   item,
   index,
   t,
+  localeHref,
 }: {
   item: ItemListItem;
   index: number;
   t: (key: string, options?: Record<string, unknown>) => string;
+  localeHref: (path: string) => string;
 }) {
   const [imgError, setImgError] = useState(false);
 
@@ -323,7 +336,7 @@ function ItemCard({
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
     >
       <Link
-        href={`/items/${item.name}`}
+        href={localeHref(`/items/${item.name}`)}
         className="group relative flex h-full flex-col overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-card/60"
       >
         <div className="flex items-start justify-between gap-3">

@@ -65,16 +65,11 @@ export function getLanguageId(language: string | null | undefined, systemLanguag
 
 export function getLanguageAlternates(pathname = '/'): Record<string, string> {
   const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
-
   return {
-    [languageToMetadataLocale.en]: normalizedPath,
-    [languageToMetadataLocale.fr]: normalizedPath,
-    [languageToMetadataLocale.es]: normalizedPath,
-    [languageToMetadataLocale.de]: normalizedPath,
-    [languageToMetadataLocale.it]: normalizedPath,
-    [languageToMetadataLocale.ja]: normalizedPath,
-    [languageToMetadataLocale.ko]: normalizedPath,
-    [languageToMetadataLocale.zh]: normalizedPath,
-    'x-default': normalizedPath,
+    ...Object.fromEntries(supportedLanguages.map((language) => [
+      language,
+      normalizedPath === '/' ? `/${language}` : `/${language}${normalizedPath}`,
+    ])),
+    'x-default': normalizedPath === '/' ? '/en' : `/en${normalizedPath}`,
   };
 }

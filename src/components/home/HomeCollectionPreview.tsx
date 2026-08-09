@@ -16,7 +16,7 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
-  const { cards: featuredCards } = useHomeFeaturedCards(mounted);
+  const { cards: featuredCards } = useHomeFeaturedCards(true);
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });
   const isResume = entry.mode === 'resume';
 
@@ -32,6 +32,7 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
               key={card.id}
               card={card}
               rotationClass={rotationClass}
+              priority={index === 0}
               sizes="(min-width: 1024px) 9rem, 28vw"
             />
           ) : (

@@ -1,5 +1,5 @@
-export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://primedex.vercel.app';
-// Keep the current deployment URL until the Lunidex domain is purchased.
+export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://lunidex.app';
+// Public canonical URLs use the Lunidex domain; legacy storage and package identifiers stay unchanged.
 // Storage keys intentionally retain their legacy PrimeDex prefix so existing
 // local collections continue to load after the public rebrand.
 export const SITE_NAME = 'Lunidex';

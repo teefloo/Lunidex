@@ -290,16 +290,19 @@ export function PokemonDetailClient({
   const mainType = pokemon.types[0].type.name;
   const color = TYPE_COLORS[mainType] || '#A8A77A';
   
-  const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name 
-    || species?.names?.find(n => n.language.name === resolvedLang)?.name
+  const pokemonLanguageCode = resolvedLang === 'zh' ? 'zh-Hans' : resolvedLang;
+  const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.find((entry) => entry.pokemon_v2_language.name === pokemonLanguageCode)?.name
+    || localized?.pokemon_v2_pokemonspeciesnames?.find((entry) => entry.pokemon_v2_language.name === 'en')?.name
+    || species?.names?.find(n => n.language.name === pokemonLanguageCode)?.name
     || species?.names?.find(n => n.language.name === 'en')?.name
     || getBaseSpeciesName(pokemon.name);
   const displayName = pokemon.name.includes('-')
     ? getFormDisplayName(pokemon.name, baseLocalizedName, resolvedLang)
     : baseLocalizedName;
 
-  const flavorText = localized?.pokemon_v2_pokemonspeciesflavortexts?.[0]?.flavor_text?.replace(/\f/g, ' ')
-    || species?.flavor_text_entries.find((entry) => entry.language.name === resolvedLang)?.flavor_text.replace(/\f/g, ' ')
+  const flavorText = localized?.pokemon_v2_pokemonspeciesflavortexts?.find((entry) => entry.pokemon_v2_language.name === pokemonLanguageCode)?.flavor_text?.replace(/\f/g, ' ')
+    || localized?.pokemon_v2_pokemonspeciesflavortexts?.find((entry) => entry.pokemon_v2_language.name === 'en')?.flavor_text?.replace(/\f/g, ' ')
+    || species?.flavor_text_entries.find((entry) => entry.language.name === pokemonLanguageCode)?.flavor_text.replace(/\f/g, ' ')
     || species?.flavor_text_entries.find((entry) => entry.language.name === 'en')?.flavor_text.replace(/\f/g, ' ');
 
   const genus = species?.genera.find(
@@ -359,7 +362,7 @@ export function PokemonDetailClient({
       {/* Floating Action Buttons — sidebar on desktop, hidden on mobile */}
       <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-50 flex-col items-center justify-center gap-3" >
           <ShareButton
-            url={`/pokemon/${name}?utm_source=share&utm_medium=social`}
+            url={localeHref(`/pokemon/${name}?utm_source=share&utm_medium=social`)}
             title={t('detail.share_title', { name: displayName ?? name })}
             description={t('detail.share_text', { name: displayName ?? name })}
             label={t('detail.share')}
@@ -959,7 +962,7 @@ export function PokemonDetailClient({
                     <div className="flex items-center justify-between pb-4 border-b border-border/60">
                       <h3 className="text-xl font-black text-foreground/90">{t('detail.breeding')}</h3>
                       <Link
-                        href={`/breeding?pokemon=${pokemon.name}`}
+                        href={localeHref(`/breeding?pokemon=${pokemon.name}`)}
                         className="flex items-center gap-1.5 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all"
                       >
                         <Egg className="h-3.5 w-3.5" /> Breeding Calculator

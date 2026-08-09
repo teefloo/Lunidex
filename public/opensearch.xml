@@ -3,8 +3,8 @@
   <ShortName>Lunidex</ShortName>
   <Description>Search the National Pokédex — 1025 Pokémon with stats, evolutions, and moves.</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" template="https://primedex.vercel.app/en?search={searchTerms}"/>
-  <Image height="64" width="64" type="image/png">https://primedex.vercel.app/icon-192.png</Image>
+  <Url type="text/html" template="https://lunidex.app/en?search={searchTerms}"/>
+  <Image height="64" width="64" type="image/png">https://lunidex.app/icon-192.png</Image>
   <Developer>Lunidex</Developer>
   <Contact>contact@primedex.app</Contact>
   <Attribution>Search data via PokéAPI and TCGdex</Attribution>

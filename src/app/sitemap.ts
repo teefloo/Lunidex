@@ -21,6 +21,8 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'items', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'breeding', changeFrequency: 'monthly', priority: 0.4 },
   { path: 'ev-iv', changeFrequency: 'monthly', priority: 0.4 },
+  { path: 'battle', changeFrequency: 'monthly', priority: 0.5 },
+  { path: 'nuzlocke', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
   { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'about', changeFrequency: 'monthly', priority: 0.5 },

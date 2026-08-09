@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 import Image from 'next/image';
 
@@ -15,6 +16,7 @@ export default function RecentlyViewed() {
   const clearHistory = usePrimeDexStore(s => s.clearHistory);
   const mounted = useMounted();
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   if (!mounted || history.length === 0) {
     return null;
@@ -38,7 +40,7 @@ export default function RecentlyViewed() {
       </div>
       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
         {history.map((p, idx) => (
-          <Link key={`${p.id}-${idx}`} href={`/pokemon/${p.name}`} className="group block min-w-0">
+          <Link key={`${p.id}-${idx}`} href={localeHref(`/pokemon/${p.name}`)} className="group block min-w-0">
             <div
               className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 w-full min-w-0 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
             >

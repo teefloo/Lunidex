@@ -515,7 +515,7 @@ const cookies: LegalDocument = {
       intro: 'いつでもCookieを管理・削除できます:',
       list: [
         'お使いのブラウザの設定から(下記参照)。',
-        'primedex.vercel.appサイトの閲覧データを消去することで。',
+        'lunidex.appサイトの閲覧データを消去することで。',
         '表示されている場合は、Cookieバナーの「設定を管理」ボタンをクリックすることで。',
         'ブラウザでJavaScriptを無効にすることで(ただしサービスの大幅な低下を伴います)。',
       ],

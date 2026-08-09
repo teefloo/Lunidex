@@ -9,7 +9,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getItemDetail } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
-import { DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -22,6 +22,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
+  const t = await getServerT();
   const lang = await getServerLanguage();
   const langId = languageToPokemonLanguageId[lang];
   const displayName = formatName(name);
@@ -31,12 +32,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
   const description = item.pokemon_v2_itemeffecttexts?.[0]?.short_effect
-    || `Details about the ${displayName} item.`;
+    || t('items_page.subtitle', { defaultValue: `Details about the ${displayName} item.` });
 
   return {
     title: `${localizedName} — Item`,
     description,
-    alternates: { canonical: `/${lang}/items/${name}` },
+    alternates: {
+      canonical: `/${lang}/items/${name}`,
+      languages: buildSubpathLanguages(`/items/${name}`),
+    },
     openGraph: {
       title: `${localizedName} — Item`,
       description,

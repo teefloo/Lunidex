@@ -515,7 +515,7 @@ const cookies: LegalDocument = {
       intro: 'Sie können Cookies jederzeit kontrollieren und löschen:',
       list: [
         'Über Ihre Browsereinstellungen (siehe unten).',
-        'Durch Löschen der Browserdaten für die Website primedex.vercel.app.',
+        'Durch Löschen der Browserdaten für die Website lunidex.app.',
         'Durch Klicken auf die Schaltfläche "Meine Präferenzen verwalten" im Cookie-Banner, falls angezeigt.',
         'Durch Deaktivieren von JavaScript in Ihrem Browser (auf Kosten einer erheblichen Verschlechterung des Dienstes).',
       ],

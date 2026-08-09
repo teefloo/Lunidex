@@ -27,6 +27,9 @@ type SplitTextElement = HTMLElement & {
   _rbsplitInstance?: GSAPSplitText;
 };
 
+const DEFAULT_FROM = { opacity: 0, y: 40 };
+const DEFAULT_TO = { opacity: 1, y: 0 };
+
 /**
  * ReactBits SplitText — ported to TypeScript. Animates the text in, one
  * character/word/line at a time, when it scrolls into view.
@@ -38,8 +41,8 @@ export default function SplitText({
   duration = 1.25,
   ease = 'power3.out',
   splitType = 'chars',
-  from = { opacity: 0, y: 40 },
-  to = { opacity: 1, y: 0 },
+  from = DEFAULT_FROM,
+  to = DEFAULT_TO,
   threshold = 0.1,
   rootMargin = '-100px',
   textAlign = 'center',
@@ -57,11 +60,20 @@ export default function SplitText({
 
   useLayoutEffect(() => {
     if (typeof document === 'undefined') return;
+    let active = true;
+    const markFontsLoaded = () => {
+      if (active) setFontsLoaded(true);
+    };
+
     if (document.fonts.status === 'loaded') {
-      setFontsLoaded(true);
+      queueMicrotask(markFontsLoaded);
     } else {
-      document.fonts.ready.then(() => setFontsLoaded(true)).catch(() => setFontsLoaded(true));
+      document.fonts.ready.then(markFontsLoaded).catch(markFontsLoaded);
     }
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -145,7 +157,7 @@ export default function SplitText({
       }
       delete el[instanceKey];
     };
-  }, [text, delay, duration, ease, splitType, JSON.stringify(from), JSON.stringify(to), threshold, rootMargin, fontsLoaded]);
+  }, [text, delay, duration, ease, splitType, from, to, threshold, rootMargin, fontsLoaded]);
 
   const style: CSSProperties = {
     textAlign,

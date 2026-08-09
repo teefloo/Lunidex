@@ -29,15 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function BattlePage() {
+export default async function BattlePage() {
+  const t = await getServerT();
+
   return (
     <>
       <Header />
       <main className="mx-auto max-w-5xl px-4 pb-16 pt-24 md:px-6 md:pt-28">
         <PageHeader
           icon={SwordsIcon}
-          title="Battle Simulator"
-          description="Gen 9 damage calculator and AI duel mode"
+          title={t('battle.meta_title', { defaultValue: 'Battle Simulator — Lunidex' })}
+          description={t('battle.meta_description', { defaultValue: 'Gen 9 damage calculator and AI duel mode' })}
         />
         <BattleClient />
       </main>

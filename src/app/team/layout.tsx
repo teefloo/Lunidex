@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     robots: {
-      index: false,
+      index: true,
       follow: true,
     },
     alternates: {
@@ -41,6 +41,7 @@ export default async function TeamLayout({
 }) {
   const baseUrl = SITE_URL;
   const lang = await getServerLanguage();
+  const t = await getServerT();
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: 'Lunidex', path: '/' },
     { name: 'Team Builder', path: '/team' },
@@ -53,14 +54,13 @@ export default async function TeamLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'Pokémon Team Builder — Lunidex',
+            name: t('meta.team_title'),
             applicationCategory: 'GameApplication',
             operatingSystem: 'All',
-            description: 'Build your ultimate Pokémon team with type coverage analysis, weakness detection, and synergy scores.',
+            description: t('meta.team_description'),
             url: `${baseUrl}/${lang}/team`,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
             isAccessibleForFree: true,
-            featureList: 'Team of 6, type coverage analysis, weakness detection, synergy scoring, share via URL',
           }),
         }}
       />

@@ -56,7 +56,6 @@ export default async function MovesLayout({
             url: `${SITE_URL}/${lang}/moves`,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
             isAccessibleForFree: true,
-            featureList: 'All Pokémon moves, filter by type and category, base power, accuracy, PP',
           }),
         }}
       />

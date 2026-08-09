@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import ItemsPageClient from './ItemsPageClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { getAllItems } from '@/lib/api/graphql';
+import { languageToPokemonLanguageId } from '@/lib/languages';
+import { ServerIndexLinks } from '@/components/seo/ServerIndexLinks';
 
 export const revalidate = 3600;
 
@@ -28,6 +32,26 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function ItemsPage() {
-  return <ItemsPageClient />;
+export default async function ItemsPage() {
+  const t = await getServerT();
+  const lang = await getServerLanguage();
+  const initialLanguageId = languageToPokemonLanguageId[lang];
+  const initialItems = await getAllItems(initialLanguageId)
+    .then((items) => items.slice(0, 48))
+    .catch(() => []);
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(['items', initialLanguageId], initialItems);
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ItemsPageClient initialItems={initialItems} initialLanguageId={initialLanguageId} />
+      <ServerIndexLinks
+        title={t('items_page.title', { defaultValue: 'Items' })}
+        links={initialItems.slice(0, 12).map((item) => ({
+          href: `/${lang}/items/${item.name}`,
+          label: item.pokemon_v2_itemnames?.[0]?.name || item.name,
+        }))}
+      />
+    </HydrationBoundary>
+  );
 }

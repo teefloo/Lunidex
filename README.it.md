@@ -7,7 +7,7 @@
 
 **Un Pokédex veloce, local-first e uno spazio Pokémon TCG per allenatori, collezionisti e fan curiosi.**
 
-[![Live](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
+[![Live](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -89,7 +89,7 @@ Non è richiesta alcuna variabile d'ambiente per consultare il Pokédex in local
 
 | Variabile | Scopo |
 | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Sostituisce l'URL pubblico canonico; il valore predefinito è `https://primedex.vercel.app`. |
+| `NEXT_PUBLIC_APP_URL` | Sostituisce l'URL pubblico canonico; il valore predefinito è `https://lunidex.app`. |
 | `NEXT_PUBLIC_SUPABASE_URL` | Abilita autenticazione Supabase e sincronizzazione cloud facoltative. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chiave pubblica associata all'URL Supabase. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Abilita abbonamenti push per gli avvisi di prezzo TCG. |

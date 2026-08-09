@@ -49,15 +49,6 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
     };
   }, []);
 
-  useEffect(() => {
-    // The TCG layout may already provide the upstream stylesheet, but it does
-    // not provide the bundled local rules or the local overrides. Always
-    // import both modules so client-side navigation has the same styles as a
-    // full page load.
-    void import('../../styles/pokemon-cards-css.css');
-    void import('../../styles/tcg-card-overrides.css');
-  }, []);
-
   const flushVars = () => {
     const element = cardRef.current;
     const vars = pendingVarsRef.current;

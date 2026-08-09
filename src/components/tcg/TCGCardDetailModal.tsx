@@ -23,6 +23,7 @@ import {
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
@@ -46,6 +47,7 @@ interface TCGCardDetailModalProps {
 export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: TCGCardDetailModalProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const localeHref = useLocaleHref();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const store = usePrimeDexStore();
   const language = store.language;
@@ -107,7 +109,7 @@ export function TCGCardDetailModal({ card, isOpen, onClose, onWishlistAdded }: T
   const attacks = displayCard.attacks ?? [];
   const abilities = normalizeAbilities(displayCard.abilities);
   const pokemonPageHref = category === 'Pokemon' && displayCard.dexId?.[0]
-    ? `/pokemon/${displayCard.dexId[0]}?lang=${resolvedLang}`
+    ? localeHref(`/pokemon/${displayCard.dexId[0]}`)
     : null;
   const tcgCompareList = store.tcgCompareList ?? [];
   const compared = isTCGCompared(displayCard.id);

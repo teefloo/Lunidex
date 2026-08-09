@@ -4,7 +4,7 @@ import { getTCGCard } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
 import { getServerLanguage } from '@/lib/server-i18n';
-import { buildSubpathLanguages } from '@/lib/seo';
+import { buildInLanguage, buildSubpathLanguages } from '@/lib/seo';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -69,6 +69,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
+    inLanguage: buildInLanguage(currentLang),
     name: card.name,
     sku: card.id,
     mpn: card.localId,

@@ -1,13 +1,14 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
 import { PackageCheck } from 'lucide-react';
+import Link from 'next/link';
 import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGHolographicCard } from './TCGHolographicCard';
 
 interface TCGCardItemProps {
@@ -25,6 +26,7 @@ export const TCGCardItem = memo(function TCGCardItem({
 }: TCGCardItemProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const localeHref = useLocaleHref();
   const store = usePrimeDexStore();
   const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
   const isTCGOwned = store.isTCGOwned ?? (() => false);
@@ -33,10 +35,7 @@ export const TCGCardItem = memo(function TCGCardItem({
   const isList = variant === 'list';
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, delay: Math.min(index * 0.02, 0.22), ease: [0.16, 1, 0.3, 1] }}
+    <article
       className={cn(
         'flex h-full flex-col gap-3',
         isList && 'sm:flex-row sm:items-start',
@@ -58,7 +57,13 @@ export const TCGCardItem = memo(function TCGCardItem({
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <h3 className="line-clamp-2 max-w-full overflow-hidden break-words text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
-              {card.name}
+              <Link
+                href={localeHref(`/tcg/cards/${card.id}`)}
+                onClick={(event) => event.stopPropagation()}
+                className="transition-colors hover:text-primary"
+              >
+                {card.name}
+              </Link>
             </h3>
             <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">
               {card.set?.name ?? t('tcg.unknown')}
@@ -101,7 +106,7 @@ export const TCGCardItem = memo(function TCGCardItem({
           {t('tcg.owned_short')}
         </button>
       </div>
-    </motion.article>
+    </article>
   );
 });
 

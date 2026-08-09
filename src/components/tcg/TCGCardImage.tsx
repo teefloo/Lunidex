@@ -9,11 +9,12 @@ interface TCGCardImageProps {
   card: TCGCard;
   alt?: string;
   fill?: boolean;
+  priority?: boolean;
   sizes?: string;
   className?: string;
 }
 
-export function TCGCardImage({ card, alt, fill = true, sizes, className }: TCGCardImageProps) {
+export function TCGCardImage({ card, alt, fill = true, priority = false, sizes, className }: TCGCardImageProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const imageCandidates = useMemo(() => getTCGCardImageCandidates(card), [card]);
 
@@ -24,6 +25,7 @@ export function TCGCardImage({ card, alt, fill = true, sizes, className }: TCGCa
       src={src}
       alt={alt ?? card.name}
       fill={fill}
+      priority={priority}
       sizes={sizes}
       className={className}
       onError={() => {

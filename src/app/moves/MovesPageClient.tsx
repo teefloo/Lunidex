@@ -24,6 +24,7 @@ import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import Header from '@/components/layout/Header';
@@ -60,11 +61,18 @@ const DAMAGE_CLASSES = ['physical', 'special', 'status'] as const;
 
 type SortKey = 'name' | 'id' | 'power';
 
-export default function MovesPageClient() {
+export default function MovesPageClient({
+  initialMoves = [],
+  initialLanguageId,
+}: {
+  initialMoves?: GraphQLMoveData[];
+  initialLanguageId: number;
+}) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const getLanguageId = usePrimeDexStore((state) => state.getLanguageId);
-  const languageId = mounted ? getLanguageId() : 9;
+  const languageId = mounted ? getLanguageId() : initialLanguageId;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -74,8 +82,8 @@ export default function MovesPageClient() {
   const [visibleCount, setVisibleCount] = useState(48);
 
   const {
-    data: rawMoves,
-    isLoading,
+    data: queriedMoves,
+    isLoading: queryIsLoading,
     isFetching,
     isError,
     error,
@@ -88,6 +96,9 @@ export default function MovesPageClient() {
     retry: 2,
     refetchOnMount: 'always',
   });
+
+  const rawMoves = queriedMoves ?? (!mounted ? initialMoves : undefined);
+  const isLoading = queryIsLoading && !rawMoves;
 
   const moves = useMemo<MoveListItem[]>(() => {
     if (!rawMoves) return [];
@@ -381,6 +392,7 @@ export default function MovesPageClient() {
                         index={index}
                         onClick={() => setSelectedMove(move)}
                         t={t}
+                        localeHref={localeHref}
                       />
                     ))}
                   </AnimatePresence>
@@ -411,11 +423,13 @@ export function MoveCard({
   index,
   onClick,
   t,
+  localeHref,
 }: {
   move: MoveListItem;
   index: number;
   onClick: () => void;
   t: (key: string, options?: { count?: number; defaultValue?: string }) => string;
+  localeHref: (path: string) => string;
 }) {
   const typeColor = TYPE_COLORS[move.type] || '#6B7280';
 
@@ -482,7 +496,7 @@ export function MoveCard({
           {t('moves_page.preview', { defaultValue: 'Preview' })}
         </Button>
         <Link
-          href={`/moves/${move.name}`}
+          href={localeHref(`/moves/${move.name}`)}
           className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
           aria-label={`View details for ${move.localizedName}`}
         >

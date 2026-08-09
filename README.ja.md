@@ -7,7 +7,7 @@
 
 **トレーナー、コレクター、好奇心旺盛なファンのための、高速なローカルファーストのポケモン図鑑と Pokémon TCG ワークスペース。**
 
-[![Live](https://img.shields.io/badge/Live-primedex.vercel.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://primedex.vercel.app)
+[![Live](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -89,7 +89,7 @@ Expo の案内から iOS、Android、Web、Expo Go を開けます。対応画�
 
 | 変数 | 用途 |
 | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | 正規の公開 URL を上書きします。既定値は `https://primedex.vercel.app` です。 |
+| `NEXT_PUBLIC_APP_URL` | 正規の公開 URL を上書きします。既定値は `https://lunidex.app` です。 |
 | `NEXT_PUBLIC_SUPABASE_URL` | 任意の Supabase 認証とクラウド同期を有効にします。 |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase URL に対応する公開匿名キーです。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | TCG 価格アラート用のブラウザ Push 購読を有効にします。 |

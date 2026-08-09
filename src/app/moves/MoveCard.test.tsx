@@ -19,7 +19,7 @@ const move: MoveListItem = {
 
 describe('MoveCard interactions', () => {
   it('uses separate preview and details controls without nesting them', () => {
-    render(<MoveCard move={move} index={0} onClick={vi.fn()} t={(key) => key} />);
+    render(<MoveCard move={move} index={0} onClick={vi.fn()} t={(key) => key} localeHref={(path) => `/en${path}`} />);
     const article = screen.getByRole('article');
 
     expect(screen.getByRole('button', { name: 'moves_page.preview' })).toBeInTheDocument();
