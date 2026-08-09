@@ -548,6 +548,11 @@ h1 { letter-spacing: 0; }
   isolation: isolate;
 }
 
+/* Header popovers must be able to extend beyond the toolbar frame. */
+.codex-frame.header-toolbar {
+  overflow: visible;
+}
+
 /* Loading shimmer — pixel shimmer for skeletons */
 .codex-shimmer {
   position: relative;
@@ -1202,6 +1207,19 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .lunidex-world-backdrop {
+  --archive-field-halo-x: 0px;
+  --archive-field-halo-y: 0px;
+  --archive-field-halo-scale: 1;
+  --archive-field-grid-x: 0px;
+  --archive-field-grid-y: 0px;
+  --archive-field-wide-x: 0px;
+  --archive-field-wide-y: 0px;
+  --archive-field-wide-rotate: 0deg;
+  --archive-field-tall-x: 0px;
+  --archive-field-tall-y: 0px;
+  --archive-field-tall-rotate: 0deg;
+  --archive-field-mark-top-y: 0px;
+  --archive-field-mark-bottom-y: 0px;
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -1221,7 +1239,11 @@ body:has(.lunidex-home) .site-footer a:hover {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(232, 145, 107, 0.24), rgba(232, 145, 107, 0.08) 30%, transparent 68%);
   opacity: 0.78;
-  transform: translate(-50%, -50%);
+  transform: translate(
+    calc(-50% + var(--archive-field-halo-x)),
+    calc(-50% + var(--archive-field-halo-y))
+  ) scale(var(--archive-field-halo-scale));
+  will-change: transform;
 }
 
 .archive-field-grid {
@@ -1233,8 +1255,13 @@ body:has(.lunidex-home) .site-footer a:hover {
   background-size: 4.5rem 4.5rem;
   mask-image: radial-gradient(ellipse at center, black 12%, rgba(0, 0, 0, 0.72) 34%, transparent 76%);
   opacity: 0.22;
-  transform: perspective(52rem) rotateX(66deg) translateY(42%);
+  transform: perspective(52rem) rotateX(66deg) translate3d(
+    var(--archive-field-grid-x),
+    calc(42% + var(--archive-field-grid-y)),
+    0
+  );
   transform-origin: center bottom;
+  will-change: transform;
   -webkit-mask-image: radial-gradient(ellipse at center, black 12%, rgba(0, 0, 0, 0.72) 34%, transparent 76%);
 }
 
@@ -1251,7 +1278,11 @@ body:has(.lunidex-home) .site-footer a:hover {
   left: 66%;
   width: min(66vw, 64rem);
   aspect-ratio: 2.2 / 1;
-  transform: translate(-50%, -50%) rotate(-17deg);
+  transform: translate(
+    calc(-50% + var(--archive-field-wide-x)),
+    calc(-50% + var(--archive-field-wide-y))
+  ) rotate(calc(-17deg + var(--archive-field-wide-rotate)));
+  will-change: transform;
 }
 
 .archive-field-orbit-tall {
@@ -1260,7 +1291,11 @@ body:has(.lunidex-home) .site-footer a:hover {
   width: min(31vw, 30rem);
   aspect-ratio: 0.72 / 1;
   border-color: rgba(232, 145, 107, 0.2);
-  transform: translate(-50%, -50%) rotate(28deg);
+  transform: translate(
+    calc(-50% + var(--archive-field-tall-x)),
+    calc(-50% + var(--archive-field-tall-y))
+  ) rotate(calc(28deg + var(--archive-field-tall-rotate)));
+  will-change: transform;
 }
 
 .archive-field-mark {
@@ -1275,12 +1310,15 @@ body:has(.lunidex-home) .site-footer a:hover {
 .archive-field-mark-top {
   top: 15%;
   right: 11%;
+  transform: translate3d(0, var(--archive-field-mark-top-y), 0);
+  will-change: transform;
 }
 
 .archive-field-mark-bottom {
   bottom: 15%;
   left: 11%;
-  transform: rotate(180deg);
+  transform: translate3d(0, var(--archive-field-mark-bottom-y), 0) rotate(180deg);
+  will-change: transform;
 }
 
 .lunidex-world-content {
@@ -2186,7 +2224,11 @@ body:has(.lunidex-home) .site-footer a:hover {
     inset: -34%;
     background-size: 3.2rem 3.2rem;
     opacity: 0.14;
-    transform: perspective(38rem) rotateX(66deg) translateY(45%);
+    transform: perspective(38rem) rotateX(66deg) translate3d(
+      var(--archive-field-grid-x),
+      calc(45% + var(--archive-field-grid-y)),
+      0
+    );
   }
 
   .archive-field-orbit-wide {
