@@ -119,6 +119,16 @@ export default {
       final_title: '컬렉션은 여기서 시작됩니다.',
       final_body: '이 브라우저에서 시작하고 새로운 카드, 포켓몬 또는 팀 아이디어가 떠오를 때 다시 찾아오세요.',
       open_lunidex: 'Lunidex 열기',
+      field_index_context: '포켓몬 / 확장팩 / 팀',
+      field_lab: '필드 랩',
+      field_online: '온라인',
+      field_progress_title: '기억되는 여정.',
+      field_progress_body: '만나는 모든 포켓몬을 위한 로컬 진행 상황.',
+      field_caught: '포획',
+      field_favorites: '즐겨찾기',
+      field_badges: '배지',
+      field_base_set: '베이스 세트 / 1999',
+      field_scroll: '스크롤하여 인덱스를 탐색하세요', field_local: '로컬', field_open: '오픈', field_demo_label: '인터페이스 예시', chapter_nav_label: '챕터 둘러보기', field_support_eyebrow: '로컬 우선 기반', local_storage_note: '계정이 없으면 카드는 이 기기에 저장됩니다.', local_storage_note_link: '자세히 보기',
     },
     footer: {
       navigation: {

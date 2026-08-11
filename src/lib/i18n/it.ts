@@ -119,6 +119,16 @@ export default {
       final_title: 'La tua collezione inizia qui.',
       final_body: 'Inizia in questo browser e torna quando una nuova carta, un Pokémon o un’idea per la squadra si presenta.',
       open_lunidex: 'Apri Lunidex',
+      field_index_context: 'Specie / set / squadre',
+      field_lab: 'LABORATORIO',
+      field_online: 'Online',
+      field_progress_title: 'Il tuo percorso, ricordato.',
+      field_progress_body: 'Progressi locali per ogni Pokémon che incontri.',
+      field_caught: 'Catturati',
+      field_favorites: 'Preferiti',
+      field_badges: 'Medaglie',
+      field_base_set: 'SET BASE / 1999',
+      field_scroll: 'Scorri per esplorare l’indice', field_local: 'LOCALE', field_open: 'APERTO', field_demo_label: 'ESEMPIO DI INTERFACCIA', chapter_nav_label: 'Esplora i capitoli', field_support_eyebrow: 'Una base locale e aperta', local_storage_note: 'Senza account, le tue carte restano su questo dispositivo.', local_storage_note_link: 'Scopri di più',
     },
     footer: {
       navigation: {

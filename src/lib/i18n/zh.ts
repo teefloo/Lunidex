@@ -119,6 +119,16 @@ export default {
       final_title: '你的收藏从这里开始。',
       final_body: '先在此浏览器中开始，当下一张卡牌、下一只宝可梦或新的队伍想法出现时，再回来继续。',
       open_lunidex: '打开 Lunidex',
+      field_index_context: '宝可梦 / 扩展包 / 队伍',
+      field_lab: '现场实验室',
+      field_online: '在线',
+      field_progress_title: '记录你的旅程。',
+      field_progress_body: '为每一只遇见的宝可梦保存本地进度。',
+      field_caught: '已捕获',
+      field_favorites: '收藏',
+      field_badges: '徽章',
+      field_base_set: '基础系列 / 1999',
+      field_scroll: '滚动浏览索引', field_local: '本地', field_open: '开放', field_demo_label: '界面示例', chapter_nav_label: '浏览章节', field_support_eyebrow: '本地优先基础', local_storage_note: '没有账户时，卡牌会保存在此设备上。', local_storage_note_link: '了解更多',
     },
     footer: {
       navigation: {

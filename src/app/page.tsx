@@ -7,8 +7,8 @@ import { languageToOpenGraphLocale } from '@/lib/languages';
 import { buildLunidexHomeFaqJsonLd } from '@/lib/lunidex-home-content';
 
 export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#080d11',
+  colorScheme: 'light',
+  themeColor: '#F4EAD5',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',

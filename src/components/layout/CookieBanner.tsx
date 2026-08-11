@@ -112,24 +112,25 @@ export default function CookieBanner() {
       role="dialog"
       aria-live="polite"
       aria-labelledby="cookie-consent-title"
-      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-6 sm:bottom-6"
+      aria-describedby="cookie-consent-description cookie-consent-disclaimer"
+      className="fixed inset-x-2 bottom-2 z-50 sm:inset-x-6 sm:bottom-6"
     >
-      <div className="glass-panel mx-auto w-full max-w-xl p-4 sm:p-5">
-        <div className="flex items-start gap-3">
+      <div className="glass-panel mx-auto w-full max-w-xl p-3 sm:p-5">
+        <div className="flex items-start gap-2 sm:gap-3">
           <span
-            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--accent)_45%,transparent)] bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-accent"
+            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--accent)_45%,transparent)] bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-accent sm:h-9 sm:w-9"
             aria-hidden="true"
           >
-            <Cookie className="h-4 w-4" />
+            <Cookie className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 id="cookie-consent-title" className="font-display text-sm font-semibold tracking-tight text-foreground sm:text-base">
+            <h2 id="cookie-consent-title" className="font-display text-[0.8125rem] font-semibold leading-tight tracking-tight text-foreground sm:text-base">
               {t('legal.banner.title')}
             </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:text-[0.8125rem]">
+            <p id="cookie-consent-description" className="mt-1 max-h-[2.3rem] overflow-hidden text-[0.6875rem] leading-snug text-muted-foreground sm:mt-1.5 sm:max-h-none sm:overflow-visible sm:text-[0.8125rem] sm:leading-relaxed">
               {t('legal.banner.description')}
             </p>
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+            <p id="cookie-consent-disclaimer" className="sr-only sm:not-sr-only sm:mt-2 sm:text-xs sm:leading-relaxed">
               {t('legal.banner.disclaimer')}{' '}
               <Link
                 href={cookiesHref}
@@ -142,8 +143,8 @@ export default function CookieBanner() {
         </div>
 
         {customizing && (
-          <fieldset className="mt-4 space-y-3 rounded-sm border border-border/40 p-3">
-            <legend className="px-1 text-sm font-semibold">{t('legal.banner.manage', { defaultValue: 'Manage preferences' })}</legend>
+          <fieldset className="mt-3 space-y-3 rounded-sm border border-border/40 p-2.5 sm:mt-4 sm:p-3">
+            <legend className="px-1 text-xs font-semibold sm:text-sm">{t('legal.banner.manage', { defaultValue: 'Manage preferences' })}</legend>
             <label className="flex min-h-11 items-start gap-3 text-sm">
               <input ref={firstPreferenceRef} type="checkbox" checked={audiencePerformance} onChange={(event) => setAudiencePerformance(event.target.checked)} />
               <span>{labels.audience}</span>
@@ -155,12 +156,12 @@ export default function CookieBanner() {
             <Button type="button" size="touch" onClick={() => save(audiencePerformance, productMeasurement)}>{labels.save}</Button>
           </fieldset>
         )}
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2.5">
-          <Button type="button" variant="ghost" size="touch" onClick={handleReject}>
+        <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:flex sm:items-center sm:justify-end sm:gap-2.5">
+          <Button type="button" variant="ghost" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={handleReject}>
             {t('legal.banner.reject', { defaultValue: 'Reject all' })}
           </Button>
-          <Button type="button" variant="ghost" size="touch" onClick={() => setCustomizing(true)}>{labels.customize}</Button>
-          <Button type="button" variant="default" size="touch" onClick={handleAccept}>
+          <Button type="button" variant="ghost" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={() => setCustomizing(true)}>{labels.customize}</Button>
+          <Button type="button" variant="default" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={handleAccept}>
             {t('legal.banner.accept', { defaultValue: 'Accept all' })}
           </Button>
         </div>

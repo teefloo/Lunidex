@@ -119,6 +119,16 @@ export default {
       final_title: 'あなたのコレクションはここから始まる。',
       final_body: 'このブラウザで始めて、次のカードやポケモン、チームのアイデアに出会ったらいつでも戻れます。',
       open_lunidex: 'Lunidexを開く',
+      field_index_context: 'ポケモン / 拡張パック / チーム',
+      field_lab: 'フィールドラボ',
+      field_online: 'オンライン',
+      field_progress_title: '記録される、あなたの旅。',
+      field_progress_body: '出会ったポケモンを記録するローカル進捗。',
+      field_caught: '捕まえた数',
+      field_favorites: 'お気に入り',
+      field_badges: 'バッジ',
+      field_base_set: '基本セット / 1999',
+      field_scroll: 'スクロールして図鑑を進める', field_local: 'ローカル', field_open: 'オープン', field_demo_label: '画面イメージ', chapter_nav_label: '章を移動', field_support_eyebrow: 'ローカルで始める基盤', local_storage_note: 'アカウントなしでは、カードはこの端末に保存されます。', local_storage_note_link: '詳しく見る',
     },
     footer: {
       navigation: {

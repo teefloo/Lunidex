@@ -119,6 +119,16 @@ export default {
       final_title: 'Deine Sammlung beginnt hier.',
       final_body: 'Starte in diesem Browser und kehre zurück, wenn die nächste Karte, ein Pokémon oder eine Teamidee auftaucht.',
       open_lunidex: 'Lunidex öffnen',
+      field_index_context: 'Pokémon / Sets / Teams',
+      field_lab: 'FELDLABOR',
+      field_online: 'Online',
+      field_progress_title: 'Dein Weg, gespeichert.',
+      field_progress_body: 'Lokaler Fortschritt für jedes Pokémon, das du entdeckst.',
+      field_caught: 'Gefangen',
+      field_favorites: 'Favoriten',
+      field_badges: 'Orden',
+      field_base_set: 'BASIS-SET / 1999',
+      field_scroll: 'Scrolle durch den Index', field_local: 'LOKAL', field_open: 'OFFEN', field_demo_label: 'INTERFACE-BEISPIEL', chapter_nav_label: 'Kapitel durchsuchen', field_support_eyebrow: 'Lokal und offen', local_storage_note: 'Ohne Konto bleiben deine Karten auf diesem Gerät.', local_storage_note_link: 'Mehr erfahren',
     },
     footer: {
       navigation: {

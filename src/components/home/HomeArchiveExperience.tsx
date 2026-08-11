@@ -1,135 +1,285 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
-import HomeHeader from './HomeHeader';
-import HomeHero from './HomeHero';
-import HomePokedexPreview from './HomePokedexPreview';
-import HomeTeamPreview from './HomeTeamPreview';
-import { HomeCollectionPreview } from './HomeCollectionPreview';
+import { GITHUB_REPO_URL } from '@/lib/site';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
+import { HomeFieldWorld } from './HomeFieldWorld';
+import HomeHeader from './HomeHeader';
 import { HomeWordReveal } from './HomeWordReveal';
-import { LunidexWorld } from './LunidexWorld';
 
-export default async function HomeArchiveExperience() {
+interface FieldChapterProps {
+  id: string;
+  index: string;
+  chapterIndex: number;
+  chapterLabel: string;
+  title: string;
+  body: string;
+  proof: string[];
+  action?: ReactNode;
+  note?: ReactNode;
+  align?: 'left' | 'right';
+  headingLevel?: 'h1' | 'h2';
+}
+
+function FieldChapter({
+  id,
+  index,
+  chapterIndex,
+  chapterLabel,
+  title,
+  body,
+  proof,
+  action,
+  note,
+  align = 'left',
+  headingLevel = 'h2',
+}: FieldChapterProps) {
+  const Heading = headingLevel;
+
+  return (
+    <section
+      id={id}
+      className={`field-chapter field-chapter-${align} field-chapter-${id}`}
+      data-field-chapter-index={chapterIndex}
+      data-field-chapter={id}
+      aria-labelledby={`${id}-title`}
+      aria-current="false"
+    >
+      <div className="field-chapter-copy">
+        <div className="field-chapter-topline">
+          <span className="field-chapter-number">{index}</span>
+          <span className="field-chapter-rule" aria-hidden="true" />
+          <span>{chapterLabel}</span>
+        </div>
+        <Heading id={`${id}-title`} className="field-chapter-title">
+          <HomeWordReveal text={title} />
+        </Heading>
+        <p className="field-chapter-body">{body}</p>
+        {action && <div className="field-chapter-action">{action}</div>}
+        {note}
+        <ul className="field-proof-list">
+          {proof.map((item) => (
+            <li key={item}>
+              <span aria-hidden="true">+</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+export async function HomeArchiveExperience() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+
+  const stageCopy = {
+    indexLabel: t('lunidex_archive.hero_eyebrow'),
+    indexContextLabel: t('lunidex_archive.field_index_context'),
+    labLabel: t('lunidex_archive.field_lab'),
+    onlineLabel: t('lunidex_archive.field_online'),
+    specimenLabel: t('lunidex_archive.pokedex_eyebrow'),
+    statsLabel: t('detail.stats'),
+    evolutionLabel: t('detail.evolution'),
+    teamLabel: t('lunidex_archive.team_eyebrow'),
+    typeCoverageLabel: t('types_page.type_chart'),
+    progressLabel: t('lunidex_home.steps_eyebrow'),
+    progressTitle: t('lunidex_archive.field_progress_title'),
+    progressBody: t('lunidex_archive.field_progress_body'),
+    caughtLabel: t('lunidex_archive.field_caught'),
+    favoritesLabel: t('lunidex_archive.field_favorites'),
+    badgesLabel: t('lunidex_archive.field_badges'),
+    cardsLabel: t('lunidex_home.preview_eyebrow'),
+    baseSetLabel: t('lunidex_archive.field_base_set'),
+    ownedLabel: t('lunidex_home.preview_owned_eyebrow'),
+    missingLabel: t('lunidex_home.steps_three_title'),
+    wishlistLabel: t('tcg.wishlist_title'),
+    connectedLabel: t('lunidex_archive.final_eyebrow'),
+    scrollLabel: t('lunidex_archive.field_scroll'),
+    demoLabel: t('lunidex_archive.field_demo_label'),
+    electricLabel: t('types.electric'),
+    fireLabel: t('types.fire'),
+    waterLabel: t('types.water'),
+    ghostLabel: t('types.ghost'),
+    fightingLabel: t('types.fighting'),
+    steelLabel: t('types.steel'),
+    fairyLabel: t('types.fairy'),
+  };
+
+  const chapterNav = [
+    { id: 'threshold', label: t('lunidex_archive.hero_eyebrow') },
+    { id: 'specimen', label: t('lunidex_archive.pokedex_eyebrow') },
+    { id: 'team', label: t('lunidex_archive.team_eyebrow') },
+    { id: 'progress', label: t('lunidex_home.steps_eyebrow') },
+    { id: 'cards', label: t('lunidex_home.preview_eyebrow') },
+    { id: 'connected', label: t('lunidex_archive.final_eyebrow') },
+  ];
 
   return (
     <div className="lunidex-home">
       <HomeHeader />
-      <LunidexWorld>
-        <main id="home-main" className="lunidex-home-main">
-          <HomeHero />
+      <main id="home-main" className="field-home-main">
+        <HomeFieldWorld
+          chapterNav={chapterNav}
+          chapterNavLabel={t('lunidex_archive.chapter_nav_label')}
+          stageCopy={stageCopy}
+        >
+          <FieldChapter
+            id="threshold"
+            index="01"
+            chapterIndex={0}
+            chapterLabel={t('lunidex_archive.hero_eyebrow')}
+            title={t('lunidex_archive.hero_title')}
+            body={t('lunidex_home.hero_body')}
+            headingLevel="h1"
+            proof={[t('lunidex_home.no_account'), t('pokedex.title'), t('tcg.nav_collection')]}
+            action={(
+              <div className="field-hero-actions">
+                <HomeCollectionEntry
+                  locale={language}
+                  startLabel={t('lunidex_archive.hero_cta_primary')}
+                  resumeLabel={t('lunidex_home.cta_resume')}
+                  className="field-primary-cta"
+                />
+                <Link href="#specimen" className="field-secondary-cta">
+                  {t('lunidex_home.cta_pokedex')}
+                  <span aria-hidden="true">↓</span>
+                </Link>
+              </div>
+            )}
+            note={(
+              <p className="field-hero-note">
+                {t('lunidex_archive.local_storage_note')}{' '}
+                <Link href="#faq">{t('lunidex_archive.local_storage_note_link')}</Link>
+              </p>
+            )}
+          />
 
-          <section
-            id="collection"
-            className="home-chapter home-chapter-collection"
-            data-world-chapter="collection"
-            aria-labelledby="collection-chapter-title"
-          >
-            <div className="home-chapter-copy">
-              <p className="home-eyebrow">{t('lunidex_archive.collection_eyebrow')}</p>
-              <h2 id="collection-chapter-title" className="home-chapter-title">
-                <HomeWordReveal text={t('lunidex_archive.collection_title')} />
-              </h2>
-              <p className="home-chapter-body">{t('lunidex_archive.collection_body')}</p>
-              <p className="home-chapter-index" aria-hidden="true">02 / 05</p>
-            </div>
-            <HomeCollectionPreview
-              locale={language}
-              copy={{
-                startLabel: t('lunidex_home.cta_start'),
-                resumeLabel: t('lunidex_home.cta_resume'),
-                previewEyebrow: t('lunidex_home.preview_eyebrow'),
-                previewTitle: t('lunidex_home.preview_title'),
-                previewBody: t('lunidex_home.preview_body'),
-                previewNote: t('lunidex_home.preview_note'),
-                previewOwnedEyebrow: t('lunidex_home.preview_owned_eyebrow'),
-                previewOwnedTitle: t('lunidex_home.preview_owned_title'),
-                previewOwnedCountOne: t('lunidex_home.preview_owned_count_one'),
-                previewOwnedCountOther: t('lunidex_home.preview_owned_count_other'),
-                noAccount: t('lunidex_home.no_account'),
-              }}
-            />
-          </section>
-
-          <section
-            id="pokedex"
-            className="home-chapter home-chapter-pokedex"
-            data-world-chapter="pokedex"
-            aria-labelledby="pokedex-chapter-title"
-          >
-            <div className="home-chapter-visual home-chapter-visual-pokedex">
-              <HomePokedexPreview />
-            </div>
-            <div className="home-chapter-copy">
-              <p className="home-eyebrow">{t('lunidex_archive.pokedex_eyebrow')}</p>
-              <h2 id="pokedex-chapter-title" className="home-chapter-title">
-                <HomeWordReveal text={t('lunidex_archive.pokedex_title')} />
-              </h2>
-              <p className="home-chapter-body">{t('lunidex_home.tools_pokedex_body')}</p>
-              <Link href={localeHref('/pokedex', language)} className="home-text-cta">
+          <FieldChapter
+            id="specimen"
+            index="02"
+            chapterIndex={1}
+            chapterLabel={t('lunidex_archive.pokedex_eyebrow')}
+            title={t('lunidex_archive.pokedex_title')}
+            body={t('lunidex_home.tools_pokedex_body')}
+            proof={[t('pokedex.title'), t('detail.stats'), t('detail.evolution')]}
+            align="right"
+            action={(
+              <Link href={localeHref('/pokedex', language)} className="field-text-cta">
                 {t('lunidex_home.cta_pokedex')}
                 <span aria-hidden="true">↗</span>
               </Link>
-              <p className="home-chapter-index" aria-hidden="true">03 / 05</p>
-            </div>
-          </section>
+            )}
+          />
 
-          <section
-            id="team-builder"
-            className="home-chapter home-chapter-team"
-            data-world-chapter="team"
-            aria-labelledby="team-chapter-title"
-          >
-            <div className="home-chapter-copy">
-              <p className="home-eyebrow">{t('lunidex_archive.team_eyebrow')}</p>
-              <h2 id="team-chapter-title" className="home-chapter-title">
-                <HomeWordReveal text={t('lunidex_archive.team_title')} />
-              </h2>
-              <p className="home-chapter-body">{t('lunidex_home.tools_team_body')}</p>
-              <Link href={localeHref('/team', language)} className="home-text-cta">
-                {t('lunidex_archive.team_title')}
+          <FieldChapter
+            id="team"
+            index="03"
+            chapterIndex={2}
+            chapterLabel={t('lunidex_archive.team_eyebrow')}
+            title={t('lunidex_archive.team_title')}
+            body={t('lunidex_home.tools_team_body')}
+            proof={[t('lunidex_home.tools_team_title'), t('types_page.type_chart'), t('competitive.title')]}
+            action={(
+              <Link href={localeHref('/team', language)} className="field-text-cta">
+                {t('lunidex_home.tools_team_title')}
                 <span aria-hidden="true">↗</span>
               </Link>
-              <p className="home-chapter-index" aria-hidden="true">04 / 05</p>
-            </div>
-            <div className="home-chapter-visual home-chapter-visual-team">
-              <HomeTeamPreview />
-            </div>
-          </section>
+            )}
+          />
 
-          <section
-            id="departure"
-            className="home-chapter home-chapter-departure"
-            data-world-chapter="departure"
-            aria-labelledby="departure-title"
-          >
-            <div className="home-departure-mark" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-            <div className="home-departure-copy">
-              <p className="home-eyebrow">{t('lunidex_archive.final_eyebrow')}</p>
-              <h2 id="departure-title" className="home-departure-title">
-                <HomeWordReveal text={t('lunidex_archive.final_title')} />
-              </h2>
-              <p className="home-chapter-body">{t('lunidex_archive.final_body')}</p>
-              <HomeCollectionEntry
-                locale={language}
-                startLabel={t('lunidex_archive.hero_cta_primary')}
-                resumeLabel={t('lunidex_home.cta_resume')}
-                className="home-primary-cta"
-              />
-            </div>
-          </section>
-        </main>
-      </LunidexWorld>
+          <FieldChapter
+            id="progress"
+            index="04"
+            chapterIndex={3}
+            chapterLabel={t('lunidex_home.steps_eyebrow')}
+            title={t('lunidex_home.steps_title')}
+            body={t('lunidex_home.trust_body')}
+            proof={[t('lunidex_home.steps_three_title'), t('lunidex_home.no_account'), t('lunidex_home.trust_title')]}
+            align="right"
+            action={(
+              <Link href={localeHref('/dashboard', language)} className="field-text-cta">
+                {t('footer.navigation.dashboard')}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            )}
+          />
 
-      <div className="home-faq-wrap">
-        <HomeFaqSection />
-      </div>
+          <FieldChapter
+            id="cards"
+            index="05"
+            chapterIndex={4}
+            chapterLabel={t('lunidex_home.preview_eyebrow')}
+            title={t('lunidex_home.preview_title')}
+            body={t('lunidex_home.preview_body')}
+            proof={[t('lunidex_home.preview_owned_eyebrow'), t('lunidex_home.preview_note'), t('lunidex_home.steps_three_title')]}
+            action={(
+              <Link href={localeHref('/tcg/collection', language)} className="field-text-cta">
+                {t('tcg.nav_collection')}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            )}
+          />
+
+          <FieldChapter
+            id="connected"
+            index="06"
+            chapterIndex={5}
+            chapterLabel={t('lunidex_archive.final_eyebrow')}
+            title={t('lunidex_archive.final_title')}
+            body={t('lunidex_archive.final_body')}
+            proof={[t('about.opensource_title'), t('lunidex_home.no_account'), t('footer.brand.mission')]}
+            align="right"
+            action={(
+              <div className="field-connected-actions">
+                <HomeCollectionEntry
+                  locale={language}
+                  startLabel={t('lunidex_archive.open_lunidex')}
+                  resumeLabel={t('lunidex_home.cta_resume')}
+                  className="field-primary-cta"
+                />
+                <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="field-secondary-cta">
+                  {t('footer.resources.github')}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            )}
+          />
+        </HomeFieldWorld>
+
+        <section className="field-support-section" aria-labelledby="field-support-title">
+          <div className="field-support-intro">
+            <p className="field-eyebrow">{t('lunidex_archive.field_support_eyebrow')}</p>
+            <h2 id="field-support-title">{t('lunidex_home.trust_title')}</h2>
+            <p>{t('lunidex_home.trust_body')}</p>
+          </div>
+          <div className="field-support-grid">
+            <article id="local-first" className="field-support-card">
+              <span className="field-support-index">{t('lunidex_archive.field_local')} / 01</span>
+              <h3>{t('lunidex_home.no_account')}</h3>
+              <p>{t('lunidex_home.start_without_account')}</p>
+              <div className="field-support-points"><span>{t('lunidex_home.preview_owned_eyebrow')}</span><span>{t('lunidex_home.tools_team_title')}</span><span>{t('lunidex_home.steps_three_title')}</span></div>
+            </article>
+            <article id="open-source" className="field-support-card field-support-card-dark">
+              <span className="field-support-index">{t('lunidex_archive.field_open')} / 02</span>
+              <h3>{t('about.opensource_title')}</h3>
+              <p>{t('about.cards.github')}</p>
+              <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="field-text-cta">
+                {t('footer.resources.github')}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          </div>
+        </section>
+
+        <div className="field-faq-wrap">
+          <HomeFaqSection />
+        </div>
+      </main>
     </div>
   );
 }
+
+export default HomeArchiveExperience;
