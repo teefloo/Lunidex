@@ -12,6 +12,8 @@ export interface NeonRequestUser {
 
 const jwksUrl = process.env.NEON_AUTH_JWKS_URL;
 const remoteJwks = jwksUrl ? createRemoteJWKSet(new URL(jwksUrl)) : null;
+const expectedIssuer = process.env.NEON_AUTH_JWT_ISSUER;
+const expectedAudience = process.env.NEON_AUTH_JWT_AUDIENCE;
 
 function bearerToken(authorization: string | null): string | null {
   if (!authorization) return null;
@@ -64,7 +66,13 @@ export async function getNeonUserFromRequest(request: Request): Promise<NeonRequ
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, remoteJwks);
+    // Copy the exact claims from the Neon Auth configuration in production.
+    // Conditional options preserve local setups until those values are known,
+    // while enforcing the issuer/audience contract once configured.
+    const { payload } = await jwtVerify(token, remoteJwks, {
+      ...(expectedIssuer ? { issuer: expectedIssuer } : {}),
+      ...(expectedAudience ? { audience: expectedAudience } : {}),
+    });
     const id = typeof payload.sub === 'string'
       ? payload.sub
       : typeof payload.id === 'string' ? payload.id : null;
@@ -99,7 +107,10 @@ export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promi
     tx`
       insert into public.profiles (id, name, email)
       values (${user.id}::uuid, ${name}, ${email})
-      on conflict (id) do nothing
+      on conflict (id) do update set
+        name = coalesce(excluded.name, public.profiles.name),
+        email = coalesce(excluded.email, public.profiles.email),
+        updated_at = now()
     `,
   ]);
 }

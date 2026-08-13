@@ -27,10 +27,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { rateLimit } from '@/lib/rate-limit';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 
 const MAX_TEAM_SIZE = 6;
+const MAX_CHAT_MESSAGES = 100;
 const MIN_POKEMON_ID = 1;
 const MAX_POKEMON_ID = 1025;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -88,6 +90,9 @@ export async function POST(req: NextRequest) {
   const user = await getNeonUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!rateLimit(`battle-room-create:${user.id}`, 10)) {
+    return NextResponse.json({ error: 'Too many room creations' }, { status: 429 });
   }
   await ensureNeonUser(sql, user);
 
@@ -197,6 +202,9 @@ export async function PATCH(req: NextRequest) {
   if (!text || text.length > 500) {
     return NextResponse.json({ error: 'Chat message must contain 1 to 500 characters' }, { status: 400 });
   }
+  if (!rateLimit(`battle-chat:${user.id}`, 60)) {
+    return NextResponse.json({ error: 'Too many chat messages' }, { status: 429 });
+  }
 
   const timestamp = Date.now();
   const message: BattleChatMessage = {
@@ -206,15 +214,31 @@ export async function PATCH(req: NextRequest) {
     timestamp,
   };
   const rows = await sql`
-    update public.battle_rooms
-    set state = jsonb_set(
-      coalesce(state, '{}'::jsonb),
-      '{chat}',
-      coalesce(state->'chat', '[]'::jsonb) || ${JSON.stringify([message])}::jsonb
+    with eligible as (
+      select
+        id,
+        state,
+        coalesce(state->'chat', '[]'::jsonb) || ${JSON.stringify([message])}::jsonb as messages
+      from public.battle_rooms
+      where id = ${id}::uuid
+        and ${user.id}::uuid in (player1_id, player2_id)
+      for update
+    ), bounded as (
+      select
+        id,
+        state,
+        (
+          select coalesce(jsonb_agg(value order by ord), '[]'::jsonb)
+          from jsonb_array_elements(messages) with ordinality as entries(value, ord)
+          where ord > greatest(jsonb_array_length(messages) - ${MAX_CHAT_MESSAGES}, 0)
+        ) as chat
+      from eligible
     )
-    where id = ${id}::uuid
-      and ${user.id}::uuid in (player1_id, player2_id)
-    returning id, player1_id, player2_id, status, state, created_at
+    update public.battle_rooms as rooms
+    set state = jsonb_set(coalesce(bounded.state, '{}'::jsonb), '{chat}', bounded.chat)
+    from bounded
+    where rooms.id = bounded.id
+    returning rooms.id, rooms.player1_id, rooms.player2_id, rooms.status, rooms.state, rooms.created_at
   ` as BattleRoomRow[];
   if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
   return NextResponse.json(rows[0]);

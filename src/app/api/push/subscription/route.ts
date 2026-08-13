@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
+import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 
 interface PushSubscriptionJSON {
   endpoint?: unknown;
@@ -23,10 +24,7 @@ function validSubscription(value: unknown): value is {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const subscription = value as PushSubscriptionJSON;
   return (
-    typeof subscription.endpoint === 'string' &&
-    subscription.endpoint.length > 0 &&
-    subscription.endpoint.length <= 2048 &&
-    subscription.endpoint.startsWith('https://') &&
+    isAllowedPushEndpoint(subscription.endpoint) &&
     typeof subscription.keys?.p256dh === 'string' &&
     subscription.keys.p256dh.length > 0 &&
     subscription.keys.p256dh.length <= 512 &&
@@ -37,7 +35,7 @@ function validSubscription(value: unknown): value is {
 }
 
 function validEndpoint(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0 && value.length <= 2048 && value.startsWith('https://');
+  return isAllowedPushEndpoint(value);
 }
 
 export async function POST(request: NextRequest) {

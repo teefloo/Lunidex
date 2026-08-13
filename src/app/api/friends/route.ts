@@ -411,16 +411,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     if (!existing || existing.status === 'declined') {
       if (existing) {
-        const updated = await sql`
-          update public.friendships
-          set requester_id = ${userId}::uuid,
-              addressee_id = ${targetId}::uuid,
-              status = 'pending',
-              responded_at = null
-          where id = ${existing.id}::uuid
-          returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
-        ` as FriendshipRow[];
-        relation = updated[0];
+        // The database trigger intentionally permits only pending -> accepted|declined
+        // updates and forbids changing participants. A declined request therefore
+        // needs to be replaced atomically rather than updated in place.
+        const [, replaced] = await sql.transaction((tx) => [
+          tx`
+            delete from public.friendships
+            where id = ${existing.id}::uuid
+              and status = 'declined'
+              and least(requester_id, addressee_id) = least(${userId}::uuid, ${targetId}::uuid)
+              and greatest(requester_id, addressee_id) = greatest(${userId}::uuid, ${targetId}::uuid)
+          `,
+          tx`
+            insert into public.friendships (requester_id, addressee_id, status)
+            values (${userId}::uuid, ${targetId}::uuid, 'pending')
+            returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
+          `,
+        ]) as [unknown[], FriendshipRow[]];
+        relation = replaced[0];
       } else {
         const inserted = await sql`
           insert into public.friendships (requester_id, addressee_id, status)
@@ -442,9 +450,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!isUuid(payload.friendshipId) || (payload.response !== 'accept' && payload.response !== 'decline')) {
       return NextResponse.json({ error: 'Invalid friend request action' }, { status: 400 });
     }
+    const nextStatus = payload.response === 'accept' ? 'accepted' : 'declined';
     const rows = await sql`
       update public.friendships
-      set status = ${payload.response}, responded_at = now()
+      set status = ${nextStatus}, responded_at = now()
       where id = ${payload.friendshipId}::uuid
         and addressee_id = ${userId}::uuid
         and status = 'pending'

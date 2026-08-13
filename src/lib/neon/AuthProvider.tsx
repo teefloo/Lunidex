@@ -45,7 +45,7 @@ interface AuthContextValue {
   signInWithOAuth: (provider: 'google' | 'github') => Promise<AuthResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<AuthResult>;
-  updatePassword: (password: string) => Promise<AuthResult>;
+  updatePassword: (password: string, resetToken?: string) => Promise<AuthResult>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -221,18 +221,15 @@ function DeferredAuthProvider({
           return { error: normalizeError(error) };
         }
       },
-      updatePassword: async (password) => {
-        const token = typeof window !== 'undefined'
-          ? new URLSearchParams(window.location.search).get('token')
-          : null;
-        if (!token) {
+      updatePassword: async (password, resetToken) => {
+        if (!resetToken) {
           return { error: { name: 'InvalidToken', message: 'The password reset link is invalid or expired.' } };
         }
 
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.resetPassword({ newPassword: password, token });
+          const result = await client.resetPassword({ newPassword: password, token: resetToken });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -347,16 +344,13 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
         return { error: normalizeError(error) };
       }
     },
-    updatePassword: async (password) => {
-      const token = typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('token')
-        : null;
-      if (!token) {
+    updatePassword: async (password, resetToken) => {
+      if (!resetToken) {
         return { error: { name: 'InvalidToken', message: 'The password reset link is invalid or expired.' } };
       }
 
       try {
-        const result = await client.resetPassword({ newPassword: password, token });
+        const result = await client.resetPassword({ newPassword: password, token: resetToken });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };

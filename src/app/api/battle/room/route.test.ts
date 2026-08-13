@@ -14,7 +14,7 @@ vi.mock('@/lib/neon/server', () => ({
   getNeonClient: () => mockSql,
 }));
 
-import { GET, POST } from './route';
+import { GET, PATCH, POST } from './route';
 
 describe('battle room route', () => {
   beforeEach(() => {
@@ -61,5 +61,29 @@ describe('battle room route', () => {
     const response = await GET(request);
 
     expect(response.status).toBe(400);
+  });
+
+  it('bounds persisted chat history while keeping the participant check in SQL', async () => {
+    mockSql.mockResolvedValue([{
+      id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534',
+      player1_id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534',
+      player2_id: null,
+      status: 'waiting',
+      state: { chat: [] },
+      created_at: '2026-07-28',
+    }]);
+    const request = new NextRequest('http://localhost/api/battle/room?id=72aaab1d-ae20-4ee0-9c60-cf8e8580f534', {
+      method: 'PATCH',
+      headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'chat', text: 'Ready!' }),
+    });
+
+    const response = await PATCH(request);
+
+    expect(response.status).toBe(200);
+    const sqlText = mockSql.mock.calls[0]?.[0]?.join('') ?? '';
+    expect(sqlText).toContain('jsonb_array_elements');
+    expect(sqlText).toContain('jsonb_array_length');
+    expect(sqlText).toContain('in (player1_id, player2_id)');
   });
 });

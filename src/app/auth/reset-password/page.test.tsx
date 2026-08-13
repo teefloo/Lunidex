@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ResetPasswordPage from './page';
 
@@ -33,6 +33,19 @@ describe('ResetPasswordPage', () => {
 
     await waitFor(() => expect(screen.getByLabelText('New password')).toBeInTheDocument());
     expect(screen.getByLabelText('Confirm password')).toBeInTheDocument();
+    expect(window.location.search).toBe('');
+  });
+
+  it('passes the captured token after removing it from the URL', async () => {
+    authMock.updatePassword.mockResolvedValue({ error: null });
+    render(<ResetPasswordPage />);
+
+    await waitFor(() => expect(screen.getByLabelText('New password')).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText('New password'), { target: { value: 'new-password' } });
+    fireEvent.change(screen.getByLabelText('Confirm password'), { target: { value: 'new-password' } });
+    fireEvent.submit(screen.getByLabelText('New password').closest('form')!);
+
+    await waitFor(() => expect(authMock.updatePassword).toHaveBeenCalledWith('new-password', 'reset-token'));
   });
 
   it('shows the invalid-link state when no reset token is present', async () => {

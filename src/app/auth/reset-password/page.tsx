@@ -18,11 +18,24 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
+  const [resetToken, setResetToken] = useState<string | null>(null);
   const [hasResetToken, setHasResetToken] = useState(false);
   const [hasCheckedResetToken, setHasCheckedResetToken] = useState(false);
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get('token');
+    const url = new URL(window.location.href);
+    const token = url.searchParams.get('token');
+    const hadTokenParameter = url.searchParams.has('token');
+
+    // Keep the one-time credential only in memory. Removing it before the
+    // page renders prevents it from being copied into history, referrers, or
+    // service-worker caches while still allowing retries after a failed reset.
+    if (hadTokenParameter) {
+      url.searchParams.delete('token');
+      window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+
+    setResetToken(token);
     setHasResetToken(Boolean(token));
     setHasCheckedResetToken(true);
   }, []);
@@ -44,10 +57,14 @@ export default function ResetPasswordPage() {
       toast.error(tt('auth.password_mismatch', 'The passwords do not match.'));
       return;
     }
+    if (!resetToken) {
+      toast.error(tt('auth.reset_invalid', 'This reset link is invalid or has expired. Please request a new one.'));
+      return;
+    }
 
     setBusy(true);
     try {
-      const { error } = await updatePassword(password);
+      const { error } = await updatePassword(password, resetToken);
       if (error) {
         toast.error(error.message);
         return;

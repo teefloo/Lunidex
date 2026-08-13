@@ -94,6 +94,7 @@ const withPWA = withPWAInit({
           const pathname = url.pathname;
           if (pathname.startsWith("/api/")) return false;
           if (pathname.startsWith("/offline")) return false;
+          if (/^\/(?:(?:en|fr|es|de|it|ja|ko|zh)\/)?auth(?:\/|$)/i.test(pathname)) return false;
           return pathname.startsWith("/");
         },
         handler: "NetworkFirst",
@@ -252,6 +253,24 @@ const nextConfig: NextConfig = {
         // Apply security headers to all routes
         source: '/(.*)',
         headers: securityHeaders,
+      },
+      {
+        // Reset links carry a one-time credential. Never cache these pages or
+        // send their URL as a referrer to another resource.
+        source: '/auth/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
+        // Localized routes are the public URLs; the proxy rewrites them to the
+        // unprefixed App Router path internally.
+        source: '/:locale(en|fr|es|de|it|ja|ko|zh)/auth/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
       },
       {
         // Cache SVG and image assets

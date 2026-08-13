@@ -4,6 +4,7 @@ import { readJsonBody } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
 import { getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
+import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 
 interface SendPushPayload {
   subscription?: {
@@ -14,6 +15,7 @@ interface SendPushPayload {
 }
 
 let vapidConfigured = false;
+const WEB_PUSH_TIMEOUT_MS = 5_000;
 function ensureVapidConfigured() {
   if (vapidConfigured) return true;
   const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -57,13 +59,7 @@ export async function POST(request: NextRequest) {
   if (!subscription?.endpoint || !subscription.keys?.p256dh || !subscription.keys.auth) {
     return NextResponse.json({ error: 'A valid subscription is required' }, { status: 400 });
   }
-  let endpoint: URL;
-  try {
-    endpoint = new URL(subscription.endpoint);
-  } catch {
-    return NextResponse.json({ error: 'Invalid subscription endpoint' }, { status: 400 });
-  }
-  if (endpoint.protocol !== 'https:') {
+  if (!isAllowedPushEndpoint(subscription.endpoint)) {
     return NextResponse.json({ error: 'Invalid subscription endpoint' }, { status: 400 });
   }
   if (
@@ -98,10 +94,18 @@ export async function POST(request: NextRequest) {
         keys: { p256dh: subscription.keys.p256dh, auth: subscription.keys.auth },
       },
       JSON.stringify(payload),
+      { timeout: WEB_PUSH_TIMEOUT_MS },
     );
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('[push/send] Failed to send notification:', error);
+    const statusCode =
+      typeof error === 'object' && error !== null && 'statusCode' in error && typeof error.statusCode === 'number'
+        ? error.statusCode
+        : undefined;
+    console.error('[push/send] Failed to send notification:', {
+      name: error instanceof Error ? error.name : 'UnknownError',
+      statusCode,
+    });
     return NextResponse.json({ error: 'Failed to send notification' }, { status: 502 });
   }
 }
