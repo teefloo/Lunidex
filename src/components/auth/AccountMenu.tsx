@@ -7,6 +7,7 @@ import { LogIn, UserRound } from 'lucide-react';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { AuthModalBoundary } from './AuthModalBoundary';
 const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });
 
 export default function AccountMenu() {
@@ -57,7 +58,11 @@ export default function AccountMenu() {
                   {tt('auth.signin_cta', 'Sign in')}
                 </span>
         </button>
-        {authOpen && <AuthModal open onOpenChange={setAuthOpen} />}
+        {authOpen && (
+          <AuthModalBoundary onClose={() => setAuthOpen(false)}>
+            <AuthModal open onOpenChange={setAuthOpen} />
+          </AuthModalBoundary>
+        )}
       </>
     );
   }

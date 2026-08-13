@@ -418,6 +418,8 @@ export default {
       confirm_password: 'Confirmar contraseña',
       update_password: 'Actualizar contraseña',
       reset_invalid: 'Este enlace de restablecimiento no es válido o ha caducado. Solicita uno nuevo.',
+      load_error_title: 'Inicio de sesión no disponible',
+      load_error_desc: 'No se pudo cargar el formulario de inicio de sesión. Inténtalo de nuevo o cierra esta ventana y vuelve a intentarlo.',
     },
     header: {
       home_aria: 'Ir a Inicio',

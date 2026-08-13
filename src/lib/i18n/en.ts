@@ -422,6 +422,8 @@ export default {
       confirm_password: 'Confirm password',
       update_password: 'Update password',
       reset_invalid: 'This reset link is invalid or has expired. Please request a new one.',
+      load_error_title: 'Sign-in unavailable',
+      load_error_desc: 'The sign-in form could not load. Please retry or close this dialog and try again.',
     },
     header: {
       home_aria: 'Go to Home',

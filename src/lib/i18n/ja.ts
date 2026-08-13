@@ -405,6 +405,8 @@ export default {
       confirm_password: 'パスワードを確認',
       update_password: 'パスワードを更新',
       reset_invalid: 'この再設定リンクは無効か期限切れです。新しいリンクをリクエストしてください。',
+      load_error_title: 'サインインを利用できません',
+      load_error_desc: 'サインインフォームを読み込めませんでした。再試行するか、このダイアログを閉じてもう一度お試しください。',
     },
     header: {
       home_aria: 'ホームへ',

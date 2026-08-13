@@ -405,6 +405,8 @@ export default {
       confirm_password: '确认密码',
       update_password: '更新密码',
       reset_invalid: '此重置链接无效或已过期。请重新申请。',
+      load_error_title: '暂时无法登录',
+      load_error_desc: '登录表单加载失败。请重试，或关闭此窗口后再次尝试。',
     },
     header: {
       home_aria: '前往首页',

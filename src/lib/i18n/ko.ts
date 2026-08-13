@@ -405,6 +405,8 @@ export default {
       confirm_password: '비밀번호 확인',
       update_password: '비밀번호 업데이트',
       reset_invalid: '이 재설정 링크는 유효하지 않거나 만료되었습니다. 새 링크를 요청하세요.',
+      load_error_title: '로그인할 수 없습니다',
+      load_error_desc: '로그인 양식을 불러오지 못했습니다. 다시 시도하거나 이 창을 닫고 다시 시도하세요.',
     },
     header: {
       home_aria: '홈으로 이동',

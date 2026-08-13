@@ -422,6 +422,8 @@ export default {
       confirm_password: 'Confirmer le mot de passe',
       update_password: 'Mettre à jour le mot de passe',
       reset_invalid: 'Ce lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.',
+      load_error_title: 'Connexion indisponible',
+      load_error_desc: 'Le formulaire de connexion n’a pas pu se charger. Réessayez ou fermez cette fenêtre puis recommencez.',
     },
     header: {
       home_aria: 'Aller à l\'accueil',

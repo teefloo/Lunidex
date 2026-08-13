@@ -405,6 +405,8 @@ export default {
       confirm_password: 'Conferma password',
       update_password: 'Aggiorna password',
       reset_invalid: 'Questo link di reimpostazione non è valido o è scaduto. Richiedine uno nuovo.',
+      load_error_title: 'Accesso non disponibile',
+      load_error_desc: 'Il modulo di accesso non è stato caricato. Riprova oppure chiudi questa finestra e riprova.',
     },
     header: {
       home_aria: 'Vai a Home',

@@ -264,6 +264,22 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Auth API responses include session state and must never be served
+        // from an intermediary cache after a sign-in or sign-out mutation.
+        source: '/api/auth/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
+        source: '/:locale(en|fr|es|de|it|ja|ko|zh)/api/auth/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
         // Localized routes are the public URLs; the proxy rewrites them to the
         // unprefixed App Router path internally.
         source: '/:locale(en|fr|es|de|it|ja|ko|zh)/auth/:path*',

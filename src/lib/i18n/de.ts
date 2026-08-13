@@ -405,6 +405,8 @@ export default {
       confirm_password: 'Passwort bestätigen',
       update_password: 'Passwort aktualisieren',
       reset_invalid: 'Dieser Zurücksetzungslink ist ungültig oder abgelaufen. Bitte fordere einen neuen an.',
+      load_error_title: 'Anmeldung nicht verfügbar',
+      load_error_desc: 'Das Anmeldeformular konnte nicht geladen werden. Bitte versuche es erneut oder schließe dieses Fenster und starte noch einmal.',
     },
     header: {
       home_aria: 'Zum Startseite',
