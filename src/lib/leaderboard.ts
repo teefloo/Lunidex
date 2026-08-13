@@ -10,9 +10,19 @@
 export const LEADERBOARD_MODES = ['time-attack', 'survival', 'marathon'] as const;
 export type LeaderboardMode = (typeof LEADERBOARD_MODES)[number];
 
+/**
+ * The public leaderboard represents the daily challenge, which is the
+ * ten-question Marathon/Classic run exposed by the quiz UI. Keep this
+ * variant explicit at the boundary so a faster local mode cannot be mixed
+ * into the same ranking by forging a request body.
+ */
+export const DAILY_LEADERBOARD_MODE = 'marathon' as const satisfies LeaderboardMode;
+
 /** Quiz challenges that may submit a leaderboard score. */
 export const LEADERBOARD_CHALLENGES = ['classic', 'silhouette', 'stats'] as const;
 export type LeaderboardChallenge = (typeof LEADERBOARD_CHALLENGES)[number];
+
+export const DAILY_LEADERBOARD_CHALLENGE = 'classic' as const satisfies LeaderboardChallenge;
 
 /** Leaderboard time windows surfaced as tabs in the UI. */
 export const LEADERBOARD_PERIODS = ['day', 'week', 'all'] as const;
@@ -48,12 +58,19 @@ export function maxDailyScore(mode: LeaderboardMode): number {
  * Returns null when the input cannot be interpreted as a number at all.
  */
 export function clampScore(rawScore: unknown, mode: LeaderboardMode): number | null {
+  if (
+    rawScore === null ||
+    rawScore === undefined ||
+    typeof rawScore === 'boolean' ||
+    (typeof rawScore === 'string' && rawScore.trim() === '')
+  ) {
+    return null;
+  }
   const numeric = typeof rawScore === 'number' ? rawScore : Number(rawScore);
-  if (!Number.isFinite(numeric)) return null;
-  const floored = Math.floor(numeric);
-  if (floored < 0) return 0;
+  if (!Number.isFinite(numeric) || !Number.isInteger(numeric)) return null;
+  if (numeric < 0) return 0;
   const max = maxDailyScore(mode);
-  return floored > max ? max : floored;
+  return numeric > max ? max : numeric;
 }
 
 export function isLeaderboardMode(value: unknown): value is LeaderboardMode {

@@ -5,11 +5,14 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 import {
   clampScore,
+  DAILY_LEADERBOARD_CHALLENGE,
+  DAILY_LEADERBOARD_MODE,
   isLeaderboardChallenge,
   isLeaderboardMode,
   isLeaderboardPeriod,
   LEADERBOARD_TOP_N,
   sanitizePseudo,
+  todayISODate,
   type LeaderboardEntry,
   type LeaderboardPeriod,
   type LeaderboardResponse,
@@ -59,7 +62,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       select distinct on (qs.user_id)
         qs.user_id, qs.pseudo, qs.score, qs.date
       from public.quiz_scores qs
-      where ${start}::date is null or qs.date >= ${start}::date
+      where (${start}::date is null or qs.date >= ${start}::date)
+        and qs.mode = ${DAILY_LEADERBOARD_MODE}
+        and qs.challenge = ${DAILY_LEADERBOARD_CHALLENGE}
       order by qs.user_id, qs.score desc, qs.date asc
     )
     select row_number() over (order by best.score desc, best.date asc) as rank,
@@ -80,7 +85,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         select distinct on (qs.user_id)
           qs.user_id, qs.pseudo, qs.score, qs.date
         from public.quiz_scores qs
-        where ${start}::date is null or qs.date >= ${start}::date
+        where (${start}::date is null or qs.date >= ${start}::date)
+          and qs.mode = ${DAILY_LEADERBOARD_MODE}
+          and qs.challenge = ${DAILY_LEADERBOARD_CHALLENGE}
         order by qs.user_id, qs.score desc, qs.date asc
       ),
       ranked as (
@@ -106,7 +113,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     userRank,
     userEntry,
   };
-  return NextResponse.json(response);
+  return NextResponse.json(response, {
+    headers: { 'Cache-Control': 'private, no-store' },
+  });
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -131,6 +140,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid mode or challenge' }, { status: 400 });
   }
 
+  if (
+    body.mode !== DAILY_LEADERBOARD_MODE ||
+    body.challenge !== DAILY_LEADERBOARD_CHALLENGE
+  ) {
+    return NextResponse.json(
+      { error: 'Only the daily Marathon Classic challenge is eligible for this leaderboard' },
+      { status: 400 },
+    );
+  }
+
   const score = clampScore(body.score, body.mode);
   if (score === null) {
     return NextResponse.json({ error: 'Invalid score' }, { status: 400 });
@@ -144,11 +163,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     user.email?.split('@')[0] ||
     '';
   const pseudo = sanitizePseudo(profileName);
+  // The quiz seed and GET period windows are UTC-based. Use the same explicit
+  // date for writes so a database session configured outside UTC cannot place
+  // a score in a different leaderboard day around midnight.
+  const today = todayISODate();
 
   const [insertedRows, currentRows] = await sql.transaction((tx) => [
     tx`
       insert into public.quiz_scores (user_id, pseudo, mode, challenge, score, date)
-      values (${user.id}::uuid, ${pseudo}, ${body.mode}, ${body.challenge}, ${score}, current_date)
+      values (${user.id}::uuid, ${pseudo}, ${body.mode}, ${body.challenge}, ${score}, ${today}::date)
       on conflict (user_id, date, mode, challenge) do update
       set score = excluded.score, pseudo = excluded.pseudo
       where excluded.score > public.quiz_scores.score
@@ -158,7 +181,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       select score
       from public.quiz_scores
       where user_id = ${user.id}::uuid
-        and date = current_date
+        and date = ${today}::date
         and mode = ${body.mode}
         and challenge = ${body.challenge}
       limit 1
