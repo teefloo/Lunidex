@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TCGCard } from '@/types/tcg';
 import { TCGAlbumCard } from './TCGAlbumCard';
 
@@ -13,10 +13,8 @@ vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({
     t: (key: string, values?: Record<string, string>) => {
       const messages: Record<string, string> = {
-        'tcg.open_card_detail': `View ${values?.name ?? 'card'}`,
-        'tcg.activation.owned_action': 'I own this card',
-        'tcg.activation.remove_owned': 'Remove from my collection',
-        'tcg.activation.confirm_remove': 'Confirm removal',
+        'tcg.activation.add_card_aria': `Add ${values?.name ?? 'card'} to my collection`,
+        'tcg.activation.remove_card_aria': `Remove ${values?.name ?? 'card'} from my collection`,
         'tcg.activation.view_card': 'View card',
       };
       return messages[key] ?? key;
@@ -31,31 +29,31 @@ vi.mock('./TCGCardImage', () => ({
 const card: TCGCard = { id: 'sv01-1', localId: '1', name: 'Sprigatito', image: '/card.png' };
 
 describe('TCGAlbumCard', () => {
-  it('keeps card detail and ownership as separate actions', () => {
+  beforeEach(() => {
+    toggleTCGOwned.mockClear();
+  });
+
+  it('toggles ownership from the card and keeps card detail as a separate action', () => {
     const onView = vi.fn();
     const onOwnershipChange = vi.fn();
     render(<TCGAlbumCard card={card} owned={false} onView={onView} onOwnershipChange={onOwnershipChange} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'View Sprigatito' }));
-    expect(onView).toHaveBeenCalledOnce();
-    expect(toggleTCGOwned).not.toHaveBeenCalled();
-
-    fireEvent.click(screen.getByRole('button', { name: 'I own this card' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Sprigatito to my collection' }));
     expect(toggleTCGOwned).toHaveBeenCalledWith('sv01-1');
     expect(onOwnershipChange).toHaveBeenCalledWith(true);
+
+    fireEvent.click(screen.getByRole('button', { name: 'View card' }));
+    expect(onView).toHaveBeenCalledOnce();
+    expect(toggleTCGOwned).toHaveBeenCalledTimes(1);
   });
 
-  it('requires a second explicit action before removing an owned card', () => {
-    toggleTCGOwned.mockClear();
+  it('removes an owned card immediately without a confirmation step', () => {
     const onOwnershipChange = vi.fn();
     render(<TCGAlbumCard card={card} owned onOwnershipChange={onOwnershipChange} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Remove from my collection' }));
-    expect(screen.getByRole('button', { name: 'Confirm removal' })).toBeInTheDocument();
-    expect(toggleTCGOwned).not.toHaveBeenCalled();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Confirm removal' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Sprigatito from my collection' }));
     expect(toggleTCGOwned).toHaveBeenCalledWith('sv01-1');
     expect(onOwnershipChange).toHaveBeenCalledWith(false);
+    expect(screen.queryByRole('button', { name: 'Confirm removal' })).not.toBeInTheDocument();
   });
 });

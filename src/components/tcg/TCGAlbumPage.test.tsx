@@ -15,6 +15,7 @@ vi.mock('@/lib/i18n', () => ({
         'tcg.collection_owned': 'Owned', 'tcg.collection_overall_progress': 'Progress', 'tcg.search_placeholder': 'Search cards', 'tcg.collection_missing': 'Missing',
         'tcg.activation.album_title': 'Add your first card', 'tcg.activation.album_description': 'Start this set', 'tcg.activation.first_card_added': 'Card added · {{owned}} / {{total}} cards in this set', 'tcg.activation.continue_adding': 'Keep adding',
         'tcg.activation.change_set': 'Change set', 'tcg.activation.sync_title': 'Take your collection with you', 'tcg.activation.sync_description': 'Create an account to sync.', 'tcg.activation.create_account': 'Create an account', 'tcg.activation.continue_without_account': 'Continue without an account',
+        'tcg.activation.add_card_aria': 'Add {{name}} to my collection', 'tcg.activation.remove_card_aria': 'Remove {{name}} from my collection', 'tcg.activation.view_card': 'View card',
       };
       let message = messages[key] ?? key;
       for (const [name, value] of Object.entries(values ?? {})) message = message.replace(`{{${name}}}`, String(value));
@@ -49,7 +50,7 @@ describe('TCGAlbumPage activation', () => {
     resetStore();
     render(<TCGAlbumPage set={set} cards={cards} activation />);
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'tcg.activation.owned_action' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Add Sprigatito to my collection' }));
 
     expect(screen.getByText('Card added · 1 / 2 cards in this set')).toBeInTheDocument();
     expect(screen.queryByText('Take your collection with you')).not.toBeInTheDocument();
@@ -59,8 +60,8 @@ describe('TCGAlbumPage activation', () => {
     resetStore();
     render(<TCGAlbumPage set={set} cards={cards} activation />);
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'tcg.activation.owned_action' })[0]);
-    fireEvent.click(screen.getByRole('button', { name: 'tcg.activation.owned_action' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Sprigatito to my collection' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Fuecoco to my collection' }));
 
     expect(screen.getByText('Take your collection with you')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Continue without an account' }));
@@ -71,8 +72,8 @@ describe('TCGAlbumPage activation', () => {
     resetStore();
     render(<TCGAlbumPage set={set} cards={cards} activation />);
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'tcg.activation.owned_action' })[0]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'tcg.open_card_detail' })[1]);
+    fireEvent.click(screen.getByRole('button', { name: 'Add Sprigatito to my collection' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'View card' })[1]);
     fireEvent.click(screen.getByRole('button', { name: 'Add missing card to wishlist' }));
 
     expect(screen.getByText('Take your collection with you')).toBeInTheDocument();
