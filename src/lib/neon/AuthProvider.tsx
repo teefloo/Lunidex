@@ -248,34 +248,12 @@ function DeferredAuthProvider({
 }
 
 function useClientSession(client: ConnectedAuthClient): { data: SessionData; isPending: boolean } {
-  const [state, setState] = useState<{ data: SessionData; isPending: boolean }>({
-    data: null,
-    isPending: true,
-  });
-
-  useEffect(() => {
-    let active = true;
-    const refresh = async () => {
-      try {
-        const result = await client.getSession();
-        if (active) setState({ data: result.data, isPending: false });
-      } catch {
-        if (active) setState({ data: null, isPending: false });
-      }
-    };
-
-    void refresh();
-    const refreshOnFocus = () => void refresh();
-    window.addEventListener('focus', refreshOnFocus);
-    const intervalId = window.setInterval(refreshOnFocus, 30_000);
-    return () => {
-      active = false;
-      window.removeEventListener('focus', refreshOnFocus);
-      window.clearInterval(intervalId);
-    };
-  }, [client]);
-
-  return state;
+  // The SDK hook subscribes to its session atom. That atom is updated by the
+  // sign-in/sign-out endpoint hooks, so the header and protected UI switch
+  // immediately after an auth mutation instead of waiting for a focus event or
+  // the old polling interval.
+  const state = client.useSession();
+  return { data: state.data, isPending: state.isPending };
 }
 
 function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {

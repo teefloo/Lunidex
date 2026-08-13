@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getNeonAuthServer, type NeonAuthHandler } from '@/lib/neon/server-auth';
+import { normalizeAuthPath } from '@/lib/neon/auth-route';
 
 type AuthRouteContext = { params: Promise<{ path?: string[] }> };
 
@@ -12,7 +13,9 @@ function createHandler(method: keyof NeonAuthHandler) {
     const auth = getNeonAuthServer();
     if (!auth) return unavailableResponse();
     const params = await context.params;
-    const normalizedContext = { params: Promise.resolve({ path: params.path ?? [] }) };
+    const normalizedContext = {
+      params: Promise.resolve({ path: normalizeAuthPath(params.path, request.method) }),
+    };
     return auth.handler()[method](request, normalizedContext as Parameters<NeonAuthHandler[typeof method]>[1]);
   };
 }
