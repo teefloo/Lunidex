@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { usePathname } from 'next/navigation';
 import { isSupportedLanguage } from '@/lib/languages';
 import { normalizeDisplayName } from '@/lib/json-ld';
 import { getNeonAuthClient, isNeonAuthConfigured, loadNeonAuthClient } from './client';
@@ -132,6 +133,7 @@ function DeferredAuthProvider({
   children: ReactNode;
   onLoaded: (client: ConnectedAuthClient) => void;
 }) {
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
     const cachedClient = getNeonAuthClient();
@@ -151,8 +153,8 @@ function DeferredAuthProvider({
   }, [onLoaded]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && isAuthSensitivePath(window.location.pathname)) void loadClient();
-  }, [loadClient]);
+    if (isAuthSensitivePath(pathname ?? '')) void loadClient();
+  }, [loadClient, pathname]);
 
   const redirectTo = getRedirectTo();
   const resetRedirectTo = getResetRedirectTo();
