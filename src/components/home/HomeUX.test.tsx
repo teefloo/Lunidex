@@ -20,8 +20,9 @@ vi.mock('@/store/primedex', () => ({
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
 import { HomeFieldLabMotion } from './HomeFieldLabMotion';
+import { HomeWordReveal } from './HomeWordReveal';
 
-function createWorld(): HTMLElement {
+function createWorld(chapterTops?: number[]): HTMLElement {
   const world = document.createElement('div');
   world.dataset.fieldWorld = 'true';
   const stage = document.createElement('div');
@@ -36,11 +37,14 @@ function createWorld(): HTMLElement {
 
     const chapter = document.createElement('section');
     chapter.dataset.fieldChapterIndex = String(index);
+    if (chapterTops) {
+      vi.spyOn(chapter, 'getBoundingClientRect').mockReturnValue({
+        top: chapterTops[index] ?? 0,
+        height: window.innerHeight,
+      } as DOMRect);
+    }
     world.append(chapter);
 
-    const link = document.createElement('a');
-    link.dataset.fieldChapterNavIndex = String(index);
-    world.append(link);
   }
 
   world.append(stage);
@@ -66,6 +70,7 @@ function mockMediaQueries({ reduced = false, compact = false } = {}) {
 
 afterEach(() => {
   document.body.innerHTML = '';
+  Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
   homeStore.ownedCount = 0;
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
@@ -122,6 +127,56 @@ describe('home mobile menu', () => {
     fireEvent.click(pokedexLink);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('does not reopen when the trigger is clicked while the menu is open', () => {
+    render(
+      <HomeHeaderMobileMenu
+        links={[]}
+        menuLabel="Ouvrir le menu"
+        navigationLabel="Navigation principale"
+        closeLabel="Fermer"
+        collectionStartLabel="Commencer"
+        collectionResumeLabel="Reprendre"
+        githubLabel="GitHub"
+        githubUrl="https://github.com/example"
+        locale="fr"
+      />,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Ouvrir le menu' });
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    fireEvent.pointerDown(trigger);
+    fireEvent.click(trigger);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+});
+
+describe('home word reveal', () => {
+  it('segments unspaced CJK headings into wrap-safe visual tokens', () => {
+    mockMediaQueries();
+    const { container } = render(
+      <>
+        <HomeWordReveal text="カードを集めよう。ポケモンを探そう。" locale="ja" />
+        <HomeWordReveal text="收集卡牌。探索宝可梦。组建队伍。" locale="zh" />
+      </>,
+    );
+
+    const reveals = container.querySelectorAll('.home-word-reveal-visual');
+    expect(reveals).toHaveLength(2);
+    expect(reveals[0]?.querySelectorAll('.home-word-reveal-word').length).toBeGreaterThan(1);
+    expect(reveals[1]?.querySelectorAll('.home-word-reveal-word').length).toBeGreaterThan(1);
+  });
+
+  it('keeps punctuation attached to the preceding word in spaced locales', () => {
+    mockMediaQueries();
+    const { container } = render(<HomeWordReveal text="Track your cards. Explore Pokémon." locale="en" />);
+    const tokens = [...container.querySelectorAll('.home-word-reveal-word')].map((token) => token.textContent);
+
+    expect(tokens).toEqual(['Track', 'your', 'cards.', 'Explore', 'Pokémon.']);
+  });
 });
 
 describe('home Field Lab motion', () => {
@@ -132,10 +187,47 @@ describe('home Field Lab motion', () => {
 
     expect(world.querySelectorAll('[data-field-layer-index]')).toHaveLength(5);
     expect(world.querySelectorAll('[data-field-chapter-index]')).toHaveLength(5);
-    expect(world.querySelectorAll('[data-field-chapter-nav-index]')).toHaveLength(5);
     expect(world).toHaveAttribute('data-field-static');
     expect(world).not.toHaveAttribute('data-field-reduced-motion');
     expect(world).toHaveAttribute('data-field-active-index', '0');
+  });
+
+  it('keeps the first terminal layer isolated at the top of the page', () => {
+    mockMediaQueries();
+    const world = createWorld([100, 600, 1_100, 1_600, 2_100]);
+    render(<HomeFieldLabMotion />);
+
+    const firstLayer = world.querySelector('[data-field-layer-index="0"]');
+    const secondLayer = world.querySelector('[data-field-layer-index="1"]');
+    expect(firstLayer).toHaveStyle('--field-layer-focus: 1.0000; --field-layer-z: 100');
+    expect(secondLayer).toHaveStyle('--field-layer-focus: 0.0000; --field-layer-z: 0');
+  });
+
+  it('keeps the current chapter until the next measured activation point', () => {
+    mockMediaQueries();
+    const world = createWorld([100, 600, 1_100, 1_600, 2_100]);
+    const callbacks: FrameRequestCallback[] = [];
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      callbacks.push(callback);
+      return callbacks.length;
+    });
+    render(<HomeFieldLabMotion />);
+    callbacks.shift()?.(0);
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1_000 });
+    act(() => { window.dispatchEvent(new Event('scroll')); });
+    for (let frame = 0; frame < 60; frame += 1) callbacks.shift()?.(16);
+
+    expect(world).toHaveAttribute('data-field-active-index', '1');
+    expect(world.querySelector('[data-field-layer-active]')).toHaveAttribute('data-field-layer-index', '1');
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 1_200 });
+    act(() => { window.dispatchEvent(new Event('scroll')); });
+    for (let frame = 0; frame < 60; frame += 1) callbacks.shift()?.(16);
+
+    expect(world).toHaveAttribute('data-field-active-index', '2');
+    expect(world.querySelector('[data-field-layer-active]')).toHaveAttribute('data-field-layer-index', '2');
+    expect(world.querySelector('[data-field-chapter-index="2"]')).toHaveAttribute('data-field-active');
   });
 
   it('uses the same static presentation for reduced motion and cleans the RAF/listeners', () => {
@@ -181,6 +273,8 @@ describe('home Field Lab motion', () => {
     act(() => { window.dispatchEvent(new Event('scroll')); });
     for (let frame = 0; frame < 60; frame += 1) callbacks.shift()?.(16);
     expect(world).toHaveAttribute('data-field-active-index', '4');
-    expect(world.querySelector('[data-field-chapter-nav-index="4"]')).toHaveAttribute('aria-current', 'step');
+    const activeLayers = [...world.querySelectorAll('[data-field-layer-active]')];
+    expect(activeLayers).toHaveLength(1);
+    expect(activeLayers[0]).toHaveAttribute('data-field-layer-index', '4');
   });
 });

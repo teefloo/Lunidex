@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { TCGImageWithFallback } from '@/components/tcg/TCGImageWithFallback';
 import { getAllSets } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -33,15 +34,14 @@ function formatReleaseDate(date: string | undefined, locale: string): string | n
 export function TCGStartPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const router = useRouter();
+  const routeLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
   const ownedCards = usePrimeDexStore((state) => state.tcgOwnedCards);
-  const activeSets = usePrimeDexStore((state) => state.tcgActiveSets);
-  const language = usePrimeDexStore((state) => state.language);
-  const systemLanguage = usePrimeDexStore((state) => state.systemLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
   const searchTracked = useRef(false);
-  const resolvedLanguage = mounted ? (language === 'auto' ? systemLanguage || 'en' : language) : 'en';
+  const resolvedLanguage = mounted ? routeLanguage : 'en';
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
@@ -50,9 +50,7 @@ export function TCGStartPage() {
     enabled: mounted,
   });
 
-  const existingCollectionHref = activeSets[0]
-    ? localeHref(`/tcg/collection/${activeSets[0]}`)
-    : localeHref('/tcg/collection');
+  const existingCollectionHref = localeHref('/tcg/collection');
 
   const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
   const visibleSets = useMemo(() => {
@@ -66,6 +64,11 @@ export function TCGStartPage() {
     const source = getTcgStartSource(window.location.search);
     if (source) trackProductEvent('tcg_start_opened', source);
   }, [mounted, hasHydrated, ownedCards.length]);
+
+  useEffect(() => {
+    if (!mounted || !hasHydrated || ownedCards.length === 0) return;
+    router.replace(existingCollectionHref);
+  }, [existingCollectionHref, hasHydrated, mounted, ownedCards.length, router]);
 
   if (!mounted || !hasHydrated) {
     return (
@@ -82,7 +85,7 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell pt-24 pb-24" aria-labelledby="tcg-resume-title">
+        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24" aria-busy="true" aria-labelledby="tcg-resume-title">
           <section className="mx-auto max-w-2xl page-surface px-5 py-8 text-center sm:px-8">
             <Sparkles className="mx-auto h-6 w-6 text-primary" aria-hidden="true" />
             <h1 id="tcg-resume-title" className="mt-4 text-3xl font-black tracking-tight">
@@ -91,9 +94,6 @@ export function TCGStartPage() {
             <p className="mt-3 text-base leading-7 text-foreground/60">
               {t('tcg.activation.resume_description', { defaultValue: 'Your locally saved cards are ready to continue.' })}
             </p>
-            <Link href={existingCollectionHref} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-sm border border-primary/45 bg-primary/10 px-5 text-sm font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
-              {t('tcg.activation.resume_cta', { defaultValue: 'Resume my collection' })} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
           </section>
         </main>
       </div>

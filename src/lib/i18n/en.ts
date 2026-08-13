@@ -103,7 +103,7 @@ export default {
     },
     pokedex: { title: 'Pokédex', description: 'Explore Pokémon, their types, stats, and evolutions.', meta_title: 'Pokédex — Explore Pokémon', meta_description: 'Explore Pokémon, their types, statistics, evolutions, and more with Lunidex.', og_alt: 'Lunidex collection and connected tools interface', item_list_name: 'Complete Pokédex — All Pokémon', item_list_description: 'A complete Pokédex with Pokémon types, statistics, evolutions, and official artwork.' },
     lunidex_home: {
-      hero_title: 'Collect your cards. Play your Pokémon.',
+      hero_title: 'Track your cards. Explore Pokémon. Build your team.',
       hero_body: 'Your TCG collection and Pokémon teams, finally together in one simple, personal space.',
       cta_start: 'Start my collection', cta_resume: 'Resume my collection', cta_pokedex: 'Explore the Pokédex', start_without_account: 'Start without an account.', no_account: 'No account required.',
       preview_eyebrow: 'Collection preview', preview_title: 'Your collection, at a glance.', preview_body: 'Choose a set, add your cards, and follow your progress at your own pace.', preview_note: 'Interface preview', preview_owned_eyebrow: 'Your collection', preview_owned_title: 'Your collection is ready.', preview_owned_count_one: '{{count}} card saved on this device', preview_owned_count_other: '{{count}} cards saved on this device',
@@ -111,9 +111,10 @@ export default {
       steps_eyebrow: 'A simple collection to follow', steps_title: 'Add your cards, keep track.', steps_one_title: 'Choose a set', steps_one_body: 'Start with a set you collect.', steps_two_title: 'Add your cards', steps_two_body: 'Simply mark the cards you own.', steps_three_title: 'Track your progress', steps_three_body: 'See the progress of every set.',
       trust_title: 'Start without an account.', trust_body: 'Your cards are first saved in this browser on this device. You can create an account later to enable synchronization when it is available.', independent: 'Lunidex is an independent, unofficial project.', about: 'Learn more about Lunidex',
       faq_eyebrow: 'Frequently asked', faq_title: 'Questions about Lunidex', faq_subtitle: 'The essentials for tracking cards and preparing teams.', faq_q1: 'Do I need an account to start?', faq_a1: 'No. You can start tracking your cards without an account.', faq_q2: 'Where are my cards saved?', faq_a2: 'Your cards are saved in this browser on this device. They can be lost if you clear your browser data. Synchronization is optional and offered only when it is available.', faq_q3: 'How do I track a set?', faq_a3: 'Choose a set, add the cards you own, and view your progress.', faq_q4: 'Can I also prepare a Pokémon team?', faq_a4: 'Yes. The Pokédex and Team tool are available from Lunidex.',
-      meta_title: 'Lunidex — TCG collection and Pokémon teams', meta_description: 'Track your TCG card collection, explore the Pokédex, and prepare your Pokémon teams in one simple, personal space. Start without an account.', og_title: 'Lunidex — Collect your cards. Play your Pokémon.', og_alt: 'Lunidex collection and connected tools interface',
+      meta_title: 'Lunidex — TCG collection and Pokémon teams', meta_description: 'Track your TCG card collection, explore the Pokédex, and prepare your Pokémon teams in one simple, personal space. Start without an account.', og_title: 'Lunidex — Track your cards. Explore Pokémon. Build your team.', og_alt: 'Lunidex collection and connected tools interface',
     },
     lunidex_archive: {
+      field_pikachu: 'Pikachu', field_pichu: 'Pichu', field_raichu: 'Raichu', field_charizard: 'Charizard', field_blastoise: 'Blastoise', field_gengar: 'Gengar', field_lucario: 'Lucario', field_sylveon: 'Sylveon',
       hero_eyebrow: 'The Lunidex index',
       hero_title: 'Collect your cards. Know your Pokémon. Build your team.',
       hero_cta_primary: 'Start collecting',

@@ -212,9 +212,9 @@ export default function AccountCard() {
         <div className="glass-card rounded-sm p-5 space-y-4">
           <div className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-foreground/50" />
-            <h3 className="text-xs font-black uppercase tracking-[0.15em] text-foreground/60">
+            <h2 className="text-xs font-black uppercase tracking-[0.15em] text-foreground/60">
               {tt('profile.settings_title', 'Public Profile')}
-            </h3>
+            </h2>
           </div>
 
           {/* Handle input */}
@@ -250,7 +250,7 @@ export default function AccountCard() {
               </Button>
             </div>
             {handleError && (
-              <p className="text-[11px] text-destructive font-medium">{handleError}</p>
+              <p className="text-xs text-destructive font-medium">{handleError}</p>
             )}
           </div>
 
@@ -301,7 +301,7 @@ export default function AccountCard() {
           </div>
 
           {isPublic && publicHandle && (
-            <p className="text-[11px] text-foreground/40 font-medium">
+            <p className="text-xs text-foreground/40 font-medium">
               {tt('profile.public_hint', 'Your profile is visible at')}:{' '}
               <span className="text-foreground/60">/u/{publicHandle}</span>
             </p>

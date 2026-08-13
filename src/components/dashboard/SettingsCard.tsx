@@ -12,12 +12,12 @@ export default function SettingsCard() {
   const toggleAnimatedSprites = usePrimeDexStore(s => s.toggleAnimatedSprites);
 
   return (
-    <div className="glass-card p-6">
+    <section className="glass-card p-6" aria-labelledby="dashboard-settings-title">
       <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border/40">
         <div className="p-2 rounded-sm text-foreground/70 bg-secondary/30 border border-border/50">
           <Settings className="w-5 h-5" />
         </div>
-        <h3 className="text-lg font-black text-foreground/90">{t('settings.title')}</h3>
+        <h2 id="dashboard-settings-title" className="text-lg font-black text-foreground/90">{t('settings.title')}</h2>
       </div>
 
       <div className="space-y-4">
@@ -36,7 +36,7 @@ export default function SettingsCard() {
             role="switch"
             aria-checked={soundEnabled}
           >
-            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${soundEnabled ? 'left-6' : 'left-0.5'}`} />
+            <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform duration-300 ${soundEnabled ? 'translate-x-6' : ''}`} />
           </button>
         </div>
 
@@ -48,7 +48,7 @@ export default function SettingsCard() {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-foreground/80">{t('settings.animated_sprites')}</span>
-              <span className="text-[11px] text-foreground/40">{t('settings.animated_sprites_desc')}</span>
+              <span className="text-xs text-foreground/40">{t('settings.animated_sprites_desc')}</span>
             </div>
           </div>
           <button
@@ -58,10 +58,10 @@ export default function SettingsCard() {
             role="switch"
             aria-checked={animatedSprites}
           >
-            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-primary-foreground shadow-sm transition-all duration-300 ${animatedSprites ? 'left-6' : 'left-0.5'}`} />
+            <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform duration-300 ${animatedSprites ? 'translate-x-6' : ''}`} />
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

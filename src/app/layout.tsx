@@ -8,6 +8,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
+import { SkipLink } from "@/components/layout/SkipLink";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -189,12 +190,9 @@ export default async function RootLayout({
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
       <head />
       <body className="antialiased bg-background text-foreground font-body">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:font-bold"
-        >
+        <SkipLink>
           {t('common.skip_to_content')}
-        </a>
+        </SkipLink>
          <Providers>
            <AppContent>
              <div id="main-content" tabIndex={-1}>

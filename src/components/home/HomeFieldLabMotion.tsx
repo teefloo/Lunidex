@@ -3,32 +3,96 @@
 import { useEffect } from 'react';
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-const COMPACT_VIEWPORT_QUERY = '(max-width: 767px)';
-const CHAPTER_COUNT = 5;
+const COMPACT_VIEWPORT_QUERY = '(max-width: 1023px)';
 
 function clamp(value: number, min = 0, max = 1): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function easeInOut(value: number): number {
-  return value * value * (3 - 2 * value);
-}
-
 interface FieldMeasurements {
   worldTop: number;
   scrollRange: number;
+  activationPoints: number[];
 }
 
-function measureWorld(world: HTMLElement): FieldMeasurements {
+function getActivationViewportY(header: HTMLElement | null): number {
+  const headerHeight = header?.getBoundingClientRect().height ?? 0;
+  const safeTop = headerHeight + 24;
+  const safeBottom = Math.max(safeTop + 1, window.innerHeight - 24);
+  return safeTop + ((safeBottom - safeTop) / 2);
+}
+
+function measureWorld(
+  world: HTMLElement,
+  chapters: HTMLElement[],
+  header: HTMLElement | null,
+): FieldMeasurements {
   const worldTop = world.getBoundingClientRect().top + window.scrollY;
-  return {
-    worldTop,
-    scrollRange: Math.max(1, world.offsetHeight - window.innerHeight),
-  };
+  const scrollRange = Math.max(1, world.offsetHeight - window.innerHeight);
+  const activationViewportY = getActivationViewportY(header);
+  const measuredPoints = chapters.map((chapter) => {
+    const rect = chapter.getBoundingClientRect();
+    const chapterHeight = rect.height || chapter.offsetHeight || window.innerHeight;
+    const chapterCenter = rect.top + (chapterHeight / 2);
+    return chapterCenter + window.scrollY - activationViewportY;
+  });
+
+  const pointsAreOrdered = measuredPoints.every((point, index) => index === 0 || point > measuredPoints[index - 1]);
+  const measuredActivationPoints = pointsAreOrdered
+    ? [Math.max(0, measuredPoints[0] ?? worldTop), ...measuredPoints.slice(1)]
+    : [];
+  const activationPointsAreOrdered = measuredActivationPoints.length > 0
+    && measuredActivationPoints.every((point, index) => index === 0 || point > measuredActivationPoints[index - 1]);
+  const activationPoints = activationPointsAreOrdered
+    ? measuredActivationPoints
+    : chapters.map((_, index) => worldTop + (scrollRange * index) / Math.max(1, chapters.length - 1));
+
+  return { worldTop, scrollRange, activationPoints };
 }
 
 function getWorldProgress(measurements: FieldMeasurements): number {
-  return clamp((window.scrollY - measurements.worldTop) / measurements.scrollRange);
+  const points = measurements.activationPoints;
+  if (points.length <= 1) return 0;
+
+  const scrollY = window.scrollY;
+  if (scrollY <= points[0]) return 0;
+  const lastIndex = points.length - 1;
+  if (scrollY >= points[lastIndex]) return 1;
+
+  const index = points.findIndex((point, pointIndex) => (
+    pointIndex < lastIndex && scrollY >= point && scrollY < points[pointIndex + 1]
+  ));
+  if (index < 0) return 0;
+
+  const localProgress = (scrollY - points[index]) / Math.max(1, points[index + 1] - points[index]);
+  return clamp((index + localProgress) / lastIndex);
+}
+
+function getWorldChapterIndex(measurements: FieldMeasurements): number {
+  const points = measurements.activationPoints;
+  if (points.length <= 1) return 0;
+
+  const scrollY = window.scrollY;
+  let activeIndex = 0;
+  points.forEach((point, index) => {
+    if (scrollY >= point) activeIndex = index;
+  });
+
+  return Math.min(points.length - 1, activeIndex);
+}
+
+function applyActiveIndex(
+  world: HTMLElement,
+  chapters: HTMLElement[],
+  activeIndex: number,
+): void {
+  const normalizedIndex = Math.max(0, Math.min(chapters.length - 1, activeIndex));
+  if (world.dataset.fieldActiveIndex === String(normalizedIndex)) return;
+
+  world.dataset.fieldActiveIndex = String(normalizedIndex);
+  chapters.forEach((chapter) => {
+    chapter.toggleAttribute('data-field-active', chapter.dataset.fieldChapterIndex === String(normalizedIndex));
+  });
 }
 
 function applyFieldProgress(
@@ -36,38 +100,28 @@ function applyFieldProgress(
   stage: HTMLElement,
   layers: HTMLElement[],
   chapters: HTMLElement[],
-  navLinks: HTMLElement[],
   progress: number,
+  activeIndex = Math.round(progress * Math.max(0, chapters.length - 1)),
 ): void {
-  const chapterProgress = progress * (CHAPTER_COUNT - 1);
+  const chapterCount = Math.max(1, chapters.length || layers.length);
+  const chapterProgress = progress * Math.max(0, chapterCount - 1);
   stage.style.setProperty('--field-progress', progress.toFixed(4));
   stage.style.setProperty('--field-chapter-progress', chapterProgress.toFixed(4));
   stage.style.setProperty('--field-depth-shift', `${Math.sin(progress * Math.PI) * 1.25}%`);
   stage.style.setProperty('--field-grid-shift', `${progress * -10}%`);
 
+  // The terminal is a readable state machine: never expose two boards at once.
+  const normalizedActiveIndex = Math.min(chapterCount - 1, Math.max(0, activeIndex));
   layers.forEach((layer) => {
     const index = Number(layer.dataset.fieldLayerIndex ?? 0);
-    const focus = easeInOut(clamp(1 - Math.abs(chapterProgress - index)));
+    const isActive = index === normalizedActiveIndex;
+    const focus = isActive ? 1 : 0;
     layer.style.setProperty('--field-layer-focus', focus.toFixed(4));
+    layer.style.setProperty('--field-layer-z', isActive ? '100' : '0');
+    layer.toggleAttribute('data-field-layer-active', isActive);
   });
 
-  const activeIndex = Math.min(CHAPTER_COUNT - 1, Math.round(chapterProgress));
-  if (world.dataset.fieldActiveIndex === String(activeIndex)) return;
-
-  world.dataset.fieldActiveIndex = String(activeIndex);
-  chapters.forEach((chapter) => {
-    const isActive = chapter.dataset.fieldChapterIndex === String(activeIndex);
-    chapter.toggleAttribute('data-field-active', isActive);
-    chapter.setAttribute('aria-current', isActive ? 'step' : 'false');
-  });
-  navLinks.forEach((link) => {
-    const isActive = link.dataset.fieldChapterNavIndex === String(activeIndex);
-    link.setAttribute('aria-current', isActive ? 'step' : 'false');
-  });
-  const activeLink = navLinks.find((link) => link.dataset.fieldChapterNavIndex === String(activeIndex));
-  if (activeLink && typeof activeLink.scrollIntoView === 'function') {
-    activeLink.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  }
+  applyActiveIndex(world, chapters, normalizedActiveIndex);
 }
 
 function setHeaderState(header: HTMLElement | null, scrolled: boolean): void {
@@ -84,11 +138,10 @@ export function HomeFieldLabMotion() {
 
     const layers = Array.from(stage.querySelectorAll<HTMLElement>('[data-field-layer-index]'));
     const chapters = Array.from(world.querySelectorAll<HTMLElement>('[data-field-chapter-index]'));
-    const navLinks = Array.from(world.querySelectorAll<HTMLElement>('[data-field-chapter-nav-index]'));
     const header = document.querySelector<HTMLElement>('[data-field-header]');
     const motionPreference = window.matchMedia(REDUCED_MOTION_QUERY);
     const compactViewport = window.matchMedia(COMPACT_VIEWPORT_QUERY);
-    const measurements: FieldMeasurements = { worldTop: 0, scrollRange: 1 };
+    const measurements: FieldMeasurements = { worldTop: 0, scrollRange: 1, activationPoints: [] };
     let frameId = 0;
     let currentProgress = 0;
     let targetProgress = 0;
@@ -103,9 +156,10 @@ export function HomeFieldLabMotion() {
     };
 
     const measure = () => {
-      const next = measureWorld(world);
+      const next = measureWorld(world, chapters, header);
       measurements.worldTop = next.worldTop;
       measurements.scrollRange = next.scrollRange;
+      measurements.activationPoints = next.activationPoints;
     };
 
     const updateHeader = () => setHeaderState(header, window.scrollY > 28);
@@ -114,16 +168,25 @@ export function HomeFieldLabMotion() {
       frameId = 0;
       if (isHidden || !isWorldVisible || !dynamicListenersAttached) return;
 
-      const difference = targetProgress - currentProgress;
-      if (Math.abs(difference) < 0.0008) {
+      if (motionPreference.matches) {
         currentProgress = targetProgress;
       } else {
-        currentProgress += difference * 0.12;
+        const difference = targetProgress - currentProgress;
+        currentProgress = Math.abs(difference) < 0.0008
+          ? targetProgress
+          : currentProgress + difference * 0.12;
       }
 
-      applyFieldProgress(world, stage, layers, chapters, navLinks, currentProgress);
+      applyFieldProgress(
+        world,
+        stage,
+        layers,
+        chapters,
+        currentProgress,
+        getWorldChapterIndex(measurements),
+      );
 
-      if (Math.abs(targetProgress - currentProgress) >= 0.0008) {
+      if (!motionPreference.matches && Math.abs(targetProgress - currentProgress) >= 0.0008) {
         frameId = window.requestAnimationFrame(render);
       }
     };
@@ -133,7 +196,11 @@ export function HomeFieldLabMotion() {
 
       targetProgress = getWorldProgress(measurements);
       updateHeader();
-      if (!frameId) frameId = window.requestAnimationFrame(render);
+      if (motionPreference.matches) {
+        render();
+      } else if (!frameId) {
+        frameId = window.requestAnimationFrame(render);
+      }
     };
 
     const handleScroll = () => requestRender();
@@ -145,6 +212,7 @@ export function HomeFieldLabMotion() {
       measure();
       requestRender();
     };
+    const handleHeaderScroll = () => updateHeader();
 
     const attachDynamicListeners = () => {
       if (dynamicListenersAttached) return;
@@ -152,7 +220,14 @@ export function HomeFieldLabMotion() {
       measure();
       currentProgress = getWorldProgress(measurements);
       targetProgress = currentProgress;
-      applyFieldProgress(world, stage, layers, chapters, navLinks, currentProgress);
+      applyFieldProgress(
+        world,
+        stage,
+        layers,
+        chapters,
+        currentProgress,
+        getWorldChapterIndex(measurements),
+      );
       window.addEventListener('scroll', handleScroll, { passive: true });
       window.addEventListener('resize', handleResize);
       window.addEventListener('load', handleLoad);
@@ -169,15 +244,17 @@ export function HomeFieldLabMotion() {
     };
 
     const applyPresentationMode = () => {
-      const isStatic = motionPreference.matches || compactViewport.matches;
+      const isCompact = compactViewport.matches;
       world.toggleAttribute('data-field-reduced-motion', motionPreference.matches);
-      world.toggleAttribute('data-field-static', isStatic);
+      world.toggleAttribute('data-field-static', isCompact || motionPreference.matches);
 
-      if (isStatic) {
-        detachDynamicListeners();
+      detachDynamicListeners();
+      measure();
+
+      if (isCompact) {
         currentProgress = 0;
         targetProgress = 0;
-        applyFieldProgress(world, stage, layers, chapters, navLinks, 0);
+      applyFieldProgress(world, stage, layers, chapters, 0, 0);
         updateHeader();
         return;
       }
@@ -187,11 +264,8 @@ export function HomeFieldLabMotion() {
 
     const handleVisibility = () => {
       isHidden = document.hidden;
-      if (isHidden) {
-        cancelFrame();
-        return;
-      }
-      requestRender();
+      if (isHidden) cancelFrame();
+      else requestRender();
     };
 
     const handleWorldVisibility = (entries: IntersectionObserverEntry[]) => {
@@ -205,12 +279,14 @@ export function HomeFieldLabMotion() {
     const chapterObserver = typeof IntersectionObserver === 'function'
       ? new IntersectionObserver(
           (entries) => {
-            entries.forEach((entry) => {
-              const chapter = entry.target as HTMLElement;
-              chapter.toggleAttribute('data-field-inview', entry.isIntersecting);
-            });
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            // IntersectionObserver is only a layout invalidation hint. The
+            // conductor remains the single source of truth for the chapter
+            // threshold so the story copy and terminal cannot disagree.
+            measure();
+            requestRender();
           },
-          { rootMargin: '-28% 0px -28% 0px', threshold: 0 },
+          { rootMargin: '-42% 0px -42% 0px', threshold: 0 },
         )
       : null;
     const worldObserver = typeof IntersectionObserver === 'function'
@@ -227,6 +303,7 @@ export function HomeFieldLabMotion() {
     worldObserver?.observe(world);
     worldResizeObserver?.observe(world);
     document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
 
     const addMediaListener = (query: MediaQueryList, listener: (event: MediaQueryListEvent) => void) => {
       if (query.addEventListener) query.addEventListener('change', listener);
@@ -241,6 +318,7 @@ export function HomeFieldLabMotion() {
     addMediaListener(compactViewport, handleModeChange);
 
     applyPresentationMode();
+    updateHeader();
     world.dataset.fieldMotion = 'ready';
 
     return () => {
@@ -249,6 +327,7 @@ export function HomeFieldLabMotion() {
       worldObserver?.disconnect();
       worldResizeObserver?.disconnect();
       document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('scroll', handleHeaderScroll);
       removeMediaListener(motionPreference, handleModeChange);
       removeMediaListener(compactViewport, handleModeChange);
       setHeaderState(header, false);

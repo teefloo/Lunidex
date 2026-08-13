@@ -25,7 +25,7 @@ function PrivacySwitch({
         {checked ? <Eye className="h-4 w-4 shrink-0 text-primary" /> : <EyeOff className="h-4 w-4 shrink-0 text-foreground/35" />}
         <div className="min-w-0">
           <p className="text-sm font-bold text-foreground/80">{label}</p>
-          <p className="text-[11px] text-foreground/45">{description}</p>
+          <p className="text-xs text-foreground/45">{description}</p>
         </div>
       </div>
       <button
@@ -36,7 +36,7 @@ function PrivacySwitch({
         onClick={() => onChange(!checked)}
         className={`relative h-6 w-12 shrink-0 rounded-full transition-colors ${checked ? 'bg-primary' : 'bg-muted/70'}`}
       >
-        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-all ${checked ? 'left-6' : 'left-0.5'}`} />
+        <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-primary-foreground shadow-sm transition-transform ${checked ? 'translate-x-6' : ''}`} />
       </button>
     </div>
   );
@@ -110,7 +110,7 @@ export default function FriendPrivacyCard() {
       </div>
 
       {!settings.allowFriendRequests && (
-        <p className="flex items-center gap-2 text-[11px] font-bold text-foreground/45">
+        <p className="flex items-center gap-2 text-xs font-bold text-foreground/45">
           <UserPlus className="h-3.5 w-3.5" />
           {t('friends.settings.requests_disabled', { defaultValue: 'New friend requests are currently disabled.' })}
         </p>

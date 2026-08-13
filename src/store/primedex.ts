@@ -10,19 +10,63 @@ import type { GenTheme } from '@/lib/generation-themes';
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
 
+function getLocalStorage(): Storage | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 // Custom storage for IndexedDB
 const storage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
-    if (!isIndexedDbAvailable()) return null;
-    return (await get(name)) || null;
+    if (isIndexedDbAvailable()) {
+      try {
+        const value = await get(name);
+        if (value) return value;
+      } catch {
+        // A denied or corrupt IndexedDB should not block the local-first app.
+      }
+    }
+
+    try {
+      return getLocalStorage()?.getItem(name) ?? null;
+    } catch {
+      return null;
+    }
   },
   setItem: async (name: string, value: string): Promise<void> => {
-    if (!isIndexedDbAvailable()) return;
-    await set(name, value);
+    if (isIndexedDbAvailable()) {
+      try {
+        await set(name, value);
+        return;
+      } catch {
+        // Fall through to the browser's synchronous fallback.
+      }
+    }
+
+    try {
+      getLocalStorage()?.setItem(name, value);
+    } catch {
+      // Persistence is best effort; the in-memory Zustand state remains usable.
+    }
   },
   removeItem: async (name: string): Promise<void> => {
-    if (!isIndexedDbAvailable()) return;
-    await del(name);
+    if (isIndexedDbAvailable()) {
+      try {
+        await del(name);
+      } catch {
+        // Continue and remove the fallback copy as well.
+      }
+    }
+
+    try {
+      getLocalStorage()?.removeItem(name);
+    } catch {
+      // Persistence is best effort.
+    }
   },
 };
 
@@ -671,7 +715,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       name: 'primedex-storage',
       storage: createJSONStorage(() => storage),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
+        if (state) {
+          state.setHasHydrated(true);
+        } else {
+          // Corrupt persistence should degrade to an empty, usable session.
+          usePrimeDexStore.setState({ _hasHydrated: true });
+        }
       },
       partialize: (state) =>
         Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState,

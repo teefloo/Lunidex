@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 interface HomeHeaderMobileMenuProps {
   links: Array<{ href: string; label: string }>;
@@ -14,6 +15,7 @@ interface HomeHeaderMobileMenuProps {
   githubLabel: string;
   githubUrl: string;
   locale: string;
+  languageControl?: ReactNode;
 }
 
 export default function HomeHeaderMobileMenu({
@@ -26,98 +28,70 @@ export default function HomeHeaderMobileMenu({
   githubLabel,
   githubUrl,
   locale,
+  languageControl = null,
 }: HomeHeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLElement>(null);
-  const wasOpenRef = useRef(false);
+  const closeMenu = () => setIsOpen(false);
+  const handleOpenChange = (nextOpen: boolean) => {
+    setIsOpen(nextOpen);
+    if (!nextOpen) triggerRef.current?.focus();
+  };
 
   useEffect(() => {
-    if (!isOpen) {
-      if (wasOpenRef.current) {
-        wasOpenRef.current = false;
-        triggerRef.current?.focus();
-      }
-      return;
-    }
-
-    wasOpenRef.current = true;
-    closeRef.current?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setIsOpen(false);
-      }
-    };
+    if (!isOpen) return;
     const handlePointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !panelRef.current?.contains(event.target)) {
-        setIsOpen(false);
-      }
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      const panel = document.getElementById('lunidex-home-mobile-menu');
+      if (panel?.contains(target) || triggerRef.current?.contains(target)) return;
+      handleOpenChange(false);
     };
-
-    document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('pointerdown', handlePointerDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('pointerdown', handlePointerDown);
-    };
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, [isOpen]);
-
-  const closeMenu = () => setIsOpen(false);
 
   return (
     <div className="field-mobile-menu">
-      <button
-        ref={triggerRef}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="lunidex-home-mobile-menu"
-        aria-haspopup="dialog"
-        title={menuLabel}
-        onClick={() => setIsOpen((open) => !open)}
-        className="field-mobile-menu-trigger"
-      >
-        <span aria-hidden="true">01</span>
-        <span>{menuLabel}</span>
-      </button>
-
-      {isOpen && (
-        <>
-          <div
-            aria-hidden="true"
-            onPointerDown={closeMenu}
-            className="field-mobile-menu-backdrop"
-          />
-          <aside
-            ref={panelRef}
-            id="lunidex-home-mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label={navigationLabel}
-            className="field-mobile-menu-panel"
-          >
-            <div className="field-mobile-menu-panel-header">
-              <span className="field-mobile-menu-panel-kicker" aria-hidden="true">LUNIDEX / MENU</span>
-              <button
-                ref={closeRef}
-                type="button"
-                aria-label={closeLabel}
-                title={closeLabel}
-                onClick={closeMenu}
-                className="field-mobile-menu-close"
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
+      <Sheet open={isOpen} onOpenChange={handleOpenChange} disablePointerDismissal>
+        <SheetTrigger
+          type="button"
+          ref={triggerRef}
+          aria-haspopup="dialog"
+          title={menuLabel}
+          className="field-mobile-menu-trigger"
+        >
+          <span aria-hidden="true">01</span>
+          <span>{menuLabel}</span>
+        </SheetTrigger>
+        <SheetContent
+          id="lunidex-home-mobile-menu"
+          side="right"
+          showCloseButton={false}
+          aria-label={navigationLabel}
+          className="field-mobile-menu-panel"
+        >
+          <SheetHeader className="field-mobile-menu-panel-header">
+            <span className="field-mobile-menu-panel-kicker" aria-hidden="true">LUNIDEX / MENU</span>
+            <SheetClose
+              type="button"
+              aria-label={closeLabel}
+              title={closeLabel}
+              autoFocus
+              className="field-mobile-menu-close"
+            >
+              <span aria-hidden="true">×</span>
+            </SheetClose>
+            <SheetTitle className="sr-only">{navigationLabel}</SheetTitle>
+          </SheetHeader>
             <nav aria-label={navigationLabel} className="field-mobile-menu-links">
               {links.map((link) => (
                 <Link key={link.href} href={link.href} onClick={closeMenu}>
                   {link.label}
-                  <span aria-hidden="true">↗</span>
+                  <span aria-hidden="true">→</span>
                 </Link>
               ))}
+              {languageControl}
               <HomeCollectionEntry
                 locale={locale}
                 startLabel={collectionStartLabel}
@@ -130,9 +104,8 @@ export default function HomeHeaderMobileMenu({
                 <span aria-hidden="true">↗</span>
               </a>
             </nav>
-          </aside>
-        </>
-      )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

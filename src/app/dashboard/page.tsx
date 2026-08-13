@@ -39,7 +39,7 @@ export default function DashboardPage() {
           icon={BarChart3}
           title={t('dashboard.title')}
           subtitle={t('dashboard.subtitle')}
-          eyebrow={t('dashboard.eyebrow')}
+          eyebrow={null}
         />
 
         <div className="mb-6">

@@ -26,16 +26,16 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-4 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+      <h2 id="dashboard-extensible-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
         <BarChart3 className="w-3.5 h-3.5 text-primary" />
         {t('dashboard.extensible.title')}
-      </h3>
+      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {metrics.map((metric) => (
           <div
             key={metric.id}
-            className="p-4 rounded-sm border border-border/40 bg-card/40 flex flex-col items-center gap-2 text-center group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-300"
+            className="p-4 rounded-sm border border-border/40 bg-card/40 flex flex-col items-center gap-2 text-center group hover:border-primary/20 hover:bg-primary/[0.03] transition-[background-color,border-color,box-shadow,transform] duration-300"
           >
             <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
               {ICON_MAP[metric.icon] || <BarChart3 className="w-4 h-4" />}

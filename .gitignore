@@ -238,6 +238,7 @@ GEMINI.md
 # AI-generated temporary files
 *.ai.md
 *.assistant.md
+/docs/superpowers/
 
 
 # =============================================================================

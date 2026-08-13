@@ -33,6 +33,10 @@ interface HomeFieldLabStageCopy {
   fightingLabel: string;
   steelLabel: string;
   fairyLabel: string;
+  pikachuLabel: string;
+  pichuLabel: string;
+  raichuLabel: string;
+  teamNames: Record<number, string>;
 }
 
 interface HomeFieldLabStageProps {
@@ -40,15 +44,17 @@ interface HomeFieldLabStageProps {
 }
 
 const TEAM_PREVIEW = [
-  { id: 6, name: 'Charizard', type: 'fire' },
-  { id: 9, name: 'Blastoise', type: 'water' },
-  { id: 94, name: 'Gengar', type: 'ghost' },
-  { id: 448, name: 'Lucario', type: 'fighting' },
-  { id: 700, name: 'Sylveon', type: 'fairy' },
-  { id: 25, name: 'Pikachu', type: 'electric' },
+  { id: 6, type: 'fire' },
+  { id: 9, type: 'water' },
+  { id: 94, type: 'ghost' },
+  { id: 448, type: 'fighting' },
+  { id: 700, type: 'fairy' },
+  { id: 25, type: 'electric' },
 ] as const;
 
-const TYPE_LABELS: Record<(typeof TEAM_PREVIEW)[number]['type'], keyof HomeFieldLabStageCopy> = {
+type TypeLabelKey = 'fireLabel' | 'waterLabel' | 'ghostLabel' | 'fightingLabel' | 'fairyLabel' | 'electricLabel';
+
+const TYPE_LABELS: Record<(typeof TEAM_PREVIEW)[number]['type'], TypeLabelKey> = {
   fire: 'fireLabel',
   water: 'waterLabel',
   ghost: 'ghostLabel',
@@ -124,7 +130,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
             </div>
           </div>
 
-          <div className="field-layer field-layer-specimen" data-field-layer-index="1">
+          <div className="field-layer field-layer-specimen" data-field-layer-index="2">
             <div className="field-specimen-card">
               <div className="field-specimen-card-header">
                 <span>{copy.specimenLabel}</span><span>NO. 0025</span>
@@ -135,7 +141,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
                   <Image src={artworkUrl(25)} alt="" width={360} height={360} sizes="18rem" />
                 </div>
                 <div className="field-specimen-meta">
-                  <strong>Pikachu</strong>
+                  <strong>{copy.pikachuLabel}</strong>
                   <span className="field-type-pill field-type-electric">{copy.electricLabel}</span>
                   <div className="field-specimen-stat-head"><span>{copy.statsLabel}</span><span>BST 320</span></div>
                   <div className="field-specimen-stats">
@@ -144,13 +150,13 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
                     <span>DEF <b>40</b><i><em style={{ width: '40%' }} /></i></span>
                     <span>SPD <b>90</b><i><em style={{ width: '90%' }} /></i></span>
                   </div>
-                  <div className="field-specimen-evolution"><span>{copy.evolutionLabel}</span><strong>Pichu → Pikachu → Raichu</strong></div>
+                  <div className="field-specimen-evolution"><span>{copy.evolutionLabel}</span><strong>{copy.pichuLabel} → {copy.pikachuLabel} → {copy.raichuLabel}</strong></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="field-layer field-layer-team" data-field-layer-index="2">
+          <div className="field-layer field-layer-team" data-field-layer-index="3">
             <div className="field-team-board">
               <div className="field-team-board-header"><span>{copy.teamLabel}</span><strong>06 / 06</strong></div>
               <div className="field-team-slots">
@@ -158,7 +164,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
                   <div className="field-team-slot" key={pokemon.id}>
                     <small>0{index + 1}</small>
                     <Image src={artworkUrl(pokemon.id)} alt="" width={150} height={150} sizes="(max-width: 767px) 18vw, 10rem" />
-                    <strong>{pokemon.name}</strong>
+                    <strong>{copy.teamNames[pokemon.id]}</strong>
                     <span className={`field-type-pill field-type-${pokemon.type}`}>{copy[TYPE_LABELS[pokemon.type]]}</span>
                   </div>
                 ))}
@@ -167,11 +173,11 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
             </div>
           </div>
 
-          <div className="field-layer field-layer-progress" data-field-layer-index="3">
+          <div className="field-layer field-layer-progress" data-field-layer-index="4">
             <div className="field-progress-board">
               <div className="field-progress-copy"><span>{copy.progressLabel}</span><strong>{copy.progressTitle}</strong><p>{copy.progressBody}</p></div>
-              <div className="field-progress-dial" style={{ '--field-dial-progress': '72.4%' } as CSSProperties}>
-                <div><strong>742</strong><span>/ 1025</span></div>
+              <div className="field-progress-dial" style={{ '--field-dial-progress': '18%' } as CSSProperties}>
+                <div><strong>184</strong><span>/ 1025</span></div>
               </div>
               <div className="field-progress-metrics">
                 <span><b>184</b><small>{copy.caughtLabel}</small></span>
@@ -181,7 +187,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
             </div>
           </div>
 
-          <div className="field-layer field-layer-cards" data-field-layer-index="4">
+          <div className="field-layer field-layer-cards" data-field-layer-index="1">
             <div className="field-card-desk">
               <div className="field-card-desk-header"><span>{copy.cardsLabel}</span><strong>{copy.baseSetLabel}</strong></div>
               <div className="field-card-desk-stack">
@@ -191,7 +197,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
               </div>
               <div className="field-card-desk-footer">
                 <span><b>68</b> {copy.ownedLabel}</span>
-                <span><b>34</b> {copy.missingLabel}</span>
+                <span><b>32</b> {copy.missingLabel}</span>
                 <span><b>12</b> {copy.wishlistLabel}</span>
               </div>
               <div className="field-card-progress"><i><em /></i><strong>68%</strong></div>

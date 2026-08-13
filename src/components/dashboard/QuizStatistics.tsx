@@ -35,7 +35,7 @@ interface StatCardProps {
 
 function StatCard({ icon, label, value, accent }: StatCardProps) {
   return (
-    <div className="relative p-3 md:p-4 rounded-sm border border-border/50 bg-card/50 flex items-center gap-3 group hover:border-primary/20 hover:bg-primary/[0.03] transition-all duration-300">
+    <div className="relative p-3 md:p-4 rounded-sm border border-border/50 bg-card/50 flex items-center gap-3 group hover:border-primary/20 hover:bg-primary/[0.03] transition-[background-color,border-color,box-shadow,transform] duration-300">
       <div className={cn(
         'p-2 rounded-lg shrink-0 transition-colors duration-300',
         accent ? accent : 'bg-primary/10 text-primary'
@@ -73,10 +73,10 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
     return (
       <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
-        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+        <h2 id="dashboard-quiz-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
           <BrainCircuit className="w-3.5 h-3.5 text-primary" />
           {t('dashboard.quiz.title')}
-        </h3>
+        </h2>
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="p-4 rounded-full bg-muted/50 mb-4">
             <BrainCircuit className="w-10 h-10 text-foreground/20" />
@@ -84,7 +84,7 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
           <p className="text-sm font-semibold text-foreground/50 mb-4">{t('dashboard.quiz.no_data')}</p>
           <Link
             href={localeHref('/quiz')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-primary text-primary-foreground text-xs font-black uppercase tracking-[0.15em] hover:bg-primary/90 transition-all hover:scale-105"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-primary text-primary-foreground text-xs font-black uppercase tracking-[0.15em] hover:bg-primary/90 transition-[background-color,box-shadow,transform] hover:scale-105"
           >
             <Gamepad2 className="w-4 h-4" />
             {t('dashboard.quiz.no_data_action')}
@@ -98,10 +98,10 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+      <h2 id="dashboard-quiz-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
         <BrainCircuit className="w-3.5 h-3.5 text-primary" />
         {t('dashboard.quiz.title')}
-      </h3>
+      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
@@ -148,7 +148,7 @@ export default function QuizStatistics({ data }: QuizStatisticsProps) {
                 <span className="text-[11px] font-bold uppercase tracking-[0.1em]">{cat.key}</span>
               </div>
               <p className="text-base font-black text-foreground tabular-nums">{stats.bestScore}</p>
-              <p className="text-[11px] font-semibold text-foreground/40">
+              <p className="text-xs font-semibold text-foreground/40">
                 {stats.averageScore} avg · {stats.totalSessions} sessions
               </p>
             </div>

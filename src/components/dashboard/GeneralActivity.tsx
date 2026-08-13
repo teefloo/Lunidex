@@ -40,10 +40,10 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+      <h2 id="dashboard-activity-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
         <ActivityIcon className="w-3.5 h-3.5 text-primary" />
         {t('dashboard.activity.title')}
-      </h3>
+      </h2>
 
       {/* Visit stats */}
       <div className="flex gap-4">
@@ -84,7 +84,7 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
                     {action.label}
                   </p>
                   {action.details && (
-                    <p className="text-[11px] font-medium text-foreground/40 truncate">
+                    <p className="text-xs font-medium text-foreground/40 truncate">
                       {action.details}
                     </p>
                   )}

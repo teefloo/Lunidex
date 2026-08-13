@@ -5,12 +5,13 @@ import { GITHUB_REPO_URL } from '@/lib/site';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
+import { HomeLanguageSelect } from './HomeLanguageSelect';
 
 export default async function HomeHeader() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const links = [
     { href: '/pokedex', label: t('nav.pokedex') },
-    { href: '/tcg/collection', label: t('tcg.nav_collection') },
+    { href: '/tcg', label: t('tcg.nav_catalog') },
     { href: '/team', label: t('nav.team') },
   ];
   const menuLabel = t('header.open_menu');
@@ -42,6 +43,8 @@ export default async function HomeHeader() {
           </a>
         </nav>
 
+        <HomeLanguageSelect className="field-header-language" />
+
         <HomeCollectionEntry
           locale={language}
           startLabel={t('lunidex_home.cta_start')}
@@ -59,6 +62,7 @@ export default async function HomeHeader() {
           githubLabel={t('footer.resources.github')}
           githubUrl={GITHUB_REPO_URL}
           locale={language}
+          languageControl={<HomeLanguageSelect />}
         />
       </div>
     </header>

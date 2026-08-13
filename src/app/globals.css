@@ -2435,13 +2435,16 @@ body:has(.lunidex-home) .site-footer a:hover {
 .field-brand:focus-visible,
 .field-header-nav a:focus-visible,
 .field-header-cta:focus-visible,
+.field-language-select:focus-visible,
 .field-mobile-menu-trigger:focus-visible,
 .field-mobile-menu-close:focus-visible,
 .field-mobile-menu-links a:focus-visible,
 .field-primary-cta:focus-visible,
 .field-secondary-cta:focus-visible,
-.field-text-cta:focus-visible {
-  outline: 2px solid var(--field-coral);
+.field-text-cta:focus-visible,
+.field-hero-note a:focus-visible,
+.field-support-card a:focus-visible {
+  outline: 2px solid var(--field-coral-deep);
   outline-offset: 4px;
 }
 
@@ -2462,7 +2465,7 @@ body:has(.lunidex-home) .site-footer a:hover {
   align-items: center;
   gap: clamp(0.9rem, 2vw, 1.8rem);
   margin-left: auto;
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2493,15 +2496,47 @@ body:has(.lunidex-home) .site-footer a:hover {
   background: var(--field-coral);
   box-shadow: 3px 3px 0 color-mix(in oklab, var(--field-coral-deep) 28%, transparent);
   color: var(--field-ink);
-  font-size: 0.69rem;
+  font-size: 0.76rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
 }
 
+.field-language-control {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.field-language-select {
+  min-height: 2.75rem;
+  max-width: 6.5rem;
+  padding: 0 1.7rem 0 0.55rem;
+  border: 1px solid var(--field-line);
+  border-radius: 0.25rem;
+  background: var(--field-paper);
+  color: var(--field-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field-mobile-menu-links .field-language-control {
+  display: block;
+  margin: 0.35rem 0;
+}
+
+.field-mobile-menu-links .field-language-select {
+  width: 100%;
+  max-width: none;
+  min-height: 2.75rem;
+}
+
 .field-header-cta {
   flex: 0 0 auto;
+  min-width: 13rem;
   padding: 0 1rem;
 }
 
@@ -2613,7 +2648,7 @@ body:has(.lunidex-home) .site-footer a:hover {
   min-height: 2.75rem;
   padding: 0.75rem 0.7rem;
   color: var(--field-muted);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2633,88 +2668,11 @@ body:has(.lunidex-home) .site-footer a:hover {
 /* Persistent stage: one object, five authored states. */
 .home-field-world {
   position: relative;
-  min-height: 580svh;
+  min-height: 0;
   overflow: clip;
   background:
     linear-gradient(90deg, transparent calc(50% - 0.5px), var(--field-line-soft) 50%, transparent calc(50% + 0.5px)),
     radial-gradient(circle at 14% 22%, rgba(156, 191, 209, 0.16), transparent 22rem);
-}
-
-.field-chapter-nav {
-  position: sticky;
-  top: calc(5.7rem + env(safe-area-inset-top));
-  right: 0;
-  left: 0;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.8rem;
-  width: min(100%, 96rem);
-  margin: 0 auto;
-  padding: 0.25rem clamp(1.25rem, 7vw, 7rem);
-  border-block: 1px solid var(--field-line-soft);
-  background: color-mix(in oklab, var(--field-paper) 94%, transparent);
-  box-shadow: 0 0.35rem 1rem rgba(91, 61, 38, 0.06);
-  pointer-events: none;
-}
-
-.field-chapter-nav-label {
-  flex: 0 0 auto;
-  color: var(--field-coral-deep);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.field-chapter-nav-list {
-  display: flex;
-  gap: 0.35rem;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: auto;
-  scroll-padding-inline: 0.5rem;
-  scroll-snap-type: x proximity;
-  list-style: none;
-  scrollbar-width: none;
-  pointer-events: auto;
-}
-
-.field-chapter-nav-list::-webkit-scrollbar { display: none; }
-
-.field-chapter-nav a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 2.75rem;
-  padding: 0.35rem 0.6rem;
-  border: 1px solid color-mix(in oklab, var(--field-line) 82%, transparent);
-  background: color-mix(in oklab, var(--field-paper) 82%, transparent);
-  color: var(--field-muted);
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  text-transform: uppercase;
-  white-space: nowrap;
-  scroll-snap-align: start;
-  transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
-}
-
-.field-chapter-nav a > span {
-  color: var(--field-coral-deep);
-  font-size: 0.5rem;
-}
-
-.field-chapter-nav a:hover,
-.field-chapter-nav a[aria-current='step'] {
-  border-color: var(--field-coral);
-  background: var(--field-paper);
-  color: var(--field-ink);
 }
 
 .home-field-stage-wrap {
@@ -2967,18 +2925,21 @@ body:has(.lunidex-home) .site-footer a:hover {
 
 .field-layer {
   --field-layer-focus: 0;
+  --field-layer-z: 0;
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: var(--field-layer-z);
   display: grid;
   place-items: center;
   opacity: var(--field-layer-focus);
   transform: translate3d(0, calc((1 - var(--field-layer-focus)) * 1.1rem), 0) scale(calc(0.94 + var(--field-layer-focus) * 0.06));
   transform-origin: center;
+  transition: transform 180ms ease-out;
 }
 
 .field-layer-threshold {
   --field-layer-focus: 1;
+  --field-layer-z: 1;
 }
 
 .field-threshold-orbit {
@@ -3189,7 +3150,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 .field-specimen-evolution { display: block; line-height: 1.45; }
 .field-specimen-evolution strong { display: block; margin-top: 0.25rem; color: var(--field-ink); font-family: var(--font-body); font-size: 0.61rem; letter-spacing: 0; text-transform: none; }
 
-.field-team-board { padding-bottom: 0.9rem; transform: rotate(1.5deg); }
+.field-team-board { padding-bottom: 0.9rem; transform: rotate(1.5deg) scale(0.92); }
 .field-team-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.42rem; padding: 0.8rem; }
 .field-team-slot { min-width: 0; padding: 0.35rem; border: 1px solid rgba(69, 109, 129, 0.16); background: rgba(156, 191, 209, 0.1); }
 .field-team-slot small { display: block; color: var(--field-coral-deep); font-family: var(--font-mono); font-size: 0.45rem; }
@@ -3338,7 +3299,10 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .field-chapter-title .home-word-reveal-word {
-  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .field-chapter-title .sr-only {
@@ -3387,6 +3351,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .field-primary-cta {
+  min-width: 13rem;
   min-height: 3.2rem;
   padding: 0.5rem 1.2rem;
 }
@@ -3419,6 +3384,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 
 .field-text-cta {
   min-height: 2.75rem;
+  min-width: 11rem;
   margin-top: 1.8rem;
   padding-block: 0.5rem;
   color: var(--field-coral-deep);
@@ -3458,6 +3424,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 .field-support-points { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.8rem; }
 .field-support-points span { padding: 0.38rem 0.5rem; border: 1px solid var(--field-line); color: var(--field-blue-deep); font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .field-support-card-dark .field-text-cta { color: #f6c3a6; }
+.field-support-cta { margin-top: 1.6rem; }
 
 .field-faq-wrap {
   position: relative;
@@ -3479,6 +3446,10 @@ body:has(.lunidex-home) .site-footer a:hover {
 .lunidex-home .home-faq-section details { border-color: var(--field-line); background: var(--field-paper); box-shadow: 2px 2px 0 color-mix(in oklab, var(--field-paper-deep) 58%, transparent); }
 .lunidex-home .home-faq-section summary:hover { color: var(--field-coral-deep); }
 .lunidex-home .home-faq-section summary span:last-child { border-color: var(--field-line); }
+.lunidex-home .home-faq-section summary:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--field-coral-deep);
+}
 
 #faq,
 #local-first,
@@ -3513,11 +3484,6 @@ body:has(.lunidex-home) .site-footer a:hover {
   .field-chapter-threshold { order: 1; z-index: 2; }
   .home-field-stage-wrap { order: 2; }
   .field-chapter:not(.field-chapter-threshold) { order: 3; z-index: 2; }
-  .field-chapter-nav { top: calc(4.5rem + env(safe-area-inset-top)); justify-content: flex-start; gap: 0.5rem; padding-inline: 1rem; overflow: hidden; }
-  .field-chapter-nav-label { font-size: 0.5rem; }
-  .field-chapter-nav-list { gap: 0.25rem; }
-  .field-chapter-nav a { min-height: 2.75rem; padding: 0.35rem 0.55rem; font-size: 0.48rem; }
-  .field-chapter-nav a > span { font-size: 0.44rem; }
   /* Let the first terminal participate in the mobile flow after chapter 01.
      The previous negative margin made the editorial card start on top of the
      instrument, hiding its header and leaving only the lower edge visible. */
@@ -3615,21 +3581,6 @@ body:has(.lunidex-home) .site-footer a:hover {
   .field-chapter-copy { padding: 0.85rem; }
 }
 
-@media (min-width: 768px) and (max-width: 1100px) {
-  .field-chapter-nav {
-    justify-content: flex-start;
-    padding-inline: clamp(1rem, 5vw, 3rem);
-  }
-
-  .field-chapter-nav-label {
-    display: none;
-  }
-
-  .field-chapter-nav-list {
-    flex: 1 1 auto;
-  }
-}
-
 @supports (width: 1cqw) {
   .field-terminal-screen {
     min-height: min(35rem, 114cqw, calc(100svh - 3rem));
@@ -3672,7 +3623,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 /* Phones and reduced-motion users get one calm, in-flow Field Lab preview.
    Keeping this override at the end makes it win over the legacy scroll scene
    rules above while preserving the desktop composition for the default case. */
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+@media (max-width: 767px) {
   .lunidex-home .home-field-world {
     display: flex;
     flex-direction: column;
@@ -3682,10 +3633,6 @@ body:has(.lunidex-home) .site-footer a:hover {
 
   .lunidex-home .home-field-story {
     display: contents;
-  }
-
-  .lunidex-home .field-chapter-nav {
-    display: none;
   }
 
   .lunidex-home .field-chapter-threshold {
@@ -3836,12 +3783,125 @@ body:has(.lunidex-home) .site-footer a:hover {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Tablet keeps the story linear so the terminal never competes with a
+   narrow copy column. The semantic chapters remain the source of the page
+   flow; only the first terminal state is shown as a visual preview. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .lunidex-home .home-field-world {
+    min-height: 0;
+    overflow: clip;
+  }
+
+  .lunidex-home .home-field-stage-wrap {
+    position: relative;
+    top: auto;
+    height: auto;
+    margin: 0;
+    padding: calc(5.5rem + env(safe-area-inset-top)) 2rem 3rem;
+  }
+
+  .lunidex-home .field-stage {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    perspective: none;
+  }
+
+  .lunidex-home .field-stage-rail {
+    display: none;
+  }
+
+  .lunidex-home .field-terminal {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(100%, 42rem);
+    margin: 0 auto;
+    transform: rotateZ(-1deg);
+  }
+
+  .lunidex-home .field-terminal-screen {
+    min-height: min(30rem, 64vw);
+  }
+
+  .lunidex-home .field-layer {
+    display: none;
+    opacity: 0;
+    transform: none;
+  }
+
+  .lunidex-home .field-layer-threshold {
+    display: grid;
+    opacity: 1;
+  }
+
+  .lunidex-home .field-chapter,
+  .lunidex-home .field-chapter-threshold {
+    display: block;
+    min-height: 0;
+    padding: 7rem 2rem 3.5rem;
+  }
+
+  .lunidex-home .field-chapter-copy,
+  .lunidex-home .field-chapter-right .field-chapter-copy {
+    width: min(100%, 42rem);
+    max-width: none;
+    margin-inline: auto;
+    padding: 1.5rem;
+  }
+
+  .lunidex-home .field-chapter-title {
+    max-width: 100%;
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    line-height: 0.96;
+  }
+
+  .lunidex-home .field-primary-cta,
+  .lunidex-home .field-secondary-cta {
+    min-height: 3rem;
+  }
+}
+
+/* Reduced motion retains the semantic state changes,
+   but replaces interpolation with instant terminal states. */
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
+  .lunidex-home .field-layer {
+    display: none;
+    opacity: 0;
+    transform: none;
+    transition: none;
+  }
+
+  .lunidex-home .home-field-world[data-field-static][data-field-active-index='0'] .field-layer-threshold,
+  .lunidex-home .home-field-world[data-field-static][data-field-active-index='1'] .field-layer-cards,
+  .lunidex-home .home-field-world[data-field-static][data-field-active-index='2'] .field-layer-specimen,
+  .lunidex-home .home-field-world[data-field-static][data-field-active-index='3'] .field-layer-team,
+  .lunidex-home .home-field-world[data-field-static][data-field-active-index='4'] .field-layer-progress {
+    display: grid;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
   .lunidex-home .home-field-stage-wrap {
     padding-top: 2.5rem;
   }
+}
 
+@media (prefers-reduced-motion: reduce) {
   .lunidex-home .field-chapter-threshold {
     padding-top: 6.5rem;
+  }
+}
+
+/* Short desktop viewports have less room below the fixed header. Scale the
+   instrument into that remaining space before moving it down. */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .lunidex-home .field-terminal {
+    top: calc(50% + 3rem);
+  }
+
+  .lunidex-home .field-terminal-screen {
+    min-height: min(28rem, calc(100svh - 20rem));
   }
 }

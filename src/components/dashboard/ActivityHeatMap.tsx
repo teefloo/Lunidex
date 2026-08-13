@@ -160,10 +160,10 @@ export default function ActivityHeatMap() {
     return (
       <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
-        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+        <h2 id="dashboard-activity-heatmap-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
           <Grid3X3 className="w-3.5 h-3.5 text-primary" />
           {t('dashboard.activity_heatmap.title')}
-        </h3>
+        </h2>
         <div className="h-32 animate-pulse rounded-sm bg-muted/20" />
       </div>
     );
@@ -173,10 +173,10 @@ export default function ActivityHeatMap() {
     return (
       <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
-        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+        <h2 id="dashboard-activity-heatmap-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
           <Grid3X3 className="w-3.5 h-3.5 text-primary" />
           {t('dashboard.activity_heatmap.title')}
-        </h3>
+        </h2>
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="p-4 rounded-full bg-muted/50 mb-4">
             <Grid3X3 className="w-10 h-10 text-foreground/20" />
@@ -191,10 +191,10 @@ export default function ActivityHeatMap() {
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+      <h2 id="dashboard-activity-heatmap-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
         <Grid3X3 className="w-3.5 h-3.5 text-primary" />
         {t('dashboard.activity_heatmap.title')}
-      </h3>
+      </h2>
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
@@ -213,7 +213,7 @@ export default function ActivityHeatMap() {
               <p className="text-sm font-black text-foreground tabular-nums">
                 {mostActiveDay.count}
               </p>
-              <p className="text-[11px] font-medium text-foreground/40">{mostActiveDay.date}</p>
+              <p className="text-xs font-medium text-foreground/40">{mostActiveDay.date}</p>
             </>
           ) : (
             <p className="text-xl font-black text-foreground tabular-nums">-</p>

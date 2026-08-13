@@ -20,10 +20,10 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
 
-      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
+      <h2 id="dashboard-pokedex-title" className="text-xs font-black uppercase tracking-[0.2em] text-foreground/60 flex items-center gap-2">
         <Search className="w-3.5 h-3.5 text-primary" />
         {t('dashboard.pokedex.title')}
-      </h3>
+      </h2>
 
       {/* Main progress bar */}
       <div className="space-y-2">
@@ -37,14 +37,14 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
         </div>
         <div className="h-4 rounded-full bg-muted/70 overflow-hidden relative">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-primary via-teal-400 to-emerald-400 transition-all duration-1000 ease-out"
-            style={{ width: `${pokedex.caughtPercent}%` }}
+            className="h-full origin-left rounded-full bg-gradient-to-r from-primary via-teal-400 to-emerald-400 transition-transform duration-1000 ease-out"
+            style={{ transform: `scaleX(${pokedex.caughtPercent / 100})` }}
           />
           <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
             {pokedex.caughtPercent}%
           </span>
         </div>
-        <p className="text-[11px] font-semibold text-foreground/40 text-center">
+        <p className="text-xs font-semibold text-foreground/40 text-center">
           {t('dashboard.pokedex.progress', { count: pokedex.caughtCount, total: pokedex.totalPokemon })}
         </p>
       </div>
@@ -62,8 +62,8 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                 <span className="w-12 text-[11px] font-bold text-foreground/60 shrink-0">{gen.name}</span>
                 <div className="flex-1 h-2 rounded-full bg-muted/60 overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-700"
-                    style={{ width: `${percent}%` }}
+                    className="h-full origin-left rounded-full bg-gradient-to-r from-primary/80 to-primary transition-transform duration-700"
+                    style={{ transform: `scaleX(${percent / 100})` }}
                   />
                 </div>
                 <span className="w-14 text-right text-[11px] font-bold text-foreground/50 tabular-nums shrink-0">
@@ -114,7 +114,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
               <Link
                 key={p.id}
                 href={localeHref(`/pokemon/${p.name}`)}
-                className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-border/30 bg-muted/20 hover:bg-primary/10 hover:border-primary/20 transition-all group"
+                className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-border/30 bg-muted/20 hover:bg-primary/10 hover:border-primary/20 transition-[background-color,border-color,box-shadow,transform] group"
               >
                 <div className="w-6 h-6 rounded-full bg-muted/50 flex items-center justify-center">
                   <Image
@@ -148,7 +148,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
               <Link
                 key={p.id}
                 href={localeHref(`/pokemon/${p.name}`)}
-                className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-dashed border-border/40 bg-muted/10 hover:bg-primary/5 hover:border-primary/20 transition-all group"
+                className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-lg border border-dashed border-border/40 bg-muted/10 hover:bg-primary/5 hover:border-primary/20 transition-[background-color,border-color,box-shadow,transform] group"
               >
                 <div className="w-6 h-6 rounded-full bg-muted/30 flex items-center justify-center">
                   <Image
@@ -156,7 +156,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                     alt={p.name}
                     width={24}
                     height={24}
-                    className="object-contain opacity-50 group-hover:opacity-100 transition-all grayscale group-hover:grayscale-0"
+                    className="object-contain opacity-50 grayscale transition-[filter,opacity,transform] group-hover:opacity-100 group-hover:grayscale-0"
                     unoptimized
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
               </Link>
             ))}
           </div>
-          <p className="text-[11px] font-medium text-foreground/30 mt-2 text-center">
+          <p className="text-xs font-medium text-foreground/30 mt-2 text-center">
             {t('dashboard.pokedex.never_viewed_hint')}
           </p>
         </div>

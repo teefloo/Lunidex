@@ -1,5 +1,6 @@
 import { getServerT } from '@/lib/server-i18n';
 import { getLunidexHomeFaqs } from '@/lib/lunidex-home-content';
+import { HomeFaqAnchorBehavior } from './HomeFaqAnchorBehavior';
 
 export default async function HomeFaqSection() {
   const t = await getServerT();
@@ -31,6 +32,7 @@ export default async function HomeFaqSection() {
           {faqs.map((faq, index) => (
             <details
               key={index}
+              id={['faq-account', 'faq-storage', 'faq-track', 'faq-team'][index]}
               className="group section-frame overflow-hidden [&_summary::-webkit-details-marker]:hidden"
             >
               <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 md:p-6 font-bold text-base md:text-lg select-none hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
@@ -49,6 +51,7 @@ export default async function HomeFaqSection() {
           ))}
         </div>
       </div>
+      <HomeFaqAnchorBehavior />
     </section>
   );
 }
