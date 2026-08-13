@@ -93,9 +93,13 @@ function getResetRedirectTo(): string | undefined {
   return `${window.location.origin}${prefix}/auth/reset-password`;
 }
 
-function isAuthSensitivePath(): boolean {
-  if (typeof window === 'undefined') return false;
-  return /\/(?:dashboard|favorites|friends|team|tcg\/(?:collection|wishlist))(?:\/|$)/.test(window.location.pathname);
+export function isAuthSensitivePath(pathname: string): boolean {
+  const segments = pathname.split('/').filter(Boolean);
+  const pathWithoutLocale = isSupportedLanguage(segments[0] ?? '')
+    ? `/${segments.slice(1).join('/')}`
+    : pathname;
+
+  return /^\/(?:dashboard|favorites|friends|team|tcg\/(?:collection|wishlist))(?:\/|$)/.test(pathWithoutLocale);
 }
 
 function DisabledAuthProvider({ children }: { children: ReactNode }) {
@@ -147,7 +151,7 @@ function DeferredAuthProvider({
   }, [onLoaded]);
 
   useEffect(() => {
-    if (isAuthSensitivePath()) void loadClient();
+    if (typeof window !== 'undefined' && isAuthSensitivePath(window.location.pathname)) void loadClient();
   }, [loadClient]);
 
   const redirectTo = getRedirectTo();
