@@ -818,6 +818,7 @@ export default {
     },
     common: {
       home: 'Home',
+      skip_to_content: 'Skip to main content',
       prev: 'Previous',
       next: 'Next',
       finish: 'Finish',

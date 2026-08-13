@@ -800,6 +800,7 @@ export default {
     },
     common: {
       home: 'ホーム',
+      skip_to_content: 'メインコンテンツへ移動',
       prev: '前へ',
       next: '次へ',
       finish: '終了',

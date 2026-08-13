@@ -3,6 +3,8 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
+import { HomeCollectionEntry } from './HomeCollectionEntry';
+import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
 
 export default async function HomeHeader() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
@@ -12,6 +14,7 @@ export default async function HomeHeader() {
     { href: '/team', label: t('nav.team') },
   ];
   const menuLabel = t('header.open_menu');
+  const closeLabel = t('common.close', { defaultValue: 'Close' });
 
   return (
     <header className="field-header" data-field-header>
@@ -39,32 +42,24 @@ export default async function HomeHeader() {
           </a>
         </nav>
 
-        <Link
-          href={localeHref('/tcg/collection', language)}
+        <HomeCollectionEntry
+          locale={language}
+          startLabel={t('lunidex_home.cta_start')}
+          resumeLabel={t('lunidex_home.cta_resume')}
           className="field-header-cta"
-        >
-          {t('lunidex_archive.open_lunidex')}
-        </Link>
+        />
 
-        <details className="field-header-menu">
-          <summary title={menuLabel} aria-label={menuLabel}>
-            <span aria-hidden="true">01</span>
-            <span>{menuLabel}</span>
-          </summary>
-          <nav>
-            {links.map((link) => (
-              <Link key={link.href} href={localeHref(link.href, language)}>
-                {link.label}
-              </Link>
-            ))}
-            <Link href={localeHref('/tcg/collection', language)}>
-              {t('lunidex_archive.open_lunidex')}
-            </Link>
-            <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">
-              {t('footer.resources.github')}
-            </a>
-          </nav>
-        </details>
+        <HomeHeaderMobileMenu
+          links={links.map((link) => ({ ...link, href: localeHref(link.href, language) }))}
+          menuLabel={menuLabel}
+          navigationLabel={t('header.navigation', { defaultValue: 'Primary navigation' })}
+          closeLabel={closeLabel}
+          collectionStartLabel={t('lunidex_home.cta_start')}
+          collectionResumeLabel={t('lunidex_home.cta_resume')}
+          githubLabel={t('footer.resources.github')}
+          githubUrl={GITHUB_REPO_URL}
+          locale={language}
+        />
       </div>
     </header>
   );

@@ -7,7 +7,7 @@ interface HomeFieldLabStageCopy {
   indexLabel: string;
   indexContextLabel: string;
   labLabel: string;
-  onlineLabel: string;
+  localLabel: string;
   specimenLabel: string;
   statsLabel: string;
   evolutionLabel: string;
@@ -24,7 +24,6 @@ interface HomeFieldLabStageCopy {
   ownedLabel: string;
   missingLabel: string;
   wishlistLabel: string;
-  connectedLabel: string;
   scrollLabel: string;
   demoLabel: string;
   electricLabel: string;
@@ -93,7 +92,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
           </div>
           <div className="field-terminal-header-meta">
             <span className="field-terminal-demo">{copy.demoLabel}</span>
-            <span className="field-terminal-status"><i /> {copy.onlineLabel}</span>
+            <span className="field-terminal-status"><i /> {copy.localLabel}</span>
           </div>
         </div>
 
@@ -158,7 +157,7 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
                 {TEAM_PREVIEW.map((pokemon, index) => (
                   <div className="field-team-slot" key={pokemon.id}>
                     <small>0{index + 1}</small>
-                    <Image src={artworkUrl(pokemon.id)} alt="" width={150} height={150} sizes="6rem" />
+                    <Image src={artworkUrl(pokemon.id)} alt="" width={150} height={150} sizes="(max-width: 767px) 18vw, 10rem" />
                     <strong>{pokemon.name}</strong>
                     <span className={`field-type-pill field-type-${pokemon.type}`}>{copy[TYPE_LABELS[pokemon.type]]}</span>
                   </div>
@@ -199,24 +198,11 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
             </div>
           </div>
 
-          <div className="field-layer field-layer-connected" data-field-layer-index="5">
-            <div className="field-connected-board">
-              <div className="field-connected-core"><span>LUNIDEX</span><strong>∞</strong><small>{copy.connectedLabel}</small></div>
-              <div className="field-connected-node field-connected-node-pokedex"><i /><span>{copy.specimenLabel}</span><b>1025</b></div>
-              <div className="field-connected-node field-connected-node-team"><i /><span>{copy.teamLabel}</span><b>06 / 06</b></div>
-              <div className="field-connected-node field-connected-node-progress"><i /><span>{copy.progressLabel}</span><b>742 / 1025</b></div>
-              <div className="field-connected-node field-connected-node-cards"><i /><span>{copy.cardsLabel}</span><b>68%</b></div>
-              <div className="field-connected-line field-connected-line-one" />
-              <div className="field-connected-line field-connected-line-two" />
-              <div className="field-connected-line field-connected-line-three" />
-              <div className="field-connected-line field-connected-line-four" />
-            </div>
-          </div>
         </div>
 
         <div className="field-terminal-footer">
           <span>{copy.scrollLabel}</span>
-          <span>LOC / 45.7°N 4.8°E</span>
+          <span>{copy.indexContextLabel}</span>
         </div>
       </div>
     </div>

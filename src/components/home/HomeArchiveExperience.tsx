@@ -16,7 +16,7 @@ interface FieldChapterProps {
   chapterLabel: string;
   title: string;
   body: string;
-  proof: string[];
+  proof?: string[];
   action?: ReactNode;
   note?: ReactNode;
   align?: 'left' | 'right';
@@ -59,14 +59,16 @@ function FieldChapter({
         <p className="field-chapter-body">{body}</p>
         {action && <div className="field-chapter-action">{action}</div>}
         {note}
-        <ul className="field-proof-list">
-          {proof.map((item) => (
-            <li key={item}>
-              <span aria-hidden="true">+</span>
-              {item}
-            </li>
-          ))}
-        </ul>
+        {proof && proof.length > 0 && (
+          <ul className="field-proof-list">
+            {proof.map((item) => (
+              <li key={item}>
+                <span aria-hidden="true">+</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );
@@ -79,7 +81,7 @@ export async function HomeArchiveExperience() {
     indexLabel: t('lunidex_archive.hero_eyebrow'),
     indexContextLabel: t('lunidex_archive.field_index_context'),
     labLabel: t('lunidex_archive.field_lab'),
-    onlineLabel: t('lunidex_archive.field_online'),
+    localLabel: t('lunidex_archive.field_local'),
     specimenLabel: t('lunidex_archive.pokedex_eyebrow'),
     statsLabel: t('detail.stats'),
     evolutionLabel: t('detail.evolution'),
@@ -96,7 +98,6 @@ export async function HomeArchiveExperience() {
     ownedLabel: t('lunidex_home.preview_owned_eyebrow'),
     missingLabel: t('lunidex_home.steps_three_title'),
     wishlistLabel: t('tcg.wishlist_title'),
-    connectedLabel: t('lunidex_archive.final_eyebrow'),
     scrollLabel: t('lunidex_archive.field_scroll'),
     demoLabel: t('lunidex_archive.field_demo_label'),
     electricLabel: t('types.electric'),
@@ -112,9 +113,8 @@ export async function HomeArchiveExperience() {
     { id: 'threshold', label: t('lunidex_archive.hero_eyebrow') },
     { id: 'specimen', label: t('lunidex_archive.pokedex_eyebrow') },
     { id: 'team', label: t('lunidex_archive.team_eyebrow') },
-    { id: 'progress', label: t('lunidex_home.steps_eyebrow') },
-    { id: 'cards', label: t('lunidex_home.preview_eyebrow') },
-    { id: 'connected', label: t('lunidex_archive.final_eyebrow') },
+    { id: 'progress', label: t('dashboard.title') },
+    { id: 'cards', label: t('tcg.nav_collection') },
   ];
 
   return (
@@ -131,21 +131,20 @@ export async function HomeArchiveExperience() {
             index="01"
             chapterIndex={0}
             chapterLabel={t('lunidex_archive.hero_eyebrow')}
-            title={t('lunidex_archive.hero_title')}
+            title={t('lunidex_home.hero_title')}
             body={t('lunidex_home.hero_body')}
             headingLevel="h1"
-            proof={[t('lunidex_home.no_account'), t('pokedex.title'), t('tcg.nav_collection')]}
             action={(
               <div className="field-hero-actions">
                 <HomeCollectionEntry
                   locale={language}
-                  startLabel={t('lunidex_archive.hero_cta_primary')}
+                  startLabel={t('lunidex_home.cta_start')}
                   resumeLabel={t('lunidex_home.cta_resume')}
                   className="field-primary-cta"
                 />
-                <Link href="#specimen" className="field-secondary-cta">
+                <Link href={localeHref('/pokedex', language)} className="field-secondary-cta">
                   {t('lunidex_home.cta_pokedex')}
-                  <span aria-hidden="true">↓</span>
+                  <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             )}
@@ -164,7 +163,7 @@ export async function HomeArchiveExperience() {
             chapterLabel={t('lunidex_archive.pokedex_eyebrow')}
             title={t('lunidex_archive.pokedex_title')}
             body={t('lunidex_home.tools_pokedex_body')}
-            proof={[t('pokedex.title'), t('detail.stats'), t('detail.evolution')]}
+            proof={[t('detail.stats'), t('detail.evolution')]}
             align="right"
             action={(
               <Link href={localeHref('/pokedex', language)} className="field-text-cta">
@@ -181,7 +180,7 @@ export async function HomeArchiveExperience() {
             chapterLabel={t('lunidex_archive.team_eyebrow')}
             title={t('lunidex_archive.team_title')}
             body={t('lunidex_home.tools_team_body')}
-            proof={[t('lunidex_home.tools_team_title'), t('types_page.type_chart'), t('competitive.title')]}
+            proof={[t('types_page.type_chart'), t('competitive.title')]}
             action={(
               <Link href={localeHref('/team', language)} className="field-text-cta">
                 {t('lunidex_home.tools_team_title')}
@@ -194,10 +193,10 @@ export async function HomeArchiveExperience() {
             id="progress"
             index="04"
             chapterIndex={3}
-            chapterLabel={t('lunidex_home.steps_eyebrow')}
-            title={t('lunidex_home.steps_title')}
-            body={t('lunidex_home.trust_body')}
-            proof={[t('lunidex_home.steps_three_title'), t('lunidex_home.no_account'), t('lunidex_home.trust_title')]}
+            chapterLabel={t('dashboard.title')}
+            title={t('lunidex_archive.field_progress_title')}
+            body={t('lunidex_archive.field_progress_body')}
+            proof={[t('lunidex_archive.field_caught'), t('lunidex_archive.field_favorites'), t('lunidex_archive.field_badges')]}
             align="right"
             action={(
               <Link href={localeHref('/dashboard', language)} className="field-text-cta">
@@ -214,39 +213,17 @@ export async function HomeArchiveExperience() {
             chapterLabel={t('lunidex_home.preview_eyebrow')}
             title={t('lunidex_home.preview_title')}
             body={t('lunidex_home.preview_body')}
-            proof={[t('lunidex_home.preview_owned_eyebrow'), t('lunidex_home.preview_note'), t('lunidex_home.steps_three_title')]}
+            proof={[t('lunidex_home.preview_owned_eyebrow'), t('lunidex_home.steps_three_title'), t('tcg.wishlist_title')]}
             action={(
-              <Link href={localeHref('/tcg/collection', language)} className="field-text-cta">
-                {t('tcg.nav_collection')}
-                <span aria-hidden="true">↗</span>
-              </Link>
+              <HomeCollectionEntry
+                locale={language}
+                startLabel={t('lunidex_home.cta_start')}
+                resumeLabel={t('lunidex_home.cta_resume')}
+                className="field-text-cta"
+              />
             )}
           />
 
-          <FieldChapter
-            id="connected"
-            index="06"
-            chapterIndex={5}
-            chapterLabel={t('lunidex_archive.final_eyebrow')}
-            title={t('lunidex_archive.final_title')}
-            body={t('lunidex_archive.final_body')}
-            proof={[t('about.opensource_title'), t('lunidex_home.no_account'), t('footer.brand.mission')]}
-            align="right"
-            action={(
-              <div className="field-connected-actions">
-                <HomeCollectionEntry
-                  locale={language}
-                  startLabel={t('lunidex_archive.open_lunidex')}
-                  resumeLabel={t('lunidex_home.cta_resume')}
-                  className="field-primary-cta"
-                />
-                <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="field-secondary-cta">
-                  {t('footer.resources.github')}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            )}
-          />
         </HomeFieldWorld>
 
         <section className="field-support-section" aria-labelledby="field-support-title">
@@ -261,6 +238,12 @@ export async function HomeArchiveExperience() {
               <h3>{t('lunidex_home.no_account')}</h3>
               <p>{t('lunidex_home.start_without_account')}</p>
               <div className="field-support-points"><span>{t('lunidex_home.preview_owned_eyebrow')}</span><span>{t('lunidex_home.tools_team_title')}</span><span>{t('lunidex_home.steps_three_title')}</span></div>
+              <HomeCollectionEntry
+                locale={language}
+                startLabel={t('lunidex_home.cta_start')}
+                resumeLabel={t('lunidex_home.cta_resume')}
+                className="field-support-cta field-primary-cta"
+              />
             </article>
             <article id="open-source" className="field-support-card field-support-card-dark">
               <span className="field-support-index">{t('lunidex_archive.field_open')} / 02</span>

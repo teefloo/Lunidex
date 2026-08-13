@@ -800,6 +800,7 @@ export default {
     },
     common: {
       home: '홈',
+      skip_to_content: '주요 콘텐츠로 이동',
       prev: '이전',
       next: '다음',
       finish: '완료',

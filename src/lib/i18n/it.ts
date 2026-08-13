@@ -800,6 +800,7 @@ export default {
     },
     common: {
       home: 'Home',
+      skip_to_content: 'Vai al contenuto principale',
       prev: 'Precedente',
       next: 'Successivo',
       finish: 'Fine',

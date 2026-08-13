@@ -813,6 +813,7 @@ export default {
     },
     common: {
       home: 'Inicio',
+      skip_to_content: 'Ir al contenido principal',
       prev: 'Anterior',
       next: 'Siguiente',
       finish: 'Finalizar',

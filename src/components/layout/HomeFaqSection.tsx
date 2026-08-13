@@ -33,7 +33,7 @@ export default async function HomeFaqSection() {
               key={index}
               className="group section-frame overflow-hidden [&_summary::-webkit-details-marker]:hidden"
             >
-              <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 md:p-6 font-bold text-base md:text-lg select-none hover:text-primary transition-colors">
+              <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 md:p-6 font-bold text-base md:text-lg select-none hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                 <span className="flex-1">{faq.question}</span>
                 <span
                   aria-hidden="true"

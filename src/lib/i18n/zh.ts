@@ -800,6 +800,7 @@ export default {
     },
     common: {
       prev: '上一个',
+      skip_to_content: '跳转到主要内容',
       next: '下一个',
       finish: '完成',
       back: '返回',

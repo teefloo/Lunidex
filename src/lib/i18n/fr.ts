@@ -998,6 +998,7 @@ export default {
     },
     common: {
       home: 'Accueil',
+      skip_to_content: 'Aller au contenu principal',
       prev: 'Précédent',
       next: 'Suivant',
       finish: 'Terminer',

@@ -149,6 +149,7 @@ export default async function RootLayout({
 }>) {
   await connection();
   const lang = await getServerLanguage();
+  const t = await getServerT();
   const baseUrl = SITE_URL;
 
   const jsonLd = [
@@ -192,11 +193,11 @@ export default async function RootLayout({
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:font-bold"
         >
-          Skip to main content
+          {t('common.skip_to_content')}
         </a>
          <Providers>
            <AppContent>
-             <div id="main-content">
+             <div id="main-content" tabIndex={-1}>
                {children}
              </div>
              <SiteFooter />
