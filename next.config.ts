@@ -69,7 +69,10 @@ const withPWA = withPWAInit({
         urlPattern: /\/_next\/static.+\.js$/i,
         handler: "CacheFirst",
         options: {
-          cacheName: "next-static-js",
+          // Bump the cache namespace when the app shell changes so a service
+          // worker upgraded after a deployment cannot reuse chunks from an
+          // older HTML document.
+          cacheName: "next-static-js-v2",
           expiration: {
             maxEntries: 100,
             maxAgeSeconds: 31536000,
@@ -80,7 +83,7 @@ const withPWA = withPWAInit({
         urlPattern: /\/_next\/static.+\.css$/i,
         handler: "CacheFirst",
         options: {
-          cacheName: "next-static-css",
+          cacheName: "next-static-css-v2",
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 31536000,
@@ -99,7 +102,7 @@ const withPWA = withPWAInit({
         },
         handler: "NetworkFirst",
         options: {
-          cacheName: "pages",
+          cacheName: "pages-v2",
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 86400,
@@ -253,6 +256,23 @@ const nextConfig: NextConfig = {
         // Apply security headers to all routes
         source: '/(.*)',
         headers: securityHeaders,
+      },
+      {
+        // A service worker must revalidate on every update check. Otherwise a
+        // browser can keep an older worker that still points at removed chunk
+        // hashes after a deployment.
+        source: '/sw.js',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        // The worker extension is imported by sw.js and should follow the same
+        // update policy when its notification behavior changes.
+        source: '/push-worker.js',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
+        ],
       },
       {
         // Reset links carry a one-time credential. Never cache these pages or

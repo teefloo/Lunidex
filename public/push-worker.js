@@ -2,6 +2,23 @@
 // in next.config.ts) with Web Push support: showing incoming notifications and
 // focusing/opening the relevant tab when the user clicks one.
 
+// Runtime page and JavaScript caches intentionally use versioned names in
+// next.config.ts. Remove the previous names when an updated worker activates so
+// a cached document cannot request chunk hashes from an older deployment.
+const OBSOLETE_RUNTIME_CACHES = ['pages', 'next-static-js', 'next-static-css'];
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames
+          .filter((cacheName) => OBSOLETE_RUNTIME_CACHES.includes(cacheName))
+          .map((cacheName) => caches.delete(cacheName)),
+      ),
+    ),
+  );
+});
+
 self.addEventListener('push', (event) => {
   if (!event.data) return;
 

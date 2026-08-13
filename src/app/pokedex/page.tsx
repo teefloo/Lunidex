@@ -44,7 +44,11 @@ export default async function PokedexPage() {
   const baseUrl = SITE_URL;
   const pokedexTitle = t('pokedex.title');
 
-  await Promise.all([
+  // The page shell should remain usable when either upstream PokéAPI service
+  // is temporarily unavailable. React Query will retry these requests in the
+  // browser; a rejected server prefetch must not turn the whole route into a
+  // navigation-level error page.
+  await Promise.allSettled([
     queryClient.prefetchInfiniteQuery({
       queryKey: pokemonKeys.lists(),
       queryFn: getPokemonList,
