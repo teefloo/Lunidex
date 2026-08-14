@@ -16,7 +16,11 @@ import type {
   TCGFilterOptions,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
-import { toCollectionCard } from '@/lib/tcg-collection';
+import {
+  aggregateCollectionValue,
+  toCollectionCard,
+  type TCGCollectionValuation,
+} from '@/lib/tcg-collection';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -716,6 +720,42 @@ async function mapWithConcurrency<T, R>(
 
   return results;
 }
+
+/**
+ * Hydrate and aggregate only the cards currently owned by the user.
+ *
+ * The collection is local-first, so this intentionally uses the existing
+ * browser-side card cache instead of fetching every card in every set.
+ */
+export const fetchCollectionValue = async (
+  cardIds: string[],
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCollectionValuation> => {
+  const uniqueIds = [...new Set(cardIds.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return { groups: [], ownedCount: 0, pricedCount: 0 };
+  }
+
+  const cards = await mapWithConcurrency(
+    uniqueIds,
+    VISUAL_METADATA_CONCURRENCY,
+    async (cardId) => {
+      throwIfAborted(signal);
+      return getTCGCard(cardId, lang, signal);
+    },
+  );
+  const collectionCards = cards
+    .filter((card): card is TCGCard => Boolean(card))
+    .map(toCollectionCard);
+  const valuation = aggregateCollectionValue(collectionCards, new Set(uniqueIds));
+
+  return {
+    ...valuation,
+    // A missing detail response is still an owned card without a price.
+    ownedCount: uniqueIds.length,
+  };
+};
 
 
 /**

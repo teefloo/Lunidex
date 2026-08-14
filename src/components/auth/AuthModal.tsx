@@ -31,6 +31,7 @@ export default function AuthModal({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const tt = (key: string, fallback: string) => {
     const value = t(key, { defaultValue: fallback });
@@ -47,12 +48,15 @@ export default function AuthModal({
     event.preventDefault();
     if (busy) return;
     setBusy(true);
+    setErrorMessage(null);
 
     try {
       if (mode === 'signup') {
         const { error } = await signUp(email, password, name);
         if (error) {
-          toast.error(authErrorMessage(error));
+          const message = authErrorMessage(error);
+          setErrorMessage(message);
+          toast.error(message);
           return;
         }
         toast.success(tt('auth.check_email', 'Account created — check your inbox to confirm your email.'));
@@ -60,7 +64,9 @@ export default function AuthModal({
       } else {
         const { error } = await signIn(email, password);
         if (error) {
-          toast.error(authErrorMessage(error));
+          const message = authErrorMessage(error);
+          setErrorMessage(message);
+          toast.error(message);
           return;
         }
         toast.success(tt('auth.signed_in', 'Signed in. Syncing your collection…'));
@@ -78,9 +84,11 @@ export default function AuthModal({
     }
     const { error } = await resetPassword(email);
     if (error) {
+      setErrorMessage(error.message);
       toast.error(error.message);
       return;
     }
+    setErrorMessage(null);
     toast.success(tt('auth.reset_sent', 'Password reset email sent.'));
   };
 
@@ -176,13 +184,22 @@ export default function AuthModal({
           </Button>
         </form>
 
+        {errorMessage && (
+          <p role="alert" className="text-sm font-semibold text-destructive">
+            {errorMessage}
+          </p>
+        )}
+
         <p className="text-center text-xs text-foreground/60">
           {mode === 'signin'
             ? tt('auth.no_account', "Don't have an account?")
             : tt('auth.have_account', 'Already have an account?')}{' '}
           <button
             type="button"
-            onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+            onClick={() => {
+              setMode(mode === 'signin' ? 'signup' : 'signin');
+              setErrorMessage(null);
+            }}
             className="font-bold text-primary hover:underline"
           >
             {mode === 'signin'

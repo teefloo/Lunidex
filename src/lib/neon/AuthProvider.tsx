@@ -138,6 +138,23 @@ async function requestAuthProxy(path: string, body: Record<string, string | unde
   }
 }
 
+async function requestAuthSession(): Promise<{ data: SessionData }> {
+  const response = await fetch('/api/auth/get-session', {
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+    cache: 'no-store',
+  });
+  const result = await response.json().catch(() => null) as unknown;
+  if (!response.ok) {
+    const message = normalizeError(result)?.message
+      ?? response.statusText
+      ?? 'Authentication session request failed.';
+    throw new Error(message);
+  }
+
+  return { data: result as SessionData };
+}
+
 async function signInWithFallback(
   client: ConnectedAuthClient,
   input: SignInInput,
@@ -151,12 +168,12 @@ async function signInWithFallback(
   return requestAuthProxy('sign-in/email', input);
 }
 
-async function confirmSignedIn(client: ConnectedAuthClient): Promise<AuthErrorLike | null> {
+async function confirmSignedIn(): Promise<AuthErrorLike | null> {
   let lastError: AuthErrorLike | null = null;
   for (const delayMs of [0, 80, 240]) {
     if (delayMs > 0) await new Promise<void>((resolve) => setTimeout(resolve, delayMs));
     try {
-      const result = await client.getSession({ query: { disableCookieCache: true } });
+      const result = await requestAuthSession();
       if (result.data?.session && result.data.user) {
         notifyAuthStateChanged();
         return null;
@@ -251,7 +268,11 @@ export function isAuthSensitivePath(pathname: string): boolean {
     ? `/${segments.slice(1).join('/')}`
     : pathname;
 
-  return /^\/(?:dashboard|favorites|friends|team|tcg\/(?:collection|wishlist))(?:\/|$)/.test(pathWithoutLocale);
+  // The shared site header renders AccountMenu on every non-home page. The
+  // session must therefore be initialized there too, otherwise an existing
+  // login appears to disappear when navigating to a public route such as the
+  // Pokédex.
+  return (pathWithoutLocale || '/') !== '/';
 }
 
 function DisabledAuthProvider({ children }: { children: ReactNode }) {
@@ -350,7 +371,7 @@ function DeferredAuthProvider({
         try {
           const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
           const actionError = normalizeError(result.error);
-          return { error: actionError ?? await confirmSignedIn(client) };
+          return { error: actionError ?? await confirmSignedIn() };
         } catch (error) {
           return { error: normalizeError(error) };
         }
@@ -399,13 +420,10 @@ function DeferredAuthProvider({
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-function useClientSession(client: ConnectedAuthClient): { data: SessionData; isPending: boolean } {
-  // Do not call the optional React hook exposed by some Neon Auth SDK builds:
-  // the Next adapter can return a client without `useSession` after bundling,
-  // which would throw during render and replace the entire protected route
-  // with the browser's generic error page. The stable getSession API works in
-  // every adapter and keeps the collection usable while still refreshing
-  // promptly after returning to the tab.
+function useClientSession(): { data: SessionData; isPending: boolean } {
+  // Read through the first-party route proxy instead of calling an SDK method
+  // whose shape differs between Neon Auth browser bundles. This keeps the
+  // session cookie on the Lunidex origin and works across those bundles.
   const [state, setState] = useState<{ data: SessionData; isPending: boolean }>({
     data: null,
     isPending: true,
@@ -413,11 +431,9 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
 
   useEffect(() => {
     let active = true;
-    const refresh = async (forceNetwork = false) => {
+    const refresh = async () => {
       try {
-        const result = forceNetwork
-          ? await client.getSession({ query: { disableCookieCache: true } })
-          : await client.getSession();
+        const result = await requestAuthSession();
         if (active) setState({ data: result.data, isPending: false });
       } catch {
         if (active) setState({ data: null, isPending: false });
@@ -426,7 +442,7 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
 
     void refresh();
     const refreshOnFocus = () => void refresh();
-    const refreshOnAuthChange = () => void refresh(true);
+    const refreshOnAuthChange = () => void refresh();
     window.addEventListener('focus', refreshOnFocus);
     window.addEventListener('primedex:auth-changed', refreshOnAuthChange);
     const intervalId = window.setInterval(refreshOnFocus, 30_000);
@@ -436,13 +452,13 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
       window.removeEventListener('primedex:auth-changed', refreshOnAuthChange);
       window.clearInterval(intervalId);
     };
-  }, [client]);
+  }, []);
 
   return state;
 }
 
 function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {
-  const authState = useClientSession(client);
+  const authState = useClientSession();
   const sessionData = authState.data;
   const { session, user } = useMemo(() => {
     const mappedUser = sessionData?.user ? mapUser(sessionData.user) : null;
@@ -490,7 +506,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       try {
         const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
         const actionError = normalizeError(result.error);
-        return { error: actionError ?? await confirmSignedIn(client) };
+        return { error: actionError ?? await confirmSignedIn() };
       } catch (error) {
         return { error: normalizeError(error) };
       }

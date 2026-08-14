@@ -19,7 +19,14 @@ vi.mock('./cache', () => ({
   setCachedData: mockSetCachedData,
 }));
 
-import { getAllSets, getFilterOptions, getPokemonCards, searchCards, sortCardsByReleaseDate } from './tcg';
+import {
+  fetchCollectionValue,
+  getAllSets,
+  getFilterOptions,
+  getPokemonCards,
+  searchCards,
+  sortCardsByReleaseDate,
+} from './tcg';
 import type { TCGCard } from '@/types/tcg';
 
 function makeRawSet(id: string, name: string) {
@@ -147,6 +154,49 @@ describe('Pokémon card ordering', () => {
       'tcg-pokemon-cards-v11-en-Pikachu',
       expect.arrayContaining([expect.objectContaining({ id: 'pikachu-1' })]),
     );
+  });
+});
+
+describe('collection valuation loading', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
+  it('deduplicates owned IDs and reports priced coverage across currencies', async () => {
+    mockGet.mockImplementation(async (url: string) => {
+      const cardId = url.split('/').pop();
+      if (cardId === 'missing-1') return { data: null };
+
+      const pricing = cardId === 'usd-1'
+        ? { tcgplayer: { unit: 'USD', normal: { marketPrice: 4.25 } } }
+        : { cardmarket: { unit: 'EUR', trend: 2.5 } };
+
+      return {
+        data: {
+          id: cardId,
+          localId: '1',
+          name: cardId,
+          image: `https://example.test/${cardId}.png`,
+          pricing,
+        },
+      };
+    });
+
+    await expect(
+      fetchCollectionValue(['eur-1', 'usd-1', 'eur-1', 'missing-1'], 'en'),
+    ).resolves.toEqual({
+      groups: [
+        { currency: 'USD', total: 4.25, count: 1 },
+        { currency: 'EUR', total: 2.5, count: 1 },
+      ],
+      ownedCount: 3,
+      pricedCount: 2,
+    });
+    expect(mockGet).toHaveBeenCalledTimes(3);
   });
 });
 

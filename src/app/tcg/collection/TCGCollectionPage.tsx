@@ -44,8 +44,8 @@ export function TCGCollectionPage() {
             <span className="sr-only">{t('tcg.collection_loading')}</span>
             <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
               <div className="h-3 w-32 animate-pulse rounded-sm bg-primary/20" />
-              <div className="mt-5 grid gap-4 sm:grid-cols-3">
-                {Array.from({ length: 3 }, (_, index) => (
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 4 }, (_, index) => (
                   <div key={index} className="space-y-2">
                     <div className="h-2 w-20 animate-pulse rounded-sm bg-foreground/10" />
                     <div className="h-8 w-16 animate-pulse rounded-sm bg-foreground/10" />

@@ -9,6 +9,16 @@ const mockStore = vi.hoisted(() => ({
   toggleTCGActiveSet: vi.fn(),
 }));
 
+const collectionValueQuery = vi.hoisted(() => ({
+  data: {
+    groups: [{ currency: 'EUR', total: 2.5, count: 1 }],
+    ownedCount: 1,
+    pricedCount: 1,
+  },
+  isPending: false,
+  isError: false,
+}));
+
 const translations = vi.hoisted(() => ({
   'tcg.collection_search_sets': 'Search sets...',
   'tcg.collection_sort_label': 'Sort sets',
@@ -26,6 +36,11 @@ const translations = vi.hoisted(() => ({
   'tcg.collection_recap_title': 'Collection Overview',
   'tcg.collection_total_owned': 'Total Owned',
   'tcg.collection_sets_completed': 'Sets Completed',
+  'tcg.collection_value_estimate': 'My Collection Value',
+  'tcg.collection_value_coverage': '{{priced}}/{{owned}} cards priced',
+  'tcg.collection_value_unavailable': 'No pricing available',
+  'tcg.collection_value_none_owned': 'No cards owned yet',
+  'tcg.collection_loading': 'Loading collection...',
   'tcg.collection_overall_progress': 'Overall Progress',
   'tcg.collection_total_cards': 'Total Cards',
   'tcg.collection_active_sets_plural': 'active sets',
@@ -58,6 +73,14 @@ vi.mock('@/lib/i18n', () => ({
   }),
 }));
 
+vi.mock('@/lib/api/tcg', () => ({
+  fetchCollectionValue: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-query', () => ({
+  useQuery: () => collectionValueQuery,
+}));
+
 const sets: TCGSet[] = [
   {
     id: 'sv-base',
@@ -72,6 +95,13 @@ const sets: TCGSet[] = [
 ];
 
 describe('TCGCollectionOverview responsive UX', () => {
+  it('shows the total value and pricing coverage for the full collection', () => {
+    render(<TCGCollectionOverview sets={sets} />);
+
+    expect(screen.getByText('€2.50')).toBeInTheDocument();
+    expect(screen.getByText('1/1 cards priced')).toBeInTheDocument();
+  });
+
   it('keeps set navigation and active-set actions as separate controls', () => {
     render(<TCGCollectionOverview sets={sets} />);
 

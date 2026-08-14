@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import { Search, Sparkles, ChevronDown, Trophy } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
@@ -11,7 +12,9 @@ import { useTranslation } from '@/lib/i18n';
 import {
   getSetCompletionFromSet,
   computeCollectionStatsFromSets,
+  type TCGCollectionValueGroup,
 } from '@/lib/tcg-collection';
+import { fetchCollectionValue } from '@/lib/api/tcg';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGActiveSetInsights } from './TCGActiveSetInsights';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
@@ -22,12 +25,25 @@ interface TCGCollectionOverviewProps {
   resolvedLang?: string;
 }
 
+function formatCurrency(group: TCGCollectionValueGroup, locale: string): string {
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: group.currency,
+      maximumFractionDigits: 2,
+    }).format(group.total);
+  } catch {
+    return `${group.total.toFixed(2)} ${group.currency}`;
+  }
+}
+
 export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollectionOverviewProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
   const ownedIds = useMemo(() => new Set(ownedList), [ownedList]);
+  const ownedCardIds = useMemo(() => Array.from(ownedIds).sort(), [ownedIds]);
   const tcgActiveSets = usePrimeDexStore((s) => s.tcgActiveSets);
   const toggleTCGActiveSet = usePrimeDexStore((s) => s.toggleTCGActiveSet);
   const [filterInProgress, setFilterInProgress] = useState(false);
@@ -38,6 +54,13 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
   const setListId = useId();
 
   const stats = useMemo(() => computeCollectionStatsFromSets(sets, ownedIds), [sets, ownedIds]);
+
+  const collectionValueQuery = useQuery({
+    queryKey: ['tcg', 'collection-value', resolvedLang, ownedCardIds],
+    queryFn: ({ signal }) => fetchCollectionValue(ownedCardIds, resolvedLang, signal),
+    staleTime: 60 * 60 * 1000,
+    enabled: mounted && ownedCardIds.length > 0,
+  });
 
   const activeSets = useMemo(
     () => sets.filter((set) => tcgActiveSets.includes(set.id)),
@@ -98,7 +121,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
             {t('tcg.collection_recap_title')}
           </h2>
         </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_total_owned')}
@@ -113,6 +136,38 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
               {stats.completeSets.length}
               <span className="text-base text-foreground/30">/{stats.totalSets}</span>
             </p>
+          </div>
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
+              {t('tcg.collection_value_estimate')}
+            </p>
+            {ownedCardIds.length === 0 ? (
+              <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                {t('tcg.collection_value_none_owned')}
+              </p>
+            ) : collectionValueQuery.isPending ? (
+              <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                {t('tcg.collection_loading')}
+              </p>
+            ) : collectionValueQuery.data?.groups.length ? (
+              <>
+                <p className="mt-1 break-words text-2xl font-black leading-none text-primary sm:text-3xl">
+                  {collectionValueQuery.data.groups
+                    .map((group) => formatCurrency(group, resolvedLang))
+                    .join(' · ')}
+                </p>
+                <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                  {t('tcg.collection_value_coverage', {
+                    priced: collectionValueQuery.data.pricedCount,
+                    owned: collectionValueQuery.data.ownedCount,
+                  })}
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                {t('tcg.collection_value_unavailable')}
+              </p>
+            )}
           </div>
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">

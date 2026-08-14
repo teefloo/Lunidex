@@ -40,14 +40,29 @@ function AuthActionProbe() {
 
 describe('AuthProvider runtime compatibility', () => {
   it('does not require the optional useSession method from the SDK client', async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => null,
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+
     render(
       <AuthProvider>
         <AuthStateProbe />
       </AuthProvider>,
     );
 
-    await waitFor(() => expect(screen.getByTestId('auth-state')).toHaveTextContent('signed-out'));
-    expect(authClient.getSession).toHaveBeenCalledTimes(1);
+    try {
+      await waitFor(() => expect(screen.getByTestId('auth-state')).toHaveTextContent('signed-out'));
+      expect(authClient.getSession).not.toHaveBeenCalled();
+      expect(fetchMock).toHaveBeenCalledWith('/api/auth/get-session', expect.objectContaining({
+        credentials: 'include',
+        cache: 'no-store',
+      }));
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it('falls back to the local auth proxy when the SDK omits nested sign-in actions', async () => {
@@ -98,6 +113,10 @@ describe('AuthProvider runtime compatibility', () => {
         'The sign-in session could not be confirmed.',
       ));
       expect(fetchMock).toHaveBeenCalledWith('/api/auth/sign-in/email', expect.objectContaining({ method: 'POST' }));
+      expect(fetchMock).toHaveBeenCalledWith('/api/auth/get-session', expect.objectContaining({
+        credentials: 'include',
+        cache: 'no-store',
+      }));
     } finally {
       Object.assign(authClient, { signIn: sdkSignIn });
       vi.unstubAllGlobals();

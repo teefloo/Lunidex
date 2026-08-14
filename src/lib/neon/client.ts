@@ -22,8 +22,8 @@ export function getNeonAuthClient(): NeonAuthClient | null {
 }
 
 /**
- * Loads the browser Neon Auth SDK only when authentication is actually needed.
- * Public pages keep the SDK out of the critical bundle and initialize it in idle time.
+ * Loads the browser Neon Auth SDK after hydration when the shared account
+ * controls are present. The import remains deferred from the critical bundle.
  */
 export async function loadNeonAuthClient(): Promise<NeonAuthClient | null> {
   if (!isNeonAuthConfigured) return null;

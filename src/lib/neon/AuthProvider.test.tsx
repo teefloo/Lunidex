@@ -9,9 +9,11 @@ describe('isAuthSensitivePath', () => {
     expect(isAuthSensitivePath('/zh/tcg/wishlist/expansions')).toBe(true);
   });
 
-  it('keeps public routes out of deferred auth loading', () => {
-    expect(isAuthSensitivePath('/fr/pokedex')).toBe(false);
-    expect(isAuthSensitivePath('/about')).toBe(false);
+  it('initializes auth on every non-home route with the shared header', () => {
+    expect(isAuthSensitivePath('/fr/pokedex')).toBe(true);
+    expect(isAuthSensitivePath('/about')).toBe(true);
+    expect(isAuthSensitivePath('/fr/about')).toBe(true);
     expect(isAuthSensitivePath('/')).toBe(false);
+    expect(isAuthSensitivePath('/fr')).toBe(false);
   });
 });
