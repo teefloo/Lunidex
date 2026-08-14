@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { usePrimeDexStore } from './primedex';
-import { onSyncAccessRequired, setSyncAccessStatus } from './sync-access';
+import { onSyncAccessRequired, onSyncAccessRetry, onSyncAccessStatusChange, retrySyncAccess, setSyncAccessStatus } from './sync-access';
 
 const initialState = usePrimeDexStore.getInitialState();
 
@@ -39,6 +39,28 @@ describe('web online-only user state', () => {
     usePrimeDexStore.getState().addFavorite(25);
 
     expect(usePrimeDexStore.getState().favorites).toEqual([25]);
+  });
+
+  it('can retry a temporarily unavailable remote session', () => {
+    const onRetry = vi.fn();
+    const unsubscribe = onSyncAccessRetry(onRetry);
+
+    retrySyncAccess();
+
+    expect(onRetry).toHaveBeenCalledOnce();
+    unsubscribe();
+  });
+
+  it('notifies subscribers when sync access changes', () => {
+    const onStatusChange = vi.fn();
+    const unsubscribe = onSyncAccessStatusChange(onStatusChange);
+
+    setSyncAccessStatus('unavailable');
+    setSyncAccessStatus('unavailable');
+
+    expect(onStatusChange).toHaveBeenCalledOnce();
+    expect(onStatusChange).toHaveBeenCalledWith('unavailable');
+    unsubscribe();
   });
 
   it('does not expose syncable state through the local persistence snapshot', () => {

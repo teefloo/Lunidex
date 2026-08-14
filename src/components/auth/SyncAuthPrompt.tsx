@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { toast } from '@/lib/toast';
 import { useTranslation } from '@/lib/i18n';
-import { getSyncAccessStatus, onSyncAccessRequired } from '@/store/sync-access';
+import { getSyncAccessStatus, onSyncAccessRequired, retrySyncAccess } from '@/store/sync-access';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { AuthModalBoundary } from './AuthModalBoundary';
 
@@ -25,14 +25,15 @@ export function SyncAuthPrompt() {
       return;
     }
     if (status === 'unavailable') {
-      toast.error(t('auth.session_unavailable', {
-        defaultValue: 'Your online data is temporarily unavailable. Please try again.',
+      retrySyncAccess();
+      toast.error(t('auth.sync_unavailable', {
+        defaultValue: 'Your account is signed in, but your saved data is temporarily unavailable. Please try again in a moment.',
       }));
       return;
     }
     if (status === 'checking' || status === 'loading') {
-      toast.error(t('auth.session_unavailable', {
-        defaultValue: 'Your online session is still loading. Please try again in a moment.',
+      toast.info(t('auth.sync_checking', {
+        defaultValue: 'Your collection is still syncing. Please try again in a moment.',
       }));
       return;
     }

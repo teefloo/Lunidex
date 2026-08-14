@@ -17,6 +17,8 @@ import type { TCGSet } from '@/types/tcg';
 import { getTcgStartSource, trackProductEvent } from '@/lib/product-measurement';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
+import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
+import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 
 const LATEST_SET_LIMIT = 12;
 
@@ -40,6 +42,7 @@ export function TCGStartPage() {
   const routeLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
   const { enabled, loading: authLoading, user } = useAuth();
+  const syncStatus = useSyncAccessStatus();
   const ownedCards = usePrimeDexStore((state) => state.tcgOwnedCards);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
@@ -90,6 +93,28 @@ export function TCGStartPage() {
         <Header />
         <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
           <SyncRequiredPanel />
+        </main>
+      </div>
+    );
+  }
+
+  if (syncStatus === 'unauthenticated') {
+    return (
+      <div className="app-page">
+        <Header />
+        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+          <SyncRequiredPanel />
+        </main>
+      </div>
+    );
+  }
+
+  if (syncStatus !== 'ready') {
+    return (
+      <div className="app-page">
+        <Header />
+        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+          <SyncStatusPanel status={syncStatus} />
         </main>
       </div>
     );

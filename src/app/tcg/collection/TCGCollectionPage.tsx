@@ -11,11 +11,14 @@ import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { useTranslation } from '@/lib/i18n';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
+import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
+import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 
 export function TCGCollectionPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
+  const syncStatus = useSyncAccessStatus();
   const language = usePrimeDexStore((s) => s.language);
   const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
@@ -32,14 +35,22 @@ export function TCGCollectionPage() {
       <Header />
       <main
         className="page-shell relative pt-24 pb-24"
-        aria-labelledby={user && !authLoading ? 'tcg-collection-title' : 'sync-required-title'}
+        aria-labelledby={authLoading
+          ? undefined
+          : user && syncStatus === 'ready'
+            ? 'tcg-collection-title'
+            : syncStatus === 'checking' || syncStatus === 'loading' || syncStatus === 'unavailable'
+              ? 'sync-status-title'
+              : 'sync-required-title'}
       >
         {authLoading ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
-        ) : !user ? (
+        ) : !user || syncStatus === 'unauthenticated' ? (
           <SyncRequiredPanel />
+        ) : syncStatus !== 'ready' ? (
+          <SyncStatusPanel status={syncStatus} />
         ) : (
           <>
             <TCGPageTabs />

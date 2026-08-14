@@ -9,6 +9,8 @@ import { usePrimeDexStore } from '@/store/primedex';
 import Header from '@/components/layout/Header';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
+import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
+import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 
 export function TCGSetAlbumPage() {
   const params = useParams();
@@ -16,6 +18,7 @@ export function TCGSetAlbumPage() {
   const setId = params.setId as string;
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
+  const syncStatus = useSyncAccessStatus();
   const language = usePrimeDexStore((s) => s.language);
   const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
@@ -44,8 +47,10 @@ export function TCGSetAlbumPage() {
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
-        ) : !user ? (
+        ) : !user || syncStatus === 'unauthenticated' ? (
           <SyncRequiredPanel />
+        ) : syncStatus !== 'ready' ? (
+          <SyncStatusPanel status={syncStatus} />
         ) : loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />

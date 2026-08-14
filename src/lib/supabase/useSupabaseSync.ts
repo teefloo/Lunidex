@@ -3,7 +3,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { toast } from '@/lib/toast';
 import { usePrimeDexStore } from '@/store/primedex';
-import { setSyncAccessStatus } from '@/store/sync-access';
+import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import {
@@ -153,6 +153,9 @@ export function useNeonSync(): void {
 
     resetSession('checking');
     const deviceId = getDeviceId();
+    const unregisterRetry = onSyncAccessRetry(() => {
+      setOnlineVersion((version) => version + 1);
+    });
 
     const push = async (): Promise<void> => {
       if (cancelled) return;
@@ -279,6 +282,7 @@ export function useNeonSync(): void {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      unregisterRetry();
       unsubscribe?.();
     };
   }, [enabled, hasHydrated, loading, onlineVersion, userId]);

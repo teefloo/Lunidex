@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { notify } from '../platform/notify';
 import { usePrimeDexStore } from '../store/primedex';
-import { setSyncAccessStatus } from '../store/sync-access';
+import { onSyncAccessRetry, setSyncAccessStatus } from '../store/sync-access';
 import { fetchAppApi } from '../neon/client';
 import { useAuth } from '../neon/AuthProvider';
 import {
@@ -87,6 +87,7 @@ export function useNeonSync(): void {
   const acceptedMetadataRef = useRef<SyncMetadata | null>(null);
   const metadataRef = useRef<SyncMetadata | null>(null);
   const applyingRemoteRef = useRef(false);
+  const [retryVersion, setRetryVersion] = useState(0);
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -142,6 +143,9 @@ export function useNeonSync(): void {
 
     resetSession('checking');
     const deviceId = getDeviceId();
+    const unregisterRetry = onSyncAccessRetry(() => {
+      setRetryVersion((version) => version + 1);
+    });
 
     const push = async (): Promise<void> => {
       if (cancelled) return;
@@ -255,10 +259,11 @@ export function useNeonSync(): void {
     void init();
     return () => {
       cancelled = true;
+      unregisterRetry();
       if (debounceRef.current) clearTimeout(debounceRef.current);
       unsubscribe?.();
     };
-  }, [enabled, hasHydrated, loading, userId]);
+  }, [enabled, hasHydrated, loading, retryVersion, userId]);
 }
 
 // Kept as a source-compatible alias for existing deep imports.
