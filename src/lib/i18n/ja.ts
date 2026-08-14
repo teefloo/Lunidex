@@ -393,7 +393,7 @@ export default {
       no_account: 'アカウントをお持ちでないですか？',
       have_account: 'すでにアカウントをお持ちですか？',
       guest: 'ゲスト',
-      signed_out: 'ログアウトしました。この端末のデータは保持されます。',
+      signed_out: 'ログアウトしました。同期済みのデータはアカウントに保存されています。',
       signed_in_label: 'ログイン中',
       signout_cta: 'ログアウト',
       password_min_length: 'パスワードは6文字以上で入力してください。',

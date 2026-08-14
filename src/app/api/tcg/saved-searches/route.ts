@@ -1,66 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { decodeTCGUserState, encodeTCGUserState, TCG_USER_STATE_COOKIE } from '@/lib/tcg-user-state';
-import { readJsonBody } from '@/lib/api/route-helpers';
-import type { TCGSavedSearch } from '@/types/tcg';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
-  const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  return NextResponse.json({ savedSearches: state.savedSearches });
-}
-
-function isValidSavedSearch(v: unknown): v is TCGSavedSearch {
-  if (typeof v !== 'object' || v === null) return false;
-  const s = v as Record<string, unknown>;
-  return (
-    typeof s.id === 'string' && s.id.length > 0 && s.id.length <= 128 &&
-    typeof s.name === 'string' && s.name.length > 0 && s.name.length <= 100 &&
-    typeof s.query === 'string' && s.query.length <= 500 &&
-    typeof s.createdAt === 'string' && s.createdAt.length <= 64 && !isNaN(Date.parse(s.createdAt))
+/**
+ * Retained as a compatibility path for older clients. Saved searches now
+ * belong to the authenticated /api/user-state snapshot; this legacy cookie
+ * endpoint must not read, write, or silently import anonymous data.
+ */
+function legacyEndpointResponse(): NextResponse {
+  return NextResponse.json(
+    { error: 'This legacy endpoint is disabled. Sign in to use account-backed TCG state.' },
+    { status: 410 },
   );
 }
 
-export async function POST(request: NextRequest) {
-  const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  const payload = await readJsonBody<{ search?: unknown }>(request);
-
-  const search = payload?.search;
-  if (!isValidSavedSearch(search)) {
-    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-  }
-
-  const nextState = {
-    ...state,
-    savedSearches: [search, ...state.savedSearches.filter((item) => item.id !== search.id)].slice(0, 20),
-  };
-
-  return persistState(nextState);
+export function GET(): NextResponse {
+  return legacyEndpointResponse();
 }
 
-export async function DELETE(request: NextRequest) {
-  const state = decodeTCGUserState(request.cookies.get(TCG_USER_STATE_COOKIE)?.value);
-  const id = request.nextUrl.searchParams.get('id');
-
-  if (!id) {
-    return NextResponse.json({ error: 'Missing id' }, { status: 400 });
-  }
-
-  const nextState = {
-    ...state,
-    savedSearches: state.savedSearches.filter((search) => search.id !== id),
-  };
-
-  return persistState(nextState);
+export function POST(): NextResponse {
+  return legacyEndpointResponse();
 }
 
-function persistState(state: ReturnType<typeof decodeTCGUserState>) {
-  const response = NextResponse.json(state);
-  response.cookies.set(TCG_USER_STATE_COOKIE, encodeTCGUserState(state), {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365,
-  });
-  return response;
+export function DELETE(): NextResponse {
+  return legacyEndpointResponse();
 }
-

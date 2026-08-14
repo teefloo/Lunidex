@@ -23,8 +23,8 @@ export default function AccountMenu() {
 
   const dashboardLabel = tt('dashboard.title', 'Dashboard');
 
-  // Keep the local-first dashboard discoverable even when cloud authentication
-  // is not configured. When Auth is available, this same slot becomes the
+  // Keep the dashboard route discoverable even when cloud authentication is
+  // not configured. When Auth is available, this same slot becomes the
   // sign-in action or the signed-in user's dashboard link below.
   if (!enabled) {
     return (

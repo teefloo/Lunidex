@@ -1,18 +1,36 @@
 import 'react-native-url-polyfill/auto';
+import { Alert } from 'react-native';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { getLocales } from 'expo-localization';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { I18nextProvider } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { usePrimeDexStore } from '@primedex/core';
-import { AuthProvider } from '@primedex/core/neon/AuthProvider';
+import { onSyncAccessRequired } from '@primedex/core';
+import { AuthProvider, useAuth } from '@primedex/core/neon/AuthProvider';
 import { useNeonSync } from '@primedex/core/neon/useNeonSync';
 import { resolveLanguage } from '@primedex/core/lib/languages';
 import i18n, { loadLanguage } from '@/i18n';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 
-/** Mirrors the local store to the signed-in user's Neon row (no-op offline). */
+/** Mirrors the authenticated session to the user's Neon row (no-op offline). */
 function NeonSyncBridge() {
   useNeonSync();
+  return null;
+}
+
+function SyncAuthNotice() {
+  const { t } = useTranslation();
+  const { enabled } = useAuth();
+
+  useEffect(() => onSyncAccessRequired(() => {
+    Alert.alert(
+      t('auth.signin_title', { defaultValue: 'Account required' }),
+      enabled
+        ? t('auth.signin_subtitle', { defaultValue: 'Sign in from the Account tab to save and sync your data.' })
+        : t('auth.session_unavailable', { defaultValue: 'Accounts are not configured on this build.' }),
+    );
+  }), [enabled, t]);
+
   return null;
 }
 
@@ -66,6 +84,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <AuthProvider>
         <ThemeProvider>
           <LocaleBridge>
+            <SyncAuthNotice />
             <NeonSyncBridge />
             {children}
           </LocaleBridge>

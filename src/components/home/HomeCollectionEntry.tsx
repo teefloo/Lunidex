@@ -25,9 +25,9 @@ export function HomeCollectionEntry({ className, locale, startLabel, resumeLabel
   const { t } = useTranslation();
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });
   const isSignedIn = Boolean(user);
-  const href = isSignedIn ? `/${locale}/dashboard` : `/${locale}${entry.path}`;
+  const href = isSignedIn ? `/${locale}/tcg/collection` : `/${locale}${entry.path}`;
   const label = isSignedIn
-    ? t('lunidex_home.cta_app', { defaultValue: 'Access the app' })
+    ? t('tcg.collection_title', { defaultValue: t('tcg.nav_collection', { defaultValue: 'Collection' }) })
     : entry.mode === 'resume' ? resumeLabel : startLabel;
 
   return (

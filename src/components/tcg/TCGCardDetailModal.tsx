@@ -25,6 +25,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
@@ -156,6 +157,10 @@ export function TCGCardDetailModal({
   };
 
   const handleWishlist = () => {
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      return;
+    }
     toggleTCGWishlist(displayCard.id);
     if (!wishlisted && !owned) onWishlistAdded?.();
   };

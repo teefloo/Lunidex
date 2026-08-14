@@ -393,7 +393,7 @@ export default {
       no_account: 'Non hai un account?',
       have_account: 'Hai già un account?',
       guest: 'Ospite',
-      signed_out: 'Disconnessione effettuata. I tuoi dati restano su questo dispositivo.',
+      signed_out: 'Disconnessione effettuata. I tuoi dati sincronizzati restano nel tuo account.',
       signed_in_label: 'Accesso effettuato',
       signout_cta: 'Esci',
       password_min_length: 'La password deve contenere almeno 6 caratteri.',

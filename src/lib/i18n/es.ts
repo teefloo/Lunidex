@@ -406,7 +406,7 @@ export default {
       no_account: '¿No tienes una cuenta?',
       have_account: '¿Ya tienes una cuenta?',
       guest: 'Invitado',
-      signed_out: 'Sesión cerrada. Tus datos permanecen en este dispositivo.',
+      signed_out: 'Sesión cerrada. Tus datos sincronizados permanecen en tu cuenta.',
       signed_in_label: 'Sesión iniciada',
       signout_cta: 'Cerrar sesión',
       password_min_length: 'Tu contraseña debe tener al menos 6 caracteres.',

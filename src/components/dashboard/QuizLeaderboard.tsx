@@ -53,7 +53,8 @@ function LeaderboardRow({ entry, isCurrentUser }: { entry: LeaderboardEntry; isC
 
 /**
  * Daily challenge leaderboard with Day / Week / All-time tabs. Renders nothing
- * when Neon is unconfigured, keeping the app local-first.
+ * when Neon is unconfigured, keeping the optional online leaderboard out of
+ * the local-only experience.
  */
 export default function QuizLeaderboard({ refreshKey = 0 }: QuizLeaderboardProps) {
   const { t } = useTranslation();

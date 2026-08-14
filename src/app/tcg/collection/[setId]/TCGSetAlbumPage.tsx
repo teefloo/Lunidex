@@ -7,12 +7,15 @@ import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import Header from '@/components/layout/Header';
+import { useAuth } from '@/lib/neon/AuthProvider';
+import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 
 export function TCGSetAlbumPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const setId = params.setId as string;
   const mounted = useMounted();
+  const { loading: authLoading, user } = useAuth();
   const language = usePrimeDexStore((s) => s.language);
   const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
   const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
@@ -21,14 +24,14 @@ export function TCGSetAlbumPage() {
     queryKey: ['tcg', 'set', setId, resolvedLang],
     queryFn: () => getSetById(setId, resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted,
+    enabled: mounted && !authLoading && Boolean(user),
   });
 
   const { data: cards, isLoading: cardsLoading } = useQuery({
     queryKey: ['tcg', 'set-cards', setId, resolvedLang],
     queryFn: () => getCardsBySet(setId, resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted,
+    enabled: mounted && !authLoading && Boolean(user),
   });
 
   const loading = setLoading || cardsLoading;
@@ -37,7 +40,13 @@ export function TCGSetAlbumPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell pt-24 pb-24 relative">
-        {loading ? (
+        {authLoading ? (
+          <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+          </div>
+        ) : !user ? (
+          <SyncRequiredPanel />
+        ) : loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>

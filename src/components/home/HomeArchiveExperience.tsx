@@ -151,8 +151,7 @@ export async function HomeArchiveExperience() {
             )}
             note={(
               <p className="field-hero-note">
-                {t('lunidex_archive.local_storage_note')}{' '}
-                <Link href="#faq-storage">{t('lunidex_archive.local_storage_note_link')}</Link>
+                {t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })}
               </p>
             )}
           />
@@ -234,14 +233,14 @@ export async function HomeArchiveExperience() {
         <section className="field-support-section" aria-labelledby="field-support-title">
           <div className="field-support-intro">
             <p className="field-eyebrow">{t('lunidex_archive.field_support_eyebrow')}</p>
-            <h2 id="field-support-title">{t('lunidex_home.trust_title')}</h2>
-            <p>{t('lunidex_home.trust_body')}</p>
+            <h2 id="field-support-title">{t('auth.signin_title', { defaultValue: 'Sign in to continue' })}</h2>
+            <p>{t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })}</p>
           </div>
           <div className="field-support-grid">
             <article id="local-first" className="field-support-card">
               <span className="field-support-index">{t('lunidex_archive.field_local')} / 01</span>
-              <h3>{t('lunidex_home.no_account')}</h3>
-              <p>{t('lunidex_home.trust_body')}</p>
+              <h3>{t('auth.signup_title', { defaultValue: 'Create your account' })}</h3>
+              <p>{t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}</p>
               <div className="field-support-points"><span>{t('lunidex_home.preview_owned_eyebrow')}</span><span>{t('lunidex_home.tools_team_title')}</span><span>{t('lunidex_home.steps_three_title')}</span></div>
               <HomeCollectionEntry
                 locale={language}

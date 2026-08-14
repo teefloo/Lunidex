@@ -724,8 +724,8 @@ async function mapWithConcurrency<T, R>(
 /**
  * Hydrate and aggregate only the cards currently owned by the user.
  *
- * The collection is local-first, so this intentionally uses the existing
- * browser-side card cache instead of fetching every card in every set.
+ * The collection is account-backed; this intentionally fetches only the
+ * currently owned card IDs instead of fetching every card in every set.
  */
 export const fetchCollectionValue = async (
   cardIds: string[],

@@ -277,6 +277,19 @@ export function reconcileSyncState(
   return { state, metadata };
 }
 
+/**
+ * Starts an authenticated session from the remote snapshot only. Deliberately
+ * does not inspect the browser's legacy or anonymous snapshot.
+ */
+export function reconcileRemoteState(
+  remote: Partial<PersistedState>,
+  remoteMetadata: unknown,
+  deviceId: string,
+): SyncReconciliation {
+  const initialState = getInitialSyncState();
+  return reconcileSyncState(initialState, remote, undefined, remoteMetadata, { deviceId });
+}
+
 /** @deprecated Call reconcileSyncState with persisted metadata instead. */
 export function mergeSyncState(
   local: PersistedState,

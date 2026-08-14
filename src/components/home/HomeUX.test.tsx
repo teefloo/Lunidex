@@ -99,15 +99,15 @@ describe('home collection entry', () => {
     expect(screen.getByRole('link')).toHaveTextContent('Reprendre');
   });
 
-  it('opens the app for a signed-in user even without local cards', () => {
+  it('opens the collection for a signed-in user even without local cards', () => {
     homeAuth.user = { id: 'user-1' };
 
     render(
       <HomeCollectionEntry locale="fr" startLabel="Commencer" resumeLabel="Reprendre" />,
     );
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/dashboard');
-    expect(screen.getByRole('link')).toHaveTextContent('Access the app');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/collection');
+    expect(screen.getByRole('link')).toHaveTextContent('Collection');
   });
 });
 

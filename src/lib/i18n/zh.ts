@@ -393,7 +393,7 @@ export default {
       no_account: '还没有账户？',
       have_account: '已有账户？',
       guest: '游客',
-      signed_out: '已退出登录。你的数据会保留在此设备上。',
+      signed_out: '已退出登录。你的同步数据仍保存在账户中。',
       signed_in_label: '已登录',
       signout_cta: '退出登录',
       password_min_length: '密码至少需要6个字符。',

@@ -54,7 +54,7 @@ export const FEATURE_LIST = [
   'Interactive type chart for all 18 Pokémon types',
   'Pokémon TCG catalog with set, rarity, type, and HP filters',
   "Who's That Pokémon? quiz with 6 game modes",
-  'Living Dex Tracker with local storage persistence',
+  'Living Dex Tracker with account-backed cloud synchronization',
   'Localized in 8 languages including Japanese, Korean, and Chinese',
   'Advanced search filtering by generation, type, BST, and egg groups',
   'Free and open-source under the MIT license',

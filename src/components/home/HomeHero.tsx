@@ -30,7 +30,9 @@ export default async function HomeHero() {
             {t('lunidex_archive.hero_cta_secondary')}
           </Link>
         </div>
-        <p className="home-hero-note">{t('lunidex_home.start_without_account', { defaultValue: 'Start without an account.' })}</p>
+        <p className="home-hero-note">
+          {t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })}
+        </p>
       </div>
     </section>
   );

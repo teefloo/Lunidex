@@ -1,5 +1,10 @@
 import type { TCGSavedSearch, TCGUserCardEntry } from '@/types/tcg';
 
+/**
+ * Legacy anonymous cookie shape retained for compatibility with old data
+ * inspection. Runtime TCG state uses the authenticated user_state snapshot.
+ */
+
 export interface TCGUserState {
   owned: TCGUserCardEntry[];
   wishlist: string[];

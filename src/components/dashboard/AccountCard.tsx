@@ -182,7 +182,7 @@ export default function AccountCard() {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success(tt('auth.signed_out', 'Signed out. Your data stays on this device.'));
+    toast.success(tt('auth.signed_out', 'Signed out. Your synced data remains in your account.'));
     router.push(localeHref('/'));
   };
 

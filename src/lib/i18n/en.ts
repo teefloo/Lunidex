@@ -410,7 +410,7 @@ export default {
       no_account: "Don't have an account?",
       have_account: 'Already have an account?',
       guest: 'Guest',
-      signed_out: 'Signed out. Your data stays on this device.',
+      signed_out: 'Signed out. Your synced data remains in your account.',
       signed_in_label: 'Signed in',
       signout_cta: 'Sign out',
       password_min_length: 'Your password must contain at least 6 characters.',

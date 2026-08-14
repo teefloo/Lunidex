@@ -15,6 +15,8 @@ import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGSet } from '@/types/tcg';
 import { getTcgStartSource, trackProductEvent } from '@/lib/product-measurement';
+import { useAuth } from '@/lib/neon/AuthProvider';
+import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 
 const LATEST_SET_LIMIT = 12;
 
@@ -37,6 +39,7 @@ export function TCGStartPage() {
   const router = useRouter();
   const routeLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
+  const { enabled, loading: authLoading, user } = useAuth();
   const ownedCards = usePrimeDexStore((state) => state.tcgOwnedCards);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
@@ -47,7 +50,7 @@ export function TCGStartPage() {
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
     queryFn: () => getAllSets(resolvedLanguage),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted,
+    enabled: mounted && !authLoading && Boolean(user),
   });
 
   const existingCollectionHref = localeHref('/tcg/collection');
@@ -70,12 +73,23 @@ export function TCGStartPage() {
     router.replace(existingCollectionHref);
   }, [existingCollectionHref, hasHydrated, mounted, ownedCards.length, router]);
 
-  if (!mounted || !hasHydrated) {
+  if (!mounted || !hasHydrated || authLoading) {
     return (
       <div className="app-page">
         <Header />
         <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24" aria-busy="true">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+        </main>
+      </div>
+    );
+  }
+
+  if (!enabled || !user) {
+    return (
+      <div className="app-page">
+        <Header />
+        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+          <SyncRequiredPanel />
         </main>
       </div>
     );
@@ -92,7 +106,7 @@ export function TCGStartPage() {
               {t('tcg.activation.resume_cta', { defaultValue: 'Resume my collection' })}
             </h1>
             <p className="mt-3 text-base leading-7 text-foreground/60">
-              {t('tcg.activation.resume_description', { defaultValue: 'Your locally saved cards are ready to continue.' })}
+              {t('auth.signup_subtitle', { defaultValue: 'Your saved cards are ready to continue.' })}
             </p>
           </section>
         </main>
@@ -111,7 +125,7 @@ export function TCGStartPage() {
               {t('tcg.activation.start_title')}
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-foreground/60">
-              {t('tcg.activation.start_description')}
+              {t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}
             </p>
 
             <label htmlFor="set-search" className="mt-7 block text-sm font-bold text-foreground/80">

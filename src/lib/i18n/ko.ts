@@ -393,7 +393,7 @@ export default {
       no_account: '계정이 없으신가요?',
       have_account: '이미 계정이 있으신가요?',
       guest: '게스트',
-      signed_out: '로그아웃했습니다. 데이터는 이 기기에 남아 있습니다.',
+      signed_out: '로그아웃했습니다. 동기화된 데이터는 계정에 남아 있습니다.',
       signed_in_label: '로그인됨',
       signout_cta: '로그아웃',
       password_min_length: '비밀번호는 6자 이상이어야 합니다.',

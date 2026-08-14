@@ -16,6 +16,7 @@ export * from './types/tcg';
 export * from './types/dashboard';
 
 export * from './store/primedex';
+export * from './store/sync-access';
 
 // Historical path retained so existing consumers keep their persisted-state contract.
 export * from './supabase/sync-state';

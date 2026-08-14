@@ -137,9 +137,8 @@ export default function AccountScreen() {
               {t('account.title', { defaultValue: 'Account' })}
             </Text>
             <Text style={{ color: palette.textMuted }}>
-              {t('account.localOnly', {
-                defaultValue:
-                  'Running locally. Your collection is saved on this device. Add Neon Auth settings to enable accounts and cloud sync.',
+              {t('auth.session_unavailable', {
+                defaultValue: 'Accounts are currently unavailable. Sign-in is required to use your synced collection.',
               })}
             </Text>
           </View>

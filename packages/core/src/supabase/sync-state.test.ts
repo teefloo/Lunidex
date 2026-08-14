@@ -4,6 +4,7 @@ import {
   buildSyncPayload,
   getInitialSyncState,
   normalizeSyncMetadata,
+  reconcileRemoteState,
   reconcileSyncState,
   SYNC_METADATA_KEY,
 } from './sync-state';
@@ -17,6 +18,12 @@ function changed(before: Snapshot, after: Snapshot, device: string) {
 }
 
 describe('shared sync reconciliation', () => {
+  it('starts an authenticated session from the remote snapshot only', () => {
+    const initial = getInitialSyncState();
+    const remote = { ...initial, favorites: [6] };
+    expect(reconcileRemoteState(remote, undefined, A).state.favorites).toEqual([6]);
+  });
+
   it('keeps offline additions after reconnecting', () => {
     const initial = getInitialSyncState();
     const local = { ...initial, favorites: [25] };
@@ -44,7 +51,7 @@ describe('shared sync reconciliation', () => {
     expect(reconcileSyncState(local, remote, changed(initial, local, A), changed(initial, remote, B), { deviceId: A }).state.favorites).toEqual([25, 6]);
   });
 
-  it('imports an anonymous collection, while account switching starts clean', () => {
+  it('merges authenticated pending changes, while account switching starts clean', () => {
     const initial = getInitialSyncState();
     const anonymous = { ...initial, favorites: [25] };
     const account = { ...initial, favorites: [6] };

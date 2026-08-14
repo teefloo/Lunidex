@@ -393,7 +393,7 @@ export default {
       no_account: 'Noch kein Konto?',
       have_account: 'Du hast bereits ein Konto?',
       guest: 'Gast',
-      signed_out: 'Abgemeldet. Deine Daten bleiben auf diesem Gerät.',
+      signed_out: 'Abgemeldet. Deine synchronisierten Daten bleiben in deinem Konto.',
       signed_in_label: 'Angemeldet',
       signout_cta: 'Abmelden',
       password_min_length: 'Dein Passwort muss mindestens 6 Zeichen enthalten.',

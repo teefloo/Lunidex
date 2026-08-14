@@ -2,9 +2,8 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { usePrimeDexStore } from '@/store/primedex';
+import { setSyncAccessStatus } from '@/store/sync-access';
 import { TCGAlbumPage } from './TCGAlbumPage';
-
-const authState = vi.hoisted(() => ({ enabled: true, user: null as { id: string } | null }));
 
 vi.mock('@/hooks/useMounted', () => ({ useMounted: () => true }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useLocaleHref: () => (path: string) => `/fr${path}` }));
@@ -14,7 +13,7 @@ vi.mock('@/lib/i18n', () => ({
       const messages: Record<string, string> = {
         'tcg.collection_owned': 'Owned', 'tcg.collection_overall_progress': 'Progress', 'tcg.search_placeholder': 'Search cards', 'tcg.collection_missing': 'Missing',
         'tcg.activation.album_title': 'Add your first card', 'tcg.activation.album_description': 'Start this set', 'tcg.activation.first_card_added': 'Card added · {{owned}} / {{total}} cards in this set', 'tcg.activation.continue_adding': 'Keep adding',
-        'tcg.activation.change_set': 'Change set', 'tcg.activation.sync_title': 'Take your collection with you', 'tcg.activation.sync_description': 'Create an account to sync.', 'tcg.activation.create_account': 'Create an account', 'tcg.activation.continue_without_account': 'Continue without an account',
+        'tcg.activation.change_set': 'Change set',
         'tcg.activation.add_card_aria': 'Add {{name}} to my collection', 'tcg.activation.remove_card_aria': 'Remove {{name}} from my collection', 'tcg.activation.view_card': 'View card',
       };
       let message = messages[key] ?? key;
@@ -23,8 +22,6 @@ vi.mock('@/lib/i18n', () => ({
     },
   }),
 }));
-vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => authState }));
-vi.mock('@/components/auth/AuthModal', () => ({ default: () => null }));
 vi.mock('next/image', () => ({ default: () => <div /> }));
 vi.mock('./TCGImageWithFallback', () => ({ TCGImageWithFallback: () => <div /> }));
 vi.mock('./TCGCardDetailModal', () => ({
@@ -40,10 +37,14 @@ const cards: TCGCard[] = [
 function resetStore(owned: string[] = []) {
   act(() => {
     usePrimeDexStore.setState({ tcgOwnedCards: owned, tcgWishlistCards: [], tcgActiveSets: [], _hasHydrated: true });
+    setSyncAccessStatus('ready');
   });
 }
 
-afterEach(() => resetStore());
+afterEach(() => {
+  resetStore();
+  setSyncAccessStatus('checking');
+});
 
 describe('TCGAlbumPage activation', () => {
   it('shows exact first-card progress without a sync prompt', () => {
@@ -56,15 +57,14 @@ describe('TCGAlbumPage activation', () => {
     expect(screen.queryByText('Take your collection with you')).not.toBeInTheDocument();
   });
 
-  it('completes activation after a second card and allows the account prompt to be dismissed', () => {
+  it('completes activation after a second card without offering local continuation', () => {
     resetStore();
     render(<TCGAlbumPage set={set} cards={cards} activation />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Add Sprigatito to my collection' }));
     fireEvent.click(screen.getByRole('button', { name: 'Add Fuecoco to my collection' }));
 
-    expect(screen.getByText('Take your collection with you')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Continue without an account' }));
+    expect(usePrimeDexStore.getState().tcgOwnedCards).toEqual(['sv01-1', 'sv01-2']);
     expect(screen.queryByText('Take your collection with you')).not.toBeInTheDocument();
   });
 
@@ -76,7 +76,7 @@ describe('TCGAlbumPage activation', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'View card' })[1]);
     fireEvent.click(screen.getByRole('button', { name: 'Add missing card to wishlist' }));
 
-    expect(screen.getByText('Take your collection with you')).toBeInTheDocument();
+    expect(screen.queryByText('Take your collection with you')).not.toBeInTheDocument();
   });
 
   it('uses localized start navigation only in activation mode', () => {

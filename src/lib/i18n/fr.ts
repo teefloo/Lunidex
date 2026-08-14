@@ -410,7 +410,7 @@ export default {
       no_account: 'Vous n’avez pas de compte ?',
       have_account: 'Vous avez déjà un compte ?',
       guest: 'Visiteur',
-      signed_out: 'Déconnexion réussie. Vos données restent sur cet appareil.',
+      signed_out: 'Déconnexion réussie. Vos données synchronisées restent dans votre compte.',
       signed_in_label: 'Connecté',
       signout_cta: 'Se déconnecter',
       password_min_length: 'Votre mot de passe doit contenir au moins 6 caractères.',

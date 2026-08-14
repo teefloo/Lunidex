@@ -4,6 +4,7 @@ import {
   buildSyncPayload,
   getInitialSyncState,
   normalizeSyncMetadata,
+  reconcileRemoteState,
   reconcileSyncState,
   SYNC_METADATA_KEY,
 } from './sync-state';
@@ -16,6 +17,14 @@ function changed(before: ReturnType<typeof getInitialSyncState>, after: ReturnTy
 }
 
 describe('synchronisation locale déterministe', () => {
+  it('démarre une session avec le snapshot distant, sans importer un état local', () => {
+    const initial = getInitialSyncState();
+    const remote = { ...initial, favorites: [6] };
+    const result = reconcileRemoteState(remote, undefined, DEVICE_A);
+
+    expect(result.state.favorites).toEqual([6]);
+  });
+
   it('conserve un ajout effectué hors ligne lors de la reconnexion', () => {
     const initial = getInitialSyncState();
     const local = { ...initial, favorites: [25] };
@@ -50,7 +59,7 @@ describe('synchronisation locale déterministe', () => {
     expect(result.state.favorites).toEqual([25, 6]);
   });
 
-  it('importe sans perte la première collection anonyme dans un compte existant', () => {
+  it('fusionne les modifications authentifiées en attente avec le compte existant', () => {
     const initial = getInitialSyncState();
     const anonymous = { ...initial, favorites: [25], tcgOwnedCards: ['sv01-1'] };
     const account = { ...initial, favorites: [6], tcgOwnedCards: ['sv01-4'] };

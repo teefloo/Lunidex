@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import type { TCGCard } from '@/types/tcg';
 import { usePrimeDexStore } from '@/store/primedex';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { useTranslation } from '@/lib/i18n';
 import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
@@ -20,6 +21,10 @@ export function TCGAlbumCard({ card, owned, showMissing = true, onView, onOwners
   const toggleOwned = usePrimeDexStore((s) => s.toggleTCGOwned);
 
   const handleOwnership = () => {
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      return;
+    }
     toggleOwned(card.id);
     onOwnershipChange?.(!owned);
   };

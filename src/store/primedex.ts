@@ -6,6 +6,7 @@ import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import type { GenTheme } from '@/lib/generation-themes';
+import { hasSyncAccess, requestSyncAccess } from './sync-access';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -27,7 +28,7 @@ const storage: StateStorage = {
         const value = await get(name);
         if (value) return value;
       } catch {
-        // A denied or corrupt IndexedDB should not block the local-first app.
+        // A denied or corrupt IndexedDB should not block the remote-backed app.
       }
     }
 
@@ -268,10 +269,9 @@ interface PrimeDexStore {
 }
 
 /**
- * Keys that make up a user's persisted snapshot. Single source of truth shared
- * by the local IndexedDB persistence (`partialize` below) and the Neon sync
- * layer (`src/lib/supabase/sync-state.ts`, retained for compatibility). Add a key here and it is both stored
- * locally and synced to the signed-in user's `user_state` row.
+ * Keys that make up the remote user snapshot. These fields are read from and
+ * written to the authenticated user's Neon `user_state` row; they are no
+ * longer persisted as an anonymous browser-first snapshot.
  */
 export const SYNCED_KEYS = [
   'favorites',
@@ -327,10 +327,32 @@ export const SYNCED_KEYS = [
 
 export type SyncedKey = (typeof SYNCED_KEYS)[number];
 export type PersistedState = Pick<PrimeDexStore, SyncedKey>;
+const SYNCED_KEY_SET = new Set<string>(SYNCED_KEYS);
+const ONLINE_STATE_STORAGE_KEY = 'primedex-online-session';
 
 export const usePrimeDexStore = create<PrimeDexStore>()(
   persist(
-    (set, get) => ({
+    (baseSet, get) => {
+      type StoreUpdate = Partial<PrimeDexStore> | PrimeDexStore;
+      const applyStoreUpdate = (
+        update: StoreUpdate | ((state: PrimeDexStore) => StoreUpdate),
+        replace: false | undefined,
+      ): void => {
+        const next = typeof update === 'function' ? update(get()) : update;
+        const changesSyncableData = Object.keys(next).some((key) => SYNCED_KEY_SET.has(key));
+        if (changesSyncableData && !hasSyncAccess()) {
+          requestSyncAccess();
+          return;
+        }
+        baseSet(next, replace);
+      };
+      const guardedSet = (
+        update: StoreUpdate | ((state: PrimeDexStore) => StoreUpdate),
+        replace?: false,
+      ): void => applyStoreUpdate(update, replace);
+      const set = guardedSet;
+
+      return ({
       favorites: [],
       addFavorite: (id) => set((state) => ({ favorites: [...state.favorites, id] })),
       removeFavorite: (id) => set((state) => ({ favorites: state.favorites.filter((fid) => fid !== id) })),
@@ -483,6 +505,10 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       tcgDecks: [],
       createTCGDeck: (name) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return '';
+        }
         const id = `deck-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         set((state) => ({
           tcgDecks: [
@@ -531,6 +557,10 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       nuzlockeRuns: [],
       createNuzlockeRun: (name, game) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return '';
+        }
         const id = `nuzlocke-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         set((state) => ({
           nuzlockeRuns: [
@@ -710,9 +740,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
-    }),
+      });
+    },
     {
-      name: 'primedex-storage',
+      // Keep historical primedex-storage snapshots untouched. This new
+      // namespace intentionally stores no synchronizable user data.
+      name: ONLINE_STATE_STORAGE_KEY,
       storage: createJSONStorage(() => storage),
       onRehydrateStorage: () => (state) => {
         if (state) {
@@ -722,8 +755,8 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           usePrimeDexStore.setState({ _hasHydrated: true });
         }
       },
-      partialize: (state) =>
-        Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState,
+      partialize: () => ({}),
+      merge: (_persistedState, currentState) => currentState,
     }
   )
 );

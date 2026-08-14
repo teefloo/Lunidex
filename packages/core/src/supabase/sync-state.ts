@@ -127,6 +127,12 @@ export function reconcileSyncState(local: PersistedState, remote: Partial<Persis
   return { state, metadata };
 }
 
+/** Starts an authenticated session from the remote snapshot only. */
+export function reconcileRemoteState(remote: Partial<PersistedState>, remoteMetadata: unknown, deviceId: string): SyncReconciliation {
+  const initialState = getInitialSyncState();
+  return reconcileSyncState(initialState, remote, undefined, remoteMetadata, { deviceId });
+}
+
 /** @deprecated Call reconcileSyncState with persisted metadata instead. */
 export function mergeSyncState(local: PersistedState, remote: Partial<PersistedState>, options: { preserveLocalAdditions?: boolean } = {}): PersistedState {
   return reconcileSyncState(local, remote, undefined, extractSyncMetadata(remote), { deviceId: LEGACY_DEVICE_ID, preferLocalLegacyValues: options.preserveLocalAdditions }).state;

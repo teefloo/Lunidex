@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
+import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
@@ -163,6 +164,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <MotionConfigBoundary>
         <AuthProvider>
+          <SyncAuthPrompt />
           <ThemeProvider>
             <GenThemeProvider>
               <NeonSyncBridge />
