@@ -248,12 +248,40 @@ function DeferredAuthProvider({
 }
 
 function useClientSession(client: ConnectedAuthClient): { data: SessionData; isPending: boolean } {
-  // The SDK hook subscribes to its session atom. That atom is updated by the
-  // sign-in/sign-out endpoint hooks, so the header and protected UI switch
-  // immediately after an auth mutation instead of waiting for a focus event or
-  // the old polling interval.
-  const state = client.useSession();
-  return { data: state.data, isPending: state.isPending };
+  // Do not call the optional React hook exposed by some Neon Auth SDK builds:
+  // the Next adapter can return a client without `useSession` after bundling,
+  // which would throw during render and replace the entire protected route
+  // with the browser's generic error page. The stable getSession API works in
+  // every adapter and keeps the collection usable while still refreshing
+  // promptly after returning to the tab.
+  const [state, setState] = useState<{ data: SessionData; isPending: boolean }>({
+    data: null,
+    isPending: true,
+  });
+
+  useEffect(() => {
+    let active = true;
+    const refresh = async () => {
+      try {
+        const result = await client.getSession();
+        if (active) setState({ data: result.data, isPending: false });
+      } catch {
+        if (active) setState({ data: null, isPending: false });
+      }
+    };
+
+    void refresh();
+    const refreshOnFocus = () => void refresh();
+    window.addEventListener('focus', refreshOnFocus);
+    const intervalId = window.setInterval(refreshOnFocus, 30_000);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', refreshOnFocus);
+      window.clearInterval(intervalId);
+    };
+  }, [client]);
+
+  return state;
 }
 
 function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {
