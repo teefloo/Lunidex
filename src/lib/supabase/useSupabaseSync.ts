@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from 'react';
 import { toast } from '@/lib/toast';
+import { t } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
@@ -19,7 +20,9 @@ import {
   type SyncMetadata,
 } from './sync-state';
 
-const DEBOUNCE_MS = 1200;
+// Give a card click a short coalescing window, then send one write. The
+// remote version is cached between writes so the normal path is one PUT.
+const SYNC_DEBOUNCE_MS = 100;
 
 type Snapshot = ReturnType<typeof pickSyncState>;
 
@@ -39,6 +42,7 @@ interface SaveResult {
   saved: boolean;
   conflict: boolean;
   unauthenticated: boolean;
+  remote: RemoteState | null;
 }
 
 let sessionDeviceId: string | null = null;
@@ -56,10 +60,13 @@ function getDeviceId(): string {
 async function loadRemoteState(): Promise<RemoteState> {
   const response = await fetchAppApi('/api/user-state', { cache: 'no-store' });
   if (!response.ok) throw new RemoteStateError(response.status);
-  const payload = (await response.json()) as { data?: unknown; updatedAt?: unknown };
+  const payload = (await response.json()) as unknown;
+  const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
+    ? payload as { data?: unknown; updatedAt?: unknown }
+    : {};
   return {
-    data: payload.data ?? {},
-    updatedAt: typeof payload.updatedAt === 'string' ? payload.updatedAt : null,
+    data: candidate.data ?? {},
+    updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : null,
   };
 }
 
@@ -72,10 +79,20 @@ async function saveRemoteState(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data, expectedUpdatedAt }),
   });
+  const payload = await response.json().catch(() => null) as unknown;
+  const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
+    ? payload as { data?: unknown; updatedAt?: unknown }
+    : null;
   return {
     saved: response.ok,
     conflict: response.status === 409,
     unauthenticated: response.status === 401 || response.status === 403,
+    remote: (response.ok || response.status === 409) && candidate
+      ? {
+        data: candidate.data ?? data,
+        updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : expectedUpdatedAt,
+      }
+      : null,
   };
 }
 
@@ -97,6 +114,10 @@ export function useNeonSync(): void {
   const acceptedSnapshotRef = useRef<Snapshot | null>(null);
   const acceptedMetadataRef = useRef<SyncMetadata | null>(null);
   const metadataRef = useRef<SyncMetadata | null>(null);
+  const remoteSnapshotRef = useRef<unknown>({});
+  const remoteUpdatedAtRef = useRef<string | null>(null);
+  const pushInFlightRef = useRef<Promise<void> | null>(null);
+  const pushRequestedRef = useRef(false);
   const applyingRemoteRef = useRef(false);
 
   useEffect(() => {
@@ -126,14 +147,27 @@ export function useNeonSync(): void {
       acceptedSnapshotRef.current = initialState;
       acceptedMetadataRef.current = normalizeSyncMetadata(undefined, initialState);
       metadataRef.current = acceptedMetadataRef.current;
+      remoteSnapshotRef.current = initialState;
+      remoteUpdatedAtRef.current = null;
+      pushRequestedRef.current = false;
       setSyncAccessStatus(status);
     };
 
-    const rollbackPendingChange = (status: 'unauthenticated' | 'unavailable'): void => {
+    const rollbackPendingChange = (
+      status: 'unauthenticated' | 'unavailable',
+      preserveCollectionPage = false,
+    ): void => {
       const acceptedState = acceptedSnapshotRef.current ?? initialState;
       const acceptedMetadata = acceptedMetadataRef.current
         ?? normalizeSyncMetadata(undefined, acceptedState);
       applyAcceptedState(acceptedState, acceptedMetadata);
+      if (status === 'unavailable' && preserveCollectionPage && window.navigator.onLine) {
+        toast.error(t('auth.sync_unavailable', {
+          defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
+        }));
+        setSyncAccessStatus('ready');
+        return;
+      }
       setSyncAccessStatus(status);
     };
 
@@ -163,20 +197,7 @@ export function useNeonSync(): void {
       for (let attempt = 0; attempt < 3 && !cancelled; attempt += 1) {
         const local = pickSyncState();
         const localMetadata = metadataRef.current ?? normalizeSyncMetadata(undefined, local);
-        let remoteRow: RemoteState;
-        try {
-          remoteRow = await loadRemoteState();
-        } catch (error) {
-          if (!cancelled) {
-            const status = error instanceof RemoteStateError && error.status === 401
-              ? 'unauthenticated'
-              : 'unavailable';
-            rollbackPendingChange(status);
-          }
-          return;
-        }
-
-        const remoteSnapshot = remoteRow.data ?? {};
+        const remoteSnapshot = remoteSnapshotRef.current ?? {};
         const reconciled = reconcileSyncState(
           local,
           remoteSnapshot as Partial<Snapshot>,
@@ -187,13 +208,20 @@ export function useNeonSync(): void {
         const payload = buildSyncPayload(remoteSnapshot, reconciled.state, reconciled.metadata);
         let result: SaveResult;
         try {
-          result = await saveRemoteState(payload, remoteRow.updatedAt);
+          result = await saveRemoteState(payload, remoteUpdatedAtRef.current);
         } catch {
-          rollbackPendingChange('unavailable');
+          if (!cancelled) rollbackPendingChange('unavailable', true);
           return;
         }
+        if (cancelled) return;
 
         if (result.saved) {
+          const savedRemote = result.remote ?? {
+            data: payload,
+            updatedAt: remoteUpdatedAtRef.current,
+          };
+          remoteSnapshotRef.current = savedRemote.data;
+          remoteUpdatedAtRef.current = savedRemote.updatedAt;
           // Keep a newer in-memory edit made while the request was in flight;
           // it will be sent by the next scheduled push.
           const current = pickSyncState();
@@ -212,19 +240,50 @@ export function useNeonSync(): void {
         }
 
         if (!result.conflict) {
-          rollbackPendingChange('unavailable');
+          rollbackPendingChange('unavailable', true);
+          return;
+        }
+
+        if (result.remote) {
+          remoteSnapshotRef.current = result.remote.data;
+          remoteUpdatedAtRef.current = result.remote.updatedAt;
+          continue;
+        }
+
+        try {
+          const remoteRow = await loadRemoteState();
+          remoteSnapshotRef.current = remoteRow.data;
+          remoteUpdatedAtRef.current = remoteRow.updatedAt;
+        } catch {
+          rollbackPendingChange('unavailable', true);
           return;
         }
       }
 
-      if (!cancelled) rollbackPendingChange('unavailable');
+      if (!cancelled) rollbackPendingChange('unavailable', true);
+    };
+
+    const startPush = (): void => {
+      if (cancelled || pushInFlightRef.current) return;
+      pushRequestedRef.current = false;
+      const promise = push();
+      pushInFlightRef.current = promise;
+      const finish = (): void => {
+        if (pushInFlightRef.current !== promise) return;
+        pushInFlightRef.current = null;
+        if (pushRequestedRef.current && !cancelled) startPush();
+      };
+      void promise.then(finish, finish);
     };
 
     const schedulePush = (): void => {
+      pushRequestedRef.current = true;
+      if (pushInFlightRef.current) return;
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
-        void push();
-      }, DEBOUNCE_MS);
+        debounceRef.current = null;
+        startPush();
+      }, SYNC_DEBOUNCE_MS);
     };
 
     const init = async (): Promise<void> => {
@@ -243,6 +302,8 @@ export function useNeonSync(): void {
       if (cancelled) return;
 
       const remoteSnapshot = remoteRow.data ?? {};
+      remoteSnapshotRef.current = remoteSnapshot;
+      remoteUpdatedAtRef.current = remoteRow.updatedAt;
       const reconciled = reconcileRemoteState(
         remoteSnapshot as Partial<Snapshot>,
         extractSyncMetadata(remoteSnapshot),
@@ -282,6 +343,8 @@ export function useNeonSync(): void {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      pushInFlightRef.current = null;
+      pushRequestedRef.current = false;
       unregisterRetry();
       unsubscribe?.();
     };

@@ -32,7 +32,7 @@ async function getCurrentState(
   userId: string,
 ): Promise<UserStateRow | null> {
   const rows = await sql`
-    select data, updated_at
+    select data, updated_at::text as updated_at
     from public.user_state
     where user_id = ${userId}::uuid
     limit 1
@@ -85,14 +85,14 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       insert into public.user_state (user_id, data)
       values (${user.id}::uuid, ${serialized}::jsonb)
       on conflict (user_id) do nothing
-      returning data, updated_at
+      returning data, updated_at::text as updated_at
     ` as UserStateRow[]
     : await sql`
       update public.user_state
       set data = ${serialized}::jsonb
       where user_id = ${user.id}::uuid
         and updated_at = ${expectedUpdatedAt}::timestamptz
-      returning data, updated_at
+      returning data, updated_at::text as updated_at
     ` as UserStateRow[];
 
   const updated = updatedRows[0];
