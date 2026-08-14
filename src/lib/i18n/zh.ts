@@ -377,6 +377,7 @@ export default {
     auth: {
       check_email: '账户已创建 — 请检查收件箱以确认邮箱。',
       signed_in: '已登录。正在同步你的收藏…',
+      session_unavailable: '无法确认登录状态。请重试。',
       enter_email: '请先输入邮箱。',
       reset_sent: '密码重置邮件已发送。',
       signin_title: '欢迎回来',

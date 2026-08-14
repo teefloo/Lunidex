@@ -390,6 +390,7 @@ export default {
     auth: {
       check_email: 'Cuenta creada — revisa tu bandeja de entrada para confirmar tu correo.',
       signed_in: 'Sesión iniciada. Sincronizando tu colección…',
+      session_unavailable: 'No se pudo confirmar el inicio de sesión. Inténtalo de nuevo.',
       enter_email: 'Introduce primero tu correo electrónico.',
       reset_sent: 'Correo de restablecimiento enviado.',
       signin_title: 'Te damos la bienvenida',

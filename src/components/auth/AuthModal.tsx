@@ -37,6 +37,12 @@ export default function AuthModal({
     return value === key ? fallback : value;
   };
 
+  const authErrorMessage = (error: { name: string; message: string }) => (
+    error.name === 'AuthSessionUnavailable'
+      ? tt('auth.session_unavailable', 'Sign-in could not be confirmed. Please try again.')
+      : error.message
+  );
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (busy) return;
@@ -46,7 +52,7 @@ export default function AuthModal({
       if (mode === 'signup') {
         const { error } = await signUp(email, password, name);
         if (error) {
-          toast.error(error.message);
+          toast.error(authErrorMessage(error));
           return;
         }
         toast.success(tt('auth.check_email', 'Account created — check your inbox to confirm your email.'));
@@ -54,7 +60,7 @@ export default function AuthModal({
       } else {
         const { error } = await signIn(email, password);
         if (error) {
-          toast.error(error.message);
+          toast.error(authErrorMessage(error));
           return;
         }
         toast.success(tt('auth.signed_in', 'Signed in. Syncing your collection…'));

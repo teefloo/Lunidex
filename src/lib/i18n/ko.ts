@@ -377,6 +377,7 @@ export default {
     auth: {
       check_email: '계정이 생성되었습니다 — 받은 편지함을 확인하여 이메일을 인증하세요.',
       signed_in: '로그인했습니다. 컬렉션을 동기화하는 중…',
+      session_unavailable: '로그인을 확인할 수 없습니다. 다시 시도해 주세요.',
       enter_email: '먼저 이메일을 입력하세요.',
       reset_sent: '비밀번호 재설정 이메일을 보냈습니다.',
       signin_title: '다시 오신 것을 환영합니다',

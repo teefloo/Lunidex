@@ -377,6 +377,7 @@ export default {
     auth: {
       check_email: 'Account creato — controlla la posta in arrivo per confermare il tuo indirizzo e-mail.',
       signed_in: 'Accesso effettuato. Sincronizzazione della tua collezione…',
+      session_unavailable: 'Impossibile confermare l’accesso. Riprova.',
       enter_email: 'Inserisci prima il tuo indirizzo e-mail.',
       reset_sent: 'E-mail per reimpostare la password inviata.',
       signin_title: 'Bentornato',

@@ -75,4 +75,32 @@ describe('AuthProvider runtime compatibility', () => {
       vi.unstubAllGlobals();
     }
   });
+
+  it('does not report success when the sign-in response cannot be confirmed as a session', async () => {
+    const sdkSignIn = authClient.signIn;
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ user: { id: 'user-1', email: 'trainer@example.com' } }),
+    }));
+    Object.assign(authClient, { signIn: undefined });
+    vi.stubGlobal('fetch', fetchMock);
+
+    try {
+      render(
+        <AuthProvider>
+          <AuthActionProbe />
+        </AuthProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+      await waitFor(() => expect(screen.getByTestId('auth-action-result')).toHaveTextContent(
+        'The sign-in session could not be confirmed.',
+      ));
+      expect(fetchMock).toHaveBeenCalledWith('/api/auth/sign-in/email', expect.objectContaining({ method: 'POST' }));
+    } finally {
+      Object.assign(authClient, { signIn: sdkSignIn });
+      vi.unstubAllGlobals();
+    }
+  });
 });

@@ -377,6 +377,7 @@ export default {
     auth: {
       check_email: 'アカウントを作成しました — 受信トレイを確認してメールアドレスを認証してください。',
       signed_in: 'ログインしました。コレクションを同期しています…',
+      session_unavailable: 'ログインを確認できませんでした。もう一度お試しください。',
       enter_email: '先にメールアドレスを入力してください。',
       reset_sent: 'パスワード再設定メールを送信しました。',
       signin_title: 'おかえりなさい',

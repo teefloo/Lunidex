@@ -151,6 +151,27 @@ async function signInWithFallback(
   return requestAuthProxy('sign-in/email', input);
 }
 
+async function confirmSignedIn(client: ConnectedAuthClient): Promise<AuthErrorLike | null> {
+  let lastError: AuthErrorLike | null = null;
+  for (const delayMs of [0, 80, 240]) {
+    if (delayMs > 0) await new Promise<void>((resolve) => setTimeout(resolve, delayMs));
+    try {
+      const result = await client.getSession({ query: { disableCookieCache: true } });
+      if (result.data?.session && result.data.user) {
+        notifyAuthStateChanged();
+        return null;
+      }
+    } catch (error) {
+      lastError = normalizeError(error);
+    }
+  }
+
+  return lastError ?? {
+    name: 'AuthSessionUnavailable',
+    message: 'The sign-in session could not be confirmed.',
+  };
+}
+
 async function signUpWithFallback(
   client: ConnectedAuthClient,
   input: SignUpInput,
@@ -328,7 +349,8 @@ function DeferredAuthProvider({
         if (!client) return unavailable();
         try {
           const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
-          return { error: normalizeError(result.error) };
+          const actionError = normalizeError(result.error);
+          return { error: actionError ?? await confirmSignedIn(client) };
         } catch (error) {
           return { error: normalizeError(error) };
         }
@@ -391,9 +413,11 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
 
   useEffect(() => {
     let active = true;
-    const refresh = async () => {
+    const refresh = async (forceNetwork = false) => {
       try {
-        const result = await client.getSession();
+        const result = forceNetwork
+          ? await client.getSession({ query: { disableCookieCache: true } })
+          : await client.getSession();
         if (active) setState({ data: result.data, isPending: false });
       } catch {
         if (active) setState({ data: null, isPending: false });
@@ -402,13 +426,14 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
 
     void refresh();
     const refreshOnFocus = () => void refresh();
+    const refreshOnAuthChange = () => void refresh(true);
     window.addEventListener('focus', refreshOnFocus);
-    window.addEventListener('primedex:auth-changed', refreshOnFocus);
+    window.addEventListener('primedex:auth-changed', refreshOnAuthChange);
     const intervalId = window.setInterval(refreshOnFocus, 30_000);
     return () => {
       active = false;
       window.removeEventListener('focus', refreshOnFocus);
-      window.removeEventListener('primedex:auth-changed', refreshOnFocus);
+      window.removeEventListener('primedex:auth-changed', refreshOnAuthChange);
       window.clearInterval(intervalId);
     };
   }, [client]);
@@ -464,7 +489,8 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     signIn: async (email, password) => {
       try {
         const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
-        return { error: normalizeError(result.error) };
+        const actionError = normalizeError(result.error);
+        return { error: actionError ?? await confirmSignedIn(client) };
       } catch (error) {
         return { error: normalizeError(error) };
       }

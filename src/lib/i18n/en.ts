@@ -394,6 +394,7 @@ export default {
     auth: {
       check_email: 'Account created — check your inbox to confirm your email.',
       signed_in: 'Signed in. Syncing your collection…',
+      session_unavailable: 'Sign-in could not be confirmed. Please try again.',
       enter_email: 'Enter your email first.',
       reset_sent: 'Password reset email sent.',
       signin_title: 'Welcome back',
