@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const homeStore = vi.hoisted(() => ({ ownedCount: 0 }));
+const homeAuth = vi.hoisted(() => ({ user: null as unknown, loading: false }));
 
 vi.mock('next/link', () => ({
   default: ({ href, children, ...props }: { href: string; children: ReactNode; [key: string]: unknown }) => (
@@ -11,6 +12,12 @@ vi.mock('next/link', () => ({
 }));
 
 vi.mock('@/hooks/useMounted', () => ({ useMounted: () => true }));
+vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => homeAuth }));
+vi.mock('@/lib/i18n', () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key,
+  }),
+}));
 vi.mock('@/store/primedex', () => ({
   usePrimeDexStore: (selector: (state: { _hasHydrated: boolean; tcgOwnedCards: string[] }) => unknown) => (
     selector({ _hasHydrated: true, tcgOwnedCards: Array.from({ length: homeStore.ownedCount }, (_, index) => `card-${index}`) })
@@ -72,6 +79,7 @@ afterEach(() => {
   document.body.innerHTML = '';
   Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
   homeStore.ownedCount = 0;
+  homeAuth.user = null;
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -89,6 +97,17 @@ describe('home collection entry', () => {
     rerender(<HomeCollectionEntry locale="fr" startLabel="Commencer" resumeLabel="Reprendre" />);
     expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/collection');
     expect(screen.getByRole('link')).toHaveTextContent('Reprendre');
+  });
+
+  it('opens the app for a signed-in user even without local cards', () => {
+    homeAuth.user = { id: 'user-1' };
+
+    render(
+      <HomeCollectionEntry locale="fr" startLabel="Commencer" resumeLabel="Reprendre" />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/dashboard');
+    expect(screen.getByRole('link')).toHaveTextContent('Access the app');
   });
 });
 

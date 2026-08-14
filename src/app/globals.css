@@ -2590,6 +2590,15 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .field-mobile-menu-panel {
+  /* SheetContent is portaled to <body>, outside .lunidex-home. Keep the
+     compact menu's Field Lab tokens available in that new stacking context. */
+  --field-paper: #fffaf0;
+  --field-ink: #2a1a13;
+  --field-muted: #705d4f;
+  --field-coral: #d87958;
+  --field-coral-deep: #a94d35;
+  --field-line: rgba(83, 61, 43, 0.18);
+  --field-shadow: rgba(91, 61, 38, 0.16);
   position: fixed;
   top: calc(0.7rem + env(safe-area-inset-top) + 4.25rem);
   right: max(0.75rem, env(safe-area-inset-right));
@@ -2602,6 +2611,17 @@ body:has(.lunidex-home) .site-footer a:hover {
   border-radius: 0.25rem;
   background: var(--field-paper);
   box-shadow: 5px 5px 0 var(--field-shadow);
+}
+
+.field-mobile-menu-panel[data-side='right'] {
+  /* Reset Sheet's full-height drawer geometry for the home dropdown. */
+  inset: calc(0.7rem + env(safe-area-inset-top) + 4.25rem) max(0.75rem, env(safe-area-inset-right)) auto auto;
+  width: min(22rem, calc(100vw - 1.5rem));
+  height: auto;
+  min-height: 0;
+  max-height: calc(100dvh - 6rem - env(safe-area-inset-top));
+  gap: 0;
+  padding: 0;
 }
 
 .field-mobile-menu-panel-header {

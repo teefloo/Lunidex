@@ -263,16 +263,11 @@ function getResetRedirectTo(): string | undefined {
 }
 
 export function isAuthSensitivePath(pathname: string): boolean {
-  const segments = pathname.split('/').filter(Boolean);
-  const pathWithoutLocale = isSupportedLanguage(segments[0] ?? '')
-    ? `/${segments.slice(1).join('/')}`
-    : pathname;
-
-  // The shared site header renders AccountMenu on every non-home page. The
-  // session must therefore be initialized there too, otherwise an existing
-  // login appears to disappear when navigating to a public route such as the
-  // Pokédex.
-  return (pathWithoutLocale || '/') !== '/';
+  // The shared home CTA and site header both depend on the current session.
+  // Initialize auth on every route so a signed-in user is recognized from the
+  // landing page as well as from the rest of the application.
+  void pathname;
+  return true;
 }
 
 function DisabledAuthProvider({ children }: { children: ReactNode }) {
@@ -306,7 +301,7 @@ function DeferredAuthProvider({
   onLoaded: (client: ConnectedAuthClient) => void;
 }) {
   const pathname = usePathname();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
     const cachedClient = getNeonAuthClient();
     if (cachedClient) {
