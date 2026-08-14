@@ -53,11 +53,17 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 
 function normalizeError(error: unknown): AuthErrorLike | null {
   if (!error) return null;
+  if (typeof error === 'string') return { name: 'AuthError', message: error };
   if (error instanceof Error) return { name: error.name, message: error.message };
 
   if (typeof error === 'object' && error !== null && 'message' in error) {
     const message = (error as { message?: unknown }).message;
     if (typeof message === 'string') return { name: 'AuthError', message };
+  }
+
+  if (typeof error === 'object' && error !== null && 'error' in error) {
+    const nested = (error as { error?: unknown }).error;
+    if (nested && nested !== error) return normalizeError(nested);
   }
 
   return { name: 'AuthError', message: 'Authentication failed.' };
@@ -80,6 +86,130 @@ function mapUser(user: {
 
 type ConnectedAuthClient = NonNullable<ReturnType<typeof getNeonAuthClient>>;
 type SessionData = Awaited<ReturnType<ConnectedAuthClient['getSession']>>['data'];
+
+type AuthActionResponse = { error?: unknown; data?: unknown };
+type SignInInput = { email: string; password: string; callbackURL?: string };
+type SignUpInput = SignInInput & { name: string };
+type SocialSignInInput = { provider: 'google' | 'github'; callbackURL?: string };
+type ResetRequestInput = { email: string; redirectTo?: string };
+type ResetPasswordInput = { newPassword: string; token: string };
+
+/**
+ * The Neon package has shipped more than one browser adapter shape. Keep the
+ * expected Better Auth methods typed locally, then use the first-party route
+ * proxy when an adapter omits one of the nested actions at runtime.
+ */
+interface RuntimeAuthClient {
+  signUp?: { email?: (input: SignUpInput) => Promise<AuthActionResponse> };
+  signIn?: {
+    email?: (input: SignInInput) => Promise<AuthActionResponse>;
+    social?: (input: SocialSignInInput) => Promise<AuthActionResponse>;
+  };
+  signOut?: () => Promise<unknown>;
+  requestPasswordReset?: (input: ResetRequestInput) => Promise<AuthActionResponse>;
+  resetPassword?: (input: ResetPasswordInput) => Promise<AuthActionResponse>;
+}
+
+function asRuntimeAuthClient(client: ConnectedAuthClient): RuntimeAuthClient {
+  return client as unknown as RuntimeAuthClient;
+}
+
+function notifyAuthStateChanged(): void {
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('primedex:auth-changed'));
+}
+
+async function requestAuthProxy(path: string, body: Record<string, string | undefined>): Promise<AuthActionResponse> {
+  try {
+    const response = await fetch(`/api/auth/${path}`, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      credentials: 'include',
+      cache: 'no-store',
+      body: JSON.stringify(body),
+    });
+    const result = await response.json().catch(() => null) as unknown;
+    if (response.ok) {
+      notifyAuthStateChanged();
+      return { data: result, error: null };
+    }
+    return { error: result ?? { message: 'Authentication request failed.' } };
+  } catch (error) {
+    return { error };
+  }
+}
+
+async function signInWithFallback(
+  client: ConnectedAuthClient,
+  input: SignInInput,
+): Promise<AuthActionResponse> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.signIn?.email === 'function') {
+    const result = await runtimeClient.signIn.email(input);
+    if (!result.error) notifyAuthStateChanged();
+    return result;
+  }
+  return requestAuthProxy('sign-in/email', input);
+}
+
+async function signUpWithFallback(
+  client: ConnectedAuthClient,
+  input: SignUpInput,
+): Promise<AuthActionResponse> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.signUp?.email === 'function') {
+    const result = await runtimeClient.signUp.email(input);
+    if (!result.error) notifyAuthStateChanged();
+    return result;
+  }
+  return requestAuthProxy('sign-up/email', input);
+}
+
+async function socialSignInWithFallback(
+  client: ConnectedAuthClient,
+  input: SocialSignInInput,
+): Promise<AuthActionResponse> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.signIn?.social === 'function') {
+    const result = await runtimeClient.signIn.social(input);
+    if (!result.error) notifyAuthStateChanged();
+    return result;
+  }
+  return requestAuthProxy('sign-in/social', input);
+}
+
+async function requestPasswordResetWithFallback(
+  client: ConnectedAuthClient,
+  input: ResetRequestInput,
+): Promise<AuthActionResponse> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.requestPasswordReset === 'function') {
+    return runtimeClient.requestPasswordReset(input);
+  }
+  return requestAuthProxy('request-password-reset', input);
+}
+
+async function resetPasswordWithFallback(
+  client: ConnectedAuthClient,
+  input: ResetPasswordInput,
+): Promise<AuthActionResponse> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.resetPassword === 'function') {
+    const result = await runtimeClient.resetPassword(input);
+    if (!result.error) notifyAuthStateChanged();
+    return result;
+  }
+  return requestAuthProxy('reset-password', input);
+}
+
+async function signOutWithFallback(client: ConnectedAuthClient): Promise<void> {
+  const runtimeClient = asRuntimeAuthClient(client);
+  if (typeof runtimeClient.signOut === 'function') {
+    await runtimeClient.signOut();
+    notifyAuthStateChanged();
+    return;
+  }
+  await requestAuthProxy('sign-out', {});
+}
 
 function getRedirectTo(): string | undefined {
   return typeof window !== 'undefined'
@@ -182,7 +312,7 @@ function DeferredAuthProvider({
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.signUp.email({
+          const result = await signUpWithFallback(client, {
             email,
             password,
             name: normalizedName,
@@ -197,7 +327,7 @@ function DeferredAuthProvider({
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.signIn.email({ email, password, callbackURL: redirectTo });
+          const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -207,7 +337,7 @@ function DeferredAuthProvider({
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.signIn.social({ provider, callbackURL: redirectTo });
+          const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -215,13 +345,13 @@ function DeferredAuthProvider({
       },
       signOut: async () => {
         const client = await loadClient();
-        if (client) await client.signOut();
+        if (client) await signOutWithFallback(client);
       },
       resetPassword: async (email) => {
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.requestPasswordReset({ email, redirectTo: resetRedirectTo });
+          const result = await requestPasswordResetWithFallback(client, { email, redirectTo: resetRedirectTo });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -235,7 +365,7 @@ function DeferredAuthProvider({
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await client.resetPassword({ newPassword: password, token: resetToken });
+          const result = await resetPasswordWithFallback(client, { newPassword: password, token: resetToken });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -273,10 +403,12 @@ function useClientSession(client: ConnectedAuthClient): { data: SessionData; isP
     void refresh();
     const refreshOnFocus = () => void refresh();
     window.addEventListener('focus', refreshOnFocus);
+    window.addEventListener('primedex:auth-changed', refreshOnFocus);
     const intervalId = window.setInterval(refreshOnFocus, 30_000);
     return () => {
       active = false;
       window.removeEventListener('focus', refreshOnFocus);
+      window.removeEventListener('primedex:auth-changed', refreshOnFocus);
       window.clearInterval(intervalId);
     };
   }, [client]);
@@ -318,7 +450,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       }
 
       try {
-        const result = await client.signUp.email({
+        const result = await signUpWithFallback(client, {
           email,
           password,
           name: normalizedName,
@@ -331,7 +463,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     },
     signIn: async (email, password) => {
       try {
-        const result = await client.signIn.email({ email, password, callbackURL: redirectTo });
+        const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };
@@ -339,18 +471,18 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     },
     signInWithOAuth: async (provider) => {
       try {
-        const result = await client.signIn.social({ provider, callbackURL: redirectTo });
+        const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };
       }
     },
     signOut: async () => {
-      await client.signOut();
+      await signOutWithFallback(client);
     },
     resetPassword: async (email) => {
       try {
-        const result = await client.requestPasswordReset({ email, redirectTo: resetRedirectTo });
+        const result = await requestPasswordResetWithFallback(client, { email, redirectTo: resetRedirectTo });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };
@@ -362,7 +494,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       }
 
       try {
-        const result = await client.resetPassword({ newPassword: password, token: resetToken });
+        const result = await resetPasswordWithFallback(client, { newPassword: password, token: resetToken });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };

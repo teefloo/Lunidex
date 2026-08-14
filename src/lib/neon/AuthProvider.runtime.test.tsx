@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 const authClient = vi.hoisted(() => ({
@@ -24,6 +25,19 @@ function AuthStateProbe() {
   return <output data-testid="auth-state">{loading ? 'loading' : user ? 'signed-in' : 'signed-out'}</output>;
 }
 
+function AuthActionProbe() {
+  const { signIn } = useAuth();
+  const [message, setMessage] = useState('');
+  return (
+    <>
+      <button type="button" onClick={async () => setMessage((await signIn('trainer@example.com', 'password')).error?.message ?? 'ok')}>
+        Sign in
+      </button>
+      <output data-testid="auth-action-result">{message}</output>
+    </>
+  );
+}
+
 describe('AuthProvider runtime compatibility', () => {
   it('does not require the optional useSession method from the SDK client', async () => {
     render(
@@ -34,5 +48,31 @@ describe('AuthProvider runtime compatibility', () => {
 
     await waitFor(() => expect(screen.getByTestId('auth-state')).toHaveTextContent('signed-out'));
     expect(authClient.getSession).toHaveBeenCalledTimes(1);
+  });
+
+  it('falls back to the local auth proxy when the SDK omits nested sign-in actions', async () => {
+    const sdkSignIn = authClient.signIn;
+    const fetchMock = vi.fn(async () => ({
+      ok: false,
+      status: 401,
+      json: async () => ({ message: 'Invalid email or password' }),
+    }));
+    Object.assign(authClient, { signIn: undefined });
+    vi.stubGlobal('fetch', fetchMock);
+
+    try {
+      render(
+        <AuthProvider>
+          <AuthActionProbe />
+        </AuthProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+      await waitFor(() => expect(screen.getByTestId('auth-action-result')).toHaveTextContent('Invalid email or password'));
+      expect(fetchMock).toHaveBeenCalledWith('/api/auth/sign-in/email', expect.objectContaining({ method: 'POST' }));
+    } finally {
+      Object.assign(authClient, { signIn: sdkSignIn });
+      vi.unstubAllGlobals();
+    }
   });
 });
