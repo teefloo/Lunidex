@@ -3,7 +3,8 @@
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 import { usePrimeDexStore } from "@/store/primedex"
-import { useSyncExternalStore } from "react"
+import { markToasterReady } from "@/lib/toast"
+import { useEffect, useSyncExternalStore } from "react"
 
 function getSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") return "light"
@@ -21,6 +22,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const theme = usePrimeDexStore(s => s.theme)
   const systemTheme = useSyncExternalStore(subscribeSystemTheme, getSystemTheme, () => "light" as const)
   const resolvedTheme = theme === "system" ? systemTheme : (theme as "light" | "dark")
+
+  useEffect(() => {
+    markToasterReady()
+  }, [])
 
   return (
     <Sonner
