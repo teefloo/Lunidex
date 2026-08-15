@@ -241,7 +241,7 @@ export default {
       types_title: 'Tabella dei tipi Pokémon — Punti di forza, debolezze e matchup',
       types_description: 'Esplora la tabella interattiva dei 18 tipi Pokémon: efficacia, resistenze, immunità e matchup per preparare le tue lotte.',
       pokemon_title: '{{name}} — Statistiche, evoluzioni, mosse e build',
-      pokemon_description: 'Scopri le informazioni su {{name}}: statistiche, tipi ({{types}}), evoluzioni, abilità, mosse, luoghi e build competitive.',
+      pokemon_description: 'Scopri le informazioni su {{name}}: statistiche, tipi ({{types}}), evoluzioni, forma cromatica, abilità, mosse, luoghi e build competitive.',
       pokemon_fallback_title: 'Dettagli Pokémon',
     },
     about: {
@@ -624,8 +624,8 @@ export default {
       caught: 'Catturato',
     },
     team: {
-      title: 'Costruttore Squadra',
-      subtitle: 'Assembla la tua squadra definitiva',
+      title: 'Costruttore di squadre Pokémon',
+      subtitle: 'Crea una squadra Pokémon equilibrata con copertura dei tipi e analisi delle debolezze',
       disband: 'Sciogli Squadra',
       add: 'Aggiungi Pokémon',
       details: 'Dettagli',

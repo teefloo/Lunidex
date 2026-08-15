@@ -258,7 +258,7 @@ export default {
       types_title: 'Tableau des types Pokémon — Forces, faiblesses et matchups',
       types_description: 'Explorez le tableau interactif des 18 types Pokémon : efficacité, résistances, immunités et matchups pour préparer vos combats.',
       pokemon_title: '{{name}} — Stats, évolutions, attaques et builds',
-      pokemon_description: 'Retrouvez les informations sur {{name}} : statistiques, types ({{types}}), évolutions, talents, attaques, lieux et builds compétitifs.',
+      pokemon_description: 'Retrouvez les informations sur {{name}} : statistiques, types ({{types}}), évolutions, forme chromatique, talents, attaques, lieux et builds compétitifs.',
       pokemon_fallback_title: 'Détails du Pokémon',
     },
     about: {
@@ -1016,8 +1016,8 @@ export default {
       unknown: 'Inconnu',
     },
     team: {
-      title: 'Équipe',
-      subtitle: 'Composez votre équipe ultime',
+      title: 'Constructeur d’équipe Pokémon',
+      subtitle: 'Créez une équipe Pokémon équilibrée avec couverture des types et analyse des faiblesses',
       disband: 'Dissoudre l\'équipe',
       add: 'Ajouter',
       details: 'Détails',

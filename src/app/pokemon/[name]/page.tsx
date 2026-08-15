@@ -8,7 +8,7 @@ import Header from '@/components/layout/Header';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
-import { getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
+import { getServerLanguage, getServerPokemonLanguage, getServerT } from '@/lib/server-i18n';
 import { languageToPokemonLanguageId, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { OG_SIZE } from '@/lib/og/theme';
 
@@ -53,6 +53,7 @@ export async function generateMetadata(
   const { name } = await params;
   const lang = await getServerLanguage();
   const speciesLangCode = await getServerPokemonLanguage();
+  const t = await getServerT();
   const baseName = getBaseSpeciesName(name);
 
   try {
@@ -70,13 +71,16 @@ export async function generateMetadata(
       || species?.names?.find(n => n.language.name === 'en')?.name
       || baseName;
     const displayName = name.includes('-') ? formatPokemonSlugName(name) : localizedName;
-    const flavorTexts = localizedData?.pokemon_v2_pokemonspeciesflavortexts || [];
-    const description = normalizeDescription(flavorTexts[0]?.flavor_text);
 
     const dexNumber = `#${String(pokemon.id).padStart(3, '0')}`;
-    const title = displayName;
-    const socialTitle = `${displayName} | Lunidex`;
-    const seoDescription = description || `Detailed information about ${displayName}, including stats, abilities, types, and evolutions.`;
+    const types = pokemon.types
+      .map(({ type }) => t(`types.${type.name}`, { defaultValue: type.name }))
+      .join(', ');
+    const title = t('meta.pokemon_title', { name: displayName });
+    const socialTitle = `${title} | Lunidex`;
+    const seoDescription = normalizeDescription(
+      t('meta.pokemon_description', { name: displayName, types })
+    );
 
     const ogImageUrl = `/api/og/pokemon?name=${encodeURIComponent(name)}&lang=${lang}`;
 
@@ -164,6 +168,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   const { name } = await params;
   const sParams = await searchParams;
   const lang = await getServerLanguage();
+  const t = await getServerT();
   const langId = languageToPokemonLanguageId[lang];
 
   const baseName = getBaseSpeciesName(name);
@@ -202,6 +207,14 @@ export default async function PokemonPage({ params, searchParams }: Props) {
         initialSpecies={species}
         initialLocalized={localized}
         initialEncounters={encounters}
+        initialSeoDescription={normalizeDescription(
+          t('meta.pokemon_description', {
+            name: localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name || formatPokemonSlugName(name),
+            types: pokemon.types
+              .map(({ type }) => t(`types.${type.name}`, { defaultValue: type.name }))
+              .join(', '),
+          })
+        )}
       />
     </>
   );

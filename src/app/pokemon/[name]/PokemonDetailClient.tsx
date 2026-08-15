@@ -137,13 +137,15 @@ interface PokemonDetailClientProps {
   initialSpecies: PokemonSpecies | null;
   initialLocalized: LocalizedGqlData | null;
   initialEncounters: PokemonEncounter[];
+  initialSeoDescription: string;
 }
 
 export function PokemonDetailClient({ 
   initialPokemon, 
   initialSpecies, 
   initialLocalized, 
-  initialEncounters 
+  initialEncounters,
+  initialSeoDescription,
 }: PokemonDetailClientProps) {
   const { t } = useTranslation();
   const params = useParams();
@@ -500,6 +502,13 @@ export function PokemonDetailClient({
           <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-foreground capitalize mb-4 tracking-tight drop-shadow-sm">
             {displayName}
           </h1>
+
+          <p
+            id="pokemon-summary"
+            className="mx-auto mb-8 max-w-3xl text-sm md:text-base text-foreground/65 leading-relaxed font-medium"
+          >
+            {initialSeoDescription}
+          </p>
 
           {species && (
             <div className="flex flex-col items-center gap-2 mb-8">

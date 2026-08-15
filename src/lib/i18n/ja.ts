@@ -241,7 +241,7 @@ export default {
       types_title: 'ポケモンタイプ相性表 — 効果・弱点・耐性',
       types_description: '18タイプの相性をインタラクティブに確認。効果抜群、いまひとつ、無効などの関係を調べられます。',
       pokemon_title: '{{name}} — 能力値、進化、技、育成',
-      pokemon_description: '{{name}}の能力値、タイプ（{{types}}）、進化、特性、技、入手方法、対戦向け育成情報を確認できます。',
+      pokemon_description: '{{name}}の能力値、タイプ（{{types}}）、進化、色違い、特性、技、入手方法、対戦向け育成情報を確認できます。',
       pokemon_fallback_title: 'ポケモン詳細',
     },
     about: {
@@ -624,8 +624,8 @@ export default {
       caught: '捕獲済み',
     },
     team: {
-      title: 'チームビルダー',
-      subtitle: '究極のチームを作ろう',
+      title: 'ポケモンチームビルダー',
+      subtitle: 'タイプ相性と弱点を分析して、バランスの良いポケモンチームを作成',
       disband: 'チーム解散',
       add: 'ポケモン追加',
       details: '詳細',

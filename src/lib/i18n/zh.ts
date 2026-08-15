@@ -241,7 +241,7 @@ export default {
       types_title: '宝可梦属性相克表 — 效果、弱点与抗性',
       types_description: '互动查看 18 种宝可梦属性的相性，了解效果绝佳、效果不佳、抗性和免疫关系。',
       pokemon_title: '{{name}} — 能力值、进化、招式与配招',
-      pokemon_description: '查看 {{name}} 的能力值、属性（{{types}}）、进化、特性、招式、出现地点和对战配招。',
+      pokemon_description: '查看 {{name}} 的能力值、属性（{{types}}）、进化、闪光形态、特性、招式、出现地点和对战配招。',
       pokemon_fallback_title: '宝可梦详情',
     },
     about: {
@@ -624,8 +624,8 @@ export default {
       caught: '已捕获',
     },
     team: {
-      title: '队伍搭建',
-      subtitle: '打造你的最强队伍',
+      title: '宝可梦队伍搭建器',
+      subtitle: '分析属性覆盖与弱点，构建平衡的宝可梦队伍',
       disband: '解散队伍',
       add: '添加宝可梦',
       details: '详情',

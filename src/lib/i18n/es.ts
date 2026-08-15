@@ -254,7 +254,7 @@ export default {
       types_title: 'Tabla de tipos Pokémon — Fortalezas, debilidades y combates',
       types_description: 'Explora la tabla interactiva de los 18 tipos Pokémon: efectividad, resistencias, inmunidades y enfrentamientos para preparar tus combates.',
       pokemon_title: '{{name}} — Estadísticas, evoluciones, movimientos y builds',
-      pokemon_description: 'Consulta la información de {{name}}: estadísticas, tipos ({{types}}), evoluciones, habilidades, movimientos, ubicaciones y builds competitivas.',
+      pokemon_description: 'Consulta la información de {{name}}: estadísticas, tipos ({{types}}), evoluciones, forma Shiny, habilidades, movimientos, ubicaciones y builds competitivas.',
       pokemon_fallback_title: 'Detalles del Pokémon',
     },
     about: {
@@ -637,8 +637,8 @@ export default {
       caught: 'Capturado',
     },
     team: {
-      title: 'Constructor de Equipo',
-      subtitle: 'Assembla tu equipo definitivo',
+      title: 'Constructor de equipos Pokémon',
+      subtitle: 'Crea un equipo Pokémon equilibrado con cobertura de tipos y análisis de debilidades',
       disband: 'Disolver Equipo',
       add: 'Añadir Pokémon',
       details: 'Detalles',

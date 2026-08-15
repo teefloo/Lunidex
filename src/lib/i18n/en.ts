@@ -258,7 +258,7 @@ export default {
       types_title: 'Pokémon Type Chart — Strengths, Weaknesses & Matchups',
       types_description: 'Master every Pokémon type matchup. Interactive type chart showing strengths, weaknesses, resistances, and immunities for all 18 Pokémon types.',
       pokemon_title: '{{name}} — Stats, Evolutions, Moves & Builds',
-      pokemon_description: 'Everything about {{name}}: base stats, type matchups ({{types}}), evolution chain, competitive builds, moveset, abilities, locations, and TCG cards. The most complete {{name}} guide.',
+      pokemon_description: 'Everything about {{name}}: base stats, type matchups ({{types}}), evolution chain, shiny form, competitive builds, moveset, abilities, locations, and TCG cards. The most complete {{name}} guide.',
       pokemon_fallback_title: 'Pokémon Details',
     },
     about: {
@@ -642,8 +642,8 @@ export default {
       caught: 'Caught',
     },
     team: {
-      title: 'Team Builder',
-      subtitle: 'Assemble your ultimate squad',
+      title: 'Pokémon Team Builder',
+      subtitle: 'Build a balanced Pokémon team with type coverage and weakness analysis',
       disband: 'Disband Team',
       add: 'Add Pokémon',
       details: 'Details',

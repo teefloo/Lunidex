@@ -241,7 +241,7 @@ export default {
       types_title: 'Pokémon-Typentabelle — Stärken, Schwächen und Matchups',
       types_description: 'Erkunde die interaktive Pokémon-Typentabelle mit Effektivität, Resistenzen, Immunitäten und Matchups für alle 18 Typen.',
       pokemon_title: '{{name}} — Werte, Entwicklungen, Attacken und Builds',
-      pokemon_description: 'Alle wichtigen Informationen zu {{name}}: Werte, Typen ({{types}}), Entwicklung, Fähigkeiten, Attacken, Fundorte und kompetitive Builds.',
+      pokemon_description: 'Alle wichtigen Informationen zu {{name}}: Werte, Typen ({{types}}), Entwicklung, Shiny-Form, Fähigkeiten, Attacken, Fundorte und kompetitive Builds.',
       pokemon_fallback_title: 'Pokémon-Details',
     },
     about: {
@@ -624,8 +624,8 @@ export default {
       caught: 'Gefangen',
     },
     team: {
-      title: 'Team-Builder',
-      subtitle: 'Stelle dein ultimatives Team zusammen',
+      title: 'Pokémon-Team-Builder',
+      subtitle: 'Baue ein ausgewogenes Pokémon-Team mit Typenabdeckung und Schwächenanalyse',
       disband: 'Team auflösen',
       add: 'Pokémon hinzufügen',
       details: 'Details',

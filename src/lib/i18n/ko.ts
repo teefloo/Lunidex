@@ -241,7 +241,7 @@ export default {
       types_title: '포켓몬 타입 상성표 — 효과, 약점, 내성',
       types_description: '18개 포켓몬 타입의 상성을 인터랙티브하게 확인하고 효과가 굉장함, 약점, 내성, 무효 관계를 알아보세요.',
       pokemon_title: '{{name}} — 능력치, 진화, 기술, 배틀 빌드',
-      pokemon_description: '{{name}}의 능력치, 타입({{types}}), 진화, 특성, 기술, 서식지와 배틀용 빌드를 확인하세요.',
+      pokemon_description: '{{name}}의 능력치, 타입({{types}}), 진화, 색이 다른 모습, 특성, 기술, 서식지와 배틀용 빌드를 확인하세요.',
       pokemon_fallback_title: '포켓몬 상세 정보',
     },
     about: {
@@ -624,8 +624,8 @@ export default {
       caught: '포획됨',
     },
     team: {
-      title: '팀 빌더',
-      subtitle: '최고의 팀을 만드세요',
+      title: '포켓몬 팀 빌더',
+      subtitle: '타입 상성과 약점을 분석해 균형 잡힌 포켓몬 팀을 구성하세요',
       disband: '팀 해체',
       add: '포켓몬 추가',
       details: '상세',
