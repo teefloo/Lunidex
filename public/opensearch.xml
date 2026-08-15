@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>Lunidex</ShortName>
-  <Description>Search the National Pokédex — 1025 Pokémon with stats, evolutions, and moves.</Description>
+  <Description>Search the Lunidex Pokédex by Pokémon name or National Dex number.</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" template="https://lunidex.app/en?search={searchTerms}"/>
+  <Url type="text/html" template="https://lunidex.app/en/pokedex?q={searchTerms}"/>
   <Image height="64" width="64" type="image/png">https://lunidex.app/icon-192.png</Image>
   <Developer>Lunidex</Developer>
-  <Contact>contact@primedex.app</Contact>
   <Attribution>Search data via PokéAPI and TCGdex</Attribution>
   <SyndicationRight>open</SyndicationRight>
   <AdultContent>false</AdultContent>
@@ -18,5 +17,4 @@
   <Language>ja-JP</Language>
   <Language>ko-KR</Language>
   <Language>zh-CN</Language>
-  <Language>pt-BR</Language>
 </OpenSearchDescription>

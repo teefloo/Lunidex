@@ -4,6 +4,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import FriendProfileClient from '@/components/friends/FriendProfileClient';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import { Users } from 'lucide-react';
 
 interface FriendPageProps {
@@ -49,7 +50,7 @@ export default async function FriendPage({ params }: FriendPageProps) {
         />
         <FriendProfileClient friendId={friendId} />
       </main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
     </div>
   );
 }

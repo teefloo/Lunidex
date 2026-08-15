@@ -5,9 +5,10 @@ import {
   buildInLanguage,
   localeHref,
   buildWebPageJsonLd,
+  buildOrganizationJsonLd,
   DEFAULT_OG_IMAGE,
 } from './seo';
-import { SITE_URL } from './site';
+import { GITHUB_REPO_URL, SITE_URL } from './site';
 import { supportedLanguages } from '@/lib/languages';
 
 describe('buildBreadcrumbJsonLd', () => {
@@ -113,6 +114,24 @@ describe('DEFAULT_OG_IMAGE', () => {
       url: '/og/lunidex-og.jpg',
       width: 1200,
       height: 630,
+    });
+  });
+});
+
+describe('buildOrganizationJsonLd', () => {
+  it('publishes one stable Lunidex organization entity', () => {
+    const ld = buildOrganizationJsonLd();
+
+    expect(ld).toMatchObject({
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: 'Lunidex',
+      url: SITE_URL,
+      sameAs: [GITHUB_REPO_URL],
+    });
+    expect(ld.logo).toMatchObject({
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/icon-512.png`,
     });
   });
 });

@@ -11,7 +11,7 @@ import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
-import { DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildOrganizationJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
   SITE_URL,
   SITE_NAME,
@@ -154,6 +154,7 @@ export default async function RootLayout({
   const baseUrl = SITE_URL;
 
   const jsonLd = [
+    buildOrganizationJsonLd(),
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -164,6 +165,7 @@ export default async function RootLayout({
       description: SITE_DESCRIPTION,
       inLanguage: supportedInLanguage,
       keywords: SITE_KEYWORDS.join(', '),
+      publisher: { '@id': `${baseUrl}/#organization` },
       mainEntity: { '@id': `${baseUrl}/#webapp` },
     },
     {
@@ -182,6 +184,7 @@ export default async function RootLayout({
       featureList: FEATURE_LIST.join(', '),
       keywords: SITE_KEYWORDS.join(', '),
       inLanguage: supportedInLanguage,
+      publisher: { '@id': `${baseUrl}/#organization` },
       softwareVersion: '0.1.0',
     },
   ];

@@ -12,6 +12,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { DEFAULT_OG_IMAGE, buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export const revalidate = 3600;
 
@@ -92,8 +93,8 @@ export default async function PokedexPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <script id="pokedex-item-list-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
-      <script id="pokedex-webpage-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }} />
+      <script id="pokedex-item-list-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(itemListJsonLd) }} />
+      <script id="pokedex-webpage-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(webPageJsonLd) }} />
       <div className="app-page">
         <Header />
         <main className="relative z-10 pt-28 pb-8 md:pt-32">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL, SITE_NAME, GITHUB_REPO_URL, DISCORD_URL } from '@/lib/site';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
 import EarlyAccessForm from '@/components/early-access/EarlyAccessForm';
 import { Github, MessageCircle, ShieldCheck, Sparkles, Zap } from 'lucide-react';
@@ -93,7 +94,7 @@ export default async function EarlyAccessPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqPageJsonLd) }}
       />
       <div className="app-page">
         <main className="page-shell flex flex-col items-center pt-16 pb-24 md:pt-24">

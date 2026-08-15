@@ -10,12 +10,13 @@ import {
   GITHUB_ISSUES_URL,
 } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import { HelpCircle, Github, MessageCircleQuestion } from 'lucide-react';
 
 type FaqEntry = { q: string; a: string };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-08-04';
+const LAST_UPDATED = '2026-08-15';
 const FAQ_COUNT = 12;
 
 export const revalidate = 3600;
@@ -98,7 +99,6 @@ export default async function FaqPage() {
     isPartOf: { '@id': `${baseUrl}/#website` },
     author: { '@id': `${baseUrl}/#organization` },
     publisher: { '@id': `${baseUrl}/#organization` },
-    datePublished: LAST_UPDATED,
     dateModified: LAST_UPDATED,
     primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}${DEFAULT_OG_IMAGE.url}` },
     mainEntity: [...data, ...features, ...privacy].map((entry) => ({
@@ -160,11 +160,11 @@ export default async function FaqPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqPageJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
       <div className="app-page">
         <Header />

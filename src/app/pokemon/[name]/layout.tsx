@@ -7,6 +7,7 @@ import { formatPokemonSlugName } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages, languageToMetadataLocale } from '@/lib/languages';
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 type Props = {
   params: Promise<{ name: string }>;
@@ -190,13 +191,13 @@ export default async function PokemonLayout({
       {webPageJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(webPageJsonLd) }}
         />
       )}
       {breadcrumbJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
         />
       )}
       {children}

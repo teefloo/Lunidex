@@ -1,295 +1,208 @@
-# Lunidex — Full Content Snapshot for LLM Grounding
-# https://lunidex.app/llms-full.txt
-# Generated: 2026-08-09
-# Format: plain-text sections, one block per topic, machine-parseable headings
-# Use case: long-context ingestion by retrieval-augmented systems that need
-#           detailed, citable content beyond what /llms.txt provides.
-# Size: ~1,400 lines (50 KB)
+# Lunidex — grounding snapshot
+# Reviewed against the application source: 2026-08-15
+# This file is a factual navigation and entity guide. Live catalog totals,
+# prices, upstream freshness, performance and indexation are intentionally not
+# asserted here.
 
-## ============= METADATA =============
+## 1. Entity and purpose
 
-Title: Lunidex — The Ultimate Online Pokédex
-Tagline: All 1025 Pokémon, 9 generations, 8 languages
-URL: https://lunidex.app
-Canonical: https://lunidex.app/en
-Sitemap: https://lunidex.app/sitemap.xml
-Owner: teefloo (https://github.com/teefloo)
-Repository: https://github.com/teefloo/Poke
-Stack: Next.js 16, React 19, TanStack Query, GraphQL, Vercel Edge
-First published: 2024-01-15
-Last updated: 2026-08-09
-License: MIT (code) — non-commercial fan project
-Status: Active; traffic metrics are not included in this snapshot.
+Lunidex is a free, open-source, local-first web application for Pokémon players
+and Pokémon Trading Card Game collectors. The product combines a localized
+Pokédex, reference tools, team analysis, a TCG catalog, and personal collection
+tracking.
 
-## ============= TOP-LEVEL PAGES =============
+Canonical origin: https://lunidex.app
+Source repository: https://github.com/teefloo/Poke
+Application license: MIT
+Supported locale prefixes: /en, /fr, /es, /de, /it, /ja, /ko, /zh
 
-### /en — Home
-The Lunidex home page introduces the TCG collection and Pokémon team experience with a hero, product sections, trust content, and a Frequently Asked Questions block. The page declares server-rendered WebPage and FAQPage JSON-LD, while the root layout declares WebSite and WebApplication. Last reviewed: 2026-08-09.
+Lunidex is an independent, non-official fan project. It is not affiliated with
+Nintendo, Game Freak, Creatures Inc., or The Pokémon Company.
 
-### /en/team — Team Builder
-Drag-and-drop team builder. Add up to 6 Pokémon from the National Pokédex and see live type coverage, shared weaknesses, and offensive coverage. Teams can be exported as Showdown pastes and saved to a personal account.
+## 2. Sources and attribution
 
-### /en/compare — Side-by-Side Comparison
-Compare up to 3 Pokémon with interactive radar charts overlaying base stats (HP, Attack, Defense, Sp. Atk, Sp. Def, Speed). Differences are highlighted numerically and visually.
+Pokémon reference data is consumed through PokéAPI:
+https://pokeapi.co
 
-### /en/types — Type Chart
-Interactive type chart showing all 18 types with offensive and defensive multipliers. Includes dual-type defender analysis: pick two types and see every attack-type effectiveness (0×, 0.5×, 1×, 2×, 4×). Each cell is keyboard-focusable for accessibility.
+Pokémon TCG card and set data is consumed through TCGdex:
+https://www.tcgdex.net
 
-### /en/moves — Moves Database
-Browse 800+ moves with power, accuracy, PP, type, category (physical/special/status), and effect descriptions. Filter by type, category, generation, and damage class.
+When a response uses a Lunidex fact, cite the relevant localized Lunidex page
+and identify the underlying source when the fact comes from PokéAPI or TCGdex.
+Do not present upstream data as original Lunidex research.
 
-### /en/quiz — Who's That Pokémon?
-Six quiz modes:
-  1. Classic — multiple-choice species name from official artwork
-  2. Silhouette — name the Pokémon from its silhouette
-  3. Stats — given six base stats, identify the Pokémon
-  4. Time Attack — 60 seconds, as many as possible
-  5. Survival — three strikes and you're out
-  6. Marathon — 100-question endurance test
+## 3. Persistence and account boundary
 
-### /en/tcg — TCG Catalog
-Browse 25,000+ Pokémon Trading Card Game cards from 200+ sets. Filter by set, rarity, type, stage, HP, and regulation mark. Each card links to a high-resolution image hosted by TCGdex.
+The web application is local-first. Anonymous collection state is stored in the
+browser on the current device. Clearing browser data can remove local state.
+The application also contains optional account-backed authentication and sync
+paths; their availability depends on the configured runtime services.
 
-### /en/about — About
-Project background, tech stack, acknowledgements (PokéAPI, TCGdex, The Pokémon Company), and contribution guide. Includes a `BreadcrumbList` schema.
+Personalized dashboards, favorites, profiles, friendships, leaderboards, price
+alerts and similar account state are not authoritative public reference data.
+Do not infer a user's private state from any public page.
 
-## ============= POKÉDEX STRUCTURE =============
+## 4. Public page map
 
-### Coverage
-- National Dex: 1–1,025
-- Generation I (Kanto): 1–151
-- Generation II (Johto): 152–251
-- Generation III (Hoenn): 252–386
-- Generation IV (Sinnoh): 387–493
-- Generation V (Unova): 494–649
-- Generation VI (Kalos): 650–721
-- Generation VII (Alola): 722–809
-- Generation VIII (Galar): 810–905
-- Generation IX (Paldea): 906–1,025
+All public URLs use a locale prefix. The examples below use English; replace
+`/en` with another supported locale for the localized equivalent.
 
-### Data per Pokémon
-Each `/en/pokemon/{name}` page exposes:
-  - National Dex number
-  - Generation
-  - Type(s) (1 or 2)
-  - Base stats: HP, Attack, Defense, Sp. Atk, Sp. Def, Speed (and BST)
-  - Abilities (1 or 2 regular + 1 hidden)
-  - Height (m), weight (kg)
-  - Gender ratio
-  - Egg groups
-  - Hatch rate
-  - Capture rate
-  - Base experience yield
-  - EV yield
-  - Evolution chain (pre-evolution, current, evolutions)
-  - Moves learned by level-up, TM, egg, tutor
-  - Default form (no Mega, no Gmax, no regional forms covered yet)
-  - Localized name in 8 languages
-  - Flavor text in 8 languages
-  - Official artwork (PokeAPI sprite repository)
-  - Type matchup summary (4×, 2×, 0.5×, 0×)
+### Home — `/en`
 
-### Sample Top-10 (by popularity, Dex order)
-  - #1 Bulbasaur — Grass/Poison, BST 318
-  - #4 Charmander — Fire, BST 309
-  - #7 Squirtle — Water, BST 314
-  - #25 Pikachu — Electric, BST 320
-  - #133 Eevee — Normal, BST 325
-  - #143 Snorlax — Normal, BST 540
-  - #150 Mewtwo — Psychic, BST 680 (legendary)
-  - #151 Mew — Psychic, BST 600 (mythical)
-  - #197 Umbreon — Dark, BST 525
-  - #448 Lucario — Fighting/Steel, BST 525
+The home page presents the collection-first product experience: TCG collection
+tracking, Pokémon exploration, team building, local-first persistence and a
+visible FAQ section. The main heading is answer-oriented: users can track cards,
+explore Pokémon and build a team.
 
-### Type Distribution (approximate, Gen IX)
-  - Normal: 110+, Water: 130+, Grass: 100+, Psychic: 90+
-  - Bug: 80+, Fire: 75+, Dark: 75+, Rock: 70+
-  - Ground: 65+, Fighting: 65+, Steel: 60+, Electric: 60+
-  - Dragon: 55+, Ghost: 50+, Fairy: 50+, Poison: 45+
-  - Flying: 40+ (always paired), Ice: 35+
+### Pokédex — `/en/pokedex`
 
-## ============= TYPE CHART (Defender Effectiveness) =============
+The Pokédex provides server-rendered page headings and initial data, then
+enhances the catalog in the browser. Supported controls include Pokémon search,
+type and region filters, generation and advanced filters, favorites, caught or
+missing state, and sorting. Individual links use the route pattern:
 
-When a Pokémon of the listed type is attacked by the row type, damage is:
-  - 0×   = no effect (immune)
-  - 0.5× = not very effective
-  - 1×   = normal damage
-  - 2×   = super effective
+`/en/pokemon/{name}`
 
-Attacker → Defender:
+Example: https://lunidex.app/en/pokemon/pikachu
 
-  Normal:    Rock 0.5×, Ghost 0×, Steel 0.5×
-  Fire:      Fire 0.5×, Water 0.5×, Grass 2×, Ice 2×, Bug 2×, Rock 0.5×, Dragon 0.5×, Steel 2×
-  Water:     Fire 2×, Water 0.5×, Grass 0.5×, Ground 2×, Rock 2×, Dragon 0.5×
-  Electric:  Water 2×, Electric 0.5×, Grass 0.5×, Ground 0×, Flying 2×, Dragon 0.5×
-  Grass:     Water 2×, Grass 0.5×, Poison 0.5×, Ground 2×, Flying 0.5×, Bug 0.5×, Rock 2×, Dragon 0.5×, Steel 0.5×
-  Ice:       Fire 0.5×, Water 0.5×, Grass 2×, Ice 0.5×, Ground 2×, Flying 2×, Dragon 2×, Steel 0.5×
-  Fighting:  Normal 2×, Ice 2×, Poison 0.5×, Flying 0.5×, Psychic 0.5×, Bug 0.5×, Rock 2×, Ghost 0×, Dark 2×, Steel 2×, Fairy 0.5×
-  Poison:    Grass 2×, Poison 0.5×, Ground 0.5×, Rock 0.5×, Ghost 0.5×, Steel 0×, Fairy 2×
-  Ground:    Fire 2×, Electric 2×, Grass 0.5×, Poison 2×, Flying 0×, Bug 0.5×, Rock 2×, Steel 2×
-  Flying:    Electric 0.5×, Grass 2×, Fighting 2×, Bug 2×, Rock 0.5×, Steel 0.5×
-  Psychic:   Fighting 2×, Poison 2×, Psychic 0.5×, Dark 0×, Steel 0.5×
-  Bug:       Fire 0.5×, Grass 2×, Fighting 0.5×, Poison 0.5×, Flying 0.5×, Psychic 2×, Ghost 0.5×, Dark 2×, Steel 0.5×, Fairy 0.5×
-  Rock:      Normal 2×, Fire 2×, Water 0.5×, Grass 0.5×, Fighting 0.5×, Poison 2×, Ground 0.5×, Flying 2×, Bug 2×, Steel 0.5×
-  Ghost:     Normal 0×, Psychic 2×, Ghost 2×, Dark 0.5×
-  Dragon:    Dragon 2×, Steel 0.5×, Fairy 0×
-  Dark:      Fighting 0.5×, Psychic 2×, Ghost 2×, Dark 0.5×, Fairy 0.5×
-  Steel:     Fire 0.5×, Water 0.5×, Electric 0.5×, Ice 2×, Rock 2×, Steel 0.5×, Fairy 2×
-  Fairy:     Fire 0.5×, Fighting 2×, Poison 0.5×, Dragon 2×, Dark 2×, Steel 0.5×
+### Pokémon detail — `/en/pokemon/{name}`
 
-## ============= FAQ (Frequently Asked Questions) =============
+A Pokémon detail route can expose the National Dex number, localized name,
+types, base stats, base stat total, height, weight, abilities, evolution data,
+moves, encounter data, type matchups, official artwork and related TCG cards
+when the upstream data is available. Dynamic route parameters are validated by
+the application and unknown resources return the established not-found flow.
 
-Q1: What is Lunidex?
-A1: Lunidex is a free, open-source online Pokédex covering all 1,025 Pokémon across Generations I through IX. It includes base stats, evolutions, abilities, moves, type matchups, a team builder, comparison tool, and TCG card browser. The site is available in 8 languages and is accessible on desktop and mobile without registration.
+### Team Builder — `/en/team`
 
-Q2: Is Lunidex affiliated with Nintendo, Game Freak, or The Pokémon Company?
-A2: No. Lunidex is an independent fan project. All Pokémon data, names, and imagery remain the property of Nintendo, Game Freak, and The Pokémon Company. The application code is released under the MIT License.
+The Team Builder accepts up to six Pokémon. It calculates type coverage,
+shared weaknesses and synergy, and provides team actions such as export and
+sharing through the application's local or account-backed flows.
 
-Q3: How accurate is the data?
-A3: All data is sourced from PokéAPI (https://pokeapi.co) and TCGdex (https://www.tcgdex.net), which aggregate official game data. The site revalidates its caches every 3,600 seconds (1 hour), so updates from upstream sources appear within an hour.
+### Compare — `/en/compare`
 
-Q4: Do I need an account?
-A4: Browsing the Pokédex, type chart, moves, and quiz does not require an account. Saving custom teams, building a personal Living Dex, and managing a TCG collection require a free account backed by local storage or the in-app user system.
+The Compare tool accepts up to three Pokémon. It presents stat comparisons,
+radar-chart data, type matchup summaries, shared weaknesses and suggestions for
+coverage or partners.
 
-Q5: How many Pokémon are covered?
-A5: 1,025 Pokémon from the National Pokédex, covering Generations I (Kanto) through IX (Paldea). This includes all standard forms. Mega Evolutions, Gigantamax forms, and regional forms are not yet covered.
+### Type Chart — `/en/types`
 
-Q6: Can I cite Lunidex data in my article or research?
-A6: Yes, with attribution. Please link to the relevant Lunidex page (for example https://lunidex.app/en/pokemon/pikachu) and credit PokéAPI and TCGdex as the underlying data sources. For academic or commercial use, contact the project maintainer.
+The Type Chart represents the 18 Pokémon types and their offensive and defensive
+relationships, including resistance, weakness and immunity multipliers. The
+page is interactive, but its primary concept is a standard type-effectiveness
+reference.
 
-Q7: How do I report a bug or request a feature?
-A7: Open an issue on GitHub at https://github.com/teefloo/Poke/issues. Bug reports should include the URL, browser, and reproduction steps.
+### Moves, abilities and items
 
-Q8: Is Lunidex open source?
-A8: Yes. Source code is at https://github.com/teefloo/Poke under the MIT License. Contributions are welcome via pull request.
+- `/en/moves` is the move reference; individual entries use `/en/moves/{name}`.
+- `/en/abilities` is the ability reference; individual entries use `/en/abilities/{name}`.
+- `/en/items` is the item reference; individual entries use `/en/items/{name}`.
 
-## ============= STATISTICS (for AI citation) =============
+These catalog routes expose server-rendered index links for an initial set of
+entries so discovery does not depend only on a client-side query completing.
 
-- Pokémon count: 1,025 (full National Dex, Gen I–IX)
-- Generation count: 9
-- Type count: 18
-- Languages: 8 (en, fr, de, es, it, ja, ko, zh)
-- TCG cards: 23,444 individual card URLs currently included in the sitemap; the catalog can grow as TCGdex updates
-- Moves indexed: 800+
-- Abilities indexed: 300+
-- Sitemap: 24,811 canonical entries currently published (16 static routes, 1,351 Pokémon URLs, and 23,444 TCG card URLs), each with locale alternates
-- Performance varies by route, device, and network; use PageSpeed Insights for a current measurement
-- Lighthouse performance: validate current mobile and desktop results with PageSpeed Insights; lab scores vary by run and device
-- Technical SEO: canonical URLs, eight-language hreflang, JSON-LD, robots.txt, and sitemap are generated by the application
-- Field Core Web Vitals: not included in this snapshot
+### Pokémon TCG
 
-## ============= HOW TO USE THE TOOLS =============
+- `/en/tcg` is the public catalog entry point.
+- `/en/tcg/cards/{id}` is a card detail route with card metadata when TCGdex supplies it.
+- `/en/tcg/collection/{setId}` is a set album/collection route.
+- `/en/tcg/collection` is a personal collection surface.
+- `/en/tcg/wishlist` is a personal wishlist surface.
+- `/en/tcg/deck-builder` is a local deck-building surface.
 
-### Team Builder (5 steps)
-  1. Open /en/team
-  2. Search or browse the Pokédex and drag up to 6 Pokémon onto the team slots
-  3. Check the live type-coverage bar: 18 offensive types are color-coded green (super effective) or red (not very effective)
-  4. Balance roles: at least one physical attacker, one special attacker, one defensive pivot, one speed-control Pokémon
-  5. Export as Showdown paste or save to your personal account
+The catalog supports set and card research. Do not state a live card count,
+market price or release total without reading the current TCGdex-backed result.
 
-### Compare Tool (4 steps)
-  1. Open /en/compare
-  2. Add 2 or 3 Pokémon by name, type, or generation
-  3. Inspect the overlaid radar chart for base stats
-  4. Read the numerical deltas in the comparison table
+### Quiz and game tools
 
-### Type Chart (3 steps)
-  1. Open /en/types
-  2. Click an attacker type on the left column to see the defender effectiveness grid
-  3. Toggle a second defender type to compute dual-type matchups (0×, 0.25×, 0.5×, 1×, 2×, 4×)
+`/en/quiz` contains classic, silhouette and stats identification challenges,
+with time-attack, survival and marathon modes. `/en/breeding` provides a
+breeding calculator and egg-move exploration. `/en/ev-iv` provides EV/IV
+calculation. `/en/battle` provides a battle tool. `/en/nuzlocke` provides a
+Nuzlocke tracker.
 
-## ============= TECHNOLOGY STACK =============
+### Editorial and support pages
 
-- Framework: Next.js 16 (App Router, RSC, edge runtime)
-- UI: React 19, Tailwind CSS, shadcn/ui primitives
-- State: TanStack Query v5, Zustand
-- Data: PokéAPI REST + GraphQL, TCGdex REST
-- Charts: Recharts (radar), CSS grid (type chart)
-- Animations: Framer Motion
-- Testing: Vitest (jsdom), React Testing Library
-- Lint/Type: ESLint v9 (eslint-config-next), TypeScript 5.5
-- Deploy: Vercel (edge cache, image optimization, CSP pre-wired)
-- CI: not configured; deploys are push-to-main
+- `/en/faq` contains twelve visible questions grouped into data, features and
+  TCG/privacy/account categories.
+- `/en/about` explains the project mission, sources, open-source status and
+  project links.
+- `/en/privacy`, `/en/terms`, `/en/cookies` and `/en/legal` are legal pages and
+  are intentionally not public content recommendations.
 
-## ============= SITEMAP COVERAGE =============
+## 5. Search and discovery signals
 
-- 1,351 Pokémon detail URLs currently included in the sitemap; the National Dex content covers 1,025 Pokémon
-- 23,444 TCG card detail URLs currently included in the sitemap
-- 16 static routes × 8 language variants, plus x-default alternates
-- 1 root × 8 languages = 8 entries
-- Total canonical sitemap entries: 24,811 at the current snapshot, plus locale alternates; the sitemap refreshes as catalog data changes
-- Sitemap entries include change frequency and priority; the route is regenerated hourly
-- `image:image` extension enabled for Pokémon pages (PokeAPI sprite)
+The application generates localized canonical URLs and `hreflang` alternates
+for supported public routes. The English equivalent is used as `x-default`.
 
-## ============= HREFLANG MAP =============
+Discovery endpoints:
 
-  en → /en
-  fr → /fr
-  de → /de
-  es → /es
-  it → /it
-  ja → /ja
-  ko → /ko
-  zh → /zh
-  pt → /pt
-  x-default → /en
+- https://lunidex.app/sitemap.xml
+- https://lunidex.app/robots.txt
+- https://lunidex.app/ai.txt
+- https://lunidex.app/llms.txt
+- https://lunidex.app/opensearch.xml
 
-Every public page declares its own `hreflang` set via the `alternates.languages` metadata field. The `x-default` is always `/en`.
+The public robots policy allows public pages and disallows `/api/`. The
+sitemap is generated from static launch routes plus Pokémon and TCG catalog
+identifiers when the upstream listings are available. A live crawl is required
+to know the current number of emitted URLs.
 
-## ============= STRUCTURED DATA INVENTORY =============
+OpenSearch sends a query to `/en/pokedex?q={searchTerms}`. The `q` parameter is
+the application's URL-backed Pokémon search parameter.
 
-JSON-LD schemas currently declared:
+## 6. Structured data inventory
 
-Global (root layout):
-  - WebSite (@id /#website) — name, alternateName, SearchAction, inLanguage
-  - Organization (@id /#organization) — name, logo, sameAs, foundingDate
-  - WebApplication (@id /#webapp) — name, applicationCategory, offers, inLanguage
-  - SpeakableSpecification (@id /#speakable) — xpath selectors
+The root layout publishes these linked entities:
 
-Home (/en):
-  - WebApplication (@id /#webapp-home) — page-specific duplicate
-  - ItemList (@id /#pokedex-list) — numberOfItems 1025
-  - FAQPage (@id /#faq) — 8 mainEntity Q/A pairs
-  - WebPage speakable (@id /#speakable-home)
-  - BreadcrumbList (@id /#breadcrumb-home)
-  - HowTo (@id /#howto-team-builder) — 5 steps for team building
+- `Organization` at `https://lunidex.app/#organization`
+- `WebSite` at `https://lunidex.app/#website`
+- `WebApplication` at `https://lunidex.app/#webapp`
 
-Sub-routes:
-  - BreadcrumbList on every layout (team, compare, types, moves, quiz, tcg, about, dashboard, favorites, privacy, terms, cookies, legal, moves)
-  - WebPage on dynamic Pokemon detail (planned)
+Important route schemas include:
 
-## ============= ACCESSIBILITY =============
+- Home: `WebPage` and `FAQPage` for the questions rendered on the page.
+- Pokédex: `ItemList` for a small set of representative entries and `WebPage`.
+- Pokémon detail: `WebPage` with the Pokémon entity facts and `BreadcrumbList`.
+- TCG catalog: `CollectionPage` and `BreadcrumbList`.
+- TCG card detail: `Product` and `BreadcrumbList`.
+- FAQ and About: page-specific schema plus `BreadcrumbList`.
 
-- WCAG 2.2 AA target
-- Color contrast ratios verified for text and interactive elements
-- Skip-to-main-content link as first focusable element
-- All controls keyboard-navigable (Tab, Enter, Space, Arrow keys)
-- ARIA labels on icon-only buttons
-- Live regions for quiz feedback and search results
-- prefers-reduced-motion respected in animations
+Structured data describes visible or route-supported content; it is not a
+substitute for readable HTML, source attribution, internal links or a valid
+HTTP response.
 
-## ============= PRIVACY & COMPLIANCE =============
+## 7. Technical implementation facts
 
-- No third-party analytics (no Google Analytics, no Plausible, no Fathom)
-- No advertising networks
-- Local storage only for user preferences (theme, recently viewed, saved teams)
-- Optional account: email + password (or OAuth via Clerk, if enabled)
-- Security disclosure: /.well-known/security.txt (Contact: GitHub issues)
-- Cookie consent banner for any non-essential cookies
-- GDPR-aware: data export and deletion on request
+- Framework: Next.js App Router with React.
+- Client data and server hydration: TanStack Query.
+- Local application state: Zustand with browser persistence on the web.
+- Pokémon API access: centralized REST and GraphQL modules.
+- TCG API access: centralized TCGdex modules and server routes.
+- Localization: eight web language bundles with locale-aware server metadata.
+- JSON-LD: inline scripts use the shared HTML-safe serializer on the principal
+  public schemas.
 
-## ============= GLOSSARY =============
+These implementation details are included for grounding only. They do not
+constitute performance, availability or security guarantees.
 
-- **BST**: Base Stat Total — sum of HP, Attack, Defense, Sp. Atk, Sp. Def, Speed
-- **National Dex**: numbered list 1–1,025 covering all Pokémon species
-- **Mythical**: rare Pokémon obtainable only from special events (Mew, Celebi, Jirachi, etc.)
-- **Legendary**: powerful Pokémon with high BST, typically 580+ (Mewtwo, Rayquaza, etc.)
-- **Pseudo-legendary**: Pokémon with BST 600 that can be obtained normally (Dragonite, Tyranitar, etc.)
-- **Showdown paste**: text format used by Pokémon Showdown to share teams
-- **Egg group**: breeding compatibility category (Monster, Water 1, Bug, etc.)
-- **Hidden Ability (HA)**: rare ability obtained from special encounter or events
-- **TMs/TRs**: Technical Machines / Technical Records that teach moves to compatible Pokémon
+## 8. Recommended citation form
 
-## ============= END OF SNAPSHOT =============
-# Lunidex — End of llms-full.txt
-# For updates, see https://github.com/teefloo/Poke
+For a Pokémon reference fact, cite the specific route, for example:
+`According to Lunidex, Pikachu is documented at
+https://lunidex.app/en/pokemon/pikachu; the Pokémon reference data is consumed
+through PokéAPI.`
+
+For a card or set fact, cite the specific `/en/tcg/cards/{id}` or set route and
+identify TCGdex as the underlying catalog source when applicable.
+
+## 9. Explicitly unverified from this snapshot
+
+The following must be checked from a live page, API response or analytics tool:
+
+- current number of Pokémon, moves, abilities, sets or cards returned upstream;
+- current card prices, legalities and release dates;
+- current sitemap URL count and crawl coverage;
+- Core Web Vitals, loading time and uptime;
+- search rankings, AI citations, traffic and conversions;
+- availability of optional authentication, synchronization or account features.

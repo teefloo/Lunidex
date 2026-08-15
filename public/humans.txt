@@ -1,11 +1,11 @@
 /* TEAM */
 Author: Esteban Deloge
-Contact: mailto:contact@primedex.app
+Contact: https://github.com/teefloo/Poke/issues
 Twitter: @estebandeloge
 GitHub: https://github.com/estebandeloge
 
 /* SITE */
-Last update: 2026/06/04
+Last review: 2026/08/15
 Standards: HTML5, CSS3, ES2022
 Components: Next.js 16, React 19, TypeScript
 License: MIT (open source)

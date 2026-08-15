@@ -5,6 +5,7 @@ import FriendsClient from '@/components/friends/FriendsClient';
 import FriendPrivacyCard from '@/components/friends/FriendPrivacyCard';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 import { Users } from 'lucide-react';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -47,7 +48,7 @@ export default async function FriendsPage() {
           <FriendPrivacyCard />
         </div>
       </main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
     </div>
   );
 }

@@ -1,145 +1,71 @@
 # Lunidex
 
-> The most complete online Pokédex on the open web. Browse all 1025 Pokémon with detailed base stats, evolution chains, abilities, moves, type matchups, competitive builds, team builder, side-by-side comparison, and TCG cards. Available in 8 languages, free, fast, and beautifully designed.
+> Lunidex is a free, open-source, local-first Pokémon dashboard and Pokémon TCG workspace. It brings together a Pokédex, team-building tools, type and move references, a TCG catalog, and personal collection tracking.
 
-## Short Facts
-- **Pokémon covered**: 1,025 (Generations I–IX, complete National Dex)
-- **Total base stats in database**: 1,025 × 6 = 6,150 stat entries
-- **Distinct types**: 18 (Normal, Fire, Water, Electric, Grass, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, Fairy)
-- **Distinct abilities**: 300+ across all Pokémon
-- **Languages supported**: 8 (en, fr, es, de, it, ja, ko, zh)
-- **TCG catalog**: cards available across the supported TCGdex sets
-- **Performance**: current Core Web Vitals should be validated with PageSpeed Insights; no field metric is asserted here
-- **Data freshness**: revalidated every 3600s (1 hour)
-- **License**: MIT (code), non-commercial fan project
-- **First launched**: January 2024
+## Identity and scope
 
-## Primary URLs
+- **Public name**: Lunidex
+- **Canonical site**: https://lunidex.app
+- **Canonical route format**: every public page uses a locale prefix: `/en`, `/fr`, `/es`, `/de`, `/it`, `/ja`, `/ko`, or `/zh`
+- **Supported locales**: English, French, Spanish, German, Italian, Japanese, Korean, and Chinese
+- **Project status**: independent, non-official Pokémon fan project; not affiliated with Nintendo, Game Freak, Creatures Inc., or The Pokémon Company
+- **Application code**: available under the MIT License at https://github.com/teefloo/Poke
 
-- [Home (Pokédex listing)](https://lunidex.app/en)
-- [Team Builder](https://lunidex.app/en/team)
-- [Compare](https://lunidex.app/en/compare)
-- [Type Chart](https://lunidex.app/en/types)
-- [Moves Database](https://lunidex.app/en/moves)
-- [Quiz](https://lunidex.app/en/quiz)
-- [TCG Catalog](https://lunidex.app/en/tcg)
-- [TCG Collection](https://lunidex.app/en/tcg/collection)
-- [TCG Wishlist](https://lunidex.app/en/tcg/wishlist)
+## Core answers
+
+### What is Lunidex?
+
+Lunidex is a web application for exploring Pokémon reference data and managing a personal Pokémon TCG collection. The application also includes team analysis, Pokémon comparison, type matchups, move and ability references, quizzes, breeding and EV/IV tools, and a battle tool.
+
+### Where does the data come from?
+
+- Pokémon species, stats, types, abilities, moves, evolution and encounter data are consumed through [PokéAPI](https://pokeapi.co).
+- Pokémon Trading Card Game card and set data are consumed through [TCGdex](https://www.tcgdex.net).
+- The underlying Pokémon intellectual property remains with its respective rights holders.
+
+### Is an account required?
+
+Browsing public reference pages and starting local collection work do not require an account. The web application stores local user-owned state in the browser; optional account-backed synchronization is available when the configured service is available.
+
+## Main public pages
+
+- [Home](https://lunidex.app/en) — overview of the collection, Pokédex and team experiences, with a visible FAQ section.
+- [Pokédex](https://lunidex.app/en/pokedex) — search and filter Pokémon by name, number, type, generation and other supported attributes.
+- [Pikachu reference page](https://lunidex.app/en/pokemon/pikachu) — example Pokémon detail route. The route pattern is `/en/pokemon/{name}`.
+- [Team Builder](https://lunidex.app/en/team) — compose up to six Pokémon and inspect type coverage, shared weaknesses and team synergy.
+- [Compare](https://lunidex.app/en/compare) — compare up to three Pokémon using stats and matchup analysis.
+- [Type Chart](https://lunidex.app/en/types) — inspect offensive and defensive interactions among the 18 Pokémon types.
+- [Moves](https://lunidex.app/en/moves) — browse the move reference and open individual move pages.
+- [Abilities](https://lunidex.app/en/abilities) — browse the ability reference and open individual ability pages.
+- [Items](https://lunidex.app/en/items) — browse Pokémon item reference pages.
+- [Pokémon TCG Catalog](https://lunidex.app/en/tcg) — search and filter cards and sets.
+- [TCG Collection](https://lunidex.app/en/tcg/collection) — track owned cards by set.
+- [TCG Wishlist](https://lunidex.app/en/tcg/wishlist) — manage cards the user wants to collect.
+- [TCG Deck Builder](https://lunidex.app/en/tcg/deck-builder) — build a Pokémon TCG deck locally.
+- [Pokémon Quiz](https://lunidex.app/en/quiz) — play classic, silhouette or stats challenges with time-attack, survival or marathon modes.
 - [Breeding Calculator](https://lunidex.app/en/breeding)
-- [Battle Simulator](https://lunidex.app/en/battle)
-- [Favorites](https://lunidex.app/en/favorites)
-- [About](https://lunidex.app/en/about)
-- [FAQ](https://lunidex.app/en/faq)
-- [Privacy Policy](https://lunidex.app/en/privacy)
-- [Terms of Service](https://lunidex.app/en/terms)
+- [EV/IV Calculator](https://lunidex.app/en/ev-iv)
+- [Battle Tool](https://lunidex.app/en/battle)
+- [Nuzlocke Tracker](https://lunidex.app/en/nuzlocke)
+- [FAQ](https://lunidex.app/en/faq) — twelve visible questions about data, features, collection storage and privacy.
+- [About Lunidex](https://lunidex.app/en/about) — mission, data-source attribution, open-source information and project links.
 
-## SEO & Crawlability
+## Personal data and persistence
+
+- Anonymous collection work is designed to remain local to the browser and device.
+- Clearing browser data can remove local collection state; the application exposes export and optional synchronization flows where configured.
+- Personalized dashboards, profiles, friendships, leaderboards and other account features are not public reference sources and should not be inferred from this file.
+
+## Discovery and citation
 
 - [Sitemap](https://lunidex.app/sitemap.xml)
-- [Robots.txt](https://lunidex.app/robots.txt)
-- [AI crawl policy](https://lunidex.app/ai.txt)
-- [Full content snapshot for LLMs](https://lunidex.app/llms-full.txt)
-- [OpenSearch](https://lunidex.app/opensearch.xml)
+- [Robots policy](https://lunidex.app/robots.txt)
+- [AI discovery notes](https://lunidex.app/ai.txt)
+- [Extended grounding snapshot](https://lunidex.app/llms-full.txt)
+- [OpenSearch descriptor](https://lunidex.app/opensearch.xml)
 
-## Data Sources
+When citing a fact, link the specific localized Lunidex page when possible and identify the underlying source: PokéAPI for Pokémon reference data or TCGdex for card and set data. Do not treat this file as a live assertion of card totals, prices, rankings, performance, freshness or indexation status; verify those values on the relevant page or source API.
 
-- [PokéAPI](https://pokeapi.co) — Pokémon species, base stats, moves, abilities, encounters, evolution chains. REST + GraphQL endpoints.
-- [TCGdex](https://www.tcgdex.net) — Pokémon Trading Card Game catalog (cards, sets, rarities, images).
-- [PokéAPI GraphQL](https://beta.pokeapi.co/graphql) — Localized species names and flavor text in 8 languages.
+## Review note
 
-## Source Code
-
-- [GitHub repository](https://github.com/teefloo/Poke)
-- [Issues and contributions](https://github.com/teefloo/Poke/issues)
-- [MIT License](https://github.com/teefloo/Poke/blob/main/LICENSE)
-
-## About
-
-Lunidex is a high-performance, open-source Pokémon dashboard built with Next.js 16, React 19, and TanStack Query. It serves as a comprehensive reference for competitive Pokémon players, TCG collectors, and fans. Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
-
-## Core Features
-
-- Complete Pokédex of all 1025 Pokémon across 9 generations with localized names in 8 languages
-- Team Builder with type coverage analysis, shared weakness detection, and synergy scoring
-- Side-by-side comparison of up to 3 Pokémon with interactive stat radar charts
-- Type Chart with strengths, weaknesses, resistances, and immunities for all 18 types
-- Moves database with detailed power, accuracy, PP, and effect information
-- Pokémon TCG catalog with set, rarity, type, stage, and HP filters
-- "Who's That Pokémon?" quiz with 6 modes: Classic, Silhouette, Stats, Time Attack, Survival, Marathon
-- Living Dex Tracker for personal collection management (local storage)
-- Search and advanced filtering by generation, type, BST, egg groups, special status
-
-## Page Structure
-
-- **Type**: Single-page application (Next.js 16 App Router with client-side navigation)
-- **Breakpoints**: Mobile-first responsive (tailwind breakpoints: sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px)
-- **Locale prefix required**: Every route is prefixed with /{lang} where lang ∈ {en, fr, es, de, it, ja, ko, zh}
-
-## Header Navigation (fixed top, z-50)
-
-- Logo link → [home](https://lunidex.app/en)
-- Search form: `<form role="search">` with `<input type="search" name="search">` — searches all 1025 Pokémon
-- Theme toggle: `<button aria-label="Switch to {mode} mode">` — cycles light/dark/system
-- Language selector: `<select aria-label="Language selector">` — 9 options, flags
-- Main nav: desktop horizontal links, mobile hamburger (`<button aria-label="Open menu">`) triggers sheet/panel
-
-## Homepage (/en) — Core Interaction Flow
-
-1. Hero section: `<h1>` + search bar + filter controls
-2. Filter bar: Buttons for Type (18 types), Generation (gen1–gen9), Region (10 regions)
-3. Pokédex grid filled with [Pokémon cards](https://lunidex.app/en/pikachu)
-4. Each Pokémon card: `<a href="/en/pokemon/{name}">` containing sprite `<img>`, name, types, National Dex number
-5. "Load More" button at bottom triggers infinite scroll
-6. "Recently Viewed" section (conditionally rendered when history exists)
-
-## Pokémon Detail Page Sections
-
-Example: [Pikachu](https://lunidex.app/en/pikachu)
-
-- Hero: Sprite image, name, National Dex number, type badges, genus
-- Base Stats: Horizontal bar chart (HP, ATK, DEF, SPA, SPD, SPE)
-- Type Matchups: 4-column grid (2× weakness, 2× resistance)
-- Evolution Chain: Tree/cascade of evolution stages with sprites and conditions
-- Abilities: List with descriptions (non-default ones lazy-loaded on click)
-- Moves: Filterable table (by type, category, generation) with learn method
-- Encounters: Location/condition tables per generation
-- TCG Cards: Horizontal scroll of trading cards (if any exist)
-- Competitive: EV spread recommendations, held items, ability/tera type suggestions
-
-## Key Interactive Patterns
-
-- **Client-side navigation**: Links use `<a>` tags with Next.js prefetch (no page reload)
-- **Theme switching**: Sets `class="dark"` on `<html>`, CSS custom properties adjust — smooth transition on `background-color`
-- **Filters**: URL search params updated on filter change (`useRouter.push`); page preserves state on back/forward
-- **Infinite scroll**: IntersectionObserver + TanStack Query `useInfiniteQuery` with `getNextPageParam`
-- **Caching**: TanStack Query `staleTime: 600000`, `gcTime: 3600000`, `retry: 1`, `refetchOnWindowFocus: false`
-- **Persistent state**: Zustand store → IndexedDB via idb-keyval (favorites, team, caught, compare list, view history, settings, filters, TCG collections)
-
-## API Endpoints (consumed server-side)
-
-- `GET https://pokeapi.co/api/v2/pokemon-species/{id}` — species data
-- `GET https://pokeapi.co/api/v2/pokemon/{id}` — stats, types, abilities
-- `GET https://pokeapi.co/api/v2/evolution-chain/{id}` — evolution data
-- `GET https://pokeapi.co/api/v2/move/{id}` — move details
-- `POST https://beta.pokeapi.co/graphql/v1beta` — localized names, flavor text
-- `GET https://api.tcgdex.net/v2/en/cards?pokemon={name}` — TCG cards
-- `GET /api/tcg/sets` — TCG set listing (server proxy)
-- Neon PostgreSQL and Neon Auth — authenticated application data and user collection sync
-
-## Item Identifiers
-
-- Pokémon: `name` (slug, e.g. "pikachu"), `id` (National Dex number 1–1025)
-- Types: `normal`, `fire`, `water`, `electric`, `grass`, `ice`, `fighting`, `poison`, `ground`, `flying`, `psychic`, `bug`, `rock`, `ghost`, `dragon`, `dark`, `steel`, `fairy`
-- Moves: `name` (slug, e.g. "thunderbolt"), `id` (integer)
-- TCG Cards: `id` (string, e.g. "swsh1-1"), TCG Sets: `id` (string, e.g. "swsh1")
-- Generations: `gen1` through `gen9`
-
-## Languages
-
-The site is fully localized in 8 languages: [English](https://lunidex.app/en), [French](https://lunidex.app/fr), [German](https://lunidex.app/de), [Spanish](https://lunidex.app/es), [Italian](https://lunidex.app/it), [Japanese](https://lunidex.app/ja), [Korean](https://lunidex.app/ko), [Chinese](https://lunidex.app/zh). Each page declares `hreflang` alternates and an `x-default` pointing to `/en`.
-
-## Licensing
-
-- Application code: [MIT License](https://github.com/teefloo/Poke/blob/main/LICENSE)
-- Pokémon data, names, and imagery: © Nintendo, Game Freak, The Pokémon Company
-- This is a non-commercial fan project for educational and entertainment purposes only
+This file was reviewed against the application source on 2026-08-15. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

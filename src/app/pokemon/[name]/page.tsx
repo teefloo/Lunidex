@@ -103,7 +103,6 @@ export async function generateMetadata(
         url: `/${lang}/pokemon/${name}`,
         locale: languageToMetadataLocale[lang],
         siteName: 'Lunidex',
-        publishedTime: '2024-01-15T00:00:00Z',
         authors: ['Lunidex'],
         section: 'Pokédex',
         tags: [
@@ -136,7 +135,6 @@ export async function generateMetadata(
         'Abilities'
       ],
       other: {
-        'article:published_time': '2024-01-15T00:00:00Z',
         'article:author': 'Lunidex',
         'article:section': 'Pokédex',
         'pokemon:dex': String(pokemon.id),
@@ -146,8 +144,6 @@ export async function generateMetadata(
         'citation_publisher': 'Lunidex',
         'citation_author': 'Lunidex',
         'citation_language': lang,
-        'citation_release_date': '2024-01-15',
-        'citation_online_date': '2026-06-04',
         'DC.title': displayName,
         'DC.creator': 'Lunidex',
         'DC.subject': pokemon.types.map(t => t.type.name).join(', '),

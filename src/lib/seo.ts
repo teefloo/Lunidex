@@ -1,4 +1,4 @@
-import { SITE_NAME, SITE_TAGLINE, SITE_URL } from './site';
+import { GITHUB_REPO_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from './site';
 import { OG_SIZE } from '@/lib/og/theme';
 import { supportedLanguages, languageToMetadataLocale, type SupportedLanguage } from '@/lib/languages';
 
@@ -13,6 +13,29 @@ export const DEFAULT_OG_IMAGE = {
   height: OG_SIZE.height,
   alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
 } as const;
+
+/**
+ * Shared entity node used by page schemas that identify Lunidex as the
+ * publisher or author. Keeping one stable @id makes those references
+ * resolvable when a crawler reads only one page instead of the whole site.
+ */
+export function buildOrganizationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/icon-512.png`,
+      width: 512,
+      height: 512,
+    },
+    sameAs: [GITHUB_REPO_URL],
+  };
+}
 
 function normalizePath(item: { path: string; lang?: SupportedLanguage }): string {
   const raw = item.path.startsWith('/') ? item.path : `/${item.path}`;

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -46,7 +47,7 @@ export default async function MovesLayout({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
             name: t('moves_page.title'),
@@ -61,7 +62,7 @@ export default async function MovesLayout({
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
       {children}
     </>

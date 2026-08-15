@@ -5,6 +5,7 @@ import { DEFAULT_OG_IMAGE, buildWebPageJsonLd } from '@/lib/seo';
 import { SITE_NAME } from '@/lib/site';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { buildLunidexHomeFaqJsonLd } from '@/lib/lunidex-home-content';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export const viewport: Viewport = {
   colorScheme: 'light',
@@ -45,7 +46,7 @@ export default async function Home() {
   return (
     <div className="app-page">
       <HomeArchiveExperience />
-      <script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd({ '@graph': jsonLd }) }} />
     </div>
   );
 }
