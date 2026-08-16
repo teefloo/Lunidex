@@ -1463,7 +1463,7 @@ export default {
       cta: 'Entdecken starten',
       pokedex: {
         title: 'Nationaler Pokédex',
-        description: 'Durchstöbere alle 1025 Pokémon mit detaillierten Stats, Fähigkeiten, Shiny-Formen, Rufen und lokalisierten Namen in 7 Sprachen.',
+        description: 'Durchstöbere alle 1025 Pokémon mit detaillierten Stats, Fähigkeiten, Shiny-Formen, Rufen und lokalisierten Namen in 8 Sprachen.',
         aria: 'Nationalen Pokédex durchstöbern — alle 1025 Pokémon erkunden',
       },
       team_builder: {

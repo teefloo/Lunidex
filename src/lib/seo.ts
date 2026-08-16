@@ -70,6 +70,67 @@ export function buildInLanguage(lang: SupportedLanguage) {
   return languageToMetadataLocale[lang];
 }
 
+export type DefinedTermProperty = {
+  name: string;
+  value: string | number | boolean;
+  unitText?: string;
+};
+
+/**
+ * Describes a reference entry such as a move, ability, or item as a
+ * machine-readable term while keeping the page itself as the canonical URL.
+ * These entries are sourced from PokéAPI and are not original Lunidex claims.
+ */
+export function buildDefinedTermJsonLd({
+  lang,
+  path,
+  name,
+  description,
+  identifier,
+  setName,
+  setPath,
+  image,
+  additionalProperty,
+}: {
+  lang: SupportedLanguage;
+  path: string;
+  name: string;
+  description: string;
+  identifier: string | number;
+  setName: string;
+  setPath: string;
+  image?: string;
+  additionalProperty?: DefinedTermProperty[];
+}) {
+  const url = `${SITE_URL}${path}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTerm',
+    '@id': `${url}#term`,
+    name,
+    description,
+    identifier: String(identifier),
+    termCode: String(identifier),
+    url,
+    inLanguage: buildInLanguage(lang),
+    inDefinedTermSet: {
+      '@type': 'DefinedTermSet',
+      name: setName,
+      url: `${SITE_URL}${localeHref(setPath, lang)}`,
+    },
+    ...(image ? { image } : {}),
+    ...(additionalProperty && additionalProperty.length > 0
+      ? {
+          additionalProperty: additionalProperty.map((property) => ({
+            '@type': 'PropertyValue',
+            ...property,
+          })),
+        }
+      : {}),
+  };
+}
+
 export function localeHref(path: string, lang: SupportedLanguage): string {
   const normalized = path.startsWith('/') ? path : `/${path}`;
   if (normalized === '/') return `/${lang}`;

@@ -19,7 +19,9 @@ import MoveLearnerGrid from '@/components/moves/MoveLearnerGrid';
 import MoveBestUsers from '@/components/moves/MoveBestUsers';
 import type { LearnerEntry } from '@/components/moves/MoveLearnerGrid';
 import { REST_API_BASE } from '@/lib/api/client';
-import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -153,6 +155,46 @@ export default async function MoveDetailPage({ params }: Props) {
   // Generation label
   const genName = move.generation.name;
   const genLabel = GENERATION_LABELS[genName] ?? genName;
+  const effectDescription = (effectEntry?.effect ?? effectEntry?.short_effect ?? t('moves_page.no_description_detail'))
+    .replace(/\n|\f/g, ' ')
+    .trim();
+
+  const routePath = `/${lang}/moves/${name}`;
+  const moveTermJsonLd = buildDefinedTermJsonLd({
+    lang,
+    path: routePath,
+    name: displayName,
+    description: effectDescription,
+    identifier: move.id,
+    setName: t('moves_page.title'),
+    setPath: '/moves',
+    additionalProperty: [
+      { name: 'Type', value: move.type.name },
+      { name: 'Damage class', value: damageClass },
+      { name: 'Generation', value: genName },
+      ...(move.power !== null ? [{ name: 'Power', value: move.power }] : []),
+      ...(move.accuracy !== null ? [{ name: 'Accuracy', value: move.accuracy, unitText: '%' }] : []),
+      { name: 'PP', value: move.pp },
+      { name: 'Priority', value: move.priority },
+      ...(move.effect_chance !== null ? [{ name: 'Effect chance', value: move.effect_chance, unitText: '%' }] : []),
+    ],
+  });
+  const moveWebPageJsonLd = {
+    ...buildWebPageJsonLd({
+      lang,
+      path: routePath,
+      name: `${displayName} — ${t('moves_page.title')}`,
+      description: effectDescription,
+      keywords: `${displayName}, Pokémon move, ${move.type.name}, ${damageClass}`,
+    }),
+    about: { '@id': `${SITE_URL}${routePath}#term` },
+    mainEntity: { '@id': `${SITE_URL}${routePath}#term` },
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Lunidex', path: '/' },
+    { name: t('moves_page.title'), path: '/moves' },
+    { name: displayName, path: `/moves/${name}` },
+  ], lang);
 
   // Learners — build flat list from learned_by_pokemon (up to all of them)
   // We'll fetch stats of up to 20 to determine best users
@@ -243,7 +285,14 @@ export default async function MoveDetailPage({ params }: Props) {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({ '@graph': [moveWebPageJsonLd, moveTermJsonLd, breadcrumbJsonLd] }),
+        }}
+      />
+      <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div
@@ -337,11 +386,7 @@ export default async function MoveDetailPage({ params }: Props) {
                   {t('moves_page.full_effect_label')}
                 </h2>
               </div>
-              <p className="text-sm leading-7 text-foreground/70">
-                {effectEntry?.effect?.replace(/\n/g, ' ').trim() ??
-                  effectEntry?.short_effect?.replace(/\n/g, ' ').trim() ??
-                  t('moves_page.no_description_detail')}
-              </p>
+              <p className="text-sm leading-7 text-foreground/70">{effectDescription}</p>
             </section>
 
             {/* Flavor text */}
@@ -443,7 +488,8 @@ export default async function MoveDetailPage({ params }: Props) {
           </aside>
         </div>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
 

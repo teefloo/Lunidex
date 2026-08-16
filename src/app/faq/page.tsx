@@ -3,6 +3,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import FaqSection from '@/components/ui/FaqSection';
+import { localizeInternalRouteReferences } from '@/lib/lunidex-home-content';
 import {
   SITE_URL,
   SITE_NAME,
@@ -16,7 +17,7 @@ import { HelpCircle, Github, MessageCircleQuestion } from 'lucide-react';
 type FaqEntry = { q: string; a: string };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-08-15';
+const LAST_UPDATED = '2026-08-16';
 const FAQ_COUNT = 12;
 
 export const revalidate = 3600;
@@ -60,24 +61,25 @@ export default async function FaqPage() {
     date: formattedLastUpdated,
     count: FAQ_COUNT,
   });
+  const answer = (key: string) => localizeInternalRouteReferences(t(key), lang);
 
   const data: FaqEntry[] = [
-    { q: t('faq.q1'), a: t('faq.a1') },
-    { q: t('faq.q2'), a: t('faq.a2') },
-    { q: t('faq.q3'), a: t('faq.a3') },
-    { q: t('faq.q4'), a: t('faq.a4') },
+    { q: t('faq.q1'), a: answer('faq.a1') },
+    { q: t('faq.q2'), a: answer('faq.a2') },
+    { q: t('faq.q3'), a: answer('faq.a3') },
+    { q: t('faq.q4'), a: answer('faq.a4') },
   ];
   const features: FaqEntry[] = [
-    { q: t('faq.q5'), a: t('faq.a5') },
-    { q: t('faq.q6'), a: t('faq.a6') },
-    { q: t('faq.q7'), a: t('faq.a7') },
-    { q: t('faq.q8'), a: t('faq.a8') },
+    { q: t('faq.q5'), a: answer('faq.a5') },
+    { q: t('faq.q6'), a: answer('faq.a6') },
+    { q: t('faq.q7'), a: answer('faq.a7') },
+    { q: t('faq.q8'), a: answer('faq.a8') },
   ];
   const privacy: FaqEntry[] = [
-    { q: t('faq.q9'), a: t('faq.a9') },
-    { q: t('faq.q10'), a: t('faq.a10') },
-    { q: t('faq.q11'), a: t('faq.a11') },
-    { q: t('faq.q12'), a: t('faq.a12') },
+    { q: t('faq.q9'), a: answer('faq.a9') },
+    { q: t('faq.q10'), a: answer('faq.a10') },
+    { q: t('faq.q11'), a: answer('faq.a11') },
+    { q: t('faq.q12'), a: answer('faq.a12') },
   ];
 
   const breadcrumb = buildBreadcrumbJsonLd(

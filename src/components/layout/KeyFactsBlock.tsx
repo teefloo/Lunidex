@@ -1,4 +1,5 @@
 import { getServerT } from '@/lib/server-i18n';
+import { supportedLanguages } from '@/lib/languages';
 
 type Stat = {
   value: string;
@@ -23,7 +24,7 @@ const STATS: Stat[] = [
     source: { name: 'Bulbapedia', url: 'https://bulbapedia.bulbagarden.net/wiki/Type' },
   },
   {
-    value: '9',
+    value: String(supportedLanguages.length),
     label: 'Interface languages supported',
     source: { name: 'Lunidex', url: 'https://lunidex.app' },
   },

@@ -34,4 +34,4 @@ TCG-Data: https://www.tcgdex.net
 # - /llms-full.txt
 # - /opensearch.xml
 
-# Reviewed against the application source: 2026-08-15
+# Reviewed against the application source: 2026-08-16

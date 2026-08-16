@@ -10,7 +10,9 @@ import { getAbilityPokemon } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { formatName } from '@/lib/utils';
-import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -76,11 +78,51 @@ export default async function AbilityDetailPage({ params }: Props) {
     || ability.effect_entries.find((e) => e.language.name === 'en');
   const flavorEntry = ability.flavor_text_entries.find((e) => e.language.name === lang)
     || ability.flavor_text_entries.find((e) => e.language.name === 'en');
+  const effectDescription = (effectEntry?.effect?.replace(/\n|\f/g, ' ').trim()
+    || effectEntry?.short_effect?.replace(/\n|\f/g, ' ').trim()
+    || t('detail.no_ability_desc'));
 
   const learners = await getAbilityPokemon(name, langId).catch(() => []);
+  const routePath = `/${lang}/abilities/${name}`;
+  const abilityTermJsonLd = buildDefinedTermJsonLd({
+    lang,
+    path: routePath,
+    name: localizedName,
+    description: effectDescription,
+    identifier: ability.id,
+    setName: t('abilities_page.title', { defaultValue: 'Abilities' }),
+    setPath: '/abilities',
+    additionalProperty: [
+      { name: 'Main series', value: ability.is_main_series },
+      { name: 'Pokémon using ability', value: learners.length },
+    ],
+  });
+  const abilityWebPageJsonLd = {
+    ...buildWebPageJsonLd({
+      lang,
+      path: routePath,
+      name: `${localizedName} — ${t('abilities_page.title', { defaultValue: 'Ability' })}`,
+      description: effectDescription,
+      keywords: `${localizedName}, Pokémon ability, Pokémon abilities`,
+    }),
+    about: { '@id': `${SITE_URL}${routePath}#term` },
+    mainEntity: { '@id': `${SITE_URL}${routePath}#term` },
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Lunidex', path: '/' },
+    { name: t('abilities_page.title', { defaultValue: 'Abilities' }), path: '/abilities' },
+    { name: localizedName, path: `/abilities/${name}` },
+  ], lang);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({ '@graph': [abilityWebPageJsonLd, abilityTermJsonLd, breadcrumbJsonLd] }),
+        }}
+      />
+      <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_32%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,var(--background)_86%)] opacity-80" />
@@ -131,9 +173,7 @@ export default async function AbilityDetailPage({ params }: Props) {
                 </h2>
               </div>
               <p className="text-sm leading-7 text-foreground/70">
-                {effectEntry?.effect?.replace(/\n|\f/g, ' ').trim()
-                  || effectEntry?.short_effect?.replace(/\n|\f/g, ' ').trim()
-                  || t('moves_page.no_description')}
+                {effectDescription}
               </p>
             </section>
 
@@ -206,6 +246,7 @@ export default async function AbilityDetailPage({ params }: Props) {
           </aside>
         </div>
       </main>
-    </div>
+      </div>
+    </>
   );
 }

@@ -1486,7 +1486,7 @@ export default {
       cta: 'Start Exploring',
       pokedex: {
         title: 'National Pokédex',
-        description: 'Browse all 1025 Pokémon with detailed stats, abilities, shinies, cries, and localized names across 7 languages.',
+        description: 'Browse all 1025 Pokémon with detailed stats, abilities, shinies, cries, and localized names across 8 languages.',
         aria: 'Browse the National Pokédex — explore all 1025 Pokémon',
       },
       team_builder: {

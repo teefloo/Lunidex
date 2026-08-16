@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient, { REST_API_BASE } from './client';
 import { getCachedData, setCachedData } from './cache';
 import { PokemonDetail, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
 
@@ -78,6 +78,28 @@ export const getAllPokemonNames = async (): Promise<{ name: string; url: string 
     throw error;
   }
 };
+
+type NamedResource = 'move' | 'ability' | 'item';
+
+async function getAllNamedResourceNames(resource: NamedResource, limit: number): Promise<string[]> {
+  const response = await fetch(`${REST_API_BASE}/${resource}?limit=${limit}`, {
+    next: { revalidate: 3600 },
+  });
+  if (!response.ok) throw new Error(`Failed to fetch ${resource} names: ${response.status}`);
+
+  const data = await response.json() as {
+    results?: { name?: unknown }[];
+  };
+
+  return Array.isArray(data.results)
+    ? data.results.flatMap((entry) => typeof entry.name === 'string' && entry.name ? [entry.name] : [])
+    : [];
+}
+
+/** Lightweight name listings used by server-side discovery surfaces such as the sitemap. */
+export const getAllMoveNames = () => getAllNamedResourceNames('move', 2000);
+export const getAllAbilityNames = () => getAllNamedResourceNames('ability', 1000);
+export const getAllItemNames = () => getAllNamedResourceNames('item', 2000);
 
 export const getPokemonByGeneration = async (id: string): Promise<{ name: string; url: string }[]> => {
   const cacheKey = `gen-pokemon-${id}`;

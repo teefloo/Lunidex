@@ -9,7 +9,9 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getItemDetail } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
-import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -64,9 +66,52 @@ export default async function ItemDetailPage({ params }: Props) {
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
   const effect = item.pokemon_v2_itemeffecttexts?.[0];
   const flavor = item.pokemon_v2_itemflavortexts?.[0];
+  const effectDescription = (effect?.effect?.replace(/\n|\f/g, ' ').trim()
+    || effect?.short_effect?.replace(/\n|\f/g, ' ').trim()
+    || t('items_page.no_description', { defaultValue: 'No description available.' }));
+  const routePath = `/${lang}/items/${name}`;
+  const itemTermJsonLd = buildDefinedTermJsonLd({
+    lang,
+    path: routePath,
+    name: localizedName,
+    description: effectDescription,
+    identifier: item.id,
+    setName: t('items_page.title', { defaultValue: 'Items' }),
+    setPath: '/items',
+    image: itemSpriteUrl(name),
+    additionalProperty: [
+      ...(item.pokemon_v2_itemcategory
+        ? [{ name: 'Category', value: item.pokemon_v2_itemcategory.name }]
+        : []),
+      ...(item.cost > 0 ? [{ name: 'Cost', value: item.cost, unitText: 'Poké Dollars' }] : []),
+    ],
+  });
+  const itemWebPageJsonLd = {
+    ...buildWebPageJsonLd({
+      lang,
+      path: routePath,
+      name: `${localizedName} — ${t('items_page.title', { defaultValue: 'Item' })}`,
+      description: effectDescription,
+      keywords: `${localizedName}, Pokémon item, Pokémon items`,
+    }),
+    about: { '@id': `${SITE_URL}${routePath}#term` },
+    mainEntity: { '@id': `${SITE_URL}${routePath}#term` },
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Lunidex', path: '/' },
+    { name: t('items_page.title', { defaultValue: 'Items' }), path: '/items' },
+    { name: localizedName, path: `/items/${name}` },
+  ], lang);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({ '@graph': [itemWebPageJsonLd, itemTermJsonLd, breadcrumbJsonLd] }),
+        }}
+      />
+      <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_32%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,var(--background)_86%)] opacity-80" />
@@ -131,9 +176,7 @@ export default async function ItemDetailPage({ params }: Props) {
                 </h2>
               </div>
               <p className="text-sm leading-7 text-foreground/70">
-                {effect?.effect?.replace(/\n|\f/g, ' ').trim()
-                  || effect?.short_effect?.replace(/\n|\f/g, ' ').trim()
-                  || t('items_page.no_description', { defaultValue: 'No description available.' })}
+                {effectDescription}
               </p>
             </section>
 
@@ -175,6 +218,7 @@ export default async function ItemDetailPage({ params }: Props) {
           </aside>
         </div>
       </main>
-    </div>
+      </div>
+    </>
   );
 }

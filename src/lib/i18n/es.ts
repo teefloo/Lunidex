@@ -1476,7 +1476,7 @@ export default {
       cta: 'Empezar a explorar',
       pokedex: {
         title: 'Pokédex Nacional',
-        description: 'Navega por los 1025 Pokémon con estadísticas detalladas, habilidades, variaciones cromáticas, gritos y nombres localizados en 7 idiomas.',
+        description: 'Navega por los 1025 Pokémon con estadísticas detalladas, habilidades, variaciones cromáticas, gritos y nombres localizados en 8 idiomas.',
         aria: 'Navegar la Pokédex Nacional — explorar los 1025 Pokémon',
       },
       team_builder: {

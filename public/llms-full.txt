@@ -1,5 +1,5 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-08-15
+# Reviewed against the application source: 2026-08-16
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
@@ -144,9 +144,11 @@ Discovery endpoints:
 - https://lunidex.app/opensearch.xml
 
 The public robots policy allows public pages and disallows `/api/`. The
-sitemap is generated from static launch routes plus Pokémon and TCG catalog
-identifiers when the upstream listings are available. A live crawl is required
-to know the current number of emitted URLs.
+sitemap is generated from static launch routes plus Pokémon, move, ability,
+item, and TCG catalog identifiers when the upstream listings are available.
+Personal TCG collection/set album routes are account-gated and remain noindex;
+they are not treated as public reference sources. A live crawl is required to
+know the current number of emitted URLs.
 
 OpenSearch sends a query to `/en/pokedex?q={searchTerms}`. The `q` parameter is
 the application's URL-backed Pokémon search parameter.
@@ -164,6 +166,8 @@ Important route schemas include:
 - Home: `WebPage` and `FAQPage` for the questions rendered on the page.
 - Pokédex: `ItemList` for a small set of representative entries and `WebPage`.
 - Pokémon detail: `WebPage` with the Pokémon entity facts and `BreadcrumbList`.
+- Move, ability and item detail: `DefinedTerm`, `WebPage` and `BreadcrumbList`
+  linked to the localized reference page.
 - TCG catalog: `CollectionPage` and `BreadcrumbList`.
 - TCG card detail: `Product` and `BreadcrumbList`.
 - FAQ and About: page-specific schema plus `BreadcrumbList`.

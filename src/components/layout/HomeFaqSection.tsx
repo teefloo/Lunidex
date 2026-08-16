@@ -1,10 +1,10 @@
-import { getServerT } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { getLunidexHomeFaqs } from '@/lib/lunidex-home-content';
 import { HomeFaqAnchorBehavior } from './HomeFaqAnchorBehavior';
 
 export default async function HomeFaqSection() {
-  const t = await getServerT();
-  const faqs = getLunidexHomeFaqs(t);
+  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const faqs = getLunidexHomeFaqs(t, language);
 
   return (
     <section

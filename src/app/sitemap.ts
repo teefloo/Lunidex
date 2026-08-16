@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllPokemonNames } from '@/lib/api';
+import { getAllAbilityNames, getAllItemNames, getAllMoveNames, getAllPokemonNames } from '@/lib/api';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages } from '@/lib/languages';
 
@@ -113,17 +113,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
   let pokemonList: { name: string; url: string }[] = [];
-  try {
-    pokemonList = await getAllPokemonNames();
-  } catch (error) {
-    console.warn('sitemap: failed to fetch pokemon list, generating static routes only', error);
+  let tcgCardIds: string[] = [];
+  let moveNames: string[] = [];
+  let abilityNames: string[] = [];
+  let itemNames: string[] = [];
+
+  const [pokemonResult, tcgResult, moveResult, abilityResult, itemResult] = await Promise.allSettled([
+    getAllPokemonNames(),
+    getTcgCardIds(),
+    getAllMoveNames(),
+    getAllAbilityNames(),
+    getAllItemNames(),
+  ]);
+
+  if (pokemonResult.status === 'fulfilled') {
+    pokemonList = pokemonResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch pokemon list, generating static routes only', pokemonResult.reason);
   }
 
-  let tcgCardIds: string[] = [];
-  try {
-    tcgCardIds = await getTcgCardIds();
-  } catch (error) {
-    console.warn('sitemap: failed to fetch TCG card list, generating without TCG card routes', error);
+  if (tcgResult.status === 'fulfilled') {
+    tcgCardIds = tcgResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch TCG card list, generating without TCG card routes', tcgResult.reason);
+  }
+
+  if (moveResult.status === 'fulfilled') {
+    moveNames = moveResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch move list, generating without move detail routes', moveResult.reason);
+  }
+
+  if (abilityResult.status === 'fulfilled') {
+    abilityNames = abilityResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch ability list, generating without ability detail routes', abilityResult.reason);
+  }
+
+  if (itemResult.status === 'fulfilled') {
+    itemNames = itemResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch item list, generating without item detail routes', itemResult.reason);
   }
 
   const pokemonUrls: MetadataRoute.Sitemap = pokemonList.map((pokemon) => {
@@ -162,5 +192,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   }));
 
-  return [...staticUrls, ...pokemonUrls, ...tcgCardUrls];
+  const referenceUrls: MetadataRoute.Sitemap = [
+    ...moveNames.map((name) => ({
+      url: `${baseUrl}/en/moves/${name}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      alternates: { languages: buildLanguages(`moves/${name}`) },
+    })),
+    ...abilityNames.map((name) => ({
+      url: `${baseUrl}/en/abilities/${name}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+      alternates: { languages: buildLanguages(`abilities/${name}`) },
+    })),
+    ...itemNames.map((name) => ({
+      url: `${baseUrl}/en/items/${name}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+      alternates: { languages: buildLanguages(`items/${name}`) },
+    })),
+  ];
+
+  return [...staticUrls, ...pokemonUrls, ...referenceUrls, ...tcgCardUrls];
 }

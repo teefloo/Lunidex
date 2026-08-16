@@ -6,6 +6,7 @@ import {
   localeHref,
   buildWebPageJsonLd,
   buildOrganizationJsonLd,
+  buildDefinedTermJsonLd,
   DEFAULT_OG_IMAGE,
 } from './seo';
 import { GITHUB_REPO_URL, SITE_URL } from './site';
@@ -133,5 +134,36 @@ describe('buildOrganizationJsonLd', () => {
       '@type': 'ImageObject',
       url: `${SITE_URL}/icon-512.png`,
     });
+  });
+});
+
+describe('buildDefinedTermJsonLd', () => {
+  it('links a reference term to its localized catalog and page', () => {
+    const ld = buildDefinedTermJsonLd({
+      lang: 'fr',
+      path: '/fr/moves/thunderbolt',
+      name: 'Tonnerre',
+      description: 'A move description.',
+      identifier: 85,
+      setName: 'Moves',
+      setPath: '/moves',
+      additionalProperty: [{ name: 'Power', value: 90 }],
+    });
+
+    expect(ld).toMatchObject({
+      '@type': 'DefinedTerm',
+      '@id': `${SITE_URL}/fr/moves/thunderbolt#term`,
+      url: `${SITE_URL}/fr/moves/thunderbolt`,
+      inLanguage: 'fr-FR',
+      identifier: '85',
+      termCode: '85',
+      inDefinedTermSet: {
+        '@type': 'DefinedTermSet',
+        url: `${SITE_URL}/fr/moves`,
+      },
+    });
+    expect(ld.additionalProperty).toEqual([
+      { '@type': 'PropertyValue', name: 'Power', value: 90 },
+    ]);
   });
 });

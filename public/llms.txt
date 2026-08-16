@@ -68,4 +68,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-15. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-16. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

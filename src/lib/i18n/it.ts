@@ -1463,7 +1463,7 @@ export default {
       cta: 'Inizia a esplorare',
       pokedex: {
         title: 'Pokédex Nazionale',
-        description: 'Sfoglia tutti i 1025 Pokémon con statistiche dettagliate, abilità, shiny, versi e nomi localizzati in 7 lingue.',
+        description: 'Sfoglia tutti i 1025 Pokémon con statistiche dettagliate, abilità, shiny, versi e nomi localizzati in 8 lingue.',
         aria: 'Sfogliare il Pokédex Nazionale — esplorare tutti i 1025 Pokémon',
       },
       team_builder: {
