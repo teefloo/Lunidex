@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { Mail } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronRight, Home, Mail } from 'lucide-react';
 
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
@@ -53,7 +53,23 @@ export default async function ContactPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <div className="app-page">
         <Header />
-        <Breadcrumbs items={[{ label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` }, { label: title }]} homeLabel={t('common.home', { defaultValue: 'Home' })} />
+        <nav aria-label="Breadcrumb" className="page-shell px-5 pt-24 md:px-8">
+          <ol className="flex flex-wrap items-center gap-y-2 text-xs font-medium text-foreground/50">
+            <li className="flex min-w-0 items-center">
+              <Link
+                href={`/${lang}`}
+                className="inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40"
+              >
+                <Home aria-hidden="true" className="mr-1.5 h-3.5 w-3.5" />
+                {t('common.home', { defaultValue: 'Home' })}
+              </Link>
+            </li>
+            <li className="flex min-w-0 items-center" aria-current="page">
+              <ChevronRight aria-hidden="true" className="mx-2 h-3.5 w-3.5 shrink-0 text-foreground/25" />
+              <span className="max-w-[min(70vw,28rem)] truncate font-semibold text-foreground/80">{title}</span>
+            </li>
+          </ol>
+        </nav>
         <main className="page-shell pb-24 pt-28">
           <PageHeader icon={Mail} eyebrow={t('contact.eyebrow')} title={title} description={description} />
           <article className="mx-auto grid w-full max-w-5xl gap-8 px-5 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:px-8">
