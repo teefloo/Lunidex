@@ -20,9 +20,9 @@ const privacy: LegalDocument = {
       table: {
         headers: ['Rôle', 'Identité', 'Contact'],
         rows: [
-          ['Éditeur (responsable du traitement)', 'Particulier — Lunidex', 'estdel3012@gmail.com'],
+          ['Éditeur (responsable du traitement)', 'Particulier — Lunidex', 'contact@lunidex.app'],
           ['Hébergeur (sous-traitant)', 'Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA', 'privacy@vercel.com'],
-          ['Délégué à la protection des données', 'Non désigné (traitement à faible risque)', 'estdel3012@gmail.com'],
+          ['Délégué à la protection des données', 'Non désigné (traitement à faible risque)', 'contact@lunidex.app'],
         ],
       },
       callout: {
@@ -145,7 +145,7 @@ const privacy: LegalDocument = {
       ],
       callout: {
         type: 'info',
-        text: "Pour exercer vos droits ou obtenir une copie des garanties de transfert, vous pouvez nous contacter à l'adresse estdel3012@gmail.com.",
+        text: "Pour exercer vos droits ou obtenir une copie des garanties de transfert, vous pouvez nous contacter à l'adresse contact@lunidex.app.",
       },
     },
     {
@@ -194,7 +194,7 @@ const privacy: LegalDocument = {
         "Droits CCPA (résidents californiens) : droit de savoir, de suppression, de retrait, de non-discrimination.",
       ],
       paragraphs: [
-        "Pour exercer l'un de ces droits, écrivez-nous à estdel3012@gmail.com. Nous vous répondrons dans un délai maximum de 30 jours. Une pièce d'identité pourra être demandée pour vérifier que la demande émane bien de vous.",
+        "Pour exercer l'un de ces droits, écrivez-nous à contact@lunidex.app. Nous vous répondrons dans un délai maximum de 30 jours. Une pièce d'identité pourra être demandée pour vérifier que la demande émane bien de vous.",
         "Vous pouvez également introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés, www.cnil.fr) ou, pour les résidents de l'UE, auprès de votre autorité nationale de protection des données. Pour les résidents californiens, vous pouvez contacter le California Attorney General (oag.ca.gov).",
       ],
     },
@@ -230,7 +230,7 @@ const privacy: LegalDocument = {
       table: {
         headers: ['Canal', 'Détail'],
         rows: [
-          ['E-mail', 'estdel3012@gmail.com'],
+          ['E-mail', 'contact@lunidex.app'],
           ['Délai de réponse', '30 jours maximum (Art. 12.3 RGPD)'],
           ['Langue', 'Français ou anglais'],
           ['Code source', 'github.com/Teeflo/Poke (issues publiques)'],
@@ -270,7 +270,7 @@ const terms: LegalDocument = {
       ],
       paragraphs: [
         "Les marques, noms, sprites, illustrations, sons, vidéos, et tout autre contenu lié à l'univers Pokémon restent la propriété exclusive de leurs titulaires respectifs. Lunidex n'en revendique aucune propriété.",
-        "L'utilisation des marques et contenus Pokémon est faite à des fins de fan project non commercial, ce qui, dans la plupart des juridictions, relève d'un usage descriptif et informatif nativement autorisé. Si un titulaire de droits estime qu'un contenu porte atteinte à ses droits, nous nous engageons à le retirer promptement après notification à l'adresse estdel3012@gmail.com.",
+        "L'utilisation des marques et contenus Pokémon est faite à des fins de fan project non commercial, ce qui, dans la plupart des juridictions, relève d'un usage descriptif et informatif nativement autorisé. Si un titulaire de droits estime qu'un contenu porte atteinte à ses droits, nous nous engageons à le retirer promptement après notification à l'adresse contact@lunidex.app.",
         "Le code source du site est publié sous licence MIT (open source). Cela ne confère aucun droit sur les marques Pokémon : la licence MIT s'applique uniquement au code écrit par l'auteur de Lunidex.",
       ],
     },
@@ -322,7 +322,7 @@ const terms: LegalDocument = {
       id: 'accountability',
       title: '7. Signalement de contenu illicite',
       paragraphs: [
-        "Si vous estimez qu'un contenu affiché sur Lunidex porte atteinte à vos droits (propriété intellectuelle, diffamation, etc.), vous pouvez nous contacter à l'adresse estdel3012@gmail.com en précisant : la nature du contenu en cause, son URL exacte, votre qualité (titulaire des droits ou représentant), et tout élément justificatif.",
+        "Si vous estimez qu'un contenu affiché sur Lunidex porte atteinte à vos droits (propriété intellectuelle, diffamation, etc.), vous pouvez nous contacter à l'adresse contact@lunidex.app en précisant : la nature du contenu en cause, son URL exacte, votre qualité (titulaire des droits ou représentant), et tout élément justificatif.",
         "Nous nous engageons à examiner toute notification dans un délai raisonnable et, le cas échéant, à retirer ou modifier le contenu concerné.",
       ],
     },
@@ -346,7 +346,7 @@ const terms: LegalDocument = {
       id: 'contact',
       title: '10. Contact',
       paragraphs: [
-        "Pour toute question relative à ces CGU, vous pouvez nous contacter à l'adresse estdel3012@gmail.com.",
+        "Pour toute question relative à ces CGU, vous pouvez nous contacter à l'adresse contact@lunidex.app.",
       ],
     },
   ],
@@ -371,7 +371,7 @@ const legalNotice: LegalDocument = {
           ['Dénomination', 'Lunidex (nom de projet personnel)'],
           ['Statut', 'Particulier — projet personnel non commercial'],
           ['Responsable de la publication', 'Particulier éditeur'],
-          ['Contact', 'estdel3012@gmail.com'],
+          ['Contact', 'contact@lunidex.app'],
           ['SIRET', 'Non applicable (absence de personne morale)'],
           ['Numéro de TVA', 'Non applicable'],
           ['Adresse', 'Non publiée (particulier)'],
@@ -418,7 +418,7 @@ const legalNotice: LegalDocument = {
       id: 'contact',
       title: '5. Contact',
       paragraphs: [
-        "Pour toute demande relative au site (questions, signalement, exercice de droits RGPD), vous pouvez nous contacter à : estdel3012@gmail.com.",
+        "Pour toute demande relative au site (questions, signalement, exercice de droits RGPD), vous pouvez nous contacter à : contact@lunidex.app.",
       ],
     },
     {
@@ -544,7 +544,7 @@ const cookies: LegalDocument = {
       id: 'contact',
       title: '7. Contact',
       paragraphs: [
-        "Pour toute question relative à cette politique, vous pouvez nous contacter à : estdel3012@gmail.com.",
+        "Pour toute question relative à cette politique, vous pouvez nous contacter à : contact@lunidex.app.",
       ],
     },
   ],

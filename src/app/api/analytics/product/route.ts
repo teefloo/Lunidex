@@ -46,6 +46,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!sql) return new NextResponse(null, { status: 503, headers });
   try {
     await sql`
+      delete from analytics.daily_metrics
+      where metric_date < current_date - 90
+    `;
+    await sql`
       select analytics.increment_daily_metric(
         ${event}, ${payload.propertyA ?? ''}, ${payload.propertyB ?? ''}
       )

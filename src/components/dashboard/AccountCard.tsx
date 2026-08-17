@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { toast } from '@/lib/toast';
-import { LogOut, LogIn, User as UserIcon, Globe, Copy, Check, ExternalLink } from 'lucide-react';
+import { LogOut, LogIn, User as UserIcon, Globe, Copy, Check, ExternalLink, Download, Trash2 } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -186,6 +186,51 @@ export default function AccountCard() {
     router.push(localeHref('/'));
   };
 
+  const handleExport = async () => {
+    const response = await fetchAppApi('/api/account/export', { cache: 'no-store' });
+    if (!response.ok) {
+      toast.error(tt('account.export_error', 'Your data could not be exported.'));
+      return;
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'lunidex-account-export.json';
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(tt('account.export_success', 'Your data export is ready.'));
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmation = window.prompt(tt('account.delete_prompt', 'Type DELETE to permanently delete your account and synced data.'));
+    if (confirmation !== 'DELETE') return;
+
+    const response = await fetchAppApi('/api/account', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirmation }),
+    });
+    if (!response.ok) {
+      toast.error(tt('account.delete_error', 'Your account could not be deleted.'));
+      return;
+    }
+    try {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      document.cookie = 'primedex-lang=; path=/; max-age=0; samesite=lax';
+    } catch {
+      // Local storage may be unavailable; the server-side account deletion still completed.
+    }
+    try {
+      await signOut();
+    } catch {
+      // The auth account may already be deleted; navigation still leaves the session area.
+    }
+    toast.success(tt('account.delete_success', 'Your account and synced data were deleted.'));
+    router.push(localeHref('/'));
+  };
+
   return (
     <div className="space-y-3">
       {/* Account info */}
@@ -308,6 +353,25 @@ export default function AccountCard() {
           )}
         </div>
       )}
+
+      <div className="glass-card flex flex-col gap-3 rounded-sm p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-sm font-bold text-foreground">{tt('account.data_title', 'Your data')}</h2>
+          <p className="mt-1 text-xs leading-relaxed text-foreground/55">
+            {tt('account.data_description', 'Export or delete the data linked to this account.')}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => void handleExport()}>
+            <Download className="h-4 w-4" />
+            {tt('account.export', 'Export data')}
+          </Button>
+          <Button variant="destructive" size="sm" onClick={() => void handleDeleteAccount()}>
+            <Trash2 className="h-4 w-4" />
+            {tt('account.delete', 'Delete account')}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -157,7 +157,7 @@ export default function CookieBanner() {
           </fieldset>
         )}
         <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:flex sm:items-center sm:justify-end sm:gap-2.5">
-          <Button type="button" variant="ghost" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={handleReject}>
+          <Button type="button" variant="default" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={handleReject}>
             {t('legal.banner.reject', { defaultValue: 'Reject all' })}
           </Button>
           <Button type="button" variant="ghost" size="touch" className="w-full min-w-0 px-1.5 text-[0.6875rem] leading-tight whitespace-normal sm:w-auto sm:px-4 sm:text-sm sm:whitespace-nowrap" onClick={() => setCustomizing(true)}>{labels.customize}</Button>

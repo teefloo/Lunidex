@@ -455,6 +455,6 @@ group by event_name, property_a, property_b;
 comment on function public.set_updated_at() is
   'Shared timestamp trigger for the Neon application schema.';
 comment on table analytics.daily_metrics is
-  'Private product metrics. Retention is handled by the deployment scheduler, not pg_cron.';
+  'Private product metrics. The application endpoint purges rows older than 90 days before metric writes.';
 
 commit;

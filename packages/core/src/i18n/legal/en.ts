@@ -20,9 +20,9 @@ const privacy: LegalDocument = {
       table: {
         headers: ['Role', 'Identity', 'Contact'],
         rows: [
-          ['Publisher (Data Controller)', 'Individual — Lunidex', 'estdel3012@gmail.com'],
+          ['Publisher (Data Controller)', 'Individual — Lunidex', 'contact@lunidex.app'],
           ['Host (Processor)', 'Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA', 'privacy@vercel.com'],
-          ['Data Protection Officer', 'Not designated (low-risk processing)', 'estdel3012@gmail.com'],
+          ['Data Protection Officer', 'Not designated (low-risk processing)', 'contact@lunidex.app'],
         ],
       },
       callout: {
@@ -145,7 +145,7 @@ const privacy: LegalDocument = {
       ],
       callout: {
         type: 'info',
-        text: 'To exercise your rights or obtain a copy of the transfer safeguards, you can contact us at estdel3012@gmail.com.',
+        text: 'To exercise your rights or obtain a copy of the transfer safeguards, you can contact us at contact@lunidex.app.',
       },
     },
     {
@@ -193,7 +193,7 @@ const privacy: LegalDocument = {
         'CCPA rights (California residents): right to know, delete, opt out, and non-discrimination.',
       ],
       paragraphs: [
-        'To exercise any of these rights, write to us at estdel3012@gmail.com. We will respond within a maximum of 30 days. Proof of identity may be required to verify that the request comes from you.',
+        'To exercise any of these rights, write to us at contact@lunidex.app. We will respond within a maximum of 30 days. Proof of identity may be required to verify that the request comes from you.',
         'You may also lodge a complaint with the CNIL (Commission Nationale de l\'Informatique et des Libertés, www.cnil.fr) or, for EU residents, with your national data protection authority. For California residents, you may contact the California Attorney General (oag.ca.gov).',
       ],
     },
@@ -229,7 +229,7 @@ const privacy: LegalDocument = {
       table: {
         headers: ['Channel', 'Detail'],
         rows: [
-          ['Email', 'estdel3012@gmail.com'],
+          ['Email', 'contact@lunidex.app'],
           ['Response time', 'Maximum 30 days (Art. 12.3 GDPR)'],
           ['Languages', 'French or English'],
           ['Source code', 'github.com/Teeflo/Poke (public issues)'],
@@ -269,7 +269,7 @@ const terms: LegalDocument = {
       ],
       paragraphs: [
         'Trademarks, names, sprites, illustrations, sounds, videos, and any other content related to the Pokémon universe remain the exclusive property of their respective rights holders. Lunidex claims no ownership of them.',
-        'The use of Pokémon trademarks and content is made for non-commercial fan project purposes, which, in most jurisdictions, constitutes descriptive and informational use that is inherently permitted. If a rights holder believes that any content infringes their rights, we undertake to remove it promptly after notification at estdel3012@gmail.com.',
+        'The use of Pokémon trademarks and content is made for non-commercial fan project purposes, which, in most jurisdictions, constitutes descriptive and informational use that is inherently permitted. If a rights holder believes that any content infringes their rights, we undertake to remove it promptly after notification at contact@lunidex.app.',
         "The site's source code is released under the MIT License (open source). This does not grant any rights over the Pokémon trademarks: the MIT License applies only to the code written by the Lunidex author.",
       ],
     },
@@ -321,7 +321,7 @@ const terms: LegalDocument = {
       id: 'accountability',
       title: '7. Reporting Illegal Content',
       paragraphs: [
-        'If you believe that any content displayed on Lunidex infringes your rights (intellectual property, defamation, etc.), you can contact us at estdel3012@gmail.com specifying: the nature of the content at issue, its exact URL, your status (rights holder or representative), and any supporting evidence.',
+        'If you believe that any content displayed on Lunidex infringes your rights (intellectual property, defamation, etc.), you can contact us at contact@lunidex.app specifying: the nature of the content at issue, its exact URL, your status (rights holder or representative), and any supporting evidence.',
         'We undertake to review any notification within a reasonable timeframe and, where appropriate, to remove or modify the content concerned.',
       ],
     },
@@ -345,7 +345,7 @@ const terms: LegalDocument = {
       id: 'contact',
       title: '10. Contact',
       paragraphs: [
-        'For any question relating to these TOS, you can contact us at estdel3012@gmail.com.',
+        'For any question relating to these TOS, you can contact us at contact@lunidex.app.',
       ],
     },
   ],
@@ -370,7 +370,7 @@ const legalNotice: LegalDocument = {
           ['Name', 'Lunidex (personal project name)'],
           ['Status', 'Individual — personal non-commercial project'],
           ['Publication Director', 'The individual publisher'],
-          ['Contact', 'estdel3012@gmail.com'],
+          ['Contact', 'contact@lunidex.app'],
           ['SIRET', 'Not applicable (no legal entity)'],
           ['VAT number', 'Not applicable'],
           ['Address', 'Not published (individual)'],
@@ -417,7 +417,7 @@ const legalNotice: LegalDocument = {
       id: 'contact',
       title: '5. Contact',
       paragraphs: [
-        'For any request relating to the site (questions, reporting, exercise of GDPR rights), you can contact us at: estdel3012@gmail.com.',
+        'For any request relating to the site (questions, reporting, exercise of GDPR rights), you can contact us at: contact@lunidex.app.',
       ],
     },
     {
@@ -541,7 +541,7 @@ const cookies: LegalDocument = {
       id: 'contact',
       title: '7. Contact',
       paragraphs: [
-        'For any question relating to this policy, you can contact us at: estdel3012@gmail.com.',
+        'For any question relating to this policy, you can contact us at: contact@lunidex.app.',
       ],
     },
   ],
