@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
-import { getTCGCard } from '@/lib/api/tcg';
+import { getTCGCard, isTcgLangSupported } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { buildInLanguage, buildSubpathLanguages } from '@/lib/seo';
+import { buildInLanguage } from '@/lib/seo';
+import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 
 interface PageProps {
@@ -40,13 +42,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   });
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
   const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${currentLang}`;
+  const indexableLanguages = supportedLanguages.filter(isTcgLangSupported);
+  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
+  const languages = Object.fromEntries(
+    indexableLanguages.map((language) => [language, `/${language}/tcg/cards/${id}`]),
+  );
 
   return {
     title,
     description,
+    robots: isTcgLangSupported(currentLang)
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     alternates: {
-      canonical: `/${currentLang}/tcg/cards/${id}`,
-      languages: buildSubpathLanguages(`/tcg/cards/${id}`),
+      canonical: `/${canonicalLanguage}/tcg/cards/${id}`,
+      languages: { ...languages, 'x-default': `/en/tcg/cards/${id}` },
     },
     openGraph: {
       title,
@@ -127,6 +137,15 @@ export default async function TCGCardPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('common.home', { defaultValue: 'Home' }), href: `/${currentLang}` },
+          { label: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), href: `/${currentLang}/tcg` },
+          ...(setId ? [{ label: setName, href: `/${currentLang}/tcg/collection/${setId}` }] : []),
+          { label: card.name },
+        ]}
+        homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
       <TCGCardDetailRoute card={card} />
     </>

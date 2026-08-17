@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Info, Sparkles, Users } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getAbilityDetail } from '@/lib/api/rest';
@@ -129,6 +130,14 @@ export default async function AbilityDetailPage({ params }: Props) {
       </div>
 
       <Header />
+      <Breadcrumbs
+        items={[
+          { label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` },
+          { label: t('abilities_page.title', { defaultValue: 'Abilities' }), href: `/${lang}/abilities` },
+          { label: localizedName },
+        ]}
+        homeLabel={t('common.home', { defaultValue: 'Home' })}
+      />
 
       <main className="page-shell pb-20 pt-8">
         <div className="mb-6">

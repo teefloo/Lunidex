@@ -24,6 +24,7 @@ import {
   getAllSets,
   getFilterOptions,
   getPokemonCards,
+  isTcgLangSupported,
   searchCards,
   sortCardsByReleaseDate,
 } from './tcg';
@@ -113,6 +114,14 @@ describe('TCG set freshness', () => {
 
     expect(set.logo).toBe('https://assets.tcgdex.net/fr/me/me1/logo.png');
     expect(set.symbol).toBe('https://assets.tcgdex.net/univ/me/me1/symbol.png');
+  });
+});
+
+describe('TCG locale support', () => {
+  it('does not treat the English fallback as a Chinese indexable locale', () => {
+    expect(isTcgLangSupported('en')).toBe(true);
+    expect(isTcgLangSupported('fr')).toBe(true);
+    expect(isTcgLangSupported('zh')).toBe(false);
   });
 });
 

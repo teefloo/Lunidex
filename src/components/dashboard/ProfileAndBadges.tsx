@@ -151,7 +151,7 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
           {profile.avatarPokemonId ? (
             <Image
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${profile.avatarPokemonId}.png`}
-              alt="Avatar"
+              alt="Pokémon avatar"
               width={56}
               height={56}
               className="object-contain drop-shadow-md"

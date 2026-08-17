@@ -96,7 +96,7 @@ export default {
       faq_a5: 'ポケモンの詳細ページ (例: /pokemon/pikachu) を開くと完全な相性表が見られます。あるいは /types のグローバルタイプ表で 18 タイプすべてを並べて比較できます。',
       faq_q6: 'ポケモンクイズはどこで遊べますか?',
       faq_a6: 'ポケモンクイズは /quiz にあります。Classic、Silhouette、Stats、Time Attack、Survival、Marathon の 6 つのゲームモードがあります。難易度はプレイヤーの成績に応じて調整され、会員登録は不要です。',
-      key_facts_caveat: 'データはPokéAPIとTCGdexから取得し、毎時再検証されます。最終確認2026-06-04。',
+      key_facts_caveat: 'データはPokéAPIとTCGdexから取得し、毎時再検証されます。最終確認2026-08-17。',
       key_facts_eyebrow: '数字で見る',
       key_facts_source: '出典',
       key_facts_title: 'オープンウェブで最も完全なポケモン図鑑',

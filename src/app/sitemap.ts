@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getAllAbilityNames, getAllItemNames, getAllMoveNames, getAllPokemonNames } from '@/lib/api';
+import { isTcgLangSupported } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages } from '@/lib/languages';
 
@@ -33,6 +34,7 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
   { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'about', changeFrequency: 'monthly', priority: 0.5 },
+  { path: 'contact', changeFrequency: 'monthly', priority: 0.5 },
 ];
 
 function buildLanguages(path: string): Record<string, string> {
@@ -41,6 +43,18 @@ function buildLanguages(path: string): Record<string, string> {
   for (const lang of supportedLanguages) {
     langs[lang] = `${SITE_URL}/${lang}${normalized}`;
   }
+  return { ...langs, 'x-default': `${SITE_URL}/en${normalized}` };
+}
+
+export function buildTcgLanguages(path: string): Record<string, string> {
+  const normalized = path ? `/${path}` : '';
+  const langs = supportedLanguages
+    .filter(isTcgLangSupported)
+    .reduce<Record<string, string>>((result, lang) => {
+      result[lang] = `${SITE_URL}/${lang}${normalized}`;
+      return result;
+    }, {});
+
   return { ...langs, 'x-default': `${SITE_URL}/en${normalized}` };
 }
 
@@ -188,7 +202,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly' as const,
     priority: 0.6,
     alternates: {
-      languages: buildLanguages(`tcg/cards/${cardId}`),
+      languages: buildTcgLanguages(`tcg/cards/${cardId}`),
     },
   }));
 

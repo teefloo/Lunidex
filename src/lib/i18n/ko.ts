@@ -96,7 +96,7 @@ export default {
       faq_a5: '모든 포켓몬의 상세 페이지(예: /pokemon/pikachu)를 열면 전체 상성 차트를 볼 수 있습니다. 또는 /types의 글로벌 타입 차트에서 18개 타입을 나란히 비교할 수 있습니다.',
       faq_q6: '포켓몬 퀴즈를 어디서 플레이하나요?',
       faq_a6: '포켓몬 퀴즈는 /quiz에 있습니다. Classic, Silhouette, Stats, Time Attack, Survival, Marathon의 6가지 게임 모드가 포함되어 있습니다. 난이도는 플레이어 실력에 따라 조정되며 회원가입이 필요하지 않습니다.',
-      key_facts_caveat: '데이터는 PokéAPI와 TCGdex에서 제공되며 매시간 재검증됩니다. 마지막 확인 2026-06-04.',
+      key_facts_caveat: '데이터는 PokéAPI와 TCGdex에서 제공되며 매시간 재검증됩니다. 마지막 확인 2026-08-17.',
       key_facts_eyebrow: '숫자로 보는',
       key_facts_source: '출처',
       key_facts_title: '오픈 웹에서 가장 완전한 포켓몬 도감',

@@ -10,8 +10,9 @@ import {
   Swords,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
-import { getServerT, getServerLanguage } from '@/lib/server-i18n';
+import { getServerT, getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
 import { TYPE_COLORS } from '@/types/pokemon';
 import type { MoveDetail } from '@/types/move';
 import MoveStatCard from '@/components/moves/MoveStatCard';
@@ -22,6 +23,11 @@ import { REST_API_BASE } from '@/lib/api/client';
 import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
+import {
+  getLocalizedMoveEffectEntry,
+  getLocalizedMoveFlavorText,
+  getLocalizedMoveName,
+} from '@/lib/move-seo';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -90,18 +96,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
   const t = await getServerT();
   const lang = await getServerLanguage();
+  const pokeApiLanguage = await getServerPokemonLanguage();
   const move = await fetchMoveDetail(name);
 
   if (!move) {
     notFound();
   }
 
-  const localizedName = move.name
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  const localizedName = getLocalizedMoveName(move, pokeApiLanguage);
 
-  const effectEntry = move.effect_entries.find((e) => e.language.name === 'en');
+  const effectEntry = getLocalizedMoveEffectEntry(move, pokeApiLanguage);
   const description = effectEntry?.short_effect ?? t('moves_page.no_description_detail');
 
   return {
@@ -130,6 +134,7 @@ export default async function MoveDetailPage({ params }: Props) {
   const { name } = await params;
   const t = await getServerT();
   const lang = await getServerLanguage();
+  const pokeApiLanguage = await getServerPokemonLanguage();
 
   const move = await fetchMoveDetail(name);
   if (!move) notFound();
@@ -137,20 +142,12 @@ export default async function MoveDetailPage({ params }: Props) {
   const typeColor = TYPE_COLORS[move.type.name] || '#6B7280';
   const damageClass = move.damage_class.name;
 
-  // Human-readable move name (capitalize words)
-  const displayName = name
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  const displayName = getLocalizedMoveName(move, pokeApiLanguage);
 
-  // Effect description (English first, fallback to whatever is available)
-  const effectEntry =
-    move.effect_entries.find((e) => e.language.name === 'en') ??
-    move.effect_entries[0];
+  const effectEntry = getLocalizedMoveEffectEntry(move, pokeApiLanguage);
 
-  // Flavor text — pick the most recent version group entry in English
-  const flavorEntries = move.flavor_text_entries.filter((e) => e.language.name === 'en');
-  const flavorText = flavorEntries[flavorEntries.length - 1]?.flavor_text?.replace(/\n/g, ' ').trim() ?? null;
+  // Flavor text — pick the most recent version group entry in the current language.
+  const flavorText = getLocalizedMoveFlavorText(move, pokeApiLanguage);
 
   // Generation label
   const genName = move.generation.name;
@@ -305,6 +302,14 @@ export default async function MoveDetailPage({ params }: Props) {
       </div>
 
       <Header />
+      <Breadcrumbs
+        items={[
+          { label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` },
+          { label: t('moves_page.title', { defaultValue: 'Moves' }), href: `/${lang}/moves` },
+          { label: displayName },
+        ]}
+        homeLabel={t('common.home', { defaultValue: 'Home' })}
+      />
 
       <main className="page-shell pb-20 pt-8">
         {/* Back link */}

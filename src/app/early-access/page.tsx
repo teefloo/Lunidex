@@ -11,7 +11,7 @@ export const revalidate = 3600;
 
 const TITLE = 'Ne ratez pas la sortie du Deck Builder TCG';
 const DESCRIPTION =
-  "Le Pokédex qui suit vos parties, pas l'inverse. 1 025 Pokémon, calculs en direct, sans compte. Inscrivez-vous pour être prévenu à la sortie du Deck Builder TCG.";
+  "Le Pokédex qui suit vos parties, pas l'inverse. 1 025 Pokémon, calculs en direct, et un espace personnel synchronisé lorsque votre compte est disponible.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getServerLanguage();
@@ -46,7 +46,7 @@ const BENEFITS = [
   {
     icon: ShieldCheck,
     title: 'Zéro friction',
-    body: 'Pas de compte, pas de mot de passe oublié. Vos données restent dans votre navigateur.',
+    body: 'Les pages publiques restent accessibles sans compte. Connectez-vous pour enregistrer et synchroniser votre espace personnel.',
   },
   {
     icon: Sparkles,
@@ -62,7 +62,7 @@ const FAQ = [
   },
   {
     q: 'Mes données sont-elles stockées quelque part ?',
-    a: 'Non. Tout reste dans votre navigateur (aucun compte, aucun serveur ne les reçoit).',
+    a: 'Les pages publiques sont accessibles sans compte. Les données de votre espace personnel peuvent être synchronisées avec votre compte lorsque le service est configuré.',
   },
   {
     q: 'Je vais recevoir combien d’e-mails ?',
@@ -109,7 +109,7 @@ export default async function EarlyAccessPage() {
             </h1>
             <p className="mt-5 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
               1 025 Pokémon, calculs de stats en direct, et bientôt vos decks TCG —
-              sans compte à créer, sans pub, pour toujours gratuit.
+              pages publiques sans compte, espace personnel synchronisé avec un compte, sans pub.
             </p>
             <div className="mt-8 flex justify-center">
               <EarlyAccessForm formLabel="Inscription — en haut de page" />

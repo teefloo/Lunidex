@@ -96,7 +96,7 @@ export default {
       faq_a5: 'Abre la página de detalle de cualquier Pokémon (p. ej. /pokemon/pikachu) para ver su tabla completa de matchups, o visita la tabla de tipos global en /types para comparar los 18 tipos lado a lado.',
       faq_q6: '¿Dónde puedo jugar al quiz de Pokémon?',
       faq_a6: 'El quiz de Pokémon está en /quiz. Incluye seis modos de juego: Clásico, Silueta, Estadísticas, Time Attack, Supervivencia y Maratón. La dificultad se adapta a tu rendimiento y no requiere registro.',
-      key_facts_caveat: 'Los datos provienen de PokéAPI y TCGdex y se revalidan cada hora. Última verificación 2026-06-04.',
+      key_facts_caveat: 'Los datos provienen de PokéAPI y TCGdex y se revalidan cada hora. Última verificación 2026-08-17.',
       key_facts_eyebrow: 'En números',
       key_facts_source: 'Fuente',
       key_facts_title: 'La Pokédex más completa de la web abierta',

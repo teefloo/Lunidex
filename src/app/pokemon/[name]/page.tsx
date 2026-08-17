@@ -5,6 +5,7 @@ import { getPokemonEncounters } from '@/lib/api';
 import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
 import { getBaseSpeciesName } from '@/lib/form-names';
 import { formatPokemonSlugName } from '@/lib/utils';
@@ -198,6 +199,14 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   return (
     <>
       <Header />
+      <Breadcrumbs
+        items={[
+          { label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` },
+          { label: t('list.pokemon', { defaultValue: 'Pokémon' }), href: `/${lang}/pokedex` },
+          { label: formatPokemonSlugName(name) },
+        ]}
+        homeLabel={t('common.home', { defaultValue: 'Home' })}
+      />
       <PokemonDetailClient
         initialPokemon={pokemon}
         initialSpecies={species}

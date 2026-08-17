@@ -95,7 +95,7 @@ export default {
       faq_q5: 'Wie kann ich die Schwächen eines Pokémon prüfen?',
       faq_a5: 'Öffne die Detailseite eines Pokémon (z. B. /pokemon/pikachu), um die vollständige Matchup-Tabelle zu sehen, oder besuche die globale Typentafel unter /types, um alle 18 Typen nebeneinander zu vergleichen.',
       faq_q6: 'Wo kann ich das Pokémon-Quiz spielen?',
-      key_facts_caveat: 'Daten stammen von PokéAPI und TCGdex und werden stündlich revalidiert. Zuletzt überprüft am 2026-06-04.',
+      key_facts_caveat: 'Daten stammen von PokéAPI und TCGdex und werden stündlich revalidiert. Zuletzt überprüft am 2026-08-17.',
       key_facts_eyebrow: 'In Zahlen',
       key_facts_source: 'Quelle',
       key_facts_title: 'Der vollständigste Pokédex im offenen Web',

@@ -83,7 +83,7 @@ export default async function KeyFactsBlock() {
 
         <p className="mt-6 text-center text-xs md:text-sm text-foreground/55 max-w-2xl mx-auto">
           {t('home.key_facts_caveat', {
-            defaultValue: 'Data is sourced from PokéAPI and TCGdex and revalidated hourly. Last verified 2026-06-04.',
+            defaultValue: 'Data is sourced from PokéAPI and TCGdex and revalidated hourly. Last verified 2026-08-17.',
           })}
         </p>
       </div>

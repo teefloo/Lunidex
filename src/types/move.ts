@@ -1,6 +1,10 @@
 export interface MoveDetail {
   id: number;
   name: string;
+  names?: {
+    name: string;
+    language: { name: string };
+  }[];
   accuracy: number | null;
   effect_chance: number | null;
   pp: number;

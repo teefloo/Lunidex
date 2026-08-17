@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Info, Package, Tag } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getItemDetail } from '@/lib/api/graphql';
@@ -118,6 +119,14 @@ export default async function ItemDetailPage({ params }: Props) {
       </div>
 
       <Header />
+      <Breadcrumbs
+        items={[
+          { label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` },
+          { label: t('items_page.title', { defaultValue: 'Items' }), href: `/${lang}/items` },
+          { label: localizedName },
+        ]}
+        homeLabel={t('common.home', { defaultValue: 'Home' })}
+      />
 
       <main className="page-shell pb-20 pt-8">
         <div className="mb-6">

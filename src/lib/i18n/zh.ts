@@ -96,7 +96,7 @@ export default {
       faq_a5: '打开任何宝可梦的详情页面(例如 /pokemon/pikachu)查看完整的属性相克表,或访问 /types 的全局属性表并排比较 18 种属性。',
       faq_q6: '在哪里可以玩宝可梦问答?',
       faq_a6: '宝可梦问答位于 /quiz。包含六种游戏模式:经典、剪影、种族值、限时挑战、生存模式和马拉松。难度根据你的表现自动调整,无需注册。',
-      key_facts_caveat: '数据由 PokéAPI 和 TCGdex 提供，每小时重新验证。最后检查于 2026-06-04。',
+      key_facts_caveat: '数据由 PokéAPI 和 TCGdex 提供，每小时重新验证。最后检查于 2026-08-17。',
       key_facts_eyebrow: '数字说明',
       key_facts_source: '来源',
       key_facts_title: '开放网络上最完整的宝可梦图鉴',
