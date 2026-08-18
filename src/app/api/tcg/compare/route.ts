@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTCGCard } from '@/lib/api/tcg';
+import { getTCGCardCached } from '@/lib/api/server-cache';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 
 const MAX_COMPARE_IDS = 4;
@@ -21,11 +21,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: `Too many ids (max ${MAX_COMPARE_IDS})` }, { status: 400 });
     }
 
-    const cards = await Promise.all(ids.map(async (id) => getTCGCard(id, lang)));
+    const cards = await Promise.all(ids.map(async (id) => getTCGCardCached(id, lang)));
 
-    return NextResponse.json({
-      cards: cards.filter((card): card is NonNullable<typeof card> => Boolean(card)),
-    });
+    return NextResponse.json(
+      {
+        cards: cards.filter((card): card is NonNullable<typeof card> => Boolean(card)),
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      },
+    );
   } catch (error) {
     console.error('[TCG API] Failed to compare cards:', error);
     return NextResponse.json({ error: 'Failed to compare cards' }, { status: 502 });

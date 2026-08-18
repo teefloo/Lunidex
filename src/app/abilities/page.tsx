@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import AbilitiesPageClient from './AbilitiesPageClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
-import { getAllAbilities } from '@/lib/api/graphql';
+import { getInitialAbilitiesCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { ServerIndexLinks } from '@/components/seo/ServerIndexLinks';
 
@@ -36,8 +36,7 @@ export default async function AbilitiesPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
   const initialLanguageId = languageToPokemonLanguageId[lang];
-  const initialAbilities = await getAllAbilities(initialLanguageId)
-    .then((abilities) => abilities.slice(0, 48))
+  const initialAbilities = await getInitialAbilitiesCached(initialLanguageId)
     .catch(() => []);
   const queryClient = new QueryClient();
   queryClient.setQueryData(['abilities', initialLanguageId], initialAbilities);

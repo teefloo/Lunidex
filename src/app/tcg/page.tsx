@@ -5,7 +5,7 @@ import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { TCGCompareTrigger } from '@/components/tcg/TCGCompareTrigger';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
-import { DEFAULT_TCG_CARD_FILTERS, searchCards } from '@/lib/api/tcg';
+import { getInitialTcgCatalogCached } from '@/lib/api/server-cache';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
 import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -13,25 +13,6 @@ import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 3600;
-
-async function loadInitialCatalog(language: string) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-  try {
-    return await searchCards(
-      { ...DEFAULT_TCG_CARD_FILTERS, selectedSet: DEFAULT_LATEST_TCG_SET.id },
-      language,
-      1,
-      24,
-      controller.signal,
-    );
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -63,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TCGPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const initialCatalog = await loadInitialCatalog(lang);
+  const initialCatalog = await getInitialTcgCatalogCached(lang).catch(() => null);
   const initialTabLabels = {
     'tcg.nav_catalog': t('tcg.nav_catalog'),
     'tcg.nav_collection': t('tcg.nav_collection'),

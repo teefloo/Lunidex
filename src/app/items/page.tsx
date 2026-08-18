@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import ItemsPageClient from './ItemsPageClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
-import { getAllItems } from '@/lib/api/graphql';
+import { getInitialItemsCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { ServerIndexLinks } from '@/components/seo/ServerIndexLinks';
 
@@ -36,8 +36,7 @@ export default async function ItemsPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
   const initialLanguageId = languageToPokemonLanguageId[lang];
-  const initialItems = await getAllItems(initialLanguageId)
-    .then((items) => items.slice(0, 48))
+  const initialItems = await getInitialItemsCached(initialLanguageId)
     .catch(() => []);
   const queryClient = new QueryClient();
   queryClient.setQueryData(['items', initialLanguageId], initialItems);

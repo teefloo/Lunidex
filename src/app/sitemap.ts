@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
-import { getAllAbilityNames, getAllItemNames, getAllMoveNames, getAllPokemonNames } from '@/lib/api';
+import { getAllAbilityNamesCached, getAllItemNamesCached, getAllMoveNamesCached, getAllPokemonNamesCached } from '../lib/api/server-cache';
 import { isTcgLangSupported } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages } from '@/lib/languages';
+import { unstable_cache } from 'next/cache';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
 const TCG_CARD_PAGE_SIZE = 250;
@@ -10,6 +11,8 @@ const TCG_CARD_MAX_PAGES = 200;
 const TCG_CARD_BATCH_SIZE = 10;
 const TCG_CARD_PAGE_RETRIES = 3;
 const TCG_CARD_PAGE_TIMEOUT_MS = 8000;
+
+export const revalidate = 86400;
 
 type StaticEntry = {
   path: string;
@@ -71,7 +74,7 @@ async function getTcgCardPage(page: number): Promise<string[] | null> {
 
     try {
       const response = await fetch(`${TCG_CARD_LIST_URL}?${params.toString()}`, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 86400 },
         signal: controller.signal,
       });
       if (!response.ok) {
@@ -123,6 +126,12 @@ async function getTcgCardIds(): Promise<string[]> {
   return [...new Set(ids)];
 }
 
+const getTcgCardIdsCached = unstable_cache(
+  getTcgCardIds,
+  ['lunidex:sitemap:tcg-card-ids:v1'],
+  { revalidate: 86400 },
+);
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
@@ -133,11 +142,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let itemNames: string[] = [];
 
   const [pokemonResult, tcgResult, moveResult, abilityResult, itemResult] = await Promise.allSettled([
-    getAllPokemonNames(),
-    getTcgCardIds(),
-    getAllMoveNames(),
-    getAllAbilityNames(),
-    getAllItemNames(),
+    getAllPokemonNamesCached(),
+    getTcgCardIdsCached(),
+    getAllMoveNamesCached(),
+    getAllAbilityNamesCached(),
+    getAllItemNamesCached(),
   ]);
 
   if (pokemonResult.status === 'fulfilled') {

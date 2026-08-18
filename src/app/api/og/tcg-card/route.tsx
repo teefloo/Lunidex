@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
 
-import { getTCGCard } from '@/lib/api';
+import { getTCGCardCached } from '@/lib/api/server-cache';
 import { getTCGCardPngImage } from '@/lib/tcg-images';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
   const t = getServerTForLanguage(lang);
 
-  const card = id ? await getTCGCard(id, lang).catch(() => null) : null;
+  const card = id ? await getTCGCardCached(id, lang).catch(() => null) : null;
 
   const name = card?.name ?? 'Lunidex';
   const rarity = card?.rarity ?? '';

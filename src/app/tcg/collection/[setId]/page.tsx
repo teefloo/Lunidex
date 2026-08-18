@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getSetById } from '@/lib/api/tcg';
+import { getTCGSetCached } from '@/lib/api/server-cache';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { setId } = await params;
   const currentLang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await getSetById(setId, currentLang).catch(() => null);
+  const tcgSet = await getTCGSetCached(setId, currentLang).catch(() => null);
   if (!tcgSet) notFound();
   const releaseDate = tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' });
   const title = t('tcg.set_meta_title', {
@@ -55,7 +55,7 @@ export default async function SetAlbumPage({ params }: PageProps) {
   const { setId } = await params;
   const lang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await getSetById(setId, lang).catch(() => null);
+  const tcgSet = await getTCGSetCached(setId, lang).catch(() => null);
   if (!tcgSet) notFound();
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },

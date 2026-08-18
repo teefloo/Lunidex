@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
-import { getTCGCard, isTcgLangSupported } from '@/lib/api/tcg';
+import { isTcgLangSupported } from '@/lib/api/tcg';
+import { getTCGCardCached } from '@/lib/api/server-cache';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
@@ -156,4 +157,4 @@ function isMeaningfulCardValue(value: string | undefined): value is string {
   return Boolean(value && !['none', 'n/a', 'unknown'].includes(value.trim().toLowerCase()));
 }
 
-const getPageCard = cache((cardId: string, lang: string) => getTCGCard(cardId, lang));
+const getPageCard = cache(getTCGCardCached);

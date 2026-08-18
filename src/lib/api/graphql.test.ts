@@ -13,7 +13,13 @@ vi.mock('./cache', () => ({
   setCachedData: mockSetCachedData,
 }));
 
-import { getPokemonDetailedByType, getPokemonSummarySlice } from './graphql';
+import {
+  getAllAbilities,
+  getAllItems,
+  getAllMoves,
+  getPokemonDetailedByType,
+  getPokemonSummarySlice,
+} from './graphql';
 
 describe('GraphQL cache safety', () => {
   beforeEach(() => {
@@ -41,5 +47,32 @@ describe('GraphQL cache safety', () => {
 
     await expect(getPokemonDetailedByType('grass')).rejects.toThrow('Invalid GraphQL response');
     expect(mockSetCachedData).not.toHaveBeenCalled();
+  });
+
+  it('bounds server catalog previews without changing the full catalog API', async () => {
+    mockPost
+      .mockResolvedValueOnce({ data: { data: { pokemon_v2_move: [{ id: 1, name: 'pound' }] } } })
+      .mockResolvedValueOnce({ data: { data: { pokemon_v2_ability: [{ id: 1, name: 'stench' }] } } })
+      .mockResolvedValueOnce({ data: { data: { pokemon_v2_item: [{ id: 1, name: 'master-ball' }] } } });
+
+    await expect(getAllMoves(9, 48)).resolves.toHaveLength(1);
+    await expect(getAllAbilities(9, 48)).resolves.toHaveLength(1);
+    await expect(getAllItems(9, 48)).resolves.toHaveLength(1);
+
+    expect(mockPost).toHaveBeenNthCalledWith(
+      1,
+      '/graphql/v1beta',
+      expect.objectContaining({ variables: { limit: 48, offset: 0, languageId: 9 } }),
+    );
+    expect(mockPost).toHaveBeenNthCalledWith(
+      2,
+      '/graphql/v1beta',
+      expect.objectContaining({ variables: { languageId: 9, limit: 48 } }),
+    );
+    expect(mockPost).toHaveBeenNthCalledWith(
+      3,
+      '/graphql/v1beta',
+      expect.objectContaining({ variables: { languageId: 9, limit: 48, excludedCategories: expect.any(Array) } }),
+    );
   });
 });

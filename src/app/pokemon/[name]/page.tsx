@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { connection } from 'next/server';
-import { getPokemonEncounters } from '@/lib/api';
-import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonEncountersCached as getPokemonEncounters, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';

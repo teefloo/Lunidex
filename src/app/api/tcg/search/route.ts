@@ -31,6 +31,12 @@ export async function GET(request: NextRequest) {
       filters: searchState.filters,
       viewMode: searchState.viewMode,
       compare: searchState.compare,
+    }, {
+      headers: {
+        // Search results and filter metadata are public and keyed by the full
+        // query string, so repeated catalog requests can be served at the edge.
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
+      },
     });
   } catch (error) {
     console.error('[TCG API] Failed to execute search route:', error);

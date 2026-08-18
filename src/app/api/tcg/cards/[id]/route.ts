@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTCGCard } from '@/lib/api/tcg';
+import { getTCGCardCached } from '@/lib/api/server-cache';
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -10,13 +10,20 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
     }
 
     const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
-    const card = await getTCGCard(id, lang);
+    const card = await getTCGCardCached(id, lang);
 
     if (!card) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ card });
+    return NextResponse.json(
+      { card },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      },
+    );
   } catch (error) {
     console.error('[TCG API] Failed to fetch card detail:', error);
     return NextResponse.json({ error: 'Failed to fetch card' }, { status: 502 });

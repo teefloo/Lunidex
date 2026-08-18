@@ -5,8 +5,7 @@ import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
 import PokedexHero from '@/components/pokemon/PokedexHero';
 import PokemonOfTheDay from '@/components/pokemon/PokemonOfTheDay';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getPokemonList } from '@/lib/api';
-import { getPokemonSummarySlice } from '@/lib/api/graphql';
+import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/server-cache';
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -52,12 +51,12 @@ export default async function PokedexPage() {
   await Promise.allSettled([
     queryClient.prefetchInfiniteQuery({
       queryKey: pokemonKeys.lists(),
-      queryFn: getPokemonList,
+      queryFn: ({ pageParam = 0 }) => getPokemonListCached(pageParam),
       initialPageParam: 0,
     }),
     queryClient.prefetchQuery({
       queryKey: pokemonKeys.summarySlice(0, 80),
-      queryFn: () => getPokemonSummarySlice(80, 0),
+      queryFn: () => getPokemonSummarySliceCached(80, 0),
     }),
   ]);
 

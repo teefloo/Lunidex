@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import MovesPageClient from './MovesPageClient';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
-import { getAllMoves } from '@/lib/api/graphql';
+import { getInitialMovesCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { ServerIndexLinks } from '@/components/seo/ServerIndexLinks';
 
@@ -37,8 +37,7 @@ export default async function MovesPage() {
   const lang = await getServerLanguage();
   const initialLanguageId = languageToPokemonLanguageId[lang];
   const queryClient = new QueryClient();
-  const initialMoves = await getAllMoves(initialLanguageId)
-    .then((moves) => moves.slice(0, 48))
+  const initialMoves = await getInitialMovesCached(initialLanguageId)
     .catch(() => []);
   queryClient.setQueryData(['moves', initialLanguageId], initialMoves);
 

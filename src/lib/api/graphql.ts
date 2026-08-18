@@ -161,23 +161,29 @@ const fetchMoveBatches = async <T>(
   cacheBase: string,
   buildQuery: (offset: number, limit: number) => { query: string; variables: Record<string, unknown> },
   batchSize: number,
+  maxResults?: number,
 ): Promise<T[][]> => {
   const batches: T[][] = [];
   let offset = 0;
 
   while (true) {
+    const requestLimit = maxResults === undefined
+      ? batchSize
+      : Math.min(batchSize, Math.max(maxResults - offset, 0));
+    if (requestLimit === 0) break;
+
     const cacheKey = getBatchCacheKey(cacheBase, Math.floor(offset / batchSize));
     const cached = await getCachedData<T[]>(cacheKey);
     if (cached) {
       batches.push(cached);
-      if (cached.length < batchSize) {
+      if (cached.length < requestLimit) {
         break;
       }
-      offset += batchSize;
+      offset += requestLimit;
       continue;
     }
 
-    const { query, variables } = buildQuery(offset, batchSize);
+    const { query, variables } = buildQuery(offset, requestLimit);
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query, variables });
 
     if (!data?.data?.pokemon_v2_move) {
@@ -188,11 +194,11 @@ const fetchMoveBatches = async <T>(
     batches.push(results);
     await setCachedData(cacheKey, results);
 
-    if (results.length < batchSize) {
+    if (results.length < requestLimit) {
       break;
     }
 
-    offset += batchSize;
+    offset += requestLimit;
   }
 
   return batches;
@@ -438,14 +444,17 @@ export const getPokemonMovesLocalized = async (name: string, languageId: number)
   }
 };
 
-export const getAllMoves = async (languageId: number): Promise<GraphQLMoveData[]> => {
-  const cacheKey = `all-moves-v2-${languageId}`;
+export const getAllMoves = async (languageId: number, maxResults?: number): Promise<GraphQLMoveData[]> => {
+  const resultLimit = maxResults === undefined
+    ? undefined
+    : Math.max(1, Math.min(Math.floor(maxResults), 1000));
+  const cacheKey = `all-moves-v3-${languageId}-${resultLimit ?? 'all'}`;
   const cached = await getCachedData<GraphQLMoveData[]>(cacheKey);
   if (cached) return cached;
 
   try {
     const batches = await fetchMoveBatches<GraphQLMoveData>(
-      'all-moves-paginated-v2',
+      `all-moves-paginated-v3-${languageId}-${resultLimit ?? 'all'}`,
       (offset, limit) => ({
         query: `
           query GetAllMoves($limit: Int!, $offset: Int!, $languageId: Int!) {
@@ -481,6 +490,7 @@ export const getAllMoves = async (languageId: number): Promise<GraphQLMoveData[]
         variables: { limit, offset, languageId },
       }),
       MOVE_BATCH_SIZE,
+      resultLimit,
     );
 
     const results = batches.flat();
@@ -547,15 +557,16 @@ export const getMovePokemonLearners = async (moveName: string, languageId: numbe
   }
 };
 
-export const getAllAbilities = async (languageId: number): Promise<GraphQLAbilityData[]> => {
-  const cacheKey = `all-abilities-v2-${languageId}`;
+export const getAllAbilities = async (languageId: number, maxResults = 1000): Promise<GraphQLAbilityData[]> => {
+  const resultLimit = Math.max(1, Math.min(Math.floor(maxResults), 1000));
+  const cacheKey = `all-abilities-v3-${languageId}-${resultLimit}`;
   const cached = await getCachedData<GraphQLAbilityData[]>(cacheKey);
   if (cached) return cached;
 
   try {
     const query = `
-      query GetAllAbilities($languageId: Int!) {
-        pokemon_v2_ability(limit: 1000, order_by: {id: asc}, where: {is_main_series: {_eq: true}}) {
+      query GetAllAbilities($languageId: Int!, $limit: Int!) {
+        pokemon_v2_ability(limit: $limit, order_by: {id: asc}, where: {is_main_series: {_eq: true}}) {
           id
           name
           generation_id
@@ -583,7 +594,7 @@ export const getAllAbilities = async (languageId: number): Promise<GraphQLAbilit
 
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_ability?: GraphQLAbilityData[] } }>('/graphql/v1beta', {
       query,
-      variables: { languageId },
+      variables: { languageId, limit: resultLimit },
     });
 
     if (!data?.data?.pokemon_v2_ability) {
@@ -667,16 +678,17 @@ const EXCLUDED_ITEM_CATEGORIES = [
   'all-machines',
 ];
 
-export const getAllItems = async (languageId: number): Promise<GraphQLItemData[]> => {
-  const cacheKey = `all-items-v2-${languageId}`;
+export const getAllItems = async (languageId: number, maxResults = 2000): Promise<GraphQLItemData[]> => {
+  const resultLimit = Math.max(1, Math.min(Math.floor(maxResults), 2000));
+  const cacheKey = `all-items-v3-${languageId}-${resultLimit}`;
   const cached = await getCachedData<GraphQLItemData[]>(cacheKey);
   if (cached) return cached;
 
   try {
     const query = `
-      query GetAllItems($languageId: Int!, $excludedCategories: [String!]) {
+      query GetAllItems($languageId: Int!, $limit: Int!, $excludedCategories: [String!]) {
         pokemon_v2_item(
-          limit: 2000
+          limit: $limit
           order_by: {id: asc}
           where: {
             pokemon_v2_itemcategory: {id: {_is_null: false}, name: {_nin: $excludedCategories}}
@@ -705,7 +717,7 @@ export const getAllItems = async (languageId: number): Promise<GraphQLItemData[]
 
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
       query,
-      variables: { languageId, excludedCategories: EXCLUDED_ITEM_CATEGORIES },
+      variables: { languageId, limit: resultLimit, excludedCategories: EXCLUDED_ITEM_CATEGORIES },
     });
 
     if (!data?.data?.pokemon_v2_item) {
