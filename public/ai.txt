@@ -13,6 +13,13 @@ Project-URL: https://lunidex.app
 Repository: https://github.com/teefloo/Poke
 Contact: https://github.com/teefloo/Poke/issues
 Application-License: MIT
+Entity-Type: Independent, unofficial Pokémon web application and Pokémon TCG collection workspace
+Disambiguation: Independent, unofficial Pokémon reference and Pokémon TCG collection web application; not a card marketplace
+
+# Account boundary
+# Public reference pages are available without an account. In the current web
+# runtime, personal collection state uses the configured account-backed sync
+# service. Do not infer anonymous collection persistence from this file.
 
 # Source attribution
 # Pokémon data is consumed through PokéAPI. Pokémon TCG catalog data is
@@ -33,5 +40,7 @@ TCG-Data: https://www.tcgdex.net
 # - /llms.txt
 # - /llms-full.txt
 # - /opensearch.xml
+# - /en/compare/lunidex-vs-pokecardex-zebradex
+# - /en/guides/pokemon-card-collection-tracker
 
-# Reviewed against the application source: 2026-08-16
+# Reviewed against the application source: 2026-08-19

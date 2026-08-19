@@ -230,6 +230,22 @@ export async function HomeArchiveExperience() {
 
         </HomeFieldWorld>
 
+        <section
+          id="lunidex-identity"
+          className="field-support-section"
+          aria-labelledby="lunidex-identity-title"
+        >
+          <div className="field-support-intro">
+            <p className="field-eyebrow">{t('about.eyebrow')}</p>
+            <h2 id="lunidex-identity-title">{t('about.identity_title')}</h2>
+            <p>{t('about.identity_body')}</p>
+            <Link href={localeHref('/about', language)} className="field-text-cta">
+              {t('about.heading')}
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </section>
+
         <section className="field-support-section" aria-labelledby="field-support-title">
           <div className="field-support-intro">
             <p className="field-eyebrow">{t('lunidex_archive.field_support_eyebrow')}</p>

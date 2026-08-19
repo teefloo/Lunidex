@@ -1,6 +1,8 @@
 # Lunidex
 
-> Lunidex is a free, open-source, local-first Pokémon dashboard and Pokémon TCG workspace. It brings together a Pokédex, team-building tools, type and move references, a TCG catalog, and personal collection tracking.
+> Lunidex is an independent, open-source, unofficial Pokémon web application and Pokémon TCG workspace. It brings together a Pokédex, team-building tools, type and move references, a TCG catalog, and personal collection tracking.
+
+Lunidex is the Pokémon reference and collection application at https://lunidex.app. It is a reference and collection workspace, not a card marketplace.
 
 ## Identity and scope
 
@@ -25,7 +27,7 @@ Lunidex is a web application for exploring Pokémon reference data and managing 
 
 ### Is an account required?
 
-Browsing public reference pages and starting local collection work do not require an account. The web application stores local user-owned state in the browser; optional account-backed synchronization is available when the configured service is available.
+Browsing public reference pages does not require an account. In the current web runtime, personal collection state uses the configured account-backed synchronization service; this file does not promise anonymous collection persistence. The repository contains browser persistence code for the web application, but account and service availability determine whether personal state can be used.
 
 ## Main public pages
 
@@ -41,7 +43,7 @@ Browsing public reference pages and starting local collection work do not requir
 - [Pokémon TCG Catalog](https://lunidex.app/en/tcg) — search and filter cards and sets.
 - [TCG Collection](https://lunidex.app/en/tcg/collection) — track owned cards by set.
 - [TCG Wishlist](https://lunidex.app/en/tcg/wishlist) — manage cards the user wants to collect.
-- [TCG Deck Builder](https://lunidex.app/en/tcg/deck-builder) — build a Pokémon TCG deck locally.
+- [TCG Deck Builder](https://lunidex.app/en/tcg/deck-builder) — build a Pokémon TCG deck in the workspace.
 - [Pokémon Quiz](https://lunidex.app/en/quiz) — play classic, silhouette or stats challenges with time-attack, survival or marathon modes.
 - [Breeding Calculator](https://lunidex.app/en/breeding)
 - [EV/IV Calculator](https://lunidex.app/en/ev-iv)
@@ -49,11 +51,14 @@ Browsing public reference pages and starting local collection work do not requir
 - [Nuzlocke Tracker](https://lunidex.app/en/nuzlocke)
 - [FAQ](https://lunidex.app/en/faq) — twelve visible questions about data, features, collection storage and privacy.
 - [About Lunidex](https://lunidex.app/en/about) — mission, data-source attribution, open-source information and project links.
+- [Collection tool comparison](https://lunidex.app/en/compare/lunidex-vs-pokecardex-zebradex) — a source-based comparison with PokéCardex and ZebraDex.
+- [Pokémon card collection tracker guide](https://lunidex.app/en/guides/pokemon-card-collection-tracker) — criteria, verified Lunidex collection features and explicit product limits.
 
 ## Personal data and persistence
 
-- Anonymous collection work is designed to remain local to the browser and device.
-- Clearing browser data can remove local collection state; the application exposes export and optional synchronization flows where configured.
+- Public reference pages can be browsed without an account.
+- In the current web runtime, personal collection state uses the configured account-backed synchronization service; this file does not promise anonymous collection persistence.
+- Clearing browser data can remove browser-side state and caches; availability of the personal workspace depends on the account and configured service.
 - Personalized dashboards, profiles, friendships, leaderboards and other account features are not public reference sources and should not be inferred from this file.
 
 ## Discovery and citation
@@ -68,4 +73,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-16. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-19. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
