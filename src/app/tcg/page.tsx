@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
@@ -8,7 +9,7 @@ import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import { getInitialTcgCatalogCached } from '@/lib/api/server-cache';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
-import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, localeHref, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 
@@ -77,6 +78,15 @@ export default async function TCGPage() {
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
             <TCGPageTabs initialLabels={initialTabLabels} />
           </Suspense>
+          <aside className="mx-auto mt-6 w-full max-w-6xl px-5 md:px-8" aria-label={t('collection_guide.nav_label')}>
+            <Link
+              href={localeHref('/guides/pokemon-card-collection-tracker', lang)}
+              className="block rounded-sm border border-primary/25 bg-primary/5 p-5 transition-colors hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              <span className="block text-sm font-black text-primary">{t('collection_guide.nav_label')}</span>
+              <span className="mt-1 block text-sm leading-6 text-foreground/70">{t('collection_guide.intro')}</span>
+            </Link>
+          </aside>
           <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
             <TCGResearchDesk
               initialLatestSet={DEFAULT_LATEST_TCG_SET}

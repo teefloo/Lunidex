@@ -16,6 +16,8 @@ export default async function SiteFooter() {
     { href: '/pokedex', label: t('nav.pokedex') },
     { href: '/team', label: t('nav.team') },
     { href: '/tcg', label: t('nav.tcg') },
+    { href: '/compare/lunidex-vs-pokecardex-zebradex', label: t('comparison.nav_label') },
+    { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
     { href: '/tcg/collection', label: t('tcg.nav_collection') },
     { href: '/quiz', label: t('nav.quiz') },
     { href: '/contact', label: t('contact.title', { defaultValue: 'Contact' }) },

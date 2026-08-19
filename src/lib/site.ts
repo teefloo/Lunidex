@@ -5,7 +5,9 @@ export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://lunidex.app'
 export const SITE_NAME = 'Lunidex';
 export const SITE_TAGLINE = 'Pokémon Companion for Players and Collectors';
 export const SITE_DESCRIPTION =
-  'A free Pokémon companion for players and TCG collectors. Explore the Pokédex, build teams, track cards, and complete your collection.';
+  'Lunidex is an independent Pokémon web app for Pokédex reference, team building, and Pokémon TCG collection tracking.';
+export const SITE_DISAMBIGUATION_DESCRIPTION =
+  'Lunidex is an independent, unofficial Pokémon web application for Pokédex reference, team building, and Pokémon TCG collection tracking. It is not a card marketplace.';
 export const SITE_KEYWORDS = [
   'pokedex',
   'pokemon',
@@ -27,6 +29,10 @@ export const SITE_KEYWORDS = [
   'shiny pokemon',
   'pokemon quiz',
   'pokemon cards',
+  'pokemon card collection tracker',
+  'pokemon tcg collection',
+  'tcg collection app',
+  'pokemon card catalog',
   'pokemon weakness',
   'pokemon type chart',
   'best pokemon team',
@@ -57,5 +63,5 @@ export const FEATURE_LIST = [
   'Living Dex Tracker with account-backed cloud synchronization',
   'Localized in 8 languages including Japanese, Korean, and Chinese',
   'Advanced search filtering by generation, type, BST, and egg groups',
-  'Free and open-source under the MIT license',
+  'Open-source under the MIT license',
 ];

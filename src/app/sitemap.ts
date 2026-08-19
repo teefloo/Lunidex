@@ -35,6 +35,8 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'battle', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'nuzlocke', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
+  { path: 'compare/lunidex-vs-pokecardex-zebradex', changeFrequency: 'monthly', priority: 0.75 },
+  { path: 'guides/pokemon-card-collection-tracker', changeFrequency: 'monthly', priority: 0.72 },
   { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'about', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'contact', changeFrequency: 'monthly', priority: 0.5 },

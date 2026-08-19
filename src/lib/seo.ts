@@ -1,4 +1,11 @@
-import { GITHUB_REPO_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from './site';
+import {
+  GITHUB_REPO_URL,
+  SITE_DESCRIPTION,
+  SITE_DISAMBIGUATION_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+} from './site';
 import { OG_SIZE } from '@/lib/og/theme';
 import { supportedLanguages, languageToMetadataLocale, type SupportedLanguage } from '@/lib/languages';
 
@@ -27,6 +34,12 @@ export function buildOrganizationJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
+    disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
+    knowsAbout: [
+      'Pokémon video game reference data',
+      'Pokémon Trading Card Game collecting',
+      'Pokémon team building',
+    ],
     logo: {
       '@type': 'ImageObject',
       url: `${SITE_URL}/icon-512.png`,

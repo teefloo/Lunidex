@@ -1,0 +1,257 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+import Header from '@/components/layout/Header';
+import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import {
+  buildBreadcrumbJsonLd,
+  buildInLanguage,
+  buildSubpathLanguages,
+  buildWebPageJsonLd,
+  localeHref,
+  DEFAULT_OG_IMAGE,
+} from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { GITHUB_REPO_URL, SITE_NAME, SITE_URL } from '@/lib/site';
+
+const PAGE_PATH = '/guides/pokemon-card-collection-tracker';
+const LAST_UPDATED = '2026-08-19';
+const POKEAPI_SOURCE = 'https://pokeapi.co';
+const TCGDEX_SOURCE = 'https://www.tcgdex.net';
+
+export const revalidate = 86400;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const title = t('collection_guide.meta_title');
+  const description = t('collection_guide.meta_description');
+  const localizedPath = localeHref(PAGE_PATH, language);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: localizedPath,
+      languages: buildSubpathLanguages(PAGE_PATH),
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: localizedPath,
+      type: 'article',
+      images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
+
+export default async function PokemonCardCollectionTrackerGuide() {
+  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const localizedPath = localeHref(PAGE_PATH, language);
+  const pageUrl = `${SITE_URL}${localizedPath}`;
+  const formattedDate = new Intl.DateTimeFormat(buildInLanguage(language), {
+    dateStyle: 'medium',
+  }).format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+
+  const criteria = [
+    {
+      title: t('collection_guide.criteria_catalog_title'),
+      body: t('collection_guide.criteria_catalog_body'),
+    },
+    {
+      title: t('collection_guide.criteria_ownership_title'),
+      body: t('collection_guide.criteria_ownership_body'),
+    },
+    {
+      title: t('collection_guide.criteria_sets_title'),
+      body: t('collection_guide.criteria_sets_body'),
+    },
+    {
+      title: t('collection_guide.criteria_prices_title'),
+      body: t('collection_guide.criteria_prices_body'),
+    },
+    {
+      title: t('collection_guide.criteria_sync_title'),
+      body: t('collection_guide.criteria_sync_body'),
+    },
+  ];
+
+  const faqs = [
+    { question: t('collection_guide.faq_q1'), answer: t('collection_guide.faq_a1') },
+    { question: t('collection_guide.faq_q2'), answer: t('collection_guide.faq_a2') },
+    { question: t('collection_guide.faq_q3'), answer: t('collection_guide.faq_a3') },
+    { question: t('collection_guide.faq_q4'), answer: t('collection_guide.faq_a4') },
+  ];
+
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: SITE_NAME, path: '/' },
+    { name: t('collection_guide.nav_label'), path: PAGE_PATH },
+  ], language);
+  const pageJsonLd = {
+    ...buildWebPageJsonLd({
+      lang: language,
+      path: localizedPath,
+      name: t('collection_guide.meta_title'),
+      headline: t('collection_guide.heading'),
+      description: t('collection_guide.meta_description'),
+      about: 'Pokémon TCG collection tracking',
+      keywords: 'Pokémon card collection tracker, Pokémon TCG collection app, organize Pokémon cards, card collection guide',
+    }),
+    dateModified: LAST_UPDATED,
+    articleSection: t('collection_guide.eyebrow'),
+    citation: [
+      { '@type': 'WebPage', name: 'Lunidex source repository', url: GITHUB_REPO_URL },
+      { '@type': 'WebPage', name: 'PokéAPI', url: POKEAPI_SOURCE },
+      { '@type': 'WebPage', name: 'TCGdex', url: TCGDEX_SOURCE },
+    ],
+  };
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    url: pageUrl,
+    inLanguage: buildInLanguage(language),
+    mainEntity: faqs.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd({ '@graph': [pageJsonLd, breadcrumb, faqJsonLd] }) }}
+      />
+      <div className="app-page">
+        <Header />
+        <main className="page-shell pt-28 pb-24 relative">
+          <article className="mx-auto w-full max-w-5xl px-5 md:px-8">
+            <header className="mx-auto max-w-4xl text-center">
+              <p className="page-eyebrow justify-center">{t('collection_guide.eyebrow')}</p>
+              <h1 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
+                {t('collection_guide.heading')}
+              </h1>
+              <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-foreground/70 md:text-lg">
+                {t('collection_guide.intro')}
+              </p>
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-foreground/45">
+                {t('collection_guide.updated', { date: formattedDate })}
+              </p>
+            </header>
+
+            <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:p-8" aria-labelledby="collection-guide-answer-title">
+              <h2 id="collection-guide-answer-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.answer_title')}
+              </h2>
+              <p className="mt-4 text-base leading-8 text-foreground/80">
+                {t('collection_guide.answer_body')}
+              </p>
+            </section>
+
+            <section className="mt-12" aria-labelledby="collection-guide-criteria-title">
+              <div className="mx-auto max-w-3xl text-center">
+                <h2 id="collection-guide-criteria-title" className="text-3xl font-extrabold tracking-tight md:text-4xl">
+                  {t('collection_guide.criteria_title')}
+                </h2>
+                <p className="mt-4 leading-7 text-foreground/70">{t('collection_guide.criteria_intro')}</p>
+              </div>
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {criteria.map((criterion, index) => (
+                  <section key={criterion.title} className="section-frame p-6 md:p-7" aria-labelledby={`collection-criterion-${index}`}>
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary/70">0{index + 1}</p>
+                    <h3 id={`collection-criterion-${index}`} className="mt-5 text-xl font-extrabold tracking-tight">
+                      {criterion.title}
+                    </h3>
+                    <p className="mt-3 leading-7 text-foreground/70">{criterion.body}</p>
+                  </section>
+                ))}
+              </div>
+            </section>
+
+            <section className="mx-auto mt-12 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-limitations-title">
+              <h2 id="collection-guide-limitations-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.limitations_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('collection_guide.limitations_body')}</p>
+              <ul className="mt-5 space-y-3 text-sm leading-7 text-foreground/75">
+                <li>• {t('collection_guide.limitation_scanner')}</li>
+                <li>• {t('collection_guide.limitation_market')}</li>
+                <li>• {t('collection_guide.limitation_mobile')}</li>
+              </ul>
+            </section>
+
+            <section className="mx-auto mt-12 max-w-4xl" aria-labelledby="collection-guide-start-title">
+              <h2 id="collection-guide-start-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.how_to_start_title')}
+              </h2>
+              <ol className="mt-6 grid gap-4 md:grid-cols-2">
+                {[1, 2, 3, 4].map((step) => (
+                  <li key={step} className="section-frame flex gap-4 p-5">
+                    <span className="font-mono text-sm font-bold text-primary">0{step}</span>
+                    <p className="leading-7 text-foreground/75">{t(`collection_guide.step${step}`)}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="mx-auto mt-12 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-faq-title">
+              <h2 id="collection-guide-faq-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.faq_title')}
+              </h2>
+              <div className="mt-5 divide-y divide-border/60">
+                {faqs.map(({ question, answer }) => (
+                  <details key={question} className="group py-4 first:pt-0 last:pb-0">
+                    <summary className="cursor-pointer list-none pr-6 font-bold text-foreground marker:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+                      {question}
+                    </summary>
+                    <p className="mt-3 text-sm leading-7 text-foreground/70">{answer}</p>
+                  </details>
+                ))}
+              </div>
+            </section>
+
+            <section className="mx-auto mt-12 max-w-4xl border-t border-border/60 pt-8" aria-labelledby="collection-guide-sources-title">
+              <h2 id="collection-guide-sources-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.sources_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/70">{t('collection_guide.sources_body')}</p>
+              <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
+                <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                  {t('collection_guide.source_lunidex')}
+                </a>
+                <a href={POKEAPI_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                  PokéAPI
+                </a>
+                <a href={TCGDEX_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                  TCGdex
+                </a>
+              </div>
+            </section>
+
+            <nav className="mx-auto mt-10 max-w-4xl" aria-label={t('collection_guide.cta_title')}>
+              <p className="page-eyebrow">{t('collection_guide.cta_title')}</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link href={localeHref('/tcg', language)} className="glass-btn glass-btn-active touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_catalog')}
+                </Link>
+                <Link href={localeHref('/compare/lunidex-vs-pokecardex-zebradex', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_comparison')}
+                </Link>
+                <Link href={localeHref('/about', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_about')}
+                </Link>
+              </div>
+            </nav>
+          </article>
+        </main>
+      </div>
+    </>
+  );
+}

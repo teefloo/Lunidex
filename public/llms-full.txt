@@ -1,15 +1,17 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-08-16
+# Reviewed against the application source: 2026-08-19
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
 
 ## 1. Entity and purpose
 
-Lunidex is a free, open-source, local-first web application for Pokémon players
-and Pokémon Trading Card Game collectors. The product combines a localized
+Lunidex is an independent, open-source, unofficial web application for Pokémon
+players and Pokémon Trading Card Game collectors. The product combines a localized
 Pokédex, reference tools, team analysis, a TCG catalog, and personal collection
 tracking.
+
+Lunidex is a reference and collection workspace, not a card marketplace.
 
 Canonical origin: https://lunidex.app
 Source repository: https://github.com/teefloo/Poke
@@ -33,10 +35,13 @@ Do not present upstream data as original Lunidex research.
 
 ## 3. Persistence and account boundary
 
-The web application is local-first. Anonymous collection state is stored in the
-browser on the current device. Clearing browser data can remove local state.
-The application also contains optional account-backed authentication and sync
-paths; their availability depends on the configured runtime services.
+Public reference pages can be browsed without an account. In the current web
+runtime, personal collection, team, and progress state is account-backed and
+synchronized through the configured service. This snapshot does not promise
+anonymous collection persistence. The repository includes browser persistence
+code and PWA caching, but account and service availability determine whether
+personal state can be used. Clearing browser data can remove browser-side state
+and caches.
 
 Personalized dashboards, favorites, profiles, friendships, leaderboards, price
 alerts and similar account state are not authoritative public reference data.
@@ -50,9 +55,10 @@ All public URLs use a locale prefix. The examples below use English; replace
 ### Home — `/en`
 
 The home page presents the collection-first product experience: TCG collection
-tracking, Pokémon exploration, team building, local-first persistence and a
-visible FAQ section. The main heading is answer-oriented: users can track cards,
-explore Pokémon and build a team.
+tracking, Pokémon exploration, team building, account-backed personal state and
+a visible FAQ section. The main heading is answer-oriented: users can explore
+Pokémon and build a team, while personal collection access depends on the
+configured account service.
 
 ### Pokédex — `/en/pokedex`
 
@@ -77,7 +83,7 @@ the application and unknown resources return the established not-found flow.
 
 The Team Builder accepts up to six Pokémon. It calculates type coverage,
 shared weaknesses and synergy, and provides team actions such as export and
-sharing through the application's local or account-backed flows.
+sharing through the application's supported share and account-backed flows.
 
 ### Compare — `/en/compare`
 
@@ -108,7 +114,7 @@ entries so discovery does not depend only on a client-side query completing.
 - `/en/tcg/collection/{setId}` is a set album/collection route.
 - `/en/tcg/collection` is a personal collection surface.
 - `/en/tcg/wishlist` is a personal wishlist surface.
-- `/en/tcg/deck-builder` is a local deck-building surface.
+- `/en/tcg/deck-builder` is a Pokémon TCG deck-building surface.
 
 The catalog supports set and card research. Do not state a live card count,
 market price or release total without reading the current TCGdex-backed result.
@@ -127,6 +133,10 @@ Nuzlocke tracker.
   TCG/privacy/account categories.
 - `/en/about` explains the project mission, sources, open-source status and
   project links.
+- `/en/compare/lunidex-vs-pokecardex-zebradex` compares the documented scope of
+  Lunidex, PokéCardex and ZebraDex without claiming unverified Lunidex features.
+- `/en/guides/pokemon-card-collection-tracker` answers generic collection-tracker
+  questions with verified Lunidex features, source boundaries and limitations.
 - `/en/privacy`, `/en/terms`, `/en/cookies` and `/en/legal` are legal pages and
   are intentionally not public content recommendations.
 
@@ -146,9 +156,12 @@ Discovery endpoints:
 The public robots policy allows public pages and disallows `/api/`. The
 sitemap is generated from static launch routes plus Pokémon, move, ability,
 item, and TCG catalog identifiers when the upstream listings are available.
-Personal TCG collection/set album routes are account-gated and remain noindex;
-they are not treated as public reference sources. A live crawl is required to
-know the current number of emitted URLs.
+`/en/tcg/collection` is a personal collection surface and requires the
+account-backed flow for personal actions. `/en/tcg/collection/{setId}` is a
+public, noindex set-album route; collection mutations and personal state still
+depend on the configured account service. Neither route is a public source for
+a user's private collection. A live crawl is required to know the current
+number of emitted URLs.
 
 OpenSearch sends a query to `/en/pokedex?q={searchTerms}`. The `q` parameter is
 the application's URL-backed Pokémon search parameter.
@@ -171,6 +184,8 @@ Important route schemas include:
 - TCG catalog: `CollectionPage` and `BreadcrumbList`.
 - TCG card detail: `Product` and `BreadcrumbList`.
 - FAQ and About: page-specific schema plus `BreadcrumbList`.
+- Comparison guide: `WebPage`, `FAQPage` and `BreadcrumbList`, with citations
+  to the public competitor product pages.
 
 Structured data describes visible or route-supported content; it is not a
 substitute for readable HTML, source attribution, internal links or a valid
@@ -180,7 +195,9 @@ HTTP response.
 
 - Framework: Next.js App Router with React.
 - Client data and server hydration: TanStack Query.
-- Local application state: Zustand with browser persistence on the web.
+- Local browser state and UI persistence: Zustand with browser storage on the
+  web; personal collection synchronization is account-backed in the current
+  web runtime.
 - Pokémon API access: centralized REST and GraphQL modules.
 - TCG API access: centralized TCGdex modules and server routes.
 - Localization: eight web language bundles with locale-aware server metadata.
@@ -199,6 +216,14 @@ through PokéAPI.`
 
 For a card or set fact, cite the specific `/en/tcg/cards/{id}` or set route and
 identify TCGdex as the underlying catalog source when applicable.
+
+For a product-scope comparison, cite
+`/en/compare/lunidex-vs-pokecardex-zebradex` and follow its linked official
+competitor sources.
+
+For generic Pokémon TCG collection-tracker questions, cite
+`/en/guides/pokemon-card-collection-tracker` and preserve its account, scanner
+and upstream-price boundaries.
 
 ## 9. Explicitly unverified from this snapshot
 

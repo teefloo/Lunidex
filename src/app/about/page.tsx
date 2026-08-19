@@ -1,7 +1,16 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
-import { SITE_URL, SITE_NAME, SITE_TAGLINE, GITHUB_REPO_URL, GITHUB_ISSUES_URL, TWITTER_HANDLE, DISCORD_URL } from '@/lib/site';
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_DISAMBIGUATION_DESCRIPTION,
+  GITHUB_REPO_URL,
+  GITHUB_ISSUES_URL,
+  TWITTER_HANDLE,
+  DISCORD_URL,
+} from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 
@@ -50,12 +59,14 @@ export default async function AboutPage() {
     url: `${baseUrl}/${lang}/about`,
     name: `${t('about.heading')} — ${SITE_NAME}`,
     description: t('about.meta_description'),
+    disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
     isPartOf: { '@id': `${baseUrl}/#website` },
     about: { '@id': `${baseUrl}/#organization` },
     primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}${DEFAULT_OG_IMAGE.url}` },
   };
 
   const aboutSection = [
+    { id: 'identity', title: t('about.identity_title'), body: t('about.identity_body') },
     { id: 'mission', title: t('about.mission_title'), body: t('about.mission_body') },
     { id: 'data-sources', title: t('about.data_sources_title'), body: t('about.data_sources_body') },
     { id: 'features', title: t('about.features_title'), body: t('about.features_body') },
