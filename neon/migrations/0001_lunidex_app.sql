@@ -21,8 +21,34 @@ create schema if not exists app;
 create table if not exists app.users (
   id uuid primary key,
   created_at timestamptz not null default now(),
-  deleted_at timestamptz
+  deleted_at timestamptz,
+  deletion_state text not null default 'active',
+  deletion_requested_at timestamptz,
+  deletion_completed_at timestamptz
 );
+
+-- Keep existing deployments compatible with the durable deletion state machine.
+alter table app.users add column if not exists deletion_state text not null default 'active';
+alter table app.users add column if not exists deletion_requested_at timestamptz;
+alter table app.users add column if not exists deletion_completed_at timestamptz;
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'app_users_deletion_state_check'
+      and conrelid = 'app.users'::regclass
+  ) then
+    alter table app.users
+      add constraint app_users_deletion_state_check
+      check (deletion_state in ('active', 'pending', 'deleted'));
+  end if;
+end;
+$$;
+update app.users
+set deletion_state = 'deleted',
+    deletion_completed_at = coalesce(deletion_completed_at, deleted_at)
+where deleted_at is not null and deletion_state = 'active';
 
 create or replace function public.set_updated_at()
 returns trigger
@@ -84,6 +110,45 @@ create table if not exists public.quiz_scores (
   created_at timestamptz not null default now(),
   unique (user_id, date, mode, challenge)
 );
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'quiz_scores_score_range'
+      and conrelid = 'public.quiz_scores'::regclass
+  ) then
+    alter table public.quiz_scores
+      add constraint quiz_scores_score_range check (
+        mode <> 'marathon'
+        or challenge <> 'classic'
+        or score between 0 and 10
+      ) not valid;
+  end if;
+end;
+$$;
+
+create table if not exists public.quiz_attempts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references app.users (id) on delete cascade,
+  mode text not null check (mode = 'marathon'),
+  challenge text not null check (challenge = 'classic'),
+  date date not null,
+  question_ids integer[] not null check (cardinality(question_ids) = 10),
+  answer_index integer not null default 0 check (answer_index between 0 and 10),
+  correct_answers integer not null default 0 check (correct_answers >= 0),
+  wrong_answers integer not null default 0 check (wrong_answers >= 0),
+  status text not null default 'active'
+    check (status in ('active', 'completed', 'expired')),
+  score integer not null default 0 check (score between 0 and 10),
+  started_at timestamptz not null default now(),
+  completed_at timestamptz,
+  constraint quiz_attempts_answer_count check (correct_answers + wrong_answers = answer_index)
+);
+
+comment on table public.quiz_attempts is
+  'Server-owned daily quiz lifecycle. Answers are recorded before a leaderboard score is derived.';
 
 comment on table public.quiz_scores is
   'Daily challenge leaderboard entries. Mutations are validated by the server API.';
@@ -416,6 +481,8 @@ create index if not exists profiles_handle_lookup
   where public_handle is not null and is_public = true;
 create index if not exists quiz_scores_date_score_idx
   on public.quiz_scores (date, score desc);
+create index if not exists quiz_attempts_user_status_idx
+  on public.quiz_attempts (user_id, status, started_at desc);
 create index if not exists idx_battle_rooms_player1 on public.battle_rooms (player1_id);
 create index if not exists idx_battle_rooms_player2 on public.battle_rooms (player2_id);
 create index if not exists idx_battle_rooms_created_at on public.battle_rooms (created_at);

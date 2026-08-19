@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 
@@ -70,7 +70,9 @@ export async function GET(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const rows = await sql`
     select id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
@@ -89,13 +91,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
   const user = await getNeonUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const payload = await readJsonBody<CreateAlertPayload>(request);
 
@@ -143,13 +149,17 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
   const user = await getNeonUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const id = request.nextUrl.searchParams.get('id');
   if (!id) {
@@ -170,13 +180,17 @@ export async function DELETE(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
   const user = await getNeonUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const payload = await readJsonBody<{ id?: string; is_active?: boolean }>(request);
   if (!payload?.id || typeof payload.is_active !== 'boolean') {

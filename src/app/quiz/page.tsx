@@ -39,10 +39,14 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { resolveLanguage } from '@/lib/languages';
 import { useAuth } from '@/lib/neon/AuthProvider';
-import { submitDailyScore } from '@/lib/supabase/leaderboard-client';
+import {
+  answerDailyQuizQuestion,
+  startDailyQuizAttempt,
+  submitDailyAttempt,
+} from '@/lib/supabase/leaderboard-client';
 import QuizLeaderboard from '@/components/dashboard/QuizLeaderboard';
 import QuizResultCard from '@/components/quiz/QuizResultCard';
-import type { LeaderboardChallenge, LeaderboardMode } from '@/lib/leaderboard';
+import { DAILY_QUESTION_COUNT } from '@/lib/leaderboard';
 
 type GameMode = 'time-attack' | 'survival' | 'marathon';
 type QuizChallenge = 'classic' | 'silhouette' | 'stats';
@@ -109,9 +113,17 @@ function QuizPageContent() {
   const [correctCount, setCorrectCount] = useState(0);
   const [sessionStreak, setSessionStreak] = useState(0);
   const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
+  const [dailyAttemptId, setDailyAttemptId] = useState<string | null>(null);
+  const [dailyAttemptReady, setDailyAttemptReady] = useState(false);
   const [sessionBadges, setSessionBadges] = useState(0);
   const initialBadgeCountRef = useRef(0);
   const gameStateRef = useRef<GameState>('idle');
+  const dailyIndexRef = useRef(0);
+  const dailyAttemptIdRef = useRef<string | null>(null);
+  const nextDailyQuestionIdRef = useRef<number | null>(null);
+  const acceptedServerAnswerIndexRef = useRef(-1);
+  const pendingServerAnswerRef = useRef<ReturnType<typeof answerDailyQuizQuestion> | null>(null);
+  const submittedAttemptRef = useRef<string | null>(null);
 
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -181,23 +193,56 @@ function QuizPageContent() {
 
     if (isDaily) {
       const today = new Date().toISOString().split('T')[0];
-      const rng = seededRandom(`${today}-${dailyIndex}`);
+      const rng = seededRandom(`${today}-${dailyIndexRef.current}`);
       const randomIndex = Math.floor(rng() * pool.length);
       return pool[randomIndex];
     } else {
       const randomIndex = Math.floor(Math.random() * pool.length);
       return pool[randomIndex];
     }
-  }, [allNames, filteredPool, isDaily, dailyIndex]);
+  }, [allNames, filteredPool, isDaily]);
 
   const startNewRound = useCallback(async () => {
     if (gameStateRef.current === 'finished') return;
-    if (isDaily && dailyIndex >= 9) {
+    const currentDailyIndex = dailyIndexRef.current;
+    if (isDaily && currentDailyIndex >= DAILY_QUESTION_COUNT) {
       setGameState('finished');
       return;
     }
 
-    const pokemon = getNextPokemon();
+    const activeAttemptId = isDaily ? dailyAttemptIdRef.current : null;
+    if (activeAttemptId && acceptedServerAnswerIndexRef.current < currentDailyIndex) {
+      const pendingAnswer = pendingServerAnswerRef.current;
+      const result = pendingAnswer ? await pendingAnswer : null;
+      if (pendingAnswer === pendingServerAnswerRef.current) pendingServerAnswerRef.current = null;
+      if (
+        !result
+        || result.attemptId !== activeAttemptId
+        || result.questionIndex !== currentDailyIndex
+        || result.readyToSubmit
+      ) {
+        setGameState('finished');
+        return;
+      }
+      acceptedServerAnswerIndexRef.current = result.questionIndex;
+      nextDailyQuestionIdRef.current = result.nextQuestionId;
+    }
+
+    if (activeAttemptId && activeAttemptId !== dailyAttemptIdRef.current) return;
+    const serverQuestionId = activeAttemptId ? nextDailyQuestionIdRef.current : null;
+    if (activeAttemptId && !serverQuestionId) {
+      setGameState('finished');
+      return;
+    }
+    nextDailyQuestionIdRef.current = null;
+    const serverQuestionName = serverQuestionId
+      ? allNames?.find((entry) => entry.id === serverQuestionId)?.name
+      : null;
+    if (activeAttemptId && !serverQuestionName) {
+      setGameState('finished');
+      return;
+    }
+    const pokemon = serverQuestionName ? { name: serverQuestionName } : getNextPokemon();
     if (!pokemon) return;
     
     setGameState('loading');
@@ -212,7 +257,7 @@ function QuizPageContent() {
       const mainPool = allNames || [];
 
       const today = new Date().toISOString().split('T')[0];
-      const rngSeed = isDaily ? `${today}-${dailyIndex}` : Math.random().toString();
+      const rngSeed = isDaily ? `${today}-${currentDailyIndex}` : Math.random().toString();
       const rng = seededRandom(`options-${rngSeed}`);
 
       while (otherOptions.length < 3) {
@@ -229,12 +274,20 @@ function QuizPageContent() {
       toast.error(t('quiz.fetch_failed'));
       setGameState('idle');
     }
-  }, [allNames, getNextPokemon, isDaily, dailyIndex, t]);
+  }, [allNames, getNextPokemon, isDaily, t]);
 
   const startGame = async (challenge: QuizChallenge, mode: GameMode = 'marathon', daily: boolean = false) => {
     setGameState('loading');
     setIsDaily(daily);
     setDailyIndex(0);
+    dailyIndexRef.current = 0;
+    setDailyAttemptId(null);
+    setDailyAttemptReady(false);
+    dailyAttemptIdRef.current = null;
+    nextDailyQuestionIdRef.current = null;
+    acceptedServerAnswerIndexRef.current = -1;
+    pendingServerAnswerRef.current = null;
+    submittedAttemptRef.current = null;
     setQuizChallenge(challenge);
     setGameMode(mode);
     
@@ -243,7 +296,9 @@ function QuizPageContent() {
         ?.map((p) => ({ name: p.name }))
         .filter((p) => !p.name.includes('-primal') && !p.name.includes('-ultra')) || [];
       
-      if (selectedGen || selectedType) {
+      // The online leaderboard is the canonical unfiltered daily challenge.
+      // Custom filters remain available for local quiz modes.
+      if (!daily && (selectedGen || selectedType)) {
         const genPool = selectedGen ? await getPokemonByGeneration(selectedGen) : null;
         const typePool = selectedType ? await getPokemonByType(selectedType) : null;
 
@@ -280,9 +335,25 @@ function QuizPageContent() {
       setSessionBadges(0);
       initialBadgeCountRef.current = badges.length;
 
+      const serverAttempt = daily && user ? await startDailyQuizAttempt() : null;
+      if (serverAttempt) {
+        dailyAttemptIdRef.current = serverAttempt.attemptId;
+        setDailyAttemptId(serverAttempt.attemptId);
+      }
+
       const today = new Date().toISOString().split('T')[0];
+      const firstPokemonName = serverAttempt
+        ? mainPool.find((entry) => entry.id === serverAttempt.questionId)?.name
+        : undefined;
+      if (serverAttempt && !firstPokemonName) {
+        toast.error(t('quiz.fetch_failed'));
+        setGameState('idle');
+        return;
+      }
       const firstRng = daily ? seededRandom(`${today}-0`) : Math.random;
-      const firstPokemon = pool[Math.floor(firstRng() * pool.length)];
+      const firstPokemon = firstPokemonName
+        ? { name: firstPokemonName }
+        : pool[Math.floor(firstRng() * pool.length)];
 
       const detail = await getPokemonDetail(firstPokemon.name);
       setCurrentPokemon(detail);
@@ -315,6 +386,35 @@ function QuizPageContent() {
     setGameState('answered');
     setTotalQuestions(q => q + 1);
 
+    const currentDailyIndex = dailyIndexRef.current;
+    const answerId = allNames?.find((entry) => entry.name === option)?.id;
+    const activeAttemptId = isDaily ? dailyAttemptIdRef.current : null;
+    if (activeAttemptId && typeof answerId === 'number') {
+      const serverAnswer = answerDailyQuizQuestion({
+        attemptId: activeAttemptId,
+        questionIndex: currentDailyIndex,
+        answerId,
+      });
+      pendingServerAnswerRef.current = serverAnswer;
+      void serverAnswer.then((result) => {
+        if (pendingServerAnswerRef.current === serverAnswer) pendingServerAnswerRef.current = null;
+        if (
+          !result
+          || result.attemptId !== dailyAttemptIdRef.current
+          || result.questionIndex <= acceptedServerAnswerIndexRef.current
+        ) return;
+        acceptedServerAnswerIndexRef.current = result.questionIndex;
+        nextDailyQuestionIdRef.current = result.nextQuestionId;
+        if (result.readyToSubmit) setDailyAttemptReady(true);
+      });
+    }
+
+    if (isDaily) {
+      const nextDailyIndex = currentDailyIndex + 1;
+      dailyIndexRef.current = nextDailyIndex;
+      setDailyIndex(nextDailyIndex);
+    }
+
     if (correct) {
       setCorrectCount(c => c + 1);
       setSessionStreak(s => s + 1);
@@ -330,10 +430,6 @@ function QuizPageContent() {
         return newScore;
       });
       
-      if (isDaily) {
-        setDailyIndex(i => i + 1);
-      }
-      
       if (targetPokemon) {
         setTimeout(() => {
           setGameState('finished');
@@ -344,9 +440,6 @@ function QuizPageContent() {
       }
     } else {
       setSessionStreak(0);
-      if (isDaily) {
-        setDailyIndex(i => i + 1);
-      }
       if (gameMode === 'survival') {
         const newLives = lives - 1;
         setLives(newLives);
@@ -397,23 +490,20 @@ function QuizPageContent() {
     }
   }, [gameState, quizChallenge, gameMode, score, updateQuizHighScore, isDaily, addQuizSession, addAction, totalQuestions, correctCount, sessionStreak, badges.length]);
 
-  // Submit the daily challenge score to the online leaderboard — only when the
-  // daily run finishes and the user is signed in. The score is re-validated and
-  // clamped server-side; no-ops entirely when Neon is unconfigured.
+  // Finalize the server-tracked daily attempt. The client score is display-only;
+  // the leaderboard endpoint derives the persisted score from recorded answers.
   useEffect(() => {
-    if (gameState !== 'finished' || !isDaily || !user) return;
+    if (gameState !== 'finished' || !isDaily || !user || !dailyAttemptId || !dailyAttemptReady) return;
+    if (submittedAttemptRef.current === dailyAttemptId) return;
+    submittedAttemptRef.current = dailyAttemptId;
     let cancelled = false;
-    void submitDailyScore({
-      mode: gameMode as LeaderboardMode,
-      challenge: quizChallenge as LeaderboardChallenge,
-      score,
-    }).then((ok) => {
+    void submitDailyAttempt(dailyAttemptId).then((ok) => {
       if (ok && !cancelled) setLeaderboardRefresh((n) => n + 1);
     });
     return () => {
       cancelled = true;
     };
-  }, [gameState, isDaily, user, gameMode, quizChallenge, score]);
+  }, [gameState, isDaily, user, dailyAttemptId, dailyAttemptReady]);
 
   useEffect(() => {
     if (gameMode === 'time-attack' && gameState === 'playing') {

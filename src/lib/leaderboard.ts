@@ -54,10 +54,10 @@ export function maxDailyScore(mode: LeaderboardMode): number {
 }
 
 /**
- * Coerces an untrusted score into a valid integer within [0, max] for the mode.
- * Returns null when the input cannot be interpreted as a number at all.
+ * Parses an untrusted score without normalising impossible values into valid
+ * results. Leaderboard persistence should use a server-derived score instead.
  */
-export function clampScore(rawScore: unknown, mode: LeaderboardMode): number | null {
+export function parseBoundedScore(rawScore: unknown, mode: LeaderboardMode): number | null {
   if (
     rawScore === null ||
     rawScore === undefined ||
@@ -68,9 +68,8 @@ export function clampScore(rawScore: unknown, mode: LeaderboardMode): number | n
   }
   const numeric = typeof rawScore === 'number' ? rawScore : Number(rawScore);
   if (!Number.isFinite(numeric) || !Number.isInteger(numeric)) return null;
-  if (numeric < 0) return 0;
   const max = maxDailyScore(mode);
-  return numeric > max ? max : numeric;
+  return numeric >= 0 && numeric <= max ? numeric : null;
 }
 
 export function isLeaderboardMode(value: unknown): value is LeaderboardMode {

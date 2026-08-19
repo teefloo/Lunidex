@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { HANDLE_MAX_LENGTH, HANDLE_MIN_LENGTH, HANDLE_REGEX } from '@/types/dashboard';
@@ -51,11 +51,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  await ensureNeonUser(sql, user);
-  return NextResponse.json({ profile: await getOwnSettings(sql, user.id) });
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
+  return NextResponse.json({ profile: await getOwnSettings(sql, user.id) }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const sql = getNeonClient();
   if (!sql) return unavailable();
 
@@ -78,7 +83,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'A public profile requires a handle' }, { status: 400 });
   }
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   let updatedRows: ProfileSettingsRow[];
   try {
@@ -128,5 +135,5 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     `;
   }
 
-  return NextResponse.json({ profile: updatedRows[0] });
+  return NextResponse.json({ profile: updatedRows[0] }, { headers: { 'Cache-Control': 'private, no-store' } });
 }

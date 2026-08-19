@@ -126,7 +126,7 @@ const devConnectSrc =
 const scriptSrc =
   process.env.NODE_ENV === 'development'
     ? "'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com"
-    : "'self' 'unsafe-inline' blob: https://va.vercel-scripts.com";
+    : "'self' 'unsafe-inline' https://va.vercel-scripts.com";
 
 const csp = [
   "default-src 'self'",

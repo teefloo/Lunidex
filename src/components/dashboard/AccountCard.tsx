@@ -206,11 +206,18 @@ export default function AccountCard() {
     const confirmation = window.prompt(tt('account.delete_prompt', 'Type DELETE to permanently delete your account and synced data.'));
     if (confirmation !== 'DELETE') return;
 
+    const password = window.prompt(tt('account.delete_password', 'Enter your current password to confirm account deletion. Leave blank if your session was just refreshed.'));
+    if (password === null) return;
+
     const response = await fetchAppApi('/api/account', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ confirmation }),
+      body: JSON.stringify({ confirmation, ...(password ? { password } : {}) }),
     });
+    if (response.status === 202) {
+      toast.error(tt('account.delete_pending', 'Your account deletion is pending authentication. Please retry with your current password.'));
+      return;
+    }
     if (!response.ok) {
       toast.error(tt('account.delete_error', 'Your account could not be deleted.'));
       return;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 
@@ -47,12 +47,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
   const row = await getCurrentState(sql, user.id);
-  return NextResponse.json({ data: row?.data ?? {}, updatedAt: row?.updated_at ?? null });
+  return NextResponse.json({ data: row?.data ?? {}, updatedAt: row?.updated_at ?? null }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const sql = getNeonClient();
   if (!sql) return unavailable();
 
@@ -78,7 +83,9 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid state version' }, { status: 400 });
   }
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const updatedRows = expectedUpdatedAt === null || expectedUpdatedAt === undefined
     ? await sql`
@@ -97,12 +104,12 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
   const updated = updatedRows[0];
   if (updated) {
-    return NextResponse.json({ ok: true, data: updated.data, updatedAt: updated.updated_at });
+    return NextResponse.json({ ok: true, data: updated.data, updatedAt: updated.updated_at }, { headers: { 'Cache-Control': 'private, no-store' } });
   }
 
   const current = await getCurrentState(sql, user.id);
   return NextResponse.json(
     { conflict: true, data: current?.data ?? {}, updatedAt: current?.updated_at ?? null },
-    { status: 409 },
+    { status: 409, headers: { 'Cache-Control': 'private, no-store' } },
   );
 }

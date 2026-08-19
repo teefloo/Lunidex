@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
@@ -39,6 +39,9 @@ function validEndpoint(value: unknown): value is string {
 }
 
 export async function POST(request: NextRequest) {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
@@ -51,7 +54,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'A valid push subscription is required' }, { status: 400 });
   }
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
   await sql`
     insert into public.user_push_subscriptions (user_id, subscription)
     values (${user.id}::uuid, ${JSON.stringify(subscription)}::jsonb)
@@ -63,11 +68,18 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const body = await readJsonBody<SubscriptionPayload>(request);
   if (!validEndpoint(body?.endpoint)) {

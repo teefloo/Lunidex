@@ -121,7 +121,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  if (!isUuid(payload.attemptId) || !Number.isInteger(payload.questionIndex) || payload.questionIndex < 0 || payload.questionIndex >= 10 || !isValidQuizAnswerId(payload.answerId)) {
+  const questionIndex = typeof payload.questionIndex === 'number' ? payload.questionIndex : -1;
+  if (!isUuid(payload.attemptId) || !Number.isInteger(questionIndex) || questionIndex < 0 || questionIndex >= 10 || !isValidQuizAnswerId(payload.answerId)) {
     return NextResponse.json({ error: 'Invalid quiz answer' }, { status: 400, headers: noStoreHeaders() });
   }
 
@@ -143,7 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       and status = 'active'
       and date = ${today}::date
       and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
-      and answer_index = ${payload.questionIndex}
+      and answer_index = ${questionIndex}
       and answer_index < cardinality(question_ids)
     returning
       id as attempt_id,

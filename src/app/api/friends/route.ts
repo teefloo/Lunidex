@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import type {
@@ -15,6 +15,7 @@ import type {
 } from '@/types/friends';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const PRIVATE_NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
 interface RelationRow {
   id: string;
@@ -116,7 +117,9 @@ async function getContext(request: NextRequest): Promise<RequestContext | NextRe
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
   return { sql, userId: user.id };
 }
 
@@ -264,7 +267,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         shareTcgCollection: row.share_tcg_collection,
         shareTcgDecks: row.share_tcg_decks,
       } satisfies FriendPrivacySettings : null,
-    });
+    }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (action === 'relations') {
@@ -282,18 +285,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       where ${userId}::uuid in (f.requester_id, f.addressee_id)
       order by f.updated_at desc
     ` as RelationRow[];
-    return NextResponse.json({ relations: rows.map(toRelationWithDirectory) });
+    return NextResponse.json({ relations: rows.map(toRelationWithDirectory) }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (action === 'directory' || action === 'search') {
     const targetId = request.nextUrl.searchParams.get('userId');
     if (action === 'directory') {
       if (!isUuid(targetId)) return NextResponse.json({ error: 'Invalid friend id' }, { status: 400 });
-      return NextResponse.json({ entry: await getDirectory(sql, userId, targetId) });
+      return NextResponse.json({ entry: await getDirectory(sql, userId, targetId) }, { headers: PRIVATE_NO_STORE_HEADERS });
     }
 
     const handle = request.nextUrl.searchParams.get('handle')?.trim().toLowerCase() ?? '';
-    if (!handle || handle.length > 30) return NextResponse.json({ entry: null });
+    if (!handle || handle.length > 30) return NextResponse.json({ entry: null }, { headers: PRIVATE_NO_STORE_HEADERS });
     const rows = await sql`
       select d.user_id, d.handle, d.display_name,
         d.allow_friend_requests, d.share_tcg_collection, d.share_tcg_decks
@@ -302,7 +305,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         and d.allow_friend_requests = true
       limit 1
     ` as DirectoryRow[];
-    return NextResponse.json({ entry: rows[0] ? toDirectoryEntry(rows[0]) : null });
+    return NextResponse.json({ entry: rows[0] ? toDirectoryEntry(rows[0]) : null }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   const friendId = request.nextUrl.searchParams.get('friendId');
@@ -322,7 +325,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const summary: FriendCollectionSummary | null = row
       ? { totalOwned: Number(row.total_owned), updatedAt: row.updated_at }
       : null;
-    return NextResponse.json({ summary });
+    return NextResponse.json({ summary }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (action === 'collection-page' && friendId) {
@@ -359,7 +362,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       totalOwned: Number(rows[0]?.total_owned ?? 0),
       hasMore: Boolean(rows[0]?.has_more),
     };
-    return NextResponse.json({ page });
+    return NextResponse.json({ page }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (action === 'decks' && friendId) {
@@ -374,13 +377,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const result: FriendDeckResult | null = row
       ? { decks: Array.isArray(row.decks) ? row.decks.filter(isFriendDeck) : [], updatedAt: row.updated_at }
       : null;
-    return NextResponse.json({ result });
+    return NextResponse.json({ result }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   return NextResponse.json({ error: 'Unknown friends action' }, { status: 400 });
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const context = await getContext(request);
   if (!isContext(context)) return context;
   const { sql, userId } = context;
@@ -469,6 +475,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const context = await getContext(request);
   if (!isContext(context)) return context;
   const { sql, userId } = context;
@@ -500,6 +509,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const originError = requireTrustedMutationOrigin(request);
+  if (originError) return originError;
+
   const context = await getContext(request);
   if (!isContext(context)) return context;
   const { sql, userId } = context;

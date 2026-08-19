@@ -17,7 +17,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const [profiles, states, quizScores, priceAlerts, pushSubscriptions, friendDirectory, friendships, collectionSnapshots, deckSnapshots, battleRooms] = await Promise.all([
     sql`select id, name, email, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_total_correct, member_since, quiz_best_streak, tcg_owned_count, caught_by_gen, allow_friend_requests, share_tcg_collection, share_tcg_decks, created_at, updated_at from public.profiles where id = ${user.id}::uuid`,

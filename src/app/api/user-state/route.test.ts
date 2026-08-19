@@ -53,7 +53,7 @@ describe('/api/user-state timestamp precision', () => {
 
     const response = await PUT(new NextRequest('https://lunidex.test/api/user-state', {
       method: 'PUT',
-      headers: { 'content-type': 'application/json' },
+      headers: { origin: 'https://lunidex.test', 'content-type': 'application/json' },
       body: JSON.stringify({
         data: { tcgOwnedCards: ['sv01-1'] },
         expectedUpdatedAt: UPDATED_AT,
@@ -63,5 +63,20 @@ describe('/api/user-state timestamp precision', () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ updatedAt: UPDATED_AT });
     expect(queryText(mockSql.mock.calls[0] as unknown[])).toContain('updated_at::text as updated_at');
+  });
+
+  it('blocks reads and writes while account deletion is pending', async () => {
+    mockEnsureNeonUser.mockResolvedValue(false);
+
+    const readResponse = await GET(new NextRequest('https://lunidex.test/api/user-state'));
+    const writeResponse = await PUT(new NextRequest('https://lunidex.test/api/user-state', {
+      method: 'PUT',
+      headers: { origin: 'https://lunidex.test', 'content-type': 'application/json' },
+      body: JSON.stringify({ data: {} }),
+    }));
+
+    expect(readResponse.status).toBe(410);
+    expect(writeResponse.status).toBe(410);
+    expect(mockSql).not.toHaveBeenCalled();
   });
 });

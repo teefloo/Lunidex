@@ -90,7 +90,13 @@ export async function getNeonUserFromRequest(request: Request): Promise<NeonRequ
  * Creates the Neon-side identity projection lazily for users created after the
  * initial copy. Credentials and sessions stay exclusively in Neon Auth.
  */
-export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promise<void> {
+export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promise<boolean> {
+  await sql`
+    insert into app.users (id)
+    values (${user.id}::uuid)
+    on conflict (id) do nothing
+  `;
+
   const metadata = user.user_metadata;
   const rawName = typeof metadata.name === 'string'
     ? metadata.name
@@ -98,19 +104,17 @@ export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promi
   const name = rawName?.trim().slice(0, 120) || null;
   const email = user.email.trim().slice(0, 320) || null;
 
-  await sql.transaction((tx) => [
-    tx`
-      insert into app.users (id)
-      values (${user.id}::uuid)
-      on conflict (id) do update set deleted_at = null
-    `,
-    tx`
-      insert into public.profiles (id, name, email)
-      values (${user.id}::uuid, ${name}, ${email})
-      on conflict (id) do update set
-        name = coalesce(excluded.name, public.profiles.name),
-        email = coalesce(excluded.email, public.profiles.email),
-        updated_at = now()
-    `,
-  ]);
+  const profileRows = await sql`
+    insert into public.profiles (id, name, email)
+    select ${user.id}::uuid, ${name}, ${email}
+    from app.users
+    where id = ${user.id}::uuid
+      and deletion_state = 'active'
+    on conflict (id) do update set
+      name = coalesce(excluded.name, public.profiles.name),
+      email = coalesce(excluded.email, public.profiles.email),
+      updated_at = now()
+    returning id
+  `;
+  return Boolean(profileRows[0]);
 }

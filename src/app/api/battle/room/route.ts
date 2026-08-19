@@ -26,7 +26,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody } from '@/lib/api/route-helpers';
+import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
@@ -36,6 +36,7 @@ const MAX_CHAT_MESSAGES = 100;
 const MIN_POKEMON_ID = 1;
 const MAX_POKEMON_ID = 1025;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const PRIVATE_NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
 interface BattleTeamMember {
   id: number;
@@ -85,6 +86,9 @@ function parseTeam(value: unknown): BattleTeamMember[] | null {
 
 // POST /api/battle/room — create a room
 export async function POST(req: NextRequest) {
+  const originError = requireTrustedMutationOrigin(req);
+  if (originError) return originError;
+
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
   const user = await getNeonUserFromRequest(req);
@@ -94,7 +98,9 @@ export async function POST(req: NextRequest) {
   if (!rateLimit(`battle-room-create:${user.id}`, 10)) {
     return NextResponse.json({ error: 'Too many room creations' }, { status: 429 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const body = await readJsonBody<{ team?: unknown }>(req);
   if (!body) {
@@ -140,7 +146,9 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const rows = await sql`
     select id, player1_id, player2_id, status, state, created_at
@@ -150,13 +158,16 @@ export async function GET(req: NextRequest) {
     limit 1
   ` as BattleRoomRow[];
   const data = rows[0];
-  if (!data) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
+  if (!data) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
 
-  return NextResponse.json(data);
+  return NextResponse.json(data, { headers: PRIVATE_NO_STORE_HEADERS });
 }
 
 // PATCH /api/battle/room?id=<uuid> — join or append chat
 export async function PATCH(req: NextRequest) {
+  const originError = requireTrustedMutationOrigin(req);
+  if (originError) return originError;
+
   const id = req.nextUrl.searchParams.get('id');
   if (!id || !UUID_PATTERN.test(id)) {
     return NextResponse.json({ error: 'Invalid room id' }, { status: 400 });
@@ -166,7 +177,9 @@ export async function PATCH(req: NextRequest) {
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
   const user = await getNeonUserFromRequest(req);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  await ensureNeonUser(sql, user);
+  if (await ensureNeonUser(sql, user) === false) {
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const body = await readJsonBody<{ action?: unknown; text?: unknown }>(req);
   if (!body || (body.action !== 'join' && body.action !== 'chat')) {
