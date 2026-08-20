@@ -26,6 +26,7 @@ import { POST } from './route';
 
 function request(): NextRequest {
   return new NextRequest('https://lunidex.test/api/quiz/attempt', {
+    method: 'POST',
     headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
     body: JSON.stringify({ action: 'start', mode: 'marathon', challenge: 'classic' }),
   });

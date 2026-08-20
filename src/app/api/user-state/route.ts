@@ -94,7 +94,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-      on conflict (user_id) do nothing
   let updatedRows: UserStateRow[];
   try {
     updatedRows = expectedUpdatedAt === null || expectedUpdatedAt === undefined
