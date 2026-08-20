@@ -3,11 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
+  ArrowUpRight,
+  BookOpen,
   ChevronDown,
   Search,
   Sparkles,
   Filter,
 } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -22,6 +25,7 @@ import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -407,6 +411,7 @@ function DiscoveryHero({
   onOpenFilters: () => void;
 }) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
 
   return (
     <section className="page-surface px-5 py-6 sm:px-8 sm:py-7">
@@ -428,13 +433,33 @@ function DiscoveryHero({
           </select>
           <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/55" />
         </div>
-        <div className="space-y-3">
-          <h1 className="page-title text-4xl leading-none sm:text-5xl xl:text-6xl">
-            {title}
-          </h1>
-          <p className="page-subtitle max-w-2xl">
-            {subtitle}
-          </p>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+          <div className="space-y-3">
+            <h1 className="page-title text-4xl leading-none sm:text-5xl xl:text-6xl">
+              {title}
+            </h1>
+            <p className="page-subtitle max-w-2xl">
+              {subtitle}
+            </p>
+          </div>
+          <Link
+            href={localeHref('/guides/pokemon-card-collection-tracker')}
+            aria-label={t('collection_guide.nav_label')}
+            className="group inline-flex w-full max-w-xl items-center gap-3 rounded-sm border border-primary/25 bg-primary/5 p-3 text-left transition-[transform,border-color,background-color,box-shadow] duration-150 hover:-translate-y-px hover:border-primary/60 hover:bg-primary/10 hover:shadow-[var(--shadow-pixel-sm)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:w-auto lg:max-w-[22rem]"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-primary/30 bg-primary/10 text-primary">
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                {t('collection_guide.eyebrow')}
+              </span>
+              <span className="mt-1 block text-sm font-black leading-snug text-foreground/85">
+                {t('collection_guide.nav_label')}
+              </span>
+            </span>
+            <ArrowUpRight className="h-4 w-4 shrink-0 text-primary/65 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
         </div>
       </div>
 

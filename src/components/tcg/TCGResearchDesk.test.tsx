@@ -44,6 +44,8 @@ const translations = vi.hoisted(() => ({
   'tcg.filters': 'Filtres',
   'tcg.cards_found': 'Cartes trouvées',
   'tcg.card_count_in_set': '{{count}} cartes dans {{set}}',
+  'collection_guide.eyebrow': 'Guide de collection',
+  'collection_guide.nav_label': 'Guide du suivi de collection Pokémon',
 }));
 
 vi.mock('next/navigation', () => ({
@@ -169,5 +171,15 @@ describe('TCGResearchDesk collection selector', () => {
         { scroll: false },
       );
     });
+  });
+
+  it('keeps the collection guide inside the discovery hero with a localized link', () => {
+    window.history.pushState({}, '', '/fr/tcg');
+    render(<TCGResearchDesk initialLatestSet={{ id: 'latest-set', name: 'Dernière collection' }} />);
+
+    expect(screen.getByRole('link', { name: 'Guide du suivi de collection Pokémon' })).toHaveAttribute(
+      'href',
+      '/fr/guides/pokemon-card-collection-tracker',
+    );
   });
 });
