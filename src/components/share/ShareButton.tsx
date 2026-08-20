@@ -19,6 +19,8 @@ export interface ShareButtonProps {
   imageUrl?: string;
   /** Button label. Falls back to "Share" when omitted. */
   label?: string;
+  /** Render only the share icon while keeping the label available to assistive tech. */
+  iconOnly?: boolean;
   variant?: ButtonVariant;
   className?: string;
   /** @deprecated Use `url` instead. Legacy prop kept for backward-compat with team page. */
@@ -42,6 +44,7 @@ export function ShareButton({
   title,
   description,
   label,
+  iconOnly = false,
   variant = 'outline',
   className,
   // legacy compat
@@ -139,16 +142,20 @@ export function ShareButton({
           typeof navigator !== 'undefined' && !navigator.share ? 'listbox' : undefined
         }
         aria-expanded={open || undefined}
+        aria-label={iconOnly ? resolvedLabel : undefined}
+        title={iconOnly ? resolvedLabel : undefined}
       >
         {copied ? <Check className="h-4 w-4" /> : <Share className="h-4 w-4" />}
-        {resolvedLabel}
+        {!iconOnly && resolvedLabel}
         {/* Dropdown indicator only when Web Share is unavailable — rendered
             server-side as hidden to avoid hydration mismatch, then shown via
             the open state after mount. */}
-        <ChevronDown
-          className="h-3 w-3 opacity-50 ml-0.5"
-          aria-hidden="true"
-        />
+        {!iconOnly && (
+          <ChevronDown
+            className="h-3 w-3 opacity-50 ml-0.5"
+            aria-hidden="true"
+          />
+        )}
       </Button>
 
       {open && (

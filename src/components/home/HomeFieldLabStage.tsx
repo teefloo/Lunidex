@@ -7,7 +7,6 @@ interface HomeFieldLabStageCopy {
   indexLabel: string;
   indexContextLabel: string;
   labLabel: string;
-  localLabel: string;
   specimenLabel: string;
   statsLabel: string;
   evolutionLabel: string;
@@ -98,7 +97,6 @@ export function HomeFieldLabStage({ copy }: HomeFieldLabStageProps) {
           </div>
           <div className="field-terminal-header-meta">
             <span className="field-terminal-demo">{copy.demoLabel}</span>
-            <span className="field-terminal-status"><i /> {copy.localLabel}</span>
           </div>
         </div>
 

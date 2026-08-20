@@ -11,6 +11,7 @@ import {
   Package,
   Sparkles,
   Calculator,
+  Newspaper,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 
@@ -27,6 +28,7 @@ export const PRIMARY_NAV_ITEMS: NavItem[] = [
   { path: '/tcg',              icon: LayoutGrid,  labelKey: 'nav.tcg',                fallback: 'TCG' },
   { path: '/tcg/collection',   icon: Package,     labelKey: 'tcg.nav_collection',    fallback: 'Collection' },
   { path: '/quiz',             icon: BrainCircuit,labelKey: 'nav.quiz',               fallback: 'Quiz' },
+  { path: '/blog',             icon: Newspaper,   labelKey: 'nav.blog',               fallback: 'Blog' },
 ];
 
 export const SECONDARY_NAV_ITEMS: NavItem[] = [

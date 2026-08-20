@@ -12,6 +12,10 @@ describe('launch sitemap routes', () => {
     expect(paths).toContain('contact');
     expect(paths).toContain('compare/lunidex-vs-pokecardex-zebradex');
     expect(paths).toContain('guides/pokemon-card-collection-tracker');
+    expect(paths).toContain('guides/team-builder-guide');
+    expect(paths).toContain('guides/quiz-guide');
+    expect(paths).toContain('guides/nuzlocke-guide');
+    expect(paths).toContain('blog');
     expect(paths).not.toContain('early-access');
     expect(paths).not.toContain('privacy');
     expect(paths).not.toContain('terms');

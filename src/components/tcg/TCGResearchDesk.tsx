@@ -6,9 +6,13 @@ import {
   ArrowUpRight,
   BookOpen,
   ChevronDown,
+  Grid2X2,
+  Grid3X3,
+  List,
   Search,
   Sparkles,
   Filter,
+  type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -19,7 +23,8 @@ import { useTranslation } from '@/lib/i18n';
 import { persistLanguageCookie } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
-import type { TCGCard, TCGCardFilters, TCGSet } from '@/types/tcg';
+import { cn } from '@/lib/utils';
+import type { TCGCard, TCGCardFilters, TCGCardViewMode, TCGSet } from '@/types/tcg';
 import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
@@ -87,6 +92,7 @@ export function TCGResearchDesk({
     ...DEFAULT_TCG_CARD_FILTERS,
     ...parsedState.filters,
   }));
+  const [viewMode, setViewMode] = useState<TCGCardViewMode>(() => parsedState.viewMode);
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -109,6 +115,10 @@ export function TCGResearchDesk({
     || parsedState.filters.releaseEnd
     || (parsedState.filters.ownedState && parsedState.filters.ownedState !== 'all')
   ));
+
+  useEffect(() => {
+    setViewMode(parsedState.viewMode);
+  }, [parsedState.viewMode]);
 
   const normalizedFilters = useMemo(() => normalizeFilters(filters), [filters]);
 
@@ -154,13 +164,13 @@ export function TCGResearchDesk({
   useEffect(() => {
     const query = serializeTCGSearchState({
       filters: urlFilters,
-      viewMode: 'visual',
+      viewMode,
       compare: [],
     });
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams, urlFilters]);
+  }, [pathname, router, searchParams, urlFilters, viewMode]);
 
   const ownershipQueryKey = effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all'
     ? { owned: tcgOwnedCards, wishlist: tcgWishlistCards }
@@ -311,7 +321,7 @@ export function TCGResearchDesk({
           />
 
           {isLoading ? (
-            <CardGridSkeleton />
+            <CardGridSkeleton viewMode={viewMode} />
           ) : isError ? (
             <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80">
               {t('tcg.catalog_load_error', { defaultValue: 'Unable to load cards. Please try again.' })}
@@ -321,6 +331,7 @@ export function TCGResearchDesk({
               <CardResults
                 cards={visibleCards}
                 onCardClick={openCard}
+                viewMode={viewMode}
               />
               {hasNextPage && (
                 <button
@@ -364,6 +375,7 @@ export function TCGResearchDesk({
               <Sparkles className="h-3.5 w-3.5" />
               {t('tcg.latest_cards')}
             </button>
+            <ViewModeSelector value={viewMode} onChange={setViewMode} />
             <TCGFilters
               mode="advanced"
               filters={effectiveFilters}
@@ -564,16 +576,77 @@ function ResultSummary({
 function CardResults({
   cards,
   onCardClick,
+  viewMode,
 }: {
   cards: TCGCard[];
   onCardClick: (card: TCGCard) => void;
+  viewMode: TCGCardViewMode;
 }) {
+  const isList = viewMode === 'table';
+  const gridClassName = isList
+    ? 'grid grid-cols-1 gap-4'
+    : viewMode === 'scan'
+      ? 'grid grid-cols-2 gap-2'
+      : 'grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4';
+
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
+    <div className={gridClassName}>
       {cards.map((card, index) => (
-        <TCGCardItem key={card.id} card={card} index={index} onClick={onCardClick} />
+        <TCGCardItem
+          key={card.id}
+          card={card}
+          index={index}
+          onClick={onCardClick}
+          variant={isList ? 'list' : 'default'}
+        />
       ))}
     </div>
+  );
+}
+
+function ViewModeSelector({
+  value,
+  onChange,
+}: {
+  value: TCGCardViewMode;
+  onChange: (value: TCGCardViewMode) => void;
+}) {
+  const { t } = useTranslation();
+  const options: Array<{ value: TCGCardViewMode; label: string; Icon: LucideIcon }> = [
+    { value: 'table', label: t('tcg.list_view'), Icon: List },
+    { value: 'scan', label: t('tcg.grid_2_view'), Icon: Grid2X2 },
+    { value: 'visual', label: t('tcg.grid_4_view'), Icon: Grid3X3 },
+  ];
+
+  return (
+    <fieldset className="rounded-sm border border-border/40 bg-card/35 p-3">
+      <legend className="px-1 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
+        {t('tcg.view_mode')}
+      </legend>
+      <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t('tcg.view_mode')}>
+        {options.map(({ value: optionValue, label, Icon }) => {
+          const isActive = value === optionValue;
+          return (
+            <button
+              key={optionValue}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              onClick={() => onChange(optionValue)}
+              className={cn(
+                'flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-sm border px-2 py-2 text-center text-[10px] font-black uppercase leading-tight tracking-[0.08em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
+                isActive
+                  ? 'border-primary/45 bg-primary/15 text-primary'
+                  : 'border-border/45 bg-card/45 text-foreground/55 hover:border-primary/25 hover:bg-primary/10 hover:text-primary',
+              )}
+            >
+              <Icon className="h-4 w-4" aria-hidden="true" />
+              <span className="truncate max-w-full">{label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }
 
@@ -644,13 +717,23 @@ function EmptyState({
   );
 }
 
-function CardGridSkeleton() {
+function CardGridSkeleton({ viewMode }: { viewMode: TCGCardViewMode }) {
+  const isList = viewMode === 'table';
+  const gridClassName = isList
+    ? 'grid grid-cols-1 gap-4'
+    : viewMode === 'scan'
+      ? 'grid grid-cols-2 gap-2'
+      : 'grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4';
+
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
+    <div className={gridClassName}>
       {Array.from({ length: 9 }).map((_, index) => (
         <div
           key={index}
-          className="aspect-[2.05/2.88] rounded-[1rem] border border-border/40 bg-card/45 animate-pulse"
+          className={cn(
+            'rounded-[1rem] border border-border/40 bg-card/45 animate-pulse',
+            isList ? 'h-44' : 'aspect-[2.05/2.88]',
+          )}
         />
       ))}
     </div>

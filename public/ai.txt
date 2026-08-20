@@ -42,5 +42,9 @@ TCG-Data: https://www.tcgdex.net
 # - /opensearch.xml
 # - /en/compare/lunidex-vs-pokecardex-zebradex
 # - /en/guides/pokemon-card-collection-tracker
+# - /en/blog
+# - /en/guides/team-builder-guide
+# - /en/guides/quiz-guide
+# - /en/guides/nuzlocke-guide
 
-# Reviewed against the application source: 2026-08-19
+# Reviewed against the application source: 2026-08-21

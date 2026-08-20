@@ -192,7 +192,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
     const query = search.trim().toLowerCase();
     if (!query) return PAGE_ITEMS;
     return PAGE_ITEMS.filter((item) => {
-      const label = (mounted ? t(item.labelKey) : item.fallback) || item.fallback;
+      const label = (mounted ? t(item.labelKey, { defaultValue: item.fallback }) : item.fallback) || item.fallback;
       return label.toLowerCase().includes(query) || item.path.toLowerCase().includes(query);
     });
   }, [search, mounted, t]);

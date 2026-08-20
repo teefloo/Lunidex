@@ -368,6 +368,7 @@ export function PokemonDetailClient({
             title={t('detail.share_title', { name: displayName ?? name })}
             description={t('detail.share_text', { name: displayName ?? name })}
             label={t('detail.share')}
+            iconOnly
             variant="outline"
             className="rounded-full transition-all h-12 w-12 bg-card/55 border-border/50 text-foreground/60 hover:bg-card/75 hover:border-border/70 p-0 flex items-center justify-center"
           />

@@ -84,7 +84,6 @@ export async function HomeArchiveExperience() {
     indexLabel: t('lunidex_archive.hero_eyebrow'),
     indexContextLabel: t('lunidex_archive.field_index_context'),
     labLabel: t('lunidex_archive.field_lab'),
-    localLabel: t('lunidex_archive.field_local'),
     specimenLabel: t('lunidex_archive.pokedex_eyebrow'),
     statsLabel: t('detail.stats'),
     evolutionLabel: t('detail.evolution'),
@@ -252,26 +251,13 @@ export async function HomeArchiveExperience() {
 
         <section className="field-support-section" aria-labelledby="field-support-title">
           <div className="field-support-intro">
-            <p className="field-eyebrow">{t('lunidex_archive.field_support_eyebrow')}</p>
+            <p className="field-eyebrow">{t('lunidex_home.trust_title')}</p>
             <h2 id="field-support-title">{t('auth.signin_title', { defaultValue: 'Sign in to continue' })}</h2>
             <p>{t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })}</p>
           </div>
-          <div className="field-support-grid">
-            <article id="local-first" className="field-support-card">
-              <span className="field-support-index">{t('lunidex_archive.field_local')} / 01</span>
-              <h3>{t('auth.signup_title', { defaultValue: 'Create your account' })}</h3>
-              <p>{t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}</p>
-              <div className="field-support-points"><span>{t('lunidex_home.preview_owned_eyebrow')}</span><span>{t('lunidex_home.tools_team_title')}</span><span>{t('lunidex_home.steps_three_title')}</span></div>
-              <HomeCollectionEntry
-                locale={language}
-                startLabel={t('lunidex_home.cta_start')}
-                resumeLabel={t('lunidex_home.cta_resume')}
-                className="field-support-cta field-primary-cta"
-                initialSignedIn={initialSignedIn}
-              />
-            </article>
+          <div className="field-support-grid field-support-grid-single">
             <article id="open-source" className="field-support-card field-support-card-dark">
-              <span className="field-support-index">{t('lunidex_archive.field_open')} / 02</span>
+              <span className="field-support-index">{t('lunidex_archive.field_open')} / 01</span>
               <h3>{t('about.opensource_title')}</h3>
               <p>{t('about.cards.github')}</p>
               <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" className="field-text-cta">

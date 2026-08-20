@@ -46,6 +46,16 @@ describe('ShareButton', () => {
     expect(screen.getByText('Share')).toBeInTheDocument();
   });
 
+  it('renders an icon-only control when requested', () => {
+    render(<ShareButton {...defaultProps} label="Share" iconOnly />);
+
+    const button = screen.getByRole('button', { name: 'Share' });
+    expect(button).toHaveAttribute('aria-label', 'Share');
+    expect(button).toHaveAttribute('title', 'Share');
+    expect(button).not.toHaveTextContent('Share');
+    expect(button.querySelectorAll('svg')).toHaveLength(1);
+  });
+
   // ─── Test 2: Fallback dropdown shown when navigator.share is undefined ──
   it('opens fallback dropdown when navigator.share is not available', async () => {
     render(<ShareButton {...defaultProps} label="Share" />);

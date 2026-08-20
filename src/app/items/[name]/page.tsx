@@ -10,6 +10,7 @@ import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getItemDetail } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
+import { cleanItemText, getItemDescription, getItemEffectDescription } from '@/lib/item-description';
 import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!item) notFound();
 
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
-  const description = item.pokemon_v2_itemeffecttexts?.[0]?.short_effect
+  const description = getItemDescription(item)
     || t('items_page.subtitle', { defaultValue: `Details about the ${displayName} item.` });
 
   return {
@@ -65,11 +66,11 @@ export default async function ItemDetailPage({ params }: Props) {
 
   const displayName = formatName(name);
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
-  const effect = item.pokemon_v2_itemeffecttexts?.[0];
   const flavor = item.pokemon_v2_itemflavortexts?.[0];
-  const effectDescription = (effect?.effect?.replace(/\n|\f/g, ' ').trim()
-    || effect?.short_effect?.replace(/\n|\f/g, ' ').trim()
-    || t('items_page.no_description', { defaultValue: 'No description available.' }));
+  const flavorText = cleanItemText(flavor?.flavor_text);
+  const effectDescription = getItemEffectDescription(item)
+    || flavorText
+    || t('items_page.no_description', { defaultValue: 'No description available.' });
   const routePath = `/${lang}/items/${name}`;
   const itemTermJsonLd = buildDefinedTermJsonLd({
     lang,
@@ -189,10 +190,10 @@ export default async function ItemDetailPage({ params }: Props) {
               </p>
             </section>
 
-            {flavor && (
+            {flavorText && flavorText !== effectDescription && (
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
                 <p className="text-sm italic leading-7 text-foreground/55">
-                  &ldquo;{flavor.flavor_text.replace(/\n|\f/g, ' ').trim()}&rdquo;
+                  &ldquo;{flavorText}&rdquo;
                 </p>
               </section>
             )}

@@ -53,6 +53,10 @@ Browsing public reference pages does not require an account. In the current web 
 - [About Lunidex](https://lunidex.app/en/about) — mission, data-source attribution, open-source information and project links.
 - [Collection tool comparison](https://lunidex.app/en/compare/lunidex-vs-pokecardex-zebradex) — a source-based comparison with PokéCardex and ZebraDex.
 - [Pokémon card collection tracker guide](https://lunidex.app/en/guides/pokemon-card-collection-tracker) — criteria, verified Lunidex collection features and explicit product limits.
+- [Blog](https://lunidex.app/en/blog) — editorial hub listing Lunidex usage guides and product comparisons.
+- [Team builder guide](https://lunidex.app/en/guides/team-builder-guide) — build and analyze a team with the synergy score, type coverage, auto-complete and share codes.
+- [Quiz guide](https://lunidex.app/en/guides/quiz-guide) — challenge types, game modes, the daily challenge and the five badges.
+- [Nuzlocke tracker guide](https://lunidex.app/en/guides/nuzlocke-guide) — runs, one encounter per route, Pokémon statuses and run statistics.
 
 ## Personal data and persistence
 
@@ -73,4 +77,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-19. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-21. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

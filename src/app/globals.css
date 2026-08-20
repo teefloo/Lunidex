@@ -2509,8 +2509,9 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .field-language-select {
+  width: 10rem;
   min-height: 2.75rem;
-  max-width: 6.5rem;
+  max-width: 100%;
   padding: 0 1.7rem 0 0.55rem;
   border: 1px solid var(--field-line);
   border-radius: 0.25rem;
@@ -2531,6 +2532,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 .field-mobile-menu-links .field-language-select {
   width: 100%;
   max-width: none;
+  min-width: 0;
   min-height: 2.75rem;
 }
 
@@ -2858,21 +2860,6 @@ body:has(.lunidex-home) .site-footer a:hover {
   font-weight: 800;
   letter-spacing: 0.08em;
   white-space: nowrap;
-}
-
-.field-terminal-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.field-terminal-status i {
-  display: block;
-  width: 0.38rem;
-  height: 0.38rem;
-  border-radius: 50%;
-  background: #6eaa74;
-  box-shadow: 0 0 0 3px rgba(110, 170, 116, 0.14);
 }
 
 .field-terminal-screen {
@@ -3433,6 +3420,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 .field-support-intro h2 { margin: 0; color: var(--field-ink); font-family: var(--field-display); font-size: clamp(2.5rem, 5vw, 5.5rem); letter-spacing: -0.02em; line-height: 0.9; }
 .field-support-intro > p:last-child { max-width: 28rem; margin: 0; color: var(--field-muted); font-size: 1rem; line-height: 1.7; }
 .field-support-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; }
+.field-support-grid-single { grid-template-columns: minmax(0, 1fr); }
 .field-support-card { min-height: 16rem; padding: clamp(1.25rem, 3vw, 2.4rem); border: 1px solid var(--field-line); background: var(--field-paper); box-shadow: 4px 4px 0 color-mix(in oklab, var(--field-paper-deep) 64%, transparent); }
 .field-support-card-dark { border-color: #2b424e; background: #2a3e48; color: #f7efe2; box-shadow: 4px 4px 0 rgba(42, 26, 19, 0.2); }
 .field-support-index { color: var(--field-coral-deep); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.14em; }
@@ -3472,7 +3460,6 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 #faq,
-#local-first,
 #open-source {
   scroll-margin-top: calc(6rem + env(safe-area-inset-top));
 }
@@ -3593,7 +3580,6 @@ body:has(.lunidex-home) .site-footer a:hover {
 @media (max-width: 380px) {
   .field-brand-wordmark { font-size: 1rem; }
   .field-terminal-header { gap: 0.5rem; }
-  .field-terminal-status { display: none; }
   .field-terminal-screen { min-height: min(90vw, 23rem, calc(100svh - 3rem)); }
   .field-team-slot strong { font-size: 0.4rem; }
   .field-chapter { padding-left: 0.85rem; padding-right: 0.85rem; }

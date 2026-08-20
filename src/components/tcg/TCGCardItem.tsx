@@ -47,7 +47,7 @@ export const TCGCardItem = memo(function TCGCardItem({
         card={card}
         onClick={onClick}
         priority={index === 0}
-        quality="low"
+        quality="high"
         noFrame={isList}
         className={cn(
           'w-full',

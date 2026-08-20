@@ -28,6 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getAllItems } from '@/lib/api/graphql';
 import type { GraphQLItemData, ItemListItem } from '@/types/pokemon';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+import { getItemDescription } from '@/lib/item-description';
 
 const itemSpriteUrl = (name: string) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
 
@@ -78,10 +79,7 @@ export default function ItemsPageClient({
       localizedName: item.pokemon_v2_itemnames?.[0]?.name || formatName(item.name),
       category: item.pokemon_v2_itemcategory?.name || null,
       cost: item.cost,
-      shortEffect:
-        item.pokemon_v2_itemeffecttexts?.[0]?.short_effect?.replace(/\n|\f/g, ' ').trim() ||
-        item.pokemon_v2_itemflavortexts?.[0]?.flavor_text?.replace(/\n|\f/g, ' ').trim() ||
-        '',
+      shortEffect: getItemDescription(item),
       spriteUrl: itemSpriteUrl(item.name),
     }));
   }, [rawItems]);

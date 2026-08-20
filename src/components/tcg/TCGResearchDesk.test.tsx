@@ -42,6 +42,10 @@ const translations = vi.hoisted(() => ({
   'tcg.sort_rarity_asc': 'Rareté A-Z',
   'tcg.sort_rarity_desc': 'Rareté Z-A',
   'tcg.filters': 'Filtres',
+  'tcg.view_mode': 'Affichage',
+  'tcg.list_view': 'Vue liste',
+  'tcg.grid_2_view': 'Grille · 2 cartes',
+  'tcg.grid_4_view': 'Grille · 4 cartes',
   'tcg.cards_found': 'Cartes trouvées',
   'tcg.card_count_in_set': '{{count}} cartes dans {{set}}',
   'collection_guide.eyebrow': 'Guide de collection',
@@ -181,5 +185,28 @@ describe('TCGResearchDesk collection selector', () => {
       'href',
       '/fr/guides/pokemon-card-collection-tracker',
     );
+  });
+
+  it('switches between list, two-column, and four-column card layouts', async () => {
+    navigation.searchParams = new URLSearchParams('sortBy=id&sortOrder=asc');
+    render(<TCGResearchDesk initialLatestSet={{ id: 'latest-set', name: 'Dernière collection' }} />);
+
+    expect(screen.getByRole('radio', { name: 'Grille · 4 cartes' })).toHaveAttribute('aria-checked', 'true');
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Vue liste' }));
+    await waitFor(() => {
+      expect(navigation.replace).toHaveBeenLastCalledWith(
+        '/fr/tcg?sortBy=id&sortOrder=asc&view=table',
+        { scroll: false },
+      );
+    });
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Grille · 2 cartes' }));
+    await waitFor(() => {
+      expect(navigation.replace).toHaveBeenLastCalledWith(
+        '/fr/tcg?sortBy=id&sortOrder=asc&view=scan',
+        { scroll: false },
+      );
+    });
   });
 });
