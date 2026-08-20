@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 
@@ -57,12 +58,19 @@ export async function POST(request: NextRequest) {
   if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
-  await sql`
-    insert into public.user_push_subscriptions (user_id, subscription)
-    values (${user.id}::uuid, ${JSON.stringify(subscription)}::jsonb)
-    on conflict (user_id, ((subscription ->> 'endpoint')))
-    do update set subscription = excluded.subscription
-  `;
+  try {
+    await sql`
+      insert into public.user_push_subscriptions (user_id, subscription)
+      values (${user.id}::uuid, ${JSON.stringify(subscription)}::jsonb)
+      on conflict (user_id, ((subscription ->> 'endpoint')))
+      do update set subscription = excluded.subscription
+    `;
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    return NextResponse.json({ error: 'Failed to save push subscription' }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }

@@ -210,6 +210,14 @@ strix/
 # Turborepo
 turbo-
 
+# Local security audit artifacts
+/.source-aware-repo-map/
+/deployed_sqli_results.txt
+/sqli_probe_results.txt
+/sqli_source_lines.txt
+/poc_sqli_routes_*.py
+/probe_deployed_sqli_*.py
+
 # =============================================================================
 # 8. Screenshots & Visual QA artifacts
 # =============================================================================

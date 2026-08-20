@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 
 const MAX_STATE_BYTES = 2_000_000;
 
@@ -69,7 +71,12 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid state payload' }, { status: 400 });
   }
 
-  const serialized = JSON.stringify(payload.data);
+  const normalizedData = normalizeUserStateData(payload.data);
+  if (!normalizedData) {
+    return NextResponse.json({ error: 'Invalid TCG collection' }, { status: 400 });
+  }
+
+  const serialized = JSON.stringify(normalizedData);
   if (new TextEncoder().encode(serialized).byteLength > MAX_STATE_BYTES) {
     return NextResponse.json({ error: 'State payload is too large' }, { status: 413 });
   }
@@ -87,20 +94,29 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-  const updatedRows = expectedUpdatedAt === null || expectedUpdatedAt === undefined
-    ? await sql`
-      insert into public.user_state (user_id, data)
-      values (${user.id}::uuid, ${serialized}::jsonb)
       on conflict (user_id) do nothing
-      returning data, updated_at::text as updated_at
-    ` as UserStateRow[]
-    : await sql`
-      update public.user_state
-      set data = ${serialized}::jsonb
-      where user_id = ${user.id}::uuid
-        and updated_at = ${expectedUpdatedAt}::timestamptz
-      returning data, updated_at::text as updated_at
-    ` as UserStateRow[];
+  let updatedRows: UserStateRow[];
+  try {
+    updatedRows = expectedUpdatedAt === null || expectedUpdatedAt === undefined
+      ? await sql`
+        insert into public.user_state (user_id, data)
+        values (${user.id}::uuid, ${serialized}::jsonb)
+        on conflict (user_id) do nothing
+        returning data, updated_at::text as updated_at
+      ` as UserStateRow[]
+      : await sql`
+        update public.user_state
+        set data = ${serialized}::jsonb
+        where user_id = ${user.id}::uuid
+          and updated_at = ${expectedUpdatedAt}::timestamptz
+        returning data, updated_at::text as updated_at
+      ` as UserStateRow[];
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    return NextResponse.json({ error: 'Failed to update state' }, { status: 500 });
+  }
 
   const updated = updatedRows[0];
   if (updated) {

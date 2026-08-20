@@ -3,7 +3,9 @@ import type { NextRequest } from 'next/server';
 
 import { getPokemonDetail } from '@/lib/api';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { getTrustedOgImageUrl } from '@/lib/og/assets';
 import { loadOgFonts } from '@/lib/og/fonts';
+import { normalizeOgPokemonName, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 import type { PokemonDetail } from '@/types/pokemon';
@@ -30,19 +32,23 @@ function totalStats(pokemon: PokemonDetail): number {
 
 export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;
-  const name = search.get('name') ?? '';
+  const name = normalizeOgPokemonName(search.get('name'));
   const langParam = search.get('lang') ?? 'en';
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
 
   const pokemon = name ? await getPokemonDetail(name).catch(() => null) : null;
 
   const displayName = pokemon
-    ? pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+    ? sanitizeOgText(
+      pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+      'Lunidex',
+      64,
+    )
     : 'Lunidex';
   const dexNumber = pokemon ? formatDexNumber(pokemon.id) : '';
   const types = pokemon?.types.map((ty) => ty.type.name) ?? [];
   const bst = pokemon ? totalStats(pokemon) : 0;
-  const imageUrl = pokemon ? artworkUrl(pokemon) : '';
+  const imageUrl = pokemon ? getTrustedOgImageUrl(artworkUrl(pokemon)) : '';
   const host = new URL(SITE_URL).host;
 
   const subsetText = [displayName, dexNumber, host, 'Lunidex', 'BST']

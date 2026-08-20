@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import type {
   FriendCollectionPage,
@@ -108,6 +109,13 @@ interface RequestContext {
 
 function unavailable(): NextResponse {
   return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
+}
+
+function accountDeletionInProgress(): NextResponse {
+  return NextResponse.json(
+    { error: 'Account deletion is in progress' },
+    { status: 410, headers: { 'Cache-Control': 'private, no-store' } },
+  );
 }
 
 async function getContext(request: NextRequest): Promise<RequestContext | NextResponse> {
@@ -420,27 +428,39 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // The database trigger intentionally permits only pending -> accepted|declined
         // updates and forbids changing participants. A declined request therefore
         // needs to be replaced atomically rather than updated in place.
-        const [, replaced] = await sql.transaction((tx) => [
-          tx`
-            delete from public.friendships
-            where id = ${existing.id}::uuid
-              and status = 'declined'
-              and least(requester_id, addressee_id) = least(${userId}::uuid, ${targetId}::uuid)
-              and greatest(requester_id, addressee_id) = greatest(${userId}::uuid, ${targetId}::uuid)
-          `,
-          tx`
+        let replaced: FriendshipRow[];
+        try {
+          [, replaced] = await sql.transaction((tx) => [
+            tx`
+              delete from public.friendships
+              where id = ${existing.id}::uuid
+                and status = 'declined'
+                and least(requester_id, addressee_id) = least(${userId}::uuid, ${targetId}::uuid)
+                and greatest(requester_id, addressee_id) = greatest(${userId}::uuid, ${targetId}::uuid)
+            `,
+            tx`
+              insert into public.friendships (requester_id, addressee_id, status)
+              values (${userId}::uuid, ${targetId}::uuid, 'pending')
+              returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
+            `,
+          ]) as [unknown[], FriendshipRow[]];
+        } catch (error) {
+          if (isInactiveAccountError(error)) return accountDeletionInProgress();
+          return NextResponse.json({ error: 'Friend request failed' }, { status: 500 });
+        }
+        relation = replaced[0];
+      } else {
+        let inserted: FriendshipRow[];
+        try {
+          inserted = await sql`
             insert into public.friendships (requester_id, addressee_id, status)
             values (${userId}::uuid, ${targetId}::uuid, 'pending')
             returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
-          `,
-        ]) as [unknown[], FriendshipRow[]];
-        relation = replaced[0];
-      } else {
-        const inserted = await sql`
-          insert into public.friendships (requester_id, addressee_id, status)
-          values (${userId}::uuid, ${targetId}::uuid, 'pending')
-          returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
-        ` as FriendshipRow[];
+          ` as FriendshipRow[];
+        } catch (error) {
+          if (isInactiveAccountError(error)) return accountDeletionInProgress();
+          return NextResponse.json({ error: 'Friend request failed' }, { status: 500 });
+        }
         relation = inserted[0];
       }
     }
@@ -457,14 +477,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Invalid friend request action' }, { status: 400 });
     }
     const nextStatus = payload.response === 'accept' ? 'accepted' : 'declined';
-    const rows = await sql`
-      update public.friendships
-      set status = ${nextStatus}, responded_at = now()
-      where id = ${payload.friendshipId}::uuid
-        and addressee_id = ${userId}::uuid
-        and status = 'pending'
-      returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
-    ` as FriendshipRow[];
+    let rows: FriendshipRow[];
+    try {
+      rows = await sql`
+        update public.friendships
+        set status = ${nextStatus}, responded_at = now()
+        where id = ${payload.friendshipId}::uuid
+          and addressee_id = ${userId}::uuid
+          and status = 'pending'
+        returning id, requester_id, addressee_id, status, created_at, updated_at, responded_at
+      ` as FriendshipRow[];
+    } catch (error) {
+      if (isInactiveAccountError(error)) return accountDeletionInProgress();
+      return NextResponse.json({ error: 'Friend request failed' }, { status: 500 });
+    }
     const result = rows[0] ? await getRelation(sql, userId, rows[0].id) : null;
     return result
       ? NextResponse.json({ relation: result })
@@ -498,13 +524,18 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
   }
 
   const nextSettings = settings as FriendPrivacySettings;
-  await sql`
-    update public.profiles
-    set allow_friend_requests = ${nextSettings.allowFriendRequests},
-        share_tcg_collection = ${nextSettings.shareTcgCollection},
-        share_tcg_decks = ${nextSettings.shareTcgDecks}
-    where id = ${userId}::uuid
-  `;
+  try {
+    await sql`
+      update public.profiles
+      set allow_friend_requests = ${nextSettings.allowFriendRequests},
+          share_tcg_collection = ${nextSettings.shareTcgCollection},
+          share_tcg_decks = ${nextSettings.shareTcgDecks}
+      where id = ${userId}::uuid
+    `;
+  } catch (error) {
+    if (isInactiveAccountError(error)) return accountDeletionInProgress();
+    return NextResponse.json({ error: 'Failed to update privacy settings' }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
 

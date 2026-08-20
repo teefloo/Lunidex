@@ -86,4 +86,39 @@ describe('battle room route', () => {
     expect(sqlText).toContain('jsonb_array_length');
     expect(sqlText).toContain('in (player1_id, player2_id)');
   });
+
+  it('keeps finished rooms closed to foreign joins while preserving participant reloads', async () => {
+    const playerOne = '72aaab1d-ae20-4ee0-9c60-cf8e8580f534';
+    const foreignUser = '83bbbc2e-bf31-4f95-ad71-df9f7c8e3f21';
+    const roomId = '72aaab1d-ae20-4ee0-9c60-cf8e8580f534';
+    mockGetNeonUserFromRequest
+      .mockResolvedValueOnce({ id: foreignUser, email: 'misty@example.test', user_metadata: { name: 'Misty' } })
+      .mockResolvedValueOnce({ id: playerOne, email: 'ash@example.test', user_metadata: { name: 'Ash' } });
+    mockSql
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{
+        id: roomId,
+        player1_id: playerOne,
+        player2_id: null,
+        status: 'finished',
+        state: {},
+        created_at: '2026-07-28',
+      }]);
+
+    const joinRequest = (authorization: string) => new NextRequest(`http://localhost/api/battle/room?id=${roomId}`, {
+      method: 'PATCH',
+      headers: { authorization, 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'join' }),
+    });
+
+    const foreignResponse = await PATCH(joinRequest('Bearer foreign-token'));
+    const participantResponse = await PATCH(joinRequest('Bearer participant-token'));
+
+    expect(foreignResponse.status).toBe(404);
+    expect(participantResponse.status).toBe(200);
+    const joinSql = String(mockSql.mock.calls[0]?.[0]?.join(' '));
+    expect(joinSql).toContain("status = 'waiting'");
+    expect(joinSql).toContain('player1_id is not null');
+    expect(joinSql).toContain('in (player1_id, player2_id)');
+  });
 });

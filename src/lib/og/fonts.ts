@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { isTrustedOgFontUrl } from '@/lib/og/assets';
 import type { SupportedLanguage } from '@/lib/languages';
 
 /**
@@ -63,6 +64,8 @@ const CJK_FAMILY: Partial<Record<SupportedLanguage, string>> = {
   zh: 'Noto Sans SC',
 };
 
+const MAX_CJK_FONT_BYTES = 8 * 1024 * 1024;
+
 async function loadCjkFont(lang: SupportedLanguage, text: string): Promise<OgFont | null> {
   const family = CJK_FAMILY[lang];
   if (!family || !text.trim()) return null;
@@ -71,13 +74,24 @@ async function loadCjkFont(lang: SupportedLanguage, text: string): Promise<OgFon
     const cssUrl =
       `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@700` +
       `&text=${encodeURIComponent(text)}`;
-    const css = await fetch(cssUrl, { headers: { 'User-Agent': LEGACY_TTF_UA } }).then((res) =>
-      res.text(),
-    );
-    const fontUrl = css.match(/src:\s*url\(([^)]+)\)/)?.[1];
-    if (!fontUrl) return null;
+    const cssResponse = await fetch(cssUrl, { headers: { 'User-Agent': LEGACY_TTF_UA } });
+    if (!cssResponse.ok) return null;
 
-    const data = await fetch(fontUrl).then((res) => res.arrayBuffer());
+    const css = await cssResponse.text();
+    const rawFontUrl = css.match(/src:\s*url\(([^)]+)\)/)?.[1];
+    if (!rawFontUrl) return null;
+
+    const fontUrl = new URL(rawFontUrl, cssUrl).toString();
+    if (!isTrustedOgFontUrl(fontUrl)) return null;
+
+    const fontResponse = await fetch(fontUrl);
+    if (!fontResponse.ok) return null;
+
+    const contentLength = Number(fontResponse.headers.get('content-length'));
+    if (Number.isFinite(contentLength) && contentLength > MAX_CJK_FONT_BYTES) return null;
+
+    const data = await fontResponse.arrayBuffer();
+    if (data.byteLength > MAX_CJK_FONT_BYTES) return null;
     return { name: 'Noto CJK', data, weight: 700, style: 'normal' };
   } catch {
     return null;

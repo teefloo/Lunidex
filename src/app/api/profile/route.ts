@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { HANDLE_MAX_LENGTH, HANDLE_MIN_LENGTH, HANDLE_REGEX } from '@/types/dashboard';
 
@@ -98,6 +99,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       returning public_handle, is_public
     ` as ProfileSettingsRow[];
   } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
     if (isUniqueViolation(error)) {
       return NextResponse.json({ error: 'Handle already taken' }, { status: 409 });
     }
@@ -109,30 +113,37 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
   // Preserve the behavior of the former set_public_profile RPC: when a profile becomes public,
   // refresh its denormalized counters from the user's current state snapshot.
   if (payload.isPublic) {
-    await sql`
-      update public.profiles p
-      set caught_count = coalesce(jsonb_array_length(us.data -> 'caughtPokemon'), 0),
-          caught_by_gen = public.caught_by_generation(us.data -> 'caughtPokemon'),
-          unlocked_badges = coalesce(array(select jsonb_array_elements_text(us.data -> 'badges')), '{}'),
-          team_ids = coalesce(array(select jsonb_array_elements_text(us.data -> 'team')::int), '{}'),
-          quiz_best_score = greatest(
-            coalesce((us.data -> 'quizHighScores' ->> 'classic')::int, 0),
-            coalesce((us.data -> 'quizHighScores' ->> 'silhouette')::int, 0),
-            coalesce((us.data -> 'quizHighScores' ->> 'stats')::int, 0),
-            coalesce((us.data -> 'quizHighScores' ->> 'timeAttack')::int, 0)
-          ),
-          quiz_best_streak = coalesce((us.data ->> 'bestStreak')::int, 0),
-          quiz_total_correct = coalesce((us.data ->> 'totalQuizCorrect')::int, 0),
-          tcg_owned_count = coalesce(jsonb_array_length(us.data -> 'tcgOwnedCards'), 0),
-          avatar_pokemon_id = (
-            select (elem #>> '{}')::int
-            from jsonb_array_elements(coalesce(us.data -> 'favorites', '[]'::jsonb)) elem
-            limit 1
-          )
-      from public.user_state us
-      where p.id = ${user.id}::uuid
-        and us.user_id = p.id
-    `;
+    try {
+      await sql`
+        update public.profiles p
+        set caught_count = coalesce(jsonb_array_length(us.data -> 'caughtPokemon'), 0),
+            caught_by_gen = public.caught_by_generation(us.data -> 'caughtPokemon'),
+            unlocked_badges = coalesce(array(select jsonb_array_elements_text(us.data -> 'badges')), '{}'),
+            team_ids = coalesce(array(select jsonb_array_elements_text(us.data -> 'team')::int), '{}'),
+            quiz_best_score = greatest(
+              coalesce((us.data -> 'quizHighScores' ->> 'classic')::int, 0),
+              coalesce((us.data -> 'quizHighScores' ->> 'silhouette')::int, 0),
+              coalesce((us.data -> 'quizHighScores' ->> 'stats')::int, 0),
+              coalesce((us.data -> 'quizHighScores' ->> 'timeAttack')::int, 0)
+            ),
+            quiz_best_streak = coalesce((us.data ->> 'bestStreak')::int, 0),
+            quiz_total_correct = coalesce((us.data ->> 'totalQuizCorrect')::int, 0),
+            tcg_owned_count = public.distinct_tcg_owned_count(us.data -> 'tcgOwnedCards'),
+            avatar_pokemon_id = (
+              select (elem #>> '{}')::int
+              from jsonb_array_elements(coalesce(us.data -> 'favorites', '[]'::jsonb)) elem
+              limit 1
+            )
+        from public.user_state us
+        where p.id = ${user.id}::uuid
+          and us.user_id = p.id
+      `;
+    } catch (error) {
+      if (isInactiveAccountError(error)) {
+        return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+      }
+      return NextResponse.json({ error: 'Failed to refresh profile' }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ profile: updatedRows[0] }, { headers: { 'Cache-Control': 'private, no-store' } });

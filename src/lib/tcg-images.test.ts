@@ -1,8 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { getTCGCardImageCandidates, getTCGSetImageCandidates } from './tcg-images';
+import { getTCGCardImageCandidates, getTCGCardPngImage, getTCGSetImageCandidates } from './tcg-images';
 import type { TCGCard } from '@/types/tcg';
 
 describe('getTCGCardImageCandidates', () => {
+  it('keeps server-rendered card images on fixed upstream hosts', () => {
+    const trustedCard: TCGCard = {
+      id: 'sv-base-1',
+      localId: '1',
+      name: 'Bulbasaur',
+      image: 'https://assets.tcgdex.net/en/sv/sv-base/1',
+    };
+    const untrustedCard: TCGCard = {
+      id: 'evil-1',
+      localId: '1',
+      name: 'Unexpected',
+      image: 'https://attacker.example/redirect',
+    };
+
+    expect(getTCGCardPngImage(trustedCard)).toBe('https://assets.tcgdex.net/en/sv/sv-base/1/high.png');
+    expect(getTCGCardPngImage(untrustedCard)).toBeUndefined();
+  });
+
   it('does not replace a TCGdex image with a generic Pokémon card back', () => {
     const card: TCGCard = {
       id: 'cel25-4A',

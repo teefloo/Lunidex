@@ -23,7 +23,7 @@
   "dependencies": {
     "@base-ui/react": "^1.2.0",
     "@ducanh2912/next-pwa": "^10.2.9",
-    "@neondatabase/auth": "^0.4.2-beta",
+    "@neondatabase/auth": "^0.5.0-beta",
     "@neondatabase/serverless": "^1.1.0",
     "@tanstack/react-query": "^5.90.21",
     "@vercel/analytics": "^2.0.1",
@@ -69,6 +69,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16.2.12",
     "jsdom": "^28.1.0",
+    "metro": "0.84.5",
     "sharp": "^0.35.3",
     "tailwindcss": "^4",
     "typescript": "^5",
@@ -79,7 +80,34 @@
       "postcss": "8.5.25",
       "sharp": "0.35.3"
     },
+    "metro": "0.84.5",
+    "metro-babel-transformer": "0.84.5",
+    "metro-cache": "0.84.5",
+    "metro-cache-key": "0.84.5",
+    "metro-config": "0.84.5",
+    "metro-core": "0.84.5",
+    "metro-file-map": "0.84.5",
+    "metro-minify-terser": "0.84.5",
+    "metro-resolver": "0.84.5",
+    "metro-runtime": "0.84.5",
+    "metro-source-map": "0.84.5",
+    "metro-symbolicate": "0.84.5",
+    "metro-transform-plugins": "0.84.5",
+    "metro-transform-worker": "0.84.5",
+    "nanoid": "3.3.18",
+    "@triplit/db": {
+      "nanoid": "5.1.16"
+    },
     "serialize-javascript": "7.0.7",
-    "uuid": "11.1.1"
+    "uuid": "11.1.1",
+    "@better-auth/core": "1.6.23",
+    "@better-auth/utils": "0.4.2",
+    "@better-auth/api-key": "1.6.23",
+    "better-call": "1.3.7",
+    "@neondatabase/auth": {
+      "@neondatabase/auth-ui": {
+        "@daveyplate/better-auth-ui": "3.3.15"
+      }
+    }
   }
 }

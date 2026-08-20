@@ -234,6 +234,52 @@ create table if not exists public.friend_deck_snapshots (
   updated_at timestamptz not null default now()
 );
 
+/**
+ * Serialize lifecycle claims with every application write that is associated
+ * with an account. The trigger arguments name one or more UUID columns. IDs
+ * are locked in sorted order so a friendship or battle update cannot deadlock
+ * with another multi-account mutation. A pending/deleted account is rejected
+ * at the database boundary even if an API-level preflight ran earlier.
+ */
+create or replace function public.require_active_account()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, public, app
+as $$
+declare
+  account_column text;
+  account_id uuid;
+  account_ids uuid[] := '{}';
+  account_state text;
+begin
+  foreach account_column in array tg_argv loop
+    account_id := nullif(to_jsonb(new) ->> account_column, '')::uuid;
+    if account_id is not null then
+      account_ids := array_append(account_ids, account_id);
+    end if;
+  end loop;
+
+  for account_id in
+    select distinct candidate.id
+    from unnest(account_ids) as candidate(id)
+    order by candidate.id
+  loop
+    select deletion_state
+      into account_state
+      from app.users
+     where id = account_id
+     for update;
+
+    if account_state is distinct from 'active' then
+      raise exception 'Account is not active' using errcode = 'P0001';
+    end if;
+  end loop;
+
+  return new;
+end;
+$$;
+
 create schema if not exists analytics;
 
 create table if not exists analytics.daily_metrics (
@@ -305,6 +351,24 @@ as $$
   ) values_by_generation;
 $$;
 
+create or replace function public.distinct_tcg_owned_count(p_cards jsonb)
+returns integer
+language sql
+immutable
+set search_path = pg_catalog, public
+as $$
+  select count(*)::integer
+  from (
+    select distinct lower(btrim(value)) as card_id
+    from jsonb_array_elements_text(
+      case when jsonb_typeof(p_cards) = 'array'
+        then p_cards else '[]'::jsonb end
+    ) values_by_card(value)
+    where length(btrim(value)) between 3 and 128
+      and btrim(value) ~ '^[a-zA-Z0-9][a-zA-Z0-9._:/-]*-[a-zA-Z0-9][a-zA-Z0-9._:/-]*$'
+  ) distinct_cards;
+$$;
+
 create or replace function public.sync_public_profile_from_user_state()
 returns trigger
 language plpgsql
@@ -328,7 +392,7 @@ begin
     ),
     quiz_best_streak = coalesce((v_data ->> 'bestStreak')::int, 0),
     quiz_total_correct = coalesce((v_data ->> 'totalQuizCorrect')::int, 0),
-    tcg_owned_count = coalesce(jsonb_array_length(v_data -> 'tcgOwnedCards'), 0),
+    tcg_owned_count = public.distinct_tcg_owned_count(v_data -> 'tcgOwnedCards'),
     avatar_pokemon_id = (
       select (elem #>> '{}')::int
       from jsonb_array_elements(coalesce(v_data -> 'favorites', '[]'::jsonb)) elem
@@ -462,6 +526,61 @@ create trigger sync_friend_snapshots_on_user_state
 after insert or update of data or delete on public.user_state
 for each row execute function public.sync_friend_snapshots();
 
+drop trigger if exists require_active_account_user_state on public.user_state;
+create trigger require_active_account_user_state
+before insert or update on public.user_state
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_profiles on public.profiles;
+create trigger require_active_account_profiles
+before insert or update on public.profiles
+for each row execute function public.require_active_account('id');
+
+drop trigger if exists require_active_account_quiz_scores on public.quiz_scores;
+create trigger require_active_account_quiz_scores
+before insert or update on public.quiz_scores
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_quiz_attempts on public.quiz_attempts;
+create trigger require_active_account_quiz_attempts
+before insert or update on public.quiz_attempts
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_battle_rooms on public.battle_rooms;
+create trigger require_active_account_battle_rooms
+before insert or update on public.battle_rooms
+for each row execute function public.require_active_account('player1_id', 'player2_id');
+
+drop trigger if exists require_active_account_tcg_price_alerts on public.tcg_price_alerts;
+create trigger require_active_account_tcg_price_alerts
+before insert or update on public.tcg_price_alerts
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_user_push_subscriptions on public.user_push_subscriptions;
+create trigger require_active_account_user_push_subscriptions
+before insert or update on public.user_push_subscriptions
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_friend_directory on public.friend_directory;
+create trigger require_active_account_friend_directory
+before insert or update on public.friend_directory
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_friendships on public.friendships;
+create trigger require_active_account_friendships
+before insert or update on public.friendships
+for each row execute function public.require_active_account('requester_id', 'addressee_id');
+
+drop trigger if exists require_active_account_friend_collection_snapshots on public.friend_collection_snapshots;
+create trigger require_active_account_friend_collection_snapshots
+before insert or update on public.friend_collection_snapshots
+for each row execute function public.require_active_account('user_id');
+
+drop trigger if exists require_active_account_friend_deck_snapshots on public.friend_deck_snapshots;
+create trigger require_active_account_friend_deck_snapshots
+before insert or update on public.friend_deck_snapshots
+for each row execute function public.require_active_account('user_id');
+
 drop trigger if exists sync_friend_directory_on_profile on public.profiles;
 create trigger sync_friend_directory_on_profile
 after insert or update of name, public_handle, allow_friend_requests,
@@ -479,8 +598,39 @@ create unique index if not exists profiles_public_handle_unique
 create index if not exists profiles_handle_lookup
   on public.profiles (lower(public_handle))
   where public_handle is not null and is_public = true;
+
+update public.profiles profiles
+set tcg_owned_count = public.distinct_tcg_owned_count(user_state.data -> 'tcgOwnedCards')
+from public.user_state
+join app.users on app.users.id = user_state.user_id
+where profiles.id = user_state.user_id
+  and app.users.deletion_state = 'active';
+
 create index if not exists quiz_scores_date_score_idx
   on public.quiz_scores (date, score desc);
+
+-- Existing deployments may contain replay-created duplicates. Keep the most
+-- useful record (completed/highest score first, then progress and age) before
+-- enforcing the one-attempt-per-user/date invariant.
+with ranked_attempts as (
+  select id,
+    row_number() over (
+      partition by user_id, date, mode, challenge
+      order by (status = 'completed') desc,
+        score desc,
+        answer_index desc,
+        started_at asc,
+        id asc
+    ) as row_number
+  from public.quiz_attempts
+)
+delete from public.quiz_attempts attempts
+using ranked_attempts duplicates
+where attempts.id = duplicates.id
+  and duplicates.row_number > 1;
+
+create unique index if not exists quiz_attempts_user_daily_unique
+  on public.quiz_attempts (user_id, date, mode, challenge);
 create index if not exists quiz_attempts_user_status_idx
   on public.quiz_attempts (user_id, status, started_at desc);
 create index if not exists idx_battle_rooms_player1 on public.battle_rooms (player1_id);

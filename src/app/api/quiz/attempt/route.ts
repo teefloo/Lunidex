@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import {
@@ -55,6 +56,13 @@ function isUuid(value: unknown): value is string {
   return typeof value === 'string' && UUID_PATTERN.test(value);
 }
 
+function isUniqueViolation(error: unknown): boolean {
+  return typeof error === 'object'
+    && error !== null
+    && 'code' in error
+    && (error as { code?: unknown }).code === '23505';
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
@@ -92,19 +100,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const today = todayISODate();
     const questionIds = getDailyQuizQuestionIds(today);
-    const rows = await sql`
-      insert into public.quiz_attempts (
-        user_id, mode, challenge, date, question_ids
-      )
-      values (
-        ${user.id}::uuid,
-        ${DAILY_LEADERBOARD_MODE},
-        ${DAILY_LEADERBOARD_CHALLENGE},
-        ${today}::date,
-        ${questionIds}::integer[]
-      )
-      returning id, question_ids[1] as question_id
-    ` as NewAttemptRow[];
+    let rows: NewAttemptRow[];
+    try {
+      rows = await sql`
+        insert into public.quiz_attempts (
+          user_id, mode, challenge, date, question_ids
+        )
+        values (
+          ${user.id}::uuid,
+          ${DAILY_LEADERBOARD_MODE},
+          ${DAILY_LEADERBOARD_CHALLENGE},
+          ${today}::date,
+          ${questionIds}::integer[]
+        )
+        returning id, question_ids[1] as question_id
+      ` as NewAttemptRow[];
+    } catch (error) {
+      if (isInactiveAccountError(error)) {
+        return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: noStoreHeaders() });
+      }
+      if (isUniqueViolation(error)) {
+        return NextResponse.json(
+          { error: 'A daily quiz attempt already exists for this account' },
+          { status: 409, headers: noStoreHeaders() },
+        );
+      }
+      return NextResponse.json(
+        { error: 'Failed to create quiz attempt' },
+        { status: 500, headers: noStoreHeaders() },
+      );
+    }
     const row = rows[0];
     if (!row) {
       return NextResponse.json({ error: 'Failed to create quiz attempt' }, { status: 500, headers: noStoreHeaders() });
@@ -127,40 +152,48 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const today = todayISODate();
-  const rows = await sql`
-    update public.quiz_attempts
-    set
-      answer_index = answer_index + 1,
-      correct_answers = correct_answers + case
-        when question_ids[answer_index + 1] = ${payload.answerId} then 1
-        else 0
-      end,
-      wrong_answers = wrong_answers + case
-        when question_ids[answer_index + 1] = ${payload.answerId} then 0
-        else 1
-      end
-    where id = ${payload.attemptId}::uuid
-      and user_id = ${user.id}::uuid
-      and status = 'active'
-      and date = ${today}::date
-      and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
-      and answer_index = ${questionIndex}
-      and answer_index < cardinality(question_ids)
-    returning
-      id as attempt_id,
-      answer_index,
-      case when answer_index < cardinality(question_ids)
-        then question_ids[answer_index + 1]
-        else null
-      end as next_question_id,
-      correct_answers,
-      wrong_answers,
-      question_ids[answer_index] = ${payload.answerId} as correct,
-      (
-        answer_index >= cardinality(question_ids)
-        or wrong_answers >= ${DAILY_MARATHON_MAX_WRONG}
-      ) as ready_to_submit
-  ` as Array<AnswerRow & { correct_answers: number; wrong_answers: number }>;
+  let rows: Array<AnswerRow & { correct_answers: number; wrong_answers: number }>;
+  try {
+    rows = await sql`
+      update public.quiz_attempts
+      set
+        answer_index = answer_index + 1,
+        correct_answers = correct_answers + case
+          when question_ids[answer_index + 1] = ${payload.answerId} then 1
+          else 0
+        end,
+        wrong_answers = wrong_answers + case
+          when question_ids[answer_index + 1] = ${payload.answerId} then 0
+          else 1
+        end
+      where id = ${payload.attemptId}::uuid
+        and user_id = ${user.id}::uuid
+        and status = 'active'
+        and date = ${today}::date
+        and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
+        and answer_index = ${questionIndex}
+        and answer_index < cardinality(question_ids)
+      returning
+        id as attempt_id,
+        answer_index,
+        case when answer_index < cardinality(question_ids)
+          then question_ids[answer_index + 1]
+          else null
+        end as next_question_id,
+        correct_answers,
+        wrong_answers,
+        question_ids[answer_index] = ${payload.answerId} as correct,
+        (
+          answer_index >= cardinality(question_ids)
+          or wrong_answers >= ${DAILY_MARATHON_MAX_WRONG}
+        ) as ready_to_submit
+    ` as Array<AnswerRow & { correct_answers: number; wrong_answers: number }>;
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: noStoreHeaders() });
+    }
+    return NextResponse.json({ error: 'Failed to update quiz attempt' }, { status: 500, headers: noStoreHeaders() });
+  }
 
   const row = rows[0];
   if (!row) return invalidAttempt();

@@ -5,6 +5,7 @@ import { getPokemonDetail, getTypeRelations, type TypeRelations } from '@/lib/ap
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { getTrustedOgImageUrl } from '@/lib/og/assets';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS, synergyColor } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
@@ -14,6 +15,9 @@ import type { PokemonDetail } from '@/types/pokemon';
 // the 1 MB edge function size limit; the Node serverless function has headroom.
 export const runtime = 'nodejs';
 
+const MAX_TEAM_QUERY_LENGTH = 128;
+const MAX_POKEMON_ID = 1025;
+
 // NOTE: satori (next/og) renders a stray black rectangle at the SVG origin when
 // `box-shadow` or `position: absolute` is used inside a `flex-direction: column`
 // container (as in this layout). The Soft Pixel look here therefore relies on
@@ -22,11 +26,13 @@ export const runtime = 'nodejs';
 
 // Accepts the existing share encoding `?code=25-6-9` and also `?ids=25,6,9`.
 function parseTeamIds(raw: string | null): number[] {
-  if (!raw) return [];
+  if (!raw || raw.length > MAX_TEAM_QUERY_LENGTH) return [];
   return raw
     .split(/[-,]/)
-    .map((value) => Number.parseInt(value, 10))
-    .filter((id) => Number.isInteger(id) && id > 0)
+    .map((value) => value.trim())
+    .filter((value) => /^\d{1,4}$/.test(value))
+    .map((value) => Number(value))
+    .filter((id) => Number.isInteger(id) && id > 0 && id <= MAX_POKEMON_ID)
     .slice(0, 6);
 }
 
@@ -168,10 +174,10 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                   border: `4px solid ${pokemon ? OG_THEME.border : OG_THEME.surfaceMuted}`,
                 }}
               >
-                {pokemon && spriteUrl(pokemon) ? (
+                {pokemon && getTrustedOgImageUrl(spriteUrl(pokemon)) ? (
                   // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires a raw img element, not next/image
                   <img
-                    src={spriteUrl(pokemon)}
+                    src={getTrustedOgImageUrl(spriteUrl(pokemon))}
                     alt={pokemon.name}
                     width={132}
                     height={132}

@@ -18,7 +18,7 @@ vi.mock('@/lib/neon/server', () => ({
   getNeonClient: () => mockSql,
 }));
 
-import { POST } from './route';
+import { PATCH, POST } from './route';
 
 interface FriendshipRow {
   id: string;
@@ -62,6 +62,14 @@ const relationRow = (status: FriendshipRow['status']): FriendshipRow & {
 function request(body: unknown): NextRequest {
   return new NextRequest('https://lunidex.test/api/friends', {
     method: 'POST',
+    headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+function patchRequest(body: unknown): NextRequest {
+  return new NextRequest('https://lunidex.test/api/friends', {
+    method: 'PATCH',
     headers: { authorization: 'Bearer signed-token', 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
@@ -111,6 +119,34 @@ describe('POST /api/friends', () => {
     const updateCall = mockSql.mock.calls[0] as unknown[];
     expect(queryText(updateCall)).toContain('update public.friendships');
     expect(queryValues(updateCall)[0]).toBe(expectedStatus);
+  });
+
+  it('binds friendship responses to the authenticated principal', async () => {
+    const otherUserId = '83bbbc2e-bf31-4f95-ad71-df9f7c8e3f21';
+    mockGetNeonUserFromRequest
+      .mockResolvedValueOnce({ id: USER_ID, email: 'ash@example.test', user_metadata: { name: 'Ash' } })
+      .mockResolvedValueOnce({ id: otherUserId, email: 'misty@example.test', user_metadata: { name: 'Misty' } });
+    mockSql
+      .mockResolvedValueOnce([{ ...baseFriendship, status: 'accepted' }])
+      .mockResolvedValueOnce([relationRow('accepted')])
+      .mockResolvedValueOnce([{ ...baseFriendship, status: 'accepted' }])
+      .mockResolvedValueOnce([relationRow('accepted')]);
+
+    const first = await POST(request({
+      action: 'respond',
+      friendshipId: FRIENDSHIP_ID,
+      response: 'accept',
+    }));
+    const second = await POST(request({
+      action: 'respond',
+      friendshipId: FRIENDSHIP_ID,
+      response: 'accept',
+    }));
+
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(200);
+    expect(queryValues(mockSql.mock.calls[0] as unknown[])).toContain(USER_ID);
+    expect(queryValues(mockSql.mock.calls[2] as unknown[])).toContain(otherUserId);
   });
 
   it('does not let the requester respond to their own outgoing request', async () => {
@@ -164,5 +200,34 @@ describe('POST /api/friends', () => {
     expect(response.status).toBe(404);
     await expect(response.json()).resolves.toEqual({ error: 'Friend handle not found' });
     expect(mockSql).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns a controlled deletion response when friendship mutation races deletion', async () => {
+    mockSql.mockRejectedValueOnce({ code: 'P0001', message: 'Account is not active' });
+
+    const response = await POST(request({
+      action: 'respond',
+      friendshipId: FRIENDSHIP_ID,
+      response: 'accept',
+    }));
+
+    expect(response.status).toBe(410);
+    await expect(response.json()).resolves.toEqual({ error: 'Account deletion is in progress' });
+  });
+
+  it('returns a controlled deletion response when privacy mutation races deletion', async () => {
+    mockSql.mockRejectedValueOnce({ code: 'P0001', message: 'Account is not active' });
+
+    const response = await PATCH(patchRequest({
+      action: 'privacy',
+      settings: {
+        allowFriendRequests: true,
+        shareTcgCollection: false,
+        shareTcgDecks: false,
+      },
+    }));
+
+    expect(response.status).toBe(410);
+    await expect(response.json()).resolves.toEqual({ error: 'Account deletion is in progress' });
   });
 });

@@ -8,6 +8,8 @@ const PS_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 h
 
 const PS_FORMATS_URL =
   'https://play.pokemonshowdown.com/data/formats-data.json';
+const MAX_SMOGON_FORMAT_LENGTH = 64;
+const SMOGON_FORMAT_PATTERN = /^[a-z0-9][a-z0-9_-]*$/i;
 
 async function getPSData(): Promise<Record<string, unknown>> {
   const now = Date.now();
@@ -35,13 +37,22 @@ export async function GET(
 ) {
   const { name } = await params;
 
-  if (!name || typeof name !== 'string') {
+  if (
+    !name
+    || typeof name !== 'string'
+    || name.length > MAX_SMOGON_FORMAT_LENGTH
+    || !SMOGON_FORMAT_PATTERN.test(name)
+  ) {
     return NextResponse.json(null, { status: 400 });
   }
 
+  const normalizedName = name.toLowerCase();
+
   try {
     const data = await getPSData();
-    const entry = data[name] ?? data[name.toLowerCase()] ?? null;
+    const entry = Object.prototype.hasOwnProperty.call(data, normalizedName)
+      ? data[normalizedName]
+      : null;
 
     if (!entry) {
       return NextResponse.json(null, {

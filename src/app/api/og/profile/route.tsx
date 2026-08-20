@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { loadOgFonts } from '@/lib/og/fonts';
+import { MAX_OG_TRAINER_NAME_LENGTH, parseOgInteger, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 
@@ -10,19 +11,14 @@ import { SITE_URL } from '@/lib/site';
 // the 1 MB edge function size limit; the Node serverless function has headroom.
 export const runtime = 'nodejs';
 
-function clamp(value: string | null, fallback: number, min: number, max: number): number {
-  const n = Number.parseInt(value ?? '', 10);
-  return Number.isInteger(n) && n >= min && n <= max ? n : fallback;
-}
-
 export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;
 
-  const trainer = (search.get('trainer') ?? 'Trainer').slice(0, 24);
-  const level = clamp(search.get('level'), 1, 1, 100);
-  const badgeCount = clamp(search.get('badges'), 0, 0, 999);
-  const caughtPercent = clamp(search.get('caught'), 0, 0, 100);
-  const quizBest = clamp(search.get('quiz'), 0, 0, 9999);
+  const trainer = sanitizeOgText(search.get('trainer'), 'Trainer', MAX_OG_TRAINER_NAME_LENGTH);
+  const level = parseOgInteger(search.get('level'), 1, 1, 100);
+  const badgeCount = parseOgInteger(search.get('badges'), 0, 0, 999);
+  const caughtPercent = parseOgInteger(search.get('caught'), 0, 0, 100);
+  const quizBest = parseOgInteger(search.get('quiz'), 0, 0, 9999);
   const langParam = search.get('lang') ?? 'en';
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
 

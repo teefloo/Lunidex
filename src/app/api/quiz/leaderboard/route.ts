@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import {
   DAILY_LEADERBOARD_CHALLENGE,
@@ -183,36 +184,44 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // a score in a different leaderboard day around midnight.
   const today = todayISODate();
 
-  const [submittedRows] = await sql.transaction((tx) => [
-    tx`
-      with claimed as (
-        update public.quiz_attempts
-        set status = 'completed', completed_at = now(), score = correct_answers
-        where id = ${body.attemptId}::uuid
-          and user_id = ${user.id}::uuid
-          and status = 'active'
-          and mode = ${DAILY_LEADERBOARD_MODE}
-          and challenge = ${DAILY_LEADERBOARD_CHALLENGE}
-          and date = ${today}::date
-          and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
-          and (
-            answer_index = cardinality(question_ids)
-            or wrong_answers >= ${DAILY_MARATHON_MAX_WRONG}
-          )
-        returning user_id, mode, challenge, score, date
-      ), upserted as (
-        insert into public.quiz_scores (user_id, pseudo, mode, challenge, score, date)
-        select user_id, ${pseudo}, mode, challenge, score, date
+  let submittedRows: Array<SubmittedAttemptRow>;
+  try {
+    [submittedRows] = await sql.transaction((tx) => [
+      tx`
+        with claimed as (
+          update public.quiz_attempts
+          set status = 'completed', completed_at = now(), score = correct_answers
+          where id = ${body.attemptId}::uuid
+            and user_id = ${user.id}::uuid
+            and status = 'active'
+            and mode = ${DAILY_LEADERBOARD_MODE}
+            and challenge = ${DAILY_LEADERBOARD_CHALLENGE}
+            and date = ${today}::date
+            and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
+            and (
+              answer_index = cardinality(question_ids)
+              or wrong_answers >= ${DAILY_MARATHON_MAX_WRONG}
+            )
+          returning user_id, mode, challenge, score, date
+        ), upserted as (
+          insert into public.quiz_scores (user_id, pseudo, mode, challenge, score, date)
+          select user_id, ${pseudo}, mode, challenge, score, date
+          from claimed
+          on conflict (user_id, date, mode, challenge) do update
+          set score = excluded.score, pseudo = excluded.pseudo
+          where excluded.score > public.quiz_scores.score
+          returning id
+        )
+        select claimed.score, exists(select 1 from upserted) as improved
         from claimed
-        on conflict (user_id, date, mode, challenge) do update
-        set score = excluded.score, pseudo = excluded.pseudo
-        where excluded.score > public.quiz_scores.score
-        returning id
-      )
-      select claimed.score, exists(select 1 from upserted) as improved
-      from claimed
-    `,
-  ]) as [Array<SubmittedAttemptRow>];
+      `,
+    ]) as [Array<SubmittedAttemptRow>];
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    return NextResponse.json({ error: 'Failed to submit quiz attempt' }, { status: 500, headers: { 'Cache-Control': 'private, no-store' } });
+  }
 
   const result = submittedRows[0] as SubmittedAttemptRow | undefined;
   if (!result || typeof result.score !== 'number') {

@@ -10,6 +10,14 @@ import type {
 
 type SearchParamsLike = Pick<URLSearchParams, 'get'>;
 
+export const DEFAULT_TCG_SEARCH_LIMIT = 48;
+export const MAX_TCG_SEARCH_LIMIT = 96;
+export const MAX_TCG_SEARCH_PAGE = 100;
+export const MAX_TCG_SEARCH_VALUE_LENGTH = 128;
+export const MAX_TCG_FILTER_ITEM_LENGTH = 64;
+export const MAX_TCG_FILTER_LIST_ITEMS = 12;
+export const MAX_TCG_NUMERIC_FILTER = 1_000_000;
+
 export interface TCGSearchState {
   filters: TCGCardFilters;
   viewMode: TCGCardViewMode;
@@ -142,21 +150,27 @@ function buildInsightLines(cards: TCGCard[], facets?: TCGSearchFacets | null) {
 }
 
 function readString(searchParams: SearchParamsLike, key: string) {
-  const value = searchParams.get(key)?.trim();
+  const value = searchParams.get(key)?.trim().slice(0, MAX_TCG_SEARCH_VALUE_LENGTH);
   return value ? value : '';
 }
 
 function readList(searchParams: SearchParamsLike, key: string) {
   const value = searchParams.get(key)?.trim();
   if (!value) return [];
-  return value.split(',').map((item: string) => item.trim()).filter(Boolean);
+  return value
+    .split(',', MAX_TCG_FILTER_LIST_ITEMS + 1)
+    .slice(0, MAX_TCG_FILTER_LIST_ITEMS)
+    .map((item: string) => item.trim().slice(0, MAX_TCG_FILTER_ITEM_LENGTH))
+    .filter(Boolean);
 }
 
 function readNumber(searchParams: SearchParamsLike, key: string) {
   const value = searchParams.get(key)?.trim();
   if (!value) return undefined;
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
+  return Number.isFinite(parsed) && parsed >= 0 && parsed <= MAX_TCG_NUMERIC_FILTER
+    ? parsed
+    : undefined;
 }
 
 function writeString(params: URLSearchParams, key: string, value?: string | null) {

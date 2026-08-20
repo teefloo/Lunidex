@@ -58,6 +58,17 @@ describe('/api/quiz/attempt', () => {
     expect(String(mockSql.mock.calls[0]?.[0]?.join(' '))).toContain('insert into public.quiz_attempts');
   });
 
+  it('returns a conflict when the database rejects a duplicate daily attempt', async () => {
+    mockSql.mockRejectedValueOnce({ code: '23505' });
+
+    const response = await POST(request({ action: 'start', mode: 'marathon', challenge: 'classic' }));
+
+    expect(response.status).toBe(409);
+    await expect(response.json()).resolves.toEqual({
+      error: 'A daily quiz attempt already exists for this account',
+    });
+  });
+
   it('rejects unsupported challenge and mode values', async () => {
     const response = await POST(request({ action: 'start', mode: 'time-attack', challenge: 'silhouette' }));
 
@@ -124,4 +135,3 @@ describe('/api/quiz/attempt', () => {
     expect(responses.map((response) => response.status).sort()).toEqual([200, 409]);
   });
 });
-

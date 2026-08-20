@@ -29,6 +29,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 
 const MAX_TEAM_SIZE = 6;
@@ -115,15 +116,23 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const rows = await sql`
-    insert into public.battle_rooms (player1_id, player1_team, status)
-    values (
-      ${user.id}::uuid,
-      ${safeTeam ? JSON.stringify(safeTeam) : null}::jsonb,
-      'waiting'
-    )
-    returning id, status, created_at
-  ` as Array<{ id: string; status: string; created_at: string }>;
+  let rows: Array<{ id: string; status: string; created_at: string }>;
+  try {
+    rows = await sql`
+      insert into public.battle_rooms (player1_id, player1_team, status)
+      values (
+        ${user.id}::uuid,
+        ${safeTeam ? JSON.stringify(safeTeam) : null}::jsonb,
+        'waiting'
+      )
+      returning id, status, created_at
+    ` as Array<{ id: string; status: string; created_at: string }>;
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
+    }
+    return NextResponse.json({ error: 'Failed to create battle room' }, { status: 500 });
+  }
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Failed to create battle room' }, { status: 500 });
 
@@ -187,23 +196,36 @@ export async function PATCH(req: NextRequest) {
   }
 
   if (body.action === 'join') {
-    const rows = await sql`
-      update public.battle_rooms
-      set
-        player2_id = case
-          when player1_id <> ${user.id}::uuid and player2_id is null then ${user.id}::uuid
-          else player2_id
-        end,
-        status = case
-          when player1_id is not null and (
-            player2_id is not null or (player1_id <> ${user.id}::uuid and player2_id is null)
-          ) then 'active'
-          else status
-        end
-      where id = ${id}::uuid
-        and (${user.id}::uuid in (player1_id, player2_id) or player2_id is null)
-      returning id, player1_id, player2_id, status, state, created_at
-    ` as BattleRoomRow[];
+    let rows: BattleRoomRow[];
+    try {
+      rows = await sql`
+        update public.battle_rooms
+        set
+          player2_id = case
+            when player1_id is not null
+              and player1_id <> ${user.id}::uuid
+              and player2_id is null then ${user.id}::uuid
+            else player2_id
+          end,
+          status = case
+            when player1_id is not null and (
+              player2_id is not null or (player1_id <> ${user.id}::uuid and player2_id is null)
+            ) then 'active'
+            else status
+          end
+        where id = ${id}::uuid
+          and (
+            ${user.id}::uuid in (player1_id, player2_id)
+            or (status = 'waiting' and player1_id is not null and player2_id is null)
+          )
+        returning id, player1_id, player2_id, status, state, created_at
+      ` as BattleRoomRow[];
+    } catch (error) {
+      if (isInactiveAccountError(error)) {
+        return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
+      }
+      return NextResponse.json({ error: 'Failed to join battle room' }, { status: 500 });
+    }
     if (!rows[0]) return NextResponse.json({ error: 'Room not found or unavailable' }, { status: 404 });
     return NextResponse.json(rows[0]);
   }
@@ -226,33 +248,41 @@ export async function PATCH(req: NextRequest) {
     text,
     timestamp,
   };
-  const rows = await sql`
-    with eligible as (
-      select
-        id,
-        state,
-        coalesce(state->'chat', '[]'::jsonb) || ${JSON.stringify([message])}::jsonb as messages
-      from public.battle_rooms
-      where id = ${id}::uuid
-        and ${user.id}::uuid in (player1_id, player2_id)
-      for update
-    ), bounded as (
-      select
-        id,
-        state,
-        (
-          select coalesce(jsonb_agg(value order by ord), '[]'::jsonb)
-          from jsonb_array_elements(messages) with ordinality as entries(value, ord)
-          where ord > greatest(jsonb_array_length(messages) - ${MAX_CHAT_MESSAGES}, 0)
-        ) as chat
-      from eligible
-    )
-    update public.battle_rooms as rooms
-    set state = jsonb_set(coalesce(bounded.state, '{}'::jsonb), '{chat}', bounded.chat)
-    from bounded
-    where rooms.id = bounded.id
-    returning rooms.id, rooms.player1_id, rooms.player2_id, rooms.status, rooms.state, rooms.created_at
-  ` as BattleRoomRow[];
+  let rows: BattleRoomRow[];
+  try {
+    rows = await sql`
+      with eligible as (
+        select
+          id,
+          state,
+          coalesce(state->'chat', '[]'::jsonb) || ${JSON.stringify([message])}::jsonb as messages
+        from public.battle_rooms
+        where id = ${id}::uuid
+          and ${user.id}::uuid in (player1_id, player2_id)
+        for update
+      ), bounded as (
+        select
+          id,
+          state,
+          (
+            select coalesce(jsonb_agg(value order by ord), '[]'::jsonb)
+            from jsonb_array_elements(messages) with ordinality as entries(value, ord)
+            where ord > greatest(jsonb_array_length(messages) - ${MAX_CHAT_MESSAGES}, 0)
+          ) as chat
+        from eligible
+      )
+      update public.battle_rooms as rooms
+      set state = jsonb_set(coalesce(bounded.state, '{}'::jsonb), '{chat}', bounded.chat)
+      from bounded
+      where rooms.id = bounded.id
+      returning rooms.id, rooms.player1_id, rooms.player2_id, rooms.status, rooms.state, rooms.created_at
+    ` as BattleRoomRow[];
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
+    }
+    return NextResponse.json({ error: 'Failed to update battle room' }, { status: 500 });
+  }
   if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
   return NextResponse.json(rows[0]);
 }

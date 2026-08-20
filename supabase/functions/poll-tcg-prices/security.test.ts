@@ -33,10 +33,16 @@ Deno.test('rejects non-HTTPS and private push endpoints before a fetch', async (
     'https://localhost/push',
     'https://127.0.0.1/push',
     'https://[::1]/push',
+    'https://[::ffff:127.0.0.1]/push',
+    'https://[::ffff:7f00:1]/push',
+    'https://[0:0:0:0:0:ffff:7f00:1]/push',
+    'https://[0:0:0:0:0:ffff:127.0.0.1]/push',
+    'https://[::ffff:c0a8:101]/push',
+    'https://[0:0:0:0:0:ffff:192.168.1.1]/push',
     'https://attacker.example/push',
   ];
   for (const endpoint of endpoints) {
-    const resolver = endpoint.includes('attacker.example') ? privateDns : publicDns;
+    const resolver = endpoint.includes('attacker.example') ? publicDns : privateDns;
     if (await isSafePushEndpoint(endpoint, resolver)) {
       throw new Error(`Expected ${endpoint} to be rejected`);
     }

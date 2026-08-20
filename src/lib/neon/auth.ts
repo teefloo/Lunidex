@@ -72,7 +72,9 @@ export async function getServerAuthUser(): Promise<NeonRequestUser | null> {
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ');
 
-    const response = await fetch(new URL('get-session', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`), {
+    const sessionUrl = new URL('get-session', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
+    sessionUrl.searchParams.set('disableCookieCache', 'true');
+    const response = await fetch(sessionUrl, {
       method: 'GET',
       headers: {
         Cookie: cookieHeader,
@@ -108,7 +110,10 @@ async function getNeonUserFromSession(): Promise<NeonRequestUser | null> {
   if (!auth) return null;
 
   try {
-    const result = await auth.getSession();
+    // Protected application routes must revalidate upstream. The signed
+    // session-data cookie is an optimization for ordinary proxy traffic, not
+    // an authorization source after logout or revocation.
+    const result = await auth.getSession({ query: { disableCookieCache: true } });
     const user = result.data?.user;
     if (!user?.id || !user.email) return null;
     return mapAuthUser(user);
@@ -152,12 +157,6 @@ export async function getNeonUserFromRequest(request: Request): Promise<NeonRequ
  * initial copy. Credentials and sessions stay exclusively in Neon Auth.
  */
 export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promise<boolean> {
-  await sql`
-    insert into app.users (id)
-    values (${user.id}::uuid)
-    on conflict (id) do nothing
-  `;
-
   const metadata = user.user_metadata;
   const rawName = typeof metadata.name === 'string'
     ? metadata.name
@@ -165,17 +164,35 @@ export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promi
   const name = rawName?.trim().slice(0, 120) || null;
   const email = user.email.trim().slice(0, 320) || null;
 
-  const profileRows = await sql`
-    insert into public.profiles (id, name, email)
-    select ${user.id}::uuid, ${name}, ${email}
-    from app.users
-    where id = ${user.id}::uuid
-      and deletion_state = 'active'
-    on conflict (id) do update set
-      name = coalesce(excluded.name, public.profiles.name),
-      email = coalesce(excluded.email, public.profiles.email),
-      updated_at = now()
-    returning id
-  `;
-  return Boolean(profileRows[0]);
+  interface AccountStateRow {
+    deletion_state: 'active' | 'pending' | 'deleted';
+  }
+
+  const [, stateRows, profileRows] = await sql.transaction((tx) => [
+    tx`
+      insert into app.users (id)
+      values (${user.id}::uuid)
+      on conflict (id) do nothing
+    `,
+    tx`
+      select deletion_state
+      from app.users
+      where id = ${user.id}::uuid
+      for update
+    `,
+    tx`
+      insert into public.profiles (id, name, email)
+      select ${user.id}::uuid, ${name}, ${email}
+      from app.users
+      where id = ${user.id}::uuid
+        and deletion_state = 'active'
+      on conflict (id) do update set
+        name = coalesce(excluded.name, public.profiles.name),
+        email = coalesce(excluded.email, public.profiles.email),
+        updated_at = now()
+      returning id
+    `,
+  ]) as [unknown[], AccountStateRow[], Array<{ id: string }>];
+
+  return stateRows[0]?.deletion_state === 'active' && Boolean(profileRows[0]);
 }

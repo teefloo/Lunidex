@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFilterOptions, normalizeTcgPositiveInteger, searchCards } from '@/lib/api/tcg';
-import { buildTCGSearchInsights, parseTCGSearchState } from '@/lib/tcg-research';
+import {
+  buildTCGSearchInsights,
+  DEFAULT_TCG_SEARCH_LIMIT,
+  MAX_TCG_SEARCH_LIMIT,
+  MAX_TCG_SEARCH_PAGE,
+  parseTCGSearchState,
+} from '@/lib/tcg-research';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import type { TCGSearchFacets } from '@/types/tcg';
 
@@ -10,8 +16,17 @@ export async function GET(request: NextRequest) {
   }
   try {
     const searchState = parseTCGSearchState(request.nextUrl.searchParams);
-    const page = normalizeTcgPositiveInteger(Number(request.nextUrl.searchParams.get('page') ?? '1'), 1);
-    const limit = Math.min(normalizeTcgPositiveInteger(Number(request.nextUrl.searchParams.get('limit') ?? '48'), 48), 96);
+    const page = Math.min(
+      normalizeTcgPositiveInteger(Number(request.nextUrl.searchParams.get('page') ?? '1'), 1),
+      MAX_TCG_SEARCH_PAGE,
+    );
+    const limit = Math.min(
+      normalizeTcgPositiveInteger(
+        Number(request.nextUrl.searchParams.get('limit') ?? String(DEFAULT_TCG_SEARCH_LIMIT)),
+        DEFAULT_TCG_SEARCH_LIMIT,
+      ),
+      MAX_TCG_SEARCH_LIMIT,
+    );
     const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
 
     const [results, options] = await Promise.all([

@@ -6,6 +6,7 @@ import { getTCGCardPngImage } from '@/lib/tcg-images';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { loadOgFonts } from '@/lib/og/fonts';
+import { normalizeOgTcgCardId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 
@@ -15,16 +16,16 @@ export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;
-  const id = search.get('id') ?? '';
+  const id = normalizeOgTcgCardId(search.get('id'));
   const langParam = search.get('lang') ?? 'en';
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
   const t = getServerTForLanguage(lang);
 
   const card = id ? await getTCGCardCached(id, lang).catch(() => null) : null;
 
-  const name = card?.name ?? 'Lunidex';
-  const rarity = card?.rarity ?? '';
-  const setName = card?.set?.name ?? '';
+  const name = sanitizeOgText(card?.name ?? null, 'Lunidex', 80);
+  const rarity = sanitizeOgText(card?.rarity ?? null, '', 64);
+  const setName = sanitizeOgText(card?.set?.name ?? null, '', 100);
   const imageUrl = card ? (getTCGCardPngImage(card) ?? '') : '';
   const rarityLabel = t('tcg.rarity');
   const host = new URL(SITE_URL).host;

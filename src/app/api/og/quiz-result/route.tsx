@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { loadOgFonts } from '@/lib/og/fonts';
+import { normalizeOgEnum, parseOgInteger } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 
@@ -27,20 +28,15 @@ const MODE_LABELS: Record<string, string> = {
   'time-attack': 'Time Attack',
 };
 
-function clampScore(value: string | null, fallback: number, min: number, max: number): number {
-  const n = Number.parseInt(value ?? '', 10);
-  return Number.isInteger(n) && n >= min && n <= max ? n : fallback;
-}
-
 export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;
 
-  const score = clampScore(search.get('score'), 0, 0, 999);
-  const total = clampScore(search.get('total'), 10, 1, 999);
-  const mode = search.get('mode') ?? 'marathon';
-  const challenge = search.get('challenge') ?? 'classic';
-  const streak = clampScore(search.get('streak'), 0, 0, 999);
-  const badgesEarned = clampScore(search.get('badges'), 0, 0, 99);
+  const score = parseOgInteger(search.get('score'), 0, 0, 999);
+  const total = parseOgInteger(search.get('total'), 10, 1, 999);
+  const mode = normalizeOgEnum(search.get('mode'), ['marathon', 'survival', 'time-attack'] as const, 'marathon');
+  const challenge = normalizeOgEnum(search.get('challenge'), ['classic', 'silhouette', 'stats'] as const, 'classic');
+  const streak = parseOgInteger(search.get('streak'), 0, 0, 999);
+  const badgesEarned = parseOgInteger(search.get('badges'), 0, 0, 99);
   const langParam = search.get('lang') ?? 'en';
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
   const t = getServerTForLanguage(lang);

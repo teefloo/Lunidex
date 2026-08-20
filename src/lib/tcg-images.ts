@@ -1,4 +1,5 @@
 import type { TCGCard, TCGSet } from '@/types/tcg';
+import { getTrustedOgImageUrl } from '@/lib/og/assets';
 
 interface TCGImageCard {
   id: string;
@@ -92,8 +93,9 @@ export function buildTcgImageUrl(
  * must use the `/high.png` variant built from `card.image`.
  */
 export function getTCGCardPngImage(card: TCGCard): string | undefined {
-  if (card.image) return appendFormat(card.image, 'high.png');
-  return card.imageUrl ?? undefined;
+  const candidate = card.image ? appendFormat(card.image, 'high.png') : card.imageUrl;
+  const trustedCandidate = getTrustedOgImageUrl(candidate);
+  return trustedCandidate || undefined;
 }
 
 export function getTCGCardImageCandidates(

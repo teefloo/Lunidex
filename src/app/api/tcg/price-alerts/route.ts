@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 
 // Price polling is intentionally paused for the public launch. The scheduled
@@ -125,18 +126,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'At least one threshold is required' }, { status: 400 });
   }
 
-  const rows = await sql`
-    insert into public.tcg_price_alerts (
-      user_id, card_id, card_name, alert_type,
-      threshold_usd, threshold_eur, currency
-    )
-    values (
-      ${user.id}::uuid, ${payload.card_id}, ${payload.card_name}, ${payload.alert_type},
-      ${payload.threshold_usd ?? null}, ${payload.threshold_eur ?? null}, ${currency}
-    )
-    returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
-      currency, is_active, last_triggered_at, created_at
-  ` as PriceAlertRow[];
+  let rows: PriceAlertRow[];
+  try {
+    rows = await sql`
+      insert into public.tcg_price_alerts (
+        user_id, card_id, card_name, alert_type,
+        threshold_usd, threshold_eur, currency
+      )
+      values (
+        ${user.id}::uuid, ${payload.card_id}, ${payload.card_name}, ${payload.alert_type},
+        ${payload.threshold_usd ?? null}, ${payload.threshold_eur ?? null}, ${currency}
+      )
+      returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
+        currency, is_active, last_triggered_at, created_at
+    ` as PriceAlertRow[];
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    return NextResponse.json({ error: 'Failed to create alert' }, { status: 500 });
+  }
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Failed to create alert' }, { status: 500 });
 
@@ -197,13 +206,21 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'id and is_active are required' }, { status: 400 });
   }
 
-  const rows = await sql`
-    update public.tcg_price_alerts
-    set is_active = ${payload.is_active}
-    where id = ${payload.id}::uuid and user_id = ${user.id}::uuid
-    returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
-      currency, is_active, last_triggered_at, created_at
-  ` as PriceAlertRow[];
+  let rows: PriceAlertRow[];
+  try {
+    rows = await sql`
+      update public.tcg_price_alerts
+      set is_active = ${payload.is_active}
+      where id = ${payload.id}::uuid and user_id = ${user.id}::uuid
+      returning id, card_id, card_name, alert_type, threshold_usd, threshold_eur,
+        currency, is_active, last_triggered_at, created_at
+    ` as PriceAlertRow[];
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    return NextResponse.json({ error: 'Failed to update alert' }, { status: 500 });
+  }
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
 
