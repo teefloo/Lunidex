@@ -15,16 +15,19 @@ interface HomeCollectionEntryProps {
   resumeLabel: string;
   className?: string;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
+  initialSignedIn?: boolean;
 }
 
-export function HomeCollectionEntry({ className, locale, startLabel, resumeLabel, onClick }: HomeCollectionEntryProps) {
+export function HomeCollectionEntry({ className, initialSignedIn, locale, startLabel, resumeLabel, onClick }: HomeCollectionEntryProps) {
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { t } = useTranslation();
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });
-  const isSignedIn = Boolean(user);
+  // During hydration the client session is unknown, so the server-provided
+  // first-paint auth state keeps the entry from flashing a wrong CTA.
+  const isSignedIn = loading ? (initialSignedIn ?? false) : Boolean(user);
   const href = isSignedIn ? `/${locale}/tcg/collection` : `/${locale}${entry.path}`;
   const label = isSignedIn
     ? t('tcg.collection_title', { defaultValue: t('tcg.nav_collection', { defaultValue: 'Collection' }) })

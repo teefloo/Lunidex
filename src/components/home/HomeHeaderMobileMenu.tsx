@@ -16,6 +16,7 @@ interface HomeHeaderMobileMenuProps {
   githubUrl: string;
   locale: string;
   languageControl?: ReactNode;
+  initialSignedIn?: boolean;
 }
 
 export default function HomeHeaderMobileMenu({
@@ -29,6 +30,7 @@ export default function HomeHeaderMobileMenu({
   githubUrl,
   locale,
   languageControl = null,
+  initialSignedIn = false,
 }: HomeHeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -98,6 +100,7 @@ export default function HomeHeaderMobileMenu({
                 resumeLabel={collectionResumeLabel}
                 className="field-mobile-menu-cta"
                 onClick={closeMenu}
+                initialSignedIn={initialSignedIn}
               />
               <a href={githubUrl} target="_blank" rel="noreferrer" onClick={closeMenu}>
                 {githubLabel}

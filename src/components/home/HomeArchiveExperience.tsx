@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
+import { getServerAuthUser } from '@/lib/neon/auth';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
@@ -76,7 +77,8 @@ function FieldChapter({
 }
 
 export async function HomeArchiveExperience() {
-  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const [t, language, serverUser] = await Promise.all([getServerT(), getServerLanguage(), getServerAuthUser()]);
+  const initialSignedIn = Boolean(serverUser);
 
   const stageCopy = {
     indexLabel: t('lunidex_archive.hero_eyebrow'),
@@ -123,7 +125,7 @@ export async function HomeArchiveExperience() {
 
   return (
     <div className="lunidex-home">
-      <HomeHeader />
+      <HomeHeader initialSignedIn={initialSignedIn} />
       <main id="home-main" tabIndex={-1} className="field-home-main">
         <HomeFieldWorld stageCopy={stageCopy}>
           <FieldChapter
@@ -142,6 +144,7 @@ export async function HomeArchiveExperience() {
                   startLabel={t('lunidex_home.cta_start')}
                   resumeLabel={t('lunidex_home.cta_resume')}
                   className="field-primary-cta"
+                  initialSignedIn={initialSignedIn}
                 />
                 <Link href={localeHref('/pokedex', language)} className="field-secondary-cta">
                   {t('lunidex_home.cta_pokedex')}
@@ -171,6 +174,7 @@ export async function HomeArchiveExperience() {
                 startLabel={t('lunidex_home.cta_start')}
                 resumeLabel={t('lunidex_home.cta_resume')}
                 className="field-text-cta"
+                initialSignedIn={initialSignedIn}
               />
             )}
           />
@@ -263,6 +267,7 @@ export async function HomeArchiveExperience() {
                 startLabel={t('lunidex_home.cta_start')}
                 resumeLabel={t('lunidex_home.cta_resume')}
                 className="field-support-cta field-primary-cta"
+                initialSignedIn={initialSignedIn}
               />
             </article>
             <article id="open-source" className="field-support-card field-support-card-dark">

@@ -7,7 +7,11 @@ import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
 import { HomeLanguageSelect } from './HomeLanguageSelect';
 
-export default async function HomeHeader() {
+interface HomeHeaderProps {
+  initialSignedIn?: boolean;
+}
+
+export default async function HomeHeader({ initialSignedIn = false }: HomeHeaderProps) {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const links = [
     { href: '/pokedex', label: t('nav.pokedex') },
@@ -50,6 +54,7 @@ export default async function HomeHeader() {
           startLabel={t('lunidex_home.cta_start')}
           resumeLabel={t('lunidex_home.cta_resume')}
           className="field-header-cta"
+          initialSignedIn={initialSignedIn}
         />
 
         <HomeHeaderMobileMenu
@@ -63,6 +68,7 @@ export default async function HomeHeader() {
           githubUrl={GITHUB_REPO_URL}
           locale={language}
           languageControl={<HomeLanguageSelect />}
+          initialSignedIn={initialSignedIn}
         />
       </div>
     </header>

@@ -34,6 +34,67 @@ function mapAuthUser(user: {
   };
 }
 
+const NEON_AUTH_COOKIE_PREFIX = '__Secure-neon-auth';
+const NEON_AUTH_SESSION_COOKIE_NAME = `${NEON_AUTH_COOKIE_PREFIX}.session_token`;
+
+/**
+ * Reads the signed-in state for first paint without mutating cookies.
+ *
+ * The package's auth.getSession() fast path is safe, but its upstream
+ * fallback writes the session-data cookie through Next's cookie store, which
+ * throws outside a Server Action or Route Handler. This read-only request
+ * performs the same upstream `/get-session` call the client-facing
+ * `/api/auth/get-session` handler makes, so the server answer always matches
+ * the client answer. It never writes cookies and returns null for anonymous
+ * visitors without a network request.
+ */
+export async function getServerAuthUser(): Promise<NeonRequestUser | null> {
+  let getNeonAuthServer: typeof import('./server-auth').getNeonAuthServer;
+  let cookies: typeof import('next/headers').cookies;
+  try {
+    ({ getNeonAuthServer } = await import('./server-auth'));
+    ({ cookies } = await import('next/headers'));
+  } catch {
+    return null;
+  }
+
+  const auth = getNeonAuthServer();
+  const baseUrl = process.env.NEON_AUTH_BASE_URL;
+  if (!auth || !baseUrl) return null;
+
+  try {
+    const store = await cookies();
+    if (!store.has(NEON_AUTH_SESSION_COOKIE_NAME)) return null;
+
+    const cookieHeader = store
+      .getAll()
+      .filter((cookie) => cookie.name.startsWith(NEON_AUTH_COOKIE_PREFIX))
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join('; ');
+
+    const response = await fetch(new URL('get-session', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`), {
+      method: 'GET',
+      headers: {
+        Cookie: cookieHeader,
+        Accept: 'application/json',
+        'x-neon-auth-proxy': 'nextjs',
+      },
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3_000),
+    });
+    if (!response.ok) return null;
+
+    const payload = (await response.json()) as {
+      user?: { id: string; email: string; name?: string | null };
+    };
+    const user = payload.user;
+    if (!user?.id || !user.email) return null;
+    return mapAuthUser(user);
+  } catch {
+    return null;
+  }
+}
+
 /** Reads the request-aware Neon Auth cookie used by the Next.js integration. */
 async function getNeonUserFromSession(): Promise<NeonRequestUser | null> {
   let getNeonAuthServer: typeof import('./server-auth').getNeonAuthServer;

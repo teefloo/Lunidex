@@ -80,6 +80,7 @@ afterEach(() => {
   Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
   homeStore.ownedCount = 0;
   homeAuth.user = null;
+  homeAuth.loading = false;
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -108,6 +109,70 @@ describe('home collection entry', () => {
 
     expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/collection');
     expect(screen.getByRole('link')).toHaveTextContent('Collection');
+  });
+
+  it('keeps the server-provided signed-in state during hydration', () => {
+    homeAuth.loading = true;
+
+    render(
+      <HomeCollectionEntry
+        locale="fr"
+        startLabel="Commencer"
+        resumeLabel="Reprendre"
+        initialSignedIn
+      />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/collection');
+    expect(screen.getByRole('link')).toHaveTextContent('Collection');
+  });
+
+  it('falls back to onboarding during hydration without a server state', () => {
+    homeAuth.loading = true;
+
+    render(
+      <HomeCollectionEntry locale="fr" startLabel="Commencer" resumeLabel="Reprendre" />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/start?source=home_cta');
+    expect(screen.getByRole('link')).toHaveTextContent('Commencer');
+  });
+
+  it('prefers the signed-in state over local cards during hydration', () => {
+    homeAuth.loading = true;
+    homeStore.ownedCount = 2;
+
+    render(
+      <HomeCollectionEntry
+        locale="fr"
+        startLabel="Commencer"
+        resumeLabel="Reprendre"
+        initialSignedIn
+      />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/collection');
+    expect(screen.getByRole('link')).toHaveTextContent('Collection');
+  });
+
+  it('resolves to the client session once loading finishes', () => {
+    homeAuth.loading = true;
+
+    const { rerender } = render(
+      <HomeCollectionEntry
+        locale="fr"
+        startLabel="Commencer"
+        resumeLabel="Reprendre"
+        initialSignedIn
+      />,
+    );
+    expect(screen.getByRole('link')).toHaveTextContent('Collection');
+
+    homeAuth.loading = false;
+    homeAuth.user = null;
+    rerender(<HomeCollectionEntry locale="fr" startLabel="Commencer" resumeLabel="Reprendre" />);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/fr/tcg/start?source=home_cta');
+    expect(screen.getByRole('link')).toHaveTextContent('Commencer');
   });
 });
 
