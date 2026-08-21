@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useMounted } from '@/hooks/useMounted';
-import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { getAllSets } from '@/lib/api/tcg';
 import { TCGCollectionOverview } from '@/components/tcg/TCGCollectionOverview';
 import Header from '@/components/layout/Header';
@@ -19,9 +19,9 @@ export function TCGCollectionPage() {
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  // Set names must match the language the page is displayed in.
+  const routeLang = useClientLanguage();
+  const resolvedLang = mounted ? routeLang : 'en';
 
   const { data: sets, isLoading: setsLoading } = useQuery({
     queryKey: ['tcg', 'all-sets', resolvedLang],

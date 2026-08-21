@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { getSetById, getCardsBySet } from '@/lib/api/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
-import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import Header from '@/components/layout/Header';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
@@ -19,9 +19,9 @@ export function TCGSetAlbumPage() {
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  // Album cards must match the language the page is displayed in.
+  const routeLang = useClientLanguage();
+  const resolvedLang = mounted ? routeLang : 'en';
 
   const { data: tcgSet, isLoading: setLoading } = useQuery({
     queryKey: ['tcg', 'set', setId, resolvedLang],

@@ -41,6 +41,18 @@ describe('web online-only user state', () => {
     expect(usePrimeDexStore.getState().favorites).toEqual([25]);
   });
 
+  it('applies language changes locally without requiring sync access', () => {
+    const onRequired = vi.fn();
+    const unsubscribe = onSyncAccessRequired(onRequired);
+
+    setSyncAccessStatus('unauthenticated');
+    usePrimeDexStore.getState().setLanguage('fr');
+
+    expect(usePrimeDexStore.getState().language).toBe('fr');
+    expect(onRequired).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
   it('can retry a temporarily unavailable remote session', () => {
     const onRetry = vi.fn();
     const unsubscribe = onSyncAccessRetry(onRetry);
@@ -63,7 +75,30 @@ describe('web online-only user state', () => {
     unsubscribe();
   });
 
-  it('does not expose syncable state through the local persistence snapshot', () => {
-    expect(usePrimeDexStore.persist.getOptions().partialize?.(usePrimeDexStore.getState())).toEqual({});
+  it('persists only the local language preference in the persistence snapshot', () => {
+    // `language` is a local device preference (the effective UI language comes
+    // from the URL), so it is the only field allowed into local persistence.
+    expect(usePrimeDexStore.persist.getOptions().partialize?.(usePrimeDexStore.getState())).toEqual({
+      language: initialState.language,
+    });
+  });
+
+  it('no longer treats language as a remotely synced key', () => {
+    expect(usePrimeDexStore.persist.getOptions().partialize?.({ ...initialState, language: 'fr' })).toEqual({
+      language: 'fr',
+    });
+  });
+
+  it('restores the persisted language preference on rehydration and drops legacy fields', () => {
+    const currentState = usePrimeDexStore.getInitialState();
+    const merge = usePrimeDexStore.persist.getOptions().merge!;
+
+    expect(merge({ language: 'fr', favorites: [25] }, currentState)).toEqual({
+      ...currentState,
+      language: 'fr',
+    });
+    expect(merge({ language: 'auto', favorites: [25] }, currentState)).toEqual(currentState);
+    expect(merge(null, currentState)).toEqual(currentState);
+    expect(merge(undefined, currentState)).toEqual(currentState);
   });
 });

@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { getAllSets, getCardsBySet } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -15,9 +16,9 @@ import { TCGWishlistContent } from '@/components/tcg/TCGWishlistContent';
 export function TCGWishlistPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  // Wishlist cards must match the language the page is displayed in.
+  const routeLang = useClientLanguage();
+  const resolvedLang = mounted ? routeLang : 'en';
   const tcgWishlistCards = usePrimeDexStore((s) => s.tcgWishlistCards);
 
   const { data: sets } = useQueries({

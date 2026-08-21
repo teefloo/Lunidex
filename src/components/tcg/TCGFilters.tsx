@@ -31,7 +31,7 @@ import {
 } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { useMounted } from '@/hooks/useMounted';
-import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -60,12 +60,13 @@ export function TCGFilters({
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const { language, systemLanguage } = usePrimeDexStore();
+  const routeLang = useClientLanguage();
   const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>('set');
   const searchTimeoutRef = useRef<number | null>(null);
   const didApplyInitialSetRef = useRef(false);
 
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  // Filter options must match the language the page is displayed in.
+  const resolvedLang = mounted ? routeLang : 'en';
 
   const { data: filterOptions, isLoading } = useQuery<TCGFilterOptions>({
     queryKey: tcgKeys.filterOptions(resolvedLang),

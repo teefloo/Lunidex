@@ -11,13 +11,13 @@ import type {
   TCGCardSortOrder,
   TCGCatalogPageResult,
   TCGCollectionCard,
-  TCGPlayerPriceTier,
   TCGSet,
   TCGFilterOptions,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import {
   aggregateCollectionValue,
+  getCardMarketValue,
   toCollectionCard,
   type TCGCollectionValuation,
 } from '@/lib/tcg-collection';
@@ -579,29 +579,19 @@ function needsVisualMetadata(card: TCGCard): boolean {
   return false;
 }
 
+/**
+ * Single market price used for price filtering and sorting.
+ *
+ * This deliberately reuses `getCardMarketValue` — the same resolution the card
+ * detail modal, collection valuation, deck builder, and compare panel display —
+ * so the value users see (Cardmarket EUR first, TCGplayer USD fallback) is
+ * exactly the value that is filtered and sorted on. Mixing independent
+ * sources/currencies here previously made "Price: High to Low" disagree with
+ * the displayed prices.
+ */
 function getMarketPrice(card: TCGCard): number | undefined {
-  const tcgplayer = card.pricing?.tcgplayer;
-  const cardmarket = card.pricing?.cardmarket as {
-    avg?: number;
-    trend?: number;
-    averageSellPrice?: number;
-    trendPrice?: number;
-  } | undefined;
-
-  const tierPrice = (tier: TCGPlayerPriceTier | string | undefined) => {
-    if (!tier || typeof tier === 'string') return undefined;
-    return tier.marketPrice ?? tier.midPrice ?? tier.lowPrice;
-  };
-  const variants = ['normal', 'holofoil', 'reverse-holofoil'];
-  const tcgplayerPrice = variants
-    .map((variant) => tierPrice(tcgplayer?.[variant]))
-    .find((price): price is number => typeof price === 'number');
-
-  return tcgplayerPrice
-    ?? cardmarket?.trend
-    ?? cardmarket?.trendPrice
-    ?? cardmarket?.avg
-    ?? cardmarket?.averageSellPrice;
+  const value = getCardMarketValue(card);
+  return value ? value.amount : undefined;
 }
 
 function hasMarketPrice(card: TCGCard): boolean {
@@ -942,11 +932,16 @@ export const searchCards = async (
   const sortOrder = filters.sortOrder ?? 'asc';
   const requiresPriceHydration = sortBy === 'marketPrice';
   const requiresLocalSorting = !['name', 'id', 'hp', 'rarity'].includes(sortBy);
-  const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id';
+  // `number`, `id`, and `marketPrice` cannot be ordered remotely: the list
+  // endpoint carries no pricing, so price sorts must hydrate and rank the
+  // complete result set (bounded by MAX_REMOTE_PAGES) — ranking only the first
+  // alphabetically-ordered pages would silently drop expensive cards that sit
+  // deeper in the set.
+  const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id' || sortBy === 'marketPrice';
   const dependsOnLocalOwnership = Boolean(filters.ownedState && filters.ownedState !== 'all');
   const cacheKey = fetchAll
-    ? `tcg-catalog-all-v12-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
-    : `tcg-catalog-v12-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
+    ? `tcg-catalog-all-v13-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    : `tcg-catalog-v13-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
 
   try {
     if (!dependsOnLocalOwnership) {

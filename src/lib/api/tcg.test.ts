@@ -248,3 +248,126 @@ describe('TCG catalog filtering and failures', () => {
     consoleError.mockRestore();
   });
 });
+
+describe('TCG catalog price sorting and filtering', () => {
+  // Name-ordered summaries mirror the TCGdex listing endpoint: no pricing.
+  // The most expensive cards sit alphabetically deep in the set, like
+  // Méga-Darkrai-ex does in "Nuit Noire" (me05).
+  const setSummaries = [
+    { id: 'me05-001', localId: '001', name: 'Abra', image: 'https://example.test/me05-001.png' },
+    { id: 'me05-010', localId: '010', name: 'Bulbasaur', image: 'https://example.test/me05-010.png' },
+    { id: 'me05-020', localId: '020', name: 'Charizard', image: 'https://example.test/me05-020.png' },
+    { id: 'me05-030', localId: '030', name: 'Ditto', image: 'https://example.test/me05-030.png' },
+    { id: 'me05-116', localId: '116', name: 'Zard gold', image: 'https://example.test/me05-116.png' },
+  ];
+
+  const detailPricing: Record<string, unknown> = {
+    'me05-001': { cardmarket: { unit: 'EUR', trend: 1 } },
+    // Displayed price is the Cardmarket EUR trend (€250), even though the
+    // TCGplayer USD market price is far lower than other cards'.
+    'me05-010': { cardmarket: { unit: 'EUR', trend: 250 } },
+    // Displayed price is €16; its TCGplayer USD price (999) must NOT drive
+    // sorting or filtering because users never see that value.
+    'me05-020': {
+      cardmarket: { unit: 'EUR', trend: 16 },
+      tcgplayer: { unit: 'USD', normal: { marketPrice: 999 } },
+    },
+    'me05-030': {},
+    'me05-116': { cardmarket: { unit: 'EUR', trend: 263.35 } },
+  };
+
+  function mockCatalogResponses() {
+    mockGet.mockImplementation(async (url: string) => {
+      if (url.startsWith('/en/cards?')) {
+        const params = new URLSearchParams(url.split('?')[1] ?? '');
+        const page = Number(params.get('pagination:page') ?? '1');
+        const size = Number(params.get('pagination:itemsPerPage') ?? '100');
+        return { data: setSummaries.slice((page - 1) * size, page * size) };
+      }
+
+      const cardId = url.split('/').pop() ?? '';
+      if (!(cardId in detailPricing)) throw new Error(`Unexpected TCG API request: ${url}`);
+      const summary = setSummaries.find((card) => card.id === cardId);
+      return {
+        data: {
+          ...summary,
+          rarity: 'Rare',
+          category: 'Pokemon',
+          stage: 'Basic',
+          pricing: detailPricing[cardId],
+        },
+      };
+    });
+  }
+
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
+  it('sorts by price across the complete set before slicing a page', async () => {
+    mockCatalogResponses();
+
+    const result = await searchCards(
+      { selectedCategory: 'all', sortBy: 'marketPrice', sortOrder: 'desc' },
+      'en',
+      1,
+      2,
+    );
+
+    // The full set (5 cards, fetched across 2 name-ordered remote pages) is
+    // ranked before the page slice, so the €263 card wins even though it sits
+    // alphabetically last. The pre-fix behavior pooled only the first page and
+    // returned ['me05-020', 'me05-010'].
+    expect(result.cards.map((card) => card.id)).toEqual(['me05-116', 'me05-010']);
+    expect(result.hasMore).toBe(true);
+    expect(mockGet).toHaveBeenCalledWith('/en/cards/me05-116');
+  });
+
+  it('sorts ascending with unpriced cards last', async () => {
+    mockCatalogResponses();
+
+    const result = await searchCards(
+      { selectedCategory: 'all', sortBy: 'marketPrice', sortOrder: 'asc' },
+      'en',
+      1,
+      24,
+    );
+
+    expect(result.cards.map((card) => card.id)).toEqual([
+      'me05-001',
+      'me05-020',
+      'me05-010',
+      'me05-116',
+      'me05-030',
+    ]);
+    expect(result.hasMore).toBe(false);
+  });
+
+  it('filters on the displayed price source, not an alternative provider value', async () => {
+    mockCatalogResponses();
+
+    const affordable = await searchCards(
+      { selectedCategory: 'all', priceMax: 100 },
+      'en',
+      1,
+      24,
+    );
+
+    // Charizard displays €16 so it belongs in a ≤ €100 filter even though its
+    // TCGplayer USD price is 999; Ditto has no displayed price at all.
+    expect(affordable.cards.map((card) => card.id).sort()).toEqual(['me05-001', 'me05-020']);
+
+    const expensive = await searchCards(
+      { selectedCategory: 'all', priceMin: 200 },
+      'en',
+      1,
+      24,
+    );
+
+    expect(expensive.cards.map((card) => card.id)).toEqual(['me05-010', 'me05-116']);
+  });
+});

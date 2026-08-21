@@ -23,7 +23,7 @@ import {
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { getTCGCard } from '@/lib/api/tcg';
@@ -58,8 +58,7 @@ export function TCGCardDetailModal({
   const localeHref = useLocaleHref();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const store = usePrimeDexStore();
-  const language = store.language;
-  const systemLanguage = store.systemLanguage;
+  const routeLang = useClientLanguage();
   const addTCGCompare = store.addTCGCompare ?? (() => undefined);
   const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
   const isTCGCompared = store.isTCGCompared ?? (() => false);
@@ -67,7 +66,8 @@ export function TCGCardDetailModal({
   const toggleTCGWishlist = store.toggleTCGWishlist ?? (() => undefined);
   const isTCGOwned = store.isTCGOwned ?? (() => false);
   const isTCGWishlist = store.isTCGWishlist ?? (() => false);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  // The hydrated card must match the language the page is displayed in.
+  const resolvedLang = mounted ? routeLang : 'en';
 
   useEffect(() => {
     void import('../../styles/pokemon-cards-css.css');

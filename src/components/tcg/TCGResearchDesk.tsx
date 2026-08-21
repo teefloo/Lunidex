@@ -30,7 +30,7 @@ import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -67,20 +67,20 @@ export function TCGResearchDesk({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const {
-    language,
-    systemLanguage,
     tcgOwnedCards,
     tcgWishlistCards,
   } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
     tcgOwnedCards: state.tcgOwnedCards,
     tcgWishlistCards: state.tcgWishlistCards,
   })));
+  // Card data must follow the language the page is actually displayed in: the
+  // locale prefix of the current URL (the same source the interface uses),
+  // not the persisted browser-language preference.
+  const routeLang = useClientLanguage();
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : initialLanguage;
+  const resolvedLang = mounted ? routeLang : initialLanguage;
 
   useEffect(() => {
     // Load the bundled card rules once for the catalog instead of once per card.
@@ -661,10 +661,9 @@ function EmptyState({
 }) {
   const { t } = useTranslation();
   const setLanguage = usePrimeDexStore((s) => s.setLanguage);
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
   const mounted = useMounted();
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const routeLang = useClientLanguage();
+  const resolvedLang = mounted ? routeLang : 'en';
   const isLimited = isTcgLangLimited(resolvedLang);
 
   return (

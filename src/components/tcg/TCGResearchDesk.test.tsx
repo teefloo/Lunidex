@@ -16,6 +16,10 @@ const navigation = vi.hoisted(() => {
   return state;
 });
 
+// Captures the language the catalog query is keyed with so tests can assert
+// that card data follows the route locale rather than the stored preference.
+const catalogQueries = vi.hoisted(() => [] as Array<{ language: string }>);
+
 const store = vi.hoisted(() => ({
   language: 'fr',
   systemLanguage: 'fr',
@@ -73,18 +77,25 @@ vi.mock('@tanstack/react-query', () => ({
     isFetching: false,
     isLoading: false,
   }),
-  useInfiniteQuery: () => ({
-    data: {
-      pages: [{ cards: [{ id: 'latest-set-1', localId: '1', name: 'Pikachu' }], hasMore: false }],
-    },
-    isFetching: false,
-    isLoading: false,
-    isError: false,
-    hasNextPage: false,
-    fetchNextPage: vi.fn(),
-    isFetchingNextPage: false,
-  }),
+  useInfiniteQuery: (options: { queryKey: readonly unknown[] }) => {
+    catalogQueries.push({ language: String(queryKeyLanguage(options.queryKey)) });
+    return {
+      data: {
+        pages: [{ cards: [{ id: 'latest-set-1', localId: '1', name: 'Pikachu' }], hasMore: false }],
+      },
+      isFetching: false,
+      isLoading: false,
+      isError: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
+      isFetchingNextPage: false,
+    };
+  },
 }));
+
+function queryKeyLanguage(queryKey: readonly unknown[]): unknown {
+  return queryKey[2];
+}
 
 vi.mock('@/hooks/useMounted', () => ({
   useMounted: () => true,
@@ -121,7 +132,7 @@ vi.mock('@/lib/api/tcg', () => ({
 vi.mock('@/lib/api/keys', () => ({
   tcgKeys: {
     filterOptions: (language: string) => ['tcg', 'filter-options', language],
-    catalog: () => ['tcg', 'catalog'],
+    catalog: (filters: unknown, language: string) => ['tcg', 'catalog', language, filters],
   },
 }));
 
@@ -208,5 +219,24 @@ describe('TCGResearchDesk collection selector', () => {
         { scroll: false },
       );
     });
+  });
+
+  it('fetches card data in the route locale even when the stored preference differs', async () => {
+    const previousLanguage = store.language;
+    store.language = 'en';
+    catalogQueries.length = 0;
+    window.history.pushState({}, '', '/fr/tcg');
+
+    try {
+      render(<TCGResearchDesk initialLatestSet={{ id: 'latest-set', name: 'Dernière collection' }} />);
+
+      await waitFor(() => {
+        expect(catalogQueries).toContainEqual({ language: 'fr' });
+      });
+      expect(catalogQueries).not.toContainEqual({ language: 'en' });
+    } finally {
+      store.language = previousLanguage;
+      window.history.pushState({}, '', '/');
+    }
   });
 });

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
-import { getLanguageId as getResolvedLanguageId } from '@/lib/languages';
+import { getLanguageId as getResolvedLanguageId, isSupportedLanguage } from '@/lib/languages';
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
@@ -321,7 +321,6 @@ export const SYNCED_KEYS = [
   'theme',
   'genTheme',
   'autoGenTheme',
-  'language',
   'weeklyQuestClaimedWeek',
 ] as const;
 
@@ -744,7 +743,9 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
     },
     {
       // Keep historical primedex-storage snapshots untouched. This new
-      // namespace intentionally stores no synchronizable user data.
+      // namespace stores no synchronizable user data; `language` is a local
+      // device preference (the effective UI language comes from the URL), so
+      // switching it must never require an account.
       name: ONLINE_STATE_STORAGE_KEY,
       storage: createJSONStorage(() => storage),
       onRehydrateStorage: () => (state) => {
@@ -755,8 +756,15 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           usePrimeDexStore.setState({ _hasHydrated: true });
         }
       },
-      partialize: () => ({}),
-      merge: (_persistedState, currentState) => currentState,
+      partialize: (state) => ({ language: state.language }),
+      // Everything except the local language preference stays URL/server-owned.
+      // Ignore any other legacy fields an old snapshot may still carry.
+      merge: (persisted, currentState) => {
+        const storedLanguage = (persisted as { language?: unknown } | null)?.language;
+        return typeof storedLanguage === 'string' && isSupportedLanguage(storedLanguage)
+          ? { ...currentState, language: storedLanguage }
+          : currentState;
+      },
     }
   )
 );
