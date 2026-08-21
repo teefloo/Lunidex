@@ -1,0 +1,136 @@
+<svg viewBox="0 0 1600 1260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+<title id="title">12 Lunidex logo explorations</title>
+<desc id="desc">Twelve deliberately different logo concepts for Lunidex. Each concept references all eighteen Pokemon elemental type colors while keeping Lunidex terracotta, sky blue, parchment and dark ink as brand anchors.</desc>
+<defs>
+  <linearGradient id="energy" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#A8A77A"/><stop offset="5.8%" stop-color="#EE8130"/><stop offset="11.7%" stop-color="#6390F0"/><stop offset="17.6%" stop-color="#F7D02C"/>
+    <stop offset="23.5%" stop-color="#7AC74C"/><stop offset="29.4%" stop-color="#96D9D6"/><stop offset="35.3%" stop-color="#C22E28"/><stop offset="41.2%" stop-color="#A33EA1"/>
+    <stop offset="47.1%" stop-color="#E2BF65"/><stop offset="52.9%" stop-color="#A98FF3"/><stop offset="58.8%" stop-color="#F95587"/><stop offset="64.7%" stop-color="#A6B91A"/>
+    <stop offset="70.6%" stop-color="#B6A136"/><stop offset="76.5%" stop-color="#735797"/><stop offset="82.4%" stop-color="#6F35FC"/><stop offset="88.3%" stop-color="#705746"/>
+    <stop offset="94.2%" stop-color="#B7B7CE"/><stop offset="100%" stop-color="#D685AD"/>
+  </linearGradient>
+  <style>
+    .board{fill:#F5ECD8}.card{fill:#FEFAF1;stroke:#1D0900;stroke-width:5}.ink{stroke:#1D0900}.terr{fill:#DE8E69}.sky{fill:#A1C3DB}.paper{fill:#FEFAF1}.energyFill{fill:url(#energy)}.energyStroke{stroke:url(#energy)}
+    .label{font:700 25px ui-rounded,system-ui,sans-serif;fill:#1D0900}.sub{font:600 15px ui-rounded,system-ui,sans-serif;fill:#1D0900;opacity:.64}.num{font:700 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#1D0900;opacity:.52}
+  </style>
+</defs>
+<rect class="board" width="1600" height="1260"/>
+<text x="64" y="66" style="font:800 42px ui-rounded,system-ui,sans-serif;fill:#1D0900">Lunidex — 12 pistes de logo</text>
+<text x="64" y="98" class="sub">18 énergies / types dans chaque piste · terracotta + bleu ciel comme ancrage Lunidex · aucune proposition ne remplace le logo actuel</text>
+
+<!-- 01 ORB PRISM -->
+<g transform="translate(55 135)">
+ <rect class="card" width="360" height="335" rx="18"/>
+ <text class="num" x="20" y="30">01</text><text class="label" x="20" y="306">Orb Prism</text><text class="sub" x="20" y="328">capture-orb / énergie totale</text>
+ <g transform="translate(55 24)">
+  <circle cx="125" cy="125" r="104" fill="#FEFAF1" class="energyStroke" stroke-width="22"/>
+  <path d="M31 121A95 95 0 0 1 219 121Z" class="terr ink" stroke-width="8"/><path d="M31 129A95 95 0 0 0 219 129Z" class="sky ink" stroke-width="8"/>
+  <path d="M32 125H218" class="ink" stroke-width="15"/><circle cx="125" cy="125" r="35" class="paper ink" stroke-width="9"/><circle cx="125" cy="125" r="15" class="terr ink" stroke-width="5"/>
+ </g>
+</g>
+
+<!-- 02 ELEMENTAL BLOOM -->
+<g transform="translate(445 135)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">02</text><text class="label" x="20" y="306">Elemental Bloom</text><text class="sub" x="20" y="328">organique / vivant / plante</text>
+ <g transform="translate(52 30)">
+  <g transform="translate(128 122)" class="energyFill ink" stroke-width="4">
+   <ellipse rx="25" ry="94"/><ellipse rx="25" ry="94" transform="rotate(20)"/><ellipse rx="25" ry="94" transform="rotate(40)"/><ellipse rx="25" ry="94" transform="rotate(60)"/><ellipse rx="25" ry="94" transform="rotate(80)"/><ellipse rx="25" ry="94" transform="rotate(100)"/><ellipse rx="25" ry="94" transform="rotate(120)"/><ellipse rx="25" ry="94" transform="rotate(140)"/><ellipse rx="25" ry="94" transform="rotate(160)"/>
+  </g>
+  <circle cx="128" cy="122" r="68" class="paper ink" stroke-width="8"/><path d="M103 82v83h70" fill="none" stroke="#DE8E69" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/><circle cx="172" cy="88" r="18" class="sky ink" stroke-width="5"/>
+ </g>
+</g>
+
+<!-- 03 TYPE CROWN -->
+<g transform="translate(835 135)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">03</text><text class="label" x="20" y="306">Type Crown</text><text class="sub" x="20" y="328">radial / puissant / iconique</text>
+ <g transform="translate(50 24)">
+  <polygon points="130,10 151,73 208,40 193,105 260,104 202,140 255,180 188,174 200,242 148,198 125,262 104,198 50,240 64,174 0,181 54,140 0,104 67,106 50,40 107,73" class="energyFill ink" stroke-width="7"/>
+  <circle cx="130" cy="137" r="66" fill="#1D0900"/><circle cx="130" cy="137" r="51" fill="#F5ECD8"/><path d="M109 106v63h52" fill="none" stroke="#DE8E69" stroke-width="21"/>
+ </g>
+</g>
+
+<!-- 04 DEX CORE -->
+<g transform="translate(1225 135)">
+ <rect class="card" width="320" height="335" rx="18"/><text class="num" x="20" y="30">04</text><text class="label" x="20" y="306">Dex Core</text><text class="sub" x="20" y="328">tech / scan / Pokédex</text>
+ <g transform="translate(35 32)">
+  <polygon points="125,0 210,35 250,125 210,215 125,250 40,215 0,125 40,35" fill="#F5ECD8" class="energyStroke" stroke-width="17"/>
+  <polygon points="125,42 183,66 208,125 183,184 125,208 67,184 42,125 67,66" class="terr ink" stroke-width="7"/>
+  <circle cx="125" cy="125" r="54" class="paper ink" stroke-width="7"/><path d="M105 95v62h61" fill="none" stroke="#1D0900" stroke-width="19"/><rect x="163" y="91" width="18" height="18" class="sky ink" stroke-width="4"/>
+ </g>
+</g>
+
+<!-- 05 CRYSTAL TOTEM -->
+<g transform="translate(55 500)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">05</text><text class="label" x="20" y="306">Crystal Totem</text><text class="sub" x="20" y="328">cristal / premium / mystique</text>
+ <g transform="translate(58 28)">
+  <polygon points="122,0 235,65 214,207 122,255 30,207 9,65" class="energyFill ink" stroke-width="8"/>
+  <polygon points="122,38 192,83 177,184 122,218 67,184 52,83" fill="#FEFAF1" fill-opacity=".9" class="ink" stroke-width="7"/>
+  <path d="M96 77v93h73" fill="none" stroke="#DE8E69" stroke-width="26" stroke-linecap="round"/><path d="M169 65l31 31-31 31" fill="none" stroke="#A1C3DB" stroke-width="15" stroke-linecap="round"/>
+ </g>
+</g>
+
+<!-- 06 PIXEL CREST -->
+<g transform="translate(445 500)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">06</text><text class="label" x="20" y="306">Pixel Crest</text><text class="sub" x="20" y="328">Soft Pixel / dashboard / rétro</text>
+ <g transform="translate(55 34)">
+  <rect x="0" y="0" width="250" height="250" fill="#F5ECD8" class="energyStroke" stroke-width="18"/>
+  <path d="M52 47h58v117h90v58H52z" class="terr ink" stroke-width="8"/><rect x="148" y="48" width="53" height="53" class="sky ink" stroke-width="8"/><rect x="148" y="108" width="53" height="53" class="paper ink" stroke-width="8"/>
+  <path d="M18 18h25v25H18zm189 0h25v25h-25zM18 207h25v25H18zm189 0h25v25h-25z" class="energyFill ink" stroke-width="3"/>
+ </g>
+</g>
+
+<!-- 07 INFINITY TYPES -->
+<g transform="translate(835 500)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">07</text><text class="label" x="20" y="306">Infinity Types</text><text class="sub" x="20" y="328">collection / boucle / progression</text>
+ <g transform="translate(39 57)">
+  <path d="M12 116C65 4 130 4 141 116c11 112 76 112 129 0C217 4 152 4 141 116 130 228 65 228 12 116Z" fill="none" class="energyStroke" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="141" cy="116" r="42" class="terr ink" stroke-width="8"/><path d="M126 94v44h39" fill="none" stroke="#FEFAF1" stroke-width="13"/>
+ </g>
+</g>
+
+<!-- 08 COMPASS DEX -->
+<g transform="translate(1225 500)">
+ <rect class="card" width="320" height="335" rx="18"/><text class="num" x="20" y="30">08</text><text class="label" x="20" y="306">Compass Dex</text><text class="sub" x="20" y="328">field guide / exploration</text>
+ <g transform="translate(35 33)">
+  <circle cx="125" cy="125" r="111" fill="#F5ECD8" class="energyStroke" stroke-width="16"/>
+  <polygon points="125,12 153,96 238,125 153,153 125,238 97,153 12,125 97,96" class="paper ink" stroke-width="8"/>
+  <polygon points="125,48 142,108 202,125 142,142 125,202 108,142 48,125 108,108" class="terr ink" stroke-width="6"/><circle cx="125" cy="125" r="27" class="sky ink" stroke-width="6"/>
+ </g>
+</g>
+
+<!-- 09 PORTAL RING -->
+<g transform="translate(55 865)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">09</text><text class="label" x="20" y="306">Portal Ring</text><text class="sub" x="20" y="328">portail / énergie / dimension</text>
+ <g transform="translate(54 28)">
+  <circle cx="126" cy="126" r="107" fill="#F5ECD8" class="energyStroke" stroke-width="21"/>
+  <ellipse cx="126" cy="126" rx="72" ry="100" class="sky ink" stroke-width="7"/><ellipse cx="126" cy="126" rx="48" ry="79" class="terr ink" stroke-width="7"/><ellipse cx="126" cy="126" rx="22" ry="56" class="paper ink" stroke-width="6"/>
+ </g>
+</g>
+
+<!-- 10 ORB ECLIPSE -->
+<g transform="translate(445 865)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">10</text><text class="label" x="20" y="306">Orb Eclipse</text><text class="sub" x="20" y="328">capture-orb / lune / contraste</text>
+ <g transform="translate(52 29)">
+  <circle cx="128" cy="126" r="107" fill="#FEFAF1" class="energyStroke" stroke-width="18"/><circle cx="128" cy="126" r="84" class="terr ink" stroke-width="7"/>
+  <path d="M128 42a84 84 0 0 1 0 168 59 84 0 0 0 0-168Z" class="sky ink" stroke-width="6"/><path d="M47 126h162" class="ink" stroke-width="14"/><circle cx="128" cy="126" r="31" class="paper ink" stroke-width="8"/><circle cx="128" cy="126" r="10" fill="#1D0900"/>
+ </g>
+</g>
+
+<!-- 11 MONOGRAM SPIRAL -->
+<g transform="translate(835 865)">
+ <rect class="card" width="360" height="335" rx="18"/><text class="num" x="20" y="30">11</text><text class="label" x="20" y="306">Monogram Spiral</text><text class="sub" x="20" y="328">Lunidex / vortex / mouvement</text>
+ <g transform="translate(52 35)">
+  <path d="M126 126c82-67 153 10 102 75-48 61-160 31-180-56-23-100 86-167 177-118" fill="none" class="energyStroke" stroke-width="25" stroke-linecap="round"/>
+  <path d="M77 54v148h128" fill="none" stroke="#DE8E69" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/><path d="M95 72v111h96" fill="none" stroke="#FEFAF1" stroke-width="10" stroke-linecap="round"/><circle cx="126" cy="126" r="22" class="sky ink" stroke-width="6"/>
+ </g>
+</g>
+
+<!-- 12 SHIELD CAPTURE -->
+<g transform="translate(1225 865)">
+ <rect class="card" width="320" height="335" rx="18"/><text class="num" x="20" y="30">12</text><text class="label" x="20" y="306">Shield Capture</text><text class="sub" x="20" y="328">badge / collection / capture</text>
+ <g transform="translate(43 26)">
+  <path d="M117 0l102 39v90c0 71-42 119-102 143C57 248 15 200 15 129V39Z" fill="#FEFAF1" class="energyStroke" stroke-width="17"/>
+  <path d="M117 53l59 23v55c0 41-22 73-59 92-37-19-59-51-59-92V76Z" class="terr ink" stroke-width="7"/><circle cx="117" cy="134" r="52" class="sky ink" stroke-width="7"/><path d="M67 134h100" class="ink" stroke-width="13"/><circle cx="117" cy="134" r="24" class="paper ink" stroke-width="7"/>
+ </g>
+</g>
+</svg>
