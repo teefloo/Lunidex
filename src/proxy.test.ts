@@ -31,10 +31,33 @@ describe('locale proxy matcher', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(response.headers.get('set-cookie')).toContain('primedex-lang=fr');
     expect(fetchMock).toHaveBeenCalledWith(
       'https://pokeapi.co/api/v2/pokemon/pikachu',
       expect.objectContaining({ method: 'HEAD' }),
     );
+  });
+
+  it('does not set a locale cookie for automated clients', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(
+      new NextRequest('https://lunidex.test/en/pokemon/pikachu', {
+        headers: { 'user-agent': 'ClaudeBot/1.0' },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('set-cookie')).toBeNull();
+  });
+
+  it('short-circuits known WordPress scanner paths, including localized paths', async () => {
+    const response = await proxy(
+      new NextRequest('https://lunidex.test/fr/wp-admin/install.php'),
+    );
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get('cache-control')).toContain('s-maxage=3600');
   });
 
   it('redirects legacy deployment domains to the canonical Lunidex host', async () => {

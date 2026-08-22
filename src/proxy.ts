@@ -7,6 +7,13 @@ const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
 const CANONICAL_HOST = 'lunidex.app';
+// Automated clients do not benefit from a preference cookie. Avoiding
+// Set-Cookie for them keeps otherwise-public page responses eligible for the
+// Vercel CDN cache while normal browsers still persist their locale below.
+const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent)/i;
+// These paths are common WordPress probes but are not part of Lunidex. Return
+// a cacheable edge 404 before Next renders the global not-found route.
+const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'];
 const LEGACY_HOSTS = new Set([
   'www.lunidex.app',
   'primedex.vercel.app',
@@ -33,6 +40,18 @@ function detectLocaleFromAcceptLanguage(header: string | null): string {
   if (!header) return 'en';
   const first = header.split(',')[0]?.split(';')[0]?.trim().toLowerCase().split('-')[0] ?? 'en';
   return isSupportedLanguage(first) ? first : 'en';
+}
+
+function shouldPersistLocaleCookie(request: NextRequest): boolean {
+  const userAgent = request.headers.get('user-agent') ?? '';
+  return !AUTOMATED_CLIENT_PATTERN.test(userAgent);
+}
+
+function isKnownScannerPath(pathname: string): boolean {
+  const unlocalizedPath = pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/)/, '');
+  return KNOWN_SCANNER_PATH_PREFIXES.some(
+    (prefix) => unlocalizedPath === prefix || unlocalizedPath.startsWith(`${prefix}/`),
+  );
 }
 
 function getResourceProbe(pathname: string, locale: string): ResourceProbe | null {
@@ -147,6 +166,15 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (isKnownScannerPath(pathname)) {
+    return new NextResponse(null, {
+      status: 404,
+      headers: {
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    });
+  }
+
   const segments = pathname.split('/').filter(Boolean);
   const firstSegment = segments[0];
   const hasLocalePrefix = isSupportedLanguage(firstSegment ?? '');
@@ -171,7 +199,7 @@ export async function proxy(request: NextRequest) {
     const response = NextResponse.next({
       request: { headers: forwardedHeaders },
     });
-    if (cookieLang !== urlLocale) {
+    if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request)) {
       response.cookies.set(COOKIE_NAME, urlLocale, {
         path: '/',
         maxAge: COOKIE_MAX_AGE,

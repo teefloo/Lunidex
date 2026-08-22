@@ -149,6 +149,51 @@ const securityHeaders = [
   { key: 'Content-Security-Policy', value: csp },
 ];
 
+// These routes render public, locale-keyed content. They still use request
+// headers for the current locale, so Next classifies them as dynamic; the
+// Vercel-specific directive lets the CDN reuse the complete response without
+// enabling browser caching. Personalized/account routes are intentionally not
+// listed here.
+const publicPageCacheHeader = {
+  key: 'Vercel-CDN-Cache-Control',
+  value: 'public, max-age=3600, stale-while-revalidate=86400',
+};
+
+const publicPageCacheRoutes = [
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/pokemon/:name',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/pokedex',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/collection',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/collection/:setId',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/start',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/deck-builder',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/moves',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/moves/:name',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/abilities',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/abilities/:name',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/items',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/items/:name',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/types',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/compare',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/compare/:slug',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/guides/:slug',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/blog',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/about',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/faq',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/contact',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/nuzlocke',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/breeding',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/ev-iv',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/quiz',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/early-access',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/cookies',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/privacy',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/terms',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/legal',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/u/:handle',
+];
+
 const nextConfig: NextConfig = {
   compress: true,
   // Shared business logic now lives in the @primedex/core workspace package,
@@ -338,6 +383,10 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      ...publicPageCacheRoutes.map((source) => ({
+        source,
+        headers: [publicPageCacheHeader],
+      })),
     ];
   },
 };
