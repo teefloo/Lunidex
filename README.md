@@ -1,7 +1,7 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="Lunidex logo" width="80" />
+<img src="./public/icon-512.png" alt="Lunidex logo" width="80" />
 
 # Lunidex
 
