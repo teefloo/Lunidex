@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 
 export function HeaderLogo() {
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
@@ -16,8 +16,8 @@ export function HeaderLogo() {
   return (
     <div className="flex shrink-0 items-center justify-start">
       <Link prefetch={false} href={`/${resolvedLang}`} aria-label="Lunidex" className="touch-target flex items-center gap-2.5 group">
-        <div className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
-          <PrimeDexLogo className="h-5 w-5 md:h-6 md:w-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(190,93,72,0.18)] group-hover:drop-shadow-[0_0_14px_rgba(190,93,72,0.32)]" />
+        <div className="shrink-0 transition-transform duration-300 group-hover:scale-105">
+          <LunidexLogo alt="" priority sizes="24px" className="h-5 w-5 object-contain md:h-6 md:w-6 drop-shadow-[0_0_8px_rgba(1,76,189,0.22)] group-hover:drop-shadow-[0_0_14px_rgba(1,76,189,0.36)]" />
         </div>
         <div className="flex flex-col items-start gap-0.5 max-[479px]:hidden">
           <div className="flex items-baseline leading-none tracking-tight">

@@ -1,20 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import LunidexLogo from "@/components/ui/LunidexLogo";
 
 export default function OfflinePage() {
   const router = useRouter();
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 text-center">
-      <Image
-        src="/icon-512.png"
+      <LunidexLogo
         alt="Lunidex"
-        width={128}
-        height={128}
-        className="size-32 animate-pulse-slow"
+        sizes="128px"
+        className="size-32 animate-pulse-slow object-contain"
       />
       <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">
         You&apos;re Offline

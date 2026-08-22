@@ -3,7 +3,7 @@ import { getServerLanguage } from '@/lib/server-i18n';
 import { SITE_URL, SITE_NAME, GITHUB_REPO_URL, DISCORD_URL } from '@/lib/site';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
-import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 import EarlyAccessForm from '@/components/early-access/EarlyAccessForm';
 import { Github, MessageCircle, ShieldCheck, Sparkles, Zap } from 'lucide-react';
 
@@ -100,7 +100,7 @@ export default async function EarlyAccessPage() {
         <main className="page-shell flex flex-col items-center pt-16 pb-24 md:pt-24">
           {/* Hero — Attention */}
           <section aria-labelledby="hero-title" className="w-full max-w-3xl text-center">
-            <PrimeDexLogo className="mx-auto mb-6 w-14 h-14" />
+            <LunidexLogo alt="Lunidex" sizes="56px" className="mx-auto mb-6 h-14 w-14 object-contain" />
             <h1
               id="hero-title"
               className="page-title font-display text-[clamp(2.25rem,7vw,4.5rem)] leading-[0.95] font-extrabold gradient-text-hero"

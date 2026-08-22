@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 interface HomeHeaderMobileMenuProps {
@@ -74,7 +75,10 @@ export default function HomeHeaderMobileMenu({
           className="field-mobile-menu-panel"
         >
           <SheetHeader className="field-mobile-menu-panel-header">
-            <span className="field-mobile-menu-panel-kicker" aria-hidden="true">LUNIDEX / MENU</span>
+            <div className="flex items-center gap-2.5">
+              <LunidexLogo alt="" sizes="32px" className="h-8 w-8 object-contain" />
+              <span className="field-mobile-menu-panel-kicker" aria-hidden="true">LUNIDEX / MENU</span>
+            </div>
             <SheetClose
               type="button"
               aria-label={closeLabel}

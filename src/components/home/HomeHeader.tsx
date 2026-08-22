@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
-import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
 import { HomeLanguageSelect } from './HomeLanguageSelect';
@@ -30,7 +30,7 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
           className="field-brand"
           prefetch={false}
         >
-          <PrimeDexLogo className="h-7 w-7" />
+          <LunidexLogo alt="" priority sizes="28px" className="h-7 w-7 object-contain" />
           <span className="field-brand-wordmark" aria-hidden="true" translate="no">
             <span className="field-brand-luni">Luni</span><span>dex</span>
           </span>

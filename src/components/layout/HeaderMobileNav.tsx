@@ -7,6 +7,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 
 export function HeaderMobileNav() {
   const mounted = useMounted();
@@ -72,9 +73,12 @@ export function HeaderMobileNav() {
               >
                 <X className="h-4 w-4" />
               </button>
-              <div className="flex items-baseline text-left font-display tracking-tight">
-                <span className="text-2xl font-extrabold gradient-text-hero">Luni</span>
-                <span className="text-2xl font-medium italic editorial-italic text-foreground">dex</span>
+              <div className="flex items-center gap-3 text-left font-display tracking-tight">
+                <LunidexLogo alt="" sizes="36px" className="h-9 w-9 object-contain" />
+                <div className="flex items-baseline">
+                  <span className="text-2xl font-extrabold gradient-text-hero">Luni</span>
+                  <span className="text-2xl font-medium italic editorial-italic text-foreground">dex</span>
+                </div>
               </div>
               <p className="mt-1 cat-no text-[0.6rem] text-muted-foreground">Chapter I — Field Compendium</p>
             </div>

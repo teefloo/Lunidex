@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowUpRight, Compass, Github, ShieldCheck } from 'lucide-react';
 
 import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferencesButton';
-import PrimeDexLogo from '@/components/ui/PrimeDexLogo';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { GITHUB_REPO_URL, SITE_NAME } from '@/lib/site';
 
@@ -131,8 +131,8 @@ export default async function SiteFooter() {
               aria-label={SITE_NAME}
               className="group touch-target inline-flex items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <span className="shrink-0 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
-                <PrimeDexLogo className="h-11 w-11" />
+              <span className="shrink-0 transition-transform duration-300 group-hover:scale-105">
+                <LunidexLogo alt="" sizes="44px" className="h-11 w-11 object-contain" />
               </span>
               <span className="flex items-baseline leading-none tracking-tight">
                 <span className="font-display text-2xl font-extrabold gradient-text-hero">Luni</span>

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 
 type Mode = 'signin' | 'signup';
 
@@ -96,6 +97,7 @@ export default function AuthModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
+          <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />
           <DialogTitle className="text-xl font-black tracking-tight">
             {mode === 'signin'
               ? tt('auth.signin_title', 'Welcome back')

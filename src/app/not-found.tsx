@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 import NotFoundMiniGame from '@/components/layout/NotFoundMiniGameLazy';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import '@/styles/not-found.css';
 
@@ -28,6 +29,7 @@ export default async function NotFound() {
         <NotFoundMiniGame />
 
         <section className="section-frame mx-auto flex w-full max-w-2xl flex-col items-center px-6 py-10 text-center md:px-8 md:py-12 lg:justify-center lg:px-10">
+          <LunidexLogo alt="" sizes="64px" className="mb-4 h-16 w-16 object-contain" />
           <div className="mb-4 text-7xl font-black text-primary md:text-8xl">
             404
           </div>

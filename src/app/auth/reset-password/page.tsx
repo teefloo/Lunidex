@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
-import { Loader2, Lock } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useRouter } from 'next/navigation';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
@@ -80,8 +81,8 @@ export default function ResetPasswordPage() {
     <main className="flex min-h-dvh items-center justify-center px-4 py-24">
       <section className="page-surface w-full max-w-md p-6 sm:p-8">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-sm border border-primary/30 bg-primary/10 text-primary">
-            <Lock className="h-5 w-5" aria-hidden="true" />
+          <div className="flex h-11 w-11 items-center justify-center">
+            <LunidexLogo alt="" sizes="44px" className="h-11 w-11 object-contain" />
           </div>
           <div>
             <p className="page-eyebrow">Lunidex</p>

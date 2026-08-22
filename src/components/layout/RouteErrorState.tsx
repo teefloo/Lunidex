@@ -7,6 +7,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import LunidexLogo from '@/components/ui/LunidexLogo';
 
 interface RouteErrorStateProps {
   error: Error & { digest?: string };
@@ -21,6 +22,7 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
   return (
     <div className="app-page min-h-screen px-4 py-24 text-foreground">
       <section className="section-frame mx-auto flex max-w-xl flex-col items-center px-6 py-10 text-center md:px-8 md:py-12">
+        <LunidexLogo alt="" sizes="56px" className="mb-5 h-14 w-14 object-contain" />
         <div className="mb-5 rounded-sm border border-destructive/20 bg-destructive/10 p-4 text-destructive">
           <AlertTriangle className="h-8 w-8" />
         </div>
