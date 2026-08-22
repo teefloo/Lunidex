@@ -46,5 +46,15 @@ TCG-Data: https://www.tcgdex.net
 # - /en/guides/team-builder-guide
 # - /en/guides/quiz-guide
 # - /en/guides/nuzlocke-guide
+# - /en/compare/lunidex-vs-pokemon-database
+# - /en/compare/lunidex-vs-bulbapedia
+# - /en/compare/lunidex-vs-pokemon-showdown
+# - /en/compare/lunidex-vs-pokecardex
+# - /en/compare/lunidex-vs-zebradex
+# - /en/compare/lunidex-vs-collectr
+# - /en/guides/pokemon-reference-guide
+# - /en/guides/team-tools-guide
+# - /en/guides/tcg-workspace-guide
+# - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-08-21
+# Reviewed against the application source: 2026-08-22

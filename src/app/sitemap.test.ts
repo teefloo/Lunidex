@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildTcgLanguages, LAUNCH_SITEMAP_ROUTES } from './sitemap';
+import { buildTcgLanguages, EDITORIAL_SITEMAP_ROUTES, LAUNCH_SITEMAP_ROUTES } from './sitemap';
 
 describe('launch sitemap routes', () => {
   it('keeps indexable product pages while excluding legal and pre-launch pages', () => {
@@ -30,5 +30,10 @@ describe('launch sitemap routes', () => {
     expect(languages.fr).toBe('https://lunidex.app/fr/tcg/cards/A1-001');
     expect(languages.zh).toBeUndefined();
     expect(languages['x-default']).toBe(languages.en);
+  });
+
+  it('publishes the editorial wave with only its translated locales', () => {
+    expect(EDITORIAL_SITEMAP_ROUTES).toContain('/compare/lunidex-vs-pokemon-database');
+    expect(EDITORIAL_SITEMAP_ROUTES).toContain('/guides/tcg-workspace-guide');
   });
 });

@@ -52,11 +52,21 @@ Browsing public reference pages does not require an account. In the current web 
 - [FAQ](https://lunidex.app/en/faq) — twelve visible questions about data, features, collection storage and privacy.
 - [About Lunidex](https://lunidex.app/en/about) — mission, data-source attribution, open-source information and project links.
 - [Collection tool comparison](https://lunidex.app/en/compare/lunidex-vs-pokecardex-zebradex) — a source-based comparison with PokéCardex and ZebraDex.
+- [Lunidex vs Pokémon Database](https://lunidex.app/en/compare/lunidex-vs-pokemon-database) — Pokémon reference and team-tool comparison.
+- [Lunidex vs Bulbapedia](https://lunidex.app/en/compare/lunidex-vs-bulbapedia) — structured Pokémon workspace versus community encyclopedia.
+- [Lunidex vs Pokémon Showdown](https://lunidex.app/en/compare/lunidex-vs-pokemon-showdown) — team planning versus competitive battle simulation.
+- [Lunidex vs PokéCardex](https://lunidex.app/en/compare/lunidex-vs-pokecardex) — broad Pokémon workspace versus dedicated TCG collection app.
+- [Lunidex vs ZebraDex](https://lunidex.app/en/compare/lunidex-vs-zebradex) — localized Pokémon workspace versus French TCG specialist.
+- [Lunidex vs Collectr](https://lunidex.app/en/compare/lunidex-vs-collectr) — Pokémon collection workspace versus multi-TCG portfolio tracker.
 - [Pokémon card collection tracker guide](https://lunidex.app/en/guides/pokemon-card-collection-tracker) — criteria, verified Lunidex collection features and explicit product limits.
 - [Blog](https://lunidex.app/en/blog) — editorial hub listing Lunidex usage guides and product comparisons.
 - [Team builder guide](https://lunidex.app/en/guides/team-builder-guide) — build and analyze a team with the synergy score, type coverage, auto-complete and share codes.
 - [Quiz guide](https://lunidex.app/en/guides/quiz-guide) — challenge types, game modes, the daily challenge and the five badges.
 - [Nuzlocke tracker guide](https://lunidex.app/en/guides/nuzlocke-guide) — runs, one encounter per route, Pokémon statuses and run statistics.
+- [Pokémon reference guide](https://lunidex.app/en/guides/pokemon-reference-guide) — Pokédex, Pokémon detail, types, moves, abilities and items.
+- [Team and battle tools guide](https://lunidex.app/en/guides/team-tools-guide) — team builder, comparison, EV/IV, breeding and battle tools.
+- [Pokémon TCG workspace guide](https://lunidex.app/en/guides/tcg-workspace-guide) — catalog, cards, sets, collection, wishlist and deck builder.
+- [Progress and account guide](https://lunidex.app/en/guides/progress-account-guide) — dashboard, favorites, friends, profiles and account boundaries.
 
 ## Personal data and persistence
 
@@ -77,4 +87,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-21. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-22. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

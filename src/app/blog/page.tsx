@@ -13,9 +13,15 @@ import {
 } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { GITHUB_REPO_URL, SITE_NAME, SITE_URL } from '@/lib/site';
+import {
+  COMPETITOR_ARTICLES,
+  FEATURE_GUIDES,
+  getEditorialDates,
+  isEditorialIndexable,
+} from '@/lib/editorial';
 
 const PAGE_PATH = '/blog';
-const LAST_UPDATED = '2026-08-19';
+const LAST_UPDATED = '2026-08-22';
 const POKEAPI_SOURCE = 'https://pokeapi.co';
 const TCGDEX_SOURCE = 'https://www.tcgdex.net';
 
@@ -54,45 +60,76 @@ export default async function BlogPage() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const localizedPath = localeHref(PAGE_PATH, language);
   const pageUrl = `${SITE_URL}${localizedPath}`;
-  const formattedDate = new Intl.DateTimeFormat(buildInLanguage(language), {
+  const dateFormatter = new Intl.DateTimeFormat(buildInLanguage(language), {
     dateStyle: 'medium',
-  }).format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+  });
+  const formattedDate = dateFormatter.format(new Date(`${LAST_UPDATED}T00:00:00Z`));
 
-  const guideArticles = [
+  const existingGuideArticles = [
     {
       path: '/guides/pokemon-card-collection-tracker',
       eyebrow: t('collection_guide.nav_label'),
       title: t('collection_guide.meta_title'),
       description: t('collection_guide.meta_description'),
+      ...getEditorialDates('/guides/pokemon-card-collection-tracker'),
     },
     {
       path: '/guides/team-builder-guide',
       eyebrow: t('team_guide.nav_label'),
       title: t('team_guide.meta_title'),
       description: t('team_guide.meta_description'),
+      ...getEditorialDates('/guides/team-builder-guide'),
     },
     {
       path: '/guides/quiz-guide',
       eyebrow: t('quiz_guide.nav_label'),
       title: t('quiz_guide.meta_title'),
       description: t('quiz_guide.meta_description'),
+      ...getEditorialDates('/guides/quiz-guide'),
     },
     {
       path: '/guides/nuzlocke-guide',
       eyebrow: t('nuzlocke_guide.nav_label'),
       title: t('nuzlocke_guide.meta_title'),
       description: t('nuzlocke_guide.meta_description'),
+      ...getEditorialDates('/guides/nuzlocke-guide'),
     },
   ];
 
-  const comparisonArticles = [
+  const existingComparisonArticles = [
     {
       path: '/compare/lunidex-vs-pokecardex-zebradex',
       eyebrow: t('comparison.nav_label'),
       title: t('comparison.meta_title'),
       description: t('comparison.meta_description'),
+      ...getEditorialDates('/compare/lunidex-vs-pokecardex-zebradex'),
     },
   ];
+
+  const editorialGuideArticles = isEditorialIndexable(language) ? FEATURE_GUIDES.map((guide) => {
+    const key = `editorial.guides.${guide.slug.replace(/-guide$/, '').replaceAll('-', '_')}`;
+    return {
+      path: guide.path,
+      eyebrow: t(`${key}.nav_label`),
+      title: t(`${key}.meta_title`),
+      description: t(`${key}.meta_description`),
+      ...getEditorialDates(guide.path),
+    };
+  }) : [];
+
+  const editorialComparisonArticles = isEditorialIndexable(language) ? COMPETITOR_ARTICLES.map((article) => {
+    const key = `editorial.competitors.${article.slug.replaceAll('-', '_')}`;
+    return {
+      path: article.path,
+      eyebrow: t(`${key}.nav_label`),
+      title: t(`${key}.meta_title`),
+      description: t(`${key}.meta_description`),
+      ...getEditorialDates(article.path),
+    };
+  }) : [];
+
+  const guideArticles = [...existingGuideArticles, ...editorialGuideArticles];
+  const comparisonArticles = [...existingComparisonArticles, ...editorialComparisonArticles];
 
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: SITE_NAME, path: '/' },
@@ -131,6 +168,8 @@ export default async function BlogPage() {
         name: article.title,
         description: article.description,
         url: `${SITE_URL}${localeHref(article.path, language)}`,
+        datePublished: article.publishedAt,
+        dateModified: article.updatedAt,
       },
     })),
   };
@@ -178,6 +217,9 @@ export default async function BlogPage() {
                       {article.title}
                     </h3>
                     <p className="text-sm leading-7 text-foreground/70">{article.description}</p>
+                    <time dateTime={article.publishedAt} className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/45">
+                      {t('blog.published', { date: dateFormatter.format(new Date(`${article.publishedAt}T00:00:00Z`)) })}
+                    </time>
                     <span className="mt-auto pt-3 text-sm font-bold text-primary underline decoration-primary/30 underline-offset-4 group-hover:decoration-primary">
                       {t('blog.read_guide')}
                     </span>
@@ -206,6 +248,9 @@ export default async function BlogPage() {
                       {article.title}
                     </h3>
                     <p className="text-sm leading-7 text-foreground/70">{article.description}</p>
+                    <time dateTime={article.publishedAt} className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/45">
+                      {t('blog.published', { date: dateFormatter.format(new Date(`${article.publishedAt}T00:00:00Z`)) })}
+                    </time>
                     <span className="mt-auto pt-3 text-sm font-bold text-primary underline decoration-primary/30 underline-offset-4 group-hover:decoration-primary">
                       {t('blog.read_comparison')}
                     </span>

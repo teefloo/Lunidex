@@ -1,5 +1,5 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-08-21
+# Reviewed against the application source: 2026-08-22
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
@@ -144,8 +144,27 @@ Nuzlocke tracker.
   project links.
 - `/en/compare/lunidex-vs-pokecardex-zebradex` compares the documented scope of
   Lunidex, PokéCardex and ZebraDex without claiming unverified Lunidex features.
+- `/en/compare/lunidex-vs-pokemon-database` compares concise Pokémon reference
+  workflows and Lunidex's connected team and collection tools.
+- `/en/compare/lunidex-vs-bulbapedia` compares a structured Pokémon workspace
+  with a community-maintained franchise encyclopedia.
+- `/en/compare/lunidex-vs-pokemon-showdown` compares team planning with the
+  Pokémon Showdown competitive simulator.
+- `/en/compare/lunidex-vs-pokecardex` and `/en/compare/lunidex-vs-zebradex`
+  provide dedicated TCG collection comparisons; the existing three-product
+  page remains a higher-level collection-tool overview.
+- `/en/compare/lunidex-vs-collectr` compares a Pokémon-focused workspace with
+  a multi-TCG portfolio tracker.
 - `/en/guides/pokemon-card-collection-tracker` answers generic collection-tracker
   questions with verified Lunidex features, source boundaries and limitations.
+- `/en/guides/pokemon-reference-guide` covers the Pokédex, Pokémon detail,
+  types, moves, abilities and items.
+- `/en/guides/team-tools-guide` covers Team Builder, Compare, EV/IV, Breeding,
+  and Battle.
+- `/en/guides/tcg-workspace-guide` covers the catalog, card and set routes,
+  collection, wishlist and deck builder.
+- `/en/guides/progress-account-guide` covers the dashboard, favorites, friends,
+  public profiles and account boundary without exposing personal data.
 - `/en/privacy`, `/en/terms`, `/en/cookies` and `/en/legal` are legal pages and
   are intentionally not public content recommendations.
 

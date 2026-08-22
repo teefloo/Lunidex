@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import Header from '@/components/layout/Header';
+import { getEditorialDates } from '@/lib/editorial';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import {
+  buildArticleJsonLd,
   buildBreadcrumbJsonLd,
   buildInLanguage,
   buildSubpathLanguages,
-  buildWebPageJsonLd,
   localeHref,
   DEFAULT_OG_IMAGE,
 } from '@/lib/seo';
@@ -15,7 +16,7 @@ import { serializeJsonLd } from '@/lib/json-ld';
 import { GITHUB_REPO_URL, SITE_NAME, SITE_URL } from '@/lib/site';
 
 const PAGE_PATH = '/guides/nuzlocke-guide';
-const LAST_UPDATED = '2026-08-19';
+const { publishedAt: PUBLISHED_AT, updatedAt: LAST_UPDATED } = getEditorialDates(PAGE_PATH);
 const POKEAPI_SOURCE = 'https://pokeapi.co';
 
 export const revalidate = 86400;
@@ -27,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const localizedPath = localeHref(PAGE_PATH, language);
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: {
       canonical: localizedPath,
@@ -39,6 +40,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: localizedPath,
       type: 'article',
+      publishedTime: PUBLISHED_AT,
+      modifiedTime: LAST_UPDATED,
       images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
@@ -53,9 +56,11 @@ export default async function NuzlockeGuide() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const localizedPath = localeHref(PAGE_PATH, language);
   const pageUrl = `${SITE_URL}${localizedPath}`;
-  const formattedDate = new Intl.DateTimeFormat(buildInLanguage(language), {
+  const dateFormatter = new Intl.DateTimeFormat(buildInLanguage(language), {
     dateStyle: 'medium',
-  }).format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+  });
+  const formattedDate = dateFormatter.format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+  const formattedPublishedDate = dateFormatter.format(new Date(`${PUBLISHED_AT}T00:00:00Z`));
 
   const tips = [t('nuzlocke_guide.tip1'), t('nuzlocke_guide.tip2'), t('nuzlocke_guide.tip3')];
 
@@ -72,16 +77,17 @@ export default async function NuzlockeGuide() {
     { name: t('nuzlocke_guide.nav_label'), path: PAGE_PATH },
   ], language);
   const pageJsonLd = {
-    ...buildWebPageJsonLd({
+    ...buildArticleJsonLd({
       lang: language,
       path: localizedPath,
       name: t('nuzlocke_guide.meta_title'),
       headline: t('nuzlocke_guide.heading'),
       description: t('nuzlocke_guide.meta_description'),
+      datePublished: PUBLISHED_AT,
+      dateModified: LAST_UPDATED,
       about: 'Nuzlocke challenge tracking',
       keywords: 'Nuzlocke tracker, Nuzlocke run, challenge tracker, encounter log, Pokémon challenge',
     }),
-    dateModified: LAST_UPDATED,
     articleSection: t('nuzlocke_guide.eyebrow'),
     citation: [
       { '@type': 'WebPage', name: 'Lunidex source repository', url: GITHUB_REPO_URL },
@@ -120,7 +126,9 @@ export default async function NuzlockeGuide() {
                 {t('nuzlocke_guide.intro')}
               </p>
               <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-foreground/45">
-                {t('nuzlocke_guide.updated', { date: formattedDate })}
+                <time dateTime={PUBLISHED_AT}>{t('blog.published', { date: formattedPublishedDate })}</time>
+                <span aria-hidden="true"> · </span>
+                <time dateTime={LAST_UPDATED}>{t('nuzlocke_guide.updated', { date: formattedDate })}</time>
               </p>
             </header>
 

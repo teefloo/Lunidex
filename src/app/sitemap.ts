@@ -4,6 +4,7 @@ import { isTcgLangSupported } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages } from '@/lib/languages';
 import { unstable_cache } from 'next/cache';
+import { EDITORIAL_ROUTES, buildEditorialLanguages, getEditorialDates } from '@/lib/editorial';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
 const TCG_CARD_PAGE_SIZE = 250;
@@ -18,6 +19,7 @@ type StaticEntry = {
   path: string;
   changeFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
   priority: number;
+  lastModified?: string;
 };
 
 export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
@@ -35,16 +37,43 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'battle', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'nuzlocke', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
-  { path: 'compare/lunidex-vs-pokecardex-zebradex', changeFrequency: 'monthly', priority: 0.75 },
-  { path: 'guides/pokemon-card-collection-tracker', changeFrequency: 'monthly', priority: 0.72 },
-  { path: 'guides/team-builder-guide', changeFrequency: 'monthly', priority: 0.72 },
-  { path: 'guides/quiz-guide', changeFrequency: 'monthly', priority: 0.72 },
-  { path: 'guides/nuzlocke-guide', changeFrequency: 'monthly', priority: 0.72 },
+  {
+    path: 'compare/lunidex-vs-pokecardex-zebradex',
+    changeFrequency: 'monthly',
+    priority: 0.75,
+    lastModified: getEditorialDates('/compare/lunidex-vs-pokecardex-zebradex').updatedAt,
+  },
+  {
+    path: 'guides/pokemon-card-collection-tracker',
+    changeFrequency: 'monthly',
+    priority: 0.72,
+    lastModified: getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt,
+  },
+  {
+    path: 'guides/team-builder-guide',
+    changeFrequency: 'monthly',
+    priority: 0.72,
+    lastModified: getEditorialDates('/guides/team-builder-guide').updatedAt,
+  },
+  {
+    path: 'guides/quiz-guide',
+    changeFrequency: 'monthly',
+    priority: 0.72,
+    lastModified: getEditorialDates('/guides/quiz-guide').updatedAt,
+  },
+  {
+    path: 'guides/nuzlocke-guide',
+    changeFrequency: 'monthly',
+    priority: 0.72,
+    lastModified: getEditorialDates('/guides/nuzlocke-guide').updatedAt,
+  },
   { path: 'blog', changeFrequency: 'monthly', priority: 0.65 },
   { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
   { path: 'about', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'contact', changeFrequency: 'monthly', priority: 0.5 },
 ];
+
+export const EDITORIAL_SITEMAP_ROUTES = EDITORIAL_ROUTES;
 
 function buildLanguages(path: string): Record<string, string> {
   const normalized = path ? `/${path}` : '';
@@ -206,11 +235,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/en${path}`,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
+      ...(route.lastModified ? { lastModified: route.lastModified } : {}),
       alternates: {
         languages: buildLanguages(route.path),
       },
     };
   });
+
+const editorialUrls: MetadataRoute.Sitemap = EDITORIAL_SITEMAP_ROUTES.map((route) => ({
+  url: `${baseUrl}/en${route}`,
+  changeFrequency: 'monthly' as const,
+  priority: 0.72,
+  lastModified: getEditorialDates(route).updatedAt,
+    alternates: {
+      languages: Object.fromEntries(
+        Object.entries(buildEditorialLanguages(route)).map(([language, path]) => [language, `${baseUrl}${path}`]),
+      ),
+    },
+  }));
 
   const tcgCardUrls: MetadataRoute.Sitemap = tcgCardIds.map((cardId) => ({
     url: `${baseUrl}/en/tcg/cards/${encodeURIComponent(cardId)}`,
@@ -242,5 +284,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...staticUrls, ...pokemonUrls, ...referenceUrls, ...tcgCardUrls];
+  return [...staticUrls, ...editorialUrls, ...pokemonUrls, ...referenceUrls, ...tcgCardUrls];
 }

@@ -305,3 +305,45 @@ export function buildWebPageJsonLd({
     isPartOf: { '@id': `${SITE_URL}/#website` },
   };
 }
+
+export function buildArticleJsonLd({
+  lang,
+  path,
+  name,
+  headline,
+  description,
+  datePublished,
+  dateModified,
+  about,
+  keywords,
+}: {
+  lang: SupportedLanguage;
+  path: string;
+  name: string;
+  headline?: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  about?: string;
+  keywords?: string;
+}) {
+  return {
+    ...buildWebPageJsonLd({
+      lang,
+      path,
+      name,
+      headline,
+      description,
+      about,
+      keywords,
+    }),
+    '@type': 'Article',
+    '@id': `${SITE_URL}${path}#article`,
+    datePublished,
+    dateModified,
+    author: { '@id': `${SITE_URL}/#organization` },
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}#webpage` },
+    image: [`${SITE_URL}${DEFAULT_OG_IMAGE.url}`],
+  };
+}

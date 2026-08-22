@@ -26,7 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function EVIVPage() {
+export default async function EVIVPage() {
+  const t = await getServerT();
+
   return (
     <>
       <Header />
@@ -40,10 +42,10 @@ export default function EVIVPage() {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground/90">
-              EV / IV Calculator
+              {t('ev_iv.title')}
             </h1>
             <p className="text-sm text-foreground/50 font-medium max-w-md mx-auto">
-              Reverse-engineer IVs from your in-game stats, or plan the perfect EV spread at any level.
+              {t('ev_iv.meta_description')}
             </p>
           </div>
 

@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import Header from '@/components/layout/Header';
+import { getEditorialDates } from '@/lib/editorial';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import {
+  buildArticleJsonLd,
   buildInLanguage,
   buildSubpathLanguages,
-  buildWebPageJsonLd,
   localeHref,
   DEFAULT_OG_IMAGE,
 } from '@/lib/seo';
@@ -14,7 +15,7 @@ import { serializeJsonLd } from '@/lib/json-ld';
 import { GITHUB_REPO_URL, SITE_URL } from '@/lib/site';
 
 const PAGE_PATH = '/compare/lunidex-vs-pokecardex-zebradex';
-const LAST_UPDATED = '2026-08-19';
+const { publishedAt: PUBLISHED_AT, updatedAt: LAST_UPDATED } = getEditorialDates(PAGE_PATH);
 const POKECARDEX_SOURCE = 'https://www.pokecardex.com/app';
 const ZEBRADEX_SOURCE = 'https://zebradex.fr/index.php';
 
@@ -34,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const localizedPath = localeHref(PAGE_PATH, language);
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: {
       canonical: localizedPath,
@@ -46,6 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: localizedPath,
       type: 'article',
+      publishedTime: PUBLISHED_AT,
+      modifiedTime: LAST_UPDATED,
       images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
@@ -60,9 +63,11 @@ export default async function LunidexComparisonPage() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const localizedPath = localeHref(PAGE_PATH, language);
   const pageUrl = `${SITE_URL}${localizedPath}`;
-  const formattedDate = new Intl.DateTimeFormat(buildInLanguage(language), {
+  const dateFormatter = new Intl.DateTimeFormat(buildInLanguage(language), {
     dateStyle: 'medium',
-  }).format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+  });
+  const formattedDate = dateFormatter.format(new Date(`${LAST_UPDATED}T00:00:00Z`));
+  const formattedPublishedDate = dateFormatter.format(new Date(`${PUBLISHED_AT}T00:00:00Z`));
 
   const rows: ComparisonRow[] = [
     {
@@ -111,16 +116,17 @@ export default async function LunidexComparisonPage() {
   ];
 
   const pageJsonLd = {
-    ...buildWebPageJsonLd({
+    ...buildArticleJsonLd({
       lang: language,
       path: localizedPath,
       name: t('comparison.meta_title'),
       headline: t('comparison.heading'),
       description: t('comparison.meta_description'),
+      datePublished: PUBLISHED_AT,
+      dateModified: LAST_UPDATED,
       about: 'Pokémon TCG collection tools',
       keywords: 'Pokémon card collection tracker, Pokémon TCG app, Pokédex, team builder, card scanner comparison',
     }),
-    dateModified: LAST_UPDATED,
     citation: [
       { '@type': 'WebPage', name: t('comparison.pokecardex_source_label'), url: POKECARDEX_SOURCE },
       { '@type': 'WebPage', name: t('comparison.zebradex_source_label'), url: ZEBRADEX_SOURCE },
@@ -158,7 +164,9 @@ export default async function LunidexComparisonPage() {
                 {t('comparison.intro')}
               </p>
               <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-foreground/45">
-                {t('comparison.updated', { date: formattedDate })}
+                <time dateTime={PUBLISHED_AT}>{t('blog.published', { date: formattedPublishedDate })}</time>
+                <span aria-hidden="true"> · </span>
+                <time dateTime={LAST_UPDATED}>{t('comparison.updated', { date: formattedDate })}</time>
               </p>
             </header>
 
