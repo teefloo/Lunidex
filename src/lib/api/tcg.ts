@@ -622,7 +622,7 @@ function compareCards(a: TCGCard, b: TCGCard, sortBy: TCGCardSortField, sortOrde
 
   switch (sortBy) {
     case 'id':
-      result = compareStrings(a.id, b.id);
+      result = compareStrings(a.id, b.id, true);
       break;
     case 'number':
       result = compareCollectorNumbers(a.localId, b.localId);
@@ -940,8 +940,8 @@ export const searchCards = async (
   const requiresFullDatasetSort = sortBy === 'number' || sortBy === 'id' || sortBy === 'marketPrice';
   const dependsOnLocalOwnership = Boolean(filters.ownedState && filters.ownedState !== 'all');
   const cacheKey = fetchAll
-    ? `tcg-catalog-all-v13-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
-    : `tcg-catalog-v13-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
+    ? `tcg-catalog-all-v14-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
+    : `tcg-catalog-v14-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
 
   try {
     if (!dependsOnLocalOwnership) {

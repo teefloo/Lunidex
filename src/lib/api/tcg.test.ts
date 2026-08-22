@@ -249,6 +249,92 @@ describe('TCG catalog filtering and failures', () => {
   });
 });
 
+describe('TCG catalog ID ordering', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
+  it('sorts unpadded Sword & Shield IDs naturally without changing padded IDs', async () => {
+    const swordShieldCards = ['1', '2', '9', '10', '11', '99', '100', '101', '216']
+      .map((localId) => ({
+        id: `swsh1-${localId}`,
+        localId,
+        name: `Sword & Shield ${localId}`,
+        image: `https://example.test/swsh1-${localId}.png`,
+        rarity: 'Common' as const,
+        category: 'Pokemon' as const,
+        stage: 'Basic',
+      }));
+    const paddedCards = ['001', '002', '009', '010'].map((localId) => ({
+      id: `me03-${localId}`,
+      localId,
+      name: `Perfect Order ${localId}`,
+      image: `https://example.test/me03-${localId}.png`,
+      rarity: 'Common' as const,
+      category: 'Pokemon' as const,
+      stage: 'Basic',
+    }));
+
+    mockGet.mockImplementation(async (url: string) => {
+      const params = new URLSearchParams(url.split('?')[1] ?? '');
+      const cards = params.get('set.id') === 'eq:swsh1' ? swordShieldCards : paddedCards;
+      return { data: cards };
+    });
+
+    const swordShield = await searchCards(
+      { selectedCategory: 'all', selectedSet: 'swsh1', sortBy: 'id', sortOrder: 'asc' },
+      'en',
+      1,
+      24,
+    );
+    const swordShieldDescending = await searchCards(
+      { selectedCategory: 'all', selectedSet: 'swsh1', sortBy: 'id', sortOrder: 'desc' },
+      'en',
+      1,
+      24,
+    );
+    const padded = await searchCards(
+      { selectedCategory: 'all', selectedSet: 'me03', sortBy: 'id', sortOrder: 'asc' },
+      'en',
+      1,
+      24,
+    );
+
+    expect(swordShield.cards.map((card) => card.id)).toEqual([
+      'swsh1-1',
+      'swsh1-2',
+      'swsh1-9',
+      'swsh1-10',
+      'swsh1-11',
+      'swsh1-99',
+      'swsh1-100',
+      'swsh1-101',
+      'swsh1-216',
+    ]);
+    expect(swordShieldDescending.cards.map((card) => card.id)).toEqual([
+      'swsh1-216',
+      'swsh1-101',
+      'swsh1-100',
+      'swsh1-99',
+      'swsh1-11',
+      'swsh1-10',
+      'swsh1-9',
+      'swsh1-2',
+      'swsh1-1',
+    ]);
+    expect(padded.cards.map((card) => card.id)).toEqual([
+      'me03-001',
+      'me03-002',
+      'me03-009',
+      'me03-010',
+    ]);
+  });
+});
+
 describe('TCG catalog price sorting and filtering', () => {
   // Name-ordered summaries mirror the TCGdex listing endpoint: no pricing.
   // The most expensive cards sit alphabetically deep in the set, like
