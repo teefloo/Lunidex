@@ -232,7 +232,7 @@ const privacy: LegalDocument = {
           ['Email', 'contact@lunidex.app'],
           ['Response time', 'Maximum 30 days (Art. 12.3 GDPR)'],
           ['Languages', 'French or English'],
-          ['Source code', 'github.com/Teeflo/Poke (public issues)'],
+          ['Source code', 'github.com/teefloo/Lunidex (public issues)'],
         ],
       },
     },

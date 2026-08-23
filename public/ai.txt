@@ -10,8 +10,8 @@ Allow: /
 
 Project: Lunidex
 Project-URL: https://lunidex.app
-Repository: https://github.com/teefloo/Poke
-Contact: https://github.com/teefloo/Poke/issues
+Repository: https://github.com/teefloo/Lunidex
+Contact: https://github.com/teefloo/Lunidex/issues
 Application-License: MIT
 Entity-Type: Independent, unofficial Pokémon web application and Pokémon TCG collection workspace
 Disambiguation: Independent, unofficial Pokémon reference and Pokémon TCG collection web application; not a card marketplace

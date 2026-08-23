@@ -52,8 +52,8 @@ Web アプリは**9 世代・1,025 種のポケモン**を収録しています�
 - npm 10 以上
 
 ```bash
-git clone https://github.com/teefloo/Poke.git
-cd Poke
+git clone https://github.com/teefloo/Lunidex.git
+cd Lunidex
 npm install
 npm run dev
 ```

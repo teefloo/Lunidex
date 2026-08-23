@@ -52,8 +52,8 @@ Web 应用涵盖**九个世代的 1,025 只宝可梦**。界面支持英语、�
 - npm 10 或更高版本
 
 ```bash
-git clone https://github.com/teefloo/Poke.git
-cd Poke
+git clone https://github.com/teefloo/Lunidex.git
+cd Lunidex
 npm install
 npm run dev
 ```

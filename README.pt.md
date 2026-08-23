@@ -52,8 +52,8 @@ A aplicação web cobre os **1.025 Pokémon de nove gerações**. A sua interfac
 - npm 10 ou posterior
 
 ```bash
-git clone https://github.com/teefloo/Poke.git
-cd Poke
+git clone https://github.com/teefloo/Lunidex.git
+cd Lunidex
 npm install
 npm run dev
 ```

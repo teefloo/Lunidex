@@ -8,8 +8,6 @@ import {
   SITE_DISAMBIGUATION_DESCRIPTION,
   GITHUB_REPO_URL,
   GITHUB_ISSUES_URL,
-  TWITTER_HANDLE,
-  DISCORD_URL,
 } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
@@ -140,24 +138,6 @@ export default async function AboutPage() {
               >
                 <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">Issues</p>
                 <p className="mt-1 text-base font-bold">{t('about.cards.issues')}</p>
-              </a>
-              <a
-                href={`https://twitter.com/${TWITTER_HANDLE.replace('@', '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="section-frame p-5 hover:border-primary transition-colors"
-              >
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">Twitter / X</p>
-                <p className="mt-1 text-base font-bold">{TWITTER_HANDLE}</p>
-              </a>
-              <a
-                href={DISCORD_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="section-frame p-5 hover:border-primary transition-colors"
-              >
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">Discord</p>
-                <p className="mt-1 text-base font-bold">{t('about.cards.discord')}</p>
               </a>
             </aside>
 

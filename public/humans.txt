@@ -1,8 +1,7 @@
 /* TEAM */
 Author: Esteban Deloge
-Contact: https://github.com/teefloo/Poke/issues
-Twitter: @estebandeloge
-GitHub: https://github.com/estebandeloge
+Contact: https://github.com/teefloo/Lunidex/issues
+GitHub: https://github.com/teefloo/Lunidex
 
 /* SITE */
 Last review: 2026/08/16

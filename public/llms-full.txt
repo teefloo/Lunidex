@@ -14,7 +14,7 @@ tracking.
 Lunidex is a reference and collection workspace, not a card marketplace.
 
 Canonical origin: https://lunidex.app
-Source repository: https://github.com/teefloo/Poke
+Source repository: https://github.com/teefloo/Lunidex
 Application license: MIT
 Supported locale prefixes: /en, /fr, /es, /de, /it, /ja, /ko, /zh
 

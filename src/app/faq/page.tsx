@@ -7,12 +7,11 @@ import { localizeInternalRouteReferences } from '@/lib/lunidex-home-content';
 import {
   SITE_URL,
   SITE_NAME,
-  GITHUB_DISCUSSIONS_URL,
   GITHUB_ISSUES_URL,
 } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
-import { HelpCircle, Github, MessageCircleQuestion } from 'lucide-react';
+import { HelpCircle, MessageCircleQuestion } from 'lucide-react';
 
 type FaqEntry = { q: string; a: string };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
@@ -135,15 +134,6 @@ export default async function FaqPage() {
           {t('faq.still_questions_body')}
         </p>
         <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href={GITHUB_DISCUSSIONS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-btn glass-btn-active touch-target inline-flex items-center justify-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em]"
-          >
-            <Github aria-hidden="true" className="h-3.5 w-3.5" />
-            {t('faq.still_questions_cta_github')}
-          </a>
           <a
             href={GITHUB_ISSUES_URL}
             target="_blank"

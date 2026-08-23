@@ -233,7 +233,7 @@ const privacy: LegalDocument = {
           ['E-mail', 'contact@lunidex.app'],
           ['Délai de réponse', '30 jours maximum (Art. 12.3 RGPD)'],
           ['Langue', 'Français ou anglais'],
-          ['Code source', 'github.com/Teeflo/Poke (issues publiques)'],
+          ['Code source', 'github.com/teefloo/Lunidex (issues publiques)'],
         ],
       },
     },

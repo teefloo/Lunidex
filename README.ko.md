@@ -52,8 +52,8 @@ Lunidex는 Next.js 웹 앱, 공유 TypeScript 패키지 `@primedex/core`, Expo �
 - npm 10 이상
 
 ```bash
-git clone https://github.com/teefloo/Poke.git
-cd Poke
+git clone https://github.com/teefloo/Lunidex.git
+cd Lunidex
 npm install
 npm run dev
 ```

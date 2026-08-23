@@ -52,8 +52,8 @@ Die Webanwendung deckt **1.025 Pok√©mon aus neun Generationen** ab. Ihre Oberfl√
 - npm 10 oder neuer
 
 ```bash
-git clone https://github.com/teefloo/Poke.git
-cd Poke
+git clone https://github.com/teefloo/Lunidex.git
+cd Lunidex
 npm install
 npm run dev
 ```

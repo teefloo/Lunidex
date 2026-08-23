@@ -11,7 +11,7 @@ Lunidex is the Pokémon reference and collection application at https://lunidex.
 - **Canonical route format**: every public page uses a locale prefix: `/en`, `/fr`, `/es`, `/de`, `/it`, `/ja`, `/ko`, or `/zh`
 - **Supported locales**: English, French, Spanish, German, Italian, Japanese, Korean, and Chinese
 - **Project status**: independent, non-official Pokémon fan project; not affiliated with Nintendo, Game Freak, Creatures Inc., or The Pokémon Company
-- **Application code**: available under the MIT License at https://github.com/teefloo/Poke
+- **Application code**: available under the MIT License at https://github.com/teefloo/Lunidex
 
 ## Core answers
 
