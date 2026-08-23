@@ -211,9 +211,9 @@ export default async function EarlyAccessPage() {
             </div>
           </section>
 
-          <footer className="mt-24 text-center text-xs text-foreground/40">
+          <div className="route-disclaimer mt-24 border-t border-border/60 pt-6 text-center text-xs text-muted-foreground">
             <p>{SITE_NAME} — projet non commercial, données © Nintendo / Game Freak / The Pokémon Company.</p>
-          </footer>
+          </div>
         </main>
       </div>
     </>

@@ -26,13 +26,11 @@ export default async function HomeTeamPreview() {
           <span className="home-data-label">{t('lunidex_archive.team_eyebrow')}</span>
           <h3>{t('lunidex_archive.team_title')}</h3>
         </div>
-        <span className="home-team-count">06 / 06</span>
       </div>
 
       <ul className="home-team-roster">
-        {TEAM_PREVIEW.map((pokemon, index) => (
+        {TEAM_PREVIEW.map((pokemon) => (
           <li key={pokemon.id} className="home-team-slot">
-            <span className="home-team-index">0{index + 1}</span>
             <div className="home-team-artwork">
               <Image
                 src={artworkUrl(pokemon.id)}

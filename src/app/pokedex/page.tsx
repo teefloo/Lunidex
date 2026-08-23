@@ -94,9 +94,9 @@ export default async function PokedexPage() {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <script id="pokedex-item-list-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(itemListJsonLd) }} />
       <script id="pokedex-webpage-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(webPageJsonLd) }} />
-      <div className="app-page">
+      <div className="app-page pokedex-redesign">
         <Header />
-        <main className="relative z-10 pt-28 pb-8 md:pt-32">
+        <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
           <PokemonOfTheDay />
           <PokemonList />

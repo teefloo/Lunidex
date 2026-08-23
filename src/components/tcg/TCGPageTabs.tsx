@@ -48,10 +48,14 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
         <Link
           key={tab.href}
           href={localizedHref(tab.href)}
+          aria-current={isActive(tab.href) ? 'page' : undefined}
           className={cn(
-            'touch-target relative flex min-h-11 min-w-0 items-center justify-center rounded-sm px-2 text-center text-[11px] font-black uppercase leading-tight tracking-[0.12em] transition-[color,background-color,border-color,box-shadow,transform] duration-100 hover:-translate-x-px hover:-translate-y-px sm:px-3.5',
+            'touch-target relative flex min-h-11 min-w-0 items-center justify-center rounded-sm px-2 text-center text-[11px] font-black uppercase leading-tight tracking-[0.12em] transition-[color,background-color,border-color,box-shadow] duration-100 sm:px-3.5',
             isActive(tab.href)
-              ? 'border border-primary/40 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
+              ? cn(
+                'border border-primary/40 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]',
+                tab.href === '/tcg' && 'rounded-l-[0.95rem]',
+              )
               : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',
           )}
         >

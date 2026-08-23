@@ -105,7 +105,7 @@ export default {
       key_facts_title: '开放网络上最完整的宝可梦图鉴',
     },
     pokedex: { title: '宝可梦图鉴', description: '探索宝可梦、它们的属性、能力值与进化。', meta_title: '宝可梦图鉴 — 探索宝可梦', meta_description: '使用 Lunidex 搜索全部 1025 只宝可梦，查看属性、能力值、进化、特性、招式和官方插图。', og_alt: '展示收藏与关联工具的 Lunidex 界面', item_list_name: '完整宝可梦图鉴 — 全部宝可梦', item_list_description: '包含属性、能力值、进化和官方插图的完整宝可梦图鉴。' },
-    lunidex_home: { hero_title: '追踪你的卡牌。探索宝可梦。组建你的队伍。', hero_body: '将你的 TCG 收藏和宝可梦队伍汇集在一个简单、属于你的空间中。', cta_start: '开始我的收藏', cta_resume: '继续我的收藏', cta_app: '进入应用', cta_pokedex: '探索宝可梦图鉴', start_without_account: '无需账户即可浏览公开页面。', no_account: '公开页面无需账户。', preview_eyebrow: '收藏预览', preview_title: '一眼了解你的收藏。', preview_body: '选择一个扩展包，添加你的卡牌，并按自己的节奏追踪进度。', preview_note: '界面预览', preview_owned_eyebrow: '你的收藏', preview_owned_title: '你的收藏正在等你。', preview_owned_count_one: '此预览中的 {{count}} 张卡牌', preview_owned_count_other: '此预览中的 {{count}} 张卡牌', tools_eyebrow: '游戏工具', tools_title: '探索宝可梦。组建你的队伍。', tools_body: '浏览宝可梦图鉴，并在同一空间准备平衡的队伍。', tools_pokedex_title: '探索宝可梦图鉴', tools_pokedex_body: '浏览宝可梦、属性、能力值和进化。', tools_team_title: '组建队伍', tools_team_body: '组建队伍并检查属性覆盖。', steps_eyebrow: '易于追踪的收藏', steps_title: '添加卡牌，保持进度。', steps_one_title: '选择扩展包', steps_one_body: '从你正在收集的扩展包开始。', steps_two_title: '添加卡牌', steps_two_body: '标记你拥有的卡牌。', steps_three_title: '追踪进度', steps_three_body: '查看每个扩展包的进度。', trust_title: '无需账户即可浏览公开页面。', trust_body: '公开页面无需账户即可访问。当前 Web 运行时的个人收藏空间使用已配置的账户同步服务。', independent: 'Lunidex 是一个独立的非官方项目。', about: '了解 Lunidex', faq_eyebrow: '常见问题', faq_title: '关于 Lunidex 的问题', faq_subtitle: '追踪卡牌和准备队伍的要点。', faq_q1: '浏览 Lunidex 需要账户吗？', faq_a1: '不需要。公开页面无需账户即可浏览。保存和同步个人空间需要账户。', faq_q2: '个人数据保存在哪里？', faq_a2: '在会话和 Neon 服务可用时，个人空间会与账户同步。浏览器主要保存设置和公开数据缓存。', faq_q3: '如何追踪扩展包？', faq_a3: '登录后选择扩展包，添加你拥有的卡牌并查看进度。', faq_q4: '我也可以准备宝可梦队伍吗？', faq_a4: '可以。Lunidex 提供图鉴和队伍工具。', meta_title: 'Lunidex — TCG 收藏和宝可梦队伍', meta_description: '追踪你的 TCG 卡牌收藏，探索图鉴并在与账户关联的个人空间中准备宝可梦队伍。', og_title: 'Lunidex — 追踪你的卡牌。探索宝可梦。组建你的队伍。' },
+    lunidex_home: { hero_title: '追踪你的卡牌。探索宝可梦。组建你的队伍。', hero_body: '在一个个人空间中管理你的 TCG 收藏和宝可梦队伍。', cta_start: '开始我的收藏', cta_resume: '继续我的收藏', cta_app: '进入应用', cta_pokedex: '探索宝可梦图鉴', start_without_account: '无需账户即可浏览公开页面。', no_account: '公开页面无需账户。', preview_eyebrow: '收藏预览', preview_title: '一眼查看你的收藏。', preview_body: '选择扩展包，标记你拥有的卡牌，查看进度。', preview_note: '界面预览', preview_owned_eyebrow: '你的收藏', preview_owned_title: '你的收藏正在等你。', preview_owned_count_one: '此预览中的 {{count}} 张卡牌', preview_owned_count_other: '此预览中的 {{count}} 张卡牌', tools_eyebrow: '游戏工具', tools_title: '探索宝可梦。组建你的队伍。', tools_body: '浏览宝可梦图鉴，在同一空间组建队伍。', tools_pokedex_title: '探索宝可梦图鉴', tools_pokedex_body: '浏览宝可梦、属性、能力值和进化。', tools_team_title: '组建队伍', tools_team_body: '组建队伍并检查属性覆盖。', steps_eyebrow: '如何追踪收藏', steps_title: '从扩展包开始，逐步添加卡牌。', steps_one_title: '选择扩展包', steps_one_body: '从你正在收集的扩展包开始。', steps_two_title: '添加卡牌', steps_two_body: '标记你拥有的卡牌。', steps_three_title: '查看进度', steps_three_body: '查看每个扩展包的进度。', trust_title: '无需账户即可浏览公开页面。', trust_body: '公开页面无需账户。账户服务可用时，登录或创建账户即可保存并同步个人空间。', independent: 'Lunidex 是一个独立的非官方项目。', about: '了解 Lunidex', faq_eyebrow: '常见问题', faq_title: '关于 Lunidex 的问题', faq_subtitle: '追踪卡牌和组建队伍所需的信息。', faq_q1: '浏览 Lunidex 需要账户吗？', faq_a1: '不需要。公开页面无需账户即可浏览。保存和同步个人空间需要账户。', faq_q2: '个人数据保存在哪里？', faq_a2: '在会话和 Neon 服务可用时，个人空间会与账户同步。浏览器主要保存设置和公开数据缓存。', faq_q3: '如何追踪扩展包？', faq_a3: '登录后选择扩展包，添加你拥有的卡牌并查看进度。', faq_q4: '我也可以准备宝可梦队伍吗？', faq_a4: '可以。Lunidex 提供图鉴和队伍工具。', meta_title: 'Lunidex: TCG 收藏和宝可梦队伍', meta_description: '追踪你的 TCG 卡牌，探索图鉴，并在账户可用时通过个人空间组建宝可梦队伍。', og_title: 'Lunidex: 追踪你的卡牌。探索宝可梦。组建你的队伍。' },
     lunidex_archive: {
       field_pikachu: '皮卡丘', field_pichu: '皮丘', field_raichu: '雷丘', field_charizard: '喷火龙', field_blastoise: '水箭龟', field_gengar: '耿鬼', field_lucario: '路卡利欧', field_sylveon: '仙子伊布',
       hero_eyebrow: 'Lunidex 索引',
@@ -118,7 +118,7 @@ export default {
       pokedex_eyebrow: '宝可梦图鉴',
       pokedex_title: '每一只宝可梦。一个地方。',
       team_eyebrow: '队伍构建器',
-      team_title: '组建。平衡。对战。',
+      team_title: '组建你的队伍。',
       final_eyebrow: '你的下一章',
       final_title: '你的收藏从这里开始。',
       final_body: '浏览公开页面，需要使用个人空间时再登录。',
@@ -267,7 +267,7 @@ export default {
       features_title: '你可以做什么',
       features_body: '浏览全部 1025 只宝可梦的完整图鉴。使用雷达图并排比较种族值。构建 6 只宝可梦的队伍,具备属性覆盖分析和弱点检测。通过交互式效果矩阵掌握属性克制图。跨所有世代追踪你的 living dex。按卡包管理实体 TCG 收藏的进度。挑战我们的 6 种模式宝可梦问答。包括日语、韩语和中文在内的 8 种语言均可使用。',
       opensource_title: '开源',
-      opensource_body: 'Lunidex 根据 MIT 许可证授权。完整的源代码在 GitHub 上公开 — 你可以阅读、审计、分支,甚至自托管。我们接受社区贡献(新功能、翻译、错误修复),并发布公开路线图。\n\n为什么选择 MIT?因为宝可梦社区给予了我们太多 — 粉丝艺术、竞技分析、ROM 修改、lore 研究 — 回报的最好方式就是保持我们的工作开放。',
+      opensource_body: 'Lunidex 采用 MIT 许可证。完整源代码在 GitHub 上公开。你可以阅读、审查、创建分支或自行托管。欢迎贡献代码和翻译。\n\n我们选择 MIT，是为了让任何人都能查看、修改和改进这个项目。',
       contact_title: '联系我们',
       contact_body: '发现了 bug?有功能请求?在 GitHub 上提出 issue。想贡献代码或翻译?发送 pull request。对于安全披露,请直接给我们发送邮件,而不是公开提出 issue。\n\n我们在 7 天内回复大部分 GitHub issue。我们没有用于一般问题的支持邮箱 — 请使用 GitHub Discussions 进行社区问答。',
       cards: {

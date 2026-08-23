@@ -19,15 +19,16 @@ export default function CaughtFilter({ className }: { className?: string }) {
   ];
 
   return (
-    <div className={cn("flex bg-card/80 border border-border/60 rounded-sm p-0.5 shadow-[var(--shadow-pixel-sm)]", className)}>
+    <div className={cn("pokedex-caught-filter flex bg-card/80 border border-border/60 rounded-sm p-0.5 shadow-[var(--shadow-pixel-sm)]", className)}>
       {modes.map((mode) => (
         <button
           key={mode.id}
           type="button"
           onClick={() => setShowCaughtOnly(mode.id)}
           aria-label={mode.label}
+          aria-pressed={showCaughtOnly === mode.id}
           className={cn(
-            "flex items-center justify-center gap-1.5 px-4 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100",
+            "pokedex-caught-filter__option flex items-center justify-center gap-1.5 px-4 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100",
             showCaughtOnly === mode.id
               ? "bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

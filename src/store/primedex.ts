@@ -5,7 +5,6 @@ import { getLanguageId as getResolvedLanguageId, isSupportedLanguage } from '@/l
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
-import type { GenTheme } from '@/lib/generation-themes';
 import { hasSyncAccess, requestSyncAccess } from './sync-access';
 
 const isIndexedDbAvailable = (): boolean =>
@@ -71,7 +70,11 @@ const storage: StateStorage = {
   },
 };
 
-type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light' | 'dark' | 'system';
+
+export function isTheme(value: unknown): value is Theme {
+  return value === 'light' || value === 'dark' || value === 'system';
+}
 
 interface PrimeDexStore {
   favorites: number[];
@@ -250,12 +253,6 @@ interface PrimeDexStore {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 
-  // Generation theme
-  genTheme: GenTheme;
-  setGenTheme: (theme: GenTheme) => void;
-  autoGenTheme: boolean;
-  setAutoGenTheme: (v: boolean) => void;
-
   // Language
   language: string;
   setLanguage: (lang: string) => void;
@@ -319,8 +316,6 @@ export const SYNCED_KEYS = [
   'soundEnabled',
   'animatedSprites',
   'theme',
-  'genTheme',
-  'autoGenTheme',
   'weeklyQuestClaimedWeek',
 ] as const;
 
@@ -338,7 +333,11 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         replace: false | undefined,
       ): void => {
         const next = typeof update === 'function' ? update(get()) : update;
-        const changesSyncableData = Object.keys(next).some((key) => SYNCED_KEY_SET.has(key));
+        // Theme is a display preference: it must work before authentication
+        // and can still be observed by the authenticated sync bridge.
+        const changesSyncableData = Object.keys(next).some(
+          (key) => SYNCED_KEY_SET.has(key) && key !== 'theme',
+        );
         if (changesSyncableData && !hasSyncAccess()) {
           requestSyncAccess();
           return;
@@ -724,11 +723,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       theme: 'system',
       setTheme: (theme) => set({ theme }),
 
-      genTheme: 'default',
-      setGenTheme: (theme) => set({ genTheme: theme }),
-      autoGenTheme: false,
-      setAutoGenTheme: (v) => set({ autoGenTheme: v }),
-
       language: 'auto',
       setLanguage: (lang) => set({ language: lang }),
       getLanguageId: () => {
@@ -743,11 +737,23 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
     },
     {
       // Keep historical primedex-storage snapshots untouched. This new
-      // namespace stores no synchronizable user data; `language` is a local
-      // device preference (the effective UI language comes from the URL), so
-      // switching it must never require an account.
+      // namespace stores only local display preferences. Synchronizable user
+      // collections remain remote-owned, while theme is also persisted here
+      // so it works before authentication and during remote outages.
       name: ONLINE_STATE_STORAGE_KEY,
       storage: createJSONStorage(() => storage),
+      version: 1,
+      migrate: (persisted) => {
+        const stored = persisted as { language?: unknown; theme?: unknown } | null;
+        // Rewrite the old online-session envelope so retired generation-theme
+        // preferences disappear without touching the legacy collection store.
+        return {
+          ...(typeof stored?.language === 'string' && isSupportedLanguage(stored.language)
+            ? { language: stored.language }
+            : {}),
+          ...(isTheme(stored?.theme) ? { theme: stored.theme } : {}),
+        };
+      },
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHasHydrated(true);
@@ -756,14 +762,17 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           usePrimeDexStore.setState({ _hasHydrated: true });
         }
       },
-      partialize: (state) => ({ language: state.language }),
-      // Everything except the local language preference stays URL/server-owned.
+      partialize: (state) => ({ language: state.language, theme: state.theme }),
       // Ignore any other legacy fields an old snapshot may still carry.
       merge: (persisted, currentState) => {
-        const storedLanguage = (persisted as { language?: unknown } | null)?.language;
-        return typeof storedLanguage === 'string' && isSupportedLanguage(storedLanguage)
-          ? { ...currentState, language: storedLanguage }
-          : currentState;
+        const stored = persisted as { language?: unknown; theme?: unknown } | null;
+        return {
+          ...currentState,
+          ...(typeof stored?.language === 'string' && isSupportedLanguage(stored.language)
+            ? { language: stored.language }
+            : {}),
+          ...(isTheme(stored?.theme) ? { theme: stored.theme } : {}),
+        };
       },
     }
   )

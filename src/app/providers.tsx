@@ -9,7 +9,6 @@ import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
 import { AuthProvider } from '@/lib/neon/AuthProvider';
 import { useNeonSync } from '@/lib/neon/useNeonSync';
 import dynamic from 'next/dynamic';
-import { GenThemeProvider } from '@/components/providers/GenThemeProvider';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
@@ -166,12 +165,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <SyncAuthPrompt />
           <ThemeProvider>
-            <GenThemeProvider>
-              <NeonSyncBridge />
-              {children}
-              <VercelInsights />
-              <DeferredOverlays />
-            </GenThemeProvider>
+            <NeonSyncBridge />
+            {children}
+            <VercelInsights />
+            <DeferredOverlays />
           </ThemeProvider>
         </AuthProvider>
       </MotionConfigBoundary>

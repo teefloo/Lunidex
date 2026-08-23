@@ -20,7 +20,7 @@ export default async function HomePokedexPreview() {
   return (
     <div className="home-pokedex-specimen">
       <div className="home-pokedex-specimen-topline">
-        <span>NO. 0025</span>
+        <span>{t('lunidex_home.tools_pokedex_title')}</span>
         <span>{t('pokedex.title')}</span>
       </div>
 
@@ -44,7 +44,6 @@ export default async function HomePokedexPreview() {
         <div className="home-pokedex-data">
           <div className="home-data-heading">
             <span>{t('detail.stats')}</span>
-            <span aria-hidden="true">25 / 1025</span>
           </div>
           <dl className="home-stat-grid">
             {stats.map((stat) => (

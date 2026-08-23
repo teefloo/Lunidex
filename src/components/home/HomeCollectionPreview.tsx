@@ -10,9 +10,10 @@ import { useHomeFeaturedCards } from './useHomeFeaturedCards';
 interface HomeCollectionPreviewProps {
   locale: string;
   copy: Record<string, string>;
+  showAction?: boolean;
 }
 
-export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewProps) {
+export function HomeCollectionPreview({ locale, copy, showAction = true }: HomeCollectionPreviewProps) {
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
@@ -55,7 +56,9 @@ export function HomeCollectionPreview({ locale, copy }: HomeCollectionPreviewPro
       </p>
       {!isResume && <p className="mt-3 text-xs font-semibold text-foreground/45">{copy.previewNote}</p>}
       {isResume && <p className="mt-3 text-xs font-semibold text-foreground/45">{copy.noAccount}</p>}
-      <HomeCollectionEntry locale={locale} startLabel={copy.startLabel} resumeLabel={copy.resumeLabel} className="mt-5 inline-flex min-h-11 min-w-56 items-center justify-center gap-2 rounded-sm border border-primary/45 bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" />
+      {showAction && (
+        <HomeCollectionEntry locale={locale} startLabel={copy.startLabel} resumeLabel={copy.resumeLabel} className="mt-5 inline-flex min-h-11 min-w-56 items-center justify-center gap-2 rounded-sm border border-primary/45 bg-primary/10 px-4 text-sm font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" />
+      )}
     </aside>
   );
 }

@@ -23,8 +23,8 @@ export default function RecentlyViewed() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 sm:px-2 mt-12">
-      <div className="flex items-end justify-between mb-4 gap-4">
+    <section className="pokedex-recent-section mx-auto w-full max-w-6xl px-4 sm:px-2 mt-12">
+      <div className="pokedex-recent-heading flex items-end justify-between mb-4 gap-4">
         <h2 className="font-display text-xl md:text-2xl font-extrabold tracking-[-0.01em] text-foreground">
           {t('recently_viewed.title', { defaultValue: 'Recently viewed' })}
         </h2>
@@ -42,7 +42,7 @@ export default function RecentlyViewed() {
         {history.map((p, idx) => (
           <Link key={`${p.id}-${idx}`} href={localeHref(`/pokemon/${p.name}`)} className="group block min-w-0">
             <div
-              className="codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 w-full min-w-0 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
+              className="pokedex-recent-card codex-frame p-2.5 flex flex-col items-center text-center gap-1.5 w-full min-w-0 hover:border-primary/40 transition-all hover:-translate-y-1 duration-200"
             >
               <div className="relative w-10 h-10">
                 <Image

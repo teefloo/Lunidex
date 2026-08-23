@@ -64,7 +64,6 @@ export default function HomeHeaderMobileMenu({
           title={menuLabel}
           className="field-mobile-menu-trigger"
         >
-          <span aria-hidden="true">01</span>
           <span>{menuLabel}</span>
         </SheetTrigger>
         <SheetContent

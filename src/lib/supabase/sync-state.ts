@@ -3,6 +3,8 @@ import { usePrimeDexStore, SYNCED_KEYS, type PersistedState, type SyncedKey } fr
 export const SYNC_METADATA_KEY = '__sync';
 export const SYNC_METADATA_VERSION = 1;
 
+const REMOVED_SYNC_KEYS = new Set(['genTheme', 'autoGenTheme']);
+
 const COLLECTION_KEYS = [
   'favorites',
   'caughtPokemon',
@@ -308,12 +310,23 @@ export function pickSyncState(): PersistedState {
 }
 
 export function getInitialSyncState(): PersistedState {
-  const state = usePrimeDexStore.getInitialState();
+  // Keep the local display preference when the unauthenticated sync bridge
+  // resets remote-owned state. An authenticated snapshot may still replace it
+  // when it contains an explicit theme value.
+  const state = {
+    ...usePrimeDexStore.getInitialState(),
+    theme: usePrimeDexStore.getState().theme,
+  };
   return Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState;
 }
 
 export function applySyncState(snapshot: Partial<PersistedState>): void {
   usePrimeDexStore.setState(snapshot);
+}
+
+export function hasRemovedSyncKeys(snapshot: unknown): boolean {
+  if (typeof snapshot !== 'object' || snapshot === null || Array.isArray(snapshot)) return false;
+  return Object.keys(snapshot).some((key) => REMOVED_SYNC_KEYS.has(key));
 }
 
 /** Preserves unknown client fields while writing the current metadata version. */
@@ -322,6 +335,8 @@ export function buildSyncPayload(remote: unknown, snapshot: PersistedState, meta
     return { ...snapshot, [SYNC_METADATA_KEY]: metadata };
   }
   const knownKeys = new Set<string>([...SYNCED_KEYS, SYNC_METADATA_KEY]);
-  const unknownEntries = Object.entries(remote).filter(([key]) => !knownKeys.has(key));
+  const unknownEntries = Object.entries(remote).filter(
+    ([key]) => !knownKeys.has(key) && !REMOVED_SYNC_KEYS.has(key),
+  );
   return { ...Object.fromEntries(unknownEntries), ...snapshot, [SYNC_METADATA_KEY]: metadata };
 }

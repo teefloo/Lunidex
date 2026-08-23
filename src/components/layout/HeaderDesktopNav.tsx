@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
@@ -13,9 +14,14 @@ export function HeaderDesktopNav() {
   const mounted = useMounted();
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
+  const pathname = usePathname();
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const toolsRef = useRef<HTMLDivElement>(null);
+  const isToolsActive = SECONDARY_NAV_ITEMS.some((item) => {
+    const href = localizedHref(item.path);
+    return pathname === href || pathname.startsWith(`${href}/`);
+  });
 
   const label = (key: string, fallback: string) => {
     if (!mounted) return fallback;
@@ -59,8 +65,10 @@ export function HeaderDesktopNav() {
           type="button"
           aria-expanded={isToolsOpen}
           aria-haspopup="menu"
+          aria-current={isToolsActive ? 'page' : undefined}
+          data-active={isToolsActive ? 'true' : undefined}
           onClick={() => setIsToolsOpen((open) => !open)}
-          className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="group inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-all duration-100 hover:border-border/60 hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[active=true]:border-primary/25 data-[active=true]:bg-primary/10 data-[active=true]:text-primary"
         >
           {label('nav.tools', 'Tools')}
           <ChevronDown className={`h-2.5 w-2.5 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
@@ -72,8 +80,10 @@ export function HeaderDesktopNav() {
                 key={item.path}
                 href={localizedHref(item.path)}
                 role="menuitem"
+                aria-current={pathname === localizedHref(item.path) ? 'page' : undefined}
+                data-active={pathname === localizedHref(item.path) ? 'true' : undefined}
                 onClick={() => setIsToolsOpen(false)}
-                className="relative flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground outline-hidden transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground"
+                className="relative flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground outline-hidden transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground data-[active=true]:bg-primary/10 data-[active=true]:text-primary"
               >
                 <item.icon className="h-3.5 w-3.5 shrink-0" /> {label(item.labelKey, item.fallback)}
               </Link>

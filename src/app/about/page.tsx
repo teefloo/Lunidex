@@ -161,10 +161,10 @@ export default async function AboutPage() {
               </a>
             </aside>
 
-            <footer className="mt-12 text-center text-sm text-foreground/50">
+            <div className="route-disclaimer mt-12 border-t border-border/60 pt-6 text-center text-sm text-muted-foreground">
               <p>{SITE_NAME} — {SITE_TAGLINE}</p>
               <p className="mt-1">{t('about.footer_license')}</p>
-            </footer>
+            </div>
           </article>
         </main>
       </div>

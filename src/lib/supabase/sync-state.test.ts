@@ -3,6 +3,7 @@ import {
   advanceSyncMetadata,
   buildSyncPayload,
   getInitialSyncState,
+  hasRemovedSyncKeys,
   normalizeSyncMetadata,
   reconcileRemoteState,
   reconcileSyncState,
@@ -23,6 +24,14 @@ describe('synchronisation locale déterministe', () => {
     const result = reconcileRemoteState(remote, undefined, DEVICE_A);
 
     expect(result.state.favorites).toEqual([6]);
+  });
+
+  it('synchronise la préférence white/dark lorsqu’un snapshot distant la contient', () => {
+    const initial = getInitialSyncState();
+    const remote = { ...initial, theme: 'dark' as const };
+    const result = reconcileRemoteState(remote, undefined, DEVICE_A);
+
+    expect(result.state.theme).toBe('dark');
   });
 
   it('conserve un ajout effectué hors ligne lors de la reconnexion', () => {
@@ -97,6 +106,23 @@ describe('synchronisation locale déterministe', () => {
     expect(payload.tcgDecks).toEqual([{ id: 'deck' }]);
     expect(payload[SYNC_METADATA_KEY].version).toBe(1);
     expect(buildSyncPayload(null, snapshot)).toMatchObject(snapshot);
+  });
+
+  it('supprime les préférences de génération retirées sans toucher aux champs inconnus', () => {
+    const snapshot = pickInitial();
+    const remote = {
+      ...snapshot,
+      genTheme: 'gen1',
+      autoGenTheme: true,
+      futurePreference: 'keep',
+    };
+
+    expect(hasRemovedSyncKeys(remote)).toBe(true);
+
+    const payload = buildSyncPayload(remote, snapshot) as Record<string, unknown>;
+    expect(payload).not.toHaveProperty('genTheme');
+    expect(payload).not.toHaveProperty('autoGenTheme');
+    expect(payload.futurePreference).toBe('keep');
   });
 });
 

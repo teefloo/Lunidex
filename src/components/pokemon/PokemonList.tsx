@@ -418,7 +418,7 @@ export default function PokemonList() {
 
   if (isDataLoading) {
     return (
-      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
+      <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
         {Array.from({ length: 10 }).map((_, i) => <PokemonCardSkeleton key={i} />)}
       </div>
     );
@@ -426,7 +426,7 @@ export default function PokemonList() {
 
   if (detailedError) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
+      <div className="pokedex-empty-state flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-red-500/40" />
         <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.error_loading')}</h2>
         <p className="text-sm text-muted-foreground max-w-md">{(detailedError as Error).message || t('list.error_desc')}</p>
@@ -439,7 +439,7 @@ export default function PokemonList() {
 
   if (displayedPokemon.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
+      <div className="pokedex-empty-state flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-foreground/20" />
         <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.no_results')}</h2>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
@@ -450,8 +450,8 @@ export default function PokemonList() {
   }
 
   return (
-    <div className="space-y-6 pb-20">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
+    <div className="pokedex-list-shell space-y-6 pb-20">
+      <div className="pokedex-list-heading mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6">
         <h2 className="sr-only">
           {t('list.title', { defaultValue: 'Specimen Catalogue' })}
         </h2>
@@ -460,7 +460,7 @@ export default function PokemonList() {
 
       {!isBasicMode && (
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-2">
-          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
+          <div className="pokedex-result-status flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 codex-frame" role="status" aria-live="polite">
             <div className="flex items-center gap-3">
               <span className="cat-no text-[0.6rem] text-muted-foreground">{t('list.results')}</span>
               <Badge variant="secondary" className="bg-primary/10 text-foreground font-mono font-semibold tracking-wider border-none text-[11px]">
@@ -480,7 +480,7 @@ export default function PokemonList() {
       )}
 
       <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
-        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
+        <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
           {displayedPokemon.map((p, idx) => (
             <div key={p.id} className="pokemon-grid-item">
               <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />
@@ -490,7 +490,7 @@ export default function PokemonList() {
       </div>
 
       {(isBasicMode || hasMoreFiltered) && (
-        <div className="flex justify-center p-8">
+        <div className="pokedex-load-more flex justify-center p-8">
           <Button
             variant="outline"
             onClick={handleLoadMore}

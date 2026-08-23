@@ -14,13 +14,13 @@ export default function TypeFilter() {
   const { t } = useTranslation();
 
   return (
-    <div role="region" aria-label={t('filters.types')} className="scroll-snap-x w-full overflow-x-auto pb-2 pt-2 scrollbar-hide">
+    <div role="region" aria-label={t('filters.types')} className="pokedex-filter-rail pokedex-type-filter scroll-snap-x w-full overflow-x-auto pb-2 pt-2 scrollbar-hide">
       <div className="flex flex-nowrap lg:flex-wrap gap-2 justify-start lg:justify-center px-4 min-w-max lg:min-w-0 mx-auto max-w-7xl">
         {selectedTypes.length > 0 && (
           <button
             type="button"
             onClick={() => setSelectedTypes([])}
-            className="flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-destructive bg-destructive/10 border border-destructive/30 rounded-sm hover:bg-destructive/20 transition-all duration-100 whitespace-nowrap overflow-hidden min-h-[44px] shadow-[var(--shadow-pixel-sm)]"
+            className="pokedex-filter-clear flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-destructive bg-destructive/10 border border-destructive/30 rounded-sm hover:bg-destructive/20 transition-all duration-100 whitespace-nowrap overflow-hidden min-h-[44px] shadow-[var(--shadow-pixel-sm)]"
             aria-label={t('filters.clear_types', { count: selectedTypes.length })}
           >
             <X className="w-3.5 h-3.5" />
@@ -40,7 +40,7 @@ export default function TypeFilter() {
               onClick={() => toggleType(type)}
               aria-label={label}
               className={cn(
-                "scroll-snap-align-start relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+                "pokedex-filter-chip scroll-snap-align-start relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
                   ? "text-primary-foreground border-transparent"
                    : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"

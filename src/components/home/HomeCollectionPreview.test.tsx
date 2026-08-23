@@ -62,5 +62,30 @@ describe('HomeCollectionPreview', () => {
       'wotc-presentation-009-165r',
       'base1-4',
     ]);
+    expect(screen.getByRole('link', { name: 'Start' })).toBeInTheDocument();
+  });
+
+  it('can hide its collection action when embedded in the homepage bento', () => {
+    render(
+      <HomeCollectionPreview
+        locale="fr"
+        showAction={false}
+        copy={{
+          startLabel: 'Start',
+          resumeLabel: 'Resume',
+          previewEyebrow: 'Collection preview',
+          previewTitle: 'Your collection',
+          previewBody: 'Add cards',
+          previewNote: 'No account',
+          previewOwnedEyebrow: 'Owned',
+          previewOwnedTitle: 'Your cards',
+          previewOwnedCountOne: '{{count}} card',
+          previewOwnedCountOther: '{{count}} cards',
+          noAccount: 'No account needed',
+        }}
+      />,
+    );
+
+    expect(screen.queryByRole('link', { name: 'Start' })).not.toBeInTheDocument();
   });
 });

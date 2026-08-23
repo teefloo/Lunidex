@@ -65,7 +65,7 @@ const CHIP_ACTIVE =
 
 export function PokemonCardSkeleton() {
   return (
-    <div className="py-1 px-1">
+    <div className="pokedex-card-skeleton py-1 px-1">
       <div className="relative h-[18rem] p-4 flex flex-col animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
@@ -239,10 +239,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const mainType = types[0]?.type?.name || 'normal';
   const color = TYPE_COLORS[mainType] || '#A8A77A';
 
-  const cardBackground = [
-    `linear-gradient(165deg, ${hexToRgba(color, 0.07)} 0%, transparent 35%, ${hexToRgba(color, 0.05)} 100%)`,
-  ].join(', ');
-  const cardShadow = `4px 4px 0 ${hexToRgba(color, 0.45)}`;
   const isLegendary = pokemon.is_legendary;
   const isMythical = pokemon.is_mythical;
 
@@ -253,30 +249,27 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   };
 
   return (
-    <div className="group/specimen relative h-full py-1 px-1 sm:px-2">
+    <div className="pokedex-card-shell group/specimen relative h-full py-1 px-1 sm:px-2">
       <article
-        className="relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
+        className="pokedex-card relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
           '--type-color': color,
-          backgroundImage: cardBackground,
-          borderColor: hexToRgba(color, 0.32),
-          boxShadow: cardShadow,
         } as CSSProperties}
       >
         <Link
           href={localeHref(`/pokemon/${name}`)}
           aria-label={displayName}
-          className="absolute inset-0 z-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="pokedex-card-link absolute inset-0 z-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           onMouseEnter={prefetchDetails}
         />
         <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-60 transition-opacity duration-500 group-hover/specimen:opacity-80"
+          className="pokedex-card-glow pointer-events-none absolute inset-0 z-0 opacity-60 transition-opacity duration-500 group-hover/specimen:opacity-80"
           style={{
             background: `radial-gradient(circle at 50% 30%, ${hexToRgba(color, 0.1)} 0%, transparent 65%)`,
           }}
         />
 
-        <div className="pointer-events-none relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
+        <div className="pokedex-card-actions pointer-events-none relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5">
           <div className="flex flex-col items-start gap-0.5">
             <span className="cat-no text-[0.55rem] text-muted-foreground sm:text-[0.6rem]">Cat. No.</span>
             <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
@@ -335,9 +328,9 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
           </div>
         </div>
 
-        <div className="pointer-events-none relative mx-auto h-28 w-28 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
+        <div className="pokedex-card-art pointer-events-none relative mx-auto h-28 w-28 aspect-square transition-transform duration-500 group-hover/specimen:scale-105 sm:h-24 sm:w-24">
           <div
-            className="absolute inset-1 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
+            className="pokedex-card-art__halo absolute inset-1 rounded-full opacity-0 transition-opacity duration-500 group-hover/specimen:opacity-100"
             style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
             aria-hidden="true"
           />
@@ -349,20 +342,20 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             fill
             unoptimized
             sizes="(max-width: 640px) 112px, 96px"
-            className="relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
+            className="pokedex-card-art__image relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
             priority={index < 4}
             fetchPriority={index === 0 ? 'high' : undefined}
           />
         </div>
 
-        <div className="pointer-events-none relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
-          <p className="latin-name font-display text-[11px] italic text-muted-foreground sm:text-[11px]">
+        <div className="pokedex-card-copy pointer-events-none relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
+          <p className="pokedex-card-native-name latin-name font-display text-[11px] italic text-muted-foreground sm:text-[11px]">
             {pokemonName.replace(/-/g, ' ')}
           </p>
-          <h3 className="truncate w-full text-center font-display text-base font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
+          <h3 className="pokedex-card-name truncate w-full text-center font-display text-base font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
             {displayName}
           </h3>
-          <div className="mt-1 flex min-h-[20px] flex-wrap items-center justify-center gap-1 sm:gap-1.5">
+          <div className="pokedex-card-types mt-1 flex min-h-[20px] flex-wrap items-center justify-center gap-1 sm:gap-1.5">
             {types.map((typeItem: PokemonCardType, i: number) => {
               const typeName = typeItem?.type?.name;
               if (!typeName) return null;
@@ -400,7 +393,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         type="button"
         onClick={handleToggleCaught}
         className={cn(
-          'absolute bottom-2 right-2.5 z-20 flex h-11 w-11 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-2 sm:right-3',
+          'pokedex-card-caught absolute bottom-2 right-2.5 z-20 flex h-11 w-11 items-center justify-center rounded-sm border transition-all duration-100 outline-none hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1 focus-visible:ring-offset-background sm:bottom-2 sm:right-3',
           caught
             ? 'border-primary/55 bg-primary text-primary-foreground shadow-[2px_2px_0_color-mix(in_oklab,var(--primary)_40%,transparent)]'
             : 'border-foreground/20 bg-background/65 text-muted-foreground hover:border-foreground/40 hover:text-foreground'

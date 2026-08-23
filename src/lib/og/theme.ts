@@ -2,26 +2,26 @@
  * Soft Pixel design tokens resolved to plain sRGB hex for use inside
  * `next/og` (satori). Satori does not understand the OKLCH custom properties
  * declared in `src/app/globals.css`, so the OG surfaces mirror the same palette
- * with hard-coded equivalents: warm dark background, terracotta primary, blue
- * accent, sharp corners, thick borders and offset "pixel" shadows.
+ * with hard-coded equivalents: cobalt ink, lavender primary, blue accent,
+ * sharp corners, thick borders and offset "pixel" shadows.
  */
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
 export const OG_THEME = {
-  background: '#211A17',
-  backgroundAccent: '#2A211C',
-  surface: '#2E2521',
-  surfaceMuted: '#241D19',
-  border: '#5A4A40',
-  borderStrong: '#7A6557',
-  shadow: '#100B09',
-  primary: '#E8916B',
-  primarySoft: '#F2B79B',
-  accent: '#A8C5E0',
-  text: '#F3ECE4',
-  textMuted: '#C3B3A6',
-  textDim: '#8C7C70',
+  background: '#07144F',
+  backgroundAccent: '#0B1D5B',
+  surface: '#123B86',
+  surfaceMuted: '#0D2D75',
+  border: '#526EB8',
+  borderStrong: '#8DB4FF',
+  shadow: '#020726',
+  primary: '#C9B8FF',
+  primarySoft: '#DED4FF',
+  accent: '#8DB4FF',
+  text: '#FFF8FC',
+  textMuted: '#A9B9E8',
+  textDim: '#7F96D1',
 } as const;
 
 /** Canonical Pokémon type colours (sRGB) — recognisable in social previews. */

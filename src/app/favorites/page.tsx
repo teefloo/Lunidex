@@ -80,19 +80,6 @@ export default function FavoritesPage() {
           </div>
         )}
       </main>
-
-      <footer className="relative z-10 mt-24 border-t border-border/40">
-        <div className="py-16 text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/20" />
-            <span className="text-lg font-black gradient-text-primary tracking-tighter">Lunidex</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/20" />
-          </div>
-          <p className="text-[11px] font-semibold text-foreground/25 tracking-wider">
-            {t('home.footer_copyright', { year: new Date().getFullYear() })}
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

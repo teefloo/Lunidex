@@ -53,6 +53,18 @@ describe('web online-only user state', () => {
     unsubscribe();
   });
 
+  it('applies theme changes locally without requiring sync access', () => {
+    const onRequired = vi.fn();
+    const unsubscribe = onSyncAccessRequired(onRequired);
+
+    setSyncAccessStatus('unauthenticated');
+    usePrimeDexStore.getState().setTheme('dark');
+
+    expect(usePrimeDexStore.getState().theme).toBe('dark');
+    expect(onRequired).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
   it('can retry a temporarily unavailable remote session', () => {
     const onRetry = vi.fn();
     const unsubscribe = onSyncAccessRetry(onRetry);
@@ -75,30 +87,36 @@ describe('web online-only user state', () => {
     unsubscribe();
   });
 
-  it('persists only the local language preference in the persistence snapshot', () => {
-    // `language` is a local device preference (the effective UI language comes
-    // from the URL), so it is the only field allowed into local persistence.
+  it('persists local display preferences in the persistence snapshot', () => {
     expect(usePrimeDexStore.persist.getOptions().partialize?.(usePrimeDexStore.getState())).toEqual({
       language: initialState.language,
+      theme: initialState.theme,
     });
   });
 
-  it('no longer treats language as a remotely synced key', () => {
+  it('keeps the local theme while preserving the URL-owned language preference', () => {
     expect(usePrimeDexStore.persist.getOptions().partialize?.({ ...initialState, language: 'fr' })).toEqual({
       language: 'fr',
+      theme: initialState.theme,
     });
   });
 
-  it('restores the persisted language preference on rehydration and drops legacy fields', () => {
+  it('restores valid local preferences on rehydration and drops legacy fields', () => {
     const currentState = usePrimeDexStore.getInitialState();
     const merge = usePrimeDexStore.persist.getOptions().merge!;
+    const migrate = usePrimeDexStore.persist.getOptions().migrate!;
 
-    expect(merge({ language: 'fr', favorites: [25] }, currentState)).toEqual({
+    expect(merge({ language: 'fr', theme: 'dark', favorites: [25], genTheme: 'gen1' }, currentState)).toEqual({
       ...currentState,
       language: 'fr',
+      theme: 'dark',
     });
-    expect(merge({ language: 'auto', favorites: [25] }, currentState)).toEqual(currentState);
+    expect(merge({ language: 'auto', theme: 'invalid', favorites: [25] }, currentState)).toEqual(currentState);
     expect(merge(null, currentState)).toEqual(currentState);
     expect(merge(undefined, currentState)).toEqual(currentState);
+    expect(migrate({ language: 'fr', theme: 'dark', genTheme: 'gen1', autoGenTheme: true }, 0)).toEqual({
+      language: 'fr',
+      theme: 'dark',
+    });
   });
 });

@@ -18,9 +18,11 @@ export default function FavoriteToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+      data-active={showFavoritesOnly}
       aria-label={favoritesLabel}
+      aria-pressed={showFavoritesOnly}
       className={cn(
-        "flex items-center justify-center gap-2 px-5 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+        "pokedex-action-button flex items-center justify-center gap-2 px-5 min-h-[44px] rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
         className,
         showFavoritesOnly
           ? "text-primary-foreground border-[color-mix(in_oklab,var(--action-favorite)_55%,transparent)] bg-[var(--action-favorite)] shadow-[2px_2px_0_color-mix(in_oklab,var(--action-favorite)_45%,transparent)]"

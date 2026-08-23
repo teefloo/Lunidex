@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { CSSProperties } from 'react';
 import { Sparkles, BrainCircuit } from 'lucide-react';
 import { getServerT, getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
 import { getPokemonDetailCached, getPokemonSpeciesCached, getLocalizedPokemonDataCached } from '@/lib/api/server-cache';
@@ -51,14 +52,14 @@ export default async function PokemonOfTheDay() {
   return (
     <section className="mx-auto w-full max-w-6xl px-5 md:px-8 mb-8">
       <div
-        className="relative overflow-hidden rounded-sm border border-border/70 bg-card/40 p-5 md:p-6 flex items-center gap-5 md:gap-8"
-        style={{ background: `linear-gradient(120deg, color-mix(in oklab, ${color} 10%, transparent), transparent 60%)` }}
+        className="pokedex-daily-card relative overflow-hidden rounded-sm border border-border/70 bg-card/40 p-5 md:p-6 flex items-center gap-5 md:gap-8"
+        style={{ '--pokemon-type': color } as CSSProperties}
       >
-        <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: color }} />
+        <div className="pokedex-daily-card__line absolute inset-x-0 top-0 h-1" />
 
         <Link
           href={localeHref(`/pokemon/${pokemon.name}`, lang)}
-          className="relative shrink-0 h-24 w-24 md:h-32 md:w-32 group"
+          className="pokedex-daily-card__art relative shrink-0 h-24 w-24 md:h-32 md:w-32 group"
         >
           {artwork && (
             <Image
@@ -73,7 +74,7 @@ export default async function PokemonOfTheDay() {
           )}
         </Link>
 
-        <div className="min-w-0 flex-1">
+        <div className="pokedex-daily-card__content min-w-0 flex-1">
           <p className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-primary">
             <Sparkles className="h-3 w-3" />
             {t('home.pokemon_of_the_day', { defaultValue: 'Pokémon of the Day' })}

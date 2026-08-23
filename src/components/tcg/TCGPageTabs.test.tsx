@@ -14,6 +14,7 @@ describe('TCGPageTabs mobile layout', () => {
 
     expect(tabs).toHaveLength(5);
     expect(tabs.every((tab) => tab.className.includes('min-h-11'))).toBe(true);
+    expect(tabs[0]).toHaveClass('rounded-l-[0.95rem]');
     await waitFor(() => {
       expect(tabs.map((tab) => tab.getAttribute('href'))).toEqual([
         '/fr/tcg',

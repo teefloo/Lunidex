@@ -67,10 +67,10 @@ export default function SearchBar() {
 
   return (
     <div
-      className="relative my-4 md:my-6 flex w-full items-center group"
+      className="pokedex-searchbar relative flex w-full items-center group"
     >
       <div className="relative w-full">
-        <div className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 transition-colors duration-300">
+        <div className="pokedex-searchbar__icon pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 transition-colors duration-300">
           <Search className={`w-5 h-5 transition-colors duration-300 ${isFocused ? 'text-foreground' : 'text-muted-foreground'}`} />
         </div>
 
@@ -85,7 +85,7 @@ export default function SearchBar() {
             setLocalSearch(e.target.value);
             prefetchIndex();
           }}
-          className="glass-control w-full py-6 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-muted-foreground focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/30 md:text-lg"
+          className="pokedex-search-input glass-control w-full py-6 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-muted-foreground focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/30 md:text-lg"
           aria-label={searchAriaLabel}
           id="pokemon-search"
         />
@@ -98,7 +98,7 @@ export default function SearchBar() {
             setLocalSearch('');
             setSearchTerm('');
           }}
-          className="absolute right-6 z-10 rounded-sm p-3 text-muted-foreground transition-all duration-100 hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="pokedex-search-clear absolute right-6 z-10 rounded-sm p-3 text-muted-foreground transition-all duration-100 hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={clearLabel}
         >
           <X className="w-5 h-5" />

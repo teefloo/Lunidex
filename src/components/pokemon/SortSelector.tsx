@@ -36,15 +36,15 @@ export default function SortSelector() {
     ?? (mounted ? t('sort.placeholder') : 'Select sort');
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="pokedex-sort flex items-center gap-3">
       <span id="sort-label" className="text-[11px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">
         {mounted ? t('sort.label') : 'Sort by'}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
-        <SelectTrigger aria-labelledby="sort-label" className="touch-target w-full rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider focus:ring-primary/20 hover:border-border transition-[border-color,box-shadow] shadow-[var(--shadow-pixel-sm)] sm:w-[200px]">
+      <SelectTrigger aria-labelledby="sort-label" className="pokedex-sort__trigger touch-target w-full rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider focus:ring-primary/20 hover:border-border transition-[border-color,box-shadow] shadow-[var(--shadow-pixel-sm)] sm:w-[200px]">
           <SelectValue>{currentSortLabel}</SelectValue>
         </SelectTrigger>
-        <SelectContent className="p-1 border border-border/60">
+        <SelectContent className="pokedex-sort-content p-1 border border-border/60">
           {options.map((opt) => (
             <SelectItem
               key={opt.value}

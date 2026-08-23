@@ -48,9 +48,9 @@ export const DISCORD_URL = 'https://discord.gg/primedex';
 export const SOCIAL_PROFILES = [GITHUB_REPO_URL, TWITTER_URL, DISCORD_URL];
 
 
-export const PRIMARY_COLOR = '#E8916B';
-export const BACKGROUND_COLOR = '#211A17';
-export const ACCENT_COLOR = '#A8C5E0';
+export const PRIMARY_COLOR = '#5243B5';
+export const BACKGROUND_COLOR = '#07144F';
+export const ACCENT_COLOR = '#8DB4FF';
 
 
 export const FEATURE_LIST = [

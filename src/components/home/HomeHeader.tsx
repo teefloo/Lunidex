@@ -6,6 +6,7 @@ import LunidexLogo from '@/components/ui/LunidexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
 import { HomeLanguageSelect } from './HomeLanguageSelect';
+import HomeThemeToggle from './HomeThemeToggle';
 
 interface HomeHeaderProps {
   initialSignedIn?: boolean;
@@ -26,7 +27,7 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
       <div className="field-header-inner">
         <Link
           href={localeHref('/', language)}
-          aria-label={`Lunidex — ${t('header.home_aria')}`}
+          aria-label={`Lunidex: ${t('header.home_aria')}`}
           className="field-brand"
           prefetch={false}
         >
@@ -48,6 +49,7 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
         </nav>
 
         <HomeLanguageSelect className="field-header-language" />
+        <HomeThemeToggle />
 
         <HomeCollectionEntry
           locale={language}

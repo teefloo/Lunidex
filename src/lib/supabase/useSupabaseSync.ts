@@ -13,6 +13,7 @@ import {
   buildSyncPayload,
   extractSyncMetadata,
   getInitialSyncState,
+  hasRemovedSyncKeys,
   normalizeSyncMetadata,
   pickSyncState,
   reconcileRemoteState,
@@ -330,6 +331,20 @@ export function useNeonSync(): void {
         previousSnapshotRef.current = next;
         schedulePush();
       });
+
+      // Remove preferences from the retired generation-theme feature without
+      // touching any collection or account data. A conflict simply defers the
+      // cleanup to the next normal sync write.
+      if (hasRemovedSyncKeys(remoteSnapshot)) {
+        const cleanupPayload = buildSyncPayload(remoteSnapshot, reconciled.state, reconciled.metadata);
+        void saveRemoteState(cleanupPayload, remoteRow.updatedAt).then((result) => {
+          if (!result.saved || !result.remote || cancelled) return;
+          remoteSnapshotRef.current = result.remote.data;
+          remoteUpdatedAtRef.current = result.remote.updatedAt;
+        }).catch(() => {
+          // The authenticated session remains usable; cleanup is best effort.
+        });
+      }
     };
 
     if (window.navigator.onLine) void init();

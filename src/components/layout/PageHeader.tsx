@@ -14,6 +14,7 @@ interface PageHeaderProps {
   iconColor?: string;
   gradientFrom?: string;
   centered?: boolean;
+  variant?: 'hero' | 'standard' | 'compact';
 }
 
 export default function PageHeader({
@@ -29,18 +30,19 @@ export default function PageHeader({
   iconColor = 'text-foreground',
   gradientFrom = 'from-primary/20',
   centered = false,
+  variant = 'standard',
 }: PageHeaderProps) {
   const resolvedEyebrow = eyebrow === undefined ? 'Lunidex' : eyebrow;
   const resolvedDescription = description ?? subtitle;
 
   return (
-    <section className={cn('page-shell pt-14 mb-10', centered && 'text-center', className)}>
-      <div className="page-surface relative overflow-hidden px-5 py-6 md:px-8 md:py-7">
+    <section className={cn('page-shell page-header pt-14 mb-10', `page-header-${variant}`, centered && 'text-center', className)}>
+      <div className="page-surface page-header-surface relative overflow-hidden px-5 py-6 md:px-8 md:py-7">
         <div className={cn('pointer-events-none absolute inset-x-0 top-0 h-28 opacity-55 bg-gradient-to-b to-transparent', gradientFrom)} />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
         <div className={cn('flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start md:items-center', centered && 'sm:justify-center')}>
           <div className={cn('flex min-w-0 items-center gap-4', centered && 'justify-center')}>
-            <div className={cn('flex h-14 w-14 flex-none items-center justify-center rounded-sm border shadow-[var(--shadow-pixel-sm)]', iconBgColor, iconBorderColor)}>
+            <div className={cn('page-header-icon flex h-14 w-14 flex-none items-center justify-center rounded-sm border shadow-[var(--shadow-pixel-sm)]', iconBgColor, iconBorderColor)}>
               <Icon aria-hidden="true" className={cn('h-6 w-6', iconColor)} />
             </div>
             <div className={cn('min-w-0 flex-1 space-y-2', centered && 'max-w-3xl')}>

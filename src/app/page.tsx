@@ -8,8 +8,11 @@ import { buildLunidexHomeFaqJsonLd } from '@/lib/lunidex-home-content';
 import { serializeJsonLd } from '@/lib/json-ld';
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#F4EAD5',
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F7F9FF' },
+    { media: '(prefers-color-scheme: dark)', color: '#07144F' },
+  ],
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',

@@ -40,8 +40,8 @@ const bodyFont = Nunito({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F4EAD5' },
-    { media: '(prefers-color-scheme: dark)', color: '#211A17' },
+    { media: '(prefers-color-scheme: light)', color: '#F2F6FF' },
+    { media: '(prefers-color-scheme: dark)', color: '#07144F' },
   ],
   width: 'device-width',
   initialScale: 1,
