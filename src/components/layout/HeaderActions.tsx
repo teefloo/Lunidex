@@ -2,15 +2,24 @@
 
 import { useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { Sun, Moon, Heart, Search, Settings, ChevronDown } from 'lucide-react';
+import { Sun, Moon, Heart, Search, Settings, ChevronDown, Globe2 } from 'lucide-react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { cn } from '@/lib/utils';
 import AccountMenu from '@/components/auth/AccountMenu';
 
-export function HeaderActions() {
+type HeaderActionsPlacement = 'toolbar' | 'sheet';
+
+interface HeaderActionsProps {
+  placement?: HeaderActionsPlacement;
+  onInteraction?: () => void;
+  onRequestAuth?: () => void;
+}
+
+export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestAuth }: HeaderActionsProps = {}) {
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const toggleSettings = usePrimeDexStore(s => s.toggleSettings);
@@ -19,11 +28,15 @@ export function HeaderActions() {
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
   const resolvedLang = useClientLanguage();
-  const localizedHref = (path: string) => `/${resolvedLang}${path}`;
+  const isSheet = placement === 'sheet';
 
   const isMac = mounted && typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac');
 
-  const label = (key: string, fallback: string) => mounted ? (t(key) || fallback) : fallback;
+  const label = (key: string, fallback: string) => {
+    if (!mounted) return fallback;
+    const translated = t(key, { defaultValue: fallback });
+    return translated === key ? fallback : translated;
+  };
 
   const isDark = mounted && (
     theme === 'dark' ||
@@ -35,15 +48,8 @@ export function HeaderActions() {
   const handleLanguageChange = useCallback((nextLanguage: string | null) => {
     if (!nextLanguage || nextLanguage === language) return;
     changeLanguage(nextLanguage);
-  }, [changeLanguage, language]);
-
-  const languageLabel = mounted ? (language === 'auto' ? t('settings.auto') : language.toUpperCase()) : 'EN';
-  const themeLabel = mounted
-    ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
-    : 'System';
-  const searchPlaceholder = label('search.placeholder', 'Search Pokémon (name or id)...');
-  const favoritesLabel = label('nav.favorites', 'Favorites');
-  const settingsLabel = label('header.open_settings', 'Open Settings');
+    onInteraction?.();
+  }, [changeLanguage, language, onInteraction]);
 
   const languageOptions = useMemo(() => [
     { code: 'auto', label: t('languages.auto'), flag: '🌐' },
@@ -57,81 +63,116 @@ export function HeaderActions() {
     { code: 'zh',  label: t('languages.zh'),  flag: '🇨🇳' },
   ] as const, [t]);
 
+  const searchLabel = label('command_palette.title', 'Search');
+  const searchPlaceholder = label('search.placeholder', 'Search Pokémon (name or id)…').replace(/\.\.\./g, '…');
+  const favoritesLabel = label('nav.favorites', 'Favorites');
+  const settingsLabel = label('header.open_settings', 'Open Settings');
+  const languageLabel = label('settings.language', 'Language');
+  const themeLabel = mounted
+    ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
+    : 'System';
+  const languageCode = mounted ? (language === 'auto' ? 'AUTO' : language.toUpperCase()) : 'EN';
+  const selectedLanguage = languageOptions.find((option) => option.code === language)?.label ?? languageCode;
+  const baseActionClass = isSheet ? 'site-header-sheet-action' : 'site-header-action';
+
+  const switchThemeLabel = isDark
+    ? t('settings.switch_to_light', { defaultValue: `Switch to light theme — current theme: ${themeLabel}` })
+    : t('settings.switch_to_dark', { defaultValue: `Switch to dark theme — current theme: ${themeLabel}` });
+
   return (
-    <>
+    <div className={isSheet ? 'site-header-sheet-actions-grid' : 'site-header-actions-list'}>
       <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('primedex:open-command-palette'))}
-            aria-label={t('command_palette.title', { defaultValue: 'Command Palette' })}
-            title={searchPlaceholder}
-            className="glass-control mr-0.5 hidden h-11 min-w-11 items-center justify-center gap-1.5 px-2.5 text-muted-foreground transition-all hover:text-primary active:scale-95 md:flex"
-          >
-            <Search className="h-3.5 w-3.5" />
-            <kbd className="hidden rounded-sm border border-border/60 bg-card/60 px-1.5 py-0.5 font-mono text-[11px] font-bold 2xl:inline-flex">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
+        type="button"
+        onClick={() => {
+          onInteraction?.();
+          window.dispatchEvent(new CustomEvent('primedex:open-command-palette'));
+        }}
+        aria-label={searchLabel}
+        title={searchPlaceholder}
+        className={cn(baseActionClass, !isSheet && 'site-header-search-action')}
+      >
+        <Search aria-hidden="true" className="h-4 w-4" />
+        <span className={cn(!isSheet && 'sr-only')}>{searchLabel}</span>
+        {!isSheet && (
+          <kbd className="site-header-shortcut hidden rounded-sm px-1.5 py-0.5 font-mono text-[10px] font-bold 2xl:inline-flex">
+            {isMac ? '⌘K' : 'Ctrl+K'}
+          </kbd>
+        )}
       </button>
 
-      <Link prefetch={false} href={localizedHref('/favorites')} aria-label={t('nav.favorites')} title={favoritesLabel} className="hidden sm:block">
-            <div className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground transition-[color,transform] hover:text-[var(--action-favorite)] active:scale-95">
-              <Heart className="h-3.5 w-3.5" />
-            </div>
+      <Link
+        prefetch={false}
+        href={`/${resolvedLang}/favorites`}
+        aria-label={favoritesLabel}
+        title={favoritesLabel}
+        onClick={onInteraction}
+        className={cn(baseActionClass, !isSheet && 'hidden sm:inline-flex')}
+      >
+        <Heart aria-hidden="true" className="h-4 w-4" />
+        <span className={cn(!isSheet && 'sr-only')}>{favoritesLabel}</span>
       </Link>
 
-      <div className="relative flex h-11 w-14 items-center sm:w-24">
+      <label className={cn('site-header-language', !isSheet && 'hidden xl:flex', isSheet && 'site-header-language-sheet')}>
+        <Globe2 aria-hidden="true" className="h-4 w-4 shrink-0" />
+        <span className="site-header-language-code" aria-hidden="true">{languageCode}</span>
+        {isSheet && <span className="site-header-language-name">{selectedLanguage}</span>}
         <select
+          name="language"
           value={language}
           onChange={(event) => handleLanguageChange(event.target.value)}
           aria-label={languageLabel}
-          className="glass-control touch-target h-11 w-full cursor-pointer appearance-none rounded-sm border border-input/70 bg-transparent px-2 text-transparent outline-none transition-colors hover:border-indigo-500/20 hover:bg-indigo-500/10 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 sm:px-3"
+          className="site-header-language-select"
         >
-          {languageOptions.map((lang) => (
-            <option key={lang.code} value={lang.code} className="bg-card text-foreground">
-              {lang.flag} {lang.label}
+          {languageOptions.map((option) => (
+            <option key={option.code} value={option.code} className="bg-card text-foreground">
+              {option.flag} {option.label}
             </option>
           ))}
         </select>
-        <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-muted-foreground sm:left-3">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
-            <circle cx="9" cy="9" r="7.2" />
-            <path d="M2 9h14" />
-            <path d="M9 1.8C7 4.2 6 6.5 6 9s1 4.8 3 7.2" />
-            <path d="M9 1.8c2 2.4 3 4.7 3 7.2s-1 4.8-3 7.2" />
-            <path d="M2.8 5.5h12.4M2.8 12.5h12.4" />
-          </svg>
-        </div>
-        <span className="pointer-events-none absolute right-5 hidden text-[11px] font-semibold uppercase leading-none text-muted-foreground sm:block">
-          {language === 'auto' ? 'AUTO' : language.toUpperCase()}
-        </span>
-        <ChevronDown className="pointer-events-none absolute right-1.5 h-3.5 w-3.5 text-muted-foreground sm:right-2" aria-hidden="true" />
-      </div>
+        <ChevronDown aria-hidden="true" className="site-header-language-chevron h-3.5 w-3.5 shrink-0" />
+      </label>
 
       <button
-            type="button"
-            onClick={cycleTheme}
-            title={themeLabel}
-            className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground hover:border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 active:scale-95"
-            aria-label={isDark ? t('settings.switch_to_light', { defaultValue: `Switch to light theme — current theme: ${themeLabel}` }) : t('settings.switch_to_dark', { defaultValue: `Switch to dark theme — current theme: ${themeLabel}` })}
-            suppressHydrationWarning
-          >
-            {!mounted ? (
-              <div className="h-4 w-4 md:h-[18px] md:w-[18px]" />
-            ) : isDark ? (
-              <Moon className="h-4 w-4 text-blue-400 md:h-[18px] md:w-[18px]" />
-            ) : (
-              <Sun className="h-4 w-4 text-amber-500 md:h-[18px] md:w-[18px]" />
-            )}
+        type="button"
+        onClick={() => {
+          cycleTheme();
+          onInteraction?.();
+        }}
+        title={themeLabel}
+        aria-label={switchThemeLabel}
+        suppressHydrationWarning
+        className={cn(baseActionClass, !isSheet && 'hidden md:inline-flex h-11 w-11')}
+      >
+        {!mounted ? (
+          <Sun aria-hidden="true" className="h-4 w-4" />
+        ) : isDark ? (
+          <Moon aria-hidden="true" className="h-4 w-4" />
+        ) : (
+          <Sun aria-hidden="true" className="h-4 w-4" />
+        )}
+        <span className={cn(!isSheet && 'sr-only')}>{themeLabel}</span>
       </button>
 
       <button
-            type="button"
-            onClick={toggleSettings}
-            aria-label={settingsLabel}
-            title={settingsLabel}
-            className="glass-control touch-target flex h-11 w-11 items-center justify-center text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary active:scale-95"
-          >
-            <Settings className="h-4 w-4 md:h-[18px] md:w-[18px]" aria-hidden="true" />
+        type="button"
+        onClick={() => {
+          toggleSettings();
+          onInteraction?.();
+        }}
+        aria-label={settingsLabel}
+        title={settingsLabel}
+        className={cn(baseActionClass, !isSheet && 'hidden md:inline-flex h-11 w-11')}
+      >
+        <Settings aria-hidden="true" className="h-4 w-4" />
+        <span className={cn(!isSheet && 'sr-only')}>{settingsLabel}</span>
       </button>
 
-      <AccountMenu />
-    </>
+      <AccountMenu
+        className={cn(!isSheet && 'hidden sm:inline-flex', isSheet && 'site-header-sheet-action site-header-sheet-account')}
+        showLabel={isSheet}
+        onInteraction={onInteraction}
+        onRequestAuth={onRequestAuth}
+      />
+    </div>
   );
 }

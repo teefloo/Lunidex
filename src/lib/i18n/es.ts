@@ -696,6 +696,8 @@ export default {
       load_error_desc: 'No se pudo cargar el formulario de inicio de sesión. Inténtalo de nuevo o cierra esta ventana y vuelve a intentarlo.',
     },
     header: {
+      navigation: 'Navegación principal',
+      menu_description: 'Explora la navegación de Lunidex y las herramientas de cuenta.',
       home_aria: 'Ir a Inicio',
       caught_label: 'atrapados',
       open_favorites: 'Abrir Favoritos',

@@ -683,6 +683,8 @@ export default {
       load_error_desc: 'Das Anmeldeformular konnte nicht geladen werden. Bitte versuche es erneut oder schließe dieses Fenster und starte noch einmal.',
     },
     header: {
+      navigation: 'Hauptnavigation',
+      menu_description: 'Durchsuche die Lunidex-Navigation und Kontowerkzeuge.',
       home_aria: 'Zum Startseite',
       caught_label: 'gefangen',
       open_favorites: 'Favoriten öffnen',

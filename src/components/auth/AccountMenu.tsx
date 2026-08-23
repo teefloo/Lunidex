@@ -7,10 +7,18 @@ import { LogIn, UserRound } from 'lucide-react';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { AuthModalBoundary } from './AuthModalBoundary';
 const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });
 
-export default function AccountMenu() {
+interface AccountMenuProps {
+  className?: string;
+  onInteraction?: () => void;
+  onRequestAuth?: () => void;
+  showLabel?: boolean;
+}
+
+export default function AccountMenu({ className, onInteraction, onRequestAuth, showLabel = false }: AccountMenuProps) {
   const { enabled, loading, user } = useAuth();
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
@@ -32,10 +40,11 @@ export default function AccountMenu() {
         href={localeHref('/dashboard')}
         aria-label={dashboardLabel}
         title={dashboardLabel}
-        className="glass-control touch-target flex min-h-11 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95"
+        onClick={onInteraction}
+        className={cn('site-header-action', className)}
       >
         <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
-        <span className="hidden text-[11px] font-black uppercase tracking-[0.15em] 2xl:inline">
+        <span className={cn('site-header-account-label', !showLabel && 'hidden 2xl:inline')}>
           {dashboardLabel}
         </span>
       </Link>
@@ -46,17 +55,24 @@ export default function AccountMenu() {
     return (
       <>
         <button
-                type="button"
-                onClick={() => setAuthOpen(true)}
-                disabled={loading}
-                title={tt('auth.signin_cta', 'Sign in')}
-                className="glass-control touch-target flex min-h-11 items-center gap-1.5 px-2.5 text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95 disabled:opacity-50"
-                aria-label={tt('auth.signin_cta', 'Sign in')}
-              >
-                <LogIn className="h-3.5 w-3.5" />
-                <span className="hidden text-[11px] font-black uppercase tracking-[0.15em] 2xl:inline">
-                  {tt('auth.signin_cta', 'Sign in')}
-                </span>
+          type="button"
+          onClick={() => {
+            if (onRequestAuth) {
+              onRequestAuth();
+              return;
+            }
+            onInteraction?.();
+            setAuthOpen(true);
+          }}
+          disabled={loading}
+          title={tt('auth.signin_cta', 'Sign in')}
+          className={cn('site-header-action disabled:opacity-50', className)}
+          aria-label={tt('auth.signin_cta', 'Sign in')}
+        >
+          <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
+          <span className={cn('site-header-account-label', !showLabel && 'hidden 2xl:inline')}>
+            {tt('auth.signin_cta', 'Sign in')}
+          </span>
         </button>
         {authOpen && (
           <AuthModalBoundary onClose={() => setAuthOpen(false)}>
@@ -81,7 +97,8 @@ export default function AccountMenu() {
       href={localeHref('/dashboard')}
       aria-label={dashboardLabel}
       title={tooltip}
-      className="glass-control touch-target flex h-11 w-11 items-center justify-center text-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-primary active:scale-95"
+      onClick={onInteraction}
+      className={cn('site-header-action', className)}
     >
       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[11px] font-black text-primary">
         {initial}

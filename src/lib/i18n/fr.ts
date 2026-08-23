@@ -934,6 +934,8 @@ export default {
       load_error_desc: 'Le formulaire de connexion n’a pas pu se charger. Réessayez ou fermez cette fenêtre puis recommencez.',
     },
     header: {
+      navigation: 'Navigation principale',
+      menu_description: 'Parcourez la navigation Lunidex et les outils du compte.',
       home_aria: 'Aller à l\'accueil',
       caught_label: 'attrapés',
       open_favorites: 'Ouvrir les favoris',

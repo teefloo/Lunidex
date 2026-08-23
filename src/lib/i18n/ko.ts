@@ -683,6 +683,8 @@ export default {
       load_error_desc: '로그인 양식을 불러오지 못했습니다. 다시 시도하거나 이 창을 닫고 다시 시도하세요.',
     },
     header: {
+      navigation: '주요 탐색',
+      menu_description: 'Lunidex 탐색 메뉴와 계정 도구를 확인하세요.',
       home_aria: '홈으로 이동',
       caught_label: '포획됨',
       open_favorites: '즐겨찾기 열기',

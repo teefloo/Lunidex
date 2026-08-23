@@ -934,6 +934,8 @@ export default {
       load_error_desc: 'The sign-in form could not load. Please retry or close this dialog and try again.',
     },
     header: {
+      navigation: 'Primary navigation',
+      menu_description: 'Browse Lunidex navigation and account tools.',
       home_aria: 'Go to Home',
       caught_label: 'caught',
       open_favorites: 'Open Favorites',

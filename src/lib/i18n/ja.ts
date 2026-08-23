@@ -683,6 +683,8 @@ export default {
       load_error_desc: 'サインインフォームを読み込めませんでした。再試行するか、このダイアログを閉じてもう一度お試しください。',
     },
     header: {
+      navigation: 'メインナビゲーション',
+      menu_description: 'Lunidexのナビゲーションとアカウントツールを表示します。',
       home_aria: 'ホームへ',
       caught_label: '捕獲済み',
       open_favorites: 'お気に入りを開く',

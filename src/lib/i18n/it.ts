@@ -683,6 +683,8 @@ export default {
       load_error_desc: 'Il modulo di accesso non è stato caricato. Riprova oppure chiudi questa finestra e riprova.',
     },
     header: {
+      navigation: 'Navigazione principale',
+      menu_description: 'Esplora la navigazione di Lunidex e gli strumenti dell’account.',
       home_aria: 'Vai a Home',
       caught_label: 'catturati',
       open_favorites: 'Apri Preferiti',

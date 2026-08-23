@@ -683,6 +683,8 @@ export default {
       load_error_desc: '登录表单加载失败。请重试，或关闭此窗口后再次尝试。',
     },
     header: {
+      navigation: '主导航',
+      menu_description: '浏览 Lunidex 导航和账户工具。',
       home_aria: '前往首页',
       caught_label: '已捕获',
       open_favorites: '打开收藏',

@@ -7,15 +7,13 @@ import { HeaderMobileNav } from './HeaderMobileNav';
 
 export default function Header() {
   return (
-    <header className="fixed left-0 right-0 top-[calc(0.5rem+env(safe-area-inset-top))] z-50 flex justify-center px-3 md:top-[calc(0.75rem+env(safe-area-inset-top))] md:px-4">
-      <div className="relative">
-        <div className="glass-toolbar codex-frame header-toolbar inline-flex max-w-[calc(100vw-1.5rem)] items-center gap-1.5 px-3 py-2 shadow-[var(--shadow-pixel)] max-[479px]:gap-0 max-[479px]:px-2 min-[480px]:w-full min-[480px]:justify-between min-[480px]:px-4 md:max-w-[calc(100vw-3rem)] lg:w-fit lg:justify-start">
-          <HeaderLogo />
-          <HeaderDesktopNav />
-          <div className="flex shrink-0 items-center justify-end gap-1 max-[479px]:gap-0 md:gap-1.5">
-            <HeaderActions />
-            <HeaderMobileNav />
-          </div>
+    <header className="site-header fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
+      <div className="site-header-bar mx-auto flex w-full max-w-[92rem] items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <HeaderLogo />
+        <HeaderDesktopNav />
+        <div className="site-header-utilities flex shrink-0 items-center justify-end gap-1 sm:gap-1.5">
+          <HeaderActions />
+          <HeaderMobileNav />
         </div>
       </div>
     </header>
