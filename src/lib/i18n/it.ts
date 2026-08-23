@@ -269,7 +269,7 @@ export default {
       opensource_title: 'Open source',
       opensource_body: 'Lunidex è distribuito con licenza MIT. Il codice sorgente completo è disponibile su GitHub. Puoi leggerlo, analizzarlo, farne un fork o ospitarlo autonomamente. Accettiamo contributi al codice e alle traduzioni.\n\nAbbiamo scelto MIT così chiunque possa consultare, adattare e migliorare il progetto.',
       contact_title: 'Contattaci',
-      contact_body: 'Trovato un bug? Hai una richiesta di funzionalità? Apri un issue su GitHub. Vuoi contribuire con codice o traduzioni? Invia una pull request. Per divulgazioni di sicurezza, inviaci un\'email direttamente invece di aprire un issue pubblico.\n\nRispondiamo alla maggior parte degli issue di GitHub entro 7 giorni. Non abbiamo un\'email di supporto per domande generali — usa GitHub Discussions per le domande della community.',
+      contact_body: 'Trovato un bug? Hai una richiesta di funzionalità? Apri un issue su GitHub. Vuoi contribuire con codice o traduzioni? Invia una pull request. Per divulgazioni di sicurezza, inviaci un\'email direttamente invece di aprire un issue pubblico.\n\nRispondiamo alla maggior parte degli issue di GitHub entro 7 giorni. Non abbiamo un\'email di supporto per domande generali — usa gli issue di GitHub per le domande generali.',
       cards: {
         github: 'Codice sorgente, README e changelog',
         issues: 'Segnala bug, richiedi funzionalità, traccia i progressi',
@@ -331,7 +331,6 @@ export default {
       still_questions_title: 'Hai ancora domande?',
       last_updated: 'Ultimo aggiornamento il {{date}} · {{count}} domande con risposta',
       still_questions_body: 'Apri una discussione su GitHub, invia una pull request o segnala un bug. Lunidex è costruito dalla community, per la community.',
-      still_questions_cta_github: 'Apri le discussioni GitHub',
       still_questions_cta_issues: 'Segnala un problema',
     },
     comparison: {

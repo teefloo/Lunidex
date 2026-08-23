@@ -269,7 +269,7 @@ export default {
       opensource_title: 'オープンソース',
       opensource_body: 'Lunidex は MIT ライセンスで公開しています。完全なソースコードは GitHub で確認できます。読んだり、監査したり、フォークしたり、自分でホストしたりできます。コードと翻訳への貢献を受け付けています。\n\nMIT ライセンスを選んだのは、誰でもプロジェクトを確認、変更、改善できるようにするためです。',
       contact_title: 'お問い合わせ',
-      contact_body: 'バグを見つけましたか?機能リクエストがありますか?GitHub で issue を開いてください。コードや翻訳に貢献したいですか?プルリクエストを送ってください。セキュリティ開示については、公開 issue を開くのではなく、直接メールでご連絡ください。\n\nGitHub のほとんどの issue には7日以内に対応します。一般的な質問用のサポートメールアドレスはありません。コミュニティ Q&A には GitHub Discussions をご利用ください。',
+      contact_body: 'バグを見つけましたか?機能リクエストがありますか?GitHub で issue を開いてください。コードや翻訳に貢献したいですか?プルリクエストを送ってください。セキュリティ開示については、公開 issue を開くのではなく、直接メールでご連絡ください。\n\nGitHub のほとんどの issue には7日以内に対応します。一般的な質問用のサポートメールアドレスはありません。一般的な質問には GitHub issue をご利用ください。',
       cards: {
         github: 'ソースコード、README、変更履歴',
         issues: 'バグ報告、機能リクエスト、進捗追跡',
@@ -331,7 +331,6 @@ export default {
       still_questions_title: 'まだ質問がありますか?',
       last_updated: '最終更新日 {{date}} · {{count}} 問に回答',
       still_questions_body: 'GitHub でディスカッションを開くか、プルリクエストを送信するか、バグを報告してください。Lunidex はコミュニティによって、コミュニティのために作られています。',
-      still_questions_cta_github: 'GitHub ディスカッションを開く',
       still_questions_cta_issues: '問題を報告',
     },
     comparison: {

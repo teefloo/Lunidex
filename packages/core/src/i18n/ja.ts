@@ -62,6 +62,12 @@ export default {
         dashboard: 'ダッシュボード',
         types: 'タイプ',
       },
+      groups: {
+        explore: '探索',
+        guides: 'ガイド',
+        community: 'コミュニティ',
+        sources: 'データソース',
+      },
       resources: {
         title: 'リソース',
         pokeapi: 'PokéAPI',
@@ -166,7 +172,7 @@ export default {
       opensource_title: 'オープンソース・永久無料',
       opensource_body: 'Lunidex は MIT ライセンスの下でライセンスされています。完全なソースコードは GitHub で公開されています。読むことも、監査することも、フォークすることも、セルフホストすることもできます。コミュニティからの貢献(新機能、翻訳、バグ修正)を受け付けており、公開ロードマップも公開されています。\n\nなぜ MIT か?ポケモンコミュニティが私たちに多くのものを与えてくれたからです — ファンアート、競技分析、ROMハック、 lore の研究 — そしてそれに報いる最良の方法は、私たちの仕事を開いたままにすることです。',
       contact_title: 'お問い合わせ',
-      contact_body: 'バグを見つけましたか?機能リクエストがありますか?GitHub で issue を開いてください。コードや翻訳に貢献したいですか?プルリクエストを送ってください。セキュリティ開示については、公開 issue を開くのではなく、直接メールでご連絡ください。\n\nGitHub のほとんどの issue には7日以内に対応します。一般的な質問用のサポートメールアドレスはありません。コミュニティ Q&A には GitHub Discussions をご利用ください。',
+      contact_body: 'バグを見つけましたか?機能リクエストがありますか?GitHub で issue を開いてください。コードや翻訳に貢献したいですか?プルリクエストを送ってください。セキュリティ開示については、公開 issue を開くのではなく、直接メールでご連絡ください。\n\nGitHub のほとんどの issue には7日以内に対応します。一般的な質問用のサポートメールアドレスはありません。一般的な質問には GitHub issue をご利用ください。',
       cards: {
         github: 'ソースコード、README、変更履歴',
         issues: 'バグ報告、機能リクエスト、進捗追跡',
@@ -218,7 +224,6 @@ export default {
       still_questions_title: 'まだ質問がありますか?',
       last_updated: '最終更新日 {{date}} · {{count}} 問に回答',
       still_questions_body: 'GitHub でディスカッションを開くか、プルリクエストを送信するか、バグを報告してください。Lunidex はコミュニティによって、コミュニティのために作られています。',
-      still_questions_cta_github: 'GitHub ディスカッションを開く',
       still_questions_cta_issues: '問題を報告',
     },
     settings: {

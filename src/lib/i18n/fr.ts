@@ -375,7 +375,6 @@ export default {
       still_questions_title: 'D\'autres questions ?',
       last_updated: 'Dernière mise à jour le {{date}} · {{count}} questions répondues',
       still_questions_body: 'Ouvrez une discussion sur GitHub, envoyez une pull request, ou signalez un bug. Lunidex est construit par la communauté, pour la communauté.',
-      still_questions_cta_github: 'Ouvrir les discussions GitHub',
       still_questions_cta_issues: 'Signaler un problème',
     },
     comparison: {

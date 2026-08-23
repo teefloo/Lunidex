@@ -62,6 +62,12 @@ export default {
         dashboard: 'Dashboard',
         types: 'Typen',
       },
+      groups: {
+        explore: 'Entdecken',
+        guides: 'Anleitungen',
+        community: 'Community',
+        sources: 'Datenquellen',
+      },
       resources: {
         title: 'Ressourcen',
         pokeapi: 'PokéAPI',
@@ -166,7 +172,7 @@ export default {
       opensource_title: 'Open Source & für immer kostenlos',
       opensource_body: 'Lunidex steht unter der MIT-Lizenz. Der vollständige Quellcode ist auf GitHub verfügbar — Sie können ihn lesen, prüfen, forken und sogar selbst hosten. Wir akzeptieren Community-Beiträge (neue Funktionen, Übersetzungen, Fehlerbehebungen) und veröffentlichen eine öffentliche Roadmap.\n\nWarum MIT? Weil die Pokémon-Community uns so viel gegeben hat — Fan-Arts, kompetitive Analysen, ROM-Hacks, Lore-Recherche — und der beste Weg, etwas zurückzugeben, darin besteht, unsere Arbeit offen zu halten.',
       contact_title: 'Kontakt aufnehmen',
-      contact_body: 'Einen Fehler gefunden? Eine Funktionsanfrage? Eröffnen Sie ein Issue auf GitHub. Möchten Sie Code oder Übersetzungen beitragen? Senden Sie einen Pull Request. Für Sicherheitsmeldungen senden Sie uns bitte eine E-Mail direkt, anstatt ein öffentliches Issue zu eröffnen.\n\nWir antworten auf die meisten GitHub-Issues innerhalb von 7 Tagen. Wir haben keine Support-E-Mail für allgemeine Fragen — bitte nutzen Sie GitHub Discussions für Community-Q&A.',
+      contact_body: 'Einen Fehler gefunden? Eine Funktionsanfrage? Eröffnen Sie ein Issue auf GitHub. Möchten Sie Code oder Übersetzungen beitragen? Senden Sie einen Pull Request. Für Sicherheitsmeldungen senden Sie uns bitte eine E-Mail direkt, anstatt ein öffentliches Issue zu eröffnen.\n\nWir antworten auf die meisten GitHub-Issues innerhalb von 7 Tagen. Wir haben keine Support-E-Mail für allgemeine Fragen — bitte nutzen Sie GitHub-Issues für allgemeine Fragen.',
       cards: {
         github: 'Quellcode, README und Changelog',
         issues: 'Fehler melden, Funktionen anfordern, Fortschritt verfolgen',
@@ -218,7 +224,6 @@ export default {
       still_questions_title: 'Noch Fragen?',
       last_updated: 'Zuletzt aktualisiert am {{date}} · {{count}} Fragen beantwortet',
       still_questions_body: 'Eröffne eine Diskussion auf GitHub, sende einen Pull Request oder melde einen Bug. Lunidex wird von der Community für die Community gebaut.',
-      still_questions_cta_github: 'GitHub-Diskussionen öffnen',
       still_questions_cta_issues: 'Problem melden',
     },
     settings: {

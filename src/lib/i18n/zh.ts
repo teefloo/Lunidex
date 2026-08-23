@@ -269,7 +269,7 @@ export default {
       opensource_title: '开源',
       opensource_body: 'Lunidex 采用 MIT 许可证。完整源代码在 GitHub 上公开。你可以阅读、审查、创建分支或自行托管。欢迎贡献代码和翻译。\n\n我们选择 MIT，是为了让任何人都能查看、修改和改进这个项目。',
       contact_title: '联系我们',
-      contact_body: '发现了 bug?有功能请求?在 GitHub 上提出 issue。想贡献代码或翻译?发送 pull request。对于安全披露,请直接给我们发送邮件,而不是公开提出 issue。\n\n我们在 7 天内回复大部分 GitHub issue。我们没有用于一般问题的支持邮箱 — 请使用 GitHub Discussions 进行社区问答。',
+      contact_body: '发现了 bug?有功能请求?在 GitHub 上提出 issue。想贡献代码或翻译?发送 pull request。对于安全披露,请直接给我们发送邮件,而不是公开提出 issue。\n\n我们在 7 天内回复大部分 GitHub issue。我们没有用于一般问题的支持邮箱 — 一般问题请使用 GitHub issue。',
       cards: {
         github: '源代码、README 和更新日志',
         issues: '报告 bug、请求功能、跟踪进度',
@@ -331,7 +331,6 @@ export default {
       still_questions_title: '还有其他问题吗?',
       last_updated: '最后更新于 {{date}} · 已回答 {{count}} 个问题',
       still_questions_body: '在 GitHub 上开启讨论、提交拉取请求,或报告 bug。Lunidex 由社区构建,为社区服务。',
-      still_questions_cta_github: '开启 GitHub 讨论',
       still_questions_cta_issues: '报告问题',
     },
     comparison: {

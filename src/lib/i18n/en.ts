@@ -375,7 +375,6 @@ export default {
       still_questions_title: 'Still have questions?',
       last_updated: 'Last updated {{date}} · {{count}} questions answered',
       still_questions_body: 'Open a discussion on GitHub, send a pull request, or report a bug. Lunidex is built by the community, for the community.',
-      still_questions_cta_github: 'Open GitHub Discussions',
       still_questions_cta_issues: 'Report an issue',
     },
     comparison: {

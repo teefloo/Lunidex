@@ -62,6 +62,12 @@ export default {
         dashboard: 'Dashboard',
         types: 'Types',
       },
+      groups: {
+        explore: 'Explore',
+        guides: 'Guides',
+        community: 'Community',
+        sources: 'Data sources',
+      },
       resources: {
         title: 'Resources',
         pokeapi: 'PokéAPI',
@@ -176,7 +182,7 @@ export default {
       opensource_title: 'Open Source & Free Forever',
       opensource_body: 'Lunidex is licensed under the MIT License. The full source code is available on GitHub — you can read it, audit it, fork it, and even self-host it. We accept community contributions (new features, translations, bug fixes) and we publish a public roadmap.\n\nWhy MIT? Because the Pokémon community has given us so much — fan art, competitive analysis, ROM hacks, lore research — and the best way to give back is to keep our work open.',
       contact_title: 'Get in Touch',
-      contact_body: 'Found a bug? Have a feature request? Open an issue on GitHub. Want to contribute code or translations? Send a pull request. For security disclosures, please email us directly rather than opening a public issue.\n\nWe respond to most GitHub issues within 7 days. We do not have a support email for general questions — please use GitHub Discussions for community Q&A.',
+      contact_body: 'Found a bug? Have a feature request? Open an issue on GitHub. Want to contribute code or translations? Send a pull request. For security disclosures, please email us directly rather than opening a public issue.\n\nWe respond to most GitHub issues within 7 days. We do not have a support email for general questions — please use GitHub issues for general questions.',
       cards: {
         github: 'Source code, README, and changelog',
         issues: 'Report bugs, request features, track progress',
@@ -228,7 +234,6 @@ export default {
       still_questions_title: 'Still have questions?',
       last_updated: 'Last updated {{date}} · {{count}} questions answered',
       still_questions_body: 'Open a discussion on GitHub, send a pull request, or report a bug. Lunidex is built by the community, for the community.',
-      still_questions_cta_github: 'Open GitHub Discussions',
       still_questions_cta_issues: 'Report an issue',
     },
     settings: {

@@ -62,6 +62,12 @@ export default {
         quiz: 'Quiz',
         types: 'Types',
       },
+      groups: {
+        explore: 'Explorer',
+        guides: 'Guides',
+        community: 'Communauté',
+        sources: 'Sources de données',
+      },
       resources: {
         title: 'Ressources',
         pokeapi: 'PokéAPI',
@@ -176,7 +182,7 @@ export default {
       opensource_title: 'Open source et gratuit pour toujours',
       opensource_body: 'Lunidex est sous licence MIT. Le code source complet est disponible sur GitHub — vous pouvez le lire, l\'auditer, le forker et même l\'auto-héberger. Nous acceptons les contributions de la communauté (nouvelles fonctionnalités, traductions, corrections de bugs) et nous publions une feuille de route publique.\n\nPourquoi MIT ? Parce que la communauté Pokémon nous a tant donné — fan arts, analyses compétitives, hacks ROM, recherche de lore — et la meilleure façon de rendre la pareille est de garder notre travail ouvert.',
       contact_title: 'Nous contacter',
-      contact_body: 'Vous avez trouvé un bug ? Une demande de fonctionnalité ? Ouvrez un ticket sur GitHub. Vous voulez contribuer du code ou des traductions ? Envoyez une pull request. Pour les divulgations de sécurité, veuillez nous envoyer un email directement plutôt que d\'ouvrir un ticket public.\n\nNous répondons à la plupart des tickets GitHub sous 7 jours. Nous n\'avons pas d\'email d\'assistance pour les questions générales — veuillez utiliser GitHub Discussions pour les questions communautaires.',
+      contact_body: 'Vous avez trouvé un bug ? Une demande de fonctionnalité ? Ouvrez un ticket sur GitHub. Vous voulez contribuer du code ou des traductions ? Envoyez une pull request. Pour les divulgations de sécurité, veuillez nous envoyer un email directement plutôt que d\'ouvrir un ticket public.\n\nNous répondons à la plupart des tickets GitHub sous 7 jours. Nous n\'avons pas d\'email d\'assistance pour les questions générales — veuillez utiliser les issues GitHub pour les questions générales.',
       cards: {
         github: 'Code source, README et changelog',
         issues: 'Signaler des bugs, demander des fonctionnalités, suivre l\'avancement',
@@ -228,7 +234,6 @@ export default {
       still_questions_title: 'D\'autres questions ?',
       last_updated: 'Dernière mise à jour le {{date}} · {{count}} questions répondues',
       still_questions_body: 'Ouvrez une discussion sur GitHub, envoyez une pull request, ou signalez un bug. Lunidex est construit par la communauté, pour la communauté.',
-      still_questions_cta_github: 'Ouvrir les discussions GitHub',
       still_questions_cta_issues: 'Signaler un problème',
     },
     settings: {

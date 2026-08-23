@@ -62,6 +62,12 @@ export default {
         dashboard: '대시보드',
         types: '타입',
       },
+      groups: {
+        explore: '탐색',
+        guides: '가이드',
+        community: '커뮤니티',
+        sources: '데이터 소스',
+      },
       resources: {
         title: '리소스',
         pokeapi: 'PokéAPI',
@@ -166,7 +172,7 @@ export default {
       opensource_title: '오픈 소스 & 영원히 무료',
       opensource_body: 'Lunidex는 MIT 라이선스 하에 라이선스됩니다. 전체 소스 코드는 GitHub에서 사용할 수 있습니다. 읽고, 감사하고, 포크하고, 자체 호스팅할 수도 있습니다. 커뮤니티 기여(새 기능, 번역, 버그 수정)를 받아들이며 공개 로드맵을 게시합니다.\n\n왜 MIT인가? 포켓몬 커뮤니티가 우리에게 너무 많은 것을 주었기 때문입니다 — 팬 아트, 경쟁 분석, ROM 핵, lore 연구 — 그리고 그에 보답하는 가장 좋은 방법은 우리 작업을 열린 상태로 유지하는 것입니다.',
       contact_title: '문의하기',
-      contact_body: '버그를 발견하셨나요? 기능 요청이 있으신가요? GitHub에서 이슈를 열어주세요. 코드나 번역에 기여하고 싶으신가요? 풀 리퀘스트를 보내주세요. 보안 공개는 공개 이슈를 여는 대신 직접 이메일을 보내주세요.\n\n대부분의 GitHub 이슈에 7일 이내에 답변합니다. 일반 질문을 위한 지원 이메일은 없습니다. 커뮤니티 Q&A는 GitHub Discussions를 사용해주세요.',
+      contact_body: '버그를 발견하셨나요? 기능 요청이 있으신가요? GitHub에서 이슈를 열어주세요. 코드나 번역에 기여하고 싶으신가요? 풀 리퀘스트를 보내주세요. 보안 공개는 공개 이슈를 여는 대신 직접 이메일을 보내주세요.\n\n대부분의 GitHub 이슈에 7일 이내에 답변합니다. 일반 질문을 위한 지원 이메일은 없습니다. 일반적인 질문에는 GitHub 이슈를 사용해주세요.',
       cards: {
         github: '소스 코드, README, 변경 로그',
         issues: '버그 신고, 기능 요청, 진행 상황 추적',
@@ -218,7 +224,6 @@ export default {
       still_questions_title: '아직 궁금한 점이 있나요?',
       last_updated: '마지막 업데이트 {{date}} · {{count}}개 질문 답변',
       still_questions_body: 'GitHub에서 토론을 열거나, 풀 리퀘스트를 보내거나, 버그를 신고하세요. Lunidex는 커뮤니티에 의해, 커뮤니티를 위해 만들어졌습니다.',
-      still_questions_cta_github: 'GitHub 토론 열기',
       still_questions_cta_issues: '문제 신고',
     },
     settings: {
