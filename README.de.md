@@ -1,19 +1,25 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="Lunidex-Logo" width="80" />
+<img src="./public/icon-512.png" alt="Lunidex-Logo" width="80" />
 
 # Lunidex
 
-**Ein schneller, local-first Pokédex und Pokémon-TCG-Arbeitsbereich für Trainer, Sammler und neugierige Fans.**
+**Ein fokussierter Pokémon-Arbeitsbereich für Spieler, Trainer und TCG-Sammler.**
 
 [![Live](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
-[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
-[![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Mobile](https://img.shields.io/badge/Mobile-Expo-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
+[![CI](https://img.shields.io/github/actions/workflow/status/teefloo/Lunidex/ci.yml?style=flat-square&label=CI)](https://github.com/teefloo/Lunidex/actions/workflows/ci.yml)
+[![Node.js 22](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Expo 57](https://img.shields.io/badge/Mobile-Expo%2057-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
-[Überblick](#überblick) · [Start](#start) · [Funktionen](#funktionen) · [Architektur](#architektur) · [Konfiguration](#konfiguration) · [Bereitstellung](#bereitstellung)
+[Live-App](https://lunidex.app) · [Repository](https://github.com/teefloo/Lunidex) · [Issues](https://github.com/teefloo/Lunidex/issues)
+
+[Übersicht](#übersicht) · [Funktionen](#funktionen) · [Schnellstart](#schnellstart) · [Konfiguration](#konfiguration) · [Architektur](#architektur) · [Bereitstellung](#bereitstellung)
+
+<img src="./public/screenshot-desktop.png" alt="Lunidex-Pokédex und Sammlungs-Dashboard auf dem Desktop" width="840" />
 
 </div>
 
@@ -23,140 +29,237 @@
 
 <!-- README-I18N:END -->
 
-## Überblick
+## Übersicht
 
-Lunidex ist ein Open-Source-Monorepo mit einer Next.js-Webanwendung, dem gemeinsamen TypeScript-Paket `@primedex/core` und einer Expo-Mobile-Begleitapp. Es vereint den Nationalen Pokédex, Werkzeuge für das kompetitive Training, Pokémon-TCG-Sammlungswerkzeuge und persönliche Fortschrittsverfolgung – ohne dass ein Konto erforderlich ist.
+Lunidex ist ein unabhängiges Open-Source-Monorepo mit npm workspaces. Es verbindet einen Pokédex, Pokémon-Referenzwerkzeuge, Team-Building-Tools, einen Pokémon-TCG-Katalog und einen persönlichen, kontogebundenen Arbeitsbereich.
 
-Die Webanwendung deckt **1.025 Pokémon aus neun Generationen** ab. Ihre Oberfläche ist auf Englisch, Französisch, Spanisch, Deutsch, Italienisch, Japanisch, Koreanisch und vereinfachtem Chinesisch verfügbar; dieses Repository enthält außerdem eine portugiesische README-Übersetzung.
+Die Webanwendung umfasst **1.025 Pokémon aus neun Generationen** und unterstützt acht Oberflächensprachen: Englisch, Französisch, Spanisch, Deutsch, Italienisch, Japanisch, Koreanisch und vereinfachtes Chinesisch. Portugiesisch ist als übersetzte README-Datei verfügbar, aber keine Sprache der Weboberfläche.
+
+Öffentliche Referenzseiten funktionieren ohne Konto. Der persönliche Arbeitsbereich — Favoriten, gefangene Pokémon, Teams, Quizfortschritt, TCG-Sammlungen, Wunschlisten, gespeicherte Suchen, Notizen, Decks und verwandte Funktionen — verwendet Neon Auth und Neon PostgreSQL, sobald diese konfiguriert und synchronisiert sind. Anzeigeeinstellungen im Web werden mit IndexedDB gespeichert; die Expo-App verwendet AsyncStorage.
 
 > [!NOTE]
-> Lunidex ist ein nicht kommerzielles Fanprojekt. Pokémon-Daten, -Namen und -Bilder gehören Nintendo, Game Freak, Creatures und The Pokémon Company. Lunidex ist mit ihnen weder verbunden noch von ihnen unterstützt.
+> Lunidex ist ein unabhängiges, nicht kommerzielles und inoffizielles Fanprojekt. Pokémon-Daten, Namen, Figuren und Bilder gehören Nintendo, Game Freak, Creatures und The Pokémon Company. Lunidex ist nicht mit diesen Unternehmen verbunden und wird von ihnen nicht unterstützt.
+
+<div align="center">
+  <img src="./public/screenshot-mobile.png" alt="Mobile Pokédex-Ansicht von Lunidex" width="280" />
+</div>
 
 ## Funktionen
 
-| Bereich | Möglichkeiten |
+| Bereich | Was du tun kannst |
 | --- | --- |
-| **Pokédex** | Alle 1.025 Pokémon durchsuchen und filtern; Werte, Fähigkeiten, Attacken, Entwicklungen, Formen, Fundorte, Sprites und kompetitive Informationen ansehen. |
-| **Training** | Sechserteams erstellen, Typabdeckung analysieren, Pokémon vergleichen, die Typentabelle erkunden, EVs und IVs planen, Zuchtwahrscheinlichkeiten berechnen und Kämpfe der neunten Generation simulieren. |
-| **Nachschlagewerk** | Attacken, Fähigkeiten und Items suchen sowie Coverage-Prüfungen und Kontervorschläge nutzen. |
-| **Persönlicher Fortschritt** | Favoriten, Living Dex, Teams, zuletzt besuchte Seiten, Quiz-Statistiken und Einstellungen persistent lokal speichern und als JSON exportieren oder importieren. |
-| **Spielmodi** | Das Quiz mit sechs Modi spielen, einen Nuzlocke-Lauf verfolgen und Teams schreibgeschützt teilen. |
-| **TCG-Bereich** | Karten und Sets entdecken, Sammlung und Wunschliste verwalten, Karten vergleichen, Preisverlauf und Alarme verfolgen sowie 60-Karten-Decks bauen. |
-| **Offline und mobil** | Die PWA installieren und zuvor verwendete Ressourcen zwischengespeichert wiederverwenden. Die Expo-App umfasst derzeit Pokédex, Detailseite, Favoriten, Teams, Konto, Theme und Sprachen. |
+| **Pokédex und Referenz** | Alle 1.025 Pokémon durchsuchen und filtern; Werte, Typen, Fähigkeiten, Attacken, Entwicklungen, Formen, Fundorte, Sprites und lokalisierte Artdaten ansehen. Nach Attacken, Fähigkeiten und Items suchen. |
+| **Team- und Kampflabor** | Teams mit bis zu sechs Pokémon erstellen, Typ- und Attackenabdeckung analysieren, Synergie und Rollen prüfen, bis zu drei Pokémon vergleichen, die 18-Typen-Tabelle verwenden, EV/IV planen, Zucht berechnen und einen Kampf-Simulator für Generation 9 ausführen. |
+| **Fortschritt und Spiel** | Favoriten, gefangene Pokémon, Living Dex, Aktivitäten, Abzeichen und Quizstatistiken verfolgen. Mit drei Quiz-Herausforderungen und drei Spielmodi, einschließlich täglicher Läufe, spielen und einen Nuzlocke-Lauf verfolgen. |
+| **Teilen und soziale Funktionen** | Showdown-Teams importieren und exportieren, schreibgeschützte Teamlinks teilen, öffentliche Profile erstellen, Freunde verwalten, Quizranglisten ansehen und kontogebundene Kampfräume nutzen. |
+| **Pokémon-TCG-Arbeitsbereich** | Karten und Sets durchsuchen, den Katalog filtern, Karten vergleichen, eigene und gewünschte Karten verfolgen, den Setfortschritt prüfen, Suchen und Notizen speichern, Decks erstellen und Preisfelder anzeigen, wenn TCGdex sie bereitstellt. |
+| **PWA und Speicherung** | Die Webanwendung als PWA installieren. Der Service Worker cached die App-Shell und ausgewählte externe Ressourcen für zuverlässigere wiederholte Besuche, während Kontodaten hinter der Server-API bleiben. |
+| **Mobiler Begleiter** | Die Expo-App auf iOS, Android oder im Web mit gemeinsamen API-Clients, Typen, Zustand-Store, Speicherverträgen, Übersetzungen und Neon-Helfern aus `@primedex/core` nutzen. |
 
-## Start
+## Die App erkunden
+
+Ersetze `en` durch eine unterstützte Sprache: `en`, `fr`, `es`, `de`, `it`, `ja`, `ko` oder `zh`.
+
+| Oberfläche | Route |
+| --- | --- |
+| Startseite | [`/en`](https://lunidex.app/en) |
+| Pokédex | [`/en/pokedex`](https://lunidex.app/en/pokedex) |
+| Pokémon-Detailseite | [`/en/pokemon/pikachu`](https://lunidex.app/en/pokemon/pikachu) |
+| Team-Builder | [`/en/team`](https://lunidex.app/en/team) |
+| Typentabelle | [`/en/types`](https://lunidex.app/en/types) |
+| Quiz | [`/en/quiz`](https://lunidex.app/en/quiz) |
+| Kampf-Simulator | [`/en/battle`](https://lunidex.app/en/battle) |
+| TCG-Katalog | [`/en/tcg`](https://lunidex.app/en/tcg) |
+| TCG-Sammlung | [`/en/tcg/collection`](https://lunidex.app/en/tcg/collection) |
+| Dashboard | [`/en/dashboard`](https://lunidex.app/en/dashboard) |
+
+Sammlung, Dashboard, soziale Funktionen und andere persönliche Bereiche können eine authentifizierte Synchronisierungssitzung erfordern.
+
+## Schnellstart
 
 ### Voraussetzungen
 
-- [Node.js](https://nodejs.org/) 20 oder neuer
-- npm 10 oder neuer
+- [Node.js](https://nodejs.org/) 22
+- npm und die versionierte `package-lock.json`
+- [Git](https://git-scm.com/)
+
+Repository klonen, Workspaces installieren und die Webanwendung starten:
 
 ```bash
 git clone https://github.com/teefloo/Lunidex.git
 cd Lunidex
-npm install
+npm ci
 npm run dev
 ```
 
-Öffnen Sie [http://localhost:3000](http://localhost:3000). Lunidex leitet URLs ohne Präfix anhand des Cookies `primedex-lang` oder des Browser-Headers `Accept-Language` zu einer Sprachroute wie `/de` weiter.
+Öffne [http://localhost:3000](http://localhost:3000). Der Locale-Proxy leitet eine URL ohne Präfix zu einer unterstützten Sprache wie `/de` um. Dabei werden das Cookie `primedex-lang` oder, falls vorhanden, die Browsersprache verwendet.
 
 > [!IMPORTANT]
-> Die Entwicklung verwendet absichtlich webpack: `npm run dev` führt `next dev --webpack` aus. Behalten Sie diesen Befehl bei, auch wenn die Next-Konfiguration zusätzlich ein Turbopack-Root festlegt.
+> Entwicklungs- und Produktionsbuilds verwenden absichtlich webpack: `npm run dev` führt `next dev --webpack` aus und `npm run build` führt `next build --webpack` aus. Behalte diese Option bei, auch wenn die Next.js-Konfiguration zusätzlich eine Turbopack-Root definiert.
 
-| Befehl | Beschreibung |
-| --- | --- |
-| `npm run dev` | Startet Next.js im Entwicklungsmodus auf Port 3000. |
-| `npm run build` | Erstellt den Produktions-Build. |
-| `npm run start` | Startet den Produktions-Build. |
-| `npm run lint` | Führt ESLint 9 aus. |
-| `npm run typecheck` | Prüft TypeScript ohne Dateien zu erzeugen. |
-| `npm run test` | Führt Vitest in jsdom aus. |
+## Mobile App
 
-### Mobile App
+Der Expo-Begleiter befindet sich in [`apps/mobile`](./apps/mobile). Aktuell umfasst er Pokédex-Liste und -Suche, Detailseiten, Favoriten, Teams, Konto, Theme und Spracheinstellungen. Die vollständige Web-Parität ist noch nicht erreicht; die übrigen Werkzeuge bleiben in der Next.js-Anwendung verfügbar.
 
-Die Expo-Begleitapp befindet sich in [`apps/mobile`](./apps/mobile) und verwendet das gemeinsame Paket [`@primedex/core`](./packages/core).
+Aus dem Repository-Stamm starten:
 
 ```bash
-cd apps/mobile
-npx expo start
+npm run start --workspace=@primedex/mobile
 ```
 
-Über die Expo-Eingabe können Sie iOS, Android, Web oder Expo Go öffnen. Welche Screens unterstützt werden, steht im [mobilen README](./apps/mobile/README.md).
+Mit dem Expo-Menü kannst du iOS, Android oder eine Webvorschau öffnen. Das Package stellt außerdem die Skripte `android`, `ios` und `web` bereit:
+
+```bash
+npm run android --workspace=@primedex/mobile
+npm run ios --workspace=@primedex/mobile
+npm run web --workspace=@primedex/mobile
+```
+
+Weitere Expo-spezifische Umgebungsvariablen und Architekturhinweise findest du in der [mobilen README](./apps/mobile/README.md).
 
 ## Konfiguration
 
-Zum lokalen Durchsuchen des Pokédex sind keine Umgebungsvariablen erforderlich. Legen Sie eine nicht versionierte `.env.local` nur für optionale Integrationen an.
+Für öffentliche Referenzseiten sind keine Umgebungsvariablen erforderlich. Kopiere die Vorlage, wenn optionale Konto-, Server-, Kontakt-, Benachrichtigungs- oder Entwicklungsintegrationen aktiviert werden sollen:
 
-| Variable | Zweck |
-| --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Überschreibt die kanonische öffentliche URL; Standard ist `https://lunidex.app`. |
-| `NEXT_PUBLIC_SUPABASE_URL` | Aktiviert optionale Supabase-Authentifizierung und Cloud-Synchronisierung. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Öffentlicher Schlüssel zur Supabase-URL. |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Aktiviert Push-Abonnements für TCG-Preisalarme. |
-| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Fügt Google-Search-Console-Verifizierungsmetadaten hinzu. |
-| `NEXT_PUBLIC_ENABLE_AGENTATION` | Aktiviert die Agentation-UI-Review-Leiste in der Entwicklung. |
+```bash
+cp .env.example .env.local
+```
 
-> [!TIP]
-> Ohne Supabase bleibt Lunidex im local-first-Modus voll nutzbar: Favoriten, Teams, Fänge, Filter und TCG-Fortschritt liegen im Browser-Speicher. Für Mobile setzen Sie `EXPO_PUBLIC_SUPABASE_URL` und `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `apps/mobile/.env`.
+Für die Expo-App verwende `apps/mobile/.env.example` als Vorlage:
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env
+```
+
+| Variable(n) | Bereich | Zweck |
+| --- | --- | --- |
+| `NEXT_PUBLIC_APP_URL` | Web / öffentlich | Kanonische Site- und API-Basis-URL. Standard: `https://lunidex.app`. |
+| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / öffentlich | Neon-Auth-Endpunkt für den Browser-Client. |
+| `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | Nur Server | Endpunkte für Neon-Auth-Proxy und JWT-Verifizierung. |
+| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Nur Server | Schutz des Auth-Cookies und Einschränkungen für die JWT-Validierung. |
+| `NEON_DATABASE_URL` / `DATABASE_URL` | Nur Server | Neon-PostgreSQL-Verbindung. Die Vercel-Neon-Integration liefert `DATABASE_URL`; lokal kann `NEON_DATABASE_URL` verwendet werden. |
+| `EXPO_PUBLIC_NEON_AUTH_URL`, `EXPO_PUBLIC_APP_URL` | Mobil / öffentlich | Von Expo verwendete Neon-Auth- und Deployment-Endpunkte. |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / öffentlich | Optionaler Wert für die Google-Search-Console-Verifizierung. |
+| `NEXT_PUBLIC_ENABLE_AGENTATION` | Entwicklung | Aktiviert das Agentation-UI-Review-Overlay bei `true`. |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / öffentlich | Optionaler Schlüssel für Browser-Push-Abonnements. |
+| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Nur Server | Optionale serverseitige Konfiguration für Push-Zustellung. |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Nur Server | Optionaler Versand des Kontaktformulars über Resend. |
+| `SUPABASE_DB_URL` | Nur Migration | Quellverbindung für die vorhandenen Supabase-zu-Neon-Exports; niemals eine Web- oder Mobile-Runtime-Variable. |
+
+> [!WARNING]
+> Veröffentliche niemals Verbindungszeichenfolgen, JWKS-Einstellungen, Cookie-Secrets, private VAPID-Daten, Resend-Schlüssel oder Migrations-URLs über `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, Quelldateien, Logs oder Commits.
 
 <details>
 <summary><strong>Agentation in der Entwicklung aktivieren</strong></summary>
 
-Fügen Sie diesen Wert zu `.env.local` hinzu und starten Sie den Server neu:
+Füge diesen Wert zu `.env.local` hinzu und starte den Entwicklungsserver neu:
 
-```bash
+```dotenv
 NEXT_PUBLIC_ENABLE_AGENTATION=true
 ```
 
-Das Hilfsprogramm läuft auf `http://localhost:4747`; Entwicklungs-Origin und CSP sind bereits eingerichtet.
+Das Tool verwendet `http://localhost:4747`; Entwicklungs-Origin und CSP-Unterstützung sind bereits konfiguriert.
 
 </details>
+
+## Skripte
+
+Führe Root-Befehle aus dem Repository-Stamm aus:
+
+| Befehl | Beschreibung |
+| --- | --- |
+| `npm run dev` | Startet den Next.js-Entwicklungsserver. |
+| `npm run build` | Erstellt einen Produktionsbuild. |
+| `npm run start` | Startet den Produktionsbuild. |
+| `npm run lint` | Prüft Web-, Core- und Mobile-Quellen. |
+| `npm run typecheck` | Prüft den Web-Workspace. |
+| `npm run test -- --run` | Führt die Vitest-Suite einmal aus. |
+| `npx vitest run path/to/file.test.ts` | Führt eine einzelne Testdatei aus. |
+| `npx tsc --project packages/core/tsconfig.json --noEmit` | Prüft `@primedex/core`. |
+| `npm run typecheck --workspace=@primedex/mobile` | Prüft die Expo-App. |
+| `npm run lint --workspace=@primedex/mobile` | Prüft die Expo-App mit ESLint. |
+| `npm run db:neon:export` | Exportiert die erhaltenen Quelldaten für die Migration. |
+| `npm run db:neon:import` | Wendet das Neon-Schema an und importiert einen vorbereiteten Export. |
+| `npm run db:neon:verify` | Vergleicht Quelle und Ergebnis der Neon-Migration. |
+
+> [!WARNING]
+> Die Neon-Import- und Verifizierungsbefehle greifen auf externe Datenbanken zu. Lies vorher [`neon/AGENTS.md`](./neon/AGENTS.md) und [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) und verwende ein freigegebenes Test- oder Staging-Ziel.
+
+Der CI-Workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) installiert Abhängigkeiten und führt Linting, Web- und Core-Typprüfungen, Tests, den Produktionsbuild sowie die Mobile-Typprüfung aus.
 
 ## Architektur
 
 ```text
-Poke/
-├── src/                 Next.js-16-Webanwendung (App Router)
-├── packages/core/       @primedex/core: API, State, Typen, i18n, Helfer, Supabase
-├── apps/mobile/         Expo-/React-Native-Begleitapp
-├── supabase/migrations/ Optionale Supabase-Schema-Migrationen
-└── public/              PWA-Icons, Screenshots und statische Dateien
+.
+├── src/                 Next.js-16-/React-19-Webanwendung
+├── packages/core/       @primedex/core: gemeinsame API-Clients, Typen, Store, i18n und Helfer
+├── apps/mobile/         @primedex/mobile Expo-Router-Begleiter
+├── neon/migrations/     Aktives Neon-PostgreSQL-Anwendungsschema
+├── supabase/            Erhaltene Quellmigrationen und Kompatibilitätsmaterial
+├── scripts/neon/        Kontrollierte Export-, Import- und Verifizierungsskripte
+├── public/              PWA-Icons, Screenshots, Kartenressourcen und statische Dateien
+└── docs/                Produkt-, Design-, Migrations-, Audit- und Implementierungsnotizen
 ```
 
 ```text
-React-Server- und Client-Komponenten
-  ├── TanStack-Query-Hooks (@/lib/api) ──▶ PokéAPI REST + GraphQL, TCGdex
-  └── Zustand-Selektoren (@/store/primedex) ──▶ IndexedDB im Web / AsyncStorage mobil
+Web (Next.js App Router)
+  ├── Server- und Client-Routenkomponenten
+  ├── TanStack Query ──▶ gemeinsame API-Clients ──▶ PokéAPI + TCGdex
+  ├── Zustand ──▶ IndexedDB-Anzeigeeinstellungen
+  └── Route Handlers ──▶ Neon Auth + Neon-PostgreSQL-Benutzerbereich
+
+Mobile (Expo Router)
+  └── @primedex/core ──▶ AsyncStorage + Neon Auth/API bei Konfiguration
 ```
 
-- **Oberfläche:** Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, Base UI und Framer Motion. Server Components sind der Standard.
-- **Daten:** Zentrale API-Clients verwenden Axios mit Wiederholungen; TanStack Query verwaltet den Cache und die Query Keys sind zentral definiert.
-- **State:** Zustand persistiert persönliche Daten als IDs und Primitive in IndexedDB im Web bzw. AsyncStorage auf Mobilgeräten.
-- **Sprachen und Resilienz:** i18next lädt Client-Bundles bei Bedarf, Serverübersetzungen versorgen statisches Rendering. Die PWA cached ihr Shell sowie ausgewählte PokéAPI-, TCGdex-, Bild- und Next-Ressourcen.
+Wichtige Grenzen:
 
-## Datenquellen
+- **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query und die PWA-Schicht.
+- **Gemeinsamer Core:** UI-unabhängige Domänentypen, API-Clients, Zustand-Store, i18n-Bundles, Neon-Helfer und reine Utilities werden von Web und Mobile gemeinsam genutzt.
+- **Datenzugriff:** Externe Anfragen laufen über die zentrale API-Fassade in `src/lib/api` und `packages/core/src/api`; Präsentationskomponenten erzeugen keine eigenen API-Clients.
+- **Persistenz:** Web-Anzeigeeinstellungen verwenden IndexedDB mit Browser-Fallback; native Persistenz nutzt AsyncStorage. Der authentifizierte Arbeitsbereich wird über die Neon-API synchronisiert und in `user_state` gespeichert.
+- **Plattformgrenze:** Passende `*.ts`- und `*.native.ts`-Adapter trennen Browser- und React-Native-Speicher/Konfiguration, ohne Domänenlogik zu duplizieren.
+- **Lokalisierung:** Locale-präfixierte Routen und Übersetzungsbundles unterstützen `en`, `fr`, `es`, `de`, `it`, `ja`, `ko` und `zh`.
+
+> [!IMPORTANT]
+> Lunidex ist der sichtbare Produktname, aber `primedex`, `@primedex/core`, `@primedex/mobile`, `usePrimeDexStore`, Speicherschlüssel, Route-Slugs, Expo-Schemas und Bundle-Identifier sind historische, kompatibilitätssensible Bezeichnungen. Ändere sie nur im Rahmen einer bewussten Migration.
+
+## Datenquellen und Attribution
 
 | Quelle | Verwendung |
 | --- | --- |
-| [PokéAPI](https://pokeapi.co/) REST und GraphQL | Pokémon, Spezies-Texte, Attacken, Fähigkeiten, Typen, Entwicklungen und Fundorte. |
-| [TCGdex](https://www.tcgdex.net/) | Pokémon-TCG-Karten, Sets, Bilder, Seltenheiten und Katalogdaten. |
-| [Supabase](https://supabase.com/) | Optionale Authentifizierung, Cloud-Synchronisierung, öffentliche Profile, Spieldaten und TCG-Preisalarme. |
+| [PokéAPI](https://pokeapi.co/) REST und GraphQL | Pokémon, Artenbeschreibungen, Werte, Typen, Attacken, Fähigkeiten, Entwicklungen, Fundorte und lokalisierte Namen. |
+| [PokéAPI-Sprites](https://github.com/PokeAPI/sprites) | Pokémon- und Item-Sprites sowie zugehörige Illustrationsressourcen. |
+| [TCGdex](https://www.tcgdex.net/) | Pokémon-TCG-Karten, Sets, Seltenheiten, Bilder, Katalogfelder und Preisfelder, sofern von der Quelle geliefert. |
+| [Neon](https://neon.com/) | Optionale Authentifizierung, PostgreSQL-Benutzerstatus, Profile, Freunde, Ranglisten, Kampfräume und serverseitige Arbeitsbereichsfunktionen. |
 
-Komponenten rufen diese Dienste nicht direkt auf: Anfragen laufen durch die API-Schicht des Projekts.
+Verfügbarkeit, Lokalisierungsabdeckung, Bilder und Preisfelder der externen Quellen können sich ändern. Lunidex ist kein Kartenmarktplatz und garantiert weder Marktwerte noch eine vollständige Preishistorie.
+
+Der Quellcode steht unter der MIT-Lizenz in [`LICENSE`](./LICENSE). Pokémon-Immaterialgüter und Daten von Drittanbietern unterliegen weiterhin den jeweiligen Eigentümern und Bedingungen.
 
 ## Bereitstellung
 
-Lunidex ist für Vercel konfiguriert und läuft auf jeder Plattform mit Next.js-Server-Runtime und Bildoptimierung.
+Lunidex ist für [Vercel](https://vercel.com/) konfiguriert und kann auch auf einem Host mit Next.js-Server-Runtime und Bildoptimierung ausgeführt werden.
 
 ```bash
 npm run build
 npm run start
 ```
 
-Importieren Sie das Repository in Vercel, behalten Sie die Standard-Next.js-Einstellungen bei und hinterlegen Sie optionale öffentliche Variablen im Dashboard. [`vercel.json`](./vercel.json) ist absichtlich minimal.
+Für Vercel:
 
-## Danksagung
+1. Importiere `teefloo/Lunidex` in ein Vercel-Projekt.
+2. Konfiguriere die Neon-Auth-Werte und die serverseitige Datenbankverbindung in Preview und Production.
+3. Verwende die standardmäßigen Next.js-Build-Einstellungen. Die versionierte [`vercel.json`](./vercel.json) bleibt absichtlich minimal.
 
-Lunidex baut auf [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) und den in der Anwendung genutzten Open-Source-Projekten auf.
+Die aktive Web-Runtime verwendet Neon. Die erhaltenen Supabase-Migrationen und kontrollierten Migrationsskripte dienen dem Vergleich, der Sicherung und der Migration; sie sind nicht die Authentifizierungs- oder Datenbank-Runtime der Webanwendung.
 
-Pokémon und alle zugehörigen Eigenschaften sind Marken ihrer jeweiligen Inhaber. Dieses Fanprojekt ist inoffiziell und nicht kommerziell.
+Weitere Informationen stehen im [Neon-Migrations-Runbook](./docs/neon-migration.md), einschließlich Schema, Umgebungsgrenzen und Validierungsverfahren.
+
+## Zugehörige Dokumentation
+
+- [Mobiles Setup und Paritätshinweise](./apps/mobile/README.md)
+- [Produktkontext](./PRODUCT.md)
+- [Designsystem](./DESIGN.md)
+- [Neon-Migrations-Runbook](./docs/neon-migration.md)
+- [GitHub-Issues](https://github.com/teefloo/Lunidex/issues)

@@ -1,19 +1,25 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./public/icon.svg" alt="Lunidex 로고" width="80" />
+<img src="./public/icon-512.png" alt="Lunidex 로고" width="80" />
 
 # Lunidex
 
-**트레이너, 컬렉터, 호기심 많은 팬을 위한 빠른 로컬 우선 포켓몬 도감 및 Pokémon TCG 작업 공간입니다.**
+**플레이어, 트레이너, TCG 컬렉터를 위한 집중형 포켓몬 워크스페이스.**
 
-[![Live](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
-[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
-[![React](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Mobile](https://img.shields.io/badge/Mobile-Expo-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
+[![온라인 앱](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
+[![CI](https://img.shields.io/github/actions/workflow/status/teefloo/Lunidex/ci.yml?style=flat-square&label=CI)](https://github.com/teefloo/Lunidex/actions/workflows/ci.yml)
+[![Node.js 22](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Expo 57](https://img.shields.io/badge/Mobile-Expo%2057-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
-[개요](#개요) · [시작하기](#시작하기) · [기능](#기능) · [아키텍처](#아키텍처) · [구성](#구성) · [배포](#배포)
+[온라인 앱](https://lunidex.app) · [저장소](https://github.com/teefloo/Lunidex) · [Issues](https://github.com/teefloo/Lunidex/issues)
+
+[개요](#개요) · [기능](#기능) · [빠른 시작](#빠른-시작) · [구성](#구성) · [아키텍처](#아키텍처) · [배포](#배포)
+
+<img src="./public/screenshot-desktop.png" alt="Lunidex 데스크톱 포켓몬 도감 및 컬렉션 대시보드" width="840" />
 
 </div>
 
@@ -25,138 +31,235 @@
 
 ## 개요
 
-Lunidex는 Next.js 웹 앱, 공유 TypeScript 패키지 `@primedex/core`, Expo 모바일 컴패니언으로 구성된 오픈 소스 모노레포입니다. 계정 생성 없이 전국도감, 경쟁전 준비 도구, Pokémon TCG 컬렉션 도구, 개인 진행 상황 추적 기능을 한곳에 제공합니다.
+Lunidex는 npm workspaces를 사용하는 독립적인 오픈 소스 모노레포입니다. 포켓몬 도감, 포켓몬 참고 도구, 팀 구성 도구, Pokémon TCG 카탈로그, 계정 기반 개인 워크스페이스를 하나로 제공합니다.
 
-웹 앱은 **9세대 1,025마리 포켓몬**을 다룹니다. 인터페이스는 영어, 프랑스어, 스페인어, 독일어, 이탈리아어, 일본어, 한국어, 중국어 간체를 지원하며, 이 저장소에는 포르투갈어 README 번역도 포함되어 있습니다.
+웹 앱은 **9개 세대의 포켓몬 1,025종**을 다루며 영어, 프랑스어, 스페인어, 독일어, 이탈리아어, 일본어, 한국어, 중국어 간체 등 8개 인터페이스 언어를 지원합니다. 포르투갈어는 번역된 README로 제공되지만 웹 UI 언어에는 포함되지 않습니다.
+
+공개 참고 페이지는 계정 없이 사용할 수 있습니다. 개인 워크스페이스(즐겨찾기, 포획한 포켓몬, 팀, 퀴즈 진행도, TCG 컬렉션, 위시리스트, 저장된 검색, 메모, 덱 등)는 Neon Auth와 Neon PostgreSQL을 설정하고 동기화할 때 사용할 수 있습니다. 웹 표시 설정은 IndexedDB에 저장하고 Expo 앱은 AsyncStorage를 사용합니다.
 
 > [!NOTE]
-> Lunidex는 비상업적 팬 프로젝트입니다. 포켓몬의 데이터, 이름, 이미지는 Nintendo, Game Freak, Creatures 및 The Pokémon Company에 귀속됩니다. Lunidex는 이들 회사와 제휴하거나 보증을 받지 않았습니다.
+> Lunidex는 독립적인 비공식 비상업 팬 프로젝트입니다. 포켓몬 데이터, 이름, 캐릭터, 이미지는 Nintendo, Game Freak, Creatures 및 The Pokémon Company에 귀속됩니다. Lunidex는 이 회사들과 제휴하거나 승인을 받은 프로젝트가 아닙니다.
+
+<div align="center">
+  <img src="./public/screenshot-mobile.png" alt="Lunidex 모바일 포켓몬 도감 화면" width="280" />
+</div>
 
 ## 기능
 
 | 영역 | 할 수 있는 일 |
 | --- | --- |
-| **포켓몬 도감** | 1,025마리를 탐색하고 필터링하며, 능력치, 특성, 기술, 진화, 폼, 출현 장소, 스프라이트, 경쟁전 정보를 확인합니다. |
-| **육성 도구** | 6마리 팀을 구성하고 상성을 분석하며, 포켓몬 비교, 타입표 탐색, 노력치·개체값 계획, 교배 확률 계산, 9세대 배틀 시뮬레이션을 할 수 있습니다. |
-| **참고 자료** | 기술, 특성, 도구를 검색하고 기술 범위 검사와 카운터 제안을 활용합니다. |
-| **개인 진행 상황** | 즐겨찾기, Living Dex, 팀, 최근 본 항목, 퀴즈 통계, 설정을 영구 로컬 저장소에 보관하고 JSON으로 내보내거나 가져옵니다. |
-| **게임 모드** | 6가지 모드의 퀴즈를 즐기고, Nuzlocke 런을 기록하며, 읽기 전용 링크로 팀을 공유합니다. |
-| **TCG 작업 공간** | 카드와 세트를 찾고, 컬렉션과 위시리스트를 관리하며, 카드를 비교하고, 가격 이력과 알림을 확인하고, 60장 덱을 구성합니다. |
-| **오프라인 및 모바일** | PWA를 설치하고 이미 사용한 리소스를 캐시에서 다시 사용할 수 있습니다. Expo 앱은 현재 도감, 상세, 즐겨찾기, 팀, 계정, 테마, 언어를 지원합니다. |
+| **포켓몬 도감 및 참고 자료** | 1,025종의 포켓몬을 탐색하고 필터링하며 능력치, 타입, 특성, 기술, 진화, 폼, 출현 장소, 스프라이트, 현지화된 종족 데이터를 확인합니다. 기술, 특성, 도구도 검색할 수 있습니다. |
+| **팀 및 배틀 랩** | 최대 6마리로 팀을 만들고 타입·기술 커버리지, 시너지, 역할을 분석합니다. 최대 3마리 비교, 18타입 상성표, EV/IV 계획, 교배 계산, 9세대 배틀 시뮬레이터를 제공합니다. |
+| **진행도와 게임** | 즐겨찾기, 포획한 포켓몬, Living Dex, 활동, 배지, 퀴즈 통계를 관리합니다. 3가지 챌린지와 3가지 게임 모드(일일 플레이 포함)로 퀴즈를 즐기고 Nuzlocke 진행도 기록할 수 있습니다. |
+| **공유 및 소셜 기능** | Showdown 팀을 가져오고 내보내며, 읽기 전용 팀 링크를 공유하고, 공개 프로필을 만들고, 친구를 관리하고, 퀴즈 순위표와 계정 기반 배틀룸을 이용합니다. |
+| **Pokémon TCG 워크스페이스** | 카드와 세트를 탐색하고 카탈로그를 필터링하며 카드를 비교합니다. 보유 카드와 원하는 카드, 세트 진행도, 저장된 검색과 메모, 덱을 관리하고 TCGdex가 제공하는 경우 가격 필드도 표시합니다. |
+| **PWA 및 저장** | 웹 앱을 PWA로 설치할 수 있습니다. Service Worker가 앱 셸과 일부 외부 리소스를 캐시해 재방문 안정성을 높이며, 계정 데이터는 서버 API 뒤에서 관리됩니다. |
+| **모바일 컴패니언** | `@primedex/core`의 공통 API 클라이언트, 타입, Zustand 상태, 저장 계약, 번역, Neon 헬퍼를 사용해 iOS, Android, 웹에서 Expo 앱을 실행합니다. |
 
-## 시작하기
+## 앱 둘러보기
+
+`en`을 지원 언어로 바꿔 사용하세요: `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`.
+
+| 화면 | 경로 |
+| --- | --- |
+| 홈 | [`/en`](https://lunidex.app/en) |
+| 포켓몬 도감 | [`/en/pokedex`](https://lunidex.app/en/pokedex) |
+| 포켓몬 상세 | [`/en/pokemon/pikachu`](https://lunidex.app/en/pokemon/pikachu) |
+| 팀 빌더 | [`/en/team`](https://lunidex.app/en/team) |
+| 타입 상성표 | [`/en/types`](https://lunidex.app/en/types) |
+| 퀴즈 | [`/en/quiz`](https://lunidex.app/en/quiz) |
+| 배틀 시뮬레이터 | [`/en/battle`](https://lunidex.app/en/battle) |
+| TCG 카탈로그 | [`/en/tcg`](https://lunidex.app/en/tcg) |
+| TCG 컬렉션 | [`/en/tcg/collection`](https://lunidex.app/en/tcg/collection) |
+| 대시보드 | [`/en/dashboard`](https://lunidex.app/en/dashboard) |
+
+컬렉션, 대시보드, 소셜 기능 및 기타 개인 화면에는 인증된 동기화 세션이 필요할 수 있습니다.
+
+## 빠른 시작
 
 ### 사전 요구 사항
 
-- [Node.js](https://nodejs.org/) 20 이상
-- npm 10 이상
+- [Node.js](https://nodejs.org/) 22
+- npm 및 커밋된 `package-lock.json`
+- [Git](https://git-scm.com/)
+
+저장소를 클론하고 workspace를 설치한 뒤 웹 앱을 실행합니다.
 
 ```bash
 git clone https://github.com/teefloo/Lunidex.git
 cd Lunidex
-npm install
+npm ci
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000)을 엽니다. Lunidex는 `primedex-lang` 쿠키 또는 브라우저의 `Accept-Language` 헤더를 기준으로 접두사가 없는 URL을 `/ko` 같은 로케일 경로로 리디렉션합니다.
+[http://localhost:3000](http://localhost:3000)을 엽니다. 로케일 프록시는 `primedex-lang` 쿠키 또는 브라우저 언어를 사용해 접두사가 없는 URL을 `/ko`와 같은 지원 언어 경로로 리디렉션합니다.
 
 > [!IMPORTANT]
-> 개발에서는 의도적으로 webpack을 사용합니다. `npm run dev`는 `next dev --webpack`을 실행합니다. Next 구성에 Turbopack root가 선언되어 있어도 이 명령을 유지하세요.
+> 개발 및 프로덕션 빌드는 의도적으로 webpack을 사용합니다. `npm run dev`는 `next dev --webpack`, `npm run build`는 `next build --webpack`을 실행합니다. Next.js 설정에 Turbopack root도 선언되어 있지만 이 옵션을 유지하세요.
 
-| 명령 | 설명 |
-| --- | --- |
-| `npm run dev` | 포트 3000에서 Next.js 개발 서버를 시작합니다. |
-| `npm run build` | 프로덕션 빌드를 생성합니다. |
-| `npm run start` | 프로덕션 빌드를 실행합니다. |
-| `npm run lint` | ESLint 9를 실행합니다. |
-| `npm run typecheck` | 파일을 만들지 않고 TypeScript를 검사합니다. |
-| `npm run test` | jsdom에서 Vitest를 실행합니다. |
+## 모바일 앱
 
-### 모바일 앱
+Expo 컴패니언은 [`apps/mobile`](./apps/mobile)에 있습니다. 현재 도감 목록과 검색, 상세 화면, 즐겨찾기, 팀, 계정, 테마, 언어 설정을 포함합니다. 아직 웹의 전체 기능과 동일하지 않으며 나머지 도구는 Next.js 앱에서 이용할 수 있습니다.
 
-Expo 컴패니언은 [`apps/mobile`](./apps/mobile)에 있으며 공유 패키지 [`@primedex/core`](./packages/core)를 사용합니다.
+저장소 루트에서 실행합니다.
 
 ```bash
-cd apps/mobile
-npx expo start
+npm run start --workspace=@primedex/mobile
 ```
 
-Expo 안내에서 iOS, Android, 웹 또는 Expo Go를 열 수 있습니다. 지원 화면은 [모바일 README](./apps/mobile/README.md)를 참조하세요.
+Expo 메뉴에서 iOS, Android 또는 웹 미리보기를 열 수 있습니다. 패키지는 `android`, `ios`, `web` 스크립트도 제공합니다.
+
+```bash
+npm run android --workspace=@primedex/mobile
+npm run ios --workspace=@primedex/mobile
+npm run web --workspace=@primedex/mobile
+```
+
+Expo 전용 환경 변수와 아키텍처 설명은 [모바일 README](./apps/mobile/README.md)를 참고하세요.
 
 ## 구성
 
-로컬에서 도감을 둘러보는 데 환경 변수는 필요하지 않습니다. 선택 기능을 켤 때만 커밋하지 않는 `.env.local`을 만드세요.
+공개 참고 페이지를 보는 데 환경 변수는 필요하지 않습니다. 계정, 서버, 문의, 알림 또는 개발용 선택적 통합을 활성화할 때 템플릿을 복사하세요.
 
-| 변수 | 용도 |
-| --- | --- |
-| `NEXT_PUBLIC_APP_URL` | 표준 공개 URL을 바꿉니다. 기본값은 `https://lunidex.app`입니다. |
-| `NEXT_PUBLIC_SUPABASE_URL` | 선택적인 Supabase 인증 및 클라우드 동기화를 켭니다. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase URL과 함께 쓰는 공개 익명 키입니다. |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | TCG 가격 알림용 브라우저 Push 구독을 켭니다. |
-| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Google Search Console 확인 메타데이터를 추가합니다. |
-| `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 중 Agentation UI 검토 도구 모음을 켭니다. |
+```bash
+cp .env.example .env.local
+```
 
-> [!TIP]
-> Supabase 없이도 Lunidex는 로컬 우선 방식으로 완전히 사용할 수 있습니다. 즐겨찾기, 팀, 포획, 필터, TCG 진행도는 브라우저 저장소에 남습니다. 모바일에서는 `apps/mobile/.env`에 `EXPO_PUBLIC_SUPABASE_URL`과 `EXPO_PUBLIC_SUPABASE_ANON_KEY`를 사용하세요.
+Expo 앱에서는 `apps/mobile/.env.example`을 템플릿으로 사용합니다.
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env
+```
+
+| 변수 | 범위 | 용도 |
+| --- | --- | --- |
+| `NEXT_PUBLIC_APP_URL` | Web / 공개 | 정식 사이트 및 API 기본 URL. 기본값은 `https://lunidex.app`입니다. |
+| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 공개 | 브라우저 클라이언트가 사용하는 Neon Auth 엔드포인트. |
+| `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | 서버 전용 | Neon Auth 프록시 및 JWT 검증 엔드포인트. |
+| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | 서버 전용 | 인증 쿠키 보호 및 JWT 검증 조건. |
+| `NEON_DATABASE_URL` / `DATABASE_URL` | 서버 전용 | Neon PostgreSQL 연결. Vercel의 Neon 통합은 `DATABASE_URL`을 제공하며 로컬에서는 `NEON_DATABASE_URL`을 사용할 수 있습니다. |
+| `EXPO_PUBLIC_NEON_AUTH_URL`, `EXPO_PUBLIC_APP_URL` | 모바일 / 공개 | Expo가 사용하는 Neon Auth 및 배포된 앱 엔드포인트. |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 공개 | 선택적인 Google Search Console 인증 값. |
+| `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 | `true`일 때 Agentation UI 리뷰 오버레이 활성화. |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 공개 | 선택적인 브라우저 Push 구독 키. |
+| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | 서버 전용 | 선택적인 서버 측 Push 전송 설정. |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | 서버 전용 | Resend를 통한 선택적인 문의 폼 이메일 전송. |
+| `SUPABASE_DB_URL` | 마이그레이션 전용 | 보존된 Supabase-to-Neon export 스크립트가 사용하는 원본 연결. Web 또는 모바일 runtime 변수로 사용하지 마세요. |
+
+> [!WARNING]
+> 연결 문자열, JWKS 설정, 쿠키 시크릿, VAPID 개인 키, Resend 키, 마이그레이션 URL을 `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, 소스 파일, 로그 또는 커밋에 노출하지 마세요.
 
 <details>
-<summary><strong>개발에서 Agentation 켜기</strong></summary>
+<summary><strong>개발에서 Agentation 활성화</strong></summary>
 
 `.env.local`에 다음 값을 추가하고 개발 서버를 다시 시작합니다.
 
-```bash
+```dotenv
 NEXT_PUBLIC_ENABLE_AGENTATION=true
 ```
 
-도구는 `http://localhost:4747`에서 실행되며 개발 Origin과 CSP는 이미 구성되어 있습니다.
+도구는 `http://localhost:4747`을 사용하며 개발 Origin과 CSP 지원은 이미 구성되어 있습니다.
 
 </details>
+
+## 스크립트
+
+저장소 루트에서 root 명령을 실행하세요.
+
+| 명령 | 설명 |
+| --- | --- |
+| `npm run dev` | Next.js 개발 서버를 시작합니다. |
+| `npm run build` | 프로덕션 빌드를 생성합니다. |
+| `npm run start` | 프로덕션 빌드를 제공합니다. |
+| `npm run lint` | Web, core, mobile 소스를 lint합니다. |
+| `npm run typecheck` | Web workspace의 타입을 확인합니다. |
+| `npm run test -- --run` | Vitest 전체 테스트를 한 번 실행합니다. |
+| `npx vitest run path/to/file.test.ts` | 특정 테스트 파일을 실행합니다. |
+| `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core`의 타입을 확인합니다. |
+| `npm run typecheck --workspace=@primedex/mobile` | Expo 앱의 타입을 확인합니다. |
+| `npm run lint --workspace=@primedex/mobile` | Expo 앱을 lint합니다. |
+| `npm run db:neon:export` | 보존된 원본 데이터를 마이그레이션용으로 export합니다. |
+| `npm run db:neon:import` | Neon 스키마를 적용하고 준비된 export를 import합니다. |
+| `npm run db:neon:verify` | 원본과 Neon 마이그레이션 결과를 비교합니다. |
+
+> [!WARNING]
+> Neon import 및 verify 명령은 외부 데이터베이스에 접근합니다. 먼저 [`neon/AGENTS.md`](./neon/AGENTS.md)와 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)를 읽고 승인된 테스트 또는 staging 대상을 사용하세요.
+
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml)의 CI workflow는 의존성 설치, lint, Web/core 타입 검사, 테스트, 프로덕션 빌드, 모바일 타입 검사를 실행합니다.
 
 ## 아키텍처
 
 ```text
-Poke/
-├── src/                 Next.js 16 App Router 웹 애플리케이션
-├── packages/core/       @primedex/core: API, 상태, 타입, i18n, 헬퍼, Supabase
-├── apps/mobile/         Expo / React Native 컴패니언
-├── supabase/migrations/ 선택적인 Supabase 스키마 마이그레이션
-└── public/              PWA 아이콘, 스크린샷, 정적 자산
+.
+├── src/                 Next.js 16 / React 19 Web 애플리케이션
+├── packages/core/       @primedex/core: 공통 API 클라이언트, 타입, store, i18n, helper
+├── apps/mobile/         @primedex/mobile Expo Router 컴패니언
+├── neon/migrations/     활성 Neon PostgreSQL 애플리케이션 스키마
+├── supabase/            보존된 원본 마이그레이션 및 호환성 자료
+├── scripts/neon/        관리되는 export, import, verify 스크립트
+├── public/              PWA 아이콘, 스크린샷, 카드 리소스, 정적 파일
+└── docs/                제품, 디자인, 마이그레이션, 감사, 구현 문서
 ```
 
 ```text
-React 서버 및 클라이언트 컴포넌트
-  ├── TanStack Query hooks (@/lib/api) ──▶ PokéAPI REST + GraphQL, TCGdex
-  └── Zustand selectors (@/store/primedex) ──▶ 웹 IndexedDB / 모바일 AsyncStorage
+Web (Next.js App Router)
+  ├── 서버 및 클라이언트 라우트 컴포넌트
+  ├── TanStack Query ──▶ 공통 API 클라이언트 ──▶ PokéAPI + TCGdex
+  ├── Zustand ──▶ IndexedDB 표시 설정
+  └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL 사용자 워크스페이스
+
+Mobile (Expo Router)
+  └── @primedex/core ──▶ AsyncStorage + 설정된 경우 Neon Auth/API
 ```
 
-- **UI:** Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, Base UI, Framer Motion을 사용합니다. Server Components가 기본입니다.
-- **데이터:** 중앙 API 클라이언트는 재시도 기능을 가진 Axios를 사용합니다. TanStack Query가 캐시를 관리하며 쿼리 키는 한 곳에 모여 있습니다.
-- **상태:** Zustand는 개인 데이터를 ID와 기본값으로 웹의 IndexedDB와 모바일의 AsyncStorage에 저장합니다.
-- **언어 및 복원력:** i18next는 클라이언트 번들을 지연 로드하고 서버 번역은 정적 렌더링에 사용됩니다. PWA는 앱 셸과 일부 PokéAPI, TCGdex, 이미지, Next 리소스를 캐시합니다.
+주요 경계:
 
-## 데이터 소스
+- **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query, PWA 계층.
+- **공유 core:** UI와 분리된 도메인 타입, API 클라이언트, Zustand store, i18n 번들, Neon helper, 순수 유틸리티를 Web과 모바일이 공유합니다.
+- **데이터 접근:** 외부 요청은 `src/lib/api`와 `packages/core/src/api`의 중앙 API façade를 통하며 프레젠테이션 컴포넌트는 별도의 API 클라이언트를 만들지 않습니다.
+- **저장:** Web 표시 설정은 IndexedDB와 브라우저 fallback을 사용하고 네이티브 저장은 AsyncStorage를 사용합니다. 인증된 워크스페이스 데이터는 Neon API로 동기화되어 `user_state`에 저장됩니다.
+- **플랫폼 경계:** 대응하는 `*.ts` 및 `*.native.ts` adapter가 도메인 로직을 복제하지 않고 브라우저와 React Native의 저장소/설정을 분리합니다.
+- **현지화:** 로케일 접두사 라우트와 번역 번들은 `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`를 지원합니다.
+
+> [!IMPORTANT]
+> 표시 제품명은 Lunidex이지만 `primedex`, `@primedex/core`, `@primedex/mobile`, `usePrimeDexStore`, 저장소 키, 라우트 slug, Expo scheme, bundle identifier는 호환성이 중요한 역사적 식별자입니다. 의도적인 마이그레이션 없이 변경하지 마세요.
+
+## 데이터 소스 및 출처
 
 | 소스 | 용도 |
 | --- | --- |
-| [PokéAPI](https://pokeapi.co/) REST 및 GraphQL | 포켓몬, 도감 텍스트, 기술, 특성, 타입, 진화, 출현 정보. |
-| [TCGdex](https://www.tcgdex.net/) | Pokémon TCG 카드, 세트, 이미지, 레어도, 카탈로그 정보. |
-| [Supabase](https://supabase.com/) | 선택적 인증, 클라우드 동기화, 공개 프로필, 게임 데이터, TCG 가격 알림. |
+| [PokéAPI](https://pokeapi.co/) REST 및 GraphQL | 포켓몬, 종 텍스트, 능력치, 타입, 기술, 특성, 진화, 출현 정보, 현지화된 이름. |
+| [PokéAPI sprites](https://github.com/PokeAPI/sprites) | 포켓몬과 도구 스프라이트 및 관련 이미지 리소스. |
+| [TCGdex](https://www.tcgdex.net/) | Pokémon TCG 카드, 세트, 레어도, 이미지, 카탈로그 필드, 제공되는 경우 가격 필드. |
+| [Neon](https://neon.com/) | 선택적 인증, PostgreSQL 사용자 상태, 프로필, 친구, 순위표, 배틀룸, 서버 기반 워크스페이스 기능. |
 
-컴포넌트는 이 서비스를 직접 호출하지 않습니다. 요청은 프로젝트 API 계층을 거칩니다.
+외부 소스의 제공 여부, 현지화 범위, 이미지 및 가격 필드는 변경될 수 있습니다. Lunidex는 카드 마켓플레이스가 아니며 시장 가치나 가격 이력의 완전한 제공을 보장하지 않습니다.
+
+소스 코드는 [`LICENSE`](./LICENSE)의 MIT 라이선스로 배포됩니다. 포켓몬 지식재산권과 제3자 데이터는 각 권리자와 조건의 적용을 받습니다.
 
 ## 배포
 
-Lunidex는 Vercel에 맞게 구성되어 있으며 Next.js 서버 런타임과 이미지 최적화를 지원하는 모든 호스트에서 실행할 수 있습니다.
+Lunidex는 [Vercel](https://vercel.com/)에 맞게 구성되어 있으며 Next.js 서버 runtime과 이미지 최적화를 지원하는 호스트에서도 실행할 수 있습니다.
 
 ```bash
 npm run build
 npm run start
 ```
 
-Vercel에서 저장소를 가져오고 기본 Next.js 설정을 유지한 뒤, 선택적인 공개 환경 변수를 대시보드에 추가하세요. [`vercel.json`](./vercel.json)은 의도적으로 최소화되어 있습니다.
+Vercel에서는:
 
-## 감사의 말
+1. `teefloo/Lunidex`를 Vercel 프로젝트로 가져옵니다.
+2. Preview 및 Production에 Neon Auth 값과 서버 전용 데이터베이스 연결을 설정합니다.
+3. 표준 Next.js build 설정을 사용합니다. 커밋된 [`vercel.json`](./vercel.json)은 의도적으로 최소 구성입니다.
 
-Lunidex는 [PokéAPI](https://pokeapi.co/), [TCGdex](https://www.tcgdex.net/), [Vercel](https://vercel.com/) 및 애플리케이션에서 사용하는 오픈 소스 프로젝트의 도움으로 만들어졌습니다.
+현재 Web runtime은 Neon을 사용합니다. 보존된 Supabase 마이그레이션과 관리형 마이그레이션 스크립트는 비교, 백업, 마이그레이션 작업을 위한 것이며 Web 앱의 인증 또는 데이터베이스 runtime이 아닙니다.
 
-Pokémon 및 관련 자산은 각 소유자의 상표입니다. 이 팬 프로젝트는 비공식적이고 비상업적입니다.
+스키마, 환경 경계, 검증 절차는 [Neon 마이그레이션 runbook](./docs/neon-migration.md)을 참고하세요.
+
+## 관련 문서
+
+- [모바일 설정 및 기능 범위](./apps/mobile/README.md)
+- [제품 컨텍스트](./PRODUCT.md)
+- [디자인 시스템](./DESIGN.md)
+- [Neon 마이그레이션 runbook](./docs/neon-migration.md)
+- [GitHub Issues](https://github.com/teefloo/Lunidex/issues)
