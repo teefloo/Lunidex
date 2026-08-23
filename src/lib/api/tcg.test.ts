@@ -23,6 +23,7 @@ import {
   fetchCollectionValue,
   getAllSets,
   getFilterOptions,
+  getTCGCard,
   getPokemonCards,
   isTcgLangSupported,
   searchCards,
@@ -160,9 +161,92 @@ describe('Pokémon card ordering', () => {
     expect(mockGet).toHaveBeenCalledWith(expect.stringContaining('/en/cards?'));
     expect(mockGet).not.toHaveBeenCalledWith(expect.stringMatching(/\/en\/cards\/[^?]/));
     expect(mockSetCachedData).toHaveBeenCalledWith(
-      'tcg-pokemon-cards-v11-en-Pikachu',
+      'tcg-pokemon-cards-v13-en-Pikachu',
       expect.arrayContaining([expect.objectContaining({ id: 'pikachu-1' })]),
     );
+  });
+
+  it('hydrates cards by stable ID when the localized name is not indexed', async () => {
+    mockGet.mockImplementation(async (url: string) => {
+      const parsed = new URL(`https://tcgdex.test${url}`);
+      const searchTerm = parsed.searchParams.get('name');
+
+      if (parsed.pathname === '/fr/cards' && searchTerm === 'like:Debugant') {
+        return { data: [] };
+      }
+
+      if (parsed.pathname === '/fr/cards' && searchTerm === 'like:tyrogue') {
+        return { data: [] };
+      }
+
+      if (parsed.pathname === '/en/cards' && searchTerm === 'like:tyrogue') {
+        return {
+          data: [{
+            id: 'sv-base-1',
+            localId: '1',
+            name: 'Tyrogue',
+            image: 'https://assets.tcgdex.net/en/sv/sv-base/1',
+          }],
+        };
+      }
+
+      if (parsed.pathname === '/fr/cards/sv-base-1') {
+        return {
+          data: {
+            id: 'sv-base-1',
+            localId: '1',
+            name: 'Debugant',
+            image: 'https://assets.tcgdex.net/fr/sv/sv-base/1',
+          },
+        };
+      }
+
+      throw new Error(`Unexpected TCG API request: ${url}`);
+    });
+
+    const cards = await getPokemonCards('Debugant', 'fr', 'tyrogue');
+
+    expect(cards).toEqual([
+      expect.objectContaining({
+        id: 'sv-base-1',
+        name: 'Debugant',
+        image: 'https://assets.tcgdex.net/fr/sv/sv-base/1',
+      }),
+    ]);
+    expect(mockGet).toHaveBeenCalledTimes(4);
+    expect(mockGet.mock.calls.map(([url]) => url)).toEqual([
+      expect.stringContaining('/fr/cards?'),
+      expect.stringContaining('/fr/cards?'),
+      expect.stringContaining('/en/cards?'),
+      '/fr/cards/sv-base-1',
+    ]);
+  });
+
+  it('does not fall back to English when a localized card detail is unavailable', async () => {
+    mockGet.mockImplementation(async (url: string) => {
+      if (url === '/fr/cards/sv-base-1') {
+        throw new Error('French card not available');
+      }
+
+      if (url === '/en/cards/sv-base-1') {
+        return {
+          data: {
+            id: 'sv-base-1',
+            localId: '1',
+            name: 'Tyrogue',
+            image: 'https://assets.tcgdex.net/en/sv/sv-base/1',
+          },
+        };
+      }
+
+      throw new Error(`Unexpected TCG API request: ${url}`);
+    });
+
+    const card = await getTCGCard('sv-base-1', 'fr', undefined, { allowEnglishFallback: false });
+
+    expect(card).toBeNull();
+    expect(mockGet).toHaveBeenCalledTimes(1);
+    expect(mockGet).toHaveBeenCalledWith('/fr/cards/sv-base-1');
   });
 });
 

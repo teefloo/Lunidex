@@ -5543,6 +5543,14 @@ body:has(.lunidex-home) .site-footer a:hover {
   background-position: center top, center top;
   background-repeat: no-repeat;
   background-size: max(100%, 96rem) auto, auto;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0 70%, transparent 100%);
+  -webkit-mask-position: top;
+  mask-position: top;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 64rem;
+  mask-size: 100% 64rem;
   opacity: 0.12;
   mix-blend-mode: multiply;
 }

@@ -4,7 +4,7 @@ import { useQuery, useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
 import { useParams, useRouter } from 'next/navigation';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import {
   Loader2,
   ArrowLeft,
@@ -31,7 +31,7 @@ import { cn, formatId, formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
-import { useMounted } from '@/hooks/useMounted';
+import { languageToPokemonLanguageId } from '@/lib/languages';
 
 interface LocalizedGqlData {
   pokemon_v2_pokemonspeciesnames: { 
@@ -158,19 +158,17 @@ export function PokemonDetailClient({
     toggleCaught, isCaught, 
     addToCompare, removeFromCompare, isInCompare,
     addToTeam, removeFromTeam, isInTeam,
-    addToHistory, language, systemLanguage, team,
+    addToHistory, team,
     soundEnabled
   } = usePrimeDexStore();
-  const mounted = useMounted();
+  const routeLanguage = useClientLanguage();
 
   const [abilityDescs, setAbilityDescs] = useState<Record<string, AbilityBattleDesc> | null>(null);
   useEffect(() => {
     import('@/lib/ability-battle-descriptions').then(m => setAbilityDescs(m.ABILITY_BATTLE_DESCRIPTIONS));
   }, []);
 
-  const resolvedLang = mounted 
-    ? (language === 'auto' ? systemLanguage : language) 
-    : 'en';
+  const resolvedLang = routeLanguage;
 
   const statLabels: Record<string, string> = {
     'hp': t('stats.hp_short'),
@@ -184,7 +182,7 @@ export function PokemonDetailClient({
   const { data, isLoading } = useQuery({
     queryKey: ['pokemon-full-detail', name, resolvedLang],
     queryFn: async () => {
-      const langId = usePrimeDexStore.getState().getLanguageId();
+      const langId = languageToPokemonLanguageId[resolvedLang];
       const baseName = getBaseSpeciesName(name);
       const [pokemon, species, localized] = await Promise.all([
         getPokemonDetail(name),
@@ -795,7 +793,7 @@ export function PokemonDetailClient({
                         return <div className="col-span-full p-4 text-center text-xs text-foreground/50 bg-secondary/20 rounded-sm border border-border/40">{t('detail.no_items')}</div>;
                       }
                       return items.map(item => (
-                        <ItemCard key={item.id} item={item} language={language} />
+                        <ItemCard key={item.id} item={item} language={resolvedLang} />
                       ));
                     })()}
                   </div>

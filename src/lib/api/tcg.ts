@@ -515,9 +515,20 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
 /**
  * Fetch a single card by ID with full details.
  */
-export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSignal): Promise<TCGCard | null> => {
+interface GetTCGCardOptions {
+  /** Keep a localized response localized instead of replacing it with English data. */
+  allowEnglishFallback?: boolean;
+}
+
+export const getTCGCard = async (
+  cardId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+  options: GetTCGCardOptions = {},
+): Promise<TCGCard | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-card-v9-${cardId}-${tcgLang}`;
+  const cacheKey = `tcg-card-v10-${cardId}-${tcgLang}`;
+  const allowEnglishFallback = options.allowEnglishFallback !== false;
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
@@ -539,9 +550,13 @@ export const getTCGCard = async (cardId: string, lang = 'en', signal?: AbortSign
     // TCGdex does not publish every card in every supported UI language.
     // Keep the localized route indexable with the English card payload rather
     // than turning a valid alternate URL into a 404.
-    if (tcgLang !== 'en') {
+    if (allowEnglishFallback && tcgLang !== 'en') {
       const fallbackCard = await getTCGCard(cardId, 'en', signal);
       if (fallbackCard) return fallbackCard;
+    }
+
+    if (!allowEnglishFallback) {
+      return await getCachedData<TCGCard>(cacheKey, true);
     }
 
     console.error(`[TCG API] Error fetching card ${cardId}:`, error);
@@ -1128,12 +1143,17 @@ export const getRaritiesForSet = async (setId: string, lang = 'en'): Promise<str
 };
 
 /**
- * Fetch card summaries by Pokémon name with an English fallback.
+ * Fetch card summaries by Pokémon name in the requested TCGdex language.
  *
- * The search endpoint already provides the identity and image needed by the
- * grid. Fetching every card detail here blocks the entire grid behind hundreds
- * of requests for popular Pokémon; details are hydrated on demand by the card
- * modal instead.
+ * TCGdex does not always index a localized card under the translated Pokémon
+ * name. When that happens, use the English index only to discover stable card
+ * IDs, then hydrate each card from the requested locale. This keeps the card
+ * artwork and printed text in the same language as the page.
+ *
+ * The localized search endpoint already provides the identity and image needed
+ * by the grid. Detail hydration is only used when the localized index cannot
+ * find the Pokémon, so the English index can be used for IDs without leaking
+ * English card payloads into the localized grid.
  */
 export const getPokemonCards = async (
   pokemonName: string,
@@ -1141,7 +1161,7 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v11-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v13-${tcgLang}-${pokemonName}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
@@ -1154,10 +1174,29 @@ export const getPokemonCards = async (
       sortOrder: 'asc',
     };
 
-    let cards = await fetchAllCardSearchPages(searchFilters, tcgLang);
+    const searchTerms = [pokemonName];
+    if (englishName && englishName.trim().toLowerCase() !== pokemonName.trim().toLowerCase()) {
+      searchTerms.push(englishName);
+    }
+
+    let cards: TCGCard[] = [];
+    for (const searchTerm of searchTerms) {
+      cards = await fetchAllCardSearchPages({ ...searchFilters, searchTerm }, tcgLang);
+      if (cards.length > 0) break;
+    }
 
     if (cards.length === 0 && tcgLang !== 'en' && englishName) {
-      cards = await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en');
+      const englishSummaries = await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en');
+      const localizedCards = await mapWithConcurrency(
+        englishSummaries,
+        VISUAL_METADATA_CONCURRENCY,
+        (card) => getTCGCard(card.id, tcgLang, undefined, { allowEnglishFallback: false }),
+      );
+
+      // Do not put an English card into a localized page when TCGdex has no
+      // localized detail for that card. Showing fewer cards is preferable to
+      // silently mixing languages in the same grid.
+      cards = localizedCards.filter((card): card is TCGCard => Boolean(card));
     }
 
     const sorted = sortCardsByReleaseDate(cards);

@@ -103,7 +103,11 @@ export function TCGCardDetailModal({
 
   const { data: hydratedCard, isFetching } = useQuery({
     queryKey: card ? tcgKeys.card(card.id, resolvedLang) : tcgKeys.card('missing', resolvedLang),
-    queryFn: async () => (card ? getTCGCard(card.id, resolvedLang) : null),
+    queryFn: async () => (
+      card
+        ? getTCGCard(card.id, resolvedLang, undefined, { allowEnglishFallback: false })
+        : null
+    ),
     enabled: mounted && isOpen && !!card,
     staleTime: 30 * 60 * 1000,
     placeholderData: card ?? undefined,
