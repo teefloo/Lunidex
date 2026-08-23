@@ -39,6 +39,7 @@ export default function TypeFilter() {
               type="button"
               onClick={() => toggleType(type)}
               aria-label={label}
+              aria-pressed={isActive}
               className={cn(
                 "pokedex-filter-chip scroll-snap-align-start relative px-5 py-3 rounded-sm text-[11px] font-black uppercase tracking-wider transition-all duration-100 border min-h-[44px] shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
                 isActive
