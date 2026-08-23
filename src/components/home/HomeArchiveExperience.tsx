@@ -22,11 +22,9 @@ export async function HomeArchiveExperience() {
   const collectionCopy = {
     startLabel: t('lunidex_home.cta_start'),
     resumeLabel: t('lunidex_home.cta_resume'),
-    previewEyebrow: t('lunidex_home.preview_eyebrow'),
     previewTitle: t('lunidex_home.preview_title'),
     previewBody: t('lunidex_home.preview_body'),
     previewNote: t('lunidex_home.preview_note'),
-    previewOwnedEyebrow: t('lunidex_home.preview_owned_eyebrow'),
     previewOwnedTitle: t('lunidex_home.preview_owned_title'),
     previewOwnedCountOne: t('lunidex_home.preview_owned_count_one'),
     previewOwnedCountOther: t('lunidex_home.preview_owned_count_other'),
@@ -39,7 +37,6 @@ export async function HomeArchiveExperience() {
       <main id="home-main" tabIndex={-1} className="home-landing-main">
         <section id="threshold" className="home-landing-hero" aria-labelledby="home-hero-title">
           <div className="home-landing-hero-copy">
-            <p className="home-section-kicker">{t('lunidex_archive.hero_eyebrow')}</p>
             <h1 id="home-hero-title" className="home-landing-hero-title">
               <HomeWordReveal text={t('lunidex_home.hero_title')} locale={language} />
             </h1>
@@ -63,10 +60,7 @@ export async function HomeArchiveExperience() {
 
         <section id="cards" className="home-preview-bento" aria-labelledby="home-preview-title">
           <div className="home-section-heading">
-            <div>
-              <p className="home-section-kicker">{t('lunidex_home.tools_eyebrow')}</p>
-              <h2 id="home-preview-title">{t('lunidex_home.tools_title')}</h2>
-            </div>
+            <h2 id="home-preview-title">{t('lunidex_home.tools_title')}</h2>
             <p>{t('lunidex_home.tools_body')}</p>
           </div>
 
@@ -95,7 +89,6 @@ export async function HomeArchiveExperience() {
 
         <section id="progress" className="home-local-first" aria-labelledby="home-local-first-title">
           <div id="lunidex-identity" className="home-local-first-copy">
-            <p className="home-section-kicker">{t('lunidex_home.trust_title')}</p>
             <h2 id="home-local-first-title">{t('about.identity_title')}</h2>
             <p>{t('about.identity_body')}</p>
             <p>{t('lunidex_home.trust_body')}</p>
@@ -116,7 +109,6 @@ export async function HomeArchiveExperience() {
             <div className="home-open-source-brand" aria-hidden="true">
               <LunidexLogo alt="" sizes="52px" className="h-11 w-11 object-contain" />
             </div>
-            <p className="home-section-kicker">{t('about.eyebrow')}</p>
             <h2 id="home-open-source-title">{t('about.opensource_title')}</h2>
             <p>{t('about.cards.github')}</p>
             <p>{t('about.opensource_body').split('\n')[0]}</p>

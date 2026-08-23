@@ -12,7 +12,6 @@ export default async function HomeCollectionSteps() {
     <section id="collection-steps" className="home-collection-steps" aria-labelledby="collection-steps-title">
       <div className="home-collection-steps-inner">
         <div className="home-collection-steps-heading">
-          <p className="home-section-kicker">{t('lunidex_home.steps_eyebrow')}</p>
           <h2 id="collection-steps-title">{t('lunidex_home.steps_title')}</h2>
         </div>
         <ul className="home-collection-steps-list">

@@ -88,7 +88,7 @@ export function HomeWordReveal({ text, className, locale = 'en' }: HomeWordRevea
           </span>
         ))}
       </span>
-      <span className="sr-only">{text}</span>
+      <span className="sr-only home-word-reveal-accessible">{text}</span>
     </span>
   );
 }

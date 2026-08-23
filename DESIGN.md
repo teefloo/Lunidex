@@ -1,130 +1,153 @@
 ---
 name: Lunidex
-description: A localized Pokémon companion and TCG collection dashboard built around a warm Soft Pixel field-compendium language.
+description: A localized Pokémon companion for Pokédex reference, team building, and Pokémon TCG collection tracking.
 project_id: "N/A — local repository; no Stitch project is linked to this workspace"
+audited: 2026-08-23
+scope: "Next.js web application; the Expo mobile boundary is documented separately below"
 source_of_truth:
   - src/app/globals.css
+  - src/styles/shadcn-tailwind.css
+  - src/app/layout.tsx
   - src/components/ui/button.tsx
   - src/components/ui/input.tsx
   - src/components/ui/badge.tsx
-  - src/types/pokemon.ts
-  - src/lib/generation-themes.ts
-  - apps/mobile/src/theme/colors.ts
-color_encoding: "Runtime web tokens are authored in OKLCH. Hex values below are sRGB rendering references; preserve the OKLCH token as canonical."
-colors:
-  light:
-    background: "oklch(0.945 0.028 85) / #F5ECD8"
-    foreground: "oklch(0.17 0.045 60) / #1D0900"
-    card: "oklch(0.985 0.012 85) / #FEFAF1"
-    primary: "oklch(0.72 0.110 45) / #DE8E69"
-    accent: "oklch(0.80 0.050 240) / #A1C3DB"
-    border: "oklch(0.74 0.060 75) / #C1A681"
-  dark:
-    background: "oklch(0.16 0.012 50) / #120C09"
-    foreground: "oklch(1.0 0 0) / #FFFFFF"
-    card: "oklch(0.22 0.015 55) / #201914"
-    primary: "oklch(0.80 0.100 45) / #F4A988"
-    accent: "oklch(0.87 0.040 235) / #BCD9EB"
-    border: "oklch(0.40 0.030 60) / #544438"
-typography:
-  display: "Pixelify Sans, 400/500/600/700"
-  body: "Nunito, 400/600/700"
-  mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono"
-geometry:
-  radius: "0.125rem default; 0.25rem Tailwind large token"
-  border: "3px for framed surfaces; 2px for compact controls"
-  touch_target: "2.75rem minimum"
+  - src/components/ui/card.tsx
+  - src/components/layout/Header.tsx
+  - src/components/layout/PageHeader.tsx
+  - src/app/pokedex/page.tsx
+  - src/components/home/HomeArchiveExperience.tsx
+  - packages/core/src/types/pokemon.ts
+  - src/lib/site.ts
 ---
 
 # Design System: Lunidex
 
-**Project ID:** N/A — this file documents the local Lunidex repository; no Stitch project ID is available in the current workspace.
+This document is the visual source of truth for new web screens and for prompts that need to extend the existing interface. It describes the effective current cascade, not the historical names of the project or retired visual experiments.
 
-**Scope:** The canonical system below describes the Next.js web application. Expo mobile has a separate runtime theme and is documented at the end; do not mix its tokens into web screens.
+## 1. Visual theme and atmosphere
 
-**Audited:** 2026-08-09
+### Creative direction: “Cobalt Pokémon Field Console”
 
-## 1. Visual Theme & Atmosphere
+Lunidex is a focused reference instrument for players and collectors. Its core web experience is a calm cobalt-indigo console: cool, luminous, data-rich, and friendly without becoming toy-like. The Pokémon mark, official artwork, type colors, and card imagery provide the personality; the surrounding interface stays structured so search, comparison, collection progress, and localized text remain easy to scan.
 
-### Creative north star: “The Soft Pixel Field Compendium”
-
-Lunidex should feel like a collector’s field guide rebuilt as a focused digital instrument: warm, tactile, playful, and unusually deliberate. The interface combines the friendliness of a Pokémon companion with the density of a catalog or research desk. It is not generic SaaS glassmorphism and it is not a strict 8-bit recreation. The personality comes from near-square frames, offset pixel shadows, specimen metadata, Pixelify Sans headlines, and type-driven color.
-
-The default web mood is a warm parchment workspace with terracotta actions and desaturated sky-blue support accents. Dark mode becomes a deep brown-black workspace with lifted, readable accents. Pokémon sprites, type colors, and TCG artwork provide the strongest moments of saturation; surrounding UI stays quiet so the content remains the subject.
-
-The product is a functional dashboard first. Every decorative treatment must preserve scanability, collection progress, filtering, comparison, and localized reading. Use texture and motion as a light layer of character, never as a competing visual hierarchy.
+The landing page is a more editorial expression of the same system. It uses the same light/dark theme pair, but gives the interface more room: a fixed frosted header, a large hero composition, collectible-card previews, a Pokédex specimen, team evidence, local-first messaging, and an accordion FAQ. It should feel like a polished field lab, not a generic SaaS dashboard.
 
 ### Visual principles
 
-- **Warm, not sterile:** cream, paper, umber, terracotta, and muted blue replace a neutral gray SaaS palette.
-- **Tactile, not soft:** global frames use crisp borders and zero-blur offset shadows; depth reads like a physical card or label.
-- **Catalogued, not ornamental:** small uppercase metadata, catalog numbers, rules, and specimen tags make dense data feel intentional.
-- **Content-led color:** Pokémon types, TCG rarity, and meaningful states carry color; the primary brand accent stays purposeful.
-- **Playful, not childish:** Pixelify Sans, the Pokéball mark, and card motion add game character while the layout remains editorial and practical.
+- **Cool, not clinical:** cobalt, periwinkle, lavender, and blue-white surfaces replace a neutral gray SaaS palette.
+- **Soft depth with a tactile response:** resting surfaces use diffused shadows and thin borders; interactive controls lift by a pixel on hover and settle on press.
+- **Content-led color:** the primary indigo/lavender signal is reserved for actions, selection, focus, and progress. Pokémon type and TCG rarity colors belong to the data they describe.
+- **Editorial density:** display headings, uppercase micro-labels, monospace catalog data, and clear rules make large information sets feel intentional.
+- **Playful restraint:** official sprites, the Lunidex mark, card tilt, glows, and small motion add game character without competing with the content.
+
+### Effective visual layers
+
+| Layer | Selector or route | Design role |
+| --- | --- | --- |
+| Shared web foundation | `:root`, `.dark`, `body` | Theme tokens, typography, noise layer, safe areas, focus, and motion defaults. |
+| Generic application routes | `.app-page:not(.pokedex-redesign):not(.lunidex-home)` | Indigo/periwinkle page background, rounded data surfaces, framed page headers, and the shared header/footer. |
+| Pokédex route | `.pokedex-redesign` | Dedicated cobalt field with star-like texture, luminous lavender controls, hero mark, search/filter console, and specimen cards. |
+| Home route | `.lunidex-home` | Cobalt landing composition with hero artwork, bento previews, collection steps, local-first/open-source cards, and FAQ. |
+| Mobile app | `apps/mobile/src/theme/colors.ts` | Native palette and geometry; it does not inherit web CSS or web glass classes. |
+
+`src/app/globals.css` contains older compatibility selectors before the final route-scoped rules. When a selector appears more than once, use the effective route-specific definition near the end of the file and the tokens documented here. The former warm parchment landing experiment and per-generation theme system are not the current web design system.
 
 ### Source precedence
 
-When a future screen needs a design decision, use this order of authority:
+Use this order when making a new visual decision:
 
-1. CSS custom properties and component classes in `src/app/globals.css`.
-2. Shared shadcn/Base UI primitives in `src/components/ui/`.
-3. Shared Pokémon and generation data in `src/types/pokemon.ts` and `src/lib/generation-themes.ts`.
-4. Feature-local styling in the relevant route or component. Local styling may add a semantic exception for a chart, TCG card, quiz state, or illustration, but it must not silently redefine the global palette.
+1. Effective custom properties and route-scoped selectors in `src/app/globals.css`.
+2. Shared Base UI primitives in `src/components/ui/` and the variants in `src/styles/shadcn-tailwind.css`.
+3. Shared domain color data in `packages/core/src/types/pokemon.ts`.
+4. Feature-local styles in the route or component. A local exception is allowed for TCG rarity, quiz feedback, charts, illustrations, or a dedicated visual experiment, but it must not silently redefine the global shell.
 
-## 2. Color Palette & Roles
+## 2. Color palette and roles
 
-The web system is authored in OKLCH. The hex values in parentheses are 8-bit sRGB references for visual communication; the OKLCH declaration is the value to preserve in CSS.
+The web foundation uses exact sRGB hex and RGBA values. `color-mix(in oklab, ...)` is used to derive restrained tints; do not replace the source tokens with approximate hex colors.
 
-### Light-mode foundation
+### Light foundation
 
-| Semantic role | Canonical token | sRGB reference | Use |
+| Token | Value | Role |
+| --- | --- | --- |
+| `--background` | `#F2F6FF` | Cool blue-white page canvas. |
+| `--foreground` | `#14265D` | Primary ink, headings, and important data. |
+| `--card` | `#FFFFFF` | Main cards, panels, toolbar surfaces, and popovers. |
+| `--card-foreground` | `#14265D` | Text on cards. |
+| `--popover` | `#FFFFFF` | Menus, dialogs, and floating surfaces. |
+| `--popover-foreground` | `#14265D` | Text in floating surfaces. |
+| `--primary` | `#5243B5` | Primary actions, active controls, progress, selected navigation, and focus. |
+| `--primary-foreground` | `#FFFFFF` | Text and icons on primary surfaces. |
+| `--accent` | `#DCE7FF` | Pale blue support surface and secondary emphasis. |
+| `--accent-foreground` | `#173164` | Text on accent surfaces. |
+| `--secondary` | `#E9EFFF` | Quiet secondary controls and grouped utility areas. |
+| `--secondary-foreground` | `#173164` | Text on secondary surfaces. |
+| `--muted` | `#EEF3FF` | Skeletons, quiet fills, and low-emphasis backgrounds. |
+| `--muted-foreground` | `#53658E` | Supporting copy, metadata, and inactive controls. |
+| `--destructive` | `#C94355` | Errors, reset, delete, and destructive feedback. |
+| `--border` | `rgba(35, 62, 128, 0.16)` | Default boundary and separator. |
+| `--border-strong` | `rgba(35, 62, 128, 0.30)` | Emphasized boundary. |
+| `--input` | `rgba(35, 62, 128, 0.18)` | Input and control boundary. |
+| `--ring` | `#5243B5` | Keyboard focus ring. |
+
+### Dark foundation
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--background` | `#07144F` | Deep ultramarine canvas. |
+| `--foreground` | `#FFF8FC` | Warm white text and headings. |
+| `--card` | `#123B86` | Raised cobalt cards and panels. |
+| `--card-foreground` | `#FFF8FC` | Text on dark cards. |
+| `--popover` | `#0B1D5B` | Dark floating surfaces and menus. |
+| `--popover-foreground` | `#FFF8FC` | Text in dark floating surfaces. |
+| `--primary` | `#C9B8FF` | Lifted lavender action and selection color. |
+| `--primary-foreground` | `#10164F` | Dark ink on lavender primary surfaces. |
+| `--accent` | `#8DB4FF` | Bright blue support accent and secondary emphasis. |
+| `--accent-foreground` | `#08154A` | Dark text on accent surfaces. |
+| `--secondary` | `#17356F` | Secondary cobalt surface. |
+| `--secondary-foreground` | `#FFF8FC` | Text on secondary surfaces. |
+| `--muted` | `#18366F` | Quiet dark fill and skeleton background. |
+| `--muted-foreground` | `#A9B9E8` | Supporting copy and inactive controls. |
+| `--destructive` | `#FF8D9B` | Lifted destructive feedback. |
+| `--border` | `rgba(201, 184, 255, 0.24)` | Default lavender boundary. |
+| `--border-strong` | `rgba(229, 222, 255, 0.46)` | High-emphasis boundary and separators. |
+| `--input` | `rgba(201, 184, 255, 0.24)` | Input and control boundary. |
+| `--ring` | `#C9B8FF` | Keyboard focus ring. |
+
+### Depth tokens
+
+| Token | Light value | Dark value | Use |
 | --- | --- | --- | --- |
-| Warm parchment canvas | `--background: oklch(0.945 0.028 85)` | `#F5ECD8` | Page background and quiet empty states. |
-| Dark umber ink | `--foreground: oklch(0.17 0.045 60)` | `#1D0900` | Body text, headings, and high-priority content. |
-| Paper card | `--card: oklch(0.985 0.012 85)` | `#FEFAF1` | Cards, toolbars, panels, popovers, and control surfaces. |
-| Soft terracotta primary | `--primary: oklch(0.72 0.110 45)` | `#DE8E69` | Primary actions, active states, progress, focus, and selected navigation. |
-| Primary ink | `--primary-foreground: oklch(0.22 0.060 45)` | `#300F01` | Text and icons on the filled primary color. |
-| Desaturated sky accent | `--accent: oklch(0.80 0.050 240)` | `#A1C3DB` | Secondary information and compare-oriented accents. |
-| Accent ink | `--accent-foreground: oklch(0.16 0.040 240)` | `#000F1C` | Text on accent surfaces. |
-| Quiet secondary | `--secondary: oklch(0.92 0.020 85)` | `#EBE4D6` | Muted controls, segmented backgrounds, and secondary panels. |
-| Muted copy | `--muted-foreground: oklch(0.17 0.060 70)` | `#1F0800` | Supporting text; opacity utilities usually soften it further. |
-| Warm border | `--border: oklch(0.74 0.060 75)` | `#C1A681` | Default frame and control boundary. |
-| Strong warm border | `--border-strong: oklch(0.68 0.055 75)` | `#AD9473` | Emphasis and stronger separators. |
-| Destructive coral | `--destructive: oklch(0.70 0.090 20)` | `#D18887` | Delete, reset, error, and favorite action color when mapped through `--action-favorite`. |
+| `--pixel-shadow` | `rgba(35, 62, 128, 0.16)` | `rgba(2, 7, 38, 0.42)` | Main shadow color. |
+| `--shadow-pixel` | `0 18px 48px var(--pixel-shadow)` | Same form | Large surfaces and toolbars. |
+| `--shadow-pixel-sm` | `0 8px 22px rgba(35, 62, 128, 0.12)` | `0 8px 22px rgba(2, 7, 38, 0.28)` | Cards, buttons, and compact controls. |
 
-The explicit metadata colors in `src/lib/site.ts` are a separate integration layer: `PRIMARY_COLOR` is `#E8916B`, `ACCENT_COLOR` is `#A8C5E0`, and `BACKGROUND_COLOR` is `#211A17`. Use those values for metadata, OG assets, and browser-facing integration where the source calls for them; do not treat them as replacements for the runtime CSS tokens above.
+The overall system is softly elevated rather than flat. Hard offset shadows are reserved for interaction states and selected landing CTAs, usually `3px 3px 0` to `5px 5px 0` in a color-mixed primary tone. Do not add large blurred shadows to every small control.
 
-### Dark-mode foundation
+### Integration colors
 
-The `.dark` class preserves the same roles while moving the canvas to warm brown-black and lifting the actionable colors for contrast.
+`src/lib/site.ts` exposes the public integration values used by metadata and browser-facing assets:
 
-| Semantic role | Canonical token | sRGB reference | Use |
-| --- | --- | --- | --- |
-| Brown-black canvas | `--background: oklch(0.16 0.012 50)` | `#120C09` | Dark page background. |
-| White foreground | `--foreground: oklch(1.0 0 0)` | `#FFFFFF` | Main text and headings. |
-| Raised brown card | `--card: oklch(0.22 0.015 55)` | `#201914` | Cards, popovers, and controls. |
-| Lifted terracotta | `--primary: oklch(0.80 0.100 45)` | `#F4A988` | Primary actions and focus states. |
-| Lifted sky | `--accent: oklch(0.87 0.040 235)` | `#BCD9EB` | Secondary accent and information. |
-| Brown border | `--border: oklch(0.40 0.030 60)` | `#544438` | Frames and separators. |
-| Dark pixel shadow | `--pixel-shadow: oklch(0.10 0.010 50)` | `#050302` | Offset depth on dark surfaces. |
+- `PRIMARY_COLOR`: `#5243B5`
+- `BACKGROUND_COLOR`: `#07144F`
+- `ACCENT_COLOR`: `#8DB4FF`
 
-Dark mode also lifts all type colors and action colors. The browser theme colors are explicitly `#F4EAD5` for light and `#211A17` for dark in `src/app/layout.tsx`.
+The root viewport uses `#F2F6FF` in light mode and `#07144F` in dark mode. The home page declares `#F7F9FF` for its light viewport and keeps `#07144F` for dark mode. These integration values do not authorize a separate palette for new components.
 
 ### Semantic action accents
 
-These are reserved for actions and status, not general decoration.
+Use these only when the action has the corresponding meaning. They are not decorative brand colors.
 
-| Role | Light token | Dark token | Use |
-| --- | --- | --- | --- |
-| Favorite | `--action-favorite: oklch(0.70 0.090 20)` | `oklch(0.75 0.100 22)` | Favorite and remove-favorite states. |
-| Compare | `--action-compare: oklch(0.68 0.090 250)` | `oklch(0.74 0.095 252)` | Compare controls and selected comparison items. |
-| Team | `--action-team: oklch(0.72 0.090 162)` | `oklch(0.78 0.095 164)` | Add/remove from team. |
-| Caught | `var(--primary)` | `var(--primary)` | Living-Dex completion and caught state. |
-| Legendary | `--action-legendary: oklch(0.82 0.090 80)` | `oklch(0.87 0.090 80)` | Legendary and mythical specimen label. |
+| Role | Light token | Dark token |
+| --- | --- | --- |
+| Favorite | `oklch(0.70 0.090 20)` | `oklch(0.75 0.100 22)` |
+| Compare | `oklch(0.68 0.090 250)` | `oklch(0.74 0.095 252)` |
+| Team | `oklch(0.72 0.090 162)` | `oklch(0.78 0.095 164)` |
+| Caught | `var(--primary)` | `var(--primary)` |
+| Legendary/mythical | `oklch(0.82 0.090 80)` | `oklch(0.87 0.090 80)` |
 
 ### Pokémon type palette
 
-`TYPE_COLORS` in `src/types/pokemon.ts` is the shared, exact hex palette used by badges, filters, type bars, charts, battle views, and inline card gradients. It is intentionally more saturated than the neutral shell.
+`TYPE_COLORS` in `packages/core/src/types/pokemon.ts` is the canonical data palette. Use it for type badges, active type filters, type bars, charts, and type-driven card accents. Use a tint or `color-mix()` for surfaces; reserve the raw color for labels, swatches, or a clearly active state.
 
 | Type | Hex | Type | Hex |
 | --- | --- | --- | --- |
@@ -138,184 +161,191 @@ These are reserved for actions and status, not general decoration.
 | Dragon | `#6F35FC` | Dark | `#705746` |
 | Steel | `#B7B7CE` | Fairy | `#D685AD` |
 
-The `TypeBadge` and `type-accent` treatment uses the active type as `--type-color`: approximately 10–18% type color in the card fill, 45–55% in the border mix, and 80% in the text mix. Pokémon cards additionally use a 7%/5% type-tinted linear gradient and a hard `4px 4px` shadow at roughly 45% type opacity. Type charts and battle views may use the raw hex as a full-color swatch.
+The `--type-*` variables in `globals.css` are lower-chroma OKLCH reserve tokens for components that explicitly consume them. They are not a replacement for `TYPE_COLORS`. Feature-local TCG rarity, quiz verdict, ownership, and chart colors may use vivid emerald, red, amber, violet, cyan, pink, or slate accents, but those colors must remain close to the data they explain.
 
-`src/app/globals.css` also declares lower-chroma `--type-*` OKLCH variables and lifted dark counterparts as a reserved semantic palette. Current web components generally pass the shared hex values through inline `--type-color`, so use `TYPE_COLORS` for actual Pokémon data and the `--type-*` variables only when a component explicitly opts into the CSS reserve.
-
-### Generation themes
-
-`GenThemeProvider` sets `data-gen="gen1"` through `data-gen="gen9"` on `<html>`. Each theme is a semantic recoloring of the same component geometry; it is not a new layout system.
-
-| Theme | Primary | Accent | Canvas | Text | Notes |
-| --- | --- | --- | --- | --- | --- |
-| Default | `#C87941` | `#7AABCC` | `#FFF8E7` | `#5C4033` | Runtime base still comes from the Soft Pixel OKLCH root tokens; these values are used by the theme selector metadata. |
-| Gen 1 / Kanto | `#E3350D` | `#003A8C` | `#FFF8E7` | `#1A1A1A` | Warm cream with red/blue game identity. |
-| Gen 2 / Johto | `#FFD700` | `#C0C0C0` | `#1A3A1A` | `#F5F0D0` | Dark forest canvas; card and border are also overridden. |
-| Gen 3 / Hoenn | `#9B2335` | `#0047AB` | `#006994` | `#FFFFFF` | Deep turquoise canvas; card and border are also overridden. |
-| Gen 4 / Sinnoh | `#B0D4F1` | `#9966CC` | `#1A1A2E` | `#E8E0F0` | Night-blue canvas; card and border are also overridden. |
-| Gen 5 / Unys | `#CC2222` | `#F5F5F5` | `#1C1C1C` | `#F5F5F5` | Near-black canvas; card and border are also overridden. |
-| Gen 6 / Kalos | `#4169E1` | `#FF2400` | `#F0F4FF` | `#1A1A3A` | Light blue canvas; root card remains in use. |
-| Gen 7 / Alola | `#FFB700` | `#6A0DAD` | `#E8F8F8` | `#1A2A3A` | Pale turquoise canvas; root card remains in use. |
-| Gen 8 / Galar | `#CE1620` | `#0A4FA6` | `#F5F0F8` | `#1A0A2A` | Pale lavender canvas; root card remains in use. |
-| Gen 9 / Paldea | `#FF2400` | `#8B00FF` | `#FFF0F0` | `#2A0A1A` | Pale rose canvas; root card remains in use. |
-
-### Feature-local accents
-
-TCG rarity, quiz answers, collection ownership, badges, and battle verdicts use local semantic colors such as emerald, red, amber, blue, violet, cyan, pink, and slate. These accents are intentionally allowed to be more vivid than the shell because they communicate card rarity or an immediate result. Keep their usage close to the data they label; do not promote a feature-local color to a global brand token without adding a documented role.
-
-## 3. Typography Rules
+## 3. Typography rules
 
 ### Typeface roles
 
-- **Pixelify Sans** is the display voice. It is loaded through `next/font/google` at weights 400, 500, 600, and 700, then applied to all `h1`–`h6`, `.page-title`, hero headlines, modal titles, and specimen names.
-- **Nunito** is the reading voice. It is loaded at weights 400, 600, and 700 and is the body stack for descriptions, controls, navigation copy, and localized content.
-- **Monospace** (`ui-monospace`, SFMono-Regular, Menlo, Consolas, Liberation Mono) is reserved for catalog numbers, IDs, stats, technical values, chart labels, code, and compact field metadata.
+- **Pixelify Sans** is the display voice, loaded through `next/font/google` at weights `400`, `500`, `600`, and `700`. It is used by headings, page titles, the wordmark, Pokémon names, and prominent feature labels.
+- **Nunito** is the reading voice, loaded at weights `400`, `600`, and `700`. It is used for body copy, navigation, controls, descriptions, and localized content.
+- **Monospace** is `ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono`. Use it for catalog numbers, IDs, stats, filters, compact labels, and technical metadata.
 
-Both web fonts use `font-display: optional` and metric-matched fallbacks. The body stack includes Hiragino Sans, Noto Sans CJK JP, and Microsoft YaHei so the eight supported locales do not break the hierarchy.
+The CSS frequently requests `font-weight: 800` or `900` for high-emphasis display copy even though the downloaded display range stops at `700`; preserve the existing font setup and let the browser synthesize the heavier weight. Both Google fonts use `display: optional` and `preload: false`. The body fallback chain includes `Hiragino Sans`, `Noto Sans CJK JP`, and `Microsoft YaHei` for the supported Asian locales.
 
 ### Hierarchy
 
-| Level | Implemented expression | Character |
+| Level | Current expression | Guidance |
 | --- | --- | --- |
-| Hero display | `clamp(2.75rem, 7vw, 6rem)` on the home hero; Pokédex hero uses `clamp(2.75rem, 9vw, 6.5rem)`, weight 800, line-height `.92` | Large, tightly cropped, immediate product promise. |
-| Page title | `page-title`, display font, weight 700, line-height `1`, usually `text-3xl` → `text-6xl` across breakpoints | Editorial section anchor. |
-| Section title | Usually `text-3xl` → `text-4xl`, weight 800/900, tight tracking | Strong but readable navigation through a dense page. |
-| Card/specimen title | Display font, usually 1rem–1.25rem, semibold or black, tight tracking | Fast recognition of a Pokémon, set, tool, or card. |
-| Body | 0.875rem–1rem, line-height 1.5–1.75, Nunito | Comfortable reading and localized copy. |
-| Micro-label | 0.6875rem–0.75rem, bold/black, uppercase, `0.08em–0.22em` tracking | Filters, statuses, tabs, rarity, and actions. |
-| Catalog metadata | 0.6rem–0.6875rem, monospace, uppercase, `0.12em–0.18em` tracking | Pokedex number, set code, stat, or accession-like detail. |
+| Pokédex hero | `clamp(3.75rem, 9vw, 7rem)` on large screens; smaller mobile clamp | Short, high-impact title with tight `0.84` line-height. |
+| Generic page title | `page-title`, display font, `clamp(1.75rem, 4vw, 3rem)` compact to `text-6xl` standard | Use as the page anchor; keep `text-wrap: balance`. |
+| Home hero/section title | Display font, roughly `clamp(3.25rem, 4.7vw, 5rem)` desktop | Editorial, compact, and strongly tracked negative. |
+| Card/specimen title | Display font, usually `1rem`–`2.75rem` depending on surface | Favor recognition and short names over ornamental styling. |
+| Body | `0.9rem`–`1.18rem`, usually `1.6`–`1.72` line-height | Give localized text room to wrap. |
+| Micro-label | `0.55rem`–`0.75rem`, bold, uppercase, `0.08em`–`0.18em` tracking | Use for status, tabs, filters, and controls. |
+| Catalog metadata | Monospace, approximately `0.55rem`–`0.7rem`, uppercase | Use for IDs, numbers, stat labels, and technical context. |
 
-The display voice uses zero or slightly negative tracking for large headings. Wide tracking is reserved for short uppercase labels. Do not turn paragraphs into uppercase; it damages the multilingual reading rhythm. The legacy `gradient-text-*` helper classes intentionally resolve to `var(--foreground)` and must not be interpreted as permission to add gradient text.
+Large headings use tight or negative tracking, while short uppercase labels use positive tracking. Never uppercase paragraphs or long localized copy. The legacy `gradient-text-*` helpers intentionally resolve to `var(--foreground)`; do not interpret their names as permission to add gradient text.
 
-## 4. Component Stylings
+## 4. Geometry, depth, and component styling
 
-### Shapes, borders, and elevation
+### Geometry vocabulary
 
-The default silhouette is nearly square: `--radius: 0.125rem`. Tailwind’s runtime mapping is `rounded-sm: 0`, `rounded-md: 0.125rem`, and `rounded-lg: 0.25rem` through `src/styles/shadcn-tailwind.css`. The canonical frame border is `3px`; compact controls generally use `2px` or a one-pixel utility border when they are intentionally quieter.
+- Base `--radius`: `0.5rem`.
+- Tailwind theme radii: `--radius-sm: 0.375rem`, `--radius-md: 0.5rem`, `--radius-lg: 0.75rem`.
+- Base border width: `1px`.
+- Minimum interactive target: `2.75rem` (`44px`) through the `touch-target` utility.
+- The visual language is rounded and calm. “Pixel” describes the responsive lift/press behavior and data-console character, not universally square corners.
 
-| Surface family | Geometry | Resting depth | Intended use |
-| --- | --- | --- | --- |
-| Framed surfaces | `var(--radius)`, 3px solid `--border` | `4px 4px 0 var(--pixel-shadow)` | `page-surface`, `section-frame`, `glass-panel`, `glass-surface`, `codex-frame`, main header, dialogs, and toasts. |
-| Compact surfaces | `var(--radius)`, 2px solid `--border` | `2px 2px 0 var(--pixel-shadow)` | `glass-card`, `glass-control`, `glass-toolbar`, `type-accent`, tags, and small controls. |
-| Plain content blocks | Small radius or no frame | Local border or no shadow | Editorial sections, table cells, filter rows, and feature-specific data panels. |
+### Surface families
 
-The core system is not flat at rest: its pixel offset is part of the identity. Hover normally moves an interactive element `-1px` on each axis and increases the offset; press moves it `2px` down/right and removes the shadow. Focus-visible uses a `2px` ring with a small offset, sourced from `--ring`. Soft blur shadows are permitted only for media, illustrations, charts, and feature-local overlays where the content needs atmospheric separation.
+| Surface | Effective geometry | Use |
+| --- | --- | --- |
+| Generic framed panel | `1px` border, `1rem` radius, card/background mix, `--shadow-pixel` | Page headers, content panels, dialogs, and large modules. |
+| Generic compact surface | `1px` border, `0.75rem` radius, card/background mix, `--shadow-pixel-sm` | Cards, controls, toolbars, and type-accent blocks. |
+| Generic toolbar | `1.15rem` radius, translucent card mix, `18px` backdrop blur, inset highlight | Fixed global header and floating navigation. |
+| Pokédex console | `1.35rem` controls, `1.05rem` search field, `0.85rem` action controls | Search, sort, filters, and result state. |
+| Pokédex card | `1px` border, `1.25rem` radius, gradient cobalt surface | Specimen grid; `19.75rem` desktop height and `18.6rem` mobile height. |
+| Home panel | `1px` border, `1.25rem` radius, translucent panel, `14px` blur, soft shadow | Collection preview, Pokédex specimen, team preview, and trust cards. |
+| Home FAQ item | `1px` border, `1rem` radius, compact panel | Expandable questions and answers. |
+| Pill/status | Use `rounded-full` only for true status dots, progress dials, and compact type/status chips | A pill communicates a compact semantic state, not a default container shape. |
 
-### Page shell and headers
+When a component uses the historical `glass-*` class name, follow the effective surface family above. “Glass” is a compatibility name: use restrained translucency for toolbars and selected landing panels, not a blur-heavy treatment on every data card.
 
-- `.page-shell` centers content in `min(100%, 90rem)` with `1rem` horizontal padding, `1.5rem` from 640px, and `2rem` from 1024px. Many feature pages use a narrower `max-w-6xl` content column.
-- `PageHeader` uses a framed panel, a small top gradient wash, a 56px icon tile, a `page-eyebrow`, a responsive `page-title`, muted description, and a 2px divider below.
-- The home hero is intentionally more open than catalog screens: `max-w-6xl`, a one-column-to-two-column grid, `2rem` mobile gap / `3rem` desktop gap, and a masked 1.35rem primary-colored pixel grid with a restrained radial glow.
-- The fixed header is a centered framed toolbar, positioned below the safe-area inset. It contains the Pokéball/Lunidex lockup, desktop navigation, search shortcut, favorites, locale selector, theme switch, settings, account, and a mobile sheet trigger.
-- The logo combines a small Pokéball mark, “Luni” in bold display type, “dex” in an italic display treatment, and a compact `000 / 1025` progress readout with a 2px progress bar.
+### Buttons and controls
 
-### Buttons and interactive controls
+The shared `Button` variants are `default`, `outline`, `secondary`, `ghost`, `glass`, `surface`, `destructive`, and `link`. Sizes are `xs` (`36px`), `sm` (`40px`), `default` (`44px`), `lg` (`48px`), `touch` (minimum `44px`), and icon sizes from `36px` to `48px`.
 
-- Use the shared `Button` variants: filled primary, outline, secondary, ghost, glass, surface, destructive, and link. The filled primary is the strongest action; outline and glass controls are the default for supporting actions.
-- Common sizes are 40–48px high; icon controls are 44px square. The `touch-target` utility guarantees a minimum `2.75rem` hit area even when the visible icon is smaller.
-- Navigation, filters, tabs, rarity, and technical actions are often uppercase with tracked microcopy. Home CTAs and explanatory actions may remain sentence case. Case is semantic, not a universal button rule.
-- Active states use primary or the action-specific color. Team, compare, favorite, caught, owned, and wishlist controls should keep their meaning visually stable across cards and detail views.
-- Every icon-only action requires an accessible name. Visible text may be hidden only when an `aria-label` or equivalent accessible name is present.
+- The filled `default`/primary button is the strongest action and uses the primary token with a small shadow.
+- Outline, secondary, glass, and surface variants support secondary actions; ghost is reserved for low-emphasis navigation or icon controls.
+- Hover generally lifts by `-1px` on both axes and increases the offset shadow; press moves by roughly `2px` and removes the shadow.
+- Icon-only controls must be named accessibly. Keep the `44px` hit area even if the icon is visually `14px`–`18px`.
+- Navigation, filters, tabs, and technical actions commonly use uppercase monospace or bold microcopy. Explanatory CTAs may use sentence case when localization needs it.
+- Preserve stable semantic colors for favorite, compare, team, caught, wishlist, destructive, and legendary states across list, detail, and dashboard views.
 
-### Cards and data surfaces
+### Inputs, tabs, cards, and overlays
 
-- Standard cards use a paper/brown card surface, a near-square corner, a visible border, and the small pixel shadow. Larger panels use the 3px frame and 4px offset.
-- Padding scales with density: compact cards use `p-3`–`p-4`; content panels and dashboard modules use `p-5`–`p-8`; page headers use roughly `p-5` on mobile and `p-7`–`p-8` on desktop.
-- Use `color-mix()` or an opacity utility for a quiet tint; do not fill an entire page with saturated accent color.
-- The shared Base UI/shadcn primitives inherit the same variables. Do not create a parallel radius or shadow vocabulary inside a new component.
+- `Input` is a `44px`-high `glass-control` with `1rem` horizontal padding, an input-colored border, and a `2px` ring on focus.
+- `Badge` is approximately `24px` high, bold, uppercase, `11px`, with `0.12em` tracking. Use the shared variants instead of inventing badge geometry.
+- `Card` uses `glass-card`, a compact gap, `1rem` horizontal content padding, and a border-top footer when needed. Keep the card hierarchy quiet so artwork or data carries the emphasis.
+- Tabs use a framed `glass-toolbar` list; the active tab becomes a card-colored raised item with a primary indicator line.
+- Dialogs use a centered `glass-surface`, a foreground-tinted overlay, safe-area-aware bottom padding, and short fade/zoom transitions. Sheets use the same surface language and must preserve mobile safe areas.
+- Sonner toasts use `.cn-toast`: popover surface, border, `--shadow-pixel`, and the active foreground tokens.
+- Skeletons use muted fills and `.codex-shimmer` when a sweep improves perceived loading; the sweep is `2.4s` and must stop under reduced motion.
 
-### Pokémon cards and catalog controls
+### Header and page header
 
-- The Pokédex grid is dense and specimen-like: cards are approximately `18rem` tall, separated by `0.5rem` gaps, and expand from 1 to 2 columns at 360px, 3 at `md`, 4 at `lg`, and 5 at `xl`.
-- Each Pokémon card uses a type-tinted gradient, a type-colored 4px hard shadow, a crisp small-radius border, a pixel-preserving or official sprite, and a soft sprite drop shadow. Hover raises the card by 1px and scales the sprite to roughly 105%.
-- The top of the card carries a monospace catalog number and three 44px action chips for team, compare, and favorite. A fourth caught/Pokéball control sits at the lower right.
-- Pokémon names use display type; the Latin-style name is italic display text; type labels are monospace, uppercase, and tracked. Legendary/mythical status uses the gold action accent.
-- Type and region filters are horizontally scrollable on small screens, use scroll snap, hide the browser scrollbar, and become centered/wrapping rows at larger widths. Active type filters use the raw type hex; active region filters use primary.
+The shared header is fixed below the safe-area inset and centered inside a `glass-toolbar`/`codex-frame`. It contains the Lunidex mark, the `Luni`/italic `dex` wordmark, a `000 / 1025` progress readout, desktop primary navigation, a tools menu, command-palette search, favorites, language, theme, settings, account, and a mobile navigation trigger.
 
-### TCG cards and research desk
+`PageHeader` is the standard route introduction: a responsive framed surface, a `56px` icon tile, a `page-eyebrow`, display-font title, muted description, optional badge, and a `2px` divider. Use `standard`, `hero`, or `compact` rather than creating a parallel heading shell.
 
-- The TCG catalog is a deliberate visual subsystem inside the same shell. Cards keep a physical trading-card ratio (`2.15 / 3`) and use a corner radius around `4.55% / 3.5%` rather than the square UI radius.
-- Interactive holographic cards support pointer-driven tilt up to roughly 10 degrees, shine/glare layers, and a restrained holographic border sweep on hover. Do not use that treatment on ordinary Pokémon or dashboard cards.
-- TCG research uses framed panels, compact uppercase filters, a prominent search field, tabs, set/rarity/category controls, and dense card metadata. The main search field intentionally uses a more generous `1.25rem` radius as a feature-local exception.
-- Rarity badges use local tones for common, uncommon, rare, promo, hyper rare, secret, illustration, rainbow, holo, and related variants. Their purpose is classification; preserve their contrast and do not collapse them into the primary brand color.
-- The compare trigger is a fixed 48px round action button with a count badge. The comparison surface is a right-side panel with a border, card background, pixel shadow, and responsive 1-to-4-card grid.
+### Pokédex visual subsystem
 
-### Inputs, tabs, dialogs, and feedback
+The Pokédex route intentionally becomes a dedicated dark/light field inside `.pokedex-redesign`:
 
-- Inputs and selects are generally `glass-control` surfaces, 44px high, with `--input`/`--border` strokes, card or transparent background, and a primary `2px` focus ring. Textareas use the same near-square radius and quieter card fill.
-- Tabs sit in a `glass-toolbar`; the active tab gets a card fill, border, small pixel shadow, and primary indicator. TCG tabs may wrap to two columns on narrow screens.
-- Dialogs and sheets use the framed surface language, safe-area-aware bottom padding, a muted overlay, and slide/zoom/fade entrance. The sheet uses the pixel shadow to separate from the page edge.
-- Sonner toasts use a 3px frame, popover surface, foreground text, near-square radius, and the large pixel shadow.
-- Loading states use muted fills and, where appropriate, the `codex-shimmer` primary sweep. Error and destructive states use coral/red semantic colors, not a new ad hoc brand color.
+- Dark canvas: deep ultramarine `#07144F`, blue middle gradient near `#09256F`, and deep edge `#050D38`, with small star-like radial marks.
+- Dark raised surface: `#123B86` and `#17489C`; light mode maps the same structure to `#FFFFFF`, `#F2F6FF`, and `#EEF3FF`.
+- Hero mark: luminous halo, orbit shapes, small stars, and the square Lunidex mark. The hero uses a two-column layout on larger screens and a compact mark in the upper-right on mobile.
+- Search/filter console: translucent gradient panel, prominent `4.25rem` search field, `2.85rem` action controls, horizontally scrollable filter rails, and a visible result-status block.
+- Specimen cards: approximately `19.75rem` tall on desktop, `18.6rem` on mobile, with a cobalt gradient, a `1.25rem` radius, type-derived glow, 44px action chips, official artwork, and a `translateY(-4px)` hover lift. Type colors tint the data; they do not recolor the whole route.
 
-## 5. Layout Principles
+### TCG visual subsystem
 
-### Composition and density
+TCG imagery uses a physical card ratio of `2.15 / 3` in catalogs, home previews, skeletons, and compare panels. The interactive `TCGHolographicCard` adds pointer-driven tilt through CSS variables, image shine, glare, rarity/type classes, and a semantic keyboard focus state. The holographic border sweep uses `7s` animation and must remain limited to TCG cards.
 
-Lunidex alternates between generous editorial introductions and dense utility zones. Hero and page-header copy gets room to breathe; catalog grids, filter rails, comparison panels, and stat blocks are intentionally packed.
+Use TCG rarity colors only for rarity labels and card feedback. Keep catalog metadata uppercase and compact, and keep ownership actions touch-sized. Do not apply the TCG shine, tilt, or physical card radius to ordinary dashboard cards.
 
-- Use a centered content column. The global ceiling is 90rem; most public and feature pages use 72rem (`max-w-6xl`).
-- Start mobile-first. Use one column below 360px, two columns from 360px where the content supports it, then add 3/4/5-column grids at `md`/`lg`/`xl`.
-- Use 0.5rem gaps for dense catalog grids, 1rem–1.5rem gaps for standard cards, and 2rem–3rem gaps for hero columns. Separate major sections with roughly 3rem on mobile and 4rem on desktop.
-- Keep interactive rows horizontally scrollable rather than compressing labels into unreadable widths. Use `scroll-snap-x`, `scroll-snap-align-start`, `overscroll-behavior-x: contain`, and a hidden scrollbar for filter and card rails.
-- Avoid horizontal overflow at 320px, 375px, 414px, and 768px. Long localized labels must wrap or scroll within their own control rather than expanding the viewport.
+## 5. Layout and responsive principles
 
-### Responsive framing
+### Composition
 
-The fixed header and modal/sheet surfaces account for `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)`. Main content reserves top space for the header (`pt-24` to `pt-32` in major routes). Footer content remains quiet and border-separated, with compact links and a readable disclaimer rather than another framed panel.
+- The base `.page-shell` is centered at `min(100%, 90rem)` with `1rem` side padding, `1.5rem` from `640px`, and `2rem` from `1024px`. Generic application routes raise the effective ceiling to `92rem`; feature content commonly uses `max-w-6xl`.
+- Use mobile-first layout. Dense Pokémon grids may use 2 columns from the smallest supported width, then 3/4/5 columns as available; never force a label to fit by shrinking it below a readable size.
+- Use about `0.7rem`–`1.15rem` for dense Pokédex grids, `1rem` for standard/bento card gaps, and larger `2rem`–`6rem` gaps for hero compositions. Section padding should use `clamp()` where the screen is editorial.
+- Keep filter rails and long control rows scrollable with `scroll-snap-x`, `scroll-snap-align-start`, hidden scrollbars, and `overscroll-behavior-x: contain` when wrapping would harm scanability.
+- Reserve top space for the fixed header (`pt-28`/`pt-32` on the Pokédex and a safe-area-aware clamp on home). Do not allow content to sit underneath the header.
 
-### Localization and accessibility
+### Home composition
 
-The web UI supports English, French, Spanish, German, Italian, Japanese, Korean, and Chinese. Leave room for longer translations, do not bake English widths into buttons, and keep the font fallback chain intact. Maintain WCAG-oriented 44px touch targets, visible keyboard focus, accessible names for icon controls, reduced-motion behavior, and sufficient contrast for muted metadata.
+The home route is a clear, scrollable product introduction:
 
-## 6. Motion, Texture, and Media
+1. A fixed frosted header with navigation, language, theme, and a primary entry CTA.
+2. A two-column hero (`0.92fr / 1.08fr`) with a large display title, concise promise, primary/secondary CTAs, a central Pokémon illustration, orbit lines, and three card previews.
+3. A bento tools section: the collection preview spans two rows beside a Pokédex specimen and a team preview.
+4. A collection-steps section with a heading column and ruled step list.
+5. A two-card local-first/open-source section.
+6. A centered FAQ accordion with a maximum reading width of `56rem`.
 
-Motion should feel physical and brief:
+On screens below `768px`, the hero and bento become one column, CTAs stack to full width, and the team roster uses two columns. At very narrow widths, content padding can fall to `0.9rem`; localized copy must still wrap without horizontal overflow.
 
-- `fadeInUp`: 0.6s entrance with an 18px upward drift.
-- `scaleIn`: 0.5s subtle content/sprite arrival from 96% scale.
-- `float`: 8–12s decorative particle movement with small rotation; use only in playful hero or 404 scenes.
-- `pulseSlow`: 4.5–8s opacity breathing for restrained loading or emphasis.
-- `statFill`: 1s horizontal stat-bar reveal from zero.
-- `codex-shimmer`: 2.4s skeleton sweep.
-- `holographicShimmer`: 7s TCG border sweep, visible only on the holographic card interaction.
-- Home preview cards use pointer-aware 3D tilt and a primary radial glow; touch and reduced-motion users do not receive the pointer effect.
+### Accessibility, localization, and platform behavior
 
-The page background has a repeated 240px SVG fractal-noise layer: light mode uses multiply at `.18`, dark mode uses screen at `.10`, and reduced motion lowers it to `.06`. The home hero adds a radial-masked primary grid and a 12px-blurred radial glow. These are atmospheric backgrounds, not replacements for content surfaces.
+The web supports `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`, plus an `auto` preference. Use `useTranslation`/server translation helpers for all new copy, preserve the font fallback chain, and assume labels may become substantially longer in German or French. Maintain visible focus, named icon actions, `44px` touch targets, sufficient contrast for muted metadata, `next/image` with meaningful alt text, safe-area padding, and `prefers-reduced-motion` behavior.
 
-Every global animation and transition must have a `prefers-reduced-motion: reduce` path. In reduced motion, entrance effects become immediately visible, particle/shimmer/tilt animations stop, and interaction transitions collapse to near-zero duration.
+## 6. Motion, texture, and media
 
-## 7. Platform Boundary
+Motion is brief, physical, and subordinate to the information hierarchy:
 
-The Expo app shares domain logic but not the web surface system. Its source of truth is `apps/mobile/src/theme/colors.ts`:
+- Shared interaction transitions target `180ms` with the `cubic-bezier(0.22, 1, 0.36, 1)` ease; component primitives may use shorter `100ms` state changes.
+- `fadeInUp`: `0.6s`, `18px` upward entrance.
+- `scaleIn`: `0.5s`, starting at `96%` scale.
+- `codex-shimmer`: `2.4s` skeleton sweep.
+- `pulseSlow`: `4.5s` for emphasis or `8s` for ambient breathing.
+- `statFill`: `1s` reveal from zero.
+- `holographicShimmer`: `7s`, only for holographic TCG borders.
+- Pokédex hero orb float: `7s`; home card previews respond to pointer with up to approximately `10°` tilt, never on touch.
+- Home word reveals are word-aware through `Intl.Segmenter`, with an immediate accessible text fallback.
 
-- **Mobile light:** background `#F5F6FB`, surfaces/cards `#FFFFFF`, alternate surface `#EEF0F7`, border `#E3E6F0`, text `#11131C`, muted text `#5B6071`, primary indigo `#4F46E5`, accent pink `#EC4899`, danger `#E11D48`, success `#16A34A`.
-- **Mobile dark:** background `#0B1020`, surfaces `#141A2E`, alternate surface `#1B2238`, card `#161D33`, border `#28304A`, text `#F3F5FC`, muted text `#A3ABC4`, primary `#7C83FF`, accent `#F472B6`, danger `#FB7185`, success `#4ADE80`.
+The body has a repeated `240px` SVG fractal-noise layer: light mode uses multiply at `0.18`, dark mode uses screen at `0.10`. Under reduced motion it drops to `0.06`. Home and Pokédex add restrained radial glows, grid/orbit marks, and artwork drop shadows; these remain backgrounds or media treatments, never text replacements.
 
-Mobile components should remain native and responsive to their platform. Do not port the web’s pixel shadow, OKLCH shell, or web-specific `glass-*` classes into React Native unless a deliberate cross-platform design migration is planned.
+Every animation needs a reduced-motion path. Under `prefers-reduced-motion: reduce`, transitions collapse to near-zero, entrance content is immediately visible, card tilt and holographic motion stop, the Pokédex orb stops, and no information depends on an animation completing.
 
-## 8. Do’s and Don’ts
+## 7. Mobile platform boundary
+
+The Expo companion shares domain data and the canonical Pokémon type hex values, but it has an independent native palette. Do not port web CSS classes, `color-mix()`, backdrop blur, or web shadow geometry into React Native.
+
+| Token | Mobile light | Mobile dark |
+| --- | --- | --- |
+| Background | `#F5F6FB` | `#0B1020` |
+| Surface | `#FFFFFF` | `#141A2E` |
+| Alternate surface | `#EEF0F7` | `#1B2238` |
+| Card | `#FFFFFF` | `#161D33` |
+| Border | `#E3E6F0` | `#28304A` |
+| Text | `#11131C` | `#F3F5FC` |
+| Muted text | `#5B6071` | `#A3ABC4` |
+| Faint text | `#9AA0B4` | `#6F7796` |
+| Primary | `#4F46E5` | `#7C83FF` |
+| Primary text | `#FFFFFF` | `#0B1020` |
+| Accent | `#EC4899` | `#F472B6` |
+| Danger | `#E11D48` | `#FB7185` |
+| Success | `#16A34A` | `#4ADE80` |
+
+Mobile overlays and shadows are native-specific. Keep the contract equivalent, but let each platform express its own surface, navigation, and touch conventions.
+
+## 8. Do and don’t
 
 ### Do
 
-- Reuse the existing CSS variables and Base UI primitives.
-- Use the warm parchment/umber shell with the terracotta primary as a deliberate signal.
-- Keep frames near-square, visibly bordered, and physically offset where the component family calls for it.
-- Use exact Pokémon type hex values for type data and `color-mix()` for quiet type-tinted surfaces.
-- Preserve the distinction between primary brand actions, Pokémon type data, TCG rarity, and result/status colors.
-- Use Pixelify Sans for headings and Nunito for reading copy; keep monospace for catalog and technical metadata.
-- Design for localized text, 44px touch targets, keyboard focus, safe areas, and reduced motion.
-- Treat TCG physical-card geometry, quiz feedback, charts, and illustration glows as documented feature exceptions.
+- Reuse the web tokens, `cn()`, Base UI primitives, and established route shells.
+- Use cobalt/periwinkle light mode and ultramarine/lavender dark mode for new web surfaces.
+- Use thin borders, rounded panels, restrained translucency, and diffused depth; use hard offset shadows only as an interaction or selected CTA signal.
+- Use exact `TYPE_COLORS` for Pokémon data and semantic action tokens for user actions.
+- Keep Pixelify Sans for display, Nunito for reading, and monospace for compact data.
+- Design for all eight locales, safe areas, keyboard focus, reduced motion, and 44px targets.
+- Treat TCG physical-card geometry and holographic effects as a feature-local exception.
 
 ### Don’t
 
-- Do not replace the canonical OKLCH runtime tokens with arbitrary hex values just because a nearby integration uses a hex color.
-- Do not add generic gray glassmorphism, blurred shadows, or gradients to standard dashboard surfaces.
-- Do not use gradient text; the existing gradient-text helper is intentionally plain foreground text.
-- Do not claim that every component is square or every shadow is hard: TCG cards, toggles, chart cells, status pills, sprite art, and feature-local overlays have explicit rounded/soft exceptions.
-- Do not make all labels uppercase; reserve uppercase tracking for short metadata, filters, tabs, statuses, and technical actions.
-- Do not use saturated type or rarity colors as decorative page backgrounds.
-- Do not create a new radius, shadow, or semantic color family in a component file without updating the source-of-truth tokens.
-- Do not remove accessible names from icon-only controls or reduce touch targets below 44px.
+- Do not reintroduce the old warm parchment/terracotta shell as the default web palette.
+- Do not refer to `src/lib/generation-themes.ts` or build new per-generation UI themes; that source is retired and does not exist in the current repository.
+- Do not use saturated Pokémon types, TCG rarities, or chart colors as page backgrounds.
+- Do not add a new radius, shadow, or color family inside a feature without documenting its semantic role.
+- Do not apply heavy blur, holographic shine, pointer tilt, or physical TCG card geometry to ordinary dashboard surfaces.
+- Do not use gradient text; the existing `gradient-text-*` classes intentionally render foreground text.
+- Do not hard-code English copy, hide overflow to force a localized label into one line, or remove accessible names from icon-only controls.
 
-For Stitch-oriented prompts, keep the descriptions semantic and role-based while retaining the exact runtime values above. Reference the [Stitch Effective Prompting Guide](https://stitch.withgoogle.com/docs/learn/prompting/) when translating this system into new screens.
+## 9. Prompting vocabulary for new screens
+
+Describe the system semantically: “cobalt-indigo Pokémon field console,” “blue-white periwinkle light canvas,” “deep ultramarine dark canvas,” “raised white/cobalt data cards,” “lavender primary action,” “thin translucent border,” “soft diffused elevation,” “Pixelify display headings,” “Nunito reading copy,” and “monospace catalog metadata.”
+
+For a new screen, specify the light/dark role mapping and the functional hierarchy first. Add Pokémon type or TCG rarity color only where the data requires it. Preserve the exact runtime values above and keep new compositions compatible with the shared header, localization, safe areas, keyboard focus, and reduced-motion rules.

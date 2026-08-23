@@ -5335,7 +5335,8 @@ html:not(.dark) .lunidex-home {
   --field-line: rgba(35, 62, 128, 0.18);
   --field-line-soft: rgba(35, 62, 128, 0.1);
   --field-shadow: rgba(35, 62, 128, 0.16);
-  background:
+  background-color: var(--home-bg);
+  background-image:
     radial-gradient(circle at 75% 7%, rgba(82, 67, 181, 0.14), transparent 24rem),
     linear-gradient(180deg, #f7f9ff 0%, var(--field-canvas) 42%, #eaf0ff 100%);
   color: var(--field-ink);
@@ -5363,8 +5364,9 @@ html.dark .lunidex-home {
   --field-blue-deep: #1853ad;
   --field-line: rgba(201, 184, 255, 0.24);
   --field-line-soft: rgba(201, 184, 255, 0.12);
-  --field-shadow: rgba(2, 7, 38, 0.42);
-  background:
+  --field-shadow: rgba(0, 0, 0, 0.34);
+  background-color: var(--home-bg);
+  background-image:
     radial-gradient(circle at 75% 7%, rgba(201, 184, 255, 0.14), transparent 24rem),
     linear-gradient(180deg, #07144f 0%, var(--field-canvas) 42%, #050d38 100%);
   color: var(--field-ink);
@@ -5478,7 +5480,7 @@ html.dark .lunidex-home {
   --home-panel-raised: color-mix(in oklab, var(--card) 84%, var(--accent));
   --home-accent: var(--primary);
   --home-cool: var(--accent);
-  --home-shadow-color: rgba(2, 7, 38, 0.42);
+  --home-shadow-color: rgba(0, 0, 0, 0.34);
   --field-canvas: var(--background);
   --field-paper: var(--card);
   --field-paper-warm: var(--muted);
@@ -5518,7 +5520,8 @@ body:has(.lunidex-home) .site-footer a:hover {
   isolation: isolate;
   min-height: 100dvh;
   overflow: clip;
-  background:
+  background-color: var(--home-bg);
+  background-image:
     radial-gradient(circle at 88% 7%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 27rem),
     linear-gradient(180deg, color-mix(in oklab, var(--background) 86%, var(--card)), var(--background));
   color: var(--home-ink);
@@ -5539,7 +5542,7 @@ body:has(.lunidex-home) .site-footer a:hover {
     radial-gradient(circle at 14% 22%, color-mix(in oklab, var(--primary) 15%, transparent), transparent 26rem);
   background-position: center top, center top;
   background-repeat: no-repeat;
-  background-size: min(100%, 96rem) auto, auto;
+  background-size: max(100%, 96rem) auto, auto;
   opacity: 0.12;
   mix-blend-mode: multiply;
 }
@@ -5573,7 +5576,7 @@ html.dark .lunidex-home::before {
 
 .home-landing-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(24rem, 1.08fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
   align-items: center;
   gap: clamp(2rem, 5vw, 6rem);
   min-height: min(58rem, 100svh);
@@ -5608,15 +5611,28 @@ html.dark .lunidex-home::before {
   color: var(--home-ink);
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.03em;
   line-height: 0.94;
+  min-width: 0;
+  overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
 .home-landing-hero-title {
   max-width: 14ch;
-  margin-top: 1.1rem;
+  margin-top: 0;
   font-size: clamp(3.25rem, 4.7vw, 5rem);
+}
+
+.home-landing-hero-title .home-word-reveal-visual {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.home-landing-hero-title .home-word-reveal-word {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .home-landing-hero-body {
@@ -5765,7 +5781,7 @@ html.dark .lunidex-home::before {
 }
 
 .home-hero-visual-card .home-card-preview {
-  box-shadow: 0 1.25rem 2rem var(--home-shadow-color);
+  box-shadow: 0 0.85rem 1.5rem var(--home-shadow-color);
 }
 
 .home-preview-bento {
@@ -5783,7 +5799,7 @@ html.dark .lunidex-home::before {
 
 .home-section-heading h2 {
   max-width: 17ch;
-  margin-top: 0.8rem;
+  margin-top: 0;
   font-size: clamp(2.75rem, 5vw, 5.5rem);
 }
 
@@ -5797,10 +5813,11 @@ html.dark .lunidex-home::before {
 
 .home-preview-bento-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
-  grid-template-rows: minmax(0, auto) minmax(0, auto);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  grid-template-rows: none;
   gap: 1rem;
   align-items: stretch;
+  container: home-bento / inline-size;
 }
 
 .home-preview-bento-cell {
@@ -5808,7 +5825,13 @@ html.dark .lunidex-home::before {
 }
 
 .home-preview-bento-cell-collection {
-  grid-row: span 2;
+  grid-row: auto;
+}
+
+@container home-bento (min-width: 53rem) {
+  .home-preview-bento-cell-collection {
+    grid-row: span 2;
+  }
 }
 
 .home-preview-bento-cell > article,
@@ -5821,8 +5844,8 @@ html.dark .lunidex-home::before {
 .lunidex-home .home-team-specimen {
   border: 1px solid var(--home-line);
   border-radius: 1.25rem;
-  background: color-mix(in oklab, var(--home-panel) 94%, transparent);
-  box-shadow: 0 1.5rem 4rem var(--home-shadow-color), inset 0 1px 0 color-mix(in oklab, var(--foreground) 10%, transparent);
+  background-color: var(--home-panel);
+  box-shadow: none;
   color: var(--home-ink);
   backdrop-filter: blur(14px);
 }
@@ -5841,7 +5864,7 @@ html.dark .lunidex-home::before {
 }
 
 .lunidex-home .home-collection-preview .home-card-preview {
-  box-shadow: 0 1rem 1.8rem var(--home-shadow-color);
+  box-shadow: 0 0.75rem 1.25rem var(--home-shadow-color);
 }
 
 .lunidex-home .home-collection-preview .text-primary {
@@ -5849,7 +5872,7 @@ html.dark .lunidex-home::before {
 }
 
 .lunidex-home .home-collection-preview h3 {
-  margin-top: 0.65rem;
+  margin-top: 0;
   color: var(--home-ink);
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3vw, 2.75rem);
@@ -5871,14 +5894,31 @@ html.dark .lunidex-home::before {
 }
 
 .lunidex-home .home-pokedex-specimen {
+  container: home-pokedex / inline-size;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 84% 18%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 12rem),
-    color-mix(in oklab, var(--home-panel-raised) 88%, transparent);
+  background-color: var(--home-panel-raised);
+  background-image: radial-gradient(
+    circle at 84% 18%,
+    color-mix(in oklab, var(--accent) 22%, transparent),
+    transparent 12rem
+  );
+}
+
+/* The stats grid needs a real content breakpoint: a narrow bento column can
+   occur on tablets and desktop too, not only below the phone media query. */
+@container home-pokedex (max-width: 23rem) {
+  .lunidex-home .home-pokedex-specimen-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lunidex-home .home-pokedex-artwork {
+    max-width: 17rem;
+    margin-inline: auto;
+  }
 }
 
 .lunidex-home .home-pokedex-specimen::after {
-  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 19%, transparent), transparent 70%);
+  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 8%, transparent), transparent 72%);
 }
 
 .lunidex-home .home-pokedex-specimen-topline,
@@ -5947,10 +5987,15 @@ html.dark .lunidex-home::before {
   color: var(--home-muted);
 }
 
+.home-word-reveal-accessible {
+  letter-spacing: normal;
+  line-height: 1.5;
+}
+
 .home-collection-steps {
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
-  background: color-mix(in oklab, var(--home-panel-raised) 44%, transparent);
+  background-color: var(--home-panel-raised);
 }
 
 .home-collection-steps-inner {
@@ -5963,7 +6008,7 @@ html.dark .lunidex-home::before {
 
 .home-collection-steps-heading h2 {
   max-width: 10ch;
-  margin-top: 0.85rem;
+  margin-top: 0;
   font-size: clamp(2.75rem, 5vw, 5.5rem);
 }
 
@@ -6018,8 +6063,8 @@ html.dark .lunidex-home::before {
   padding: clamp(1.5rem, 4vw, 3.5rem);
   border: 1px solid var(--home-line);
   border-radius: 1.25rem;
-  background: color-mix(in oklab, var(--home-panel) 91%, transparent);
-  box-shadow: 0 1.5rem 4rem var(--home-shadow-color);
+  background-color: var(--home-panel);
+  box-shadow: none;
 }
 
 .home-local-first-copy h2,
@@ -6047,9 +6092,12 @@ html.dark .lunidex-home::before {
   position: relative;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 92% 4%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 18rem),
-    color-mix(in oklab, var(--home-panel-raised) 88%, transparent);
+  background-color: var(--home-panel-raised);
+  background-image: radial-gradient(
+    circle at 92% 4%,
+    color-mix(in oklab, var(--accent) 28%, transparent),
+    transparent 18rem
+  );
 }
 
 .home-open-source-brand {
@@ -6067,7 +6115,7 @@ html.dark .lunidex-home::before {
 .home-faq-section {
   padding: clamp(4rem, 9vw, 8rem) clamp(1.25rem, 4vw, 3.5rem);
   border-top: 1px solid var(--home-line);
-  background: color-mix(in oklab, var(--home-panel) 38%, transparent);
+  background-color: var(--home-bg);
 }
 
 .home-faq-inner {
@@ -6081,7 +6129,7 @@ html.dark .lunidex-home::before {
 }
 
 .home-faq-title {
-  margin-top: 0.8rem;
+  margin-top: 0;
   font-size: clamp(2.75rem, 5vw, 5.5rem);
 }
 
@@ -6101,8 +6149,8 @@ html.dark .lunidex-home::before {
   overflow: hidden;
   border: 1px solid var(--home-line);
   border-radius: 1rem;
-  background: color-mix(in oklab, var(--home-panel) 88%, transparent);
-  box-shadow: 0 0.8rem 2.5rem color-mix(in oklab, var(--home-shadow-color) 72%, transparent);
+  background-color: var(--home-panel);
+  box-shadow: 0 0.5rem 1.25rem color-mix(in oklab, var(--home-shadow-color) 72%, transparent);
 }
 
 .home-faq-summary {
@@ -6157,8 +6205,8 @@ html.dark .lunidex-home::before {
   padding-inline: clamp(0.85rem, 2vw, 1.5rem);
   border: 1px solid var(--home-line);
   border-radius: 1rem;
-  background: color-mix(in oklab, var(--home-panel) 84%, transparent);
-  box-shadow: 0 1rem 3rem var(--home-shadow-color), inset 0 1px 0 color-mix(in oklab, var(--foreground) 10%, transparent);
+  background-color: var(--home-panel);
+  box-shadow: none;
   color: var(--home-ink);
   backdrop-filter: blur(18px);
 }
@@ -6446,6 +6494,12 @@ html.dark .lunidex-home::before {
 @media (max-width: 380px) {
   .lunidex-home .field-brand-wordmark {
     font-size: 1rem;
+  }
+
+  .lunidex-home .field-mobile-menu-trigger {
+    white-space: nowrap;
+    font-size: 0.58rem;
+    letter-spacing: 0.07em;
   }
 
   .home-landing-hero,

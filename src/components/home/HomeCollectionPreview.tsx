@@ -43,9 +43,6 @@ export function HomeCollectionPreview({ locale, copy, showAction = true }: HomeC
           );
         })}
       </div>
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-primary">
-        {isResume ? copy.previewOwnedEyebrow : copy.previewEyebrow}
-      </p>
       <h3 id="collection-preview-title" className="mt-2 text-2xl font-black tracking-tight text-foreground">
         {isResume ? copy.previewOwnedTitle : copy.previewTitle}
       </h3>

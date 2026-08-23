@@ -14,9 +14,6 @@ export default async function HomeFaqSection() {
     >
       <div className="home-faq-inner">
         <div className="home-faq-heading">
-          <p className="home-section-kicker">
-            {t('lunidex_home.faq_eyebrow')}
-          </p>
           <h2
             id="faq-title"
             className="home-faq-title"

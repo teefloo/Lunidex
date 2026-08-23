@@ -11,23 +11,17 @@ interface HomeCardPreviewProps {
 }
 
 type HomeCardStyle = CSSProperties & {
-  '--card-glow-x': string;
-  '--card-glow-y': string;
   '--card-rotate-x': string;
   '--card-rotate-y': string;
 };
 
 const RESTING_STYLE: HomeCardStyle = {
-  '--card-glow-x': '50%',
-  '--card-glow-y': '50%',
   '--card-rotate-x': '0deg',
   '--card-rotate-y': '0deg',
   borderRadius: '4.55% / 3.5%',
 };
 
 function resetCardStyle(element: HTMLDivElement) {
-  element.style.setProperty('--card-glow-x', '50%');
-  element.style.setProperty('--card-glow-y', '50%');
   element.style.setProperty('--card-rotate-x', '0deg');
   element.style.setProperty('--card-rotate-y', '0deg');
   element.style.removeProperty('will-change');
@@ -51,8 +45,6 @@ function handleCardPointerMove(event: PointerEvent<HTMLDivElement>) {
   const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
   const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
 
-  element.style.setProperty('--card-glow-x', `${(x * 100).toFixed(1)}%`);
-  element.style.setProperty('--card-glow-y', `${(y * 100).toFixed(1)}%`);
   element.style.setProperty('--card-rotate-x', `${((0.5 - y) * 10).toFixed(2)}deg`);
   element.style.setProperty('--card-rotate-y', `${((x - 0.5) * 10).toFixed(2)}deg`);
   element.style.setProperty('will-change', 'transform');
@@ -77,12 +69,6 @@ export function HomeCardPreview({ card, rotationClass, sizes }: HomeCardPreviewP
         }}
       >
         <TCGCardImage card={card} alt="" sizes={sizes} className="object-contain" />
-        <span
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 motion-reduce:transition-none"
-          style={{
-            background: 'radial-gradient(circle at var(--card-glow-x) var(--card-glow-y), color-mix(in oklab, var(--primary) 34%, transparent), transparent 42%)',
-          }}
-        />
       </div>
     </div>
   );
