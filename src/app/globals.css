@@ -3938,28 +3938,6 @@ body:has(.lunidex-home) .site-footer a:hover {
   padding-top: clamp(1.25rem, 4vw, 3rem);
 }
 
-.pokedex-hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin: 0 0 1.15rem;
-  color: var(--pokedex-lavender);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.pokedex-hero__eyebrow-dot {
-  width: 0.48rem;
-  height: 0.48rem;
-  border-radius: 999px;
-  background: var(--pokedex-lavender);
-  box-shadow: 0 0 0 0.25rem rgba(201, 184, 255, 0.12), 0 0 1rem rgba(201, 184, 255, 0.8);
-}
-
 .pokedex-hero__title {
   max-width: 10ch;
   color: var(--pokedex-white);
@@ -4790,14 +4768,6 @@ html:not(.dark) .pokedex-redesign header .glass-btn:hover {
 html:not(.dark) .pokedex-redesign header .gradient-text-hero,
 html:not(.dark) .pokedex-redesign header .gradient-text-primary {
   color: var(--pokedex-white);
-}
-
-html:not(.dark) .pokedex-hero__eyebrow {
-  color: var(--pokedex-lavender);
-}
-
-html:not(.dark) .pokedex-hero__eyebrow-dot {
-  box-shadow: 0 0 0 0.25rem rgba(82, 67, 181, 0.12), 0 0 1rem rgba(82, 67, 181, 0.38);
 }
 
 html:not(.dark) .pokedex-hero__description {

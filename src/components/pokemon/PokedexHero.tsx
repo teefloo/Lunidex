@@ -9,10 +9,6 @@ export default async function PokedexHero() {
     <section aria-labelledby="pokedex-title" className="pokedex-hero relative pt-6 pb-8 md:pt-10 md:pb-12">
       <div className="pokedex-hero__grid mx-auto w-full max-w-6xl px-5 md:px-8">
         <div className="pokedex-hero__copy">
-          <p className="pokedex-hero__eyebrow">
-            <span className="pokedex-hero__eyebrow-dot" aria-hidden="true" />
-            Lunidex · {t('pokedex.title')}
-          </p>
           <h1 id="pokedex-title" className="page-title pokedex-hero__title font-display">
             {t('pokedex.title')}
           </h1>
