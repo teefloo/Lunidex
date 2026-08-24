@@ -96,6 +96,11 @@ export function buildTcgLanguages(path: string): Record<string, string> {
   return { ...langs, 'x-default': `${SITE_URL}/en${normalized}` };
 }
 
+/** Keep overlapping launch/editorial declarations from emitting duplicate URLs. */
+export function deduplicateSitemapEntries(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  return Array.from(new Map(entries.map((entry) => [entry.url, entry])).values());
+}
+
 async function getTcgCardPage(page: number): Promise<string[] | null> {
   const params = new URLSearchParams({
     'pagination:page': String(page),
@@ -284,5 +289,11 @@ const editorialUrls: MetadataRoute.Sitemap = EDITORIAL_SITEMAP_ROUTES.map((route
     })),
   ];
 
-  return [...staticUrls, ...editorialUrls, ...pokemonUrls, ...referenceUrls, ...tcgCardUrls];
+  return deduplicateSitemapEntries([
+    ...staticUrls,
+    ...editorialUrls,
+    ...pokemonUrls,
+    ...referenceUrls,
+    ...tcgCardUrls,
+  ]);
 }

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildTcgLanguages, EDITORIAL_SITEMAP_ROUTES, LAUNCH_SITEMAP_ROUTES } from './sitemap';
+import {
+  buildTcgLanguages,
+  deduplicateSitemapEntries,
+  EDITORIAL_SITEMAP_ROUTES,
+  LAUNCH_SITEMAP_ROUTES,
+} from './sitemap';
 
 describe('launch sitemap routes', () => {
   it('keeps indexable product pages while excluding legal and pre-launch pages', () => {
@@ -35,5 +40,16 @@ describe('launch sitemap routes', () => {
   it('publishes the editorial wave with only its translated locales', () => {
     expect(EDITORIAL_SITEMAP_ROUTES).toContain('/compare/lunidex-vs-pokemon-database');
     expect(EDITORIAL_SITEMAP_ROUTES).toContain('/guides/tcg-workspace-guide');
+  });
+
+  it('removes duplicate URLs when launch and editorial routes overlap', () => {
+    const entries = deduplicateSitemapEntries([
+      { url: 'https://lunidex.app/en/guides/team-builder-guide', priority: 0.5 },
+      { url: 'https://lunidex.app/en/guides/team-builder-guide', priority: 0.72 },
+      { url: 'https://lunidex.app/en/faq', priority: 0.7 },
+    ]);
+
+    expect(entries).toHaveLength(2);
+    expect(entries[0].priority).toBe(0.72);
   });
 });

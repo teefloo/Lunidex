@@ -52,13 +52,16 @@ export async function generateMetadata(): Promise<Metadata> {
   await connection();
   const t = await getServerT();
   const lang = await getServerLanguage();
+  const title = t('lunidex_home.meta_title', { defaultValue: t('meta.title') });
+  const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
+  const openGraphTitle = t('lunidex_home.og_title', { defaultValue: title });
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: t("meta.title"),
+      default: title,
       template: `%s | ${SITE_NAME}`,
     },
-    description: SITE_DESCRIPTION,
+    description,
     keywords: t("meta.keywords", { returnObjects: true }) as unknown as string[],
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,
@@ -107,8 +110,8 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
     },
     openGraph: {
-      title: t("meta.og_title"),
-      description: t("meta.og_description"),
+      title: openGraphTitle,
+      description,
       type: "website",
       siteName: SITE_NAME,
       locale: languageToOpenGraphLocale[lang],
@@ -150,6 +153,7 @@ export default async function RootLayout({
   const lang = await getServerLanguage();
   const t = await getServerT();
   const baseUrl = SITE_URL;
+  const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
 
   const jsonLd = [
     buildOrganizationJsonLd(),
@@ -160,7 +164,7 @@ export default async function RootLayout({
       name: SITE_NAME,
       alternateName: ['Lunidex', 'Luni Dex', 'Lunidex Pokédex'],
       url: baseUrl,
-      description: SITE_DESCRIPTION,
+      description,
       disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
       inLanguage: supportedInLanguage,
       keywords: SITE_KEYWORDS.join(', '),
@@ -178,7 +182,7 @@ export default async function RootLayout({
       applicationSubCategory: 'GameDatabase',
       operatingSystem: 'All',
       browserRequirements: 'Requires modern browser with JavaScript enabled',
-      description: SITE_DESCRIPTION,
+      description,
       disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
       image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
       featureList: FEATURE_LIST.join(', '),

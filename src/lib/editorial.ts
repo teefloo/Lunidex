@@ -39,9 +39,9 @@ export type FeatureGuideDefinition = {
  */
 export const EDITORIAL_ARTICLE_DATES = {
   '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-08-19' },
-  '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-08-19' },
-  '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-19' },
-  '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-19' },
+  '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-08-24' },
+  '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-24' },
+  '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-24' },
   '/compare/lunidex-vs-pokecardex-zebradex': { publishedAt: '2026-08-12', updatedAt: '2026-08-19' },
   '/compare/lunidex-vs-pokemon-database': { publishedAt: '2026-08-13', updatedAt: '2026-08-22' },
   '/compare/lunidex-vs-bulbapedia': { publishedAt: '2026-08-14', updatedAt: '2026-08-22' },

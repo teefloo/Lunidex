@@ -9,7 +9,7 @@ const t = (key: string) => {
 };
 
 describe('Lunidex home FAQ content', () => {
-  it('uses the same four visible questions and answers in FAQPage JSON-LD', () => {
+  it('uses the same visible questions and answers in FAQPage JSON-LD', () => {
     const visible = getLunidexHomeFaqs(t, 'fr');
     const jsonLd = buildLunidexHomeFaqJsonLd(t, 'fr');
 

@@ -16,7 +16,7 @@ import { HelpCircle, MessageCircleQuestion } from 'lucide-react';
 type FaqEntry = { q: string; a: string };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-08-16';
+const LAST_UPDATED = '2026-08-24';
 const FAQ_COUNT = 12;
 
 export const revalidate = 3600;
