@@ -436,6 +436,29 @@ export interface TCGActiveSetInsights {
 }
 
 /**
+ * Keep the progress indicator truthful while card-level set details are
+ * unavailable. The set metadata still gives us a reliable total and the
+ * compact owned IDs let us calculate the owned count without claiming that
+ * an empty response means the set is complete.
+ */
+export function getActiveSetInsightsFallback(
+  set: TCGSet,
+  ownedIds: Set<string>,
+): TCGActiveSetInsights {
+  const completion = getSetCompletionFromSet(set, ownedIds);
+  return {
+    completion,
+    topMissing: [],
+    valuation: {
+      groups: [],
+      ownedCount: completion.owned,
+      pricedCount: 0,
+    },
+    setTotalValue: [],
+  };
+}
+
+/**
  * Aggregate the estimated value of ALL cards in a set (ownership-independent).
  * Useful as a "set worth" reference even when the user owns 0 cards.
  */

@@ -768,16 +768,18 @@ export const fetchCollectionValue = async (
  */
 export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-cards-v4-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-cards-v5-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
-    if (cached) return cached;
+    // Empty responses are not useful cache entries: they can be produced by a
+    // transient upstream failure while the set is still available.
+    if (cached?.length) return cached;
 
     const { data } = await tcgClient.get<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
 
-    await setCachedData(cacheKey, cards);
+    if (cards.length > 0) await setCachedData(cacheKey, cards);
     return cards;
   } catch (error) {
     if (tcgLang !== 'en') {
@@ -831,12 +833,21 @@ export const fetchSetCollectionCards = async (
   signal?: AbortSignal,
 ): Promise<TCGCollectionCard[]> => {
   const params = new URLSearchParams({ setId, lang });
-  const response = await fetch(`/api/tcg/collection/set-cards?${params.toString()}`, { signal });
-  if (!response.ok) {
-    throw new Error(`Failed to load collection cards for ${setId}`);
+  try {
+    const response = await fetch(`/api/tcg/collection/set-cards?${params.toString()}`, { signal });
+    if (response.ok) {
+      const data = (await response.json()) as { cards?: TCGCollectionCard[] };
+      if (Array.isArray(data.cards) && data.cards.length > 0) return data.cards;
+    }
+  } catch (error) {
+    if (signal?.aborted) throw error;
   }
-  const data = (await response.json()) as { cards?: TCGCollectionCard[] };
-  return Array.isArray(data.cards) ? data.cards : [];
+
+  // The server route may be unable to reach TCGdex while the browser can. Use
+  // the lightweight set listing as a client-side fallback instead of turning
+  // an unavailable set into a misleading empty 0/0 collection.
+  const fallbackCards = await getCardsBySet(setId, lang);
+  return fallbackCards.map(toCollectionCard);
 };
 
 /**

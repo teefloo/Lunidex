@@ -29,6 +29,12 @@ export async function GET(request: NextRequest) {
 
   try {
     const cards = await buildSetCollectionCards(setId, lang, maxCards);
+    if (cards.length === 0) {
+      return NextResponse.json(
+        { error: 'Set cards unavailable' },
+        { status: 502, headers: { 'Cache-Control': 'private, no-store' } },
+      );
+    }
     return NextResponse.json(
       { setId, cards },
       {

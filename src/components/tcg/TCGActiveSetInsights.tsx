@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchSetCollectionCards } from '@/lib/api/tcg';
 import {
   computeActiveSetInsights,
+  getActiveSetInsightsFallback,
   getRarityColor,
   getRarityLabel,
   type TCGCollectionValueGroup,
@@ -59,9 +60,12 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
   });
 
   const insights = useMemo(
-    () => (cards ? computeActiveSetInsights(cards, ownedIds, 6) : null),
-    [cards, ownedIds],
+    () => (cards?.length
+      ? computeActiveSetInsights(cards, ownedIds, 6)
+      : getActiveSetInsightsFallback(set, ownedIds)),
+    [cards, ownedIds, set],
   );
+  const detailsUnavailable = isError || (!isLoading && !cards?.length);
 
   return (
     <div className="min-w-0 rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
@@ -106,13 +110,13 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
         </div>
       )}
 
-      {isError && (
+      {detailsUnavailable && (
         <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.1em] text-rose-400/85">
           {t('tcg.collection_insights_error')}
         </p>
       )}
 
-      {insights && (
+      {insights && !isLoading && !detailsUnavailable && (
         <>
           {/* Value */}
           <div className="mt-4 grid min-w-0 grid-cols-2 gap-3 border-t border-border/15 pt-3">
@@ -133,6 +137,10 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                     })}
                   </p>
                 </>
+              ) : insights.valuation.ownedCount > 0 ? (
+                <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                  {t('tcg.collection_value_unavailable')}
+                </p>
               ) : (
                 <p className="mt-1 text-[11px] font-bold text-foreground/55">
                   {t('tcg.collection_value_none_owned')}

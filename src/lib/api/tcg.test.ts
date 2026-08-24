@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockGet = vi.hoisted(() => vi.fn());
 const mockGetCachedData = vi.hoisted(() => vi.fn());
@@ -21,7 +21,9 @@ vi.mock('./cache', () => ({
 
 import {
   fetchCollectionValue,
+  fetchSetCollectionCards,
   getAllSets,
+  getCardsBySet,
   getFilterOptions,
   getTCGCard,
   getPokemonCards,
@@ -115,6 +117,61 @@ describe('TCG set freshness', () => {
 
     expect(set.logo).toBe('https://assets.tcgdex.net/fr/me/me1/logo.png');
     expect(set.symbol).toBe('https://assets.tcgdex.net/univ/me/me1/symbol.png');
+  });
+});
+
+describe('TCG collection card loading', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetCachedData.mockReset();
+    mockGetCachedData.mockResolvedValue(null);
+    mockSetCachedData.mockReset();
+    mockSetCachedData.mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('falls back to browser-loaded set summaries when the server route returns no cards', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ setId: 'me05', cards: [] }),
+    }));
+    mockGet.mockResolvedValue({
+      data: {
+        cards: [{
+          id: 'me05-001',
+          localId: '001',
+          name: 'Tropius',
+          image: 'https://assets.example.test/me05/001',
+        }],
+      },
+    });
+
+    await expect(fetchSetCollectionCards('me05', 'fr')).resolves.toEqual([
+      {
+        id: 'me05-001',
+        localId: '001',
+        name: 'Tropius',
+        image: 'https://assets.example.test/me05/001.png',
+        rarity: null,
+        value: null,
+      },
+    ]);
+    expect(mockGet).toHaveBeenCalledWith('/fr/sets/me05');
+  });
+
+  it('does not reuse an empty cached set response', async () => {
+    mockGetCachedData.mockResolvedValue([]);
+    mockGet.mockResolvedValue({
+      data: {
+        cards: [{ id: 'me05-001', localId: '001', name: 'Tropius' }],
+      },
+    });
+
+    await expect(getCardsBySet('me05', 'fr')).resolves.toHaveLength(1);
+    expect(mockGet).toHaveBeenCalledWith('/fr/sets/me05');
   });
 });
 

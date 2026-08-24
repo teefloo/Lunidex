@@ -6,9 +6,10 @@ import {
   getTopMissingCards,
   aggregateCollectionValue,
   computeActiveSetInsights,
+  getActiveSetInsightsFallback,
   sortCollectionCardsByRarity,
 } from './tcg-collection';
-import type { TCGCard, TCGCollectionCard } from '@/types/tcg';
+import type { TCGCard, TCGCollectionCard, TCGSet } from '@/types/tcg';
 
 function card(partial: Partial<TCGCard> & { id: string }): TCGCard {
   return {
@@ -204,5 +205,22 @@ describe('computeActiveSetInsights', () => {
     expect(insights.completion).toEqual({ owned: 1, total: 3, percentage: 33 });
     expect(insights.topMissing.map((c) => c.id)).toEqual(['c', 'b']);
     expect(insights.valuation.groups).toEqual([{ currency: 'EUR', total: 1, count: 1 }]);
+  });
+});
+
+describe('getActiveSetInsightsFallback', () => {
+  it('uses set metadata for progress without claiming an empty response is complete', () => {
+    const set: TCGSet = {
+      id: 'me05',
+      name: 'Nuit Noire',
+      cardCount: { total: 120, official: 84 },
+    };
+
+    expect(getActiveSetInsightsFallback(set, new Set(['me05-001', 'me05-002']))).toEqual({
+      completion: { owned: 2, total: 120, percentage: 2 },
+      topMissing: [],
+      valuation: { groups: [], ownedCount: 2, pricedCount: 0 },
+      setTotalValue: [],
+    });
   });
 });
