@@ -4569,6 +4569,7 @@ body:has(.lunidex-home) .site-footer a:hover {
   }
 
   .pokedex-hero__description {
+    max-width: calc(100% - 7.75rem);
     font-size: 0.94rem;
   }
 
@@ -7196,6 +7197,10 @@ body:has(.lunidex-home) .site-footer {
   gap: 0.3rem;
 }
 
+.site-header-utilities {
+  margin-inline-start: auto;
+}
+
 .site-header-action:not(.hidden),
 .site-header-language:not(.hidden) {
   display: inline-flex;
@@ -7290,6 +7295,9 @@ body:has(.lunidex-home) .site-footer {
   max-width: none !important;
   gap: 0 !important;
   overflow: hidden !important;
+  /* The sheet is portaled outside .site-header, so reserve the device's
+     status-bar area before laying out its header content. */
+  padding-top: env(safe-area-inset-top, 0px);
   border-color: color-mix(in oklab, var(--foreground) 16%, transparent);
   background: var(--card);
   color: var(--foreground);
@@ -7297,6 +7305,7 @@ body:has(.lunidex-home) .site-footer {
 
 .header-mobile-sheet-header {
   display: flex;
+  flex: 0 0 auto;
   min-height: var(--site-header-height);
   flex-direction: row;
   align-items: center;
@@ -7316,6 +7325,7 @@ body:has(.lunidex-home) .site-footer {
 }
 
 .header-mobile-sheet-body {
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -7455,6 +7465,7 @@ body:has(.lunidex-home) .site-footer {
 }
 
 .site-header-sheet-actions-grid > .site-header-sheet-action:first-child,
+.site-header-sheet-actions-grid > .site-header-sheet-favorites,
 .site-header-sheet-actions-grid > .site-header-language,
 .site-header-sheet-account {
   grid-column: 1 / -1;

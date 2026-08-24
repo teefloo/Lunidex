@@ -75,4 +75,15 @@ describe('HeaderActions', () => {
     fireEvent.click(settings);
     expect(mockStore.toggleSettings).toHaveBeenCalledOnce();
   });
+
+  it('keeps the sheet favorites action on its own full-width row', () => {
+    render(<HeaderActions placement="sheet" />);
+
+    const favorites = screen.getAllByRole('link', { name: 'Favorites' }).find((link) =>
+      link.classList.contains('site-header-sheet-favorites'),
+    );
+
+    expect(favorites).toBeDefined();
+    expect(favorites).toHaveClass('site-header-sheet-favorites');
+  });
 });

@@ -106,7 +106,11 @@ export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestA
         aria-label={favoritesLabel}
         title={favoritesLabel}
         onClick={onInteraction}
-        className={cn(baseActionClass, !isSheet && 'hidden sm:inline-flex')}
+        className={cn(
+          baseActionClass,
+          !isSheet && 'hidden sm:inline-flex',
+          isSheet && 'site-header-sheet-favorites',
+        )}
       >
         <Heart aria-hidden="true" className="h-4 w-4" />
         <span className={cn(!isSheet && 'sr-only')}>{favoritesLabel}</span>

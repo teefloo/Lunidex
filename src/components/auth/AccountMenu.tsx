@@ -85,7 +85,9 @@ export default function AccountMenu({ className, onInteraction, onRequestAuth, s
 
   const email = user.email ?? '';
   const displayName =
-    (typeof user.user_metadata?.name === 'string' && user.user_metadata.name.trim()) || '';
+    (typeof user.user_metadata?.name === 'string' && user.user_metadata.name.trim()) ||
+    (typeof user.user_metadata?.display_name === 'string' && user.user_metadata.display_name.trim()) ||
+    '';
   const initial = (displayName || email).charAt(0).toUpperCase() || '?';
   const tooltip = displayName || email || dashboardLabel;
 
@@ -103,6 +105,7 @@ export default function AccountMenu({ className, onInteraction, onRequestAuth, s
       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[11px] font-black text-primary">
         {initial}
       </span>
+      {showLabel && <span className="site-header-account-label">{tooltip}</span>}
     </Link>
   );
 }
