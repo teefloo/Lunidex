@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'Link kopiert',
       ios_done: 'Verstanden',
     },
+    offline: {
+      eyebrow: 'Signal verloren',
+      title: 'Lunidex ist vorübergehend offline',
+      description: 'Zum Laden dieser Seite wird eine Verbindung benötigt. Überprüfe dein Netzwerk und versuche es erneut.',
+      retry: 'Erneut versuchen',
+      home: 'Zur Startseite',
+      local_note: 'Bereits geöffnete Seiten sind möglicherweise weiterhin offline verfügbar.',
+    },
     types_page: {
       title: 'Typen-Meister',
       subtitle: 'Meistere die Elemente und besiege jeden Gegner',

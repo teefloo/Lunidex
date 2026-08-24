@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'Lien copié',
       ios_done: 'Compris',
     },
+    offline: {
+      eyebrow: 'Signal perdu',
+      title: 'Lunidex est momentanément hors ligne',
+      description: 'Une connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.',
+      retry: 'Réessayer',
+      home: 'Retour à l’accueil',
+      local_note: 'Les pages déjà consultées peuvent rester accessibles hors connexion.',
+    },
     types_page: {
       title: 'Maître des Types',
       subtitle: 'Maîtrisez les éléments et conquérez chaque combat',

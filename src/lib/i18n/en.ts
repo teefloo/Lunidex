@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'Link copied',
       ios_done: 'Got it',
     },
+    offline: {
+      eyebrow: 'Signal lost',
+      title: 'Lunidex is temporarily offline',
+      description: 'A connection is needed to load this page. Check your network, then try again.',
+      retry: 'Try again',
+      home: 'Back to home',
+      local_note: 'Pages you have already opened may still be available offline.',
+    },
     types_page: {
       title: 'Type Master',
       subtitle: 'Master the elements and conquer every battle',

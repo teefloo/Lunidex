@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'リンクをコピーしました',
       ios_done: 'わかりました',
     },
+    offline: {
+      eyebrow: '接続がありません',
+      title: 'Lunidex は一時的にオフラインです',
+      description: 'このページを読み込むには接続が必要です。ネットワークを確認して、もう一度お試しください。',
+      retry: '再試行',
+      home: 'ホームに戻る',
+      local_note: 'すでに開いたページはオフラインでも利用できる場合があります。',
+    },
     types_page: {
       title: 'タイプマスター',
       subtitle: '属性を極めてバトルを制そう',

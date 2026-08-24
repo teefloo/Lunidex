@@ -17,6 +17,14 @@ export default {
       ios_link_copied: '링크가 복사되었습니다',
       ios_done: '확인',
     },
+    offline: {
+      eyebrow: '신호가 끊겼어요',
+      title: 'Lunidex가 잠시 오프라인 상태예요',
+      description: '이 페이지를 불러오려면 연결이 필요합니다. 네트워크를 확인한 후 다시 시도해 주세요.',
+      retry: '다시 시도',
+      home: '홈으로 돌아가기',
+      local_note: '이미 열어 본 페이지는 오프라인에서도 이용할 수 있습니다.',
+    },
     types_page: {
       title: '타입 마스터',
       subtitle: '속성을 마스터하고 모든 배틀에서 승리하세요',

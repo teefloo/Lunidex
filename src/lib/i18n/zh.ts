@@ -17,6 +17,14 @@ export default {
       ios_link_copied: '链接已复制',
       ios_done: '知道了',
     },
+    offline: {
+      eyebrow: '信号中断',
+      title: 'Lunidex 暂时处于离线状态',
+      description: '加载此页面需要网络连接。请检查网络后重试。',
+      retry: '重试',
+      home: '返回首页',
+      local_note: '你之前打开过的页面可能仍可离线访问。',
+    },
     types_page: {
       title: '属性大师',
       subtitle: '掌握属性，征服每场对战',

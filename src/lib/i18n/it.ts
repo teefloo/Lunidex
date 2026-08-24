@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'Link copiato',
       ios_done: 'Fatto',
     },
+    offline: {
+      eyebrow: 'Segnale assente',
+      title: 'Lunidex è temporaneamente offline',
+      description: 'Per caricare questa pagina serve una connessione. Controlla la rete e riprova.',
+      retry: 'Riprova',
+      home: 'Torna alla home',
+      local_note: 'Le pagine già aperte potrebbero essere ancora disponibili offline.',
+    },
     types_page: {
       title: 'Maestro dei Tipi',
       subtitle: 'Padroneggia gli elementi e vinci ogni lotta',

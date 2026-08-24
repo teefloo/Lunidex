@@ -17,6 +17,14 @@ export default {
       ios_link_copied: 'Enlace copiado',
       ios_done: 'Entendido',
     },
+    offline: {
+      eyebrow: 'Señal perdida',
+      title: 'Lunidex está temporalmente sin conexión',
+      description: 'Necesitamos una conexión para cargar esta página. Comprueba tu red y vuelve a intentarlo.',
+      retry: 'Reintentar',
+      home: 'Volver al inicio',
+      local_note: 'Las páginas que ya has visitado pueden seguir disponibles sin conexión.',
+    },
     types_page: {
       title: 'Maestro de Tipos',
       subtitle: 'Domina los elementos y conquista cada batalla',
