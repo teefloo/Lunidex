@@ -178,7 +178,7 @@ export default {
         github_repo: '在 GitHub 上查看',
       },
       brand: {
-        description: '终极宝可梦伴侣 — 数据、进化、队伍搭建等更多功能。',
+        description: '追踪你的宝可梦 TCG 收藏，并探索图鉴和队伍工具。',
         mission: '使命：完成宝可梦图鉴',
       },
       disclaimer: {
@@ -1549,6 +1549,7 @@ team: '队伍',
       card_meta_description: '{{set}}的{{name}}（{{rarity}}）。HP {{hp}}。在 Lunidex 查看卡牌详情、招式、特性和价格。',
       set_meta_title: '{{name}} — 宝可梦 TCG 扩充包 | Lunidex',
       set_meta_description: '探索{{name}}宝可梦 TCG 扩充包（{{releaseDate}}发行）。在 Lunidex 浏览卡牌并管理你的收藏。',
+      set_landing_checklist: '扩充包卡牌清单', set_landing_showing: '显示 {{shown}} / {{total}} 张卡牌。',
       page_title: '宝可梦 TCG 卡牌目录',
       page_description: '搜索宝可梦集换式卡牌游戏的完整目录，查看所有 TCG 卡牌的属性、稀有度、招式和特性，并管理你的收藏。',
       page_heading: 'TCG 目录',

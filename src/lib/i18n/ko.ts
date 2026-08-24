@@ -178,7 +178,7 @@ export default {
         github_repo: 'GitHub에서 보기',
       },
       brand: {
-        description: '최고의 포켓몬 동반자 — 스탯, 진화, 팀 빌더 & 더 많은 것.',
+        description: '포켓몬 TCG 컬렉션을 관리하고 도감과 팀 도구를 함께 이용하세요.',
         mission: '미션: 포켓몬 도감 완성',
       },
       disclaimer: {
@@ -1592,6 +1592,7 @@ team: '팀',
       card_meta_description: '{{set}}의 {{name}} ({{rarity}}). HP {{hp}}. Lunidex에서 카드 상세 정보, 기술, 특성 및 가격을 확인하세요.',
       set_meta_title: '{{name}} — 포켓몬 TCG 세트 | Lunidex',
       set_meta_description: '{{releaseDate}}에 출시된 {{name}} 포켓몬 TCG 세트를 살펴보세요. Lunidex에서 카드를 확인하고 컬렉션을 관리할 수 있습니다.',
+      set_landing_checklist: '세트 카드 목록', set_landing_showing: '{{total}}장 중 {{shown}}장 표시.',
       page_title: '포켓몬 TCG 카탈로그',
       page_description: '포켓몬 트레이딩 카드 게임의 전체 카탈로그를 검색하세요. 모든 TCG 카드의 타입, 희귀도, 공격과 특성을 확인하고 컬렉션을 관리할 수 있습니다.',
       page_heading: 'TCG 카탈로그',

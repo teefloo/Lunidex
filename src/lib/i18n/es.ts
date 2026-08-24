@@ -191,7 +191,7 @@ export default {
         github_repo: 'Ver en GitHub',
       },
       brand: {
-        description: 'Tu compañero Pokémon definitivo — stats, evoluciones, constructor de equipos & más.',
+        description: 'Sigue tu colección de cartas Pokémon TCG y explora la Pokédex y los equipos.',
         mission: 'Misión: Completar el Pokédex',
       },
       disclaimer: {
@@ -1562,6 +1562,7 @@ team: 'Equipo',
       card_meta_description: '{{name}} ({{rarity}}) de {{set}}. PS {{hp}}. Consulta los detalles, ataques, habilidades y precios de esta carta en Lunidex.',
       set_meta_title: '{{name}} — expansión TCG Pokémon | Lunidex',
       set_meta_description: 'Explora la expansión {{name}} de Pokémon TCG, publicada en {{releaseDate}}. Descubre sus cartas y sigue tu colección en Lunidex.',
+      set_landing_checklist: 'Checklist de la expansión', set_landing_showing: 'Se muestran {{shown}} de {{total}} cartas.',
       page_title: 'Catálogo TCG Pokémon',
       page_description: 'Explora el catálogo completo del Juego de Cartas Coleccionables Pokémon. Todas las cartas TCG, tipos, rarezas, ataques y habilidades.',
       page_heading: 'Catálogo TCG',

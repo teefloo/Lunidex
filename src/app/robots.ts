@@ -6,7 +6,9 @@ export default function robots(): MetadataRoute.Robots {
 
   const allowAll = {
     userAgent: '*',
-    allow: '/',
+    // OG endpoints are public presentation assets; keep them crawlable even
+    // though authenticated/API mutations remain disallowed below.
+    allow: ['/', '/api/og/'],
     disallow: ['/api/'] as string[],
   };
 
@@ -54,7 +56,7 @@ export default function robots(): MetadataRoute.Robots {
     'ia_archiver',
   ].map((userAgent) => ({
     userAgent,
-    allow: '/',
+    allow: ['/', '/api/og/'],
     disallow: ['/api/'],
   }));
 

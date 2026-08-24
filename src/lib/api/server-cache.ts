@@ -3,6 +3,8 @@ import { unstable_cache } from 'next/cache';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import {
   DEFAULT_TCG_CARD_FILTERS,
+  getAllSets,
+  getCardsBySet,
   getTCGCard,
   getSetById,
   searchCards,
@@ -138,6 +140,18 @@ const getTCGSetPersistent = unstable_cache(
   { revalidate: 3600 },
 );
 
+const getTCGSetCardsPersistent = unstable_cache(
+  (setId: string, language: string) => getCardsBySet(setId, language),
+  ['lunidex:tcg-set-cards:v1'],
+  { revalidate: 3600 },
+);
+
+const getAllSetsPersistent = unstable_cache(
+  (language: string) => getAllSets(language),
+  ['lunidex:tcg-all-sets:v1'],
+  { revalidate: 3600 },
+);
+
 /**
  * Server-cached and per-request memoized versions of the public fetchers used
  * by detail routes. `unstable_cache` avoids repeating stable upstream work
@@ -159,3 +173,5 @@ export const getInitialItemsCached = cache(getInitialItemsPersistent);
 export const getInitialTcgCatalogCached = cache(getInitialTcgCatalogPersistent);
 export const getTCGCardCached = cache(getTCGCardPersistent);
 export const getTCGSetCached = cache(getTCGSetPersistent);
+export const getTCGSetCardsCached = cache(getTCGSetCardsPersistent);
+export const getAllSetsCached = cache(getAllSetsPersistent);

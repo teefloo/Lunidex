@@ -20,6 +20,11 @@ describe('product metrics endpoint', () => {
     expect((await POST(request(JSON.stringify({ event: 'tcg_sync_prompt_shown' })))).status).toBe(503);
     expect((await POST(request(JSON.stringify({ event: 'tcg_activation_completed', propertyA: 'wishlist' })))).status).toBe(503);
     expect((await POST(request(JSON.stringify({ event: 'tcg_returned_after_activation', propertyA: 'day_0_7', propertyB: 'album_open' })))).status).toBe(503);
+    expect((await POST(request(JSON.stringify({ event: 'tcg_start_opened', propertyA: 'campaign', propertyB: 'summer-2026' })))).status).toBe(503);
+  });
+  it('rejects malformed campaign attribution', async () => {
+    expect((await POST(request(JSON.stringify({ event: 'tcg_start_opened', propertyA: 'campaign', propertyB: 'https://evil.test' })))).status).toBe(400);
+    expect((await POST(request(JSON.stringify({ event: 'tcg_start_opened', propertyA: 'direct', propertyB: 'summer-2026' })))).status).toBe(400);
   });
   it('is no-store and unavailable without server configuration', async () => { const response = await POST(request(JSON.stringify({ event: 'tcg_start_opened', propertyA: 'direct' }))); expect(response.status).toBe(503); expect(response.headers.get('cache-control')).toBe('no-store'); });
   it('limits each ephemeral client independently', async () => {

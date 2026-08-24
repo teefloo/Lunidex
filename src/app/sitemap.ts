@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllAbilityNamesCached, getAllItemNamesCached, getAllMoveNamesCached, getAllPokemonNamesCached } from '../lib/api/server-cache';
+import { getAllAbilityNamesCached, getAllItemNamesCached, getAllMoveNamesCached, getAllPokemonNamesCached, getAllSetsCached } from '../lib/api/server-cache';
 import { isTcgLangSupported } from '@/lib/api/tcg';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages } from '@/lib/languages';
@@ -180,13 +180,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let moveNames: string[] = [];
   let abilityNames: string[] = [];
   let itemNames: string[] = [];
+  let tcgSets: { id: string; releaseDate?: string }[] = [];
 
-  const [pokemonResult, tcgResult, moveResult, abilityResult, itemResult] = await Promise.allSettled([
+  const [pokemonResult, tcgResult, moveResult, abilityResult, itemResult, tcgSetsResult] = await Promise.allSettled([
     getAllPokemonNamesCached(),
     getTcgCardIdsCached(),
     getAllMoveNamesCached(),
     getAllAbilityNamesCached(),
     getAllItemNamesCached(),
+    getAllSetsCached('en'),
   ]);
 
   if (pokemonResult.status === 'fulfilled') {
@@ -217,6 +219,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     itemNames = itemResult.value;
   } else {
     console.warn('sitemap: failed to fetch item list, generating without item detail routes', itemResult.reason);
+  }
+
+  if (tcgSetsResult.status === 'fulfilled') {
+    tcgSets = tcgSetsResult.value;
+  } else {
+    console.warn('sitemap: failed to fetch TCG set list, generating without TCG set routes', tcgSetsResult.reason);
   }
 
   const pokemonUrls: MetadataRoute.Sitemap = pokemonList.map((pokemon) => {
@@ -268,6 +276,16 @@ const editorialUrls: MetadataRoute.Sitemap = EDITORIAL_SITEMAP_ROUTES.map((route
     },
   }));
 
+  const tcgSetUrls: MetadataRoute.Sitemap = tcgSets.map((set) => ({
+    url: `${baseUrl}/en/tcg/sets/${encodeURIComponent(set.id)}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+    ...(set.releaseDate ? { lastModified: set.releaseDate } : {}),
+    alternates: {
+      languages: buildTcgLanguages(`tcg/sets/${encodeURIComponent(set.id)}`),
+    },
+  }));
+
   const referenceUrls: MetadataRoute.Sitemap = [
     ...moveNames.map((name) => ({
       url: `${baseUrl}/en/moves/${name}`,
@@ -294,6 +312,7 @@ const editorialUrls: MetadataRoute.Sitemap = EDITORIAL_SITEMAP_ROUTES.map((route
     ...editorialUrls,
     ...pokemonUrls,
     ...referenceUrls,
+    ...tcgSetUrls,
     ...tcgCardUrls,
   ]);
 }

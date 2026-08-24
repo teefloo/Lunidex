@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect, type ComponentProps } from 'react';
-import { Share, Link2, Twitter, MessageSquare, Check, ChevronDown } from 'lucide-react';
+import { Share, Link2, Check, ChevronDown } from 'lucide-react';
 import { toast } from '@/lib/toast';
+import { useTranslation } from '@/lib/i18n';
 
 import { Button } from '@/components/ui/button';
 
@@ -34,10 +35,7 @@ export interface ShareButtonProps {
  *
  * - Uses `navigator.share` (Web Share API) when the browser supports it
  *   (mobile / PWA contexts).
- * - Falls back to a small dropdown with three options:
- *   1. Copy link (Clipboard API)
- *   2. Share on Twitter/X
- *   3. Copy Discord-formatted link `[title](url)`
+ * - Falls back to a small dropdown with a single copy-link action.
  */
 export function ShareButton({
   url,
@@ -51,8 +49,9 @@ export function ShareButton({
   path,
   copiedMessage,
 }: ShareButtonProps) {
+  const { t } = useTranslation();
   const resolvedUrl = url || path || '';
-  const resolvedLabel = label ?? copiedMessage ?? 'Share';
+  const resolvedLabel = label ?? copiedMessage ?? t('share_menu.label', { defaultValue: 'Share' });
 
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
@@ -104,30 +103,10 @@ export function ShareButton({
     try {
       await navigator.clipboard.writeText(absoluteUrl);
       setCopied(true);
-      toast.success('Link copied!');
+      toast.success(t('share_menu.toast_copied', { defaultValue: 'Link copied!' }));
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.prompt('Copy this link:', absoluteUrl);
-    }
-  }
-
-  function handleTwitter() {
-    const absoluteUrl = buildAbsoluteUrl(resolvedUrl);
-    setOpen(false);
-    const text = description ? `${title} — ${description}` : title;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(absoluteUrl)}`;
-    window.open(twitterUrl, '_blank', 'noopener,noreferrer,width=600,height=400');
-  }
-
-  async function handleDiscord() {
-    const absoluteUrl = buildAbsoluteUrl(resolvedUrl);
-    setOpen(false);
-    const formatted = `[${title}](${absoluteUrl})`;
-    try {
-      await navigator.clipboard.writeText(formatted);
-      toast.success('Discord link copied!');
-    } catch {
-      window.prompt('Copy this Discord link:', formatted);
+      window.prompt(t('share_menu.prompt_copy', { defaultValue: 'Copy this link:' }), absoluteUrl);
     }
   }
 
@@ -160,35 +139,18 @@ export function ShareButton({
 
       {open && (
         <div
-          role="listbox"
+          role="menu"
+          aria-label={resolvedLabel}
           className="absolute right-0 mt-1 z-50 min-w-[180px] rounded-sm border border-border/60 bg-popover shadow-lg overflow-hidden"
         >
           <button
-            role="option"
-            aria-selected={false}
+            type="button"
+            role="menuitem"
             onClick={handleCopyLink}
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left"
           >
             <Link2 className="h-4 w-4 text-foreground/60" />
-            Copy link
-          </button>
-          <button
-            role="option"
-            aria-selected={false}
-            onClick={handleTwitter}
-            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left text-[#1DA1F2]"
-          >
-            <Twitter className="h-4 w-4" />
-            Share on X / Twitter
-          </button>
-          <button
-            role="option"
-            aria-selected={false}
-            onClick={handleDiscord}
-            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold hover:bg-accent/10 transition-colors text-left text-indigo-400"
-          >
-            <MessageSquare className="h-4 w-4" />
-            Copy for Discord
+            {t('share_menu.copy_link', { defaultValue: 'Copy link' })}
           </button>
         </div>
       )}

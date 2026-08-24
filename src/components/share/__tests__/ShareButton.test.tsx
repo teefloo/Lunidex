@@ -65,8 +65,7 @@ describe('ShareButton', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Copy link')).toBeInTheDocument();
-      expect(screen.getByText('Share on X / Twitter')).toBeInTheDocument();
-      expect(screen.getByText('Copy for Discord')).toBeInTheDocument();
+      expect(screen.getAllByRole('menuitem')).toHaveLength(1);
     });
   });
 
@@ -84,29 +83,6 @@ describe('ShareButton', () => {
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(defaultProps.url);
     });
-  });
-
-  // ─── Test 4: Twitter URL built correctly ─────────────────────────────────
-  it('opens a Twitter intent URL with the correct text and url params', async () => {
-    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-
-    render(<ShareButton {...defaultProps} label="Share" />);
-
-    // Open dropdown
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(() => screen.getByText('Share on X / Twitter'));
-
-    fireEvent.click(screen.getByText('Share on X / Twitter'));
-
-await waitFor(() => {
-       expect(openSpy).toHaveBeenCalledOnce();
-       const calledUrl = openSpy.mock.calls[0][0] as string;
-       expect(calledUrl).toContain('https://twitter.com/intent/tweet');
-       expect(calledUrl).toContain(encodeURIComponent(defaultProps.url));
-       expect(calledUrl).toContain(encodeURIComponent(defaultProps.title));
-     });
-
-    openSpy.mockRestore();
   });
 
   // ─── Bonus: navigator.share called when available ────────────────────────

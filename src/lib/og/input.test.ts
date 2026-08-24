@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MAX_OG_POKEMON_NAME_LENGTH,
   MAX_OG_TCG_CARD_ID_LENGTH,
+  normalizeOgTcgSetId,
   normalizeOgEnum,
   normalizeOgPokemonName,
   normalizeOgTcgCardId,
@@ -22,6 +23,11 @@ describe('OG input hardening', () => {
     expect(normalizeOgTcgCardId(' SV-BASE-1 ')).toBe('sv-base-1');
     expect(normalizeOgTcgCardId('sv-base/1')).toBeNull();
     expect(normalizeOgTcgCardId('a'.repeat(MAX_OG_TCG_CARD_ID_LENGTH + 1))).toBeNull();
+  });
+
+  it('applies the same path hardening to public TCG set OG images', () => {
+    expect(normalizeOgTcgSetId('sv-10')).toBe('sv-10');
+    expect(normalizeOgTcgSetId('sv-10/../../etc')).toBeNull();
   });
 
   it('bounds numbers and enum values before they reach the renderer', () => {

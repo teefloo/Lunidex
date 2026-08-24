@@ -1,5 +1,6 @@
 export const MAX_OG_POKEMON_NAME_LENGTH = 64;
 export const MAX_OG_TCG_CARD_ID_LENGTH = 128;
+export const MAX_OG_TCG_SET_ID_LENGTH = 128;
 export const MAX_OG_TRAINER_NAME_LENGTH = 24;
 
 const POKEMON_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -30,6 +31,10 @@ export function normalizeOgPokemonName(value: string | null): string | null {
 
 export function normalizeOgTcgCardId(value: string | null): string | null {
   return normalizeSlug(value, MAX_OG_TCG_CARD_ID_LENGTH, TCG_CARD_ID_PATTERN);
+}
+
+export function normalizeOgTcgSetId(value: string | null): string | null {
+  return normalizeSlug(value, MAX_OG_TCG_SET_ID_LENGTH, TCG_CARD_ID_PATTERN);
 }
 
 export function sanitizeOgText(

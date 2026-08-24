@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGSet } from '@/types/tcg';
-import { getTcgStartSource, trackProductEvent } from '@/lib/product-measurement';
+import { getTcgStartAttribution, trackProductEvent } from '@/lib/product-measurement';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
@@ -39,6 +39,7 @@ export function TCGStartPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const routeLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
   const { enabled, loading: authLoading, user } = useAuth();
@@ -48,6 +49,10 @@ export function TCGStartPage() {
   const [query, setQuery] = useState('');
   const searchTracked = useRef(false);
   const resolvedLanguage = mounted ? routeLanguage : 'en';
+  const attribution = useMemo(
+    () => getTcgStartAttribution(searchParams.toString()),
+    [searchParams],
+  );
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
@@ -67,9 +72,8 @@ export function TCGStartPage() {
 
   useEffect(() => {
     if (!mounted || !hasHydrated || ownedCards.length > 0) return;
-    const source = getTcgStartSource(window.location.search);
-    if (source) trackProductEvent('tcg_start_opened', source);
-  }, [mounted, hasHydrated, ownedCards.length]);
+    if (attribution) trackProductEvent('tcg_start_opened', attribution.source, attribution.campaign);
+  }, [attribution, hasHydrated, mounted, ownedCards.length]);
 
   useEffect(() => {
     if (!mounted || !hasHydrated || ownedCards.length === 0) return;

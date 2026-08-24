@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
+import { normalizeCampaignSlug } from '@/lib/campaigns';
 
 const allowed = {
-  tcg_start_opened: [['home_cta', 'catalog', 'direct', 'seo']], tcg_set_search_used: [['length_1_3', 'length_4_8', 'length_9_plus']],
+  tcg_start_opened: [['home_cta', 'catalog', 'direct', 'seo', 'campaign']], tcg_set_search_used: [['length_1_3', 'length_4_8', 'length_9_plus']],
   tcg_set_selected: [['search', 'latest_list']], tcg_album_opened: [['activation', 'collection']],
   tcg_first_value_reached: [], tcg_activation_completed: [['second_owned_card', 'wishlist']],
   tcg_sync_prompt_shown: [], tcg_sync_prompt_actioned: [['create_account', 'continue_local', 'dismiss']],
@@ -38,10 +39,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!payload || typeof payload.event !== 'string' || !(payload.event in allowed) || Object.keys(payload).some((key) => key !== 'event' && key !== 'propertyA' && key !== 'propertyB')) return new NextResponse(null, { status: 400, headers });
   const event = payload.event as EventName;
   const values = [payload.propertyA, payload.propertyB];
-  const expectedArity = allowed[event].length;
+  const isCampaignStart = event === 'tcg_start_opened' && payload.propertyA === 'campaign';
+  const expectedArity = isCampaignStart ? 2 : allowed[event].length;
   if (values.slice(0, expectedArity).some((value) => typeof value !== 'string') || values.slice(expectedArity).some((value) => value !== undefined)) return new NextResponse(null, { status: 400, headers });
   if (values.some((value) => value !== undefined && (typeof value !== 'string' || value.length === 0 || value.length > 32))) return new NextResponse(null, { status: 400, headers });
-  if (values.some((value, index) => value !== undefined && !allowed[event][index]?.includes(value as never))) return new NextResponse(null, { status: 400, headers });
+  if (isCampaignStart) {
+    const campaign = normalizeCampaignSlug(typeof payload.propertyB === 'string' ? payload.propertyB : null);
+    if (!campaign || campaign !== payload.propertyB) return new NextResponse(null, { status: 400, headers });
+  } else if (values.some((value, index) => value !== undefined && !allowed[event][index]?.includes(value as never))) {
+    return new NextResponse(null, { status: 400, headers });
+  }
   const sql = getNeonClient();
   if (!sql) return new NextResponse(null, { status: 503, headers });
   try {

@@ -3,12 +3,18 @@ export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://lunidex.app'
 // Storage keys intentionally retain their legacy PrimeDex prefix so existing
 // local collections continue to load after the public rebrand.
 export const SITE_NAME = 'Lunidex';
-export const SITE_TAGLINE = 'Pokémon Companion for Players and Collectors';
+export const SITE_TAGLINE = 'Pokémon TCG collection tracker and Pokémon workspace';
 export const SITE_DESCRIPTION =
-  'Lunidex is an independent Pokémon web app for Pokédex reference, team building, and Pokémon TCG collection tracking.';
+  'Track Pokémon TCG sets, owned and missing cards, and collection progress with Lunidex. Explore the Pokédex and build teams too.';
 export const SITE_DISAMBIGUATION_DESCRIPTION =
-  'Lunidex is an independent, unofficial Pokémon web application for Pokédex reference, team building, and Pokémon TCG collection tracking. It is not a card marketplace.';
+  'Lunidex is an independent, unofficial Pokémon web application for tracking Pokémon TCG sets and collection progress, with Pokédex and team tools. It is not a card marketplace.';
 export const SITE_KEYWORDS = [
+  'pokemon card collection tracker',
+  'pokemon tcg collection',
+  'pokemon tcg set tracker',
+  'pokemon card checklist',
+  'tcg collection app',
+  'pokemon card catalog',
   'pokedex',
   'pokemon',
   'pokédex',
@@ -29,10 +35,6 @@ export const SITE_KEYWORDS = [
   'shiny pokemon',
   'pokemon quiz',
   'pokemon cards',
-  'pokemon card collection tracker',
-  'pokemon tcg collection',
-  'tcg collection app',
-  'pokemon card catalog',
   'pokemon weakness',
   'pokemon type chart',
   'best pokemon team',
@@ -48,11 +50,12 @@ export const ACCENT_COLOR = '#8DB4FF';
 
 
 export const FEATURE_LIST = [
+  'Pokémon TCG collection tracker for sets, owned cards, missing cards, and progress',
+  'Public Pokémon TCG set checklists and card catalog with set, rarity, type, and HP filters',
   'Complete Pokédex of all 1025 Pokémon across 9 generations',
   'Team Builder with type coverage analysis and synergy scoring',
   'Side-by-side comparison of up to 3 Pokémon with stat radar charts',
   'Interactive type chart for all 18 Pokémon types',
-  'Pokémon TCG catalog with set, rarity, type, and HP filters',
   "Who's That Pokémon? quiz with 6 game modes",
   'Living Dex Tracker with account-backed cloud synchronization',
   'Localized in 8 languages including Japanese, Korean, and Chinese',

@@ -124,7 +124,7 @@ export default async function TCGCardPage({ params }: PageProps) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: t('common.home', { defaultValue: 'Lunidex' }), item: `${SITE_URL}/${currentLang}` },
       { '@type': 'ListItem', position: 2, name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), item: `${SITE_URL}/${currentLang}/tcg` },
-      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${currentLang}/tcg/collection/${setId}` }] : []),
+      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${currentLang}/tcg/sets/${setId}` }] : []),
       { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${currentLang}/tcg/cards/${card.id}` },
     ],
   };
@@ -143,7 +143,7 @@ export default async function TCGCardPage({ params }: PageProps) {
         items={[
           { label: t('common.home', { defaultValue: 'Home' }), href: `/${currentLang}` },
           { label: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), href: `/${currentLang}/tcg` },
-          ...(setId ? [{ label: setName, href: `/${currentLang}/tcg/collection/${setId}` }] : []),
+          ...(setId ? [{ label: setName, href: `/${currentLang}/tcg/sets/${setId}` }] : []),
           { label: card.name },
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}

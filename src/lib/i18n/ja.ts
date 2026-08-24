@@ -178,7 +178,7 @@ export default {
         github_repo: 'GitHubで見る',
       },
       brand: {
-        description: '究極のポケモンコンパニオン — ステータス，进化、チームビルダー等等。',
+        description: 'ポケモンTCGのコレクションを管理し、図鑑やチーム作成ツールも楽しめます。',
         mission: 'ミッション: ポケモン図鑑 完成',
       },
       disclaimer: {
@@ -1553,6 +1553,7 @@ team: 'チーム',
       card_meta_description: '{{set}}の{{name}}（{{rarity}}）。HP {{hp}}。カードの詳細、ワザ、特性、価格をLunidexで確認できます。',
       set_meta_title: '{{name}} — ポケモンTCGセット | Lunidex',
       set_meta_description: '{{releaseDate}}発売の{{name}}ポケモンTCGセットを探索しましょう。カードを確認し、Lunidexでコレクションを管理できます。',
+      set_landing_checklist: 'セットのカード一覧', set_landing_showing: '{{total}}枚中{{shown}}枚を表示しています。',
       page_title: 'ポケモンTCGカタログ',
       page_description: 'ポケモンカードゲームの完全カタログを検索。全TCGカードのタイプ、レアリティ、ワザ、特性を調べ、コレクションを管理できます。',
       page_heading: 'TCGカタログ',

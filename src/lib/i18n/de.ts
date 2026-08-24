@@ -178,7 +178,7 @@ export default {
         github_repo: 'Auf GitHub ansehen',
       },
       brand: {
-        description: 'Dein ultimativer Pokémon-Begleiter — Stats, Evolutionen, Team-Builder & mehr.',
+        description: 'Verfolge deine Pokémon-TCG-Sammlung und entdecke den Pokédex und Teamwerkzeuge.',
         mission: 'Mission: Pokédex vervollständigen',
       },
       disclaimer: {
@@ -1552,6 +1552,7 @@ team: 'Team',
       card_meta_description: '{{name}} ({{rarity}}) aus {{set}}. KP {{hp}}. Kartendetails, Angriffe, Fähigkeiten und Preise auf Lunidex.',
       set_meta_title: '{{name}} — Pokémon-TCG-Set | Lunidex',
       set_meta_description: 'Durchsuche das Pokémon-TCG-Set {{name}}, veröffentlicht {{releaseDate}}. Entdecke Karten und verfolge deine Sammlung auf Lunidex.',
+      set_landing_checklist: 'Set-Kartenliste', set_landing_showing: '{{shown}} von {{total}} Karten angezeigt.',
       page_title: 'Pokémon TCG-Katalog',
       page_description: 'Durchsuche den kompletten Pokémon-Sammelkartenspiel-Katalog. Alle TCG-Karten, Typen, Seltenheiten, Angriffe und Fähigkeiten.',
       page_heading: 'TCG-Katalog',

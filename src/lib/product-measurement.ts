@@ -1,5 +1,7 @@
 'use client';
 
+import { normalizeCampaignSlug } from '@/lib/campaigns';
+
 export type ProductMeasurementConsent = 'granted' | 'denied' | 'unset';
 
 const CONSENT_KEY = 'primedex-consent-v2';
@@ -20,11 +22,29 @@ export type ProductEvent =
   | 'tcg_returned_after_activation'
   | 'tcg_activation_error';
 
-export type TcgStartSource = 'home_cta' | 'catalog' | 'direct' | 'seo';
+export type TcgStartSource = 'home_cta' | 'catalog' | 'direct' | 'seo' | 'campaign';
+
+export interface TcgStartAttribution {
+  source: TcgStartSource;
+  campaign?: string;
+}
 
 export function getTcgStartSource(search: string): TcgStartSource | undefined {
-  const source = new URLSearchParams(search).get('source');
-  return source === 'home_cta' || source === 'catalog' || source === 'direct' || source === 'seo' ? source : undefined;
+  return getTcgStartAttribution(search)?.source;
+}
+
+export function getTcgStartAttribution(search: string): TcgStartAttribution | undefined {
+  const params = new URLSearchParams(search);
+  const source = params.get('source');
+
+  if (source === 'campaign') {
+    const campaign = normalizeCampaignSlug(params.get('campaign'));
+    return campaign ? { source, campaign } : undefined;
+  }
+
+  return source === 'home_cta' || source === 'catalog' || source === 'direct' || source === 'seo'
+    ? { source }
+    : undefined;
 }
 
 export interface ProductConsent {

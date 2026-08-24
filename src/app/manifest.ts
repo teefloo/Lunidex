@@ -3,9 +3,9 @@ import { SITE_URL } from '@/lib/site';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Lunidex — Pokémon Companion for Players and Collectors',
+    name: 'Lunidex — Pokémon TCG collection tracker',
     short_name: 'Lunidex',
-    description: 'Explore the Pokédex, build teams, track your Pokémon TCG collection, and complete sets.',
+    description: 'Track Pokémon TCG sets, owned and missing cards, and collection progress. Explore the Pokédex and build teams too.',
     start_url: '/en',
     scope: '/',
     display: 'standalone',

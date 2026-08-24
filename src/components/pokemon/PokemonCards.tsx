@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { getPokemonCards } from '@/lib/api/tcg';
 import type { TCGCard } from '@/types/tcg';
@@ -10,6 +11,7 @@ import { motion, Variants } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 import { TCGCardDetailModal } from '@/components/tcg/TCGCardDetailModal';
 import { TCGHolographicCard } from '@/components/tcg/TCGHolographicCard';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 interface PokemonCardsProps {
   name: string;
@@ -21,6 +23,7 @@ interface PokemonCardsProps {
 
 export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName, lang }) => {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const queryName = localizedName || name;
   const tcgLang = lang || 'en';
   
@@ -71,12 +74,20 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
 
   return (
     <div className="glass-panel p-6 md:p-8 rounded-sm">
-      <h3 className="text-2xl font-black mb-8 border-b border-border/60 pb-4 flex items-center gap-3">
-        <span className="text-foreground/90">{t('detail.cards')}</span>
-        <span className="px-2 py-1 bg-secondary/50 rounded-md text-xs font-bold text-foreground/60 border border-border/50">
-          {cards.length}
-        </span>
-      </h3>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
+        <h3 className="flex items-center gap-3 text-2xl font-black">
+          <span className="text-foreground/90">{t('detail.cards')}</span>
+          <span className="rounded-md border border-border/50 bg-secondary/50 px-2 py-1 text-xs font-bold text-foreground/60">
+            {cards.length}
+          </span>
+        </h3>
+        <Link
+          href={localeHref(`/tcg?q=${encodeURIComponent(queryName)}`)}
+          className="inline-flex min-h-11 items-center rounded-sm px-2 text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('detail.cards_open_catalog', { defaultValue: 'Open in TCG catalog' })}
+        </Link>
+      </div>
 
       <motion.div 
         variants={containerVariants}

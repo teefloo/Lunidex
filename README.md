@@ -31,7 +31,7 @@
 
 ## Overview
 
-Lunidex is an independent, open-source npm-workspaces monorepo that combines a Pokédex, Pokémon reference tools, team-building utilities, a Pokémon TCG catalog, and an account-backed personal workspace.
+Lunidex is an independent, open-source npm-workspaces monorepo centered on Pokémon TCG collection tracking, with a Pokédex, team-building utilities, and an account-backed personal workspace.
 
 The web app covers **1,025 Pokémon across nine generations** and supports eight interface locales: English, French, Spanish, German, Italian, Japanese, Korean, and Simplified Chinese. Portuguese is available as a translated repository README, but is not a web UI locale.
 
