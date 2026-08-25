@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueries } from '@tanstack/react-query';
-import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
+import { getPokemonDetail, getPokemonForm, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
 import { useParams, useRouter } from 'next/navigation';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
@@ -24,7 +24,7 @@ import {
   Egg,
   ExternalLink,
 } from 'lucide-react';
-import { PokemonDetail, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
+import { PokemonDetail, PokemonForm, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
@@ -135,6 +135,7 @@ const POKE_COLORS: Record<string, string> = {
 interface PokemonDetailClientProps {
   initialPokemon: PokemonDetail;
   initialSpecies: PokemonSpecies | null;
+  initialForm: PokemonForm | null;
   initialLocalized: LocalizedGqlData | null;
   initialEncounters: PokemonEncounter[];
   initialSeoDescription: string;
@@ -143,6 +144,7 @@ interface PokemonDetailClientProps {
 export function PokemonDetailClient({ 
   initialPokemon, 
   initialSpecies, 
+  initialForm,
   initialLocalized, 
   initialEncounters,
   initialSeoDescription,
@@ -202,13 +204,14 @@ export function PokemonDetailClient({
     queryFn: async () => {
       const langId = languageToPokemonLanguageId[resolvedLang];
       const baseName = getBaseSpeciesName(name);
-      const [pokemon, species, localized] = await Promise.all([
+      const [pokemon, species, localized, form] = await Promise.all([
         getPokemonDetail(name),
         getPokemonSpecies(baseName).catch(() => null),
-        getLocalizedPokemonData(name, langId).catch(() => null)
+        getLocalizedPokemonData(name, langId).catch(() => null),
+        getPokemonForm(name).catch(() => null),
       ]);
 
-      return { pokemon, species, localized: localized as LocalizedGqlData | null };
+      return { pokemon, species, localized: localized as LocalizedGqlData | null, form };
     },
     initialData: () => {
       const fetchedLang = initialLocalized?.pokemon_v2_pokemonspeciesnames?.[0]?.pokemon_v2_language?.name;
@@ -220,6 +223,7 @@ export function PokemonDetailClient({
         return {
           pokemon: initialPokemon,
           species: initialSpecies,
+          form: initialForm,
           localized: initialLocalized as LocalizedGqlData | null,
         };
       }
@@ -230,6 +234,7 @@ export function PokemonDetailClient({
 
   const pokemon = data?.pokemon;
   const species = data?.species;
+  const form = data?.form;
   const localized = data?.localized;
 
   // Add to history when pokemon data is loaded
@@ -298,10 +303,8 @@ export function PokemonDetailClient({
     || localized?.pokemon_v2_pokemonspeciesnames?.find((entry) => entry.pokemon_v2_language.name === 'en')?.name
     || species?.names?.find(n => n.language.name === pokemonLanguageCode)?.name
     || species?.names?.find(n => n.language.name === 'en')?.name
-    || getBaseSpeciesName(pokemon.name);
-  const displayName = pokemon.name.includes('-')
-    ? getFormDisplayName(pokemon.name, baseLocalizedName, resolvedLang)
-    : baseLocalizedName;
+    || getBaseSpeciesName(pokemon.species?.name || pokemon.name);
+  const displayName = getFormDisplayName(pokemon.name, baseLocalizedName, resolvedLang, form);
 
   const flavorText = localized?.pokemon_v2_pokemonspeciesflavortexts?.find((entry) => entry.pokemon_v2_language.name === pokemonLanguageCode)?.flavor_text?.replace(/\f/g, ' ')
     || localized?.pokemon_v2_pokemonspeciesflavortexts?.find((entry) => entry.pokemon_v2_language.name === 'en')?.flavor_text?.replace(/\f/g, ' ')

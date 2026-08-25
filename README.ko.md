@@ -38,7 +38,7 @@ Lunidex는 npm workspaces를 사용하는 독립적인 오픈 소스 모노레�
 공개 참고 페이지는 계정 없이 사용할 수 있습니다. 개인 워크스페이스(즐겨찾기, 포획한 포켓몬, 팀, 퀴즈 진행도, TCG 컬렉션, 위시리스트, 저장된 검색, 메모, 덱 등)는 Neon Auth와 Neon PostgreSQL을 설정하고 동기화할 때 사용할 수 있습니다. 웹 표시 설정은 IndexedDB에 저장하고 Expo 앱은 AsyncStorage를 사용합니다.
 
 > [!NOTE]
-> Lunidex는 독립적인 비공식 비상업 팬 프로젝트입니다. 포켓몬 데이터, 이름, 캐릭터, 이미지는 Nintendo, Game Freak, Creatures 및 The Pokémon Company에 귀속됩니다. Lunidex는 이 회사들과 제휴하거나 승인을 받은 프로젝트가 아닙니다.
+> Lunidex는 독립적인 비공식 팬 프로젝트입니다. 포켓몬 캐릭터 이름, 상표, 일러스트, 이미지 및 관련 지식재산권은 각 권리자에게 귀속됩니다. Lunidex는 Nintendo, Creatures Inc., GAME FREAK inc. 또는 The Pokémon Company와 제휴·승인·후원 관계가 없으며 공식적으로 연결된 프로젝트도 아닙니다.
 
 <div align="center">
   <img src="./public/screenshot-mobile.png" alt="Lunidex 모바일 포켓몬 도감 화면" width="280" />

@@ -38,7 +38,7 @@ Web 应用涵盖**九个世代的 1,025 只宝可梦**，支持英语、法语�
 公开参考页面无需账户即可使用。个人工作空间（收藏、已捕获宝可梦、队伍、测验进度、TCG 收藏、愿望清单、已保存搜索、备注、套牌及相关功能）在配置并完成同步后使用 Neon Auth 和 Neon PostgreSQL。Web 显示偏好使用 IndexedDB，Expo 应用使用 AsyncStorage。
 
 > [!NOTE]
-> Lunidex 是一个独立的、非官方、非商业粉丝项目。宝可梦数据、名称、角色和图像归 Nintendo、Game Freak、Creatures 及 The Pokémon Company 所有。Lunidex 与这些公司没有关联，也未得到其认可。
+> Lunidex 是一个独立的非官方粉丝项目。宝可梦角色名称、商标、插图、图像及相关知识产权归各自权利人所有。Lunidex 与 Nintendo、Creatures Inc.、GAME FREAK inc. 或 The Pokémon Company 没有隶属、认可或赞助关系，也不是与其官方关联的项目。
 
 <div align="center">
   <img src="./public/screenshot-mobile.png" alt="Lunidex 移动版宝可梦图鉴" width="280" />

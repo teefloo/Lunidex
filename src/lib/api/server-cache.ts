@@ -25,6 +25,7 @@ import {
   getAbilityDetail,
   getPokemonDetail,
   getPokemonEncounters,
+  getPokemonForm,
   getPokemonList,
   getPokemonSpecies,
 } from './rest';
@@ -40,6 +41,12 @@ const getPokemonDetailPersistent = unstable_cache(
 const getPokemonSpeciesPersistent = unstable_cache(
   (name: string) => getPokemonSpecies(name),
   ['lunidex:pokemon-species:v1'],
+  { revalidate: 86400 },
+);
+
+const getPokemonFormPersistent = unstable_cache(
+  (name: string) => getPokemonForm(name),
+  ['lunidex:pokemon-form:v1'],
   { revalidate: 86400 },
 );
 
@@ -144,7 +151,9 @@ const getTCGSetPersistent = unstable_cache(
 
 const getTCGSetCardsPersistent = unstable_cache(
   (setId: string, language: string) => getCardsBySet(setId, language),
-  ['lunidex:tcg-set-cards:v1'],
+  // v2 invalidates previously cached partial set responses used by the public
+  // checklist route.
+  ['lunidex:tcg-set-cards:v2'],
   { revalidate: 3600 },
 );
 
@@ -176,6 +185,7 @@ const getAbilityDetailPersistent = unstable_cache(
  */
 export const getPokemonDetailCached = cache(getPokemonDetailPersistent);
 export const getPokemonSpeciesCached = cache(getPokemonSpeciesPersistent);
+export const getPokemonFormCached = cache(getPokemonFormPersistent);
 export const getPokemonEncountersCached = cache(getPokemonEncountersPersistent);
 export const getLocalizedPokemonDataCached = cache(getLocalizedPokemonDataPersistent);
 export const getPokemonListCached = cache(getPokemonListPersistent);

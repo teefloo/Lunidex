@@ -33,12 +33,14 @@
 
 Lunidex is an independent, open-source npm-workspaces monorepo centered on Pokémon TCG collection tracking, with a Pokédex, team-building utilities, and an account-backed personal workspace.
 
+Lunidex is open-source software distributed under the MIT License. See [`LICENSE`](./LICENSE) for the complete license text.
+
 The web app covers **1,025 Pokémon across nine generations** and supports eight interface locales: English, French, Spanish, German, Italian, Japanese, Korean, and Simplified Chinese. Portuguese is available as a translated repository README, but is not a web UI locale.
 
 Public reference pages work without an account. The personal workspace—favorites, caught Pokémon, teams, quiz progress, TCG collections, wishlists, saved searches, notes, decks, and related features—uses Neon Auth and Neon PostgreSQL when configured and synchronized. Web display preferences use IndexedDB; the Expo app uses AsyncStorage.
 
 > [!NOTE]
-> Lunidex is an unofficial, non-commercial fan project. Pokémon data, names, characters, and imagery belong to Nintendo, Game Freak, Creatures, and The Pokémon Company. Lunidex is not affiliated with or endorsed by them.
+> Pokémon, Pokémon character names, trademarks, artwork, imagery, and related intellectual property belong to their respective rights holders. Lunidex is an independent fan project and is not affiliated with, endorsed by, sponsored by, or otherwise officially connected with Nintendo, Creatures Inc., GAME FREAK inc., or The Pokémon Company.
 
 <div align="center">
   <img src="./public/screenshot-mobile.png" alt="Lunidex mobile Pokédex view" width="280" />
@@ -235,7 +237,7 @@ Key boundaries:
 
 Upstream availability, localized coverage, images, and price fields can change. Lunidex is not a card marketplace and does not guarantee market valuations or price-history coverage.
 
-The source code is distributed under the MIT license in [`LICENSE`](./LICENSE). Pokémon intellectual property and third-party data remain subject to their respective owners and source terms.
+The original Lunidex code is distributed under the MIT License in [`LICENSE`](./LICENSE). The MIT License does not cover Pokémon intellectual property, artwork, imagery, game data, or other third-party materials; those remain subject to their respective owners and source terms.
 
 ## Deployment
 

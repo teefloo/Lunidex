@@ -1,6 +1,6 @@
 import apiClient, { REST_API_BASE } from './client';
 import { getCachedData, setCachedData } from './cache';
-import { PokemonDetail, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
+import { PokemonDetail, PokemonForm, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
 
 export const getPokemonList = async ({ pageParam = 0 }) => {
   const cacheKey = `pokemon-list-${pageParam}`;
@@ -42,6 +42,19 @@ export const getPokemonSpecies = async (name: string): Promise<PokemonSpecies> =
     return data;
   } catch (error) {
     const cached = await getCachedData<PokemonSpecies>(cacheKey, true);
+    if (cached) return cached;
+    throw error;
+  }
+};
+
+export const getPokemonForm = async (name: string): Promise<PokemonForm> => {
+  const cacheKey = `pokemon-form-${name}`;
+  try {
+    const { data } = await apiClient.get<PokemonForm>(`/pokemon-form/${name}`);
+    await setCachedData(cacheKey, data);
+    return data;
+  } catch (error) {
+    const cached = await getCachedData<PokemonForm>(cacheKey, true);
     if (cached) return cached;
     throw error;
   }

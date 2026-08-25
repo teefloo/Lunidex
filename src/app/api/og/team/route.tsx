@@ -10,6 +10,7 @@ import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS, synergyColor } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
 import type { PokemonDetail } from '@/types/pokemon';
+import { getPokemonDisplayName } from '@/lib/form-names';
 
 // Node.js runtime: the edge bundle (next/og + satori + vendored fonts) exceeds
 // the 1 MB edge function size limit; the Node serverless function has headroom.
@@ -178,7 +179,12 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                   // eslint-disable-next-line @next/next/no-img-element -- satori (next/og) requires a raw img element, not next/image
                   <img
                     src={getTrustedOgImageUrl(spriteUrl(pokemon))}
-                    alt={pokemon.name}
+                    alt={getPokemonDisplayName({
+                      name: pokemon.name,
+                      baseLocalizedName: pokemon.species.name,
+                      baseSpeciesName: pokemon.species.name,
+                      lang,
+                    })}
                     width={132}
                     height={132}
                     style={{ objectFit: 'contain' }}

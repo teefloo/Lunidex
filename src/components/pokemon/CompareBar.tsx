@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { getPokemonDisplayName } from '@/lib/form-names';
 import Image from 'next/image';
 
 export default function CompareBar() {
@@ -57,7 +58,12 @@ export default function CompareBar() {
                     ) : pokemon?.sprites?.front_default ? (
                       <Image
                         src={pokemon.sprites.front_default}
-                        alt={pokemon.name}
+                        alt={getPokemonDisplayName({
+                          name: pokemon.name,
+                          baseLocalizedName: pokemon.species.name,
+                          baseSpeciesName: pokemon.species.name,
+                          lang: 'en',
+                        })}
                         width={40}
                         height={40}
                         sizes="40px"

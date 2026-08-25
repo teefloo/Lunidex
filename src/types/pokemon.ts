@@ -129,6 +129,19 @@ export interface PokemonDetail {
   }[];
 }
 
+export interface PokemonForm {
+  name: string;
+  form_name?: string;
+  form_names?: {
+    name: string;
+    language: { name: string };
+  }[];
+  names?: {
+    name: string;
+    language: { name: string };
+  }[];
+}
+
 export interface LocalizedPokemonData {
   pokemon_v2_pokemonspeciesnames: Array<{
     name: string;

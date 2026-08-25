@@ -38,7 +38,7 @@ La aplicación web cubre **1.025 Pokémon de nueve generaciones** y admite ocho 
 Las páginas públicas de referencia funcionan sin cuenta. El espacio personal —favoritos, Pokémon capturados, equipos, progreso del quiz, colecciones TCG, listas de deseos, búsquedas guardadas, notas, mazos y funciones relacionadas— usa Neon Auth y Neon PostgreSQL cuando están configurados y sincronizados. Las preferencias visuales web usan IndexedDB; la aplicación Expo usa AsyncStorage.
 
 > [!NOTE]
-> Lunidex es un proyecto de fans independiente, no comercial y no oficial. Los datos, nombres, personajes e imágenes de Pokémon pertenecen a Nintendo, Game Freak, Creatures y The Pokémon Company. Lunidex no está afiliado ni respaldado por ellas.
+> Lunidex es un proyecto de fans independiente y no oficial. Los nombres de personajes Pokémon, marcas, ilustraciones, imágenes y la propiedad intelectual relacionada pertenecen a sus respectivos titulares. Lunidex no está afiliado, respaldado, patrocinado ni oficialmente vinculado a Nintendo, Creatures Inc., GAME FREAK inc. o The Pokémon Company.
 
 <div align="center">
   <img src="./public/screenshot-mobile.png" alt="Vista móvil de la Pokédex de Lunidex" width="280" />

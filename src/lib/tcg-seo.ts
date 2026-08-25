@@ -1,5 +1,11 @@
 import type { TCGCard, TCGSet } from '@/types/tcg';
 
+export const TCG_SET_IMAGE_PREVIEW_LIMIT = 36;
+
+export function getTCGSetPreviewCards(cards: TCGCard[]): TCGCard[] {
+  return cards.slice(0, TCG_SET_IMAGE_PREVIEW_LIMIT);
+}
+
 /**
  * Resolve the trusted card count used by the public set page.
  *

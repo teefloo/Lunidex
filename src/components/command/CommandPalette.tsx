@@ -45,6 +45,7 @@ import {
 import { pokemonKeys } from '@/lib/api/keys';
 import { resolveLanguage } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
+import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 
 interface StaticCommandItem {
   path: string;
@@ -319,7 +320,11 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
               {pokemonResults.map((pokemon) => {
                 const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
                 const localized = speciesNames.find((entry) => entry.pokemon_v2_language?.name === resolvedLang);
-                const displayName = localized?.name || formatName(pokemon.name);
+                const displayName = getFormDisplayName(
+                  pokemon.name,
+                  localized?.name || getBaseSpeciesName(pokemon.name),
+                  resolvedLang,
+                );
                 return (
                   <CommandItem
                     key={pokemon.id}

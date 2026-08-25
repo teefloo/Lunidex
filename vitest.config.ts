@@ -8,6 +8,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    // The jsdom suites share browser globals and time out when Vitest starts
+    // the host's full worker pool. Keep the default CI run deterministic.
+    maxWorkers: 2,
     exclude: ['**/node_modules/**', '**/.claude/worktrees/**', '**/.hatch-runs/**', 'supabase/functions/**'],
   },
   resolve: {

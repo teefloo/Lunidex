@@ -1,4 +1,7 @@
-export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://lunidex.app';
+// SEO and public metadata must have one origin. Keep NEXT_PUBLIC_APP_URL for
+// API/runtime configuration, but never let a preview or legacy value become a
+// canonical URL, sitemap host, or social metadata URL.
+export const SITE_URL = 'https://lunidex.app';
 // Public canonical URLs use the Lunidex domain; legacy storage and package identifiers stay unchanged.
 // Storage keys intentionally retain their legacy PrimeDex prefix so existing
 // local collections continue to load after the public rebrand.

@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
-import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
-import { getBaseSpeciesName } from '@/lib/form-names';
-import { formatPokemonSlugName } from '@/lib/utils';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonFormCached as getPokemonForm, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
+import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { loadDefaultOgImage } from '@/lib/og/default-image';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS } from '@/lib/og/theme';
@@ -15,14 +14,15 @@ export default async function Image({ params }: { params: { name: string } }) {
   const name = params.name;
 
   try {
-    const baseName = getBaseSpeciesName(name);
-    const [pokemon, species] = await Promise.all([
-      getPokemonDetail(name),
+    const pokemon = await getPokemonDetail(name);
+    const baseName = pokemon.species?.name || getBaseSpeciesName(name);
+    const [species, form] = await Promise.all([
       getPokemonSpecies(baseName).catch(() => null),
+      getPokemonForm(name).catch(() => null),
     ]);
     const baseLocalizedName = species?.names?.find((entry) => entry.language.name === 'en')?.name
       || baseName.charAt(0).toUpperCase() + baseName.slice(1);
-    const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
+    const displayName = getPokemonDisplayName({ name, baseLocalizedName, baseSpeciesName: baseName, lang: 'en', form });
     const artwork = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
     const mainType = pokemon.types[0].type.name;
     const mainColor = OG_TYPE_COLORS[mainType] || OG_THEME.border;

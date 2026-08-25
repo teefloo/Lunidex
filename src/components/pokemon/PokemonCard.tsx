@@ -349,9 +349,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         </div>
 
         <div className="pokedex-card-copy pointer-events-none relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">
-          <p className="pokedex-card-native-name latin-name font-display text-[11px] italic text-muted-foreground sm:text-[11px]">
-            {pokemonName.replace(/-/g, ' ')}
-          </p>
           <h3 className="pokedex-card-name truncate w-full text-center font-display text-base font-semibold tracking-tight text-foreground transition-colors duration-300 sm:text-base">
             {displayName}
           </h3>

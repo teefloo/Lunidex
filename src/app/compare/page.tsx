@@ -10,6 +10,7 @@ import { TypeRelations } from '@/lib/api/rest';
 import { TYPE_COLORS, PokemonDetail, PokemonSpecies } from '@/types/pokemon';
 import { analyzeTeam } from '@/lib/team-analysis';
 import { getCompareSuggestions } from '@/lib/counter-suggestions';
+import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import { 
   ArrowLeft, 
   Loader2, 
@@ -139,7 +140,11 @@ export default function ComparePage() {
       .filter((pokemon) => {
         const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
         const localized = speciesNames.find((entry) => entry.pokemon_v2_language?.name === resolvedLang);
-        const displayName = (localized?.name || pokemon.name).toLowerCase();
+        const displayName = getFormDisplayName(
+          pokemon.name,
+          localized?.name || getBaseSpeciesName(pokemon.name),
+          resolvedLang,
+        ).toLowerCase();
         return displayName.includes(term) || pokemon.name.includes(term) || pokemon.id.toString().includes(term);
       })
       .filter((pokemon) => !activeCompareIds.includes(pokemon.id))
@@ -328,9 +333,11 @@ export default function ComparePage() {
               {searchResults.length > 0 ? searchResults.map((pokemon) => {
                 const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];
                 const localized = speciesNames.find((entry) => entry.pokemon_v2_language?.name === resolvedLang);
-                const displayName = pokemon.name.includes('-')
-                  ? pokemon.name.replace(/-/g, ' ')
-                  : localized?.name || pokemon.name;
+                const displayName = getFormDisplayName(
+                  pokemon.name,
+                  localized?.name || getBaseSpeciesName(pokemon.name),
+                  resolvedLang,
+                );
 
                 return (
                   <button
@@ -401,7 +408,11 @@ export default function ComparePage() {
                         {compareData.map((d) => d.pokemon && (
                           <Radar
                             key={d.pokemon.id}
-                            name={d.species?.names?.find((n) => n.language.name === resolvedLang)?.name || d.pokemon.name}
+                            name={getFormDisplayName(
+                              d.pokemon.name,
+                              d.species?.names?.find((n) => n.language.name === resolvedLang)?.name || getBaseSpeciesName(d.pokemon.name),
+                              resolvedLang,
+                            )}
                             dataKey={d.pokemon.name}
                             stroke={TYPE_COLORS[d.pokemon.types[0].type.name]}
                             fill={TYPE_COLORS[d.pokemon.types[0].type.name]}
@@ -424,7 +435,11 @@ export default function ComparePage() {
                         if (key === 'total') return null;
                         const winner = compareData[info.index];
                         if (!winner || !winner.pokemon) return null;
-                        const winnerName = winner.species?.names?.find((n) => n.language.name === resolvedLang)?.name || winner.pokemon.name;
+                        const winnerName = getFormDisplayName(
+                          winner.pokemon.name,
+                          winner.species?.names?.find((n) => n.language.name === resolvedLang)?.name || getBaseSpeciesName(winner.pokemon.name),
+                          resolvedLang,
+                        );
                         return (
                           <div key={key} className="bg-secondary/20 p-4 rounded-sm border border-border/40 flex flex-col gap-1 hover:border-primary/30 transition-all">
                             <span className="text-[11px] font-black uppercase text-muted-foreground">{statLabels[key]}</span>

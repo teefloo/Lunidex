@@ -1,13 +1,12 @@
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { connection } from 'next/server';
-import { getPokemonDetailCached as getPokemonDetail, getPokemonEncountersCached as getPokemonEncounters, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonEncountersCached as getPokemonEncounters, getPokemonFormCached as getPokemonForm, getPokemonSpeciesCached as getPokemonSpecies, getLocalizedPokemonDataCached as getLocalizedPokemonData } from '@/lib/api/server-cache';
 import { PokemonDetailClient } from './PokemonDetailClient';
 import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
-import { PokemonDetail, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
-import { getBaseSpeciesName } from '@/lib/form-names';
-import { formatPokemonSlugName } from '@/lib/utils';
+import { PokemonDetail, PokemonForm, PokemonSpecies, PokemonEncounter, LocalizedPokemonData } from '@/types/pokemon';
+import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { getServerLanguage, getServerPokemonLanguage, getServerT } from '@/lib/server-i18n';
 import { languageToPokemonLanguageId, languageToMetadataLocale, supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { OG_SIZE } from '@/lib/og/theme';
@@ -54,23 +53,23 @@ export async function generateMetadata(
   const lang = await getServerLanguage();
   const speciesLangCode = await getServerPokemonLanguage();
   const t = await getServerT();
-  const baseName = getBaseSpeciesName(name);
-
   try {
-    const [pokemon, species] = await Promise.all([
-      getPokemonDetail(name),
+    const pokemon = await getPokemonDetail(name);
+    const baseName = pokemon.species?.name || getBaseSpeciesName(name);
+    const [species, form] = await Promise.all([
       getPokemonSpecies(baseName).catch(() => null),
+      getPokemonForm(name).catch(() => null),
     ]);
 
     const langId = languageToPokemonLanguageId[lang];
     const localizedData = await getLocalizedPokemonData(name, langId).catch(() => null) as LocalizedPokemonData | null;
 
-    const localizedName = localizedData?.pokemon_v2_pokemonspeciesnames?.[0]?.name
-      || species?.names?.find(n => n.language.name === speciesLangCode)?.name
+    const localizedName = species?.names?.find(n => n.language.name === speciesLangCode)?.name
       || species?.names?.find(n => n.language.name === lang)?.name
       || species?.names?.find(n => n.language.name === 'en')?.name
+      || localizedData?.pokemon_v2_pokemonspeciesnames?.[0]?.name
       || baseName;
-    const displayName = name.includes('-') ? formatPokemonSlugName(name) : localizedName;
+    const displayName = getPokemonDisplayName({ name, baseLocalizedName: localizedName, baseSpeciesName: baseName, lang, form });
 
     const dexNumber = `#${String(pokemon.id).padStart(3, '0')}`;
     const types = pokemon.types
@@ -167,10 +166,9 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   const t = await getServerT();
   const langId = languageToPokemonLanguageId[lang];
 
-  const baseName = getBaseSpeciesName(name);
-
   let pokemon: PokemonDetail;
   let species: PokemonSpecies | null = null;
+  let form: PokemonForm | null = null;
   let localized: LocalizedPokemonData | null = null;
   let encounters: PokemonEncounter[] = [];
 
@@ -184,16 +182,26 @@ export default async function PokemonPage({ params, searchParams }: Props) {
     permanentRedirect(buildPokemonPath(pokemon.name, sParams));
   }
 
+  const baseName = pokemon.species?.name || getBaseSpeciesName(name);
+
   // Try species for the form name first, fall back to base name for mega/primal/ultra
-  const [speciesData, localizedData, encountersData] = await Promise.all([
+  const [speciesData, localizedData, encountersData, formData] = await Promise.all([
     getPokemonSpecies(baseName).catch(() => null),
     getLocalizedPokemonData(name, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
     getPokemonEncounters(pokemon.id).catch(() => []),
+    getPokemonForm(name).catch(() => null),
   ]);
 
   species = speciesData;
   localized = localizedData;
   encounters = encountersData;
+  form = formData;
+
+  const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
+    || species?.names?.find((entry) => entry.language.name === lang)?.name
+    || species?.names?.find((entry) => entry.language.name === 'en')?.name
+    || baseName;
+  const displayName = getPokemonDisplayName({ name, baseLocalizedName, baseSpeciesName: baseName, lang, form });
 
   return (
     <>
@@ -202,18 +210,19 @@ export default async function PokemonPage({ params, searchParams }: Props) {
         items={[
           { label: t('common.home', { defaultValue: 'Home' }), href: `/${lang}` },
           { label: t('list.pokemon', { defaultValue: 'Pokémon' }), href: `/${lang}/pokedex` },
-          { label: formatPokemonSlugName(name) },
+          { label: displayName },
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
       <PokemonDetailClient
         initialPokemon={pokemon}
         initialSpecies={species}
+        initialForm={form}
         initialLocalized={localized}
         initialEncounters={encounters}
         initialSeoDescription={normalizeDescription(
           t('meta.pokemon_description', {
-            name: localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name || formatPokemonSlugName(name),
+            name: displayName,
             types: pokemon.types
               .map(({ type }) => t(`types.${type.name}`, { defaultValue: type.name }))
               .join(', '),

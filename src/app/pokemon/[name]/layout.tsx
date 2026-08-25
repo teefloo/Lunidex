@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { connection } from 'next/server';
-import { getPokemonDetailCached as getPokemonDetail, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
+import { getPokemonDetailCached as getPokemonDetail, getPokemonFormCached as getPokemonForm, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/server-i18n';
-import { getBaseSpeciesName } from '@/lib/form-names';
-import { formatPokemonSlugName } from '@/lib/utils';
+import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { SITE_URL } from '@/lib/site';
 import { supportedLanguages, languageToMetadataLocale } from '@/lib/languages';
 import { DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -20,15 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = await getServerLanguage();
   const speciesLangCode = await getServerPokemonLanguage();
   try {
-    const baseName = getBaseSpeciesName(name);
-    const [pokemon, species] = await Promise.all([
-      getPokemonDetail(name),
+    const pokemon = await getPokemonDetail(name);
+    const baseName = pokemon.species?.name || getBaseSpeciesName(name);
+    const [species, form] = await Promise.all([
       getPokemonSpecies(baseName).catch(() => null),
+      getPokemonForm(name).catch(() => null),
     ]);
     const baseLocalizedName = species?.names?.find((entry) => entry.language.name === speciesLangCode)?.name
       || species?.names?.find((entry) => entry.language.name === 'en')?.name
       || baseName.charAt(0).toUpperCase() + baseName.slice(1);
-    const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
+    const displayName = getPokemonDisplayName({ name, baseLocalizedName, baseSpeciesName: baseName, lang, form });
     const types = pokemon.types
       .map((type) => t(`types.${type.type.name}`, { defaultValue: type.type.name }))
       .join(', ');
@@ -95,15 +95,16 @@ export default async function PokemonLayout({
   let breadcrumbJsonLd = null;
 
   try {
-    const baseName = getBaseSpeciesName(name);
-    const [pokemon, species] = await Promise.all([
-      getPokemonDetail(name),
+    const pokemon = await getPokemonDetail(name);
+    const baseName = pokemon.species?.name || getBaseSpeciesName(name);
+    const [species, form] = await Promise.all([
       getPokemonSpecies(baseName).catch(() => null),
+      getPokemonForm(name).catch(() => null),
     ]);
     const baseLocalizedName = species?.names?.find((entry) => entry.language.name === speciesLangCode)?.name
       || species?.names?.find((entry) => entry.language.name === 'en')?.name
       || baseName.charAt(0).toUpperCase() + baseName.slice(1);
-    const displayName = name.includes('-') ? formatPokemonSlugName(name) : baseLocalizedName;
+    const displayName = getPokemonDisplayName({ name, baseLocalizedName, baseSpeciesName: baseName, lang, form });
     const imageUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
     const totalStats = pokemon.stats.reduce((sum: number, s: { base_stat: number }) => sum + s.base_stat, 0);
     const typesArr = pokemon.types.map((typeItem: { type: { name: string } }) => typeItem.type.name);

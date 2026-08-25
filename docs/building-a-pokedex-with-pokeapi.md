@@ -190,4 +190,4 @@ The important part is the normalization boundary. It prevents API-specific quirk
 - Live Pokédex: https://lunidex.app/en/pokedex
 - Source: https://github.com/teefloo/Lunidex
 
-Lunidex is an unofficial, non-commercial fan project and is not affiliated with or endorsed by Nintendo, Game Freak, Creatures, or The Pokémon Company.
+Lunidex is an independent, unofficial fan project. Pokémon names, trademarks, artwork, imagery, game data, and related intellectual property belong to their respective rights holders. Lunidex is not affiliated with, endorsed by, sponsored by, or officially connected with Nintendo, Creatures Inc., GAME FREAK inc., or The Pokémon Company.

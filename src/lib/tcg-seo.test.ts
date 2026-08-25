@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { TCGCard, TCGSet } from '@/types/tcg';
-import { getTCGSetCardCount, isIndexableTCGSetCardList } from './tcg-seo';
+import { getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList, TCG_SET_IMAGE_PREVIEW_LIMIT } from './tcg-seo';
 
 const set: TCGSet = {
   id: 'sv01',
@@ -35,5 +35,11 @@ describe('TCG public set SEO quality gate', () => {
 
   it('rejects cards without a collector number', () => {
     expect(isIndexableTCGSetCardList(set, [{ ...card('sv01-1'), localId: '' }, card('sv01-2')])).toBe(false);
+  });
+
+  it('limits the visual preview while keeping the source list available to the page', () => {
+    const cards = Array.from({ length: TCG_SET_IMAGE_PREVIEW_LIMIT + 4 }, (_, index) => card(`sv01-${index + 1}`));
+    expect(getTCGSetPreviewCards(cards)).toHaveLength(TCG_SET_IMAGE_PREVIEW_LIMIT);
+    expect(getTCGSetPreviewCards(cards)[0].id).toBe('sv01-1');
   });
 });

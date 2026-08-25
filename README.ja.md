@@ -38,7 +38,7 @@ Web アプリには **9 世代・1,025 種のポケモン**が収録され、英
 公開リファレンスページはアカウントなしで利用できます。個人ワークスペース（お気に入り、捕獲したポケモン、チーム、クイズの進捗、TCG コレクション、ほしいカード、保存した検索、メモ、デッキなど）は、Neon Auth と Neon PostgreSQL を設定して同期すると利用できます。Web の表示設定には IndexedDB、Expo アプリには AsyncStorage を使用します。
 
 > [!NOTE]
-> Lunidex は独立した非公式・非営利のファンプロジェクトです。ポケモンのデータ、名称、キャラクター、画像は Nintendo、Game Freak、Creatures、The Pokémon Company に帰属します。Lunidex はこれらの企業と提携・承認されていません。
+> Lunidex は独立した非公式のファンプロジェクトです。ポケモンのキャラクター名、商標、イラスト、画像および関連する知的財産は、それぞれの権利者に帰属します。Lunidex は Nintendo、Creatures Inc.、GAME FREAK inc.、The Pokémon Company と提携・承認・スポンサー関係になく、公式に関連するものでもありません。
 
 <div align="center">
   <img src="./public/screenshot-mobile.png" alt="Lunidex モバイル版ポケモン図鑑" width="280" />

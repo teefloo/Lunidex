@@ -14,6 +14,7 @@ import {
 } from '@/lib/battle-engine';
 import { getAllPokemonNames, getMoveDetail, getPokemonDetail } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { getPokemonDisplayName } from '@/lib/form-names';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -113,6 +114,14 @@ function PokemonSelector({
     : null;
 
   const types = value?.pokemon.types ?? [];
+  const valueDisplayName = value
+    ? getPokemonDisplayName({
+      name: value.pokemon.name,
+      baseLocalizedName: value.pokemon.species.name,
+      baseSpeciesName: value.pokemon.species.name,
+      lang: 'en',
+    })
+    : '';
 
   return (
     <div className="flex flex-col gap-3">
@@ -171,12 +180,12 @@ function PokemonSelector({
           >
 {sprite && (
                <div className="relative h-16 w-16 shrink-0">
-                 <Image src={sprite} alt={value.pokemon.name} fill className="object-contain drop-shadow-md" unoptimized />
+                 <Image src={sprite} alt={valueDisplayName} fill className="object-contain drop-shadow-md" unoptimized />
                </div>
              )}
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm font-bold capitalize italic">
-                {value.pokemon.name}
+                {valueDisplayName}
               </p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {types.map(t => (

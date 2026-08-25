@@ -12,7 +12,7 @@ import { buildInLanguage, localeHref } from '@/lib/seo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
-import { getTCGSetCardCount, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
+import { getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 
@@ -36,6 +36,54 @@ function buildSetLanguages(setId: string): Record<string, string> {
 function formatReleaseDate(value: string | undefined, language: SupportedLanguage): string {
   if (!value || Number.isNaN(Date.parse(value))) return '—';
   return new Intl.DateTimeFormat(language, { dateStyle: 'medium' }).format(new Date(value));
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => (
+    {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[character] ?? character
+  ));
+}
+
+function translateCardCategory(
+  category: string,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): string {
+  const key = category === 'Pokemon'
+    ? 'tcg.card_category_pokemon'
+    : category === 'Trainer'
+      ? 'tcg.card_category_trainer'
+      : category === 'Energy'
+        ? 'tcg.card_category_energy'
+        : null;
+
+  return key ? t(key, { defaultValue: category }) : category;
+}
+
+function buildChecklistMarkup(
+  cards: Awaited<ReturnType<typeof getTCGSetCardsCached>>,
+  language: SupportedLanguage,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): string {
+  return cards.map((card) => {
+    const collectorNumber = card.localId || card.number || card.id;
+    const metadata = [
+      card.rarity ? `${t('tcg.rarity')}: ${card.rarity}` : null,
+      card.category ? `${t('tcg.card_category')}: ${translateCardCategory(card.category, t)}` : null,
+      card.types?.length ? `${t('tcg.types')}: ${card.types.map((type) => t(`types.${type}`, { defaultValue: type })).join(', ')}` : null,
+      typeof card.hp === 'number' ? `${t('stats.hp')}: ${card.hp}` : null,
+    ]
+      .filter((value): value is string => Boolean(value))
+      .map(escapeHtml)
+      .join(' · ');
+
+    return `<li><a href="${escapeHtml(localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language))}" aria-label="${escapeHtml(t('tcg.open_card_detail', { name: card.name }))}" class="flex min-h-16 items-start gap-3 px-4 py-3 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 sm:items-center sm:gap-5"><span class="w-20 shrink-0 font-mono text-xs font-bold text-foreground/55 sm:w-24">${escapeHtml(collectorNumber)}</span><span class="min-w-0 flex-1"><span class="block font-bold text-foreground">${escapeHtml(card.name)}</span>${metadata ? `<span class="mt-1 block text-xs leading-5 text-foreground/55">${metadata}</span>` : ''}</span><span class="hidden shrink-0 text-xs font-black uppercase tracking-[0.08em] text-primary sm:inline">${escapeHtml(t('tcg.card_row_hint'))}</span></a></li>`;
+  }).join('');
 }
 
 async function getSetPageData(setId: string, language: SupportedLanguage) {
@@ -91,7 +139,10 @@ export default async function TCGSetPage({ params }: PageProps) {
 
   const { set, cards, isIndexable } = data;
   const releaseDate = formatReleaseDate(set.releaseDate, language);
-  const total = cards.length > 0 ? cards.length : getTCGSetCardCount(set);
+  const declaredTotal = getTCGSetCardCount(set);
+  const total = declaredTotal || cards.length;
+  const itemListTotal = isIndexable ? total : cards.length;
+  const previewCards = getTCGSetPreviewCards(cards);
   const path = `/tcg/sets/${encodeURIComponent(setId)}`;
   const pageTitle = t('tcg.set_meta_title', { name: set.name, releaseDate });
   const pageDescription = t('tcg.set_meta_description', { name: set.name, releaseDate });
@@ -109,7 +160,7 @@ export default async function TCGSetPage({ params }: PageProps) {
     about: { '@type': 'Thing', name: 'Pokémon Trading Card Game' },
     mainEntity: {
       '@type': 'ItemList',
-      numberOfItems: cards.length,
+      numberOfItems: itemListTotal,
       itemListElement: cards.map((card, index) => ({
         '@type': 'ListItem',
         position: index + 1,
@@ -155,6 +206,8 @@ export default async function TCGSetPage({ params }: PageProps) {
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-foreground/55">
                 <span>{t('tcg.activation.card_total', { count: total })}</span>
                 <span>{releaseDate}</span>
+                {set.serie?.name ? <span>{t('tcg.series', { defaultValue: 'Series' })}: {set.serie.name}</span> : null}
+                {set.cardCount?.official ? <span>{t('tcg.official_count', { defaultValue: 'Official' })}: {set.cardCount.official}</span> : null}
               </div>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link
@@ -189,9 +242,9 @@ export default async function TCGSetPage({ params }: PageProps) {
               <span className="text-sm font-semibold text-foreground/55">{t('tcg.activation.card_total', { count: total })}</span>
             </div>
 
-            {cards.length > 0 ? (
+            {previewCards.length > 0 ? (
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {cards.map((card) => (
+                {previewCards.map((card) => (
                   <Link
                     key={card.id}
                     href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}
@@ -217,6 +270,26 @@ export default async function TCGSetPage({ params }: PageProps) {
             ) : (
               <p className="mt-5 rounded-sm border border-dashed border-border/40 p-8 text-center text-sm text-foreground/60">{t('tcg.no_cards', { defaultValue: 'No cards found' })}</p>
             )}
+
+            {cards.length > 0 ? (
+              <section className="mt-10" aria-labelledby="tcg-set-complete-list-title">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">
+                      {t('tcg.set_landing_showing', { shown: previewCards.length, total: cards.length })}
+                    </p>
+                    <h3 id="tcg-set-complete-list-title" className="mt-2 text-xl font-black tracking-tight sm:text-2xl">
+                      {t('tcg.set_landing_complete', { defaultValue: 'Complete card checklist' })}
+                    </h3>
+                  </div>
+                  <span className="text-sm font-semibold text-foreground/55">{cards.length} {t('tcg.cards', { defaultValue: 'cards' })}</span>
+                </div>
+                <ol
+                  className="mt-5 divide-y divide-border/35 overflow-hidden rounded-sm border border-border/45 bg-card/35"
+                  dangerouslySetInnerHTML={{ __html: buildChecklistMarkup(cards, language, t) }}
+                />
+              </section>
+            ) : null}
             {!isIndexable ? (
               <p className="mt-5 rounded-sm border border-dashed border-border/40 p-4 text-center text-sm text-foreground/60">
                 {t('tcg.set_landing_unavailable', { defaultValue: 'The complete card list is temporarily unavailable.' })}

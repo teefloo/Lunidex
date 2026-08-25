@@ -7,6 +7,7 @@ import { PokemonDetail } from '@/types/pokemon';
 import { extractSprites } from '@/lib/pokemon-utils';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { getPokemonDisplayName } from '@/lib/form-names';
 import { Button } from '@/components/ui/button';
 
 interface SpriteGalleryProps {
@@ -107,7 +108,12 @@ export function SpriteGallery({ pokemon }: SpriteGalleryProps) {
                     {sprite.url && (
                     <Image
                       src={sprite.url}
-                      alt={`${pokemon.name} ${sprite.label}`}
+                      alt={`${getPokemonDisplayName({
+                        name: pokemon.name,
+                        baseLocalizedName: pokemon.species.name,
+                        baseSpeciesName: pokemon.species.name,
+                        lang: 'en',
+                      })} ${sprite.label}`}
                       width={96}
                       height={96}
                       className="pixel-sprite w-full h-full object-contain"

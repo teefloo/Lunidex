@@ -19,6 +19,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const currentLang = await getServerLanguage();
+  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
   const t = await getServerT();
   const card = await getPageCard(id, currentLang);
 
@@ -42,11 +43,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     hp: card.hp ?? '?',
   });
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
-  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodeURIComponent(id)}&lang=${currentLang}`;
+  const encodedCardId = encodeURIComponent(id);
+  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodedCardId}&lang=${canonicalLanguage}`;
   const indexableLanguages = supportedLanguages.filter(isTcgLangSupported);
-  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
   const languages = Object.fromEntries(
-    indexableLanguages.map((language) => [language, `/${language}/tcg/cards/${id}`]),
+    indexableLanguages.map((language) => [language, `/${language}/tcg/cards/${encodedCardId}`]),
   );
 
   return {
@@ -58,13 +59,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? { index: true, follow: true }
       : { index: false, follow: true },
     alternates: {
-      canonical: `/${canonicalLanguage}/tcg/cards/${id}`,
-      languages: { ...languages, 'x-default': `/en/tcg/cards/${id}` },
+      canonical: `/${canonicalLanguage}/tcg/cards/${encodedCardId}`,
+      languages: { ...languages, 'x-default': `/en/tcg/cards/${encodedCardId}` },
     },
     openGraph: {
       title,
       description,
-      url: `/${currentLang}/tcg/cards/${id}`,
+      url: `/${canonicalLanguage}/tcg/cards/${encodedCardId}`,
       type: 'website',
       images: [{ url: ogImage, width: 1200, height: 630, alt: card.name }],
     },
@@ -80,6 +81,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function TCGCardPage({ params }: PageProps) {
   const { id } = await params;
   const currentLang = await getServerLanguage();
+  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
   const t = await getServerT();
   const card = await getPageCard(id, currentLang);
   if (!card) notFound();
@@ -109,7 +111,7 @@ export default async function TCGCardPage({ params }: PageProps) {
     brand: { '@type': 'Brand', name: 'Pokémon' },
     manufacturer: { '@type': 'Organization', name: 'The Pokémon Company' },
     category: 'Trading Card',
-    url: `${SITE_URL}/${currentLang}/tcg/cards/${card.id}`,
+    url: `${SITE_URL}/${canonicalLanguage}/tcg/cards/${encodeURIComponent(card.id)}`,
     additionalProperty: [
       ...(card.hp ? [{ '@type': 'PropertyValue', name: 'HP', value: card.hp }] : []),
       ...(card.rarity ? [{ '@type': 'PropertyValue', name: 'Rarity', value: card.rarity }] : []),
@@ -126,8 +128,8 @@ export default async function TCGCardPage({ params }: PageProps) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: t('common.home', { defaultValue: 'Lunidex' }), item: `${SITE_URL}/${currentLang}` },
       { '@type': 'ListItem', position: 2, name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), item: `${SITE_URL}/${currentLang}/tcg` },
-      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${currentLang}/tcg/sets/${setId}` }] : []),
-      { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${currentLang}/tcg/cards/${card.id}` },
+      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}` }] : []),
+      { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${canonicalLanguage}/tcg/cards/${encodeURIComponent(card.id)}` },
     ],
   };
 

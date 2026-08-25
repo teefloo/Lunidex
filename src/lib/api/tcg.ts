@@ -772,7 +772,9 @@ export const fetchCollectionValue = async (
  */
 export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-cards-v5-${setId}-${tcgLang}`;
+  // v6 invalidates earlier partial-set caches so public checklist pages can
+  // safely hydrate the complete set response before becoming indexable.
+  const cacheKey = `tcg-set-cards-v6-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);

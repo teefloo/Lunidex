@@ -6,7 +6,7 @@ import { getServerT, getServerLanguage, getServerPokemonLanguage } from '@/lib/s
 import { getPokemonDetailCached, getPokemonSpeciesCached, getLocalizedPokemonDataCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
-import { getBaseSpeciesName } from '@/lib/form-names';
+import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { localeHref } from '@/lib/seo';
 
 const NATIONAL_DEX_SIZE = 1025;
@@ -40,10 +40,16 @@ export default async function PokemonOfTheDay() {
     return null;
   }
 
-  const displayName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
+  const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.[0]?.name
     || species?.names?.find((n) => n.language.name === speciesLangCode)?.name
     || species?.names?.find((n) => n.language.name === 'en')?.name
-    || pokemon.name;
+    || getBaseSpeciesName(pokemon.name);
+  const displayName = getPokemonDisplayName({
+    name: pokemon.name,
+    baseLocalizedName,
+    baseSpeciesName: pokemon.species.name,
+    lang,
+  });
 
   const artwork = pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default;
   const mainType = pokemon.types[0]?.type.name;
