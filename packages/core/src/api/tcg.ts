@@ -112,10 +112,9 @@ function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
 }
 
 function normaliseSet(raw: RawSet): TCGSet {
-  const fromCardsArray = Array.isArray(raw.cards) ? raw.cards.length : undefined;
   const fromCardCount = typeof raw.cardCount?.total === 'number' ? raw.cardCount.total : undefined;
   const fromTotalCards = typeof raw.totalCards === 'number' ? raw.totalCards : undefined;
-  const count = fromCardsArray ?? fromCardCount ?? fromTotalCards ?? 0;
+  const count = fromCardCount ?? fromTotalCards ?? 0;
 
   return {
     id: raw.id,

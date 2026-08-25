@@ -12,6 +12,7 @@ import { buildInLanguage, localeHref } from '@/lib/seo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
+import { getTCGSetCardCount, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 
@@ -42,7 +43,7 @@ async function getSetPageData(setId: string, language: SupportedLanguage) {
   if (!set) return null;
 
   const cards = await getTCGSetCardsCached(setId, language).catch(() => []);
-  return { set, cards };
+  return { set, cards, isIndexable: isIndexableTCGSetCardList(set, cards) };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -56,13 +57,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const releaseDate = formatReleaseDate(data.set.releaseDate, language);
   const title = t('tcg.set_meta_title', { name: data.set.name, releaseDate });
   const description = t('tcg.set_meta_description', { name: data.set.name, releaseDate });
-  const ogImage = `${SITE_URL}/api/og/tcg-set?set=${encodeURIComponent(setId)}&lang=${language}`;
   const canonicalLanguage = isTcgLangSupported(language) ? language : 'en';
+  const ogImage = `${SITE_URL}/api/og/tcg-set?set=${encodeURIComponent(setId)}&lang=${canonicalLanguage}`;
 
   return {
     title: { absolute: title },
     description,
-    robots: isTcgLangSupported(language) ? { index: true, follow: true } : { index: false, follow: true },
+    robots: data.isIndexable && isTcgLangSupported(language)
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     alternates: {
       canonical: `/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}`,
       languages: buildSetLanguages(setId),
@@ -70,7 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title,
       description,
-      url: `/${language}/tcg/sets/${encodeURIComponent(setId)}`,
+      url: `/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}`,
       type: 'website',
       images: [{ url: ogImage, width: 1200, height: 630, alt: data.set.name }],
     },
@@ -86,10 +89,9 @@ export default async function TCGSetPage({ params }: PageProps) {
 
   if (!data) notFound();
 
-  const { set, cards } = data;
+  const { set, cards, isIndexable } = data;
   const releaseDate = formatReleaseDate(set.releaseDate, language);
-  const total = set.cardCount?.total ?? set.totalCards ?? cards.length;
-  const visibleCards = cards.slice(0, 36);
+  const total = cards.length > 0 ? cards.length : getTCGSetCardCount(set);
   const path = `/tcg/sets/${encodeURIComponent(setId)}`;
   const pageTitle = t('tcg.set_meta_title', { name: set.name, releaseDate });
   const pageDescription = t('tcg.set_meta_description', { name: set.name, releaseDate });
@@ -107,8 +109,8 @@ export default async function TCGSetPage({ params }: PageProps) {
     about: { '@type': 'Thing', name: 'Pokémon Trading Card Game' },
     mainEntity: {
       '@type': 'ItemList',
-      numberOfItems: total,
-      itemListElement: visibleCards.map((card, index) => ({
+      numberOfItems: cards.length,
+      itemListElement: cards.map((card, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: card.name,
@@ -147,7 +149,7 @@ export default async function TCGSetPage({ params }: PageProps) {
                 {t('tcg.set_landing_checklist', { defaultValue: 'Pokémon TCG set checklist' })}
               </p>
               <h1 id="tcg-set-title" className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-                {set.name}
+                {set.name} — {t('tcg.set_landing_checklist', { defaultValue: 'Card list and checklist' })}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-foreground/65">{pageDescription}</p>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-foreground/55">
@@ -187,12 +189,13 @@ export default async function TCGSetPage({ params }: PageProps) {
               <span className="text-sm font-semibold text-foreground/55">{t('tcg.activation.card_total', { count: total })}</span>
             </div>
 
-            {visibleCards.length > 0 ? (
+            {cards.length > 0 ? (
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {visibleCards.map((card) => (
+                {cards.map((card) => (
                   <Link
                     key={card.id}
                     href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}
+                    aria-label={t('tcg.open_card_detail', { name: card.name })}
                     className="group rounded-sm border border-border/35 bg-card/45 p-2 transition-colors hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                   >
                     <TCGImageWithFallback
@@ -204,17 +207,36 @@ export default async function TCGSetPage({ params }: PageProps) {
                       className="aspect-[5/7] w-full rounded-sm object-contain"
                     />
                     <span className="mt-2 block truncate px-1 pb-1 text-xs font-bold text-foreground/70 group-hover:text-primary">{card.name}</span>
+                    <span className="flex items-center justify-between gap-2 px-1 pb-1 text-[10px] font-bold uppercase tracking-[0.06em] text-foreground/45">
+                      <span>{card.localId || card.number || card.id}</span>
+                      {card.rarity ? <span className="truncate text-right">{card.rarity}</span> : null}
+                    </span>
                   </Link>
                 ))}
               </div>
             ) : (
               <p className="mt-5 rounded-sm border border-dashed border-border/40 p-8 text-center text-sm text-foreground/60">{t('tcg.no_cards', { defaultValue: 'No cards found' })}</p>
             )}
-            {cards.length > visibleCards.length ? (
-              <p className="mt-5 text-center text-sm text-foreground/55">
-                {t('tcg.set_landing_showing', { defaultValue: 'Showing {{shown}} of {{total}} cards.', shown: visibleCards.length, total })}
+            {!isIndexable ? (
+              <p className="mt-5 rounded-sm border border-dashed border-border/40 p-4 text-center text-sm text-foreground/60">
+                {t('tcg.set_landing_unavailable', { defaultValue: 'The complete card list is temporarily unavailable.' })}
               </p>
             ) : null}
+          </section>
+
+          <section className="mt-10 rounded-sm border border-primary/20 bg-primary/5 p-5 sm:p-7" aria-labelledby="tcg-set-tracker-title">
+            <h2 id="tcg-set-tracker-title" className="text-2xl font-black tracking-tight sm:text-3xl">
+              {t('tcg.activation.start_title')}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-foreground/65">
+              {t('tcg.activation.start_description')}
+            </p>
+            <Link
+              href={localeHref(`/tcg/collection/${encodeURIComponent(set.id)}?activation=1`, language)}
+              className="mt-5 inline-flex min-h-12 items-center rounded-sm bg-primary px-5 text-sm font-black text-primary-foreground shadow-[4px_4px_0_hsl(var(--foreground)/0.18)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              {t('tcg.activation.choose_set')}
+            </Link>
           </section>
         </main>
       </div>

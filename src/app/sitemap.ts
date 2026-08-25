@@ -283,7 +283,6 @@ const editorialUrls: MetadataRoute.Sitemap = EDITORIAL_SITEMAP_ROUTES.map((route
     url: `${baseUrl}/en/tcg/sets/${encodeURIComponent(set.id)}`,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
-    ...(set.releaseDate ? { lastModified: set.releaseDate } : {}),
     alternates: {
       languages: buildTcgLanguages(`tcg/sets/${encodeURIComponent(set.id)}`),
     },
