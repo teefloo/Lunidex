@@ -204,6 +204,7 @@ export async function proxy(request: NextRequest) {
         path: '/',
         maxAge: COOKIE_MAX_AGE,
         sameSite: 'lax',
+        secure: request.nextUrl.protocol === 'https:',
       });
     }
     return response;
@@ -231,6 +232,7 @@ export async function proxy(request: NextRequest) {
       path: '/',
       maxAge: COOKIE_MAX_AGE,
       sameSite: 'lax',
+      secure: request.nextUrl.protocol === 'https:',
     });
   }
   return redirect;

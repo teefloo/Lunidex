@@ -222,21 +222,41 @@ export function TCGResearchDesk({
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, totalCards]);
 
+  // Search drives the query key, so every keystroke would otherwise fire a
+  // fresh upstream request and a router.replace. Coalesce edits for 300 ms.
+  const searchTermTimerRef = useRef<number | null>(null);
+  const effectiveFiltersRef = useRef(effectiveFilters);
+  effectiveFiltersRef.current = effectiveFilters;
+  const cancelPendingSearch = useCallback(() => {
+    if (searchTermTimerRef.current !== null) {
+      window.clearTimeout(searchTermTimerRef.current);
+      searchTermTimerRef.current = null;
+    }
+  }, []);
   const updateFilters = useCallback((next: TCGCardFilters) => {
+    cancelPendingSearch();
     setHasUserEditedFilters(true);
     setFilters(normalizeFilters(next));
-  }, []);
+  }, [cancelPendingSearch]);
+  useEffect(() => cancelPendingSearch, [cancelPendingSearch]);
+  const updateSearchTerm = useCallback((value: string) => {
+    setHasUserEditedFilters(true);
+    cancelPendingSearch();
+    searchTermTimerRef.current = window.setTimeout(() => {
+      searchTermTimerRef.current = null;
+      updateFilters({ ...effectiveFiltersRef.current, searchTerm: value.trim() ? value : undefined });
+    }, 300);
+  }, [cancelPendingSearch, updateFilters]);
 
   const clearFilters = useCallback(() => {
-    setHasUserEditedFilters(true);
-    setFilters({
+    updateFilters({
       ...DEFAULT_TCG_CARD_FILTERS,
       selectedSet: null,
       selectedCategory: 'all',
       selectedRarity: null,
       searchTerm: undefined,
     });
-  }, []);
+  }, [updateFilters]);
 
   const openCard = useCallback((card: TCGCard) => {
     setSelectedCard(card);
@@ -246,6 +266,7 @@ export function TCGResearchDesk({
   const openFilters = useCallback(() => setIsFiltersOpen(true), []);
 
   const applyQuickPreset = useCallback((preset: 'latest' | 'pikachu') => {
+    cancelPendingSearch();
     setHasUserEditedFilters(true);
 
     const resetQuickPresetFilters = (current: TCGCardFilters, next: Partial<TCGCardFilters>): TCGCardFilters => normalizeFilters({
@@ -281,7 +302,7 @@ export function TCGResearchDesk({
     setFilters((current) => resetQuickPresetFilters(current, {
       searchTerm: 'Pikachu',
     }));
-  }, [latestSetFallbackId]);
+  }, [cancelPendingSearch, latestSetFallbackId]);
 
   return (
     <div className="space-y-6 pb-24">
@@ -304,10 +325,7 @@ export function TCGResearchDesk({
             sortOrder,
           });
         }}
-        onSearchChange={(value) => updateFilters({
-          ...effectiveFilters,
-          searchTerm: value.trim() ? value : undefined,
-        })}
+        onSearchChange={(value) => updateSearchTerm(value)}
         onClearSearch={() => updateFilters({ ...effectiveFilters, searchTerm: undefined, selectedSet: null })}
         onOpenFilters={openFilters}
       />

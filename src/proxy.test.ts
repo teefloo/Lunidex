@@ -38,6 +38,15 @@ describe('locale proxy matcher', () => {
     );
   });
 
+  it('does not mark the locale cookie Secure on an HTTP development origin', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(new NextRequest('http://localhost:3000/fr/pokemon/pikachu'));
+
+    expect(response.headers.get('set-cookie')).toContain('primedex-lang=fr');
+    expect(response.headers.get('set-cookie')).not.toMatch(/;\s*secure/i);
+  });
+
   it('does not set a locale cookie for automated clients', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
 

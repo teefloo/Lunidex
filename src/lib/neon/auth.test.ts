@@ -12,7 +12,76 @@ vi.mock('next/headers', () => ({
   cookies: mockCookies,
 }));
 
-import { getNeonUserFromRequest, getServerAuthUser } from './auth';
+import { ensureNeonUser, getNeonUserFromRequest, getServerAuthUser } from './auth';
+
+const user = {
+  id: '72aaab1d-ae20-4ee0-9c60-cf8e8580f534',
+  email: 'trainer@example.com',
+  user_metadata: { name: 'Trainer' },
+};
+
+function ensuredSql() {
+  const statementResults = [
+    [],
+    [{ deletion_state: 'active' }],
+    [{ id: user.id }],
+  ];
+  return Object.assign(vi.fn(), {
+    transaction: vi.fn((callback: (tx: unknown) => unknown[]) =>
+      callback(vi.fn()).map((_statement, index) => statementResults[index]),
+    ),
+  });
+}
+
+describe('ensureNeonUser account lifecycle gate', () => {
+  it('rechecks the projection transaction for every request', async () => {
+    const sql = ensuredSql();
+
+    await expect(ensureNeonUser(sql as never, user)).resolves.toBe(true);
+    await expect(ensureNeonUser(sql as never, user)).resolves.toBe(true);
+    expect(sql.transaction).toHaveBeenCalledTimes(2);
+  });
+
+  it('observes a deletion transition after a previously active request', async () => {
+    const transaction = vi
+      .fn()
+      .mockImplementationOnce((callback: (tx: unknown) => unknown[]) =>
+        callback(vi.fn()).map((_statement, index) => [
+          [],
+          [{ deletion_state: 'active' }],
+          [{ id: user.id }],
+        ][index]),
+      )
+      .mockImplementationOnce((callback: (tx: unknown) => unknown[]) =>
+        callback(vi.fn()).map((_statement, index) => [
+          [],
+          [{ deletion_state: 'pending' }],
+          [],
+        ][index]),
+      );
+    const sql = Object.assign(vi.fn(), { transaction });
+
+    await expect(ensureNeonUser(sql as never, user)).resolves.toBe(true);
+    await expect(ensureNeonUser(sql as never, user)).resolves.toBe(false);
+    expect(transaction).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not authorize a pending or deleted deletion state', async () => {
+    const pendingSql = Object.assign(vi.fn(), {
+      transaction: vi.fn((callback: (tx: unknown) => unknown[]) =>
+        callback(vi.fn()).map((_statement, index) => [
+          [],
+          [{ deletion_state: 'pending' }],
+          [],
+        ][index]),
+      ),
+    });
+
+    await expect(ensureNeonUser(pendingSql as never, user)).resolves.toBe(false);
+    await expect(ensureNeonUser(pendingSql as never, user)).resolves.toBe(false);
+    expect(pendingSql.transaction).toHaveBeenCalledTimes(2);
+  });
+});
 
 describe('Neon server session lookups', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 export const MAX_TCG_OWNED_CARDS = 5000;
 const MAX_TCG_CARD_ID_LENGTH = 128;
-const TCG_CARD_ID_PATTERN = /^[a-z0-9][a-z0-9._:/-]*-[a-z0-9][a-z0-9._:/-]*$/i;
+const TCG_CARD_ID_PATTERN = /^[a-z0-9][a-z0-9._:-]*-[a-z0-9][a-z0-9._:-]*$/i;
 
 /**
  * TCGdex card IDs are compact, URL-safe identifiers composed of a set ID and
@@ -18,8 +18,24 @@ export function normalizeTcgCardId(value: unknown): string | null {
   ) {
     return null;
   }
-
   return normalized;
+}
+
+/**
+ * Validates the shape of a TCGdex card identifier without changing its case.
+ * The allowed charset excludes query, fragment, and whitespace characters so
+ * a validated id can only ever extend an upstream URL path segment.
+ */
+export function isValidTcgCardId(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const trimmed = value.trim();
+  return (
+    trimmed === value
+    &&
+    trimmed.length > 0
+    && trimmed.length <= MAX_TCG_CARD_ID_LENGTH
+    && TCG_CARD_ID_PATTERN.test(trimmed)
+  );
 }
 
 /** Returns null for an invalid collection, otherwise a bounded unique list. */

@@ -16,14 +16,23 @@ project_dir="$(pwd)"
 migration_dir="$project_dir/.neon-migration"
 dump_file="$migration_dir/supabase-app.dump"
 users_file="$migration_dir/app-users.csv"
-schema_file="$project_dir/neon/migrations/0001_lunidex_app.sql"
+
+mapfile -t schema_files < <(
+  find "$project_dir/neon/migrations" -maxdepth 1 -type f -name '*.sql' -print | sort
+)
 
 [[ -s "$dump_file" ]] || fail "Export absent: $dump_file"
 [[ -s "$users_file" ]] || fail "Export Auth absent: $users_file"
-[[ -s "$schema_file" ]] || fail "Migration absente: $schema_file"
+[[ "${#schema_files[@]}" -gt 0 ]] || fail "Aucune migration Neon trouvée."
+for schema_file in "${schema_files[@]}"; do
+  [[ -s "$schema_file" ]] || fail "Migration vide: $schema_file"
+done
 
 printf 'Création du schéma Neon cible...\n'
-psql --no-psqlrc --no-password --set=ON_ERROR_STOP=1 --file="$schema_file" "$target_url"
+for schema_file in "${schema_files[@]}"; do
+  printf '  Application de %s\n' "${schema_file##*/}"
+  psql --no-psqlrc --no-password --set=ON_ERROR_STOP=1 --file="$schema_file" "$target_url"
+done
 
 data_tables=(
   public.profiles

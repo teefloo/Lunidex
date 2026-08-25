@@ -1,11 +1,31 @@
 import { describe, expect, it } from 'vitest';
 import {
   MAX_TCG_OWNED_CARDS,
+  isValidTcgCardId,
   normalizeTcgOwnedCards,
   normalizeUserStateData,
 } from './tcg-owned-cards';
 
 describe('TCG owned-card state normalization', () => {
+  it('accepts path-safe identifiers of any supported case', () => {
+    expect(isValidTcgCardId('sv01-1')).toBe(true);
+    expect(isValidTcgCardId('smp-SMP01')).toBe(true);
+    expect(isValidTcgCardId('swsh45sv-SV084PV')).toBe(true);
+  });
+
+  it('rejects identifiers that could alter an upstream URL path', () => {
+    expect(isValidTcgCardId('../../sets')).toBe(false);
+    expect(isValidTcgCardId('sv01-1/../../sets/base')).toBe(false);
+    expect(isValidTcgCardId('sv01-1\\../../sets/base')).toBe(false);
+    expect(isValidTcgCardId('sv01-1?x=1')).toBe(false);
+    expect(isValidTcgCardId('sv01-1#frag')).toBe(false);
+    expect(isValidTcgCardId('sv01 1')).toBe(false);
+    expect(isValidTcgCardId('')).toBe(false);
+    expect(isValidTcgCardId(' sv01-1')).toBe(false);
+    expect(isValidTcgCardId(`${'a'.repeat(127)}-b`)).toBe(false);
+    expect(isValidTcgCardId(25)).toBe(false);
+  });
+
   it('canonicalizes and deduplicates card identifiers', () => {
     expect(normalizeTcgOwnedCards([' SV01-1 ', 'sv01-1', 'base-25'])).toEqual([
       'sv01-1',

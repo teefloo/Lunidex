@@ -239,4 +239,21 @@ describe('TCGResearchDesk collection selector', () => {
       window.history.pushState({}, '', '/');
     }
   });
+
+  it('cancels a pending search when another filter is applied', async () => {
+    vi.useFakeTimers();
+    navigation.replace.mockClear();
+
+    try {
+      render(<TCGResearchDesk initialLatestSet={{ id: 'latest-set', name: 'Dernière collection' }} />);
+
+      fireEvent.change(screen.getByPlaceholderText('Rechercher'), { target: { value: 'Pikachu' } });
+      fireEvent.change(screen.getByRole('combobox', { name: 'Extension' }), { target: { value: 'previous-set' } });
+      await vi.advanceTimersByTimeAsync(350);
+
+      expect(navigation.replace.mock.calls.some(([href]) => String(href).includes('search=Pikachu'))).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

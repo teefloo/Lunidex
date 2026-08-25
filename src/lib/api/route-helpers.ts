@@ -1,9 +1,54 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-/** Safely parse a JSON request body. Returns null on invalid JSON or non-object payloads. */
-export async function readJsonBody<T>(request: NextRequest): Promise<T | null> {
+/**
+ * Safely parse a JSON request body. Returns null on invalid JSON or non-object
+ * payloads. When `maxBytes` is provided, both the declared Content-Length and
+ * the streamed body are bounded before JSON parsing, including chunked
+ * requests that do not provide a length header.
+ */
+export async function readJsonBody<T>(
+  request: NextRequest,
+  options: { maxBytes?: number } = {},
+): Promise<T | null> {
+  const { maxBytes } = options;
   try {
-    const payload = await request.json();
+    let bodyText: string;
+    if (maxBytes === undefined) {
+      bodyText = await request.text();
+    } else {
+      const declaredLength = Number(request.headers.get('content-length'));
+      if (Number.isFinite(declaredLength) && declaredLength > maxBytes) return null;
+
+      const reader = request.body?.getReader();
+      if (!reader) {
+        bodyText = await request.text();
+        if (new TextEncoder().encode(bodyText).byteLength > maxBytes) return null;
+      } else {
+        const chunks: Uint8Array[] = [];
+        let totalBytes = 0;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          totalBytes += value.byteLength;
+          if (totalBytes > maxBytes) {
+            await reader.cancel();
+            return null;
+          }
+          chunks.push(value);
+        }
+
+        const bodyBytes = new Uint8Array(totalBytes);
+        let offset = 0;
+        for (const chunk of chunks) {
+          bodyBytes.set(chunk, offset);
+          offset += chunk.byteLength;
+        }
+        bodyText = new TextDecoder().decode(bodyBytes);
+      }
+    }
+
+    const payload: unknown = JSON.parse(bodyText);
     return payload && typeof payload === 'object' ? (payload as T) : null;
   } catch {
     return null;

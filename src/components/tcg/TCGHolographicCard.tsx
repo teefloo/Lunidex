@@ -42,6 +42,19 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   const imageCandidates = useMemo(() => getTCGCardImageCandidates(card, quality), [card, quality]);
   const setId = card.set?.id ?? card.id.split('-')[0] ?? '';
   const cardNumber = card.localId ?? card.number ?? '';
+  // Pointer-driven tilt is decorative motion: disable it entirely for users
+  // who prefer reduced motion instead of only shortening its transitions.
+  const reducedMotionRef = useRef(false);
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotionRef.current = query.matches;
+    const onChange = (event: MediaQueryListEvent) => {
+      reducedMotionRef.current = event.matches;
+    };
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -93,6 +106,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   };
 
   const applyPointerPosition = (event: PointerEvent<HTMLButtonElement>) => {
+    if (reducedMotionRef.current) return;
     const rect = event.currentTarget.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
 
@@ -126,6 +140,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   };
 
   const applyFocusPosition = () => {
+    if (reducedMotionRef.current) return;
     setInteracting(true);
     scheduleVars({
       '--pointer-x': '25%',

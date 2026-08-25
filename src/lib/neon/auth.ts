@@ -154,7 +154,9 @@ export async function getNeonUserFromRequest(request: Request): Promise<NeonRequ
 
 /**
  * Creates the Neon-side identity projection lazily for users created after the
- * initial copy. Credentials and sessions stay exclusively in Neon Auth.
+ * initial copy. Credentials and sessions stay exclusively in Neon Auth. This
+ * is also the authoritative account-lifecycle gate, so it must re-read the
+ * deletion tombstone for every request instead of using a process-local cache.
  */
 export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promise<boolean> {
   const metadata = user.user_metadata;
@@ -194,5 +196,6 @@ export async function ensureNeonUser(sql: NeonSql, user: NeonRequestUser): Promi
     `,
   ]) as [unknown[], AccountStateRow[], Array<{ id: string }>];
 
-  return stateRows[0]?.deletion_state === 'active' && Boolean(profileRows[0]);
+  const isActive = stateRows[0]?.deletion_state === 'active' && Boolean(profileRows[0]);
+  return isActive;
 }

@@ -51,6 +51,9 @@ laisser sur Supabase.
   tables, types, contraintes, clés étrangères vers app.users, index, séquence,
   vues et fonctions de projection nécessaires, ainsi que le compteur analytique
   exécutable côté serveur.
+- neon/migrations/0002_battle_rooms_cascade.sql durcit les clés étrangères des
+  salles de combat, les valeurs acceptées du leaderboard et les index de
+  rétention. Le script d'import applique les fichiers SQL dans l'ordre lexical.
 - scripts/neon/export-supabase.sh exporte le dump applicatif et les seuls
   identifiants Auth stables requis pour les clés étrangères.
 - scripts/neon/import-to-neon.sh applique le schéma, importe les données et

@@ -16,11 +16,25 @@ function describeGraphQLResponse(value: unknown) {
   }
 }
 
-const fetchBatch = async <T>(query: string, cacheKey: string, variables?: Record<string, unknown>): Promise<T[]> => {
+const fetchBatch = async <T>(
+  query: string,
+  cacheKey: string,
+  variables?: Record<string, unknown>,
+  signal?: AbortSignal,
+): Promise<T[]> => {
+  if (signal?.aborted) throw signal.reason ?? new Error('GraphQL batch request aborted');
   const cached = await getCachedData<T[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query, variables });
+  const { data } = signal
+    ? await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>(
+      '/graphql/v1beta',
+      { query, variables },
+      { signal },
+    )
+    : await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query, variables });
+
+  if (signal?.aborted) throw signal.reason ?? new Error('GraphQL batch request aborted');
   
   if (!data?.data?.pokemon_v2_pokemon) {
     throw new Error(`Invalid GraphQL response in fetchBatch: ${describeGraphQLResponse(data)}`);
@@ -138,20 +152,40 @@ const fetchPokemonBatches = async <T>(
   buildQuery: (offset: number, limit: number) => { query: string; variables: Record<string, unknown> },
   batchSize: number,
 ): Promise<T[][]> => {
-  const batches: T[][] = [];
-  let offset = 0;
-
-  while (true) {
-    const cacheKey = getBatchCacheKey(cacheBase, Math.floor(offset / batchSize));
+  const launchAt = (index: number, signal: AbortSignal): Promise<T[]> => {
+    const offset = index * batchSize;
     const { query, variables } = buildQuery(offset, batchSize);
-    const batch = await fetchBatch<T>(query, cacheKey, variables);
-    batches.push(batch);
+    const request = fetchBatch<T>(query, getBatchCacheKey(cacheBase, index), variables, signal);
+    // The tail request can be cancelled once the previous page proves that it
+    // is the final page. Attach a handler immediately so a fast rejection
+    // cannot become an unhandled promise before the loop reaches the tail.
+    void request.catch(() => undefined);
+    return request;
+  };
 
-    if (batch.length < batchSize) {
-      break;
+  // One-batch lookahead: while batch N is in flight, N+1 is already
+  // downloading, so a full catalog load pays roughly half the serial latency.
+  // The tail request is aborted as soon as N proves that there is no N+1.
+  const batches: T[][] = [];
+  let cursor = 0;
+  let current = launchAt(cursor++, new AbortController().signal);
+  let followingController = new AbortController();
+  let following = launchAt(cursor++, followingController.signal);
+
+  try {
+    for (;;) {
+      const batch = await current;
+      batches.push(batch);
+
+      if (batch.length < batchSize) break;
+
+      current = following;
+      followingController = new AbortController();
+      following = launchAt(cursor++, followingController.signal);
     }
-
-    offset += batchSize;
+  } finally {
+    followingController.abort();
+    await following.catch(() => undefined);
   }
 
   return batches;

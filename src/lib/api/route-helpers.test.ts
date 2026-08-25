@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
 
-import { isTrustedMutationOrigin, requireTrustedMutationOrigin } from './route-helpers';
+import { isTrustedMutationOrigin, readJsonBody, requireTrustedMutationOrigin } from './route-helpers';
 
 function request(headers?: HeadersInit): NextRequest {
   return new NextRequest('https://lunidex.test/api/profile', {
@@ -32,5 +32,39 @@ describe('mutation origin protection', () => {
 
     expect(crossSite?.status).toBe(403);
     expect(originless?.status).toBe(403);
+  });
+});
+
+describe('readJsonBody size pre-check', () => {
+  it('rejects a declared body above maxBytes without parsing it', async () => {
+    const oversized = new NextRequest('https://lunidex.test/api/user-state', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', 'content-length': '100' },
+      body: JSON.stringify({ data: {} }),
+    });
+
+    await expect(readJsonBody(oversized, { maxBytes: 10 })).resolves.toBeNull();
+  });
+
+  it('parses a declared body within maxBytes', async () => {
+    const body = JSON.stringify({ data: {} });
+    const request = new NextRequest('https://lunidex.test/api/user-state', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', 'content-length': String(body.length) },
+      body,
+    });
+
+    await expect(readJsonBody(request, { maxBytes: 1024 })).resolves.toEqual({ data: {} });
+  });
+
+  it('rejects a chunked body after reading past the byte limit', async () => {
+    const body = JSON.stringify({ data: { payload: 'x'.repeat(64) } });
+    const request = new NextRequest('https://lunidex.test/api/user-state', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body,
+    });
+
+    await expect(readJsonBody(request, { maxBytes: 32 })).resolves.toBeNull();
   });
 });

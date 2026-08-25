@@ -82,12 +82,24 @@ required_indexes(index_name) as (
     ('idx_battle_rooms_player2'),
     ('idx_battle_rooms_created_at'),
     ('idx_price_history_card_id'),
+    ('quiz_attempts_status_started_at_idx'),
+    ('tcg_price_history_recorded_at_idx'),
     ('tcg_price_alerts_user_id_idx'),
     ('user_push_subscriptions_user_endpoint_unique'),
     ('friend_directory_handle_unique'),
     ('friendships_pair_unique'),
     ('friendships_requester_status'),
     ('friendships_addressee_status')
+),
+required_constraints(constraint_schema, table_name, constraint_name) as (
+  values
+    ('public', 'quiz_scores', 'quiz_scores_mode_allowed'),
+    ('public', 'quiz_scores', 'quiz_scores_challenge_allowed')
+),
+required_cascade_fks(constraint_schema, table_name, constraint_name) as (
+  values
+    ('public', 'battle_rooms', 'battle_rooms_player1_id_fkey'),
+    ('public', 'battle_rooms', 'battle_rooms_player2_id_fkey')
 ),
 required_functions(schema_name, function_name) as (
   values
@@ -113,6 +125,27 @@ select concat(
      select 1 from pg_indexes i
      where i.schemaname = 'public' and i.indexname = r.index_name
    )) = (select count(*) from required_indexes),
+  '|',
+  (select count(*) from required_constraints r
+   where exists (
+     select 1 from information_schema.table_constraints c
+     where c.constraint_schema = r.constraint_schema
+       and c.table_name = r.table_name
+       and c.constraint_name = r.constraint_name
+   )) = (select count(*) from required_constraints),
+  '|',
+  (select count(*) from required_cascade_fks r
+   where exists (
+     select 1
+     from information_schema.table_constraints c
+     join information_schema.referential_constraints rc
+       on rc.constraint_schema = c.constraint_schema
+      and rc.constraint_name = c.constraint_name
+     where c.constraint_schema = r.constraint_schema
+       and c.table_name = r.table_name
+       and c.constraint_name = r.constraint_name
+       and rc.delete_rule = 'CASCADE'
+   )) = (select count(*) from required_cascade_fks),
   '|',
   (select count(*) from information_schema.table_constraints
    where constraint_type = 'FOREIGN KEY'
@@ -149,11 +182,11 @@ select concat(
 SQL
 )"
 
-IFS='|' read -r tables indexes foreign_keys triggers functions views extension sequence <<< "$object_check"
-printf 'Vérification des objets Neon: tables=%s index=%s FK=%s triggers=%s fonctions=%s vues=%s pgcrypto=%s séquence=%s\n' \
-  "$tables" "$indexes" "$foreign_keys" "$triggers" "$functions" "$views" "$extension" "$sequence"
+IFS='|' read -r tables indexes constraints cascades foreign_keys triggers functions views extension sequence <<< "$object_check"
+printf 'Vérification des objets Neon: tables=%s index=%s contraintes=%s cascades=%s FK=%s triggers=%s fonctions=%s vues=%s pgcrypto=%s séquence=%s\n' \
+  "$tables" "$indexes" "$constraints" "$cascades" "$foreign_keys" "$triggers" "$functions" "$views" "$extension" "$sequence"
 
-for result in "$tables" "$indexes" "$foreign_keys" "$triggers" "$functions" "$views" "$extension" "$sequence"; do
+for result in "$tables" "$indexes" "$constraints" "$cascades" "$foreign_keys" "$triggers" "$functions" "$views" "$extension" "$sequence"; do
   [[ "$result" == "t" ]] || failed=1
 done
 

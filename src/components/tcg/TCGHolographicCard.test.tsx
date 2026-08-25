@@ -48,4 +48,32 @@ describe('TCGHolographicCard', () => {
       'https://assets.tcgdex.net/fr/me/me05/001/high.webp',
     );
   });
+
+  it('does not tilt on keyboard focus when reduced motion is enabled', () => {
+    const originalMatchMedia = window.matchMedia;
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: () => ({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    });
+
+    try {
+      render(<TCGHolographicCard card={card('https://assets.tcgdex.net/fr/me/me05/001', 'Tropius')} />);
+      const button = screen.getByRole('button', { name: 'Open Tropius' });
+      fireEvent.focus(button);
+
+      const cardElement = button.closest('.pokemon-holo-card');
+      expect(cardElement).not.toHaveClass('interacting');
+      expect(cardElement).toHaveStyle('--rotate-x: 0deg');
+      expect(cardElement).toHaveStyle('--rotate-y: 0deg');
+    } finally {
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        value: originalMatchMedia,
+      });
+    }
+  });
 });
