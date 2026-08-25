@@ -1,5 +1,5 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-08-24
+# Reviewed against the application source: 2026-08-25
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
@@ -110,6 +110,7 @@ entries so discovery does not depend only on a client-side query completing.
 ### Pokémon TCG
 
 - `/en/tcg` is the public catalog entry point.
+- `/en/30e-anniversaire` is the English Pokémon TCG 30th Anniversary landing, with official-source-based facts, announced products, and a browser-local tracker for 30 Pikachu slots. `/fr/30e-anniversaire` is the French equivalent.
 - `/en/tcg/cards/{id}` is a card detail route with card metadata when TCGdex supplies it.
 - `/en/tcg/collection/{setId}` is a set album/collection route.
 - `/en/tcg/collection` is a personal collection surface.
@@ -118,6 +119,17 @@ entries so discovery does not depend only on a client-side query completing.
 
 The catalog supports set and card research. Do not state a live card count,
 market price or release total without reading the current TCGdex-backed result.
+
+The 30th Anniversary landing records facts published by Pokémon, including the
+worldwide September 16, 2026 release date, 30 confirmed Pikachu cards with
+unique illustrations, one Pikachu card in each announced booster, and the
+products named in the official product announcement. It does not publish
+unverified card numbering, prices, stock, retailer availability, or a guessed
+TCGdex set identifier. The authoritative campaign sources are:
+
+- https://www.pokemon.com/fr/actus-pokemon/preparez-vous-pour-lextension-30-anniversaire-du-jcc-pokemon
+- https://www.pokemon.com/fr/actualites/des-cartes-pikachu-electrisantes-dans-lextension-30-anniversaire-du-jcc-pokemon
+- https://www.pokemon.com/fr/actualites/jcc-pokemon-produits-30-anniversaire
 
 ### Quiz and game tools
 

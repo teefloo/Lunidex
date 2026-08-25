@@ -7,6 +7,8 @@ const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
 const CANONICAL_HOST = 'lunidex.app';
+const ANNIVERSARY_30_ROUTE = '30e-anniversaire';
+const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko', 'zh']);
 // Automated clients do not benefit from a preference cookie. Avoiding
 // Set-Cookie for them keeps otherwise-public page responses eligible for the
 // Vercel CDN cache while normal browsers still persist their locale below.
@@ -208,6 +210,16 @@ export async function proxy(request: NextRequest) {
   if (hasLocalePrefix) {
     const urlLocale = firstSegment!;
 
+    if (
+      segments.length === 2 &&
+      segments[1] === ANNIVERSARY_30_ROUTE &&
+      ANNIVERSARY_30_UNSUPPORTED_LOCALES.has(urlLocale)
+    ) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = `/en/${ANNIVERSARY_30_ROUTE}`;
+      return NextResponse.redirect(redirectUrl, 308);
+    }
+
     const probe = getResourceProbe(pathname, urlLocale) ?? getTcgResourceProbe(pathname, urlLocale);
     if (probe && (await probeResource(probe)) === false) {
       return hardNotFoundResponse(request, urlLocale);
@@ -263,6 +275,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|\\.well-known/|og/|images/|pokemon-cards/).*)',
+    '/((?!_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|sitemaps/|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|\\.well-known/|og/|images/|pokemon-cards/).*)',
   ],
 };

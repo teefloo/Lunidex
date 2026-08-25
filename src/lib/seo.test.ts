@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   buildBreadcrumbJsonLd,
   buildSubpathLanguages,
+  buildLocalizedLanguages,
   buildInLanguage,
   localeHref,
   buildWebPageJsonLd,
@@ -46,6 +47,19 @@ describe('buildSubpathLanguages', () => {
   it('normalizes a path missing its leading slash', () => {
     const langs = buildSubpathLanguages('quiz');
     expect(langs.fr).toBe('/fr/quiz');
+  });
+});
+
+describe('buildLocalizedLanguages', () => {
+  it('limits alternates to the locales with dedicated content', () => {
+    const langs = buildLocalizedLanguages('/30e-anniversaire', ['en', 'fr']);
+
+    expect(langs).toEqual({
+      en: '/en/30e-anniversaire',
+      fr: '/fr/30e-anniversaire',
+      'x-default': '/en/30e-anniversaire',
+    });
+    expect(langs).not.toHaveProperty('de');
   });
 });
 

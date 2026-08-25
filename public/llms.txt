@@ -41,6 +41,7 @@ Browsing public reference pages does not require an account. In the current web 
 - [Abilities](https://lunidex.app/en/abilities) — browse the ability reference and open individual ability pages.
 - [Items](https://lunidex.app/en/items) — browse Pokémon item reference pages.
 - [Pokémon TCG Catalog](https://lunidex.app/en/tcg) — search and filter cards and sets.
+- [Pokémon TCG 30th Anniversary](https://lunidex.app/en/30e-anniversaire) — official-source-based release facts, announced products, and a local tracker for the 30 Pikachu cards. The French version is available at https://lunidex.app/fr/30e-anniversaire.
 - [TCG Collection](https://lunidex.app/en/tcg/collection) — track owned cards by set.
 - [TCG Wishlist](https://lunidex.app/en/tcg/wishlist) — manage cards the user wants to collect.
 - [TCG Deck Builder](https://lunidex.app/en/tcg/deck-builder) — build a Pokémon TCG deck in the workspace.
@@ -78,6 +79,8 @@ Browsing public reference pages does not require an account. In the current web 
 ## Discovery and citation
 
 - [Sitemap](https://lunidex.app/sitemap.xml)
+- [Pokémon TCG 30th Anniversary landing](https://lunidex.app/en/30e-anniversaire)
+- [Pokémon TCG 30e anniversaire landing in French](https://lunidex.app/fr/30e-anniversaire)
 - [Robots policy](https://lunidex.app/robots.txt)
 - [AI discovery notes](https://lunidex.app/ai.txt)
 - [Extended grounding snapshot](https://lunidex.app/llms-full.txt)
@@ -87,4 +90,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-24. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-25. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

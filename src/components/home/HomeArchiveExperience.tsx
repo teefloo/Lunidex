@@ -2,6 +2,7 @@ import Link from 'next/link';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { getServerAuthUser } from '@/lib/neon/auth';
+import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
@@ -57,6 +58,26 @@ export async function HomeArchiveExperience() {
           </div>
           <HomeHeroVisual />
         </section>
+
+        {isAnniversary30Language(language) ? (
+          <section className="mx-auto w-full max-w-6xl px-5 py-8 md:px-8" aria-labelledby="home-anniversary-30-title">
+            <div className="rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8">
+              <div>
+                <p className="home-section-kicker">{t('anniversary_30.eyebrow')}</p>
+                <h2 id="home-anniversary-30-title" className="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">
+                  {t('anniversary_30.heading')}
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-foreground/70">
+                  {t('anniversary_30.intro')}
+                </p>
+              </div>
+              <Link href={localeHref(ANNIVERSARY_30_PATH, language)} className="home-primary-cta mt-5 shrink-0 md:mt-0">
+                {t('anniversary_30.cta_tracker')}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+          </section>
+        ) : null}
 
         <section id="cards" className="home-preview-bento" aria-labelledby="home-preview-title">
           <div className="home-section-heading">

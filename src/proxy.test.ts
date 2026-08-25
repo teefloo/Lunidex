@@ -60,6 +60,17 @@ describe('locale proxy matcher', () => {
     expect(response.headers.get('set-cookie')).toBeNull();
   });
 
+  it('redirects unsupported anniversary locales to the English landing', async () => {
+    const response = await proxy(
+      new NextRequest('https://lunidex.test/de/30e-anniversaire?utm_source=seasonal'),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      'https://lunidex.test/en/30e-anniversaire?utm_source=seasonal',
+    );
+  });
+
   it('short-circuits known WordPress scanner paths, including localized paths', async () => {
     const response = await proxy(
       new NextRequest('https://lunidex.test/fr/wp-admin/install.php'),

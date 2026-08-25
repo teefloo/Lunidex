@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import Header from '@/components/layout/Header';
+import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
 import { getEditorialDates } from '@/lib/editorial';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import {
@@ -162,6 +163,21 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 {t('collection_guide.answer_body')}
               </p>
             </section>
+
+            {isAnniversary30Language(language) ? (
+              <section className="mx-auto mt-10 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-6 md:p-8" aria-labelledby="collection-guide-anniversary-title">
+                <div>
+                  <p className="page-eyebrow">{t('anniversary_30.eyebrow')}</p>
+                  <h2 id="collection-guide-anniversary-title" className="mt-2 text-2xl font-extrabold tracking-tight">
+                    {t('anniversary_30.heading')}
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-foreground/70">{t('anniversary_30.tracker_body')}</p>
+                </div>
+                <Link href={`${localeHref(ANNIVERSARY_30_PATH, language)}#tracker`} className="glass-btn glass-btn-active mt-5 inline-flex min-h-11 shrink-0 items-center px-4 py-3 text-sm font-bold md:mt-0">
+                  {t('anniversary_30.cta_tracker')}
+                </Link>
+              </section>
+            ) : null}
 
             <section className="mt-12" aria-labelledby="collection-guide-criteria-title">
               <div className="mx-auto max-w-3xl text-center">

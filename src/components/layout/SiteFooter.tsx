@@ -12,6 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 
 import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferencesButton';
 import LunidexLogo from '@/components/ui/LunidexLogo';
+import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { cn } from '@/lib/utils';
 import { GITHUB_REPO_URL, SITE_NAME } from '@/lib/site';
@@ -120,6 +121,9 @@ export default async function SiteFooter() {
     { href: '/guides/quiz-guide', label: t('quiz_guide.nav_label', { defaultValue: 'Quiz guide' }) },
     { href: '/guides/nuzlocke-guide', label: t('nuzlocke_guide.nav_label', { defaultValue: 'Nuzlocke guide' }) },
     { href: '/compare/lunidex-vs-pokecardex-zebradex', label: t('comparison.nav_label') },
+    ...(isAnniversary30Language(language)
+      ? [{ href: ANNIVERSARY_30_PATH, label: t('anniversary_30.nav_label') }]
+      : []),
   ];
 
   const supportLinks: FooterLinkData[] = [

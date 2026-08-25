@@ -40,6 +40,8 @@ TCG-Data: https://www.tcgdex.net
 # - /llms.txt
 # - /llms-full.txt
 # - /opensearch.xml
+# - /en/30e-anniversaire
+# - /fr/30e-anniversaire
 # - /en/compare/lunidex-vs-pokecardex-zebradex
 # - /en/guides/pokemon-card-collection-tracker
 # - /en/blog
@@ -57,4 +59,4 @@ TCG-Data: https://www.tcgdex.net
 # - /en/guides/tcg-workspace-guide
 # - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-08-24
+# Reviewed against the application source: 2026-08-25

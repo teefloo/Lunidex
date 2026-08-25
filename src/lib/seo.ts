@@ -79,6 +79,17 @@ export function buildSubpathLanguages(path: string) {
   return { ...languages, 'x-default': `/en${normalized}` };
 }
 
+export function buildLocalizedLanguages(
+  path: string,
+  languages: readonly SupportedLanguage[],
+): Record<string, string> {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const alternates = Object.fromEntries(
+    languages.map((locale) => [locale, `/${locale}${normalized}`]),
+  );
+  return { ...alternates, 'x-default': `/en${normalized}` };
+}
+
 export function buildInLanguage(lang: SupportedLanguage) {
   return languageToMetadataLocale[lang];
 }

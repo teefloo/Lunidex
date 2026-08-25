@@ -132,7 +132,7 @@ const csp = [
   "default-src 'self'",
   `script-src ${scriptSrc}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
+  "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://mcdn.pokemon.com https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
   `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
@@ -251,6 +251,11 @@ const nextConfig: NextConfig = {
         hostname: 'tcg.pokemon.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'mcdn.pokemon.com',
+        pathname: '/image/upload/**',
+      },
     ],
   },
   async rewrites() {
@@ -361,8 +366,20 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Cache sitemap, robots, and AI discovery files
-        source: '/(sitemap\\.xml|robots\\.txt|llms\\.txt|llms-full\\.txt|ai\\.txt)',
+        // Keep the sitemap index in sync with the six-hour child sitemap
+        // refresh window. The specialized /sitemaps/*.xml routes set their
+        // own cache headers and are intentionally not matched here.
+        source: '/sitemap\\.xml',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=21600, max-age=0, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        // Cache robots and AI discovery files
+        source: '/(robots\\.txt|llms\\.txt|llms-full\\.txt|ai\\.txt)',
         headers: [
           {
             key: 'Cache-Control',
