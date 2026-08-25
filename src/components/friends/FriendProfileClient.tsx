@@ -10,6 +10,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { getAllSets, getTCGCard } from '@/lib/api/tcg';
+import { tcgKeys } from '@/lib/api/keys';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import { getFriendCollectionPage, getFriendCollectionSummary, getFriendDecks, getFriendDirectoryEntry, getFriendRelations } from '@/lib/friends';
 import type { FriendDeck, FriendDirectoryEntry } from '@/types/friends';
@@ -134,7 +135,7 @@ function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; 
   );
   const cardQueries = useQueries({
     queries: cardIds.map((cardId) => ({
-      queryKey: ['tcg-card-detail', cardId, resolvedLang],
+      queryKey: tcgKeys.card(cardId, resolvedLang),
       queryFn: () => getTCGCard(cardId, resolvedLang),
       enabled: mounted,
       staleTime: 60 * 60 * 1000,
@@ -208,7 +209,7 @@ function FriendDecks({ friend, friendId }: { friend: FriendDirectoryEntry; frien
   const deckCardIds = Array.from(new Set(decks.flatMap((deck) => deck.cards.map((card) => card.cardId))));
   const cardQueries = useQueries({
     queries: deckCardIds.map((cardId) => ({
-      queryKey: ['tcg-card-detail', cardId, 'en'],
+      queryKey: tcgKeys.card(cardId, 'en'),
       queryFn: () => getTCGCard(cardId, 'en'),
       staleTime: 60 * 60 * 1000,
     })),

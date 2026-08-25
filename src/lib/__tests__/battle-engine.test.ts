@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcDamage, getTypeEffectivenessMultiplier, BattleMove } from '../battle-engine';
+import { calcDamage, getTypeEffectivenessMultiplier, chooseBestMove, simulateBattle, BattleMove } from '../battle-engine';
 import { PokemonDetail } from '@/types/pokemon';
 
 // ---------------------------------------------------------------------------
@@ -172,5 +172,71 @@ describe('getTypeEffectivenessMultiplier', () => {
 
   it('returns 0.5 for Fire vs Water', () => {
     expect(getTypeEffectivenessMultiplier('fire', ['water'])).toBe(0.5);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// chooseBestMove
+// ---------------------------------------------------------------------------
+describe('chooseBestMove', () => {
+  const waterGun: BattleMove = { name: 'water gun', type: 'water', power: 40, damage_class: 'special', accuracy: 100 };
+  const growl: BattleMove = { name: 'growl', type: 'normal', power: 0, damage_class: 'status', accuracy: 100 };
+
+  it('picks the move with the highest average damage', () => {
+    const attacker = makePokemon({ id: 7, name: 'squirtle', types: ['water'], spAtk: 65 });
+    const defender = makePokemon({ id: 4, name: 'charmander', types: ['fire'] });
+
+    const best = chooseBestMove(attacker, defender, [tackle, waterGun, growl]);
+
+    expect(best).not.toBeNull();
+    expect(best!.move.name).toBe('water gun');
+    expect(best!.result.average).toBeGreaterThan(0);
+  });
+
+  it('returns null when only status moves are available', () => {
+    const attacker = makePokemon({ types: ['normal'] });
+    const defender = makePokemon({ types: ['normal'] });
+
+    expect(chooseBestMove(attacker, defender, [growl])).toBeNull();
+  });
+
+  it('returns null for an empty move list', () => {
+    const a = makePokemon({ types: ['normal'] });
+    expect(chooseBestMove(a, a, [])).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// simulateBattle
+// ---------------------------------------------------------------------------
+describe('simulateBattle', () => {
+  it('declares a winner and never exceeds the turn cap', () => {
+    const fast = makePokemon({ id: 6, name: 'charizard', types: ['fire'], hp: 78, attack: 84, spAtk: 109, speed: 100 });
+    const slow = makePokemon({ id: 1, name: 'bulbasaur', types: ['grass'], hp: 45, attack: 49, spAtk: 65, speed: 45 });
+
+    const result = simulateBattle(
+      { pokemon: fast, moves: [ember, flamethrower] },
+      { pokemon: slow, moves: [tackle] },
+    );
+
+    expect(result.turns).toBeGreaterThan(0);
+    expect(result.log.length).toBe(result.turns);
+    expect([result.winner, result.loser]).toEqual(expect.arrayContaining(['charizard', 'bulbasaur']));
+    expect(result.winner).not.toBe(result.loser);
+  });
+
+  it('logs entries whose damage never exceeds the defender max HP', () => {
+    const a = makePokemon({ name: 'a-mon', types: ['electric'], hp: 60, attack: 100, spAtk: 100, speed: 120 });
+    const b = makePokemon({ name: 'b-mon', types: ['water'], hp: 50, defense: 40, spDef: 40, speed: 30 });
+
+    const result = simulateBattle({ pokemon: a, moves: [thunderbolt] }, { pokemon: b, moves: [tackle] });
+
+    for (const entry of result.log) {
+      expect(entry.damage).toBeGreaterThanOrEqual(0);
+      expect(entry.defenderRemainingPercent).toBeLessThanOrEqual(100);
+      expect(entry.effectiveness).toEqual(
+        expect.stringMatching(/^(super|normal|resist|immune)$/)
+      );
+    }
   });
 });

@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { getAbilityDetail } from '@/lib/api/rest';
+import { getAbilityDetailCached } from '@/lib/api/server-cache';
 import { getAbilityPokemon } from '@/lib/api/graphql';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const displayName = formatName(name);
 
   try {
-    const ability = await getAbilityDetail(name);
+    const ability = await getAbilityDetailCached(name);
     const localizedName = ability.names.find((n) => n.language.name === lang)?.name
       || ability.names.find((n) => n.language.name === 'en')?.name
       || displayName;
@@ -65,7 +65,7 @@ export default async function AbilityDetailPage({ params }: Props) {
 
   let ability;
   try {
-    ability = await getAbilityDetail(name);
+    ability = await getAbilityDetailCached(name);
   } catch {
     notFound();
   }

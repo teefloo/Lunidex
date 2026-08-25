@@ -321,7 +321,42 @@ export const SYNCED_KEYS = [
 
 export type SyncedKey = (typeof SYNCED_KEYS)[number];
 export type PersistedState = Pick<PrimeDexStore, SyncedKey>;
+
+/**
+ * View filters and display preferences shape the public browsing experience
+ * but hold no user-owned data, so they are applied locally even before the
+ * sync bridge is ready (including for signed-out visitors). Shared filter
+ * URLs such as /pokedex?types=fire must keep working without an account.
+ * They remain part of SYNCED_KEYS so signed-in accounts still sync them.
+ */
+export const LOCAL_PREFERENCE_KEYS = [
+  'showCaughtOnly',
+  'selectedTypes',
+  'selectedGeneration',
+  'selectedEggGroups',
+  'selectedColors',
+  'selectedShapes',
+  'isLegendary',
+  'isMythical',
+  'minBaseStats',
+  'minAttack',
+  'minDefense',
+  'minSpeed',
+  'minHp',
+  'heightRange',
+  'weightRange',
+  'selectedRegion',
+  'showFavoritesOnly',
+  'sortBy',
+  'soundEnabled',
+  'animatedSprites',
+] as const;
+
+export type LocalPreferenceKey = (typeof LOCAL_PREFERENCE_KEYS)[number];
+
 const SYNCED_KEY_SET = new Set<string>(SYNCED_KEYS);
+// Theme is also a display preference: it works before authentication.
+const UNGATED_KEY_SET = new Set<string>([...LOCAL_PREFERENCE_KEYS, 'theme']);
 const ONLINE_STATE_STORAGE_KEY = 'primedex-online-session';
 
 export const usePrimeDexStore = create<PrimeDexStore>()(
@@ -333,10 +368,10 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         replace: false | undefined,
       ): void => {
         const next = typeof update === 'function' ? update(get()) : update;
-        // Theme is a display preference: it must work before authentication
-        // and can still be observed by the authenticated sync bridge.
+        // View filters and display preferences always apply locally; the
+        // remaining synced keys stay gated until the remote session is ready.
         const changesSyncableData = Object.keys(next).some(
-          (key) => SYNCED_KEY_SET.has(key) && key !== 'theme',
+          (key) => SYNCED_KEY_SET.has(key) && !UNGATED_KEY_SET.has(key),
         );
         if (changesSyncableData && !hasSyncAccess()) {
           requestSyncAccess();

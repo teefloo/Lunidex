@@ -614,6 +614,7 @@ export default function NotFoundMiniGame() {
             width={MAZE_CANVAS_WIDTH}
             height={MAZE_CANVAS_HEIGHT}
             className="not-found-game-canvas"
+            role="img"
             aria-label={t('common.not_found_canvas_label', {
               defaultValue: 'Route 404 maze board',
             })}
@@ -633,7 +634,11 @@ export default function NotFoundMiniGame() {
           </div>
 
           <div className="pointer-events-none absolute inset-x-3 bottom-3 z-10">
-            <div className="mb-2 rounded-full border border-white/10 bg-slate-950/65 px-3 py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-white/75 backdrop-blur">
+            <div
+              className="mb-2 rounded-full border border-white/10 bg-slate-950/65 px-3 py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-white/75 backdrop-blur"
+              role="status"
+              aria-live="polite"
+            >
               {message}
             </div>
             <div className="h-2 rounded-full bg-black/35">

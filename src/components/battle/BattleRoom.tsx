@@ -108,11 +108,18 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
       try {
         await joinRoom();
         if (!active) return;
+        let pollInFlight = false;
         interval = window.setInterval(() => {
+          // Skip ticks when the tab is hidden or the previous poll has not
+          // settled yet so slow responses cannot stack overlapping fetches.
+          if (document.hidden || pollInFlight) return;
+          pollInFlight = true;
           void loadRoom().catch((loadError: unknown) => {
             if (!active) return;
             setConnected(false);
             setError(loadError instanceof Error ? loadError.message : 'Connection to battle room lost.');
+          }).finally(() => {
+            pollInFlight = false;
           });
         }, 1500);
       } catch (joinError: unknown) {
@@ -144,19 +151,26 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
     }
 
     setChatInput('');
-    const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action: 'chat', text }),
-    });
-    if (!response.ok) {
-      setError(await readError(response, 'Unable to send the message.'));
-      return;
+    try {
+      const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'chat', text }),
+      });
+      if (!response.ok) {
+        setError(await readError(response, 'Unable to send the message.'));
+        setChatInput(text);
+        return;
+      }
+      applyRoom(await response.json() as BattleRoomState);
+    } catch {
+      // Keep the typed message so a transient network failure does not lose it.
+      setChatInput(text);
+      setError('Unable to send the message. Check your connection and try again.');
     }
-    applyRoom(await response.json() as BattleRoomState);
   }, [applyRoom, chatInput, connected, roomId]);
 
   const copyRoomLink = useCallback(() => {

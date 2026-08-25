@@ -9,10 +9,12 @@ import {
   getPokemonByGeneration, 
   getPokemonByType 
 } from '@/lib/api';
-import { 
-  Gamepad2, 
-  Trophy, 
-  Timer, 
+import { pokemonKeys } from '@/lib/api/keys';
+import {
+  Gamepad2,
+  Trophy,
+  Timer,
+
   CheckCircle2, 
   AlertCircle, 
   Loader2,
@@ -32,6 +34,7 @@ import { PokemonDetail } from '@/types/pokemon';
 import { useTranslation } from '@/lib/i18n';
 import { getFormDisplayName } from '@/lib/form-names';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { toast } from '@/lib/toast';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
@@ -81,6 +84,16 @@ const seededRandom = (seed: string) => {
   };
 };
 
+/** Unbiased Fisher-Yates shuffle driven by the supplied random source. */
+const shuffled = <T,>(items: T[], rng: () => number): T[] => {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
 export default function QuizPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-12 h-12 animate-spin text-primary" /></div>}>
@@ -121,13 +134,24 @@ function QuizPageContent() {
   const dailyIndexRef = useRef(0);
   const dailyAttemptIdRef = useRef<string | null>(null);
   const nextDailyQuestionIdRef = useRef<number | null>(null);
+  // Track round-transition timers so leaving the quiz cannot fire them later.
+  const transitionTimersRef = useRef<number[]>([]);
   const acceptedServerAnswerIndexRef = useRef(-1);
   const pendingServerAnswerRef = useRef<ReturnType<typeof answerDailyQuizQuestion> | null>(null);
   const submittedAttemptRef = useRef<string | null>(null);
 
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore();
+  const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+    quizHighScores: state.quizHighScores,
+    updateQuizHighScore: state.updateQuizHighScore,
+    addBadge: state.addBadge,
+    badges: state.badges,
+    addQuizSession: state.addQuizSession,
+    addAction: state.addAction,
+  })));
 
   const resolvedLang = resolveLanguage(language, systemLanguage);
 
@@ -135,8 +159,21 @@ function QuizPageContent() {
     gameStateRef.current = gameState;
   }, [gameState]);
 
+  const scheduleTransition = useCallback((fn: () => void, delay: number) => {
+    const id = window.setTimeout(fn, delay);
+    transitionTimersRef.current.push(id);
+  }, []);
+
+  useEffect(() => {
+    const timers = transitionTimersRef.current;
+    return () => {
+      for (const id of timers) window.clearTimeout(id);
+      timers.length = 0;
+    };
+  }, []);
+
   const { data: allNames } = useQuery({
-    queryKey: ['allPokemonSearchIndex'],
+    queryKey: pokemonKeys.allSearchIndex(),
     queryFn: getAllPokemonSearchIndex,
     staleTime: 30 * 60 * 1000,
   });
@@ -175,7 +212,7 @@ function QuizPageContent() {
               otherOptions.push(p.name);
             }
           }
-          setOptions([targetPokemon, ...otherOptions].sort(() => Math.random() - 0.5));
+          setOptions(shuffled([targetPokemon, ...otherOptions], Math.random));
           setGameState('playing');
         } catch {
           toast.error(t('quiz.fetch_failed'));
@@ -268,7 +305,7 @@ function QuizPageContent() {
         }
       }
 
-      setOptions([pokemon.name, ...otherOptions].sort(() => rng() - 0.5));
+      setOptions(shuffled([pokemon.name, ...otherOptions], rng));
       setGameState('playing');
     } catch {
       toast.error(t('quiz.fetch_failed'));
@@ -369,7 +406,7 @@ function QuizPageContent() {
         }
       }
 
-      setOptions([firstPokemon.name, ...otherOptions].sort(() => optionsRng() - 0.5));
+      setOptions(shuffled([firstPokemon.name, ...otherOptions], optionsRng));
       setGameState('playing');
     } catch {
       toast.error(t('quiz.fetch_failed'));
@@ -431,12 +468,12 @@ function QuizPageContent() {
       });
       
       if (targetPokemon) {
-        setTimeout(() => {
+        scheduleTransition(() => {
           setGameState('finished');
           toast.success(t('quiz.targeted_finish'));
         }, 1500);
       } else {
-        setTimeout(startNewRound, 1500);
+        scheduleTransition(() => startNewRound(), 1500);
       }
     } else {
       setSessionStreak(0);
@@ -446,7 +483,7 @@ function QuizPageContent() {
         if (newLives <= 0) {
           setGameState('finished');
         } else {
-          setTimeout(startNewRound, 2000);
+          scheduleTransition(() => startNewRound(), 2000);
         }
       } else if (gameMode === 'marathon') {
         const newWrong = wrongAnswers + 1;
@@ -454,10 +491,10 @@ function QuizPageContent() {
         if (newWrong >= 5) {
           setGameState('finished');
         } else {
-          setTimeout(startNewRound, 2000);
+          scheduleTransition(() => startNewRound(), 2000);
         }
       } else if (gameMode === 'time-attack') {
-        setTimeout(startNewRound, 2000);
+        scheduleTransition(() => startNewRound(), 2000);
       }
     }
   };

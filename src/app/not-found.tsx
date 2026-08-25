@@ -9,7 +9,9 @@ import '@/styles/not-found.css';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   return {
-    title: t('common.not_found_title', { defaultValue: 'Page Not Found' }) + ' | Lunidex',
+    title: {
+      absolute: `${t('common.not_found_title', { defaultValue: 'Page Not Found' })} | Lunidex`,
+    },
     description: t('common.not_found_desc', {
       defaultValue: "The Pokémon you're looking for might have fled! The page doesn't exist or has been moved.",
     }),

@@ -99,11 +99,12 @@ describe('synchronisation locale déterministe', () => {
 
   it('préserve les champs inconnus des snapshots existants tout en ajoutant les métadonnées', () => {
     const snapshot = pickInitial();
-    const payload = buildSyncPayload({ tcgDecks: [{ id: 'deck' }], favorites: [999] }, snapshot) as {
-      tcgDecks: { id: string }[]; [SYNC_METADATA_KEY]: { version: number };
-    };
+    const payload = buildSyncPayload(
+      { futureField: { id: 'deck' }, favorites: [999] },
+      snapshot,
+    ) as { futureField: { id: string }; [SYNC_METADATA_KEY]: { version: number } };
 
-    expect(payload.tcgDecks).toEqual([{ id: 'deck' }]);
+    expect(payload.futureField).toEqual({ id: 'deck' });
     expect(payload[SYNC_METADATA_KEY].version).toBe(1);
     expect(buildSyncPayload(null, snapshot)).toMatchObject(snapshot);
   });

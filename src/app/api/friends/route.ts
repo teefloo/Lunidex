@@ -3,6 +3,7 @@ import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-help
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { rateLimit } from '@/lib/rate-limit';
 import type {
   FriendCollectionPage,
   FriendCollectionSummary,
@@ -123,7 +124,7 @@ async function getContext(request: NextRequest): Promise<RequestContext | NextRe
   if (!sql) return unavailable();
 
   const user = await getNeonUserFromRequest(request);
-  if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: PRIVATE_NO_STORE_HEADERS });
 
   if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
@@ -299,7 +300,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (action === 'directory' || action === 'search') {
     const targetId = request.nextUrl.searchParams.get('userId');
     if (action === 'directory') {
-      if (!isUuid(targetId)) return NextResponse.json({ error: 'Invalid friend id' }, { status: 400 });
+      if (!isUuid(targetId)) return NextResponse.json({ error: 'Invalid friend id' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
       return NextResponse.json({ entry: await getDirectory(sql, userId, targetId) }, { headers: PRIVATE_NO_STORE_HEADERS });
     }
 
@@ -318,11 +319,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const friendId = request.nextUrl.searchParams.get('friendId');
   if (action === 'collection-summary' || action === 'collection-page' || action === 'decks') {
-    if (!isUuid(friendId)) return NextResponse.json({ error: 'Invalid friend id' }, { status: 400 });
+    if (!isUuid(friendId)) return NextResponse.json({ error: 'Invalid friend id' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (action === 'collection-summary' && friendId) {
-    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_collection'))) return NextResponse.json({ summary: null });
+    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_collection'))) return NextResponse.json({ summary: null }, { headers: PRIVATE_NO_STORE_HEADERS });
     const rows = await sql`
       select cardinality(card_ids)::integer as total_owned, updated_at
       from public.friend_collection_snapshots
@@ -337,7 +338,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   if (action === 'collection-page' && friendId) {
-    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_collection'))) return NextResponse.json({ error: 'Collection unavailable' }, { status: 404 });
+    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_collection'))) return NextResponse.json({ error: 'Collection unavailable' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
     const rawLimit = Number(request.nextUrl.searchParams.get('limit') ?? 36);
     const limit = Number.isInteger(rawLimit) ? Math.min(Math.max(rawLimit, 1), 60) : 36;
     const cursor = request.nextUrl.searchParams.get('cursor');
@@ -374,7 +375,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   if (action === 'decks' && friendId) {
-    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_decks'))) return NextResponse.json({ result: null });
+    if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_decks'))) return NextResponse.json({ result: null }, { headers: PRIVATE_NO_STORE_HEADERS });
     const rows = await sql`
       select decks, updated_at
       from public.friend_deck_snapshots
@@ -388,7 +389,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ result }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
-  return NextResponse.json({ error: 'Unknown friends action' }, { status: 400 });
+  return NextResponse.json({ error: 'Unknown friends action' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -400,8 +401,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { sql, userId } = context;
   const payload = await readJsonBody<FriendsPayload>(request);
 
+  // Request spam control: opt-in targets and dedup already bound abuse, this
+  // caps fan-out per account.
+  if (payload?.action === 'send' && !rateLimit(`friend-send:${userId}`, 10)) {
+    return NextResponse.json({ error: 'Too many friend requests. Please try again later.' }, { status: 429, headers: PRIVATE_NO_STORE_HEADERS });
+  }
+
   if (payload?.action === 'send') {
-    if (typeof payload.handle !== 'string' || !payload.handle.trim()) return NextResponse.json({ error: 'Friend handle is required' }, { status: 400 });
+    if (typeof payload.handle !== 'string' || !payload.handle.trim()) return NextResponse.json({ error: 'Friend handle is required' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
     const targetRows = await sql`
       select user_id
       from public.friend_directory
@@ -410,8 +417,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       limit 1
     ` as Array<{ user_id: string }>;
     const targetId = targetRows[0]?.user_id;
-    if (!targetId) return NextResponse.json({ error: 'Friend handle not found' }, { status: 404 });
-    if (targetId === userId) return NextResponse.json({ error: 'Cannot add yourself' }, { status: 400 });
+    if (!targetId) return NextResponse.json({ error: 'Friend handle not found' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
+    if (targetId === userId) return NextResponse.json({ error: 'Cannot add yourself' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 
     const existingRows = await sql`
       select id, requester_id, addressee_id, status, created_at, updated_at, responded_at
@@ -465,16 +472,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     }
 
-    if (!relation) return NextResponse.json({ error: 'Friend request failed' }, { status: 500 });
+    if (!relation) return NextResponse.json({ error: 'Friend request failed' }, { status: 500, headers: PRIVATE_NO_STORE_HEADERS });
     const result = await getRelation(sql, userId, relation.id);
     return result
-      ? NextResponse.json({ relation: result })
-      : NextResponse.json({ error: 'Friend request failed' }, { status: 500 });
+      ? NextResponse.json({ relation: result }, { headers: PRIVATE_NO_STORE_HEADERS })
+      : NextResponse.json({ error: 'Friend request failed' }, { status: 500, headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (payload?.action === 'respond') {
     if (!isUuid(payload.friendshipId) || (payload.response !== 'accept' && payload.response !== 'decline')) {
-      return NextResponse.json({ error: 'Invalid friend request action' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid friend request action' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
     }
     const nextStatus = payload.response === 'accept' ? 'accepted' : 'declined';
     let rows: FriendshipRow[];
@@ -493,11 +500,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
     const result = rows[0] ? await getRelation(sql, userId, rows[0].id) : null;
     return result
-      ? NextResponse.json({ relation: result })
-      : NextResponse.json({ error: 'Friend request not found' }, { status: 404 });
+      ? NextResponse.json({ relation: result }, { headers: PRIVATE_NO_STORE_HEADERS })
+      : NextResponse.json({ error: 'Friend request not found' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
   }
 
-  return NextResponse.json({ error: 'Invalid friends action' }, { status: 400 });
+  return NextResponse.json({ error: 'Invalid friends action' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
@@ -520,7 +527,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     || typeof settings.shareTcgCollection !== 'boolean'
     || typeof settings.shareTcgDecks !== 'boolean'
   ) {
-    return NextResponse.json({ error: 'Invalid privacy settings' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid privacy settings' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   const nextSettings = settings as FriendPrivacySettings;
@@ -536,7 +543,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     if (isInactiveAccountError(error)) return accountDeletionInProgress();
     return NextResponse.json({ error: 'Failed to update privacy settings' }, { status: 500 });
   }
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
@@ -547,12 +554,12 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   if (!isContext(context)) return context;
   const { sql, userId } = context;
   const friendshipId = request.nextUrl.searchParams.get('id');
-  if (!isUuid(friendshipId)) return NextResponse.json({ error: 'Invalid friendship id' }, { status: 400 });
+  if (!isUuid(friendshipId)) return NextResponse.json({ error: 'Invalid friendship id' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 
   await sql`
     delete from public.friendships
     where id = ${friendshipId}::uuid
       and ${userId}::uuid in (requester_id, addressee_id)
   `;
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonMovesLocalized } from '@/lib/api';
 import { TYPE_COLORS } from '@/types/pokemon';
@@ -23,7 +24,11 @@ interface MoveData {
 }
 
 export default function MoveCoverageChecker({ className }: MoveCoverageCheckerProps) {
-  const { team, language, getLanguageId } = usePrimeDexStore();
+  const { team, language, getLanguageId } = usePrimeDexStore(useShallow((state) => ({
+    team: state.team,
+    language: state.language,
+    getLanguageId: state.getLanguageId,
+  })));
 
   const pokemonQueries = useQueries({
     queries: team.map(id => ({

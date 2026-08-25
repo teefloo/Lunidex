@@ -7,7 +7,7 @@ import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { getItemDetail } from '@/lib/api/graphql';
+import { getItemDetailCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
 import { cleanItemText, getItemDescription, getItemEffectDescription } from '@/lib/item-description';
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const langId = languageToPokemonLanguageId[lang];
   const displayName = formatName(name);
 
-  const item = await getItemDetail(name, langId).catch(() => null);
+  const item = await getItemDetailCached(name, langId).catch(() => null);
   if (!item) notFound();
 
   const localizedName = item.pokemon_v2_itemnames?.[0]?.name || displayName;
@@ -61,7 +61,7 @@ export default async function ItemDetailPage({ params }: Props) {
   const lang = await getServerLanguage();
   const langId = languageToPokemonLanguageId[lang];
 
-  const item = await getItemDetail(name, langId);
+  const item = await getItemDetailCached(name, langId);
   if (!item) notFound();
 
   const displayName = formatName(name);

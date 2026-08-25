@@ -15,6 +15,7 @@ import type {
   TCGFilterOptions,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
+import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import {
   aggregateCollectionValue,
   getCardMarketValue,
@@ -526,6 +527,10 @@ export const getTCGCard = async (
   signal?: AbortSignal,
   options: GetTCGCardOptions = {},
 ): Promise<TCGCard | null> => {
+  // Defense in depth: card ids end up concatenated into upstream URL paths.
+  // Reject anything that is not a plain path-safe identifier before it can
+  // reach the network layer.
+  if (!isValidTcgCardId(cardId)) return null;
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = `tcg-card-v10-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;

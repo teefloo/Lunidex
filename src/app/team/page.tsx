@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import GenerationPicker from '@/components/team/GenerationPicker';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAllPokemonDetailed } from '@/lib/api';
 import { TYPE_COLORS } from '@/types/pokemon';
@@ -55,7 +56,14 @@ const RechartsTooltip = dynamic(() => import('recharts').then(m => m.Tooltip), {
 import Image from 'next/image';
 
 export default function TeamPage() {
-  const { language, systemLanguage, team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore();
+  const { language, systemLanguage, team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+    team: state.team,
+    addToTeam: state.addToTeam,
+    removeFromTeam: state.removeFromTeam,
+    clearTeam: state.clearTeam,
+  })));
   const [isAutoCompleting, setIsAutoCompleting] = useState(false);
   const [targetGeneration, setTargetGeneration] = useState<TargetGeneration>(
     DEFAULT_AUTO_COMPLETE_OPTIONS.targetGeneration

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getNeonClient } from '@/lib/neon/server';
 import { getTCGCardCached } from '../../../../../lib/api/server-cache';
+import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 
 /** Minimum interval between two recorded snapshots for the same card. */
 const SNAPSHOT_MIN_INTERVAL_HOURS = 6;
@@ -128,7 +129,7 @@ export const runtime = 'edge';
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { cardId } = await params;
 
-  if (!cardId || cardId.trim() === '' || cardId.length > 128) {
+  if (!isValidTcgCardId(cardId)) {
     return NextResponse.json({ error: 'Missing cardId' }, { status: 400 });
   }
 

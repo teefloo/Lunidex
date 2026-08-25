@@ -109,8 +109,8 @@ export default function CookieBanner() {
 
   return (
     <div
-      role="dialog"
-      aria-live="polite"
+      role="region"
+      aria-label="Cookie consent"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description cookie-consent-disclaimer"
       className="fixed inset-x-2 bottom-2 z-50 sm:inset-x-6 sm:bottom-6"

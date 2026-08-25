@@ -21,7 +21,7 @@ export async function getPublicProfileByHandle(
       quiz_best_score, quiz_best_streak, quiz_total_correct,
       tcg_owned_count, caught_by_gen, member_since
     from public.public_profiles
-    where public_handle = ${handle}
+    where lower(public_handle) = lower(${handle})
       and is_public = true
     limit 1
   ` as PublicProfileRow[];

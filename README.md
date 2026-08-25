@@ -262,4 +262,5 @@ See the [Neon migration runbook](./docs/neon-migration.md) for the schema, envir
 - [Product context](./PRODUCT.md)
 - [Design system](./DESIGN.md)
 - [Neon migration runbook](./docs/neon-migration.md)
+- [Technical guides](./docs/README.md) (TCGdex, PokéAPI, Next.js, and localization)
 - [GitHub issues](https://github.com/teefloo/Lunidex/issues)

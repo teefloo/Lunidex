@@ -10,6 +10,7 @@ describe('PWA manifest', () => {
     expect(result.icons).toEqual([
       expect.objectContaining({ src: '/icon-192.png', sizes: '192x192', purpose: 'any' }),
       expect.objectContaining({ src: '/icon-512.png', sizes: '512x512', purpose: 'any' }),
+      expect.objectContaining({ src: '/icon-512-maskable.png', sizes: '512x512', purpose: 'maskable' }),
     ]);
     expect(result.shortcuts?.map((shortcut) => shortcut.url)).toEqual([
       '/en/team',

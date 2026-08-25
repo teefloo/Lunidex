@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { REST_API_BASE } from '@/lib/api/client';
 import apiClient from '@/lib/api/client';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
 import { getFormDisplayName, getBaseSpeciesName } from '@/lib/form-names';
 import { cn, formatId } from '@/lib/utils';
@@ -108,7 +109,10 @@ function detectFormType(formName: string): string {
 }
 
 function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean }) {
-  const { language, systemLanguage } = usePrimeDexStore();
+  const { language, systemLanguage } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+  })));
   const localeHref = useLocaleHref();
   const resolvedLang = language === 'auto' ? systemLanguage : language;
 

@@ -50,14 +50,14 @@ export default function SearchBar() {
   }, [localSearch, searchTerm, setSearchTerm]);
 
   useEffect(() => {
+    // "/" focuses this input; Cmd/Ctrl+K belongs exclusively to the global
+    // command palette handled in AppContent, which would otherwise fight for
+    // focus with this field on /pokedex.
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || e.key === '/') {
+      if (e.key === '/') {
         if (document.activeElement !== inputRef.current) {
           e.preventDefault();
           inputRef.current?.focus();
-        } else if (e.key === 'k') {
-          // If already in input, still prevent default browser action for Cmd+K / Ctrl+K
-          e.preventDefault();
         }
       }
     };

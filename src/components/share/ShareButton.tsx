@@ -56,17 +56,32 @@ export function ShareButton({
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
-  // Close dropdown on outside click
+  // Close dropdown on outside click or Escape, restoring focus to the trigger.
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
+    const closeAndRestoreFocus = () => {
+      setOpen(false);
+      triggerRef.current?.focus();
+    };
+    const onMouseDown = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        closeAndRestoreFocus();
+      }
+    };
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, [open]);
 
   /** Resolve relative URL against current origin. */
@@ -94,6 +109,7 @@ export function ShareButton({
     }
 
     // Desktop fallback: toggle dropdown
+    triggerRef.current = document.activeElement as HTMLElement | null;
     setOpen((prev) => !prev);
   }
 
@@ -117,9 +133,7 @@ export function ShareButton({
         variant={variant}
         onClick={handleClick}
         className={className}
-        aria-haspopup={
-          typeof navigator !== 'undefined' && !navigator.share ? 'listbox' : undefined
-        }
+        aria-haspopup="menu"
         aria-expanded={open || undefined}
         aria-label={iconOnly ? resolvedLabel : undefined}
         title={iconOnly ? resolvedLabel : undefined}

@@ -109,7 +109,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = effectEntry?.short_effect ?? t('moves_page.no_description_detail');
 
   return {
-    title: `${localizedName} — Move | Lunidex`,
+    title: { absolute: `${localizedName} — Move | Lunidex` },
     description,
     alternates: {
       canonical: `/${lang}/moves/${name}`,

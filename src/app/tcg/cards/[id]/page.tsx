@@ -50,7 +50,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   );
 
   return {
-    title,
+    // Bundled titles already carry the "| Lunidex" suffix; absolute prevents
+    // the root layout template from appending a second one.
+    title: { absolute: title },
     description,
     robots: isTcgLangSupported(currentLang)
       ? { index: true, follow: true }

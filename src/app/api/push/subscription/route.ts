@@ -4,6 +4,9 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
+import { rateLimit } from '@/lib/rate-limit';
+
+const PRIVATE_NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
 interface PushSubscriptionJSON {
   endpoint?: unknown;
@@ -49,6 +52,11 @@ export async function POST(request: NextRequest) {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  // Registration rewrites subscription rows; throttle churn per account.
+  if (!rateLimit(`push-subscription:${user.id}`, 10)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: PRIVATE_NO_STORE_HEADERS });
+  }
+
   const body = await readJsonBody<SubscriptionPayload>(request);
   const subscription = body?.subscription;
   if (!validSubscription(subscription)) {
@@ -56,7 +64,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (await ensureNeonUser(sql, user) === false) {
-    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
   }
   try {
     await sql`
@@ -67,12 +75,12 @@ export async function POST(request: NextRequest) {
     `;
   } catch (error) {
     if (isInactiveAccountError(error)) {
-      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
     }
     return NextResponse.json({ error: 'Failed to save push subscription' }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
 
 export async function DELETE(request: NextRequest) {
@@ -86,7 +94,7 @@ export async function DELETE(request: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   if (await ensureNeonUser(sql, user) === false) {
-    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   const body = await readJsonBody<SubscriptionPayload>(request);
@@ -100,5 +108,5 @@ export async function DELETE(request: NextRequest) {
       and subscription ->> 'endpoint' = ${body.endpoint}
   `;
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }

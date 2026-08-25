@@ -23,7 +23,7 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 export default function DashboardPage() {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
-  const { incrementVisit } = usePrimeDexStore();
+  const incrementVisit = usePrimeDexStore((state) => state.incrementVisit);
   const { data, isLoading, isError } = useDashboardData();
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 type ProfileRow = Record<string, unknown>;
 type UserStateRow = { data: unknown; updated_at: string };
@@ -16,6 +17,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+
+  // The export fans out to ten parallel queries; keep it a rare operation.
+  if (!rateLimit(`account-export:${user.id}`, 3)) {
+    return NextResponse.json(
+      { error: 'Too many export requests. Please try again later.' },
+      { status: 429, headers: { 'Cache-Control': 'private, no-store' } },
+    );
+  }
 
   if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });

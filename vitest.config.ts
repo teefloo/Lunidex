@@ -2,8 +2,6 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-const core = (p: string) => path.resolve(__dirname, `./packages/core/src/${p}`);
-
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -13,22 +11,10 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/.claude/worktrees/**', '**/.hatch-runs/**', 'supabase/functions/**'],
   },
   resolve: {
-    // Mirror the tsconfig path mapping so `@/...` imports that now live in the
-    // shared @primedex/core package still resolve under Vitest. Specific rules
-    // must precede the generic `@/*` fallback (first match wins).
-    alias: [
-      { find: /^@\/types\/(.*)$/, replacement: core('types/$1') },
-      { find: /^@\/store\/(.*)$/, replacement: core('store/$1') },
-      { find: '@/lib/api/route-helpers', replacement: path.resolve(__dirname, './src/lib/api/route-helpers') },
-      { find: /^@\/lib\/api$/, replacement: core('api/index') },
-      { find: /^@\/lib\/api\/(.*)$/, replacement: core('api/$1') },
-      { find: /^@\/lib\/i18n\/(.*)$/, replacement: core('i18n/$1') },
-      { find: /^@\/lib\/supabase\/(.*)$/, replacement: core('supabase/$1') },
-      {
-        find: /^@\/lib\/(languages|utils|pokemon-utils|team-analysis|auto-complete|badges|tcg-rarity)$/,
-        replacement: core('lib/$1'),
-      },
-      { find: /^@\/(.*)$/, replacement: path.resolve(__dirname, './src/$1') },
-    ],
+    // Resolve `@/...` exactly like the Next.js build: to the web sources.
+    // Redirecting shared-module specifiers at @primedex/core made tests pass
+    // against code that never ships to the browser while the web copies
+    // drifted ahead; both trees still exist, so tests must follow the build.
+    alias: [{ find: /^@\/(.*)$/, replacement: path.resolve(__dirname, './src/$1') }],
   },
 });

@@ -1,3 +1,9 @@
 {
-  "name": "poke-app"
+  "name": "poke-app",
+  "crons": [
+    {
+      "path": "/api/cron/metrics-retention",
+      "schedule": "17 4 * * *"
+    }
+  ]
 }

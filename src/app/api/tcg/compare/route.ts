@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardCached } from '@/lib/api/server-cache';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
+import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 
 const MAX_COMPARE_IDS = 4;
 
@@ -17,8 +18,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing ids' }, { status: 400 });
     }
 
-    if (ids.length > MAX_COMPARE_IDS) {
-      return NextResponse.json({ error: `Too many ids (max ${MAX_COMPARE_IDS})` }, { status: 400 });
+    if (ids.length > MAX_COMPARE_IDS || !ids.every((id) => isValidTcgCardId(id))) {
+      return NextResponse.json({ error: `Invalid ids (max ${MAX_COMPARE_IDS})` }, { status: 400 });
     }
 
     const cards = await Promise.all(ids.map(async (id) => getTCGCardCached(id, lang)));

@@ -36,10 +36,33 @@ interface ResourceProbe {
   headers?: Record<string, string>;
 }
 
+/**
+ * Ranks Accept-Language entries by their q-values instead of trusting the raw
+ * first entry, so "en;q=0.5, fr" correctly resolves to French.
+ */
 function detectLocaleFromAcceptLanguage(header: string | null): string {
   if (!header) return 'en';
-  const first = header.split(',')[0]?.split(';')[0]?.trim().toLowerCase().split('-')[0] ?? 'en';
-  return isSupportedLanguage(first) ? first : 'en';
+  const candidates = header
+    .split(',')
+    .map((part) => {
+      const [tag, ...params] = part.split(';');
+      let quality = 1;
+      for (const param of params) {
+        const match = /^\s*q=([0-9.]+)\s*$/.exec(param);
+        if (match) {
+          const parsed = Number.parseFloat(match[1]);
+          quality = Number.isFinite(parsed) ? Math.min(Math.max(parsed, 0), 1) : 0;
+        }
+      }
+      return { tag: (tag ?? '').trim().toLowerCase().split('-')[0], quality };
+    })
+    .filter((entry) => entry.tag.length > 0 && entry.quality > 0)
+    .sort((left, right) => right.quality - left.quality);
+
+  for (const { tag } of candidates) {
+    if (isSupportedLanguage(tag)) return tag;
+  }
+  return 'en';
 }
 
 function shouldPersistLocaleCookie(request: NextRequest): boolean {
@@ -240,6 +263,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|\\.well-known/).*)',
+    '/((?!_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|\\.well-known/|og/|images/|pokemon-cards/).*)',
   ],
 };

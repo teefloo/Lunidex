@@ -53,6 +53,48 @@ describe('web online-only user state', () => {
     unsubscribe();
   });
 
+  it('applies pokedex view filters locally for signed-out visitors', () => {
+    const onRequired = vi.fn();
+    const unsubscribe = onSyncAccessRequired(onRequired);
+
+    setSyncAccessStatus('unauthenticated');
+    usePrimeDexStore.getState().toggleType('fire');
+    usePrimeDexStore.getState().setSortBy('name-asc');
+    usePrimeDexStore.getState().setSelectedGeneration(1);
+
+    expect(usePrimeDexStore.getState().selectedTypes).toEqual(['fire']);
+    expect(usePrimeDexStore.getState().sortBy).toBe('name-asc');
+    expect(usePrimeDexStore.getState().selectedGeneration).toBe(1);
+    expect(onRequired).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
+  it('applies sound and sprite display preferences locally', () => {
+    const onRequired = vi.fn();
+    const unsubscribe = onSyncAccessRequired(onRequired);
+
+    setSyncAccessStatus('unauthenticated');
+    usePrimeDexStore.getState().toggleSound();
+    usePrimeDexStore.getState().toggleAnimatedSprites();
+
+    expect(usePrimeDexStore.getState().soundEnabled).toBe(false);
+    expect(usePrimeDexStore.getState().animatedSprites).toBe(true);
+    expect(onRequired).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
+  it('keeps gating collection data such as the team while signed out', () => {
+    const onRequired = vi.fn();
+    const unsubscribe = onSyncAccessRequired(onRequired);
+
+    setSyncAccessStatus('unauthenticated');
+    usePrimeDexStore.getState().addToTeam(25);
+
+    expect(usePrimeDexStore.getState().team).toEqual([]);
+    expect(onRequired).toHaveBeenCalledOnce();
+    unsubscribe();
+  });
+
   it('applies theme changes locally without requiring sync access', () => {
     const onRequired = vi.fn();
     const unsubscribe = onSyncAccessRequired(onRequired);

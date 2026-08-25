@@ -27,6 +27,7 @@ import {
 import { PokemonDetail, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { cn, formatId, formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
@@ -153,14 +154,31 @@ export function PokemonDetailClient({
   const localeHref = useLocaleHref();
   const [showShiny, setShowShiny] = useState(false);
   const [playingCry, setPlayingCry] = useState<'latest' | 'legacy' | null>(null);
-  const { 
-    isFavorite, addFavorite, removeFavorite, 
-    toggleCaught, isCaught, 
+  // Fine-grained slice: this page re-renders on every store keystroke if it
+  // subscribes to the whole store.
+  const {
+    isFavorite, addFavorite, removeFavorite,
+    toggleCaught, isCaught,
     addToCompare, removeFromCompare, isInCompare,
     addToTeam, removeFromTeam, isInTeam,
     addToHistory, team,
     soundEnabled
-  } = usePrimeDexStore();
+  } = usePrimeDexStore(useShallow((state) => ({
+    isFavorite: state.isFavorite,
+    addFavorite: state.addFavorite,
+    removeFavorite: state.removeFavorite,
+    toggleCaught: state.toggleCaught,
+    isCaught: state.isCaught,
+    addToCompare: state.addToCompare,
+    removeFromCompare: state.removeFromCompare,
+    isInCompare: state.isInCompare,
+    addToTeam: state.addToTeam,
+    removeFromTeam: state.removeFromTeam,
+    isInTeam: state.isInTeam,
+    addToHistory: state.addToHistory,
+    team: state.team,
+    soundEnabled: state.soundEnabled,
+  })));
   const routeLanguage = useClientLanguage();
 
   const [abilityDescs, setAbilityDescs] = useState<Record<string, AbilityBattleDesc> | null>(null);

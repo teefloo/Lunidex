@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     defaultValue: `Browse the ${tcgSet.name} Pokémon TCG set, released ${releaseDate}. Explore cards and track your collection on Lunidex.`,
   });
   return {
-    title,
+    title: { absolute: title },
     description,
     robots: {
       index: false,

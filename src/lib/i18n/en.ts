@@ -329,6 +329,16 @@ export default {
       success: 'Message sent.',
       success_body: 'Thank you for your message. We will get back to you as soon as possible.',
     },
+    share_menu: {
+      label: 'Share',
+      copy_link: 'Copy link',
+      share_twitter: 'Share on X / Twitter',
+      copy_discord: 'Copy for Discord',
+      toast_copied: 'Link copied!',
+      toast_discord_copied: 'Discord link copied!',
+      prompt_copy: 'Copy this link:',
+      prompt_discord: 'Copy this Discord link:',
+    },
     faq: {
       eyebrow: 'Help Center',
       heading: 'Frequently Asked Questions',

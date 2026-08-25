@@ -15,6 +15,13 @@ function unavailableResponse() {
   );
 }
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Rejects malformed ids before they are cast to uuid (which throws a 500). */
+function isUuid(value: unknown): value is string {
+  return typeof value === 'string' && UUID_PATTERN.test(value);
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -149,7 +156,7 @@ export async function POST(request: NextRequest) {
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Failed to create alert' }, { status: 500 });
 
-  return NextResponse.json({ alert: toPriceAlert(data) }, { status: 201 });
+  return NextResponse.json({ alert: toPriceAlert(data) }, { status: 201, headers: { 'Cache-Control': 'private, no-store' } });
 }
 
 // ---------------------------------------------------------------------------
@@ -171,7 +178,7 @@ export async function DELETE(request: NextRequest) {
   }
 
   const id = request.nextUrl.searchParams.get('id');
-  if (!id) {
+  if (!isUuid(id)) {
     return NextResponse.json({ error: 'Missing alert id' }, { status: 400 });
   }
 
@@ -180,7 +187,7 @@ export async function DELETE(request: NextRequest) {
     where id = ${id}::uuid and user_id = ${user.id}::uuid
   `;
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
 // ---------------------------------------------------------------------------
@@ -202,7 +209,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   const payload = await readJsonBody<{ id?: string; is_active?: boolean }>(request);
-  if (!payload?.id || typeof payload.is_active !== 'boolean') {
+  if (!isUuid(payload?.id) || typeof payload.is_active !== 'boolean') {
     return NextResponse.json({ error: 'id and is_active are required' }, { status: 400 });
   }
 
@@ -224,5 +231,5 @@ export async function PATCH(request: NextRequest) {
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
 
-  return NextResponse.json({ alert: toPriceAlert(data) });
+  return NextResponse.json({ alert: toPriceAlert(data) }, { headers: { 'Cache-Control': 'private, no-store' } });
 }

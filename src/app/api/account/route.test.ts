@@ -8,10 +8,15 @@ const mockEnsureNeonUser = vi.hoisted(() => vi.fn());
 const mockSql = vi.hoisted(() => Object.assign(vi.fn(), { transaction: vi.fn() }));
 const mockDeleteNeonAuthUser = vi.hoisted(() => vi.fn());
 const mockGetNeonAuthServer = vi.hoisted(() => vi.fn());
+const mockRateLimit = vi.hoisted(() => vi.fn(() => true));
 
 vi.mock('@/lib/neon/auth', () => ({
   ensureNeonUser: mockEnsureNeonUser,
   getNeonUserFromRequest: mockGetNeonUserFromRequest,
+}));
+
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: mockRateLimit,
 }));
 
 vi.mock('@/lib/neon/server', () => ({
@@ -131,6 +136,15 @@ describe('DELETE /api/account', () => {
 
     expect(response.status).toBe(204);
     expect(mockDeleteNeonAuthUser).not.toHaveBeenCalled();
+    expect(mockSql.transaction).not.toHaveBeenCalled();
+  });
+
+  it('throttles repeated deletion attempts per account', async () => {
+    mockRateLimit.mockReturnValueOnce(false);
+
+    const response = await DELETE(request({ confirmation: 'DELETE' }));
+
+    expect(response.status).toBe(429);
     expect(mockSql.transaction).not.toHaveBeenCalled();
   });
 

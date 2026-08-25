@@ -4,6 +4,7 @@ import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-help
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { deleteNeonAuthUser, getNeonAuthServer } from '@/lib/neon/server-auth';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 type DeletePayload = {
   confirmation?: unknown;
@@ -105,6 +106,12 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   // terminal tombstone so that retries remain possible and idempotent.
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: NO_STORE_HEADERS });
+
+  // Deletion triggers an auth-provider call plus a multi-table transaction;
+  // throttle retries per account while keeping legitimate retries possible.
+  if (!rateLimit(`account-delete:${user.id}`, 3)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: NO_STORE_HEADERS });
+  }
 
   let state = await getDeletionState(sql, user.id);
   if (!state) {

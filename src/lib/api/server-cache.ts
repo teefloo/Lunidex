@@ -13,6 +13,7 @@ import {
   getAllAbilities,
   getAllItems,
   getAllMoves,
+  getItemDetail,
   getPokemonSummarySlice,
   getLocalizedPokemonData,
 } from './graphql';
@@ -21,6 +22,7 @@ import {
   getAllItemNames,
   getAllMoveNames,
   getAllPokemonNames,
+  getAbilityDetail,
   getPokemonDetail,
   getPokemonEncounters,
   getPokemonList,
@@ -152,6 +154,21 @@ const getAllSetsPersistent = unstable_cache(
   { revalidate: 3600 },
 );
 
+// Detail-route fetchers shared by generateMetadata and the page component:
+// without per-request memoization each route issues two identical upstream
+// calls (axios traffic is invisible to Next's fetch dedupe).
+const getItemDetailPersistent = unstable_cache(
+  (name: string, languageId: number) => getItemDetail(name, languageId),
+  ['lunidex:item-detail:v1'],
+  { revalidate: 86400 },
+);
+
+const getAbilityDetailPersistent = unstable_cache(
+  (name: string) => getAbilityDetail(name),
+  ['lunidex:ability-detail:v1'],
+  { revalidate: 86400 },
+);
+
 /**
  * Server-cached and per-request memoized versions of the public fetchers used
  * by detail routes. `unstable_cache` avoids repeating stable upstream work
@@ -175,3 +192,5 @@ export const getTCGCardCached = cache(getTCGCardPersistent);
 export const getTCGSetCached = cache(getTCGSetPersistent);
 export const getTCGSetCardsCached = cache(getTCGSetCardsPersistent);
 export const getAllSetsCached = cache(getAllSetsPersistent);
+export const getItemDetailCached = cache(getItemDetailPersistent);
+export const getAbilityDetailCached = cache(getAbilityDetailPersistent);

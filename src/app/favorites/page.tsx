@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 export default function FavoritesPage() {
-  const { favorites } = usePrimeDexStore();
+  const favorites = usePrimeDexStore((state) => state.favorites);
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
 

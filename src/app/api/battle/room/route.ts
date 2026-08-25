@@ -136,7 +136,10 @@ export async function POST(req: NextRequest) {
   const data = rows[0];
   if (!data) return NextResponse.json({ error: 'Failed to create battle room' }, { status: 500 });
 
-  return NextResponse.json({ roomId: data.id, status: data.status, createdAt: data.created_at });
+  return NextResponse.json(
+    { roomId: data.id, status: data.status, createdAt: data.created_at },
+    { headers: PRIVATE_NO_STORE_HEADERS },
+  );
 }
 
 // GET /api/battle/room?id=<uuid> — fetch room
@@ -226,8 +229,8 @@ export async function PATCH(req: NextRequest) {
       }
       return NextResponse.json({ error: 'Failed to join battle room' }, { status: 500 });
     }
-    if (!rows[0]) return NextResponse.json({ error: 'Room not found or unavailable' }, { status: 404 });
-    return NextResponse.json(rows[0]);
+    if (!rows[0]) return NextResponse.json({ error: 'Room not found or unavailable' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
+    return NextResponse.json(rows[0], { headers: PRIVATE_NO_STORE_HEADERS });
   }
 
   if (typeof body.text !== 'string') {
@@ -283,6 +286,6 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json({ error: 'Failed to update battle room' }, { status: 500 });
   }
-  if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404 });
-  return NextResponse.json(rows[0]);
+  if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
+  return NextResponse.json(rows[0], { headers: PRIVATE_NO_STORE_HEADERS });
 }

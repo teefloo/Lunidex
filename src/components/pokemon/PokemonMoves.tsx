@@ -12,6 +12,7 @@ import { TYPE_COLORS, GraphQLPokemonMoveData } from '@/types/pokemon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 
 interface PokemonMovesProps {
   pokemonName: string;
@@ -30,7 +31,10 @@ const LANGUAGE_MAP: Record<string, number> = {
 export const PokemonMoves = ({ pokemonName }: PokemonMovesProps) => {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const { language, systemLanguage } = usePrimeDexStore();
+  const { language, systemLanguage } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+  })));
   const resolvedLang = mounted ? (language === 'auto' ? systemLanguage : language) : 'en';
 
   const languageId = LANGUAGE_MAP[resolvedLang] || 9;

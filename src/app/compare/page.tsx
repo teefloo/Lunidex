@@ -3,6 +3,7 @@
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { getAllPokemonSearchIndex, getPokemonDetail, getPokemonSpecies, getTypeRelations } from '@/lib/api';
 import { TypeRelations } from '@/lib/api/rest';
@@ -54,7 +55,14 @@ const STAT_KEYS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense
 import Image from 'next/image';
 
 export default function ComparePage() {
-  const { language, systemLanguage, compareList, addToCompare, removeFromCompare, clearCompare } = usePrimeDexStore();
+  const { language, systemLanguage, compareList, addToCompare, removeFromCompare, clearCompare } = usePrimeDexStore(useShallow((state) => ({
+    language: state.language,
+    systemLanguage: state.systemLanguage,
+    compareList: state.compareList,
+    addToCompare: state.addToCompare,
+    removeFromCompare: state.removeFromCompare,
+    clearCompare: state.clearCompare,
+  })));
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

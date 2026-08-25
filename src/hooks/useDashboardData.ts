@@ -3,10 +3,12 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useShallow } from 'zustand/react/shallow';
 import { getAllPokemonSummary } from '@/lib/api/graphql';
+import { pokemonKeys } from '@/lib/api/keys';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { BADGE_DEFINITIONS, computeBadgeStatus, findNextBadge } from '@/lib/badges';
-import type { DashboardData, BadgeConditionData, ActivityAction, ExtensibleMetric, CategoryStats } from '@/types/dashboard';
+import type { DashboardData, BadgeConditionData, ActivityAction, ExtensibleMetric, CategoryStats, QuizSession } from '@/types/dashboard';
 
 const GENERATIONS = [
   { id: 1, name: 'Gen 1' },
@@ -57,10 +59,28 @@ export function useDashboardData(): {
     tcgOwnedCards,
     tcgWishlistCards,
     tcgSavedSearches,
-  } = usePrimeDexStore();
+  } = usePrimeDexStore(useShallow((state) => ({
+    caughtPokemon: state.caughtPokemon,
+    favorites: state.favorites,
+    team: state.team,
+    badges: state.badges,
+    quizHighScores: state.quizHighScores,
+    quizHistory: state.quizHistory,
+    currentStreak: state.currentStreak,
+    bestStreak: state.bestStreak,
+    totalQuizCorrect: state.totalQuizCorrect,
+    visitCount: state.visitCount,
+    lastVisitDate: state.lastVisitDate,
+    viewCount: state.viewCount,
+    history: state.history,
+    recentActions: state.recentActions,
+    tcgOwnedCards: state.tcgOwnedCards,
+    tcgWishlistCards: state.tcgWishlistCards,
+    tcgSavedSearches: state.tcgSavedSearches,
+  })));
 
   const { data: allPokemon, isLoading, isError } = useQuery({
-    queryKey: ['dashboard', 'allPokemonSummary'],
+    queryKey: pokemonKeys.allSummary(),
     queryFn: getAllPokemonSummary,
     staleTime: 30 * 60 * 1000,
   });
@@ -70,7 +90,10 @@ export function useDashboardData(): {
 
     const totalPokemon = allPokemon.length;
     const caughtSet = new Set(caughtPokemon);
-    const viewedIds = new Set([...Object.keys(viewCount).map(Number), ...history.map((h) => h.id)]);
+    const viewedIds = new Set([
+      ...Object.keys(viewCount).map(Number),
+      ...(history as Array<{ id: number; name: string }>).map((h) => h.id),
+    ]);
 
     const caughtCount = caughtPokemon.length;
     const seenCount = viewedIds.size;
@@ -102,7 +125,7 @@ export function useDashboardData(): {
     const nextBadge = findNextBadge(badgeStatusesWithUnlock);
 
     // Quiz stats
-    const quizSessions = quizHistory;
+    const quizSessions: QuizSession[] = quizHistory;
     const allScores = quizSessions.map((s) => s.score);
 
     const quizStats = {
@@ -159,7 +182,7 @@ export function useDashboardData(): {
       .sort((a, b) => b.total - a.total);
 
     // Most viewed
-    const viewCountEntries = Object.entries(viewCount).map(([id, count]) => ({
+    const viewCountEntries = (Object.entries(viewCount) as Array<[string, number]>).map(([id, count]) => ({
       id: Number(id),
       count,
     }));

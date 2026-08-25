@@ -184,7 +184,6 @@ const publicPageCacheRoutes = [
   '/:locale(en|fr|es|de|it|ja|ko|zh)/breeding',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/ev-iv',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/quiz',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/early-access',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/cookies',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/privacy',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/terms',

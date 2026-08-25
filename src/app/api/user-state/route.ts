@@ -4,6 +4,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
+import { rateLimit } from '@/lib/rate-limit';
 
 const MAX_STATE_BYTES = 2_000_000;
 
@@ -49,6 +50,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
+  if (!rateLimit(`user-state-read:${user.id}`, 120)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
+  }
+
   if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
@@ -66,7 +71,13 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  const payload = await readJsonBody<UserStatePayload>(request);
+  // Writes rewrite the full snapshot; the client debounces, so a generous
+  // per-account ceiling only blocks runaway loops.
+  if (!rateLimit(`user-state-write:${user.id}`, 60)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
+  }
+
+  const payload = await readJsonBody<UserStatePayload>(request, { maxBytes: MAX_STATE_BYTES });
   if (!payload || !isJsonObject(payload.data)) {
     return NextResponse.json({ error: 'Invalid state payload' }, { status: 400 });
   }

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardCached } from '@/lib/api/server-cache';
+import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
 
-    if (!id?.trim()) {
+    if (!isValidTcgCardId(id)) {
       return NextResponse.json({ error: 'Missing id' }, { status: 400 });
     }
 

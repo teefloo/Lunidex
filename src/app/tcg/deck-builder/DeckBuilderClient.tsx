@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery, useQueries } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Plus, Minus, Trash2, LayoutGrid, Search, Loader2, X } from 'lucide-react';
@@ -12,6 +12,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { searchCards, DEFAULT_TCG_CARD_FILTERS, getTCGCard } from '@/lib/api/tcg';
+import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 
@@ -29,20 +30,31 @@ export default function DeckBuilderClient() {
 
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  // The raw input stays responsive; the query only sees committed values.
+  const [committedSearchTerm, setCommittedSearchTerm] = useState('');
+  const searchTimerRef = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
+  }, []);
+  const handleSearchChange = (value: string): void => {
+    setSearchTerm(value);
+    if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = window.setTimeout(() => setCommittedSearchTerm(value), 300);
+  };
   const [newDeckName, setNewDeckName] = useState('');
 
   const selectedDeck = decks.find((d) => d.id === selectedDeckId) ?? null;
 
   const { data: searchResults, isFetching } = useQuery({
-    queryKey: ['deck-builder-search', searchTerm],
+    queryKey: ['tcg', 'deck-builder-search', committedSearchTerm],
     queryFn: async ({ signal }) => searchCards(
-      { ...DEFAULT_TCG_CARD_FILTERS, searchTerm },
+      { ...DEFAULT_TCG_CARD_FILTERS, searchTerm: committedSearchTerm },
       'en',
       1,
       24,
       signal,
     ),
-    enabled: mounted && searchTerm.trim().length > 1,
+    enabled: mounted && committedSearchTerm.trim().length > 1,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -50,7 +62,7 @@ export default function DeckBuilderClient() {
 
   const deckCardQueries = useQueries({
     queries: deckCardIds.map((cardId) => ({
-      queryKey: ['tcg-card-detail', cardId],
+      queryKey: tcgKeys.card(cardId, 'en'),
       queryFn: ({ signal }: { signal: AbortSignal }) => getTCGCard(cardId, 'en', signal),
       staleTime: 60 * 60 * 1000,
       enabled: mounted,
@@ -186,14 +198,14 @@ export default function DeckBuilderClient() {
                     <input
                       type="text"
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                       placeholder={t('tcg.deck_builder.search_placeholder', { defaultValue: 'Search cards to add...' })}
                       className="h-10 w-full rounded-sm border border-border/70 bg-muted/40 pl-9 pr-9 text-sm text-foreground placeholder:text-foreground/30 focus:border-primary/40 focus:outline-none"
                     />
                     {searchTerm && (
                       <button
                         type="button"
-                        onClick={() => setSearchTerm('')}
+                        onClick={() => handleSearchChange('')}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground"
                       >
                         <X className="h-4 w-4" />

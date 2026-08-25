@@ -118,6 +118,12 @@ export async function generateMetadata(): Promise<Metadata> {
       url: `/${lang}`,
       images: [DEFAULT_OG_IMAGE],
     },
+    twitter: {
+      // Site-level fallback so routes without their own twitter metadata still
+      // render a large share card instead of a bare summary.
+      card: "summary_large_image",
+      images: [DEFAULT_OG_IMAGE],
+    },
     icons: {
       icon: [
         { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
@@ -136,10 +142,11 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     other: {
+      // Array values render as repeated og:locale:alternate metatags, which is
+      // the format social scrapers expect (one tag per alternate locale).
       "og:locale:alternate": supportedLanguages
         .filter((l) => l !== lang)
-        .map((l) => languageToOpenGraphLocale[l])
-        .join(", "),
+        .map((l) => languageToOpenGraphLocale[l]),
     },
   };
 }
@@ -199,7 +206,15 @@ export default async function RootLayout({
 
   return (
       <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
-      <head />
+      <head>
+        {/* Autodiscovery for the OpenSearch description shipped at this path. */}
+        <link
+          rel="search"
+          type="application/opensearchdescription+xml"
+          title={SITE_NAME}
+          href="/opensearch.xml"
+        />
+      </head>
       <body className="antialiased bg-background text-foreground font-body">
         <SkipLink>
           {t('common.skip_to_content')}
