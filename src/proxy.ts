@@ -132,7 +132,7 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
       url: `${TCGDEX_BASE_URL}/${probeLocale}/cards/${encodedIdentifier}`,
     };
   }
-  if (segments[2] === 'collection') {
+  if (segments[2] === 'sets' || segments[2] === 'collection') {
     return {
       kind: 'tcg-set',
       url: `${TCGDEX_BASE_URL}/${probeLocale}/sets/${encodedIdentifier}`,

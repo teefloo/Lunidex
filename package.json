@@ -15,6 +15,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "seo:check": "node scripts/seo-check.mjs",
     "test": "node ./node_modules/vitest/vitest.mjs",
     "typecheck": "tsc --noEmit",
     "db:neon:export": "bash scripts/neon/export-supabase.sh",

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
@@ -9,7 +10,7 @@ import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/se
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { DEFAULT_OG_IMAGE, buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
+import { DEFAULT_OG_IMAGE, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 
@@ -98,6 +99,33 @@ export default async function PokedexPage() {
         <Header />
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
+          <section className="page-shell mt-8" aria-labelledby="pokedex-priority-links-title">
+            <div className="rounded-sm border border-border/50 bg-card/35 p-5 sm:p-7">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">
+                {t('pokedex.featured_eyebrow', { defaultValue: 'Explore the Pokédex' })}
+              </p>
+              <h2 id="pokedex-priority-links-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
+                {t('pokedex.featured_title', { defaultValue: 'Popular Pokémon and reference hubs' })}
+              </h2>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {topPokemon.map((slug) => (
+                  <Link
+                    key={slug}
+                    href={localeHref(`/pokemon/${slug}`, lang)}
+                    className="rounded-sm border border-border/50 bg-background/40 px-3 py-2 text-sm font-bold text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
+                  >
+                    {slug.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')}
+                  </Link>
+                ))}
+              </div>
+              <nav className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('pokedex.reference_hubs', { defaultValue: 'Pokédex reference hubs' })}>
+                <Link href={localeHref('/types', lang)} className="underline-offset-4 hover:underline">{t('list.types', { defaultValue: 'Types' })}</Link>
+                <Link href={localeHref('/moves', lang)} className="underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
+                <Link href={localeHref('/abilities', lang)} className="underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>
+                <Link href={localeHref('/items', lang)} className="underline-offset-4 hover:underline">{t('list.items', { defaultValue: 'Items' })}</Link>
+              </nav>
+            </div>
+          </section>
           <PokemonOfTheDay />
           <PokemonList />
           <ClientRecentlyViewed />

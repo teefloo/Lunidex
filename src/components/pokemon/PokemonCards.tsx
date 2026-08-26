@@ -103,6 +103,22 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
               onClick={setSelectedCard}
               sizes="(min-width: 1024px) 220px, (min-width: 640px) 28vw, 45vw"
             />
+            <div className="mt-2 flex max-w-[280px] flex-wrap justify-center gap-x-2 gap-y-1 text-center text-[11px] font-bold">
+              <Link
+                href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                {card.name}
+              </Link>
+              {card.set?.id ? (
+                <Link
+                  href={localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}
+                  className="text-foreground/55 underline-offset-4 hover:text-primary hover:underline"
+                >
+                  {card.set.name}
+                </Link>
+              ) : null}
+            </div>
           </motion.div>
         ))}
       </motion.div>

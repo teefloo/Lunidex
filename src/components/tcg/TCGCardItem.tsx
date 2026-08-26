@@ -69,7 +69,17 @@ export const TCGCardItem = memo(function TCGCardItem({
               </Link>
             </h3>
             <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">
-              {card.set?.name ?? t('tcg.unknown')}
+              {card.set?.id ? (
+                <Link
+                  href={localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}
+                  onClick={(event) => event.stopPropagation()}
+                  className="transition-colors hover:text-primary"
+                >
+                  {card.set.name}
+                </Link>
+              ) : (
+                card.set?.name ?? t('tcg.unknown')
+              )}
             </p>
           </div>
 
