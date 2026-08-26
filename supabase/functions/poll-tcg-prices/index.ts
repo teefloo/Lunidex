@@ -254,7 +254,7 @@ serve(async (req) => {
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
   const vapidPublicKey = Deno.env.get('VAPID_PUBLIC_KEY') ?? '';
   const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY') ?? '';
-  const vapidSubject = Deno.env.get('VAPID_SUBJECT') ?? 'mailto:admin@primedex.app';
+  const vapidSubject = Deno.env.get('VAPID_SUBJECT') ?? 'mailto:contact@lunidex.app';
 
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },

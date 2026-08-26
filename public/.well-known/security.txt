@@ -1,5 +1,5 @@
-Contact: mailto:security@primedex.app
-Contact: https://github.com/estebandeloge/primedex/issues
-Expires: 2027-12-31T23:59:59z
+Contact: mailto:contact@lunidex.app
+Contact: https://github.com/teefloo/Lunidex/issues
+Expires: 2027-12-31T23:59:59Z
 Preferred-Languages: en, fr
-Canonical: https://primedex.vercel.app/.well-known/security.txt
+Canonical: https://lunidex.app/.well-known/security.txt

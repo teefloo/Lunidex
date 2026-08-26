@@ -25,8 +25,12 @@ jobs:
 
       - run: npm run test
 
+      - run: npm run seo:check
+
       - run: npm run build
 
       - run: npx tsc --project packages/core/tsconfig.json --noEmit
 
       - run: npm run typecheck --workspace=@primedex/mobile
+
+      - run: npm run lint --workspace=@primedex/mobile

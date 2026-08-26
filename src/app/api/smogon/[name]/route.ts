@@ -17,7 +17,7 @@ async function getPSData(): Promise<Record<string, unknown>> {
 
   const res = await fetch(PS_FORMATS_URL, {
     next: { revalidate: 86400 },
-    headers: { 'User-Agent': 'PrimeDex/1.0 (+https://lunidex.app)' },
+    headers: { 'User-Agent': 'Lunidex/1.0 (+https://lunidex.app)' },
   });
 
   if (!res.ok) throw new Error(`PS data fetch failed: ${res.status}`);
