@@ -9,11 +9,9 @@ This guide applies only to `src/components/tcg/` and supplements `src/components
 - Reuse `TCGCardItem`, `TCGHolographicCard`, existing UI primitives, `cn()`, and `useTranslation`. Keep every card action keyboard/touch accessible and every icon-only control named.
 - Preserve `next/dynamic` boundaries for the card detail modal and filters when they are browser-only or expensive. New animation must remain non-critical and respect reduced motion.
 
-Focused tests live alongside these components. Run a relevant file while iterating, then the root web checks:
+Run the root web checks after changing these components:
 
 ```bash
-npx vitest run src/components/tcg/TCGCardImage.test.tsx
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```

@@ -31,7 +31,6 @@ Run from the repository root after web changes:
 ```bash
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```
 
-Add or update focused Vitest/Testing Library coverage for behavioral changes. The full CI also runs the production build, core type-check, and mobile type-check documented at the root.
+The full CI also runs the production build, core type-check, and mobile type-check documented at the root.

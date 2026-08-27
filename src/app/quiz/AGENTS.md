@@ -21,9 +21,6 @@ This guide supplements the App Router guides for the client-heavy quiz route in 
 From the repository root:
 
 ```bash
-npm run test -- --run
 npm run lint
 npm run typecheck
 ```
-
-Add focused coverage for changed quiz rules or helpers when a testable behavior changes.

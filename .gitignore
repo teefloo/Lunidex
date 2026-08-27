@@ -32,6 +32,11 @@ yarn.lock
 .next/
 out/
 
+# next-pwa generated output; recreated by the production build
+/public/sw.js
+/public/workbox-*.js
+/public/fallback-*.js
+
 # Production builds
 build/
 dist/
@@ -237,6 +242,10 @@ turbo-
 .opencode/
 .claude/
 .codex-logs/
+/.superpowers/
+/tmp/
+**/__pycache__/
+*.py[cod]
 .codex-*.png
 .playwright-mcp/
 .agents/

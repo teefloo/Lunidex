@@ -1,6 +1,6 @@
 # Neon schema guide
 
-`neon/migrations/` contains the application schema used by the current Neon-backed server runtime. It is distinct from the retained Supabase source migrations in `supabase/migrations/`.
+`neon/migrations/` contains the application schema used by the current Neon-backed server runtime. The former Supabase migration archive has been removed; `supabase/` is not a second schema source.
 
 ## Schema contract
 

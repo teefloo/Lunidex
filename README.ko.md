@@ -173,8 +173,6 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run start` | 프로덕션 빌드를 제공합니다. |
 | `npm run lint` | Web, core, mobile 소스를 lint합니다. |
 | `npm run typecheck` | Web workspace의 타입을 확인합니다. |
-| `npm run test -- --run` | Vitest 전체 테스트를 한 번 실행합니다. |
-| `npx vitest run path/to/file.test.ts` | 특정 테스트 파일을 실행합니다. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core`의 타입을 확인합니다. |
 | `npm run typecheck --workspace=@primedex/mobile` | Expo 앱의 타입을 확인합니다. |
 | `npm run lint --workspace=@primedex/mobile` | Expo 앱을 lint합니다. |
@@ -185,7 +183,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 > [!WARNING]
 > Neon import 및 verify 명령은 외부 데이터베이스에 접근합니다. 먼저 [`neon/AGENTS.md`](./neon/AGENTS.md)와 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)를 읽고 승인된 테스트 또는 staging 대상을 사용하세요.
 
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml)의 CI workflow는 의존성 설치, lint, Web/core 타입 검사, 테스트, 프로덕션 빌드, 모바일 타입 검사를 실행합니다.
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml)의 CI workflow는 의존성 설치, lint, Web/core 타입 검사, 프로덕션 빌드, 모바일 타입 검사를 실행합니다.
 
 ## 아키텍처
 
@@ -195,7 +193,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 ├── packages/core/       @primedex/core: 공통 API 클라이언트, 타입, store, i18n, helper
 ├── apps/mobile/         @primedex/mobile Expo Router 컴패니언
 ├── neon/migrations/     활성 Neon PostgreSQL 애플리케이션 스키마
-├── supabase/            보존된 원본 마이그레이션 및 호환성 자료
+├── supabase/            보관된 Edge Function 및 보안 기록
 ├── scripts/neon/        관리되는 export, import, verify 스크립트
 ├── public/              PWA 아이콘, 스크린샷, 카드 리소스, 정적 파일
 └── docs/                제품, 디자인, 마이그레이션, 감사, 구현 문서
@@ -252,7 +250,7 @@ Vercel에서는:
 2. Preview 및 Production에 Neon Auth 값과 서버 전용 데이터베이스 연결을 설정합니다.
 3. 표준 Next.js build 설정을 사용합니다. 커밋된 [`vercel.json`](./vercel.json)은 의도적으로 최소 구성입니다.
 
-현재 Web runtime은 Neon을 사용합니다. 보존된 Supabase 마이그레이션과 관리형 마이그레이션 스크립트는 비교, 백업, 마이그레이션 작업을 위한 것이며 Web 앱의 인증 또는 데이터베이스 runtime이 아닙니다.
+현재 Web runtime은 Neon을 사용합니다. Supabase SQL 마이그레이션은 더 이상 저장소에 보관하지 않으며, 이 디렉터리에는 보관된 Edge Function과 보안 기록만 남아 있습니다. 관리형 마이그레이션 스크립트는 역사적 도구이며 Web 앱의 인증 또는 데이터베이스 runtime이 아닙니다.
 
 스키마, 환경 경계, 검증 절차는 [Neon 마이그레이션 runbook](./docs/neon-migration.md)을 참고하세요.
 

@@ -8,10 +8,4 @@ This guide supplements the App Router guides for `src/app/team/`.
 - `share/page.tsx` sanitizes the team code, emits localized no-index metadata, and redirects humans to `/team?code=...`; preserve that boundary and locale-aware URLs.
 - Keep `layout.tsx` metadata, breadcrumbs, JSON-LD, and the historical `usePrimeDexStore`/persistence identifiers aligned with the route.
 
-Focused analysis tests:
-
-```bash
-npm run test -- --run src/lib/team-analysis.test.ts
-```
-
 Also run the root web checks after behavioral or route changes.

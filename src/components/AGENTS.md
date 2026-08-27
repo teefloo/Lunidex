@@ -15,12 +15,11 @@ This guide supplements `src/AGENTS.md` for reusable UI under `src/components/`. 
 - Use `next/dynamic` for expensive browser-only charts, editors, or visualizations when the surrounding feature follows that pattern.
 - Preserve SSR-safe initial output, visible keyboard focus, touch-sized controls, and meaningful error/loading states. New animation must be purposeful, interruptible, and reduced-motion aware.
 
-## Tests
+## Verification
 
-Place component tests beside the implementation or in a nearby `__tests__` directory. Use Testing Library and mock Next.js modules or complex UI primitives only when needed. Run a focused test while iterating, then:
+Run the web lint and type-check from the repository root after component changes:
 
 ```bash
-npm run test -- --run
 npm run lint
 npm run typecheck
 ```

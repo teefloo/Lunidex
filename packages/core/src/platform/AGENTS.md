@@ -17,5 +17,4 @@ After changing an adapter or its contract, run both consumers from the repositor
 npx tsc --project packages/core/tsconfig.json --noEmit
 npm run typecheck
 npm run typecheck --workspace=@primedex/mobile
-npm run test -- --run
 ```

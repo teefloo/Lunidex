@@ -173,8 +173,6 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run start` | 提供生产构建。 |
 | `npm run lint` | 检查 Web、core 和 mobile 源码。 |
 | `npm run typecheck` | 检查 Web workspace 类型。 |
-| `npm run test -- --run` | 运行一次 Vitest 测试套件。 |
-| `npx vitest run path/to/file.test.ts` | 运行指定测试文件。 |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | 检查 `@primedex/core` 类型。 |
 | `npm run typecheck --workspace=@primedex/mobile` | 检查 Expo 应用类型。 |
 | `npm run lint --workspace=@primedex/mobile` | 检查 Expo 应用。 |
@@ -185,7 +183,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 > [!WARNING]
 > Neon 导入和验证命令会访问外部数据库。请先阅读 [`neon/AGENTS.md`](./neon/AGENTS.md) 和 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)，并使用获批准的测试或 staging 目标。
 
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) 中的 CI workflow 会安装依赖，运行 lint、Web/core 类型检查、测试、生产构建和移动端类型检查。
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) 中的 CI workflow 会安装依赖，运行 lint、Web/core 类型检查、生产构建和移动端类型检查。
 
 ## 架构
 
@@ -195,7 +193,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 ├── packages/core/       @primedex/core：共享 API 客户端、类型、store、i18n 和工具
 ├── apps/mobile/         @primedex/mobile Expo Router 伴侣应用
 ├── neon/migrations/     当前使用的 Neon PostgreSQL 应用架构
-├── supabase/            保留的源迁移和兼容性资料
+├── supabase/            已归档的 Edge Function 和安全历史资料
 ├── scripts/neon/        受控的导出、导入和验证脚本
 ├── public/              PWA 图标、截图、卡牌资源和静态文件
 └── docs/                产品、设计、迁移、审计和实现说明
@@ -252,7 +250,7 @@ npm run start
 2. 在 Preview 和 Production 中配置 Neon Auth 参数以及仅服务器使用的数据库连接。
 3. 使用标准 Next.js 构建设置。已提交的 [`vercel.json`](./vercel.json) 有意保持最小化。
 
-当前 Web runtime 使用 Neon。保留的 Supabase 迁移和受控迁移脚本用于比较、备份和迁移工作，并不是 Web 应用的身份验证或数据库 runtime。
+当前 Web runtime 使用 Neon。仓库中不再保留 Supabase SQL 迁移；此目录现在仅包含已归档的 Edge Function 和安全历史资料。受控迁移脚本属于历史工具，并不是 Web 应用的身份验证或数据库 runtime。
 
 有关架构、环境边界和验证流程，请参阅 [Neon 迁移 runbook](./docs/neon-migration.md)。
 

@@ -31,8 +31,9 @@ Le runtime applicatif n'appelle plus Supabase :
 - l'ancienne Edge Function `poll-tcg-prices` n'est pas déployée et les alertes
   de prix restent désactivées ; elle est conservée comme archive à remplacer
   par un job Vercel/Neon avant toute réactivation ;
-- les anciennes migrations et le projet Supabase sont conservés uniquement pour
-  sauvegarde, comparaison et retour arrière.
+- les anciennes migrations SQL Supabase ont été retirées du dépôt après la
+  validation de la bascule ; le projet Supabase externe n'a pas été modifié et
+  reste une décision opérationnelle séparée.
 
 Le schéma Neon ne rejoue pas les schémas internes Supabase `auth`, `storage`,
 `realtime`, `graphql_public` ou `vault`, ni les politiques RLS qui dépendaient
@@ -70,8 +71,8 @@ Le web n'utilise pas d'ORM : ses routes serveur utilisent
 `@neondatabase/serverless` avec `DATABASE_URL` et `@neondatabase/auth` pour le
 proxy Auth. Le mobile utilise le client Neon Auth natif et appelle les mêmes
 routes API Neon avec un JWT court. Les noms historiques `src/lib/supabase/*`
-restent uniquement pour la compatibilité des chemins et des tests de l'état
-persisté ; ils ne contiennent plus de client Supabase.
+restent uniquement pour la compatibilité des chemins et de l'état persisté ;
+ils ne contiennent plus de client Supabase.
 
 ## Procédure contrôlée
 
@@ -112,9 +113,11 @@ DROP, TRUNCATE ou suppression de données.
 8. build local de la version Neon Auth terminé avec succès après autorisation
    réseau pour les polices.
 
-Les contrôles automatisés réalisés localement sont `npm run lint`,
-`npm run typecheck` et `npm run test -- --run` (392 tests passants). Le build
-`npm run build` local et le build Vercel de la version déployée sont passants.
+Les contrôles automatisés réalisés localement avant la suppression de la suite
+de tests étaient `npm run lint`, `npm run typecheck` et `npm run test -- --run`
+(392 tests passants). La commande de test n'est plus présente dans le dépôt ;
+le build `npm run build` local et le build Vercel de la version déployée sont
+passants.
 La validation authentifiée complète reste à faire avec un compte de test, sans
 exposer de jeton dans les logs.
 

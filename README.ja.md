@@ -173,8 +173,6 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run start` | 本番ビルドを配信。 |
 | `npm run lint` | Web、core、mobile のソースを lint。 |
 | `npm run typecheck` | Web workspace の型を確認。 |
-| `npm run test -- --run` | Vitest スイートを一度実行。 |
-| `npx vitest run path/to/file.test.ts` | 指定したテストファイルを実行。 |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core` の型を確認。 |
 | `npm run typecheck --workspace=@primedex/mobile` | Expo アプリの型を確認。 |
 | `npm run lint --workspace=@primedex/mobile` | Expo アプリを lint。 |
@@ -185,7 +183,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 > [!WARNING]
 > Neon の import と verify コマンドは外部データベースにアクセスします。事前に [`neon/AGENTS.md`](./neon/AGENTS.md) と [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) を読み、承認済みのテストまたは staging 用ターゲットを使用してください。
 
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) の CI workflow は、依存関係のインストール、lint、Web/core の型チェック、テスト、本番ビルド、モバイルの型チェックを実行します。
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) の CI workflow は、依存関係のインストール、lint、Web/core の型チェック、本番ビルド、モバイルの型チェックを実行します。
 
 ## アーキテクチャ
 
@@ -195,7 +193,7 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 ├── packages/core/       @primedex/core: 共通 API、型、store、i18n、helper
 ├── apps/mobile/         @primedex/mobile Expo Router コンパニオン
 ├── neon/migrations/     稼働中の Neon PostgreSQL アプリケーションスキーマ
-├── supabase/            保持されたソースマイグレーションと互換性用資料
+├── supabase/            アーカイブ済み Edge Function とセキュリティ履歴
 ├── scripts/neon/        管理された export、import、verify スクリプト
 ├── public/              PWA アイコン、スクリーンショット、カード素材、静的ファイル
 └── docs/                プロダクト、デザイン、移行、監査、実装ノート
@@ -252,7 +250,7 @@ Vercel では:
 2. Preview と Production に Neon Auth の値とサーバー専用データベース接続を設定します。
 3. 標準の Next.js build 設定を使用します。コミット済みの [`vercel.json`](./vercel.json) は意図的に最小構成です。
 
-現在の Web runtime は Neon を使用します。保持された Supabase の migration と管理用 migration script は比較、バックアップ、移行作業のために存在し、Web アプリの認証・データベース runtime ではありません。
+現在の Web runtime は Neon を使用します。Supabase の SQL migration はリポジトリに保持していません。このディレクトリにはアーカイブ済みの Edge Function とセキュリティ履歴だけが残っています。管理用 migration script は履歴的なツールであり、Web アプリの認証・データベース runtime ではありません。
 
 スキーマ、環境変数の境界、検証手順については [Neon 移行 runbook](./docs/neon-migration.md) を参照してください。
 

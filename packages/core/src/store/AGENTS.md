@@ -18,9 +18,8 @@ This guide applies only to the platform-neutral Zustand store in `packages/core/
 
 ## Verification
 
-When store behavior changes, add focused Vitest coverage for the affected persistence shape, hydration, limits, reset behavior, or action. From the repository root run:
+When store behavior changes, run the shared core type-check from the repository root:
 
 ```bash
 npx tsc --project packages/core/tsconfig.json --noEmit
-npm run test -- --run
 ```

@@ -18,7 +18,7 @@ Lunidex is a localized, local-first Pokémon dashboard and Pokémon TCG workspac
 - `packages/core/`: the shared TypeScript API clients, domain types, Zustand store, i18n data, pure helpers, Neon helpers, and compatibility sync modules.
 - `apps/mobile/`: the Expo 57 / React Native companion, which consumes `@primedex/core`.
 - `neon/migrations/`: the application schema used by the Neon-backed runtime.
-- `supabase/`: retained Supabase source migrations and a separate Deno Edge Function; it is not the web application's runtime authentication/database path.
+- `supabase/`: an archived Deno Edge Function and historical security material; it is not the web application's runtime authentication/database path.
 
 The web and mobile apps remain usable without cloud configuration. The web uses IndexedDB and the mobile app uses AsyncStorage for local persistence. Remote Pokémon data comes from PokéAPI and Pokémon TCG data from TCGdex through the centralized API layers.
 
@@ -52,9 +52,6 @@ Run root commands from the repository root:
 | Serve a production build | `npm run start` |
 | Lint web, core, and mobile sources | `npm run lint` |
 | Type-check the web workspace | `npm run typecheck` |
-| Run Vitest once | `npm run test -- --run` |
-| Run one test file | `npx vitest run src/lib/auto-complete.test.ts` |
-| Run tests by name | `npx vitest run -t "<test name>"` |
 | Type-check shared core | `npx tsc --project packages/core/tsconfig.json --noEmit` |
 | Start Expo | `npm run start --workspace=@primedex/mobile` |
 | Type-check Expo | `npm run typecheck --workspace=@primedex/mobile` |
@@ -67,11 +64,9 @@ Run root commands from the repository root:
 
 ## Verification and CI
 
-The checked-in workflow `.github/workflows/ci.yml` runs, in order, `npm ci`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, the core TypeScript check, and the mobile type-check. Run the checks relevant to the change; for a broad handoff, use the same sequence as CI.
+The checked-in workflow `.github/workflows/ci.yml` runs, in order, `npm ci`, `npm run lint`, `npm run typecheck`, `npm run build`, the core TypeScript check, and the mobile type-check. Run the checks relevant to the change; for a broad handoff, use the same sequence as CI.
 
-- Add or update tests for behavioral changes. Tests use Vitest with jsdom and `src/test/setup.ts`; React component tests use Testing Library.
-- Keep focused tests close to the implementation or in the established nearby `__tests__` directory. Mock Next.js modules or complex UI primitives only when that keeps the test focused.
-- Fix related lint, type, and test failures instead of documenting them as expected regressions.
+- Fix related lint and type failures instead of documenting them as expected regressions.
 - Schema, migration, Edge Function, and Neon-specific validation is described by the closest database guide; do not substitute a web-only check for a database safety check.
 
 ## Application architecture
@@ -86,7 +81,7 @@ The checked-in workflow `.github/workflows/ci.yml` runs, in order, `npm ci`, `np
 
 ## Routing, localization, SEO, and UI
 
-- The supported web locales are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep `src/lib/languages.ts`, core language data, translation bundles, proxy routing, metadata, sitemap, tests, and alternate-language links synchronized.
+- The supported web locales are `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`. Keep `src/lib/languages.ts`, core language data, translation bundles, proxy routing, metadata, sitemap, and alternate-language links synchronized.
 - `src/proxy.ts` redirects unprefixed routes and rewrites locale-prefixed routes. Build client-side internal URLs with `useLocaleHref` or the established locale helper so the locale prefix is retained.
 - Use `@/lib/i18n` / `useTranslation` in client code and `@/lib/server-i18n` / server translation helpers in server components and metadata. Do not hard-code new user-facing language strings.
 - Preserve canonical URLs, `hreflang`, JSON-LD, Open Graph output, `llms.txt`, `ai.txt`, OpenSearch output, and established route `robots` behavior when changing routes or metadata.

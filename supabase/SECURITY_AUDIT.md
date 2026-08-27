@@ -1,11 +1,16 @@
-# Supabase security audit — 1 August 2026
+# Archived Supabase security audit — 1 August 2026
+
+> Historical record only. The Supabase SQL migration files referenced below
+> were removed after the application moved to Neon. This document is retained
+> for context and is not an active migration or deployment runbook.
 
 Scope: static review of the migration chain through `20260729000000` and the
 additive corrective migration `20260731010403`. No local PostgreSQL, pgTAP,
 Supabase project, staging project, or production project has been accessed in
-this audit. The SQL tests below are prepared but **not yet executed**.
+this audit. The SQL test fixtures were never executed and were later removed
+with the legacy migration archive.
 
-## Pending migration review
+## Historical migration review
 
 | Migration | Finding | Additive resolution |
 | --- | --- | --- |
@@ -45,7 +50,7 @@ dates rather than elapsed 24-hour timestamps. "90 days" means exactly the 90
 dates `current_date - 89` through `current_date`, inclusive. A row dated
 `current_date - 90` is deleted. The pgTAP test includes both boundary rows.
 
-## Staging runbook (not run)
+## Historical staging runbook (not run)
 
 Use a separate disposable staging project, never `--linked`, `db push`, or a
 production connection.
@@ -109,7 +114,7 @@ installation](https://supabase.com/docs/guides/cron/install), [RLS/JWT
 helpers](https://supabase.com/docs/guides/database/postgres/row-level-security),
 and [deprecated RLS features](https://supabase.com/docs/guides/troubleshooting/deprecated-rls-features-Pm77Zs).
 
-## Tested rollback procedure (to execute in staging first)
+## Specified historical rollback procedure (to execute in staging first)
 
 This rollback is specified, not yet tested. Run each step separately in a
 transaction on staging and rerun the pgTAP suite after each affected function.

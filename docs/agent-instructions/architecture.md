@@ -17,7 +17,3 @@
 
 - shadcn/ui style is `base-nova`; some primitives come from `@base-ui/react`.
 - Agentation dev tool runs on port 4747 (enabled via `NEXT_PUBLIC_ENABLE_AGENTATION`).
-
-## Testing
-
-- Vitest setup file is configured at `src/test/setup.ts` (create if adding tests).

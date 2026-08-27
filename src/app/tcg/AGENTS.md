@@ -12,12 +12,9 @@ This guide applies to the Pokémon TCG routes under `src/app/tcg/` and supplemen
 
 ## Verification
 
-When changing a TCG route, update focused tests for URL state, collection calculations, card rendering, or metadata as applicable. Useful checks from the repository root include:
+When changing a TCG route, run the web checks from the repository root:
 
 ```bash
-npx vitest run src/lib/tcg-collection.test.ts
-npx vitest run src/components/tcg/TCGResearchDesk.test.tsx
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```

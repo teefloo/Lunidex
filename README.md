@@ -175,8 +175,6 @@ Run root commands from the repository root:
 | `npm run start` | Serve the production build. |
 | `npm run lint` | Lint web, core, and mobile sources. |
 | `npm run typecheck` | Type-check the web workspace. |
-| `npm run test -- --run` | Run the Vitest suite once. |
-| `npx vitest run path/to/file.test.ts` | Run one focused test file. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | Type-check `@primedex/core`. |
 | `npm run typecheck --workspace=@primedex/mobile` | Type-check the Expo app. |
 | `npm run lint --workspace=@primedex/mobile` | Lint the Expo app. |
@@ -187,7 +185,7 @@ Run root commands from the repository root:
 > [!WARNING]
 > The Neon import and verification commands access external databases. Read [`neon/AGENTS.md`](./neon/AGENTS.md) and [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) first, and use an approved disposable or staging target.
 
-The CI workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs dependency installation, linting, web and core type-checks, tests, the production build, and the mobile type-check.
+The CI workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs dependency installation, linting, web and core type-checks, the production build, and the mobile type-check.
 
 ## Architecture
 
@@ -197,7 +195,7 @@ The CI workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs
 ├── packages/core/       @primedex/core shared API clients, types, store, i18n, and helpers
 ├── apps/mobile/         @primedex/mobile Expo Router companion
 ├── neon/migrations/     Active Neon PostgreSQL application schema
-├── supabase/            Retained source migrations and compatibility material
+├── supabase/            Archived Edge Function and historical security material
 ├── scripts/neon/        Controlled export, import, and verification scripts
 ├── public/              PWA icons, screenshots, card assets, and static files
 └── docs/                Product, design, migration, audit, and implementation notes
@@ -254,7 +252,7 @@ For Vercel:
 2. Configure the Neon Auth values and server-only database connection in Preview and Production.
 3. Use the standard Next.js build settings. The committed [`vercel.json`](./vercel.json) intentionally stays minimal.
 
-The active web runtime uses Neon. The retained Supabase migrations and the controlled migration scripts exist for comparison, backup, and migration work; they are not the web application's authentication or database runtime.
+The active web runtime uses Neon. Supabase SQL migrations are no longer kept in the repository; this directory now contains only an archived Edge Function and historical security material. The controlled migration scripts are historical tooling and are not part of the web application's authentication or database runtime.
 
 See the [Neon migration runbook](./docs/neon-migration.md) for the schema, environment boundaries, and validation procedure.
 

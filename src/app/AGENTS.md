@@ -27,5 +27,4 @@ From the repository root:
 ```bash
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```

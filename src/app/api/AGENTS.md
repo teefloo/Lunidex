@@ -18,11 +18,9 @@ This guide supplements the App Router guide for `src/app/api/`. These handlers a
 
 ## Verification
 
-Add focused tests for parsing, validation, authentication/ownership, rate limits, status codes, caching, and failure responses when changing a handler. Run from the repository root:
+Run from the repository root after changing a handler:
 
 ```bash
-npx vitest run src/app/api/tcg/price-alerts/route.test.ts
-npm run test -- --run
 npm run lint
 npm run typecheck
 ```

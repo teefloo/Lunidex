@@ -18,11 +18,9 @@ Run from the repository root:
 
 ```bash
 npx tsc --project packages/core/tsconfig.json --noEmit
-npx vitest run packages/core/src/api/tcg.test.ts
-npm run test -- --run
 ```
 
-Use a focused test while iterating. When changing an exported type, API client, platform adapter, store shape, or Neon contract, run the web and mobile type-checks that consume it as well:
+When changing an exported type, API client, platform adapter, store shape, or Neon contract, run the web and mobile type-checks that consume it as well:
 
 ```bash
 npm run typecheck

@@ -18,10 +18,9 @@ This guide applies to the web-only Zustand store in `src/store/primedex.ts`. It 
 
 ## Verification
 
-When store behavior changes, add focused Vitest coverage for the persistence shape, limits, reset behavior, and hydration, then run:
+When store behavior changes, run:
 
 ```bash
 npm run lint
 npm run typecheck
-npm run test -- --run
 ```

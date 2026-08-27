@@ -173,8 +173,6 @@ Führe Root-Befehle aus dem Repository-Stamm aus:
 | `npm run start` | Startet den Produktionsbuild. |
 | `npm run lint` | Prüft Web-, Core- und Mobile-Quellen. |
 | `npm run typecheck` | Prüft den Web-Workspace. |
-| `npm run test -- --run` | Führt die Vitest-Suite einmal aus. |
-| `npx vitest run path/to/file.test.ts` | Führt eine einzelne Testdatei aus. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | Prüft `@primedex/core`. |
 | `npm run typecheck --workspace=@primedex/mobile` | Prüft die Expo-App. |
 | `npm run lint --workspace=@primedex/mobile` | Prüft die Expo-App mit ESLint. |
@@ -185,7 +183,7 @@ Führe Root-Befehle aus dem Repository-Stamm aus:
 > [!WARNING]
 > Die Neon-Import- und Verifizierungsbefehle greifen auf externe Datenbanken zu. Lies vorher [`neon/AGENTS.md`](./neon/AGENTS.md) und [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) und verwende ein freigegebenes Test- oder Staging-Ziel.
 
-Der CI-Workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) installiert Abhängigkeiten und führt Linting, Web- und Core-Typprüfungen, Tests, den Produktionsbuild sowie die Mobile-Typprüfung aus.
+Der CI-Workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) installiert Abhängigkeiten und führt Linting, Web- und Core-Typprüfungen, den Produktionsbuild sowie die Mobile-Typprüfung aus.
 
 ## Architektur
 
@@ -195,7 +193,7 @@ Der CI-Workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) inst
 ├── packages/core/       @primedex/core: gemeinsame API-Clients, Typen, Store, i18n und Helfer
 ├── apps/mobile/         @primedex/mobile Expo-Router-Begleiter
 ├── neon/migrations/     Aktives Neon-PostgreSQL-Anwendungsschema
-├── supabase/            Erhaltene Quellmigrationen und Kompatibilitätsmaterial
+├── supabase/            Archivierte Edge Function und historische Sicherheitsunterlagen
 ├── scripts/neon/        Kontrollierte Export-, Import- und Verifizierungsskripte
 ├── public/              PWA-Icons, Screenshots, Kartenressourcen und statische Dateien
 └── docs/                Produkt-, Design-, Migrations-, Audit- und Implementierungsnotizen
@@ -252,7 +250,7 @@ Für Vercel:
 2. Konfiguriere die Neon-Auth-Werte und die serverseitige Datenbankverbindung in Preview und Production.
 3. Verwende die standardmäßigen Next.js-Build-Einstellungen. Die versionierte [`vercel.json`](./vercel.json) bleibt absichtlich minimal.
 
-Die aktive Web-Runtime verwendet Neon. Die erhaltenen Supabase-Migrationen und kontrollierten Migrationsskripte dienen dem Vergleich, der Sicherung und der Migration; sie sind nicht die Authentifizierungs- oder Datenbank-Runtime der Webanwendung.
+Die aktive Web-Runtime verwendet Neon. Supabase-SQL-Migrationen werden nicht mehr im Repository aufbewahrt; dieses Verzeichnis enthält nur noch eine archivierte Edge Function und historische Sicherheitsunterlagen. Die kontrollierten Migrationsskripte sind historische Werkzeuge und nicht die Authentifizierungs- oder Datenbank-Runtime der Webanwendung.
 
 Weitere Informationen stehen im [Neon-Migrations-Runbook](./docs/neon-migration.md), einschließlich Schema, Umgebungsgrenzen und Validierungsverfahren.
 
