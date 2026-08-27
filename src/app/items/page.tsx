@@ -43,7 +43,7 @@ export default async function ItemsPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ItemsPageClient initialItems={initialItems} initialLanguageId={initialLanguageId} />
+      <ItemsPageClient initialItems={initialItems} />
       <ServerIndexLinks
         title={t('items_page.title', { defaultValue: 'Items' })}
         links={initialItems.slice(0, 12).map((item) => ({

@@ -27,7 +27,6 @@ import { Button } from '@/components/ui/button';
 import { ShareButton } from '@/components/share/ShareButton';
 import { useMemo, useEffect, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { resolveLanguage } from '@/lib/languages';
 import { toast } from '@/lib/toast';
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
 import {
@@ -40,7 +39,7 @@ import dynamic from 'next/dynamic';
 import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
 import { TeamExportButton } from '@/components/team/TeamExportButton';
 import { ShowdownImportDialog } from '@/components/team/ShowdownImportDialog';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 
 // Dynamic imports for heavy charting library
 const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
@@ -56,9 +55,7 @@ const RechartsTooltip = dynamic(() => import('recharts').then(m => m.Tooltip), {
 import Image from 'next/image';
 
 export default function TeamPage() {
-  const { language, systemLanguage, team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
+  const { team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
     team: state.team,
     addToTeam: state.addToTeam,
     removeFromTeam: state.removeFromTeam,
@@ -71,7 +68,7 @@ export default function TeamPage() {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
 
-  const resolvedLang = resolveLanguage(language, systemLanguage);
+  const resolvedLang = useClientLanguage();
 
   // Team sharing logic: Check for team in URL (`?code=25-6-9` or `?ids=25,6,9`)
   useEffect(() => {

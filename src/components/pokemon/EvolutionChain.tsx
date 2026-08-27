@@ -10,13 +10,11 @@ import Image from 'next/image';
 
 import { REST_API_BASE } from '@/lib/api/client';
 import apiClient from '@/lib/api/client';
-import { usePrimeDexStore } from '@/store/primedex';
-import { useShallow } from 'zustand/react/shallow';
 import { getPokemonDetail, getPokemonSpecies } from '@/lib/api';
 import { getFormDisplayName, getBaseSpeciesName } from '@/lib/form-names';
 import { cn, formatId } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 
 interface EvolutionChainProps {
   url: string;
@@ -109,12 +107,8 @@ function detectFormType(formName: string): string {
 }
 
 function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean }) {
-  const { language, systemLanguage } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
-  })));
   const localeHref = useLocaleHref();
-  const resolvedLang = language === 'auto' ? systemLanguage : language;
+  const resolvedLang = useClientLanguage();
 
   const { data: pokemonData, isError: pokemonError } = useQuery({
     queryKey: ['pokemon-evolution-item', name, resolvedLang],
@@ -193,9 +187,8 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
 }
 
 function AlternateFormItem({ form }: { form: AlternateForm }) {
-  const store = usePrimeDexStore();
   const localeHref = useLocaleHref();
-  const resolvedLang = store.language === 'auto' ? store.systemLanguage : store.language;
+  const resolvedLang = useClientLanguage();
   const { t } = useTranslation();
 
   const { data: pokemonData, isLoading, isError } = useQuery({

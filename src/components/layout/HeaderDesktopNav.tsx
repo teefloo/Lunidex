@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
-import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -11,7 +10,6 @@ import { HeaderLink } from './HeaderLink';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
 
 export function HeaderDesktopNav() {
-  const mounted = useMounted();
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const pathname = usePathname();
@@ -22,8 +20,7 @@ export function HeaderDesktopNav() {
   });
 
   const label = (key: string, fallback: string) => {
-    if (!mounted) return fallback;
-    const translated = t(key);
+    const translated = t(key, { defaultValue: fallback });
     return translated && translated !== key ? translated : fallback;
   };
 

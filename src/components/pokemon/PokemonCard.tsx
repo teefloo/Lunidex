@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { memo, useCallback } from 'react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -92,8 +92,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const queryClient = useQueryClient();
   const mounted = useMounted();
 
-  const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const favorites = usePrimeDexStore(s => s.favorites);
   const compareList = usePrimeDexStore(s => s.compareList);
   const team = usePrimeDexStore(s => s.team);
@@ -108,12 +106,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const removeFromTeam = usePrimeDexStore(s => s.removeFromTeam);
   const toggleCaught = usePrimeDexStore(s => s.toggleCaught);
 
-  // Keep the first client render identical to SSR. The persisted/system
-  // language can be different (for example `fr` in the browser while the
-  // server rendered the default `en` bundle), so only apply it after mount.
-  const resolvedLang = mounted
-    ? (language === 'auto' ? systemLanguage : language)
-    : 'en';
+  const resolvedLang = useClientLanguage();
 
   const pokemonGql = initialData?.pokemon as GqlPokemonData | undefined;
   const hasUsableData = !!(initialData?.pokemon?.id &&

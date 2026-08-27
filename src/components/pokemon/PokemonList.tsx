@@ -12,6 +12,7 @@ import { PokemonBasicData, GraphQLPokemonSummary, LocalizedNameEntry, PokemonSpe
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 
 type PokemonStatName = 'hp' | 'attack' | 'defense' | 'speed' | 'special-attack' | 'special-defense';
 
@@ -65,8 +66,6 @@ export default function PokemonList() {
   const minHp = usePrimeDexStore(s => s.minHp);
   const heightRange = usePrimeDexStore(s => s.heightRange);
   const weightRange = usePrimeDexStore(s => s.weightRange);
-  const language = usePrimeDexStore(s => s.language);
-  const systemLanguage = usePrimeDexStore(s => s.systemLanguage);
   const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const storeResetFilters = usePrimeDexStore(s => s.resetFilters);
@@ -75,7 +74,7 @@ export default function PokemonList() {
     storeResetFilters();
   };
 
-  const resolvedLang = language === 'auto' ? systemLanguage : language;
+  const resolvedLang = useClientLanguage();
 
   // Detect whether any filter is non-default.
   // Note: `showCaughtOnly` is intentionally excluded so the basic (infinite

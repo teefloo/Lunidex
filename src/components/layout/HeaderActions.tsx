@@ -7,7 +7,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLanguageSelection } from '@/hooks/useLocaleHref';
 import { cn } from '@/lib/utils';
 import AccountMenu from '@/components/auth/AccountMenu';
 
@@ -23,7 +23,7 @@ export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestA
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
   const toggleSettings = usePrimeDexStore(s => s.toggleSettings);
-  const language = usePrimeDexStore(s => s.language);
+  const language = useLanguageSelection();
   const mounted = useMounted();
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
@@ -33,7 +33,6 @@ export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestA
   const isMac = mounted && typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac');
 
   const label = (key: string, fallback: string) => {
-    if (!mounted) return fallback;
     const translated = t(key, { defaultValue: fallback });
     return translated === key ? fallback : translated;
   };
@@ -71,7 +70,7 @@ export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestA
   const themeLabel = mounted
     ? (theme === 'system' ? t('settings.system') : theme === 'dark' ? t('settings.dark') : t('settings.light'))
     : 'System';
-  const languageCode = mounted ? (language === 'auto' ? 'AUTO' : language.toUpperCase()) : 'EN';
+  const languageCode = language === 'auto' ? 'AUTO' : language.toUpperCase();
   const selectedLanguage = languageOptions.find((option) => option.code === language)?.label ?? languageCode;
   const baseActionClass = isSheet ? 'site-header-sheet-action' : 'site-header-action';
 

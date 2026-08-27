@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useMounted } from '@/hooks/useMounted';
 import { isSupportedLanguage } from '@/lib/languages';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 
@@ -33,7 +32,6 @@ interface TCGPageTabsProps {
 export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
-  const mounted = useMounted();
   const localizedHref = useLocaleHref();
   const normalizedPathname = normalizePathname(pathname);
 
@@ -59,7 +57,7 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
               : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',
           )}
         >
-          {mounted ? t(tab.key) : initialLabels[tab.key]}
+          {t(tab.key, { defaultValue: initialLabels[tab.key] })}
         </Link>
       ))}
     </div>

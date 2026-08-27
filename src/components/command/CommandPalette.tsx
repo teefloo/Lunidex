@@ -33,8 +33,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { useTranslation } from '@/lib/i18n';
-import { usePrimeDexStore } from '@/store/primedex';
-import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import {
   getAllPokemonSearchIndex,
   getAllItems,
@@ -43,7 +42,7 @@ import {
 } from '@/lib/api/graphql';
 
 import { pokemonKeys } from '@/lib/api/keys';
-import { resolveLanguage } from '@/lib/languages';
+import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 
@@ -78,15 +77,11 @@ const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/mast
 export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean }) {
   const { t } = useTranslation();
   const router = useRouter();
-  const mounted = useMounted();
   const [open, setOpen] = useState(initialOpen);
   const [search, setSearch] = useState('');
 
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const getLanguageId = usePrimeDexStore((s) => s.getLanguageId);
-  const resolvedLang = mounted ? resolveLanguage(language, systemLanguage) : 'en';
-  const languageId = mounted ? getLanguageId() : 9;
+  const resolvedLang = useClientLanguage();
+  const languageId = languageToPokemonLanguageId[resolvedLang];
 
   const localizedHref = useCallback((path: string) => {
     const normalized = path.startsWith('/') ? path : `/${path}`;
@@ -193,10 +188,10 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
     const query = search.trim().toLowerCase();
     if (!query) return PAGE_ITEMS;
     return PAGE_ITEMS.filter((item) => {
-      const label = (mounted ? t(item.labelKey, { defaultValue: item.fallback }) : item.fallback) || item.fallback;
+      const label = t(item.labelKey, { defaultValue: item.fallback }) || item.fallback;
       return label.toLowerCase().includes(query) || item.path.toLowerCase().includes(query);
     });
-  }, [search, mounted, t]);
+  }, [search, t]);
 
   const navigate = useCallback((href: string) => {
     setOpen(false);
@@ -226,7 +221,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
             <CommandGroup heading={t('command_palette.pages', { defaultValue: 'Pages' })}>
               {pageResults.map((item) => {
                 const Icon = item.icon;
-                const label = (mounted ? t(item.labelKey) : item.fallback) || item.fallback;
+                const label = t(item.labelKey, { defaultValue: item.fallback }) || item.fallback;
                 return (
                   <CommandItem
                     key={item.path}

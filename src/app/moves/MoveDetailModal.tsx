@@ -22,8 +22,8 @@ import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
-import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { languageToPokemonLanguageId } from '@/lib/languages';
 import { getMovePokemonLearners } from '@/lib/api/graphql';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -38,8 +38,7 @@ interface MoveDetailModalProps {
 
 export default function MoveDetailModal({ move, open, onClose }: MoveDetailModalProps) {
   const { t } = useTranslation();
-  const getLanguageId = usePrimeDexStore((state) => state.getLanguageId);
-  const languageId = getLanguageId();
+  const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
   const {
     data: learnersData,

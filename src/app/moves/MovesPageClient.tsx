@@ -24,8 +24,8 @@ import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
-import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { languageToPokemonLanguageId } from '@/lib/languages';
 import { cn } from '@/lib/utils';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
@@ -63,16 +63,13 @@ type SortKey = 'name' | 'id' | 'power';
 
 export default function MovesPageClient({
   initialMoves = [],
-  initialLanguageId,
 }: {
   initialMoves?: GraphQLMoveData[];
-  initialLanguageId: number;
 }) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
   const mounted = useMounted();
-  const getLanguageId = usePrimeDexStore((state) => state.getLanguageId);
-  const languageId = mounted ? getLanguageId() : initialLanguageId;
+  const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string | null>(null);

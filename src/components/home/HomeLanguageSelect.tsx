@@ -2,9 +2,8 @@
 
 import { useCallback, type ChangeEvent } from 'react';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
-import { useMounted } from '@/hooks/useMounted';
+import { useLanguageSelection } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import { usePrimeDexStore } from '@/store/primedex';
 
 const OPTIONS = [
   ['en', '🇺🇸'],
@@ -22,9 +21,8 @@ interface HomeLanguageSelectProps {
 }
 
 export function HomeLanguageSelect({ className }: HomeLanguageSelectProps) {
-  const mounted = useMounted();
   const { t } = useTranslation();
-  const language = usePrimeDexStore((state) => state.language);
+  const language = useLanguageSelection();
   const changeLanguage = useChangeLanguage();
   const handleChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
     changeLanguage(event.target.value);
@@ -35,7 +33,7 @@ export function HomeLanguageSelect({ className }: HomeLanguageSelectProps) {
       <span className="sr-only">{t('settings.language')}</span>
       <select
         aria-label={t('settings.language')}
-        value={mounted ? language : 'en'}
+        value={language}
         onChange={handleChange}
         className="field-language-select"
       >

@@ -4,15 +4,13 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useMounted } from '@/hooks/useMounted';
 
 export default function FavoriteToggle({ className }: { className?: string }) {
   const showFavoritesOnly = usePrimeDexStore(s => s.showFavoritesOnly);
   const setShowFavoritesOnly = usePrimeDexStore(s => s.setShowFavoritesOnly);
   const favorites = usePrimeDexStore(s => s.favorites);
   const { t } = useTranslation();
-  const mounted = useMounted();
-  const favoritesLabel = mounted ? t('favorites.toggle', { count: favorites.length }) : `Favorites (${favorites.length})`;
+  const favoritesLabel = t('favorites.toggle', { count: favorites.length });
 
   return (
     <button

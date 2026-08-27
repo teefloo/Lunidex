@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 
 function toKey(date: Date): string {
   const y = date.getFullYear();
@@ -142,9 +143,7 @@ export default function ActivityHeatMap() {
   const mounted = useMounted();
   const recentActions = usePrimeDexStore((s) => s.recentActions);
   const _hasHydrated = usePrimeDexStore((s) => s._hasHydrated);
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const locale = language === 'auto' ? (systemLanguage || 'en') : language;
+  const locale = useClientLanguage();
 
   const [tooltip, setTooltip] = useState<{ x: number; y: number; date: string; count: number } | null>(null);
 

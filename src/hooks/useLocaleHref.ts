@@ -2,8 +2,14 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
-import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
-import { useMounted } from '@/hooks/useMounted';
+import { useInitialClientLanguage } from '@/lib/client-language';
+import {
+  isSupportedLanguage,
+  resolveLanguage,
+  type AppLanguage,
+  type SupportedLanguage,
+} from '@/lib/languages';
+import { usePrimeDexStore } from '@/store/primedex';
 
 const FALLBACK_LANG: SupportedLanguage = 'en';
 
@@ -24,15 +30,13 @@ function getDocumentLanguage(): SupportedLanguage {
 }
 
 export function useClientLanguage(): SupportedLanguage {
-  const mounted = useMounted();
+  const initialLanguage = useInitialClientLanguage();
   const pathname = usePathname();
   const documentLanguage = useSyncExternalStore(
     subscribeToDocumentLanguage,
     getDocumentLanguage,
-    () => FALLBACK_LANG,
+    () => initialLanguage,
   );
-
-  if (!mounted) return FALLBACK_LANG;
 
   const publicPathname = typeof window === 'undefined' ? pathname : window.location.pathname;
   const pathLanguage = publicPathname.split('/').filter(Boolean)[0];
@@ -40,6 +44,21 @@ export function useClientLanguage(): SupportedLanguage {
   return isSupportedLanguage(pathLanguage ?? '')
     ? (pathLanguage as SupportedLanguage)
     : documentLanguage;
+}
+
+export function useLanguageSelection(): AppLanguage {
+  const activeLanguage = useClientLanguage();
+  const selectedLanguage = usePrimeDexStore((state) => state.language);
+  const systemLanguage = usePrimeDexStore((state) => state.systemLanguage);
+  const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
+
+  if (!hasHydrated) return activeLanguage;
+  if (selectedLanguage === 'auto' && resolveLanguage(selectedLanguage, systemLanguage) === activeLanguage) {
+    return selectedLanguage;
+  }
+  return isSupportedLanguage(selectedLanguage) && selectedLanguage === activeLanguage
+    ? selectedLanguage
+    : activeLanguage;
 }
 
 export function useLocaleHref(): (path: string) => string {

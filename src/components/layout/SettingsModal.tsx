@@ -5,6 +5,7 @@ import { Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react'
 import { DataExportImport } from '@/components/layout/DataExportImport';
 import { useTranslation } from '@/lib/i18n';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
+import { useLanguageSelection } from '@/hooks/useLocaleHref';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function SettingsModal() {
@@ -16,7 +17,7 @@ export default function SettingsModal() {
   const toggleAnimatedSprites = usePrimeDexStore(s => s.toggleAnimatedSprites);
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
-  const language = usePrimeDexStore(s => s.language);
+  const language = useLanguageSelection();
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
 

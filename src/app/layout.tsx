@@ -4,7 +4,7 @@ import { Pixelify_Sans, Nunito } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { getServerT, getServerLanguage } from '@/lib/server-i18n';
+import { getServerT, getServerLanguage, getServerTranslations } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
@@ -159,6 +159,7 @@ export default async function RootLayout({
   await connection();
   const lang = await getServerLanguage();
   const t = await getServerT();
+  const initialTranslations = getServerTranslations(lang);
   const baseUrl = SITE_URL;
   const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
 
@@ -219,7 +220,7 @@ export default async function RootLayout({
         <SkipLink>
           {t('common.skip_to_content')}
         </SkipLink>
-         <Providers>
+         <Providers initialLanguage={lang} initialTranslations={initialTranslations}>
            <AppContent>
              <div id="main-content" tabIndex={-1}>
                {children}

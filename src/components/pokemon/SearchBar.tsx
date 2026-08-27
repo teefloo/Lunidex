@@ -8,7 +8,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useQueryClient } from '@tanstack/react-query';
 import { pokemonKeys } from '@/lib/api/keys';
 import { getAllPokemonSearchIndex } from '@/lib/api';
-import { useMounted } from '@/hooks/useMounted';
 
 export default function SearchBar() {
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
@@ -17,11 +16,10 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
-  const mounted = useMounted();
   const queryClient = useQueryClient();
-  const searchPlaceholder = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
-  const searchAriaLabel = mounted ? t('search.placeholder') : 'Search Pokémon (name or id)...';
-  const clearLabel = mounted ? t('search.clear') : 'Clear search';
+  const searchPlaceholder = t('search.placeholder');
+  const searchAriaLabel = t('search.placeholder');
+  const clearLabel = t('search.clear');
 
   const prefetchIndex = useCallback(() => {
     queryClient.prefetchQuery({

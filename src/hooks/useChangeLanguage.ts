@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import i18n, { loadLanguage, persistLanguageCookie } from '@/lib/i18n';
+import { loadLanguage, persistLanguageCookie, useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { usePrimeDexStore } from '@/store/primedex';
 
@@ -22,6 +22,7 @@ function stripLocalePrefix(path: string): string {
 }
 
 export function useChangeLanguage(): (code: string) => void {
+  const { i18n } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const setLanguage = usePrimeDexStore((s) => s.setLanguage);
@@ -34,9 +35,6 @@ export function useChangeLanguage(): (code: string) => void {
       setLanguage(code);
 
       const resolvedLang = resolveLang(code, systemLanguage);
-      loadLanguage(resolvedLang).then(() => {
-        i18n.changeLanguage(resolvedLang);
-      });
       persistLanguageCookie(resolvedLang);
 
       const stripped = stripLocalePrefix(pathname);
@@ -46,15 +44,15 @@ export function useChangeLanguage(): (code: string) => void {
       const suffix = `${currentUrl?.search ?? ''}${currentUrl?.hash ?? ''}`;
       const newPath = `${localizedPath}${suffix}`;
 
-      // The locale prefix is removed by the Next rewrite before the route
-      // reaches the App Router. Refresh after the client navigation so the
-      // server components receive the new locale header and render their
-      // translated content immediately, without a browser reload.
-      if (`${pathname}${suffix}` !== newPath) {
-        router.replace(newPath, { scroll: false });
-      }
-      router.refresh();
+      // Load the bundle before navigation. The route locale remains active in
+      // both the selector and translations until the new server render arrives.
+      void loadLanguage(i18n, resolvedLang).then(() => {
+        if (`${pathname}${suffix}` !== newPath) {
+          router.replace(newPath, { scroll: false });
+        }
+        router.refresh();
+      });
     },
-    [setLanguage, systemLanguage, pathname, router]
+    [i18n, setLanguage, systemLanguage, pathname, router]
   );
 }

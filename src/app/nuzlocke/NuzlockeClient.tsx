@@ -12,7 +12,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { resolveLanguage } from '@/lib/languages';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { formatName, cn } from '@/lib/utils';
 import type { NuzlockeEncounterStatus } from '@/types/nuzlocke';
 
@@ -31,9 +31,7 @@ export default function NuzlockeClient() {
   const addEncounter = usePrimeDexStore((s) => s.addNuzlockeEncounter);
   const updateStatus = usePrimeDexStore((s) => s.updateNuzlockeEncounterStatus);
   const removeEncounter = usePrimeDexStore((s) => s.removeNuzlockeEncounter);
-  const language = usePrimeDexStore((s) => s.language);
-  const systemLanguage = usePrimeDexStore((s) => s.systemLanguage);
-  const resolvedLang = mounted ? resolveLanguage(language, systemLanguage) : 'en';
+  const resolvedLang = useClientLanguage();
 
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [newRunName, setNewRunName] = useState('');

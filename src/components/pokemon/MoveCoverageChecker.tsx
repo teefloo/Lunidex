@@ -12,6 +12,8 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { analyzeMoveCoverage } from '@/lib/move-coverage';
 import type { MoveCoverageResult } from '@/lib/move-coverage';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { languageToPokemonLanguageId } from '@/lib/languages';
 
 interface MoveCoverageCheckerProps {
   className?: string;
@@ -24,11 +26,10 @@ interface MoveData {
 }
 
 export default function MoveCoverageChecker({ className }: MoveCoverageCheckerProps) {
-  const { team, language, getLanguageId } = usePrimeDexStore(useShallow((state) => ({
+  const { team } = usePrimeDexStore(useShallow((state) => ({
     team: state.team,
-    language: state.language,
-    getLanguageId: state.getLanguageId,
   })));
+  const language = useClientLanguage();
 
   const pokemonQueries = useQueries({
     queries: team.map(id => ({
@@ -55,7 +56,7 @@ export default function MoveCoverageChecker({ className }: MoveCoverageCheckerPr
         queryKey: ['pokemon-moves', pokemonName, language],
         queryFn: async () => {
           if (!pokemonName) return null;
-          const langId = getLanguageId();
+          const langId = languageToPokemonLanguageId[language];
           const moveData = await getPokemonMovesLocalized(pokemonName, langId);
           return {
             pokemonName,

@@ -43,7 +43,7 @@ export default async function MovesPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <MovesPageClient initialMoves={initialMoves} initialLanguageId={initialLanguageId} />
+      <MovesPageClient initialMoves={initialMoves} />
       <ServerIndexLinks
         title={t('moves_page.title')}
         links={initialMoves.slice(0, 12).map((move) => ({

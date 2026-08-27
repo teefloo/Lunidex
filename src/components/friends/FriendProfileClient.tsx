@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, BarChart3, EyeOff, Layers, Loader2, ShieldAlert, Users, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@/lib/neon/AuthProvider';
-import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { getAllSets, getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
@@ -106,9 +105,7 @@ function FriendHero({ friend }: { friend: FriendDirectoryEntry }) {
 function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; friendId: string }) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const language = usePrimeDexStore((state) => state.language);
-  const systemLanguage = usePrimeDexStore((state) => state.systemLanguage);
-  const resolvedLang = mounted ? (language === 'auto' ? (systemLanguage || 'en') : language) : 'en';
+  const resolvedLang = useClientLanguage();
 
   const summaryQuery = useQuery({
     queryKey: ['friends', 'collection-summary', friendId],

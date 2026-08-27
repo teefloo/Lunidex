@@ -15,9 +15,7 @@ import {
 } from 'lucide-react';
 import { cn, formatName } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { usePrimeDexStore } from '@/store/primedex';
-import { useShallow } from 'zustand/react/shallow';
-import { useMounted } from '@/hooks/useMounted';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 
 interface PokemonBuildsProps {
   pokemon: PokemonDetail;
@@ -25,15 +23,7 @@ interface PokemonBuildsProps {
 
 export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
   const { t } = useTranslation();
-  const { language, systemLanguage } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
-  })));
-  const mounted = useMounted();
-
-  const resolvedLang = mounted 
-    ? (language === 'auto' ? systemLanguage : language) 
-    : 'en';
+  const resolvedLang = useClientLanguage();
 
   const moveNames = pokemon.moves.slice(0, 20).map(m => m.move.name);
   
@@ -187,4 +177,3 @@ export function PokemonBuilds({ pokemon }: PokemonBuildsProps) {
     </div>
   );
 }
-

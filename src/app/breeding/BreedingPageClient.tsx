@@ -10,7 +10,6 @@ import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import i18n from '@/lib/i18n';
 
 interface BreedingPageClientProps {
   initialPokemon?: string;
@@ -20,7 +19,7 @@ interface BreedingPageClientProps {
 type TabId = 'calculator' | 'egg-moves';
 
 export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageClientProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabId>(
     (initialTab as TabId) ?? 'calculator',
   );

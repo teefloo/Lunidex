@@ -36,8 +36,7 @@ import { cn, formatId } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
-import { resolveLanguage } from '@/lib/languages';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { toast } from '@/lib/toast';
 import dynamic from 'next/dynamic';
 
@@ -56,9 +55,7 @@ const STAT_KEYS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense
 import Image from 'next/image';
 
 export default function ComparePage() {
-  const { language, systemLanguage, compareList, addToCompare, removeFromCompare, clearCompare } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
+  const { compareList, addToCompare, removeFromCompare, clearCompare } = usePrimeDexStore(useShallow((state) => ({
     compareList: state.compareList,
     addToCompare: state.addToCompare,
     removeFromCompare: state.removeFromCompare,
@@ -71,7 +68,7 @@ export default function ComparePage() {
   const localeHref = useLocaleHref();
   const [compareSearch, setCompareSearch] = useState('');
 
-  const resolvedLang = resolveLanguage(language, systemLanguage);
+  const resolvedLang = useClientLanguage();
   const { data: allPokemon } = useQuery({
     queryKey: ['compare-search-index'],
     queryFn: getAllPokemonSearchIndex,

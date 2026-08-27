@@ -40,7 +40,7 @@ import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { resolveLanguage } from '@/lib/languages';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import {
   answerDailyQuizQuestion,
@@ -142,9 +142,7 @@ function QuizPageContent() {
 
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { language, systemLanguage, quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore(useShallow((state) => ({
-    language: state.language,
-    systemLanguage: state.systemLanguage,
+  const { quizHighScores, updateQuizHighScore, addBadge, badges, addQuizSession, addAction } = usePrimeDexStore(useShallow((state) => ({
     quizHighScores: state.quizHighScores,
     updateQuizHighScore: state.updateQuizHighScore,
     addBadge: state.addBadge,
@@ -153,7 +151,7 @@ function QuizPageContent() {
     addAction: state.addAction,
   })));
 
-  const resolvedLang = resolveLanguage(language, systemLanguage);
+  const resolvedLang = useClientLanguage();
 
   useEffect(() => {
     gameStateRef.current = gameState;

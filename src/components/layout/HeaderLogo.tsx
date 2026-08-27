@@ -14,8 +14,8 @@ export function HeaderLogo() {
   const resolvedLang = useClientLanguage();
   const caughtCount = mounted ? caughtPokemon.length : 0;
   const progressPercent = Math.round((caughtCount / 1025) * 100);
-  const homeLabel = mounted ? t('header.home_aria', { defaultValue: 'Go to Home' }) : 'Go to Home';
-  const accessibleHomeLabel = mounted ? `Lunidex: ${homeLabel}` : 'Lunidex';
+  const homeLabel = t('header.home_aria', { defaultValue: 'Go to Home' });
+  const accessibleHomeLabel = `Lunidex: ${homeLabel}`;
 
   return (
     <div className="site-header-brand flex min-w-0 shrink-0 items-center justify-start">

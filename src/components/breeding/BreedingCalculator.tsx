@@ -38,19 +38,21 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { useTranslation } from '@/lib/i18n';
-import i18n from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 
 // Helper function to get localized pokemon name
-const getLocalizedPokemonName = (englishName: string, pokemonList: GraphQLPokemonSearchIndex[] | undefined): string | null => {
+const getLocalizedPokemonName = (
+  englishName: string,
+  pokemonList: GraphQLPokemonSearchIndex[] | undefined,
+  language: string,
+): string | null => {
   if (!pokemonList) return null;
   
   const pokemon = pokemonList.find(p => p.name === englishName);
   if (!pokemon) return null;
   
-  const currentLang = i18n.language || 'en';
   const localizedNameObj = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames
-    .find((nameObj: { name: string; pokemon_v2_language: { name: string } }) => nameObj.pokemon_v2_language.name === currentLang);
+    .find((nameObj: { name: string; pokemon_v2_language: { name: string } }) => nameObj.pokemon_v2_language.name === language);
   
   return localizedNameObj?.name || null;
 };
@@ -88,7 +90,8 @@ interface PokemonPickerProps {
 }
 
 function PokemonPicker({ label, selected, onSelect }: PokemonPickerProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.resolvedLanguage ?? i18n.language ?? 'en';
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -167,7 +170,7 @@ const results = useMemo(() => {
                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
                  ''
                }${selected.name}.png`}
-               alt={getLocalizedPokemonName(selected.name, allPokemon) || selected.name}
+               alt={getLocalizedPokemonName(selected.name, allPokemon, currentLanguage) || selected.name}
                width={56}
                height={56}
                className="object-contain drop-shadow"
@@ -176,7 +179,7 @@ const results = useMemo(() => {
              />
            </div>
            <div className="flex-1 min-w-0">
-             <p className="font-black text-sm capitalize text-foreground/90">{getLocalizedPokemonName(selected.name, allPokemon) || selected.name}</p>
+             <p className="font-black text-sm capitalize text-foreground/90">{getLocalizedPokemonName(selected.name, allPokemon, currentLanguage) || selected.name}</p>
              <p className="text-[11px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
                {selected.eggGroups.join(' · ') || t('breeding.unknown_groups')}
              </p>
@@ -210,9 +213,8 @@ const results = useMemo(() => {
              <div className="absolute z-50 top-full mt-1 w-full rounded-sm border border-border/60 bg-card shadow-lg overflow-hidden">
                {results.map(p => {
                  // Get localized name for current language
-                 const currentLang = i18n.language || 'en';
-                  const localizedNameObj = p.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames
-                   .find(nameObj => nameObj.pokemon_v2_language.name === currentLang);
+                 const localizedNameObj = p.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames
+                   .find(nameObj => nameObj.pokemon_v2_language.name === currentLanguage);
                  const displayName = localizedNameObj?.name || p.name;
                  
                  return (
@@ -290,7 +292,8 @@ interface BreedingCalculatorProps {
 }
 
 export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.resolvedLanguage ?? i18n.language ?? 'en';
   const localeHref = useLocaleHref();
 
   const { data: allPokemon } = useQuery({
@@ -623,8 +626,8 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
 {/* IVs */}
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <IvEditor label={getLocalizedPokemonName(parent1?.name ?? '', allPokemon) ?? (parent1?.name ?? t('breeding.parent_1'))} ivs={p1IVs} onChange={setP1IVs} />
-             <IvEditor label={getLocalizedPokemonName(parent2?.name ?? '', allPokemon) ?? (parent2?.name ?? t('breeding.parent_2'))} ivs={p2IVs} onChange={setP2IVs} />
+             <IvEditor label={getLocalizedPokemonName(parent1?.name ?? '', allPokemon, currentLanguage) ?? (parent1?.name ?? t('breeding.parent_1'))} ivs={p1IVs} onChange={setP1IVs} />
+             <IvEditor label={getLocalizedPokemonName(parent2?.name ?? '', allPokemon, currentLanguage) ?? (parent2?.name ?? t('breeding.parent_2'))} ivs={p2IVs} onChange={setP2IVs} />
            </div>
 
           {/* Target IVs */}
@@ -814,7 +817,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                  <div className="flex items-center justify-between p-4 rounded-sm bg-secondary/20 border border-border/40">
                    <div>
                      <p className="text-xs font-black uppercase tracking-wider text-foreground/60">{t('breeding.egg_move_link_title')}</p>
-                     <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: getLocalizedPokemonName(parent1.name, allPokemon) || parent1.name })}</p>
+                     <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: getLocalizedPokemonName(parent1.name, allPokemon, currentLanguage) || parent1.name })}</p>
                    </div>
                    <Link
                      href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}

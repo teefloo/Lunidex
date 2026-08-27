@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Cookie } from 'lucide-react';
 
-import i18n, { useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { Button } from '@/components/ui/button';
 import { getProductConsent, setProductConsent, type ProductConsent } from '@/lib/product-measurement';
@@ -59,14 +59,14 @@ function getServerSnapshot(): boolean {
   return false;
 }
 
-function getCurrentLanguage(): SupportedLanguage {
-  const candidate = (i18n.language ?? 'en').split('-')[0];
+function getCurrentLanguage(language: string): SupportedLanguage {
+  const candidate = language.split('-')[0];
   return isSupportedLanguage(candidate) ? candidate : 'en';
 }
 
 export default function CookieBanner() {
-  const { t } = useTranslation();
-  const language = getCurrentLanguage();
+  const { t, i18n } = useTranslation();
+  const language = getCurrentLanguage(i18n.resolvedLanguage ?? i18n.language ?? 'en');
   const [customizing, setCustomizing] = useState(false);
   const [audiencePerformance, setAudiencePerformance] = useState(false);
   const [productMeasurement, setProductMeasurement] = useState(false);

@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { AuthModalBoundary } from '@/components/auth/AuthModalBoundary';
@@ -17,7 +16,6 @@ import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
 const AuthModal = dynamic(() => import('@/components/auth/AuthModal'), { ssr: false });
 
 export function HeaderMobileNav() {
-  const mounted = useMounted();
   const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const pathname = usePathname();
@@ -29,7 +27,6 @@ export function HeaderMobileNav() {
   const restoreFocusOnCloseRef = useRef(true);
 
   const label = (key: string, fallback: string) => {
-    if (!mounted) return fallback;
     const translated = t(key, { defaultValue: fallback });
     return translated === key ? fallback : translated;
   };

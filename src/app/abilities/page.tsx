@@ -43,7 +43,7 @@ export default async function AbilitiesPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AbilitiesPageClient initialAbilities={initialAbilities} initialLanguageId={initialLanguageId} />
+      <AbilitiesPageClient initialAbilities={initialAbilities} />
       <ServerIndexLinks
         title={t('abilities_page.title', { defaultValue: 'Abilities' })}
         links={initialAbilities.slice(0, 12).map((ability) => ({

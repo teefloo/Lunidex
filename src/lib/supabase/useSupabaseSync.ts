@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from 'react';
 import { toast } from '@/lib/toast';
-import { t } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
@@ -103,6 +103,7 @@ async function saveRemoteState(
  * snapshot and failed writes are rolled back from the last accepted remote state.
  */
 export function useNeonSync(): void {
+  const { i18n } = useTranslation();
   const ctx = useContext(AuthContext);
   const user = ctx?.user ?? null;
   const enabled = ctx?.enabled ?? false;
@@ -163,7 +164,7 @@ export function useNeonSync(): void {
         ?? normalizeSyncMetadata(undefined, acceptedState);
       applyAcceptedState(acceptedState, acceptedMetadata);
       if (status === 'unavailable' && preserveCollectionPage && window.navigator.onLine) {
-        toast.error(t('auth.sync_unavailable', {
+        toast.error(i18n.t('auth.sync_unavailable', {
           defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
         }));
         setSyncAccessStatus('ready');
@@ -363,7 +364,7 @@ export function useNeonSync(): void {
       unregisterRetry();
       unsubscribe?.();
     };
-  }, [enabled, hasHydrated, loading, onlineVersion, userId]);
+  }, [enabled, hasHydrated, i18n, loading, onlineVersion, userId]);
 }
 
 // Kept as a source-compatible alias for existing deep imports.

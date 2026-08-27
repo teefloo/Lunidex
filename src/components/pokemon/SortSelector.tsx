@@ -11,34 +11,32 @@ import {
 } from "@/components/ui/select";
 import { useTranslation } from '@/lib/i18n';
 import { useMemo } from 'react';
-import { useMounted } from '@/hooks/useMounted';
 
 export default function SortSelector() {
   const sortBy = usePrimeDexStore(s => s.sortBy);
   const setSortBy = usePrimeDexStore(s => s.setSortBy);
   const { t } = useTranslation();
-  const mounted = useMounted();
 
   const options = useMemo(() => [
-    { value: 'id-asc', label: mounted ? t('sort.id-asc') : 'ID Asc', icon: Hash },
-    { value: 'id-desc', label: mounted ? t('sort.id-desc') : 'ID Desc', icon: ListOrdered },
-    { value: 'name-asc', label: mounted ? t('sort.name-asc') : 'Name Asc', icon: ArrowDownAZ },
-    { value: 'name-desc', label: mounted ? t('sort.name-desc') : 'Name Desc', icon: ArrowUpAZ },
-    { value: 'height-asc', label: mounted ? t('sort.height-asc') : 'Height Asc', icon: ArrowDown10 },
-    { value: 'height-desc', label: mounted ? t('sort.height-desc') : 'Height Desc', icon: ArrowUp10 },
-    { value: 'weight-asc', label: mounted ? t('sort.weight-asc') : 'Weight Asc', icon: Scale },
-    { value: 'weight-desc', label: mounted ? t('sort.weight-desc') : 'Weight Desc', icon: Scale },
-  ] as const, [mounted, t]);
+    { value: 'id-asc', label: t('sort.id-asc'), icon: Hash },
+    { value: 'id-desc', label: t('sort.id-desc'), icon: ListOrdered },
+    { value: 'name-asc', label: t('sort.name-asc'), icon: ArrowDownAZ },
+    { value: 'name-desc', label: t('sort.name-desc'), icon: ArrowUpAZ },
+    { value: 'height-asc', label: t('sort.height-asc'), icon: ArrowDown10 },
+    { value: 'height-desc', label: t('sort.height-desc'), icon: ArrowUp10 },
+    { value: 'weight-asc', label: t('sort.weight-asc'), icon: Scale },
+    { value: 'weight-desc', label: t('sort.weight-desc'), icon: Scale },
+  ] as const, [t]);
 
   type SortValue = typeof options[number]['value'];
 
   const currentSortLabel = options.find(o => o.value === sortBy)?.label
-    ?? (mounted ? t('sort.placeholder') : 'Select sort');
+    ?? t('sort.placeholder');
 
   return (
     <div className="pokedex-sort flex items-center gap-3">
       <span id="sort-label" className="text-[11px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">
-        {mounted ? t('sort.label') : 'Sort by'}
+        {t('sort.label')}
       </span>
       <Select value={sortBy} onValueChange={(val: SortValue | null) => val && setSortBy(val)}>
       <SelectTrigger aria-labelledby="sort-label" className="pokedex-sort__trigger touch-target w-full rounded-sm bg-card border-border/70 text-[11px] font-bold uppercase tracking-wider focus:ring-primary/20 hover:border-border transition-[border-color,box-shadow] shadow-[var(--shadow-pixel-sm)] sm:w-[200px]">

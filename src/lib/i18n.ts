@@ -1,10 +1,9 @@
 "use client";
 
-import i18n from 'i18next';
-import type { TOptions } from 'i18next';
+import { createInstance } from 'i18next';
+import type { i18n as I18nInstance, ResourceLanguage } from 'i18next';
 import { initReactI18next, useTranslation as useReactTranslation } from 'react-i18next';
 import enTranslations from './i18n/en';
-import { useMounted } from '@/hooks/useMounted';
 import type { SupportedLanguage } from './languages';
 
 // Lazy-load map for on-demand language loading
@@ -24,35 +23,44 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
   zh: () => import('./i18n/zh'),
 };
 
-// Keep the first client render aligned with SSR.
-// The user's preferred language is restored right after hydration in Providers.
-const getInitialLang = () => 'en';
+export function createClientI18n(
+  initialLanguage: SupportedLanguage,
+  initialTranslations: ResourceLanguage,
+): I18nInstance {
+  const instance = createInstance();
+  const resources = {
+    en: enTranslations,
+    ...(initialLanguage === 'en'
+      ? {}
+      : { [initialLanguage]: { translation: initialTranslations } }),
+  };
 
-// Initialize with English only (smallest initial bundle)
-i18n
-  .use(initReactI18next)
-  .init({
-    resources: {
-      en: enTranslations,
-    },
-    lng: getInitialLang(),
+  void instance.use(initReactI18next).init({
+    resources,
+    lng: initialLanguage,
     fallbackLng: 'en',
+    initAsync: false,
     interpolation: {
-      escapeValue: false
-    }
+      escapeValue: false,
+    },
   });
 
-// Dynamically load a language and add it to i18n
-export const loadLanguage = async (lang: string): Promise<void> => {
-  if (lang === 'en' || !languageResources[lang as SupportedLanguage]) return;
+  return instance;
+}
 
-  const hasResourceBundle = i18n.hasResourceBundle(lang, 'translation');
+export const loadLanguage = async (
+  instance: I18nInstance,
+  lang: SupportedLanguage,
+): Promise<void> => {
+  if (lang === 'en' || !languageResources[lang]) return;
+
+  const hasResourceBundle = instance.hasResourceBundle(lang, 'translation');
   if (hasResourceBundle) return;
 
   try {
-    const langModule = await languageResources[lang as SupportedLanguage]?.();
+    const langModule = await languageResources[lang]?.();
     if (!langModule) return;
-    i18n.addResourceBundle(lang, 'translation', langModule.default.translation, true, true);
+    instance.addResourceBundle(lang, 'translation', langModule.default.translation, true, true);
   } catch (error) {
     console.error(`Failed to load language: ${lang}`, error);
   }
@@ -68,12 +76,4 @@ export function persistLanguageCookie(lang: string): void {
   document.cookie = `${LANG_COOKIE}=${safe}; path=/; max-age=${LANG_COOKIE_MAX_AGE}; samesite=lax`;
 }
 
-export const useTranslation = () => {
-  const mounted = useMounted();
-  const translation = useReactTranslation();
-  const t = mounted ? translation.t : i18n.getFixedT('en', 'translation');
-  return { ...translation, t };
-};
-export const t = (key: string, options?: TOptions) => i18n.t(key, options);
-
-export default i18n;
+export const useTranslation = useReactTranslation;

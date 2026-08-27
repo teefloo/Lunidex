@@ -1,6 +1,6 @@
 import { cookies, headers } from 'next/headers';
 import { createInstance } from 'i18next';
-import type { i18n as I18nInstance, TFunction, TOptions } from 'i18next';
+import type { i18n as I18nInstance, ResourceLanguage, TFunction, TOptions } from 'i18next';
 
 import { isSupportedLanguage, type SupportedLanguage } from './languages';
 
@@ -73,6 +73,10 @@ export async function getServerT(): Promise<TFunction> {
   ensureInit();
   const lang = await getServerLanguage();
   return serverI18n.getFixedT(lang, 'translation');
+}
+
+export function getServerTranslations(lang: SupportedLanguage): ResourceLanguage {
+  return serverResources[lang].translation;
 }
 
 // Synchronous, language-explicit translator. Used where the locale comes from
