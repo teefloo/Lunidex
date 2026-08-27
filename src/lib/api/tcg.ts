@@ -113,6 +113,18 @@ function throwIfAborted(signal?: AbortSignal) {
   throw signal.reason ?? new DOMException('Aborted', 'AbortError');
 }
 
+function isNotFoundResponse(error: unknown): boolean {
+  if (!error || typeof error !== 'object' || !('response' in error)) return false;
+
+  const response = (error as { response?: unknown }).response;
+  return Boolean(
+    response
+      && typeof response === 'object'
+      && 'status' in response
+      && response.status === 404,
+  );
+}
+
 function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
   if (!url) return undefined;
   if (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.webp') || url.endsWith('.svg')) return url;
@@ -915,7 +927,7 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
  */
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-v9-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-set-v10-${setId}-${tcgLang}`;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
@@ -926,8 +938,30 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
     await setCachedData(cacheKey, set);
     return set;
   } catch (error) {
+    const staleSet = await getCachedData<TCGSet>(cacheKey, true);
+    if (staleSet) return staleSet;
+
+    if (tcgLang !== 'en') {
+      try {
+        const englishSet = await getSetById(setId, 'en');
+        if (englishSet) {
+          await setCachedData(cacheKey, englishSet);
+          return englishSet;
+        }
+      } catch (fallbackError) {
+        // A network or upstream failure is temporary. Throwing keeps Next's
+        // persistent cache from storing it as a missing set for an hour.
+        console.error(`[TCG API] Error fetching fallback set ${setId}:`, fallbackError);
+        throw fallbackError;
+      }
+    }
+
+    if (isNotFoundResponse(error)) return null;
+
+    // Only a confirmed 404 means the identifier is absent. Other failures
+    // must remain retryable instead of being cached as a route-level 404.
     console.error(`[TCG API] Error fetching set ${setId}:`, error);
-    return await getCachedData<TCGSet>(cacheKey, true);
+    throw error;
   }
 };
 

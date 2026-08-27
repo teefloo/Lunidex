@@ -35,6 +35,7 @@ type SupportedResource =
 interface ResourceProbe {
   kind: SupportedResource;
   url: string;
+  fallbackUrl?: string;
   headers?: Record<string, string>;
 }
 
@@ -122,20 +123,27 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
   if (!identifier) return null;
 
   const encodedIdentifier = encodeURIComponent(identifier);
-  // TCGdex has partial locale coverage. The page/API layer falls back to
-  // English card data, so probe the English catalog to keep valid localized
-  // alternates from being rejected as 404s by the proxy.
-  const probeLocale = 'en';
+  // Probe the requested catalog first. Japanese and Korean contain regional
+  // set IDs that do not exist in English, while Chinese uses the established
+  // English data fallback.
+  const probeLocale = locale === 'zh' ? 'en' : locale;
+  const fallbackLocale = probeLocale === 'en' ? null : 'en';
   if (segments[2] === 'cards') {
     return {
       kind: 'tcg-card',
       url: `${TCGDEX_BASE_URL}/${probeLocale}/cards/${encodedIdentifier}`,
+      fallbackUrl: fallbackLocale
+        ? `${TCGDEX_BASE_URL}/${fallbackLocale}/cards/${encodedIdentifier}`
+        : undefined,
     };
   }
   if (segments[2] === 'sets' || segments[2] === 'collection') {
     return {
       kind: 'tcg-set',
       url: `${TCGDEX_BASE_URL}/${probeLocale}/sets/${encodedIdentifier}`,
+      fallbackUrl: fallbackLocale
+        ? `${TCGDEX_BASE_URL}/${fallbackLocale}/sets/${encodedIdentifier}`
+        : undefined,
     };
   }
 
@@ -143,13 +151,28 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
 }
 
 async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
+  const primaryResult = await probeResourceUrl(probe.url, probe.headers);
+  if (primaryResult === true || !probe.fallbackUrl) return primaryResult;
+
+  const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+  if (primaryResult === false) return fallbackResult;
+
+  // A successful fallback proves the route can render. If the localized probe
+  // timed out, however, an English 404 cannot prove the localized ID is absent.
+  return fallbackResult === true ? true : null;
+}
+
+async function probeResourceUrl(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<boolean | null> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), RESOURCE_PROBE_TIMEOUT_MS);
 
   try {
-    const response = await fetch(probe.url, {
+    const response = await fetch(url, {
       method: 'HEAD',
-      headers: probe.headers,
+      headers,
       signal: controller.signal,
     });
     if (response.status === 404) return false;

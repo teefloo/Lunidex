@@ -145,7 +145,7 @@ const getTCGCardPersistent = unstable_cache(
 
 const getTCGSetPersistent = unstable_cache(
   (setId: string, language: string) => getSetById(setId, language),
-  ['lunidex:tcg-set:v1'],
+  ['lunidex:tcg-set:v2'],
   { revalidate: 3600 },
 );
 
