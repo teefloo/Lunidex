@@ -13,7 +13,6 @@ import { serializeJsonLd } from '@/lib/json-ld';
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ lang?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

@@ -13,6 +13,7 @@ import {
   getAllAbilities,
   getAllItems,
   getAllMoves,
+  getAbilityPokemon,
   getItemDetail,
   getPokemonSummarySlice,
   getLocalizedPokemonData,
@@ -178,6 +179,12 @@ const getAbilityDetailPersistent = unstable_cache(
   { revalidate: 86400 },
 );
 
+const getAbilityPokemonPersistent = unstable_cache(
+  (name: string, languageId: number) => getAbilityPokemon(name, languageId),
+  ['lunidex:ability-pokemon:v1'],
+  { revalidate: 86400 },
+);
+
 /**
  * Server-cached and per-request memoized versions of the public fetchers used
  * by detail routes. `unstable_cache` avoids repeating stable upstream work
@@ -204,3 +211,4 @@ export const getTCGSetCardsCached = cache(getTCGSetCardsPersistent);
 export const getAllSetsCached = cache(getAllSetsPersistent);
 export const getItemDetailCached = cache(getItemDetailPersistent);
 export const getAbilityDetailCached = cache(getAbilityDetailPersistent);
+export const getAbilityPokemonCached = cache(getAbilityPokemonPersistent);

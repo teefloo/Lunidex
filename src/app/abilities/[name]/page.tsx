@@ -6,8 +6,7 @@ import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
-import { getAbilityDetailCached } from '@/lib/api/server-cache';
-import { getAbilityPokemon } from '@/lib/api/graphql';
+import { getAbilityDetailCached, getAbilityPokemonCached } from '@/lib/api/server-cache';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { formatName } from '@/lib/utils';
@@ -83,7 +82,7 @@ export default async function AbilityDetailPage({ params }: Props) {
     || effectEntry?.short_effect?.replace(/\n|\f/g, ' ').trim()
     || t('detail.no_ability_desc'));
 
-  const learners = await getAbilityPokemon(name, langId).catch(() => []);
+  const learners = await getAbilityPokemonCached(name, langId).catch(() => []);
   const routePath = `/${lang}/abilities/${name}`;
   const abilityTermJsonLd = buildDefinedTermJsonLd({
     lang,

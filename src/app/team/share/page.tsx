@@ -12,16 +12,23 @@ import { OG_SIZE } from '@/lib/og/theme';
 import { RedirectToTeam } from './RedirectToTeam';
 
 interface SharePageProps {
-  searchParams: Promise<{ code?: string; lang?: string }>;
+  searchParams: Promise<{ code?: SearchParamValue; lang?: SearchParamValue }>;
 }
 
-function resolveLang(lang?: string): SupportedLanguage {
-  return lang && isSupportedLanguage(lang) ? lang : 'en';
+type SearchParamValue = string | string[] | undefined;
+
+function firstSearchParam(value: SearchParamValue): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function resolveLang(lang?: SearchParamValue): SupportedLanguage {
+  const value = firstSearchParam(lang);
+  return value && isSupportedLanguage(value) ? value : 'en';
 }
 
 // Team ids are encoded as `25-6-9`; keep only digits and dashes.
-function sanitizeCode(code?: string): string {
-  return (code ?? '').replace(/[^0-9-]/g, '').slice(0, 40);
+function sanitizeCode(code?: SearchParamValue): string {
+  return (firstSearchParam(code) ?? '').replace(/[^0-9-]/g, '').slice(0, 40);
 }
 
 export async function generateMetadata({ searchParams }: SharePageProps): Promise<Metadata> {

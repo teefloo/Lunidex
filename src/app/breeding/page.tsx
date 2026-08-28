@@ -25,19 +25,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+type SearchParamValue = string | string[] | undefined;
+
 interface Props {
-  searchParams: Promise<{ pokemon?: string; tab?: string }>;
+  searchParams: Promise<{ pokemon?: SearchParamValue; tab?: SearchParamValue }>;
+}
+
+function firstSearchParam(value: SearchParamValue): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
 }
 
 export default async function BreedingPage({ searchParams }: Props) {
   const { pokemon, tab } = await searchParams;
+  const initialPokemon = firstSearchParam(pokemon);
+  const initialTab = firstSearchParam(tab);
 
   return (
     <>
       <Header />
       <main className="min-h-dvh pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
-          <BreedingPageClient initialPokemon={pokemon} initialTab={tab} />
+          <BreedingPageClient initialPokemon={initialPokemon} initialTab={initialTab} />
         </div>
       </main>
     </>

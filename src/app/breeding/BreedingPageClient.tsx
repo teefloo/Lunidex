@@ -18,10 +18,14 @@ interface BreedingPageClientProps {
 
 type TabId = 'calculator' | 'egg-moves';
 
+function isTabId(value: string | undefined): value is TabId {
+  return value === 'calculator' || value === 'egg-moves';
+}
+
 export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageClientProps) {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabId>(
-    (initialTab as TabId) ?? 'calculator',
+    isTabId(initialTab) ? initialTab : 'calculator',
   );
   const [explorerPokemon, setExplorerPokemon] = useState(initialPokemon ?? '');
   const [explorerInput, setExplorerInput] = useState(initialPokemon ?? '');

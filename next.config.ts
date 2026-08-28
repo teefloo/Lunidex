@@ -94,15 +94,18 @@ const withPWA = withPWAInit({
         urlPattern: ({ url }: { url: URL }) => {
           const isSameOrigin = self.location.origin === url.origin;
           if (!isSameOrigin) return false;
-          const pathname = url.pathname;
-          if (pathname.startsWith("/api/")) return false;
+          const pathname = url.pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/i, '') || '/';
+          // Localized URLs are rewritten internally, so normalize before
+          // excluding APIs and auth pages from the document cache.
+          if (/^\/(?:api|auth)(?:\/|$)/i.test(pathname)) return false;
           if (pathname.startsWith("/offline")) return false;
-          if (/^\/(?:(?:en|fr|es|de|it|ja|ko|zh)\/)?auth(?:\/|$)/i.test(pathname)) return false;
           return pathname.startsWith("/");
         },
         handler: "NetworkFirst",
         options: {
-          cacheName: "pages-v2",
+          // Bump the namespace when the page eligibility rules change so
+          // entries created by an older worker cannot be reused.
+          cacheName: "pages-v3",
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 86400,
@@ -180,6 +183,7 @@ const publicPageCacheRoutes = [
   '/:locale(en|fr|es|de|it|ja|ko|zh)/about',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/faq',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/contact',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/30e-anniversaire',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/nuzlocke',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/breeding',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/ev-iv',
@@ -345,6 +349,12 @@ const nextConfig: NextConfig = {
           { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
           { key: 'Referrer-Policy', value: 'no-referrer' },
         ],
+      },
+      {
+        // Localized API URLs are redirected to their unprefixed canonical
+        // endpoint by proxy and must not be treated as public pages.
+        source: '/:locale(en|fr|es|de|it|ja|ko|zh)/api/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
       },
       {
         // Localized routes are the public URLs; the proxy rewrites them to the

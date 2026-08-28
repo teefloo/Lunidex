@@ -209,11 +209,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(canonicalUrl, 308);
   }
 
-  // API routes, including the Neon Auth proxy, are intentionally unlocalized.
-  if (pathname.startsWith('/api/')) {
-    return NextResponse.next();
-  }
-
   if (isKnownScannerPath(pathname)) {
     return new NextResponse(null, {
       status: 404,
@@ -233,6 +228,15 @@ export async function proxy(request: NextRequest) {
   if (hasLocalePrefix) {
     const urlLocale = firstSegment!;
 
+    // API routes are intentionally unlocalized. Canonicalize an accidental
+    // locale prefix before the config rewrite can turn it into a cacheable
+    // page-like request.
+    if (segments[1] === 'api') {
+      const apiUrl = request.nextUrl.clone();
+      apiUrl.pathname = `/${segments.slice(1).join('/')}`;
+      return NextResponse.redirect(apiUrl, 308);
+    }
+
     if (
       segments.length === 2 &&
       segments[1] === ANNIVERSARY_30_ROUTE &&
@@ -243,14 +247,23 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(redirectUrl, 308);
     }
 
-    const probe = getResourceProbe(pathname, urlLocale) ?? getTcgResourceProbe(pathname, urlLocale);
-    if (probe && (await probeResource(probe)) === false) {
-      return hardNotFoundResponse(request, urlLocale);
+    // Only validate document requests here. Next's client navigations use
+    // Flight responses and the page itself remains the source of truth for
+    // those requests; avoiding a second upstream probe keeps navigation fast.
+    const accept = (request.headers.get('accept') ?? '').toLowerCase();
+    const isDocumentRequest = request.method === 'HEAD'
+      || accept.includes('text/html')
+      || accept.includes('*/*');
+    if (isDocumentRequest) {
+      const probe = getResourceProbe(pathname, urlLocale) ?? getTcgResourceProbe(pathname, urlLocale);
+      if (probe && (await probeResource(probe)) === false) {
+        return hardNotFoundResponse(request, urlLocale);
+      }
     }
 
     // Forward the URL's locale as a request header so this exact render uses
-    // it immediately. The route rewrite itself is declared in next.config.ts:
-    // keeping it in Next's router preserves the status code from notFound().
+    // it immediately. The route rewrite itself is declared in next.config.ts,
+    // keeping the public URL separate from the physical route.
     const forwardedHeaders = new Headers(request.headers);
     forwardedHeaders.set('x-primedex-lang', urlLocale);
 
@@ -268,16 +281,6 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Preserve the locale header if the request reaches this branch after an
-  // internal rewrite, so the route can render without being redirected back
-  // to its localized public URL.
-  const rewrittenLocale = request.headers.get('x-primedex-lang');
-  if (isSupportedLanguage(rewrittenLocale ?? '')) {
-    return NextResponse.next({
-      request: { headers: request.headers },
-    });
-  }
-
   const acceptLang = request.headers.get('accept-language');
   const targetLocale = cookieLang ?? detectLocaleFromAcceptLanguage(acceptLang);
 
@@ -285,7 +288,7 @@ export async function proxy(request: NextRequest) {
   url.pathname = `/${targetLocale}${pathname === '/' ? '' : pathname}`;
 
   const redirect = NextResponse.redirect(url, 308);
-  if (!cookieLang) {
+  if (!cookieLang && shouldPersistLocaleCookie(request)) {
     redirect.cookies.set(COOKIE_NAME, targetLocale, {
       path: '/',
       maxAge: COOKIE_MAX_AGE,
@@ -298,6 +301,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|sitemaps/|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|\\.well-known/|og/|images/|pokemon-cards/).*)',
+    '/((?!api(?:/|$)|_next/static|_next/image|sw\\.js|push-worker\\.js|workbox-[^/]+\\.js|fallback-[^/]+\\.js|favicon\\.ico|icon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png|favicon-16x16\\.png|favicon-32x32\\.png|brand/|screenshot-mobile\\.png|screenshot-desktop\\.png|robots\\.txt|sitemap\\.xml|sitemaps/|llms\\.txt|llms-full\\.txt|ai\\.txt|opensearch\\.xml|manifest\\.webmanifest|opengraph-image(?:/|$)|\\.well-known/|og/|images/|pokemon-cards/).*)',
   ],
 };

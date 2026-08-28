@@ -10,8 +10,8 @@ export const alt = 'Pokémon Details — Lunidex';
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { name: string } }) {
-  const name = params.name;
+export default async function Image({ params }: { params: Promise<{ name: string }> }) {
+  const { name } = await params;
 
   try {
     const pokemon = await getPokemonDetail(name);
