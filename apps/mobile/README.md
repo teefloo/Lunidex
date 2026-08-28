@@ -32,6 +32,7 @@ build uses the default `.ts`:
 | Concern         | Web (`*.ts`)            | Native (`*.native.ts`)        |
 | --------------- | ----------------------- | ----------------------------- |
 | Store persist   | IndexedDB (idb-keyval)  | AsyncStorage                  |
+| API data cache  | IndexedDB (idb-keyval)  | AsyncStorage                  |
 | Neon config     | `NEXT_PUBLIC_*` env     | `EXPO_PUBLIC_*` + AsyncStorage|
 
 No `if (Platform.OS)` branching leaks into the business logic.

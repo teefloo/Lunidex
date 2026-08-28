@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { readJsonBody } from '@/lib/api/route-helpers';
 import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
@@ -13,6 +14,11 @@ const allowed = {
   tcg_activation_error: [['start_load', 'set_load', 'album_load', 'collection_mutation', 'progress_render', 'wishlist_mutation'], ['network', 'upstream_5xx', 'client_validation', 'unknown']],
 } as const;
 type EventName = keyof typeof allowed;
+type ProductPayload = {
+  event?: unknown;
+  propertyA?: unknown;
+  propertyB?: unknown;
+};
 
 function forbidden(request: NextRequest): boolean {
   const origin = request.headers.get('origin');
@@ -33,9 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const length = Number(request.headers.get('content-length') ?? 0);
   if (length > 512) return new NextResponse(null, { status: 413, headers });
   if (!rateLimit(ephemeralClientKey(request), 30)) return new NextResponse(null, { status: 429, headers });
-  const raw = await request.text().catch(() => '');
-  if (new TextEncoder().encode(raw).byteLength > 512) return new NextResponse(null, { status: 413, headers });
-  const payload = (() => { try { return JSON.parse(raw) as { event?: unknown; propertyA?: unknown; propertyB?: unknown }; } catch { return null; } })();
+  const payload = await readJsonBody<ProductPayload>(request, { maxBytes: 512 });
   if (!payload || typeof payload.event !== 'string' || !(payload.event in allowed) || Object.keys(payload).some((key) => key !== 'event' && key !== 'propertyA' && key !== 'propertyB')) return new NextResponse(null, { status: 400, headers });
   const event = payload.event as EventName;
   const values = [payload.propertyA, payload.propertyB];

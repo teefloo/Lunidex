@@ -139,7 +139,7 @@ export default function AccountCard() {
   };
 
   const handleCopyLink = async () => {
-    const url = `${window.location.origin}/u/${publicHandle}`;
+    const url = `${window.location.origin}${localeHref(`/u/${publicHandle}`)}`;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -340,7 +340,7 @@ export default function AccountCard() {
                     : tt('profile.copy_link', 'Copy link')}
                 </Button>
                 <a
-                  href={`/u/${publicHandle}`}
+                  href={localeHref(`/u/${publicHandle}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-medium text-foreground/50 hover:text-foreground/70 transition-colors"

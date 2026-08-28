@@ -17,7 +17,7 @@ function describeGraphQLResponse(value: unknown) {
 }
 
 const fetchBatch = async <T>(query: string, cacheKey: string, variables?: Record<string, unknown>): Promise<T[]> => {
-  const cached = await getCachedData<T[]>(cacheKey, true);
+  const cached = await getCachedData<T[]>(cacheKey);
   if (cached) return cached;
 
   const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query, variables });
@@ -57,7 +57,7 @@ export const getPokemonSummarySlice = async (
   offset = 0,
 ): Promise<GraphQLPokemonSummary[]> => {
   const cacheKey = `pokemon-summary-slice-v1-${offset}-${limit}`;
-  const cached = await getCachedData<GraphQLPokemonSummary[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLPokemonSummary[]>(cacheKey);
   if (cached) return cached;
 
   const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: GraphQLPokemonSummary[] } }>('/graphql/v1beta', {
@@ -163,7 +163,7 @@ const fetchMoveBatches = async <T>(
 
   while (true) {
     const cacheKey = getBatchCacheKey(cacheBase, Math.floor(offset / batchSize));
-    const cached = await getCachedData<T[]>(cacheKey, true);
+    const cached = await getCachedData<T[]>(cacheKey);
     if (cached) {
       batches.push(cached);
       if (cached.length < batchSize) {
@@ -197,7 +197,7 @@ const fetchMoveBatches = async <T>(
 export const getAllPokemonSummary = async (): Promise<GraphQLPokemonSummary[]> => {
   const cacheKey = 'all-pokemon-summary-v1';
   
-  const cached = await getCachedData<GraphQLPokemonSummary[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLPokemonSummary[]>(cacheKey);
   if (cached) return cached;
 
   try {
@@ -245,7 +245,7 @@ export const getAllPokemonSummaryPaginated = async (): Promise<GraphQLPokemonSum
 export const getAllPokemonSearchIndex = async (): Promise<GraphQLPokemonSearchIndex[]> => {
   const cacheKey = 'all-pokemon-search-index-v1';
 
-  const cached = await getCachedData<GraphQLPokemonSearchIndex[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLPokemonSearchIndex[]>(cacheKey);
   if (cached) return cached;
 
   try {
@@ -275,7 +275,7 @@ export const getAllPokemonSearchIndex = async (): Promise<GraphQLPokemonSearchIn
 
 export const getPokemonDetailedByType = async (type: string): Promise<PokemonBasicData[]> => {
   const cacheKey = `pokemon-detailed-by-type-v1-${type}`;
-  const cached = await getCachedData<PokemonBasicData[]>(cacheKey, true);
+  const cached = await getCachedData<PokemonBasicData[]>(cacheKey);
   if (cached) return cached;
 
   const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: PokemonBasicData[] } }>('/graphql/v1beta', {
@@ -300,7 +300,7 @@ export const getPokemonDetailedByType = async (type: string): Promise<PokemonBas
 export const getAllPokemonDetailed = async (): Promise<PokemonBasicData[]> => {
   const cacheKey = 'all-pokemon-detailed-v9';
   
-  const cached = await getCachedData<PokemonBasicData[]>(cacheKey, true);
+  const cached = await getCachedData<PokemonBasicData[]>(cacheKey);
   if (cached && cached.length > 0 && cached[0]?.pokemon_v2_pokemonspecy) {
     return cached;
   }
@@ -430,7 +430,7 @@ export const getPokemonMovesLocalized = async (name: string, languageId: number)
 
 export const getAllMoves = async (languageId: number): Promise<GraphQLMoveData[]> => {
   const cacheKey = `all-moves-v2-${languageId}`;
-  const cached = await getCachedData<GraphQLMoveData[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLMoveData[]>(cacheKey);
   if (cached) return cached;
 
   try {
@@ -486,7 +486,7 @@ export const getAllMoves = async (languageId: number): Promise<GraphQLMoveData[]
 
 export const getMovePokemonLearners = async (moveName: string, languageId: number): Promise<GraphQLMovePokemonData[]> => {
   const cacheKey = `move-learners-v2-${moveName}-${languageId}`;
-  const cached = await getCachedData<GraphQLMovePokemonData[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLMovePokemonData[]>(cacheKey);
   if (cached) return cached;
 
   try {
@@ -539,7 +539,7 @@ export const getMovePokemonLearners = async (moveName: string, languageId: numbe
 
 export const getAllAbilities = async (languageId: number): Promise<GraphQLAbilityData[]> => {
   const cacheKey = `all-abilities-v2-${languageId}`;
-  const cached = await getCachedData<GraphQLAbilityData[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLAbilityData[]>(cacheKey);
   if (cached) return cached;
 
   try {
@@ -592,7 +592,7 @@ export const getAllAbilities = async (languageId: number): Promise<GraphQLAbilit
 
 export const getAbilityPokemon = async (abilityName: string, languageId: number): Promise<GraphQLAbilityPokemonData[]> => {
   const cacheKey = `ability-pokemon-v1-${abilityName}-${languageId}`;
-  const cached = await getCachedData<GraphQLAbilityPokemonData[]>(cacheKey, true);
+  const cached = await getCachedData<GraphQLAbilityPokemonData[]>(cacheKey);
   if (cached) return cached;
 
   try {

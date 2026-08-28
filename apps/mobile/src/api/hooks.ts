@@ -3,6 +3,7 @@ import {
   getPokemonList,
   getPokemonDetail,
   getPokemonSpecies,
+  getAllPokemonNames,
 } from '@primedex/core/api/rest';
 
 /** Paginated national-dex listing (20 per page), powered by the shared REST client. */
@@ -12,6 +13,16 @@ export function usePokemonList() {
     queryFn: ({ pageParam }) => getPokemonList({ pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextParam,
+  });
+}
+
+/** Full name index used to search Pokémon that are not in the loaded list pages. */
+export function usePokemonSearchIndex(enabled: boolean) {
+  return useQuery({
+    queryKey: ['pokemon', 'search-index'],
+    queryFn: getAllPokemonNames,
+    enabled,
+    staleTime: 24 * 60 * 60 * 1000,
   });
 }
 

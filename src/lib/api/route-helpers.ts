@@ -1,51 +1,50 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+const DEFAULT_MAX_JSON_BYTES = 64 * 1024;
+
 /**
  * Safely parse a JSON request body. Returns null on invalid JSON or non-object
- * payloads. When `maxBytes` is provided, both the declared Content-Length and
- * the streamed body are bounded before JSON parsing, including chunked
- * requests that do not provide a length header.
+ * payloads. Both the declared Content-Length and the streamed body are
+ * bounded before JSON parsing, including chunked requests that do not provide
+ * a length header. Endpoints with larger, explicit payload contracts can opt
+ * into a higher limit with `maxBytes`.
  */
 export async function readJsonBody<T>(
   request: NextRequest,
   options: { maxBytes?: number } = {},
 ): Promise<T | null> {
-  const { maxBytes } = options;
+  const maxBytes = options.maxBytes ?? DEFAULT_MAX_JSON_BYTES;
   try {
     let bodyText: string;
-    if (maxBytes === undefined) {
+    const declaredLength = Number(request.headers.get('content-length'));
+    if (Number.isFinite(declaredLength) && declaredLength > maxBytes) return null;
+
+    const reader = request.body?.getReader();
+    if (!reader) {
       bodyText = await request.text();
+      if (new TextEncoder().encode(bodyText).byteLength > maxBytes) return null;
     } else {
-      const declaredLength = Number(request.headers.get('content-length'));
-      if (Number.isFinite(declaredLength) && declaredLength > maxBytes) return null;
+      const chunks: Uint8Array[] = [];
+      let totalBytes = 0;
 
-      const reader = request.body?.getReader();
-      if (!reader) {
-        bodyText = await request.text();
-        if (new TextEncoder().encode(bodyText).byteLength > maxBytes) return null;
-      } else {
-        const chunks: Uint8Array[] = [];
-        let totalBytes = 0;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          totalBytes += value.byteLength;
-          if (totalBytes > maxBytes) {
-            await reader.cancel();
-            return null;
-          }
-          chunks.push(value);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        totalBytes += value.byteLength;
+        if (totalBytes > maxBytes) {
+          await reader.cancel();
+          return null;
         }
-
-        const bodyBytes = new Uint8Array(totalBytes);
-        let offset = 0;
-        for (const chunk of chunks) {
-          bodyBytes.set(chunk, offset);
-          offset += chunk.byteLength;
-        }
-        bodyText = new TextDecoder().decode(bodyBytes);
+        chunks.push(value);
       }
+
+      const bodyBytes = new Uint8Array(totalBytes);
+      let offset = 0;
+      for (const chunk of chunks) {
+        bodyBytes.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      bodyText = new TextDecoder().decode(bodyBytes);
     }
 
     const payload: unknown = JSON.parse(bodyText);

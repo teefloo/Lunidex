@@ -47,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'rate_limited' }, { status: 429, headers });
   }
 
-  const payload = await readJsonBody<ContactPayload>(request);
+  const payload = await readJsonBody<ContactPayload>(request, { maxBytes: 12_000 });
   if (!payload || (isText(payload.website) && payload.website.trim()) || invalid(payload)) {
     return NextResponse.json({ error: 'invalid_contact' }, { status: 400, headers });
   }
