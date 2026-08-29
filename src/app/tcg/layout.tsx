@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { BackToTopButton } from '@/components/layout/BackToTopButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
@@ -39,6 +40,7 @@ export default async function TcgLayout({ children }: { children: React.ReactNod
       <link rel="dns-prefetch" href="https://api.tcgdex.net" />
       <link rel="dns-prefetch" href="https://assets.tcgdex.net" />
       {children}
+      <BackToTopButton />
     </>
   );
 }
