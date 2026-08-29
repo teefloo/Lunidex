@@ -54,7 +54,12 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 function normalizeError(error: unknown): AuthErrorLike | null {
   if (!error) return null;
   if (typeof error === 'string') return { name: 'AuthError', message: error };
-  if (error instanceof Error) return { name: error.name, message: error.message };
+  if (error instanceof Error) {
+    if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+      return { name: 'AuthTimeout', message: 'Authentication is taking too long. Please try again.' };
+    }
+    return { name: error.name, message: error.message };
+  }
 
   if (typeof error === 'object' && error !== null && 'message' in error) {
     const message = (error as { message?: unknown }).message;
@@ -67,6 +72,10 @@ function normalizeError(error: unknown): AuthErrorLike | null {
   }
 
   return { name: 'AuthError', message: 'Authentication failed.' };
+}
+
+function normalizeAuthEmail(email: string): string {
+  return email.trim();
 }
 
 function mapUser(user: {
@@ -93,6 +102,31 @@ type SignUpInput = SignInInput & { name: string };
 type SocialSignInInput = { provider: 'google' | 'github'; callbackURL?: string };
 type ResetRequestInput = { email: string; redirectTo?: string };
 type ResetPasswordInput = { newPassword: string; token: string };
+
+const AUTH_ACTION_TIMEOUT_MS = 15_000;
+const AUTH_SESSION_TIMEOUT_MS = 5_000;
+const AUTH_SDK_TIMEOUT_MS = 8_000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      const error = new Error('Authentication request timed out.');
+      error.name = 'TimeoutError';
+      reject(error);
+    }, timeoutMs);
+
+    promise.then(
+      (value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      },
+    );
+  });
+}
 
 /**
  * The Neon package has shipped more than one browser adapter shape. Keep the
@@ -125,6 +159,7 @@ async function requestAuthProxy(path: string, body: Record<string, string | unde
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       credentials: 'include',
       cache: 'no-store',
+      signal: AbortSignal.timeout(AUTH_ACTION_TIMEOUT_MS),
       body: JSON.stringify(body),
     });
     const result = await response.json().catch(() => null) as unknown;
@@ -143,6 +178,7 @@ async function requestAuthSession(): Promise<{ data: SessionData }> {
     headers: { Accept: 'application/json' },
     credentials: 'include',
     cache: 'no-store',
+    signal: AbortSignal.timeout(AUTH_SESSION_TIMEOUT_MS),
   });
   const result = await response.json().catch(() => null) as unknown;
   if (!response.ok) {
@@ -161,9 +197,19 @@ async function signInWithFallback(
 ): Promise<AuthActionResponse> {
   const runtimeClient = asRuntimeAuthClient(client);
   if (typeof runtimeClient.signIn?.email === 'function') {
-    const result = await runtimeClient.signIn.email(input);
-    if (!result.error) notifyAuthStateChanged();
-    return result;
+    try {
+      const result = await withTimeout(
+        runtimeClient.signIn.email(input),
+        AUTH_SDK_TIMEOUT_MS,
+      );
+      if (!result.error) notifyAuthStateChanged();
+      return result;
+    } catch {
+      // Some Neon Auth browser adapters expose signIn.email but fail before
+      // returning a response. A same-origin proxy retry keeps login usable
+      // across those adapter versions; sign-in is safe to retry.
+      return requestAuthProxy('sign-in/email', input);
+    }
   }
   return requestAuthProxy('sign-in/email', input);
 }
@@ -336,6 +382,7 @@ function DeferredAuthProvider({
       session: null,
       user: null,
       signUp: async (email, password, name) => {
+        const normalizedEmail = normalizeAuthEmail(email);
         const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
         if (!normalizedName) {
           return {
@@ -350,7 +397,7 @@ function DeferredAuthProvider({
         if (!client) return unavailable();
         try {
           const result = await signUpWithFallback(client, {
-            email,
+            email: normalizedEmail,
             password,
             name: normalizedName,
             callbackURL: redirectTo,
@@ -361,10 +408,14 @@ function DeferredAuthProvider({
         }
       },
       signIn: async (email, password) => {
+        const normalizedEmail = normalizeAuthEmail(email);
+        if (!normalizedEmail) {
+          return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
+        }
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
+          const result = await signInWithFallback(client, { email: normalizedEmail, password, callbackURL: redirectTo });
           const actionError = normalizeError(result.error);
           return { error: actionError ?? await confirmSignedIn() };
         } catch (error) {
@@ -386,10 +437,14 @@ function DeferredAuthProvider({
         if (client) await signOutWithFallback(client);
       },
       resetPassword: async (email) => {
+        const normalizedEmail = normalizeAuthEmail(email);
+        if (!normalizedEmail) {
+          return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
+        }
         const client = await loadClient();
         if (!client) return unavailable();
         try {
-          const result = await requestPasswordResetWithFallback(client, { email, redirectTo: resetRedirectTo });
+          const result = await requestPasswordResetWithFallback(client, { email: normalizedEmail, redirectTo: resetRedirectTo });
           return { error: normalizeError(result.error) };
         } catch (error) {
           return { error: normalizeError(error) };
@@ -475,6 +530,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     session,
     user,
     signUp: async (email, password, name) => {
+      const normalizedEmail = normalizeAuthEmail(email);
       const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
       if (!normalizedName) {
         return {
@@ -487,7 +543,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
 
       try {
         const result = await signUpWithFallback(client, {
-          email,
+          email: normalizedEmail,
           password,
           name: normalizedName,
           callbackURL: redirectTo,
@@ -498,8 +554,12 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       }
     },
     signIn: async (email, password) => {
+      const normalizedEmail = normalizeAuthEmail(email);
+      if (!normalizedEmail) {
+        return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
+      }
       try {
-        const result = await signInWithFallback(client, { email, password, callbackURL: redirectTo });
+        const result = await signInWithFallback(client, { email: normalizedEmail, password, callbackURL: redirectTo });
         const actionError = normalizeError(result.error);
         return { error: actionError ?? await confirmSignedIn() };
       } catch (error) {
@@ -518,8 +578,12 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       await signOutWithFallback(client);
     },
     resetPassword: async (email) => {
+      const normalizedEmail = normalizeAuthEmail(email);
+      if (!normalizedEmail) {
+        return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
+      }
       try {
-        const result = await requestPasswordResetWithFallback(client, { email, redirectTo: resetRedirectTo });
+        const result = await requestPasswordResetWithFallback(client, { email: normalizedEmail, redirectTo: resetRedirectTo });
         return { error: normalizeError(result.error) };
       } catch (error) {
         return { error: normalizeError(error) };

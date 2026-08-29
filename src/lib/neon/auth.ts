@@ -1,5 +1,10 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import type { NeonSql } from './server';
+import {
+  DEVELOPMENT_AUTH_COOKIE_PREFIX,
+  hasDevelopmentAuthCookie,
+  rewriteDevelopmentAuthCookieHeader,
+} from './local-cookies';
 
 export interface NeonRequestUser {
   id: string;
@@ -36,6 +41,32 @@ function mapAuthUser(user: {
 
 const NEON_AUTH_COOKIE_PREFIX = '__Secure-neon-auth';
 const NEON_AUTH_SESSION_COOKIE_NAME = `${NEON_AUTH_COOKIE_PREFIX}.session_token`;
+const DEVELOPMENT_AUTH_SESSION_COOKIE_NAME = `${DEVELOPMENT_AUTH_COOKIE_PREFIX}.session_token`;
+
+async function getUserFromCookieHeader(
+  cookieHeader: string,
+  baseUrl: string,
+): Promise<NeonRequestUser | null> {
+  const sessionUrl = new URL('get-session', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
+  sessionUrl.searchParams.set('disableCookieCache', 'true');
+  const response = await fetch(sessionUrl, {
+    method: 'GET',
+    headers: {
+      Cookie: cookieHeader,
+      Accept: 'application/json',
+      'x-neon-auth-proxy': 'nextjs',
+    },
+    cache: 'no-store',
+    signal: AbortSignal.timeout(3_000),
+  });
+  if (!response.ok) return null;
+
+  const payload = (await response.json()) as {
+    user?: { id: string; email: string; name?: string | null };
+  };
+  const user = payload.user;
+  return user?.id && user.email ? mapAuthUser(user) : null;
+}
 
 /**
  * Reads the signed-in state for first paint without mutating cookies.
@@ -64,41 +95,40 @@ export async function getServerAuthUser(): Promise<NeonRequestUser | null> {
 
   try {
     const store = await cookies();
-    if (!store.has(NEON_AUTH_SESSION_COOKIE_NAME)) return null;
-
-    const cookieHeader = store
+    const authCookies = store
       .getAll()
-      .filter((cookie) => cookie.name.startsWith(NEON_AUTH_COOKIE_PREFIX))
+      .filter((cookie) => cookie.name.startsWith(NEON_AUTH_COOKIE_PREFIX)
+        || (process.env.NODE_ENV === 'development' && cookie.name.startsWith(DEVELOPMENT_AUTH_COOKIE_PREFIX)));
+    if (!authCookies.some((cookie) => cookie.name === NEON_AUTH_SESSION_COOKIE_NAME
+      || cookie.name === DEVELOPMENT_AUTH_SESSION_COOKIE_NAME)) return null;
+
+    const cookieHeader = authCookies
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ');
-
-    const sessionUrl = new URL('get-session', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
-    sessionUrl.searchParams.set('disableCookieCache', 'true');
-    const response = await fetch(sessionUrl, {
-      method: 'GET',
-      headers: {
-        Cookie: cookieHeader,
-        Accept: 'application/json',
-        'x-neon-auth-proxy': 'nextjs',
-      },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(3_000),
-    });
-    if (!response.ok) return null;
-
-    const payload = (await response.json()) as {
-      user?: { id: string; email: string; name?: string | null };
-    };
-    const user = payload.user;
-    if (!user?.id || !user.email) return null;
-    return mapAuthUser(user);
+    return getUserFromCookieHeader(rewriteDevelopmentAuthCookieHeader(cookieHeader), baseUrl);
   } catch {
     return null;
   }
 }
 
 /** Reads the request-aware Neon Auth cookie used by the Next.js integration. */
-async function getNeonUserFromSession(): Promise<NeonRequestUser | null> {
+async function getNeonUserFromSession(request?: Request): Promise<NeonRequestUser | null> {
+  const requestCookieHeader = request?.headers.get('cookie');
+  if (process.env.NODE_ENV === 'development'
+    && requestCookieHeader
+    && hasDevelopmentAuthCookie(requestCookieHeader)) {
+    const baseUrl = process.env.NEON_AUTH_BASE_URL;
+    if (!baseUrl) return null;
+    try {
+      return await getUserFromCookieHeader(
+        rewriteDevelopmentAuthCookieHeader(requestCookieHeader),
+        baseUrl,
+      );
+    } catch {
+      return null;
+    }
+  }
+
   let getNeonAuthServer: typeof import('./server-auth').getNeonAuthServer;
   try {
     ({ getNeonAuthServer } = await import('./server-auth'));
@@ -124,7 +154,7 @@ async function getNeonUserFromSession(): Promise<NeonRequestUser | null> {
 
 /** Verifies a Neon Auth JWT without trusting a client-supplied user id. */
 export async function getNeonUserFromRequest(request: Request): Promise<NeonRequestUser | null> {
-  const cookieUser = await getNeonUserFromSession();
+  const cookieUser = await getNeonUserFromSession(request);
   if (cookieUser) return cookieUser;
 
   if (!remoteJwks) return null;

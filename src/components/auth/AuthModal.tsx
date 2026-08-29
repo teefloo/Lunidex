@@ -42,7 +42,15 @@ export default function AuthModal({
   const authErrorMessage = (error: { name: string; message: string }) => (
     error.name === 'AuthSessionUnavailable'
       ? tt('auth.session_unavailable', 'Sign-in could not be confirmed. Please try again.')
+      : error.name === 'AuthTimeout'
+        ? tt('auth.timeout', 'Authentication is taking too long. Please try again.')
       : error.message
+  );
+
+  const unexpectedAuthErrorMessage = (error: unknown) => (
+    error instanceof Error && error.message
+      ? error.message
+      : tt('auth.request_failed', 'Unable to complete the request. Please try again.')
   );
 
   const handleSubmit = async (event: FormEvent) => {
@@ -73,24 +81,41 @@ export default function AuthModal({
         toast.success(tt('auth.signed_in', 'Signed in. Syncing your collection…'));
         onOpenChange(false);
       }
+    } catch (error) {
+      const message = unexpectedAuthErrorMessage(error);
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setBusy(false);
     }
   };
 
   const handleReset = async () => {
-    if (!email) {
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail) {
       toast.error(tt('auth.enter_email', 'Enter your email first.'));
       return;
     }
-    const { error } = await resetPassword(email);
-    if (error) {
-      setErrorMessage(error.message);
-      toast.error(error.message);
-      return;
-    }
+    if (busy) return;
+
+    setBusy(true);
     setErrorMessage(null);
-    toast.success(tt('auth.reset_sent', 'Password reset email sent.'));
+    try {
+      const { error } = await resetPassword(normalizedEmail);
+      if (error) {
+        const message = authErrorMessage(error);
+        setErrorMessage(message);
+        toast.error(message);
+        return;
+      }
+      toast.success(tt('auth.reset_sent', 'Password reset email sent.'));
+    } catch (error) {
+      const message = unexpectedAuthErrorMessage(error);
+      setErrorMessage(message);
+      toast.error(message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -172,6 +197,7 @@ export default function AuthModal({
             <button
               type="button"
               onClick={handleReset}
+              disabled={busy}
               className="self-end text-xs font-semibold text-primary hover:underline"
             >
               {tt('auth.forgot', 'Forgot password?')}

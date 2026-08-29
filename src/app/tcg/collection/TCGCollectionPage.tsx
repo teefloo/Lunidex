@@ -13,6 +13,7 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
+import { RefreshCw } from 'lucide-react';
 
 export function TCGCollectionPage() {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export function TCGCollectionPage() {
   const routeLang = useClientLanguage();
   const resolvedLang = mounted ? routeLang : 'en';
 
-  const { data: sets, isLoading: setsLoading } = useQuery({
+  const { data: sets, isLoading: setsLoading, isError: setsError, refetch: refetchSets } = useQuery({
     queryKey: ['tcg', 'all-sets', resolvedLang],
     queryFn: () => getAllSets(resolvedLang),
     staleTime: 60 * 60 * 1000,
@@ -64,7 +65,21 @@ export function TCGCollectionPage() {
               </p>
             </div>
 
-            {setsLoading || !sets ? (
+            {setsError && !sets ? (
+              <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-5" role="alert">
+                <p className="text-sm text-foreground/75">
+                  {t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void refetchSets()}
+                  className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                  {t('common.retry', { defaultValue: 'Retry' })}
+                </button>
+              </div>
+            ) : setsLoading || !sets ? (
               <div className="space-y-8" aria-busy="true" aria-live="polite">
                 <span className="sr-only">{t('tcg.collection_loading')}</span>
                 <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">

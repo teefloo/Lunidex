@@ -11,12 +11,31 @@ interface PageProps {
   params: Promise<{ setId: string }>;
 }
 
+async function loadCollectionSet(setId: string, language: string) {
+  try {
+    // `null` is a confirmed missing identifier; `undefined` means the
+    // upstream request failed and the client page should be allowed to retry.
+    return await getTCGSetCached(setId, language);
+  } catch {
+    return undefined;
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { setId } = await params;
   const currentLang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await getTCGSetCached(setId, currentLang).catch(() => null);
-  if (!tcgSet) notFound();
+  const tcgSet = await loadCollectionSet(setId, currentLang);
+  if (tcgSet === null) notFound();
+  if (!tcgSet) {
+    return {
+      title: { absolute: t('tcg.collection_title', { defaultValue: 'My Collection' }) },
+      description: t('tcg.collection_subtitle', {
+        defaultValue: 'Track your Pokémon TCG collection by set.',
+      }),
+      robots: { index: false, follow: true },
+    };
+  }
   const releaseDate = tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' });
   const title = t('tcg.set_meta_title', {
     name: tcgSet.name,
@@ -55,8 +74,8 @@ export default async function SetAlbumPage({ params }: PageProps) {
   const { setId } = await params;
   const lang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await getTCGSetCached(setId, lang).catch(() => null);
-  if (!tcgSet) notFound();
+  const tcgSet = await loadCollectionSet(setId, lang);
+  if (tcgSet === null) notFound();
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
     { name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), path: '/tcg' },

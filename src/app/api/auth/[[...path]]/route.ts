@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getNeonAuthServer, type NeonAuthHandler } from '@/lib/neon/server-auth';
 import { normalizeAuthPath } from '@/lib/neon/auth-route';
+import { rewriteDevelopmentAuthRequest, rewriteDevelopmentAuthResponse } from '@/lib/neon/local-cookies';
 
 type AuthRouteContext = { params: Promise<{ path?: string[] }> };
 
@@ -28,7 +29,12 @@ function createHandler(method: keyof NeonAuthHandler) {
       && normalizedPath[0] === 'get-session'
       ? requestWithFreshSessionLookup(request)
       : request;
-    return auth.handler()[method](authRequest, normalizedContext as Parameters<NeonAuthHandler[typeof method]>[1]);
+    const forwardedRequest = rewriteDevelopmentAuthRequest(authRequest);
+    const response = await auth.handler()[method](
+      forwardedRequest,
+      normalizedContext as Parameters<NeonAuthHandler[typeof method]>[1],
+    );
+    return rewriteDevelopmentAuthResponse(response, request);
   };
 }
 
