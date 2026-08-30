@@ -9,6 +9,7 @@ import {
 // A set id is a short alphanumeric slug (e.g. "swsh3", "sv03.5"). Reject anything
 // else before hitting the upstream API.
 const SET_ID_PATTERN = /^[a-z0-9][a-z0-9.\-]{0,31}$/i;
+const COLLECTION_SET_CARDS_ROUTE_TIMEOUT_MS = 15_000;
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -28,7 +29,11 @@ export async function GET(request: NextRequest) {
   );
 
   try {
-    const cards = await buildSetCollectionCards(setId, lang, maxCards, request.signal);
+    const requestSignal = AbortSignal.any([
+      request.signal,
+      AbortSignal.timeout(COLLECTION_SET_CARDS_ROUTE_TIMEOUT_MS),
+    ]);
+    const cards = await buildSetCollectionCards(setId, lang, maxCards, requestSignal);
     if (cards.length === 0) {
       return NextResponse.json(
         { error: 'Set cards unavailable' },
@@ -46,6 +51,9 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error(`[TCG API] Failed to build collection cards for ${setId}:`, error);
-    return NextResponse.json({ error: 'Failed to build collection cards' }, { status: 502 });
+    return NextResponse.json(
+      { error: 'Failed to build collection cards' },
+      { status: 502, headers: { 'Cache-Control': 'private, no-store' } },
+    );
   }
 }

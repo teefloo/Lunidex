@@ -57,6 +57,22 @@ const withPWA = withPWAInit({
         },
       },
       {
+        urlPattern: ({ sameOrigin, url }: { sameOrigin: boolean; url: URL }) =>
+          sameOrigin && url.pathname === "/api/tcg/collection/set-cards",
+        handler: "NetworkFirst",
+        options: {
+          // Set card projections are public and can be reused by the PWA while
+          // the server function or upstream price service is temporarily slow.
+          cacheName: "tcg-collection-set-cards-v1",
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 86400,
+          },
+          networkTimeoutSeconds: 5,
+          cacheableResponse: { statuses: [200] },
+        },
+      },
+      {
         urlPattern: /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/.*$/i,
         handler: "CacheFirst",
         options: {

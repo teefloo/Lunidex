@@ -75,6 +75,8 @@ const VISUAL_METADATA_CONCURRENCY = 8;
 const POKEMON_CARD_PAGE_SIZE = 100;
 const COLLECTION_CATALOG_TIMEOUT_MS = 10_000;
 const COLLECTION_CATALOG_CLIENT_TIMEOUT_MS = 8_000;
+const COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS = 8_000;
+const COLLECTION_SET_CARDS_FALLBACK_TIMEOUT_MS = 15_000;
 const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -544,6 +546,8 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
 interface GetTCGCardOptions {
   /** Keep a localized response localized instead of replacing it with English data. */
   allowEnglishFallback?: boolean;
+  /** Bypass cached card summaries until a market price is available. */
+  requirePricing?: boolean;
 }
 
 export const getTCGCard = async (
@@ -557,12 +561,12 @@ export const getTCGCard = async (
   // reach the network layer.
   if (!isValidTcgCardId(cardId)) return null;
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-card-v10-${cardId}-${tcgLang}`;
+  const cacheKey = `tcg-card-v11-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
-    if (cached) return cached;
+    if (cached && (!options.requirePricing || hasMarketPrice(cached))) return cached;
 
     throwIfAborted(signal);
 
@@ -581,7 +585,7 @@ export const getTCGCard = async (
     // Keep the localized route indexable with the English card payload rather
     // than turning a valid alternate URL into a 404.
     if (allowEnglishFallback && tcgLang !== 'en') {
-      const fallbackCard = await getTCGCard(cardId, 'en', signal);
+      const fallbackCard = await getTCGCard(cardId, 'en', signal, options);
       if (fallbackCard) return fallbackCard;
     }
 
@@ -777,7 +781,7 @@ export const fetchCollectionValue = async (
     VISUAL_METADATA_CONCURRENCY,
     async (cardId) => {
       throwIfAborted(signal);
-      return getTCGCard(cardId, lang, signal);
+      return getTCGCard(cardId, lang, signal, { requirePricing: true });
     },
   );
   const collectionCards = cards
@@ -999,6 +1003,52 @@ export function isCollectionSetSummary(value: unknown): value is TCGCollectionSe
   );
 }
 
+function isCollectionCard(value: unknown): value is TCGCollectionCard {
+  if (!value || typeof value !== 'object') return false;
+  const card = value as Partial<TCGCollectionCard>;
+  return (
+    typeof card.id === 'string'
+    && typeof card.localId === 'string'
+    && typeof card.name === 'string'
+    && typeof card.setId === 'string'
+  );
+}
+
+function hasCollectionCardValue(card: TCGCollectionCard): boolean {
+  return Boolean(
+    card.value
+    && Number.isFinite(card.value.amount)
+    && typeof card.value.currency === 'string'
+    && card.value.currency.length > 0,
+  );
+}
+
+async function hydrateCollectionCardValues(
+  cards: TCGCollectionCard[],
+  lang: string,
+  signal?: AbortSignal,
+): Promise<TCGCollectionCard[]> {
+  if (cards.length === 0) return cards;
+
+  const hydrationSignal = createCollectionRequestSignal(signal, COLLECTION_SET_CARDS_FALLBACK_TIMEOUT_MS);
+  return mapWithConcurrency(cards, VISUAL_METADATA_CONCURRENCY, async (card) => {
+    if (hydrationSignal.aborted) return card;
+
+    try {
+      const fullCard = await getTCGCard(
+        card.id,
+        lang,
+        hydrationSignal,
+        { requirePricing: true },
+      );
+      return fullCard ? { ...card, ...toCollectionCard(fullCard, card.setId) } : card;
+    } catch (error) {
+      if (signal?.aborted) throw error;
+      return card;
+    }
+  });
+}
+
 /** Fetch the collection catalog through the same-origin cached route. */
 export const fetchCollectionSetCatalog = async (
   lang = 'en',
@@ -1059,7 +1109,7 @@ export const buildSetCollectionCards = async (
 
   const limited = summaries.slice(0, Math.max(0, maxCards));
   const hydrated = await mapWithConcurrency(limited, VISUAL_METADATA_CONCURRENCY, async (card) => {
-    const full = await getTCGCard(card.id, tcgLang, signal).catch((error) => {
+    const full = await getTCGCard(card.id, tcgLang, signal, { requirePricing: true }).catch((error) => {
       if (signal?.aborted) throw error;
       return null;
     });
@@ -1081,20 +1131,37 @@ export const fetchSetCollectionCards = async (
 ): Promise<TCGCollectionCard[]> => {
   const params = new URLSearchParams({ setId, lang });
   try {
-    const response = await fetch(`/api/tcg/collection/set-cards?${params.toString()}`, { signal });
+    const response = await fetch(
+      `/api/tcg/collection/set-cards?${params.toString()}`,
+      { signal: createCollectionRequestSignal(signal, COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS) },
+    );
     if (response.ok) {
-      const data = (await response.json()) as { cards?: TCGCollectionCard[] };
-      if (Array.isArray(data.cards) && data.cards.length > 0) return data.cards;
+      const payload: unknown = await response.json();
+      const rawCards = payload && typeof payload === 'object' && 'cards' in payload
+        ? (payload as { cards?: unknown }).cards
+        : undefined;
+      if (Array.isArray(rawCards)) {
+        const cards = rawCards.filter(isCollectionCard);
+        if (cards.length === rawCards.length && cards.length > 0) {
+          const cardsWithoutPrices = cards.filter((card) => !hasCollectionCardValue(card));
+          if (cardsWithoutPrices.length === 0) return cards;
+
+          const hydratedCards = await hydrateCollectionCardValues(cardsWithoutPrices, lang, signal);
+          const hydratedById = new Map(hydratedCards.map((card) => [card.id, card]));
+          return cards.map((card) => hydratedById.get(card.id) ?? card);
+        }
+      }
     }
   } catch (error) {
     if (signal?.aborted) throw error;
   }
 
-  // The server route may be unable to reach TCGdex while the browser can. Use
-  // the lightweight set listing as a client-side fallback instead of turning
-  // an unavailable set into a misleading empty 0/0 collection.
+  // The server route may be unable to reach TCGdex while the browser can. The
+  // lightweight set listing contains no prices, so hydrate its cards directly
+  // before rendering collection values.
   const fallbackCards = await getCardsBySet(setId, lang, signal);
-  return fallbackCards.map((card) => toCollectionCard(card, setId));
+  const collectionCards = fallbackCards.map((card) => toCollectionCard(card, setId));
+  return hydrateCollectionCardValues(collectionCards, lang, signal);
 };
 
 /**
