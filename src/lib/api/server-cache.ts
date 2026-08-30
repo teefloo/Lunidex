@@ -179,8 +179,8 @@ const getCollectionSetCatalogPersistent = unstable_cache(
   { revalidate: 3600 },
 );
 
-// Limited locales need a real card-availability pass. Keep that manifest
-// shared for a day while the regular catalog remains fresh each hour.
+// Limited locales change less frequently. Keep their compact set manifest
+// shared for a day; card availability is validated when a set is opened.
 const getLimitedCollectionSetCatalogPersistent = unstable_cache(
   (language: string) => getCollectionSetCatalog(language),
   ['lunidex:tcg-collection-set-catalog-limited:v1'],

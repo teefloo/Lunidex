@@ -319,7 +319,11 @@ export async function proxy(request: NextRequest) {
       || accept.includes('text/html')
       || accept.includes('*/*');
     if (isDocumentRequest) {
-      const probe = getResourceProbe(pathname, urlLocale) ?? getTcgResourceProbe(pathname, urlLocale);
+      const isPrivateCollectionAlbum = segments.length === 4
+        && segments[1] === 'tcg'
+        && segments[2] === 'collection';
+      const probe = getResourceProbe(pathname, urlLocale)
+        ?? (isPrivateCollectionAlbum ? null : getTcgResourceProbe(pathname, urlLocale));
       if (probe && (await probeResource(probe)) === false) {
         return hardNotFoundResponse(request, urlLocale);
       }

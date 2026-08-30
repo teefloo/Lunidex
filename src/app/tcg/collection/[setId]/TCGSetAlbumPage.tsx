@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
-import type { TCGSetAlbumData } from '@/types/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
@@ -19,14 +18,12 @@ interface TCGSetAlbumPageProps {
   setId: string;
   language: string;
   activation?: boolean;
-  initialAlbum?: TCGSetAlbumData | null;
 }
 
 export function TCGSetAlbumPage({
   setId,
   language,
   activation = false,
-  initialAlbum,
 }: TCGSetAlbumPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -39,15 +36,14 @@ export function TCGSetAlbumPage({
   const albumQuery = useQuery({
     queryKey: ['tcg', 'collection-set-album', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
-    initialData: initialAlbum && language === resolvedLang ? initialAlbum : undefined,
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !authLoading && Boolean(user),
+    enabled: mounted && !authLoading && Boolean(user) && syncStatus === 'ready',
   });
 
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell pt-24 pb-24 relative">
+      <main className="page-shell relative pt-24 pb-40">
         {authLoading ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />

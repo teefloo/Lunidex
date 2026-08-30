@@ -1,7 +1,4 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { getCollectionSetAlbumCached } from '@/lib/api/server-cache';
-import type { TCGSetAlbumData } from '@/types/tcg';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -13,45 +10,15 @@ interface PageProps {
   searchParams: Promise<{ activation?: string | string[] | undefined }>;
 }
 
-async function loadCollectionAlbum(
-  setId: string,
-  language: string,
-): Promise<TCGSetAlbumData | null | undefined> {
-  try {
-    // `null` is a confirmed missing or empty identifier; `undefined` means the
-    // upstream request failed and the client page should be allowed to retry.
-    return await getCollectionSetAlbumCached(setId, language);
-  } catch {
-    return undefined;
-  }
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { setId } = await params;
   const currentLang = await getServerLanguage();
   const t = await getServerT();
-  const album = await loadCollectionAlbum(setId, currentLang);
-  if (album === null) notFound();
-  const tcgSet = album?.set;
-  if (!tcgSet) {
-    return {
-      title: { absolute: t('tcg.collection_title', { defaultValue: 'My Collection' }) },
-      description: t('tcg.collection_subtitle', {
-        defaultValue: 'Track your Pokémon TCG collection by set.',
-      }),
-      robots: { index: false, follow: true },
-    };
-  }
-  const releaseDate = tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' });
-  const title = t('tcg.set_meta_title', {
-    name: tcgSet.name,
-    defaultValue: `${tcgSet.name} — Pokémon TCG Set | Lunidex`,
+  const collectionTitle = t('tcg.collection_title', { defaultValue: 'My Collection' });
+  const description = t('tcg.collection_subtitle', {
+    defaultValue: 'Track your Pokémon TCG collection by set.',
   });
-  const description = t('tcg.set_meta_description', {
-    name: tcgSet.name,
-    releaseDate,
-    defaultValue: `Browse the ${tcgSet.name} Pokémon TCG set, released ${releaseDate}. Explore cards and track your collection on Lunidex.`,
-  });
+  const title = `${setId} — ${collectionTitle}`;
   return {
     title: { absolute: title },
     description,
@@ -81,15 +48,17 @@ export default async function SetAlbumPage({ params, searchParams }: PageProps) 
   const query = await searchParams;
   const lang = await getServerLanguage();
   const t = await getServerT();
-  const album = await loadCollectionAlbum(setId, lang);
-  if (album === null) notFound();
-  const tcgSet = album?.set;
+  const collectionTitle = t('tcg.collection_title', { defaultValue: 'My Collection' });
+  const collectionDescription = t('tcg.collection_subtitle', {
+    defaultValue: 'Track your Pokémon TCG collection by set.',
+  });
+  const title = `${setId} — ${collectionTitle}`;
   const activationValue = Array.isArray(query.activation) ? query.activation[0] : query.activation;
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
     { name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), path: '/tcg' },
     { name: t('tcg.collection_title', { defaultValue: 'Collection' }), path: '/tcg/collection' },
-    { name: tcgSet?.name ?? setId, path: `/tcg/collection/${setId}` },
+    { name: setId, path: `/tcg/collection/${setId}` },
   ], lang);
   return (
     <>
@@ -97,35 +66,25 @@ export default async function SetAlbumPage({ params, searchParams }: PageProps) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
-      {tcgSet ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: serializeJsonLd({
-              '@context': 'https://schema.org',
-              '@type': 'CollectionPage',
-              name: t('tcg.set_meta_title', {
-                name: tcgSet.name,
-                defaultValue: `${tcgSet.name} — Pokémon TCG Set | Lunidex`,
-              }),
-              description: t('tcg.set_meta_description', {
-                name: tcgSet.name,
-                releaseDate: tcgSet.releaseDate || t('tcg.unknown', { defaultValue: 'unknown date' }),
-                defaultValue: `Browse the ${tcgSet.name} Pokémon TCG set on Lunidex.`,
-              }),
-              url: `${SITE_URL}/${lang}/tcg/collection/${setId}`,
-              isPartOf: { '@id': `${SITE_URL}/${lang}/tcg` },
-              about: { '@type': 'ProductGroup', name: tcgSet.name },
-              keywords: `${tcgSet.name}, Pokémon TCG, ${t('tcg.cards', { defaultValue: 'cards' })}`,
-            }),
-          }}
-        />
-      ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: title,
+            description: collectionDescription,
+            url: `${SITE_URL}/${lang}/tcg/collection/${setId}`,
+            isPartOf: { '@id': `${SITE_URL}/${lang}/tcg` },
+            about: { '@type': 'ProductGroup', name: setId },
+            keywords: `${setId}, Pokémon TCG, ${t('tcg.cards', { defaultValue: 'cards' })}`,
+          }),
+        }}
+      />
       <TCGSetAlbumPage
         setId={setId}
         language={lang}
         activation={activationValue === '1'}
-        initialAlbum={album}
       />
     </>
   );

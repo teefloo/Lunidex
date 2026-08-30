@@ -73,6 +73,8 @@ export const TCG_GLOBAL_RARITIES = [
 
 const VISUAL_METADATA_CONCURRENCY = 8;
 const POKEMON_CARD_PAGE_SIZE = 100;
+const COLLECTION_CATALOG_TIMEOUT_MS = 10_000;
+const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   selectedCategory: 'all',
@@ -108,6 +110,11 @@ export function isTcgLangLimited(lang: string): boolean {
 
 function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
   return signal ? tcgClient.get<T>(url, { signal }) : tcgClient.get<T>(url);
+}
+
+function createCollectionRequestSignal(signal: AbortSignal | undefined, timeoutMs: number): AbortSignal {
+  const timeoutSignal = AbortSignal.timeout(timeoutMs);
+  return signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
 }
 
 function throwIfAborted(signal?: AbortSignal) {
@@ -785,7 +792,11 @@ export const fetchCollectionValue = async (
 /**
  * Fetches all cards from a given set.
  */
-export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard[]> => {
+export const getCardsBySet = async (
+  setId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
   // v6 invalidates earlier partial-set caches so public checklist pages can
   // safely hydrate the complete set response before becoming indexable.
@@ -797,14 +808,19 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
     // transient upstream failure while the set is still available.
     if (cached?.length) return cached;
 
-    const { data } = await tcgClient.get<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(`/${tcgLang}/sets/${setId}`);
+    const { data } = await getWithOptionalSignal<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(
+      `/${tcgLang}/sets/${setId}`,
+      signal,
+    );
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
 
     if (cards.length > 0) await setCachedData(cacheKey, cards);
     return cards;
   } catch (error) {
+    if (signal?.aborted) throw error;
+
     if (tcgLang !== 'en') {
-      const fallbackCards = await getCardsBySet(setId, 'en');
+      const fallbackCards = await getCardsBySet(setId, 'en', signal);
       if (fallbackCards.length > 0) return fallbackCards;
     }
 
@@ -884,11 +900,12 @@ export const getCollectionSetAlbum = async (
   const cacheKey = `tcg-collection-set-album-v1-${setId}-${tcgLang}`;
   const cached = await getCachedData<TCGSetAlbumData>(cacheKey);
   if (cached?.cards.length) return cached;
+  const requestSignal = createCollectionRequestSignal(signal, COLLECTION_ALBUM_TIMEOUT_MS);
 
   try {
     let album: TCGSetAlbumData | null;
     try {
-      album = await fetchCollectionSetAlbumForLanguage(setId, tcgLang, signal);
+      album = await fetchCollectionSetAlbumForLanguage(setId, tcgLang, requestSignal);
     } catch (error) {
       if (!isNotFoundResponse(error)) throw error;
       album = null;
@@ -896,7 +913,7 @@ export const getCollectionSetAlbum = async (
 
     if (!album && tcgLang !== 'en') {
       try {
-        album = await fetchCollectionSetAlbumForLanguage(setId, 'en', signal);
+        album = await fetchCollectionSetAlbumForLanguage(setId, 'en', requestSignal);
       } catch (error) {
         if (!isNotFoundResponse(error)) throw error;
         album = null;
@@ -914,9 +931,9 @@ export const getCollectionSetAlbum = async (
 };
 
 /**
- * Collection-specific catalog loader. Normal locales use the ordered brief
- * list directly. Japanese and Korean lists need a shared availability pass
- * because their declared card counts can describe empty localized responses.
+ * Collection-specific catalog loader. The ordered brief list is intentionally
+ * kept as a compact manifest; localized card availability is resolved when a
+ * user opens an album instead of probing every set on the landing page.
  */
 export const getCollectionSetCatalog = async (
   lang = 'en',
@@ -928,6 +945,7 @@ export const getCollectionSetCatalog = async (
   try {
     const { data } = await tcgClient.get<RawSet[]>(
       `/${tcgLang}/sets?sort:field=releaseDate&sort:order=DESC`,
+      { signal: createCollectionRequestSignal(undefined, COLLECTION_CATALOG_TIMEOUT_MS) },
     );
     if (!Array.isArray(data)) throw new Error('Invalid TCGdex set catalog response');
 
@@ -946,24 +964,11 @@ export const getCollectionSetCatalog = async (
 
     if (listedSets.length === 0) throw new Error('TCGdex returned no usable sets');
 
-    const collectionSets = isTcgLangLimited(tcgLang)
-      ? (await mapWithConcurrency(listedSets, 10, async (set) => {
-        const album = await getCollectionSetAlbum(set.id, tcgLang);
-        if (!album) return null;
-        return {
-          ...set,
-          ...album.set,
-          totalCards: album.cards.length,
-          releaseRank: set.releaseRank,
-          dataLanguage: album.dataLanguage,
-        } satisfies TCGCollectionSetSummary;
-      })).filter((set): set is TCGCollectionSetSummary => Boolean(set))
-      : listedSets;
-
-    if (collectionSets.length === 0) throw new Error('TCGdex returned no sets with card data');
-
-    await setCachedData(cacheKey, collectionSets);
-    return collectionSets;
+    // The ordered list is the compact collection manifest. Validate card data
+    // only when an authenticated user opens a set; probing every Japanese or
+    // Korean set here turns the landing page into an N+1 request waterfall.
+    await setCachedData(cacheKey, listedSets);
+    return listedSets;
   } catch (error) {
     if (cached?.length) return cached;
     const staleCatalog = await getCachedData<TCGCollectionSetSummary[]>(cacheKey, true);
@@ -1023,14 +1028,18 @@ export const buildSetCollectionCards = async (
   setId: string,
   lang = 'en',
   maxCards = TCG_COLLECTION_MAX_CARDS,
+  signal?: AbortSignal,
 ): Promise<TCGCollectionCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const summaries = await getCardsBySet(setId, tcgLang);
+  const summaries = await getCardsBySet(setId, tcgLang, signal);
   if (summaries.length === 0) return [];
 
   const limited = summaries.slice(0, Math.max(0, maxCards));
   const hydrated = await mapWithConcurrency(limited, VISUAL_METADATA_CONCURRENCY, async (card) => {
-    const full = await getTCGCard(card.id, tcgLang).catch(() => null);
+    const full = await getTCGCard(card.id, tcgLang, signal).catch((error) => {
+      if (signal?.aborted) throw error;
+      return null;
+    });
     return toCollectionCard(full ?? card, setId);
   });
 
@@ -1061,7 +1070,7 @@ export const fetchSetCollectionCards = async (
   // The server route may be unable to reach TCGdex while the browser can. Use
   // the lightweight set listing as a client-side fallback instead of turning
   // an unavailable set into a misleading empty 0/0 collection.
-  const fallbackCards = await getCardsBySet(setId, lang);
+  const fallbackCards = await getCardsBySet(setId, lang, signal);
   return fallbackCards.map((card) => toCollectionCard(card, setId));
 };
 

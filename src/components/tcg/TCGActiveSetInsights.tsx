@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSetCollectionCards } from '@/lib/api/tcg';
@@ -25,9 +25,9 @@ interface TCGActiveSetInsightsProps {
   resolvedLang: string;
 }
 
-function formatCurrency(group: TCGCollectionValueGroup): string {
+function formatCurrency(group: TCGCollectionValueGroup, locale: string): string {
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: group.currency,
       maximumFractionDigits: 2,
@@ -37,9 +37,9 @@ function formatCurrency(group: TCGCollectionValueGroup): string {
   }
 }
 
-function formatCardValue(value: TCGCardValue): string {
+function formatCardValue(value: TCGCardValue, locale: string): string {
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: value.currency,
       maximumFractionDigits: 2,
@@ -52,11 +52,37 @@ function formatCardValue(value: TCGCardValue): string {
 export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveSetInsightsProps) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldLoadDetails, setShouldLoadDetails] = useState(false);
 
-  const { data: cards, isLoading, isError } = useQuery({
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      const frameId = requestAnimationFrame(() => setShouldLoadDetails(true));
+      return () => cancelAnimationFrame(frameId);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoadDetails(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '360px 0px' },
+    );
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const { data: cards, isLoading: cardsLoading, isError } = useQuery({
     queryKey: ['tcg', 'collection-cards', set.id, resolvedLang],
     queryFn: ({ signal }) => fetchSetCollectionCards(set.id, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
+    enabled: shouldLoadDetails,
   });
 
   const insights = useMemo(
@@ -65,10 +91,11 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
       : getActiveSetInsightsFallback(set, ownedIds)),
     [cards, ownedIds, set],
   );
-  const detailsUnavailable = isError || (!isLoading && !cards?.length);
+  const isLoading = shouldLoadDetails && cardsLoading;
+  const detailsUnavailable = shouldLoadDetails && (isError || (!cardsLoading && !cards?.length));
 
   return (
-    <div className="min-w-0 rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
+    <div ref={containerRef} className="min-w-0 rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
       <div className="flex min-w-0 items-center gap-3">
         {set.logo && (
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card/40">
@@ -115,7 +142,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
         </p>
       )}
 
-      {insights && !isLoading && !detailsUnavailable && (
+      {shouldLoadDetails && insights && !isLoading && !detailsUnavailable && (
         <>
           {/* Value */}
           <div className="mt-4 grid min-w-0 grid-cols-2 gap-3 border-t border-border/15 pt-3">
@@ -127,7 +154,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
               {insights.valuation.groups.length > 0 ? (
                 <>
                   <p className="mt-1 break-words text-base font-black leading-tight text-primary sm:text-lg">
-                    {insights.valuation.groups.map((g) => formatCurrency(g)).join(' · ')}
+                    {insights.valuation.groups.map((g) => formatCurrency(g, resolvedLang)).join(' · ')}
                   </p>
                   <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
                     {t('tcg.collection_value_coverage', {
@@ -153,7 +180,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   {t('tcg.collection_set_total_value')}
                 </p>
                 <p className="mt-1 break-words text-base font-black leading-tight sm:text-lg">
-                  {insights.setTotalValue.map((g) => formatCurrency(g)).join(' · ')}
+                  {insights.setTotalValue.map((g) => formatCurrency(g, resolvedLang)).join(' · ')}
                 </p>
                 <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
                   {insights.setTotalValue[0].count} / {insights.completion.total} {t('tcg.cards')}
@@ -200,7 +227,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                     </p>
                     {card.value && (
                       <p className="truncate text-[11px] font-bold text-foreground/60">
-                        {formatCardValue(card.value)}
+                        {formatCardValue(card.value, resolvedLang)}
                       </p>
                     )}
                   </Link>

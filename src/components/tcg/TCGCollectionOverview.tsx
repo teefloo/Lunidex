@@ -44,6 +44,7 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
   const ownedIds = useMemo(() => new Set(ownedList), [ownedList]);
   const ownedCardIds = useMemo(() => Array.from(ownedIds).sort(), [ownedIds]);
   const tcgActiveSets = usePrimeDexStore((s) => s.tcgActiveSets);
+  const activeSetIds = useMemo(() => new Set(tcgActiveSets), [tcgActiveSets]);
   const toggleTCGActiveSet = usePrimeDexStore((s) => s.toggleTCGActiveSet);
   const [filterInProgress, setFilterInProgress] = useState(false);
   const [search, setSearch] = useState('');
@@ -60,8 +61,8 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
   });
 
   const activeSets = useMemo(
-    () => sets.filter((set) => tcgActiveSets.includes(set.id)),
-    [sets, tcgActiveSets],
+    () => sets.filter((set) => activeSetIds.has(set.id)),
+    [sets, activeSetIds],
   );
 
   const baseSetEntries = useMemo(
@@ -363,13 +364,13 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
           <div id={setListId} className="flex flex-col gap-3">
             {setEntries.map(({ set, completion }) => {
               const isComplete = completion.percentage >= 100;
-              const isActive = tcgActiveSets.includes(set.id);
+              const isActive = activeSetIds.has(set.id);
               const missing = Math.max(completion.total - completion.owned, 0);
               const setValue = collectionValueQuery.data?.bySet[set.id];
               return (
                 <div
                   key={set.id}
-                  className="group flex flex-col gap-3 rounded-sm border border-border/15 bg-card/30 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color,transform] hover:-translate-x-px hover:-translate-y-px hover:border-primary/20 hover:bg-card/50 [content-visibility:auto] [contain-intrinsic-size:0_112px] sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+                  className="group flex flex-col gap-3 rounded-sm border border-border/15 bg-card/30 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color] hover:border-primary/20 hover:bg-card/50 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
                 >
                   <Link
                     href={localeHref(`/tcg/collection/${set.id}`)}

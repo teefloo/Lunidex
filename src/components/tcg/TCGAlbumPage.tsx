@@ -92,7 +92,7 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
       <div className="flex flex-wrap items-center gap-4">
         <Link
           href={localeHref(backHref)}
-          aria-label="Back to TCG collection"
+          aria-label={`${t('common.back')} — ${t('tcg.collection_title')}`}
           className="flex h-9 w-9 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />

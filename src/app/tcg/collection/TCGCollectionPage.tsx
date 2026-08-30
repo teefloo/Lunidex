@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { fetchCollectionSetCatalog } from '@/lib/api/tcg';
-import type { TCGCollectionSetSummary } from '@/types/tcg';
 import { TCGCollectionOverview } from '@/components/tcg/TCGCollectionOverview';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
@@ -17,11 +16,10 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { RefreshCw } from 'lucide-react';
 
 interface TCGCollectionPageProps {
-  initialSets?: TCGCollectionSetSummary[];
   initialLanguage?: string;
 }
 
-export function TCGCollectionPage({ initialSets, initialLanguage = 'en' }: TCGCollectionPageProps) {
+export function TCGCollectionPage({ initialLanguage = 'en' }: TCGCollectionPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
@@ -33,16 +31,15 @@ export function TCGCollectionPage({ initialSets, initialLanguage = 'en' }: TCGCo
   const { data: sets, isLoading: setsLoading, isError: setsError, refetch: refetchSets } = useQuery({
     queryKey: ['tcg', 'collection-sets', resolvedLang],
     queryFn: ({ signal }) => fetchCollectionSetCatalog(resolvedLang, signal),
-    initialData: initialSets && initialLanguage === resolvedLang ? initialSets : undefined,
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !authLoading && Boolean(user),
+    enabled: mounted && !authLoading && Boolean(user) && syncStatus === 'ready',
   });
 
   return (
     <div className="app-page">
       <Header />
       <main
-        className="page-shell relative pt-24 pb-24"
+        className="page-shell relative pt-24 pb-40"
         aria-labelledby={authLoading
           ? undefined
           : user && syncStatus === 'ready'
