@@ -41,6 +41,22 @@ const withPWA = withPWAInit({
         },
       },
       {
+        urlPattern: ({ sameOrigin, url }: { sameOrigin: boolean; url: URL }) =>
+          sameOrigin && url.pathname === "/api/tcg/sets",
+        handler: "NetworkFirst",
+        options: {
+          // The catalog is public and safe to reuse when an installed PWA is
+          // offline or the server function is temporarily unavailable.
+          cacheName: "tcg-collection-catalog-v1",
+          expiration: {
+            maxEntries: 8,
+            maxAgeSeconds: 86400,
+          },
+          networkTimeoutSeconds: 5,
+          cacheableResponse: { statuses: [200] },
+        },
+      },
+      {
         urlPattern: /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/.*$/i,
         handler: "CacheFirst",
         options: {

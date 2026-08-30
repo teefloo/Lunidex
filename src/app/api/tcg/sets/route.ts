@@ -2,10 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isCollectionSetSummary } from '@/lib/api/tcg';
 import { getCollectionSetCatalogCached } from '@/lib/api/server-cache';
 
+const COLLECTION_CATALOG_ROUTE_TIMEOUT_MS = 12_000;
+
+async function loadCollectionSetCatalog(language: string) {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      getCollectionSetCatalogCached(language),
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error('Collection catalog route timed out'));
+        }, COLLECTION_CATALOG_ROUTE_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
   try {
-    const sets = await getCollectionSetCatalogCached(lang);
+    const sets = await loadCollectionSetCatalog(lang);
     if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {
       throw new Error('Collection catalog is empty or malformed');
     }

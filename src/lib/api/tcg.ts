@@ -74,6 +74,7 @@ export const TCG_GLOBAL_RARITIES = [
 const VISUAL_METADATA_CONCURRENCY = 8;
 const POKEMON_CARD_PAGE_SIZE = 100;
 const COLLECTION_CATALOG_TIMEOUT_MS = 10_000;
+const COLLECTION_CATALOG_CLIENT_TIMEOUT_MS = 8_000;
 const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -115,6 +116,10 @@ function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
 function createCollectionRequestSignal(signal: AbortSignal | undefined, timeoutMs: number): AbortSignal {
   const timeoutSignal = AbortSignal.timeout(timeoutMs);
   return signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
+}
+
+function getCollectionSetCatalogCacheKey(language: string): string {
+  return `tcg-collection-set-catalog-v1-${resolveTcgLang(language)}`;
 }
 
 function throwIfAborted(signal?: AbortSignal) {
@@ -937,15 +942,17 @@ export const getCollectionSetAlbum = async (
  */
 export const getCollectionSetCatalog = async (
   lang = 'en',
+  signal?: AbortSignal,
 ): Promise<TCGCollectionSetSummary[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-collection-set-catalog-v1-${tcgLang}`;
+  const cacheKey = getCollectionSetCatalogCacheKey(tcgLang);
   const cached = await getCachedData<TCGCollectionSetSummary[]>(cacheKey);
+  if (cached?.length) return cached;
 
   try {
     const { data } = await tcgClient.get<RawSet[]>(
       `/${tcgLang}/sets?sort:field=releaseDate&sort:order=DESC`,
-      { signal: createCollectionRequestSignal(undefined, COLLECTION_CATALOG_TIMEOUT_MS) },
+      { signal: createCollectionRequestSignal(signal, COLLECTION_CATALOG_TIMEOUT_MS) },
     );
     if (!Array.isArray(data)) throw new Error('Invalid TCGdex set catalog response');
 
@@ -970,6 +977,7 @@ export const getCollectionSetCatalog = async (
     await setCachedData(cacheKey, listedSets);
     return listedSets;
   } catch (error) {
+    if (signal?.aborted) throw error;
     if (cached?.length) return cached;
     const staleCatalog = await getCachedData<TCGCollectionSetSummary[]>(cacheKey, true);
     if (staleCatalog?.length) return staleCatalog;
@@ -997,19 +1005,34 @@ export const fetchCollectionSetCatalog = async (
   signal?: AbortSignal,
 ): Promise<TCGCollectionSetSummary[]> => {
   const params = new URLSearchParams({ lang });
-  const response = await fetch(`/api/tcg/sets?${params.toString()}`, { signal });
-  if (!response.ok) throw new Error(`Collection catalog request failed (${response.status})`);
+  try {
+    const response = await fetch(
+      `/api/tcg/sets?${params.toString()}`,
+      { signal: createCollectionRequestSignal(signal, COLLECTION_CATALOG_CLIENT_TIMEOUT_MS) },
+    );
+    if (!response.ok) throw new Error(`Collection catalog request failed (${response.status})`);
 
-  const payload: unknown = await response.json();
-  if (!payload || typeof payload !== 'object' || !('sets' in payload)) {
-    throw new Error('Invalid collection catalog response');
+    const payload: unknown = await response.json();
+    if (!payload || typeof payload !== 'object' || !('sets' in payload)) {
+      throw new Error('Invalid collection catalog response');
+    }
+
+    const sets = (payload as { sets?: unknown }).sets;
+    if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {
+      throw new Error('Collection catalog is empty or malformed');
+    }
+
+    // Keep the public manifest available to the installed PWA when its server
+    // route or the upstream catalog is temporarily unavailable.
+    void setCachedData(getCollectionSetCatalogCacheKey(lang), sets);
+    return sets;
+  } catch (error) {
+    if (signal?.aborted) throw error;
   }
 
-  const sets = (payload as { sets?: unknown }).sets;
-  if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {
-    throw new Error('Collection catalog is empty or malformed');
-  }
-  return sets;
+  // The browser can still reach TCGdex when the server function is cold,
+  // blocked, or stale. This also returns the local IndexedDB snapshot first.
+  return getCollectionSetCatalog(lang, signal);
 };
 
 /** Upper bound on how many cards a single collection-insight request will hydrate. */
