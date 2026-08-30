@@ -3,10 +3,13 @@ import { unstable_cache } from 'next/cache';
 import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import {
   DEFAULT_TCG_CARD_FILTERS,
+  getCollectionSetAlbum,
+  getCollectionSetCatalog,
   getAllSets,
   getCardsBySet,
   getTCGCard,
   getSetById,
+  isTcgLangLimited,
   searchCards,
 } from './tcg';
 import {
@@ -164,6 +167,26 @@ const getAllSetsPersistent = unstable_cache(
   { revalidate: 3600 },
 );
 
+const getCollectionSetAlbumPersistent = unstable_cache(
+  (setId: string, language: string) => getCollectionSetAlbum(setId, language),
+  ['lunidex:tcg-collection-set-album:v1'],
+  { revalidate: 3600 },
+);
+
+const getCollectionSetCatalogPersistent = unstable_cache(
+  (language: string) => getCollectionSetCatalog(language),
+  ['lunidex:tcg-collection-set-catalog:v1'],
+  { revalidate: 3600 },
+);
+
+// Limited locales need a real card-availability pass. Keep that manifest
+// shared for a day while the regular catalog remains fresh each hour.
+const getLimitedCollectionSetCatalogPersistent = unstable_cache(
+  (language: string) => getCollectionSetCatalog(language),
+  ['lunidex:tcg-collection-set-catalog-limited:v1'],
+  { revalidate: 86400 },
+);
+
 // Detail-route fetchers shared by generateMetadata and the page component:
 // without per-request memoization each route issues two identical upstream
 // calls (axios traffic is invisible to Next's fetch dedupe).
@@ -209,6 +232,12 @@ export const getTCGCardCached = cache(getTCGCardPersistent);
 export const getTCGSetCached = cache(getTCGSetPersistent);
 export const getTCGSetCardsCached = cache(getTCGSetCardsPersistent);
 export const getAllSetsCached = cache(getAllSetsPersistent);
+export const getCollectionSetAlbumCached = cache(getCollectionSetAlbumPersistent);
+export const getCollectionSetCatalogCached = cache((language: string) => (
+  isTcgLangLimited(language)
+    ? getLimitedCollectionSetCatalogPersistent(language)
+    : getCollectionSetCatalogPersistent(language)
+));
 export const getItemDetailCached = cache(getItemDetailPersistent);
 export const getAbilityDetailCached = cache(getAbilityDetailPersistent);
 export const getAbilityPokemonCached = cache(getAbilityPokemonPersistent);

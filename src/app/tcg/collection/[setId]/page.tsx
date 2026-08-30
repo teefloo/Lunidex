@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTCGSetCached } from '@/lib/api/server-cache';
+import { getCollectionSetAlbumCached } from '@/lib/api/server-cache';
+import type { TCGSetAlbumData } from '@/types/tcg';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -9,13 +10,17 @@ import { TCGSetAlbumPage } from './TCGSetAlbumPage';
 
 interface PageProps {
   params: Promise<{ setId: string }>;
+  searchParams: Promise<{ activation?: string | string[] | undefined }>;
 }
 
-async function loadCollectionSet(setId: string, language: string) {
+async function loadCollectionAlbum(
+  setId: string,
+  language: string,
+): Promise<TCGSetAlbumData | null | undefined> {
   try {
-    // `null` is a confirmed missing identifier; `undefined` means the
+    // `null` is a confirmed missing or empty identifier; `undefined` means the
     // upstream request failed and the client page should be allowed to retry.
-    return await getTCGSetCached(setId, language);
+    return await getCollectionSetAlbumCached(setId, language);
   } catch {
     return undefined;
   }
@@ -25,8 +30,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { setId } = await params;
   const currentLang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await loadCollectionSet(setId, currentLang);
-  if (tcgSet === null) notFound();
+  const album = await loadCollectionAlbum(setId, currentLang);
+  if (album === null) notFound();
+  const tcgSet = album?.set;
   if (!tcgSet) {
     return {
       title: { absolute: t('tcg.collection_title', { defaultValue: 'My Collection' }) },
@@ -70,12 +76,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function SetAlbumPage({ params }: PageProps) {
+export default async function SetAlbumPage({ params, searchParams }: PageProps) {
   const { setId } = await params;
+  const query = await searchParams;
   const lang = await getServerLanguage();
   const t = await getServerT();
-  const tcgSet = await loadCollectionSet(setId, lang);
-  if (tcgSet === null) notFound();
+  const album = await loadCollectionAlbum(setId, lang);
+  if (album === null) notFound();
+  const tcgSet = album?.set;
+  const activationValue = Array.isArray(query.activation) ? query.activation[0] : query.activation;
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
     { name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), path: '/tcg' },
@@ -112,7 +121,12 @@ export default async function SetAlbumPage({ params }: PageProps) {
           }}
         />
       ) : null}
-      <TCGSetAlbumPage />
+      <TCGSetAlbumPage
+        setId={setId}
+        language={lang}
+        activation={activationValue === '1'}
+        initialAlbum={album}
+      />
     </>
   );
 }

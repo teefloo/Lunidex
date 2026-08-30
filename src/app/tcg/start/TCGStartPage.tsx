@@ -209,7 +209,7 @@ export function TCGStartPage() {
                       className="group flex min-h-20 items-center gap-4 rounded-sm border border-border/30 bg-card/40 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                     >
                       <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-muted/40 p-1">
-                        <TCGImageWithFallback candidates={getTCGSetImageCandidates(set)} alt="" width={48} height={48} sizes="48px" className="max-h-full max-w-full object-contain" />
+                        <TCGImageWithFallback candidates={getTCGSetImageCandidates(set)} alt="" fill sizes="48px" className="object-contain" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-base font-bold text-foreground group-hover:text-primary">{set.name}</p>

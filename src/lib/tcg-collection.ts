@@ -319,11 +319,12 @@ export function getCardMarketValue(card: TCGCard): TCGCardValue | null {
  * Project a hydrated card into the slim, owned-independent shape consumed by the
  * collection statistics UI.
  */
-export function toCollectionCard(card: TCGCard): TCGCollectionCard {
+export function toCollectionCard(card: TCGCard, fallbackSetId?: string): TCGCollectionCard {
   return {
     id: card.id,
     localId: card.localId,
     name: card.name,
+    setId: fallbackSetId ?? card.set?.id ?? '',
     image: card.image ?? card.imageUrl,
     rarity: card.rarity ?? null,
     value: getCardMarketValue(card),
@@ -391,40 +392,108 @@ export interface TCGCollectionValuation {
   pricedCount: number;
 }
 
-/**
- * Aggregate the estimated value of the owned subset of `cards`, grouped by
- * currency. Pure and allocation-light so it stays fast on large sets when
- * memoised by the caller.
- */
-export function aggregateCollectionValue(
-  cards: TCGCollectionCard[],
-  ownedIds: Set<string>,
-): TCGCollectionValuation {
-  const totals = new Map<string, { total: number; count: number }>();
-  let ownedCount = 0;
-  let pricedCount = 0;
+export interface TCGCollectionSetValuation {
+  /** Per-currency totals for owned cards in one set. */
+  groups: TCGCollectionValueGroup[];
+  /** Number of owned cards in this set that contributed a price. */
+  pricedCount: number;
+}
 
-  for (const card of cards) {
-    if (!ownedIds.has(card.id)) continue;
-    ownedCount++;
-    const value = card.value;
-    if (!value || !Number.isFinite(value.amount)) continue;
-    pricedCount++;
-    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
-    entry.total += value.amount;
-    entry.count++;
-    totals.set(value.currency, entry);
-  }
+export interface TCGCollectionValuationResult extends TCGCollectionValuation {
+  /** Owned-card values grouped by set identifier. */
+  bySet: Record<string, TCGCollectionSetValuation>;
+}
 
-  const groups = [...totals.entries()]
+function groupsFromTotals(
+  totals: Map<string, { total: number; count: number }>,
+): TCGCollectionValueGroup[] {
+  return [...totals.entries()]
     .map(([currency, { total, count }]) => ({
       currency,
       total: Math.round(total * 100) / 100,
       count,
     }))
     .sort((a, b) => b.total - a.total);
+}
 
-  return { groups, ownedCount, pricedCount };
+/**
+ * Aggregate the estimated value of the owned subset of `cards`, grouped by
+ * currency and set in one pass. Pure and allocation-light so it stays fast on
+ * large collections when memoised by the caller.
+ */
+export function aggregateCollectionValueWithSets(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+): TCGCollectionValuationResult {
+  const totals = new Map<string, { total: number; count: number }>();
+  const totalsBySet = new Map<string, Map<string, { total: number; count: number }>>();
+  const pricedBySet = new Map<string, number>();
+  let ownedCount = 0;
+  let pricedCount = 0;
+
+  for (const card of cards) {
+    if (!ownedIds.has(card.id)) continue;
+    ownedCount++;
+
+    const setTotals = card.setId
+      ? (totalsBySet.get(card.setId) ?? new Map<string, { total: number; count: number }>())
+      : null;
+    if (card.setId && !totalsBySet.has(card.setId)) totalsBySet.set(card.setId, setTotals!);
+
+    const value = card.value;
+    if (!value || !Number.isFinite(value.amount)) continue;
+    pricedCount++;
+
+    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
+    entry.total += value.amount;
+    entry.count++;
+    totals.set(value.currency, entry);
+
+    if (setTotals && card.setId) {
+      const setEntry = setTotals.get(value.currency) ?? { total: 0, count: 0 };
+      setEntry.total += value.amount;
+      setEntry.count++;
+      setTotals.set(value.currency, setEntry);
+      pricedBySet.set(card.setId, (pricedBySet.get(card.setId) ?? 0) + 1);
+    }
+  }
+
+  const bySet = Object.fromEntries(
+    [...totalsBySet.entries()].map(([setId, setTotals]) => [
+      setId,
+      {
+        groups: groupsFromTotals(setTotals),
+        pricedCount: pricedBySet.get(setId) ?? 0,
+      },
+    ]),
+  );
+
+  return { groups: groupsFromTotals(totals), ownedCount, pricedCount, bySet };
+}
+
+/** Aggregate the owned value globally, preserving the legacy return shape. */
+export function aggregateCollectionValue(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+): TCGCollectionValuation {
+  const valuation = aggregateCollectionValueWithSets(cards, ownedIds);
+  return {
+    groups: valuation.groups,
+    ownedCount: valuation.ownedCount,
+    pricedCount: valuation.pricedCount,
+  };
+}
+
+/**
+ * Aggregate the priced subset of owned cards by set without combining
+ * currencies. Cards without a set identifier remain part of the global
+ * valuation but cannot be assigned to a per-set row.
+ */
+export function aggregateCollectionValueBySet(
+  cards: TCGCollectionCard[],
+  ownedIds: Set<string>,
+): Record<string, TCGCollectionSetValuation> {
+  return aggregateCollectionValueWithSets(cards, ownedIds).bySet;
 }
 
 export interface TCGActiveSetInsights {

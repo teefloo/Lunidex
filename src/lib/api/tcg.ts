@@ -11,16 +11,18 @@ import type {
   TCGCardSortOrder,
   TCGCatalogPageResult,
   TCGCollectionCard,
+  TCGCollectionSetSummary,
+  TCGSetAlbumData,
   TCGSet,
   TCGFilterOptions,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import {
-  aggregateCollectionValue,
+  aggregateCollectionValueWithSets,
   getCardMarketValue,
   toCollectionCard,
-  type TCGCollectionValuation,
+  type TCGCollectionValuationResult,
 } from '@/lib/tcg-collection';
 
 const tcgClient = axios.create({
@@ -752,10 +754,10 @@ export const fetchCollectionValue = async (
   cardIds: string[],
   lang = 'en',
   signal?: AbortSignal,
-): Promise<TCGCollectionValuation> => {
+): Promise<TCGCollectionValuationResult> => {
   const uniqueIds = [...new Set(cardIds.map((id) => id.trim()).filter(Boolean))];
   if (uniqueIds.length === 0) {
-    return { groups: [], ownedCount: 0, pricedCount: 0 };
+    return { groups: [], ownedCount: 0, pricedCount: 0, bySet: {} };
   }
 
   const cards = await mapWithConcurrency(
@@ -768,8 +770,9 @@ export const fetchCollectionValue = async (
   );
   const collectionCards = cards
     .filter((card): card is TCGCard => Boolean(card))
-    .map(toCollectionCard);
-  const valuation = aggregateCollectionValue(collectionCards, new Set(uniqueIds));
+    .map((card) => toCollectionCard(card));
+  const ownedIds = new Set(uniqueIds);
+  const valuation = aggregateCollectionValueWithSets(collectionCards, ownedIds);
 
   return {
     ...valuation,
@@ -810,6 +813,200 @@ export const getCardsBySet = async (setId: string, lang = 'en'): Promise<TCGCard
   }
 };
 
+function isRawSetBrief(value: unknown): value is RawSet {
+  if (!value || typeof value !== 'object') return false;
+  const set = value as Partial<RawSet>;
+  return typeof set.id === 'string' && typeof set.name === 'string';
+}
+
+function isRawSetCard(value: unknown): value is TCGCard {
+  if (!value || typeof value !== 'object') return false;
+  const card = value as Partial<TCGCard>;
+  return (
+    typeof card.id === 'string'
+    && typeof card.localId === 'string'
+    && typeof card.name === 'string'
+  );
+}
+
+function normaliseCollectionSetAlbum(
+  raw: RawSet,
+  language: string,
+  expectedSetId: string,
+): TCGSetAlbumData | null {
+  // TCGdex occasionally canonicalizes the casing of an identifier in the
+  // response (for example, `XY10` is returned as `xy10` in English). Treat
+  // that as the same set while retaining the canonical payload identifier.
+  if (raw.id.trim().toLowerCase() !== expectedSetId.trim().toLowerCase() || !Array.isArray(raw.cards)) {
+    throw new Error(`Invalid TCGdex set response for ${expectedSetId}`);
+  }
+
+  if (raw.cards.some((card) => !isRawSetCard(card))) {
+    throw new Error(`Invalid TCGdex card response for ${expectedSetId}`);
+  }
+
+  const cards = raw.cards.map((card) => normaliseCard({ ...card, source: 'TCGames' }, language));
+  if (cards.length === 0) return null;
+
+  return {
+    set: {
+      ...normaliseSet(raw, language),
+      // The collection must count cards that can actually be displayed in the
+      // selected language, not a declared count for an unavailable locale.
+      totalCards: cards.length,
+    },
+    cards,
+    dataLanguage: language,
+  };
+}
+
+async function fetchCollectionSetAlbumForLanguage(
+  setId: string,
+  language: string,
+  signal?: AbortSignal,
+): Promise<TCGSetAlbumData | null> {
+  const encodedSetId = encodeURIComponent(setId);
+  const { data } = await getWithOptionalSignal<RawSet>(`/${language}/sets/${encodedSetId}`, signal);
+  return normaliseCollectionSetAlbum(data, language, setId);
+}
+
+/**
+ * Fetch one collection album as a single set response. Empty localized sets
+ * may use the same-ID English response, while transient failures stay
+ * retryable and are never converted into an empty album.
+ */
+export const getCollectionSetAlbum = async (
+  setId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGSetAlbumData | null> => {
+  const tcgLang = resolveTcgLang(lang);
+  const cacheKey = `tcg-collection-set-album-v1-${setId}-${tcgLang}`;
+  const cached = await getCachedData<TCGSetAlbumData>(cacheKey);
+  if (cached?.cards.length) return cached;
+
+  try {
+    let album: TCGSetAlbumData | null;
+    try {
+      album = await fetchCollectionSetAlbumForLanguage(setId, tcgLang, signal);
+    } catch (error) {
+      if (!isNotFoundResponse(error)) throw error;
+      album = null;
+    }
+
+    if (!album && tcgLang !== 'en') {
+      try {
+        album = await fetchCollectionSetAlbumForLanguage(setId, 'en', signal);
+      } catch (error) {
+        if (!isNotFoundResponse(error)) throw error;
+        album = null;
+      }
+    }
+
+    if (album) await setCachedData(cacheKey, album);
+    return album;
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    const staleAlbum = await getCachedData<TCGSetAlbumData>(cacheKey, true);
+    if (staleAlbum?.cards.length) return staleAlbum;
+    throw error;
+  }
+};
+
+/**
+ * Collection-specific catalog loader. Normal locales use the ordered brief
+ * list directly. Japanese and Korean lists need a shared availability pass
+ * because their declared card counts can describe empty localized responses.
+ */
+export const getCollectionSetCatalog = async (
+  lang = 'en',
+): Promise<TCGCollectionSetSummary[]> => {
+  const tcgLang = resolveTcgLang(lang);
+  const cacheKey = `tcg-collection-set-catalog-v1-${tcgLang}`;
+  const cached = await getCachedData<TCGCollectionSetSummary[]>(cacheKey);
+
+  try {
+    const { data } = await tcgClient.get<RawSet[]>(
+      `/${tcgLang}/sets?sort:field=releaseDate&sort:order=DESC`,
+    );
+    if (!Array.isArray(data)) throw new Error('Invalid TCGdex set catalog response');
+
+    const listedSets = data
+      .map((raw, index) => {
+        if (!isRawSetBrief(raw)) throw new Error('Invalid TCGdex set catalog item');
+        const normalized = normaliseSet(raw, tcgLang);
+        return {
+          ...normalized,
+          totalCards: normalized.totalCards ?? 0,
+          releaseRank: index,
+          dataLanguage: tcgLang,
+        } satisfies TCGCollectionSetSummary;
+      })
+      .filter((set) => (set.totalCards ?? 0) > 0);
+
+    if (listedSets.length === 0) throw new Error('TCGdex returned no usable sets');
+
+    const collectionSets = isTcgLangLimited(tcgLang)
+      ? (await mapWithConcurrency(listedSets, 10, async (set) => {
+        const album = await getCollectionSetAlbum(set.id, tcgLang);
+        if (!album) return null;
+        return {
+          ...set,
+          ...album.set,
+          totalCards: album.cards.length,
+          releaseRank: set.releaseRank,
+          dataLanguage: album.dataLanguage,
+        } satisfies TCGCollectionSetSummary;
+      })).filter((set): set is TCGCollectionSetSummary => Boolean(set))
+      : listedSets;
+
+    if (collectionSets.length === 0) throw new Error('TCGdex returned no sets with card data');
+
+    await setCachedData(cacheKey, collectionSets);
+    return collectionSets;
+  } catch (error) {
+    if (cached?.length) return cached;
+    const staleCatalog = await getCachedData<TCGCollectionSetSummary[]>(cacheKey, true);
+    if (staleCatalog?.length) return staleCatalog;
+    throw error;
+  }
+};
+
+export function isCollectionSetSummary(value: unknown): value is TCGCollectionSetSummary {
+  if (!value || typeof value !== 'object') return false;
+  const set = value as Partial<TCGCollectionSetSummary>;
+  return (
+    typeof set.id === 'string'
+    && typeof set.name === 'string'
+    && typeof set.releaseRank === 'number'
+    && Number.isInteger(set.releaseRank)
+    && set.releaseRank >= 0
+    && typeof set.dataLanguage === 'string'
+    && (set.totalCards ?? 0) > 0
+  );
+}
+
+/** Fetch the collection catalog through the same-origin cached route. */
+export const fetchCollectionSetCatalog = async (
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCollectionSetSummary[]> => {
+  const params = new URLSearchParams({ lang });
+  const response = await fetch(`/api/tcg/sets?${params.toString()}`, { signal });
+  if (!response.ok) throw new Error(`Collection catalog request failed (${response.status})`);
+
+  const payload: unknown = await response.json();
+  if (!payload || typeof payload !== 'object' || !('sets' in payload)) {
+    throw new Error('Invalid collection catalog response');
+  }
+
+  const sets = (payload as { sets?: unknown }).sets;
+  if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {
+    throw new Error('Collection catalog is empty or malformed');
+  }
+  return sets;
+};
+
 /** Upper bound on how many cards a single collection-insight request will hydrate. */
 export const TCG_COLLECTION_MAX_CARDS = 600;
 
@@ -834,7 +1031,7 @@ export const buildSetCollectionCards = async (
   const limited = summaries.slice(0, Math.max(0, maxCards));
   const hydrated = await mapWithConcurrency(limited, VISUAL_METADATA_CONCURRENCY, async (card) => {
     const full = await getTCGCard(card.id, tcgLang).catch(() => null);
-    return toCollectionCard(full ?? card);
+    return toCollectionCard(full ?? card, setId);
   });
 
   return hydrated;
@@ -865,7 +1062,7 @@ export const fetchSetCollectionCards = async (
   // the lightweight set listing as a client-side fallback instead of turning
   // an unavailable set into a misleading empty 0/0 collection.
   const fallbackCards = await getCardsBySet(setId, lang);
-  return fallbackCards.map(toCollectionCard);
+  return fallbackCards.map((card) => toCollectionCard(card, setId));
 };
 
 /**
@@ -1283,7 +1480,7 @@ interface RawSet {
   cardCount?: { total?: number };
   totalCards?: number;
   legalities?: { unlimited?: string; standard?: string; expanded?: string };
-  cards?: { id: string }[];
+  cards?: TCGCard[];
 }
 
 export { buildCardQueryParams };

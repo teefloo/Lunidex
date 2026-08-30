@@ -1891,6 +1891,7 @@ export default {
         collection_top_missing: 'Top Missing Cards',
         collection_no_missing: 'Every card collected!',
         collection_value_estimate: 'My Collection Value',
+        collection_set_owned_value: 'Owned value',
         collection_value_coverage: '{{priced}}/{{owned}} cards priced',
         collection_value_unavailable: 'No pricing available',
         collection_value_none_owned: 'No cards owned yet',

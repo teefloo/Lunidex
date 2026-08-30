@@ -75,10 +75,9 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
             <TCGImageWithFallback
               candidates={getTCGSetImageCandidates(set)}
               alt=""
-              width={40}
-              height={40}
+              fill
               sizes="40px"
-              className="max-h-full max-w-full object-contain p-1"
+              className="object-contain p-1"
             />
           </div>
         )}

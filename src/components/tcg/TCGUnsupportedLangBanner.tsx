@@ -10,9 +10,11 @@ import { persistLanguageCookie } from '@/lib/i18n';
 interface TCGDataLangBannerProps {
   resolvedLang: string;
   variant?: 'inline' | 'full';
+  /** Actual TCGdex payload language, when it differs from the UI locale. */
+  dataLanguage?: string;
 }
 
-export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataLangBannerProps) {
+export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLanguage }: TCGDataLangBannerProps) {
   const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
   const setLanguage = usePrimeDexStore((s) => s.setLanguage);
@@ -21,6 +23,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
 
   const isSupported = isTcgLangSupported(resolvedLang);
   const isLimited = isTcgLangLimited(resolvedLang);
+  const isEnglishFallback = dataLanguage === 'en' && resolvedLang !== 'en';
 
   if (isSupported && !isLimited) return null;
 
@@ -85,9 +88,14 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline' }: TCGDataL
               persistLanguageCookie('en');
             }}
             className="inline-flex h-8 items-center rounded-sm border border-sky-300/40 bg-sky-500/15 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
-          >
-            {t('tcg.try_english')}
-          </button>
+            >
+              {t('tcg.try_english')}
+            </button>
+            {isEnglishFallback && (
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-sky-200/70">
+                {t('tcg.showing_english_fallback')}
+              </span>
+            )}
         </div>
       </div>
       <button

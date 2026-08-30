@@ -97,6 +97,8 @@ export interface TCGCollectionCard {
   id: string;
   localId: string;
   name: string;
+  /** Set identifier used to group owned-card valuations by extension. */
+  setId: string;
   image?: string;
   rarity?: string | null;
   value?: TCGCardValue | null;
@@ -188,6 +190,24 @@ export interface TCGSet {
     standard?: string;
     expanded?: string;
   };
+}
+
+/**
+ * Compact set metadata used by the authenticated collection landing page.
+ * `releaseRank` comes from TCGdex's release-date ordering because the brief
+ * set response does not include the date itself.
+ */
+export interface TCGCollectionSetSummary extends TCGSet {
+  totalCards: number;
+  releaseRank: number;
+  dataLanguage: string;
+}
+
+/** A set and its card summaries loaded together for the collection album. */
+export interface TCGSetAlbumData {
+  set: TCGSet;
+  cards: TCGCard[];
+  dataLanguage: string;
 }
 
 export interface TCGFilterOptions {

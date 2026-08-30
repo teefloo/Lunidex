@@ -6,6 +6,11 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
+// Empty Japanese/Korean set payloads contain only metadata and are currently
+// smaller than 400 bytes. Confirm those compact responses with a GET only when
+// the English fallback is also absent, keeping valid fallback albums to their
+// single detail read.
+const LIMITED_TCG_EMPTY_PROBE_MAX_BYTES = 400;
 const CANONICAL_HOST = 'lunidex.app';
 const ANNIVERSARY_30_ROUTE = '30e-anniversaire';
 const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko', 'zh']);
@@ -150,22 +155,76 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
   return null;
 }
 
+interface ResourceProbeResult {
+  available: boolean | null;
+  contentLength: number | null;
+}
+
+function isLimitedTcgSetProbe(probe: ResourceProbe): boolean {
+  return probe.kind === 'tcg-set' && /\/(?:ja|ko)\/sets\//.test(probe.url);
+}
+
+async function confirmTcgSetHasCards(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<boolean | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), RESOURCE_PROBE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { Accept: 'application/json', ...headers },
+      signal: controller.signal,
+    });
+    if (response.status === 404) return false;
+    if (!response.ok) return null;
+
+    const payload = (await response.json()) as unknown;
+    if (!payload || typeof payload !== 'object' || !('cards' in payload)) return null;
+    const cards = (payload as { cards?: unknown }).cards;
+    return Array.isArray(cards) ? cards.length > 0 : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
   const primaryResult = await probeResourceUrl(probe.url, probe.headers);
-  if (primaryResult === true || !probe.fallbackUrl) return primaryResult;
+  const primaryIsCompact = isLimitedTcgSetProbe(probe)
+    && primaryResult.available === true
+    && primaryResult.contentLength !== null
+    && primaryResult.contentLength <= LIMITED_TCG_EMPTY_PROBE_MAX_BYTES;
+
+  if (primaryIsCompact && probe.fallbackUrl) {
+    // Probe the fallback first. A valid English fallback means the route should
+    // render and avoids downloading the localized empty payload a second time.
+    const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+    if (fallbackResult.available === true) return true;
+    if (fallbackResult.available === null) return true;
+    return confirmTcgSetHasCards(probe.url, probe.headers);
+  }
+
+  if (primaryResult.available === true) {
+    if (primaryIsCompact) return confirmTcgSetHasCards(probe.url, probe.headers);
+    return true;
+  }
+  if (!probe.fallbackUrl) return primaryResult.available;
 
   const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
-  if (primaryResult === false) return fallbackResult;
+  if (primaryResult.available === false) return fallbackResult.available;
 
   // A successful fallback proves the route can render. If the localized probe
   // timed out, however, an English 404 cannot prove the localized ID is absent.
-  return fallbackResult === true ? true : null;
+  return fallbackResult.available === true ? true : null;
 }
 
 async function probeResourceUrl(
   url: string,
   headers?: Record<string, string>,
-): Promise<boolean | null> {
+): Promise<ResourceProbeResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), RESOURCE_PROBE_TIMEOUT_MS);
 
@@ -175,12 +234,17 @@ async function probeResourceUrl(
       headers,
       signal: controller.signal,
     });
-    if (response.status === 404) return false;
-    return true;
+    if (response.status === 404) return { available: false, contentLength: null };
+    const rawContentLength = response.headers.get('content-length');
+    const contentLength = rawContentLength ? Number(rawContentLength) : null;
+    return {
+      available: true,
+      contentLength: contentLength !== null && Number.isFinite(contentLength) ? contentLength : null,
+    };
   } catch {
     // The page fetch remains the source of truth when the probe times out or
     // an upstream service is temporarily unavailable.
-    return null;
+    return { available: null, contentLength: null };
   } finally {
     clearTimeout(timeout);
   }

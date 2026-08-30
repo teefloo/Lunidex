@@ -103,10 +103,9 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
               <TCGImageWithFallback
                 candidates={getTCGSetImageCandidates(set)}
                 alt={set.name}
-                width={40}
-                height={40}
+                fill
                 sizes="40px"
-                className="max-h-full max-w-full object-contain"
+                className="object-contain"
               />
             </div>
           )}

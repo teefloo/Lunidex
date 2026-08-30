@@ -3,15 +3,14 @@
 import { useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Sparkles, ChevronDown, Trophy } from 'lucide-react';
+import { Search, Sparkles, ChevronDown, Trophy, RefreshCw } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
-import type { TCGSet } from '@/types/tcg';
+import type { TCGCollectionSetSummary } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import {
   getSetCompletionFromSet,
-  computeCollectionStatsFromSets,
   type TCGCollectionValueGroup,
 } from '@/lib/tcg-collection';
 import { fetchCollectionValue } from '@/lib/api/tcg';
@@ -21,7 +20,7 @@ import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 
 interface TCGCollectionOverviewProps {
-  sets: TCGSet[];
+  sets: TCGCollectionSetSummary[];
   resolvedLang?: string;
 }
 
@@ -53,8 +52,6 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
   const sortId = useId();
   const setListId = useId();
 
-  const stats = useMemo(() => computeCollectionStatsFromSets(sets, ownedIds), [sets, ownedIds]);
-
   const collectionValueQuery = useQuery({
     queryKey: ['tcg', 'collection-value', resolvedLang, ownedCardIds],
     queryFn: ({ signal }) => fetchCollectionValue(ownedCardIds, resolvedLang, signal),
@@ -67,12 +64,37 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
     [sets, tcgActiveSets],
   );
 
-  const setEntries = useMemo(() => {
-    return sets
-      .map((set) => ({
-        set,
-        completion: getSetCompletionFromSet(set, ownedIds),
-      }))
+  const baseSetEntries = useMemo(
+    () => sets.map((set) => ({
+      set,
+      completion: getSetCompletionFromSet(set, ownedIds),
+    })),
+    [sets, ownedIds],
+  );
+
+  const stats = useMemo(() => {
+    let totalCards = 0;
+    let totalOwned = 0;
+    const completeSets: string[] = [];
+
+    for (const { set, completion } of baseSetEntries) {
+      totalCards += completion.total;
+      totalOwned += completion.owned;
+      if (completion.owned === completion.total && completion.total > 0) {
+        completeSets.push(set.id);
+      }
+    }
+
+    return {
+      totalCards,
+      totalOwned,
+      totalSets: baseSetEntries.length,
+      completeSets,
+      percentage: totalCards > 0 ? Math.round((totalOwned / totalCards) * 100) : 0,
+    };
+  }, [baseSetEntries]);
+
+  const setEntries = useMemo(() => baseSetEntries
       .filter((entry) => {
         if (filterInProgress && entry.completion.percentage >= 100) return false;
         if (search) {
@@ -82,18 +104,13 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
         return true;
       })
       .sort((a, b) => {
-        function toDateNum(d?: string): number {
-          if (!d) return 0;
-          const p = d.split(/[-/]/);
-          return (Number(p[0]) || 0) * 10000 + (Number(p[1]) || 0) * 100 + (Number(p[2]) || 0);
-        }
         switch (sortMode) {
           case 'id-asc':
             return a.set.id.localeCompare(b.set.id);
           case 'release-newest':
-            return toDateNum(b.set.releaseDate) - toDateNum(a.set.releaseDate);
+            return a.set.releaseRank - b.set.releaseRank;
           case 'release-oldest':
-            return toDateNum(a.set.releaseDate) - toDateNum(b.set.releaseDate);
+            return b.set.releaseRank - a.set.releaseRank;
           case 'name-asc':
             return a.set.name.localeCompare(b.set.name);
           case 'name-desc':
@@ -106,8 +123,9 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
             if (b.completion.percentage >= 100) return -1;
             return b.completion.percentage - a.completion.percentage;
         }
-      });
-  }, [sets, ownedIds, filterInProgress, search, sortMode]);
+      }),
+    [baseSetEntries, filterInProgress, search, sortMode],
+  );
 
   if (!mounted) return null;
 
@@ -163,6 +181,20 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                   })}
                 </p>
               </>
+            ) : collectionValueQuery.isError ? (
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <p className="text-[11px] font-bold text-foreground/55">
+                  {t('tcg.collection_value_unavailable')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void collectionValueQuery.refetch()}
+                  className="inline-flex min-h-9 items-center gap-1 rounded-sm border border-primary/30 px-2 text-[10px] font-black uppercase tracking-[0.06em] text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  <RefreshCw className="h-3 w-3" aria-hidden="true" />
+                  {t('common.retry', { defaultValue: 'Retry' })}
+                </button>
+              </div>
             ) : (
               <p className="mt-1 text-[11px] font-bold text-foreground/55">
                 {t('tcg.collection_value_unavailable')}
@@ -333,10 +365,11 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
               const isComplete = completion.percentage >= 100;
               const isActive = tcgActiveSets.includes(set.id);
               const missing = Math.max(completion.total - completion.owned, 0);
+              const setValue = collectionValueQuery.data?.bySet[set.id];
               return (
                 <div
                   key={set.id}
-                  className="group flex flex-col gap-3 rounded-sm border border-border/15 bg-card/30 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color,transform] hover:-translate-x-px hover:-translate-y-px hover:border-primary/20 hover:bg-card/50 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+                  className="group flex flex-col gap-3 rounded-sm border border-border/15 bg-card/30 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color,transform] hover:-translate-x-px hover:-translate-y-px hover:border-primary/20 hover:bg-card/50 [content-visibility:auto] [contain-intrinsic-size:0_112px] sm:flex-row sm:items-center sm:gap-4 sm:p-4"
                 >
                   <Link
                     href={localeHref(`/tcg/collection/${set.id}`)}
@@ -348,10 +381,9 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                         <TCGImageWithFallback
                           candidates={getTCGSetImageCandidates(set)}
                           alt=""
-                          width={48}
-                          height={48}
+                          fill
                           sizes="48px"
-                          className="max-h-full max-w-full object-contain p-1"
+                          className="object-contain p-1"
                         />
                       </div>
                     )}
@@ -370,6 +402,30 @@ export function TCGCollectionOverview({ sets, resolvedLang = 'en' }: TCGCollecti
                       </p>
                     </div>
                   </Link>
+                  <div className="min-w-0 shrink-0 sm:w-36 sm:text-right">
+                    <p className="text-[10px] font-black uppercase tracking-[0.08em] text-foreground/45">
+                      {t('tcg.collection_set_owned_value')}
+                    </p>
+                    {completion.owned === 0 ? (
+                      <span className="text-sm font-black text-foreground/35" aria-label={t('tcg.collection_value_none_owned')}>
+                        —
+                      </span>
+                    ) : collectionValueQuery.isPending ? (
+                      <span className="text-sm font-black text-foreground/35" aria-label={t('tcg.collection_loading')}>
+                        …
+                      </span>
+                    ) : setValue?.groups.length ? (
+                      <p className="break-words text-sm font-black text-primary">
+                        {setValue.groups
+                          .map((group) => formatCurrency(group, resolvedLang))
+                          .join(' · ')}
+                      </p>
+                    ) : (
+                      <span className="text-[11px] font-bold text-foreground/45">
+                        {t('tcg.collection_value_unavailable')}
+                      </span>
+                    )}
+                  </div>
                   <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end sm:justify-center">
                     {isComplete && (
                       <span className="rounded-sm border border-emerald-500/30 bg-emerald-500/15 px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-emerald-400">

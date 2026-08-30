@@ -3,7 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { getAllSets } from '@/lib/api/tcg';
+import { fetchCollectionSetCatalog } from '@/lib/api/tcg';
+import type { TCGCollectionSetSummary } from '@/types/tcg';
 import { TCGCollectionOverview } from '@/components/tcg/TCGCollectionOverview';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
@@ -15,18 +16,24 @@ import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { RefreshCw } from 'lucide-react';
 
-export function TCGCollectionPage() {
+interface TCGCollectionPageProps {
+  initialSets?: TCGCollectionSetSummary[];
+  initialLanguage?: string;
+}
+
+export function TCGCollectionPage({ initialSets, initialLanguage = 'en' }: TCGCollectionPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
   // Set names must match the language the page is displayed in.
   const routeLang = useClientLanguage();
-  const resolvedLang = mounted ? routeLang : 'en';
+  const resolvedLang = mounted ? routeLang : initialLanguage;
 
   const { data: sets, isLoading: setsLoading, isError: setsError, refetch: refetchSets } = useQuery({
-    queryKey: ['tcg', 'all-sets', resolvedLang],
-    queryFn: () => getAllSets(resolvedLang),
+    queryKey: ['tcg', 'collection-sets', resolvedLang],
+    queryFn: ({ signal }) => fetchCollectionSetCatalog(resolvedLang, signal),
+    initialData: initialSets && initialLanguage === resolvedLang ? initialSets : undefined,
     staleTime: 60 * 60 * 1000,
     enabled: mounted && !authLoading && Boolean(user),
   });
