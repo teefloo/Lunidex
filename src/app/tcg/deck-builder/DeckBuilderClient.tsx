@@ -15,6 +15,7 @@ import { searchCards, DEFAULT_TCG_CARD_FILTERS, getTCGCard } from '@/lib/api/tcg
 import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
+import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 
 const MAX_DECK_SIZE = 60;
 
@@ -27,6 +28,9 @@ export default function DeckBuilderClient() {
   const renameDeck = usePrimeDexStore((s) => s.renameTCGDeck);
   const addCard = usePrimeDexStore((s) => s.addCardToTCGDeck);
   const removeCard = usePrimeDexStore((s) => s.removeCardFromTCGDeck);
+  const browseLanguage = usePrimeDexStore((s) => s.tcgBrowseLanguage);
+  const displayCurrency = usePrimeDexStore((s) => s.tcgDisplayCurrency);
+  const hasHydrated = usePrimeDexStore((s) => s._hasHydrated);
 
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,15 +50,15 @@ export default function DeckBuilderClient() {
   const selectedDeck = decks.find((d) => d.id === selectedDeckId) ?? null;
 
   const { data: searchResults, isFetching } = useQuery({
-    queryKey: ['tcg', 'deck-builder-search', committedSearchTerm],
+    queryKey: ['tcg', 'deck-builder-search', committedSearchTerm, browseLanguage],
     queryFn: async ({ signal }) => searchCards(
       { ...DEFAULT_TCG_CARD_FILTERS, searchTerm: committedSearchTerm },
-      'en',
+      browseLanguage,
       1,
       24,
       signal,
     ),
-    enabled: mounted && committedSearchTerm.trim().length > 1,
+    enabled: mounted && hasHydrated && committedSearchTerm.trim().length > 1,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -62,10 +66,10 @@ export default function DeckBuilderClient() {
 
   const deckCardQueries = useQueries({
     queries: deckCardIds.map((cardId) => ({
-      queryKey: tcgKeys.card(cardId, 'en'),
-      queryFn: ({ signal }: { signal: AbortSignal }) => getTCGCard(cardId, 'en', signal),
+      queryKey: tcgKeys.card(cardId, browseLanguage),
+      queryFn: ({ signal }: { signal: AbortSignal }) => getTCGCard(cardId, browseLanguage, signal),
       staleTime: 60 * 60 * 1000,
-      enabled: mounted,
+      enabled: mounted && hasHydrated,
     })),
   });
 
@@ -78,14 +82,28 @@ export default function DeckBuilderClient() {
   }, [selectedDeck, deckCardQueries]);
 
   const totalCount = selectedDeck?.cards.reduce((sum, c) => sum + c.quantity, 0) ?? 0;
-  const totalValue = deckCardsWithData.reduce((sum, entry) => {
+  const pricedDeckCards = deckCardsWithData.filter((entry) => {
+    if (!entry.card) return false;
+    return getCardMarketValue(entry.card, displayCurrency) !== null;
+  });
+  const totalValue = pricedDeckCards.reduce((sum, entry) => {
     if (!entry.card) return sum;
-    const value = getCardMarketValue(entry.card);
+    const value = getCardMarketValue(entry.card, displayCurrency);
     return value ? sum + value.amount * entry.quantity : sum;
   }, 0);
-  const currency = deckCardsWithData.find((e) => e.card && getCardMarketValue(e.card))?.card
-    ? getCardMarketValue(deckCardsWithData.find((e) => e.card && getCardMarketValue(e.card))!.card!)?.currency
-    : 'EUR';
+  const totalValueLabel = pricedDeckCards.length > 0
+    ? (() => {
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency: displayCurrency,
+            maximumFractionDigits: 2,
+          }).format(totalValue);
+        } catch {
+          return `${totalValue.toFixed(2)} ${displayCurrency}`;
+        }
+      })()
+    : null;
 
   const handleCreateDeck = () => {
     const name = newDeckName.trim() || t('tcg.deck_builder.default_deck_name', { defaultValue: 'New Deck' });
@@ -99,6 +117,7 @@ export default function DeckBuilderClient() {
       <Header />
 
       <main className="page-shell pb-20 pt-8">
+        <TCGPageTabs />
         <PageHeader
           title={t('tcg.deck_builder.title', { defaultValue: 'Deck Builder' })}
           subtitle={t('tcg.deck_builder.subtitle', { defaultValue: 'Build a 60-card Pokémon TCG deck (max 4 copies per card, except basic Energy)' })}
@@ -182,9 +201,9 @@ export default function DeckBuilderClient() {
                     <Badge variant={totalCount === MAX_DECK_SIZE ? 'default' : 'outline'}>
                       {totalCount}/{MAX_DECK_SIZE}
                     </Badge>
-                    {totalValue > 0 && (
+                    {totalValueLabel && (
                       <Badge variant="outline">
-                        ~{totalValue.toFixed(2)} {currency}
+                        ~{totalValueLabel}
                       </Badge>
                     )}
                   </div>

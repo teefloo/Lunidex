@@ -7,6 +7,7 @@ import { toast } from '@/lib/toast';
 import { getNeonAccessToken, isNeonAuthConfigured } from '@/lib/neon/client';
 import { subscribeToPush, sendPushNotification, isPushSupported } from '@/lib/push-notifications';
 import { cn } from '@/lib/utils';
+import { usePrimeDexStore } from '@/store/primedex';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -221,6 +222,7 @@ interface AlertRowProps {
 
 function AlertRow({ alert, cardId }: AlertRowProps) {
   const queryClient = useQueryClient();
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const symbol = alert.currency === 'EUR' ? '€' : '$';
   const threshold = alert.currency === 'EUR' ? alert.threshold_eur : alert.threshold_usd;
 
@@ -251,7 +253,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
       const ok = await sendPushNotification(subscription, {
         title: `Lunidex — ${alert.card_name}`,
         body: `Test alert: ${alert.alert_type} ${symbolLocal}${threshold?.toFixed(2) ?? '?'}`,
-        url: `/tcg/cards/${alert.card_id}`,
+        url: `/tcg/cards/${alert.card_id}?tcgLang=${encodeURIComponent(browseLanguage)}`,
       });
       if (!ok) throw new Error('Send failed');
     },

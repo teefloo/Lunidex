@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardCached } from '@/lib/api/server-cache';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
+import { resolveTcgLang } from '@/lib/api/tcg';
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -10,7 +11,9 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
       return NextResponse.json({ error: 'Missing id' }, { status: 400 });
     }
 
-    const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
+    const lang = resolveTcgLang(request.nextUrl.searchParams.get('tcgLang')
+      ?? request.nextUrl.searchParams.get('lang')
+      ?? 'en');
     const card = await getTCGCardCached(id, lang);
 
     if (!card) {

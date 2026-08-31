@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
+import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 
 type ProfileRow = Record<string, unknown>;
 type UserStateRow = { data: unknown; updated_at: string };
@@ -38,16 +39,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     sql`select id, subscription, created_at from public.user_push_subscriptions where user_id = ${user.id}::uuid order by created_at desc`,
     sql`select user_id, handle, display_name, allow_friend_requests, share_tcg_collection, share_tcg_decks, updated_at from public.friend_directory where user_id = ${user.id}::uuid`,
     sql`select id, requester_id, addressee_id, status, created_at, updated_at, responded_at from public.friendships where requester_id = ${user.id}::uuid or addressee_id = ${user.id}::uuid order by created_at desc`,
-    sql`select user_id, card_ids, updated_at from public.friend_collection_snapshots where user_id = ${user.id}::uuid`,
+    sql`select user_id, card_ids, collection_state, updated_at from public.friend_collection_snapshots where user_id = ${user.id}::uuid`,
     sql`select user_id, decks, updated_at from public.friend_deck_snapshots where user_id = ${user.id}::uuid`,
     sql`select id, player1_id, player2_id, player1_team, player2_team, state, status, created_at from public.battle_rooms where player1_id = ${user.id}::uuid or player2_id = ${user.id}::uuid order by created_at desc`,
   ]);
 
+  const rawUserState = (states as UserStateRow[])[0] ?? null;
+  const userState = rawUserState && typeof rawUserState.data === 'object' && rawUserState.data !== null && !Array.isArray(rawUserState.data)
+    ? { ...rawUserState, data: normalizeUserStateData(rawUserState.data as Record<string, unknown>) ?? rawUserState.data }
+    : rawUserState;
   const exportData = {
+    // Account exports carry the current physical-variant collection model.
+    // Importers should continue accepting the historical v1/v2 envelopes.
+    version: '3.0',
     exportedAt: new Date().toISOString(),
     account: { id: user.id, email: user.email, name: user.user_metadata.name ?? user.user_metadata.display_name ?? null },
     profile: (profiles as ProfileRow[])[0] ?? null,
-    userState: (states as UserStateRow[])[0] ?? null,
+    userState,
     quizScores,
     priceAlerts,
     pushSubscriptions,

@@ -21,19 +21,42 @@ import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
+import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 interface TCGAlbumPageProps {
   set: TCGSet;
   cards: TCGCard[];
   activation?: boolean;
+  language?: TCGCardLanguage;
+  collectionKey?: string;
 }
 
-export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPageProps) {
+export function TCGAlbumPage({ set, cards, activation = false, language, collectionKey }: TCGAlbumPageProps) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
   const mounted = useMounted();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
-  const ownedIds = useMemo(() => new Set(ownedList), [ownedList]);
+  const collectionCards = usePrimeDexStore((s) => s.tcgCollectionCards);
+  const browseLanguage = usePrimeDexStore((s) => s.tcgBrowseLanguage);
+  const selectedLanguage = language ?? browseLanguage;
+  const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(selectedLanguage, set.id) ?? undefined;
+  const ownedIds = useMemo(() => new Set(
+    resolvedCollectionKey
+      ? getTCGCollectionCardIds(resolvedCollectionKey, collectionCards)
+      : ownedList,
+  ), [collectionCards, ownedList, resolvedCollectionKey]);
+  const ownershipByCard = useMemo(() => {
+    if (!resolvedCollectionKey) return new Map<string, ReturnType<typeof getTCGCollectionCardOwnerships>>();
+    const byCard = new Map<string, ReturnType<typeof getTCGCollectionCardOwnerships>>();
+    for (const ownership of getTCGCollectionCardOwnerships(resolvedCollectionKey, collectionCards)) {
+      const current = byCard.get(ownership.cardId) ?? [];
+      current.push(ownership);
+      byCard.set(ownership.cardId, current);
+    }
+    return byCard;
+  }, [collectionCards, resolvedCollectionKey]);
+
   const [search, setSearch] = useState('');
   const [rarityFilter, setRarityFilter] = useState<string | null>(null);
   const [showMissingOnly, setShowMissingOnly] = useState(false);
@@ -51,7 +74,7 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
   const rarityCompletion = useMemo(() => getCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
-  const backHref = activation ? '/tcg/start' : '/tcg/collection';
+  const backHref = `${activation ? '/tcg/start' : '/tcg/collection'}?tcgLang=${encodeURIComponent(selectedLanguage)}`;
 
   const filteredCards = useMemo(() => {
     let result = sortedCards;
@@ -122,7 +145,7 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
 
       {activation && (
         <div className="flex justify-end">
-          <Link href={localeHref('/tcg/start')} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+          <Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
             {t('tcg.activation.change_set', { defaultValue: 'Change set' })}
           </Link>
         </div>
@@ -197,12 +220,15 @@ export function TCGAlbumPage({ set, cards, activation = false }: TCGAlbumPagePro
             card={card}
             owned={ownedIds.has(card.id)}
             onView={() => openCard(card)}
+            collectionKey={resolvedCollectionKey}
+            language={selectedLanguage}
+            ownerships={ownershipByCard.get(card.id) ?? []}
             onOwnershipChange={handleOwnershipChange}
           />
         ))}
       </div>
 
-      {selectedCard && <TCGCardDetailModal card={selectedCard} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
+      {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
     </div>
   );
 }

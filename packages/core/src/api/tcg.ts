@@ -14,6 +14,12 @@ import type {
   TCGFilterOptions,
 } from '../types/tcg';
 import { getCanonicalTcgRarity } from '../lib/tcg-rarity';
+import {
+  DEFAULT_TCG_CARD_LANGUAGE,
+  isTCGCardLanguage,
+  normalizeTCGCardLanguage,
+  type TCGCardLanguage,
+} from '../lib/tcg-language';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -28,8 +34,12 @@ axiosRetry(tcgClient, {
   },
 });
 
-const supportedLangs = ['en', 'fr', 'es', 'it', 'de', 'ja', 'ko', 'zh'] as const;
-const unsupportedTcgLangs = new Set(['zh']);
+// Keep this list in one place with the web client and TCGdex's official
+// language registry. `zh` is intentionally absent: callers must choose the
+// simplified (`zh-cn`) or traditional (`zh-tw`) Chinese dataset explicitly.
+// Retain the former `zh` alias in diagnostics while requiring callers to pick
+// the official simplified (`zh-cn`) or traditional (`zh-tw`) dataset.
+const unsupportedTcgLangs = new Set<string>(['zh']);
 const limitedTcgLangs = new Set(['ko', 'ja']);
 
 export const TCG_CARD_CATEGORIES: TCGCardCategoryFilter[] = ['all', 'Pokemon', 'Trainer', 'Energy'];
@@ -78,14 +88,16 @@ export function normalizeTcgPositiveInteger(value: number, fallback: number) {
   return normalized >= 1 ? normalized : fallback;
 }
 
-function resolveTcgLang(lang = 'en') {
-  const supportedLang = supportedLangs.includes(lang as (typeof supportedLangs)[number]) ? lang : 'en';
-  return unsupportedTcgLangs.has(supportedLang) ? 'en' : supportedLang;
+export function resolveTcgLang(lang: string | null | undefined): TCGCardLanguage {
+  const supportedLanguage = normalizeTCGCardLanguage(lang, DEFAULT_TCG_CARD_LANGUAGE)
+    ?? DEFAULT_TCG_CARD_LANGUAGE;
+  return unsupportedTcgLangs.has(supportedLanguage)
+    ? DEFAULT_TCG_CARD_LANGUAGE
+    : supportedLanguage;
 }
 
 export function isTcgLangSupported(lang: string): boolean {
-  if (!supportedLangs.includes(lang as (typeof supportedLangs)[number])) return false;
-  return !unsupportedTcgLangs.has(lang);
+  return isTCGCardLanguage(lang) && !unsupportedTcgLangs.has(lang);
 }
 
 export function getUnsupportedTcgLangs(): readonly string[] {
@@ -93,7 +105,7 @@ export function getUnsupportedTcgLangs(): readonly string[] {
 }
 
 export function isTcgLangLimited(lang: string): boolean {
-  return limitedTcgLangs.has(lang);
+  return isTCGCardLanguage(lang) && limitedTcgLangs.has(lang);
 }
 
 function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {

@@ -8,6 +8,7 @@ import { resolveCollectionEntry } from '@/lib/tcg-collection-entry';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
+import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 
 interface HomeCollectionEntryProps {
   locale: string;
@@ -21,7 +22,7 @@ interface HomeCollectionEntryProps {
 export function HomeCollectionEntry({ className, initialSignedIn, locale, startLabel, resumeLabel, onClick }: HomeCollectionEntryProps) {
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
-  const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
+  const ownedCount = usePrimeDexStore((state) => countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards));
   const { user, loading } = useAuth();
   const { t } = useTranslation();
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });

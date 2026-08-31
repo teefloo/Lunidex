@@ -9,6 +9,7 @@ import { pokemonKeys } from '@/lib/api/keys';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { BADGE_DEFINITIONS, computeBadgeStatus, findNextBadge } from '@/lib/badges';
 import type { DashboardData, BadgeConditionData, ActivityAction, ExtensibleMetric, CategoryStats, QuizSession } from '@/types/dashboard';
+import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 
 const GENERATIONS = [
   { id: 1, name: 'Gen 1' },
@@ -56,7 +57,8 @@ export function useDashboardData(): {
     viewCount,
     history,
     recentActions,
-    tcgOwnedCards,
+    tcgCollectionCards,
+    tcgLegacyOwnedCards,
     tcgWishlistCards,
     tcgSavedSearches,
   } = usePrimeDexStore(useShallow((state) => ({
@@ -74,7 +76,8 @@ export function useDashboardData(): {
     viewCount: state.viewCount,
     history: state.history,
     recentActions: state.recentActions,
-    tcgOwnedCards: state.tcgOwnedCards,
+    tcgCollectionCards: state.tcgCollectionCards,
+    tcgLegacyOwnedCards: state.tcgLegacyOwnedCards,
     tcgWishlistCards: state.tcgWishlistCards,
     tcgSavedSearches: state.tcgSavedSearches,
   })));
@@ -89,6 +92,7 @@ export function useDashboardData(): {
     if (!allPokemon) return { data: null, isLoading, isError };
 
     const totalPokemon = allPokemon.length;
+    const tcgPhysicalCount = countPhysicalTCGCards(tcgCollectionCards, tcgLegacyOwnedCards);
     const caughtSet = new Set(caughtPokemon);
     const viewedIds = new Set([
       ...Object.keys(viewCount).map(Number),
@@ -111,7 +115,7 @@ export function useDashboardData(): {
         .filter((p) => viewedIds.has(p.id))
         .flatMap((p) => p.pokemon_v2_pokemontypes.map((t) => t.pokemon_v2_type.name))
         .filter((t, i, arr) => arr.indexOf(t) === i).length,
-      tcgOwnedCount: tcgOwnedCards.length,
+      tcgOwnedCount: tcgPhysicalCount,
       currentStreak,
     };
 
@@ -210,7 +214,7 @@ export function useDashboardData(): {
       {
         id: 'tcg-owned',
         label: 'TCG Cards Owned',
-        value: tcgOwnedCards.length,
+        value: tcgPhysicalCount,
         icon: 'LayoutGrid',
         subtitle: 'TCG',
       },
@@ -282,5 +286,5 @@ export function useDashboardData(): {
       isLoading: false,
       isError: false,
     };
-  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, isLoading, isError]);
+  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgCollectionCards, tcgLegacyOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, isLoading, isError]);
 }

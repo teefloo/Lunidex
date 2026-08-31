@@ -62,12 +62,14 @@ interface PrivacyRow {
 
 interface SnapshotSummaryRow {
   total_owned: number;
+  distinct_owned: number;
   updated_at: string | null;
 }
 
 interface CollectionPageRow {
   card_id: string;
   total_owned: number;
+  distinct_owned: number;
   has_more: boolean;
 }
 
@@ -325,14 +327,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (action === 'collection-summary' && friendId) {
     if (!(await canViewSnapshot(sql, userId, friendId, 'share_tcg_collection'))) return NextResponse.json({ summary: null }, { headers: PRIVATE_NO_STORE_HEADERS });
     const rows = await sql`
-      select cardinality(card_ids)::integer as total_owned, updated_at
+      select (
+        case when collection_state ? 'legacyOwnedCards' or collection_state ? 'collectionCards'
+          then public.physical_tcg_collection_state_count(collection_state)
+          else cardinality(card_ids)
+        end
+      )::integer as total_owned,
+      cardinality(card_ids)::integer as distinct_owned,
+      updated_at
       from public.friend_collection_snapshots
       where user_id = ${friendId}::uuid
       limit 1
     ` as SnapshotSummaryRow[];
     const row = rows[0];
     const summary: FriendCollectionSummary | null = row
-      ? { totalOwned: Number(row.total_owned), updatedAt: row.updated_at }
+      ? { totalOwned: Number(row.total_owned), distinctOwned: Number(row.distinct_owned), updatedAt: row.updated_at }
       : null;
     return NextResponse.json({ summary }, { headers: PRIVATE_NO_STORE_HEADERS });
   }
@@ -349,6 +358,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         cross join unnest(s.card_ids) as cards(item)
         where s.user_id = ${friendId}::uuid
       ),
+      physical as (
+        select
+          (case when collection_state ? 'legacyOwnedCards' or collection_state ? 'collectionCards'
+            then public.physical_tcg_collection_state_count(collection_state)
+            else cardinality(card_ids)
+          end)::integer as total_owned,
+          cardinality(card_ids)::integer as distinct_owned
+        from public.friend_collection_snapshots
+        where user_id = ${friendId}::uuid
+        limit 1
+      ),
       owned as (
         select card_id
         from all_owned
@@ -356,19 +376,42 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       ),
       ranked as (
         select owned.card_id,
-          (select count(*)::integer from all_owned) as total_owned,
+          (select total_owned from physical) as total_owned,
+          (select distinct_owned from physical) as distinct_owned,
           row_number() over (order by owned.card_id) as row_number,
           count(*) over () > ${limit} as has_more
         from owned
       )
-      select card_id, total_owned, has_more
+      select card_id, total_owned, distinct_owned, has_more
       from ranked
       where row_number <= ${limit}
       order by card_id
     ` as CollectionPageRow[];
+    let totalOwned = Number(rows[0]?.total_owned ?? 0);
+    let distinctOwned = Number(rows[0]?.distinct_owned ?? 0);
+    if (rows.length === 0) {
+      // A cursor past the last page produces no ranked rows, so recover the
+      // aggregate counters instead of incorrectly reporting an empty friend
+      // collection to the client.
+      const totals = await sql`
+        select (
+          case when collection_state ? 'legacyOwnedCards' or collection_state ? 'collectionCards'
+            then public.physical_tcg_collection_state_count(collection_state)
+            else cardinality(card_ids)
+          end
+        )::integer as total_owned,
+        cardinality(card_ids)::integer as distinct_owned
+        from public.friend_collection_snapshots
+        where user_id = ${friendId}::uuid
+        limit 1
+      ` as Array<{ total_owned: number; distinct_owned: number }>;
+      totalOwned = Number(totals[0]?.total_owned ?? 0);
+      distinctOwned = Number(totals[0]?.distinct_owned ?? 0);
+    }
     const page: FriendCollectionPage = {
       cardIds: rows.map((row) => row.card_id),
-      totalOwned: Number(rows[0]?.total_owned ?? 0),
+      totalOwned,
+      distinctOwned,
       hasMore: Boolean(rows[0]?.has_more),
     };
     return NextResponse.json({ page }, { headers: PRIVATE_NO_STORE_HEADERS });

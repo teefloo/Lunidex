@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { fetchAppApi } from '@/lib/app-api';
 import { usePrimeDexStore } from '@/store/primedex';
+import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 import { useState, useEffect } from 'react';
 import { computeTotalXP, getTrainerLevel, getXPProgress, computeWeeklyQuest } from '@/lib/trainer';
 import { ShareButton } from '@/components/share/ShareButton';
@@ -81,7 +82,9 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
   const memberSince = memberSinceRaw
     ? new Date(memberSinceRaw).toLocaleDateString()
     : t('common.unknown');
-  const tcgOwnedCards = usePrimeDexStore((s) => s.tcgOwnedCards);
+  const tcgCollectionCards = usePrimeDexStore((s) => s.tcgCollectionCards);
+  const tcgLegacyOwnedCards = usePrimeDexStore((s) => s.tcgLegacyOwnedCards);
+  const tcgPhysicalCount = countPhysicalTCGCards(tcgCollectionCards, tcgLegacyOwnedCards);
   const totalQuizCorrect = usePrimeDexStore((s) => s.totalQuizCorrect);
   const weeklyQuestClaimedWeek = usePrimeDexStore((s) => s.weeklyQuestClaimedWeek);
   const claimWeeklyQuest = usePrimeDexStore((s) => s.claimWeeklyQuest);
@@ -97,10 +100,10 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
       quizHighScoreStats: 0,
       totalQuizSessions: data.quiz.totalSessions,
       uniqueTypesViewed: data.pokedex.byType.length,
-      tcgOwnedCount: tcgOwnedCards.length,
+      tcgOwnedCount: tcgPhysicalCount,
       currentStreak: data.quiz.currentStreak,
     },
-    { tcgOwnedCount: tcgOwnedCards.length, totalQuizCorrect },
+    { tcgOwnedCount: tcgPhysicalCount, totalQuizCorrect },
   );
 
   const trainerLevel = getTrainerLevel(xp);
@@ -118,10 +121,10 @@ export default function ProfileAndBadges({ data }: ProfileAndBadgesProps) {
       quizHighScoreStats: 0,
       totalQuizSessions: data.quiz.totalSessions,
       uniqueTypesViewed: data.pokedex.byType.length,
-      tcgOwnedCount: tcgOwnedCards.length,
+      tcgOwnedCount: tcgPhysicalCount,
       currentStreak: data.quiz.currentStreak,
     },
-    tcgOwnedCards.length,
+    tcgPhysicalCount,
   );
 
   const weekNum = (() => {

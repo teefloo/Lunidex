@@ -10,6 +10,16 @@ export type TCGCardViewMode = 'visual' | 'table' | 'scan';
 
 export type TCGOwnedState = 'all' | 'owned' | 'wishlist' | 'missing';
 
+export type { TCGCardLanguage } from '../lib/tcg-language';
+export type {
+  TCGCollection,
+  TCGCollectionCardOwnership,
+  TCGCollectionState,
+  TCGCollectionVariant,
+  TCGPhysicalVariant,
+} from '../lib/tcg-collections';
+export type { TCGDisplayCurrency } from '../lib/tcg-currency';
+
 export type TCGLegalState = 'standard' | 'expanded' | 'unlimited';
 
 export interface TCGCardAttack {
@@ -33,11 +43,11 @@ export interface TCGResistanceWeakness {
 }
 
 export interface TCGCardVariants {
-  firstEdition: boolean;
-  holo: boolean;
-  normal: boolean;
-  reverse: boolean;
-  wPromo: boolean;
+  firstEdition?: boolean;
+  holo?: boolean;
+  normal?: boolean;
+  reverse?: boolean;
+  wPromo?: boolean;
 }
 
 export interface TCGCardLegalities {
@@ -46,9 +56,49 @@ export interface TCGCardLegalities {
   unlimited?: boolean;
 }
 
+/** Per-variant TCGplayer pricing tier (USD). */
+export interface TCGPlayerPriceTier {
+  lowPrice?: number | null;
+  midPrice?: number | null;
+  highPrice?: number | null;
+  marketPrice?: number | null;
+  directLowPrice?: number | null;
+}
+
+/** TCGdex `pricing.tcgplayer` block, keyed by marketplace variant. */
+export interface TCGPlayerPricing {
+  unit?: string;
+  updated?: string;
+  normal?: TCGPlayerPriceTier;
+  /** Some TCGdex payloads use the shorter `holo` alias. */
+  holo?: TCGPlayerPriceTier;
+  holofoil?: TCGPlayerPriceTier;
+  reverse?: TCGPlayerPriceTier;
+  'reverse-holofoil'?: TCGPlayerPriceTier;
+  [variant: string]: TCGPlayerPriceTier | string | undefined;
+}
+
+/** TCGdex Cardmarket data, including foil-specific fields. */
+export interface TCGCardmarketPricing {
+  unit?: string;
+  updated?: string;
+  avg?: number | null;
+  low?: number | null;
+  trend?: number | null;
+  avg1?: number | null;
+  avg7?: number | null;
+  avg30?: number | null;
+  'avg-holo'?: number | null;
+  'low-holo'?: number | null;
+  'trend-holo'?: number | null;
+  'avg1-holo'?: number | null;
+  'avg7-holo'?: number | null;
+  'avg30-holo'?: number | null;
+}
+
 export interface TCGCardPricing {
-  tcgplayer?: unknown;
-  cardmarket?: unknown;
+  tcgplayer?: TCGPlayerPricing;
+  cardmarket?: TCGCardmarketPricing;
 }
 
 export interface TCGPriceSnapshot {

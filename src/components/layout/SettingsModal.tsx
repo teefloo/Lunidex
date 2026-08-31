@@ -1,7 +1,7 @@
 'use client';
 
 import { usePrimeDexStore } from '@/store/primedex';
-import { Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film } from 'lucide-react';
+import { Volume2, VolumeX, Sun, Moon, Monitor, Globe, Film, Coins } from 'lucide-react';
 import { DataExportImport } from '@/components/layout/DataExportImport';
 import { useTranslation } from '@/lib/i18n';
 import { useChangeLanguage } from '@/hooks/useChangeLanguage';
@@ -17,6 +17,8 @@ export default function SettingsModal() {
   const toggleAnimatedSprites = usePrimeDexStore(s => s.toggleAnimatedSprites);
   const theme = usePrimeDexStore(s => s.theme);
   const setTheme = usePrimeDexStore(s => s.setTheme);
+  const tcgDisplayCurrency = usePrimeDexStore(s => s.tcgDisplayCurrency);
+  const setTCGDisplayCurrency = usePrimeDexStore(s => s.setTCGDisplayCurrency);
   const language = useLanguageSelection();
   const { t } = useTranslation();
   const changeLanguage = useChangeLanguage();
@@ -41,6 +43,11 @@ export default function SettingsModal() {
     { code: 'ja', name: t('languages.ja'), flag: '🇯🇵' },
     { code: 'ko', name: t('languages.ko'), flag: '🇰🇷' },
     { code: 'zh', name: t('languages.zh'), flag: '🇨🇳' },
+  ];
+
+  const currencyOptions = [
+    { value: 'EUR' as const, label: t('settings.currency_eur', { defaultValue: 'Euro (EUR)' }) },
+    { value: 'USD' as const, label: t('settings.currency_usd', { defaultValue: 'US dollar (USD)' }) },
   ];
 
   return (
@@ -127,6 +134,35 @@ export default function SettingsModal() {
                       aria-pressed={theme === value}
                     >
                       <Icon className="w-5 h-5" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* TCG Currency Selector */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-2.5 rounded-sm text-foreground/70 bg-secondary/30 border border-border/50">
+                    <Coins className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-foreground/80">{t('settings.currency')}</span>
+                    <span className="text-[11px] text-foreground/40">{t('settings.currency_desc')}</span>
+                  </div>
+                </div>
+                <div className="glass-card grid grid-cols-2 gap-2 p-2">
+                  {currencyOptions.map(({ value, label }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setTCGDisplayCurrency(value)}
+                      className={`touch-target flex min-h-11 items-center justify-center rounded-sm px-2 py-2 text-xs font-bold transition-[color,background-color,box-shadow] duration-300 ${tcgDisplayCurrency === value
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                        : 'text-foreground/50 hover:bg-muted/55 hover:text-foreground/80'
+                        }`}
+                      aria-pressed={tcgDisplayCurrency === value}
+                    >
                       {label}
                     </button>
                   ))}

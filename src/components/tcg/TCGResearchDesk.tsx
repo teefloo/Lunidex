@@ -20,7 +20,6 @@ import dynamic from 'next/dynamic';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
-import { persistLanguageCookie } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { cn } from '@/lib/utils';
@@ -30,7 +29,8 @@ import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
-import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -69,18 +69,31 @@ export function TCGResearchDesk({
   const {
     tcgOwnedCards,
     tcgWishlistCards,
+    tcgBrowseLanguage,
+    hasHydrated,
+    setTCGBrowseLanguage,
   } = usePrimeDexStore(useShallow((state) => ({
     tcgOwnedCards: state.tcgOwnedCards,
     tcgWishlistCards: state.tcgWishlistCards,
+    tcgBrowseLanguage: state.tcgBrowseLanguage,
+    hasHydrated: state._hasHydrated,
+    setTCGBrowseLanguage: state.setTCGBrowseLanguage,
   })));
-  // Card data must follow the language the page is actually displayed in: the
-  // locale prefix of the current URL (the same source the interface uses),
-  // not the persisted browser-language preference.
-  const routeLang = useClientLanguage();
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
-  const resolvedLang = mounted ? routeLang : initialLanguage;
+  const initialTcgLanguage: TCGCardLanguage = isTCGCardLanguage(initialLanguage) ? initialLanguage : 'en';
+  // A valid URL parameter is authoritative for this view. Once mounted, the
+  // selector effect mirrors it into the independent browse preference; the
+  // interface locale is never involved in resolving TCG data.
+  const resolvedLang: TCGCardLanguage = mounted && hasHydrated
+    ? (parsedState.tcgLang ?? tcgBrowseLanguage)
+    : (parsedState.tcgLang ?? initialTcgLanguage);
+
+  useEffect(() => {
+    if (!mounted || !hasHydrated || !parsedState.tcgLang || parsedState.tcgLang === tcgBrowseLanguage) return;
+    setTCGBrowseLanguage(parsedState.tcgLang);
+  }, [hasHydrated, mounted, parsedState.tcgLang, setTCGBrowseLanguage, tcgBrowseLanguage]);
 
   useEffect(() => {
     // Load the bundled card rules once for the catalog instead of once per card.
@@ -126,7 +139,7 @@ export function TCGResearchDesk({
     queryKey: tcgKeys.filterOptions(resolvedLang),
     queryFn: () => getFilterOptions(resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted,
+    enabled: mounted && hasHydrated,
   });
 
   const setOptions = useMemo(() => {
@@ -162,15 +175,17 @@ export function TCGResearchDesk({
       : latestSetFallbackName;
 
   useEffect(() => {
+    if (!mounted || !hasHydrated) return;
     const query = serializeTCGSearchState({
       filters: urlFilters,
       viewMode,
       compare: [],
+      tcgLang: resolvedLang,
     });
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams, urlFilters, viewMode]);
+  }, [hasHydrated, mounted, pathname, resolvedLang, router, searchParams, urlFilters, viewMode]);
 
   const ownershipQueryKey = effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all'
     ? { owned: tcgOwnedCards, wishlist: tcgWishlistCards }
@@ -193,7 +208,7 @@ export function TCGResearchDesk({
     queryFn: async ({ pageParam, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, 24, signal, ownedIds, wishlistIds, false),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length + 1 : undefined,
-    enabled: mounted,
+    enabled: mounted && hasHydrated,
     staleTime: 5 * 60 * 1000,
     initialData: initialCards.length > 0 && initialLanguage === resolvedLang ? initialCatalogData : undefined,
     initialDataUpdatedAt: 0,
@@ -258,6 +273,13 @@ export function TCGResearchDesk({
     });
   }, [updateFilters]);
 
+  const tryEnglish = useCallback(() => {
+    setTCGBrowseLanguage('en');
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tcgLang', 'en');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams, setTCGBrowseLanguage]);
+
   const openCard = useCallback((card: TCGCard) => {
     setSelectedCard(card);
     setIsModalOpen(true);
@@ -306,7 +328,7 @@ export function TCGResearchDesk({
 
   return (
     <div className="space-y-6 pb-24">
-      <TCGDataLangBanner resolvedLang={resolvedLang} />
+      <TCGDataLangBanner resolvedLang={resolvedLang} onTryEnglish={tryEnglish} />
       <DiscoveryHero
         title={t('tcg.page_title')}
         subtitle={t('tcg.discover_subtitle')}
@@ -350,6 +372,7 @@ export function TCGResearchDesk({
                 cards={visibleCards}
                 onCardClick={openCard}
                 viewMode={viewMode}
+                tcgLanguage={resolvedLang}
               />
               {hasNextPage && (
                 <button
@@ -368,6 +391,8 @@ export function TCGResearchDesk({
               onClear={clearFilters}
               onLatest={() => applyQuickPreset('latest')}
               onPikachu={() => applyQuickPreset('pikachu')}
+              language={resolvedLang}
+              onTryEnglish={tryEnglish}
             />
           )}
         </main>
@@ -409,6 +434,7 @@ export function TCGResearchDesk({
           card={selectedCard}
           isOpen
           onClose={() => setIsModalOpen(false)}
+          tcgLanguage={resolvedLang}
         />
       )}
     </div>
@@ -595,10 +621,12 @@ function CardResults({
   cards,
   onCardClick,
   viewMode,
+  tcgLanguage,
 }: {
   cards: TCGCard[];
   onCardClick: (card: TCGCard) => void;
   viewMode: TCGCardViewMode;
+  tcgLanguage: TCGCardLanguage;
 }) {
   const isList = viewMode === 'table';
   const gridClassName = isList
@@ -616,6 +644,7 @@ function CardResults({
           index={index}
           onClick={onCardClick}
           variant={isList ? 'list' : 'default'}
+          tcgLanguage={tcgLanguage}
         />
       ))}
     </div>
@@ -672,17 +701,17 @@ function EmptyState({
   onClear,
   onLatest,
   onPikachu,
+  language,
+  onTryEnglish,
 }: {
   onClear: () => void;
   onLatest: () => void;
   onPikachu: () => void;
+  language: TCGCardLanguage;
+  onTryEnglish: () => void;
 }) {
   const { t } = useTranslation();
-  const setLanguage = usePrimeDexStore((s) => s.setLanguage);
-  const mounted = useMounted();
-  const routeLang = useClientLanguage();
-  const resolvedLang = mounted ? routeLang : 'en';
-  const isLimited = isTcgLangLimited(resolvedLang);
+  const isLimited = isTcgLangLimited(language);
 
   return (
     <div className="flex flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-border/50 bg-card/35 px-6 py-20 text-center">
@@ -699,10 +728,7 @@ function EmptyState({
         {isLimited && (
           <button
             type="button"
-            onClick={() => {
-              setLanguage('en');
-              persistLanguageCookie('en');
-            }}
+            onClick={onTryEnglish}
             className="inline-flex h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/25"
           >
             {t('tcg.try_english')}

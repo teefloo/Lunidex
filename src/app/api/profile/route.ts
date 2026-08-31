@@ -128,7 +128,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
             ),
             quiz_best_streak = coalesce((us.data ->> 'bestStreak')::int, 0),
             quiz_total_correct = coalesce((us.data ->> 'totalQuizCorrect')::int, 0),
-            tcg_owned_count = public.distinct_tcg_owned_count(us.data -> 'tcgOwnedCards'),
+            tcg_owned_count = public.physical_tcg_owned_count(us.data),
             avatar_pokemon_id = (
               select (elem #>> '{}')::int
               from jsonb_array_elements(coalesce(us.data -> 'favorites', '[]'::jsonb)) elem

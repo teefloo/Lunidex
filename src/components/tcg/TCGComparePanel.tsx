@@ -24,15 +24,16 @@ export function TCGComparePanel({ isOpen, onClose }: TCGComparePanelProps) {
   const mounted = useMounted();
   const store = usePrimeDexStore();
   const tcgCompareList = store.tcgCompareList;
+  const browseLanguage = store.tcgBrowseLanguage;
   const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
   const clearTCGCompare = store.clearTCGCompare ?? (() => undefined);
   const [expandedAttacks, setExpandedAttacks] = useState<Record<string, boolean>>({});
 
   const { data, isFetching, error } = useQuery({
-    queryKey: tcgKeys.compare(tcgCompareList),
+    queryKey: tcgKeys.compare(tcgCompareList, browseLanguage),
     queryFn: async () => {
       const ids = tcgCompareList.map(encodeURIComponent).join(',');
-      const res = await fetch(`/api/tcg/compare?ids=${ids}`);
+      const res = await fetch(`/api/tcg/compare?ids=${ids}&tcgLang=${encodeURIComponent(browseLanguage)}`);
       if (!res.ok) throw new Error('Failed to fetch');
       return res.json() as Promise<{ cards: TCGCard[] }>;
     },
@@ -155,7 +156,8 @@ function CompareCardSlot({
   onToggleAttacks: () => void;
 }) {
   const { t } = useTranslation();
-  const marketValue = getCardMarketValue(card);
+  const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
+  const marketValue = getCardMarketValue(card, displayCurrency);
   const attacks = card.attacks ?? [];
   const weaknesses = card.weaknesses ?? [];
   const retreatCost = card.retreat ?? card.retreatCost ?? 0;

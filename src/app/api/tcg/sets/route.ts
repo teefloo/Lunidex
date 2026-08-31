@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isCollectionSetSummary } from '@/lib/api/tcg';
+import { isCollectionSetSummary, resolveTcgLang } from '@/lib/api/tcg';
 import { getCollectionSetCatalogCached } from '@/lib/api/server-cache';
 
 const COLLECTION_CATALOG_ROUTE_TIMEOUT_MS = 12_000;
@@ -21,7 +21,9 @@ async function loadCollectionSetCatalog(language: string) {
 }
 
 export async function GET(request: NextRequest) {
-  const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
+  const lang = resolveTcgLang(request.nextUrl.searchParams.get('tcgLang')
+    ?? request.nextUrl.searchParams.get('lang')
+    ?? 'en');
   try {
     const sets = await loadCollectionSetCatalog(lang);
     if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {

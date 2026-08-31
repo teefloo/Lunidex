@@ -7,6 +7,7 @@ import type {
   TCGSearchFacets,
   TCGSearchInsights,
 } from '@/types/tcg';
+import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 type SearchParamsLike = Pick<URLSearchParams, 'get'>;
 
@@ -22,6 +23,7 @@ export interface TCGSearchState {
   filters: TCGCardFilters;
   viewMode: TCGCardViewMode;
   compare: string[];
+  tcgLang?: TCGCardLanguage;
 }
 
 const DEFAULT_VIEW_MODE: TCGCardViewMode = 'visual';
@@ -56,12 +58,16 @@ export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchSt
     filters,
     viewMode,
     compare: readList(searchParams, 'compare'),
+    tcgLang: (() => {
+      const value = readString(searchParams, 'tcgLang');
+      return isTCGCardLanguage(value) ? value : undefined;
+    })(),
   };
 }
 
 export function serializeTCGSearchState(state: TCGSearchState): string {
   const params = new URLSearchParams();
-  const { filters, viewMode, compare } = state;
+  const { filters, viewMode, compare, tcgLang } = state;
   const normalizedViewMode = normalizeViewMode(viewMode);
 
   writeString(params, 'q', filters.searchTerm);
@@ -86,6 +92,7 @@ export function serializeTCGSearchState(state: TCGSearchState): string {
   writeString(params, 'sortOrder', filters.sortOrder);
   writeString(params, 'view', normalizedViewMode !== DEFAULT_VIEW_MODE ? normalizedViewMode : undefined);
   writeList(params, 'compare', compare);
+  if (tcgLang) params.set('tcgLang', tcgLang);
 
   return params.toString();
 }

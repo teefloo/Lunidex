@@ -14,6 +14,7 @@ import {
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { usePriceHistory, computePriceTrend, type PriceHistoryEntry } from '@/hooks/usePriceHistory';
 import { cn } from '@/lib/utils';
+import { usePrimeDexStore } from '@/store/primedex';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -96,11 +97,19 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
       <p className="mb-1 font-bold text-foreground/70">{label}</p>
       {payload.map((item) => (
         <p key={item.name} style={{ color: item.color }} className="font-semibold">
-          {item.name}: {item.value != null ? `${item.name === 'EUR' ? '€' : '$'}${item.value.toFixed(2)}` : '—'}
+          {item.name}: {item.value != null ? formatChartAmount(item.value, item.name) : '—'}
         </p>
       ))}
     </div>
   );
+}
+
+function formatChartAmount(amount: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency, maximumFractionDigits: 2 }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${currency}`;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -129,6 +138,7 @@ function PriceChartSkeleton() {
 
 export function PriceChart({ cardId }: PriceChartProps) {
   const [days, setDays] = useState<Days>(30);
+  const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const { data: history, isPending, isError } = usePriceHistory(cardId, days);
 
   if (isPending) return <PriceChartSkeleton />;
@@ -143,6 +153,16 @@ export function PriceChart({ cardId }: PriceChartProps) {
 
   const chartData = toChartData(history);
   const trend = computePriceTrend(history);
+  const chartKey: 'usd' | 'eur' = displayCurrency === 'EUR' ? 'eur' : 'usd';
+  const hasSelectedCurrencyHistory = chartData.some((entry) => entry[chartKey] != null);
+
+  if (!hasSelectedCurrencyHistory) {
+    return (
+      <div className="rounded-xl border border-foreground/10 bg-foreground/5 px-5 py-6 text-center text-xs text-foreground/40">
+        No price history available yet. Data is collected every 6 hours.
+      </div>
+    );
+  }
 
   const DAY_BUTTONS: { label: string; value: Days }[] = [
     { label: '7d', value: 7 },
@@ -159,8 +179,7 @@ export function PriceChart({ cardId }: PriceChartProps) {
         </span>
 
         <div className="flex items-center gap-1.5">
-          <TrendBadge pct={trend.usdChange} label="USD" />
-          <TrendBadge pct={trend.eurChange} label="EUR" />
+          <TrendBadge pct={displayCurrency === 'EUR' ? trend.eurChange : trend.usdChange} label={displayCurrency} />
         </div>
 
         {/* Day toggle */}
@@ -199,7 +218,7 @@ export function PriceChart({ cardId }: PriceChartProps) {
               tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.4)' }}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(v: number) => `$${v.toFixed(0)}`}
+              tickFormatter={(v: number) => formatChartAmount(v, displayCurrency)}
               width={44}
             />
             <Tooltip content={<ChartTooltip />} />
@@ -210,19 +229,9 @@ export function PriceChart({ cardId }: PriceChartProps) {
             />
             <Line
               type="monotone"
-              dataKey="usd"
-              name="USD"
-              stroke="#3b82f6"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4 }}
-              connectNulls
-            />
-            <Line
-              type="monotone"
-              dataKey="eur"
-              name="EUR"
-              stroke="#ef4444"
+              dataKey={chartKey}
+              name={displayCurrency}
+              stroke={displayCurrency === 'EUR' ? '#ef4444' : '#3b82f6'}
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4 }}

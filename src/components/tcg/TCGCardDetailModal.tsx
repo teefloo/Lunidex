@@ -31,6 +31,8 @@ import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
+import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant, isTCGCollectionCardOwned } from '@/lib/tcg-collections';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -44,6 +46,8 @@ interface TCGCardDetailModalProps {
   onClose: () => void;
   onWishlistAdded?: () => void;
   priority?: boolean;
+  tcgLanguage?: TCGCardLanguage;
+  collectionKey?: string;
 }
 
 export function TCGCardDetailModal({
@@ -52,22 +56,30 @@ export function TCGCardDetailModal({
   onClose,
   onWishlistAdded,
   priority = true,
+  tcgLanguage,
+  collectionKey,
 }: TCGCardDetailModalProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
+  const interfaceLanguage = useClientLanguage();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const store = usePrimeDexStore();
-  const routeLang = useClientLanguage();
   const addTCGCompare = store.addTCGCompare ?? (() => undefined);
   const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
   const isTCGCompared = store.isTCGCompared ?? (() => false);
   const toggleTCGOwned = store.toggleTCGOwned ?? (() => undefined);
+  const removeTCGCollectionCard = store.removeTCGCollectionCard ?? (() => undefined);
+  const setTCGCollectionVariantQuantity = store.setTCGCollectionVariantQuantity ?? (() => undefined);
+  const tcgCollections = store.tcgCollections;
   const toggleTCGWishlist = store.toggleTCGWishlist ?? (() => undefined);
   const isTCGOwned = store.isTCGOwned ?? (() => false);
   const isTCGWishlist = store.isTCGWishlist ?? (() => false);
-  // The hydrated card must match the language the page is displayed in.
-  const resolvedLang = mounted ? routeLang : 'en';
+  const browseLanguage = store.tcgBrowseLanguage;
+  const displayCurrency = store.tcgDisplayCurrency;
+  // Card data follows the independent TCG language, never the interface
+  // locale prefix. Collection albums pass their fixed language explicitly.
+  const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
 
   useEffect(() => {
     void import('../../styles/pokemon-cards-css.css');
@@ -129,10 +141,23 @@ export function TCGCardDetailModal({
     ? localeHref(`/pokemon/${displayCard.dexId[0]}`)
     : null;
   const tcgCompareList = store.tcgCompareList ?? [];
+  const candidateCollectionKey = displayCard.set?.id
+    ? encodeTCGCollectionKey(resolvedLang, displayCard.set.id)
+    : null;
+  // Catalogue/card pages should keep the existing v1 behaviour when the user
+  // has not started that language/set collection yet. An explicit album key,
+  // or a known collection in the store, opts into language-scoped ownership;
+  // otherwise the action remains a historical (language-less) possession.
+  const resolvedCollectionKey = collectionKey
+    ?? (candidateCollectionKey && tcgCollections.includes(candidateCollectionKey)
+      ? candidateCollectionKey
+      : null);
   const compared = isTCGCompared(displayCard.id);
-  const owned = isTCGOwned(displayCard.id);
+  const owned = resolvedCollectionKey
+    ? isTCGCollectionCardOwned(resolvedCollectionKey, displayCard.id, store.tcgCollectionCards)
+    : isTCGOwned(displayCard.id);
   const wishlisted = isTCGWishlist(displayCard.id);
-  const marketValue = getCardMarketValue(displayCard);
+  const marketValue = getCardMarketValue(displayCard, displayCurrency);
   const marketValueLabel = marketValue
     ? (() => {
         try {
@@ -149,7 +174,7 @@ export function TCGCardDetailModal({
 
   const handleShareCard = async () => {
     const url = new URL(
-      `/tcg/cards/${displayCard.id}?lang=${resolvedLang}`,
+      `/tcg/cards/${displayCard.id}?tcgLang=${resolvedLang}`,
       window.location.origin,
     ).toString();
     try {
@@ -169,8 +194,30 @@ export function TCGCardDetailModal({
     if (!wishlisted && !owned) onWishlistAdded?.();
   };
 
+  const handleOwnedToggle = () => {
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      return;
+    }
+    if (!resolvedCollectionKey) {
+      toggleTCGOwned(displayCard.id);
+      return;
+    }
+    if (owned) {
+      removeTCGCollectionCard(resolvedCollectionKey, displayCard.id);
+      return;
+    }
+    const firstKnownVariant = getTCGDefaultPhysicalVariant(displayCard.variants);
+    setTCGCollectionVariantQuantity(
+      resolvedCollectionKey,
+      displayCard.id,
+      firstKnownVariant ?? 'unspecified',
+      1,
+    );
+  };
+
   return createPortal(
-    <div lang={resolvedLang} className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div lang={interfaceLanguage} className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -280,7 +327,17 @@ export function TCGCardDetailModal({
                       label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
                       badge={compared ? tcgCompareList.length : undefined}
                     />
-                    <ActionPill active={owned} onClick={() => toggleTCGOwned(displayCard.id)} label={t('tcg.mark_owned')} />
+                    {resolvedCollectionKey ? (
+                      <div
+                        role="status"
+                        aria-label={t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: `Manage variants for ${displayCard.name}` })}
+                        className="flex min-h-11 items-center justify-center rounded-sm border border-primary/25 bg-primary/10 px-3 text-center text-[11px] font-black uppercase tracking-[0.08em] text-primary"
+                      >
+                        {owned ? t('tcg.collection_owned_variants', { defaultValue: 'Variants managed in collection' }) : t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: 'Manage variants in the collection card' })}
+                      </div>
+                    ) : (
+                      <ActionPill active={owned} onClick={handleOwnedToggle} label={t('tcg.mark_owned')} />
+                    )}
                     <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
                   </div>

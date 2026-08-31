@@ -7,6 +7,8 @@ import { toast } from '@/lib/toast';
 import { useRef, useState, useCallback } from 'react';
 import { Download, Upload, AlertTriangle, Check, X, FileJson } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { countPhysicalTCGCards } from '@/lib/tcg-collections';
+import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 
 interface ExportPayload {
   version: string;
@@ -19,6 +21,8 @@ interface ImportPreview {
   team: number[];
   caughtPokemon: number[];
   tcgOwnedCards: string[];
+  tcgPhysicalCards: number;
+  tcgCollections: string[];
   tcgWishlistCards: string[];
   badges: string[];
 }
@@ -34,6 +38,9 @@ function validateImportPayload(
 
   if (!('version' in obj) || typeof obj.version !== 'string') {
     return { valid: false, error: 'Missing or invalid version field' };
+  }
+  if (!/^\d+\.\d+$/.test(obj.version) || !['1.0', '2.0', '3.0'].includes(obj.version)) {
+    return { valid: false, error: 'Unsupported backup version' };
   }
 
   if (!('data' in obj) || typeof obj.data !== 'object' || obj.data === null) {
@@ -54,8 +61,11 @@ function validateImportPayload(
     return { valid: false, error: 'Caught Pokémon list exceeds 2000 entries' };
   }
 
-  if (Array.isArray(data.tcgOwnedCards) && data.tcgOwnedCards.length > 5000) {
-    return { valid: false, error: 'TCG owned cards list exceeds 5000 entries' };
+  if (Array.isArray(data.tcgOwnedCards) && data.tcgOwnedCards.length > 10000) {
+    return { valid: false, error: 'TCG owned cards list exceeds 10000 entries' };
+  }
+  if (Array.isArray(data.tcgCollectionCards) && data.tcgCollectionCards.length > 10000) {
+    return { valid: false, error: 'TCG collection cards list exceeds 10000 entries' };
   }
 
   if (Array.isArray(data.tcgWishlistCards) && data.tcgWishlistCards.length > 5000) {
@@ -66,10 +76,13 @@ function validateImportPayload(
     return { valid: false, error: 'Badges list exceeds 500 entries' };
   }
 
+  const normalized = normalizeUserStateData(data);
+  if (!normalized) return { valid: false, error: 'Invalid TCG collection data' };
+
   const syncedData: Record<string, unknown> = {};
   for (const key of SYNCED_KEYS) {
-    if (key in data) {
-      syncedData[key] = data[key];
+    if (key in normalized) {
+      syncedData[key] = normalized[key];
     }
   }
 
@@ -82,6 +95,11 @@ function getImportPreview(data: PersistedState): ImportPreview {
     team: Array.isArray(data.team) ? data.team : [],
     caughtPokemon: Array.isArray(data.caughtPokemon) ? data.caughtPokemon : [],
     tcgOwnedCards: Array.isArray(data.tcgOwnedCards) ? data.tcgOwnedCards : [],
+    tcgPhysicalCards: countPhysicalTCGCards(
+      Array.isArray(data.tcgCollectionCards) ? data.tcgCollectionCards : [],
+      Array.isArray(data.tcgLegacyOwnedCards) ? data.tcgLegacyOwnedCards : data.tcgOwnedCards,
+    ),
+    tcgCollections: Array.isArray(data.tcgCollections) ? data.tcgCollections : [],
     tcgWishlistCards: Array.isArray(data.tcgWishlistCards) ? data.tcgWishlistCards : [],
     badges: Array.isArray(data.badges) ? data.badges : [],
   };
@@ -97,8 +115,10 @@ export function DataExportImport() {
   const handleExport = useCallback(() => {
     try {
       const state = pickSyncState();
+      // The v3 envelope carries the v3 physical-variant collection state while
+      // validation below remains backwards compatible with v1 and v2 files.
       const payload: ExportPayload = {
-        version: '1.0',
+        version: '3.0',
         exportedAt: new Date().toISOString(),
         data: state,
       };
@@ -255,7 +275,7 @@ export function DataExportImport() {
                 </div>
                 <div className="flex justify-between">
                   <span>{t('settings.import_tcg')}</span>
-                  <span className="font-bold text-foreground/80">{preview.tcgOwnedCards.length}</span>
+                  <span className="font-bold text-foreground/80">{preview.tcgPhysicalCards}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>{t('settings.import_wishlist')}</span>

@@ -14,6 +14,9 @@
 export * from './types/pokemon';
 export * from './types/tcg';
 export * from './types/dashboard';
+export * from './lib/tcg-language';
+export * from './lib/tcg-collections';
+export * from './lib/tcg-currency';
 
 export * from './store/primedex';
 export * from './store/sync-access';

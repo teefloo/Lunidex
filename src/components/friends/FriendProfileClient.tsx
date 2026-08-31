@@ -6,7 +6,8 @@ import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, BarChart3, EyeOff, Layers, Loader2, ShieldAlert, Users, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useMounted } from '@/hooks/useMounted';
-import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { usePrimeDexStore } from '@/store/primedex';
 import { useTranslation } from '@/lib/i18n';
 import { getAllSets, getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
@@ -105,7 +106,7 @@ function FriendHero({ friend }: { friend: FriendDirectoryEntry }) {
 function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; friendId: string }) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const resolvedLang = useClientLanguage();
+  const resolvedLang = usePrimeDexStore((state) => mounted ? state.tcgBrowseLanguage : 'en');
 
   const summaryQuery = useQuery({
     queryKey: ['friends', 'collection-summary', friendId],
@@ -154,8 +155,9 @@ function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; 
   }
 
   const totalOwned = summaryQuery.data?.totalOwned ?? cardsQuery.data?.pages[0]?.totalOwned ?? 0;
+  const distinctOwned = summaryQuery.data?.distinctOwned ?? cardsQuery.data?.pages[0]?.distinctOwned ?? cardIds.length;
   const totalCards = setsQuery.data?.reduce((sum, set) => sum + (set.totalCards ?? set.cardCount?.total ?? 0), 0) ?? 0;
-  const completion = totalCards > 0 ? Math.round((totalOwned / totalCards) * 100) : 0;
+  const completion = totalCards > 0 ? Math.round((Math.min(distinctOwned, totalCards) / totalCards) * 100) : 0;
   const isRarityPartial = Boolean(cardsQuery.hasNextPage || cardsQuery.isFetchingNextPage);
 
   return (
@@ -164,7 +166,7 @@ function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; 
         <div className="grid gap-4 sm:grid-cols-3">
           <Stat label={t('friends.stats.owned', { defaultValue: 'Cards owned' })} value={String(totalOwned)} />
           <Stat label={t('friends.stats.completion', { defaultValue: 'Collection completion' })} value={`${completion}%`} />
-          <Stat label={t('friends.stats.loaded', { defaultValue: 'Cards loaded' })} value={`${loadedCards.length}/${totalOwned}`} />
+          <Stat label={t('friends.stats.loaded', { defaultValue: 'Cards loaded' })} value={`${loadedCards.length}/${distinctOwned}`} />
         </div>
       </section>
 
@@ -197,6 +199,7 @@ function FriendCollection({ friend, friendId }: { friend: FriendDirectoryEntry; 
 
 function FriendDecks({ friend, friendId }: { friend: FriendDirectoryEntry; friendId: string }) {
   const { t } = useTranslation();
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const decksQuery = useQuery({
     queryKey: ['friends', 'decks', friendId],
     queryFn: () => getFriendDecks(friendId),
@@ -206,8 +209,8 @@ function FriendDecks({ friend, friendId }: { friend: FriendDirectoryEntry; frien
   const deckCardIds = Array.from(new Set(decks.flatMap((deck) => deck.cards.map((card) => card.cardId))));
   const cardQueries = useQueries({
     queries: deckCardIds.map((cardId) => ({
-      queryKey: tcgKeys.card(cardId, 'en'),
-      queryFn: () => getTCGCard(cardId, 'en'),
+      queryKey: tcgKeys.card(cardId, browseLanguage),
+      queryFn: () => getTCGCard(cardId, browseLanguage),
       staleTime: 60 * 60 * 1000,
     })),
   });

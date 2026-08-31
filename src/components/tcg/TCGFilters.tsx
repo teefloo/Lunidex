@@ -31,11 +31,11 @@ import {
 } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { useMounted } from '@/hooks/useMounted';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
+import { usePrimeDexStore } from '@/store/primedex';
 
 interface TCGFiltersProps {
   filters: TCGCardFilters;
@@ -60,19 +60,20 @@ export function TCGFilters({
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const routeLang = useClientLanguage();
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
+  const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>('set');
   const searchTimeoutRef = useRef<number | null>(null);
   const didApplyInitialSetRef = useRef(false);
 
   // Filter options must match the language the page is displayed in.
-  const resolvedLang = mounted ? routeLang : 'en';
+  const resolvedLang = mounted && hasHydrated ? browseLanguage : 'en';
 
   const { data: filterOptions, isLoading } = useQuery<TCGFilterOptions>({
     queryKey: tcgKeys.filterOptions(resolvedLang),
     queryFn: () => getFilterOptions(resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted,
+    enabled: mounted && hasHydrated,
   });
 
   const selectedSet = filters.selectedSet || null;

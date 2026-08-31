@@ -14,7 +14,7 @@ export default async function CollectionPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
-      <TCGCollectionPage initialLanguage={lang} />
+      <TCGCollectionPage />
     </>
   );
 }

@@ -3,26 +3,32 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSetCollectionCards } from '@/lib/api/tcg';
+import { fetchCollectionValue, getCollectionSetAlbum } from '@/lib/api/tcg';
 import {
   computeActiveSetInsights,
   getActiveSetInsightsFallback,
   getRarityColor,
   getRarityLabel,
+  type TCGOwnedVariant,
   type TCGCollectionValueGroup,
+  getTCGValueInCurrency,
+  toCollectionCard,
 } from '@/lib/tcg-collection';
 import type { TCGCardValue } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
 import type { TCGSet } from '@/types/tcg';
 import { TCGProgressBar } from './TCGProgressBar';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { usePrimeDexStore } from '@/store/primedex';
 
 interface TCGActiveSetInsightsProps {
   set: TCGSet;
   ownedIds: Set<string>;
-  resolvedLang: string;
+  ownedVariants: readonly TCGOwnedVariant[];
+  resolvedLang: TCGCardLanguage;
 }
 
 function formatCurrency(group: TCGCollectionValueGroup, locale: string): string {
@@ -49,9 +55,11 @@ function formatCardValue(value: TCGCardValue, locale: string): string {
   }
 }
 
-export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveSetInsightsProps) {
+export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLang }: TCGActiveSetInsightsProps) {
   const { t } = useTranslation();
+  const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
+  const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldLoadDetails, setShouldLoadDetails] = useState(false);
 
@@ -78,21 +86,43 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
     return () => observer.disconnect();
   }, []);
 
-  const { data: cards, isLoading: cardsLoading, isError } = useQuery({
-    queryKey: ['tcg', 'collection-cards', set.id, resolvedLang],
-    queryFn: ({ signal }) => fetchSetCollectionCards(set.id, resolvedLang, signal),
+  const { data: album, isLoading: cardsLoading, isError } = useQuery({
+    queryKey: ['tcg', 'collection-set-briefs', set.id, resolvedLang],
+    queryFn: ({ signal }) => getCollectionSetAlbum(set.id, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
     enabled: shouldLoadDetails,
   });
 
-  const insights = useMemo(
-    () => (cards?.length
-      ? computeActiveSetInsights(cards, ownedIds, 6)
-      : getActiveSetInsightsFallback(set, ownedIds)),
-    [cards, ownedIds, set],
+  // Pricing and variant flags are only needed for physical copies the user
+  // owns. The helper deduplicates card detail calls and keeps its concurrency
+  // bound, so opening the overview never hydrates an entire album.
+  const { data: ownedValuation, isLoading: valuationLoading, isError: valuationError } = useQuery({
+    // Keep the active-set cards in sync with the corrected price resolver even
+    // when a page survives a hot update without a full reload.
+    queryKey: ['tcg', 'collection-owned-value-v3', set.id, resolvedLang, ownedVariants, displayCurrency],
+    queryFn: ({ signal }) => fetchCollectionValue(ownedVariants, resolvedLang, signal, displayCurrency),
+    staleTime: 60 * 60 * 1000,
+    enabled: shouldLoadDetails && ownedVariants.length > 0,
+  });
+
+  const cards = useMemo(
+    () => album?.cards.map((card) => toCollectionCard(card, set.id, displayCurrency)) ?? [],
+    [album?.cards, set.id, displayCurrency],
   );
-  const isLoading = shouldLoadDetails && cardsLoading;
-  const detailsUnavailable = shouldLoadDetails && (isError || (!cardsLoading && !cards?.length));
+
+  const insights = useMemo(
+    () => {
+      const base = cards.length
+        ? computeActiveSetInsights(cards, ownedIds, 6, ownedVariants, displayCurrency)
+        : getActiveSetInsightsFallback(set, ownedIds, ownedVariants);
+      return ownedValuation && !valuationError
+        ? { ...base, valuation: ownedValuation }
+        : base;
+    },
+    [cards, ownedIds, ownedVariants, ownedValuation, set, valuationError, displayCurrency],
+  );
+  const isLoading = shouldLoadDetails && (cardsLoading || valuationLoading);
+  const detailsUnavailable = shouldLoadDetails && (isError || (!cardsLoading && !album?.cards.length));
 
   return (
     <div ref={containerRef} className="min-w-0 rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
@@ -110,7 +140,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
         )}
         <div className="min-w-0 flex-1">
           <Link
-            href={localeHref(`/tcg/collection/${set.id}`)}
+            href={localeHref(`/tcg/collection/${resolvedLang}/${encodeURIComponent(set.id)}`)}
             aria-label={t('tcg.collection_view_set', { name: set.name })}
             className="block min-h-11 break-words rounded-sm py-3 text-sm font-bold outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/70"
           >
@@ -154,13 +184,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
               {insights.valuation.groups.length > 0 ? (
                 <>
                   <p className="mt-1 break-words text-base font-black leading-tight text-primary sm:text-lg">
-                    {insights.valuation.groups.map((g) => formatCurrency(g, resolvedLang)).join(' · ')}
-                  </p>
-                  <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
-                    {t('tcg.collection_value_coverage', {
-                      priced: insights.valuation.pricedCount,
-                      owned: insights.valuation.ownedCount,
-                    })}
+                    {insights.valuation.groups.map((g) => formatCurrency(g, interfaceLanguage)).join(' · ')}
                   </p>
                 </>
               ) : insights.valuation.ownedCount > 0 ? (
@@ -172,6 +196,21 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   {t('tcg.collection_value_none_owned')}
                 </p>
               )}
+              {insights.valuation.ownedCount > 0 && (
+                <>
+                  <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
+                    {t('tcg.collection_value_coverage', {
+                      priced: insights.valuation.pricedCount,
+                      owned: insights.valuation.ownedCount,
+                    })}
+                  </p>
+                  {(insights.valuation.unpricedCount ?? 0) > 0 && (
+                    <p className="text-[11px] font-bold text-amber-200/70">
+                      {t('tcg.collection_value_unpriced', { count: insights.valuation.unpricedCount })}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
             {/* Set total value */}
             {insights.setTotalValue.length > 0 && (
@@ -180,7 +219,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   {t('tcg.collection_set_total_value')}
                 </p>
                 <p className="mt-1 break-words text-base font-black leading-tight sm:text-lg">
-                  {insights.setTotalValue.map((g) => formatCurrency(g, resolvedLang)).join(' · ')}
+                  {insights.setTotalValue.map((g) => formatCurrency(g, interfaceLanguage)).join(' · ')}
                 </p>
                 <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
                   {insights.setTotalValue[0].count} / {insights.completion.total} {t('tcg.cards')}
@@ -206,7 +245,7 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                   return (
                   <Link
                     key={card.id}
-                    href={localeHref(`/tcg/cards/${card.id}`)}
+                    href={`${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(resolvedLang)}`}
                     aria-label={t('tcg.open_card_detail', { name: card.name })}
                     className="group/card scroll-snap-align-start w-16 shrink-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
                     title={`${card.name} — ${getRarityLabel(card.rarity)}`}
@@ -225,9 +264,9 @@ export function TCGActiveSetInsights({ set, ownedIds, resolvedLang }: TCGActiveS
                     <p className={`mt-1 truncate text-[11px] font-black uppercase tracking-[0.04em] ${getRarityColor(card.rarity)}`}>
                       {getRarityLabel(card.rarity)}
                     </p>
-                    {card.value && (
+                    {getTCGValueInCurrency(card.value, displayCurrency) && (
                       <p className="truncate text-[11px] font-bold text-foreground/60">
-                        {formatCardValue(card.value, resolvedLang)}
+                        {formatCardValue(getTCGValueInCurrency(card.value, displayCurrency)!, interfaceLanguage)}
                       </p>
                     )}
                   </Link>

@@ -2,6 +2,32 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId, isSupportedLanguage } from '@/lib/languages';
+import {
+  assignLegacyTCGSetToCollection,
+  countPhysicalTCGCards,
+  createTCGCollection,
+  deriveTCGOwnedCardIds,
+  getTCGCollectionCardIdentity,
+  getTCGCollectionCardQuantity,
+  isTCGCollectionCardOwned,
+  isValidTCGCollectionKey,
+  qualifyTCGCollectionCardVariant,
+  removeTCGCollectionCard,
+  setTCGCollectionVariantQuantity,
+  transferTCGCollectionCards as transferCollectionCards,
+  MAX_TCG_COLLECTION_PHYSICAL_CARDS,
+  TCG_COLLECTION_MODEL_VERSION,
+} from '@/lib/tcg-collections';
+import {
+  DEFAULT_TCG_CARD_LANGUAGE,
+  normalizeTCGCardLanguage,
+  type TCGCardLanguage,
+} from '@/lib/tcg-language';
+import {
+  DEFAULT_TCG_DISPLAY_CURRENCY,
+  normalizeTCGDisplayCurrency,
+  type TCGDisplayCurrency,
+} from '@/lib/tcg-currency';
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
@@ -76,7 +102,7 @@ export function isTheme(value: unknown): value is Theme {
   return value === 'light' || value === 'dark' || value === 'system';
 }
 
-interface PrimeDexStore {
+export interface PrimeDexStore {
   favorites: number[];
   addFavorite: (id: number) => void;
   removeFavorite: (id: number) => void;
@@ -160,7 +186,26 @@ interface PrimeDexStore {
   tcgOwnedCards: string[];
   tcgWishlistCards: string[];
   tcgActiveSets: string[];
-  toggleTCGOwned: (cardId: string) => void;
+  tcgBrowseLanguage: TCGCardLanguage;
+  tcgCollections: string[];
+  tcgCollectionCards: string[];
+  tcgActiveCollections: string[];
+  tcgLegacyOwnedCards: string[];
+  tcgCollectionModelVersion: 1 | 2 | typeof TCG_COLLECTION_MODEL_VERSION;
+  setTCGBrowseLanguage: (language: TCGCardLanguage) => void;
+  createTCGCollection: (setId: string, language?: TCGCardLanguage) => string;
+  addTCGCollectionCard: (collectionKey: string, cardId: string) => void;
+  removeTCGCollectionCard: (collectionKey: string, cardId: string) => void;
+  transferTCGCollectionCards: (sourceCollectionKey: string, targetCollectionKey: string) => boolean;
+  setTCGCollectionVariantQuantity: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGCollectionVariant, quantity: number) => void;
+  qualifyTCGCollectionCardVariant: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGPhysicalVariant) => void;
+  toggleTCGCollectionCard: (collectionKey: string, cardId: string) => void;
+  isTCGCollectionCardOwned: (collectionKey: string, cardId: string) => boolean;
+  toggleTCGActiveCollection: (collectionKey: string) => void;
+  isTCGActiveCollection: (collectionKey: string) => boolean;
+  assignLegacyTCGSetLanguage: (setId: string, language: TCGCardLanguage) => string;
+  getTCGPhysicalCardCount: () => number;
+  toggleTCGOwned: (cardId: string, collectionKey?: string) => void;
   toggleTCGWishlist: (cardId: string) => void;
   toggleTCGActiveSet: (setId: string) => void;
   isTCGOwned: (cardId: string) => boolean;
@@ -246,6 +291,8 @@ interface PrimeDexStore {
   toggleSettings: () => void;
   soundEnabled: boolean;
   toggleSound: () => void;
+  tcgDisplayCurrency: TCGDisplayCurrency;
+  setTCGDisplayCurrency: (currency: TCGDisplayCurrency) => void;
   animatedSprites: boolean;
   toggleAnimatedSprites: () => void;
 
@@ -294,6 +341,12 @@ export const SYNCED_KEYS = [
   'compareList',
   'tcgCompareList',
   'tcgOwnedCards',
+  'tcgBrowseLanguage',
+  'tcgCollections',
+  'tcgCollectionCards',
+  'tcgActiveCollections',
+  'tcgLegacyOwnedCards',
+  'tcgCollectionModelVersion',
   'tcgWishlistCards',
   'tcgActiveSets',
   'tcgSavedSearches',
@@ -315,6 +368,7 @@ export const SYNCED_KEYS = [
   'viewedTypes',
   'soundEnabled',
   'animatedSprites',
+  'tcgDisplayCurrency',
   'theme',
   'weeklyQuestClaimedWeek',
 ] as const;
@@ -350,6 +404,8 @@ export const LOCAL_PREFERENCE_KEYS = [
   'sortBy',
   'soundEnabled',
   'animatedSprites',
+  'tcgBrowseLanguage',
+  'tcgDisplayCurrency',
 ] as const;
 
 export type LocalPreferenceKey = (typeof LOCAL_PREFERENCE_KEYS)[number];
@@ -500,11 +556,175 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgOwnedCards: [],
       tcgWishlistCards: [],
       tcgActiveSets: [],
-      toggleTCGOwned: (cardId) => set((state) => ({
-        tcgOwnedCards: state.tcgOwnedCards.includes(cardId)
-          ? state.tcgOwnedCards.filter((id) => id !== cardId)
-          : [...state.tcgOwnedCards, cardId],
-      })),
+      tcgBrowseLanguage: DEFAULT_TCG_CARD_LANGUAGE,
+      tcgCollections: [],
+      tcgCollectionCards: [],
+      tcgActiveCollections: [],
+      tcgLegacyOwnedCards: [],
+      tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+      setTCGBrowseLanguage: (language) => {
+        const normalized = normalizeTCGCardLanguage(language);
+        // Browsing language is a display preference and must stay usable on
+        // public catalogue screens before authentication/sync is available.
+        // The sync bridge observes the updated state and persists it when it
+        // can access the account.
+        if (normalized) baseSet({ tcgBrowseLanguage: normalized });
+      },
+      createTCGCollection: (setId, language = get().tcgBrowseLanguage) => {
+        const collection = createTCGCollection(setId, language);
+        if (!collection) return '';
+        set((state) => ({
+          tcgCollections: state.tcgCollections.includes(collection.key)
+            ? state.tcgCollections
+            : [...state.tcgCollections, collection.key],
+          tcgActiveCollections: state.tcgActiveCollections.includes(collection.key)
+            ? state.tcgActiveCollections
+            : [...state.tcgActiveCollections, collection.key],
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        }));
+        return collection.key;
+      },
+      addTCGCollectionCard: (collectionKey, cardId) => {
+        // Keep the historical API as an idempotent unspecified ×1 write, but
+        // route it through the quantity action so the global physical cap and
+        // legacy-to-collection migration stay atomic.
+        get().setTCGCollectionVariantQuantity(collectionKey, cardId, 'unspecified', 1);
+      },
+      removeTCGCollectionCard: (collectionKey, cardId) => set((state) => {
+        const collectionCards = removeTCGCollectionCard(collectionKey, cardId, state.tcgCollectionCards);
+        return {
+          tcgCollectionCards: collectionCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        };
+      }),
+      transferTCGCollectionCards: (sourceCollectionKey, targetCollectionKey) => {
+        const current = get();
+        const collectionCards = transferCollectionCards(
+          sourceCollectionKey,
+          targetCollectionKey,
+          current.tcgCollectionCards,
+        );
+        if (!collectionCards) return false;
+        if (sourceCollectionKey === targetCollectionKey) return true;
+        set((state) => ({
+          tcgCollections: state.tcgCollections.includes(targetCollectionKey)
+            ? state.tcgCollections
+            : [...state.tcgCollections, targetCollectionKey],
+          tcgActiveCollections: [
+            ...state.tcgActiveCollections.filter((key) => key !== sourceCollectionKey),
+            ...(state.tcgActiveCollections.includes(targetCollectionKey) ? [] : [targetCollectionKey]),
+          ],
+          tcgCollectionCards: collectionCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        }));
+        return true;
+      },
+      setTCGCollectionVariantQuantity: (collectionKey, cardId, variant, quantity) => set((state) => {
+        if (!isValidTCGCollectionKey(collectionKey)) return state;
+        if (typeof cardId !== 'string' || !getTCGCollectionCardIdentity(collectionKey, cardId, variant)) return state;
+        if (!Number.isInteger(quantity) || quantity < 0 || quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return state;
+        const currentQuantity = getTCGCollectionCardQuantity(collectionKey, cardId, variant, state.tcgCollectionCards);
+        const normalizedCardId = cardId.trim().toLowerCase();
+        const legacyQuantity = state.tcgLegacyOwnedCards.some((id) => id.trim().toLowerCase() === normalizedCardId) ? 1 : 0;
+        if (quantity === 0 && currentQuantity === 0) return state;
+        const removedLegacyQuantity = quantity > 0 ? legacyQuantity : 0;
+        const otherQuantity = countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards)
+          - currentQuantity
+          - removedLegacyQuantity;
+        if (otherQuantity + quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return state;
+        const collectionCards = setTCGCollectionVariantQuantity(
+          collectionKey,
+          cardId,
+          variant,
+          quantity,
+          state.tcgCollectionCards,
+        );
+        const legacyOwnedCards = quantity > 0
+          ? state.tcgLegacyOwnedCards.filter((id) => id.trim().toLowerCase() !== normalizedCardId)
+          : state.tcgLegacyOwnedCards;
+        return {
+          tcgCollections: state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey],
+          tcgActiveCollections: state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey],
+          tcgCollectionCards: collectionCards,
+          tcgLegacyOwnedCards: legacyOwnedCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, legacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        };
+      }),
+      qualifyTCGCollectionCardVariant: (collectionKey, cardId, variant) => set((state) => {
+        if (!isValidTCGCollectionKey(collectionKey) || typeof cardId !== 'string') return state;
+        const unspecifiedQuantity = getTCGCollectionCardQuantity(collectionKey, cardId, 'unspecified', state.tcgCollectionCards);
+        if (unspecifiedQuantity <= 0) return state;
+        const collectionCards = qualifyTCGCollectionCardVariant(collectionKey, cardId, variant, state.tcgCollectionCards);
+        if (collectionCards === state.tcgCollectionCards || collectionCards.length === state.tcgCollectionCards.length && collectionCards.every((entry, index) => entry === state.tcgCollectionCards[index])) return state;
+        return {
+          tcgCollectionCards: collectionCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        };
+      }),
+      toggleTCGCollectionCard: (collectionKey, cardId) => {
+        if (get().isTCGCollectionCardOwned(collectionKey, cardId)) get().removeTCGCollectionCard(collectionKey, cardId);
+        else get().addTCGCollectionCard(collectionKey, cardId);
+      },
+      isTCGCollectionCardOwned: (collectionKey, cardId) => isTCGCollectionCardOwned(collectionKey, cardId, get().tcgCollectionCards),
+      toggleTCGActiveCollection: (collectionKey) => set((state) => {
+        if (!isValidTCGCollectionKey(collectionKey) || !state.tcgCollections.includes(collectionKey)) return state;
+        return {
+          tcgActiveCollections: state.tcgActiveCollections.includes(collectionKey)
+            ? state.tcgActiveCollections.filter((key) => key !== collectionKey)
+            : [...state.tcgActiveCollections, collectionKey],
+        };
+      }),
+      isTCGActiveCollection: (collectionKey) => get().tcgActiveCollections.includes(collectionKey),
+      assignLegacyTCGSetLanguage: (setId, language) => {
+        const collection = createTCGCollection(setId, language);
+        if (!collection) return '';
+        set((state) => {
+          const next = assignLegacyTCGSetToCollection(
+            setId,
+            language,
+            state.tcgLegacyOwnedCards,
+            state.tcgCollectionCards,
+          );
+          if (!next.collection) return state;
+          return {
+            tcgCollections: state.tcgCollections.includes(collection.key)
+              ? state.tcgCollections
+              : [...state.tcgCollections, collection.key],
+            tcgActiveCollections: state.tcgActiveCollections.includes(collection.key)
+              ? state.tcgActiveCollections
+              : [...state.tcgActiveCollections, collection.key],
+            tcgCollectionCards: next.tcgCollectionCards,
+            tcgOwnedCards: deriveTCGOwnedCardIds(next.tcgCollectionCards, next.tcgLegacyOwnedCards),
+            tcgLegacyOwnedCards: next.tcgLegacyOwnedCards,
+            tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+          };
+        });
+        return collection.key;
+      },
+      getTCGPhysicalCardCount: () => countPhysicalTCGCards(get().tcgCollectionCards, get().tcgLegacyOwnedCards),
+      toggleTCGOwned: (cardId, collectionKey) => {
+        if (collectionKey) {
+          get().toggleTCGCollectionCard(collectionKey, cardId);
+          return;
+        }
+        set((state) => {
+          const normalizedCardId = cardId.trim().toLowerCase();
+          const legacyOwned = state.tcgLegacyOwnedCards.some((id) => id.toLowerCase() === normalizedCardId);
+          const nextLegacy = legacyOwned
+            ? state.tcgLegacyOwnedCards.filter((id) => id.toLowerCase() !== normalizedCardId)
+            : [...state.tcgLegacyOwnedCards, cardId];
+          if (!legacyOwned && countPhysicalTCGCards(state.tcgCollectionCards, nextLegacy) > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return state;
+          return {
+            tcgLegacyOwnedCards: nextLegacy,
+            tcgOwnedCards: deriveTCGOwnedCardIds(state.tcgCollectionCards, nextLegacy),
+            tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+          };
+        });
+      },
       toggleTCGWishlist: (cardId) => set((state) => ({
         tcgWishlistCards: state.tcgWishlistCards.includes(cardId)
           ? state.tcgWishlistCards.filter((id) => id !== cardId)
@@ -752,6 +972,10 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
       soundEnabled: true,
       toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+      tcgDisplayCurrency: DEFAULT_TCG_DISPLAY_CURRENCY,
+      setTCGDisplayCurrency: (currency) => {
+        baseSet({ tcgDisplayCurrency: normalizeTCGDisplayCurrency(currency) });
+      },
       animatedSprites: false,
       toggleAnimatedSprites: () => set((state) => ({ animatedSprites: !state.animatedSprites })),
 
@@ -777,16 +1001,22 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       // so it works before authentication and during remote outages.
       name: ONLINE_STATE_STORAGE_KEY,
       storage: createJSONStorage(() => storage),
-      version: 1,
+      version: 3,
       migrate: (persisted) => {
-        const stored = persisted as { language?: unknown; theme?: unknown } | null;
+        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown } | null;
         // Rewrite the old online-session envelope so retired generation-theme
         // preferences disappear without touching the legacy collection store.
+        const restoredTcgLanguage = normalizeTCGCardLanguage(stored?.tcgBrowseLanguage);
+        const restoredTcgCurrency = normalizeTCGDisplayCurrency(stored?.tcgDisplayCurrency);
         return {
           ...(typeof stored?.language === 'string' && isSupportedLanguage(stored.language)
             ? { language: stored.language }
             : {}),
           ...(isTheme(stored?.theme) ? { theme: stored.theme } : {}),
+          ...(restoredTcgLanguage
+            ? { tcgBrowseLanguage: restoredTcgLanguage }
+            : {}),
+          tcgDisplayCurrency: restoredTcgCurrency,
         };
       },
       onRehydrateStorage: () => (state) => {
@@ -797,16 +1027,27 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           usePrimeDexStore.setState({ _hasHydrated: true });
         }
       },
-      partialize: (state) => ({ language: state.language, theme: state.theme }),
+      partialize: (state) => ({
+        language: state.language,
+        theme: state.theme,
+        tcgBrowseLanguage: state.tcgBrowseLanguage,
+        tcgDisplayCurrency: state.tcgDisplayCurrency,
+      }),
       // Ignore any other legacy fields an old snapshot may still carry.
       merge: (persisted, currentState) => {
-        const stored = persisted as { language?: unknown; theme?: unknown } | null;
+        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown } | null;
+        const restoredTcgLanguage = normalizeTCGCardLanguage(stored?.tcgBrowseLanguage);
+        const restoredTcgCurrency = normalizeTCGDisplayCurrency(stored?.tcgDisplayCurrency);
         return {
           ...currentState,
           ...(typeof stored?.language === 'string' && isSupportedLanguage(stored.language)
             ? { language: stored.language }
             : {}),
           ...(isTheme(stored?.theme) ? { theme: stored.theme } : {}),
+          ...(restoredTcgLanguage
+            ? { tcgBrowseLanguage: restoredTcgLanguage }
+            : {}),
+          tcgDisplayCurrency: restoredTcgCurrency,
         };
       },
     }

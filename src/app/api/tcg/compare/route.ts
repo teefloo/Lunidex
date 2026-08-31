@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardCached } from '@/lib/api/server-cache';
+import { resolveTcgLang } from '@/lib/api/tcg';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 
@@ -11,7 +12,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
+    const lang = resolveTcgLang(request.nextUrl.searchParams.get('tcgLang')
+      ?? request.nextUrl.searchParams.get('lang')
+      ?? 'en');
     const ids = request.nextUrl.searchParams.get('ids')?.split(',').map((id) => id.trim()).filter(Boolean) ?? [];
 
     if (ids.length === 0) {

@@ -123,20 +123,68 @@ on conflict (user_id) do update set
   share_tcg_collection = excluded.share_tcg_collection,
   share_tcg_decks = excluded.share_tcg_decks;
 
-insert into public.friend_collection_snapshots (user_id, card_ids)
+insert into public.friend_collection_snapshots (user_id, card_ids, collection_state)
 select
   user_id,
   coalesce(
     array(
-      select distinct jsonb_array_elements_text(
-        case when jsonb_typeof(data -> 'tcgOwnedCards') = 'array'
-          then data -> 'tcgOwnedCards' else '[]'::jsonb end
-      )
+      select distinct card_id
+      from (
+        select lower(btrim(value)) as card_id
+        from jsonb_array_elements_text(
+          case
+            when (data ->> 'tcgCollectionModelVersion') = '1'
+              and jsonb_typeof(data -> 'tcgOwnedCards') = 'array'
+              then data -> 'tcgOwnedCards'
+            when jsonb_typeof(data -> 'tcgLegacyOwnedCards') = 'array'
+              then data -> 'tcgLegacyOwnedCards'
+            when coalesce(data ->> 'tcgCollectionModelVersion', '') not in ('2', '3')
+              and jsonb_typeof(data -> 'tcgOwnedCards') = 'array'
+              then data -> 'tcgOwnedCards'
+            else '[]'::jsonb
+          end
+        ) as legacy(value)
+        union all
+        select lower(btrim(split_part(value, '|', 2))) as card_id
+        from jsonb_array_elements_text(case
+          when jsonb_typeof(data -> 'tcgCollectionCards') = 'array'
+            then data -> 'tcgCollectionCards' else '[]'::jsonb end
+        ) as collection_cards(value)
+      ) projected
+      where card_id <> ''
     ),
     '{}'
+  ),
+  jsonb_build_object(
+    'modelVersion', 3,
+    'browseLanguage', case
+      when jsonb_typeof(data -> 'tcgBrowseLanguage') = 'string'
+        then data -> 'tcgBrowseLanguage'
+      else null
+    end,
+    'collections', case when jsonb_typeof(data -> 'tcgCollections') = 'array'
+      then data -> 'tcgCollections' else '[]'::jsonb end,
+    'collectionCards', public.tcg_collection_cards_v3(data -> 'tcgCollectionCards'),
+    'activeCollections', case when jsonb_typeof(data -> 'tcgActiveCollections') = 'array'
+      then data -> 'tcgActiveCollections' else '[]'::jsonb end,
+    'legacyOwnedCards', case
+      when (data ->> 'tcgCollectionModelVersion') = '1'
+        and jsonb_typeof(data -> 'tcgOwnedCards') = 'array' then data -> 'tcgOwnedCards'
+      when (data ->> 'tcgCollectionModelVersion') in ('2', '3')
+        and jsonb_typeof(data -> 'tcgLegacyOwnedCards') = 'array' then data -> 'tcgLegacyOwnedCards'
+      when jsonb_typeof(data -> 'tcgLegacyOwnedCards') = 'array'
+        and jsonb_array_length(data -> 'tcgLegacyOwnedCards') > 0 then data -> 'tcgLegacyOwnedCards'
+      when jsonb_typeof(data -> 'tcgCollectionCards') = 'array'
+        and jsonb_array_length(data -> 'tcgCollectionCards') > 0 then '[]'::jsonb
+      when coalesce(data ->> 'tcgCollectionModelVersion', '') not in ('2', '3')
+        and jsonb_typeof(data -> 'tcgOwnedCards') = 'array' then data -> 'tcgOwnedCards'
+      else '[]'::jsonb
+    end
   )
 from public.user_state
-on conflict (user_id) do update set card_ids = excluded.card_ids;
+on conflict (user_id) do update set
+  card_ids = excluded.card_ids,
+  collection_state = excluded.collection_state;
 
 insert into public.friend_deck_snapshots (user_id, decks)
 select
@@ -145,6 +193,13 @@ select
     then data -> 'tcgDecks' else '[]'::jsonb end
 from public.user_state
 on conflict (user_id) do update set decks = excluded.decks;
+
+update public.profiles profiles
+set tcg_owned_count = public.physical_tcg_owned_count(user_state.data)
+from public.user_state
+join app.users on app.users.id = user_state.user_id
+where profiles.id = user_state.user_id
+  and app.users.deletion_state = 'active';
 
 select setval(
   pg_get_serial_sequence('public.tcg_price_history', 'id'),

@@ -11,12 +11,16 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGHolographicCard } from './TCGHolographicCard';
+import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant } from '@/lib/tcg-collections';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 interface TCGCardItemProps {
   card: TCGCard;
   index?: number;
   onClick?: (card: TCGCard) => void;
   variant?: 'default' | 'compact' | 'list';
+  tcgLanguage?: TCGCardLanguage;
+  collectionKey?: string;
 }
 
 export const TCGCardItem = memo(function TCGCardItem({
@@ -24,16 +28,36 @@ export const TCGCardItem = memo(function TCGCardItem({
   index = 0,
   onClick,
   variant = 'default',
+  tcgLanguage,
+  collectionKey,
 }: TCGCardItemProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
-  const { toggleTCGOwned, isTCGOwned } = usePrimeDexStore(useShallow((state) => ({
+  const {
+    toggleTCGOwned,
+    removeTCGCollectionCard,
+    setTCGCollectionVariantQuantity,
+    isTCGOwned,
+    browseLanguage,
+    collectionKeys,
+    isCollectionCardOwned,
+  } = usePrimeDexStore(useShallow((state) => ({
     toggleTCGOwned: state.toggleTCGOwned,
+    removeTCGCollectionCard: state.removeTCGCollectionCard,
+    setTCGCollectionVariantQuantity: state.setTCGCollectionVariantQuantity,
     isTCGOwned: state.tcgOwnedCards.includes(card.id),
+    browseLanguage: state.tcgBrowseLanguage,
+    collectionKeys: state.tcgCollections,
+    isCollectionCardOwned: state.isTCGCollectionCardOwned,
   })));
 
-  const owned = mounted && isTCGOwned;
+  const selectedLanguage = tcgLanguage ?? browseLanguage;
+  const candidateCollectionKey = card.set?.id ? encodeTCGCollectionKey(selectedLanguage, card.set.id) : null;
+  const resolvedCollectionKey = collectionKey ?? (candidateCollectionKey && collectionKeys.includes(candidateCollectionKey) ? candidateCollectionKey : null);
+  const owned = mounted && (resolvedCollectionKey
+    ? isCollectionCardOwned(resolvedCollectionKey, card.id)
+    : isTCGOwned);
   const isList = variant === 'list';
 
   return (
@@ -61,7 +85,7 @@ export const TCGCardItem = memo(function TCGCardItem({
           <div className="min-w-0 flex-1">
             <h3 className="line-clamp-2 max-w-full overflow-hidden break-words text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
               <Link
-                href={localeHref(`/tcg/cards/${card.id}`)}
+                href={`${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                 onClick={(event) => event.stopPropagation()}
                 className="transition-colors hover:text-primary"
               >
@@ -71,7 +95,7 @@ export const TCGCardItem = memo(function TCGCardItem({
             <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">
               {card.set?.id ? (
                 <Link
-                  href={localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}
+                  href={`${localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                   onClick={(event) => event.stopPropagation()}
                   className="transition-colors hover:text-primary"
                 >
@@ -105,7 +129,20 @@ export const TCGCardItem = memo(function TCGCardItem({
           type="button"
           onClick={(event) => {
             event.stopPropagation();
-            toggleTCGOwned(card.id);
+            if (!resolvedCollectionKey) {
+              toggleTCGOwned(card.id);
+              return;
+            }
+            if (owned) {
+              removeTCGCollectionCard(resolvedCollectionKey, card.id);
+              return;
+            }
+            setTCGCollectionVariantQuantity(
+              resolvedCollectionKey,
+              card.id,
+              getTCGDefaultPhysicalVariant(card.variants) ?? 'unspecified',
+              1,
+            );
           }}
           className={cn(
             'touch-target inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border text-[11px] font-black uppercase tracking-[0.08em] transition-[color,background-color,border-color]',

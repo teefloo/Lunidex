@@ -19,11 +19,20 @@ import type {
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import {
-  aggregateCollectionValueWithSets,
+  DEFAULT_TCG_CARD_LANGUAGE,
+  isTCGCardLanguage,
+  normalizeTCGCardLanguage,
+  type TCGCardLanguage,
+} from '@/lib/tcg-language';
+import {
+  aggregateCollectionValueWithVariants,
   getCardMarketValue,
   toCollectionCard,
+  type TCGOwnedVariant,
   type TCGCollectionValuationResult,
 } from '@/lib/tcg-collection';
+import type { TCGDisplayCurrency } from '@/lib/tcg-currency';
+import { MAX_TCG_COLLECTION_PHYSICAL_CARDS } from '@primedex/core/lib/tcg-collections';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -38,7 +47,9 @@ axiosRetry(tcgClient, {
   },
 });
 
-const supportedLangs = ['en', 'fr', 'es', 'it', 'de', 'ja', 'ko', 'zh'] as const;
+// `zh` was the former Lunidex locale alias, not a TCGdex code. Keep it as an
+// invalid/unsupported input so it cannot silently select a different card
+// language; callers should choose zh-cn or zh-tw explicitly.
 const unsupportedTcgLangs = new Set(['zh']);
 const limitedTcgLangs = new Set(['ko', 'ja']);
 
@@ -93,13 +104,13 @@ export function normalizeTcgPositiveInteger(value: number, fallback: number) {
   return normalized >= 1 ? normalized : fallback;
 }
 
-function resolveTcgLang(lang = 'en') {
-  const supportedLang = supportedLangs.includes(lang as (typeof supportedLangs)[number]) ? lang : 'en';
-  return unsupportedTcgLangs.has(supportedLang) ? 'en' : supportedLang;
+export function resolveTcgLang(lang: string | null | undefined): TCGCardLanguage {
+  const normalized = normalizeTCGCardLanguage(lang, DEFAULT_TCG_CARD_LANGUAGE) ?? DEFAULT_TCG_CARD_LANGUAGE;
+  return unsupportedTcgLangs.has(normalized) ? DEFAULT_TCG_CARD_LANGUAGE : normalized;
 }
 
 export function isTcgLangSupported(lang: string): boolean {
-  if (!supportedLangs.includes(lang as (typeof supportedLangs)[number])) return false;
+  if (!isTCGCardLanguage(lang)) return false;
   return !unsupportedTcgLangs.has(lang);
 }
 
@@ -108,7 +119,7 @@ export function getUnsupportedTcgLangs(): readonly string[] {
 }
 
 export function isTcgLangLimited(lang: string): boolean {
-  return limitedTcgLangs.has(lang);
+  return isTCGCardLanguage(lang) && limitedTcgLangs.has(lang);
 }
 
 function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
@@ -561,7 +572,9 @@ export const getTCGCard = async (
   // reach the network layer.
   if (!isValidTcgCardId(cardId)) return null;
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-card-v11-${cardId}-${tcgLang}`;
+  // v12 invalidates cards cached before the variant-price resolver learned to
+  // preserve zero quotes and keep each finish on its exact provider tier.
+  const cacheKey = `tcg-card-v12-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;
 
   try {
@@ -767,13 +780,39 @@ async function mapWithConcurrency<T, R>(
  * currently owned card IDs instead of fetching every card in every set.
  */
 export const fetchCollectionValue = async (
-  cardIds: string[],
+  ownedInput: readonly string[] | readonly TCGOwnedVariant[],
   lang = 'en',
   signal?: AbortSignal,
+  displayCurrency?: TCGDisplayCurrency,
 ): Promise<TCGCollectionValuationResult> => {
-  const uniqueIds = [...new Set(cardIds.map((id) => id.trim()).filter(Boolean))];
+  const ownedVariants: TCGOwnedVariant[] = [];
+  const seenLegacyIds = new Set<string>();
+  let physicalCount = 0;
+  for (const entry of ownedInput) {
+    if (typeof entry === 'string') {
+      const cardId = entry.trim().toLowerCase();
+      if (cardId && !seenLegacyIds.has(cardId) && physicalCount < MAX_TCG_COLLECTION_PHYSICAL_CARDS) {
+        seenLegacyIds.add(cardId);
+        ownedVariants.push({ cardId, variant: 'unspecified', quantity: 1 });
+        physicalCount += 1;
+      }
+      continue;
+    }
+
+    if (!entry || typeof entry !== 'object') continue;
+    const candidate = entry as Partial<TCGOwnedVariant>;
+    const cardId = typeof candidate.cardId === 'string' ? candidate.cardId.trim().toLowerCase() : '';
+    const variant = candidate.variant;
+    const quantity = candidate.quantity;
+    if (!cardId || (variant !== 'normal' && variant !== 'reverse' && variant !== 'holo' && variant !== 'unspecified')) continue;
+    if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0 || quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) continue;
+    if (physicalCount + quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) continue;
+    ownedVariants.push({ cardId, variant, quantity });
+    physicalCount += quantity;
+  }
+  const uniqueIds = [...new Set(ownedVariants.map((entry) => entry.cardId))];
   if (uniqueIds.length === 0) {
-    return { groups: [], ownedCount: 0, pricedCount: 0, bySet: {} };
+    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, bySet: {} };
   }
 
   const cards = await mapWithConcurrency(
@@ -786,14 +825,15 @@ export const fetchCollectionValue = async (
   );
   const collectionCards = cards
     .filter((card): card is TCGCard => Boolean(card))
-    .map((card) => toCollectionCard(card));
-  const ownedIds = new Set(uniqueIds);
-  const valuation = aggregateCollectionValueWithSets(collectionCards, ownedIds);
+    .map((card) => toCollectionCard(card, undefined, displayCurrency));
+  const valuation = aggregateCollectionValueWithVariants(collectionCards, ownedVariants, displayCurrency);
+  const ownedCount = ownedVariants.reduce((sum, entry) => sum + entry.quantity, 0);
 
   return {
     ...valuation,
-    // A missing detail response is still an owned card without a price.
-    ownedCount: uniqueIds.length,
+    // A missing detail response is still an owned physical card without a price.
+    ownedCount,
+    unpricedCount: Math.max(0, ownedCount - valuation.pricedCount),
   };
 };
 
@@ -1054,7 +1094,7 @@ export const fetchCollectionSetCatalog = async (
   lang = 'en',
   signal?: AbortSignal,
 ): Promise<TCGCollectionSetSummary[]> => {
-  const params = new URLSearchParams({ lang });
+  const params = new URLSearchParams({ tcgLang: lang });
   try {
     const response = await fetch(
       `/api/tcg/sets?${params.toString()}`,
@@ -1129,7 +1169,7 @@ export const fetchSetCollectionCards = async (
   lang = 'en',
   signal?: AbortSignal,
 ): Promise<TCGCollectionCard[]> => {
-  const params = new URLSearchParams({ setId, lang });
+  const params = new URLSearchParams({ setId, tcgLang: lang });
   try {
     const response = await fetch(
       `/api/tcg/collection/set-cards?${params.toString()}`,

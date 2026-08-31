@@ -15,17 +15,17 @@ import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-i
 import { getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
+import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ setId: string }>;
+  searchParams: Promise<{ tcgLang?: string | string[] | undefined }>;
 }
 
 function buildSetLanguages(setId: string): Record<string, string> {
-  const languages = supportedLanguages
-    .filter(isTcgLangSupported)
-    .reduce<Record<string, string>>((result, language) => {
+  const languages = supportedLanguages.reduce<Record<string, string>>((result, language) => {
       result[language] = `/${language}/tcg/sets/${encodeURIComponent(setId)}`;
       return result;
     }, {});
@@ -68,6 +68,7 @@ function translateCardCategory(
 function buildChecklistMarkup(
   cards: Awaited<ReturnType<typeof getTCGSetCardsCached>>,
   language: SupportedLanguage,
+  tcgLanguage: TCGCardLanguage,
   t: (key: string, options?: Record<string, unknown>) => string,
 ): string {
   return cards.map((card) => {
@@ -82,11 +83,12 @@ function buildChecklistMarkup(
       .map(escapeHtml)
       .join(' · ');
 
-    return `<li><a href="${escapeHtml(localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language))}" aria-label="${escapeHtml(t('tcg.open_card_detail', { name: card.name }))}" class="flex min-h-16 items-start gap-3 px-4 py-3 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 sm:items-center sm:gap-5"><span class="w-20 shrink-0 font-mono text-xs font-bold text-foreground/55 sm:w-24">${escapeHtml(collectorNumber)}</span><span class="min-w-0 flex-1"><span class="block font-bold text-foreground">${escapeHtml(card.name)}</span>${metadata ? `<span class="mt-1 block text-xs leading-5 text-foreground/55">${metadata}</span>` : ''}</span><span class="hidden shrink-0 text-xs font-black uppercase tracking-[0.08em] text-primary sm:inline">${escapeHtml(t('tcg.card_row_hint'))}</span></a></li>`;
+    const cardHref = `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}?tcgLang=${encodeURIComponent(tcgLanguage)}`;
+    return `<li><a href="${escapeHtml(cardHref)}" aria-label="${escapeHtml(t('tcg.open_card_detail', { name: card.name }))}" class="flex min-h-16 items-start gap-3 px-4 py-3 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 sm:items-center sm:gap-5"><span class="w-20 shrink-0 font-mono text-xs font-bold text-foreground/55 sm:w-24">${escapeHtml(collectorNumber)}</span><span class="min-w-0 flex-1"><span class="block font-bold text-foreground">${escapeHtml(card.name)}</span>${metadata ? `<span class="mt-1 block text-xs leading-5 text-foreground/55">${metadata}</span>` : ''}</span><span class="hidden shrink-0 text-xs font-black uppercase tracking-[0.08em] text-primary sm:inline">${escapeHtml(t('tcg.card_row_hint'))}</span></a></li>`;
   }).join('');
 }
 
-async function getSetPageData(setId: string, language: SupportedLanguage) {
+async function getSetPageData(setId: string, language: TCGCardLanguage) {
   const set = await getTCGSetCached(setId, language).catch(() => null);
   if (!set) return null;
 
@@ -94,24 +96,27 @@ async function getSetPageData(setId: string, language: SupportedLanguage) {
   return { set, cards, isIndexable: isIndexableTCGSetCardList(set, cards) };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { setId } = await params;
   const language = await getServerLanguage();
+  const query = await searchParams;
+  const requestedTcgLanguage = Array.isArray(query.tcgLang) ? query.tcgLang[0] : query.tcgLang;
+  const tcgLanguage = normalizeTCGCardLanguage(requestedTcgLanguage, 'en') as TCGCardLanguage;
   const t = await getServerT();
-  const data = await getSetPageData(setId, language);
+  const data = await getSetPageData(setId, tcgLanguage);
 
   if (!data) notFound();
 
   const releaseDate = formatReleaseDate(data.set.releaseDate, language);
   const title = t('tcg.set_meta_title', { name: data.set.name, releaseDate });
   const description = t('tcg.set_meta_description', { name: data.set.name, releaseDate });
-  const canonicalLanguage = isTcgLangSupported(language) ? language : 'en';
-  const ogImage = `${SITE_URL}/api/og/tcg-set?set=${encodeURIComponent(setId)}&lang=${canonicalLanguage}`;
+  const canonicalLanguage = language;
+  const ogImage = `${SITE_URL}/api/og/tcg-set?set=${encodeURIComponent(setId)}&lang=${tcgLanguage}`;
 
   return {
     title: { absolute: title },
     description,
-    robots: data.isIndexable && isTcgLangSupported(language)
+    robots: data.isIndexable && isTcgLangSupported(tcgLanguage)
       ? { index: true, follow: true }
       : { index: false, follow: true },
     alternates: {
@@ -129,11 +134,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function TCGSetPage({ params }: PageProps) {
+export default async function TCGSetPage({ params, searchParams }: PageProps) {
   const { setId } = await params;
   const language = await getServerLanguage();
+  const query = await searchParams;
+  const requestedTcgLanguage = Array.isArray(query.tcgLang) ? query.tcgLang[0] : query.tcgLang;
+  const tcgLanguage = normalizeTCGCardLanguage(requestedTcgLanguage, 'en') as TCGCardLanguage;
   const t = await getServerT();
-  const data = await getSetPageData(setId, language);
+  const data = await getSetPageData(setId, tcgLanguage);
 
   if (!data) notFound();
 
@@ -165,7 +173,7 @@ export default async function TCGSetPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: index + 1,
         name: card.name,
-        url: `${SITE_URL}${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}`,
+        url: `${SITE_URL}${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}?tcgLang=${encodeURIComponent(tcgLanguage)}`,
       })),
     },
   };
@@ -211,7 +219,7 @@ export default async function TCGSetPage({ params }: PageProps) {
               </div>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link
-                  href={localeHref(`/tcg/collection/${encodeURIComponent(set.id)}?activation=1`, language)}
+                  href={`${localeHref(`/tcg/collection/${tcgLanguage}/${encodeURIComponent(set.id)}`, language)}?activation=1`}
                   className="inline-flex min-h-12 items-center rounded-sm bg-primary px-5 text-sm font-black text-primary-foreground shadow-[4px_4px_0_hsl(var(--foreground)/0.18)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
                   {t('tcg.activation.choose_set')}
@@ -247,7 +255,7 @@ export default async function TCGSetPage({ params }: PageProps) {
                 {previewCards.map((card) => (
                   <Link
                     key={card.id}
-                    href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}
+                    href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}?tcgLang=${encodeURIComponent(tcgLanguage)}`}
                     aria-label={t('tcg.open_card_detail', { name: card.name })}
                     className="group rounded-sm border border-border/35 bg-card/45 p-2 transition-colors hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                   >
@@ -286,7 +294,7 @@ export default async function TCGSetPage({ params }: PageProps) {
                 </div>
                 <ol
                   className="mt-5 divide-y divide-border/35 overflow-hidden rounded-sm border border-border/45 bg-card/35"
-                  dangerouslySetInnerHTML={{ __html: buildChecklistMarkup(cards, language, t) }}
+                  dangerouslySetInnerHTML={{ __html: buildChecklistMarkup(cards, language, tcgLanguage, t) }}
                 />
               </section>
             ) : null}
@@ -305,7 +313,7 @@ export default async function TCGSetPage({ params }: PageProps) {
               {t('tcg.activation.start_description')}
             </p>
             <Link
-              href={localeHref(`/tcg/collection/${encodeURIComponent(set.id)}?activation=1`, language)}
+              href={`${localeHref(`/tcg/collection/${tcgLanguage}/${encodeURIComponent(set.id)}`, language)}?activation=1`}
               className="mt-5 inline-flex min-h-12 items-center rounded-sm bg-primary px-5 text-sm font-black text-primary-foreground shadow-[4px_4px_0_hsl(var(--foreground)/0.18)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             >
               {t('tcg.activation.choose_set')}

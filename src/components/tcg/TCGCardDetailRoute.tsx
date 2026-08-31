@@ -9,13 +9,14 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => module.TCGCardDetailModal),
   { ssr: false },
 );
 
-export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
+export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard | null; tcgLanguage?: TCGCardLanguage }) {
   const router = useRouter();
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
           </p>
           <button
             type="button"
-            onClick={() => router.push(localeHref('/tcg'))}
+            onClick={() => router.push(localeHref(`/tcg?tcgLang=${encodeURIComponent(tcgLanguage)}`))}
             className="glass-control mt-8 inline-flex items-center gap-2 px-5 py-2.5 text-xs font-black uppercase tracking-[0.2em]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -138,6 +139,7 @@ export function TCGCardDetailRoute({ card }: { card: TCGCard | null }) {
         {isModalOpen && (
           <TCGCardDetailModal
             card={card}
+            tcgLanguage={tcgLanguage}
             isOpen
             onClose={() => setIsModalOpen(false)}
           />

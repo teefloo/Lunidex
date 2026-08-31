@@ -40,5 +40,5 @@ export const tcgKeys = {
   filterOptions: (language: string) => [...tcgKeys.all(), 'filter-options', language] as const,
   rarities: (setId: string | null | undefined, language: string) =>
     [...tcgKeys.all(), 'rarities', setId ?? 'all', language] as const,
-  compare: (ids: string[]) => [...tcgKeys.all(), 'compare', ids] as const,
+  compare: (ids: string[], language = 'en') => [...tcgKeys.all(), 'compare', language, ids] as const,
 };

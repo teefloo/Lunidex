@@ -5,19 +5,23 @@ import { useState } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useTranslation } from '@/lib/i18n';
 import { isTcgLangLimited, isTcgLangSupported } from '@/lib/api/tcg';
-import { persistLanguageCookie } from '@/lib/i18n';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { getTCGCardLanguageName, isTCGCardLanguage } from '@/lib/tcg-language';
 
 interface TCGDataLangBannerProps {
   resolvedLang: string;
   variant?: 'inline' | 'full';
   /** Actual TCGdex payload language, when it differs from the UI locale. */
   dataLanguage?: string;
+  /** Optional view-level action for pages whose language is URL-controlled. */
+  onTryEnglish?: () => void;
 }
 
-export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLanguage }: TCGDataLangBannerProps) {
+export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLanguage, onTryEnglish }: TCGDataLangBannerProps) {
   const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
-  const setLanguage = usePrimeDexStore((s) => s.setLanguage);
+  const setTCGBrowseLanguage = usePrimeDexStore((s) => s.setTCGBrowseLanguage);
+  const interfaceLanguage = useClientLanguage();
 
   if (dismissed) return null;
 
@@ -27,7 +31,9 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLangua
 
   if (isSupported && !isLimited) return null;
 
-  const languageName = t(`languages.${resolvedLang}`);
+  const languageName = isTCGCardLanguage(resolvedLang)
+    ? getTCGCardLanguageName(resolvedLang, interfaceLanguage)
+    : resolvedLang;
 
   if (!isSupported) {
     return (
@@ -46,8 +52,8 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLangua
             <button
               type="button"
               onClick={() => {
-                setLanguage('en');
-                persistLanguageCookie('en');
+                setTCGBrowseLanguage('en');
+                onTryEnglish?.();
               }}
               className="inline-flex h-8 items-center rounded-sm border border-amber-300/40 bg-amber-500/15 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-amber-100 transition-colors hover:border-amber-200/60 hover:bg-amber-500/25"
             >
@@ -84,8 +90,8 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLangua
           <button
             type="button"
             onClick={() => {
-              setLanguage('en');
-              persistLanguageCookie('en');
+              setTCGBrowseLanguage('en');
+              onTryEnglish?.();
             }}
             className="inline-flex h-8 items-center rounded-sm border border-sky-300/40 bg-sky-500/15 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-sky-100 transition-colors hover:border-sky-200/60 hover:bg-sky-500/25"
             >

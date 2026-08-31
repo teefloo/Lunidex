@@ -16,20 +16,24 @@ import {
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { decodeTCGCollectionKey } from '@/lib/tcg-collections';
 
 interface TCGWishlistContentProps {
   setsMap: Map<string, { set: TCGSet; cards: TCGCard[] }>;
+  tcgLanguage?: TCGCardLanguage;
 }
 
 type WishlistSort = 'rarity' | 'set' | 'name';
 
-export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
+export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const store = usePrimeDexStore();
   const tcgWishlistCards = store.tcgWishlistCards;
   const tcgOwnedCards = store.tcgOwnedCards;
   const tcgActiveSets = store.tcgActiveSets;
+  const tcgActiveCollections = store.tcgActiveCollections;
   const toggleTCGWishlist = store.toggleTCGWishlist;
   const [copied, setCopied] = useState(false);
   const [sortBy, setSortBy] = useState<WishlistSort>('rarity');
@@ -39,7 +43,12 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
 
-  const activeSetIds = useMemo(() => new Set(tcgActiveSets), [tcgActiveSets]);
+  const activeSetIds = useMemo(() => new Set([
+    ...tcgActiveSets,
+    ...tcgActiveCollections
+      .map((key) => decodeTCGCollectionKey(key)?.setId)
+      .filter((setId): setId is string => Boolean(setId)),
+  ]), [tcgActiveCollections, tcgActiveSets]);
 
   const suggestions = useMemo(
     () => getWishlistSuggestions(setsMap, ownedIds, [...activeSetIds]),
@@ -263,6 +272,7 @@ export function TCGWishlistContent({ setsMap }: TCGWishlistContentProps) {
       {selectedCard && (
         <TCGCardDetailModal
           card={selectedCard}
+          tcgLanguage={tcgLanguage}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

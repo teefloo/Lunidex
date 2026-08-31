@@ -15,6 +15,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "test:tcg": "vitest run",
     "seo:check": "node scripts/seo-check.mjs",
     "typecheck": "tsc --noEmit",
     "db:neon:export": "bash scripts/neon/export-supabase.sh",
@@ -64,7 +65,8 @@
     "metro": "0.84.5",
     "sharp": "^0.35.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "next": {

@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import Header from '@/components/layout/Header';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
@@ -13,25 +15,46 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useTranslation } from '@/lib/i18n';
 import { RefreshCw } from 'lucide-react';
 import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
+import { TCGLanguageSelector } from '@/components/tcg/TCGLanguageSelector';
+import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
+import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { usePrimeDexStore } from '@/store/primedex';
 
 interface TCGSetAlbumPageProps {
   setId: string;
   language: string;
   activation?: boolean;
+  collectionKey?: string;
 }
 
 export function TCGSetAlbumPage({
   setId,
   language,
   activation = false,
+  collectionKey,
 }: TCGSetAlbumPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const router = useRouter();
+  const localeHref = useLocaleHref();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  // Album cards must match the language the page is displayed in.
-  const routeLang = useClientLanguage();
-  const resolvedLang = mounted ? routeLang : language;
+  const resolvedLang: TCGCardLanguage = normalizeTCGCardLanguage(language, 'en') ?? 'en';
+  const createCollection = usePrimeDexStore((state) => state.createTCGCollection);
+  const transferCollectionCards = usePrimeDexStore((state) => state.transferTCGCollectionCards);
+  const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
+  const collections = usePrimeDexStore((state) => state.tcgCollections);
+  const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(resolvedLang, setId) ?? undefined;
+  const tryEnglish = () => {
+    setBrowseLanguage('en');
+    const activationQuery = activation ? '?activation=1' : '';
+    router.replace(`${localeHref(`/tcg/collection/en/${encodeURIComponent(setId)}`)}${activationQuery}`);
+  };
+
+  useEffect(() => {
+    if (!mounted || syncStatus !== 'ready' || !user || !resolvedCollectionKey || collections.includes(resolvedCollectionKey)) return;
+    createCollection(setId, resolvedLang);
+  }, [collections, createCollection, mounted, resolvedCollectionKey, resolvedLang, setId, syncStatus, user]);
 
   const albumQuery = useQuery({
     queryKey: ['tcg', 'collection-set-album', setId, resolvedLang],
@@ -72,11 +95,31 @@ export function TCGSetAlbumPage({
           </div>
         ) : albumQuery.data ? (
           <>
-            <TCGDataLangBanner resolvedLang={resolvedLang} dataLanguage={albumQuery.data.dataLanguage} />
+            <TCGDataLangBanner resolvedLang={resolvedLang} dataLanguage={albumQuery.data.dataLanguage} onTryEnglish={tryEnglish} />
+            <div className="mb-4 flex justify-end">
+              <TCGLanguageSelector
+                value={resolvedLang}
+                onChange={(nextLanguage) => {
+                  const nextKey = encodeTCGCollectionKey(nextLanguage, setId);
+                  if (!nextKey) return;
+                  const transferred = resolvedCollectionKey === nextKey
+                    ? true
+                    : resolvedCollectionKey
+                      ? transferCollectionCards(resolvedCollectionKey, nextKey)
+                      : Boolean(createCollection(setId, nextLanguage));
+                  if (!transferred) return;
+                  setBrowseLanguage(nextLanguage);
+                  const activationQuery = activation ? '?activation=1' : '';
+                  router.push(`${localeHref(`/tcg/collection/${nextLanguage}/${encodeURIComponent(setId)}`)}${activationQuery}`);
+                }}
+              />
+            </div>
             <TCGAlbumPage
               set={albumQuery.data.set}
               cards={albumQuery.data.cards}
               activation={activation}
+              language={resolvedLang}
+              collectionKey={resolvedCollectionKey}
             />
           </>
         ) : (

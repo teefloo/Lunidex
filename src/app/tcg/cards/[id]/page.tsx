@@ -10,17 +10,22 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildInLanguage } from '@/lib/seo';
 import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ tcgLang?: string | string[] | undefined }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const currentLang = await getServerLanguage();
-  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
+  const query = await searchParams;
+  const requestedTcgLanguage = Array.isArray(query.tcgLang) ? query.tcgLang[0] : query.tcgLang;
+  const tcgLanguage = normalizeTCGCardLanguage(requestedTcgLanguage, 'en') as TCGCardLanguage;
+  const canonicalLanguage = currentLang;
   const t = await getServerT();
-  const card = await getPageCard(id, currentLang);
+  const card = await getPageCard(id, tcgLanguage);
 
   if (!card) {
     notFound();
@@ -43,8 +48,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   });
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
   const encodedCardId = encodeURIComponent(id);
-  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodedCardId}&lang=${canonicalLanguage}`;
-  const indexableLanguages = supportedLanguages.filter(isTcgLangSupported);
+  const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodedCardId}&lang=${tcgLanguage}`;
+  const indexableLanguages = supportedLanguages;
   const languages = Object.fromEntries(
     indexableLanguages.map((language) => [language, `/${language}/tcg/cards/${encodedCardId}`]),
   );
@@ -54,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // the root layout template from appending a second one.
     title: { absolute: title },
     description,
-    robots: isTcgLangSupported(currentLang)
+    robots: isTcgLangSupported(tcgLanguage)
       ? { index: true, follow: true }
       : { index: false, follow: true },
     alternates: {
@@ -77,12 +82,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function TCGCardPage({ params }: PageProps) {
+export default async function TCGCardPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const currentLang = await getServerLanguage();
-  const canonicalLanguage = isTcgLangSupported(currentLang) ? currentLang : 'en';
+  const query = await searchParams;
+  const requestedTcgLanguage = Array.isArray(query.tcgLang) ? query.tcgLang[0] : query.tcgLang;
+  const tcgLanguage = normalizeTCGCardLanguage(requestedTcgLanguage, 'en') as TCGCardLanguage;
+  const canonicalLanguage = currentLang;
   const t = await getServerT();
-  const card = await getPageCard(id, currentLang);
+  const card = await getPageCard(id, tcgLanguage);
   if (!card) notFound();
 
   const imageUrl = card.imageUrl || card.image || `${SITE_URL}/images/card-placeholder.svg`;
@@ -151,7 +159,7 @@ export default async function TCGCardPage({ params }: PageProps) {
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
-      <TCGCardDetailRoute card={card} />
+      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} />
     </>
   );
 }

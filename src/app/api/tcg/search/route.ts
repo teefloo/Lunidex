@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getFilterOptions, normalizeTcgPositiveInteger, searchCards } from '@/lib/api/tcg';
+import { getFilterOptions, normalizeTcgPositiveInteger, resolveTcgLang, searchCards } from '@/lib/api/tcg';
 import {
   buildTCGSearchInsights,
   DEFAULT_TCG_SEARCH_LIMIT,
@@ -27,7 +27,12 @@ export async function GET(request: NextRequest) {
       ),
       MAX_TCG_SEARCH_LIMIT,
     );
-    const lang = request.nextUrl.searchParams.get('lang') ?? 'en';
+    // `tcgLang` is the public, language-independent query parameter. Keep
+    // `lang` as a backwards-compatible alias for existing API consumers.
+    const lang = resolveTcgLang(searchState.tcgLang
+      ?? request.nextUrl.searchParams.get('tcgLang')
+      ?? request.nextUrl.searchParams.get('lang')
+      ?? 'en');
 
     const [results, options] = await Promise.all([
       searchCards(searchState.filters, lang, page, limit),

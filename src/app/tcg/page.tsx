@@ -13,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, localeHref, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
+import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 export const revalidate = 3600;
 
@@ -43,10 +44,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function TCGPage() {
+interface TCGPageProps {
+  searchParams: Promise<{ tcgLang?: string | string[] | undefined }>;
+}
+
+export default async function TCGPage({ searchParams }: TCGPageProps) {
   const t = await getServerT();
   const lang = await getServerLanguage();
-  const initialCatalog = await getInitialTcgCatalogCached(lang).catch(() => null);
+  const query = await searchParams;
+  const requestedTcgLanguage = Array.isArray(query.tcgLang) ? query.tcgLang[0] : query.tcgLang;
+  const initialTcgLanguage: TCGCardLanguage = isTCGCardLanguage(requestedTcgLanguage) ? requestedTcgLanguage : 'en';
+  const initialCatalog = await getInitialTcgCatalogCached(initialTcgLanguage).catch(() => null);
   const initialTabLabels = {
     'tcg.nav_catalog': t('tcg.nav_catalog'),
     'tcg.nav_collection': t('tcg.nav_collection'),
@@ -100,7 +108,7 @@ export default async function TCGPage() {
               initialLatestSet={DEFAULT_LATEST_TCG_SET}
               initialCards={initialCatalog?.cards ?? []}
               initialHasMore={initialCatalog?.hasMore ?? false}
-              initialLanguage={lang}
+              initialLanguage={initialTcgLanguage}
             />
           </Suspense>
           <TCGCompareTrigger />

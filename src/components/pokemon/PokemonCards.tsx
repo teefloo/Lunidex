@@ -9,9 +9,12 @@ import { pokemonKeys } from '@/lib/api/keys';
 import { Loader2 } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
+import { useMounted } from '@/hooks/useMounted';
+import { usePrimeDexStore } from '@/store/primedex';
 import { TCGCardDetailModal } from '@/components/tcg/TCGCardDetailModal';
 import { TCGHolographicCard } from '@/components/tcg/TCGHolographicCard';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 interface PokemonCardsProps {
   name: string;
@@ -21,11 +24,15 @@ interface PokemonCardsProps {
 
 // rarity and category are now provided by TCGCard directly from TCGdex detail API
 
-export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName, lang }) => {
+export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName }) => {
   const { t } = useTranslation();
+  const mounted = useMounted();
   const localeHref = useLocaleHref();
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const queryName = localizedName || name;
-  const tcgLang = lang || 'en';
+  // The Pokémon page's `lang` is an interface/translation hint. TCG card data
+  // follows the independent workspace preference instead.
+  const tcgLang: TCGCardLanguage = mounted ? browseLanguage : 'en';
   
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
 
@@ -82,7 +89,7 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
           </span>
         </h3>
         <Link
-          href={localeHref(`/tcg?q=${encodeURIComponent(queryName)}`)}
+          href={`${localeHref(`/tcg?q=${encodeURIComponent(queryName)}`)}&tcgLang=${encodeURIComponent(tcgLang)}`}
           className="inline-flex min-h-11 items-center rounded-sm px-2 text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >
           {t('detail.cards_open_catalog', { defaultValue: 'Open in TCG catalog' })}
@@ -105,14 +112,14 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
             />
             <div className="mt-2 flex max-w-[280px] flex-wrap justify-center gap-x-2 gap-y-1 text-center text-[11px] font-bold">
               <Link
-                href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}
+                href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(tcgLang)}`}
                 className="text-primary underline-offset-4 hover:underline"
               >
                 {card.name}
               </Link>
               {card.set?.id ? (
                 <Link
-                  href={localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}
+                  href={`${localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}?tcgLang=${encodeURIComponent(tcgLang)}`}
                   className="text-foreground/55 underline-offset-4 hover:text-primary hover:underline"
                 >
                   {card.set.name}
@@ -127,6 +134,7 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName,
         card={selectedCard}
         isOpen={!!selectedCard}
         onClose={() => setSelectedCard(null)}
+        tcgLanguage={tcgLang}
       />
     </div>
   );

@@ -58,7 +58,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
   const row = await getCurrentState(sql, user.id);
-  return NextResponse.json({ data: row?.data ?? {}, updatedAt: row?.updated_at ?? null }, { headers: { 'Cache-Control': 'private, no-store' } });
+  const data = isJsonObject(row?.data)
+    ? normalizeUserStateData(row.data) ?? row.data
+    : {};
+  return NextResponse.json({ data, updatedAt: row?.updated_at ?? null }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {

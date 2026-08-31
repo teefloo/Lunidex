@@ -24,12 +24,16 @@ export interface FriendRelation {
 }
 
 export interface FriendCollectionSummary {
+  /** Physical copies, including variant quantities. */
   totalOwned: number;
+  /** Distinct card identifiers used for completion percentages. */
+  distinctOwned: number;
   updatedAt: string | null;
 }
 
 export interface FriendCollectionPage {
   cardIds: string[];
+  distinctOwned: number;
   totalOwned: number;
   hasMore: boolean;
 }

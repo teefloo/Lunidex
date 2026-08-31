@@ -143,7 +143,9 @@ const getInitialTcgCatalogPersistent = unstable_cache(
 
 const getTCGCardPersistent = unstable_cache(
   (cardId: string, language: string) => getTCGCard(cardId, language),
-  ['lunidex:tcg-card:v1'],
+  // v2 invalidates server snapshots created before the exact finish/currency
+  // resolver was added.
+  ['lunidex:tcg-card:v2'],
   { revalidate: 3600 },
 );
 

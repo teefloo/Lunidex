@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   buildSetCollectionCards,
-  isTcgLangSupported,
   normalizeTcgPositiveInteger,
+  resolveTcgLang,
   TCG_COLLECTION_MAX_CARDS,
 } from '@/lib/api/tcg';
 
@@ -19,8 +19,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid setId' }, { status: 400 });
   }
 
-  const rawLang = params.get('lang')?.trim() ?? 'en';
-  const lang = isTcgLangSupported(rawLang) ? rawLang : 'en';
+  const lang = resolveTcgLang((params.get('tcgLang') ?? params.get('lang'))?.trim() ?? 'en');
 
   const rawLimit = Number.parseInt(params.get('limit') ?? '', 10);
   const maxCards = Math.min(

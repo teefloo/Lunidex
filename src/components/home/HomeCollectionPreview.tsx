@@ -6,6 +6,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import { HomeCardPreview } from './HomeCardPreview';
 import { useHomeFeaturedCards } from './useHomeFeaturedCards';
+import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 
 interface HomeCollectionPreviewProps {
   locale: string;
@@ -16,7 +17,7 @@ interface HomeCollectionPreviewProps {
 export function HomeCollectionPreview({ locale, copy, showAction = true }: HomeCollectionPreviewProps) {
   const mounted = useMounted();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
-  const ownedCount = usePrimeDexStore((state) => state.tcgOwnedCards.length);
+  const ownedCount = usePrimeDexStore((state) => countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards));
   const { cards: featuredCards } = useHomeFeaturedCards(true);
   const entry = resolveCollectionEntry({ hasHydrated: mounted && hasHydrated, ownedCount });
   const isResume = entry.mode === 'resume';

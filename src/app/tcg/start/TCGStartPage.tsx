@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
@@ -19,6 +19,8 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
+import { TCGLanguageSelector } from '@/components/tcg/TCGLanguageSelector';
+import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 const LATEST_SET_LIMIT = 12;
 
@@ -38,17 +40,21 @@ function formatReleaseDate(date: string | undefined, locale: string): string | n
 export function TCGStartPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const routeLanguage = useClientLanguage();
+  const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
   const { enabled, loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  const ownedCards = usePrimeDexStore((state) => state.tcgOwnedCards);
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
+  const createCollection = usePrimeDexStore((state) => state.createTCGCollection);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
   const searchTracked = useRef(false);
-  const resolvedLanguage = mounted ? routeLanguage : 'en';
+  const requestedLanguage = searchParams.get('tcgLang');
+  const queryLanguage: TCGCardLanguage | null = isTCGCardLanguage(requestedLanguage) ? requestedLanguage : null;
+  const resolvedLanguage: TCGCardLanguage = mounted && hasHydrated
+    ? (queryLanguage ?? browseLanguage)
+    : (queryLanguage ?? 'en');
   const attribution = useMemo(
     () => getTcgStartAttribution(searchParams.toString()),
     [searchParams],
@@ -58,10 +64,8 @@ export function TCGStartPage() {
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
     queryFn: () => getAllSets(resolvedLanguage),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !authLoading && Boolean(user),
+    enabled: mounted && hasHydrated && !authLoading && Boolean(user),
   });
-
-  const existingCollectionHref = localeHref('/tcg/collection');
 
   const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
   const visibleSets = useMemo(() => {
@@ -71,14 +75,9 @@ export function TCGStartPage() {
   }, [normalizedQuery, resolvedLanguage, sets]);
 
   useEffect(() => {
-    if (!mounted || !hasHydrated || ownedCards.length > 0) return;
+    if (!mounted || !hasHydrated) return;
     if (attribution) trackProductEvent('tcg_start_opened', attribution.source, attribution.campaign);
-  }, [attribution, hasHydrated, mounted, ownedCards.length]);
-
-  useEffect(() => {
-    if (!mounted || !hasHydrated || ownedCards.length === 0) return;
-    router.replace(existingCollectionHref);
-  }, [existingCollectionHref, hasHydrated, mounted, ownedCards.length, router]);
+  }, [attribution, hasHydrated, mounted]);
 
   if (!mounted || !hasHydrated || authLoading) {
     return (
@@ -124,35 +123,21 @@ export function TCGStartPage() {
     );
   }
 
-  if (ownedCards.length > 0) {
-    return (
-      <div className="app-page">
-        <Header />
-        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24" aria-busy="true" aria-labelledby="tcg-resume-title">
-          <section className="mx-auto max-w-2xl page-surface px-5 py-8 text-center sm:px-8">
-            <Sparkles className="mx-auto h-6 w-6 text-primary" aria-hidden="true" />
-            <h1 id="tcg-resume-title" className="mt-4 text-3xl font-black tracking-tight">
-              {t('tcg.activation.resume_cta', { defaultValue: 'Resume my collection' })}
-            </h1>
-            <p className="mt-3 text-base leading-7 text-foreground/60">
-              {t('auth.signup_subtitle', { defaultValue: 'Your saved cards are ready to continue.' })}
-            </p>
-          </section>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className="app-page">
       <Header />
       <main className="page-shell pt-24 pb-24" aria-labelledby="tcg-start-title">
         <section className="mx-auto max-w-3xl">
           <div className="page-surface px-5 py-7 sm:px-8 sm:py-9">
-            <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h1 id="tcg-start-title" className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
-              {t('tcg.activation.start_title')}
-            </h1>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
+                <h1 id="tcg-start-title" className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
+                  {t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}
+                </h1>
+              </div>
+              <TCGLanguageSelector />
+            </div>
             <p className="mt-3 max-w-2xl text-base leading-7 text-foreground/60">
               {t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}
             </p>
@@ -199,13 +184,20 @@ export function TCGStartPage() {
             ) : (
               <div className="mt-4 space-y-3">
                 {visibleSets.map((set) => {
-                  const releaseDate = formatReleaseDate(set.releaseDate, resolvedLanguage);
+                  const releaseDate = formatReleaseDate(set.releaseDate, interfaceLanguage);
                   const total = set.cardCount?.total ?? set.totalCards;
                   return (
                     <Link
                       key={set.id}
-                      href={localeHref(`/tcg/collection/${set.id}?activation=1`)}
-                      onClick={() => trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list')}
+                      href={`${localeHref(`/tcg/collection/${resolvedLanguage}/${encodeURIComponent(set.id)}`)}?activation=1`}
+                      onClick={(event) => {
+                        const collectionKey = createCollection(set.id, resolvedLanguage);
+                        if (!collectionKey) {
+                          event.preventDefault();
+                          return;
+                        }
+                        trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list');
+                      }}
                       className="group flex min-h-20 items-center gap-4 rounded-sm border border-border/30 bg-card/40 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                     >
                       <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-muted/40 p-1">

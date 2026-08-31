@@ -5,6 +5,14 @@ import type {
   TCGCollectionCard,
   TCGSet,
 } from '@/types/tcg';
+import {
+  TCG_DEFAULT_VARIANT_ORDER,
+  TCG_PHYSICAL_VARIANTS,
+  normalizeTCGCollectionQuantity,
+  type TCGCollectionVariant,
+  type TCGPhysicalVariant,
+} from '@primedex/core/lib/tcg-collections';
+import type { TCGDisplayCurrency } from '@/lib/tcg-currency';
 
 export function countOwnedInSet(setId: string, ownedIds: Set<string>): number {
   const prefix = `${setId}-`;
@@ -267,8 +275,8 @@ export function formatWishlistCopyPaste(cards: TCGCard[]): string {
 // We prefer Cardmarket because the app's primary audience is European and the
 // EUR figures are a single scalar per card; TCGplayer is used as a fallback for
 // cards Cardmarket does not cover. Because the two providers use different
-// currencies we never sum across them — `aggregateCollectionValue` groups totals
-// per currency so the displayed estimate stays honest.
+// currencies we never sum or convert across them — callers can pass the user's
+// selected display currency to keep only matching source quotes.
 //
 // Extension point: to add another price source, populate `card.pricing` in
 // `normaliseCard` (src/lib/api/tcg.ts) and extend `getCardMarketValue` below.
@@ -279,35 +287,84 @@ function toFiniteNumber(value: unknown): number | undefined {
 }
 
 /**
- * Resolve a single representative market value for a card.
- * Prefers Cardmarket trend → average → low (EUR), then falls back to the most
- * relevant TCGplayer variant market/mid/low price (USD). Returns null when no
- * price is available (e.g. summary cards that were never hydrated).
+ * Keep every non-negative finite quote, including a genuine zero. `null`, an
+ * omitted field, negative values, and non-numeric payloads remain unavailable.
  */
-export function getCardMarketValue(card: TCGCard): TCGCardValue | null {
+function toUsableMarketNumber(value: unknown): number | undefined {
+  const amount = toFiniteNumber(value);
+  return typeof amount === 'number' && amount >= 0 ? amount : undefined;
+}
+
+function getCardmarketBaseAmount(cardmarket: NonNullable<TCGCard['pricing']>['cardmarket']): number | undefined {
+  if (!cardmarket) return undefined;
+  return toUsableMarketNumber(cardmarket.trend)
+    ?? toUsableMarketNumber(cardmarket.avg)
+    ?? toUsableMarketNumber(cardmarket.avg30)
+    ?? toUsableMarketNumber(cardmarket.avg7)
+    ?? toUsableMarketNumber(cardmarket.avg1)
+    ?? toUsableMarketNumber(cardmarket.low);
+}
+
+function getCardmarketHoloAmount(cardmarket: NonNullable<TCGCard['pricing']>['cardmarket']): number | undefined {
+  if (!cardmarket) return undefined;
+  return toUsableMarketNumber(cardmarket['trend-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg30-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg7-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg1-holo'])
+    ?? toUsableMarketNumber(cardmarket['low-holo']);
+}
+
+function normalizeCurrency(value: unknown, fallback: string): string {
+  if (typeof value !== 'string' || !value.trim()) return fallback;
+  const normalized = value.trim().toUpperCase();
+  if (normalized === '€') return 'EUR';
+  if (normalized === '$') return 'USD';
+  return normalized;
+}
+
+/**
+ * Resolve the exact market value for one physical variant. Cardmarket exposes
+ * non-foil and foil prices, while TCGplayer exposes Normal, Holofoil and
+ * Reverse-Holofoil separately. Reverse therefore never falls back to an
+ * ambiguous Cardmarket foil value.
+ */
+export function getTCGVariantValue(
+  card: TCGCard,
+  variant: TCGPhysicalVariant,
+  displayCurrency?: TCGDisplayCurrency,
+): TCGCardValue | null {
+  // TCGdex may omit variant metadata on summary/legacy payloads. Treat that
+  // as unknown rather than inventing a physical finish from a provider price.
+  if (card.variants?.[variant] !== true) return null;
   const cardmarket = card.pricing?.cardmarket;
   if (cardmarket) {
-    const amount =
-      toFiniteNumber(cardmarket.trend) ??
-      toFiniteNumber(cardmarket.avg) ??
-      toFiniteNumber(cardmarket.avg30) ??
-      toFiniteNumber(cardmarket.low);
-    if (typeof amount === 'number') {
-      return { amount, currency: cardmarket.unit || 'EUR' };
+    const cardmarketAmount = variant === 'normal'
+      ? getCardmarketBaseAmount(cardmarket)
+      : variant === 'holo'
+        ? getCardmarketHoloAmount(cardmarket)
+        : undefined;
+    if (typeof cardmarketAmount === 'number') {
+      const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket.unit, 'EUR') };
+      if (!displayCurrency || value.currency === displayCurrency) return value;
     }
   }
 
   const tcgplayer = card.pricing?.tcgplayer;
   if (tcgplayer) {
-    const currency = tcgplayer.unit || 'USD';
-    for (const variant of ['normal', 'holofoil', 'reverse-holofoil'] as const) {
-      const tier = tcgplayer[variant];
-      if (tier && typeof tier === 'object') {
-        const amount =
-          toFiniteNumber(tier.marketPrice) ??
-          toFiniteNumber(tier.midPrice) ??
-          toFiniteNumber(tier.lowPrice);
-        if (typeof amount === 'number') return { amount, currency };
+    const currency = normalizeCurrency(tcgplayer.unit, 'USD');
+    const tiers = variant === 'normal'
+      ? [tcgplayer.normal]
+      : variant === 'holo'
+        ? [tcgplayer.holofoil, tcgplayer.holo]
+        : [tcgplayer.reverse, tcgplayer['reverse-holofoil']];
+    for (const tier of tiers) {
+      if (!tier || typeof tier !== 'object') continue;
+      const amount = toUsableMarketNumber(tier.marketPrice)
+        ?? toUsableMarketNumber(tier.midPrice)
+        ?? toUsableMarketNumber(tier.lowPrice);
+      if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
+        return { amount, currency };
       }
     }
   }
@@ -316,10 +373,91 @@ export function getCardMarketValue(card: TCGCard): TCGCardValue | null {
 }
 
 /**
+ * Resolve the legacy single price shown outside variant-aware collection UI.
+ *
+ * The old collection model had no finish information and intentionally used
+ * whichever marketplace quote was available. Preserve that behavior for
+ * representative estimates. This fallback never applies to an explicitly
+ * selected variant.
+ */
+export function getCardMarketValue(card: TCGCard, displayCurrency?: TCGDisplayCurrency): TCGCardValue | null {
+  // When TCGdex tells us which physical finishes exist, resolve the first
+  // available finish in the same deterministic order used when qualifying a
+  // historical possession. This prevents a holo-only card from inheriting a
+  // non-foil Cardmarket quote.
+  if (card.variants) {
+    const declaredVariants = TCG_DEFAULT_VARIANT_ORDER.filter((variant) => card.variants?.[variant] === true);
+    for (const variant of declaredVariants) {
+      const value = getTCGVariantValue(card, variant, displayCurrency);
+      if (value) return value;
+    }
+    if (declaredVariants.length > 0) return null;
+  }
+
+  // Summary/legacy payloads without variant metadata still need the old
+  // representative estimate for catalogue views. This path is deliberately
+  // not used for an explicitly qualified physical variant.
+  const cardmarket = card.pricing?.cardmarket;
+  const cardmarketAmount = getCardmarketBaseAmount(cardmarket);
+  if (typeof cardmarketAmount === 'number') {
+    const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket?.unit, 'EUR') };
+    if (!displayCurrency || value.currency === displayCurrency) return value;
+  }
+
+  const tcgplayer = card.pricing?.tcgplayer;
+  if (tcgplayer) {
+    const currency = normalizeCurrency(tcgplayer.unit, 'USD');
+    for (const variant of TCG_DEFAULT_VARIANT_ORDER) {
+      const tiers = variant === 'normal'
+        ? [tcgplayer.normal]
+        : variant === 'holo'
+          ? [tcgplayer.holofoil, tcgplayer.holo]
+          : [tcgplayer.reverse, tcgplayer['reverse-holofoil']];
+      for (const tier of tiers) {
+        if (!tier || typeof tier !== 'object') continue;
+        const amount = toUsableMarketNumber(tier.marketPrice)
+          ?? toUsableMarketNumber(tier.midPrice)
+          ?? toUsableMarketNumber(tier.lowPrice);
+        if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
+          return { amount, currency };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+/** Keep a resolved source quote only when it matches the user's display currency. */
+export function getTCGValueInCurrency(
+  value: TCGCardValue | null | undefined,
+  displayCurrency?: TCGDisplayCurrency,
+): TCGCardValue | null {
+  if (!value || !Number.isFinite(value.amount) || typeof value.currency !== 'string') return null;
+  const currency = normalizeCurrency(value.currency, '');
+  return !displayCurrency || currency === displayCurrency
+    ? { ...value, currency: currency || value.currency }
+    : null;
+}
+
+/**
  * Project a hydrated card into the slim, owned-independent shape consumed by the
  * collection statistics UI.
  */
-export function toCollectionCard(card: TCGCard, fallbackSetId?: string): TCGCollectionCard {
+export function toCollectionCard(
+  card: TCGCard,
+  fallbackSetId?: string,
+  displayCurrency?: TCGDisplayCurrency,
+): TCGCollectionCard {
+  const variants = card.variants ?? null;
+  const variantValues = {
+    // A missing flag is not evidence that a physical finish exists. Keep the
+    // card-level price available to catalogue views, but only expose exact
+    // variant prices when TCGdex explicitly marks that finish as present.
+    normal: variants?.normal === true ? getTCGVariantValue(card, 'normal', displayCurrency) : null,
+    reverse: variants?.reverse === true ? getTCGVariantValue(card, 'reverse', displayCurrency) : null,
+    holo: variants?.holo === true ? getTCGVariantValue(card, 'holo', displayCurrency) : null,
+  } satisfies Partial<Record<TCGPhysicalVariant, TCGCardValue | null>>;
   return {
     id: card.id,
     localId: card.localId,
@@ -327,8 +465,26 @@ export function toCollectionCard(card: TCGCard, fallbackSetId?: string): TCGColl
     setId: fallbackSetId ?? card.set?.id ?? '',
     image: card.image ?? card.imageUrl,
     rarity: card.rarity ?? null,
-    value: getCardMarketValue(card),
+    variants,
+    variantValues,
+    value: getCardMarketValue(card, displayCurrency),
   };
+}
+
+/**
+ * Read an exact finish quote from a collection projection. `value` is a
+ * representative estimate and may intentionally come from another available
+ * finish, so it is only a compatibility fallback for projections created
+ * before `variantValues` existed.
+ */
+function getExactCollectionCardValue(
+  card: TCGCollectionCard,
+  variant: TCGPhysicalVariant,
+): TCGCardValue | null {
+  if (card.variantValues && Object.prototype.hasOwnProperty.call(card.variantValues, variant)) {
+    return card.variantValues[variant] ?? null;
+  }
+  return variant === 'normal' ? card.value ?? null : null;
 }
 
 export function getCollectionCardRarityWeight(card: TCGCollectionCard): number {
@@ -390,18 +546,30 @@ export interface TCGCollectionValuation {
   ownedCount: number;
   /** Number of owned cards that contributed a price to `groups`. */
   pricedCount: number;
+  /** Number of owned physical cards with no usable provider price. */
+  unpricedCount?: number;
 }
 
 export interface TCGCollectionSetValuation {
   /** Per-currency totals for owned cards in one set. */
   groups: TCGCollectionValueGroup[];
+  /** Number of owned physical cards in this set, priced or not. */
+  ownedCount: number;
   /** Number of owned cards in this set that contributed a price. */
   pricedCount: number;
+  /** Number of owned physical cards in this set with no usable price. */
+  unpricedCount?: number;
 }
 
 export interface TCGCollectionValuationResult extends TCGCollectionValuation {
   /** Owned-card values grouped by set identifier. */
   bySet: Record<string, TCGCollectionSetValuation>;
+}
+
+export interface TCGOwnedVariant {
+  cardId: string;
+  variant: TCGCollectionVariant;
+  quantity: number;
 }
 
 function groupsFromTotals(
@@ -424,36 +592,48 @@ function groupsFromTotals(
 export function aggregateCollectionValueWithSets(
   cards: TCGCollectionCard[],
   ownedIds: Set<string>,
+  displayCurrency?: TCGDisplayCurrency,
 ): TCGCollectionValuationResult {
+  // This id-only API predates physical finishes. Preserve its compatibility
+  // contract by valuing the projected representative `card.value`; callers
+  // that know the actual finish must use `aggregateCollectionValueWithVariants`.
   const totals = new Map<string, { total: number; count: number }>();
   const totalsBySet = new Map<string, Map<string, { total: number; count: number }>>();
   const pricedBySet = new Map<string, number>();
+  const unpricedBySet = new Map<string, number>();
+  const ownedBySet = new Map<string, number>();
   let ownedCount = 0;
   let pricedCount = 0;
+  let unpricedCount = 0;
 
   for (const card of cards) {
     if (!ownedIds.has(card.id)) continue;
-    ownedCount++;
+    ownedCount += 1;
+    if (card.setId) {
+      ownedBySet.set(card.setId, (ownedBySet.get(card.setId) ?? 0) + 1);
+      if (!totalsBySet.has(card.setId)) totalsBySet.set(card.setId, new Map());
+    }
 
-    const setTotals = card.setId
-      ? (totalsBySet.get(card.setId) ?? new Map<string, { total: number; count: number }>())
-      : null;
-    if (card.setId && !totalsBySet.has(card.setId)) totalsBySet.set(card.setId, setTotals!);
+    const value = getTCGValueInCurrency(card.value, displayCurrency);
+    const currency = value?.currency.trim().toUpperCase() || null;
+    if (!value || !currency) {
+      unpricedCount += 1;
+      if (card.setId) unpricedBySet.set(card.setId, (unpricedBySet.get(card.setId) ?? 0) + 1);
+      continue;
+    }
 
-    const value = card.value;
-    if (!value || !Number.isFinite(value.amount)) continue;
-    pricedCount++;
+    pricedCount += 1;
+    const totalEntry = totals.get(currency) ?? { total: 0, count: 0 };
+    totalEntry.total += value.amount;
+    totalEntry.count += 1;
+    totals.set(currency, totalEntry);
 
-    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
-    entry.total += value.amount;
-    entry.count++;
-    totals.set(value.currency, entry);
-
-    if (setTotals && card.setId) {
-      const setEntry = setTotals.get(value.currency) ?? { total: 0, count: 0 };
+    if (card.setId) {
+      const setTotals = totalsBySet.get(card.setId)!;
+      const setEntry = setTotals.get(currency) ?? { total: 0, count: 0 };
       setEntry.total += value.amount;
-      setEntry.count++;
-      setTotals.set(value.currency, setEntry);
+      setEntry.count += 1;
+      setTotals.set(currency, setEntry);
       pricedBySet.set(card.setId, (pricedBySet.get(card.setId) ?? 0) + 1);
     }
   }
@@ -463,20 +643,104 @@ export function aggregateCollectionValueWithSets(
       setId,
       {
         groups: groupsFromTotals(setTotals),
+        ownedCount: ownedBySet.get(setId) ?? 0,
         pricedCount: pricedBySet.get(setId) ?? 0,
+        unpricedCount: unpricedBySet.get(setId) ?? 0,
       },
     ]),
   );
 
-  return { groups: groupsFromTotals(totals), ownedCount, pricedCount, bySet };
+  return { groups: groupsFromTotals(totals), ownedCount, pricedCount, unpricedCount, bySet };
+}
+
+/**
+ * Aggregate actual physical variant quantities in one pass. Missing prices do
+ * not contribute to totals but remain represented in `ownedCount`.
+ */
+export function aggregateCollectionValueWithVariants(
+  cards: TCGCollectionCard[],
+  ownedVariants: readonly TCGOwnedVariant[],
+  displayCurrency?: TCGDisplayCurrency,
+): TCGCollectionValuationResult {
+  const cardsById = new Map(cards.map((card) => [card.id, card]));
+  const totals = new Map<string, { total: number; count: number }>();
+  const totalsBySet = new Map<string, Map<string, { total: number; count: number }>>();
+  const pricedBySet = new Map<string, number>();
+  const unpricedBySet = new Map<string, number>();
+  const ownedBySet = new Map<string, number>();
+  let ownedCount = 0;
+  let pricedCount = 0;
+  let unpricedCount = 0;
+
+  for (const owned of ownedVariants) {
+    const card = cardsById.get(owned.cardId);
+    const normalizedQuantity = normalizeTCGCollectionQuantity(owned.quantity);
+    const quantity = normalizedQuantity ?? 0;
+    if (!card || quantity === 0) continue;
+    ownedCount += quantity;
+
+    const setTotals = card.setId
+      ? (totalsBySet.get(card.setId) ?? new Map<string, { total: number; count: number }>())
+      : null;
+    if (card.setId && !totalsBySet.has(card.setId)) totalsBySet.set(card.setId, setTotals!);
+    if (card.setId) ownedBySet.set(card.setId, (ownedBySet.get(card.setId) ?? 0) + quantity);
+
+    // Historical/imported possessions do not carry a finish. Keep that fact in
+    // the collection model and leave them unpriced until the detail panel can
+    // qualify them. Once a finish is known, prefer its exact provider value and
+    // never fall back to a different physical finish.
+    const physicalVariant = owned.variant === 'unspecified' ? null : owned.variant;
+    const variantAvailable = physicalVariant !== null && card.variants?.[physicalVariant] === true;
+    const value = physicalVariant === null
+      ? null
+      : !variantAvailable
+        ? null
+        : getExactCollectionCardValue(card, physicalVariant);
+    const displayValue = getTCGValueInCurrency(value, displayCurrency);
+    const currency = displayValue?.currency.trim().toUpperCase() || null;
+    if (!displayValue || !currency) {
+      unpricedCount += quantity;
+      if (card.setId) unpricedBySet.set(card.setId, (unpricedBySet.get(card.setId) ?? 0) + quantity);
+      continue;
+    }
+    pricedCount += quantity;
+
+    const entry = totals.get(currency) ?? { total: 0, count: 0 };
+    entry.total += displayValue.amount * quantity;
+    entry.count += quantity;
+    totals.set(currency, entry);
+
+    if (setTotals && card.setId) {
+      const setEntry = setTotals.get(currency) ?? { total: 0, count: 0 };
+      setEntry.total += displayValue.amount * quantity;
+      setEntry.count += quantity;
+      setTotals.set(currency, setEntry);
+      pricedBySet.set(card.setId, (pricedBySet.get(card.setId) ?? 0) + quantity);
+    }
+  }
+
+  const bySet = Object.fromEntries(
+    [...totalsBySet.entries()].map(([setId, setTotals]) => [
+      setId,
+      {
+        groups: groupsFromTotals(setTotals),
+        ownedCount: ownedBySet.get(setId) ?? 0,
+        pricedCount: pricedBySet.get(setId) ?? 0,
+        unpricedCount: unpricedBySet.get(setId) ?? 0,
+      },
+    ]),
+  );
+
+  return { groups: groupsFromTotals(totals), ownedCount, pricedCount, unpricedCount, bySet };
 }
 
 /** Aggregate the owned value globally, preserving the legacy return shape. */
 export function aggregateCollectionValue(
   cards: TCGCollectionCard[],
   ownedIds: Set<string>,
+  displayCurrency?: TCGDisplayCurrency,
 ): TCGCollectionValuation {
-  const valuation = aggregateCollectionValueWithSets(cards, ownedIds);
+  const valuation = aggregateCollectionValueWithSets(cards, ownedIds, displayCurrency);
   return {
     groups: valuation.groups,
     ownedCount: valuation.ownedCount,
@@ -492,8 +756,9 @@ export function aggregateCollectionValue(
 export function aggregateCollectionValueBySet(
   cards: TCGCollectionCard[],
   ownedIds: Set<string>,
+  displayCurrency?: TCGDisplayCurrency,
 ): Record<string, TCGCollectionSetValuation> {
-  return aggregateCollectionValueWithSets(cards, ownedIds).bySet;
+  return aggregateCollectionValueWithSets(cards, ownedIds, displayCurrency).bySet;
 }
 
 export interface TCGActiveSetInsights {
@@ -513,15 +778,20 @@ export interface TCGActiveSetInsights {
 export function getActiveSetInsightsFallback(
   set: TCGSet,
   ownedIds: Set<string>,
+  ownedVariants?: readonly TCGOwnedVariant[],
 ): TCGActiveSetInsights {
   const completion = getSetCompletionFromSet(set, ownedIds);
+  const physicalOwned = ownedVariants
+    ? ownedVariants.reduce((sum, ownership) => sum + (Number.isInteger(ownership.quantity) && ownership.quantity > 0 ? ownership.quantity : 0), 0)
+    : completion.owned;
   return {
     completion,
     topMissing: [],
     valuation: {
       groups: [],
-      ownedCount: completion.owned,
+      ownedCount: physicalOwned,
       pricedCount: 0,
+      unpricedCount: physicalOwned,
     },
     setTotalValue: [],
   };
@@ -533,15 +803,23 @@ export function getActiveSetInsightsFallback(
  */
 export function aggregateSetTotalValue(
   cards: TCGCollectionCard[],
+  displayCurrency?: TCGDisplayCurrency,
 ): TCGCollectionValueGroup[] {
   const totals = new Map<string, { total: number; count: number }>();
   for (const card of cards) {
-    const value = card.value;
-    if (!value || !Number.isFinite(value.amount)) continue;
-    const entry = totals.get(value.currency) ?? { total: 0, count: 0 };
-    entry.total += value.amount;
-    entry.count++;
-    totals.set(value.currency, entry);
+    const variants = card.variants
+      ? TCG_PHYSICAL_VARIANTS.filter((variant) => card.variants?.[variant] === true)
+      : [];
+    for (const variant of variants) {
+      const value = getExactCollectionCardValue(card, variant);
+      const displayValue = getTCGValueInCurrency(value, displayCurrency);
+      const currency = displayValue?.currency.trim().toUpperCase() || null;
+      if (!displayValue || !currency) continue;
+      const entry = totals.get(currency) ?? { total: 0, count: 0 };
+      entry.total += displayValue.amount;
+      entry.count++;
+      totals.set(currency, entry);
+    }
   }
   return [...totals.entries()]
     .map(([currency, { total, count }]) => ({
@@ -559,11 +837,15 @@ export function computeActiveSetInsights(
   cards: TCGCollectionCard[],
   ownedIds: Set<string>,
   topMissingLimit = 8,
+  ownedVariants?: readonly TCGOwnedVariant[],
+  displayCurrency?: TCGDisplayCurrency,
 ): TCGActiveSetInsights {
   return {
     completion: getSetCompletionFromCards(cards, ownedIds),
     topMissing: getTopMissingCards(cards, ownedIds, topMissingLimit),
-    valuation: aggregateCollectionValue(cards, ownedIds),
-    setTotalValue: aggregateSetTotalValue(cards),
+    valuation: ownedVariants
+      ? aggregateCollectionValueWithVariants(cards, ownedVariants, displayCurrency)
+      : aggregateCollectionValue(cards, ownedIds, displayCurrency),
+    setTotalValue: aggregateSetTotalValue(cards, displayCurrency),
   };
 }
