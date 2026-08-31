@@ -1,5 +1,5 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-08-25
+# Reviewed against the application source: 2026-08-31
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
@@ -82,8 +82,9 @@ the application and unknown resources return the established not-found flow.
 ### Team Builder — `/en/team`
 
 The Team Builder accepts up to six Pokémon. It calculates type coverage,
-shared weaknesses and synergy, and provides team actions such as export and
-sharing through the application's supported share and account-backed flows.
+shared weaknesses and synergy, and provides a team image export, short share
+codes, and Showdown text import through the application's supported share and
+account-backed flows.
 
 ### Compare — `/en/compare`
 
@@ -112,7 +113,9 @@ entries so discovery does not depend only on a client-side query completing.
 - `/en/tcg` is the public catalog entry point.
 - `/en/30e-anniversaire` is the English Pokémon TCG 30th Anniversary landing, with official-source-based facts, announced products, and a browser-local tracker for 30 Pikachu slots. `/fr/30e-anniversaire` is the French equivalent.
 - `/en/tcg/cards/{id}` is a card detail route with card metadata when TCGdex supplies it.
-- `/en/tcg/collection/{setId}` is a set album/collection route.
+- `/en/tcg/collection/{language}/{setId}` is a language-specific set album route;
+  the legacy `/en/tcg/collection/{setId}` path only resolves older collection
+  records and is not an indexable content source.
 - `/en/tcg/collection` is a personal collection surface.
 - `/en/tcg/wishlist` is a personal wishlist surface.
 - `/en/tcg/deck-builder` is a Pokémon TCG deck-building surface.
@@ -197,8 +200,8 @@ The public robots policy allows public pages and disallows `/api/`. The
 sitemap is generated from static launch routes plus Pokémon, move, ability,
 item, and TCG catalog identifiers when the upstream listings are available.
 `/en/tcg/collection` is a personal collection surface and requires the
-account-backed flow for personal actions. `/en/tcg/collection/{setId}` is a
-public, noindex set-album route; collection mutations and personal state still
+account-backed flow for personal actions. `/en/tcg/collection/{language}/{setId}`
+is a public, noindex set-album route; collection mutations and personal state still
 depend on the configured account service. Neither route is a public source for
 a user's private collection. A live crawl is required to know the current
 number of emitted URLs.

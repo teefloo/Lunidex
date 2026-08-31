@@ -36,7 +36,6 @@ import {
 } from '@/lib/auto-complete';
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
-import MoveCoverageChecker from '@/components/pokemon/MoveCoverageChecker';
 import { TeamExportButton } from '@/components/team/TeamExportButton';
 import { ShowdownImportDialog } from '@/components/team/ShowdownImportDialog';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
@@ -53,6 +52,18 @@ const Radar = dynamic(() => import('recharts').then(m => m.Radar), { ssr: false 
 const RechartsTooltip = dynamic(() => import('recharts').then(m => m.Tooltip), { ssr: false });
 
 import Image from 'next/image';
+
+const MoveCoverageChecker = dynamic(
+  () => import('@/components/pokemon/MoveCoverageChecker'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="glass-panel flex h-40 items-center justify-center rounded-sm">
+        <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
+      </div>
+    ),
+  },
+);
 
 export default function TeamPage() {
   const { team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
@@ -250,6 +261,28 @@ export default function TeamPage() {
           )}
         />
 
+        <section
+          className="mx-auto mb-8 max-w-4xl rounded-sm border border-primary/20 bg-primary/5 p-5 md:p-6"
+          aria-labelledby="team-builder-overview-title"
+        >
+          <h2 id="team-builder-overview-title" className="text-xl font-black tracking-tight md:text-2xl">
+            {t('team_guide.answer_title')}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/75 md:text-base">
+            {t('team_guide.answer_body')}
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/65">
+            {t('team_guide.how_intro')}
+          </p>
+          <Link
+            href={localeHref('/guides/team-builder-guide')}
+            className="mt-4 inline-flex font-bold text-primary underline-offset-4 hover:underline"
+          >
+            {t('team_guide.nav_label')}
+            <span aria-hidden="true" className="ml-1">↗</span>
+          </Link>
+        </section>
+
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Team Slots */}
           <div className="lg:col-span-8 space-y-6">
@@ -280,7 +313,7 @@ export default function TeamPage() {
                           <div className="absolute inset-x-5 bottom-3 top-10 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity group-hover:opacity-80" />
                         <Image 
                           src={p.sprites.other['official-artwork'].front_default || p.sprites.front_default} 
-                          alt={displayName || ''} 
+                          alt={displayName || p.name}
                           width={112}
                           height={112}
                           sizes="112px"

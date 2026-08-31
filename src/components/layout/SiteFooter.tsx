@@ -159,7 +159,7 @@ export default async function SiteFooter() {
               className="site-footer__brand-link group"
             >
               <span className="site-footer__brand-mark">
-                <LunidexLogo alt="" sizes="52px" className="h-11 w-11 object-contain" />
+                <LunidexLogo alt={SITE_NAME} sizes="52px" className="h-11 w-11 object-contain" />
               </span>
               <span className="site-footer__wordmark" aria-hidden="true" translate="no">
                 <span className="site-footer__wordmark-primary">Luni</span>

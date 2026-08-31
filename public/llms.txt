@@ -34,7 +34,7 @@ Browsing public reference pages does not require an account. In the current web 
 - [Home](https://lunidex.app/en) — overview of the collection, Pokédex and team experiences, with a visible FAQ section.
 - [Pokédex](https://lunidex.app/en/pokedex) — search and filter Pokémon by name, number, type, generation and other supported attributes.
 - [Pikachu reference page](https://lunidex.app/en/pokemon/pikachu) — example Pokémon detail route. The route pattern is `/en/pokemon/{name}`.
-- [Team Builder](https://lunidex.app/en/team) — compose up to six Pokémon and inspect type coverage, shared weaknesses and team synergy.
+- [Team Builder](https://lunidex.app/en/team) — compose up to six Pokémon, inspect type coverage, shared weaknesses and team synergy, export a team image, share a short code, or import Showdown text.
 - [Compare](https://lunidex.app/en/compare) — compare up to three Pokémon using stats and matchup analysis.
 - [Type Chart](https://lunidex.app/en/types) — inspect offensive and defensive interactions among the 18 Pokémon types.
 - [Moves](https://lunidex.app/en/moves) — browse the move reference and open individual move pages.
@@ -90,4 +90,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-25. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-08-31. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

@@ -21,7 +21,7 @@ export function HeaderLogo() {
     <div className="site-header-brand flex min-w-0 shrink-0 items-center justify-start">
       <Link prefetch={false} href={`/${resolvedLang}`} aria-label={accessibleHomeLabel} className="site-header-brand-link group flex min-w-0 items-center gap-2.5">
         <div className="site-header-brand-mark shrink-0">
-          <LunidexLogo alt="" priority sizes="28px" className="h-7 w-7 object-contain" />
+          <LunidexLogo alt="Lunidex" priority sizes="28px" className="h-7 w-7 object-contain" />
         </div>
         <div className="site-header-brand-copy flex min-w-0 flex-col items-start gap-1">
           <div className="flex items-baseline leading-none tracking-tight">

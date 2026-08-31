@@ -59,4 +59,4 @@ TCG-Data: https://www.tcgdex.net
 # - /en/guides/tcg-workspace-guide
 # - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-08-25
+# Reviewed against the application source: 2026-08-31

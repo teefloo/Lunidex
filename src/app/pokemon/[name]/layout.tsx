@@ -154,14 +154,11 @@ export default async function PokemonLayout({
         ],
       },
       author: {
-        '@type': 'Organization',
         '@id': `${baseUrl}/#organization`,
-        name: 'Lunidex',
-        url: baseUrl,
       },
       publisher: { '@id': `${baseUrl}/#organization` },
-      sourceOrganization: {
-        '@type': 'Organization',
+      citation: {
+        '@type': 'WebPage',
         name: 'PokéAPI',
         url: 'https://pokeapi.co',
       },
@@ -179,7 +176,7 @@ export default async function PokemonLayout({
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Lunidex', item: `${baseUrl}/${lang}` },
-        { '@type': 'ListItem', position: 2, name: t('nav.pokedex', { defaultValue: 'Pokédex' }), item: `${baseUrl}/${lang}` },
+        { '@type': 'ListItem', position: 2, name: t('nav.pokedex', { defaultValue: 'Pokédex' }), item: `${baseUrl}/${lang}/pokedex` },
         { '@type': 'ListItem', position: 3, name: displayName, item: `${baseUrl}/${lang}/pokemon/${name}` },
       ],
     };

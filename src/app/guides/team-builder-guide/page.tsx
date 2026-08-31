@@ -86,7 +86,7 @@ export default async function TeamBuilderGuide() {
       datePublished: PUBLISHED_AT,
       dateModified: LAST_UPDATED,
       about: 'Pokémon team building',
-      keywords: 'Pokémon team builder, team analysis, synergy score, type coverage, Showdown export',
+      keywords: 'Pokémon team builder, team analysis, synergy score, type coverage, Showdown import',
     }),
     articleSection: t('team_guide.eyebrow'),
     citation: [
