@@ -4,24 +4,20 @@ import Link from 'next/link';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { useTranslation } from '@/lib/i18n';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 
 export function HeaderLogo() {
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const mounted = useMounted();
-  const { t } = useTranslation();
   const resolvedLang = useClientLanguage();
   const caughtCount = mounted ? caughtPokemon.length : 0;
   const progressPercent = Math.round((caughtCount / 1025) * 100);
-  const homeLabel = t('header.home_aria', { defaultValue: 'Go to Home' });
-  const accessibleHomeLabel = `Lunidex: ${homeLabel}`;
 
   return (
     <div className="site-header-brand flex min-w-0 shrink-0 items-center justify-start">
-      <Link prefetch={false} href={`/${resolvedLang}`} aria-label={accessibleHomeLabel} className="site-header-brand-link group flex min-w-0 items-center gap-2.5">
+      <Link prefetch={false} href={`/${resolvedLang}`} className="site-header-brand-link group flex min-w-0 items-center gap-2.5">
         <div className="site-header-brand-mark shrink-0">
-          <LunidexLogo alt="Lunidex" priority sizes="28px" className="h-7 w-7 object-contain" />
+          <LunidexLogo alt="" priority sizes="28px" className="h-7 w-7 object-contain" />
         </div>
         <div className="site-header-brand-copy flex min-w-0 flex-col items-start gap-1">
           <div className="flex items-baseline leading-none tracking-tight">

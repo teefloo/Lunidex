@@ -62,7 +62,6 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${SITE_NAME}`,
     },
     description,
-    keywords: t("meta.keywords", { returnObjects: true }) as unknown as string[],
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,
     publisher: SITE_NAME,

@@ -153,8 +153,8 @@ Nuzlocke tracker.
   modes, daily-challenge behavior and badge thresholds.
 - `/en/guides/nuzlocke-guide` answers Nuzlocke-tracking questions with verified
   tracker features: runs, one encounter per route, statuses and statistics.
-- `/en/faq` contains twelve visible questions grouped into data, features and
-  TCG/privacy/account categories.
+- `/en/faq` contains eighteen visible questions grouped into getting started,
+  Pokémon tools, TCG workspace, and data and support.
 - `/en/about` explains the project mission, sources, open-source status and
   project links.
 - `/en/compare/lunidex-vs-pokecardex-zebradex` compares the documented scope of

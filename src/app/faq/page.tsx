@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import FaqSection from '@/components/ui/FaqSection';
-import { localizeInternalRouteReferences } from '@/lib/lunidex-home-content';
 import {
   SITE_URL,
   SITE_NAME,
@@ -11,13 +11,13 @@ import {
 } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
-import { HelpCircle, MessageCircleQuestion } from 'lucide-react';
+import { HelpCircle, Mail, MessageCircleQuestion } from 'lucide-react';
 
-type FaqEntry = { q: string; a: string };
+type FaqLink = { href: string; label: string };
+type FaqEntry = { id: string; q: string; a: string; links?: FaqLink[] };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-08-24';
-const FAQ_COUNT = 12;
+const LAST_UPDATED = '2026-09-01';
 
 export const revalidate = 3600;
 
@@ -29,7 +29,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    keywords: t('faq.meta_keywords'),
     alternates: {
       canonical: `/${lang}/faq`,
       languages: buildSubpathLanguages('/faq'),
@@ -53,33 +52,74 @@ export default async function FaqPage() {
   const t = await getServerT();
   const lang = await getServerLanguage();
   const baseUrl = SITE_URL;
+
+  const routeLink = (path: string, labelKey: string): FaqLink => ({
+    href: `/${lang}${path}`,
+    label: t(labelKey),
+  });
+
+  const links = {
+    about: routeLink('/about', 'about.heading'),
+    pokedex: routeLink('/pokedex', 'footer.navigation.pokedex'),
+    team: routeLink('/team', 'footer.navigation.team_builder'),
+    compare: routeLink('/compare', 'compare.title'),
+    types: routeLink('/types', 'footer.navigation.types'),
+    quiz: routeLink('/quiz', 'footer.navigation.quiz'),
+    nuzlocke: routeLink('/nuzlocke', 'nuzlocke.title'),
+    tcg: routeLink('/tcg', 'footer.navigation.tcg'),
+    collection: routeLink('/tcg/collection', 'tcg.nav_collection'),
+    wishlist: routeLink('/tcg/wishlist', 'tcg.nav_wishlist'),
+    deckBuilder: routeLink('/tcg/deck-builder', 'tcg.nav_deck_builder'),
+    offline: routeLink('/offline', 'offline.title'),
+    dashboard: routeLink('/dashboard', 'footer.navigation.dashboard'),
+    privacy: routeLink('/privacy', 'footer.legal.privacy'),
+    contact: routeLink('/contact', 'contact.title'),
+  };
+
+  const answer = (key: string) => t(key);
+
+  const start: FaqEntry[] = [
+    { id: 'what-is-lunidex', q: t('faq.q1'), a: answer('faq.a1'), links: [links.about] },
+    { id: 'account-and-payment', q: t('faq.q2'), a: answer('faq.a2'), links: [links.dashboard] },
+    { id: 'interface-languages', q: t('faq.q3'), a: answer('faq.a3') },
+    { id: 'install-on-mobile', q: t('faq.q4'), a: answer('faq.a4'), links: [links.offline] },
+  ];
+  const tools: FaqEntry[] = [
+    { id: 'pokemon-coverage', q: t('faq.q5'), a: answer('faq.a5'), links: [links.pokedex] },
+    { id: 'team-builder', q: t('faq.q6'), a: answer('faq.a6'), links: [links.team] },
+    { id: 'compare-pokemon', q: t('faq.q7'), a: answer('faq.a7'), links: [links.compare, links.types] },
+    { id: 'pokemon-quiz', q: t('faq.q8'), a: answer('faq.a8'), links: [links.quiz] },
+    { id: 'nuzlocke-tracker', q: t('faq.q9'), a: answer('faq.a9'), links: [links.nuzlocke] },
+  ];
+  const tcg: FaqEntry[] = [
+    { id: 'tcg-catalog', q: t('faq.q10'), a: answer('faq.a10'), links: [links.tcg] },
+    { id: 'tcg-collection', q: t('faq.q11'), a: answer('faq.a11'), links: [links.collection] },
+    { id: 'tcg-wishlist-and-decks', q: t('faq.q12'), a: answer('faq.a12'), links: [links.wishlist, links.deckBuilder] },
+    { id: 'tcg-prices', q: t('faq.q13'), a: answer('faq.a13'), links: [links.tcg] },
+    { id: 'tcg-scanner-marketplace', q: t('faq.q14'), a: answer('faq.a14'), links: [links.about] },
+  ];
+  const support: FaqEntry[] = [
+    { id: 'data-storage-and-sync', q: t('faq.q15'), a: answer('faq.a15'), links: [links.privacy, links.dashboard] },
+    { id: 'offline-use', q: t('faq.q16'), a: answer('faq.a16'), links: [links.offline] },
+    { id: 'export-and-delete', q: t('faq.q17'), a: answer('faq.a17'), links: [links.dashboard, links.privacy] },
+    { id: 'contact-and-open-source', q: t('faq.q18'), a: answer('faq.a18'), links: [links.contact, links.about] },
+  ];
+
+  const categories: FaqCategory[] = [
+    { id: 'start', title: t('faq.cat_start_title'), intro: t('faq.cat_start_intro'), entries: start },
+    { id: 'tools', title: t('faq.cat_tools_title'), intro: t('faq.cat_tools_intro'), entries: tools },
+    { id: 'tcg', title: t('faq.cat_tcg_title'), intro: t('faq.cat_tcg_intro'), entries: tcg },
+    { id: 'support', title: t('faq.cat_support_title'), intro: t('faq.cat_support_intro'), entries: support },
+  ];
+  const allEntries = categories.flatMap((category) => category.entries);
+  const faqCount = allEntries.length;
   const formattedLastUpdated = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(
     new Date(`${LAST_UPDATED}T00:00:00Z`),
   );
   const lastUpdatedLabel = t('faq.last_updated', {
     date: formattedLastUpdated,
-    count: FAQ_COUNT,
+    count: faqCount,
   });
-  const answer = (key: string) => localizeInternalRouteReferences(t(key), lang);
-
-  const data: FaqEntry[] = [
-    { q: t('faq.q1'), a: answer('faq.a1') },
-    { q: t('faq.q2'), a: answer('faq.a2') },
-    { q: t('faq.q3'), a: answer('faq.a3') },
-    { q: t('faq.q4'), a: answer('faq.a4') },
-  ];
-  const features: FaqEntry[] = [
-    { q: t('faq.q5'), a: answer('faq.a5') },
-    { q: t('faq.q6'), a: answer('faq.a6') },
-    { q: t('faq.q7'), a: answer('faq.a7') },
-    { q: t('faq.q8'), a: answer('faq.a8') },
-  ];
-  const privacy: FaqEntry[] = [
-    { q: t('faq.q9'), a: answer('faq.a9') },
-    { q: t('faq.q10'), a: answer('faq.a10') },
-    { q: t('faq.q11'), a: answer('faq.a11') },
-    { q: t('faq.q12'), a: answer('faq.a12') },
-  ];
 
   const breadcrumb = buildBreadcrumbJsonLd(
     [
@@ -102,7 +142,7 @@ export default async function FaqPage() {
     publisher: { '@id': `${baseUrl}/#organization` },
     dateModified: LAST_UPDATED,
     primaryImageOfPage: { '@type': 'ImageObject', url: `${baseUrl}${DEFAULT_OG_IMAGE.url}` },
-    mainEntity: [...data, ...features, ...privacy].map((entry) => ({
+    mainEntity: allEntries.map((entry) => ({
       '@type': 'Question',
       name: entry.q,
       acceptedAnswer: {
@@ -112,12 +152,6 @@ export default async function FaqPage() {
     })),
   };
 
-  const categories: FaqCategory[] = [
-    { id: 'data', title: t('faq.cat_data_title'), intro: t('faq.cat_data_intro'), entries: data },
-    { id: 'features', title: t('faq.cat_features_title'), intro: t('faq.cat_features_intro'), entries: features },
-    { id: 'privacy', title: t('faq.cat_privacy_title'), intro: t('faq.cat_privacy_intro'), entries: privacy },
-  ];
-
   const faqFooter = (
     <aside className="mt-16" data-od-id="faq-footer">
       <div className="editorial-ornament mb-6">
@@ -125,7 +159,7 @@ export default async function FaqPage() {
       </div>
       <div className="page-surface p-8 md:p-10 text-center">
         <p className="cat-no mb-3 text-center">
-          <span className="cat-no__num">{String(FAQ_COUNT).padStart(2, '0')}</span>
+          <span className="cat-no__num">{String(faqCount).padStart(2, '0')}</span>
         </p>
         <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
           {t('faq.still_questions_title')}
@@ -134,6 +168,13 @@ export default async function FaqPage() {
           {t('faq.still_questions_body')}
         </p>
         <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+          <Link
+            href={`/${lang}/contact`}
+            className="glass-btn glass-btn-active touch-target inline-flex items-center justify-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em]"
+          >
+            <Mail aria-hidden="true" className="h-3.5 w-3.5" />
+            {t('faq.still_questions_cta_contact')}
+          </Link>
           <a
             href={GITHUB_ISSUES_URL}
             target="_blank"
@@ -178,49 +219,17 @@ export default async function FaqPage() {
           </header>
 
           <article className="mx-auto w-full max-w-4xl px-5 md:px-8">
-            <nav
-              aria-label={t('faq.toc_title')}
-              className="section-frame p-5 md:p-6"
-              data-od-id="faq-index"
-            >
-              <div className="flex items-center justify-between gap-3 mb-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground/50">
-                  {t('faq.toc_title')}
-                </p>
-                <p className="cat-no">
-                  <span className="cat-no__num">{String(FAQ_COUNT).padStart(2, '0')}</span> FAQ
-                </p>
-              </div>
-              <ul className="flex flex-wrap gap-2">
-                {categories.map((section, idx) => (
-                  <li key={section.id}>
-                    <a
-                      href={`#${section.id}`}
-                      className="glass-btn touch-target inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-foreground/80"
-                    >
-                      <span className="font-mono text-[11px] text-foreground/45">
-                        {(idx + 1).toString().padStart(2, '0')}
-                      </span>
-                      {section.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <div className="rule-line my-10 md:my-12">
-              {t('faq.toc_title')}
-            </div>
-
             <FaqSection
               categories={categories}
               allLabel={t('faq.all_label')}
               searchPlaceholder={t('faq.search_placeholder')}
-              tocLabel={t('faq.toc_title')}
+              categoryLabel={t('faq.toc_title')}
+              relatedLinksLabel={t('faq.related_links_label')}
               clearSearchLabel={t('faq.search_clear')}
               filterLabel={t('faq.filter_label')}
               resultsFoundOne={t('faq.results_found_one')}
               resultsFoundOther={t('faq.results_found_other')}
+              resultsSummary={t('faq.results_summary')}
               noResultsTitle={t('faq.no_results_title')}
               noResultsBody={t('faq.no_results_body')}
               expandAnswerLabel={t('faq.expand_answer')}

@@ -50,7 +50,7 @@ Browsing public reference pages does not require an account. In the current web 
 - [EV/IV Calculator](https://lunidex.app/en/ev-iv)
 - [Battle Tool](https://lunidex.app/en/battle)
 - [Nuzlocke Tracker](https://lunidex.app/en/nuzlocke)
-- [FAQ](https://lunidex.app/en/faq) — twelve visible questions about data, features, collection storage and privacy.
+- [FAQ](https://lunidex.app/en/faq) — eighteen visible questions about getting started, Pokémon tools, TCG collection workflows, data boundaries and support.
 - [About Lunidex](https://lunidex.app/en/about) — mission, data-source attribution, open-source information and project links.
 - [Collection tool comparison](https://lunidex.app/en/compare/lunidex-vs-pokecardex-zebradex) — a source-based comparison with PokéCardex and ZebraDex.
 - [Lunidex vs Pokémon Database](https://lunidex.app/en/compare/lunidex-vs-pokemon-database) — Pokémon reference and team-tool comparison.

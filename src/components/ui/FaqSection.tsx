@@ -1,22 +1,26 @@
 'use client';
 
-import { useState, useMemo, useRef, useCallback } from 'react';
-import { Search, ChevronDown, X } from 'lucide-react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import Link from 'next/link';
+import { Search, ChevronDown, X, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
-type FaqEntry = { q: string; a: string };
+type FaqLink = { href: string; label: string };
+type FaqEntry = { id: string; q: string; a: string; links?: FaqLink[] };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
 interface FaqSectionProps {
   categories: FaqCategory[];
   allLabel: string;
   searchPlaceholder: string;
-  tocLabel: string;
+  categoryLabel: string;
+  relatedLinksLabel: string;
   clearSearchLabel: string;
   filterLabel: string;
   resultsFoundOne: string;
   resultsFoundOther: string;
+  resultsSummary: string;
   noResultsTitle: string;
   noResultsBody: string;
   expandAnswerLabel: string;
@@ -27,11 +31,13 @@ export default function FaqSection({
   categories,
   allLabel,
   searchPlaceholder,
-  tocLabel,
+  categoryLabel,
+  relatedLinksLabel,
   clearSearchLabel,
   filterLabel,
   resultsFoundOne,
   resultsFoundOther,
+  resultsSummary,
   noResultsTitle,
   noResultsBody,
   expandAnswerLabel,
@@ -42,48 +48,93 @@ export default function FaqSection({
   const [expanded, setExpanded] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  const normalize = useCallback((value: string) => (
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+  ), []);
+
   const filtered = useMemo(() => {
-    const q = search.toLowerCase().trim();
+    const q = normalize(search);
     return categories.map((cat) => {
       const entries = cat.entries.filter((entry) => {
         const matchesCategory = activeCategory === 'all' || cat.id === activeCategory;
         if (!matchesCategory) return false;
         if (!q) return true;
-        return entry.q.toLowerCase().includes(q) || entry.a.toLowerCase().includes(q);
+        return normalize(entry.q).includes(q) || normalize(entry.a).includes(q);
       });
       return { ...cat, entries };
     });
-  }, [categories, search, activeCategory]);
+  }, [categories, search, activeCategory, normalize]);
 
   const totalVisible = useMemo(
     () => filtered.reduce((sum, cat) => sum + cat.entries.length, 0),
     [filtered],
   );
 
-  const toggle = useCallback(
-    (id: string) => setExpanded((prev) => (prev === id ? null : id)),
-    [],
+  const updateHash = useCallback((id: string | null) => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    url.hash = id ?? '';
+    window.history.replaceState(null, '', url);
+  }, []);
+
+  const toggle = useCallback((id: string) => {
+    setExpanded((prev) => {
+      const next = prev === id ? null : id;
+      updateHash(next);
+      return next;
+    });
+  }, [updateHash]);
+
+  const entryIds = useMemo(
+    () => new Set(categories.flatMap((category) => category.entries.map((entry) => entry.id))),
+    [categories],
   );
+
+  useEffect(() => {
+    const openHashEntry = () => {
+      const id = window.location.hash.slice(1);
+      if (!id || !entryIds.has(id)) return;
+      setSearch('');
+      setActiveCategory('all');
+      setExpanded(id);
+      window.requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ block: 'start' });
+      });
+    };
+
+    openHashEntry();
+    window.addEventListener('hashchange', openHashEntry);
+    return () => window.removeEventListener('hashchange', openHashEntry);
+  }, [entryIds]);
 
   const clearSearch = useCallback(() => {
     setSearch('');
     setExpanded(null);
+    updateHash(null);
     searchRef.current?.focus();
-  }, []);
+  }, [updateHash]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
     setExpanded(null);
-  }, []);
+    updateHash(null);
+  }, [updateHash]);
 
   const handleCategoryChange = useCallback((categoryId: string) => {
     setActiveCategory(categoryId);
     setExpanded(null);
-  }, []);
+    updateHash(null);
+  }, [updateHash]);
 
-  const resultMessage = (totalVisible === 1 ? resultsFoundOne : resultsFoundOther)
-    .replace('{{count}}', String(totalVisible))
-    .replace('{{query}}', search.trim());
+  const resultMessage = search.trim()
+    ? (totalVisible === 1 ? resultsFoundOne : resultsFoundOther)
+      .replace('{{count}}', String(totalVisible))
+      .replace('{{query}}', search.trim())
+    : resultsSummary.replace('{{count}}', String(totalVisible));
 
   return (
     <div className="space-y-12">
@@ -98,6 +149,10 @@ export default function FaqSection({
           />
           <Input
             id="faq-question-search"
+            name="faq-search"
+            type="search"
+            autoComplete="off"
+            spellCheck={false}
             ref={searchRef}
             value={search}
             onChange={(event) => handleSearchChange(event.target.value)}
@@ -120,18 +175,15 @@ export default function FaqSection({
         <div className="mt-4 border-t-2 border-dashed border-foreground/15 pt-4" data-od-id="faq-categories">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p className="cat-no">{filterLabel}</p>
-            {search.trim() && (
-              <p className="cat-no" aria-live="polite">
-                <span className="cat-no__num">{totalVisible}</span>
-              </p>
-            )}
+            <p className="cat-no" aria-live="polite">
+              <span className="cat-no__num">{totalVisible}</span>
+            </p>
           </div>
 
-          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={tocLabel}>
+          <div className="flex flex-wrap gap-2" role="group" aria-label={categoryLabel}>
             <button
               type="button"
-              role="radio"
-              aria-checked={activeCategory === 'all'}
+              aria-pressed={activeCategory === 'all'}
               onClick={() => handleCategoryChange('all')}
               className={cn(
                 'glass-btn touch-target inline-flex min-h-11 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold',
@@ -146,8 +198,7 @@ export default function FaqSection({
               <button
                 key={cat.id}
                 type="button"
-                role="radio"
-                aria-checked={activeCategory === cat.id}
+                aria-pressed={activeCategory === cat.id}
                 onClick={() => handleCategoryChange(cat.id)}
                 className={cn(
                   'glass-btn touch-target inline-flex min-h-11 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold',
@@ -163,11 +214,9 @@ export default function FaqSection({
           </div>
         </div>
 
-        {search.trim() && (
-          <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
-            {resultMessage}
-          </p>
-        )}
+        <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
+          {resultMessage}
+        </p>
       </div>
 
       <div className="space-y-12" data-od-id="faq-accordion">
@@ -193,19 +242,21 @@ export default function FaqSection({
               </header>
 
               <div className="space-y-3">
-                {cat.entries.map((entry, index) => {
-                  const itemKey = `${cat.id}-${entry.q}`;
-                  const itemId = `${cat.id}-${index + 1}`;
+                {cat.entries.map((entry) => {
+                  const itemKey = entry.id;
+                  const itemId = entry.id;
                   const headingId = `faq-question-${itemId}`;
                   const answerId = `faq-answer-${itemId}`;
                   const isOpen = expanded === itemKey;
                   return (
                     <div
                       key={itemKey}
+                      id={itemId}
+                      data-faq-item="true"
                       data-category={cat.id}
                       data-od-id={`faq-item-${itemId}`}
                       className={cn(
-                        'glass-card overflow-hidden transition-colors focus-within:border-primary',
+                        'glass-card scroll-mt-32 overflow-hidden transition-colors focus-within:border-primary',
                         isOpen && 'border-primary ring-2 ring-primary/15',
                       )}
                     >
@@ -236,6 +287,7 @@ export default function FaqSection({
                         role="region"
                         aria-labelledby={headingId}
                         aria-hidden={!isOpen}
+                        inert={!isOpen}
                         className={cn(
                           'grid transition-[grid-template-rows] duration-200 ease-in-out motion-reduce:transition-none',
                           isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
@@ -243,7 +295,24 @@ export default function FaqSection({
                       >
                         <div className="overflow-hidden">
                           <div className="border-t-2 border-dashed border-foreground/15 px-4 pb-5 pt-4 text-muted-foreground leading-relaxed md:px-6 md:pb-6 md:pt-5">
-                            {entry.a}
+                            <p>{entry.a}</p>
+                            {entry.links && entry.links.length > 0 && (
+                              <nav className="mt-5 border-t border-dashed border-foreground/15 pt-4" aria-label={relatedLinksLabel}>
+                                <ul className="flex flex-wrap gap-2">
+                                  {entry.links.map((link) => (
+                                    <li key={link.href}>
+                                      <Link
+                                        href={link.href}
+                                        className="glass-btn touch-target inline-flex min-h-11 items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-foreground/80"
+                                      >
+                                        {link.label}
+                                        <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </nav>
+                            )}
                           </div>
                         </div>
                       </div>
