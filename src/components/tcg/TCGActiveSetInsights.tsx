@@ -87,7 +87,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   }, []);
 
   const { data: album, isLoading: cardsLoading, isError } = useQuery({
-    queryKey: ['tcg', 'collection-set-briefs', set.id, resolvedLang],
+    queryKey: ['tcg', 'collection-set-briefs-v2', set.id, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(set.id, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
     enabled: shouldLoadDetails,
@@ -99,7 +99,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   const { data: ownedValuation, isLoading: valuationLoading, isError: valuationError } = useQuery({
     // Keep the active-set cards in sync with the corrected price resolver even
     // when a page survives a hot update without a full reload.
-    queryKey: ['tcg', 'collection-owned-value-v4', set.id, resolvedLang, ownedVariants, displayCurrency],
+    queryKey: ['tcg', 'collection-owned-value-v5', set.id, resolvedLang, ownedVariants, displayCurrency],
     queryFn: ({ signal }) => fetchCollectionValue(ownedVariants, resolvedLang, signal, displayCurrency),
     staleTime: 60 * 60 * 1000,
     enabled: shouldLoadDetails && ownedVariants.length > 0,

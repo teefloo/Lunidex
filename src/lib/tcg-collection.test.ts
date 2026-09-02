@@ -100,7 +100,7 @@ describe('TCG physical variant pricing', () => {
     expect(result.bySet.base1.ownedCount).toBe(6);
   });
 
-  it('keeps unspecified ownership unpriced and never mixes currencies', () => {
+  it('uses a representative estimate for unspecified ownership without mixing currencies', () => {
     const card = toCollectionCard({
       ...baseCard,
       pricing: {
@@ -112,10 +112,10 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'unspecified', quantity: 2 },
       { cardId: card.id, variant: 'normal', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([{ currency: 'EUR', total: 2, count: 1 }]);
+    expect(result.groups).toEqual([{ currency: 'EUR', total: 6, count: 3 }]);
     expect(result.ownedCount).toBe(3);
-    expect(result.pricedCount).toBe(1);
-    expect(result.unpricedCount).toBe(2);
+    expect(result.pricedCount).toBe(3);
+    expect(result.unpricedCount).toBe(0);
   });
 
   it('infers the only declared finish for unspecified ownership', () => {
@@ -193,7 +193,7 @@ describe('TCG physical variant pricing', () => {
     expect(getCardMarketValue(card)).toEqual({ amount: 2.92, currency: 'EUR' });
   });
 
-  it('falls back to another available finish for an unqualified card estimate', () => {
+  it('uses a representative estimate for an unqualified card', () => {
     const card: TCGCard = {
       ...baseCard,
       pricing: { tcgplayer: { unit: 'USD', reverse: { marketPrice: 1.75 } } },
@@ -204,10 +204,10 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'unspecified', quantity: 2 },
       { cardId: card.id, variant: 'normal', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([]);
+    expect(result.groups).toEqual([{ currency: 'USD', total: 3.5, count: 2 }]);
     expect(result.ownedCount).toBe(3);
-    expect(result.pricedCount).toBe(0);
-    expect(result.unpricedCount).toBe(3);
+    expect(result.pricedCount).toBe(2);
+    expect(result.unpricedCount).toBe(1);
   });
 
   it('keeps valuation totals and coverage in the selected source currency', () => {

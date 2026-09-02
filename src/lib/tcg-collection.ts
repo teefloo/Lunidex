@@ -515,12 +515,12 @@ export function toCollectionCard(
 }
 
 /**
- * Read an exact finish quote from a collection projection. `value` is a
- * representative estimate and may intentionally come from another available
- * finish, so it is only a compatibility fallback for projections created
- * before `variantValues` existed.
+ * Read the value for one owned finish from a collection projection. Explicit
+ * finishes use their exact quote. An unspecified possession uses `value`, a
+ * representative estimate based on the first available finish, because the
+ * collection cannot know which physical printing the user owns yet.
  */
-function getExactCollectionCardValue(
+function getCollectionCardVariantValue(
   card: TCGCollectionCard,
   variant: TCGPhysicalVariant,
 ): TCGCardValue | null {
@@ -735,20 +735,20 @@ export function aggregateCollectionValueWithVariants(
     if (card.setId && !totalsBySet.has(card.setId)) totalsBySet.set(card.setId, setTotals!);
     if (card.setId) ownedBySet.set(card.setId, (ownedBySet.get(card.setId) ?? 0) + quantity);
 
-    // Historical/imported possessions do not carry a finish. Keep that fact in
-    // the collection model unless TCGdex declares exactly one possible finish;
-    // only that case can be inferred without inventing a physical variant.
-    // Once a finish is known, prefer its exact provider value and never fall
-    // back to a different physical finish.
+    // Historical/imported possessions do not carry a finish. Infer it only
+    // when TCGdex declares one possibility; otherwise use the card-level
+    // representative estimate so a valid market quote is not reported as
+    // "without price". Once a finish is known, prefer its exact provider
+    // value and never fall back to a different physical finish.
     const physicalVariant = owned.variant === 'unspecified'
       ? getOnlyAvailablePhysicalVariant(card.variants)
       : owned.variant;
     const variantAvailable = physicalVariant !== null && card.variants?.[physicalVariant] === true;
     const value = physicalVariant === null
-      ? null
+      ? card.value ?? null
       : !variantAvailable
         ? null
-        : getExactCollectionCardValue(card, physicalVariant);
+        : getCollectionCardVariantValue(card, physicalVariant);
     const displayValue = getTCGValueInCurrency(value, displayCurrency);
     const currency = displayValue?.currency.trim().toUpperCase() || null;
     if (!displayValue || !currency) {
@@ -864,7 +864,7 @@ export function aggregateSetTotalValue(
       ? TCG_PHYSICAL_VARIANTS.filter((variant) => card.variants?.[variant] === true)
       : [];
     for (const variant of variants) {
-      const value = getExactCollectionCardValue(card, variant);
+      const value = getCollectionCardVariantValue(card, variant);
       const displayValue = getTCGValueInCurrency(value, displayCurrency);
       const currency = displayValue?.currency.trim().toUpperCase() || null;
       if (!displayValue || !currency) continue;
