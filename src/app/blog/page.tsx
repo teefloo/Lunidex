@@ -164,14 +164,8 @@ export default async function BlogPage() {
     itemListElement: [...guideArticles, ...comparisonArticles].map((article, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      item: {
-        '@type': 'Article',
-        name: article.title,
-        description: article.description,
-        url: `${SITE_URL}${localeHref(article.path, language)}`,
-        datePublished: article.publishedAt,
-        dateModified: article.updatedAt,
-      },
+      name: article.title,
+      item: `${SITE_URL}${localeHref(article.path, language)}`,
     })),
   };
 

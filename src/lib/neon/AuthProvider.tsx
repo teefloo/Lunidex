@@ -9,7 +9,6 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { usePathname } from 'next/navigation';
 import { isSupportedLanguage } from '@/lib/languages';
 import { normalizeDisplayName } from '@/lib/json-ld';
 import { getNeonAuthClient, isNeonAuthConfigured, loadNeonAuthClient } from './client';
@@ -308,14 +307,6 @@ function getResetRedirectTo(): string | undefined {
   return `${window.location.origin}${prefix}/auth/reset-password`;
 }
 
-export function isAuthSensitivePath(pathname: string): boolean {
-  // The shared home CTA and site header both depend on the current session.
-  // Initialize auth on every route so a signed-in user is recognized from the
-  // landing page as well as from the rest of the application.
-  void pathname;
-  return true;
-}
-
 function DisabledAuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => {
     const noop = async (): Promise<AuthResult> => ({
@@ -346,8 +337,8 @@ function DeferredAuthProvider({
   children: ReactNode;
   onLoaded: (client: ConnectedAuthClient) => void;
 }) {
-  const pathname = usePathname();
-  const [loading, setLoading] = useState(true);
+  const authState = useClientSession();
+  const [sdkLoading, setSdkLoading] = useState(false);
   const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
     const cachedClient = getNeonAuthClient();
     if (cachedClient) {
@@ -355,19 +346,28 @@ function DeferredAuthProvider({
       return cachedClient;
     }
 
-    setLoading(true);
+    setSdkLoading(true);
     try {
       const loadedClient = await loadNeonAuthClient();
       if (loadedClient) onLoaded(loadedClient);
       return loadedClient;
     } finally {
-      setLoading(false);
+      setSdkLoading(false);
     }
   }, [onLoaded]);
 
-  useEffect(() => {
-    if (isAuthSensitivePath(pathname ?? '')) void loadClient();
-  }, [loadClient, pathname]);
+  const sessionData = authState.data;
+  const { session, user } = useMemo(() => {
+    const mappedUser = sessionData?.user ? mapUser(sessionData.user) : null;
+    const mappedSession: AppSession | null = sessionData?.session && mappedUser
+      ? {
+        user: mappedUser,
+        expires_at: Math.floor(new Date(sessionData.session.expiresAt).getTime() / 1000),
+      }
+      : null;
+    return { session: mappedSession, user: mappedUser };
+  }, [sessionData]);
+  const loading = authState.isPending || sdkLoading;
 
   const redirectTo = getRedirectTo();
   const resetRedirectTo = getResetRedirectTo();
@@ -379,8 +379,8 @@ function DeferredAuthProvider({
     return {
       enabled: true,
       loading,
-      session: null,
-      user: null,
+      session,
+      user,
       signUp: async (email, password, name) => {
         const normalizedEmail = normalizeAuthEmail(email);
         const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
@@ -465,7 +465,7 @@ function DeferredAuthProvider({
         }
       },
     };
-  }, [loading, loadClient, redirectTo, resetRedirectTo]);
+  }, [loading, loadClient, redirectTo, resetRedirectTo, session, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

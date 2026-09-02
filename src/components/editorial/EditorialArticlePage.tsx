@@ -37,6 +37,7 @@ export default function EditorialArticlePage({
   const key = `editorial.competitors.${article.slug.replaceAll('-', '_')}`;
   const text = (field: string) => t(`${key}.${field}`);
   const competitorName = text('name');
+  const comparisonRows = article.comparisonRows ?? [];
   const pageUrl = `${SITE_URL}${canonicalPath}`;
   const faqs = [
     { question: text('faq_q1'), answer: text('faq_a1') },
@@ -63,7 +64,7 @@ export default function EditorialArticlePage({
     articleSection: t('editorial.article.eyebrow'),
     citation: [
       { '@type': 'WebPage', name: t('editorial.article.source_lunidex'), url: GITHUB_REPO_URL },
-      { '@type': 'WebPage', name: article.source.label, url: article.source.url },
+      ...article.sources.map((source) => ({ '@type': 'WebPage', name: source.label, url: source.url })),
     ],
   };
   const faqJsonLd = {
@@ -114,6 +115,35 @@ export default function EditorialArticlePage({
               <p className="mt-4 leading-7 text-foreground/75">{text('scope')}</p>
             </section>
 
+            {comparisonRows.length > 0 ? (
+              <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-matrix-title">
+                <h2 id="editorial-article-matrix-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                  {t('editorial.article.matrix_title')}
+                </h2>
+                <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+                  <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+                    <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">
+                      <tr>
+                        <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('editorial.article.matrix_criterion')}</th>
+                        <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">Lunidex</th>
+                        <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{competitorName}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonRows.map((row) => (
+                        <tr key={row} className="align-top even:bg-card/25">
+                          <th scope="row" className="border-b border-border/40 px-4 py-3 font-bold text-foreground/75">{text(`matrix.${row}.label`)}</th>
+                          <td className="border-b border-border/40 px-4 py-3 leading-6 text-foreground/70">{text(`matrix.${row}.lunidex`)}</td>
+                          <td className="border-b border-border/40 px-4 py-3 leading-6 text-foreground/70">{text(`matrix.${row}.competitor`)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-4 text-xs leading-6 text-foreground/55">{t('editorial.article.matrix_note')}</p>
+              </section>
+            ) : null}
+
             <section className="mt-10 grid gap-8 lg:grid-cols-2" aria-label={t('editorial.article.difference_title')}>
               <div className="section-frame p-6 md:p-8">
                 <h2 className="text-2xl font-extrabold tracking-tight md:text-3xl">{t('editorial.article.shared_title')}</h2>
@@ -157,9 +187,11 @@ export default function EditorialArticlePage({
                 <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
                   {t('editorial.article.source_lunidex')}
                 </a>
-                <a href={article.source.url} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
-                  {article.source.label}
-                </a>
+                {article.sources.map((source) => (
+                  <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                    {source.label}
+                  </a>
+                ))}
               </div>
             </section>
 

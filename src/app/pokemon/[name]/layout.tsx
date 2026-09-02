@@ -1,82 +1,10 @@
-import { Metadata } from 'next';
 import { connection } from 'next/server';
 import { getPokemonDetailCached as getPokemonDetail, getPokemonFormCached as getPokemonForm, getPokemonSpeciesCached as getPokemonSpecies } from '@/lib/api/server-cache';
 import { getServerT, getServerPokemonLanguage, getServerLanguage } from '@/lib/server-i18n';
 import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { SITE_URL } from '@/lib/site';
-import { supportedLanguages, languageToMetadataLocale } from '@/lib/languages';
-import { DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { languageToMetadataLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
-
-type Props = {
-  params: Promise<{ name: string }>;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  await connection();
-  const name = (await params).name;
-  const t = await getServerT();
-  const lang = await getServerLanguage();
-  const speciesLangCode = await getServerPokemonLanguage();
-  try {
-    const pokemon = await getPokemonDetail(name);
-    const baseName = pokemon.species?.name || getBaseSpeciesName(name);
-    const [species, form] = await Promise.all([
-      getPokemonSpecies(baseName).catch(() => null),
-      getPokemonForm(name).catch(() => null),
-    ]);
-    const baseLocalizedName = species?.names?.find((entry) => entry.language.name === speciesLangCode)?.name
-      || species?.names?.find((entry) => entry.language.name === 'en')?.name
-      || baseName.charAt(0).toUpperCase() + baseName.slice(1);
-    const displayName = getPokemonDisplayName({ name, baseLocalizedName, baseSpeciesName: baseName, lang, form });
-    const types = pokemon.types
-      .map((type) => t(`types.${type.type.name}`, { defaultValue: type.type.name }))
-      .join(', ');
-    const title = t('meta.pokemon_title', { name: displayName });
-    const description = t('meta.pokemon_description', { name: displayName, types });
-    const languages: Record<string, string> = {};
-    for (const locale of supportedLanguages) {
-      languages[locale] = `/${locale}/pokemon/${name}`;
-    }
-
-    return {
-      title,
-      description,
-      alternates: {
-        canonical: `/${lang}/pokemon/${name}`,
-        languages: { ...languages, 'x-default': `/en/pokemon/${name}` },
-      },
-      openGraph: {
-        title,
-        description,
-        url: `/${lang}/pokemon/${name}`,
-        images: [DEFAULT_OG_IMAGE],
-        type: 'article',
-        locale: languageToMetadataLocale[lang],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        images: [DEFAULT_OG_IMAGE.url],
-      },
-      keywords: [
-        displayName.toLowerCase(),
-        `${displayName.toLowerCase()} stats`,
-        `${displayName.toLowerCase()} evolution`,
-        `${displayName.toLowerCase()} moveset`,
-        `${displayName.toLowerCase()} weakness`,
-        `${displayName.toLowerCase()} builds`,
-        ...pokemon.types.map((typeItem: { type: { name: string } }) => `${typeItem.type.name} type pokemon`),
-        'pokemon', 'pokedex',
-      ],
-    };
-  } catch {
-    return {
-      title: t('meta.pokemon_fallback_title'),
-    };
-  }
-}
 
 export default async function PokemonLayout({
   children,
@@ -142,7 +70,6 @@ export default async function PokemonLayout({
         identifier: pokemon.id.toString(),
         sameAs: [
           `https://pokeapi.co/api/v2/pokemon/${pokemon.id}`,
-          `https://bulbapedia.bulbagarden.net/wiki/${displayName.replace(/\s/g, '_')}`,
         ],
         additionalProperty: [
           { '@type': 'PropertyValue', name: 'National Dex Number', value: pokemon.id },
@@ -164,10 +91,6 @@ export default async function PokemonLayout({
       },
       keywords: `${displayName}, Pokémon, ${typesString}, Pokédex`,
       isPartOf: { '@id': `${baseUrl}/#website` },
-      speakable: {
-        '@type': 'SpeakableSpecification',
-        cssSelector: ['h1', 'h2', '#pokemon-stats'],
-      },
       mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}/${lang}/pokemon/${name}` },
     };
 

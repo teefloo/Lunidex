@@ -353,7 +353,7 @@ export function PokemonDetailClient({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-28 sm:pb-20 overflow-x-hidden relative">
+    <main id="main-content" className="min-h-screen bg-background text-foreground pb-28 sm:pb-20 overflow-x-hidden relative">
 
       {/* Hero Section */}
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">
@@ -1172,6 +1172,6 @@ export function PokemonDetailClient({
           </Button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

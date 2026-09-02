@@ -109,6 +109,7 @@ export function TCGResearchDesk({
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const didSyncUrlRef = useRef(false);
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
     parsedState.filters.selectedSet
     || parsedState.filters.searchTerm
@@ -176,6 +177,14 @@ export function TCGResearchDesk({
 
   useEffect(() => {
     if (!mounted || !hasHydrated) return;
+    // The parsed URL already represents the initial state. Avoid replacing it
+    // on first hydration with serialized defaults (sort/order/tcgLang), which
+    // causes a same-route navigation and can duplicate head metadata in the
+    // browser. Subsequent filter/view changes still update the shareable URL.
+    if (!didSyncUrlRef.current) {
+      didSyncUrlRef.current = true;
+      return;
+    }
     const query = serializeTCGSearchState({
       filters: urlFilters,
       viewMode,
@@ -353,7 +362,10 @@ export function TCGResearchDesk({
       />
 
       <div className="space-y-4">
-        <main className="min-w-0 space-y-4">
+        <section className="min-w-0 space-y-4" aria-labelledby="tcg-results-title">
+          <h2 id="tcg-results-title" className="sr-only">
+            {t('tcg.results_heading', { defaultValue: 'Catalog results' })}
+          </h2>
           <ResultSummary
             count={totalCards}
             activeSetName={activeSetName}
@@ -395,7 +407,7 @@ export function TCGResearchDesk({
               onTryEnglish={tryEnglish}
             />
           )}
-        </main>
+        </section>
       </div>
 
       <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>

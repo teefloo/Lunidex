@@ -70,6 +70,10 @@ export default async function PokemonCardCollectionTrackerGuide() {
       body: t('collection_guide.criteria_catalog_body'),
     },
     {
+      title: t('collection_guide.criteria_languages_title'),
+      body: t('collection_guide.criteria_languages_body'),
+    },
+    {
       title: t('collection_guide.criteria_ownership_title'),
       body: t('collection_guide.criteria_ownership_body'),
     },

@@ -5539,7 +5539,13 @@ body:has(.lunidex-home) .site-footer a:hover {
 .lunidex-home::before {
   z-index: -2;
   background-image:
-    url('/brand/lunidex-home-atmosphere.png'),
+    url('/brand/lunidex-home-atmosphere.webp'),
+    radial-gradient(circle at 14% 22%, color-mix(in oklab, var(--primary) 15%, transparent), transparent 26rem);
+  background-image:
+    image-set(
+      url('/brand/lunidex-home-atmosphere.avif') type('image/avif'),
+      url('/brand/lunidex-home-atmosphere.webp') type('image/webp')
+    ),
     radial-gradient(circle at 14% 22%, color-mix(in oklab, var(--primary) 15%, transparent), transparent 26rem);
   background-position: center top, center top;
   background-repeat: no-repeat;

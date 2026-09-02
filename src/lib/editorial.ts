@@ -14,6 +14,18 @@ export type EditorialSource = {
   url: string;
 };
 
+export const COMPARISON_ROW_KEYS = [
+  'platform',
+  'scope',
+  'scanner',
+  'prices',
+  'offline',
+  'accountSync',
+  'cost',
+] as const;
+
+export type ComparisonRowKey = (typeof COMPARISON_ROW_KEYS)[number];
+
 export type EditorialDateDefinition = {
   publishedAt: string;
   updatedAt: string;
@@ -22,8 +34,9 @@ export type EditorialDateDefinition = {
 export type CompetitorArticleDefinition = {
   slug: string;
   path: string;
-  source: EditorialSource;
+  sources: readonly EditorialSource[];
   productPath: string;
+  comparisonRows?: readonly ComparisonRowKey[];
 };
 
 export type FeatureGuideDefinition = {
@@ -46,9 +59,9 @@ export const EDITORIAL_ARTICLE_DATES = {
   '/compare/lunidex-vs-pokemon-database': { publishedAt: '2026-08-13', updatedAt: '2026-08-22' },
   '/compare/lunidex-vs-bulbapedia': { publishedAt: '2026-08-14', updatedAt: '2026-08-22' },
   '/compare/lunidex-vs-pokemon-showdown': { publishedAt: '2026-08-15', updatedAt: '2026-08-22' },
-  '/compare/lunidex-vs-pokecardex': { publishedAt: '2026-08-16', updatedAt: '2026-08-22' },
-  '/compare/lunidex-vs-zebradex': { publishedAt: '2026-08-17', updatedAt: '2026-08-22' },
-  '/compare/lunidex-vs-collectr': { publishedAt: '2026-08-18', updatedAt: '2026-08-22' },
+  '/compare/lunidex-vs-pokecardex': { publishedAt: '2026-08-16', updatedAt: '2026-09-01' },
+  '/compare/lunidex-vs-zebradex': { publishedAt: '2026-08-17', updatedAt: '2026-09-01' },
+  '/compare/lunidex-vs-collectr': { publishedAt: '2026-08-18', updatedAt: '2026-09-01' },
   '/guides/pokemon-reference-guide': { publishedAt: '2026-08-19', updatedAt: '2026-08-22' },
   '/guides/team-tools-guide': { publishedAt: '2026-08-20', updatedAt: '2026-08-22' },
   '/guides/tcg-workspace-guide': { publishedAt: '2026-08-21', updatedAt: '2026-08-22' },
@@ -59,38 +72,44 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
   {
     slug: 'pokemon-database',
     path: '/compare/lunidex-vs-pokemon-database',
-    source: { label: 'Pokémon Database Pokédex', url: 'https://pokemondb.net/pokedex' },
+    sources: [{ label: 'Pokémon Database Pokédex', url: 'https://pokemondb.net/pokedex' }],
     productPath: '/pokedex',
   },
   {
     slug: 'bulbapedia',
     path: '/compare/lunidex-vs-bulbapedia',
-    source: { label: 'Bulbapedia About page', url: 'https://bulbapedia.bulbagarden.net/wiki/Bulbapedia:About' },
+    sources: [{ label: 'Bulbapedia About page', url: 'https://bulbapedia.bulbagarden.net/wiki/Bulbapedia:About' }],
     productPath: '/pokedex',
   },
   {
     slug: 'pokemon-showdown',
     path: '/compare/lunidex-vs-pokemon-showdown',
-    source: { label: 'Pokémon Showdown simulator overview', url: 'https://www.smogon.com/sim/' },
+    sources: [{ label: 'Pokémon Showdown simulator overview', url: 'https://www.smogon.com/sim/' }],
     productPath: '/team',
   },
   {
     slug: 'pokecardex',
     path: '/compare/lunidex-vs-pokecardex',
-    source: { label: 'PokéCardex official application page', url: 'https://www.pokecardex.com/app' },
+    sources: [
+      { label: 'PokéCardex official application page', url: 'https://www.pokecardex.com/app' },
+      { label: 'PokéCardex Google Play listing', url: 'https://play.google.com/store/apps/details?id=com.application.pokecardex' },
+    ],
     productPath: '/tcg',
+    comparisonRows: COMPARISON_ROW_KEYS,
   },
   {
     slug: 'zebradex',
     path: '/compare/lunidex-vs-zebradex',
-    source: { label: 'ZebraDex official site', url: 'https://zebradex.fr/index.php' },
+    sources: [{ label: 'ZebraDex official site', url: 'https://zebradex.fr/index.php' }],
     productPath: '/tcg',
+    comparisonRows: COMPARISON_ROW_KEYS,
   },
   {
     slug: 'collectr',
     path: '/compare/lunidex-vs-collectr',
-    source: { label: 'Collectr official site', url: 'https://www.getcollectr.com/' },
+    sources: [{ label: 'Collectr official site', url: 'https://www.getcollectr.com/' }],
     productPath: '/tcg',
+    comparisonRows: COMPARISON_ROW_KEYS,
   },
 ];
 

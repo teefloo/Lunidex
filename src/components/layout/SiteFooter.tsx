@@ -118,9 +118,13 @@ export default async function SiteFooter() {
     { href: '/blog', label: t('nav.blog') },
     { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
     { href: '/guides/team-builder-guide', label: t('team_guide.nav_label', { defaultValue: 'Team building guide' }) },
+    { href: '/guides/progress-account-guide', label: t('editorial.guides.progress_account.nav_label', { defaultValue: 'Progress and account guide' }) },
     { href: '/guides/quiz-guide', label: t('quiz_guide.nav_label', { defaultValue: 'Quiz guide' }) },
     { href: '/guides/nuzlocke-guide', label: t('nuzlocke_guide.nav_label', { defaultValue: 'Nuzlocke guide' }) },
     { href: '/compare/lunidex-vs-pokecardex-zebradex', label: t('comparison.nav_label') },
+    { href: '/compare/lunidex-vs-pokecardex', label: t('editorial.competitors.pokecardex.nav_label', { defaultValue: 'Lunidex vs PokéCardex' }) },
+    { href: '/compare/lunidex-vs-zebradex', label: t('editorial.competitors.zebradex.nav_label', { defaultValue: 'Lunidex vs ZebraDex' }) },
+    { href: '/compare/lunidex-vs-collectr', label: t('editorial.competitors.collectr.nav_label', { defaultValue: 'Lunidex vs Collectr' }) },
     ...(isAnniversary30Language(language)
       ? [{ href: ANNIVERSARY_30_PATH, label: t('anniversary_30.nav_label') }]
       : []),

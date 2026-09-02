@@ -119,8 +119,16 @@ export async function HomeArchiveExperience() {
                 {t('about.heading')}
                 <span aria-hidden="true">↗</span>
               </Link>
+              <Link href={localeHref('/faq', language)} className="home-inline-link">
+                {t('nav.faq', { defaultValue: 'FAQ' })}
+                <span aria-hidden="true">↗</span>
+              </Link>
               <Link href={localeHref('/dashboard', language)} className="home-inline-link">
                 {t('footer.navigation.dashboard')}
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <Link href={localeHref('/guides/progress-account-guide', language)} className="home-inline-link">
+                {t('editorial.guides.progress_account.nav_label', { defaultValue: 'Progress and account guide' })}
                 <span aria-hidden="true">↗</span>
               </Link>
             </div>

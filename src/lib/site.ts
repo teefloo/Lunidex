@@ -28,8 +28,8 @@ export const SITE_KEYWORDS = [
   'pokemon team builder',
   'pokemon evolution',
   'pokemon moves',
-  'competitive pokemon',
-  'pokemon builds',
+  'pokemon moveset suggestions',
+  'pokemon team coverage',
   'pokemon comparison',
   'pokedex online',
   'all pokemon',
@@ -40,7 +40,7 @@ export const SITE_KEYWORDS = [
   'pokemon cards',
   'pokemon weakness',
   'pokemon type chart',
-  'best pokemon team',
+  'pokemon team planning',
 ];
 
 export const GITHUB_REPO_URL = 'https://github.com/teefloo/Lunidex';
@@ -55,12 +55,12 @@ export const ACCENT_COLOR = '#8DB4FF';
 export const FEATURE_LIST = [
   'Pokémon TCG collection tracker for sets, owned cards, missing cards, and progress',
   'Public Pokémon TCG set checklists and card catalog with set, rarity, type, and HP filters',
-  'Complete Pokédex of all 1025 Pokémon across 9 generations',
+  'Pokémon reference catalog with stats, types, evolutions, moves, and abilities',
   'Team Builder with type coverage analysis and synergy scoring',
   'Side-by-side comparison of up to 3 Pokémon with stat radar charts',
   'Interactive type chart for all 18 Pokémon types',
   "Who's That Pokémon? quiz with 6 game modes",
-  'Living Dex Tracker with account-backed cloud synchronization',
+  'Progress tracking with account-backed synchronization when the configured service is available',
   'Localized in 8 languages including Japanese, Korean, and Chinese',
   'Advanced search filtering by generation, type, BST, and egg groups',
   'Open-source under the MIT license',

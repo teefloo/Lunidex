@@ -21,17 +21,17 @@ export function HomeHeroVisual() {
         width={420}
         height={420}
         priority
-        sizes="(max-width: 767px) 42vw, 20rem"
+        sizes="(max-width: 767px) 47vw, 25vw"
         className="home-hero-visual-pokemon"
       />
       <div className="home-hero-visual-card home-hero-visual-card-one">
-        <HomeCardPreview card={HOME_FEATURED_CARDS[0]} rotationClass="-rotate-6" sizes="(max-width: 767px) 35vw, 15rem" />
+        <HomeCardPreview card={HOME_FEATURED_CARDS[0]} rotationClass="-rotate-6" sizes="(max-width: 767px) 26vw, 14vw" />
       </div>
       <div className="home-hero-visual-card home-hero-visual-card-two">
-        <HomeCardPreview card={HOME_FEATURED_CARDS[1]} rotationClass="rotate-3" sizes="(max-width: 767px) 35vw, 15rem" />
+        <HomeCardPreview card={HOME_FEATURED_CARDS[1]} rotationClass="rotate-3" sizes="(max-width: 767px) 26vw, 14vw" />
       </div>
       <div className="home-hero-visual-card home-hero-visual-card-three">
-        <HomeCardPreview card={HOME_FEATURED_CARDS[2]} rotationClass="rotate-8" sizes="(max-width: 767px) 35vw, 15rem" />
+        <HomeCardPreview card={HOME_FEATURED_CARDS[2]} rotationClass="rotate-8" sizes="(max-width: 767px) 26vw, 14vw" />
       </div>
     </div>
   );

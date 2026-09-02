@@ -139,18 +139,6 @@ export async function generateMetadata(
         'pokemon:dex': String(pokemon.id),
         'pokemon:generation': String(pokemon.id <= 151 ? 1 : pokemon.id <= 251 ? 2 : pokemon.id <= 386 ? 3 : pokemon.id <= 493 ? 4 : pokemon.id <= 649 ? 5 : pokemon.id <= 721 ? 6 : pokemon.id <= 809 ? 7 : pokemon.id <= 905 ? 8 : 9),
         'pokemon:types': pokemon.types.map(t => t.type.name).join(','),
-        'citation_title': `${displayName} — Pokédex Entry | Lunidex`,
-        'citation_publisher': 'Lunidex',
-        'citation_author': 'Lunidex',
-        'citation_language': lang,
-        'DC.title': displayName,
-        'DC.creator': 'Lunidex',
-        'DC.subject': pokemon.types.map(t => t.type.name).join(', '),
-        'DC.description': seoDescription,
-        'DC.language': languageToMetadataLocale[lang],
-        'DC.publisher': 'Lunidex',
-        'DC.contributor': 'PokéAPI (https://pokeapi.co)',
-        'DC.type': 'InteractiveResource',
       },
     };
   } catch {

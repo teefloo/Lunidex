@@ -63,6 +63,13 @@ export default async function TeamBuilderGuide() {
   const formattedPublishedDate = dateFormatter.format(new Date(`${PUBLISHED_AT}T00:00:00Z`));
 
   const tips = [t('team_guide.tip1'), t('team_guide.tip2'), t('team_guide.tip3')];
+  const analysisRows = [
+    { label: t('team_guide.analysis_row_team'), value: t('team_guide.analysis_value_team') },
+    { label: t('team_guide.analysis_row_weaknesses'), value: t('team_guide.analysis_value_weaknesses') },
+    { label: t('team_guide.analysis_row_coverage'), value: t('team_guide.analysis_value_coverage') },
+    { label: t('team_guide.analysis_row_stats'), value: t('team_guide.analysis_value_stats') },
+    { label: t('team_guide.analysis_row_synergy'), value: t('team_guide.analysis_value_synergy') },
+  ];
 
   const faqs = [
     { question: t('team_guide.faq_q1'), answer: t('team_guide.faq_a1') },
@@ -139,6 +146,31 @@ export default async function TeamBuilderGuide() {
               <p className="mt-4 text-base leading-8 text-foreground/80">
                 {t('team_guide.answer_body')}
               </p>
+            </section>
+
+            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="team-guide-analysis-title">
+              <h2 id="team-guide-analysis-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('team_guide.analysis_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('team_guide.analysis_intro')}</p>
+              <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+                <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+                  <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">
+                    <tr>
+                      <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('team_guide.analysis_criterion')}</th>
+                      <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('team_guide.analysis_result')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {analysisRows.map((row) => (
+                      <tr key={row.label} className="align-top even:bg-card/25">
+                        <th scope="row" className="border-b border-border/40 px-4 py-3 font-bold text-foreground/75">{row.label}</th>
+                        <td className="border-b border-border/40 px-4 py-3 leading-6 text-foreground/70">{row.value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </section>
 
             <section className="mt-12" aria-labelledby="team-guide-how-title">
