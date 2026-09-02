@@ -73,7 +73,7 @@ export function TCGAlbumCard({
   const qualifyVariant = usePrimeDexStore((s) => s.qualifyTCGCollectionCardVariant);
   const displayCurrency = usePrimeDexStore((s) => s.tcgDisplayCurrency);
   const detailQuery = useQuery({
-    queryKey: ['tcg', 'collection-card-detail', card.id, language],
+    queryKey: ['tcg', 'collection-card-detail-v2', card.id, language],
     queryFn: async ({ signal }) => {
       const detail = await getTCGCard(card.id, language, signal, { requirePricing: true });
       if (!detail) throw new Error('TCGdex card detail unavailable');

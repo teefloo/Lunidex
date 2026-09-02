@@ -36,7 +36,7 @@ export const tcgKeys = {
     localCardIds?: { owned: readonly string[]; wishlist: readonly string[] },
   ) =>
     [...tcgKeys.all(), 'catalog', language, pageSize, filters, localCardIds] as const,
-  card: (cardId: string, language: string) => [...tcgKeys.all(), 'card', cardId, language] as const,
+  card: (cardId: string, language: string) => [...tcgKeys.all(), 'card-v2', cardId, language] as const,
   filterOptions: (language: string) => [...tcgKeys.all(), 'filter-options', language] as const,
   rarities: (setId: string | null | undefined, language: string) =>
     [...tcgKeys.all(), 'rarities', setId ?? 'all', language] as const,

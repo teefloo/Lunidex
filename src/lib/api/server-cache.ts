@@ -143,9 +143,9 @@ const getInitialTcgCatalogPersistent = unstable_cache(
 
 const getTCGCardPersistent = unstable_cache(
   (cardId: string, language: string) => getTCGCard(cardId, language),
-  // v2 invalidates server snapshots created before the exact finish/currency
-  // resolver was added.
-  ['lunidex:tcg-card:v2'],
+  // v3 invalidates server snapshots created before the resolver understood
+  // TCGdex's exact `variants_detailed` pricing payload.
+  ['lunidex:tcg-card:v3'],
   { revalidate: 3600 },
 );
 
@@ -171,7 +171,7 @@ const getAllSetsPersistent = unstable_cache(
 
 const getCollectionSetAlbumPersistent = unstable_cache(
   (setId: string, language: string) => getCollectionSetAlbum(setId, language),
-  ['lunidex:tcg-collection-set-album:v1'],
+  ['lunidex:tcg-collection-set-album:v2'],
   { revalidate: 3600 },
 );
 

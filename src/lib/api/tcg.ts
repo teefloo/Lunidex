@@ -572,9 +572,9 @@ export const getTCGCard = async (
   // reach the network layer.
   if (!isValidTcgCardId(cardId)) return null;
   const tcgLang = resolveTcgLang(lang);
-  // v12 invalidates cards cached before the variant-price resolver learned to
-  // preserve zero quotes and keep each finish on its exact provider tier.
-  const cacheKey = `tcg-card-v12-${cardId}-${tcgLang}`;
+  // v13 invalidates cards cached before the resolver learned TCGdex's
+  // `variants_detailed` shape and the provider's zero-price sentinels.
+  const cacheKey = `tcg-card-v13-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;
 
   try {
@@ -946,7 +946,7 @@ export const getCollectionSetAlbum = async (
   signal?: AbortSignal,
 ): Promise<TCGSetAlbumData | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-collection-set-album-v1-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-collection-set-album-v2-${setId}-${tcgLang}`;
   const cached = await getCachedData<TCGSetAlbumData>(cacheKey);
   if (cached?.cards.length) return cached;
   const requestSignal = createCollectionRequestSignal(signal, COLLECTION_ALBUM_TIMEOUT_MS);
@@ -1058,6 +1058,7 @@ function hasCollectionCardValue(card: TCGCollectionCard): boolean {
   return Boolean(
     card.value
     && Number.isFinite(card.value.amount)
+    && card.value.amount > 0
     && typeof card.value.currency === 'string'
     && card.value.currency.length > 0,
   );

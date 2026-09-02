@@ -101,6 +101,16 @@ export interface TCGCardPricing {
   cardmarket?: TCGCardmarketPricing;
 }
 
+/** TCGdex pricing attached to one concrete physical card variant. */
+export interface TCGCardVariantDetailed {
+  type: string;
+  size?: string;
+  variantId?: string;
+  stamp?: string;
+  foil?: string;
+  pricing?: TCGCardPricing | null;
+}
+
 /** A single resolved market value for a card, in one currency. */
 export interface TCGCardValue {
   amount: number;
@@ -163,6 +173,8 @@ export interface TCGCard {
   hp?: number;
   illustrator?: string;
   variants?: TCGCardVariants;
+  /** TCGdex's exact per-printing pricing payload (newer card responses). */
+  variants_detailed?: TCGCardVariantDetailed[];
   boosters?: TCGCardBooster[] | null;
   set?: TCGSet;
   attacks?: TCGCardAttack[];

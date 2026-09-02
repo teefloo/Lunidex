@@ -80,7 +80,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
       return {
         // Include the selected currency so switching it immediately rebuilds
         // coverage and totals without mixing EUR and USD source quotes.
-        queryKey: ['tcg', 'collection-value-v3', entry.collectionKey, ownership, displayCurrency],
+        queryKey: ['tcg', 'collection-value-v4', entry.collectionKey, ownership, displayCurrency],
         queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionValue(ownership, entry.language, signal, displayCurrency),
         staleTime: 60 * 60 * 1000,
         enabled: mounted && ownership.length > 0,

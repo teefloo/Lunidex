@@ -57,7 +57,7 @@ export function TCGSetAlbumPage({
   }, [collections, createCollection, mounted, resolvedCollectionKey, resolvedLang, setId, syncStatus, user]);
 
   const albumQuery = useQuery({
-    queryKey: ['tcg', 'collection-set-album', setId, resolvedLang],
+    queryKey: ['tcg', 'collection-set-album-v2', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
     enabled: mounted && !authLoading && Boolean(user) && syncStatus === 'ready',

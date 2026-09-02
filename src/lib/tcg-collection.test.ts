@@ -17,7 +17,7 @@ const baseCard: TCGCard = {
 };
 
 describe('TCG physical variant pricing', () => {
-  it('resolves each variant from its exact provider fields and preserves zero quotes', () => {
+  it('resolves each variant from its exact provider fields and rejects zero quotes', () => {
     const card: TCGCard = {
       ...baseCard,
       pricing: {
@@ -33,13 +33,49 @@ describe('TCG physical variant pricing', () => {
     expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 1.25, currency: 'EUR' });
     expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 4.5, currency: 'EUR' });
     expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 3.25, currency: 'USD' });
-    expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { normal: { marketPrice: 0 } } } }, 'normal')).toEqual({ amount: 0, currency: 'USD' });
+    expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { normal: { marketPrice: 0 } } } }, 'normal')).toBeNull();
     expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { reverse: { marketPrice: 1.75 } } } }, 'reverse')).toEqual({ amount: 1.75, currency: 'USD' });
     expect(getTCGVariantValue({ ...card, pricing: { cardmarket: { unit: 'EUR' }, tcgplayer: { normal: { marketPrice: 2.25 } } } }, 'normal')).toEqual({ amount: 2.25, currency: 'USD' });
     expect(getTCGVariantValue(card, 'normal', 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
     expect(getTCGVariantValue(card, 'reverse', 'EUR')).toBeNull();
     expect(getCardMarketValue(card, 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
     expect(getTCGValueInCurrency({ amount: 1, currency: 'EUR' }, 'USD')).toBeNull();
+  });
+
+  it('uses the exact pricing block from TCGdex variants_detailed', () => {
+    const card: TCGCard = {
+      ...baseCard,
+      pricing: {
+        cardmarket: { unit: 'EUR', trend: 0.03, 'trend-holo': 0 },
+        tcgplayer: {
+          unit: 'USD',
+          normal: { marketPrice: 0.08 },
+          'reverse-holofoil': { marketPrice: 0.17 },
+          holofoil: { marketPrice: 4.58 },
+        },
+      },
+      variants_detailed: [
+        {
+          type: 'Normal',
+          pricing: { cardmarket: { unit: 'EUR', trend: 0.03 } },
+        },
+        {
+          type: 'Reverse',
+          pricing: { tcgplayer: { unit: 'USD', 'reverse-holofoil': { marketPrice: 0.17 } } },
+        },
+        {
+          type: 'Holo',
+          pricing: {
+            cardmarket: { unit: 'EUR', trend: 25.53, 'trend-holo': 0 },
+            tcgplayer: { unit: 'USD', holofoil: { marketPrice: 35.21 } },
+          },
+        },
+      ],
+    };
+
+    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.03, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 0.17, currency: 'USD' });
+    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 25.53, currency: 'EUR' });
   });
 
   it('multiplies quantities, groups currencies, and exposes unpriced variants', () => {
@@ -82,6 +118,29 @@ describe('TCG physical variant pricing', () => {
     expect(result.unpricedCount).toBe(2);
   });
 
+  it('infers the only declared finish for unspecified ownership', () => {
+    const card = toCollectionCard({
+      ...baseCard,
+      variants: { firstEdition: false, holo: true, normal: false, reverse: false, wPromo: false },
+      pricing: {
+        cardmarket: { unit: 'EUR', trend: 25.53, 'trend-holo': 0 },
+      },
+      variants_detailed: [
+        {
+          type: 'Holo',
+          pricing: { cardmarket: { unit: 'EUR', trend: 25.53, 'trend-holo': 0 } },
+        },
+      ],
+    });
+    const result = aggregateCollectionValueWithVariants([card], [
+      { cardId: card.id, variant: 'unspecified', quantity: 1 },
+    ], 'EUR');
+
+    expect(result.groups).toEqual([{ currency: 'EUR', total: 25.53, count: 1 }]);
+    expect(result.pricedCount).toBe(1);
+    expect(result.unpricedCount).toBe(0);
+  });
+
   it('does not invent a price for a variant explicitly absent from the card', () => {
     const card = toCollectionCard({
       ...baseCard,
@@ -121,7 +180,7 @@ describe('TCG physical variant pricing', () => {
     expect(getCardMarketValue(card)).toEqual({ amount: 2.5, currency: 'USD' });
   });
 
-  it('keeps a genuine zero holo quote instead of substituting the non-foil price', () => {
+  it('ignores a zero Cardmarket holo sentinel instead of valuing the card at zero', () => {
     const card: TCGCard = {
       ...baseCard,
       variants: { holo: true, normal: false, reverse: false },
@@ -130,8 +189,8 @@ describe('TCG physical variant pricing', () => {
         tcgplayer: { unit: 'USD', holofoil: { marketPrice: 4.58 } },
       },
     };
-    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 0, currency: 'EUR' });
-    expect(getCardMarketValue(card)).toEqual({ amount: 0, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 2.92, currency: 'EUR' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 2.92, currency: 'EUR' });
   });
 
   it('falls back to another available finish for an unqualified card estimate', () => {

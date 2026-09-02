@@ -1,6 +1,8 @@
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import type {
   TCGCard,
+  TCGCardPricing,
+  TCGCardVariantDetailed,
   TCGCardValue,
   TCGCollectionCard,
   TCGSet,
@@ -272,11 +274,12 @@ export function formatWishlistCopyPaste(cards: TCGCard[]): string {
 //
 // TCGdex exposes prices on the card *detail* endpoint only (not the bulk set
 // listing): `pricing.cardmarket` (EUR) and `pricing.tcgplayer.<variant>` (USD).
-// We prefer Cardmarket because the app's primary audience is European and the
-// EUR figures are a single scalar per card; TCGplayer is used as a fallback for
-// cards Cardmarket does not cover. Because the two providers use different
-// currencies we never sum or convert across them — callers can pass the user's
-// selected display currency to keep only matching source quotes.
+// Newer detail responses also expose `variants_detailed`, whose pricing block
+// belongs to one concrete printing. Prefer that block whenever it exists; the
+// legacy top-level pricing object can represent a different printing than the
+// one selected by the user. Because the two providers use different currencies
+// we never sum or convert across them — callers can pass the user's selected
+// display currency to keep only matching source quotes.
 //
 // Extension point: to add another price source, populate `card.pricing` in
 // `normaliseCard` (src/lib/api/tcg.ts) and extend `getCardMarketValue` below.
@@ -287,15 +290,16 @@ function toFiniteNumber(value: unknown): number | undefined {
 }
 
 /**
- * Keep every non-negative finite quote, including a genuine zero. `null`, an
- * omitted field, negative values, and non-numeric payloads remain unavailable.
+ * Market quotes must be strictly positive. TCGdex currently emits `0` for
+ * unavailable Cardmarket foil fields, so accepting zero would turn an
+ * expensive holo card into a free card in the collection total.
  */
 function toUsableMarketNumber(value: unknown): number | undefined {
   const amount = toFiniteNumber(value);
-  return typeof amount === 'number' && amount >= 0 ? amount : undefined;
+  return typeof amount === 'number' && amount > 0 ? amount : undefined;
 }
 
-function getCardmarketBaseAmount(cardmarket: NonNullable<TCGCard['pricing']>['cardmarket']): number | undefined {
+function getCardmarketBaseAmount(cardmarket: TCGCardPricing['cardmarket'] | null): number | undefined {
   if (!cardmarket) return undefined;
   return toUsableMarketNumber(cardmarket.trend)
     ?? toUsableMarketNumber(cardmarket.avg)
@@ -305,7 +309,7 @@ function getCardmarketBaseAmount(cardmarket: NonNullable<TCGCard['pricing']>['ca
     ?? toUsableMarketNumber(cardmarket.low);
 }
 
-function getCardmarketHoloAmount(cardmarket: NonNullable<TCGCard['pricing']>['cardmarket']): number | undefined {
+function getCardmarketHoloAmount(cardmarket: TCGCardPricing['cardmarket'] | null): number | undefined {
   if (!cardmarket) return undefined;
   return toUsableMarketNumber(cardmarket['trend-holo'])
     ?? toUsableMarketNumber(cardmarket['avg-holo'])
@@ -323,6 +327,83 @@ function normalizeCurrency(value: unknown, fallback: string): string {
   return normalized;
 }
 
+function normalizeDetailedVariantType(value: unknown): TCGPhysicalVariant | null {
+  if (typeof value !== 'string') return null;
+  const normalized = value.trim().toLowerCase().replace(/[\s_-]+/g, '');
+  if (normalized === 'normal') return 'normal';
+  if (normalized === 'reverse' || normalized === 'reverseholo' || normalized === 'reverseholofoil') return 'reverse';
+  if (normalized === 'holo' || normalized === 'holofoil') return 'holo';
+  return null;
+}
+
+/**
+ * Return the standard detail for a physical variant. TCGdex can list an
+ * additional stamped/foil printing beside the standard one; the collection
+ * model does not distinguish those sub-variants, so prefer the unmarked entry
+ * when one is available.
+ */
+function getDetailedVariants(
+  card: TCGCard,
+  variant: TCGPhysicalVariant,
+): TCGCardVariantDetailed[] {
+  const detailedVariants = Array.isArray(card.variants_detailed) ? card.variants_detailed : [];
+  const matches = detailedVariants.filter(
+    (entry) => entry && normalizeDetailedVariantType(entry.type) === variant,
+  );
+  const standardMatches = matches.filter((entry) => !entry.stamp && !entry.foil);
+  return standardMatches.length > 0 ? standardMatches : matches;
+}
+
+function getTCGPlayerTiers(
+  tcgplayer: NonNullable<TCGCardPricing['tcgplayer']>,
+  variant: TCGPhysicalVariant,
+) {
+  return variant === 'normal'
+    ? [tcgplayer.normal]
+    : variant === 'holo'
+      ? [tcgplayer.holofoil, tcgplayer.holo]
+      : [tcgplayer.reverse, tcgplayer['reverse-holofoil']];
+}
+
+function resolveValueFromPricing(
+  pricing: TCGCardPricing | null | undefined,
+  variant: TCGPhysicalVariant,
+  displayCurrency: TCGDisplayCurrency | undefined,
+  useDetailedHoloPrice = false,
+  allowTopLevelHoloBaseFallback = false,
+): TCGCardValue | null {
+  const cardmarket = pricing?.cardmarket;
+  const cardmarketAmount = variant === 'normal'
+    ? getCardmarketBaseAmount(cardmarket)
+    : variant === 'holo'
+      ? useDetailedHoloPrice
+        ? getCardmarketBaseAmount(cardmarket) ?? getCardmarketHoloAmount(cardmarket)
+        : getCardmarketHoloAmount(cardmarket)
+          ?? (allowTopLevelHoloBaseFallback ? getCardmarketBaseAmount(cardmarket) : undefined)
+      : undefined;
+
+  if (typeof cardmarketAmount === 'number') {
+    const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket?.unit, 'EUR') };
+    if (!displayCurrency || value.currency === displayCurrency) return value;
+  }
+
+  const tcgplayer = pricing?.tcgplayer;
+  if (tcgplayer) {
+    const currency = normalizeCurrency(tcgplayer.unit, 'USD');
+    for (const tier of getTCGPlayerTiers(tcgplayer, variant)) {
+      if (!tier || typeof tier !== 'object') continue;
+      const amount = toUsableMarketNumber(tier.marketPrice)
+        ?? toUsableMarketNumber(tier.midPrice)
+        ?? toUsableMarketNumber(tier.lowPrice);
+      if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
+        return { amount, currency };
+      }
+    }
+  }
+
+  return null;
+}
+
 /**
  * Resolve the exact market value for one physical variant. Cardmarket exposes
  * non-foil and foil prices, while TCGplayer exposes Normal, Holofoil and
@@ -337,39 +418,24 @@ export function getTCGVariantValue(
   // TCGdex may omit variant metadata on summary/legacy payloads. Treat that
   // as unknown rather than inventing a physical finish from a provider price.
   if (card.variants?.[variant] !== true) return null;
-  const cardmarket = card.pricing?.cardmarket;
-  if (cardmarket) {
-    const cardmarketAmount = variant === 'normal'
-      ? getCardmarketBaseAmount(cardmarket)
-      : variant === 'holo'
-        ? getCardmarketHoloAmount(cardmarket)
-        : undefined;
-    if (typeof cardmarketAmount === 'number') {
-      const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket.unit, 'EUR') };
-      if (!displayCurrency || value.currency === displayCurrency) return value;
+  const detailedVariants = getDetailedVariants(card, variant);
+  if (detailedVariants.length > 0) {
+    for (const detailedVariant of detailedVariants) {
+      const value = resolveValueFromPricing(
+        detailedVariant.pricing,
+        variant,
+        displayCurrency,
+        true,
+      );
+      if (value) return value;
     }
+    // A matching detailed entry is authoritative even when its providers have
+    // no quote. Do not silently substitute a price for another printing from
+    // the legacy top-level block.
+    return null;
   }
 
-  const tcgplayer = card.pricing?.tcgplayer;
-  if (tcgplayer) {
-    const currency = normalizeCurrency(tcgplayer.unit, 'USD');
-    const tiers = variant === 'normal'
-      ? [tcgplayer.normal]
-      : variant === 'holo'
-        ? [tcgplayer.holofoil, tcgplayer.holo]
-        : [tcgplayer.reverse, tcgplayer['reverse-holofoil']];
-    for (const tier of tiers) {
-      if (!tier || typeof tier !== 'object') continue;
-      const amount = toUsableMarketNumber(tier.marketPrice)
-        ?? toUsableMarketNumber(tier.midPrice)
-        ?? toUsableMarketNumber(tier.lowPrice);
-      if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
-        return { amount, currency };
-      }
-    }
-  }
-
-  return null;
+  return resolveValueFromPricing(card.pricing, variant, displayCurrency, false, card.variants?.normal === false);
 }
 
 /**
@@ -394,35 +460,12 @@ export function getCardMarketValue(card: TCGCard, displayCurrency?: TCGDisplayCu
     if (declaredVariants.length > 0) return null;
   }
 
-  // Summary/legacy payloads without variant metadata still need the old
+  // Summary/legacy payloads without variant metadata still need a
   // representative estimate for catalogue views. This path is deliberately
-  // not used for an explicitly qualified physical variant.
-  const cardmarket = card.pricing?.cardmarket;
-  const cardmarketAmount = getCardmarketBaseAmount(cardmarket);
-  if (typeof cardmarketAmount === 'number') {
-    const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket?.unit, 'EUR') };
-    if (!displayCurrency || value.currency === displayCurrency) return value;
-  }
-
-  const tcgplayer = card.pricing?.tcgplayer;
-  if (tcgplayer) {
-    const currency = normalizeCurrency(tcgplayer.unit, 'USD');
-    for (const variant of TCG_DEFAULT_VARIANT_ORDER) {
-      const tiers = variant === 'normal'
-        ? [tcgplayer.normal]
-        : variant === 'holo'
-          ? [tcgplayer.holofoil, tcgplayer.holo]
-          : [tcgplayer.reverse, tcgplayer['reverse-holofoil']];
-      for (const tier of tiers) {
-        if (!tier || typeof tier !== 'object') continue;
-        const amount = toUsableMarketNumber(tier.marketPrice)
-          ?? toUsableMarketNumber(tier.midPrice)
-          ?? toUsableMarketNumber(tier.lowPrice);
-        if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
-          return { amount, currency };
-        }
-      }
-    }
+  // not used when an explicit physical variant is available above.
+  for (const variant of TCG_DEFAULT_VARIANT_ORDER) {
+    const value = resolveValueFromPricing(card.pricing, variant, displayCurrency);
+    if (value) return value;
   }
 
   return null;
@@ -433,7 +476,7 @@ export function getTCGValueInCurrency(
   value: TCGCardValue | null | undefined,
   displayCurrency?: TCGDisplayCurrency,
 ): TCGCardValue | null {
-  if (!value || !Number.isFinite(value.amount) || typeof value.currency !== 'string') return null;
+  if (!value || !Number.isFinite(value.amount) || value.amount <= 0 || typeof value.currency !== 'string') return null;
   const currency = normalizeCurrency(value.currency, '');
   return !displayCurrency || currency === displayCurrency
     ? { ...value, currency: currency || value.currency }
@@ -584,6 +627,13 @@ function groupsFromTotals(
     .sort((a, b) => b.total - a.total);
 }
 
+function getOnlyAvailablePhysicalVariant(
+  variants: TCGCollectionCard['variants'],
+): TCGPhysicalVariant | null {
+  const availableVariants = TCG_PHYSICAL_VARIANTS.filter((variant) => variants?.[variant] === true);
+  return availableVariants.length === 1 ? availableVariants[0] : null;
+}
+
 /**
  * Aggregate the estimated value of the owned subset of `cards`, grouped by
  * currency and set in one pass. Pure and allocation-light so it stays fast on
@@ -686,10 +736,13 @@ export function aggregateCollectionValueWithVariants(
     if (card.setId) ownedBySet.set(card.setId, (ownedBySet.get(card.setId) ?? 0) + quantity);
 
     // Historical/imported possessions do not carry a finish. Keep that fact in
-    // the collection model and leave them unpriced until the detail panel can
-    // qualify them. Once a finish is known, prefer its exact provider value and
-    // never fall back to a different physical finish.
-    const physicalVariant = owned.variant === 'unspecified' ? null : owned.variant;
+    // the collection model unless TCGdex declares exactly one possible finish;
+    // only that case can be inferred without inventing a physical variant.
+    // Once a finish is known, prefer its exact provider value and never fall
+    // back to a different physical finish.
+    const physicalVariant = owned.variant === 'unspecified'
+      ? getOnlyAvailablePhysicalVariant(card.variants)
+      : owned.variant;
     const variantAvailable = physicalVariant !== null && card.variants?.[physicalVariant] === true;
     const value = physicalVariant === null
       ? null
