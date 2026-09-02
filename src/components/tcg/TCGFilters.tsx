@@ -32,6 +32,7 @@ import {
 import { tcgKeys } from '@/lib/api/keys';
 import { useMounted } from '@/hooks/useMounted';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
+import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
@@ -135,6 +136,8 @@ export function TCGFilters({
       return dateB - dateA;
     });
   }, [filterOptions?.sets]);
+
+  const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(setOptions), [setOptions]);
 
   const latestSetId = useMemo(() => {
     const sets = filterOptions?.sets ?? [];
@@ -387,7 +390,7 @@ export function TCGFilters({
                             : 'border-border/45 bg-card/45 text-foreground/60 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
                         )}
                       >
-                        <span className="min-w-0 truncate">{set.name}</span>
+                        <span className="min-w-0 truncate">{setDisplayNames.get(set.id) ?? set.name}</span>
                         <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
                           {set.totalCards}
                         </span>
@@ -538,7 +541,7 @@ export function TCGFilters({
                       {logoCandidates.length > 0 ? (
                         <TCGImageWithFallback
                           candidates={logoCandidates}
-                          alt={set.name}
+                          alt={setDisplayNames.get(set.id) ?? set.name}
                           fill
                           sizes="48px"
                           className="object-contain p-2"
@@ -553,7 +556,7 @@ export function TCGFilters({
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-3">
                         <span className="truncate text-xs font-black uppercase tracking-tight">
-                          {set.name}
+                          {setDisplayNames.get(set.id) ?? set.name}
                         </span>
                         <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
                           {set.releaseDate ? new Date(set.releaseDate).getFullYear() : set.id.toUpperCase()}

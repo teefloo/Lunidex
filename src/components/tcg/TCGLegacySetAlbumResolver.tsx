@@ -122,7 +122,7 @@ export function TCGLegacySetAlbumResolver({ setId, activation = false }: TCGLega
             <p className="mt-2 text-sm leading-6 text-foreground/60">
               {t('tcg.collection_not_started', { defaultValue: 'This collection has not been started yet.' })}
             </p>
-            <Link href={localeHref('/tcg/start')} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/40 bg-primary/15 px-4 text-sm font-bold text-primary hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            <Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/40 bg-primary/15 px-4 text-sm font-bold text-primary hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
               {t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>

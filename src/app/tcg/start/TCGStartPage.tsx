@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
@@ -20,7 +20,9 @@ import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { TCGLanguageSelector } from '@/components/tcg/TCGLanguageSelector';
+import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 
 const LATEST_SET_LIMIT = 12;
 
@@ -41,6 +43,8 @@ export function TCGStartPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
   const { enabled, loading: authLoading, user } = useAuth();
@@ -73,6 +77,15 @@ export function TCGStartPage() {
     if (!normalizedQuery) return sorted.slice(0, LATEST_SET_LIMIT);
     return sorted.filter((set) => set.name.toLocaleLowerCase(resolvedLanguage).includes(normalizedQuery));
   }, [normalizedQuery, resolvedLanguage, sets]);
+  const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(sets ?? []), [sets]);
+  const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
+
+  const tryEnglish = useCallback(() => {
+    setBrowseLanguage('en');
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tcgLang', 'en');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams, setBrowseLanguage]);
 
   useEffect(() => {
     if (!mounted || !hasHydrated) return;
@@ -141,6 +154,9 @@ export function TCGStartPage() {
             <p className="mt-3 max-w-2xl text-base leading-7 text-foreground/60">
               {t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}
             </p>
+            <div className="mt-5">
+              <TCGDataLangBanner resolvedLang={resolvedLanguage} onTryEnglish={tryEnglish} />
+            </div>
 
             <label htmlFor="set-search" className="mt-7 block text-sm font-bold text-foreground/80">
               {t('tcg.activation.search_sets')}
@@ -204,7 +220,7 @@ export function TCGStartPage() {
                         <TCGImageWithFallback candidates={getTCGSetImageCandidates(set)} alt="" fill sizes="48px" className="object-contain" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-base font-bold text-foreground group-hover:text-primary">{set.name}</p>
+                        <p className="text-base font-bold text-foreground group-hover:text-primary">{setDisplayNames.get(set.id) ?? set.name}</p>
                         <p className="mt-1 text-sm text-foreground/55">
                           {[releaseDate, total ? t('tcg.activation.card_total', { count: total }) : null].filter(Boolean).join(' · ')}
                         </p>

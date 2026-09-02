@@ -94,6 +94,12 @@ export interface TCGCardmarketPricing {
   'avg1-holo'?: number | null;
   'avg7-holo'?: number | null;
   'avg30-holo'?: number | null;
+  'avg-reverse-holo'?: number | null;
+  'low-reverse-holo'?: number | null;
+  'trend-reverse-holo'?: number | null;
+  'avg1-reverse-holo'?: number | null;
+  'avg7-reverse-holo'?: number | null;
+  'avg30-reverse-holo'?: number | null;
 }
 
 export interface TCGCardPricing {
@@ -106,8 +112,8 @@ export interface TCGCardVariantDetailed {
   type: string;
   size?: string;
   variantId?: string;
-  stamp?: string;
-  foil?: string;
+  stamp?: string | string[] | null;
+  foil?: string | null;
   pricing?: TCGCardPricing | null;
 }
 

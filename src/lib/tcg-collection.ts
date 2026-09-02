@@ -274,12 +274,12 @@ export function formatWishlistCopyPaste(cards: TCGCard[]): string {
 //
 // TCGdex exposes prices on the card *detail* endpoint only (not the bulk set
 // listing): `pricing.cardmarket` (EUR) and `pricing.tcgplayer.<variant>` (USD).
-// Newer detail responses also expose `variants_detailed`, whose pricing block
-// belongs to one concrete printing. Prefer that block whenever it exists; the
-// legacy top-level pricing object can represent a different printing than the
-// one selected by the user. Because the two providers use different currencies
-// we never sum or convert across them — callers can pass the user's selected
-// display currency to keep only matching source quotes.
+// Newer detail responses also expose `variants_detailed`. When a variant entry
+// includes its own pricing block, prefer it; older/newer payloads can also
+// expose variant metadata without pricing, in which case the top-level block
+// remains the only usable source. Because the two providers use different
+// currencies we never sum or convert across them — callers can pass the
+// user's selected display currency to keep only matching source quotes.
 //
 // Extension point: to add another price source, populate `card.pricing` in
 // `normaliseCard` (src/lib/api/tcg.ts) and extend `getCardMarketValue` below.
@@ -309,6 +309,12 @@ function getCardmarketBaseAmount(cardmarket: TCGCardPricing['cardmarket'] | null
     ?? toUsableMarketNumber(cardmarket.low);
 }
 
+/**
+ * Resolve Cardmarket's holo series. Cardmarket exposes a single foil price
+ * family as `*-holo`; unlike TCGplayer, it does not normally publish a
+ * separate reverse-holo family. Newer payloads may expose explicit reverse
+ * fields, so those win when present.
+ */
 function getCardmarketHoloAmount(cardmarket: TCGCardPricing['cardmarket'] | null): number | undefined {
   if (!cardmarket) return undefined;
   return toUsableMarketNumber(cardmarket['trend-holo'])
@@ -317,6 +323,18 @@ function getCardmarketHoloAmount(cardmarket: TCGCardPricing['cardmarket'] | null
     ?? toUsableMarketNumber(cardmarket['avg7-holo'])
     ?? toUsableMarketNumber(cardmarket['avg1-holo'])
     ?? toUsableMarketNumber(cardmarket['low-holo']);
+}
+
+function getCardmarketReverseAmount(cardmarket: TCGCardPricing['cardmarket'] | null): number | undefined {
+  if (!cardmarket) return undefined;
+  return toUsableMarketNumber(cardmarket['trend-reverse-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg-reverse-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg30-reverse-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg7-reverse-holo'])
+    ?? toUsableMarketNumber(cardmarket['avg1-reverse-holo'])
+    ?? toUsableMarketNumber(cardmarket['low-reverse-holo'])
+    // Cardmarket's current API uses the holo family for foil/reverse sales.
+    ?? getCardmarketHoloAmount(cardmarket);
 }
 
 function normalizeCurrency(value: unknown, fallback: string): string {
@@ -336,11 +354,21 @@ function normalizeDetailedVariantType(value: unknown): TCGPhysicalVariant | null
   return null;
 }
 
+function hasVariantMarker(value: unknown): boolean {
+  if (value === undefined || value === null) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) {
+    return value.some((item) => (typeof item === 'string' ? item.trim().length > 0 : true));
+  }
+  return true;
+}
+
 /**
- * Return the standard detail for a physical variant. TCGdex can list an
- * additional stamped/foil printing beside the standard one; the collection
- * model does not distinguish those sub-variants, so prefer the unmarked entry
- * when one is available.
+ * Return standard details for a physical variant. TCGdex can list stamped,
+ * Cosmos and other special printings beside the standard one; the collection
+ * model does not distinguish those sub-variants, so marked entries must never
+ * become the generic price for the physical variant. When no unmarked entry
+ * exists, the caller can safely fall back to the legacy top-level quote.
  */
 function getDetailedVariants(
   card: TCGCard,
@@ -350,8 +378,7 @@ function getDetailedVariants(
   const matches = detailedVariants.filter(
     (entry) => entry && normalizeDetailedVariantType(entry.type) === variant,
   );
-  const standardMatches = matches.filter((entry) => !entry.stamp && !entry.foil);
-  return standardMatches.length > 0 ? standardMatches : matches;
+  return matches.filter((entry) => !hasVariantMarker(entry.stamp) && !hasVariantMarker(entry.foil));
 }
 
 function getTCGPlayerTiers(
@@ -375,12 +402,12 @@ function resolveValueFromPricing(
   const cardmarket = pricing?.cardmarket;
   const cardmarketAmount = variant === 'normal'
     ? getCardmarketBaseAmount(cardmarket)
-    : variant === 'holo'
-      ? useDetailedHoloPrice
-        ? getCardmarketBaseAmount(cardmarket) ?? getCardmarketHoloAmount(cardmarket)
+    : variant === 'reverse'
+      ? getCardmarketReverseAmount(cardmarket)
+      : useDetailedHoloPrice
+        ? getCardmarketHoloAmount(cardmarket) ?? getCardmarketBaseAmount(cardmarket)
         : getCardmarketHoloAmount(cardmarket)
-          ?? (allowTopLevelHoloBaseFallback ? getCardmarketBaseAmount(cardmarket) : undefined)
-      : undefined;
+          ?? (allowTopLevelHoloBaseFallback ? getCardmarketBaseAmount(cardmarket) : undefined);
 
   if (typeof cardmarketAmount === 'number') {
     const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket?.unit, 'EUR') };
@@ -405,10 +432,9 @@ function resolveValueFromPricing(
 }
 
 /**
- * Resolve the exact market value for one physical variant. Cardmarket exposes
- * non-foil and foil prices, while TCGplayer exposes Normal, Holofoil and
- * Reverse-Holofoil separately. Reverse therefore never falls back to an
- * ambiguous Cardmarket foil value.
+ * Resolve the market value for one physical variant. Cardmarket exposes
+ * standard and foil (`*-holo`) series, while TCGplayer exposes Normal,
+ * Holofoil and Reverse-Holofoil separately.
  */
 export function getTCGVariantValue(
   card: TCGCard,
@@ -420,7 +446,15 @@ export function getTCGVariantValue(
   if (card.variants?.[variant] !== true) return null;
   const detailedVariants = getDetailedVariants(card, variant);
   if (detailedVariants.length > 0) {
-    for (const detailedVariant of detailedVariants) {
+    // TCGdex sometimes sends variants_detailed as metadata only (type, size,
+    // variantId). In that shape, the top-level pricing object is still valid
+    // and must be used instead of turning the variant into an unpriced card.
+    const variantsWithPricing = detailedVariants.filter((entry) => entry.pricing !== undefined);
+    if (variantsWithPricing.length === 0) {
+      return resolveValueFromPricing(card.pricing, variant, displayCurrency, false, card.variants?.normal === false);
+    }
+
+    for (const detailedVariant of variantsWithPricing) {
       const value = resolveValueFromPricing(
         detailedVariant.pricing,
         variant,
@@ -429,9 +463,8 @@ export function getTCGVariantValue(
       );
       if (value) return value;
     }
-    // A matching detailed entry is authoritative even when its providers have
-    // no quote. Do not silently substitute a price for another printing from
-    // the legacy top-level block.
+    // A matching detailed entry explicitly carrying an empty pricing block is
+    // authoritative. Do not silently substitute a price for another printing.
     return null;
   }
 

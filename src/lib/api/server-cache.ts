@@ -143,9 +143,9 @@ const getInitialTcgCatalogPersistent = unstable_cache(
 
 const getTCGCardPersistent = unstable_cache(
   (cardId: string, language: string) => getTCGCard(cardId, language),
-  // v3 invalidates server snapshots created before the resolver understood
-  // TCGdex's exact `variants_detailed` pricing payload.
-  ['lunidex:tcg-card:v3'],
+  // v4 invalidates server snapshots created before marked special printings
+  // were excluded from generic normal/reverse/holo price resolution.
+  ['lunidex:tcg-card:v4'],
   { revalidate: 3600 },
 );
 

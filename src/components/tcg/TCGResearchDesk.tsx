@@ -31,6 +31,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -159,6 +160,8 @@ export function TCGResearchDesk({
     });
   }, [filterOptions?.sets]);
 
+  const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(setOptions), [setOptions]);
+
   const latestSet = setOptions[0] ?? null;
   const latestSetId = latestSet?.id ?? null;
   const latestSetFallbackId = latestSetId ?? initialLatestSet?.id ?? null;
@@ -174,6 +177,21 @@ export function TCGResearchDesk({
     : hasUserEditedFilters
       ? null
       : latestSetFallbackName;
+
+  useEffect(() => {
+    // A set id is only meaningful inside the language-specific TCGdex catalog.
+    // If the user changes language and that catalog does not contain the
+    // previously selected set, clear the stale URL/filter value instead of
+    // querying an unrelated fallback set with zero results.
+    if (!mounted || !hasHydrated || !filterOptions || setOptions.length === 0 || !filters.selectedSet) return;
+    if (setOptions.some((set) => set.id === filters.selectedSet)) return;
+
+    setFilters((current) => {
+      if (current.selectedSet !== filters.selectedSet) return current;
+      return normalizeFilters({ ...current, selectedSet: null });
+    });
+    setHasUserEditedFilters(true);
+  }, [filterOptions, filters.selectedSet, hasHydrated, mounted, setOptions]);
 
   useEffect(() => {
     if (!mounted || !hasHydrated) return;
@@ -343,6 +361,7 @@ export function TCGResearchDesk({
         subtitle={t('tcg.discover_subtitle')}
         searchTerm={effectiveFilters.searchTerm ?? ''}
         collections={setOptions}
+        collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
         onCollectionChange={(selectedSet) => updateFilters({
@@ -458,6 +477,7 @@ function DiscoveryHero({
   subtitle,
   searchTerm,
   collections,
+  collectionLabels,
   selectedCollectionId,
   sortValue,
   onCollectionChange,
@@ -470,6 +490,7 @@ function DiscoveryHero({
   subtitle: string;
   searchTerm: string;
   collections: TCGSet[];
+  collectionLabels: Map<string, string>;
   selectedCollectionId: string | null;
   sortValue: string;
   onCollectionChange: (setId: string | null) => void;
@@ -495,7 +516,7 @@ function DiscoveryHero({
             <option value="">{t('tcg.all_collections')}</option>
             {collections.map((collection) => (
               <option key={collection.id} value={collection.id}>
-                {collection.name}
+                {collectionLabels.get(collection.id) ?? collection.name}
               </option>
             ))}
           </select>

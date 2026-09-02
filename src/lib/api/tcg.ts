@@ -572,9 +572,9 @@ export const getTCGCard = async (
   // reach the network layer.
   if (!isValidTcgCardId(cardId)) return null;
   const tcgLang = resolveTcgLang(lang);
-  // v13 invalidates cards cached before the resolver learned TCGdex's
-  // `variants_detailed` shape and the provider's zero-price sentinels.
-  const cacheKey = `tcg-card-v13-${cardId}-${tcgLang}`;
+  // v14 invalidates cards cached before marked special printings were kept
+  // out of the generic normal/reverse/holo price resolver.
+  const cacheKey = `tcg-card-v14-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;
 
   try {

@@ -7,7 +7,6 @@ import { fetchCollectionSetCatalog } from '@/lib/api/tcg';
 import { TCGCollectionOverview, type TCGCollectionOverviewEntry } from '@/components/tcg/TCGCollectionOverview';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
-import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useAuth } from '@/lib/neon/AuthProvider';
@@ -22,7 +21,6 @@ export function TCGCollectionPage() {
   const mounted = useMounted();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const collectionKeys = usePrimeDexStore((state) => state.tcgCollections);
   const legacyOwnedCards = usePrimeDexStore((state) => state.tcgLegacyOwnedCards);
   const collectionRefs = useMemo(
@@ -73,7 +71,6 @@ export function TCGCollectionPage() {
         ) : (
           <>
             <TCGPageTabs />
-            <TCGDataLangBanner resolvedLang={browseLanguage} />
             <div className="mb-6">
               <h1 id="tcg-collection-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
                 {t('tcg.collection_title')}
@@ -97,7 +94,7 @@ export function TCGCollectionPage() {
                   {t('common.retry', { defaultValue: 'Retry' })}
                 </button>
               </div>
-            ) : setsLoading || !sets ? (
+            ) : setsLoading ? (
               <div className="space-y-8" aria-busy="true" aria-live="polite">
                 <span className="sr-only">{t('tcg.collection_loading')}</span>
                 <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
@@ -118,7 +115,24 @@ export function TCGCollectionPage() {
                 </div>
               </div>
             ) : (
-              <TCGCollectionOverview collections={sets} legacyOwnedCards={legacyOwnedCards} />
+              <>
+                {setsError && (
+                  <div className="mb-6 rounded-sm border border-amber-500/30 bg-amber-500/10 p-5" role="alert">
+                    <p className="text-sm text-foreground/75">
+                      {t('tcg.activation.sets_load_error', { defaultValue: 'Some collections could not be loaded.' })}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => void refetchSets()}
+                      className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                    >
+                      <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                      {t('common.retry', { defaultValue: 'Retry' })}
+                    </button>
+                  </div>
+                )}
+                <TCGCollectionOverview collections={sets} legacyOwnedCards={legacyOwnedCards} />
+              </>
             )}
           </>
         )}

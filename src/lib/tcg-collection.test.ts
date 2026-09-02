@@ -32,12 +32,12 @@ describe('TCG physical variant pricing', () => {
     };
     expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 1.25, currency: 'EUR' });
     expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 4.5, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 3.25, currency: 'USD' });
+    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 4.5, currency: 'EUR' });
     expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { normal: { marketPrice: 0 } } } }, 'normal')).toBeNull();
     expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { reverse: { marketPrice: 1.75 } } } }, 'reverse')).toEqual({ amount: 1.75, currency: 'USD' });
     expect(getTCGVariantValue({ ...card, pricing: { cardmarket: { unit: 'EUR' }, tcgplayer: { normal: { marketPrice: 2.25 } } } }, 'normal')).toEqual({ amount: 2.25, currency: 'USD' });
     expect(getTCGVariantValue(card, 'normal', 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
-    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toBeNull();
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 4.5, currency: 'EUR' });
     expect(getCardMarketValue(card, 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
     expect(getTCGValueInCurrency({ amount: 1, currency: 'EUR' }, 'USD')).toBeNull();
   });
@@ -76,6 +76,80 @@ describe('TCG physical variant pricing', () => {
     expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.03, currency: 'EUR' });
     expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 0.17, currency: 'USD' });
     expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 25.53, currency: 'EUR' });
+  });
+
+  it('ignores a marked special printing when resolving a generic card price', () => {
+    const card: TCGCard = {
+      ...baseCard,
+      pricing: {
+        cardmarket: {
+          unit: 'EUR',
+          trend: 0.1,
+          avg: 0.07,
+          avg7: 0.09,
+          avg30: 0.07,
+        },
+      },
+      variants_detailed: [
+        {
+          type: 'Normal',
+          stamp: ['Logo de la série'],
+          pricing: { cardmarket: { unit: 'EUR', trend: 32.82 } },
+        },
+        {
+          type: 'Holo',
+          foil: 'Cosmos',
+          pricing: null,
+        },
+      ],
+    };
+
+    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.1, currency: 'EUR' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 0.1, currency: 'EUR' });
+  });
+
+  it('maps Cardmarket reverse-holo quotes to the reverse variant', () => {
+    const pricing = {
+      cardmarket: {
+        unit: 'EUR',
+        trend: 0.06,
+        'trend-holo': 0.09,
+      },
+    };
+    const card: TCGCard = {
+      ...baseCard,
+      pricing,
+      variants_detailed: [
+        { type: 'Holo', pricing },
+        { type: 'Reverse', pricing },
+      ],
+    };
+
+    expect(getTCGVariantValue(card, 'holo', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR' });
+  });
+
+  it('keeps top-level prices when variants_detailed only contains metadata', () => {
+    const card: TCGCard = {
+      ...baseCard,
+      pricing: {
+        cardmarket: { unit: 'EUR', trend: 0.02, 'trend-holo': 0.07 },
+        tcgplayer: {
+          unit: 'USD',
+          normal: { marketPrice: 0.07 },
+          'reverse-holofoil': { marketPrice: 0.22 },
+        },
+      },
+      variants_detailed: [
+        { type: 'normal', size: 'standard', variantId: 'normal-id' },
+        { type: 'reverse', size: 'standard', variantId: 'reverse-id' },
+      ],
+    };
+
+    expect(getTCGVariantValue(card, 'normal', 'EUR')).toEqual({ amount: 0.02, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.07, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'reverse', 'USD')).toEqual({ amount: 0.22, currency: 'USD' });
+    expect(getCardMarketValue(card, 'EUR')).toEqual({ amount: 0.02, currency: 'EUR' });
   });
 
   it('multiplies quantities, groups currencies, and exposes unpriced variants', () => {
