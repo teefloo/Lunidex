@@ -394,6 +394,26 @@ export function setTCGCollectionVariantQuantity(
 }
 
 /**
+ * Adjust one physical finish from the current snapshot. Keeping the read and
+ * write in one pure operation lets store actions apply +/- changes from the
+ * latest state instead of from a rendered value that may already be stale.
+ */
+export function adjustTCGCollectionVariantQuantity(
+  collectionKey: string,
+  cardId: string,
+  variant: TCGCollectionVariant,
+  delta: number,
+  current: readonly string[] = [],
+): string[] {
+  const normalized = normalizeTCGCollectionCardKeys(current) ?? [];
+  if (!Number.isInteger(delta)) return normalized;
+  const currentQuantity = getTCGCollectionCardQuantity(collectionKey, cardId, variant, normalized);
+  const nextQuantity = currentQuantity + delta;
+  if (nextQuantity < 0 || nextQuantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return normalized;
+  return setTCGCollectionVariantQuantity(collectionKey, cardId, variant, nextQuantity, normalized);
+}
+
+/**
  * Qualify historical `unspecified` ownership using the first finish that
  * TCGdex explicitly reports. The promotion is returned as one pure snapshot
  * operation so callers can persist both identity changes together.

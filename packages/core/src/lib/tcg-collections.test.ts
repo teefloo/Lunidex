@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   addTCGCollectionCard,
+  adjustTCGCollectionVariantQuantity,
   assignLegacyTCGSetToCollection,
   countPhysicalTCGCards,
   decodeTCGCollectionCardKey,
@@ -110,6 +111,55 @@ describe('TCG collection codecs', () => {
     expect(getTCGCollectionCardQuantity(collection, 'base1-001', 'reverse', cards)).toBe(3);
     expect(new Set(cards.map((entry) => getTCGCollectionCardIdentity(collection, 'base1-001', decodeTCGCollectionCardKey(entry)!.variant)))).toHaveLength(3);
     expect(countPhysicalTCGCards(cards, [])).toBe(6);
+  });
+
+  it('adjusts one copy at a time without collapsing a finish to zero', () => {
+    const collection = encodeTCGCollectionKey('fr', 'me05')!;
+    const twoHolo = encodeTCGCollectionCardKey(collection, 'me05-100', 'holo', 2)!;
+
+    const oneHolo = adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', -1, [twoHolo]);
+    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', oneHolo)).toBe(1);
+
+    const noHolo = adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', -1, oneHolo);
+    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', noHolo)).toBe(0);
+  });
+
+  it('applies +/- changes from the latest shared-store snapshot', () => {
+    setSyncAccessStatus('ready');
+    const collection = encodeTCGCollectionKey('fr', 'me05')!;
+    usePrimeDexStore.setState({
+      tcgCollections: [],
+      tcgCollectionCards: [],
+      tcgActiveCollections: [],
+      tcgLegacyOwnedCards: [],
+      tcgOwnedCards: [],
+      tcgCollectionModelVersion: 3,
+    });
+    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 2);
+    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', -1);
+    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', usePrimeDexStore.getState().tcgCollectionCards)).toBe(1);
+    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 1);
+    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', usePrimeDexStore.getState().tcgCollectionCards)).toBe(2);
+    setSyncAccessStatus('checking');
+  });
+
+  it('moves a legacy copy into the selected finish instead of duplicating it', () => {
+    setSyncAccessStatus('ready');
+    const collection = encodeTCGCollectionKey('fr', 'me05')!;
+    usePrimeDexStore.setState({
+      tcgCollections: [],
+      tcgCollectionCards: [],
+      tcgActiveCollections: [],
+      tcgLegacyOwnedCards: ['me05-100'],
+      tcgOwnedCards: ['me05-100'],
+      tcgCollectionModelVersion: 3,
+    });
+    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 1);
+    const state = usePrimeDexStore.getState();
+    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', state.tcgCollectionCards)).toBe(1);
+    expect(state.tcgLegacyOwnedCards).toEqual([]);
+    expect(state.getTCGPhysicalCardCount()).toBe(1);
+    setSyncAccessStatus('checking');
   });
 
   it('chooses the least ambiguous available finish and promotes historical ownership', () => {

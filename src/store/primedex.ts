@@ -3,6 +3,7 @@ import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId, isSupportedLanguage } from '@/lib/languages';
 import {
+  adjustTCGCollectionVariantQuantity as adjustCollectionVariantQuantity,
   assignLegacyTCGSetToCollection,
   countPhysicalTCGCards,
   createTCGCollection,
@@ -198,6 +199,7 @@ export interface PrimeDexStore {
   removeTCGCollectionCard: (collectionKey: string, cardId: string) => void;
   transferTCGCollectionCards: (sourceCollectionKey: string, targetCollectionKey: string) => boolean;
   setTCGCollectionVariantQuantity: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGCollectionVariant, quantity: number) => void;
+  adjustTCGCollectionVariantQuantity: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGCollectionVariant, delta: number) => void;
   qualifyTCGCollectionCardVariant: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGPhysicalVariant) => void;
   toggleTCGCollectionCard: (collectionKey: string, cardId: string) => void;
   isTCGCollectionCardOwned: (collectionKey: string, cardId: string) => boolean;
@@ -642,6 +644,39 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           state.tcgCollectionCards,
         );
         const legacyOwnedCards = quantity > 0
+          ? state.tcgLegacyOwnedCards.filter((id) => id.trim().toLowerCase() !== normalizedCardId)
+          : state.tcgLegacyOwnedCards;
+        return {
+          tcgCollections: state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey],
+          tcgActiveCollections: state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey],
+          tcgCollectionCards: collectionCards,
+          tcgLegacyOwnedCards: legacyOwnedCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, legacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        };
+      }),
+      adjustTCGCollectionVariantQuantity: (collectionKey, cardId, variant, delta) => set((state) => {
+        if (!isValidTCGCollectionKey(collectionKey) || typeof cardId !== 'string' || !Number.isInteger(delta)) return state;
+        const currentQuantity = getTCGCollectionCardQuantity(collectionKey, cardId, variant, state.tcgCollectionCards);
+        const nextQuantity = currentQuantity + delta;
+        if (nextQuantity < 0 || nextQuantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return state;
+        const normalizedCardId = cardId.trim().toLowerCase();
+        const legacyQuantity = state.tcgLegacyOwnedCards.some((id) => id.trim().toLowerCase() === normalizedCardId) ? 1 : 0;
+        const removedLegacyQuantity = nextQuantity > 0 ? legacyQuantity : 0;
+        const otherQuantity = countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards)
+          - currentQuantity
+          - removedLegacyQuantity;
+        if (otherQuantity + nextQuantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return state;
+        const collectionCards = adjustCollectionVariantQuantity(
+          collectionKey,
+          cardId,
+          variant,
+          delta,
+          state.tcgCollectionCards,
+        );
+        if (collectionCards.length === state.tcgCollectionCards.length
+          && collectionCards.every((entry, index) => entry === state.tcgCollectionCards[index])) return state;
+        const legacyOwnedCards = nextQuantity > 0
           ? state.tcgLegacyOwnedCards.filter((id) => id.trim().toLowerCase() !== normalizedCardId)
           : state.tcgLegacyOwnedCards;
         return {
