@@ -14,6 +14,7 @@ import { useNeonSync } from '@/lib/neon/useNeonSync';
 import dynamic from 'next/dynamic';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
+import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
 
@@ -198,6 +199,7 @@ export default function Providers({ children, initialLanguage, initialTranslatio
               <ThemeProvider translationInstance={translationInstance}>
                 <NeonSyncBridge />
                 {children}
+                <SentryConsentBridge />
                 <VercelInsights />
                 <DeferredOverlays />
               </ThemeProvider>

@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import withPWAInit from "@ducanh2912/next-pwa";
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -170,7 +171,8 @@ const csp = [
   "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://mcdn.pokemon.com https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
-  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  "worker-src 'self' blob:",
   "frame-ancestors 'none'",
 ].join('; ');
 
@@ -437,4 +439,24 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default withSentryConfig(withPWA(nextConfig), {
+  org: process.env.SENTRY_ORG ?? 'teeflo',
+  project: process.env.SENTRY_PROJECT ?? 'lunidex',
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  telemetry: false,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+  webpack: {
+    autoInstrumentServerFunctions: true,
+    autoInstrumentMiddleware: true,
+    autoInstrumentAppDirectory: true,
+    automaticVercelMonitors: true,
+  },
+  errorHandler: (error) => {
+    if (process.env.SENTRY_AUTH_TOKEN) throw error;
+    console.warn(`[Sentry] Build integration skipped: ${error.message}`);
+  },
+});
