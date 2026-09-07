@@ -189,6 +189,7 @@ export default async function RootLayout({
       applicationSubCategory: 'GameDatabase',
       operatingSystem: 'All',
       browserRequirements: 'Requires modern browser with JavaScript enabled',
+      isAccessibleForFree: true,
       description,
       disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
       image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,

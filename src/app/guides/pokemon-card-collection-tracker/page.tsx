@@ -193,7 +193,7 @@ export default async function PokemonCardCollectionTrackerGuide() {
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 {criteria.map((criterion, index) => (
                   <section key={criterion.title} className="section-frame p-6 md:p-7" aria-labelledby={`collection-criterion-${index}`}>
-                    <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary/70">0{index + 1}</p>
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">0{index + 1}</p>
                     <h3 id={`collection-criterion-${index}`} className="mt-5 text-xl font-extrabold tracking-tight">
                       {criterion.title}
                     </h3>

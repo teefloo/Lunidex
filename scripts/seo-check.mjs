@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
+const nextConfigSource = await readFile(join(projectRoot, 'next.config.ts'), 'utf8');
 const sitemapSource = await readFile(join(projectRoot, 'src/lib/sitemap.ts'), 'utf8');
 const routeSource = await readFile(join(projectRoot, 'src/app/sitemaps/[name]/route.ts'), 'utf8');
 const proxySource = await readFile(join(projectRoot, 'src/proxy.ts'), 'utf8');
@@ -29,6 +30,10 @@ check(sitemapSource.includes('assertSitemapIntegrity'), 'Sitemap integrity guard
 check(routeSource.includes('status: 503'), 'Specialized sitemap route does not fail explicitly');
 check(proxySource.includes('sitemaps/'), 'Proxy matcher does not exclude specialized sitemaps');
 check(!sitemapSource.includes('<priority>'), 'Sitemap source must not emit priority hints');
+check(!nextConfigSource.includes("source: '/pokedex'"), 'Valid /pokedex route must not redirect to the home page');
+check(!nextConfigSource.includes("source: '/pokemon'"), 'Legacy /pokemon alias must be handled by the localized route');
+check(proxySource.includes("segments.length === 2 && segments[1] === 'pokemon'"), 'Localized /pokemon alias must redirect before rendering');
+check(proxySource.includes("const isLegacyPokemonIndex"), 'Unlocalized /pokemon alias must preserve the locale redirect target');
 
 // Keep structured data and document landmarks aligned with the visible pages.
 check(blogSource.includes("'@type': 'ItemList'"), 'Blog page is missing its ItemList schema');

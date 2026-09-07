@@ -292,6 +292,15 @@ export async function proxy(request: NextRequest) {
   if (hasLocalePrefix) {
     const urlLocale = firstSegment!;
 
+    // There is no standalone /pokemon index; preserve the legacy entry point
+    // with a real HTTP redirect to the localized Pokédex. Detail pages such
+    // as /pokemon/pikachu do not match this branch.
+    if (segments.length === 2 && segments[1] === 'pokemon') {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = `/${urlLocale}/pokedex`;
+      return NextResponse.redirect(redirectUrl, 308);
+    }
+
     // API routes are intentionally unlocalized. Canonicalize an accidental
     // locale prefix before the config rewrite can turn it into a cacheable
     // page-like request.
@@ -351,9 +360,11 @@ export async function proxy(request: NextRequest) {
 
   const acceptLang = request.headers.get('accept-language');
   const targetLocale = cookieLang ?? detectLocaleFromAcceptLanguage(acceptLang);
+  const isLegacyPokemonIndex = pathname === '/pokemon' || pathname === '/pokemon/';
+  const targetPathname = isLegacyPokemonIndex ? '/pokedex' : pathname;
 
   const url = request.nextUrl.clone();
-  url.pathname = `/${targetLocale}${pathname === '/' ? '' : pathname}`;
+  url.pathname = `/${targetLocale}${targetPathname === '/' ? '' : targetPathname}`;
 
   const redirect = NextResponse.redirect(url, 308);
   if (!cookieLang && shouldPersistLocaleCookie(request)) {

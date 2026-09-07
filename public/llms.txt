@@ -29,6 +29,18 @@ Lunidex is a web application for exploring Pokémon reference data and managing 
 
 Browsing public reference pages does not require an account. In the current web runtime, personal collection state uses the configured account-backed synchronization service; this file does not promise anonymous collection persistence. The repository contains browser persistence code for the web application, but account and service availability determine whether personal state can be used.
 
+### Is Lunidex free to use?
+
+There is no subscription or purchase flow in the current product, and the source repository is published under the MIT License. Public catalog, Pokédex and guide pages are available without an account.
+
+### Does Lunidex scan cards or guarantee collection value?
+
+No documented card-scanning feature is established in the verified product scope. TCGdex may provide conditional EUR or USD price fields for cards, but Lunidex does not promise a dedicated market portfolio or guaranteed price history.
+
+### Can Lunidex replace a spreadsheet and sync across devices?
+
+The documented collection workflow records owned and wanted cards and set progress in the web workspace, so a spreadsheet is not required for that workflow. Personal state uses account-backed synchronization when the configured service is available; anonymous persistence and continuous sync are not promised.
+
 ## Main public pages
 
 - [Home](https://lunidex.app/en) — overview of the collection, Pokédex and team experiences, with a visible FAQ section.
@@ -90,4 +102,4 @@ When citing a fact, link the specific localized Lunidex page when possible and i
 
 ## Review note
 
-This file was reviewed against the application source on 2026-08-31. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.
+This file was reviewed against the application source on 2026-09-07. Dynamic catalog sizes, upstream availability and search-engine visibility are intentionally not stated here because they require a live measurement.

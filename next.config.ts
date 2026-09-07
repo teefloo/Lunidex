@@ -317,16 +317,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/pokedex',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/pokemon',
-        destination: '/',
-        permanent: true,
-      },
-      {
         source: '/pt/:path*',
         destination: '/en/:path*',
         permanent: true,

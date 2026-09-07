@@ -8,7 +8,7 @@ export const SITE_URL = 'https://lunidex.app';
 export const SITE_NAME = 'Lunidex';
 export const SITE_TAGLINE = 'Pokémon TCG collection tracker and Pokémon workspace';
 export const SITE_DESCRIPTION =
-  'Track Pokémon TCG sets, owned and missing cards, and collection progress with Lunidex. Explore the Pokédex and build teams too.';
+  'Free-to-use Pokémon TCG collection tracker for sets, owned and missing cards, and progress. Explore the Pokédex and build teams with Lunidex.';
 export const SITE_DISAMBIGUATION_DESCRIPTION =
   'Lunidex is an independent, unofficial Pokémon web application for tracking Pokémon TCG sets and collection progress, with Pokédex and team tools. It is not a card marketplace.';
 export const SITE_KEYWORDS = [

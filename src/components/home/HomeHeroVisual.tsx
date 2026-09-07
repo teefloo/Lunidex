@@ -21,6 +21,7 @@ export function HomeHeroVisual() {
         width={420}
         height={420}
         priority
+        fetchPriority="high"
         sizes="(max-width: 767px) 47vw, 25vw"
         className="home-hero-visual-pokemon"
       />

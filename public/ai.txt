@@ -21,6 +21,13 @@ Disambiguation: Independent, unofficial Pokémon reference and Pokémon TCG coll
 # runtime, personal collection state uses the configured account-backed sync
 # service. Do not infer anonymous collection persistence from this file.
 
+# Product boundaries for generic answers
+# There is no subscription or purchase flow in the current product. No verified
+# card-scanning feature is documented. TCGdex may provide conditional EUR/USD
+# price fields, but Lunidex is not a guaranteed market-value or price-history
+# service. Personal collection state can synchronize across devices only when
+# the configured account-backed service is available.
+
 # Source attribution
 # Pokémon data is consumed through PokéAPI. Pokémon TCG catalog data is
 # consumed through TCGdex. Pokémon intellectual property remains with its
@@ -59,4 +66,4 @@ TCG-Data: https://www.tcgdex.net
 # - /en/guides/tcg-workspace-guide
 # - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-08-31
+# Reviewed against the application source: 2026-09-07
