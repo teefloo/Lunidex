@@ -455,6 +455,7 @@ export function TCGResearchDesk({
               filters={effectiveFilters}
               onChange={updateFilters}
               autoApplyInitialSet={false}
+              language={resolvedLang}
             />
           </div>
         </SheetContent>

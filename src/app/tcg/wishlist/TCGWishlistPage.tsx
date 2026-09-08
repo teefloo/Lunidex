@@ -12,7 +12,7 @@ import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { TCGWishlistContent } from '@/components/tcg/TCGWishlistContent';
-import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 export function TCGWishlistPage() {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ export function TCGWishlistPage() {
   const pathname = usePathname();
   const router = useRouter();
   const requestedLanguage = searchParams.get('tcgLang');
-  const queryLanguage: TCGCardLanguage | null = isTCGCardLanguage(requestedLanguage) ? requestedLanguage : null;
+  const queryLanguage: TCGCardLanguage | null = resolveRequestedTCGCardLanguage(requestedLanguage);
   const resolvedLang: TCGCardLanguage = mounted && hasHydrated
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
@@ -44,7 +44,7 @@ export function TCGWishlistPage() {
         queryKey: ['tcg', 'all-sets', resolvedLang],
         queryFn: () => getAllSets(resolvedLang),
         staleTime: 60 * 60 * 1000,
-        enabled: mounted && hasHydrated,
+        enabled: mounted && hasHydrated && tcgWishlistCards.length > 0,
       },
     ],
   })[0] as unknown as { data: TCGSet[] | undefined };
@@ -54,7 +54,7 @@ export function TCGWishlistPage() {
       queryKey: ['tcg', 'set-cards', set.id, resolvedLang],
       queryFn: () => getCardsBySet(set.id, resolvedLang),
       staleTime: 60 * 60 * 1000,
-      enabled: mounted && hasHydrated && sets !== undefined && sets.length > 0,
+      enabled: mounted && hasHydrated && tcgWishlistCards.length > 0 && sets !== undefined && sets.length > 0,
     })),
   });
 

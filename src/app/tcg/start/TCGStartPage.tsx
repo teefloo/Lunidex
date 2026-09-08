@@ -21,7 +21,7 @@ import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { TCGLanguageSelector } from '@/components/tcg/TCGLanguageSelector';
 import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
-import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 
 const LATEST_SET_LIMIT = 12;
@@ -55,7 +55,7 @@ export function TCGStartPage() {
   const [query, setQuery] = useState('');
   const searchTracked = useRef(false);
   const requestedLanguage = searchParams.get('tcgLang');
-  const queryLanguage: TCGCardLanguage | null = isTCGCardLanguage(requestedLanguage) ? requestedLanguage : null;
+  const queryLanguage: TCGCardLanguage | null = resolveRequestedTCGCardLanguage(requestedLanguage);
   const resolvedLanguage: TCGCardLanguage = mounted && hasHydrated
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');

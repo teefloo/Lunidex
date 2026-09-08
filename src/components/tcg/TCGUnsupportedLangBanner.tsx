@@ -68,7 +68,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLangua
           type="button"
           onClick={() => setDismissed(true)}
           aria-label={t('tcg.clear')}
-          className="shrink-0 rounded-sm p-1 text-amber-200/60 transition-colors hover:bg-amber-500/15 hover:text-amber-100"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm p-1 text-amber-200/60 transition-colors hover:bg-amber-500/15 hover:text-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -108,7 +108,7 @@ export function TCGDataLangBanner({ resolvedLang, variant = 'inline', dataLangua
         type="button"
         onClick={() => setDismissed(true)}
         aria-label={t('tcg.clear')}
-        className="shrink-0 rounded-sm p-1 text-sky-200/60 transition-colors hover:bg-sky-500/15 hover:text-sky-100"
+        className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm p-1 text-sky-200/60 transition-colors hover:bg-sky-500/15 hover:text-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200/70"
       >
         <X className="h-3.5 w-3.5" />
       </button>

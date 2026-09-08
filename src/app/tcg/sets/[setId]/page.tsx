@@ -16,6 +16,7 @@ import { getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList } 
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 
 export const revalidate = 3600;
 
@@ -74,7 +75,7 @@ function buildChecklistMarkup(
   return cards.map((card) => {
     const collectorNumber = card.localId || card.number || card.id;
     const metadata = [
-      card.rarity ? `${t('tcg.rarity')}: ${card.rarity}` : null,
+      card.rarity ? `${t('tcg.rarity')}: ${getTCGRarityLabel(card.rarity, t)}` : null,
       card.category ? `${t('tcg.card_category')}: ${translateCardCategory(card.category, t)}` : null,
       card.types?.length ? `${t('tcg.types')}: ${card.types.map((type) => t(`types.${type}`, { defaultValue: type })).join(', ')}` : null,
       typeof card.hp === 'number' ? `${t('stats.hp')}: ${card.hp}` : null,
@@ -270,7 +271,7 @@ export default async function TCGSetPage({ params, searchParams }: PageProps) {
                     <span className="mt-2 block truncate px-1 pb-1 text-xs font-bold text-foreground/70 group-hover:text-primary">{card.name}</span>
                     <span className="flex items-center justify-between gap-2 px-1 pb-1 text-[10px] font-bold uppercase tracking-[0.06em] text-foreground/45">
                       <span>{card.localId || card.number || card.id}</span>
-                      {card.rarity ? <span className="truncate text-right">{card.rarity}</span> : null}
+                      {card.rarity ? <span className="truncate text-right">{getTCGRarityLabel(card.rarity, t)}</span> : null}
                     </span>
                   </Link>
                 ))}

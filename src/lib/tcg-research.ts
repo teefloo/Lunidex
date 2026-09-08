@@ -7,7 +7,7 @@ import type {
   TCGSearchFacets,
   TCGSearchInsights,
 } from '@/types/tcg';
-import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
 type SearchParamsLike = Pick<URLSearchParams, 'get'>;
 
@@ -59,8 +59,8 @@ export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchSt
     viewMode,
     compare: readList(searchParams, 'compare'),
     tcgLang: (() => {
-      const value = readString(searchParams, 'tcgLang');
-      return isTCGCardLanguage(value) ? value : undefined;
+      const value = searchParams.get('tcgLang');
+      return value === null ? undefined : (resolveRequestedTCGCardLanguage(value) ?? 'en');
     })(),
   };
 }

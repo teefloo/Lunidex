@@ -32,8 +32,18 @@ export interface OgFont {
 
 let brandFontsPromise: Promise<OgFont[]> | null = null;
 
-function readFontFile(file: string): Promise<Buffer> {
-  return readFile(fileURLToPath(new URL(`./fonts/${file}`, import.meta.url)));
+const PIXELIFY_FONT_URL = new URL('./fonts/PixelifySans-Bold.ttf', import.meta.url);
+const NUNITO_FONT_URL = new URL('./fonts/Nunito-Bold.ttf', import.meta.url);
+const NUNITO_EXTRA_BOLD_FONT_URL = new URL('./fonts/Nunito-ExtraBold.ttf', import.meta.url);
+
+async function readFontFile(url: URL): Promise<Buffer | null> {
+  try {
+    return await readFile(fileURLToPath(url));
+  } catch {
+    // A serverless bundle may omit optional font assets. OG generation can
+    // still use the platform fallback font instead of failing with ENOENT.
+    return null;
+  }
 }
 
 /** Buffer → standalone ArrayBuffer slice (avoids a shared-pool offset). */
@@ -43,15 +53,15 @@ function toArrayBuffer(buf: Buffer): ArrayBuffer {
 
 async function loadBrandFonts(): Promise<OgFont[]> {
   const [pixelify, nunito, nunitoExtra] = await Promise.all([
-    readFontFile('PixelifySans-Bold.ttf'),
-    readFontFile('Nunito-Bold.ttf'),
-    readFontFile('Nunito-ExtraBold.ttf'),
+    readFontFile(PIXELIFY_FONT_URL),
+    readFontFile(NUNITO_FONT_URL),
+    readFontFile(NUNITO_EXTRA_BOLD_FONT_URL),
   ]);
   return [
-    { name: 'Pixelify Sans', data: toArrayBuffer(pixelify), weight: 700, style: 'normal' },
-    { name: 'Nunito', data: toArrayBuffer(nunito), weight: 700, style: 'normal' },
-    { name: 'Nunito', data: toArrayBuffer(nunitoExtra), weight: 800, style: 'normal' },
-  ];
+    pixelify && { name: 'Pixelify Sans', data: toArrayBuffer(pixelify), weight: 700, style: 'normal' as const },
+    nunito && { name: 'Nunito', data: toArrayBuffer(nunito), weight: 700, style: 'normal' as const },
+    nunitoExtra && { name: 'Nunito', data: toArrayBuffer(nunitoExtra), weight: 800, style: 'normal' as const },
+  ].filter((font): font is OgFont => Boolean(font));
 }
 
 // Google Fonts serves static TTFs (rather than WOFF2) to legacy user agents.

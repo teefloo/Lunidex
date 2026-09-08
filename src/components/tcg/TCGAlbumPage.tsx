@@ -23,6 +23,7 @@ import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 
 interface TCGAlbumPageProps {
   set: TCGSet;
@@ -116,7 +117,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
         <Link
           href={localeHref(backHref)}
           aria-label={`${t('common.back')} — ${t('tcg.collection_title')}`}
-          className="flex h-9 w-9 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
@@ -172,10 +173,11 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
               key={r.rarity}
               type="button"
               onClick={() => setRarityFilter(rarityFilter === r.rarity ? null : r.rarity)}
-              className="rounded-lg border border-border/20 bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:bg-card/50"
+              aria-pressed={rarityFilter === r.rarity}
+              className="min-h-11 rounded-lg border border-border/20 bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:bg-card/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             >
               <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-foreground/40">
-                {r.rarity}
+                {getTCGRarityLabel(r.rarity, t)}
               </span>
               <span className={getRarityColor(r.rarity)}>
                 {r.owned}/{r.total}

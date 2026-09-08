@@ -37,6 +37,7 @@ import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
 import { usePrimeDexStore } from '@/store/primedex';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 interface TCGFiltersProps {
   filters: TCGCardFilters;
@@ -46,6 +47,7 @@ interface TCGFiltersProps {
   onSimpleCategoryChange?: (category: TCGCardCategoryFilter) => void;
   onSimpleRarityChange?: (rarity: string) => void;
   autoApplyInitialSet?: boolean;
+  language?: TCGCardLanguage;
 }
 
 const FILTER_CONTROL_FOCUS_CLASS =
@@ -58,6 +60,7 @@ export function TCGFilters({
   onSimpleSetChange,
   onSimpleRarityChange,
   autoApplyInitialSet = true,
+  language,
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -68,13 +71,13 @@ export function TCGFilters({
   const didApplyInitialSetRef = useRef(false);
 
   // Filter options must match the language the page is displayed in.
-  const resolvedLang = mounted && hasHydrated ? browseLanguage : 'en';
+  const resolvedLang = language ?? (mounted && hasHydrated ? browseLanguage : 'en');
 
   const { data: filterOptions, isLoading } = useQuery<TCGFilterOptions>({
     queryKey: tcgKeys.filterOptions(resolvedLang),
     queryFn: () => getFilterOptions(resolvedLang),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && hasHydrated,
+    enabled: mounted && (hasHydrated || Boolean(language)),
   });
 
   const selectedSet = filters.selectedSet || null;
@@ -446,7 +449,7 @@ export function TCGFilters({
                 onClick={clearAllFilters}
                 className={cn(
                   FILTER_CONTROL_FOCUS_CLASS,
-                  'inline-flex items-center gap-1.5 rounded-sm border border-border/45 bg-card/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55',
+                  'inline-flex min-h-11 items-center gap-1.5 rounded-sm border border-border/45 bg-card/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55',
                 )}
               >
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -493,7 +496,7 @@ export function TCGFilters({
               onClick={clearAllFilters}
               className={cn(
                 FILTER_CONTROL_FOCUS_CLASS,
-                'inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-primary',
+                'inline-flex min-h-11 items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-primary',
               )}
             >
               <RotateCcw className="h-3.5 w-3.5" />
@@ -1053,7 +1056,7 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
           }}
           className={cn(
             FILTER_CONTROL_FOCUS_CLASS,
-            'absolute inset-y-0 right-0 flex items-center pr-4 text-foreground/30 transition-colors hover:text-foreground',
+            'absolute inset-y-0 right-0 flex min-h-11 min-w-11 items-center justify-center text-foreground/30 transition-colors hover:text-foreground',
           )}
           aria-label={clearLabel}
         >

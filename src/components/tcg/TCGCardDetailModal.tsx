@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
 import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant, isTCGCollectionCardOwned } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -284,7 +285,7 @@ export function TCGCardDetailModal({
                     </span>
                     {displayCard.rarity && (
                       <span className="rounded-sm border border-border/30 bg-card/35 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-foreground/45">
-                        {displayCard.rarity}
+                        {getTCGRarityLabel(displayCard.rarity, t)}
                       </span>
                     )}
                     {displayCard.stage && (

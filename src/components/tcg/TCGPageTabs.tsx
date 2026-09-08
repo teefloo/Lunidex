@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage } from '@/lib/languages';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
-import { isTCGCardLanguage } from '@/lib/tcg-language';
+import { resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
 import { usePrimeDexStore } from '@/store/primedex';
 
 const TABS = [
@@ -42,8 +42,8 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
   const requestedTcgLanguage = searchParams.get('tcgLang');
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
-  const tcgLanguage = requestedTcgLanguage && isTCGCardLanguage(requestedTcgLanguage)
-    ? requestedTcgLanguage
+  const tcgLanguage = requestedTcgLanguage !== null
+    ? resolveRequestedTCGCardLanguage(requestedTcgLanguage)
     : hasHydrated
       ? browseLanguage
       : null;

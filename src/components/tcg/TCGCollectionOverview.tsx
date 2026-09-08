@@ -83,6 +83,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
         queryKey: ['tcg', 'collection-value-v5', entry.collectionKey, ownership, displayCurrency],
         queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionValue(ownership, entry.language, signal, displayCurrency),
         staleTime: 60 * 60 * 1000,
+        retry: false,
         enabled: mounted && ownership.length > 0,
       };
     }),

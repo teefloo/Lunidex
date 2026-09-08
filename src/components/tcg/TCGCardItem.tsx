@@ -13,6 +13,7 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGHolographicCard } from './TCGHolographicCard';
 import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
 
 interface TCGCardItemProps {
   card: TCGCard;
@@ -108,14 +109,14 @@ export const TCGCardItem = memo(function TCGCardItem({
           </div>
 
           <span className="min-w-0 max-w-[48%] break-words rounded-sm border border-border/50 bg-card/65 px-1 py-0.5 text-right text-[11px] font-black uppercase leading-tight tracking-[0.1em] text-foreground/70 sm:max-w-none sm:shrink-0 sm:text-xs">
-            {card.rarity ?? t('tcg.none')}
+            {getTCGRarityLabel(card.rarity, t)}
           </span>
         </div>
 
         <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[11px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-xs">
           {card.category && (
             <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
-              {card.category}
+              {getTCGCategoryLabel(card.category, t)}
             </span>
           )}
           {card.hp ? (

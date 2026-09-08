@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import {
   getTCGCardLanguageName,
   isTCGCardLanguage,
+  resolveRequestedTCGCardLanguage,
   TCG_CARD_LANGUAGES,
   type TCGCardLanguage,
 } from '@/lib/tcg-language';
@@ -40,7 +41,9 @@ export function TCGLanguageSelector({
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
   const queryLanguage = searchParams.get('tcgLang');
-  const requestedLanguage = queryLanguage && isTCGCardLanguage(queryLanguage) ? queryLanguage : undefined;
+  const requestedLanguage: TCGCardLanguage | undefined = queryLanguage === null
+    ? undefined
+    : resolveRequestedTCGCardLanguage(queryLanguage) ?? 'en';
   // Show a URL-selected language on the first hydrated render, before the
   // effect below mirrors it into the persisted browse preference. This avoids
   // an English flash that could be mistaken for a user choice.

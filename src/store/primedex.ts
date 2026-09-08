@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
-import { get, set, del } from 'idb-keyval';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { getLanguageId as getResolvedLanguageId, isSupportedLanguage } from '@/lib/languages';
 import {
   adjustTCGCollectionVariantQuantity as adjustCollectionVariantQuantity,
@@ -33,6 +33,7 @@ import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import { hasSyncAccess, requestSyncAccess } from './sync-access';
+import { createResilientStorage } from './persistence';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -46,56 +47,15 @@ function getLocalStorage(): Storage | null {
   }
 }
 
-// Custom storage for IndexedDB
-const storage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    if (isIndexedDbAvailable()) {
-      try {
-        const value = await get(name);
-        if (value) return value;
-      } catch {
-        // A denied or corrupt IndexedDB should not block the remote-backed app.
-      }
-    }
-
-    try {
-      return getLocalStorage()?.getItem(name) ?? null;
-    } catch {
-      return null;
-    }
+const storage = createResilientStorage({
+  getLocalStorage,
+  idbAvailable: isIndexedDbAvailable,
+  idb: {
+    get: idbGet,
+    set: idbSet,
+    del: idbDel,
   },
-  setItem: async (name: string, value: string): Promise<void> => {
-    if (isIndexedDbAvailable()) {
-      try {
-        await set(name, value);
-        return;
-      } catch {
-        // Fall through to the browser's synchronous fallback.
-      }
-    }
-
-    try {
-      getLocalStorage()?.setItem(name, value);
-    } catch {
-      // Persistence is best effort; the in-memory Zustand state remains usable.
-    }
-  },
-  removeItem: async (name: string): Promise<void> => {
-    if (isIndexedDbAvailable()) {
-      try {
-        await del(name);
-      } catch {
-        // Continue and remove the fallback copy as well.
-      }
-    }
-
-    try {
-      getLocalStorage()?.removeItem(name);
-    } catch {
-      // Persistence is best effort.
-    }
-  },
-};
+});
 
 export type Theme = 'light' | 'dark' | 'system';
 

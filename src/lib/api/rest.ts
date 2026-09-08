@@ -2,6 +2,7 @@ import apiClient, { REST_API_BASE } from './client';
 import { getCachedData, setCachedData } from './cache';
 import { PokemonDetail, PokemonForm, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
 import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
+import { isPokemonDetailResponse, normalizePokemonName } from '@/lib/pokemon-route';
 
 export const getPokemonList = async ({ pageParam = 0 }) => {
   const cacheKey = `pokemon-list-${pageParam}`;
@@ -31,9 +32,20 @@ export const getPokemonList = async ({ pageParam = 0 }) => {
 };
 
 export const getPokemonDetail = async (name: string): Promise<PokemonDetail> => {
-  const cacheKey = `pokemon-detail-${name}`;
+  const normalizedName = normalizePokemonName(name);
+  if (!normalizedName) throw new Error('Invalid Pokémon name');
+
+  const cacheKey = `pokemon-detail-${normalizedName}`;
   try {
-    const { data } = await apiClient.get<PokemonDetail>(`/pokemon/${name}`);
+    const { data } = await apiClient.get<PokemonDetail>(`/pokemon/${normalizedName}`);
+    if (!isPokemonDetailResponse(data)) {
+      reportFallback('invalid-response', {
+        feature: 'pokemon',
+        service: 'pokeapi',
+        operation: 'pokemon-detail',
+      });
+      throw new Error('Invalid PokéAPI Pokémon detail response');
+    }
     await setCachedData(cacheKey, data);
     return data;
   } catch (error) {

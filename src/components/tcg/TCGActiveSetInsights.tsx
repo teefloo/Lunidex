@@ -8,12 +8,12 @@ import {
   computeActiveSetInsights,
   getActiveSetInsightsFallback,
   getRarityColor,
-  getRarityLabel,
   type TCGOwnedVariant,
   type TCGCollectionValueGroup,
   getTCGValueInCurrency,
   toCollectionCard,
 } from '@/lib/tcg-collection';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import type { TCGCardValue } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
@@ -248,7 +248,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
                     href={`${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(resolvedLang)}`}
                     aria-label={t('tcg.open_card_detail', { name: card.name })}
                     className="group/card scroll-snap-align-start w-16 shrink-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-                    title={`${card.name} — ${getRarityLabel(card.rarity)}`}
+                    title={`${card.name} — ${getTCGRarityLabel(card.rarity, t)}`}
                   >
                     <div className="relative aspect-[63/88] w-16 overflow-hidden rounded-sm border border-border/20 bg-card/40">
                       {thumbCandidates.length > 0 && (
@@ -262,7 +262,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
                       )}
                     </div>
                     <p className={`mt-1 truncate text-[11px] font-black uppercase tracking-[0.04em] ${getRarityColor(card.rarity)}`}>
-                      {getRarityLabel(card.rarity)}
+                      {getTCGRarityLabel(card.rarity, t)}
                     </p>
                     {getTCGValueInCurrency(card.value, displayCurrency) && (
                       <p className="truncate text-[11px] font-bold text-foreground/60">

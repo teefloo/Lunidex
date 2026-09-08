@@ -93,6 +93,10 @@ const COLLECTION_CATALOG_CLIENT_TIMEOUT_MS = 8_000;
 const COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS = 8_000;
 const COLLECTION_SET_CARDS_FALLBACK_TIMEOUT_MS = 15_000;
 const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
+const COLLECTION_VALUE_CARD_TIMEOUT_MS = 4_000;
+const COLLECTION_VALUE_TIMEOUT_MS = 15_000;
+const COLLECTION_VALUE_CONCURRENCY = 6;
+export const TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS = 600;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
   selectedCategory: 'all',
@@ -796,6 +800,187 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
+async function mapWithConcurrencyUntilTimeout<T, R>(
+  items: T[],
+  concurrency: number,
+  timeoutMs: number,
+  externalSignal: AbortSignal | undefined,
+  mapper: (item: T, index: number, signal: AbortSignal) => Promise<R>,
+): Promise<R[]> {
+  const controller = new AbortController();
+  const results: Array<R | undefined> = new Array(items.length);
+  let nextIndex = 0;
+  let deadlineReached = false;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  let removeAbortListener: (() => void) | undefined;
+
+  async function worker() {
+    while (!deadlineReached && nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await mapper(items[currentIndex], currentIndex, controller.signal);
+    }
+  }
+
+  const completion = Promise.all(
+    Array.from({ length: Math.min(concurrency, items.length) }, worker),
+  ).then(() => results);
+  const deadline = new Promise<Array<R | undefined>>((resolve) => {
+    timeoutId = setTimeout(() => {
+      deadlineReached = true;
+      controller.abort(new DOMException('Collection valuation timed out', 'TimeoutError'));
+      reportFallback('incomplete-response', {
+        feature: 'tcg-collection-value',
+        service: 'tcgdex',
+        operation: 'valuation-timeout',
+      });
+      resolve(results);
+    }, timeoutMs);
+  });
+  const externalAbort = externalSignal
+    ? new Promise<never>((_, reject) => {
+      const abort = () => {
+        deadlineReached = true;
+        controller.abort(externalSignal.reason);
+        reject(externalSignal.reason ?? new DOMException('Aborted', 'AbortError'));
+      };
+      if (externalSignal.aborted) {
+        abort();
+      } else {
+        externalSignal.addEventListener('abort', abort, { once: true });
+        removeAbortListener = () => externalSignal.removeEventListener('abort', abort);
+      }
+    })
+    : null;
+
+  try {
+    const result = await Promise.race([
+      completion,
+      deadline,
+      ...(externalAbort ? [externalAbort] : []),
+    ]);
+    return result.filter((value): value is R => value !== undefined);
+  } finally {
+    if (timeoutId !== undefined) clearTimeout(timeoutId);
+    removeAbortListener?.();
+  }
+}
+
+export type OwnedValuationInput = string | Partial<TCGOwnedVariant> | null | undefined;
+
+/**
+ * Normalise old id-only collections and variant-aware collections into one
+ * bounded list. Duplicate physical variants are merged before any network
+ * work starts, which keeps large collections from multiplying card requests.
+ */
+export function normalizeOwnedVariantsForValuation(
+  ownedInput: readonly OwnedValuationInput[],
+  maxPhysicalCards = MAX_TCG_COLLECTION_PHYSICAL_CARDS,
+): TCGOwnedVariant[] {
+  const physicalLimit = Math.max(0, Math.floor(maxPhysicalCards));
+  const normalized: TCGOwnedVariant[] = [];
+  const indexes = new Map<string, number>();
+  let physicalCount = 0;
+
+  const addEntry = (cardId: string, variant: TCGOwnedVariant['variant'], quantity: number) => {
+    const remaining = physicalLimit - physicalCount;
+    if (!cardId || remaining <= 0 || !Number.isInteger(quantity) || quantity <= 0) return;
+
+    const acceptedQuantity = Math.min(quantity, remaining);
+    const key = `${cardId}:${variant}`;
+    const existingIndex = indexes.get(key);
+    if (existingIndex === undefined) {
+      indexes.set(key, normalized.length);
+      normalized.push({ cardId, variant, quantity: acceptedQuantity });
+    } else {
+      normalized[existingIndex].quantity += acceptedQuantity;
+    }
+    physicalCount += acceptedQuantity;
+  };
+
+  for (const entry of ownedInput) {
+    if (typeof entry === 'string') {
+      addEntry(entry.trim().toLowerCase(), 'unspecified', 1);
+      continue;
+    }
+
+    if (!entry || typeof entry !== 'object') continue;
+    const cardId = typeof entry.cardId === 'string' ? entry.cardId.trim().toLowerCase() : '';
+    const variant = entry.variant;
+    if (variant !== 'normal' && variant !== 'reverse' && variant !== 'holo' && variant !== 'unspecified') continue;
+    addEntry(cardId, variant, entry.quantity ?? 0);
+  }
+
+  return normalized;
+}
+
+export interface FetchCollectionValueOptions {
+  /** Dependency injection for deterministic tests and alternate data sources. */
+  fetchCard?: (cardId: string, lang: string, signal: AbortSignal) => Promise<TCGCard | null>;
+  concurrency?: number;
+  cardTimeoutMs?: number;
+  maxUniqueCards?: number;
+}
+
+async function fetchValuationCardWithTimeout(
+  cardId: string,
+  lang: string,
+  signal: AbortSignal | undefined,
+  fetchCard: (cardId: string, lang: string, signal: AbortSignal) => Promise<TCGCard | null>,
+  timeoutMs: number,
+): Promise<TCGCard | null> {
+  throwIfAborted(signal);
+  const controller = new AbortController();
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  let removeAbortListener: (() => void) | undefined;
+
+  const timeout = new Promise<null>((resolve) => {
+    timeoutId = setTimeout(() => {
+      controller.abort(new DOMException('Collection card request timed out', 'TimeoutError'));
+      reportFallback('incomplete-response', {
+        feature: 'tcg-collection-value',
+        service: 'tcgdex',
+        operation: 'card-detail-timeout',
+      });
+      resolve(null);
+    }, timeoutMs);
+  });
+
+  const externalAbort = signal
+    ? new Promise<never>((_, reject) => {
+      const abort = () => {
+        controller.abort(signal.reason);
+        reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
+      };
+      if (signal.aborted) {
+        abort();
+      } else {
+        signal.addEventListener('abort', abort, { once: true });
+        removeAbortListener = () => signal.removeEventListener('abort', abort);
+      }
+    })
+    : null;
+
+  try {
+    return await Promise.race([
+      fetchCard(cardId, lang, controller.signal),
+      timeout,
+      ...(externalAbort ? [externalAbort] : []),
+    ]);
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    reportFallback('incomplete-response', {
+      feature: 'tcg-collection-value',
+      service: 'tcgdex',
+      operation: 'card-detail-partial',
+    });
+    return null;
+  } finally {
+    if (timeoutId !== undefined) clearTimeout(timeoutId);
+    removeAbortListener?.();
+  }
+}
+
 /**
  * Hydrate and aggregate only the cards currently owned by the user.
  *
@@ -803,47 +988,40 @@ async function mapWithConcurrency<T, R>(
  * currently owned card IDs instead of fetching every card in every set.
  */
 export const fetchCollectionValue = async (
-  ownedInput: readonly string[] | readonly TCGOwnedVariant[],
+  ownedInput: readonly OwnedValuationInput[],
   lang = 'en',
   signal?: AbortSignal,
   displayCurrency?: TCGDisplayCurrency,
+  options: FetchCollectionValueOptions = {},
 ): Promise<TCGCollectionValuationResult> => {
-  const ownedVariants: TCGOwnedVariant[] = [];
-  const seenLegacyIds = new Set<string>();
-  let physicalCount = 0;
-  for (const entry of ownedInput) {
-    if (typeof entry === 'string') {
-      const cardId = entry.trim().toLowerCase();
-      if (cardId && !seenLegacyIds.has(cardId) && physicalCount < MAX_TCG_COLLECTION_PHYSICAL_CARDS) {
-        seenLegacyIds.add(cardId);
-        ownedVariants.push({ cardId, variant: 'unspecified', quantity: 1 });
-        physicalCount += 1;
-      }
-      continue;
-    }
-
-    if (!entry || typeof entry !== 'object') continue;
-    const candidate = entry as Partial<TCGOwnedVariant>;
-    const cardId = typeof candidate.cardId === 'string' ? candidate.cardId.trim().toLowerCase() : '';
-    const variant = candidate.variant;
-    const quantity = candidate.quantity;
-    if (!cardId || (variant !== 'normal' && variant !== 'reverse' && variant !== 'holo' && variant !== 'unspecified')) continue;
-    if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0 || quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) continue;
-    if (physicalCount + quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) continue;
-    ownedVariants.push({ cardId, variant, quantity });
-    physicalCount += quantity;
-  }
-  const uniqueIds = [...new Set(ownedVariants.map((entry) => entry.cardId))];
+  const ownedVariants = normalizeOwnedVariantsForValuation(ownedInput);
+  const maxUniqueCards = Math.max(1, Math.floor(options.maxUniqueCards ?? TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS));
+  const uniqueIds = [...new Set(ownedVariants.map((entry) => entry.cardId))].slice(0, maxUniqueCards);
   if (uniqueIds.length === 0) {
     return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, bySet: {} };
   }
 
-  const cards = await mapWithConcurrency(
+  const fetchCard = options.fetchCard ?? ((cardId: string, cardLanguage: string, cardSignal: AbortSignal) => (
+    getTCGCard(cardId, cardLanguage, cardSignal, { requirePricing: true })
+  ));
+  const cards = await mapWithConcurrencyUntilTimeout(
     uniqueIds,
-    VISUAL_METADATA_CONCURRENCY,
-    async (cardId) => {
-      throwIfAborted(signal);
-      return getTCGCard(cardId, lang, signal, { requirePricing: true });
+    Math.max(1, Math.floor(options.concurrency ?? COLLECTION_VALUE_CONCURRENCY)),
+    COLLECTION_VALUE_TIMEOUT_MS,
+    signal,
+    async (cardId, _index, valuationSignal) => {
+      try {
+        return await fetchValuationCardWithTimeout(
+          cardId,
+          lang,
+          valuationSignal,
+          fetchCard,
+          Math.max(1, Math.floor(options.cardTimeoutMs ?? COLLECTION_VALUE_CARD_TIMEOUT_MS)),
+        );
+      } catch (error) {
+        if (signal?.aborted) throw error;
+        return null;
+      }
     },
   );
   const collectionCards = cards

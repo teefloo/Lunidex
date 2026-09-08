@@ -31,6 +31,20 @@ function unavailable(): NextResponse {
   return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 }
 
+function isExpectedDependencyFailure(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { name?: unknown; code?: unknown };
+  const name = typeof candidate.name === 'string' ? candidate.name : '';
+  const code = typeof candidate.code === 'string' ? candidate.code : '';
+  return name === 'NeonDbError'
+    || name === 'FetchError'
+    || name === 'TimeoutError'
+    || name === 'AbortError'
+    || code.startsWith('08')
+    || code === '53300'
+    || code === '57P01';
+}
+
 async function getCurrentState(
   sql: NeonSql,
   userId: string,
@@ -129,7 +143,8 @@ async function putUserState(request: NextRequest): Promise<NextResponse> {
     if (isInactiveAccountError(error)) {
       return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
     }
-    return NextResponse.json({ error: 'Failed to update state' }, { status: 500 });
+    if (isExpectedDependencyFailure(error)) return unavailable();
+    throw error;
   }
 
   const updated = updatedRows[0];
@@ -144,5 +159,29 @@ async function putUserState(request: NextRequest): Promise<NextResponse> {
   );
 }
 
-export const GET = withObservedRouteHandler('/api/user-state', 'sync', getUserState);
-export const PUT = withObservedRouteHandler('/api/user-state', 'sync', putUserState);
+async function safeGetUserState(request: NextRequest): Promise<NextResponse> {
+  try {
+    return await getUserState(request);
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    if (isExpectedDependencyFailure(error)) return unavailable();
+    throw error;
+  }
+}
+
+async function safePutUserState(request: NextRequest): Promise<NextResponse> {
+  try {
+    return await putUserState(request);
+  } catch (error) {
+    if (isInactiveAccountError(error)) {
+      return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
+    }
+    if (isExpectedDependencyFailure(error)) return unavailable();
+    throw error;
+  }
+}
+
+export const GET = withObservedRouteHandler('/api/user-state', 'sync', safeGetUserState);
+export const PUT = withObservedRouteHandler('/api/user-state', 'sync', safePutUserState);

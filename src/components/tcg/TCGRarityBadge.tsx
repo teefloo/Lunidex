@@ -1,6 +1,9 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
+import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 
 const RARITY_TONES: Record<string, { bg: string; text: string; border: string }> = {
   common: { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-400/15' },
@@ -32,9 +35,10 @@ interface TCGRarityBadgeProps {
 }
 
 export function TCGRarityBadge({ rarity, className }: TCGRarityBadgeProps) {
+  const { t } = useTranslation();
   if (!rarity) return null;
 
-  const key = rarity.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const key = getCanonicalTcgRarity(rarity);
   const tone = RARITY_TONES[key];
 
   return (
@@ -47,7 +51,7 @@ export function TCGRarityBadge({ rarity, className }: TCGRarityBadgeProps) {
         className,
       )}
     >
-      {rarity}
+      {getTCGRarityLabel(rarity, t)}
     </span>
   );
 }

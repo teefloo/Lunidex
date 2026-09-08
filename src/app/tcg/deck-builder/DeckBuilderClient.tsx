@@ -138,7 +138,12 @@ export default function DeckBuilderClient() {
                 placeholder={t('tcg.deck_builder.new_deck_placeholder', { defaultValue: 'Deck name...' })}
                 className="h-9 flex-1 min-w-0 rounded-sm border border-border/70 bg-muted/40 px-3 text-xs text-foreground placeholder:text-foreground/30 focus:border-primary/40 focus:outline-none"
               />
-              <Button size="sm" onClick={handleCreateDeck}>
+              <Button
+                size="sm"
+                onClick={handleCreateDeck}
+                aria-label={t('tcg.deck_builder.create_deck', { defaultValue: 'Create deck' })}
+                className="min-h-11 min-w-11"
+              >
                 <Plus className="h-3.5 w-3.5" />
               </Button>
             </div>
@@ -170,8 +175,8 @@ export default function DeckBuilderClient() {
                         deleteDeck(deck.id);
                         if (selectedDeckId === deck.id) setSelectedDeckId(null);
                       }}
-                      className="shrink-0 text-foreground/30 hover:text-destructive transition-colors"
-                      aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                      className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center text-foreground/30 transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      aria-label={t('tcg.deck_builder.delete_deck', { defaultValue: 'Delete deck' })}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -215,6 +220,7 @@ export default function DeckBuilderClient() {
                       <Search className="h-4 w-4 text-foreground/30" />
                     </div>
                     <input
+                      aria-label={t('tcg.deck_builder.search_placeholder', { defaultValue: 'Search cards to add...' })}
                       type="text"
                       value={searchTerm}
                       onChange={(e) => handleSearchChange(e.target.value)}
@@ -225,7 +231,8 @@ export default function DeckBuilderClient() {
                       <button
                         type="button"
                         onClick={() => handleSearchChange('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground"
+                        aria-label={t('tcg.deck_builder.clear_search', { defaultValue: 'Clear card search' })}
+                        className="absolute right-1 top-1/2 inline-flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center text-foreground/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -299,7 +306,8 @@ export default function DeckBuilderClient() {
                             <button
                               type="button"
                               onClick={() => removeCard(selectedDeck.id, entry.cardId)}
-                              className="text-foreground/40 hover:text-destructive"
+                              aria-label={t('tcg.deck_builder.decrease_card', { name: entry.card?.name ?? entry.cardId, defaultValue: `Decrease ${entry.card?.name ?? entry.cardId} quantity` })}
+                              className="inline-flex min-h-11 min-w-11 items-center justify-center text-foreground/40 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                             >
                               <Minus className="h-3.5 w-3.5" />
                             </button>
@@ -308,7 +316,8 @@ export default function DeckBuilderClient() {
                               type="button"
                               onClick={() => addCard(selectedDeck.id, entry.cardId, entry.card?.category === 'Energy' && entry.card?.energyType !== 'Special')}
                               disabled={totalCount >= MAX_DECK_SIZE || (entry.card?.category !== 'Energy' && entry.quantity >= 4)}
-                              className="text-foreground/40 hover:text-primary disabled:opacity-30"
+                              aria-label={t('tcg.deck_builder.increase_card', { name: entry.card?.name ?? entry.cardId, defaultValue: `Increase ${entry.card?.name ?? entry.cardId} quantity` })}
+                              className="inline-flex min-h-11 min-w-11 items-center justify-center text-foreground/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-30"
                             >
                               <Plus className="h-3.5 w-3.5" />
                             </button>

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 import { getPokemonDetail } from '@/lib/api';
@@ -30,13 +31,28 @@ function totalStats(pokemon: PokemonDetail): number {
   return pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
 }
 
-export async function GET(request: NextRequest): Promise<ImageResponse> {
+export async function GET(request: NextRequest): Promise<ImageResponse | NextResponse> {
   const search = request.nextUrl.searchParams;
   const name = normalizeOgPokemonName(search.get('name'));
   const langParam = search.get('lang') ?? 'en';
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
 
-  const pokemon = name ? await getPokemonDetail(name).catch(() => null) : null;
+  if (!name) {
+    return NextResponse.json({ error: 'Invalid Pokémon name' }, { status: 400 });
+  }
+
+  let pokemon: PokemonDetail;
+  try {
+    pokemon = await getPokemonDetail(name);
+  } catch (error) {
+    const status = error && typeof error === 'object' && 'response' in error
+      ? (error as { response?: { status?: unknown } }).response?.status
+      : undefined;
+    if (status === 404) {
+      return NextResponse.json({ error: 'Pokémon not found' }, { status: 404 });
+    }
+    throw error;
+  }
 
   const displayName = pokemon
     ? sanitizeOgText(

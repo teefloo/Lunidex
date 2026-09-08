@@ -303,7 +303,11 @@ export function useNeonSync(): void {
           ? 'unauthenticated'
           : 'unavailable';
         resetSession(status);
-        if (status === 'unavailable') toast.error('Could not load your saved data.');
+        if (status === 'unavailable') {
+          toast.error(i18n.t('auth.sync_unavailable', {
+            defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
+          }));
+        }
         return;
       }
       if (cancelled) return;

@@ -10,6 +10,7 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => module.TCGCardDetailModal),
@@ -85,9 +86,9 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
             </p>
             <dl className="mt-6 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
               {card.hp && <div><dt className="text-muted-foreground">{t('common.hp', { defaultValue: 'HP' })}</dt><dd className="font-bold">{card.hp}</dd></div>}
-              {card.rarity && <div><dt className="text-muted-foreground">{t('tcg.rarity')}</dt><dd className="font-bold">{card.rarity}</dd></div>}
+              {card.rarity && <div><dt className="text-muted-foreground">{t('tcg.rarity')}</dt><dd className="font-bold">{getTCGRarityLabel(card.rarity, t)}</dd></div>}
               {card.localId && <div><dt className="text-muted-foreground">{t('tcg.collector_no')}</dt><dd className="font-bold">#{card.localId}</dd></div>}
-              {card.category && <div><dt className="text-muted-foreground">{t('tcg.card_category')}</dt><dd className="font-bold">{card.category}</dd></div>}
+              {card.category && <div><dt className="text-muted-foreground">{t('tcg.card_category')}</dt><dd className="font-bold">{getTCGCategoryLabel(card.category, t)}</dd></div>}
               {card.illustrator && <div><dt className="text-muted-foreground">{t('tcg.illustrator')}</dt><dd className="font-bold">{card.illustrator}</dd></div>}
               {card.types && card.types.length > 0 && <div><dt className="text-muted-foreground">{t('tcg.pokemon_types')}</dt><dd className="font-bold">{card.types.join(', ')}</dd></div>}
             </dl>

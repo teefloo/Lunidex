@@ -147,7 +147,7 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                       toggleTCGWishlist(card.id);
                     }}
                     aria-label={t('tcg.compare_remove_card')}
-                    className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
                   >
                     <Trash2 className="h-2.5 w-2.5" />
                   </button>
@@ -171,6 +171,7 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as WishlistSort)}
+              aria-label={t('tcg.wishlist_sort_rarity')}
               className="h-8 rounded-full border border-border/40 bg-card/60 px-3 text-[11px] font-bold uppercase tracking-[0.06em] text-foreground focus:border-primary/40 focus:outline-none"
             >
               <option value="rarity">{t('tcg.wishlist_sort_rarity')}</option>
@@ -247,7 +248,7 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                     toggleTCGWishlist(card.id);
                   }}
                   aria-label={t('tcg.compare_remove_card')}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

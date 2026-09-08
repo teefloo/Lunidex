@@ -96,7 +96,7 @@ export function TCGComparePanel({ isOpen, onClose }: TCGComparePanelProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-sm border border-border/60 bg-muted/60 p-2 text-foreground/70 transition-colors hover:bg-card hover:text-foreground"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border/60 bg-muted/60 p-2 text-foreground/70 transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
               aria-label={t('common.close')}
             >
               <X className="h-4 w-4" />
@@ -167,7 +167,7 @@ function CompareCardSlot({
       <button
         type="button"
         onClick={onRemove}
-        className="absolute right-2 top-2 z-10 rounded-sm border border-border/60 bg-muted/80 p-1 text-foreground/40 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-500/20 hover:text-red-400"
+        className="absolute right-1 top-1 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border/60 bg-muted/80 p-1 text-foreground/40 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-500/20 hover:text-red-400 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         aria-label={t('tcg.compare_remove_card')}
       >
         <X className="h-3 w-3" />
