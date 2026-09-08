@@ -445,13 +445,18 @@ export default withSentryConfig(withPWA(nextConfig), {
   authToken: process.env.SENTRY_AUTH_TOKEN,
   telemetry: false,
   silent: !process.env.CI,
-  widenClientFileUpload: true,
+  // Upload server maps without widening the client bundle's source-map set;
+  // this keeps frequent builds lighter while preserving server-side errors.
+  widenClientFileUpload: false,
   sourcemaps: {
     deleteSourcemapsAfterUpload: true,
   },
   webpack: {
     autoInstrumentServerFunctions: true,
-    autoInstrumentMiddleware: true,
+    // The proxy already performs lightweight request routing and Vercel
+    // Observability covers its invocation metrics. Keep Sentry for errors and
+    // page/server-function traces without tracing every middleware request.
+    autoInstrumentMiddleware: false,
     autoInstrumentAppDirectory: true,
     automaticVercelMonitors: true,
   },

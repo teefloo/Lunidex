@@ -39,11 +39,13 @@ import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
-  timeout: 30000,
+  timeout: 10000,
 });
 
 axiosRetry(tcgClient, {
-  retries: 3,
+  // One retry covers transient 429/network failures without multiplying a
+  // failing card request into four upstream calls.
+  retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;

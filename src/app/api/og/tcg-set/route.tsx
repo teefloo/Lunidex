@@ -4,7 +4,8 @@ import type { NextRequest } from 'next/server';
 import { getTCGSetCached } from '@/lib/api/server-cache';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
-import { getTrustedOgImageUrl } from '@/lib/og/assets';
+import { loadFirstTrustedOgImageDataUrl } from '@/lib/og/assets';
+import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgTcgSetId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const name = sanitizeOgText(set?.name ?? null, 'Pokémon TCG set', 80);
   const total = set?.cardCount?.total ?? set?.totalCards ?? 0;
   const releaseDate = sanitizeOgText(set?.releaseDate ?? null, '', 32);
-  const imageUrl = set ? getTrustedOgImageUrl(getTCGSetImageCandidates(set)[0]) : '';
+  const imageUrl = await loadFirstTrustedOgImageDataUrl(set ? getTCGSetImageCandidates(set) : []);
   const title = t('tcg.set_meta_title', { name, releaseDate: releaseDate || '?' });
   const label = t('tcg.set_landing_checklist', { defaultValue: 'Pokémon TCG set checklist' });
   const host = new URL(SITE_URL).host;
@@ -113,6 +114,6 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
         </div>
       </div>
     ),
-    { width: OG_SIZE.width, height: OG_SIZE.height, fonts },
+    { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
 }

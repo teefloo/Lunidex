@@ -14,7 +14,7 @@ Sentry.init({
   release: process.env.SENTRY_RELEASE ?? process.env.VERCEL_GIT_COMMIT_SHA,
   environment,
   sendDefaultPii: false,
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 0,
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.02 : 0,
   beforeSend: scrubSentryEvent,
   initialScope: {
     tags: {

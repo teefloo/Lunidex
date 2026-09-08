@@ -6,6 +6,9 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
+const RESOURCE_PROBE_CACHE_TTL_MS = 5 * 60 * 1000;
+const RESOURCE_PROBE_FAILURE_TTL_MS = 15 * 1000;
+const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 512;
 // Empty Japanese/Korean set payloads contain only metadata and are currently
 // smaller than 400 bytes. Confirm those compact responses with a GET only when
 // the English fallback is also absent, keeping valid fallback albums to their
@@ -160,6 +163,14 @@ interface ResourceProbeResult {
   contentLength: number | null;
 }
 
+interface CachedResourceProbe {
+  result: boolean | null;
+  expiresAt: number;
+}
+
+const resourceProbeCache = new Map<string, CachedResourceProbe>();
+const resourceProbeInFlight = new Map<string, Promise<boolean | null>>();
+
 function isLimitedTcgSetProbe(probe: ResourceProbe): boolean {
   return probe.kind === 'tcg-set' && /\/(?:ja|ko)\/sets\//.test(probe.url);
 }
@@ -191,7 +202,38 @@ async function confirmTcgSetHasCards(
   }
 }
 
-async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
+function getResourceProbeCacheKey(probe: ResourceProbe): string {
+  return [probe.url, probe.fallbackUrl ?? '', JSON.stringify(probe.headers ?? {})].join('|');
+}
+
+function getCachedResourceProbe(key: string): boolean | null | undefined {
+  const cached = resourceProbeCache.get(key);
+  if (!cached) return undefined;
+  if (cached.expiresAt <= Date.now()) {
+    resourceProbeCache.delete(key);
+    return undefined;
+  }
+
+  // Keep hot probes near the end of the bounded map so they survive eviction.
+  resourceProbeCache.delete(key);
+  resourceProbeCache.set(key, cached);
+  return cached.result;
+}
+
+function setCachedResourceProbe(key: string, result: boolean | null): void {
+  resourceProbeCache.delete(key);
+  while (resourceProbeCache.size >= MAX_RESOURCE_PROBE_CACHE_ENTRIES) {
+    const oldestKey = resourceProbeCache.keys().next().value;
+    if (typeof oldestKey !== 'string') break;
+    resourceProbeCache.delete(oldestKey);
+  }
+  resourceProbeCache.set(key, {
+    result,
+    expiresAt: Date.now() + (result === null ? RESOURCE_PROBE_FAILURE_TTL_MS : RESOURCE_PROBE_CACHE_TTL_MS),
+  });
+}
+
+async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | null> {
   const primaryResult = await probeResourceUrl(probe.url, probe.headers);
   const primaryIsCompact = isLimitedTcgSetProbe(probe)
     && primaryResult.available === true
@@ -219,6 +261,29 @@ async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
   // A successful fallback proves the route can render. If the localized probe
   // timed out, however, an English 404 cannot prove the localized ID is absent.
   return fallbackResult.available === true ? true : null;
+}
+
+async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
+  const key = getResourceProbeCacheKey(probe);
+  const cached = getCachedResourceProbe(key);
+  if (cached !== undefined) return cached;
+
+  const inFlight = resourceProbeInFlight.get(key);
+  if (inFlight) return inFlight;
+
+  const pending = probeResourceUncached(probe).then((result) => {
+    setCachedResourceProbe(key, result);
+    return result;
+  });
+  resourceProbeInFlight.set(key, pending);
+
+  try {
+    return await pending;
+  } finally {
+    if (resourceProbeInFlight.get(key) === pending) {
+      resourceProbeInFlight.delete(key);
+    }
+  }
 }
 
 async function probeResourceUrl(

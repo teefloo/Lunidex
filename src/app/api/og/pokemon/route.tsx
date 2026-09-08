@@ -2,9 +2,10 @@ import { ImageResponse } from 'next/og';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { getPokemonDetail } from '@/lib/api';
+import { getPokemonDetailCached as getPokemonDetail } from '@/lib/api/server-cache';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
-import { getTrustedOgImageUrl } from '@/lib/og/assets';
+import { loadTrustedOgImageDataUrl } from '@/lib/og/assets';
+import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgPokemonName, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS } from '@/lib/og/theme';
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
   const dexNumber = pokemon ? formatDexNumber(pokemon.id) : '';
   const types = pokemon?.types.map((ty) => ty.type.name) ?? [];
   const bst = pokemon ? totalStats(pokemon) : 0;
-  const imageUrl = pokemon ? getTrustedOgImageUrl(artworkUrl(pokemon)) : '';
+  const imageUrl = await loadTrustedOgImageDataUrl(pokemon ? artworkUrl(pokemon) : '');
   const host = new URL(SITE_URL).host;
 
   const subsetText = [displayName, dexNumber, host, 'Lunidex', 'BST']
@@ -305,6 +306,6 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
         </div>
       </div>
     ),
-    { width: OG_SIZE.width, height: OG_SIZE.height, fonts },
+    { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
 }

@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isTrustedOgFontUrl } from '@/lib/og/assets';
 import type { SupportedLanguage } from '@/lib/languages';
@@ -7,9 +8,9 @@ import type { SupportedLanguage } from '@/lib/languages';
  * Font loading for `next/og` (satori). Satori only accepts static TTF/OTF/WOFF
  * buffers — never WOFF2 or variable fonts — so the Soft Pixel brand faces
  * (Pixelify Sans / Nunito) are vendored as static TTFs next to this module and
- * read with `fs.readFile(fileURLToPath(new URL('./fonts/...', import.meta.url)))`.
- * The `new URL(..., import.meta.url)` reference makes the bundler emit the asset
- * alongside the route chunk and have @vercel/nft trace it into the function.
+ * read from the traced project-relative path, with a `new URL(..., import.meta.url)`
+ * fallback for development. The URL references make the bundler emit the assets
+ * and have @vercel/nft trace them into the function.
  *
  * The OG routes run on the Node.js runtime (not edge): the edge bundle of
  * `next/og` + satori + the vendored faces exceeds the 1 MB edge function size
@@ -36,14 +37,24 @@ const PIXELIFY_FONT_URL = new URL('./fonts/PixelifySans-Bold.ttf', import.meta.u
 const NUNITO_FONT_URL = new URL('./fonts/Nunito-Bold.ttf', import.meta.url);
 const NUNITO_EXTRA_BOLD_FONT_URL = new URL('./fonts/Nunito-ExtraBold.ttf', import.meta.url);
 
-async function readFontFile(url: URL): Promise<Buffer | null> {
-  try {
-    return await readFile(fileURLToPath(url));
-  } catch {
-    // A serverless bundle may omit optional font assets. OG generation can
-    // still use the platform fallback font instead of failing with ENOENT.
-    return null;
+async function readFontFile(url: URL, fileName: string): Promise<Buffer | null> {
+  const candidates = [
+    // Webpack rewrites `new URL()` font imports to /_next/static paths. The
+    // traced source file is still present in the Node function bundle, so use
+    // the project-relative path first in production.
+    join(process.cwd(), 'src/lib/og/fonts', fileName),
+    ...(url.protocol === 'file:' ? [fileURLToPath(url)] : []),
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      return await readFile(candidate);
+    } catch {
+      // Try the next traced/bundled location.
+    }
   }
+
+  return null;
 }
 
 /** Buffer → standalone ArrayBuffer slice (avoids a shared-pool offset). */
@@ -53,9 +64,9 @@ function toArrayBuffer(buf: Buffer): ArrayBuffer {
 
 async function loadBrandFonts(): Promise<OgFont[]> {
   const [pixelify, nunito, nunitoExtra] = await Promise.all([
-    readFontFile(PIXELIFY_FONT_URL),
-    readFontFile(NUNITO_FONT_URL),
-    readFontFile(NUNITO_EXTRA_BOLD_FONT_URL),
+    readFontFile(PIXELIFY_FONT_URL, 'PixelifySans-Bold.ttf'),
+    readFontFile(NUNITO_FONT_URL, 'Nunito-Bold.ttf'),
+    readFontFile(NUNITO_EXTRA_BOLD_FONT_URL, 'Nunito-ExtraBold.ttf'),
   ]);
   return [
     pixelify && { name: 'Pixelify Sans', data: toArrayBuffer(pixelify), weight: 700, style: 'normal' as const },

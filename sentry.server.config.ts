@@ -14,7 +14,9 @@ Sentry.init({
   release: process.env.SENTRY_RELEASE ?? process.env.VERCEL_GIT_COMMIT_SHA,
   environment,
   sendDefaultPii: false,
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 0,
+  // Error events remain unsampled; only performance transactions are reduced
+  // because Vercel already supplies request-level observability.
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.02 : 0,
   beforeSend: scrubSentryEvent,
   initialScope: {
     tags: {

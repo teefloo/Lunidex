@@ -5,6 +5,8 @@ import { getTCGCardCached } from '@/lib/api/server-cache';
 import { getTCGCardPngImage } from '@/lib/tcg-images';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
+import { loadTrustedOgImageDataUrl } from '@/lib/og/assets';
+import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgTcgCardId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
@@ -26,7 +28,8 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const name = sanitizeOgText(card?.name ?? null, 'Lunidex', 80);
   const rarity = sanitizeOgText(card?.rarity ?? null, '', 64);
   const setName = sanitizeOgText(card?.set?.name ?? null, '', 100);
-  const imageUrl = card ? (getTCGCardPngImage(card) ?? '') : '';
+  const imageSource = card ? (getTCGCardPngImage(card) ?? '') : '';
+  const imageUrl = await loadTrustedOgImageDataUrl(imageSource);
   const rarityLabel = t('tcg.rarity');
   const host = new URL(SITE_URL).host;
 
@@ -204,6 +207,6 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
         </div>
       </div>
     ),
-    { width: OG_SIZE.width, height: OG_SIZE.height, fonts },
+    { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
 }

@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
   loadOgFonts: vi.fn(),
 }));
 
-vi.mock('@/lib/api', () => ({ getPokemonDetail: mocks.getPokemonDetail }));
+vi.mock('@/lib/api/server-cache', () => ({ getPokemonDetailCached: mocks.getPokemonDetail }));
 vi.mock('@/lib/og/fonts', () => ({ loadOgFonts: mocks.loadOgFonts }));
 vi.mock('next/og', () => ({
   ImageResponse: class MockImageResponse {
