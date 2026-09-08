@@ -548,6 +548,32 @@ export function toCollectionCard(
 }
 
 /**
+ * Merge detail-endpoint metadata into cards from a compact set listing.
+ * Set listings intentionally omit fields such as rarity and market value;
+ * keeping the merge here pure lets lazy recommendation hydration reuse the
+ * same card projection without replacing the already-rendered summary.
+ */
+export function mergeCollectionCardDetails(
+  cards: readonly TCGCollectionCard[],
+  detailedCards: readonly TCGCollectionCard[],
+): TCGCollectionCard[] {
+  const detailsById = new Map(detailedCards.map((card) => [card.id, card]));
+  return cards.map((card) => {
+    const detail = detailsById.get(card.id);
+    if (!detail) return card;
+
+    return {
+      ...card,
+      image: detail.image ?? card.image,
+      rarity: detail.rarity ?? card.rarity,
+      variants: detail.variants ?? card.variants,
+      variantValues: detail.variantValues ?? card.variantValues,
+      value: detail.value ?? card.value,
+    };
+  });
+}
+
+/**
  * Read the value for one owned finish from a collection projection. Explicit
  * finishes use their exact quote. An unspecified possession uses `value`, a
  * representative estimate based on the first available finish, because the

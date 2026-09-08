@@ -4,6 +4,7 @@ import {
   getCardMarketValue,
   getTCGValueInCurrency,
   getTCGVariantValue,
+  mergeCollectionCardDetails,
   toCollectionCard,
 } from './tcg-collection';
 import type { TCGCard } from '@/types/tcg';
@@ -309,5 +310,25 @@ describe('TCG physical variant pricing', () => {
     expect(usd.groups).toEqual([{ currency: 'USD', total: 8, count: 3 }]);
     expect(usd.pricedCount).toBe(3);
     expect(usd.unpricedCount).toBe(0);
+  });
+
+  it('merges hydrated prices into missing-card recommendations', () => {
+    const summary = toCollectionCard({
+      ...baseCard,
+      id: 'me05-119',
+      localId: '119',
+    }, 'me05', 'EUR');
+    const pricedDetail = toCollectionCard({
+      ...baseCard,
+      id: 'me05-119',
+      localId: '119',
+      rarity: 'Ultra Rare',
+      pricing: { cardmarket: { unit: 'EUR', trend: 26.51 } },
+    }, 'me05', 'EUR');
+
+    const [merged] = mergeCollectionCardDetails([summary], [pricedDetail]);
+
+    expect(merged.value).toEqual({ amount: 26.51, currency: 'EUR' });
+    expect(merged.rarity).toBe('Ultra Rare');
   });
 });

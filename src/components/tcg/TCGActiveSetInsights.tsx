@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCollectionValue, getCollectionSetAlbum } from '@/lib/api/tcg';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { fetchCollectionValue, getCollectionSetAlbum, getTCGCard } from '@/lib/api/tcg';
 import {
   computeActiveSetInsights,
   getActiveSetInsightsFallback,
   getRarityColor,
+  mergeCollectionCardDetails,
   type TCGOwnedVariant,
   type TCGCollectionValueGroup,
   getTCGValueInCurrency,
@@ -124,6 +125,38 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
     },
     [cards, ownedIds, ownedVariants, ownedValuation, set, valuationError, displayCurrency],
   );
+
+  const topMissingIds = useMemo(
+    () => insights?.topMissing.map((card) => card.id) ?? [],
+    [insights],
+  );
+  // The compact set album intentionally omits detail-only pricing and rarity.
+  // Hydrate only the six recommended missing cards so their visible metadata is
+  // complete without bringing back the old request waterfall for every card.
+  const missingCardQueries = useQueries({
+    queries: topMissingIds.map((cardId) => ({
+      queryKey: ['tcg', 'collection-card-detail-v1', cardId, resolvedLang],
+      queryFn: ({ signal }: { signal: AbortSignal }) => getTCGCard(
+        cardId,
+        resolvedLang,
+        signal,
+        { requirePricing: true },
+      ),
+      staleTime: 60 * 60 * 1000,
+      retry: 1,
+      enabled: shouldLoadDetails,
+    })),
+  });
+  const hydratedMissingCards = useMemo(
+    () => missingCardQueries.flatMap((query) => (
+      query.data ? [toCollectionCard(query.data, set.id, displayCurrency)] : []
+    )),
+    [displayCurrency, missingCardQueries, set.id],
+  );
+  const topMissingCards = useMemo(
+    () => insights ? mergeCollectionCardDetails(insights.topMissing, hydratedMissingCards) : [],
+    [hydratedMissingCards, insights],
+  );
   const isLoading = shouldLoadDetails && (cardsLoading || valuationLoading);
   const detailsUnavailable = shouldLoadDetails && (isError || (!cardsLoading && !album?.cards.length));
 
@@ -236,14 +269,14 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">
               {t('tcg.collection_top_missing')}
             </p>
-            {insights.topMissing.length === 0 ? (
+            {topMissingCards.length === 0 ? (
               <p className="mt-2 text-[11px] font-bold text-emerald-400/70">
                 {t('tcg.collection_no_missing')}
               </p>
             ) : (
               <div className="relative">
                 <div className="scroll-snap-x scrollbar-hide flex gap-2 overflow-x-auto pb-1 pr-6">
-                {insights.topMissing.map((card) => {
+                {topMissingCards.map((card) => {
                   const thumbCandidates = getTCGCardImageCandidates(card, 'low');
                   return (
                   <Link
