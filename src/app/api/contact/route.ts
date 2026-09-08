@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { sendContactEmail } from '@/lib/resend';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LIMITS = { name: 120, email: 320, subject: 160, message: 5000 } as const;
@@ -33,7 +34,7 @@ function invalid(payload: ContactPayload): boolean {
     || message.length > LIMITS.message;
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postContact(request: NextRequest): Promise<NextResponse> {
   if (request.headers.get('content-type') !== 'application/json') {
     return NextResponse.json({ error: 'unsupported_media_type' }, { status: 415, headers });
   }
@@ -70,3 +71,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'contact_delivery_failed' }, { status: 503, headers });
   }
 }
+
+export const POST = withObservedRouteHandler('/api/contact', 'contact', postContact);

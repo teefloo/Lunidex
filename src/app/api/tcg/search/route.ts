@@ -9,8 +9,9 @@ import {
 } from '@/lib/tcg-research';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import type { TCGSearchFacets } from '@/types/tcg';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
-export async function GET(request: NextRequest) {
+async function getTcgSearch(request: NextRequest) {
   if (!rateLimit(`tcg-search:${ipKey(request)}`, 30)) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
@@ -59,10 +60,12 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('[TCG API] Failed to execute search route:', error);
+    console.error('[TCG API] Failed to execute search route:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Failed to search cards' }, { status: 502 });
   }
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/search', 'tcg', getTcgSearch);
 
 function buildFacets(cards: Awaited<ReturnType<typeof searchCards>>['cards']): TCGSearchFacets {
   const setLabelMap = new Map(cards.map((card) => [card.set?.id ?? 'unknown', card.set?.name ?? 'Unknown']));

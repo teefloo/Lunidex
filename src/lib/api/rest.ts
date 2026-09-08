@@ -1,6 +1,7 @@
 import apiClient, { REST_API_BASE } from './client';
 import { getCachedData, setCachedData } from './cache';
 import { PokemonDetail, PokemonForm, PokemonListResponse, PokemonSpecies, PokemonEncounter } from '@/types/pokemon';
+import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
 
 export const getPokemonList = async ({ pageParam = 0 }) => {
   const cacheKey = `pokemon-list-${pageParam}`;
@@ -8,6 +9,14 @@ export const getPokemonList = async ({ pageParam = 0 }) => {
   if (cached) return cached;
 
   const { data } = await apiClient.get<PokemonListResponse>(`/pokemon?offset=${pageParam}&limit=20`);
+  if (!Array.isArray(data.results)) {
+    reportFallback('invalid-response', {
+      feature: 'pokemon',
+      service: 'pokeapi',
+      operation: 'pokemon-list',
+    });
+    throw new Error('Invalid PokéAPI list response');
+  }
   
   // Extract offset from next URL if it exists
   let nextParam: number | undefined;
@@ -95,18 +104,60 @@ export const getAllPokemonNames = async (): Promise<{ name: string; url: string 
 type NamedResource = 'move' | 'ability' | 'item';
 
 async function getAllNamedResourceNames(resource: NamedResource, limit: number): Promise<string[]> {
-  const response = await fetch(`${REST_API_BASE}/${resource}?limit=${limit}`, {
-    next: { revalidate: 3600 },
-  });
-  if (!response.ok) throw new Error(`Failed to fetch ${resource} names: ${response.status}`);
+  const route = `/${resource}`;
+  let status: number | undefined;
+  try {
+    const response = await fetch(`${REST_API_BASE}/${resource}?limit=${limit}`, {
+      next: { revalidate: 3600 },
+    });
+    status = response.status;
+    if (!response.ok) {
+      reportHttpFailure(new Error('PokéAPI name list request failed'), {
+        feature: resource,
+        service: 'pokeapi',
+        route,
+        method: 'GET',
+        status,
+        operation: 'name-list',
+      });
+      throw new Error('PokéAPI name list request failed');
+    }
 
-  const data = await response.json() as {
-    results?: { name?: unknown }[];
-  };
+    const data = await response.json() as {
+      results?: { name?: unknown }[];
+    };
 
-  return Array.isArray(data.results)
-    ? data.results.flatMap((entry) => typeof entry.name === 'string' && entry.name ? [entry.name] : [])
-    : [];
+    if (!Array.isArray(data.results)) {
+      reportFallback('invalid-response', {
+        feature: resource,
+        service: 'pokeapi',
+        route,
+        operation: 'name-list',
+      });
+      return [];
+    }
+
+    const names = data.results.flatMap((entry) => typeof entry.name === 'string' && entry.name ? [entry.name] : []);
+    if (names.length === 0) {
+      reportFallback('empty-required-list', {
+        feature: resource,
+        service: 'pokeapi',
+        route,
+        operation: 'name-list',
+      });
+    }
+    return names;
+  } catch (error) {
+    reportHttpFailure(error, {
+      feature: resource,
+      service: 'pokeapi',
+      route,
+      method: 'GET',
+      status,
+      operation: 'name-list',
+    });
+    throw error;
+  }
 }
 
 /** Lightweight name listings used by server-side discovery surfaces such as the sitemap. */

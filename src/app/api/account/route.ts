@@ -5,6 +5,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { deleteNeonAuthUser, getNeonAuthServer } from '@/lib/neon/server-auth';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 type DeletePayload = {
   confirmation?: unknown;
@@ -85,7 +86,7 @@ async function markDeleted(sql: NeonSql, userId: string): Promise<void> {
   `;
 }
 
-export async function DELETE(request: NextRequest): Promise<NextResponse> {
+async function deleteAccount(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -162,3 +163,5 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   for (const cookie of setCookies) response.headers.append('Set-Cookie', cookie);
   return response;
 }
+
+export const DELETE = withObservedRouteHandler('/api/account', 'profile', deleteAccount);

@@ -6,6 +6,7 @@ import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
+import { reportFallback } from '@/lib/sentry-observability';
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import {
   advanceSyncMetadata,
@@ -153,6 +154,9 @@ export function useNeonSync(): void {
       remoteUpdatedAtRef.current = null;
       pushRequestedRef.current = false;
       setSyncAccessStatus(status);
+      if (status === 'unavailable') {
+        reportFallback('sync-unavailable', { feature: 'sync', operation: 'session-reset' });
+      }
     };
 
     const rollbackPendingChange = (
@@ -164,6 +168,7 @@ export function useNeonSync(): void {
         ?? normalizeSyncMetadata(undefined, acceptedState);
       applyAcceptedState(acceptedState, acceptedMetadata);
       if (status === 'unavailable' && preserveCollectionPage && window.navigator.onLine) {
+        reportFallback('sync-unavailable', { feature: 'sync', operation: 'write-rollback' });
         toast.error(i18n.t('auth.sync_unavailable', {
           defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
         }));
@@ -351,7 +356,10 @@ export function useNeonSync(): void {
     if (window.navigator.onLine) void init();
     else resetSession('unavailable');
     const onOnline = (): void => setOnlineVersion((version) => version + 1);
-    const onOffline = (): void => setSyncAccessStatus('unavailable');
+    const onOffline = (): void => {
+      reportFallback('sync-unavailable', { feature: 'sync', operation: 'offline' });
+      setSyncAccessStatus('unavailable');
+    };
     window.addEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
     return () => {

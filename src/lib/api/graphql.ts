@@ -1,6 +1,7 @@
 ﻿import { graphqlClient } from './client';
 import { getCachedData, setCachedData } from './cache';
 import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData, GraphQLItemData } from '@/types/pokemon';
+import { reportFallback } from '@/lib/sentry-observability';
 
 const BATCH_SIZE = 200;
 const SEARCH_BATCH_SIZE = 250;
@@ -8,12 +9,9 @@ const MOVE_BATCH_SIZE = 250;
 
 const getBatchCacheKey = (base: string, batchIndex: number) => `${base}-batch-${batchIndex}`;
 
-function describeGraphQLResponse(value: unknown) {
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return '[unserializable GraphQL response]';
-  }
+function throwInvalidGraphQLResponse(operation: string): never {
+  reportFallback('invalid-response', { feature: 'graphql', operation });
+  throw new Error('Invalid GraphQL response');
 }
 
 const fetchBatch = async <T>(
@@ -37,7 +35,7 @@ const fetchBatch = async <T>(
   if (signal?.aborted) throw signal.reason ?? new Error('GraphQL batch request aborted');
   
   if (!data?.data?.pokemon_v2_pokemon) {
-    throw new Error(`Invalid GraphQL response in fetchBatch: ${describeGraphQLResponse(data)}`);
+    throwInvalidGraphQLResponse('fetch-batch');
   }
   
   const results = data.data.pokemon_v2_pokemon;
@@ -86,7 +84,7 @@ export const getPokemonSummarySlice = async (
   });
 
   if (!data?.data?.pokemon_v2_pokemon) {
-    throw new Error(`Invalid GraphQL response in getPokemonSummarySlice: ${describeGraphQLResponse(data)}`);
+    throwInvalidGraphQLResponse('pokemon-summary-slice');
   }
 
   const results = data.data.pokemon_v2_pokemon;
@@ -221,7 +219,7 @@ const fetchMoveBatches = async <T>(
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query, variables });
 
     if (!data?.data?.pokemon_v2_move) {
-      throw new Error(`Invalid GraphQL response in fetchMoveBatches: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('move-batches');
     }
 
     const results = data.data.pokemon_v2_move;
@@ -337,7 +335,7 @@ export const getPokemonDetailedByType = async (type: string): Promise<PokemonBas
   });
 
   if (!data?.data?.pokemon_v2_pokemon) {
-    throw new Error(`Invalid GraphQL response in getPokemonDetailedByType: ${describeGraphQLResponse(data)}`);
+    throwInvalidGraphQLResponse('pokemon-detailed-by-type');
   }
 
   const results = data.data.pokemon_v2_pokemon;
@@ -360,9 +358,9 @@ export const getAllPokemonDetailed = async (): Promise<PokemonBasicData[]> => {
       await setCachedData(cacheKey, flattenedResults);
       return flattenedResults;
     }
-    throw new Error('PokéAPI GraphQL returned invalid data');
+    throwInvalidGraphQLResponse('pokemon-detailed');
   } catch (error) {
-    console.error('Failed to fetch detailed Pokémon data:', error);
+    console.error('Failed to fetch detailed Pokémon data:', error instanceof Error ? error.name : 'UnknownError');
     const cachedFallback = await getCachedData<PokemonBasicData[]>(cacheKey, true);
     if (cachedFallback && cachedFallback.length > 0) {
       return cachedFallback;
@@ -416,7 +414,7 @@ export const getLocalizedPokemonData = async (name: string, languageId: number):
     });
     
     if (!data?.data?.pokemon_v2_pokemonspecies?.[0]) {
-      throw new Error(`Invalid GraphQL response in getLocalizedPokemonData: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('localized-pokemon');
     }
     
     const results = data.data.pokemon_v2_pokemonspecies[0];
@@ -465,7 +463,7 @@ export const getPokemonMovesLocalized = async (name: string, languageId: number)
     
     const pokemon = data?.data?.pokemon_v2_pokemon;
     if (!pokemon) {
-      throw new Error(`Invalid GraphQL response in getPokemonMovesLocalized: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('localized-pokemon-moves');
     }
 
     const result = pokemon[0]?.pokemon_v2_pokemonmoves ?? [];
@@ -531,7 +529,7 @@ export const getAllMoves = async (languageId: number, maxResults?: number): Prom
     await setCachedData(cacheKey, results);
     return results;
   } catch (error) {
-    console.error('Failed to fetch all moves:', error);
+    console.error('Failed to fetch all moves:', error instanceof Error ? error.name : 'UnknownError');
     const cached = await getCachedData<GraphQLMoveData[]>(cacheKey, true);
     if (cached) return cached;
     throw error;
@@ -578,7 +576,7 @@ export const getMovePokemonLearners = async (moveName: string, languageId: numbe
     });
 
     if (!data?.data?.pokemon_v2_pokemonmove) {
-      throw new Error(`Invalid GraphQL response in getMovePokemonLearners: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('move-pokemon-learners');
     }
 
     const results = data.data.pokemon_v2_pokemonmove;
@@ -632,7 +630,7 @@ export const getAllAbilities = async (languageId: number, maxResults = 1000): Pr
     });
 
     if (!data?.data?.pokemon_v2_ability) {
-      throw new Error(`Invalid GraphQL response in getAllAbilities: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('abilities');
     }
 
     const results = data.data.pokemon_v2_ability;
@@ -683,7 +681,7 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
     });
 
     if (!data?.data?.pokemon_v2_pokemonability) {
-      throw new Error(`Invalid GraphQL response in getAbilityPokemon: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('ability-pokemon');
     }
 
     const results = data.data.pokemon_v2_pokemonability;
@@ -755,7 +753,7 @@ export const getAllItems = async (languageId: number, maxResults = 2000): Promis
     });
 
     if (!data?.data?.pokemon_v2_item) {
-      throw new Error(`Invalid GraphQL response in getAllItems: ${describeGraphQLResponse(data)}`);
+      throwInvalidGraphQLResponse('items');
     }
 
     const results = data.data.pokemon_v2_item;

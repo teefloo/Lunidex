@@ -5,6 +5,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 interface SendPushPayload {
   subscription?: {
@@ -35,7 +36,7 @@ function ensureVapidConfigured() {
 // this same web-push logic server-side. This route also doubles as the
 // manual "send test notification" path used by the client-side helper in
 // `src/lib/push-notifications.ts`.
-export async function POST(request: NextRequest) {
+async function postPushSend(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -115,3 +116,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to send notification' }, { status: 502 });
   }
 }
+
+export const POST = withObservedRouteHandler('/api/push/send', 'notifications', postPushSend);

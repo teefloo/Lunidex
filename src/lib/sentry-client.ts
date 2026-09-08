@@ -3,7 +3,7 @@
 import * as Sentry from '@sentry/nextjs';
 
 import { getProductConsent, type ProductConsent } from '@/lib/product-measurement';
-import { scrubSentryEvent } from '@/lib/sentry-common';
+import { scrubSentryEvent, scrubSentryFeedback } from '@/lib/sentry-common';
 
 type ReplayIntegration = {
   name: string;
@@ -12,6 +12,9 @@ type ReplayIntegration = {
 
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
 const hasDsn = Boolean(dsn);
+const release = process.env.NEXT_PUBLIC_SENTRY_RELEASE
+  ?? process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA
+  ?? process.env.VERCEL_GIT_COMMIT_SHA;
 const productionTraceSampleRate = 0.1;
 const developmentTraceSampleRate = 1;
 const replaySessionSampleRate = 0.05;
@@ -41,15 +44,50 @@ export function initializeSentryClient(): void {
   Sentry.init({
     dsn,
     enabled: true,
+    release,
     environment: getEnvironment(),
     sendDefaultPii: false,
-    // The integrations themselves are added only after consent. Keeping the
-    // rates configured here lets Sentry initialize Replay lazily later.
+    // Tracing and Replay integrations are added only after consent. Keeping
+    // their rates configured here lets Sentry enable them lazily later.
     tracesSampleRate: getTraceSampleRate(),
     replaysSessionSampleRate: replaySessionSampleRate,
     replaysOnErrorSampleRate: 1,
     beforeSend: scrubSentryEvent,
-    integrations: [],
+    integrations: [
+      Sentry.globalHandlersIntegration(),
+      Sentry.browserApiErrorsIntegration(),
+      Sentry.dedupeIntegration(),
+      Sentry.breadcrumbsIntegration({
+        console: false,
+        dom: false,
+        fetch: true,
+        history: false,
+        sentry: false,
+        xhr: true,
+      }),
+      Sentry.httpClientIntegration({
+        failedRequestStatusCodes: [[500, 599]],
+        failedRequestTargets: [
+          /\/api\//,
+          /^https:\/\/pokeapi\.co\//,
+          /^https:\/\/beta\.pokeapi\.co\//,
+          /^https:\/\/api\.tcgdex\.net\//,
+        ],
+      }),
+      // The integration is inert until a user explicitly opens the form from
+      // the footer. No automatic feedback widget or user data is collected.
+      Sentry.feedbackIntegration({
+        autoInject: false,
+        colorScheme: 'system',
+        enableScreenshot: true,
+        isEmailRequired: false,
+        isNameRequired: false,
+        showEmail: false,
+        showName: false,
+        triggerLabel: 'Report a problem',
+        triggerAriaLabel: 'Report a problem',
+      }),
+    ],
     initialScope: {
       tags: {
         app: 'lunidex',
@@ -59,6 +97,7 @@ export function initializeSentryClient(): void {
   });
 
   initialized = true;
+  Sentry.getClient()?.on('beforeSendFeedback', scrubSentryFeedback);
   syncSentryPerformance(getProductConsent());
 }
 

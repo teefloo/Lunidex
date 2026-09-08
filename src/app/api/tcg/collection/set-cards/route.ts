@@ -5,13 +5,14 @@ import {
   resolveTcgLang,
   TCG_COLLECTION_MAX_CARDS,
 } from '@/lib/api/tcg';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 // A set id is a short alphanumeric slug (e.g. "swsh3", "sv03.5"). Reject anything
 // else before hitting the upstream API.
 const SET_ID_PATTERN = /^[a-z0-9][a-z0-9.\-]{0,31}$/i;
 const COLLECTION_SET_CARDS_ROUTE_TIMEOUT_MS = 15_000;
 
-export async function GET(request: NextRequest) {
+async function getTcgCollectionSetCards(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
   const setId = params.get('setId')?.trim() ?? '';
@@ -49,10 +50,12 @@ export async function GET(request: NextRequest) {
       },
     );
   } catch (error) {
-    console.error(`[TCG API] Failed to build collection cards for ${setId}:`, error);
+    console.error(`[TCG API] Failed to build collection cards for ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json(
       { error: 'Failed to build collection cards' },
       { status: 502, headers: { 'Cache-Control': 'private, no-store' } },
     );
   }
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/collection/set-cards', 'tcg', getTcgCollectionSetCards);

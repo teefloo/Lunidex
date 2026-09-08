@@ -17,6 +17,7 @@ import { VercelInsights } from '@/components/analytics/VercelInsights';
 import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
+import { createObservedMutationCache, createObservedQueryCache } from '@/lib/query-observability';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
@@ -178,6 +179,8 @@ interface ProvidersProps {
 export default function Providers({ children, initialLanguage, initialTranslations }: ProvidersProps) {
   const [translationInstance] = useState(() => createClientI18n(initialLanguage, initialTranslations));
   const [queryClient] = useState(() => new QueryClient({
+    queryCache: createObservedQueryCache(),
+    mutationCache: createObservedMutationCache(),
     defaultOptions: {
       queries: {
         staleTime: 10 * 60 * 1000,

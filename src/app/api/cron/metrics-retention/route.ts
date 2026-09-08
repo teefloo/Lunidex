@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getNeonClient } from '@/lib/neon/server';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 /**
  * Scheduled retention job (see the `crons` entry in vercel.json).
@@ -29,7 +30,7 @@ function unauthorized(): NextResponse {
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: NO_STORE_HEADERS });
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getMetricsRetention(request: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
   // No secret configured: the job is disabled rather than open to anyone.
   if (!secret) return NextResponse.json({ error: 'Retention job unavailable' }, { status: 503, headers: NO_STORE_HEADERS });
@@ -81,3 +82,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Retention job failed' }, { status: 500, headers: NO_STORE_HEADERS });
   }
 }
+
+export const GET = withObservedRouteHandler('/api/cron/metrics-retention', 'sync', getMetricsRetention);

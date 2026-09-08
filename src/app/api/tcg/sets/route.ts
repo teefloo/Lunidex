@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isCollectionSetSummary, resolveTcgLang } from '@/lib/api/tcg';
 import { getCollectionSetCatalogCached } from '@/lib/api/server-cache';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const COLLECTION_CATALOG_ROUTE_TIMEOUT_MS = 12_000;
 
@@ -20,7 +21,7 @@ async function loadCollectionSetCatalog(language: string) {
   }
 }
 
-export async function GET(request: NextRequest) {
+async function getTcgSets(request: NextRequest) {
   const lang = resolveTcgLang(request.nextUrl.searchParams.get('tcgLang')
     ?? request.nextUrl.searchParams.get('lang')
     ?? 'en');
@@ -38,10 +39,12 @@ export async function GET(request: NextRequest) {
       },
     );
   } catch (error) {
-    console.error('[TCG API] Collection catalog unavailable:', error);
+    console.error('[TCG API] Collection catalog unavailable:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json(
       { error: 'Failed to fetch TCG sets' },
       { status: 502, headers: { 'Cache-Control': 'no-store' } },
     );
   }
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/sets', 'tcg', getTcgSets);

@@ -3,6 +3,7 @@ import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-help
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 // Price polling is intentionally paused for the public launch. The scheduled
 // sender does not yet use standards-compliant web-push payload encryption.
@@ -70,7 +71,7 @@ function isValidCurrency(v: unknown): v is 'USD' | 'EUR' {
 // GET — list user's alerts
 // ---------------------------------------------------------------------------
 
-export async function GET(request: NextRequest) {
+async function getPriceAlerts(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
@@ -97,7 +98,7 @@ export async function GET(request: NextRequest) {
 // POST — create an alert
 // ---------------------------------------------------------------------------
 
-export async function POST(request: NextRequest) {
+async function postPriceAlert(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
@@ -163,7 +164,7 @@ export async function POST(request: NextRequest) {
 // DELETE — remove an alert by id (?id=uuid)
 // ---------------------------------------------------------------------------
 
-export async function DELETE(request: NextRequest) {
+async function deletePriceAlert(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
@@ -194,7 +195,7 @@ export async function DELETE(request: NextRequest) {
 // PATCH — toggle is_active on an alert
 // ---------------------------------------------------------------------------
 
-export async function PATCH(request: NextRequest) {
+async function patchPriceAlert(request: NextRequest) {
   if (!PRICE_ALERTS_ENABLED) return unavailableResponse();
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
@@ -233,3 +234,8 @@ export async function PATCH(request: NextRequest) {
 
   return NextResponse.json({ alert: toPriceAlert(data) }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/price-alerts', 'tcg', getPriceAlerts);
+export const POST = withObservedRouteHandler('/api/tcg/price-alerts', 'tcg', postPriceAlert);
+export const DELETE = withObservedRouteHandler('/api/tcg/price-alerts', 'tcg', deletePriceAlert);
+export const PATCH = withObservedRouteHandler('/api/tcg/price-alerts', 'tcg', patchPriceAlert);

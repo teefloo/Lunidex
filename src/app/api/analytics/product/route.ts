@@ -4,6 +4,7 @@ import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
 import { normalizeCampaignSlug } from '@/lib/campaigns';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const allowed = {
   tcg_start_opened: [['home_cta', 'catalog', 'direct', 'seo', 'campaign']], tcg_set_search_used: [['length_1_3', 'length_4_8', 'length_9_plus']],
@@ -33,7 +34,7 @@ function ephemeralClientKey(request: NextRequest): string {
   return `product-metrics:${createHash('sha256').update(ip).digest('hex').slice(0, 16)}`;
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postProductAnalytics(request: NextRequest): Promise<NextResponse> {
   const headers = { 'Cache-Control': 'no-store' };
   if (request.headers.get('content-type') !== 'application/json' || forbidden(request)) return new NextResponse(null, { status: 403, headers });
   const length = Number(request.headers.get('content-length') ?? 0);
@@ -70,3 +71,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 503, headers });
   }
 }
+
+export const POST = withObservedRouteHandler('/api/analytics/product', 'analytics', postProductAnalytics);

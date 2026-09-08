@@ -4,6 +4,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { HANDLE_MAX_LENGTH, HANDLE_MIN_LENGTH, HANDLE_REGEX } from '@/types/dashboard';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 interface ProfileSettingsRow {
   public_handle: string | null;
@@ -45,7 +46,7 @@ async function getOwnSettings(
   return rows[0] ?? null;
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getProfile(request: NextRequest): Promise<NextResponse> {
   const sql = getNeonClient();
   if (!sql) return unavailable();
 
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ profile: await getOwnSettings(sql, user.id) }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
-export async function PATCH(request: NextRequest): Promise<NextResponse> {
+async function patchProfile(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -148,3 +149,6 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json({ profile: updatedRows[0] }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
+
+export const GET = withObservedRouteHandler('/api/profile', 'profile', getProfile);
+export const PATCH = withObservedRouteHandler('/api/profile', 'profile', patchProfile);

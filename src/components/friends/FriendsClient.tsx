@@ -27,6 +27,7 @@ function RelationRow({ relation, userId }: { relation: FriendRelation; userId: s
   const otherUser = relation.otherUser;
   const isIncoming = relation.addresseeId === userId;
   const actionMutation = useMutation({
+    mutationKey: ['friends'],
     mutationFn: async (action: 'accept' | 'decline' | 'delete') => {
       if (action === 'delete') return deleteFriendship(relation.id);
       return respondToFriendRequest(relation.id, action);
@@ -94,6 +95,7 @@ export default function FriendsClient() {
     staleTime: 30 * 1000,
   });
   const sendMutation = useMutation({
+    mutationKey: ['friends'],
     mutationFn: () => sendFriendRequest(handle),
     onSuccess: () => {
       setHandle('');

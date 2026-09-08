@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardCached } from '@/lib/api/server-cache';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import { resolveTcgLang } from '@/lib/api/tcg';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
-export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+async function getTcgCard(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
 
@@ -29,7 +30,9 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
       },
     );
   } catch (error) {
-    console.error('[TCG API] Failed to fetch card detail:', error);
+    console.error('[TCG API] Failed to fetch card detail:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Failed to fetch card' }, { status: 502 });
   }
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/cards/:id', 'tcg', getTcgCard);

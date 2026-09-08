@@ -1,5 +1,6 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import { attachAxiosSentryInstrumentation } from '@/lib/sentry-observability';
 import { getCachedData, setCachedData } from './cache';
 import type {
   TCGCard,
@@ -33,6 +34,7 @@ import {
 } from '@/lib/tcg-collection';
 import type { TCGDisplayCurrency } from '@/lib/tcg-currency';
 import { MAX_TCG_COLLECTION_PHYSICAL_CARDS } from '@primedex/core/lib/tcg-collections';
+import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -46,6 +48,8 @@ axiosRetry(tcgClient, {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
   },
 });
+
+attachAxiosSentryInstrumentation(tcgClient, { feature: 'tcg', service: 'tcgdex' });
 
 // `zh` was the former Lunidex locale alias, not a TCGdex code. Keep it as an
 // invalid/unsupported input so it cannot silently select a different card
@@ -385,6 +389,10 @@ async function fetchAllCardSearchPages(
     // service caps a larger requested page size.
     const query = buildCardQueryParams(filters, page, pageSize - 1).toString();
     const { data } = await tcgClient.get<TCGCard[]>(`/${lang}/cards?${query}`);
+    if (!Array.isArray(data)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'card-search-pages' });
+      throw new Error('Invalid TCGdex card search response');
+    }
     const pageCards = Array.isArray(data) ? data.map((card) => normaliseCard(card, lang)) : [];
     const pageSignature = pageCards.map((card) => card.id).join('|');
 
@@ -584,6 +592,14 @@ export const getTCGCard = async (
     throwIfAborted(signal);
 
     const { data } = await getWithOptionalSignal<TCGCard>(`/${tcgLang}/cards/${cardId}`, signal);
+    if (!data || typeof data !== 'object' || typeof data.id !== 'string') {
+      reportFallback('invalid-response', {
+        feature: 'tcg',
+        service: 'tcgdex',
+        operation: 'card-detail',
+      });
+      throw new Error('Invalid TCGdex card response');
+    }
     if (data) {
       const card = await resolveCardImage(normaliseCard(data, tcgLang), tcgLang, signal);
       await setCachedData(cacheKey, card);
@@ -599,14 +615,21 @@ export const getTCGCard = async (
     // than turning a valid alternate URL into a 404.
     if (allowEnglishFallback && tcgLang !== 'en') {
       const fallbackCard = await getTCGCard(cardId, 'en', signal, options);
-      if (fallbackCard) return fallbackCard;
+      if (fallbackCard) {
+        reportFallback('incomplete-response', {
+          feature: 'tcg',
+          service: 'tcgdex',
+          operation: 'localized-card-english-fallback',
+        });
+        return fallbackCard;
+      }
     }
 
     if (!allowEnglishFallback) {
       return await getCachedData<TCGCard>(cacheKey, true);
     }
 
-    console.error(`[TCG API] Error fetching card ${cardId}:`, error);
+    console.error(`[TCG API] Error fetching card ${cardId}:`, error instanceof Error ? error.name : 'UnknownError');
     return await getCachedData<TCGCard>(cacheKey, true);
   }
 };
@@ -861,9 +884,25 @@ export const getCardsBySet = async (
       `/${tcgLang}/sets/${setId}`,
       signal,
     );
+    if (!data || typeof data !== 'object' || !Array.isArray(data.cards)) {
+      reportFallback('invalid-response', {
+        feature: 'tcg',
+        service: 'tcgdex',
+        operation: 'set-cards',
+      });
+      throw new Error('Invalid TCGdex set response');
+    }
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
 
-    if (cards.length > 0) await setCachedData(cacheKey, cards);
+    if (cards.length > 0) {
+      await setCachedData(cacheKey, cards);
+    } else {
+      reportFallback('empty-required-list', {
+        feature: 'tcg',
+        service: 'tcgdex',
+        operation: 'set-cards',
+      });
+    }
     return cards;
   } catch (error) {
     if (signal?.aborted) throw error;
@@ -873,7 +912,7 @@ export const getCardsBySet = async (
       if (fallbackCards.length > 0) return fallbackCards;
     }
 
-    console.error(`[TCG API] Error fetching cards for set ${setId}:`, error);
+    console.error(`[TCG API] Error fetching cards for set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
     return (await getCachedData<TCGCard[]>(cacheKey, true)) || [];
   }
 };
@@ -903,15 +942,20 @@ function normaliseCollectionSetAlbum(
   // response (for example, `XY10` is returned as `xy10` in English). Treat
   // that as the same set while retaining the canonical payload identifier.
   if (raw.id.trim().toLowerCase() !== expectedSetId.trim().toLowerCase() || !Array.isArray(raw.cards)) {
-    throw new Error(`Invalid TCGdex set response for ${expectedSetId}`);
+    reportFallback('inconsistent-result', { feature: 'tcg', service: 'tcgdex', operation: 'collection-set-response' });
+    throw new Error('Invalid TCGdex set response');
   }
 
   if (raw.cards.some((card) => !isRawSetCard(card))) {
-    throw new Error(`Invalid TCGdex card response for ${expectedSetId}`);
+    reportFallback('inconsistent-result', { feature: 'tcg', service: 'tcgdex', operation: 'collection-card-response' });
+    throw new Error('Invalid TCGdex card response');
   }
 
   const cards = raw.cards.map((card) => normaliseCard({ ...card, source: 'TCGames' }, language));
-  if (cards.length === 0) return null;
+  if (cards.length === 0) {
+    reportFallback('empty-required-list', { feature: 'tcg', service: 'tcgdex', operation: 'collection-set-cards' });
+    return null;
+  }
 
   return {
     set: {
@@ -998,11 +1042,17 @@ export const getCollectionSetCatalog = async (
       `/${tcgLang}/sets?sort:field=releaseDate&sort:order=DESC`,
       { signal: createCollectionRequestSignal(signal, COLLECTION_CATALOG_TIMEOUT_MS) },
     );
-    if (!Array.isArray(data)) throw new Error('Invalid TCGdex set catalog response');
+    if (!Array.isArray(data)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'set-catalog' });
+      throw new Error('Invalid TCGdex set catalog response');
+    }
 
     const listedSets = data
       .map((raw, index) => {
-        if (!isRawSetBrief(raw)) throw new Error('Invalid TCGdex set catalog item');
+        if (!isRawSetBrief(raw)) {
+          reportFallback('inconsistent-result', { feature: 'tcg', service: 'tcgdex', operation: 'set-catalog-item' });
+          throw new Error('Invalid TCGdex set catalog item');
+        }
         const normalized = normaliseSet(raw, tcgLang);
         return {
           ...normalized,
@@ -1013,7 +1063,10 @@ export const getCollectionSetCatalog = async (
       })
       .filter((set) => (set.totalCards ?? 0) > 0);
 
-    if (listedSets.length === 0) throw new Error('TCGdex returned no usable sets');
+    if (listedSets.length === 0) {
+      reportFallback('empty-required-list', { feature: 'tcg', service: 'tcgdex', operation: 'set-catalog' });
+      throw new Error('TCGdex returned no usable sets');
+    }
 
     // The ordered list is the compact collection manifest. Validate card data
     // only when an authenticated user opens a set; probing every Japanese or
@@ -1096,20 +1149,33 @@ export const fetchCollectionSetCatalog = async (
   signal?: AbortSignal,
 ): Promise<TCGCollectionSetSummary[]> => {
   const params = new URLSearchParams({ tcgLang: lang });
+  let status: number | undefined;
   try {
     const response = await fetch(
       `/api/tcg/sets?${params.toString()}`,
       { signal: createCollectionRequestSignal(signal, COLLECTION_CATALOG_CLIENT_TIMEOUT_MS) },
     );
-    if (!response.ok) throw new Error(`Collection catalog request failed (${response.status})`);
+    status = response.status;
+    if (!response.ok) {
+      reportHttpFailure(new Error('Collection catalog request failed'), {
+        feature: 'tcg',
+        route: '/api/tcg/sets',
+        method: 'GET',
+        status,
+        operation: 'collection-catalog',
+      });
+      throw new Error('Collection catalog request failed');
+    }
 
     const payload: unknown = await response.json();
     if (!payload || typeof payload !== 'object' || !('sets' in payload)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'client-set-catalog' });
       throw new Error('Invalid collection catalog response');
     }
 
     const sets = (payload as { sets?: unknown }).sets;
     if (!Array.isArray(sets) || sets.length === 0 || !sets.every(isCollectionSetSummary)) {
+      reportFallback('incomplete-response', { feature: 'tcg', service: 'tcgdex', operation: 'client-set-catalog' });
       throw new Error('Collection catalog is empty or malformed');
     }
 
@@ -1119,6 +1185,15 @@ export const fetchCollectionSetCatalog = async (
     return sets;
   } catch (error) {
     if (signal?.aborted) throw error;
+    if (status === undefined || status >= 500) {
+      reportHttpFailure(error, {
+        feature: 'tcg',
+        route: '/api/tcg/sets',
+        method: 'GET',
+        status,
+        operation: 'collection-catalog',
+      });
+    }
   }
 
   // The browser can still reach TCGdex when the server function is cold,
@@ -1171,11 +1246,23 @@ export const fetchSetCollectionCards = async (
   signal?: AbortSignal,
 ): Promise<TCGCollectionCard[]> => {
   const params = new URLSearchParams({ setId, tcgLang: lang });
+  let status: number | undefined;
   try {
     const response = await fetch(
       `/api/tcg/collection/set-cards?${params.toString()}`,
       { signal: createCollectionRequestSignal(signal, COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS) },
     );
+    status = response.status;
+    if (!response.ok) {
+      reportHttpFailure(new Error('Collection set cards request failed'), {
+        feature: 'tcg',
+        route: '/api/tcg/collection/set-cards',
+        method: 'GET',
+        status,
+        operation: 'collection-set-cards',
+      });
+      throw new Error('Collection set cards request failed');
+    }
     if (response.ok) {
       const payload: unknown = await response.json();
       const rawCards = payload && typeof payload === 'object' && 'cards' in payload
@@ -1191,10 +1278,20 @@ export const fetchSetCollectionCards = async (
           const hydratedById = new Map(hydratedCards.map((card) => [card.id, card]));
           return cards.map((card) => hydratedById.get(card.id) ?? card);
         }
+        reportFallback('inconsistent-result', { feature: 'tcg', service: 'tcgdex', operation: 'client-set-cards' });
       }
     }
   } catch (error) {
     if (signal?.aborted) throw error;
+    if (status === undefined || status >= 500) {
+      reportHttpFailure(error, {
+        feature: 'tcg',
+        route: '/api/tcg/collection/set-cards',
+        method: 'GET',
+        status,
+        operation: 'collection-set-cards',
+      });
+    }
   }
 
   // The server route may be unable to reach TCGdex while the browser can. The
@@ -1221,6 +1318,10 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
 
   try {
     const { data } = await tcgClient.get<RawSet[]>(`/${tcgLang}/sets`);
+    if (!Array.isArray(data)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'all-sets' });
+      throw new Error('Invalid TCGdex set list response');
+    }
     const sets = data.map((set) => normaliseSet(set, tcgLang));
 
     const enrichedSets = await mapWithConcurrency(sets, 10, async (set) => {
@@ -1248,12 +1349,16 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
       return dateB - dateA;
     });
 
+    if (sortedSets.length === 0) {
+      reportFallback('empty-required-list', { feature: 'tcg', service: 'tcgdex', operation: 'all-sets' });
+    }
+
     if (sortedSets.length > 0 || !cachedSets?.length) {
       await setCachedData(cacheKey, sortedSets);
     }
     return sortedSets.length > 0 ? sortedSets : (cachedSets ?? []);
   } catch (error) {
-    console.error('[TCG API] Error fetching all sets:', error);
+    console.error('[TCG API] Error fetching all sets:', error instanceof Error ? error.name : 'UnknownError');
     const fallbackSets = cachedSets ?? (await getCachedData<TCGSet[]>(cacheKey, true));
     return fallbackSets ?? [];
   }
@@ -1271,6 +1376,10 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
     if (cached) return cached;
 
     const { data } = await tcgClient.get<RawSet>(`/${tcgLang}/sets/${setId}`);
+    if (!isRawSetBrief(data)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'set-detail' });
+      throw new Error('Invalid TCGdex set response');
+    }
     const set = normaliseSet(data, tcgLang);
     await setCachedData(cacheKey, set);
     return set;
@@ -1288,7 +1397,7 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
       } catch (fallbackError) {
         // A network or upstream failure is temporary. Throwing keeps Next's
         // persistent cache from storing it as a missing set for an hour.
-        console.error(`[TCG API] Error fetching fallback set ${setId}:`, fallbackError);
+        console.error(`[TCG API] Error fetching fallback set ${setId}:`, fallbackError instanceof Error ? fallbackError.name : 'UnknownError');
         throw fallbackError;
       }
     }
@@ -1297,7 +1406,7 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
 
     // Only a confirmed 404 means the identifier is absent. Other failures
     // must remain retryable instead of being cached as a route-level 404.
-    console.error(`[TCG API] Error fetching set ${setId}:`, error);
+    console.error(`[TCG API] Error fetching set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
     throw error;
   }
 };
@@ -1363,6 +1472,10 @@ export const searchCards = async (
           const pageQuery = buildCardQueryParams(queryFilters, remotePage, ALL_PAGE_SIZE - 1).toString();
           const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
           throwIfAborted(signal);
+          if (!Array.isArray(data)) {
+            reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'card-search-all' });
+            throw new Error('Invalid TCGdex card search response');
+          }
           const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
           allCards.push(...normalized);
           hasMoreRemote = normalized.length === ALL_PAGE_SIZE;
@@ -1379,6 +1492,10 @@ export const searchCards = async (
 
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${query}`, signal);
       throwIfAborted(signal);
+      if (!Array.isArray(data)) {
+        reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'card-search-page' });
+        throw new Error('Invalid TCGdex card search response');
+      }
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
       const sorted = [...normalized].sort((a, b) => compareCards(a, b, filters.sortBy ?? 'name', filters.sortOrder ?? 'asc'));
       const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, safeLimit), tcgLang, signal);
@@ -1401,6 +1518,10 @@ export const searchCards = async (
       const pageQuery = buildCardQueryParams(queryFilters, remotePage, safeLimit).toString();
       const { data } = await getWithOptionalSignal<TCGCard[]>(`/${tcgLang}/cards?${pageQuery}`, signal);
       throwIfAborted(signal);
+      if (!Array.isArray(data)) {
+        reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'card-search-filtered' });
+        throw new Error('Invalid TCGdex card search response');
+      }
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
       const hydrated = hasLocalOnlyFilters || requiresPriceHydration
         ? await mapWithConcurrency(normalized, VISUAL_METADATA_CONCURRENCY, async (card) => {
@@ -1432,7 +1553,7 @@ export const searchCards = async (
     return result;
   } catch (error) {
     if (signal?.aborted) throw error;
-    console.error('[TCG API] Error in searchCards:', error);
+    console.error('[TCG API] Error in searchCards:', error instanceof Error ? error.name : 'UnknownError');
     const staleCached = dependsOnLocalOwnership
       ? null
       : await getCachedData<TCGCatalogPageResult>(cacheKey, true);
@@ -1464,7 +1585,7 @@ export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> =
     await setCachedData(cacheKey, options);
     return options;
   } catch (error) {
-    console.error('[TCG API] Error fetching filter options:', error);
+    console.error('[TCG API] Error fetching filter options:', error instanceof Error ? error.name : 'UnknownError');
     return (
       cached ?? (await getCachedData<TCGFilterOptions>(cacheKey, true)) ?? {
         categories: TCG_CARD_CATEGORIES,
@@ -1525,7 +1646,7 @@ export const getRaritiesForSet = async (setId: string, lang = 'en'): Promise<str
     await setCachedData(cacheKey, rarities);
     return rarities;
   } catch (error) {
-    console.error(`[TCG API] Error fetching rarities for set ${setId}:`, error);
+    console.error(`[TCG API] Error fetching rarities for set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
     return (await getCachedData<string[]>(cacheKey, true)) || [];
   }
 };
@@ -1591,7 +1712,7 @@ export const getPokemonCards = async (
     await setCachedData(cacheKey, sorted);
     return sorted;
   } catch (error) {
-    console.error(`[TCG API] Error fetching cards for ${pokemonName}:`, error);
+    console.error(`[TCG API] Error fetching cards for ${pokemonName}:`, error instanceof Error ? error.name : 'UnknownError');
     const staleCached = await getCachedData<TCGCard[]>(cacheKey, true);
     return staleCached ? sortCardsByReleaseDate(staleCached) : [];
   }

@@ -113,6 +113,7 @@ function CreateAlertForm({ cardId, cardName, onSuccess, onCancel }: CreateFormPr
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
+    mutationKey: ['tcg-price-alerts'],
     mutationFn: () => {
       const value = parseFloat(threshold);
       if (isNaN(value) || value <= 0) throw new Error('Enter a valid price');
@@ -227,6 +228,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
   const threshold = alert.currency === 'EUR' ? alert.threshold_eur : alert.threshold_usd;
 
   const deleteMutation = useMutation({
+    mutationKey: ['tcg-price-alerts'],
     mutationFn: () => deleteAlert(alert.id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['price-alerts', cardId] });
@@ -236,6 +238,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
   });
 
   const toggleMutation = useMutation({
+    mutationKey: ['tcg-price-alerts'],
     mutationFn: () => toggleAlert(alert.id, !alert.is_active),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['price-alerts', cardId] });
@@ -244,6 +247,7 @@ function AlertRow({ alert, cardId }: AlertRowProps) {
   });
 
   const testMutation = useMutation({
+    mutationKey: ['notifications'],
     mutationFn: async () => {
       if (!isPushSupported()) throw new Error('Push not supported in this browser');
       const registration = await navigator.serviceWorker.ready;

@@ -11,6 +11,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 
 import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferencesButton';
+import { ReportProblemButton } from '@/components/layout/ReportProblemButton';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -282,6 +283,27 @@ export default async function SiteFooter() {
                 <ConsentPreferencesButton
                   label={t('legal.banner.manage', { defaultValue: 'Manage preferences' })}
                   className="site-footer__link site-footer__link--compact"
+                />
+              </li>
+              <li>
+                <ReportProblemButton
+                  addScreenshotLabel={t('feedback.add_screenshot')}
+                  cancelLabel={t('feedback.cancel')}
+                  confirmScreenshotLabel={t('feedback.confirm_screenshot')}
+                  contactHref={localizedHref('/contact')}
+                  errorEmptyMessage={t('feedback.error_empty_message')}
+                  errorForbidden={t('feedback.error_forbidden')}
+                  errorGeneric={t('feedback.error_generic')}
+                  errorNoClient={t('feedback.error_no_client')}
+                  errorTimeout={t('feedback.error_timeout')}
+                  formTitle={t('feedback.form_title')}
+                  label={t('feedback.report_problem')}
+                  messageLabel={t('feedback.message_label')}
+                  messagePlaceholder={t('feedback.message_placeholder')}
+                  removeScreenshotLabel={t('feedback.remove_screenshot')}
+                  requiredLabel={t('feedback.required')}
+                  submitLabel={t('feedback.submit')}
+                  successMessage={t('feedback.success')}
                 />
               </li>
             </ul>

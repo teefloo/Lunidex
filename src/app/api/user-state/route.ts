@@ -5,6 +5,7 @@ import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 import { rateLimit } from '@/lib/rate-limit';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const MAX_STATE_BYTES = 2_000_000;
 
@@ -43,7 +44,7 @@ async function getCurrentState(
   return rows[0] ?? null;
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getUserState(request: NextRequest): Promise<NextResponse> {
   const sql = getNeonClient();
   if (!sql) return unavailable();
 
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ data, updatedAt: row?.updated_at ?? null }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
-export async function PUT(request: NextRequest): Promise<NextResponse> {
+async function putUserState(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -142,3 +143,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     { status: 409, headers: { 'Cache-Control': 'private, no-store' } },
   );
 }
+
+export const GET = withObservedRouteHandler('/api/user-state', 'sync', getUserState);
+export const PUT = withObservedRouteHandler('/api/user-state', 'sync', putUserState);

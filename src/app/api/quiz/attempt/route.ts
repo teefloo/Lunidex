@@ -5,6 +5,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import {
   DAILY_LEADERBOARD_CHALLENGE,
   DAILY_LEADERBOARD_MODE,
@@ -63,7 +64,7 @@ function isUniqueViolation(error: unknown): boolean {
     && (error as { code?: unknown }).code === '23505';
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postQuizAttempt(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -213,3 +214,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     { headers: noStoreHeaders() },
   );
 }
+
+export const POST = withObservedRouteHandler('/api/quiz/attempt', 'quiz', postQuizAttempt);

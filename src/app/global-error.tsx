@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import * as Sentry from '@sentry/nextjs';
+
+import { reportSentryException } from '@/lib/sentry-observability';
 
 export default function GlobalError({
   error,
@@ -11,7 +12,11 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    reportSentryException(error, {
+      feature: 'route-boundary',
+      route: window.location.pathname,
+      operation: 'global-error',
+    });
   }, [error]);
 
   return (

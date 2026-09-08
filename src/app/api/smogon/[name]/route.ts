@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 // Cache the full PS formats-data payload at the module level so the Edge
 // runtime re-uses it across requests within the same invocation.
@@ -31,7 +32,7 @@ async function getPSData(): Promise<Record<string, unknown>> {
 export const runtime = 'edge';
 export const revalidate = 86400; // 24 h
 
-export async function GET(
+async function getSmogonData(
   _req: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
@@ -68,3 +69,5 @@ export async function GET(
     return NextResponse.json(null, { status: 502 });
   }
 }
+
+export const GET = withObservedRouteHandler('/api/smogon/:name', 'smogon', getSmogonData);

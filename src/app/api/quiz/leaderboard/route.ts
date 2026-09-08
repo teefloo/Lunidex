@@ -16,6 +16,7 @@ import {
   type LeaderboardResponse,
 } from '@/lib/leaderboard';
 import { DAILY_MARATHON_MAX_WRONG, QUIZ_ATTEMPT_MAX_AGE_MINUTES } from '@/lib/quiz-attempt';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 /** Row shape returned by the quiz_leaderboard_* RPCs (rank may arrive as bigint). */
 interface LeaderboardRpcRow {
@@ -62,7 +63,7 @@ function toEntry(row: LeaderboardRpcRow): LeaderboardEntry {
   };
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getQuizLeaderboard(request: NextRequest): Promise<NextResponse> {
   const sql = getNeonClient();
   if (!sql) {
     return NextResponse.json(
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   });
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postQuizLeaderboard(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -234,3 +235,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     { headers: { 'Cache-Control': 'private, no-store' } },
   );
 }
+
+export const GET = withObservedRouteHandler('/api/quiz/leaderboard', 'quiz', getQuizLeaderboard);
+export const POST = withObservedRouteHandler('/api/quiz/leaderboard', 'quiz', postQuizLeaderboard);

@@ -1,4 +1,5 @@
 import { get, set, keys, del } from 'idb-keyval';
+import { featureFromCacheKey, reportFallback } from '@/lib/sentry-observability';
 
 const CACHE_PREFIX = 'poke-cache-v3-';
 const CACHE_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 days
@@ -46,6 +47,13 @@ export async function getCachedData<T>(key: string, allowExpired = false): Promi
     const isExpired = Date.now() - item.timestamp > CACHE_EXPIRATION;
     if (isExpired && !allowExpired) {
       return null;
+    }
+
+    if (isExpired && allowExpired) {
+      reportFallback('stale-cache', {
+        feature: featureFromCacheKey(key),
+        operation: 'cache-read',
+      });
     }
 
     return item.data;

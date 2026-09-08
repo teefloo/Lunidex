@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getNeonAuthServer, type NeonAuthHandler } from '@/lib/neon/server-auth';
 import { normalizeAuthPath } from '@/lib/neon/auth-route';
 import { rewriteDevelopmentAuthRequest, rewriteDevelopmentAuthResponse } from '@/lib/neon/local-cookies';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 type AuthRouteContext = { params: Promise<{ path?: string[] }> };
 
@@ -38,8 +39,8 @@ function createHandler(method: keyof NeonAuthHandler) {
   };
 }
 
-export const GET = createHandler('GET');
-export const POST = createHandler('POST');
-export const PUT = createHandler('PUT');
-export const DELETE = createHandler('DELETE');
-export const PATCH = createHandler('PATCH');
+export const GET = withObservedRouteHandler('/api/auth/:path', 'auth', createHandler('GET'));
+export const POST = withObservedRouteHandler('/api/auth/:path', 'auth', createHandler('POST'));
+export const PUT = withObservedRouteHandler('/api/auth/:path', 'auth', createHandler('PUT'));
+export const DELETE = withObservedRouteHandler('/api/auth/:path', 'auth', createHandler('DELETE'));
+export const PATCH = withObservedRouteHandler('/api/auth/:path', 'auth', createHandler('PATCH'));

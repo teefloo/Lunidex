@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getNeonClient } from '@/lib/neon/server';
 import { getTCGCardCached } from '../../../../../lib/api/server-cache';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 /** Minimum interval between two recorded snapshots for the same card. */
 const SNAPSHOT_MIN_INTERVAL_HOURS = 6;
@@ -100,7 +101,7 @@ async function recordSnapshotIfDue(
          ${snapshot.cardmarket_low}, ${snapshot.cardmarket_trend})
     `;
   } catch (error) {
-    console.error('[price-history] Failed to record snapshot:', error);
+    console.error('[price-history] Failed to record snapshot:', error instanceof Error ? error.name : 'UnknownError');
   }
 }
 
@@ -126,7 +127,7 @@ interface PriceHistoryRow {
 
 export const runtime = 'edge';
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
   const { cardId } = await params;
 
   if (!isValidTcgCardId(cardId)) {
@@ -178,3 +179,5 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     },
   );
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/price-history/:id', 'tcg', getPriceHistory);

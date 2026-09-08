@@ -1,5 +1,6 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import { attachAxiosSentryInstrumentation } from '@/lib/sentry-observability';
 
 export const REST_API_BASE = 'https://pokeapi.co/api/v2';
 export const GRAPHQL_API_BASE = 'https://beta.pokeapi.co/graphql/v1beta';
@@ -22,6 +23,8 @@ axiosRetry(apiClient, {
   },
 });
 
+attachAxiosSentryInstrumentation(apiClient, { feature: 'pokemon', service: 'pokeapi' });
+
 axiosRetry(graphqlClient, {
   retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
@@ -29,6 +32,8 @@ axiosRetry(graphqlClient, {
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
   },
 });
+
+attachAxiosSentryInstrumentation(graphqlClient, { feature: 'graphql', service: 'pokeapi-graphql' });
 
 export { graphqlClient };
 export default apiClient;

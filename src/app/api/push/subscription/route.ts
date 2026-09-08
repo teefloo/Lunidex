@@ -5,6 +5,7 @@ import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 import { rateLimit } from '@/lib/rate-limit';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const PRIVATE_NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
@@ -42,7 +43,7 @@ function validEndpoint(value: unknown): value is string {
   return isAllowedPushEndpoint(value);
 }
 
-export async function POST(request: NextRequest) {
+async function postPushSubscription(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
 
-export async function DELETE(request: NextRequest) {
+async function deletePushSubscription(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -110,3 +111,6 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
+
+export const POST = withObservedRouteHandler('/api/push/subscription', 'notifications', postPushSubscription);
+export const DELETE = withObservedRouteHandler('/api/push/subscription', 'notifications', deletePushSubscription);

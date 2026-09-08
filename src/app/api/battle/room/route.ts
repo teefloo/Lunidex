@@ -31,6 +31,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient } from '@/lib/neon/server';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const MAX_TEAM_SIZE = 6;
 const MAX_CHAT_MESSAGES = 100;
@@ -86,7 +87,7 @@ function parseTeam(value: unknown): BattleTeamMember[] | null {
 }
 
 // POST /api/battle/room — create a room
-export async function POST(req: NextRequest) {
+async function postBattleRoom(req: NextRequest) {
   const originError = requireTrustedMutationOrigin(req);
   if (originError) return originError;
 
@@ -143,7 +144,7 @@ export async function POST(req: NextRequest) {
 }
 
 // GET /api/battle/room?id=<uuid> — fetch room
-export async function GET(req: NextRequest) {
+async function getBattleRoom(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id');
   if (!id) {
     return NextResponse.json({ error: 'Missing room id' }, { status: 400 });
@@ -176,7 +177,7 @@ export async function GET(req: NextRequest) {
 }
 
 // PATCH /api/battle/room?id=<uuid> — join or append chat
-export async function PATCH(req: NextRequest) {
+async function patchBattleRoom(req: NextRequest) {
   const originError = requireTrustedMutationOrigin(req);
   if (originError) return originError;
 
@@ -289,3 +290,7 @@ export async function PATCH(req: NextRequest) {
   if (!rows[0]) return NextResponse.json({ error: 'Room not found or access denied' }, { status: 404, headers: PRIVATE_NO_STORE_HEADERS });
   return NextResponse.json(rows[0], { headers: PRIVATE_NO_STORE_HEADERS });
 }
+
+export const POST = withObservedRouteHandler('/api/battle/room', 'battle', postBattleRoom);
+export const GET = withObservedRouteHandler('/api/battle/room', 'battle', getBattleRoom);
+export const PATCH = withObservedRouteHandler('/api/battle/room', 'battle', patchBattleRoom);

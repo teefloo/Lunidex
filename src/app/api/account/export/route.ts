@@ -4,6 +4,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 type ProfileRow = Record<string, unknown>;
 type UserStateRow = { data: unknown; updated_at: string };
@@ -12,7 +13,7 @@ function unavailable(): NextResponse {
   return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getAccountExport(request: NextRequest): Promise<NextResponse> {
   const sql = getNeonClient();
   if (!sql) return unavailable();
 
@@ -73,3 +74,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     },
   });
 }
+
+export const GET = withObservedRouteHandler('/api/account/export', 'profile', getAccountExport);

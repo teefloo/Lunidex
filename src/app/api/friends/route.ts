@@ -4,6 +4,7 @@ import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import type {
   FriendCollectionPage,
   FriendCollectionSummary,
@@ -258,7 +259,7 @@ async function canViewSnapshot(sql: NeonSql, userId: string, friendId: string, f
   return allowed?.allowed === true;
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function getFriends(request: NextRequest): Promise<NextResponse> {
   const context = await getContext(request);
   if (!isContext(context)) return context;
   const { sql, userId } = context;
@@ -435,7 +436,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ error: 'Unknown friends action' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postFriends(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -550,7 +551,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ error: 'Invalid friends action' }, { status: 400, headers: PRIVATE_NO_STORE_HEADERS });
 }
 
-export async function PATCH(request: NextRequest): Promise<NextResponse> {
+async function patchFriends(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -589,7 +590,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
 
-export async function DELETE(request: NextRequest): Promise<NextResponse> {
+async function deleteFriends(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
@@ -606,3 +607,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   `;
   return NextResponse.json({ ok: true }, { headers: PRIVATE_NO_STORE_HEADERS });
 }
+
+export const GET = withObservedRouteHandler('/api/friends', 'friends', getFriends);
+export const POST = withObservedRouteHandler('/api/friends', 'friends', postFriends);
+export const PATCH = withObservedRouteHandler('/api/friends', 'friends', patchFriends);
+export const DELETE = withObservedRouteHandler('/api/friends', 'friends', deleteFriends);

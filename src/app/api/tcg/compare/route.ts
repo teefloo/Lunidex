@@ -3,10 +3,11 @@ import { getTCGCardCached } from '@/lib/api/server-cache';
 import { resolveTcgLang } from '@/lib/api/tcg';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
+import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const MAX_COMPARE_IDS = 4;
 
-export async function GET(request: NextRequest) {
+async function getTcgCompare(request: NextRequest) {
   if (!rateLimit(`tcg-compare:${ipKey(request)}`, 20)) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
@@ -38,7 +39,9 @@ export async function GET(request: NextRequest) {
       },
     );
   } catch (error) {
-    console.error('[TCG API] Failed to compare cards:', error);
+    console.error('[TCG API] Failed to compare cards:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Failed to compare cards' }, { status: 502 });
   }
 }
+
+export const GET = withObservedRouteHandler('/api/tcg/compare', 'tcg', getTcgCompare);
