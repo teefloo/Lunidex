@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Minus, Plus, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -30,7 +30,7 @@ interface TCGAlbumCardProps {
   owned: boolean;
   ownerships?: readonly TCGCollectionCardOwnership[];
   showMissing?: boolean;
-  onView?: () => void;
+  onView?: (card: TCGCard) => void;
   onOwnershipChange?: (owned: boolean) => void;
   collectionKey?: string;
   language?: TCGCardLanguage;
@@ -64,7 +64,7 @@ function quantityForVariant(
   return ownerships.find((ownership) => ownership.variant === variant)?.quantity ?? 0;
 }
 
-export function TCGAlbumCard({
+export const TCGAlbumCard = memo(function TCGAlbumCard({
   card,
   owned,
   ownerships = [],
@@ -206,7 +206,7 @@ export function TCGAlbumCard({
 
   return (
     <Sheet open={Boolean(collectionKey && isPanelOpen)} onOpenChange={setIsPanelOpen}>
-      <article className={cn('group flex min-w-0 flex-col gap-2 rounded-sm border p-1.5 shadow-[var(--shadow-pixel-sm)]', owned ? 'border-emerald-500/30 bg-card/40' : 'border-border/15 bg-card/20')}>
+      <article className={cn('tcg-album-card group flex min-w-0 flex-col gap-2 rounded-sm border p-1.5 shadow-[var(--shadow-pixel-sm)]', owned ? 'border-emerald-500/30 bg-card/40' : 'border-border/15 bg-card/20')}>
       <button
         type="button"
         onClick={handleCardClick}
@@ -261,7 +261,7 @@ export function TCGAlbumCard({
       )}
 
       <div className="pt-0.5">
-        <button type="button" onClick={onView} className="min-h-11 w-full rounded-sm border border-border/40 bg-card/50 px-2 text-[11px] font-black uppercase tracking-[0.05em] text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
+        <button type="button" onClick={() => onView?.(card)} className="min-h-11 w-full rounded-sm border border-border/40 bg-card/50 px-2 text-[11px] font-black uppercase tracking-[0.05em] text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
           {t('tcg.activation.view_card')}
         </button>
       </div>
@@ -312,6 +312,33 @@ export function TCGAlbumCard({
       )}
     </Sheet>
   );
+}, areTCGAlbumCardPropsEqual);
+
+function areTCGAlbumCardPropsEqual(previous: TCGAlbumCardProps, next: TCGAlbumCardProps): boolean {
+  return previous.card.id === next.card.id
+    && previous.card.name === next.card.name
+    && previous.card.localId === next.card.localId
+    && previous.card.image === next.card.image
+    && previous.card.imageUrl === next.card.imageUrl
+    && previous.card.rarity === next.card.rarity
+    && previous.owned === next.owned
+    && previous.showMissing === next.showMissing
+    && previous.collectionKey === next.collectionKey
+    && previous.language === next.language
+    && sameOwnerships(previous.ownerships ?? [], next.ownerships ?? []);
+}
+
+function sameOwnerships(
+  previous: readonly TCGCollectionCardOwnership[],
+  next: readonly TCGCollectionCardOwnership[],
+): boolean {
+  if (previous.length !== next.length) return false;
+  return previous.every((entry, index) => {
+    const candidate = next[index];
+    return entry.cardId === candidate.cardId
+      && entry.variant === candidate.variant
+      && entry.quantity === candidate.quantity;
+  });
 }
 
 function VariantQuantityRow({

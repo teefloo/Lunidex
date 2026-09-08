@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
-import { getAllSets, getCardsBySet } from '@/lib/api/tcg';
+import { getCardsBySet, getSetById } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
@@ -13,6 +13,8 @@ import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
 import { TCGWishlistContent } from '@/components/tcg/TCGWishlistContent';
 import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
+import { decodeTCGCollectionKey } from '@/lib/tcg-collections';
+import { getTCGSetIdsFromWishlist } from '@/lib/tcg-wishlist';
 
 export function TCGWishlistPage() {
   const { t } = useTranslation();
@@ -30,6 +32,8 @@ export function TCGWishlistPage() {
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
   const tcgWishlistCards = usePrimeDexStore((s) => s.tcgWishlistCards);
+  const tcgActiveSets = usePrimeDexStore((s) => s.tcgActiveSets);
+  const tcgActiveCollections = usePrimeDexStore((s) => s.tcgActiveCollections);
   const setBrowseLanguage = usePrimeDexStore((s) => s.setTCGBrowseLanguage);
   const tryEnglish = () => {
     setBrowseLanguage('en');
@@ -38,37 +42,49 @@ export function TCGWishlistPage() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const { data: sets } = useQueries({
-    queries: [
-      {
-        queryKey: ['tcg', 'all-sets', resolvedLang],
-        queryFn: () => getAllSets(resolvedLang),
-        staleTime: 60 * 60 * 1000,
-        enabled: mounted && hasHydrated && tcgWishlistCards.length > 0,
-      },
-    ],
-  })[0] as unknown as { data: TCGSet[] | undefined };
+  const activeSetIds = useMemo(() => [...new Set([
+    ...tcgActiveSets,
+    ...tcgActiveCollections
+      .map((key) => decodeTCGCollectionKey(key)?.setId)
+      .filter((setId): setId is string => Boolean(setId)),
+  ])]
+    .map((setId) => setId.trim().toLowerCase())
+    .filter(Boolean)
+    .sort(), [tcgActiveCollections, tcgActiveSets]);
+  const relevantSetIds = useMemo(() => [...new Set([
+    ...getTCGSetIdsFromWishlist(tcgWishlistCards),
+    ...activeSetIds,
+  ])].sort(), [activeSetIds, tcgWishlistCards]);
+
+  const setQueries = useQueries({
+    queries: relevantSetIds.map((setId) => ({
+      queryKey: ['tcg', 'set-brief-v2', setId, resolvedLang],
+      queryFn: () => getSetById(setId, resolvedLang),
+      staleTime: 60 * 60 * 1000,
+      enabled: mounted && hasHydrated && tcgWishlistCards.length > 0,
+    })),
+  });
 
   const cardQueries = useQueries({
-    queries: (sets ?? []).map((set) => ({
-      queryKey: ['tcg', 'set-cards', set.id, resolvedLang],
-      queryFn: () => getCardsBySet(set.id, resolvedLang),
+    queries: relevantSetIds.map((setId) => ({
+      queryKey: ['tcg', 'set-cards', setId, resolvedLang],
+      queryFn: () => getCardsBySet(setId, resolvedLang),
       staleTime: 60 * 60 * 1000,
-      enabled: mounted && hasHydrated && tcgWishlistCards.length > 0 && sets !== undefined && sets.length > 0,
+      enabled: mounted && hasHydrated && tcgWishlistCards.length > 0,
     })),
   });
 
   const setsMap = useMemo(() => {
     const map = new Map<string, { set: TCGSet; cards: TCGCard[] }>();
-    if (!sets) return map;
-    for (let i = 0; i < sets.length; i++) {
+    for (let i = 0; i < relevantSetIds.length; i++) {
+      const set = setQueries[i]?.data;
       const cardData = cardQueries[i]?.data;
-      if (cardData) {
-        map.set(sets[i].id, { set: sets[i], cards: cardData });
+      if (set && cardData) {
+        map.set(relevantSetIds[i], { set, cards: cardData });
       }
     }
     return map;
-  }, [sets, cardQueries]);
+  }, [cardQueries, relevantSetIds, setQueries]);
 
   return (
     <div className="app-page">

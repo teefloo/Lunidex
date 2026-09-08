@@ -273,6 +273,11 @@ h1 { letter-spacing: 0; }
   min-height: 100dvh;
 }
 
+.tcg-album-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 360px;
+}
+
 .page-shell {
   position: relative;
   z-index: 1;

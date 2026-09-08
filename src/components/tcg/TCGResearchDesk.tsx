@@ -238,7 +238,6 @@ export function TCGResearchDesk({
     enabled: mounted && hasHydrated,
     staleTime: 5 * 60 * 1000,
     initialData: initialCards.length > 0 && initialLanguage === resolvedLang ? initialCatalogData : undefined,
-    initialDataUpdatedAt: 0,
   });
 
   const cards = useMemo(() => cardsData?.pages.flatMap((page) => page.cards) ?? [], [cardsData]);

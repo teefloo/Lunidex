@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
@@ -66,6 +66,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
   const [firstValueReached, setFirstValueReached] = useState(false);
   const [activationComplete, setActivationComplete] = useState(false);
   const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
+  const firstValueReachedRef = useRef(false);
 
   useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
   useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
@@ -92,21 +93,22 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
     return result;
   }, [sortedCards, search, rarityFilter, showMissingOnly, ownedIds]);
 
-  const openCard = (card: TCGCard) => {
+  const openCard = useCallback((card: TCGCard) => {
     setSelectedCard(card);
     setIsDetailOpen(true);
-  };
+  }, []);
 
-  const handleOwnershipChange = (nowOwned: boolean) => {
+  const handleOwnershipChange = useCallback((nowOwned: boolean) => {
     if (!nowOwned) return;
-    if (!firstValueReached) {
+    if (!firstValueReachedRef.current) {
+      firstValueReachedRef.current = true;
       setFirstValueReached(true);
       return;
     }
     trackReturnAfterActivation('owned_add');
     setActivationMethod('second_owned_card');
     setActivationComplete(true);
-  };
+  }, []);
 
   if (!mounted) return null;
 
@@ -221,7 +223,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
             key={card.id}
             card={card}
             owned={ownedIds.has(card.id)}
-            onView={() => openCard(card)}
+            onView={openCard}
             collectionKey={resolvedCollectionKey}
             language={selectedLanguage}
             ownerships={ownershipByCard.get(card.id) ?? []}

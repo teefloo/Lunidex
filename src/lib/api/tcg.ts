@@ -2,6 +2,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { attachAxiosSentryInstrumentation } from '@/lib/sentry-observability';
 import { getCachedData, setCachedData } from './cache';
+import { createMemoryCache } from './memory-cache';
 import type {
   TCGCard,
   TCGCardAbility,
@@ -98,6 +99,13 @@ const COLLECTION_VALUE_CONCURRENCY = 6;
 const COLLECTION_VALUE_MIN_TIMEOUT_MS = 45_000;
 const COLLECTION_VALUE_MAX_TIMEOUT_MS = 90_000;
 const COLLECTION_VALUE_BATCH_BUDGET_MS = 1_500;
+const TCG_MEMORY_CACHE_TTL_MS = 10 * 60 * 1000;
+const tcgCardMemoryCache = createMemoryCache<TCGCard>({ maxEntries: 1024, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const tcgSetMemoryCache = createMemoryCache<TCGSet>({ maxEntries: 256, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const tcgSetCardsMemoryCache = createMemoryCache<TCGCard[]>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const tcgAlbumMemoryCache = createMemoryCache<TCGSetAlbumData>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const tcgCollectionCatalogMemoryCache = createMemoryCache<TCGCollectionSetSummary[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const tcgAllSetsMemoryCache = createMemoryCache<TCGSet[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 export const TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS = 600;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -590,10 +598,18 @@ export const getTCGCard = async (
   // out of the generic normal/reverse/holo price resolver.
   const cacheKey = `tcg-card-v14-${cardId}-${tcgLang}`;
   const allowEnglishFallback = options.allowEnglishFallback !== false;
+  const memoryCached = tcgCardMemoryCache.get(cacheKey);
+  if (memoryCached && (!options.requirePricing || hasMarketPrice(memoryCached))) {
+    throwIfAborted(signal);
+    return memoryCached;
+  }
 
   try {
     const cached = await getCachedData<TCGCard>(cacheKey);
-    if (cached && (!options.requirePricing || hasMarketPrice(cached))) return cached;
+    if (cached && (!options.requirePricing || hasMarketPrice(cached))) {
+      tcgCardMemoryCache.set(cacheKey, cached);
+      return cached;
+    }
 
     throwIfAborted(signal);
 
@@ -608,6 +624,7 @@ export const getTCGCard = async (
     }
     if (data) {
       const card = await resolveCardImage(normaliseCard(data, tcgLang), tcgLang, signal);
+      tcgCardMemoryCache.set(cacheKey, card);
       await setCachedData(cacheKey, card);
       return card;
     }
@@ -632,11 +649,15 @@ export const getTCGCard = async (
     }
 
     if (!allowEnglishFallback) {
-      return await getCachedData<TCGCard>(cacheKey, true);
+      const staleCard = await getCachedData<TCGCard>(cacheKey, true);
+      if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
+      return staleCard;
     }
 
     console.error(`[TCG API] Error fetching card ${cardId}:`, error instanceof Error ? error.name : 'UnknownError');
-    return await getCachedData<TCGCard>(cacheKey, true);
+    const staleCard = await getCachedData<TCGCard>(cacheKey, true);
+    if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
+    return staleCard;
   }
 };
 
@@ -1072,12 +1093,20 @@ export const getCardsBySet = async (
   // v6 invalidates earlier partial-set caches so public checklist pages can
   // safely hydrate the complete set response before becoming indexable.
   const cacheKey = `tcg-set-cards-v6-${setId}-${tcgLang}`;
+  const memoryCached = tcgSetCardsMemoryCache.get(cacheKey);
+  if (memoryCached?.length) {
+    throwIfAborted(signal);
+    return memoryCached;
+  }
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
     // Empty responses are not useful cache entries: they can be produced by a
     // transient upstream failure while the set is still available.
-    if (cached?.length) return cached;
+    if (cached?.length) {
+      tcgSetCardsMemoryCache.set(cacheKey, cached);
+      return cached;
+    }
 
     const { data } = await getWithOptionalSignal<Omit<RawSet, 'cards'> & { cards: TCGCard[] }>(
       `/${tcgLang}/sets/${setId}`,
@@ -1094,6 +1123,7 @@ export const getCardsBySet = async (
     const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
 
     if (cards.length > 0) {
+      tcgSetCardsMemoryCache.set(cacheKey, cards);
       await setCachedData(cacheKey, cards);
     } else {
       reportFallback('empty-required-list', {
@@ -1112,7 +1142,9 @@ export const getCardsBySet = async (
     }
 
     console.error(`[TCG API] Error fetching cards for set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
-    return (await getCachedData<TCGCard[]>(cacheKey, true)) || [];
+    const staleCards = await getCachedData<TCGCard[]>(cacheKey, true);
+    if (staleCards?.length) tcgSetCardsMemoryCache.set(cacheKey, staleCards);
+    return staleCards || [];
   }
 };
 
@@ -1190,8 +1222,16 @@ export const getCollectionSetAlbum = async (
 ): Promise<TCGSetAlbumData | null> => {
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = `tcg-collection-set-album-v2-${setId}-${tcgLang}`;
+  const memoryCached = tcgAlbumMemoryCache.get(cacheKey);
+  if (memoryCached?.cards.length) {
+    throwIfAborted(signal);
+    return memoryCached;
+  }
   const cached = await getCachedData<TCGSetAlbumData>(cacheKey);
-  if (cached?.cards.length) return cached;
+  if (cached?.cards.length) {
+    tcgAlbumMemoryCache.set(cacheKey, cached);
+    return cached;
+  }
   const requestSignal = createCollectionRequestSignal(signal, COLLECTION_ALBUM_TIMEOUT_MS);
 
   try {
@@ -1212,12 +1252,18 @@ export const getCollectionSetAlbum = async (
       }
     }
 
-    if (album) await setCachedData(cacheKey, album);
+    if (album) {
+      tcgAlbumMemoryCache.set(cacheKey, album);
+      await setCachedData(cacheKey, album);
+    }
     return album;
   } catch (error) {
     if (signal?.aborted) throw error;
     const staleAlbum = await getCachedData<TCGSetAlbumData>(cacheKey, true);
-    if (staleAlbum?.cards.length) return staleAlbum;
+    if (staleAlbum?.cards.length) {
+      tcgAlbumMemoryCache.set(cacheKey, staleAlbum);
+      return staleAlbum;
+    }
     throw error;
   }
 };
@@ -1233,8 +1279,16 @@ export const getCollectionSetCatalog = async (
 ): Promise<TCGCollectionSetSummary[]> => {
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = getCollectionSetCatalogCacheKey(tcgLang);
+  const memoryCached = tcgCollectionCatalogMemoryCache.get(cacheKey);
+  if (memoryCached?.length) {
+    throwIfAborted(signal);
+    return memoryCached;
+  }
   const cached = await getCachedData<TCGCollectionSetSummary[]>(cacheKey);
-  if (cached?.length) return cached;
+  if (cached?.length) {
+    tcgCollectionCatalogMemoryCache.set(cacheKey, cached);
+    return cached;
+  }
 
   try {
     const { data } = await tcgClient.get<RawSet[]>(
@@ -1270,13 +1324,20 @@ export const getCollectionSetCatalog = async (
     // The ordered list is the compact collection manifest. Validate card data
     // only when an authenticated user opens a set; probing every Japanese or
     // Korean set here turns the landing page into an N+1 request waterfall.
+    tcgCollectionCatalogMemoryCache.set(cacheKey, listedSets);
     await setCachedData(cacheKey, listedSets);
     return listedSets;
   } catch (error) {
     if (signal?.aborted) throw error;
-    if (cached?.length) return cached;
+    if (cached?.length) {
+      tcgCollectionCatalogMemoryCache.set(cacheKey, cached);
+      return cached;
+    }
     const staleCatalog = await getCachedData<TCGCollectionSetSummary[]>(cacheKey, true);
-    if (staleCatalog?.length) return staleCatalog;
+    if (staleCatalog?.length) {
+      tcgCollectionCatalogMemoryCache.set(cacheKey, staleCatalog);
+      return staleCatalog;
+    }
     throw error;
   }
 };
@@ -1347,6 +1408,12 @@ export const fetchCollectionSetCatalog = async (
   lang = 'en',
   signal?: AbortSignal,
 ): Promise<TCGCollectionSetSummary[]> => {
+  const cacheKey = getCollectionSetCatalogCacheKey(lang);
+  const memoryCached = tcgCollectionCatalogMemoryCache.get(cacheKey);
+  if (memoryCached?.length) {
+    throwIfAborted(signal);
+    return memoryCached;
+  }
   const params = new URLSearchParams({ tcgLang: lang });
   let status: number | undefined;
   try {
@@ -1380,7 +1447,8 @@ export const fetchCollectionSetCatalog = async (
 
     // Keep the public manifest available to the installed PWA when its server
     // route or the upstream catalog is temporarily unavailable.
-    void setCachedData(getCollectionSetCatalogCacheKey(lang), sets);
+    tcgCollectionCatalogMemoryCache.set(cacheKey, sets);
+    void setCachedData(cacheKey, sets);
     return sets;
   } catch (error) {
     if (signal?.aborted) throw error;
@@ -1510,6 +1578,8 @@ export const fetchSetCollectionCards = async (
 export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = `tcg-all-sets-v8-${tcgLang}`;
+  const memoryCached = tcgAllSetsMemoryCache.get(cacheKey);
+  if (memoryCached?.length) return memoryCached;
   // The set list changes when a new expansion releases. Keep IndexedDB as an
   // offline fallback, but always give the live API the first opportunity to
   // provide the latest list.
@@ -1553,12 +1623,16 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
     }
 
     if (sortedSets.length > 0 || !cachedSets?.length) {
+      if (sortedSets.length > 0) tcgAllSetsMemoryCache.set(cacheKey, sortedSets);
       await setCachedData(cacheKey, sortedSets);
     }
-    return sortedSets.length > 0 ? sortedSets : (cachedSets ?? []);
+    const result = sortedSets.length > 0 ? sortedSets : (cachedSets ?? []);
+    if (result.length > 0) tcgAllSetsMemoryCache.set(cacheKey, result);
+    return result;
   } catch (error) {
     console.error('[TCG API] Error fetching all sets:', error instanceof Error ? error.name : 'UnknownError');
     const fallbackSets = cachedSets ?? (await getCachedData<TCGSet[]>(cacheKey, true));
+    if (fallbackSets?.length) tcgAllSetsMemoryCache.set(cacheKey, fallbackSets);
     return fallbackSets ?? [];
   }
 };
@@ -1569,10 +1643,15 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
 export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
   const tcgLang = resolveTcgLang(lang);
   const cacheKey = `tcg-set-v10-${setId}-${tcgLang}`;
+  const memoryCached = tcgSetMemoryCache.get(cacheKey);
+  if (memoryCached) return memoryCached;
 
   try {
     const cached = await getCachedData<TCGSet>(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      tcgSetMemoryCache.set(cacheKey, cached);
+      return cached;
+    }
 
     const { data } = await tcgClient.get<RawSet>(`/${tcgLang}/sets/${setId}`);
     if (!isRawSetBrief(data)) {
@@ -1580,16 +1659,21 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
       throw new Error('Invalid TCGdex set response');
     }
     const set = normaliseSet(data, tcgLang);
+    tcgSetMemoryCache.set(cacheKey, set);
     await setCachedData(cacheKey, set);
     return set;
   } catch (error) {
     const staleSet = await getCachedData<TCGSet>(cacheKey, true);
-    if (staleSet) return staleSet;
+    if (staleSet) {
+      tcgSetMemoryCache.set(cacheKey, staleSet);
+      return staleSet;
+    }
 
     if (tcgLang !== 'en') {
       try {
         const englishSet = await getSetById(setId, 'en');
         if (englishSet) {
+          tcgSetMemoryCache.set(cacheKey, englishSet);
           await setCachedData(cacheKey, englishSet);
           return englishSet;
         }
