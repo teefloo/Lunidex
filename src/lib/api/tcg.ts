@@ -94,8 +94,10 @@ const COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS = 8_000;
 const COLLECTION_SET_CARDS_FALLBACK_TIMEOUT_MS = 15_000;
 const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
 const COLLECTION_VALUE_CARD_TIMEOUT_MS = 4_000;
-const COLLECTION_VALUE_TIMEOUT_MS = 15_000;
 const COLLECTION_VALUE_CONCURRENCY = 6;
+const COLLECTION_VALUE_MIN_TIMEOUT_MS = 45_000;
+const COLLECTION_VALUE_MAX_TIMEOUT_MS = 90_000;
+const COLLECTION_VALUE_BATCH_BUDGET_MS = 1_500;
 export const TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS = 600;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -922,6 +924,24 @@ export interface FetchCollectionValueOptions {
   maxUniqueCards?: number;
 }
 
+/**
+ * Give a valuation enough time to drain its bounded request queue. A fixed
+ * short deadline made every large set look as if roughly the same number of
+ * cards had no price, even though TCGdex had returned prices for them.
+ */
+export function getCollectionValuationTimeoutMs(
+  uniqueCardCount: number,
+  concurrency = COLLECTION_VALUE_CONCURRENCY,
+): number {
+  const safeCardCount = Math.max(0, Math.floor(uniqueCardCount));
+  const safeConcurrency = Math.max(1, Math.floor(concurrency));
+  const batches = Math.ceil(safeCardCount / safeConcurrency);
+  return Math.min(
+    COLLECTION_VALUE_MAX_TIMEOUT_MS,
+    Math.max(COLLECTION_VALUE_MIN_TIMEOUT_MS, batches * COLLECTION_VALUE_BATCH_BUDGET_MS),
+  );
+}
+
 async function fetchValuationCardWithTimeout(
   cardId: string,
   lang: string,
@@ -1004,10 +1024,11 @@ export const fetchCollectionValue = async (
   const fetchCard = options.fetchCard ?? ((cardId: string, cardLanguage: string, cardSignal: AbortSignal) => (
     getTCGCard(cardId, cardLanguage, cardSignal, { requirePricing: true })
   ));
+  const concurrency = Math.max(1, Math.floor(options.concurrency ?? COLLECTION_VALUE_CONCURRENCY));
   const cards = await mapWithConcurrencyUntilTimeout(
     uniqueIds,
-    Math.max(1, Math.floor(options.concurrency ?? COLLECTION_VALUE_CONCURRENCY)),
-    COLLECTION_VALUE_TIMEOUT_MS,
+    concurrency,
+    getCollectionValuationTimeoutMs(uniqueIds.length, concurrency),
     signal,
     async (cardId, _index, valuationSignal) => {
       try {

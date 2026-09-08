@@ -1,6 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { fetchCollectionValue, normalizeOwnedVariantsForValuation } from './api/tcg';
+import {
+  fetchCollectionValue,
+  getCollectionValuationTimeoutMs,
+  normalizeOwnedVariantsForValuation,
+} from './api/tcg';
 import type { TCGCard } from '@/types/tcg';
 
 function pricedCard(id: string, setId = 'sv1', amount = 2): TCGCard {
@@ -52,6 +56,36 @@ describe('normalizeOwnedVariantsForValuation', () => {
 });
 
 describe('fetchCollectionValue', () => {
+  it('scales the valuation deadline for large collections instead of stopping at a fixed short cutoff', () => {
+    expect(getCollectionValuationTimeoutMs(177, 6)).toBe(45_000);
+    expect(getCollectionValuationTimeoutMs(600, 6)).toBe(90_000);
+  });
+
+  it('waits for a slow but healthy large collection queue instead of labeling the tail unpriced', async () => {
+    vi.useFakeTimers();
+    try {
+      const resultPromise = fetchCollectionValue(
+        Array.from({ length: 177 }, (_, index) => `sv1-${index + 1}`),
+        'en',
+        undefined,
+        undefined,
+        {
+          concurrency: 6,
+          fetchCard: (cardId) => new Promise<TCGCard>((resolve) => {
+            setTimeout(() => resolve(pricedCard(cardId)), 1_000);
+          }),
+        },
+      );
+
+      await vi.advanceTimersByTimeAsync(30_000);
+      const result = await resultPromise;
+      expect(result.pricedCount).toBe(177);
+      expect(result.unpricedCount).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('fetches each card once, keeps priced cards, and reports missing prices as partial data', async () => {
     const calls: string[] = [];
     const result = await fetchCollectionValue(
