@@ -35,6 +35,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getAllMoves } from '@/lib/api/graphql';
 import { TYPE_COLORS, type GraphQLMoveData, type MoveListItem } from '@/types/pokemon';
 import MoveDetailModal from './MoveDetailModal';
+import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
 
 const ALL_TYPES = [
   'normal',
@@ -89,9 +90,8 @@ export default function MovesPageClient({
     queryKey: ['moves', languageId],
     queryFn: () => getAllMoves(languageId),
     enabled: mounted,
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: STATIC_REMOTE_DATA_STALE_TIME,
     retry: 2,
-    refetchOnMount: 'always',
   });
 
   const rawMoves = queriedMoves ?? (!mounted ? initialMoves : undefined);

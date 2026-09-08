@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAllAbilities } from '@/lib/api/graphql';
 import type { AbilityListItem, GraphQLAbilityData } from '@/types/pokemon';
+import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
 
 type SortKey = 'name' | 'id';
 
@@ -54,9 +55,8 @@ export default function AbilitiesPageClient({
     queryKey: ['abilities', languageId],
     queryFn: () => getAllAbilities(languageId),
     enabled: mounted,
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: STATIC_REMOTE_DATA_STALE_TIME,
     retry: 2,
-    refetchOnMount: 'always',
   });
 
   const rawAbilities = queriedAbilities ?? (!mounted ? initialAbilities : undefined);

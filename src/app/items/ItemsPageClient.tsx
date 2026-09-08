@@ -29,6 +29,7 @@ import { getAllItems } from '@/lib/api/graphql';
 import type { GraphQLItemData, ItemListItem } from '@/types/pokemon';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getItemDescription } from '@/lib/item-description';
+import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
 
 const itemSpriteUrl = (name: string) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
 
@@ -60,9 +61,8 @@ export default function ItemsPageClient({
     queryKey: ['items', languageId],
     queryFn: () => getAllItems(languageId),
     enabled: mounted,
-    staleTime: 24 * 60 * 60 * 1000,
+    staleTime: STATIC_REMOTE_DATA_STALE_TIME,
     retry: 2,
-    refetchOnMount: 'always',
   });
 
   const rawItems = queriedItems ?? (!mounted ? initialItems : undefined);

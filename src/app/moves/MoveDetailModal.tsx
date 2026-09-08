@@ -29,6 +29,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TYPE_COLORS, type GraphQLMovePokemonData, type GroupedLearners, type MoveLearnMethod, type MoveListItem, type MovePokemonLearner } from '@/types/pokemon';
+import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
 
 interface MoveDetailModalProps {
   move: MoveListItem | null;
@@ -48,8 +49,7 @@ export default function MoveDetailModal({ move, open, onClose }: MoveDetailModal
     queryKey: ['move-learners', move?.name, languageId],
     queryFn: () => getMovePokemonLearners(move!.name, languageId),
     enabled: Boolean(move && open),
-    staleTime: 24 * 60 * 60 * 1000,
-    refetchOnMount: 'always',
+    staleTime: STATIC_REMOTE_DATA_STALE_TIME,
     retry: 2,
   });
 
