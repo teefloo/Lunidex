@@ -23,6 +23,7 @@ import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { usePrimeDexStore } from '@/store/primedex';
+import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
 
 interface TCGActiveSetInsightsProps {
   set: TCGSet;
@@ -62,6 +63,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldLoadDetails, setShouldLoadDetails] = useState(false);
+  const collectionKey = encodeTCGCollectionKey(resolvedLang, set.id) ?? `${resolvedLang}:${set.id}`;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -97,9 +99,10 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   // owns. The helper deduplicates card detail calls and keeps its concurrency
   // bound, so opening the overview never hydrates an entire album.
   const { data: ownedValuation, isLoading: valuationLoading, isError: valuationError } = useQuery({
-    // Keep the active-set cards in sync with the corrected price resolver even
-    // when a page survives a hot update without a full reload.
-    queryKey: ['tcg', 'collection-owned-value-v6', set.id, resolvedLang, ownedVariants, displayCurrency],
+    // Reuse the overview valuation for the same language-aware collection.
+    // The active insights used to start a second queue of detail requests for
+    // every set, which could overload TCGdex and leave both views waiting.
+    queryKey: ['tcg', 'collection-value-v6', collectionKey, ownedVariants, displayCurrency],
     queryFn: ({ signal }) => fetchCollectionValue(ownedVariants, resolvedLang, signal, displayCurrency),
     staleTime: 60 * 60 * 1000,
     enabled: shouldLoadDetails && ownedVariants.length > 0,
