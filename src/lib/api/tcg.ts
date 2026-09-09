@@ -29,6 +29,7 @@ import {
 import {
   aggregateCollectionValueWithVariants,
   getCardMarketValue,
+  getTCGValueInCurrency,
   toCollectionCard,
   type TCGOwnedVariant,
   type TCGCollectionValuationResult,
@@ -1369,13 +1370,14 @@ function isCollectionCard(value: unknown): value is TCGCollectionCard {
   );
 }
 
-function hasCollectionCardValue(card: TCGCollectionCard): boolean {
+function hasCollectionCardValue(card: TCGCollectionCard, displayCurrency?: TCGDisplayCurrency): boolean {
+  const value = getTCGValueInCurrency(card.value, displayCurrency);
   return Boolean(
-    card.value
-    && Number.isFinite(card.value.amount)
-    && card.value.amount > 0
-    && typeof card.value.currency === 'string'
-    && card.value.currency.length > 0,
+    value
+    && Number.isFinite(value.amount)
+    && value.amount > 0
+    && typeof value.currency === 'string'
+    && value.currency.length > 0,
   );
 }
 
@@ -1383,6 +1385,7 @@ async function hydrateCollectionCardValues(
   cards: TCGCollectionCard[],
   lang: string,
   signal?: AbortSignal,
+  displayCurrency?: TCGDisplayCurrency,
 ): Promise<TCGCollectionCard[]> {
   if (cards.length === 0) return cards;
 
@@ -1397,7 +1400,7 @@ async function hydrateCollectionCardValues(
         hydrationSignal,
         { requirePricing: true },
       );
-      return fullCard ? { ...card, ...toCollectionCard(fullCard, card.setId) } : card;
+      return fullCard ? { ...card, ...toCollectionCard(fullCard, card.setId, displayCurrency) } : card;
     } catch (error) {
       if (signal?.aborted) throw error;
       return card;
@@ -1487,6 +1490,7 @@ export const buildSetCollectionCards = async (
   lang = 'en',
   maxCards = TCG_COLLECTION_MAX_CARDS,
   signal?: AbortSignal,
+  displayCurrency?: TCGDisplayCurrency,
 ): Promise<TCGCollectionCard[]> => {
   const tcgLang = resolveTcgLang(lang);
   const summaries = await getCardsBySet(setId, tcgLang, signal);
@@ -1498,7 +1502,7 @@ export const buildSetCollectionCards = async (
       if (signal?.aborted) throw error;
       return null;
     });
-    return toCollectionCard(full ?? card, setId);
+    return toCollectionCard(full ?? card, setId, displayCurrency);
   });
 
   return hydrated;
@@ -1513,8 +1517,10 @@ export const fetchSetCollectionCards = async (
   setId: string,
   lang = 'en',
   signal?: AbortSignal,
+  displayCurrency?: TCGDisplayCurrency,
 ): Promise<TCGCollectionCard[]> => {
   const params = new URLSearchParams({ setId, tcgLang: lang });
+  if (displayCurrency) params.set('currency', displayCurrency);
   let status: number | undefined;
   try {
     const response = await fetch(
@@ -1540,10 +1546,10 @@ export const fetchSetCollectionCards = async (
       if (Array.isArray(rawCards)) {
         const cards = rawCards.filter(isCollectionCard);
         if (cards.length === rawCards.length && cards.length > 0) {
-          const cardsWithoutPrices = cards.filter((card) => !hasCollectionCardValue(card));
+          const cardsWithoutPrices = cards.filter((card) => !hasCollectionCardValue(card, displayCurrency));
           if (cardsWithoutPrices.length === 0) return cards;
 
-          const hydratedCards = await hydrateCollectionCardValues(cardsWithoutPrices, lang, signal);
+          const hydratedCards = await hydrateCollectionCardValues(cardsWithoutPrices, lang, signal, displayCurrency);
           const hydratedById = new Map(hydratedCards.map((card) => [card.id, card]));
           return cards.map((card) => hydratedById.get(card.id) ?? card);
         }
@@ -1567,8 +1573,8 @@ export const fetchSetCollectionCards = async (
   // lightweight set listing contains no prices, so hydrate its cards directly
   // before rendering collection values.
   const fallbackCards = await getCardsBySet(setId, lang, signal);
-  const collectionCards = fallbackCards.map((card) => toCollectionCard(card, setId));
-  return hydrateCollectionCardValues(collectionCards, lang, signal);
+  const collectionCards = fallbackCards.map((card) => toCollectionCard(card, setId, displayCurrency));
+  return hydrateCollectionCardValues(collectionCards, lang, signal, displayCurrency);
 };
 
 /**

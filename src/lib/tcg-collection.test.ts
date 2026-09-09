@@ -5,6 +5,7 @@ import {
   getTCGValueInCurrency,
   getTCGVariantValue,
   mergeCollectionCardDetails,
+  summarizeCollectionSetValue,
   toCollectionCard,
 } from './tcg-collection';
 import type { TCGCard } from '@/types/tcg';
@@ -173,6 +174,26 @@ describe('TCG physical variant pricing', () => {
     expect(result.unpricedCount).toBe(1);
     expect(result.bySet.base1.groups[0]).toEqual({ currency: 'USD', total: 13, count: 5 });
     expect(result.bySet.base1.ownedCount).toBe(6);
+  });
+
+  it('summarizes the theoretical full-set value independently from owned quantities', () => {
+    const priced = toCollectionCard({
+      ...baseCard,
+      pricing: {
+        tcgplayer: {
+          unit: 'USD',
+          normal: { marketPrice: 2 },
+          'reverse-holofoil': { marketPrice: 3 },
+        },
+      },
+    });
+    const unpriced = toCollectionCard({ ...baseCard, id: 'base1-002', localId: '002' });
+
+    expect(summarizeCollectionSetValue([priced, unpriced], 'USD')).toEqual({
+      groups: [{ currency: 'USD', total: 5, count: 2 }],
+      cardCount: 2,
+      pricedCardCount: 1,
+    });
   });
 
   it('uses a representative estimate for unspecified ownership without mixing currencies', () => {

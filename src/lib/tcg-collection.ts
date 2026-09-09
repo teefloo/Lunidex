@@ -942,6 +942,34 @@ export function aggregateSetTotalValue(
     .sort((a, b) => b.total - a.total);
 }
 
+export interface TCGCollectionSetValueSummary {
+  groups: TCGCollectionValueGroup[];
+  cardCount: number;
+  pricedCardCount: number;
+}
+
+/** Summarize the theoretical value of every card in a set for comparison UI. */
+export function summarizeCollectionSetValue(
+  cards: readonly TCGCollectionCard[],
+  displayCurrency?: TCGDisplayCurrency,
+): TCGCollectionSetValueSummary {
+  const pricedCardIds = new Set<string>();
+  for (const card of cards) {
+    const variants = card.variants
+      ? TCG_PHYSICAL_VARIANTS.filter((variant) => card.variants?.[variant] === true)
+      : [];
+    if (variants.some((variant) => getTCGValueInCurrency(getCollectionCardVariantValue(card, variant), displayCurrency))) {
+      pricedCardIds.add(card.id);
+    }
+  }
+
+  return {
+    groups: aggregateSetTotalValue([...cards], displayCurrency),
+    cardCount: cards.length,
+    pricedCardCount: pricedCardIds.size,
+  };
+}
+
 /**
  * Compute the full insight payload for one active set from its hydrated cards.
  */

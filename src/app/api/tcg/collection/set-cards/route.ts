@@ -5,6 +5,7 @@ import {
   resolveTcgLang,
   TCG_COLLECTION_MAX_CARDS,
 } from '@/lib/api/tcg';
+import { normalizeTCGDisplayCurrency } from '@/lib/tcg-currency';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 // A set id is a short alphanumeric slug (e.g. "swsh3", "sv03.5"). Reject anything
@@ -21,6 +22,7 @@ async function getTcgCollectionSetCards(request: NextRequest) {
   }
 
   const lang = resolveTcgLang((params.get('tcgLang') ?? params.get('lang'))?.trim() ?? 'en');
+  const displayCurrency = normalizeTCGDisplayCurrency(params.get('currency'));
 
   const rawLimit = Number.parseInt(params.get('limit') ?? '', 10);
   const maxCards = Math.min(
@@ -33,7 +35,7 @@ async function getTcgCollectionSetCards(request: NextRequest) {
       request.signal,
       AbortSignal.timeout(COLLECTION_SET_CARDS_ROUTE_TIMEOUT_MS),
     ]);
-    const cards = await buildSetCollectionCards(setId, lang, maxCards, requestSignal);
+    const cards = await buildSetCollectionCards(setId, lang, maxCards, requestSignal, displayCurrency);
     if (cards.length === 0) {
       return NextResponse.json(
         { error: 'Set cards unavailable' },
