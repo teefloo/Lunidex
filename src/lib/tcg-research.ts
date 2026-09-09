@@ -27,6 +27,34 @@ export interface TCGSearchState {
 }
 
 /**
+ * Return the catalog's safe reset state. Keeping the latest set selected
+ * avoids turning a reset into an unbounded full-catalog query when the active
+ * sort needs card-level metadata such as market prices.
+ */
+export function resetTCGCardFilters(latestSetId?: string | null): TCGCardFilters {
+  return {
+    selectedCategory: 'all',
+    selectedSet: latestSetId ?? null,
+    sortBy: 'id',
+    sortOrder: 'asc',
+    ownedState: 'all',
+  };
+}
+
+/**
+ * Clear only the text search while preserving an already selected set. A
+ * global search falls back to the latest set so clearing it cannot leave the
+ * catalog in an unexpectedly expensive full-catalog state.
+ */
+export function clearTCGCardSearch(filters: TCGCardFilters, latestSetId?: string | null): TCGCardFilters {
+  return {
+    ...filters,
+    searchTerm: undefined,
+    selectedSet: filters.selectedSet ?? latestSetId ?? null,
+  };
+}
+
+/**
  * The server-rendered catalog preview is scoped to one exact query: the
  * configured latest set, the resolved card language, and the default card
  * sort with no additional filters. Reusing it for another query makes

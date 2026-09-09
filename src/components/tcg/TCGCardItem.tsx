@@ -88,7 +88,7 @@ export const TCGCardItem = memo(function TCGCardItem({
               <Link
                 href={`${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                 onClick={(event) => event.stopPropagation()}
-                className="transition-colors hover:text-primary"
+                className="inline-block min-h-11 max-w-full py-2 align-middle transition-colors hover:text-primary"
               >
                 {card.name}
               </Link>
@@ -98,7 +98,7 @@ export const TCGCardItem = memo(function TCGCardItem({
                 <Link
                   href={`${localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                   onClick={(event) => event.stopPropagation()}
-                  className="transition-colors hover:text-primary"
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-primary"
                 >
                   {card.set.name}
                 </Link>
@@ -151,7 +151,7 @@ export const TCGCardItem = memo(function TCGCardItem({
               ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
               : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',
           )}
-          aria-label={t('tcg.owned_short')}
+          aria-label={`${t('tcg.owned_short')}: ${card.name}`}
         >
           <PackageCheck className="h-2 w-2" />
           {t('tcg.owned_short')}

@@ -84,7 +84,7 @@ export function TCGLanguageSelector({
       <select
         value={selectedLanguage}
         onChange={(event) => handleChange(event.target.value)}
-        className="min-h-9 max-w-[12rem] cursor-pointer bg-transparent text-xs font-bold normal-case tracking-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        className="min-h-11 max-w-[12rem] cursor-pointer bg-transparent text-xs font-bold normal-case tracking-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         aria-label={accessibleLabel}
       >
         {TCG_CARD_LANGUAGES.map((language) => (

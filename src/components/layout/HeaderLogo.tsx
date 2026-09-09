@@ -15,7 +15,7 @@ export function HeaderLogo() {
 
   return (
     <div className="site-header-brand flex min-w-0 shrink-0 items-center justify-start">
-      <Link prefetch={false} href={`/${resolvedLang}`} className="site-header-brand-link group flex min-w-0 items-center gap-2.5">
+      <Link prefetch={false} href={`/${resolvedLang}`} className="site-header-brand-link group flex min-h-11 min-w-0 items-center gap-2.5 py-1">
         <div className="site-header-brand-mark shrink-0">
           <LunidexLogo alt="" priority sizes="28px" className="h-7 w-7 object-contain" />
         </div>

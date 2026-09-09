@@ -424,7 +424,7 @@ export function TCGFilters({
                         onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
                         className={cn(
                           FILTER_CONTROL_FOCUS_CLASS,
-                          'rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-colors',
+                          'min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-colors',
                           isActive
                             ? 'border-amber-400/35 bg-amber-500/15 text-amber-300'
                             : 'border-border/45 bg-card/45 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
@@ -677,7 +677,7 @@ export function TCGFilters({
                   placeholder="0"
                   value={typeof filters.minHp === 'number' ? filters.minHp : ''}
                   onChange={(event) => updateFilter('minHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -692,7 +692,7 @@ export function TCGFilters({
                   placeholder="340"
                   value={typeof filters.maxHp === 'number' ? filters.maxHp : ''}
                   onChange={(event) => updateFilter('maxHp', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -818,7 +818,7 @@ export function TCGFilters({
                   placeholder={t('tcg.illustrator_placeholder', { defaultValue: 'Any illustrator' })}
                   value={filters.illustrator ?? ''}
                   onChange={(event) => updateFilter('illustrator', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -832,7 +832,7 @@ export function TCGFilters({
                   placeholder={t('tcg.regulation_placeholder', { defaultValue: 'G, H, I...' })}
                   value={filters.regulationMark ?? ''}
                   onChange={(event) => updateFilter('regulationMark', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -849,7 +849,7 @@ export function TCGFilters({
                   placeholder="0"
                   value={typeof filters.priceMin === 'number' ? filters.priceMin : ''}
                   onChange={(event) => updateFilter('priceMin', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -864,7 +864,7 @@ export function TCGFilters({
                   placeholder="999"
                   value={typeof filters.priceMax === 'number' ? filters.priceMax : ''}
                   onChange={(event) => updateFilter('priceMax', event.target.value ? Number(event.target.value) : undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -879,7 +879,7 @@ export function TCGFilters({
                   type="date"
                   value={filters.releaseStart ?? ''}
                   onChange={(event) => updateFilter('releaseStart', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
 
@@ -892,7 +892,7 @@ export function TCGFilters({
                   type="date"
                   value={filters.releaseEnd ?? ''}
                   onChange={(event) => updateFilter('releaseEnd', event.target.value || undefined)}
-                  className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -905,7 +905,7 @@ export function TCGFilters({
                 id="tcg-owned-state"
                 value={filters.ownedState ?? 'all'}
                 onChange={(event) => updateFilter('ownedState', event.target.value)}
-                className="h-10 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold tracking-[0.04em] transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                className="min-h-11 w-full rounded-sm border border-border/50 bg-card/50 px-3 text-xs font-bold tracking-[0.04em] transition-[color,background-color,border-color,box-shadow] focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
               >
                 <option value="all">{t('tcg.owned_all', { defaultValue: 'All cards' })}</option>
                 <option value="owned">{t('tcg.owned_owned', { defaultValue: 'Owned' })}</option>
@@ -936,7 +936,7 @@ export function TCGFilters({
                       }}
                       className={cn(
                         FILTER_CONTROL_FOCUS_CLASS,
-                        'rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity]',
+                        'min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color,box-shadow,transform,opacity]',
                         isActive
                           ? 'border-primary/40 bg-primary/20 text-primary shadow-[0_0_16px_rgba(227,53,13,0.18)]'
                           : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',

@@ -92,7 +92,7 @@ export function TCGLegacySetAlbumResolver({ setId, activation = false }: TCGLega
                 value={promptLanguage}
                 onChange={setSelectedLanguage}
                 preserveQuery={false}
-                ariaLabel={t('tcg.collection_language_for_set', { defaultValue: `Language for ${setId}` })}
+                ariaLabel={t('tcg.collection_language_for_set', { name: setId, defaultValue: `Language for ${setId}` })}
               />
               <button type="button" onClick={handleAttribute} className="min-h-11 rounded-sm border border-primary/40 bg-primary/15 px-4 text-sm font-bold text-primary hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
                 {t('tcg.collection_attribute', { defaultValue: 'Attribute cards' })}
