@@ -42,6 +42,12 @@ const TCGCardDetailModal = dynamic(
   { ssr: false },
 );
 
+// Start the next page while the user still has several rows of cards left to
+// browse. TCGdex may need to hydrate card metadata before returning a page, so
+// the previous 320px margin could leave the user waiting at the end of the
+// grid on a normal scroll.
+const TCG_CATALOG_LOAD_AHEAD_PX = 1600;
+
 const TCGFilters = dynamic(
   () => import('./TCGFilters').then((module) => ({ default: module.TCGFilters })),
   {
@@ -267,7 +273,7 @@ export function TCGResearchDesk({
           void fetchNextPage();
         }
       },
-      { rootMargin: '320px 0px' },
+      { rootMargin: `${TCG_CATALOG_LOAD_AHEAD_PX}px 0px` },
     );
 
     observer.observe(loadMoreButton);
