@@ -2,12 +2,9 @@
 
 import { usePrimeDexStore } from '@/store/primedex';
 import { Search, X } from 'lucide-react';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
-import { useQueryClient } from '@tanstack/react-query';
-import { pokemonKeys } from '@/lib/api/keys';
-import { getAllPokemonSearchIndex } from '@/lib/api';
 
 export default function SearchBar() {
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
@@ -16,18 +13,9 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const searchPlaceholder = t('search.placeholder');
   const searchAriaLabel = t('search.placeholder');
   const clearLabel = t('search.clear');
-
-  const prefetchIndex = useCallback(() => {
-    queryClient.prefetchQuery({
-      queryKey: pokemonKeys.allSearchIndex(),
-      queryFn: () => getAllPokemonSearchIndex(),
-      staleTime: 24 * 60 * 60 * 1000,
-    });
-  }, [queryClient]);
 
   const prevSearchTermRef = useRef(searchTerm);
 
@@ -76,12 +64,14 @@ export default function SearchBar() {
           ref={inputRef}
           type="text"
           placeholder={searchPlaceholder}
+          name="pokemon-search"
+          autoComplete="off"
+          spellCheck={false}
           value={localSearch}
-          onFocus={() => { setIsFocused(true); prefetchIndex(); }}
+          onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChange={(e) => {
             setLocalSearch(e.target.value);
-            prefetchIndex();
           }}
           className="pokedex-search-input glass-control w-full py-6 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-muted-foreground focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/30 md:text-lg"
           aria-label={searchAriaLabel}

@@ -83,7 +83,7 @@ export default async function PokemonOfTheDay() {
         <div className="pokedex-daily-card__content min-w-0 flex-1">
           <p className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-primary">
             <Sparkles className="h-3 w-3" />
-            {t('home.pokemon_of_the_day', { defaultValue: 'Pokémon of the Day' })}
+            {t('pokedex_page.pokemon_of_the_day', { defaultValue: 'Pokémon of the Day' })}
           </p>
           <Link href={localeHref(`/pokemon/${pokemon.name}`, lang)} className="mt-1 block text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors">
             {displayName}
@@ -103,7 +103,7 @@ export default async function PokemonOfTheDay() {
               className="ml-1 inline-flex items-center gap-1.5 rounded-sm border border-border/60 bg-background/40 px-2.5 py-0.5 text-[11px] font-bold text-foreground/60 transition-colors hover:border-primary/40 hover:text-primary"
             >
               <BrainCircuit className="h-3 w-3" />
-              {t('home.play_daily_quiz', { defaultValue: 'Play the daily quiz' })}
+              {t('pokedex_page.play_daily_quiz', { defaultValue: 'Play the daily quiz' })}
             </Link>
           </div>
         </div>

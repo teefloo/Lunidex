@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: 'Esplora il Pokédex',
+      featured_title: 'Pokémon popolari e risorse di riferimento',
+      reference_hubs: 'Risorse di riferimento del Pokédex',
+      pokemon_of_the_day: 'Pokémon del giorno',
+      play_daily_quiz: 'Gioca al quiz giornaliero',
+    },
     types_page: {
       title: 'Maestro dei Tipi',
       subtitle: 'Padroneggia gli elementi e vinci ogni lotta',
@@ -433,6 +440,10 @@ export default {
     },
     list: {
       title: 'Lista dei Pokémon',
+      types: 'Tipi',
+      moves: 'Mosse',
+      abilities: 'Abilità',
+      items: 'Strumenti',
       search_results: 'Risultati per',
       results: 'Risultati',
       showing: 'Visualizzazione',

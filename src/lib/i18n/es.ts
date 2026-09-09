@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: 'Explora la Pokédex',
+      featured_title: 'Pokémon populares y recursos de referencia',
+      reference_hubs: 'Recursos de referencia de la Pokédex',
+      pokemon_of_the_day: 'Pokémon del día',
+      play_daily_quiz: 'Jugar al quiz diario',
+    },
     pwa: {
       install_title: 'Instalar Lunidex',
       install_description: 'Añade Lunidex a tu pantalla de inicio para disfrutar de una experiencia más rápida, como una app.',
@@ -976,6 +983,10 @@ team: 'Equipo',
     },
     list: {
       title: 'Lista de Pokémon',
+      types: 'Tipos',
+      moves: 'Movimientos',
+      abilities: 'Habilidades',
+      items: 'Objetos',
       search_results: 'Resultados de búsqueda para',
       results: 'Resultados',
       showing: 'Mostrando',

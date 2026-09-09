@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: '포켓몬 도감 탐색',
+      featured_title: '인기 포켓몬 및 참고 허브',
+      reference_hubs: '포켓몬 도감 참고 허브',
+      pokemon_of_the_day: '오늘의 포켓몬',
+      play_daily_quiz: '오늘의 퀴즈 플레이',
+    },
     pwa: {
       install_title: 'Lunidex 설치',
       install_description: '홈 화면에 추가하면 앱처럼 더 빠르게 사용할 수 있습니다.',
@@ -963,6 +970,10 @@ team: '팀',
     },
     list: {
       title: '포켓몬 목록',
+      types: '타입',
+      moves: '기술',
+      abilities: '특성',
+      items: '도구',
       search_results: '검색 결과',
       results: '결과',
       showing: '표시 중',

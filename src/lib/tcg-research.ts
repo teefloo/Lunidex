@@ -26,6 +26,37 @@ export interface TCGSearchState {
   tcgLang?: TCGCardLanguage;
 }
 
+/**
+ * The server-rendered catalog preview is scoped to one exact query: the
+ * configured latest set, the resolved card language, and the default card
+ * sort with no additional filters. Reusing it for another query makes
+ * TanStack Query consider unrelated cards fresh and can leave the previous
+ * set visible indefinitely while the requested set never loads.
+ */
+export function isInitialTcgCatalogCompatible(
+  filters: TCGCardFilters,
+  initialSetId: string | null | undefined,
+  initialLanguage: string | null | undefined,
+  resolvedLanguage: string,
+  hasInitialCards: boolean,
+): boolean {
+  if (!hasInitialCards || !initialSetId || initialLanguage !== resolvedLanguage) return false;
+  if (filters.selectedSet !== initialSetId) return false;
+  if (filters.searchTerm?.trim()) return false;
+  if ((filters.selectedCategory ?? 'all') !== 'all') return false;
+  if (filters.selectedTypes?.length || filters.selectedRarity || filters.selectedPhase) return false;
+  if (filters.selectedTrainerTypes?.length || filters.selectedEnergyTypes?.length) return false;
+  if (filters.minHp !== undefined || filters.maxHp !== undefined) return false;
+  if (filters.illustrator || filters.regulationMark) return false;
+  if (filters.legalities?.length) return false;
+  if (filters.priceMin !== undefined || filters.priceMax !== undefined) return false;
+  if (filters.releaseStart || filters.releaseEnd) return false;
+  if (filters.ownedState && filters.ownedState !== 'all') return false;
+  if ((filters.sortBy ?? 'id') !== 'id' || (filters.sortOrder ?? 'asc') !== 'asc') return false;
+
+  return true;
+}
+
 const DEFAULT_VIEW_MODE: TCGCardViewMode = 'visual';
 
 export function parseTCGSearchState(searchParams: SearchParamsLike): TCGSearchState {

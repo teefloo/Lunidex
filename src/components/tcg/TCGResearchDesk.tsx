@@ -24,7 +24,11 @@ import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCar
 import { tcgKeys } from '@/lib/api/keys';
 import { cn } from '@/lib/utils';
 import type { TCGCard, TCGCardFilters, TCGCardViewMode, TCGSet } from '@/types/tcg';
-import { parseTCGSearchState, serializeTCGSearchState } from '@/lib/tcg-research';
+import {
+  isInitialTcgCatalogCompatible,
+  parseTCGSearchState,
+  serializeTCGSearchState,
+} from '@/lib/tcg-research';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -221,6 +225,13 @@ export function TCGResearchDesk({
     pages: [{ cards: initialCards, hasMore: initialHasMore }],
     pageParams: [1],
   }), [initialCards, initialHasMore]);
+  const canUseInitialCatalog = isInitialTcgCatalogCompatible(
+    effectiveFilters,
+    initialLatestSet?.id,
+    initialLanguage,
+    resolvedLang,
+    initialCards.length > 0,
+  );
 
   const {
     data: cardsData,
@@ -237,7 +248,7 @@ export function TCGResearchDesk({
     getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length + 1 : undefined,
     enabled: mounted && hasHydrated,
     staleTime: 5 * 60 * 1000,
-    initialData: initialCards.length > 0 && initialLanguage === resolvedLang ? initialCatalogData : undefined,
+    initialData: canUseInitialCatalog ? initialCatalogData : undefined,
   });
 
   const cards = useMemo(() => cardsData?.pages.flatMap((page) => page.cards) ?? [], [cardsData]);

@@ -15,6 +15,7 @@ import { countPhysicalTCGCards, encodeTCGCollectionKey, getTCGCollectionCardIds,
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCardLanguageName } from '@/lib/tcg-language';
 import { getSetCompletionFromSet, type TCGCollectionValueGroup, type TCGOwnedVariant } from '@/lib/tcg-collection';
+import { normalizeSearchText } from '@/lib/pokemon-filter-utils';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGActiveSetInsights } from './TCGActiveSetInsights';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
@@ -114,7 +115,8 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   }, [physicalCount, startedEntries]);
   const filteredEntries = useMemo(() => startedEntries.filter((entry) => {
     if (filterInProgress && !activeCollections.includes(entry.collectionKey)) return false;
-    return !search || entry.set.name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+    const normalizedSearch = normalizeSearchText(search);
+    return !normalizedSearch || normalizeSearchText(entry.set.name).includes(normalizedSearch);
   }).sort((a, b) => {
     switch (sortMode) {
       case 'release-newest': return a.set.releaseRank - b.set.releaseRank;

@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: 'ポケモン図鑑を探索',
+      featured_title: '人気のポケモンと参考リソース',
+      reference_hubs: 'ポケモン図鑑の参考リソース',
+      pokemon_of_the_day: '今日のポケモン',
+      play_daily_quiz: '今日のクイズをプレイ',
+    },
     types_page: {
       title: 'タイプマスター',
       subtitle: '属性を極めてバトルを制そう',
@@ -433,6 +440,10 @@ export default {
     },
     list: {
       title: 'ポケモン一覧',
+      types: 'タイプ',
+      moves: '技',
+      abilities: '特性',
+      items: '道具',
       search_results: '検索結果',
       results: '結果',
       showing: '表示中',

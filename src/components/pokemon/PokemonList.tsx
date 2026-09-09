@@ -13,6 +13,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
+import {
+  comparePokemonMeasurements,
+  getExactNumericPokemonId,
+  normalizeSearchText,
+} from '@/lib/pokemon-filter-utils';
 
 type PokemonStatName = 'hp' | 'attack' | 'defense' | 'speed' | 'special-attack' | 'special-defense';
 
@@ -212,6 +217,7 @@ export default function PokemonList() {
         id: p.id,
         height: p.height ?? 0,
         weight: p.weight ?? 0,
+        generation_id: p.pokemon_v2_pokemonspecy?.generation_id,
         stats: p.pokemon_v2_pokemonstats?.reduce<PokemonStatMap>((acc, stat) => {
           const statName = stat.pokemon_v2_stat?.name as PokemonStatName | undefined;
           if (!statName) return acc;
@@ -287,11 +293,13 @@ export default function PokemonList() {
       }
 
       if (searchTerm) {
-        const lowerSearch = searchTerm.toLowerCase();
+        const normalizedSearch = normalizeSearchText(searchTerm);
+        const exactId = getExactNumericPokemonId(searchTerm);
+        const partialIdSearch = searchTerm.trim();
         results = results.filter((p) =>
-          p.name.toLowerCase().includes(lowerSearch) ||
-          p.id.toString().includes(lowerSearch) ||
-          p.localizedNames?.some((n: { name: string }) => n.name.toLowerCase().includes(lowerSearch))
+          normalizeSearchText(p.name).includes(normalizedSearch) ||
+          (exactId !== null ? p.id === exactId : p.id.toString().includes(partialIdSearch)) ||
+          p.localizedNames?.some((n: { name: string }) => normalizeSearchText(n.name).includes(normalizedSearch))
         );
       }
 
@@ -384,13 +392,13 @@ export default function PokemonList() {
         return nameB.localeCompare(nameA);
       });
     } else if (sortBy === 'height-asc') {
-      sortedResults.sort((a, b) => (Number(a.height) || 0) - (Number(b.height) || 0));
+      sortedResults.sort((a, b) => comparePokemonMeasurements(a.height, b.height, 'asc'));
     } else if (sortBy === 'height-desc') {
-      sortedResults.sort((a, b) => (Number(b.height) || 0) - (Number(a.height) || 0));
+      sortedResults.sort((a, b) => comparePokemonMeasurements(a.height, b.height, 'desc'));
     } else if (sortBy === 'weight-asc') {
-      sortedResults.sort((a, b) => (Number(a.weight) || 0) - (Number(b.weight) || 0));
+      sortedResults.sort((a, b) => comparePokemonMeasurements(a.weight, b.weight, 'asc'));
     } else if (sortBy === 'weight-desc') {
-      sortedResults.sort((a, b) => (Number(b.weight) || 0) - (Number(a.weight) || 0));
+      sortedResults.sort((a, b) => comparePokemonMeasurements(a.weight, b.weight, 'desc'));
     }
 
     return sortedResults;

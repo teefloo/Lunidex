@@ -102,10 +102,10 @@ export default async function PokedexPage() {
           <section className="page-shell mt-8" aria-labelledby="pokedex-priority-links-title">
             <div className="rounded-sm border border-border/50 bg-card/35 p-5 sm:p-7">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">
-                {t('pokedex.featured_eyebrow', { defaultValue: 'Explore the Pokédex' })}
+                {t('pokedex_page.featured_eyebrow', { defaultValue: 'Explore the Pokédex' })}
               </p>
               <h2 id="pokedex-priority-links-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
-                {t('pokedex.featured_title', { defaultValue: 'Popular Pokémon and reference hubs' })}
+                {t('pokedex_page.featured_title', { defaultValue: 'Popular Pokémon and reference hubs' })}
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {topPokemon.map((slug) => (
@@ -118,7 +118,7 @@ export default async function PokedexPage() {
                   </Link>
                 ))}
               </div>
-              <nav className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('pokedex.reference_hubs', { defaultValue: 'Pokédex reference hubs' })}>
+              <nav className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('pokedex_page.reference_hubs', { defaultValue: 'Pokédex reference hubs' })}>
                 <Link href={localeHref('/types', lang)} className="underline-offset-4 hover:underline">{t('list.types', { defaultValue: 'Types' })}</Link>
                 <Link href={localeHref('/moves', lang)} className="underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
                 <Link href={localeHref('/abilities', lang)} className="underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>

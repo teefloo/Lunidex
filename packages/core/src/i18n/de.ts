@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: 'Pokédex entdecken',
+      featured_title: 'Beliebte Pokémon und Referenzbereiche',
+      reference_hubs: 'Pokédex-Referenzbereiche',
+      pokemon_of_the_day: 'Pokémon des Tages',
+      play_daily_quiz: 'Tagesquiz spielen',
+    },
     types_page: {
       title: 'Typen-Meister',
       subtitle: 'Meistere die Elemente und besiege jeden Gegner',
@@ -433,6 +440,10 @@ export default {
     },
     list: {
       title: 'Pokémon-Liste',
+      types: 'Typen',
+      moves: 'Attacken',
+      abilities: 'Fähigkeiten',
+      items: 'Items',
       search_results: 'Suchergebnisse für',
       results: 'Ergebnisse',
       showing: 'Anzeige',

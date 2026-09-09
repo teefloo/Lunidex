@@ -213,22 +213,26 @@ export default function AdvancedFilters({ className }: { className?: string }) {
               <div className="grid grid-cols-1 gap-3">
                 <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold">{t('filters.legendary')}</span>
-                    <span className="text-[11px] text-foreground/40 font-medium">{t('filters.legendary_desc')}</span>
+                    <span id="filter-legendary-label" className="text-sm font-bold">{t('filters.legendary')}</span>
+                    <span id="filter-legendary-description" className="text-[11px] text-foreground/40 font-medium">{t('filters.legendary_desc')}</span>
                   </div>
                    <Switch
                      id="filter-legendary"
+                     aria-labelledby="filter-legendary-label"
+                     aria-describedby="filter-legendary-description"
                      checked={isLegendary === true}
                      onCheckedChange={(checked) => setIsLegendary(checked ? true : null)}
                    />
                 </div>
                 <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-sm border border-border/40">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold">{t('filters.mythical')}</span>
-                    <span className="text-[11px] text-foreground/40 font-medium">{t('filters.mythical_desc')}</span>
+                    <span id="filter-mythical-label" className="text-sm font-bold">{t('filters.mythical')}</span>
+                    <span id="filter-mythical-description" className="text-[11px] text-foreground/40 font-medium">{t('filters.mythical_desc')}</span>
                   </div>
                   <Switch
                      id="filter-mythical"
+                     aria-labelledby="filter-mythical-label"
+                     aria-describedby="filter-mythical-description"
                      checked={isMythical === true}
                      onCheckedChange={(checked) => setIsMythical(checked ? true : null)}
                    />

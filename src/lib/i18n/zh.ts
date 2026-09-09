@@ -1,6 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    pokedex_page: {
+      featured_eyebrow: '探索宝可梦图鉴',
+      featured_title: '热门宝可梦与参考入口',
+      reference_hubs: '宝可梦图鉴参考入口',
+      pokemon_of_the_day: '今日宝可梦',
+      play_daily_quiz: '参加每日问答',
+    },
     pwa: {
       install_title: '安装 Lunidex',
       install_description: '将 Lunidex 添加到主屏幕，享受更快速的应用般体验。',
@@ -963,6 +970,10 @@ team: '队伍',
     },
     list: {
       title: '宝可梦列表',
+      types: '属性',
+      moves: '招式',
+      abilities: '特性',
+      items: '道具',
       search_results: '搜索结果',
       results: '结果',
       showing: '显示中',
