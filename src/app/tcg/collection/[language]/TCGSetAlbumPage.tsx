@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
@@ -40,21 +39,14 @@ export function TCGSetAlbumPage({
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
   const resolvedLang: TCGCardLanguage = normalizeTCGCardLanguage(language, 'en') ?? 'en';
-  const createCollection = usePrimeDexStore((state) => state.createTCGCollection);
   const transferCollectionCards = usePrimeDexStore((state) => state.transferTCGCollectionCards);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
-  const collections = usePrimeDexStore((state) => state.tcgCollections);
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(resolvedLang, setId) ?? undefined;
   const tryEnglish = () => {
     setBrowseLanguage('en');
     const activationQuery = activation ? '?activation=1' : '';
     router.replace(`${localeHref(`/tcg/collection/en/${encodeURIComponent(setId)}`)}${activationQuery}`);
   };
-
-  useEffect(() => {
-    if (!mounted || syncStatus !== 'ready' || !user || !resolvedCollectionKey || collections.includes(resolvedCollectionKey)) return;
-    createCollection(setId, resolvedLang);
-  }, [collections, createCollection, mounted, resolvedCollectionKey, resolvedLang, setId, syncStatus, user]);
 
   const albumQuery = useQuery({
     queryKey: ['tcg', 'collection-set-album-v2', setId, resolvedLang],
@@ -104,9 +96,7 @@ export function TCGSetAlbumPage({
                   if (!nextKey) return;
                   const transferred = resolvedCollectionKey === nextKey
                     ? true
-                    : resolvedCollectionKey
-                      ? transferCollectionCards(resolvedCollectionKey, nextKey)
-                      : Boolean(createCollection(setId, nextLanguage));
+                    : Boolean(resolvedCollectionKey && transferCollectionCards(resolvedCollectionKey, nextKey));
                   if (!transferred) return;
                   setBrowseLanguage(nextLanguage);
                   const activationQuery = activation ? '?activation=1' : '';

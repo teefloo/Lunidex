@@ -39,6 +39,44 @@ describe('TCG language registry', () => {
 });
 
 describe('TCG collection codecs', () => {
+  it('starts a collection only after its first card is added', () => {
+    setSyncAccessStatus('ready');
+    const collection = encodeTCGCollectionKey('en', 'sv10')!;
+    usePrimeDexStore.setState({
+      tcgCollections: [],
+      tcgCollectionCards: [],
+      tcgActiveCollections: [],
+      tcgLegacyOwnedCards: [],
+      tcgOwnedCards: [],
+      tcgCollectionModelVersion: 3,
+    });
+
+    usePrimeDexStore.getState().createTCGCollection('sv10', 'en');
+    expect(usePrimeDexStore.getState().tcgActiveCollections).not.toContain(collection);
+
+    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 1);
+    expect(usePrimeDexStore.getState().tcgActiveCollections).toContain(collection);
+    setSyncAccessStatus('checking');
+  });
+
+  it('stops a collection when its last card is removed', () => {
+    setSyncAccessStatus('ready');
+    const collection = encodeTCGCollectionKey('en', 'sv10')!;
+    usePrimeDexStore.setState({
+      tcgCollections: [],
+      tcgCollectionCards: [],
+      tcgActiveCollections: [],
+      tcgLegacyOwnedCards: [],
+      tcgOwnedCards: [],
+      tcgCollectionModelVersion: 3,
+    });
+
+    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 1);
+    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 0);
+    expect(usePrimeDexStore.getState().tcgActiveCollections).not.toContain(collection);
+    setSyncAccessStatus('checking');
+  });
+
   it('updates the shared store atomically and keeps physical/progress projections distinct', () => {
     setSyncAccessStatus('ready');
     const collection = encodeTCGCollectionKey('en', 'base1')!;

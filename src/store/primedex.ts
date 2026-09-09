@@ -10,6 +10,7 @@ import {
   deriveTCGOwnedCardIds,
   getTCGCollectionCardIdentity,
   getTCGCollectionCardQuantity,
+  getTCGCollectionCardOwnerships,
   isTCGCollectionCardOwned,
   isValidTCGCollectionKey,
   qualifyTCGCollectionCardVariant,
@@ -539,9 +540,6 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           tcgCollections: state.tcgCollections.includes(collection.key)
             ? state.tcgCollections
             : [...state.tcgCollections, collection.key],
-          tcgActiveCollections: state.tcgActiveCollections.includes(collection.key)
-            ? state.tcgActiveCollections
-            : [...state.tcgActiveCollections, collection.key],
           tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
         }));
         return collection.key;
@@ -556,6 +554,9 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         const collectionCards = removeTCGCollectionCard(collectionKey, cardId, state.tcgCollectionCards);
         return {
           tcgCollectionCards: collectionCards,
+          tcgActiveCollections: getTCGCollectionCardOwnerships(collectionKey, collectionCards).length > 0
+            ? state.tcgActiveCollections
+            : state.tcgActiveCollections.filter((key) => key !== collectionKey),
           tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
           tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
         };
@@ -569,18 +570,20 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         );
         if (!collectionCards) return false;
         if (sourceCollectionKey === targetCollectionKey) return true;
-        set((state) => ({
-          tcgCollections: state.tcgCollections.includes(targetCollectionKey)
-            ? state.tcgCollections
-            : [...state.tcgCollections, targetCollectionKey],
-          tcgActiveCollections: [
-            ...state.tcgActiveCollections.filter((key) => key !== sourceCollectionKey),
-            ...(state.tcgActiveCollections.includes(targetCollectionKey) ? [] : [targetCollectionKey]),
-          ],
-          tcgCollectionCards: collectionCards,
-          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
-          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
-        }));
+        set((state) => {
+          const targetHasCards = getTCGCollectionCardOwnerships(targetCollectionKey, collectionCards).length > 0;
+          const activeCollections = state.tcgActiveCollections.filter((key) => key !== sourceCollectionKey);
+          if (targetHasCards && !activeCollections.includes(targetCollectionKey)) activeCollections.push(targetCollectionKey);
+          return {
+            tcgCollections: state.tcgCollections.includes(targetCollectionKey)
+              ? state.tcgCollections
+              : [...state.tcgCollections, targetCollectionKey],
+            tcgActiveCollections: activeCollections,
+            tcgCollectionCards: collectionCards,
+            tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+            tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+          };
+        });
         return true;
       },
       setTCGCollectionVariantQuantity: (collectionKey, cardId, variant, quantity) => set((state) => {
@@ -606,9 +609,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         const legacyOwnedCards = quantity > 0
           ? state.tcgLegacyOwnedCards.filter((id) => id.trim().toLowerCase() !== normalizedCardId)
           : state.tcgLegacyOwnedCards;
+        const collectionHasCards = getTCGCollectionCardOwnerships(collectionKey, collectionCards).length > 0;
         return {
           tcgCollections: state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey],
-          tcgActiveCollections: state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey],
+          tcgActiveCollections: collectionHasCards
+            ? state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey]
+            : state.tcgActiveCollections.filter((key) => key !== collectionKey),
           tcgCollectionCards: collectionCards,
           tcgLegacyOwnedCards: legacyOwnedCards,
           tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, legacyOwnedCards),
@@ -639,9 +645,12 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         const legacyOwnedCards = nextQuantity > 0
           ? state.tcgLegacyOwnedCards.filter((id) => id.trim().toLowerCase() !== normalizedCardId)
           : state.tcgLegacyOwnedCards;
+        const collectionHasCards = getTCGCollectionCardOwnerships(collectionKey, collectionCards).length > 0;
         return {
           tcgCollections: state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey],
-          tcgActiveCollections: state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey],
+          tcgActiveCollections: collectionHasCards
+            ? state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey]
+            : state.tcgActiveCollections.filter((key) => key !== collectionKey),
           tcgCollectionCards: collectionCards,
           tcgLegacyOwnedCards: legacyOwnedCards,
           tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, legacyOwnedCards),

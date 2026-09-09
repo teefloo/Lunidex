@@ -1,10 +1,11 @@
 'use client';
 
-import { useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 import { fetchCollectionSetCatalog } from '@/lib/api/tcg';
-import { TCGCollectionOverview, type TCGCollectionOverviewEntry } from '@/components/tcg/TCGCollectionOverview';
+import { TCGCollectionOverview } from '@/components/tcg/TCGCollectionOverview';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { useTranslation } from '@/lib/i18n';
@@ -14,38 +15,35 @@ import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { RefreshCw } from 'lucide-react';
-import { decodeTCGCollectionKey, type TCGCollection } from '@/lib/tcg-collections';
+import { resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
+import { buildTCGCollectionOverviewEntries } from '@/lib/tcg-collection-overview';
 
 export function TCGCollectionPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const searchParams = useSearchParams();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
-  const collectionKeys = usePrimeDexStore((state) => state.tcgCollections);
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
+  const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const legacyOwnedCards = usePrimeDexStore((state) => state.tcgLegacyOwnedCards);
-  const collectionRefs = useMemo(
-    () => collectionKeys.map((key) => decodeTCGCollectionKey(key)).filter((ref): ref is TCGCollection => ref !== null),
-    [collectionKeys],
-  );
-  const languages = useMemo(() => [...new Set(collectionRefs.map((ref) => ref.language))], [collectionRefs]);
-  const catalogQueries = useQueries({
-    queries: languages.map((language) => ({
-      queryKey: ['tcg', 'collection-sets', language],
-      queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionSetCatalog(language, signal),
-      staleTime: 60 * 60 * 1000,
-      enabled: mounted && !authLoading && Boolean(user) && syncStatus === 'ready',
-    })),
+  const requestedLanguage = searchParams.get('tcgLang');
+  const collectionLanguage = requestedLanguage === null
+    ? browseLanguage
+    : resolveRequestedTCGCardLanguage(requestedLanguage) ?? 'en';
+  const catalogQuery = useQuery({
+    queryKey: ['tcg', 'collection-sets', collectionLanguage],
+    queryFn: ({ signal }) => fetchCollectionSetCatalog(collectionLanguage, signal),
+    staleTime: 60 * 60 * 1000,
+    enabled: mounted && hasHydrated && !authLoading && Boolean(user) && syncStatus === 'ready',
   });
-  const sets = useMemo(() => {
-    const byLanguage = new Map(languages.map((language, index) => [language, catalogQueries[index]?.data ?? []]));
-    return collectionRefs.map((ref) => {
-      const set = byLanguage.get(ref.language)?.find((candidate) => candidate.id === ref.setId);
-      return set ? { collectionKey: ref.key, set, language: ref.language } : null;
-    }).filter((entry): entry is TCGCollectionOverviewEntry => Boolean(entry));
-  }, [catalogQueries, collectionRefs, languages]);
-  const setsLoading = languages.length > 0 && catalogQueries.some((query) => query.isPending);
-  const setsError = catalogQueries.some((query) => query.isError);
-  const refetchSets = () => Promise.all(catalogQueries.map((query) => query.refetch()));
+  const sets = useMemo(
+    () => buildTCGCollectionOverviewEntries(catalogQuery.data ?? [], collectionLanguage),
+    [catalogQuery.data, collectionLanguage],
+  );
+  const setsLoading = catalogQuery.isPending;
+  const setsError = catalogQuery.isError;
+  const refetchSets = () => catalogQuery.refetch();
 
   return (
     <div className="app-page">
@@ -60,7 +58,7 @@ export function TCGCollectionPage() {
               ? 'sync-status-title'
               : 'sync-required-title'}
       >
-        {authLoading ? (
+        {authLoading || !mounted || !hasHydrated ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
@@ -80,7 +78,7 @@ export function TCGCollectionPage() {
               </p>
             </div>
 
-            {setsError && sets.length === 0 && collectionRefs.length > 0 ? (
+            {setsError && sets.length === 0 ? (
               <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-5" role="alert">
                 <p className="text-sm text-foreground/75">
                   {t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}

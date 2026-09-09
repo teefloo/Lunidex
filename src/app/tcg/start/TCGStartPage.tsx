@@ -50,7 +50,6 @@ export function TCGStartPage() {
   const { enabled, loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
-  const createCollection = usePrimeDexStore((state) => state.createTCGCollection);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
   const searchTracked = useRef(false);
@@ -206,12 +205,7 @@ export function TCGStartPage() {
                     <Link
                       key={set.id}
                       href={`${localeHref(`/tcg/collection/${resolvedLanguage}/${encodeURIComponent(set.id)}`)}?activation=1`}
-                      onClick={(event) => {
-                        const collectionKey = createCollection(set.id, resolvedLanguage);
-                        if (!collectionKey) {
-                          event.preventDefault();
-                          return;
-                        }
+                      onClick={() => {
                         trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list');
                       }}
                       className="group flex min-h-20 items-center gap-4 rounded-sm border border-border/30 bg-card/40 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
