@@ -12,14 +12,14 @@ import { getProductConsent, setProductConsent, type ProductConsent } from '@/lib
 const STORAGE_KEY = 'primedex-cookie-consent';
 
 const preferenceLabels: Record<SupportedLanguage, { audience: string; product: string; save: string; customize: string }> = {
-  en: { audience: 'Vercel Web Analytics, Speed Insights and Sentry performance monitoring', product: 'Neon product measurement', save: 'Save my choices', customize: 'Customize' },
-  fr: { audience: 'Vercel Web Analytics, Speed Insights et mesure de performance Sentry', product: 'Mesure produit Neon', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
-  es: { audience: 'Vercel Web Analytics, Speed Insights y rendimiento de Sentry', product: 'Medición de producto de Neon', save: 'Guardar mis elecciones', customize: 'Personalizar' },
-  de: { audience: 'Vercel Web Analytics, Speed Insights und Sentry-Performance-Messung', product: 'Neon-Produktmessung', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
-  it: { audience: 'Vercel Web Analytics, Speed Insights e monitoraggio delle prestazioni Sentry', product: 'Misurazione del prodotto Neon', save: 'Salva le mie scelte', customize: 'Personalizza' },
-  ja: { audience: 'Vercel Web Analytics、Speed Insights、Sentry パフォーマンス監視', product: 'Neon プロダクト測定', save: '選択を保存', customize: 'カスタマイズ' },
-  ko: { audience: 'Vercel Web Analytics, Speed Insights 및 Sentry 성능 모니터링', product: 'Neon 제품 측정', save: '선택 저장', customize: '맞춤 설정' },
-  zh: { audience: 'Vercel Web Analytics、Speed Insights 和 Sentry 性能监控', product: 'Neon 产品衡量', save: '保存我的选择', customize: '自定义' },
+  en: { audience: 'Vercel Web Analytics, Speed Insights and Sentry performance monitoring', product: 'Neon and PostHog product measurement', save: 'Save my choices', customize: 'Customize' },
+  fr: { audience: 'Vercel Web Analytics, Speed Insights et mesure de performance Sentry', product: 'Mesure produit Neon et PostHog', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
+  es: { audience: 'Vercel Web Analytics, Speed Insights y rendimiento de Sentry', product: 'Medición de producto de Neon y PostHog', save: 'Guardar mis elecciones', customize: 'Personalizar' },
+  de: { audience: 'Vercel Web Analytics, Speed Insights und Sentry-Performance-Messung', product: 'Neon- und PostHog-Produktmessung', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
+  it: { audience: 'Vercel Web Analytics, Speed Insights e monitoraggio delle prestazioni di Sentry', product: 'Misurazione del prodotto di Neon e PostHog', save: 'Salva le mie scelte', customize: 'Personalizza' },
+  ja: { audience: 'Vercel Web Analytics、Speed Insights、Sentry パフォーマンス監視', product: 'Neon と PostHog のプロダクト測定', save: '選択を保存', customize: 'カスタマイズ' },
+  ko: { audience: 'Vercel Web Analytics, Speed Insights 및 Sentry 성능 모니터링', product: 'Neon 및 PostHog 제품 측정', save: '선택 저장', customize: '맞춤 설정' },
+  zh: { audience: 'Vercel Web Analytics、Speed Insights 和 Sentry 性能监控', product: 'Neon 和 PostHog 产品衡量', save: '保存我的选择', customize: '自定义' },
 };
 
 function readStoredConsent(): ProductConsent | null {

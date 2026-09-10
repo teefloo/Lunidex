@@ -82,6 +82,8 @@ export interface TCGPlayerPricing {
 export interface TCGCardmarketPricing {
   unit?: string;
   updated?: string;
+  /** Cardmarket's stable product identifier for the direct product page. */
+  idProduct?: number;
   avg?: number | null;
   low?: number | null;
   trend?: number | null;
@@ -107,6 +109,12 @@ export interface TCGCardPricing {
   cardmarket?: TCGCardmarketPricing;
 }
 
+export interface TCGCardThirdParty {
+  tcgplayer?: number;
+  cardmarket?: number;
+  cardtrader?: number;
+}
+
 /** TCGdex pricing attached to one concrete physical card variant. */
 export interface TCGCardVariantDetailed {
   type: string;
@@ -114,6 +122,7 @@ export interface TCGCardVariantDetailed {
   variantId?: string;
   stamp?: string | string[] | null;
   foil?: string | null;
+  thirdParty?: TCGCardThirdParty;
   pricing?: TCGCardPricing | null;
 }
 
@@ -171,6 +180,8 @@ export interface TCGCard {
   source?: string;
   updated?: string;
   legal?: TCGCardLegalities;
+  /** Stable provider identifiers exposed by TCGdex for direct marketplace links. */
+  thirdParty?: TCGCardThirdParty;
   pricing?: TCGCardPricing;
   dexId?: number[];
   level?: string;

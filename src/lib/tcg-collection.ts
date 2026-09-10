@@ -90,7 +90,37 @@ const RARITY_WEIGHTS: Record<string, number> = {
 
 export function getRarityWeight(rarity?: string | null): number {
   const key = getCanonicalTcgRarity(rarity);
-  return RARITY_WEIGHTS[key] ?? 0;
+  const knownWeight = RARITY_WEIGHTS[key];
+  if (knownWeight !== undefined) return knownWeight;
+  if (!key) return 0;
+
+  // TCGdex occasionally introduces a more specific rarity name before the
+  // collection UI knows its exact key. Keep those cards in the important-card
+  // ranking instead of treating them like an unclassified common card.
+  if (key.includes('hyperrare') || key.includes('blackgold') || key.includes('gold')) return 100;
+  if (
+    key.includes('specialillustration')
+    || key.includes('fullart')
+    || key.includes('altart')
+    || key.includes('alternativeart')
+  ) return 85;
+  if (key.includes('secretrare') || key.includes('secret')) return 90;
+  if (key.includes('mega') && (key.includes('rare') || key.includes('ex'))) return 80;
+  if (key.includes('ultrarare') || key.includes('ultra')) return 80;
+  if (key.includes('illustration') && key.includes('rare')) return 75;
+  if (key.includes('doublerare')) return 70;
+  if (key.includes('rainbow')) return 55;
+  if (key.includes('amazing')) return 40;
+  if (key.includes('radiant')) return 35;
+  if (key.includes('acespec')) return 35;
+  if (key.includes('gallery')) return 30;
+  if (key.includes('holo') && key.includes('rare')) return 50;
+  if (key.includes('rare')) return 25;
+  if (key.includes('promo')) return 15;
+  if (key.includes('reverse')) return 20;
+  if (key.includes('uncommon')) return 10;
+  if (key.includes('common')) return 5;
+  return 0;
 }
 
 export function getRarityColor(rarity?: string | null): string {
@@ -621,7 +651,8 @@ export function getSetCompletionFromCards(
 }
 
 /**
- * Return the rarest cards of a set that are not yet owned, highest rarity first.
+ * Return the most important missing cards of a set. Common and uncommon cards
+ * are intentionally excluded whenever the set has a more meaningful gap.
  * Guaranteed to contain only non-owned cards.
  */
 export function getTopMissingCards(
@@ -632,7 +663,56 @@ export function getTopMissingCards(
   const safeLimit = Math.max(0, Math.floor(limit));
   if (safeLimit === 0) return [];
   const missing = cards.filter((card) => !ownedIds.has(card.id));
-  return sortCollectionCardsByRarity(missing).slice(0, safeLimit);
+
+  const notableRarityThreshold = getRarityWeight('uncommon');
+  const rareCandidates = missing.filter((card) => getRarityWeight(card.rarity) >= getRarityWeight('rare'));
+  const notableCandidates = missing.filter((card) => getRarityWeight(card.rarity) > notableRarityThreshold);
+  const pricedCandidates = missing.filter((card) => (
+    !isBasicRarity(card.rarity) && getCollectionCardComparableValue(card) > 0
+  ));
+
+  // A key-card strip should help a collector find the set's meaningful gaps,
+  // not fill space with bulk cards. Prefer rare+ cards, then other notable
+  // special printings, and only use a known price as a fallback when rarity
+  // data is incomplete. Common and uncommon cards never win that fallback.
+  const candidates = rareCandidates.length > 0
+    ? rareCandidates
+    : notableCandidates.length > 0
+      ? notableCandidates
+      : pricedCandidates;
+
+  return [...candidates].sort(compareCollectionCardsByImportance).slice(0, safeLimit);
+}
+
+function isBasicRarity(rarity?: string | null): boolean {
+  const key = getCanonicalTcgRarity(rarity);
+  return key === 'common' || key === 'uncommon';
+}
+
+function getCollectionCardComparableValue(card: TCGCollectionCard): number {
+  const values = [
+    card.value,
+    ...Object.values(card.variantValues ?? {}),
+  ];
+  return values.reduce((maximum, value) => (
+    value && Number.isFinite(value.amount) && value.amount > maximum
+      ? value.amount
+      : maximum
+  ), 0);
+}
+
+function compareCollectionCardsByImportance(
+  left: TCGCollectionCard,
+  right: TCGCollectionCard,
+): number {
+  const rarityDifference = getRarityWeight(right.rarity) - getRarityWeight(left.rarity);
+  if (rarityDifference !== 0) return rarityDifference;
+
+  const valueDifference = getCollectionCardComparableValue(right) - getCollectionCardComparableValue(left);
+  if (valueDifference !== 0) return valueDifference;
+
+  return left.localId.localeCompare(right.localId, undefined, { numeric: true, sensitivity: 'base' })
+    || left.name.localeCompare(right.name);
 }
 
 export interface TCGCollectionValueGroup {

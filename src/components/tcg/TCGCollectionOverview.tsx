@@ -137,6 +137,10 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     }
     });
   }, [entries, filterInProgress, search, sortMode]);
+  const activeEntries = useMemo(
+    () => filteredEntries.filter((entry) => entry.ownedVariants.length > 0),
+    [filteredEntries],
+  );
   const legacyGroups = useMemo(() => {
     const groups = new Map<string, string[]>();
     for (const cardId of effectiveLegacyCards) {
@@ -161,12 +165,73 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     <div className="space-y-8">
       <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
         <div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Trophy className="h-4 w-4 text-primary" aria-hidden="true" /><h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/70">{t('tcg.collection_recap_title')}</h2></div><Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-primary hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">{t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}</Link></div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Stat label={t('tcg.collection_total_owned')} value={physicalCount} /><Stat label={t('tcg.collection_sets_completed')} value={`${stats.completeSets}/${stats.totalSets}`} /><div><p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_overall_progress')}</p><p className="mt-1 text-3xl font-black leading-none">{stats.percentage}%</p><TCGProgressBar owned={stats.ownedInCollections} total={stats.totalCards} size="sm" className="mt-2 w-full" /></div><div><p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_value_estimate')}</p>{valuationPending && !hasValuationResult ? <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_loading')}</p> : totalValueGroups.length ? <><p className="mt-1 break-words text-2xl font-black text-primary">{totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}</p><p className="mt-0.5 text-[11px] font-bold text-foreground/55">{t('tcg.collection_value_coverage', { priced: valuationCoverage.priced, owned: valuationCoverage.owned })}</p>{valuationPending && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_loading')}</p>}{!valuationPending && valuationCoverage.unpriced > 0 && <p className="text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_unpriced', { count: valuationCoverage.unpriced })}</p>}</> : physicalCount > 0 ? <><p className="mt-1 text-sm font-bold text-foreground/55">{valuationPending ? t('tcg.collection_loading') : t('tcg.collection_value_unavailable')}</p><p className="mt-0.5 text-[11px] font-bold text-foreground/55">{t('tcg.collection_value_coverage', { priced: valuationCoverage.priced, owned: valuationCoverage.owned })}</p>{!valuationPending && <p className="text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_unpriced', { count: valuationCoverage.unpriced })}</p>}</> : <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>}</div></div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat label={t('tcg.collection_total_owned')} value={physicalCount} />
+          <Stat label={t('tcg.collection_sets_completed')} value={`${stats.completeSets}/${stats.totalSets}`} />
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_overall_progress')}</p>
+            <p className="mt-1 text-3xl font-black leading-none">{stats.percentage}%</p>
+            <TCGProgressBar owned={stats.ownedInCollections} total={stats.totalCards} size="sm" className="mt-2 w-full" />
+          </div>
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_value_estimate')}</p>
+            {valuationPending && !hasValuationResult ? (
+              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_loading')}</p>
+            ) : totalValueGroups.length ? (
+              <>
+                <p className="mt-1 break-words text-2xl font-black text-primary">{totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}</p>
+                {valuationPending && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_loading')}</p>}
+                {!valuationPending && valuationCoverage.unpriced > 0 && (
+                  <p className="text-[11px] font-bold text-amber-200/70">
+                    {t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}
+                  </p>
+                )}
+              </>
+            ) : physicalCount > 0 ? (
+              <>
+                <p className="mt-1 text-sm font-bold text-foreground/55">{valuationPending ? t('tcg.collection_loading') : t('tcg.collection_value_unavailable')}</p>
+                {!valuationPending && valuationCoverage.unpriced > 0 && (
+                  <p className="text-[11px] font-bold text-amber-200/70">
+                    {t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+            )}
+          </div>
+        </div>
       </div>
 
       {legacyGroups.length > 0 && <section className="rounded-sm border border-amber-500/30 bg-amber-500/10 p-5" aria-labelledby="tcg-legacy-title"><div><h2 id="tcg-legacy-title" className="text-sm font-black uppercase tracking-[0.12em] text-amber-100">{t('tcg.collection_legacy_title', { defaultValue: 'Historical cards need a language' })}</h2><p className="mt-1 text-sm leading-6 text-amber-100/70">{t('tcg.collection_legacy_description', { defaultValue: 'These cards were saved before language-aware collections. Attribute each set explicitly.' })}</p></div><div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{legacyGroups.map(([setId, cards]) => <LegacySetAttributionRow key={setId} setId={setId} cards={cards} browseLanguage={browseLanguage} onAssign={assignLegacy} />)}</div></section>}
 
-      <section className="space-y-4"><div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-foreground/40" aria-hidden="true" /><h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/65">{t('tcg.collection_active_insights')}</h2></div>{filteredEntries.filter((entry) => entry.ownedVariants.length > 0).length === 0 ? <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/30">{t('tcg.collection_active_insights_hint')}</p> : <div className="grid gap-4 lg:grid-cols-2">{filteredEntries.filter((entry) => entry.ownedVariants.length > 0).map((entry) => <TCGActiveSetInsights key={entry.collectionKey} set={entry.set} ownedIds={entry.ownedIds} ownedVariants={entry.ownedVariants} resolvedLang={entry.language} />)}</div>}</section>
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-foreground/40" aria-hidden="true" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/65">{t('tcg.collection_active_insights')}</h2>
+        </div>
+        {activeEntries.length === 0 ? (
+          <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/30">{t('tcg.collection_active_insights_hint')}</p>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {activeEntries.map((entry) => {
+              const entryIndex = startedEntries.findIndex((candidate) => candidate.collectionKey === entry.collectionKey);
+              const setCardsQuery = collectionSetCardsQueries[entryIndex];
+              return (
+                <TCGActiveSetInsights
+                  key={entry.collectionKey}
+                  set={entry.set}
+                  ownedIds={entry.ownedIds}
+                  ownedVariants={entry.ownedVariants}
+                  resolvedLang={entry.language}
+                  collectionCards={setCardsQuery?.data}
+                  collectionCardsLoading={setCardsQuery?.isFetching}
+                />
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       <section className="space-y-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-foreground/40" aria-hidden="true" /><h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/65">{t('tcg.collection_per_set')}</h2></div><p className="mt-1 max-w-2xl text-xs leading-5 text-foreground/50">{t('tcg.collection_language_per_set_hint', { defaultValue: 'Choose the card language separately for each collection. Changing it transfers the cards to the selected language; an empty previous variant remains in history but is hidden from this list.' })}</p></div><div className="grid w-full gap-2 sm:flex sm:w-auto sm:items-center"><label htmlFor={searchId} className="sr-only">{t('tcg.collection_search_sets')}</label><div className="flex min-h-11 w-full items-center gap-2 rounded-sm border border-border/30 bg-card/40 px-3 sm:w-48"><Search className="h-4 w-4 shrink-0 text-foreground/45" aria-hidden="true" /><input id={searchId} value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('tcg.collection_search_sets')} className="min-h-11 min-w-0 flex-1 bg-transparent text-[11px] font-bold text-foreground placeholder:text-foreground/45 focus:outline-none" /></div><div className="flex min-h-11 items-center gap-1 rounded-sm border border-border/30 bg-card/40 pl-3 pr-2"><label htmlFor={sortId} className="sr-only">{t('tcg.collection_sort_label')}</label><select id={sortId} value={sortMode} onChange={(event) => setSortMode(event.target.value as typeof sortMode)} className="min-h-11 min-w-0 appearance-none bg-transparent text-[11px] font-bold text-foreground/75 focus:outline-none"><option value="progress">{t('tcg.collection_sort_default')}</option><option value="release-newest">{t('tcg.collection_sort_release_newest')}</option><option value="release-oldest">{t('tcg.collection_sort_release_oldest')}</option><option value="name-asc">{t('tcg.collection_sort_name_asc')}</option><option value="name-desc">{t('tcg.collection_sort_name_desc')}</option></select><ChevronDown className="pointer-events-none h-4 w-4 text-foreground/45" aria-hidden="true" /></div><button type="button" onClick={() => setFilterInProgress((value) => !value)} aria-pressed={filterInProgress} aria-controls={setListId} className={`min-h-11 rounded-sm border px-3 text-[11px] font-bold ${filterInProgress ? 'border-primary/40 bg-primary/15 text-primary' : 'border-border/30 bg-card/40 text-foreground/70 hover:border-primary/30 hover:text-primary/60'}`}>{t('tcg.collection_in_progress')}</button></div></div>
         {filteredEntries.length === 0 ? (
@@ -193,6 +258,13 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
               const setValueSummary = setCardsQuery?.data
                 ? summarizeCollectionSetValue(setCardsQuery.data, displayCurrency)
                 : undefined;
+              const ownedUnpricedCount = setValue
+                ? Math.max(0, setValue.unpricedCount ?? 0, setValue.ownedCount - setValue.pricedCount)
+                : 0;
+              const setUnpricedCount = setValueSummary
+                ? Math.max(0, setValueSummary.cardCount - setValueSummary.pricedCardCount)
+                : 0;
+              const unpricedCount = Math.max(ownedUnpricedCount, setUnpricedCount);
               const ownedValue = valueQuery?.isFetching && !setValue
                 ? t('tcg.collection_loading')
                 : setValue?.groups.length
@@ -230,9 +302,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
                           <span className="px-1 text-foreground/35">/</span>
                           <span className="text-foreground/80">{totalValue}</span>
                         </p>
-                        {setValue && <p className="mt-0.5 text-[11px] font-bold text-foreground/55">{t('tcg.collection_value_coverage', { priced: setValue.pricedCount, owned: setValue.ownedCount })}</p>}
-                        {setValueSummary && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_value_coverage', { priced: setValueSummary.pricedCardCount, owned: setValueSummary.cardCount })}</p>}
-                        {(setValue?.unpricedCount ?? 0) > 0 && <p className="text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_unpriced', { count: setValue?.unpricedCount })}</p>}
+                        {unpricedCount > 0 && <p className="mt-0.5 text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_partial', { count: unpricedCount })}</p>}
                       </>
                     ) : (
                       <span className="text-[11px] font-bold text-foreground/45">{t('tcg.collection_value_none_owned')}</span>

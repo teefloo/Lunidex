@@ -15,6 +15,8 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { usePriceHistory, computePriceTrend, type PriceHistoryEntry } from '@/hooks/usePriceHistory';
 import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useTranslation } from '@/lib/i18n';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -30,14 +32,14 @@ type Days = 7 | 30 | 90;
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, locale: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 }
 
-function toChartData(history: PriceHistoryEntry[]) {
+function toChartData(history: PriceHistoryEntry[], locale: string) {
   return history.map((entry) => ({
-    date: formatDate(entry.recorded_at),
+    date: formatDate(entry.recorded_at, locale),
     rawDate: entry.recorded_at,
     usd: entry.tcgplayer_mid ?? entry.tcgplayer_low ?? null,
     eur: entry.cardmarket_trend ?? entry.cardmarket_avg ?? null,
@@ -64,10 +66,10 @@ function TrendBadge({ pct, label }: TrendBadgeProps) {
       className={cn(
         'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold',
         isNeutral
-          ? 'bg-foreground/10 text-foreground/60'
+          ? 'bg-foreground/10 text-muted-foreground'
           : isPositive
-            ? 'bg-green-500/15 text-green-500'
-            : 'bg-red-500/15 text-red-400',
+            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-200'
+            : 'bg-rose-500/15 text-rose-700 dark:text-rose-200',
       )}
     >
       {isNeutral ? (
@@ -93,8 +95,8 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="glass-surface rounded-xl border border-foreground/10 px-3 py-2 text-xs shadow-lg">
-      <p className="mb-1 font-bold text-foreground/70">{label}</p>
+    <div className="glass-surface rounded-xl border border-border/70 bg-card px-3 py-2 text-xs shadow-[var(--shadow-pixel-sm)]">
+      <p className="mb-1 font-bold text-muted-foreground">{label}</p>
       {payload.map((item) => (
         <p key={item.name} style={{ color: item.color }} className="font-semibold">
           {item.name}: {item.value != null ? formatChartAmount(item.value, item.name) : '—'}
@@ -118,12 +120,12 @@ function formatChartAmount(amount: number, currency: string): string {
 
 function PriceChartSkeleton() {
   return (
-    <div className="animate-pulse space-y-3">
+    <div className="animate-pulse space-y-3 rounded-2xl border border-border/55 bg-background/20 p-4 sm:p-5">
       <div className="flex items-center justify-between">
-        <div className="h-4 w-28 rounded bg-foreground/10" />
+        <div className="h-4 w-28 rounded-lg bg-foreground/10" />
         <div className="flex gap-1">
           {[7, 30, 90].map((d) => (
-            <div key={d} className="h-7 w-10 rounded-lg bg-foreground/10" />
+            <div key={d} className="h-11 w-11 rounded-lg bg-foreground/10" />
           ))}
         </div>
       </div>
@@ -138,6 +140,8 @@ function PriceChartSkeleton() {
 
 export function PriceChart({ cardId }: PriceChartProps) {
   const [days, setDays] = useState<Days>(30);
+  const { t } = useTranslation();
+  const interfaceLanguage = useClientLanguage();
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const { data: history, isPending, isError } = usePriceHistory(cardId, days);
 
@@ -145,21 +149,21 @@ export function PriceChart({ cardId }: PriceChartProps) {
 
   if (isError || !history || history.length === 0) {
     return (
-      <div className="rounded-xl border border-foreground/10 bg-foreground/5 px-5 py-6 text-center text-xs text-foreground/40">
-        No price history available yet. Data is collected every 6 hours.
+      <div className="rounded-2xl border border-border/55 bg-background/20 px-5 py-6 text-center text-xs text-muted-foreground">
+        {t('tcg.price_history_unavailable')}
       </div>
     );
   }
 
-  const chartData = toChartData(history);
+  const chartData = toChartData(history, interfaceLanguage);
   const trend = computePriceTrend(history);
   const chartKey: 'usd' | 'eur' = displayCurrency === 'EUR' ? 'eur' : 'usd';
   const hasSelectedCurrencyHistory = chartData.some((entry) => entry[chartKey] != null);
 
   if (!hasSelectedCurrencyHistory) {
     return (
-      <div className="rounded-xl border border-foreground/10 bg-foreground/5 px-5 py-6 text-center text-xs text-foreground/40">
-        No price history available yet. Data is collected every 6 hours.
+      <div className="rounded-2xl border border-border/55 bg-background/20 px-5 py-6 text-center text-xs text-muted-foreground">
+        {t('tcg.price_history_unavailable')}
       </div>
     );
   }
@@ -171,12 +175,12 @@ export function PriceChart({ cardId }: PriceChartProps) {
   ];
 
   return (
-    <div className="space-y-3">
+    <section className="space-y-4 rounded-2xl border border-border/55 bg-background/20 p-4 sm:p-5">
       {/* Header */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-black uppercase tracking-widest text-foreground/50">
-          Price History
-        </span>
+      <div className="flex flex-wrap items-center gap-3">
+        <h3 className="text-[11px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+          {t('tcg.price_history')}
+        </h3>
 
         <div className="flex items-center gap-1.5">
           <TrendBadge pct={displayCurrency === 'EUR' ? trend.eurChange : trend.usdChange} label={displayCurrency} />
@@ -189,11 +193,12 @@ export function PriceChart({ cardId }: PriceChartProps) {
               key={value}
               type="button"
               onClick={() => setDays(value)}
+              aria-pressed={days === value}
               className={cn(
-                'rounded-lg px-2.5 py-1 text-xs font-bold transition-colors',
+                'touch-target min-w-11 rounded-lg border px-2.5 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card',
                 days === value
-                  ? 'bg-primary text-white'
-                  : 'bg-foreground/10 text-foreground/60 hover:bg-foreground/15',
+                  ? 'border-primary bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]'
+                  : 'border-border/50 bg-card/50 text-muted-foreground hover:border-primary/40 hover:bg-card/70 hover:text-foreground',
               )}
             >
               {label}
@@ -203,19 +208,19 @@ export function PriceChart({ cardId }: PriceChartProps) {
       </div>
 
       {/* Chart */}
-      <div className="rounded-xl border border-foreground/10 bg-foreground/[0.03] p-3">
+      <div className="rounded-xl border border-border/45 bg-card/20 p-3">
         <ResponsiveContainer width="100%" height={192}>
           <LineChart data={chartData} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.4)' }}
+              tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.4)' }}
+              tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => formatChartAmount(v, displayCurrency)}
@@ -225,13 +230,13 @@ export function PriceChart({ cardId }: PriceChartProps) {
             <Legend
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
+              wrapperStyle={{ color: 'var(--muted-foreground)', fontSize: 11, paddingTop: 8 }}
             />
             <Line
               type="monotone"
               dataKey={chartKey}
               name={displayCurrency}
-              stroke={displayCurrency === 'EUR' ? '#ef4444' : '#3b82f6'}
+              stroke="var(--primary)"
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4 }}
@@ -242,9 +247,9 @@ export function PriceChart({ cardId }: PriceChartProps) {
       </div>
 
       {/* Data source note */}
-      <p className="text-right text-[11px] text-foreground/30">
-        TCGPlayer (USD) · Cardmarket (EUR) · updated every 6h
+      <p className="text-right text-[11px] text-muted-foreground">
+        {t('tcg.price_history_sources')}
       </p>
-    </div>
+    </section>
   );
 }

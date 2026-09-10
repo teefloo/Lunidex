@@ -2,13 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   aggregateCollectionValueWithVariants,
   getCardMarketValue,
+  getRarityWeight,
+  getTopMissingCards,
   getTCGValueInCurrency,
   getTCGVariantValue,
   mergeCollectionCardDetails,
   summarizeCollectionSetValue,
   toCollectionCard,
 } from './tcg-collection';
-import type { TCGCard } from '@/types/tcg';
+import type { TCGCard, TCGCollectionCard } from '@/types/tcg';
 
 const baseCard: TCGCard = {
   id: 'base1-001',
@@ -351,5 +353,32 @@ describe('TCG physical variant pricing', () => {
 
     expect(merged.value).toEqual({ amount: 26.51, currency: 'EUR' });
     expect(merged.rarity).toBe('Ultra Rare');
+  });
+
+  it('ranks meaningful missing cards before bulk rarities and uses value as a tie-breaker', () => {
+    const cards: TCGCollectionCard[] = [
+      { id: 'set-001', localId: '001', name: 'Bulk', setId: 'set', rarity: 'Uncommon', value: { amount: 99, currency: 'EUR' } },
+      { id: 'set-002', localId: '002', name: 'Rare', setId: 'set', rarity: 'Rare', value: { amount: 1, currency: 'EUR' } },
+      { id: 'set-003', localId: '003', name: 'Illustration', setId: 'set', rarity: 'Illustration Rare', value: { amount: 20, currency: 'EUR' } },
+      { id: 'set-004', localId: '004', name: 'Mega Full Art', setId: 'set', rarity: 'Mega Full Art', value: { amount: 15, currency: 'EUR' } },
+      { id: 'set-005', localId: '005', name: 'Rare Chase', setId: 'set', rarity: 'Rare', value: { amount: 30, currency: 'EUR' } },
+    ];
+
+    expect(getTopMissingCards(cards, new Set(), 4).map((card) => card.id)).toEqual([
+      'set-004',
+      'set-003',
+      'set-005',
+      'set-002',
+    ]);
+    expect(getRarityWeight('Mega Hyper Rare')).toBeGreaterThan(getRarityWeight('Rare'));
+  });
+
+  it('does not present common or uncommon cards as key cards when no notable card is known', () => {
+    const cards: TCGCollectionCard[] = [
+      { id: 'set-001', localId: '001', name: 'Common', setId: 'set', rarity: 'Common', value: { amount: 8, currency: 'EUR' } },
+      { id: 'set-002', localId: '002', name: 'Uncommon', setId: 'set', rarity: 'Uncommon', value: { amount: 12, currency: 'EUR' } },
+    ];
+
+    expect(getTopMissingCards(cards, new Set())).toEqual([]);
   });
 });

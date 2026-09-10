@@ -29,6 +29,7 @@ import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
+import { getCardmarketProductUrl } from '@/lib/tcg-marketplace';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
 import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant, isTCGCollectionCardOwned } from '@/lib/tcg-collections';
@@ -172,6 +173,7 @@ export function TCGCardDetailModal({
         }
       })()
     : null;
+  const cardmarketHref = getCardmarketProductUrl(displayCard, interfaceLanguage);
 
   const handleShareCard = async () => {
     const url = new URL(
@@ -218,7 +220,7 @@ export function TCGCardDetailModal({
   };
 
   return createPortal(
-    <div lang={interfaceLanguage} className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div lang={interfaceLanguage} className="fixed inset-0 z-[300] flex items-center justify-center p-2 sm:p-4 lg:p-8">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -236,7 +238,7 @@ export function TCGCardDetailModal({
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.24, ease: 'easeOut' }}
-        className="glass-surface relative z-[301] flex h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-sm text-foreground sm:h-[calc(100dvh-3rem)] lg:h-[88dvh]"
+        className="glass-surface relative z-[301] flex h-[calc(100dvh-1rem)] w-full max-w-6xl flex-col overflow-hidden rounded-[1.25rem] border-border/70 bg-card text-foreground shadow-[var(--shadow-pixel)] sm:h-[calc(100dvh-2rem)] sm:rounded-[1.5rem] lg:h-[min(88dvh,58rem)]"
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--primary)_12%,transparent),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_24%,transparent_76%,rgba(0,0,0,0.16))]" />
@@ -245,7 +247,7 @@ export function TCGCardDetailModal({
           ref={closeButtonRef}
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-20 rounded-sm border border-border/60 bg-muted/60 p-3 text-foreground/70 transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          className="touch-target absolute right-3 top-3 z-20 inline-flex items-center justify-center rounded-xl border border-border/60 bg-background/70 text-foreground/70 shadow-[var(--shadow-pixel-sm)] backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 sm:right-4 sm:top-4"
           aria-label={t('common.close')}
           title={t('common.close')}
         >
@@ -253,75 +255,76 @@ export function TCGCardDetailModal({
         </button>
 
         <div className="relative flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]">
-          <aside className="relative flex min-h-0 shrink-0 items-center justify-center border-b border-border/60 bg-card/50 p-0 sm:p-0 lg:border-b-0 lg:border-r lg:p-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-transparent" />
+          <aside className="relative flex min-h-[17rem] shrink-0 items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-b from-primary/10 via-card/70 to-background/30 p-5 sm:min-h-[20rem] sm:p-8 lg:min-h-0 lg:border-b-0 lg:border-r lg:p-10">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_48%)]" />
+            <div className="pointer-events-none absolute inset-x-10 bottom-8 h-16 rounded-full bg-primary/15 blur-3xl" />
 
-            <div className="relative w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[460px]">
+            <div className="relative w-full max-w-[205px] sm:max-w-[270px] lg:max-w-[360px]">
               <TCGHolographicCard
                 card={displayCard}
                 priority={priority}
                 noFrame
-                sizes="(min-width: 1024px) 460px, (min-width: 640px) 320px, 240px"
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 270px, 205px"
               />
 
-              <div className="mt-5 flex items-center justify-between gap-3 text-[11px] font-black uppercase tracking-[0.24em] text-foreground/40">
+              <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-border/45 bg-background/25 px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 <span className="truncate">{displayCard.set?.name || t('tcg.unknown')}</span>
                 <span className="shrink-0">#{displayCard.localId}</span>
               </div>
             </div>
           </aside>
 
-          <div className="relative min-h-0 overflow-y-auto p-5 sm:p-6 lg:p-10 scrollbar-premium">
+          <div className="relative min-h-0 overflow-y-auto p-5 sm:p-8 lg:p-10 scrollbar-premium">
             {isHydrating ? (
               <DetailSkeleton />
             ) : (
-              <div className="relative space-y-7">
+              <div className="relative space-y-8">
 
                 {/* ── Identity ─────────────────────────────────────── */}
-                <header className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className={cn('rounded-sm border px-3 py-1 text-[11px] font-black uppercase tracking-widest', getCategoryTone(category).badge)}>
+                <header className="space-y-5">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className={cn('rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em]', getCategoryTone(category).badge)}>
                       {categoryLabel}
                     </span>
                     {displayCard.rarity && (
-                      <span className="rounded-sm border border-border/30 bg-card/35 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-foreground/45">
+                      <span className="rounded-full border border-border/50 bg-background/30 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-muted-foreground">
                         {getTCGRarityLabel(displayCard.rarity, t)}
                       </span>
                     )}
                     {displayCard.stage && (
-                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                         {getStageLabel(displayCard.stage, t)}
                       </span>
                     )}
                     {displayCard.trainerType && (
-                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                         {getTrainerTypeLabel(displayCard.trainerType, t)}
                       </span>
                     )}
                     {displayCard.energyType && (
-                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/35">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                         {getEnergyTypeLabel(displayCard.energyType, t)}
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-baseline gap-4">
-                    <h2 id={titleId} className="text-3xl font-display font-black uppercase tracking-tight sm:text-4xl xl:text-5xl">
+                  <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
+                    <h2 id={titleId} className="max-w-[15ch] text-4xl font-display font-black uppercase leading-[0.95] tracking-[-0.03em] text-balance sm:text-5xl xl:text-6xl">
                       {displayCard.name}
                     </h2>
                     {typeof displayCard.hp === 'number' && (
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-sm font-black uppercase tracking-[0.2em] text-foreground/30">{t('stats.hp')}</span>
-                        <span className="text-3xl font-display font-black text-primary sm:text-4xl">{displayCard.hp}</span>
+                      <div className="flex items-baseline gap-2 rounded-xl border border-primary/25 bg-primary/10 px-3 py-2">
+                        <span className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">{t('stats.hp')}</span>
+                        <span className="text-3xl font-display font-black leading-none text-primary sm:text-4xl">{displayCard.hp}</span>
                       </div>
                     )}
                   </div>
 
-                  <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-foreground/50">
+                  <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-muted-foreground">
                     {effectText || t('tcg.detail_empty')}
                   </p>
 
-                  <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                  <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
                     <ActionPill
                       active={compared}
                       onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
@@ -332,7 +335,7 @@ export function TCGCardDetailModal({
                       <div
                         role="status"
                         aria-label={t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: `Manage variants for ${displayCard.name}` })}
-                        className="flex min-h-11 items-center justify-center rounded-sm border border-primary/25 bg-primary/10 px-3 text-center text-[11px] font-black uppercase tracking-[0.08em] text-primary"
+                        className="flex min-h-11 items-center justify-center rounded-xl border border-primary/25 bg-primary/10 px-3 text-center text-[11px] font-black uppercase tracking-[0.08em] text-primary"
                       >
                         {owned ? t('tcg.collection_owned_variants', { defaultValue: 'Variants managed in collection' }) : t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: 'Manage variants in the collection card' })}
                       </div>
@@ -345,20 +348,40 @@ export function TCGCardDetailModal({
                 </header>
 
                 {/* ── Market price ─────────────────────────────────── */}
-                {marketValue && (
-                  <div className="flex items-center justify-between rounded-sm border border-primary/20 bg-primary/5 px-5 py-4">
-                    <div>
-                      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/40">
-                        {t('tcg.market_price')}
-                      </p>
-                      <p className="mt-1 text-2xl font-black leading-none text-primary">{marketValueLabel}</p>
-                      <p className="mt-1.5 text-[11px] font-bold text-foreground/30">
-                        via {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
-                      </p>
+                <section className="relative overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/12 via-primary/5 to-background/20">
+                  <div className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full bg-primary/15 blur-3xl" />
+                  <div className="relative flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <BadgeDollarSign className="h-4 w-4 text-primary" aria-hidden="true" />
+                        <p className="text-[11px] font-black uppercase tracking-[0.18em]">
+                          {t('tcg.market_price')}
+                        </p>
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <p className="text-3xl font-display font-black leading-none tracking-[-0.02em] text-primary">
+                          {marketValueLabel ?? '—'}
+                        </p>
+                        {marketValue && (
+                          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                            via {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <BadgeDollarSign className="h-8 w-8 shrink-0 text-primary/20" />
+                    {cardmarketHref && (
+                      <a
+                        href={cardmarketHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="touch-target inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/60 bg-primary px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground shadow-[var(--shadow-pixel-sm)] transition-all hover:-translate-y-px hover:bg-primary/90 hover:shadow-[var(--shadow-pixel)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:w-auto"
+                      >
+                        {t('tcg.view_on_cardmarket')}
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    )}
                   </div>
-                )}
+                </section>
 
                 {/* ── Card details ─────────────────────────────────── */}
                 <section className="space-y-3">
@@ -458,12 +481,12 @@ export function TCGCardDetailModal({
                 </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}
-                <div className="flex justify-end border-t border-border/20 pt-5">
+                <div className="flex justify-end border-t border-border/60 pt-5">
                   <a
                     href={`https://api.tcgdex.net/v2/${resolvedLang}/cards/${displayCard.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-sm border border-border/40 bg-card/60 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-foreground/40 transition-all hover:bg-primary/10 hover:text-primary shadow-[var(--shadow-pixel-sm)]"
+                    className="touch-target inline-flex items-center gap-2 rounded-xl border border-border/50 bg-card/60 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground shadow-[var(--shadow-pixel-sm)] transition-all hover:-translate-y-px hover:border-primary/40 hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                   >
                     {t('tcg.open_raw_data')}
                     <ExternalLink className="h-3 w-3" />
@@ -505,7 +528,7 @@ function DeferredPriceChart({ cardId }: { cardId: string }) {
       {shouldLoad ? (
         <PriceChart cardId={cardId} />
       ) : (
-        <div className="h-48 animate-pulse rounded-xl bg-foreground/5" aria-hidden="true" />
+        <div className="h-48 animate-pulse rounded-2xl border border-border/55 bg-background/20" aria-hidden="true" />
       )}
     </div>
   );
@@ -520,20 +543,20 @@ interface InfoItemProps {
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.2em] text-foreground/30">{children}</span>
-      <div className="h-px flex-1 bg-border/20" />
+      <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{children}</span>
+      <div className="h-px flex-1 bg-border/70" />
     </div>
   );
 }
 
 function InfoItem({ icon: Icon, label, value }: InfoItemProps) {
   return (
-    <div className="rounded-sm border border-border/40 bg-card/35 p-4">
+    <div className="rounded-xl border border-border/55 bg-background/20 p-4 transition-colors hover:border-primary/30 hover:bg-primary/5">
       <div className="mb-1 flex items-center gap-2">
         <Icon className="h-3 w-3 text-primary" />
-        <span className="text-[11px] font-black uppercase tracking-widest text-foreground/30">{label}</span>
+        <span className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{label}</span>
       </div>
-      <span className="block break-words text-xs font-bold leading-snug text-foreground/80">
+      <span className="block break-words text-xs font-bold leading-snug text-foreground">
         {value}
       </span>
     </div>
@@ -550,46 +573,46 @@ function EffectPanel({
   text: string;
 }) {
   return (
-    <div className="glass-card space-y-3 p-6">
+    <div className="glass-card space-y-3 rounded-xl border-border/55 bg-background/20 p-5 sm:p-6">
       <div className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-primary" />
         <h3 className="text-xs font-black uppercase tracking-widest text-primary">
           {title}
         </h3>
       </div>
-      <p className="font-body text-sm leading-relaxed text-foreground/60">{text}</p>
+      <p className="font-body text-sm leading-relaxed text-muted-foreground">{text}</p>
     </div>
   );
 }
 
 function AttackPanel({ attack }: { attack: TCGCardAttack }) {
   return (
-    <div className="glass-card group p-6 transition-all hover:bg-card/60">
+    <div className="glass-card group rounded-xl border-border/55 bg-background/20 p-5 transition-all hover:bg-primary/5 sm:p-6">
       <div className="mb-2 flex items-start justify-between gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex flex-wrap gap-1.5">
             {attack.cost?.map((cost, costIndex) => (
               <span
                 key={`${cost}-${costIndex}`}
-                className="rounded-sm border border-border/60 bg-card/55 px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/50"
+                className="rounded-full border border-border/60 bg-card/55 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground"
               >
                 {cost}
               </span>
             ))}
           </div>
-          <h4 className="text-base font-display font-black uppercase text-foreground/90 transition-colors group-hover:text-primary">
+          <h4 className="text-base font-display font-black uppercase text-foreground transition-colors group-hover:text-primary">
             {attack.name}
           </h4>
         </div>
 
         {attack.damage && (
-          <span className="text-xl font-display font-black text-foreground/40">
+          <span className="text-xl font-display font-black text-muted-foreground">
             {attack.damage}
           </span>
         )}
       </div>
 
-      <p className="font-body text-sm leading-relaxed text-foreground/50">
+      <p className="font-body text-sm leading-relaxed text-muted-foreground">
         {attack.effect || attack.text || ''}
       </p>
     </div>
@@ -637,10 +660,10 @@ function ActionPill({
       type="button"
       onClick={onClick}
       className={cn(
-        'relative rounded-sm border px-4 py-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
+        'touch-target relative w-full rounded-xl border px-3 text-center text-[11px] font-black uppercase tracking-[0.12em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card',
         active
           ? 'border-primary/60 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]'
-          : 'border-border/50 bg-card/50 text-foreground/55 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+          : 'border-border/50 bg-card/50 text-muted-foreground hover:border-primary/40 hover:bg-card/65 hover:text-foreground',
       )}
     >
       {label}
@@ -668,15 +691,15 @@ function getCategoryTone(category: TCGCardCategory) {
   switch (category) {
     case 'Trainer':
       return {
-        badge: 'border-amber-400/20 bg-amber-500/10 text-amber-200',
+        badge: 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:border-amber-400/25 dark:text-amber-200',
       };
     case 'Energy':
       return {
-        badge: 'border-cyan-400/20 bg-cyan-500/10 text-cyan-200',
+        badge: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:border-cyan-400/25 dark:text-cyan-200',
       };
     default:
       return {
-        badge: 'border-emerald-400/20 bg-emerald-500/10 text-emerald-200',
+        badge: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/25 dark:text-emerald-200',
       };
   }
 }

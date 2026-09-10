@@ -15,6 +15,7 @@ import dynamic from 'next/dynamic';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
 import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
+import { PostHogConsentBridge } from '@/components/analytics/PostHogConsentBridge';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
 import { createObservedMutationCache, createObservedQueryCache } from '@/lib/query-observability';
@@ -203,6 +204,7 @@ export default function Providers({ children, initialLanguage, initialTranslatio
                 <NeonSyncBridge />
                 {children}
                 <SentryConsentBridge />
+                <PostHogConsentBridge />
                 <VercelInsights />
                 <DeferredOverlays />
               </ThemeProvider>

@@ -1,6 +1,7 @@
 'use client';
 
 import { normalizeCampaignSlug } from '@/lib/campaigns';
+import { capturePostHogEvent } from '@/lib/posthog-client';
 
 export type ProductMeasurementConsent = 'granted' | 'denied' | 'unset';
 
@@ -133,6 +134,10 @@ export function trackProductEvent(event: ProductEvent, propertyA?: string, prope
   if (milestoneEvents.has(event)) session.emitted.push(event);
   saveSession(session);
   const body = JSON.stringify({ event, ...(propertyA ? { propertyA } : {}), ...(propertyB ? { propertyB } : {}) });
+  capturePostHogEvent(event, {
+    ...(propertyA ? { source: propertyA } : {}),
+    ...(propertyB ? { detail: propertyB } : {}),
+  });
   void fetch('/api/analytics/product', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => undefined);
 }
 

@@ -161,8 +161,8 @@ const devConnectSrc =
 // unsafe-eval is required by Webpack HMR in dev; strip it in production.
 const scriptSrc =
   process.env.NODE_ENV === 'development'
-    ? "'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com"
-    : "'self' 'unsafe-inline' https://va.vercel-scripts.com";
+    ? "'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://*.posthog.com"
+    : "'self' 'unsafe-inline' https://va.vercel-scripts.com https://*.posthog.com";
 
 const csp = [
   "default-src 'self'",
@@ -171,8 +171,8 @@ const csp = [
   "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcg.pokemon.com https://mcdn.pokemon.com https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
-  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
-  "worker-src 'self' blob:",
+  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  "worker-src 'self' blob: data:",
   "frame-ancestors 'none'",
 ].join('; ');
 

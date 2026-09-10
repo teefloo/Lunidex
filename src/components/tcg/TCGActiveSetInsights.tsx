@@ -15,7 +15,7 @@ import {
   toCollectionCard,
 } from '@/lib/tcg-collection';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
-import type { TCGCardValue } from '@/types/tcg';
+import type { TCGCardValue, TCGCollectionCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
 import type { TCGSet } from '@/types/tcg';
@@ -31,6 +31,9 @@ interface TCGActiveSetInsightsProps {
   ownedIds: Set<string>;
   ownedVariants: readonly TCGOwnedVariant[];
   resolvedLang: TCGCardLanguage;
+  /** Fully enriched cards are already loaded by the collection overview. */
+  collectionCards?: readonly TCGCollectionCard[];
+  collectionCardsLoading?: boolean;
 }
 
 function formatCurrency(group: TCGCollectionValueGroup, locale: string): string {
@@ -57,7 +60,14 @@ function formatCardValue(value: TCGCardValue, locale: string): string {
   }
 }
 
-export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLang }: TCGActiveSetInsightsProps) {
+export function TCGActiveSetInsights({
+  set,
+  ownedIds,
+  ownedVariants,
+  resolvedLang,
+  collectionCards,
+  collectionCardsLoading = false,
+}: TCGActiveSetInsightsProps) {
   const { t } = useTranslation();
   const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
@@ -97,8 +107,8 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   });
 
   // Pricing and variant flags are only needed for physical copies the user
-  // owns. The helper deduplicates card detail calls and keeps its concurrency
-  // bound, so opening the overview never hydrates an entire album.
+  // owns. The overview supplies the full set projection for recommendations;
+  // this remains the owned-value fallback when that projection is unavailable.
   const { data: ownedValuation, isLoading: valuationLoading, isError: valuationError } = useQuery({
     // Reuse the overview valuation for the same language-aware collection.
     // The active insights used to start a second queue of detail requests for
@@ -109,9 +119,14 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
     enabled: shouldLoadDetails && ownedVariants.length > 0,
   });
 
-  const cards = useMemo(
+  const albumCards = useMemo(
     () => album?.cards.map((card) => toCollectionCard(card, set.id, displayCurrency)) ?? [],
     [album?.cards, set.id, displayCurrency],
+  );
+  const hasHydratedSetCards = Boolean(collectionCards?.length);
+  const cards = useMemo(
+    () => collectionCards?.length ? [...collectionCards] : albumCards,
+    [albumCards, collectionCards],
   );
 
   const insights = useMemo(
@@ -134,7 +149,7 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
   // Hydrate only the six recommended missing cards so their visible metadata is
   // complete without bringing back the old request waterfall for every card.
   const missingCardQueries = useQueries({
-    queries: topMissingIds.map((cardId) => ({
+    queries: hasHydratedSetCards ? [] : topMissingIds.map((cardId) => ({
       queryKey: ['tcg', 'collection-card-detail-v1', cardId, resolvedLang],
       queryFn: ({ signal }: { signal: AbortSignal }) => getTCGCard(
         cardId,
@@ -154,11 +169,26 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
     [displayCurrency, missingCardQueries, set.id],
   );
   const topMissingCards = useMemo(
-    () => insights ? mergeCollectionCardDetails(insights.topMissing, hydratedMissingCards) : [],
-    [hydratedMissingCards, insights],
+    () => insights
+      ? hasHydratedSetCards
+        ? insights.topMissing
+        : mergeCollectionCardDetails(insights.topMissing, hydratedMissingCards)
+      : [],
+    [hasHydratedSetCards, hydratedMissingCards, insights],
   );
-  const isLoading = shouldLoadDetails && (cardsLoading || valuationLoading);
-  const detailsUnavailable = shouldLoadDetails && (isError || (!cardsLoading && !album?.cards.length));
+  const isLoading = shouldLoadDetails && ((cardsLoading && !hasHydratedSetCards) || valuationLoading);
+  const detailsUnavailable = shouldLoadDetails
+    && !hasHydratedSetCards
+    && (isError || (!cardsLoading && !album?.cards.length));
+  const keyCardsLoading = shouldLoadDetails && !hasHydratedSetCards && collectionCardsLoading;
+  const hasMissingCards = Boolean(insights && insights.completion.owned < insights.completion.total);
+  const valuationUnpricedCount = insights
+    ? Math.max(
+      0,
+      insights.valuation.unpricedCount ?? 0,
+      insights.valuation.ownedCount - insights.valuation.pricedCount,
+    )
+    : 0;
 
   return (
     <div ref={containerRef} className="min-w-0 rounded-sm border border-border/20 bg-card/30 p-4 shadow-[var(--shadow-pixel-sm)]">
@@ -232,20 +262,10 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
                   {t('tcg.collection_value_none_owned')}
                 </p>
               )}
-              {insights.valuation.ownedCount > 0 && (
-                <>
-                  <p className="mt-0.5 text-[11px] font-bold text-foreground/55">
-                    {t('tcg.collection_value_coverage', {
-                      priced: insights.valuation.pricedCount,
-                      owned: insights.valuation.ownedCount,
-                    })}
-                  </p>
-                  {(insights.valuation.unpricedCount ?? 0) > 0 && (
-                    <p className="text-[11px] font-bold text-amber-200/70">
-                      {t('tcg.collection_value_unpriced', { count: insights.valuation.unpricedCount })}
-                    </p>
-                  )}
-                </>
+              {valuationUnpricedCount > 0 && (
+                <p className="text-[11px] font-bold text-amber-200/70">
+                  {t('tcg.collection_value_partial', { count: valuationUnpricedCount })}
+                </p>
               )}
             </div>
             {/* Set total value */}
@@ -270,8 +290,12 @@ export function TCGActiveSetInsights({ set, ownedIds, ownedVariants, resolvedLan
               {t('tcg.collection_top_missing')}
             </p>
             {topMissingCards.length === 0 ? (
-              <p className="mt-2 text-[11px] font-bold text-emerald-400/70">
-                {t('tcg.collection_no_missing')}
+              <p className={`mt-2 text-[11px] font-bold ${hasMissingCards ? 'text-foreground/55' : 'text-emerald-400/70'}`}>
+                {hasMissingCards
+                  ? keyCardsLoading
+                    ? t('tcg.collection_loading')
+                    : t('tcg.collection_key_cards_unavailable')
+                  : t('tcg.collection_no_missing')}
               </p>
             ) : (
               <div className="relative">
