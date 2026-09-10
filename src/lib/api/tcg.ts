@@ -147,6 +147,11 @@ function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
   return signal ? tcgClient.get<T>(url, { signal }) : tcgClient.get<T>(url);
 }
 
+function getCardSetId(cardId: string): string | null {
+  const separatorIndex = cardId.lastIndexOf('-');
+  return separatorIndex > 0 ? cardId.slice(0, separatorIndex) : null;
+}
+
 function createCollectionRequestSignal(signal: AbortSignal | undefined, timeoutMs: number): AbortSignal {
   const timeoutSignal = AbortSignal.timeout(timeoutMs);
   return signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
@@ -655,6 +660,27 @@ export const getTCGCard = async (
       const staleCard = await getCachedData<TCGCard>(cacheKey, true);
       if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
       return staleCard;
+    }
+
+    // The card-detail endpoint can time out while the set endpoint remains
+    // available. Preserve a valid card route with the set's summary payload;
+    // the detail view already treats all fields beyond id/name as optional.
+    const setId = getCardSetId(cardId);
+    if (setId) {
+      try {
+        const summaryCards = await getCardsBySet(setId, tcgLang, signal);
+        const summaryCard = summaryCards.find((candidate) => candidate.id.toLowerCase() === cardId.toLowerCase());
+        if (summaryCard) {
+          reportFallback('incomplete-response', {
+            feature: 'tcg',
+            service: 'tcgdex',
+            operation: 'card-detail-set-summary-fallback',
+          });
+          return summaryCard;
+        }
+      } catch (fallbackError) {
+        if (signal?.aborted) throw fallbackError;
+      }
     }
 
     console.error(`[TCG API] Error fetching card ${cardId}:`, error instanceof Error ? error.name : 'UnknownError');

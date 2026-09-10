@@ -62,7 +62,7 @@ export async function generateMetadata(
     ]);
 
     const langId = languageToPokemonLanguageId[lang];
-    const localizedData = await getLocalizedPokemonData(name, langId).catch(() => null) as LocalizedPokemonData | null;
+    const localizedData = await getLocalizedPokemonData(baseName, langId).catch(() => null) as LocalizedPokemonData | null;
 
     const localizedName = species?.names?.find(n => n.language.name === speciesLangCode)?.name
       || species?.names?.find(n => n.language.name === lang)?.name
@@ -175,7 +175,7 @@ export default async function PokemonPage({ params, searchParams }: Props) {
   // Try species for the form name first, fall back to base name for mega/primal/ultra
   const [speciesData, localizedData, encountersData, formData] = await Promise.all([
     getPokemonSpecies(baseName).catch(() => null),
-    getLocalizedPokemonData(name, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
+    getLocalizedPokemonData(baseName, langId).catch(() => null) as Promise<LocalizedPokemonData | null>,
     getPokemonEncounters(pokemon.id).catch(() => []),
     getPokemonForm(name).catch(() => null),
   ]);

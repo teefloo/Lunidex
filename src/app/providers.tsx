@@ -16,6 +16,7 @@ import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
 import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
 import { PostHogConsentBridge } from '@/components/analytics/PostHogConsentBridge';
+import { RegisterPWA } from '@/components/pwa/RegisterPWA';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
 import { createObservedMutationCache, createObservedQueryCache } from '@/lib/query-observability';
@@ -203,6 +204,7 @@ export default function Providers({ children, initialLanguage, initialTranslatio
               <ThemeProvider translationInstance={translationInstance}>
                 <NeonSyncBridge />
                 {children}
+                <RegisterPWA />
                 <SentryConsentBridge />
                 <PostHogConsentBridge />
                 <VercelInsights />

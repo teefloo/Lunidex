@@ -111,7 +111,7 @@ describe('sentry observability', () => {
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
   });
 
-  it('reports final Axios transport failures without serializing the request config', async () => {
+  it('reports final Axios transport failures as warnings without serializing the request config', async () => {
     const rejectionHandlers: Array<(error: unknown) => Promise<never>> = [];
     const client = {
       interceptors: {
@@ -130,7 +130,8 @@ describe('sentry observability', () => {
     });
 
     await expect(rejectionHandlers[0]?.(error)).rejects.toBe(error);
-    expect(Sentry.captureException).toHaveBeenCalledTimes(1);
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex upstream failure: Error', 'warning');
   });
 
   it('reports stale cache fallbacks without including cached data', async () => {

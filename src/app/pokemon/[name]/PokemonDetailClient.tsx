@@ -207,7 +207,7 @@ export function PokemonDetailClient({
       const [pokemon, species, localized, form] = await Promise.all([
         getPokemonDetail(name),
         getPokemonSpecies(baseName).catch(() => null),
-        getLocalizedPokemonData(name, langId).catch(() => null),
+        getLocalizedPokemonData(baseName, langId).catch(() => null),
         getPokemonForm(name).catch(() => null),
       ]);
 

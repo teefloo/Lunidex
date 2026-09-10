@@ -244,6 +244,20 @@ export function reportHttpFailure(
   const candidate = error && typeof error === 'object' ? error as { name?: unknown; code?: unknown } : {};
   const errorName = typeof candidate.name === 'string' ? clampValue(candidate.name) : 'Error';
   const errorCode = typeof candidate.code === 'string' ? clampValue(candidate.code) : undefined;
+
+  // Axios clients for PokéAPI and TCGdex are intentionally allowed to fall
+  // back to cached data. Keep those transient provider failures visible as
+  // warnings; route/query observers still promote an ultimately failed app
+  // request to an error issue.
+  if (context.service) {
+    reportSentryMessage(
+      `Lunidex upstream failure: ${errorName}${errorCode ? ` (${errorCode})` : ''}`,
+      { ...context, kind: 'http-failure' },
+      'warning',
+    );
+    return;
+  }
+
   const safeError = new Error(`Observed ${errorName}${errorCode ? ` (${errorCode})` : ''} failure`);
   safeError.name = 'ObservedHttpFailure';
   reportSentryException(safeError, { ...context, kind: 'http-failure' });

@@ -8,7 +8,10 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const withPWA = withPWAInit({
   dest: "public",
-  register: true,
+  // The generated entry registers without handling rejected promises. Keep
+  // registration under the app's control so transient 429/5xx responses do
+  // not become unhandled browser errors.
+  register: false,
   disable: process.env.NODE_ENV === "development",
   fallbacks: {
     document: "/offline",
