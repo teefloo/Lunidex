@@ -39,7 +39,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -144,6 +144,14 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
     };
   }
 
+  if (status === 404) {
+    return {
+      title: t('tcg.sealed.error_title'),
+      message: t('tcg.sealed.no_catalogue'),
+      unavailable: false,
+    };
+  }
+
   const unavailable = status !== null && status >= 500
     || normalizedMessage.includes('temporarily unavailable')
     || normalizedMessage.includes('request failed')
@@ -162,7 +170,7 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
 
   return {
     title: t('tcg.sealed.error_title'),
-    message: rawMessage || t('tcg.sealed.error_description'),
+    message: t('tcg.sealed.error_description'),
     unavailable: false,
   };
 }
@@ -348,7 +356,7 @@ function EmptyPortfolio({ t, localizedHref, onAdd }: { t: (key: string, options?
             <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/60">{t('tcg.sealed.empty_description')}</p>
             <div className="mt-6 flex flex-wrap gap-2">
               {onAdd ? <Button type="button" onClick={onAdd}><Plus aria-hidden="true" />{t('tcg.sealed.add_transaction')}</Button> : null}
-              <Button variant="outline" nativeButton={false} render={<Link href={localizedHref('/tcg/sealed/catalogue')} />}>{t('tcg.sealed.catalogue')}</Button>
+              <Link href={localizedHref('/tcg/sealed/catalogue')} className={buttonVariants({ variant: 'outline' })}>{t('tcg.sealed.catalogue')}</Link>
             </div>
           </div>
           <div className="border-t border-border/60 bg-background/15 p-6 md:border-l md:border-t-0 sm:p-8">
@@ -373,7 +381,7 @@ function TransactionRow({ transaction, product, language, t, onEdit, onVoid }: {
   </div>;
 }
 
-const SEALED_FORM_FOCUS_CLASS = 'focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-1 focus-visible:outline-offset-0 focus-visible:outline-primary/60';
+const SEALED_FORM_FOCUS_CLASS = 'sealed-form-control focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-1 focus-visible:outline-offset-0 focus-visible:outline-primary/60';
 
 function TransactionForm({ state, products, lots, language, t, onClose, onSave, busy }: { state: FormState; products: SealedProduct[]; lots: SealedOverviewResponse['lots']; language: string; t: (key: string, options?: Record<string, unknown>) => string; onClose: () => void; onSave: (draft: SealedTransactionDraft, existing?: SealedTransaction) => void; busy: boolean }) {
   const existing = state.transaction;
@@ -421,7 +429,7 @@ function TransactionForm({ state, products, lots, language, t, onClose, onSave, 
   const textField = (label: string, key: 'platform' | 'counterparty' | 'storage') => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{label}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="text" value={form[key]} onChange={(event) => setField(key, event.target.value)} /></label>;
   return <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="!overflow-hidden sm:max-w-2xl"><DialogHeader><DialogTitle>{existing ? t('tcg.sealed.edit_transaction') : t('tcg.sealed.add_transaction')}</DialogTitle><DialogDescription>{t('tcg.sealed.private_note')}</DialogDescription></DialogHeader><form onSubmit={submit} className="flex min-h-0 flex-col gap-5">
     <div className="min-h-0 max-h-[calc(100dvh-13rem)] overflow-y-auto overscroll-contain pr-1 sm:max-h-[calc(100dvh-15rem)]"><div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.buy')} / {t('tcg.sealed.sell')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.kind} onChange={(event) => setField('kind', event.target.value as 'buy' | 'sell')} disabled={Boolean(existing)}><option value="buy">{t('tcg.sealed.buy')}</option><option value="sell">{t('tcg.sealed.sell')}</option></select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.date')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="date" value={form.date} onChange={(event) => setField('date', event.target.value)} /></label></div>
+      <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.buy')} / {t('tcg.sealed.sell')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.kind} onChange={(event) => setField('kind', event.target.value as 'buy' | 'sell')} disabled={Boolean(existing)}><option value="buy">{t('tcg.sealed.buy')}</option><option value="sell">{t('tcg.sealed.sell')}</option></select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.date')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="date" max={todayDay()} value={form.date} onChange={(event) => setField('date', event.target.value)} /></label></div>
       <div className="space-y-2"><label className="text-xs font-bold text-foreground/65" htmlFor="sealed-product-search">{t('tcg.sealed.product')}</label><div className="relative"><Input id="sealed-product-search" className={`pr-10 ${SEALED_FORM_FOCUS_CLASS}`} value={selectedProduct?.name ?? (existing ? `#${form.cardmarketProductId}` : productSearch)} placeholder={t('tcg.sealed.search')} autoComplete="off" onFocus={() => setCatalogueOpen(true)} onChange={(event) => { setSelectedProduct(undefined); setProductSearch(event.target.value); setCatalogueOpen(true); }} disabled={Boolean(existing)} /><Search className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-foreground/35" aria-hidden="true" /></div>{catalogueOpen && !selectedProduct && productSearch.length > 1 ? <div role="listbox" aria-label={t('tcg.sealed.search')} aria-busy={catalogue.isPending} className="max-h-64 overflow-y-auto rounded-sm border border-border bg-card shadow-[var(--shadow-pixel-sm)]">{catalogue.isPending ? <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.loading')}</p> : catalogue.data?.products.length ? catalogue.data.products.slice(0, 8).map((product) => <button type="button" role="option" aria-selected={false} key={product.cardmarketProductId} className="group flex min-h-[4.75rem] w-full items-center gap-3 border-b border-border/40 p-2 text-left last:border-0 hover:bg-muted/40 focus-visible:bg-muted/40" onClick={() => { setSelectedProduct(product); setProductSearch(product.name); setField('cardmarketProductId', product.cardmarketProductId); setCatalogueOpen(false); }}><ProductThumb product={product} size="sm" /><span className="min-w-0"><span className="line-clamp-2 text-sm font-bold group-hover:text-primary">{product.name}</span><span className="mt-1 block text-xs text-foreground/45">{product.categoryName} · #{product.cardmarketProductId}</span></span></button>) : <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.no_catalogue')}</p>}</div> : null}</div>
       <div className="grid gap-3 sm:grid-cols-3">{quantityField()}{moneyField(t('tcg.sealed.unit_price'), 'unitPriceCents')}{moneyField(t('tcg.sealed.fees'), 'feesCents')}</div>
       <p className="-mt-2 text-[11px] leading-4 text-foreground/45">{t('tcg.sealed.currency_hint', { defaultValue: 'EUR · enter 12 or 12,50 — the decimal separator is optional.' })}</p>
@@ -711,7 +719,7 @@ function ProductView({ data, loading, error, language, t, localizedHref, onAdd, 
           <p className="mt-2 text-sm text-foreground/55">{t('tcg.sealed.expansion')} {data.product.expansionId} · {t('tcg.sealed.id')} {data.product.cardmarketProductId}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Button type="button" onClick={() => onAdd(data.product)}><Plus aria-hidden="true" />{t('tcg.sealed.buy')}</Button>
-            <Button variant="outline" nativeButton={false} render={<a href={data.product.cardmarketUrl} target="_blank" rel="noreferrer" />}><ExternalLink aria-hidden="true" />Cardmarket</Button>
+            <a href={data.product.cardmarketUrl} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline' })}><ExternalLink aria-hidden="true" />Cardmarket</a>
           </div>
         </div>
         <Card className="p-0">
