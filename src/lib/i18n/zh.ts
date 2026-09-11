@@ -1548,6 +1548,7 @@ team: '队伍',
       nav_deck_builder: '套牌构筑器',
       nav_sealed: '密封产品',
       sealed: {
+        sell_product_placeholder: '选择有库存的产品', no_owned_products: '没有可出售的库存。请先记录一笔买入。', available_units: '库存 {{count}}',
         currency_hint: 'EUR · 可输入 12 或 12,50（小数分隔符可选）。', invalid_amount: '请输入有效金额，例如 12 或 12,50。',
         private_badge: '私密', exporting: '正在导出…', empty_description: '从记录一笔买入开始，然后在日志中集中管理每次变动和价格变化。', empty_steps: '三步开始', empty_step_one: '从 Cardmarket 目录选择一个密封产品。', empty_step_two: '按实际总成本记录这笔买入。', empty_step_three: '随着收藏增长，跟踪价值、现金流和利润。', unavailable_title: '你的组合正在等待连接', unavailable_description: '私人空间已经准备好，但数据服务暂时不可用。请稍后重试；你的数据不会受到影响。', local_unavailable_description: '本地服务器尚未连接 Neon 数据存储。请配置服务器环境以测试交易；你的数据不会受到影响。', service_status: '组合连接', connection_check: '安全数据存储', connection_check_pending: '此环境不可用', error_title: '无法加载此空间', error_description: '发生临时错误，请稍后重试。', auth_error_title: '会话已不可用', auth_error_description: '请重新登录以打开私人空间。', rate_limit_title: '请求过多', rate_limit_description: '请稍等片刻后重试。', no_matches: '没有产品符合这些筛选条件。', clear_filters_hint: '尝试其他搜索，或包含已售仓位。', back_to_collection: '返回收藏',
         buy_fees: '买入费用', sell_fees: '卖出费用', period_since_start: '从开始至今', today: '今天', last_7_days: '最近7天', last_30_days: '最近30天', current_year: '今年', custom: '自定义', filter_collection: '筛选收藏', sort_by: '排序方式', include_sold: '包含已售仓位',
