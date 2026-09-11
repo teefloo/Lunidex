@@ -348,7 +348,7 @@ function EmptyPortfolio({ t, localizedHref, onAdd }: { t: (key: string, options?
             <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/60">{t('tcg.sealed.empty_description')}</p>
             <div className="mt-6 flex flex-wrap gap-2">
               {onAdd ? <Button type="button" onClick={onAdd}><Plus aria-hidden="true" />{t('tcg.sealed.add_transaction')}</Button> : null}
-              <Button variant="outline" render={<Link href={localizedHref('/tcg/sealed/catalogue')} />}>{t('tcg.sealed.catalogue')}</Button>
+              <Button variant="outline" nativeButton={false} render={<Link href={localizedHref('/tcg/sealed/catalogue')} />}>{t('tcg.sealed.catalogue')}</Button>
             </div>
           </div>
           <div className="border-t border-border/60 bg-background/15 p-6 md:border-l md:border-t-0 sm:p-8">
@@ -711,7 +711,7 @@ function ProductView({ data, loading, error, language, t, localizedHref, onAdd, 
           <p className="mt-2 text-sm text-foreground/55">{t('tcg.sealed.expansion')} {data.product.expansionId} · {t('tcg.sealed.id')} {data.product.cardmarketProductId}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Button type="button" onClick={() => onAdd(data.product)}><Plus aria-hidden="true" />{t('tcg.sealed.buy')}</Button>
-            <Button variant="outline" render={<a href={data.product.cardmarketUrl} target="_blank" rel="noreferrer" />}><ExternalLink aria-hidden="true" />Cardmarket</Button>
+            <Button variant="outline" nativeButton={false} render={<a href={data.product.cardmarketUrl} target="_blank" rel="noreferrer" />}><ExternalLink aria-hidden="true" />Cardmarket</Button>
           </div>
         </div>
         <Card className="p-0">
