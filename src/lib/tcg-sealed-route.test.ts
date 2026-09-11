@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dateParam, positiveId } from './tcg-sealed-route';
+import { getSealedSubnavPath } from './tcg-sealed-navigation';
 import { isSealedUuid, normalizeSealedDraft, sealedExportCsv } from './tcg-sealed-server';
 
 describe('sealed route boundaries', () => {
@@ -30,6 +31,15 @@ describe('sealed route boundaries', () => {
       selections: [],
     });
     expect(() => normalizeSealedDraft({ kind: 'buy', cardmarketProductId: 42 })).toThrow();
+  });
+});
+
+describe('sealed navigation', () => {
+  it('maps each portfolio view to a direct path and keeps an invalid view safe', () => {
+    expect(getSealedSubnavPath('dashboard')).toBe('/tcg/sealed');
+    expect(getSealedSubnavPath('collection')).toBe('/tcg/sealed/collection');
+    expect(getSealedSubnavPath('analytics')).toBe('/tcg/sealed/analytics');
+    expect(getSealedSubnavPath('not-a-view')).toBe('/tcg/sealed');
   });
 });
 

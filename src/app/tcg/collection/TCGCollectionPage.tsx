@@ -49,7 +49,7 @@ export function TCGCollectionPage() {
     <div className="app-page">
       <Header />
       <main
-        className="page-shell relative pt-24 pb-40"
+        className="page-shell page-shell--header-offset relative pb-40"
         aria-labelledby={authLoading
           ? undefined
           : user && syncStatus === 'ready'

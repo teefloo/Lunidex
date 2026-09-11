@@ -271,6 +271,7 @@ h1 { letter-spacing: 0; }
   position: relative;
   z-index: 1;
   min-height: 100dvh;
+  --app-site-header-height: 4.5rem;
 }
 
 .tcg-album-card {
@@ -286,6 +287,10 @@ h1 { letter-spacing: 0; }
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.page-shell--header-offset {
+  padding-block-start: calc(var(--app-site-header-height, 4.5rem) + env(safe-area-inset-top, 0px) + 1.5rem);
 }
 
 @media (min-width: 640px) {
@@ -5186,6 +5191,10 @@ html:not(.dark) .pokedex-filter-sheet .bg-secondary\/20 {
     linear-gradient(180deg, color-mix(in oklab, var(--background) 92%, var(--card)), var(--background));
 }
 
+.anniversary-promo {
+  margin-block: clamp(2.5rem, 5vw, 3.5rem);
+}
+
 .app-page:not(.pokedex-redesign) .page-shell {
   max-width: 92rem;
 }
@@ -7072,7 +7081,7 @@ body:has(.lunidex-home) .site-footer {
    visible without turning every control into a floating glass pill.
    ───────────────────────────────────────────────────────────────────── */
 .site-header {
-  --site-header-height: 4.5rem;
+  --site-header-height: var(--app-site-header-height, 4.5rem);
   pointer-events: none;
 }
 
@@ -7517,8 +7526,8 @@ body:has(.lunidex-home) .site-footer {
 }
 
 @media (max-width: 1279px) {
-  .site-header {
-    --site-header-height: 4.25rem;
+  .app-page {
+    --app-site-header-height: 4.25rem;
   }
 }
 
@@ -7541,8 +7550,8 @@ body:has(.lunidex-home) .site-footer {
 }
 
 @media (max-width: 380px) {
-  .site-header {
-    --site-header-height: 4rem;
+  .app-page {
+    --app-site-header-height: 4rem;
   }
 
   .site-header-bar {

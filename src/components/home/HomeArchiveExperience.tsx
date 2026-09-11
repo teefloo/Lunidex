@@ -60,7 +60,7 @@ export async function HomeArchiveExperience() {
         </section>
 
         {isAnniversary30Language(language) ? (
-          <section className="mx-auto w-full max-w-6xl px-5 py-8 md:px-8" aria-labelledby="home-anniversary-30-title">
+          <section className="anniversary-promo mx-auto w-full max-w-6xl px-5 py-8 md:px-8" aria-labelledby="home-anniversary-30-title">
             <div className="rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8">
               <div>
                 <p className="home-section-kicker">{t('anniversary_30.eyebrow')}</p>

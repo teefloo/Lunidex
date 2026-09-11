@@ -84,12 +84,12 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <div className="app-page">
         <Header />
-        <main className="page-shell pt-24 pb-24 relative">
+        <main className="page-shell page-shell--header-offset relative pb-24">
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
             <TCGPageTabs initialLabels={initialTabLabels} />
           </Suspense>
           {isAnniversary30Language(lang) ? (
-            <section className="mx-auto mt-8 w-full max-w-6xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8" aria-labelledby="tcg-anniversary-30-title">
+            <section className="anniversary-promo mx-auto w-full max-w-6xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8" aria-labelledby="tcg-anniversary-30-title">
               <div>
                 <p className="page-eyebrow">{t('anniversary_30.eyebrow')}</p>
                 <h2 id="tcg-anniversary-30-title" className="mt-2 text-2xl font-extrabold tracking-tight">

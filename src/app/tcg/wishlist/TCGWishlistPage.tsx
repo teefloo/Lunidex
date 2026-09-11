@@ -89,7 +89,7 @@ export function TCGWishlistPage() {
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell pt-24 pb-24 relative">
+      <main className="page-shell page-shell--header-offset relative pb-24">
         <TCGPageTabs />
         <TCGDataLangBanner resolvedLang={resolvedLang} onTryEnglish={tryEnglish} />
         <div className="mb-6">

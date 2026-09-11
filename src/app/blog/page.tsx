@@ -193,7 +193,7 @@ export default async function BlogPage() {
             </header>
 
             {isEditorialIndexable(language) && isAnniversary30Language(language) ? (
-              <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8" aria-labelledby="blog-anniversary-30-title">
+              <section className="anniversary-promo mx-auto max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8" aria-labelledby="blog-anniversary-30-title">
                 <div>
                   <p className="page-eyebrow">{t('anniversary_30.eyebrow')}</p>
                   <h2 id="blog-anniversary-30-title" className="mt-2 text-2xl font-extrabold tracking-tight">

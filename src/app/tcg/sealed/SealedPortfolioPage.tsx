@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -14,6 +15,7 @@ import {
   Boxes,
   CalendarDays,
   Check,
+  ChevronDown,
   CloudOff,
   Database,
   Download,
@@ -70,6 +72,7 @@ import {
   type SealedProductDetailResponse,
   type SealedSourcesResponse,
 } from '@/lib/api/tcg-sealed';
+import { SEALED_SUBVIEWS, getSealedSubnavPath } from '@/lib/tcg-sealed-navigation';
 import type {
   SealedProduct,
   SealedProductLanguage,
@@ -80,17 +83,6 @@ import type {
 type SealedView = 'dashboard' | 'collection' | 'journal' | 'sales' | 'cashflow' | 'analytics' | 'catalogue' | 'sources' | 'product';
 type FormState = { transaction?: SealedTransaction; product?: SealedProduct; kind?: 'buy' | 'sell' };
 type PeriodPreset = 'all' | '1' | '7' | '30' | 'year' | 'custom';
-
-const SUBVIEWS = [
-  ['dashboard', 'dashboard', '/tcg/sealed'],
-  ['collection', 'collection', '/tcg/sealed/collection'],
-  ['journal', 'journal', '/tcg/sealed/journal'],
-  ['sales', 'sales', '/tcg/sealed/sales'],
-  ['cashflow', 'cashflow', '/tcg/sealed/cashflow'],
-  ['analytics', 'analytics', '/tcg/sealed/analytics'],
-  ['catalogue', 'catalogue', '/tcg/sealed/catalogue'],
-  ['sources', 'sources', '/tcg/sealed/sources'],
-] as const;
 
 function money(cents: number | null | undefined, language: string): string {
   if (cents === null || cents === undefined) return '—';
@@ -278,10 +270,29 @@ function ProductPriceHistoryChart({ prices, transactions, language, t }: { price
 }
 
 function SealedSubnav({ view, localizedHref, t }: { view: SealedView; localizedHref: (path: string) => string; t: (key: string, options?: Record<string, unknown>) => string }) {
+  const router = useRouter();
+
   return (
-    <nav className="mb-6 overflow-x-auto" aria-label={t('tcg.sealed.title')}>
-      <div className="glass-toolbar flex min-w-max gap-1 p-1.5">
-        {SUBVIEWS.map(([key, labelKey, path]) => <Link key={key} href={localizedHref(path)} aria-current={view === key ? 'page' : undefined} className={`touch-target inline-flex items-center rounded-sm px-3 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${view === key ? 'border border-primary/40 bg-primary/15 text-primary' : 'text-foreground/50 hover:bg-muted/50 hover:text-foreground'}`}>{t(`tcg.sealed.${labelKey}`)}</Link>)}
+    <nav className="mb-6" aria-label={t('tcg.sealed.title')}>
+      <div className="relative md:hidden">
+        <label htmlFor="sealed-view-select" className="sr-only">{t('tcg.sealed.title')}</label>
+        <select
+          id="sealed-view-select"
+          value={view}
+          onChange={(event) => router.push(localizedHref(getSealedSubnavPath(event.target.value)))}
+          className="glass-control h-12 w-full cursor-pointer appearance-none px-4 pr-10 text-sm font-black uppercase tracking-[0.12em] text-foreground focus:outline-none focus:ring-2 focus:ring-primary/35"
+          aria-label={t('tcg.sealed.title')}
+        >
+          {SEALED_SUBVIEWS.map((item) => (
+            <option key={item.key} value={item.key}>
+              {t(`tcg.sealed.${item.labelKey}`)}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+      </div>
+      <div className="glass-toolbar hidden w-full flex-wrap gap-1 p-1.5 md:flex">
+        {SEALED_SUBVIEWS.map((item) => <Link key={item.key} href={localizedHref(item.path)} aria-current={view === item.key ? 'page' : undefined} className={`touch-target inline-flex min-h-11 items-center whitespace-nowrap rounded-sm px-3 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${view === item.key ? 'border border-primary/40 bg-primary/15 text-primary' : 'text-foreground/50 hover:bg-muted/50 hover:text-foreground'}`}>{t(`tcg.sealed.${item.labelKey}`)}</Link>)}
       </div>
     </nav>
   );
@@ -549,7 +560,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   </PageFrame>;
 }
 
-function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell relative pb-32 pt-24 outline-none"> <TCGPageTabs /> {children}</main></div>; }
+function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none"> <TCGPageTabs /> {children}</main></div>; }
 function LoadingState({ label }: { label: string }) {
   return <div className="space-y-4" aria-busy="true" role="status">
     <span className="sr-only">{label}</span>

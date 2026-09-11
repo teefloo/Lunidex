@@ -116,7 +116,7 @@ export default function DeckBuilderClient() {
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell page-shell--header-offset pb-20">
         <TCGPageTabs />
         <PageHeader
           title={t('tcg.deck_builder.title', { defaultValue: 'Deck Builder' })}

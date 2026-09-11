@@ -58,7 +58,7 @@ export function TCGSetAlbumPage({
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell relative pt-24 pb-40">
+      <main className="page-shell page-shell--header-offset relative pb-40">
         {authLoading ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />

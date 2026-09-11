@@ -95,7 +95,7 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24" aria-busy="true">
+        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24" aria-busy="true">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
         </main>
       </div>
@@ -106,7 +106,7 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
           <SyncRequiredPanel />
         </main>
       </div>
@@ -117,7 +117,7 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
           <SyncRequiredPanel />
         </main>
       </div>
@@ -128,7 +128,7 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell flex min-h-dvh items-center justify-center pt-24 pb-24">
+        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
           <SyncStatusPanel status={syncStatus} />
         </main>
       </div>
@@ -138,7 +138,7 @@ export function TCGStartPage() {
   return (
     <div className="app-page">
       <Header />
-      <main className="page-shell pt-24 pb-24" aria-labelledby="tcg-start-title">
+      <main className="page-shell page-shell--header-offset pb-24" aria-labelledby="tcg-start-title">
         <section className="mx-auto max-w-3xl">
           <div className="page-surface px-5 py-7 sm:px-8 sm:py-9">
             <div className="flex flex-wrap items-start justify-between gap-4">
