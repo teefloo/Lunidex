@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/metrics-retention",
       "schedule": "17 4 * * *"
+    },
+    {
+      "path": "/api/cron/tcg-sealed-sync",
+      "schedule": "47 4 * * *"
     }
   ]
 }

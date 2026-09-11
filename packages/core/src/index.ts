@@ -13,10 +13,14 @@
  */
 export * from './types/pokemon';
 export * from './types/tcg';
+export * from './types/sealed';
 export * from './types/dashboard';
 export * from './lib/tcg-language';
 export * from './lib/tcg-collections';
 export * from './lib/tcg-currency';
+export * from './lib/sealed-ledger';
+export * from './lib/sealed-catalogue';
+export * from './lib/sealed-analytics';
 
 export * from './store/primedex';
 export * from './store/sync-access';
