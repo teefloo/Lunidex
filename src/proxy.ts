@@ -6,9 +6,9 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const CANONICAL_HOST = 'lunidex.app';
 const ANNIVERSARY_30_ROUTE = '30e-anniversaire';
 const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko', 'zh']);
-// Automated clients do not benefit from a preference cookie. Avoiding
-// Set-Cookie for them keeps otherwise-public page responses eligible for the
-// Vercel CDN cache while normal browsers still persist their locale below.
+// Canonical public URLs already carry their locale. Avoiding Set-Cookie on
+// those responses keeps them eligible for the Vercel CDN cache; the client
+// provider persists the selected locale for unprefixed redirects below.
 const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent)/i;
 // These paths are common WordPress probes but are not part of Lunidex. Return
 // a cacheable edge 404 before Next renders the global not-found route.
@@ -129,17 +129,14 @@ export async function proxy(request: NextRequest) {
     const forwardedHeaders = new Headers(request.headers);
     forwardedHeaders.set('x-primedex-lang', urlLocale);
 
+    // The locale in the URL is authoritative for this render. Do not attach a
+    // preference cookie to the public page response: Set-Cookie makes an
+    // otherwise cacheable localized document private to the browser. The
+    // client provider persists the language choice after hydration, while
+    // unlocalized requests still receive a cookie on the redirect below.
     const response = NextResponse.next({
       request: { headers: forwardedHeaders },
     });
-    if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request)) {
-      response.cookies.set(COOKIE_NAME, urlLocale, {
-        path: '/',
-        maxAge: COOKIE_MAX_AGE,
-        sameSite: 'lax',
-        secure: request.nextUrl.protocol === 'https:',
-      });
-    }
     return response;
   }
 
