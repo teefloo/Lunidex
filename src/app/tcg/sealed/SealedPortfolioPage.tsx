@@ -46,6 +46,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  formatSealedEuroInput,
+  parseSealedEuroInput,
+  SEALED_MONEY_FIELDS,
+  sealedEuroPlaceholder,
+  type SealedMoneyField,
+} from '@/lib/tcg-sealed-input';
+import {
   createSealedTransaction,
   downloadSealedExport,
   fetchSealedCatalogue,
@@ -158,15 +165,6 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
     message: rawMessage || t('tcg.sealed.error_description'),
     unavailable: false,
   };
-}
-
-function centsFromEuro(value: string): number {
-  const parsed = Number(value.replace(',', '.'));
-  return Number.isFinite(parsed) && parsed >= 0 ? Math.round(parsed * 100) : 0;
-}
-
-function euroInput(cents: number): string {
-  return (cents / 100).toFixed(2);
 }
 
 function productImagePath(product: SealedProduct): string {
@@ -375,30 +373,64 @@ function TransactionRow({ transaction, product, language, t, onEdit, onVoid }: {
   </div>;
 }
 
+const SEALED_FORM_FOCUS_CLASS = 'focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-1 focus-visible:outline-offset-0 focus-visible:outline-primary/60';
+
 function TransactionForm({ state, products, lots, language, t, onClose, onSave, busy }: { state: FormState; products: SealedProduct[]; lots: SealedOverviewResponse['lots']; language: string; t: (key: string, options?: Record<string, unknown>) => string; onClose: () => void; onSave: (draft: SealedTransactionDraft, existing?: SealedTransaction) => void; busy: boolean }) {
   const existing = state.transaction;
-  const initial = existing ?? {
-    kind: state.kind ?? 'buy', cardmarketProductId: state.product?.cardmarketProductId ?? 0, language: 'unknown' as SealedProductLanguage, date: new Date().toISOString().slice(0, 10), quantity: 1, unitPriceCents: 0, feesCents: 0, shippingCents: 0, discountCents: 0, paymentFeesCents: 0, otherCostsCents: 0, platform: '', counterparty: '', notes: '', storage: '', allocationMethod: 'fifo' as const, selections: [],
+  const initial: SealedTransactionDraft = existing ?? {
+    kind: state.kind ?? 'buy', cardmarketProductId: state.product?.cardmarketProductId ?? 0, language: 'unknown', date: new Date().toISOString().slice(0, 10), quantity: 1, unitPriceCents: 0, feesCents: 0, shippingCents: 0, discountCents: 0, paymentFeesCents: 0, otherCostsCents: 0, platform: '', counterparty: '', notes: '', storage: '', allocationMethod: 'fifo', selections: [],
   };
   const [form, setForm] = useState<SealedTransactionDraft>(initial);
   const [productSearch, setProductSearch] = useState(state.product?.name ?? '');
   const [selectedProduct, setSelectedProduct] = useState<SealedProduct | undefined>(state.product ?? products.find((product) => product.cardmarketProductId === initial.cardmarketProductId));
   const [manualLots, setManualLots] = useState<Record<string, number>>(() => Object.fromEntries(initial.selections.map((selection) => [selection.lotId, selection.quantity])));
+  const [moneyInputs, setMoneyInputs] = useState<Record<SealedMoneyField, string>>(() => Object.fromEntries(SEALED_MONEY_FIELDS.map((key) => [key, formatSealedEuroInput(initial[key], language)])) as Record<SealedMoneyField, string>);
+  const [moneyError, setMoneyError] = useState<SealedMoneyField | null>(null);
   const [catalogueOpen, setCatalogueOpen] = useState(false);
   const catalogue = useQuery<SealedCatalogueResponse>({ queryKey: ['tcg-sealed', 'form-catalogue', productSearch], queryFn: ({ signal }) => fetchSealedCatalogue(productSearch, 0, signal), enabled: catalogueOpen && productSearch.trim().length > 1 });
   const availableLots = lots.filter((lot) => (lot.remaining > 0 || manualLots[lot.transaction.id] > 0) && lot.transaction.cardmarketProductId === form.cardmarketProductId && lot.transaction.language === form.language);
   const setField = <K extends keyof SealedTransactionDraft>(key: K, value: SealedTransactionDraft[K]) => setForm((current) => ({ ...current, [key]: value }));
-  const submit = (event: React.FormEvent<HTMLFormElement>) => { event.preventDefault(); const selections = form.allocationMethod === 'manual' ? Object.entries(manualLots).filter(([, quantity]) => quantity > 0).map(([lotId, quantity]) => ({ lotId, quantity })) : []; onSave({ ...form, selections }, existing); };
-  const field = (label: string, key: keyof SealedTransactionDraft, type: 'text' | 'number' = 'text') => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{label}</span><Input type={type} value={type === 'number' ? key === 'quantity' ? String(form.quantity) : euroInput(Number(form[key])) : String(form[key] ?? '')} min={key === 'quantity' ? 1 : 0} onChange={(event) => setField(key, type === 'number' ? key === 'quantity' ? Math.max(1, Math.floor(Number(event.target.value) || 0)) as SealedTransactionDraft[typeof key] : centsFromEuro(event.target.value) as SealedTransactionDraft[typeof key] : event.target.value as SealedTransactionDraft[typeof key])} /></label>;
-  return <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="sm:max-w-2xl"><DialogHeader><DialogTitle>{existing ? t('tcg.sealed.edit_transaction') : t('tcg.sealed.add_transaction')}</DialogTitle><DialogDescription>{t('tcg.sealed.private_note')}</DialogDescription></DialogHeader><form onSubmit={submit} className="space-y-5">
-    <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.buy')} / {t('tcg.sealed.sell')}</span><select className="glass-control h-11 w-full px-3 text-sm" value={form.kind} onChange={(event) => setField('kind', event.target.value as 'buy' | 'sell')} disabled={Boolean(existing)}><option value="buy">{t('tcg.sealed.buy')}</option><option value="sell">{t('tcg.sealed.sell')}</option></select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.date')}</span><Input type="date" value={form.date} onChange={(event) => setField('date', event.target.value)} /></label></div>
-    <div className="space-y-2"><label className="text-xs font-bold text-foreground/65" htmlFor="sealed-product-search">{t('tcg.sealed.product')}</label><div className="flex gap-2"><Input id="sealed-product-search" value={selectedProduct?.name ?? (existing ? `#${form.cardmarketProductId}` : productSearch)} placeholder={t('tcg.sealed.search')} onFocus={() => setCatalogueOpen(true)} onChange={(event) => { setSelectedProduct(undefined); setProductSearch(event.target.value); setCatalogueOpen(true); }} disabled={Boolean(existing)} /><Search className="mt-3 -ml-10 h-4 w-4 shrink-0 text-foreground/40" aria-hidden="true" /></div>{catalogueOpen && !selectedProduct && productSearch.length > 1 ? <div className="max-h-44 overflow-y-auto rounded-sm border border-border bg-card">{catalogue.isPending ? <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.loading')}</p> : catalogue.data?.products.length ? catalogue.data.products.slice(0, 8).map((product) => <button type="button" key={product.cardmarketProductId} className="flex w-full items-center gap-3 border-b border-border/40 p-2 text-left last:border-0 hover:bg-muted/40" onClick={() => { setSelectedProduct(product); setProductSearch(product.name); setField('cardmarketProductId', product.cardmarketProductId); setCatalogueOpen(false); }}><ProductThumb product={product} size="sm" /><span className="min-w-0 truncate text-sm font-bold">{product.name}</span></button>) : <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.no_catalogue')}</p>}</div> : null}</div>
-    <div className="grid gap-3 sm:grid-cols-3">{field(t('tcg.sealed.quantity'), 'quantity', 'number')}{field(t('tcg.sealed.unit_price'), 'unitPriceCents', 'number')}{field(t('tcg.sealed.fees'), 'feesCents', 'number')}</div>
-    <div className="grid gap-3 sm:grid-cols-3">{field(t('tcg.sealed.shipping'), 'shippingCents', 'number')}{form.kind === 'buy' ? field(t('tcg.sealed.discount'), 'discountCents', 'number') : field(t('tcg.sealed.payment_fees'), 'paymentFeesCents', 'number')}{form.kind === 'sell' ? field(t('tcg.sealed.other_costs'), 'otherCostsCents', 'number') : <span />}</div>
-    <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.language')}</span><select className="glass-control h-11 w-full px-3 text-sm" value={form.language} onChange={(event) => setField('language', event.target.value as SealedProductLanguage)}><option value="unknown">—</option>{(['en', 'fr', 'es', 'de', 'it', 'ja'] as const).map((value) => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.allocation')}</span><select className="glass-control h-11 w-full px-3 text-sm" value={form.allocationMethod} onChange={(event) => setField('allocationMethod', event.target.value as 'fifo' | 'manual')} disabled={form.kind === 'buy'}><option value="fifo">{t('tcg.sealed.fifo')}</option><option value="manual">{t('tcg.sealed.manual')}</option></select></label></div>
-    {form.kind === 'sell' && form.allocationMethod === 'manual' ? <div className="rounded-sm border border-primary/25 bg-primary/5 p-3"><p className="text-xs text-foreground/60">{t('tcg.sealed.manual_hint')}</p><div className="mt-3 space-y-2">{availableLots.length ? availableLots.map((lot) => { const capacity = lot.remaining + (manualLots[lot.transaction.id] ?? 0); return <label key={lot.transaction.id} className="flex items-center justify-between gap-3 text-sm"><span className="min-w-0 truncate">{dateLabel(lot.transaction.date, language)} · {capacity} {t('tcg.sealed.units').toLowerCase()}</span><Input className="h-9 w-24" type="number" min="0" max={capacity} value={manualLots[lot.transaction.id] ?? 0} onChange={(event) => setManualLots((current) => ({ ...current, [lot.transaction.id]: Math.min(capacity, Math.max(0, Math.floor(Number(event.target.value) || 0))) }))} /></label>; }) : <p className="text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</div></div> : null}
-    <div className="grid gap-3 sm:grid-cols-2">{field(t('tcg.sealed.platform'), 'platform')}{field(t('tcg.sealed.counterparty'), 'counterparty')}{field(t('tcg.sealed.storage'), 'storage')}</div><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.notes')}</span><Textarea value={form.notes} onChange={(event) => setField('notes', event.target.value)} maxLength={4000} /></label>
-    <DialogFooter><Button type="button" variant="outline" onClick={onClose}>{t('tcg.sealed.cancel')}</Button><Button type="submit" disabled={busy || !form.cardmarketProductId || (!selectedProduct && !existing)}>{busy ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Check aria-hidden="true" />}{t('tcg.sealed.save')}</Button></DialogFooter>
+  const handleMoneyChange = (key: SealedMoneyField, value: string) => {
+    setMoneyInputs((current) => ({ ...current, [key]: value }));
+    const cents = parseSealedEuroInput(value);
+    if (cents !== null) setField(key, cents);
+    if (moneyError === key && cents !== null) setMoneyError(null);
+  };
+  const handleMoneyBlur = (key: SealedMoneyField) => {
+    if (parseSealedEuroInput(moneyInputs[key]) === null) setMoneyError(key);
+  };
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const moneyValues = {} as Pick<SealedTransactionDraft, SealedMoneyField>;
+    for (const key of SEALED_MONEY_FIELDS) {
+      const cents = parseSealedEuroInput(moneyInputs[key]);
+      if (cents === null) {
+        setMoneyError(key);
+        return;
+      }
+      moneyValues[key] = cents;
+    }
+    const selections = form.allocationMethod === 'manual' ? Object.entries(manualLots).filter(([, quantity]) => quantity > 0).map(([lotId, quantity]) => ({ lotId, quantity })) : [];
+    onSave({ ...form, ...moneyValues, selections }, existing);
+  };
+  const quantityField = () => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.quantity')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="number" inputMode="numeric" min={1} step={1} value={form.quantity} onChange={(event) => setField('quantity', Math.max(1, Math.floor(Number(event.target.value) || 1)))} /></label>;
+  const moneyField = (label: string, key: SealedMoneyField) => {
+    const errorId = `sealed-${key}-error`;
+    return <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span className="flex items-center justify-between gap-2"><span>{label}</span><span className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground/35">EUR</span></span><Input id={`sealed-${key}`} className={SEALED_FORM_FOCUS_CLASS} type="text" inputMode="decimal" autoComplete="off" value={moneyInputs[key]} placeholder={sealedEuroPlaceholder(language)} aria-invalid={moneyError === key || undefined} aria-describedby={moneyError === key ? errorId : undefined} onChange={(event) => handleMoneyChange(key, event.target.value)} onBlur={() => handleMoneyBlur(key)} />{moneyError === key ? <span id={errorId} className="block text-[11px] font-medium leading-4 text-rose-300" role="alert">{t('tcg.sealed.invalid_amount', { defaultValue: 'Enter a valid amount, for example 12 or 12,50.' })}</span> : null}</label>;
+  };
+  const textField = (label: string, key: 'platform' | 'counterparty' | 'storage') => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{label}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="text" value={form[key]} onChange={(event) => setField(key, event.target.value)} /></label>;
+  return <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="!overflow-hidden sm:max-w-2xl"><DialogHeader><DialogTitle>{existing ? t('tcg.sealed.edit_transaction') : t('tcg.sealed.add_transaction')}</DialogTitle><DialogDescription>{t('tcg.sealed.private_note')}</DialogDescription></DialogHeader><form onSubmit={submit} className="flex min-h-0 flex-col gap-5">
+    <div className="min-h-0 max-h-[calc(100dvh-13rem)] overflow-y-auto overscroll-contain pr-1 sm:max-h-[calc(100dvh-15rem)]"><div className="space-y-5">
+      <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.buy')} / {t('tcg.sealed.sell')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.kind} onChange={(event) => setField('kind', event.target.value as 'buy' | 'sell')} disabled={Boolean(existing)}><option value="buy">{t('tcg.sealed.buy')}</option><option value="sell">{t('tcg.sealed.sell')}</option></select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.date')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="date" value={form.date} onChange={(event) => setField('date', event.target.value)} /></label></div>
+      <div className="space-y-2"><label className="text-xs font-bold text-foreground/65" htmlFor="sealed-product-search">{t('tcg.sealed.product')}</label><div className="relative"><Input id="sealed-product-search" className={`pr-10 ${SEALED_FORM_FOCUS_CLASS}`} value={selectedProduct?.name ?? (existing ? `#${form.cardmarketProductId}` : productSearch)} placeholder={t('tcg.sealed.search')} autoComplete="off" onFocus={() => setCatalogueOpen(true)} onChange={(event) => { setSelectedProduct(undefined); setProductSearch(event.target.value); setCatalogueOpen(true); }} disabled={Boolean(existing)} /><Search className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-foreground/35" aria-hidden="true" /></div>{catalogueOpen && !selectedProduct && productSearch.length > 1 ? <div role="listbox" aria-label={t('tcg.sealed.search')} aria-busy={catalogue.isPending} className="max-h-64 overflow-y-auto rounded-sm border border-border bg-card shadow-[var(--shadow-pixel-sm)]">{catalogue.isPending ? <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.loading')}</p> : catalogue.data?.products.length ? catalogue.data.products.slice(0, 8).map((product) => <button type="button" role="option" aria-selected={false} key={product.cardmarketProductId} className="group flex min-h-[4.75rem] w-full items-center gap-3 border-b border-border/40 p-2 text-left last:border-0 hover:bg-muted/40 focus-visible:bg-muted/40" onClick={() => { setSelectedProduct(product); setProductSearch(product.name); setField('cardmarketProductId', product.cardmarketProductId); setCatalogueOpen(false); }}><ProductThumb product={product} size="sm" /><span className="min-w-0"><span className="line-clamp-2 text-sm font-bold group-hover:text-primary">{product.name}</span><span className="mt-1 block text-xs text-foreground/45">{product.categoryName} · #{product.cardmarketProductId}</span></span></button>) : <p className="p-3 text-sm text-foreground/50">{t('tcg.sealed.no_catalogue')}</p>}</div> : null}</div>
+      <div className="grid gap-3 sm:grid-cols-3">{quantityField()}{moneyField(t('tcg.sealed.unit_price'), 'unitPriceCents')}{moneyField(t('tcg.sealed.fees'), 'feesCents')}</div>
+      <p className="-mt-2 text-[11px] leading-4 text-foreground/45">{t('tcg.sealed.currency_hint', { defaultValue: 'EUR · enter 12 or 12,50 — the decimal separator is optional.' })}</p>
+      <div className="grid gap-3 sm:grid-cols-3">{moneyField(t('tcg.sealed.shipping'), 'shippingCents')}{form.kind === 'buy' ? moneyField(t('tcg.sealed.discount'), 'discountCents') : moneyField(t('tcg.sealed.payment_fees'), 'paymentFeesCents')}{form.kind === 'sell' ? moneyField(t('tcg.sealed.other_costs'), 'otherCostsCents') : <span />}</div>
+      <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.language')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.language} onChange={(event) => setField('language', event.target.value as SealedProductLanguage)}><option value="unknown">—</option>{(['en', 'fr', 'es', 'de', 'it', 'ja'] as const).map((value) => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.allocation')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.allocationMethod} onChange={(event) => setField('allocationMethod', event.target.value as 'fifo' | 'manual')} disabled={form.kind === 'buy'}><option value="fifo">{t('tcg.sealed.fifo')}</option><option value="manual">{t('tcg.sealed.manual')}</option></select></label></div>
+      {form.kind === 'sell' && form.allocationMethod === 'manual' ? <div className="rounded-sm border border-primary/25 bg-primary/5 p-3"><p className="text-xs text-foreground/60">{t('tcg.sealed.manual_hint')}</p><div className="mt-3 space-y-2">{availableLots.length ? availableLots.map((lot) => { const capacity = lot.remaining + (manualLots[lot.transaction.id] ?? 0); return <label key={lot.transaction.id} className="flex items-center justify-between gap-3 text-sm"><span className="min-w-0 truncate">{dateLabel(lot.transaction.date, language)} · {capacity} {t('tcg.sealed.units').toLowerCase()}</span><Input className={`h-9 w-24 ${SEALED_FORM_FOCUS_CLASS}`} type="number" min="0" max={capacity} value={manualLots[lot.transaction.id] ?? 0} onChange={(event) => setManualLots((current) => ({ ...current, [lot.transaction.id]: Math.min(capacity, Math.max(0, Math.floor(Number(event.target.value) || 0))) }))} /></label>; }) : <p className="text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</div></div> : null}
+      <div className="grid gap-3 sm:grid-cols-2">{textField(t('tcg.sealed.platform'), 'platform')}{textField(t('tcg.sealed.counterparty'), 'counterparty')}{textField(t('tcg.sealed.storage'), 'storage')}</div><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.notes')}</span><Textarea className={SEALED_FORM_FOCUS_CLASS} value={form.notes} onChange={(event) => setField('notes', event.target.value)} maxLength={4000} /></label>
+    </div></div>
+    <DialogFooter className="shrink-0"><Button type="button" variant="outline" onClick={onClose}>{t('tcg.sealed.cancel')}</Button><Button type="submit" disabled={busy || !form.cardmarketProductId || (!selectedProduct && !existing)}>{busy ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Check aria-hidden="true" />}{t('tcg.sealed.save')}</Button></DialogFooter>
   </form></DialogContent></Dialog>;
 }
 
