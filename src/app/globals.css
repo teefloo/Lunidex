@@ -5423,6 +5423,13 @@ input:focus-visible,
   outline-offset: 3px;
 }
 
+.sealed-form-control:focus-visible {
+  border-color: color-mix(in oklab, var(--border) 72%, var(--ring) 28%);
+  outline: 1px solid color-mix(in oklab, var(--ring) 42%, transparent);
+  outline-offset: 0;
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

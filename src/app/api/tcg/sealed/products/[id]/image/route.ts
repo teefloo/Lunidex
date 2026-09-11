@@ -3,6 +3,7 @@ import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { rateLimit } from '@/lib/rate-limit';
 import { getSealedImageUrl } from '@/lib/tcg-sealed-server';
 import { getSealedRequestContext, isSealedRequestContext, positiveId, sealedErrorResponse } from '@/lib/tcg-sealed-route';
+import { sealedImageContentType } from '@/lib/tcg-sealed-image';
 
 export const runtime = 'nodejs';
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
@@ -17,14 +18,22 @@ async function getImage(request: NextRequest, context: { params: Promise<{ id: s
     const candidates = await getSealedImageUrl(auth.sql, id);
     for (const url of candidates) {
       try {
-        const response = await fetch(url, { redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(8_000) });
+        const response = await fetch(url, {
+          redirect: 'error',
+          cache: 'no-store',
+          headers: {
+            Accept: 'image/*',
+            Referer: 'https://www.cardmarket.com/',
+          },
+          signal: AbortSignal.timeout(8_000),
+        });
         if (!response.ok) continue;
-        const contentType = response.headers.get('content-type') ?? '';
-        if (!contentType.startsWith('image/')) continue;
         const declaredLength = Number(response.headers.get('content-length'));
         if (Number.isFinite(declaredLength) && declaredLength > MAX_IMAGE_BYTES) continue;
         const bytes = new Uint8Array(await response.arrayBuffer());
         if (bytes.byteLength > MAX_IMAGE_BYTES) continue;
+        const contentType = sealedImageContentType(bytes);
+        if (!contentType) continue;
         return new Response(bytes, {
           status: 200,
           headers: {
