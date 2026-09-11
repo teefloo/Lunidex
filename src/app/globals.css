@@ -5424,7 +5424,8 @@ input:focus-visible,
 }
 
 .sealed-form-control:focus-visible {
-  outline: 1px solid color-mix(in oklab, var(--ring) 58%, transparent);
+  border-color: color-mix(in oklab, var(--border) 72%, var(--ring) 28%);
+  outline: 1px solid color-mix(in oklab, var(--ring) 42%, transparent);
   outline-offset: 0;
   box-shadow: none;
 }
