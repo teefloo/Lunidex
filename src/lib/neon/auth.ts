@@ -2,7 +2,6 @@ import { createRemoteJWKSet, jwtVerify } from 'jose';
 import type { NeonSql } from './server';
 import {
   DEVELOPMENT_AUTH_COOKIE_PREFIX,
-  hasDevelopmentAuthCookie,
   rewriteDevelopmentAuthCookieHeader,
 } from './local-cookies';
 
@@ -114,39 +113,26 @@ export async function getServerAuthUser(): Promise<NeonRequestUser | null> {
 /** Reads the request-aware Neon Auth cookie used by the Next.js integration. */
 async function getNeonUserFromSession(request?: Request): Promise<NeonRequestUser | null> {
   const requestCookieHeader = request?.headers.get('cookie');
-  if (process.env.NODE_ENV === 'development'
-    && requestCookieHeader
-    && hasDevelopmentAuthCookie(requestCookieHeader)) {
-    const baseUrl = process.env.NEON_AUTH_BASE_URL;
-    if (!baseUrl) return null;
-    try {
-      return await getUserFromCookieHeader(
-        rewriteDevelopmentAuthCookieHeader(requestCookieHeader),
-        baseUrl,
-      );
-    } catch {
-      return null;
-    }
-  }
+  if (!requestCookieHeader) return null;
 
-  let getNeonAuthServer: typeof import('./server-auth').getNeonAuthServer;
-  try {
-    ({ getNeonAuthServer } = await import('./server-auth'));
-  } catch {
-    return null;
-  }
+  const hasSessionToken = requestCookieHeader.split(';').some((part) => {
+    const name = part.slice(0, part.indexOf('=')).trim();
+    return name === NEON_AUTH_SESSION_COOKIE_NAME
+      || (process.env.NODE_ENV === 'development' && name === DEVELOPMENT_AUTH_SESSION_COOKIE_NAME);
+  });
+  if (!hasSessionToken) return null;
 
-  const auth = getNeonAuthServer();
-  if (!auth) return null;
+  const baseUrl = process.env.NEON_AUTH_BASE_URL;
+  if (!baseUrl) return null;
 
   try {
-    // Protected application routes must revalidate upstream. The signed
-    // session-data cookie is an optimization for ordinary proxy traffic, not
-    // an authorization source after logout or revocation.
-    const result = await auth.getSession({ query: { disableCookieCache: true } });
-    const user = result.data?.user;
-    if (!user?.id || !user.email) return null;
-    return mapAuthUser(user);
+    // Protected application routes must revalidate the exact incoming
+    // session upstream. Never authorize from the framework facade's
+    // process/context-local session-data cache after logout or revocation.
+    return await getUserFromCookieHeader(
+      rewriteDevelopmentAuthCookieHeader(requestCookieHeader),
+      baseUrl,
+    );
   } catch {
     return null;
   }

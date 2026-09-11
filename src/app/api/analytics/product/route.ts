@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
 import { getNeonClient } from '@/lib/neon/server';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, trustedClientIp } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
 import { normalizeCampaignSlug } from '@/lib/campaigns';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
@@ -30,7 +30,7 @@ function forbidden(request: NextRequest): boolean {
 }
 
 function ephemeralClientKey(request: NextRequest): string {
-  const ip = request.headers.get('x-forwarded-for')?.split(',', 1)[0]?.trim() ?? 'unknown';
+  const ip = trustedClientIp(request);
   return `product-metrics:${createHash('sha256').update(ip).digest('hex').slice(0, 16)}`;
 }
 

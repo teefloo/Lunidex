@@ -64,8 +64,17 @@ export function getRateLimitEntryCount(): number {
   return store.size;
 }
 
+/**
+ * Vercel appends the address observed at its edge to the right side of
+ * `x-forwarded-for`. The left side and `x-real-ip` can be supplied by callers,
+ * so they must not be used as an identity for rate limiting.
+ */
+export function trustedClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get('x-forwarded-for');
+  const addresses = forwarded?.split(',').map((address) => address.trim()).filter(Boolean);
+  return addresses?.at(-1) || 'unknown';
+}
+
 export function ipKey(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for')?.split(',', 1)[0]?.trim();
-  const realIp = request.headers.get('x-real-ip')?.trim();
-  return compactKey(forwarded || realIp || 'unknown');
+  return compactKey(trustedClientIp(request));
 }
