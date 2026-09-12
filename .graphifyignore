@@ -1,0 +1,10 @@
+# Small, non-essential unit tests for formatting and configuration helpers.
+# Runtime code and the rest of the test suite remain part of the corpus.
+/src/lib/pokemon-filter-utils.test.ts
+/src/lib/query-options.test.ts
+/src/lib/tcg-labels.test.ts
+/src/lib/tcg-language.test.ts
+/src/lib/tcg-sealed-image.test.ts
+/src/lib/tcg-seo.test.ts
+/src/lib/tcg-set-label.test.ts
+/src/lib/tcg-wishlist.test.ts
