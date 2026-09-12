@@ -414,10 +414,10 @@ export async function proxy(request: NextRequest) {
     // otherwise cacheable localized document private to the browser. The
     // client provider persists the language choice after hydration, while
     // unlocalized requests still receive a cookie on the redirect below.
-    const response = NextResponse.next({
+    const isPublicLocalizedRoute =      (segments.length === 2 && [        'pokedex',        'moves',        'abilities',        'items',        'types',        'compare',        'blog',        'about',        'faq',        'contact',        '30e-anniversaire',        'nuzlocke',        'breeding',        'ev-iv',        'quiz',        'cookies',        'privacy',        'terms',        'legal',      ].includes(segments[1] ?? ''))      || (segments.length === 3 && [        'pokemon',        'moves',        'abilities',        'items',        'compare',        'guides',        'u',      ].includes(segments[1] ?? ''))      || (segments[1] === 'tcg' && (        segments.length === 2        || (segments.length === 3 && segments[2] === 'deck-builder')        || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))      ));    const response = NextResponse.next({
       request: { headers: forwardedHeaders },
     });
-    return response;
+    if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicLocalizedRoute) {      response.cookies.set(COOKIE_NAME, urlLocale, {        path: '/',        maxAge: COOKIE_MAX_AGE,        sameSite: 'lax',        secure: request.nextUrl.protocol === 'https:',      });    }    return response;
   }
 
   const acceptLang = request.headers.get('accept-language');
