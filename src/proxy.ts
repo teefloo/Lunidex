@@ -3,6 +3,17 @@ import { isSupportedLanguage } from '@/lib/languages';
 
 const COOKIE_NAME = 'primedex-lang';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
+const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
+const RESOURCE_PROBE_TIMEOUT_MS = 1500;
+const RESOURCE_PROBE_CACHE_TTL_MS = 5 * 60 * 1000;
+const RESOURCE_PROBE_FAILURE_TTL_MS = 15 * 1000;
+const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 512;
+// Empty Japanese/Korean set payloads contain only metadata and are currently
+// smaller than 400 bytes. Confirm those compact responses with a GET only when
+// the English fallback is also absent, keeping valid fallback albums to their
+// single detail read.
+const LIMITED_TCG_EMPTY_PROBE_MAX_BYTES = 400;
 const CANONICAL_HOST = 'lunidex.app';
 const ANNIVERSARY_30_ROUTE = '30e-anniversaire';
 const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko', 'zh']);
@@ -20,6 +31,21 @@ const LEGACY_HOSTS = new Set([
   'lunidex-teeflo.vercel.app',
   'lunidex-teeflo-teeflo.vercel.app',
 ]);
+
+type SupportedResource =
+  | 'pokemon'
+  | 'moves'
+  | 'abilities'
+  | 'items'
+  | 'tcg-card'
+  | 'tcg-set';
+
+interface ResourceProbe {
+  kind: SupportedResource;
+  url: string;
+  fallbackUrl?: string;
+  headers?: Record<string, string>;
+}
 
 /**
  * Ranks Accept-Language entries by their q-values instead of trusting the raw
@@ -60,6 +86,246 @@ function isKnownScannerPath(pathname: string): boolean {
   return KNOWN_SCANNER_PATH_PREFIXES.some(
     (prefix) => unlocalizedPath === prefix || unlocalizedPath.startsWith(`${prefix}/`),
   );
+}
+
+function getResourceProbe(pathname: string, locale: string): ResourceProbe | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] !== locale || segments.length !== 3) return null;
+
+  const resource = segments[1];
+  const rawIdentifier = segments[2];
+  if (!rawIdentifier) return null;
+
+  let identifier: string;
+  try {
+    identifier = decodeURIComponent(rawIdentifier);
+  } catch {
+    return null;
+  }
+
+  const encodedIdentifier = encodeURIComponent(identifier);
+  switch (resource) {
+    case 'pokemon':
+      return { kind: 'pokemon', url: `${POKEAPI_BASE_URL}/pokemon/${encodedIdentifier}` };
+    case 'moves':
+      return { kind: 'moves', url: `${POKEAPI_BASE_URL}/move/${encodedIdentifier}` };
+    case 'abilities':
+      return { kind: 'abilities', url: `${POKEAPI_BASE_URL}/ability/${encodedIdentifier}` };
+    case 'items':
+      return { kind: 'items', url: `${POKEAPI_BASE_URL}/item/${encodedIdentifier}` };
+    default:
+      return null;
+  }
+}
+
+function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] !== locale || segments.length !== 4 || segments[1] !== 'tcg') return null;
+
+  let identifier: string;
+  try {
+    identifier = decodeURIComponent(segments[3] ?? '');
+  } catch {
+    return null;
+  }
+  if (!identifier) return null;
+
+  const encodedIdentifier = encodeURIComponent(identifier);
+  // Probe the requested catalog first. Japanese and Korean contain regional
+  // set IDs that do not exist in English, while Chinese uses the established
+  // English data fallback.
+  const probeLocale = locale === 'zh' ? 'en' : locale;
+  const fallbackLocale = probeLocale === 'en' ? null : 'en';
+  if (segments[2] === 'cards') {
+    return {
+      kind: 'tcg-card',
+      url: `${TCGDEX_BASE_URL}/${probeLocale}/cards/${encodedIdentifier}`,
+      fallbackUrl: fallbackLocale
+        ? `${TCGDEX_BASE_URL}/${fallbackLocale}/cards/${encodedIdentifier}`
+        : undefined,
+    };
+  }
+  if (segments[2] === 'sets' || segments[2] === 'collection') {
+    return {
+      kind: 'tcg-set',
+      url: `${TCGDEX_BASE_URL}/${probeLocale}/sets/${encodedIdentifier}`,
+      fallbackUrl: fallbackLocale
+        ? `${TCGDEX_BASE_URL}/${fallbackLocale}/sets/${encodedIdentifier}`
+        : undefined,
+    };
+  }
+
+  return null;
+}
+
+interface ResourceProbeResult {
+  available: boolean | null;
+  contentLength: number | null;
+}
+
+interface CachedResourceProbe {
+  result: boolean | null;
+  expiresAt: number;
+}
+
+const resourceProbeCache = new Map<string, CachedResourceProbe>();
+const resourceProbeInFlight = new Map<string, Promise<boolean | null>>();
+
+function isLimitedTcgSetProbe(probe: ResourceProbe): boolean {
+  return probe.kind === 'tcg-set' && /\/(?:ja|ko)\/sets\//.test(probe.url);
+}
+
+async function confirmTcgSetHasCards(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<boolean | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), RESOURCE_PROBE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { Accept: 'application/json', ...headers },
+      signal: controller.signal,
+    });
+    if (response.status === 404) return false;
+    if (!response.ok) return null;
+
+    const payload = (await response.json()) as unknown;
+    if (!payload || typeof payload !== 'object' || !('cards' in payload)) return null;
+    const cards = (payload as { cards?: unknown }).cards;
+    return Array.isArray(cards) ? cards.length > 0 : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function getResourceProbeCacheKey(probe: ResourceProbe): string {
+  return [probe.url, probe.fallbackUrl ?? '', JSON.stringify(probe.headers ?? {})].join('|');
+}
+
+function getCachedResourceProbe(key: string): boolean | null | undefined {
+  const cached = resourceProbeCache.get(key);
+  if (!cached) return undefined;
+  if (cached.expiresAt <= Date.now()) {
+    resourceProbeCache.delete(key);
+    return undefined;
+  }
+
+  // Keep hot probes near the end of the bounded map so they survive eviction.
+  resourceProbeCache.delete(key);
+  resourceProbeCache.set(key, cached);
+  return cached.result;
+}
+
+function setCachedResourceProbe(key: string, result: boolean | null): void {
+  resourceProbeCache.delete(key);
+  while (resourceProbeCache.size >= MAX_RESOURCE_PROBE_CACHE_ENTRIES) {
+    const oldestKey = resourceProbeCache.keys().next().value;
+    if (typeof oldestKey !== 'string') break;
+    resourceProbeCache.delete(oldestKey);
+  }
+  resourceProbeCache.set(key, {
+    result,
+    expiresAt: Date.now() + (result === null ? RESOURCE_PROBE_FAILURE_TTL_MS : RESOURCE_PROBE_CACHE_TTL_MS),
+  });
+}
+
+async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | null> {
+  const primaryResult = await probeResourceUrl(probe.url, probe.headers);
+  const primaryIsCompact = isLimitedTcgSetProbe(probe)
+    && primaryResult.available === true
+    && primaryResult.contentLength !== null
+    && primaryResult.contentLength <= LIMITED_TCG_EMPTY_PROBE_MAX_BYTES;
+
+  if (primaryIsCompact && probe.fallbackUrl) {
+    // Probe the fallback first. A valid English fallback means the route should
+    // render and avoids downloading the localized empty payload a second time.
+    const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+    if (fallbackResult.available === true) return true;
+    if (fallbackResult.available === null) return true;
+    return confirmTcgSetHasCards(probe.url, probe.headers);
+  }
+
+  if (primaryResult.available === true) {
+    if (primaryIsCompact) return confirmTcgSetHasCards(probe.url, probe.headers);
+    return true;
+  }
+  if (!probe.fallbackUrl) return primaryResult.available;
+
+  const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+  if (primaryResult.available === false) return fallbackResult.available;
+
+  // A successful fallback proves the route can render. If the localized probe
+  // timed out, however, an English 404 cannot prove the localized ID is absent.
+  return fallbackResult.available === true ? true : null;
+}
+
+async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
+  const key = getResourceProbeCacheKey(probe);
+  const cached = getCachedResourceProbe(key);
+  if (cached !== undefined) return cached;
+
+  const inFlight = resourceProbeInFlight.get(key);
+  if (inFlight) return inFlight;
+
+  const pending = probeResourceUncached(probe).then((result) => {
+    setCachedResourceProbe(key, result);
+    return result;
+  });
+  resourceProbeInFlight.set(key, pending);
+
+  try {
+    return await pending;
+  } finally {
+    if (resourceProbeInFlight.get(key) === pending) {
+      resourceProbeInFlight.delete(key);
+    }
+  }
+}
+
+async function probeResourceUrl(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<ResourceProbeResult> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), RESOURCE_PROBE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      headers,
+      signal: controller.signal,
+    });
+    if (response.status === 404) return { available: false, contentLength: null };
+    const rawContentLength = response.headers.get('content-length');
+    const contentLength = rawContentLength ? Number(rawContentLength) : null;
+    return {
+      available: true,
+      contentLength: contentLength !== null && Number.isFinite(contentLength) ? contentLength : null,
+    };
+  } catch {
+    // The page fetch remains the source of truth when the probe times out or
+    // an upstream service is temporarily unavailable.
+    return { available: null, contentLength: null };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function hardNotFoundResponse(request: NextRequest, locale: string) {
+  const forwardedHeaders = new Headers(request.headers);
+  forwardedHeaders.set('x-primedex-lang', locale);
+
+  // Rewrite to an unmatched internal pathname so the normal global not-found
+  // UI is rendered while keeping the public URL unchanged. Setting the
+  // status here avoids Next's streamed notFound() response becoming a 200.
+  return NextResponse.rewrite(new URL('/__lunidex-not-found', request.url), {
+    status: 404,
+    request: { headers: forwardedHeaders },
+  });
 }
 
 export async function proxy(request: NextRequest) {
@@ -119,10 +385,24 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(redirectUrl, 308);
     }
 
-    // Do not preflight public resource routes against PokéAPI or TCGdex here.
-    // The page/API boundary already owns validation, caching, fallbacks, and
-    // notFound handling. A proxy HEAD would duplicate every detail request,
-    // add upstream traffic, and still race the fetch used by the route.
+    // Only validate document requests here. Next's client navigations use
+    // Flight responses and the page itself remains the source of truth for
+    // those requests; avoiding a second upstream probe keeps navigation fast.
+    const accept = (request.headers.get('accept') ?? '').toLowerCase();
+    const isDocumentRequest = request.method === 'HEAD'
+      || accept.includes('text/html')
+      || accept.includes('*/*');
+    if (isDocumentRequest) {
+      const isPrivateCollectionAlbum = segments.length === 4
+        && segments[1] === 'tcg'
+        && segments[2] === 'collection';
+      const probe = getResourceProbe(pathname, urlLocale)
+        ?? (isPrivateCollectionAlbum ? null : getTcgResourceProbe(pathname, urlLocale));
+      if (probe && (await probeResource(probe)) === false) {
+        return hardNotFoundResponse(request, urlLocale);
+      }
+    }
+
     // Forward the URL's locale as a request header so this exact render uses
     // it immediately. The route rewrite itself is declared in next.config.ts,
     // keeping the public URL separate from the physical route.
