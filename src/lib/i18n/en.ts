@@ -676,6 +676,7 @@ export default {
       cta_tracker: 'Open the tracker',
       cta_tcg: 'Open the TCG catalog',
       cta_guide: 'Read the collection guide',
+      cta_about: 'About Lunidex',
       facts: {
         release_title: 'Worldwide release',
         release_body: 'Pokémon TCG 30th Anniversary is planned for simultaneous worldwide release on September 16, 2026.',
@@ -740,6 +741,8 @@ export default {
         pokemon_ex_boxes_description: 'A Sylveon ex or Greninja ex foil promo, an oversize foil version, and four 30th Anniversary booster packs.',
         elite_trainer_box_name: 'Pokémon TCG: 30th Anniversary Elite Trainer Box',
         elite_trainer_box_description: 'Nine booster packs, a full-art Nidorina promo, sleeves, foil Basic Energy cards, dice, a coin, dividers, a storage box, and a player\'s guide.',
+        pokemon_center_etb_name: 'Pokémon TCG: 30th Anniversary Pokémon Center Elite Trainer Box',
+        pokemon_center_etb_description: 'Everything in the standard Elite Trainer Box, plus 11 booster packs and two full-art Nidorina promo cards, including one with the Pokémon Center logo.',
         binder_collection_name: 'Pokémon TCG: 30th Anniversary Binder Collection',
         binder_collection_description: 'A themed nine-pocket binder and five 30th Anniversary booster packs.',
         booster_bundle_name: 'Pokémon TCG: 30th Anniversary Booster Bundle',

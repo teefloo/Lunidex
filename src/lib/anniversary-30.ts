@@ -247,7 +247,9 @@ export const ANNIVERSARY_30_PRODUCTS: readonly Anniversary30Product[] = [
     sourceUrl: PRODUCTS_SOURCE_URL,
     imageUrl: {
       en: 'https://mcdn.pokemon.com/image/upload/c_fit,w_2000,h_1125/f_auto/q_auto:best/v1/live/pcom-cms/static-assets/cms3/us/img/trading-card-game/tiles/30th/product-showcase/inline/pokemon-center-elite-trainer-box-en.png',
-      fr: 'https://mcdn.pokemon.com/image/upload/c_fit,w_2000,h_1125/f_auto/q_auto:best/v1/live/pcom-cms/static-assets/cms3/fr/img/trading-card-game/tiles/30th/product-showcase/inline/pokemon-center-elite-trainer-box-fr.png',
+      // Pokémon publishes this product asset from the English CDN path even
+      // on its localized product showcase pages; the French filename is 404.
+      fr: 'https://mcdn.pokemon.com/image/upload/c_fit,w_2000,h_1125/f_auto/q_auto:best/v1/live/pcom-cms/static-assets/cms3/us/img/trading-card-game/tiles/30th/product-showcase/inline/pokemon-center-elite-trainer-box-en.png',
     },
     sourceStatus: 'official',
   },

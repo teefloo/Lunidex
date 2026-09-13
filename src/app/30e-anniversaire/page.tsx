@@ -46,6 +46,11 @@ export const revalidate = 3600;
 const FACT_KEYS = ['release', 'booster', 'pikachu', 'pikachu_ex', 'foil', 'classic'] as const;
 const FAQ_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 const PRODUCT_MONTHS = ['2026-09', '2026-10', '2026-11'] as const;
+const PRODUCT_MONTH_LABEL_KEYS = {
+  '2026-09': 'sep',
+  '2026-10': 'oct',
+  '2026-11': 'nov',
+} as const;
 const VALID_PROVIDER_CARD_ID = /^[a-z0-9][a-z0-9._:-]*-[a-z0-9][a-z0-9._:-]*$/i;
 
 function getAnniversary30CardLink(
@@ -148,7 +153,7 @@ export default async function Anniversary30Page() {
   }));
   const productGroups = PRODUCT_MONTHS.map((month) => ({
     id: month,
-    label: t(`anniversary_30.products.month_${month.slice(5)}`),
+    label: t(`anniversary_30.products.month_${PRODUCT_MONTH_LABEL_KEYS[month]}`),
     products: ANNIVERSARY_30_PRODUCTS.filter((product) => product.month === month),
   }));
   const cardLabels: Anniversary30CardGridLabels = {

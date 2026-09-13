@@ -676,6 +676,7 @@ export default {
       cta_tracker: 'Ouvrir le tracker',
       cta_tcg: 'Ouvrir le catalogue TCG',
       cta_guide: 'Lire le guide de collection',
+      cta_about: 'À propos de Lunidex',
       facts: {
         release_title: 'Sortie mondiale',
         release_body: "L'extension 30e Anniversaire du JCC Pokémon doit sortir simultanément dans le monde entier le 16 septembre 2026.",
@@ -740,6 +741,8 @@ export default {
         pokemon_ex_boxes_description: 'Une carte promo brillante de Nymphali-ex ou Amphinobi-ex, une version grand format brillante et quatre boosters du 30e Anniversaire.',
         elite_trainer_box_name: 'JCC Pokémon : Coffret Dresseur d’élite 30e Anniversaire',
         elite_trainer_box_description: 'Neuf boosters, une carte promo entièrement illustrée de Nidorina, des protège-cartes, des cartes Énergie de base brillantes, des dés, une pièce, des séparateurs, un coffret et un guide de jeu.',
+        pokemon_center_etb_name: 'JCC Pokémon : Coffret Dresseur d’élite Pokémon Center 30e Anniversaire',
+        pokemon_center_etb_description: 'Tout le contenu du Coffret Dresseur d’élite standard, 11 boosters et deux cartes promo entièrement illustrées de Nidorina, dont une avec le logo Pokémon Center.',
         binder_collection_name: 'JCC Pokémon : Collection classeur 30e Anniversaire',
         binder_collection_description: 'Un classeur thématique à neuf pochettes et cinq boosters du 30e Anniversaire.',
         booster_bundle_name: 'JCC Pokémon : lot de boosters 30e Anniversaire',
