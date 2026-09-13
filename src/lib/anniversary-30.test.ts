@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { TCGCard } from '@/types/tcg';
+import nextConfig from '../../next.config';
 import {
   ANNIVERSARY_30_RELEASE_DATE,
   ANNIVERSARY_30_LAST_VERIFIED_DATE,
@@ -10,6 +11,7 @@ import {
 import {
   ANNIVERSARY_30_CARD_MANIFEST,
   ANNIVERSARY_30_PIKACHU_CARDS,
+  getAnniversary30OfficialCardImage,
   getAnniversary30Manifest,
   getAnniversary30FeaturedCards,
   getAnniversary30FuturisticRareCards,
@@ -48,6 +50,42 @@ describe('30th Celebration verified data', () => {
     expect(ANNIVERSARY_30_CARD_MANIFEST.some((card) => /slot/i.test(card.name))).toBe(false);
     expect(new Set(ANNIVERSARY_30_CARD_MANIFEST.map((card) => card.id)).size)
       .toBe(ANNIVERSARY_30_CARD_MANIFEST.length);
+  });
+
+  it('attaches the verified official gallery images to static card records', () => {
+    const manifest = getAnniversary30Manifest().cards;
+    const officialImageCards = manifest.filter((card) => (
+      card.scope === 'numbered-main'
+      || card.scope === 'pikachu'
+      || card.scope === 'secret-rare'
+      || card.scope === 'classic-collection'
+    ));
+
+    expect(getAnniversary30OfficialCardImage({ scope: 'numbered-main', localId: '001' }))
+      .toBe('https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us/2M6P_EN_1-2x.png');
+    expect(getAnniversary30OfficialCardImage({ scope: 'classic-collection', imageIndex: 1 }))
+      .toBe('https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us/2M6P_Classic_EN_1-2x.png');
+    expect(officialImageCards).toHaveLength(188);
+    expect(officialImageCards.every((card) => (
+      card.imageStatus === 'available'
+      && card.imageUrl?.en
+      && card.imageUrl.fr === card.imageUrl.en
+    ))).toBe(true);
+    expect(manifest.filter((card) => card.imageStatus !== 'available')).toHaveLength(25);
+  });
+
+  it('allows the official card CDN through the image security boundaries', async () => {
+    const headerRules = await nextConfig.headers?.();
+    const securityHeaders = headerRules?.find((rule) => rule.source === '/(.*)')?.headers ?? [];
+    const contentSecurityPolicy = securityHeaders.find((header) => header.key === 'Content-Security-Policy')?.value;
+    const remotePatterns = nextConfig.images?.remotePatterns ?? [];
+
+    expect(contentSecurityPolicy).toContain('https://dz3we2x72f7ol.cloudfront.net');
+    expect(remotePatterns.some((pattern) => (
+      pattern.protocol === 'https'
+      && pattern.hostname === 'dz3we2x72f7ol.cloudfront.net'
+      && pattern.pathname === '/expansions/30th-celebration/**'
+    ))).toBe(true);
   });
 
   it('does not duplicate product identities', () => {

@@ -18,16 +18,14 @@ const CARD_LIST_URL = ANNIVERSARY_30_CARD_LIST_SOURCE_URL;
 const CLASSIC_LIST_URL = ANNIVERSARY_30_CLASSIC_SOURCE_URL;
 
 /**
- * The official gallery currently exposes these stable file identifiers from
- * its card viewer. Keeping the path in one helper makes a future CDN change a
- * one-line maintenance task. We only attach an image to a card when its URL
- * has been validated by the provider response; an unverified path is never
- * rendered as a card image.
+ * The official gallery serves the card files from its public CDN rather than
+ * from the gallery page origin. These assets are English-only, so the same
+ * verified image is intentionally used for the English and French render.
  */
-const OFFICIAL_GALLERY_ASSET_PATH = `${OFFICIAL_GALLERY_URL}assets`;
+const OFFICIAL_GALLERY_ASSET_PATH = 'https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us';
 
 function getGalleryAssetUrl(fileName: string): string {
-  return `${OFFICIAL_GALLERY_ASSET_PATH}/${fileName}`;
+  return `${OFFICIAL_GALLERY_ASSET_PATH}/${fileName}-2x.png`;
 }
 
 export function getAnniversary30OfficialCardImage(input: {
@@ -38,11 +36,11 @@ export function getAnniversary30OfficialCardImage(input: {
   imageIndex: number;
 }): string {
   if (input.scope === 'classic-collection') {
-    return getGalleryAssetUrl(`2M6P_Classic_EN_${input.imageIndex}.png`);
+    return getGalleryAssetUrl(`2M6P_Classic_EN_${input.imageIndex}`);
   }
 
   const normalizedLocalId = input.localId.replace(/^0+/, '') || '0';
-  return getGalleryAssetUrl(`2M6P_EN_${Number(normalizedLocalId)}.png`);
+  return getGalleryAssetUrl(`2M6P_EN_${Number(normalizedLocalId)}`);
 }
 
 type MainCardRow = readonly [name: string, rarity: string, illustrator?: string];
@@ -282,9 +280,17 @@ function createCard(input: Omit<Anniversary30Card, 'sourceUrls' | 'verifiedAt' |
   };
 }
 
+function localizedImage(url: string): Anniversary30Card['imageUrl'] {
+  return { en: url, fr: url };
+}
+
 function createMainCard(row: MainCardRow, index: number): Anniversary30Card {
   const localId = String(index + 1).padStart(3, '0');
   const isPikachu = index >= 22 && index <= 51;
+  const image = getAnniversary30OfficialCardImage({
+    scope: isPikachu ? 'pikachu' : 'numbered-main',
+    localId,
+  });
   return createCard({
     id: `${ANNIVERSARY_30_FALLBACK_SET_ID}-${localId}`,
     localId,
@@ -295,7 +301,8 @@ function createMainCard(row: MainCardRow, index: number): Anniversary30Card {
     ...(row[2] ? { illustrator: row[2] } : {}),
     ...(isPikachu ? { pikachuNumber: index - 21 } : {}),
     sourceStatus: 'verified-database',
-    imageStatus: 'unknown',
+    imageUrl: localizedImage(image),
+    imageStatus: 'available',
   });
 }
 
@@ -303,6 +310,7 @@ function createSecretCard(row: MainCardRow, index: number): Anniversary30Card {
   const number = index + 129;
   const localId = String(number);
   const imageUnavailable = [143, 151, 152, 154].includes(number);
+  const image = getAnniversary30OfficialCardImage({ scope: 'secret-rare', localId });
   return createCard({
     id: `${ANNIVERSARY_30_FALLBACK_SET_ID}-${localId}`,
     localId,
@@ -312,7 +320,8 @@ function createSecretCard(row: MainCardRow, index: number): Anniversary30Card {
     rarity: row[1],
     ...(row[2] ? { illustrator: row[2] } : {}),
     sourceStatus: imageUnavailable ? 'reported' : 'verified-database',
-    imageStatus: imageUnavailable ? 'not-published' : 'unknown',
+    imageUrl: localizedImage(image),
+    imageStatus: 'available',
   });
 }
 
@@ -332,7 +341,11 @@ function createClassicCard(
     rarity: 'Classic Collection',
     sourceStatus: 'reported',
     sourceUrls: CLASSIC_SOURCE_URLS,
-    imageStatus: 'unknown',
+    imageUrl: localizedImage(getAnniversary30OfficialCardImage({
+      scope: 'classic-collection',
+      imageIndex: index + 1,
+    })),
+    imageStatus: 'available',
   });
 }
 
@@ -445,10 +458,6 @@ function providerCardKey(card: TCGCard): string {
 function providerImage(card: TCGCard): string | undefined {
   const value = card.imageUrl?.trim() || card.image?.trim();
   return value || undefined;
-}
-
-function localizedImage(url: string): Anniversary30Card['imageUrl'] {
-  return { en: url, fr: url };
 }
 
 /**
