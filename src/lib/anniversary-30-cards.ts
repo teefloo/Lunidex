@@ -337,6 +337,7 @@ function createClassicCard(
 }
 
 function createBasicEnergyCard(name: string, index: number): Anniversary30Card {
+  void index;
   const localId = `energy-${name.toLowerCase()}`;
   return createCard({
     id: `${ANNIVERSARY_30_FALLBACK_SET_ID}-${localId}`,
@@ -349,7 +350,6 @@ function createBasicEnergyCard(name: string, index: number): Anniversary30Card {
     sourceStatus: 'reported',
     sourceUrls: [CARD_LIST_URL, CLASSIC_LIST_URL],
     imageStatus: 'unknown',
-    pikachuNumber: index + 1,
   });
 }
 

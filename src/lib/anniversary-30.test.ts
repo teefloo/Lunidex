@@ -9,6 +9,7 @@ import {
   ANNIVERSARY_30_CARD_MANIFEST,
   ANNIVERSARY_30_PIKACHU_CARDS,
   getAnniversary30Manifest,
+  filterAnniversary30Cards,
   mergeAnniversary30Cards,
 } from '@/lib/anniversary-30-cards';
 
@@ -48,5 +49,18 @@ describe('30th Celebration verified data', () => {
     expect(result.find((card) => card.localId === '023')?.lunidexCardId).toBe('provider-023');
     expect(result.find((card) => card.localId === '052')?.lunidexCardId).toBeUndefined();
     expect(result.find((card) => card.localId === '023')?.imageStatus).toBe('available');
+  });
+
+  it('filters the same manifest by ownership and verified card families', () => {
+    const cards = getAnniversary30Manifest().cards;
+    const owned = new Set(['30th-023', '30th-129']);
+
+    expect(filterAnniversary30Cards(cards, 'owned', owned).map((card) => card.localId)).toEqual(['023', '129']);
+    expect(filterAnniversary30Cards(cards, 'missing', owned)).toHaveLength(cards.length - 2);
+    expect(filterAnniversary30Cards(cards, 'pikachu')).toHaveLength(30);
+    expect(filterAnniversary30Cards(cards, 'classic-collection')).toHaveLength(30);
+    expect(filterAnniversary30Cards(cards, 'illustration-rare')).toHaveLength(18);
+    expect(filterAnniversary30Cards(cards, 'special-illustration-rare')).toHaveLength(10);
+    expect(filterAnniversary30Cards(cards, 'futuristic-rare')).toHaveLength(2);
   });
 });
