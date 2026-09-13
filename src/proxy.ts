@@ -24,6 +24,41 @@ const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|exte
 // These paths are common WordPress probes but are not part of Lunidex. Return
 // a cacheable edge 404 before Next renders the global not-found route.
 const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'];
+// Next keeps request-dependent layouts private, so the route-level header in
+// next.config.ts is not present after the locale rewrite. Set Vercel's CDN-only
+// directive on the proxy response instead; browser caching remains private.
+const PUBLIC_PAGE_VERCEL_CACHE_CONTROL =
+  'public, s-maxage=3600, stale-while-revalidate=86400';
+const PUBLIC_SINGLE_SEGMENT_ROUTES = new Set([
+  'pokedex',
+  'moves',
+  'abilities',
+  'items',
+  'types',
+  'compare',
+  'blog',
+  'about',
+  'faq',
+  'contact',
+  ANNIVERSARY_30_ROUTE,
+  'nuzlocke',
+  'breeding',
+  'ev-iv',
+  'quiz',
+  'cookies',
+  'privacy',
+  'terms',
+  'legal',
+]);
+const PUBLIC_DETAIL_ROUTE_PREFIXES = new Set([
+  'pokemon',
+  'moves',
+  'abilities',
+  'items',
+  'compare',
+  'guides',
+  'u',
+]);
 const LEGACY_HOSTS = new Set([
   'www.lunidex.app',
   'primedex.vercel.app',
@@ -86,6 +121,23 @@ function isKnownScannerPath(pathname: string): boolean {
   return KNOWN_SCANNER_PATH_PREFIXES.some(
     (prefix) => unlocalizedPath === prefix || unlocalizedPath.startsWith(`${prefix}/`),
   );
+}
+
+function isPublicLocalizedRoute(segments: string[]): boolean {
+  if (segments.length === 2 && PUBLIC_SINGLE_SEGMENT_ROUTES.has(segments[1] ?? '')) {
+    return true;
+  }
+
+  if (segments.length === 3 && PUBLIC_DETAIL_ROUTE_PREFIXES.has(segments[1] ?? '')) {
+    return true;
+  }
+
+  return segments[1] === 'tcg'
+    && (
+      segments.length === 2
+      || (segments.length === 3 && segments[2] === 'deck-builder')
+      || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))
+    );
 }
 
 function getResourceProbe(pathname: string, locale: string): ResourceProbe | null {
@@ -322,10 +374,16 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
   // Rewrite to an unmatched internal pathname so the normal global not-found
   // UI is rendered while keeping the public URL unchanged. Setting the
   // status here avoids Next's streamed notFound() response becoming a 200.
-  return NextResponse.rewrite(new URL('/__lunidex-not-found', request.url), {
+  const response = NextResponse.rewrite(new URL('/__lunidex-not-found', request.url), {
     status: 404,
     request: { headers: forwardedHeaders },
   });
+  // A confirmed missing public resource is safe to reuse briefly. This avoids
+  // invoking the global not-found render repeatedly for crawler probes while
+  // keeping the browser response private.
+  response.headers.set('Vercel-CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+  response.headers.set('CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+  return response;
 }
 
 export async function proxy(request: NextRequest) {
@@ -390,8 +448,7 @@ export async function proxy(request: NextRequest) {
     // those requests; avoiding a second upstream probe keeps navigation fast.
     const accept = (request.headers.get('accept') ?? '').toLowerCase();
     const isDocumentRequest = request.method === 'HEAD'
-      || accept.includes('text/html')
-      || accept.includes('*/*');
+      || (request.method === 'GET' && (accept.includes('text/html') || accept.includes('*/*')));
     if (isDocumentRequest) {
       const isPrivateCollectionAlbum = segments.length === 4
         && segments[1] === 'tcg'
@@ -414,10 +471,23 @@ export async function proxy(request: NextRequest) {
     // otherwise cacheable localized document private to the browser. The
     // client provider persists the language choice after hydration, while
     // unlocalized requests still receive a cookie on the redirect below.
-    const isPublicLocalizedRoute =      (segments.length === 2 && [        'pokedex',        'moves',        'abilities',        'items',        'types',        'compare',        'blog',        'about',        'faq',        'contact',        '30e-anniversaire',        'nuzlocke',        'breeding',        'ev-iv',        'quiz',        'cookies',        'privacy',        'terms',        'legal',      ].includes(segments[1] ?? ''))      || (segments.length === 3 && [        'pokemon',        'moves',        'abilities',        'items',        'compare',        'guides',        'u',      ].includes(segments[1] ?? ''))      || (segments[1] === 'tcg' && (        segments.length === 2        || (segments.length === 3 && segments[2] === 'deck-builder')        || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))      ));    const response = NextResponse.next({
+    const isPublicPage = isPublicLocalizedRoute(segments);
+    const response = NextResponse.next({
       request: { headers: forwardedHeaders },
     });
-    if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicLocalizedRoute) {      response.cookies.set(COOKIE_NAME, urlLocale, {        path: '/',        maxAge: COOKIE_MAX_AGE,        sameSite: 'lax',        secure: request.nextUrl.protocol === 'https:',      });    }    return response;
+    if (isPublicPage && isDocumentRequest) {
+      response.headers.set('Vercel-CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+      response.headers.set('CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+    }
+    if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicPage) {
+      response.cookies.set(COOKIE_NAME, urlLocale, {
+        path: '/',
+        maxAge: COOKIE_MAX_AGE,
+        sameSite: 'lax',
+        secure: request.nextUrl.protocol === 'https:',
+      });
+    }
+    return response;
   }
 
   const acceptLang = request.headers.get('accept-language');

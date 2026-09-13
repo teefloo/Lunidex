@@ -103,12 +103,19 @@ const COLLECTION_VALUE_MIN_TIMEOUT_MS = 45_000;
 const COLLECTION_VALUE_MAX_TIMEOUT_MS = 90_000;
 const COLLECTION_VALUE_BATCH_BUDGET_MS = 1_500;
 const TCG_MEMORY_CACHE_TTL_MS = 10 * 60 * 1000;
+const TCG_SET_FAILURE_CACHE_TTL_MS = 15_000;
 const tcgCardMemoryCache = createMemoryCache<TCGCard>({ maxEntries: 1024, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgSetMemoryCache = createMemoryCache<TCGSet>({ maxEntries: 256, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgSetCardsMemoryCache = createMemoryCache<TCGCard[]>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+// Avoid retry storms during a short upstream outage while preserving normal
+// retryability as soon as the provider has had time to recover.
+const tcgSetCardsFailureCache = createMemoryCache<boolean>({ maxEntries: 128, ttlMs: TCG_SET_FAILURE_CACHE_TTL_MS });
 const tcgAlbumMemoryCache = createMemoryCache<TCGSetAlbumData>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgCollectionCatalogMemoryCache = createMemoryCache<TCGCollectionSetSummary[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgAllSetsMemoryCache = createMemoryCache<TCGSet[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const pendingTcgCardRequests = new Map<string, Promise<TCGCard | null>>();
+const pendingTcgSetCardsRequests = new Map<string, Promise<TCGCard[]>>();
+const pendingTcgSetRequests = new Map<string, Promise<TCGSet | null>>();
 export const TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS = 600;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -145,6 +152,46 @@ export function isTcgLangLimited(lang: string): boolean {
 
 function getWithOptionalSignal<T>(url: string, signal?: AbortSignal) {
   return signal ? tcgClient.get<T>(url, { signal }) : tcgClient.get<T>(url);
+}
+
+/**
+ * Share an identical uncancelled request while it is in flight. React.cache()
+ * only deduplicates within one render, while these maps also cover concurrent
+ * page, metadata, and OG requests handled by the same Fluid Compute instance.
+ * Abortable callers deliberately bypass this helper so one cancelled browser
+ * query cannot cancel another caller's work.
+ */
+function dedupeTcgRequest<T>(
+  pendingRequests: Map<string, Promise<T>>,
+  key: string,
+  factory: () => Promise<T>,
+): Promise<T> {
+  const existing = pendingRequests.get(key);
+  if (existing) return existing;
+
+  const pending = Promise.resolve().then(factory);
+  pendingRequests.set(key, pending);
+  pending.then(
+    () => {
+      if (pendingRequests.get(key) === pending) pendingRequests.delete(key);
+    },
+    () => {
+      if (pendingRequests.get(key) === pending) pendingRequests.delete(key);
+    },
+  );
+  return pending;
+}
+
+function getTcgCardCacheKey(cardId: string, lang: string): string {
+  return `tcg-card-v14-${cardId}-${resolveTcgLang(lang)}`;
+}
+
+function getTcgSetCardsCacheKey(setId: string, lang: string): string {
+  return `tcg-set-cards-v6-${setId}-${resolveTcgLang(lang)}`;
+}
+
+function getTcgSetCacheKey(setId: string, lang: string): string {
+  return `tcg-set-v10-${setId}-${resolveTcgLang(lang)}`;
 }
 
 function getCardSetId(cardId: string): string | null {
@@ -591,12 +638,12 @@ interface GetTCGCardOptions {
   requirePricing?: boolean;
 }
 
-export const getTCGCard = async (
+async function getTCGCardUncached(
   cardId: string,
   lang = 'en',
   signal?: AbortSignal,
   options: GetTCGCardOptions = {},
-): Promise<TCGCard | null> => {
+): Promise<TCGCard | null> {
   // Defense in depth: card ids end up concatenated into upstream URL paths.
   // Reject anything that is not a plain path-safe identifier before it can
   // reach the network layer.
@@ -604,7 +651,7 @@ export const getTCGCard = async (
   const tcgLang = resolveTcgLang(lang);
   // v14 invalidates cards cached before marked special printings were kept
   // out of the generic normal/reverse/holo price resolver.
-  const cacheKey = `tcg-card-v14-${cardId}-${tcgLang}`;
+  const cacheKey = getTcgCardCacheKey(cardId, tcgLang);
   const allowEnglishFallback = options.allowEnglishFallback !== false;
   const memoryCached = tcgCardMemoryCache.get(cacheKey);
   if (memoryCached && (!options.requirePricing || hasMarketPrice(memoryCached))) {
@@ -641,6 +688,17 @@ export const getTCGCard = async (
   } catch (error) {
     if (signal?.aborted) throw error;
 
+    // A stale localized card is already a better result than triggering an
+    // English detail request and a set-summary request. Keep the existing
+    // stale-cache fallback for pricing-required calls, which may still need a
+    // fresh price before they can satisfy the caller.
+    const staleCard = await getCachedData<TCGCard>(cacheKey, true);
+    if (staleCard && (!options.requirePricing || hasMarketPrice(staleCard))) {
+      tcgCardMemoryCache.set(cacheKey, staleCard);
+      return staleCard;
+    }
+    const confirmedNotFound = isNotFoundResponse(error);
+
     // TCGdex does not publish every card in every supported UI language.
     // Keep the localized route indexable with the English card payload rather
     // than turning a valid alternate URL into a 404.
@@ -657,7 +715,6 @@ export const getTCGCard = async (
     }
 
     if (!allowEnglishFallback) {
-      const staleCard = await getCachedData<TCGCard>(cacheKey, true);
       if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
       return staleCard;
     }
@@ -666,7 +723,11 @@ export const getTCGCard = async (
     // available. Preserve a valid card route with the set's summary payload;
     // the detail view already treats all fields beyond id/name as optional.
     const setId = getCardSetId(cardId);
-    if (setId) {
+    // An English 404 is definitive for the public card ID. The set endpoint
+    // cannot turn it into a real detail and was amplifying scanner traffic with
+    // one extra request per invalid card. Keep the localized summary fallback,
+    // because a localized catalog can legitimately omit a translated card.
+    if (setId && (!confirmedNotFound || tcgLang !== 'en')) {
       try {
         const summaryCards = await getCardsBySet(setId, tcgLang, signal);
         const summaryCard = summaryCards.find((candidate) => candidate.id.toLowerCase() === cardId.toLowerCase());
@@ -683,11 +744,33 @@ export const getTCGCard = async (
       }
     }
 
-    console.error(`[TCG API] Error fetching card ${cardId}:`, error instanceof Error ? error.name : 'UnknownError');
-    const staleCard = await getCachedData<TCGCard>(cacheKey, true);
+    if (!confirmedNotFound) {
+      console.error(`[TCG API] Error fetching card ${cardId}:`, error instanceof Error ? error.name : 'UnknownError');
+    }
     if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
     return staleCard;
   }
+}
+
+export const getTCGCard = async (
+  cardId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+  options: GetTCGCardOptions = {},
+): Promise<TCGCard | null> => {
+  if (!isValidTcgCardId(cardId) || signal) {
+    return getTCGCardUncached(cardId, lang, signal, options);
+  }
+
+  const cacheKey = getTcgCardCacheKey(cardId, lang);
+  const requestKey = [
+    cacheKey,
+    options.allowEnglishFallback === false ? 'localized-only' : 'english-fallback',
+    options.requirePricing ? 'pricing-required' : 'standard',
+  ].join(':');
+
+  return dedupeTcgRequest(pendingTcgCardRequests, requestKey, () =>
+    getTCGCardUncached(cardId, lang, undefined, options));
 };
 
 async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, signal?: AbortSignal): Promise<TCGCard[]> {
@@ -1113,15 +1196,19 @@ export const fetchCollectionValue = async (
 /**
  * Fetches all cards from a given set.
  */
-export const getCardsBySet = async (
+async function getCardsBySetUncached(
   setId: string,
   lang = 'en',
   signal?: AbortSignal,
-): Promise<TCGCard[]> => {
+): Promise<TCGCard[]> {
   const tcgLang = resolveTcgLang(lang);
   // v6 invalidates earlier partial-set caches so public checklist pages can
   // safely hydrate the complete set response before becoming indexable.
-  const cacheKey = `tcg-set-cards-v6-${setId}-${tcgLang}`;
+  const cacheKey = getTcgSetCardsCacheKey(setId, tcgLang);
+  if (tcgSetCardsFailureCache.get(cacheKey)) {
+    throwIfAborted(signal);
+    return [];
+  }
   const memoryCached = tcgSetCardsMemoryCache.get(cacheKey);
   if (memoryCached?.length) {
     throwIfAborted(signal);
@@ -1170,11 +1257,26 @@ export const getCardsBySet = async (
       if (fallbackCards.length > 0) return fallbackCards;
     }
 
-    console.error(`[TCG API] Error fetching cards for set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
+    if (!isNotFoundResponse(error)) {
+      console.error(`[TCG API] Error fetching cards for set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
+    }
     const staleCards = await getCachedData<TCGCard[]>(cacheKey, true);
     if (staleCards?.length) tcgSetCardsMemoryCache.set(cacheKey, staleCards);
+    if (!staleCards?.length) tcgSetCardsFailureCache.set(cacheKey, true);
     return staleCards || [];
   }
+}
+
+export const getCardsBySet = async (
+  setId: string,
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCard[]> => {
+  if (signal) return getCardsBySetUncached(setId, lang, signal);
+
+  const requestKey = getTcgSetCardsCacheKey(setId, lang);
+  return dedupeTcgRequest(pendingTcgSetCardsRequests, requestKey, () =>
+    getCardsBySetUncached(setId, lang));
 };
 
 function isRawSetBrief(value: unknown): value is RawSet {
@@ -1674,9 +1776,9 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
 /**
  * Fetch set details by ID.
  */
-export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
+async function getSetByIdUncached(setId: string, lang = 'en'): Promise<TCGSet | null> {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-set-v10-${setId}-${tcgLang}`;
+  const cacheKey = getTcgSetCacheKey(setId, tcgLang);
   const memoryCached = tcgSetMemoryCache.get(cacheKey);
   if (memoryCached) return memoryCached;
 
@@ -1726,6 +1828,12 @@ export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | n
     console.error(`[TCG API] Error fetching set ${setId}:`, error instanceof Error ? error.name : 'UnknownError');
     throw error;
   }
+}
+
+export const getSetById = async (setId: string, lang = 'en'): Promise<TCGSet | null> => {
+  const requestKey = getTcgSetCacheKey(setId, lang);
+  return dedupeTcgRequest(pendingTcgSetRequests, requestKey, () =>
+    getSetByIdUncached(setId, lang));
 };
 
 /**

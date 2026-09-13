@@ -196,7 +196,7 @@ const securityHeaders = [
 // listed here.
 const publicPageCacheHeader = {
   key: 'Vercel-CDN-Cache-Control',
-  value: 'public, max-age=3600, stale-while-revalidate=86400',
+  value: 'public, s-maxage=3600, stale-while-revalidate=86400',
 };
 
 const publicPageCacheRoutes = [

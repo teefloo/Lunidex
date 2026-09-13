@@ -3,9 +3,11 @@ import { getNeonClient } from '@/lib/neon/server';
 import { getTCGCardCached } from '../../../../../lib/api/server-cache';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
+import { ipKey, rateLimit } from '@/lib/rate-limit';
 
 /** Minimum interval between two recorded snapshots for the same card. */
 const SNAPSHOT_MIN_INTERVAL_HOURS = 6;
+const PRICE_HISTORY_MAX_REQUESTS_PER_MINUTE = 60;
 
 interface TCGPlayerPriceTier {
   lowPrice?: number | null;
@@ -125,9 +127,20 @@ interface PriceHistoryRow {
   recorded_at: string;
 }
 
-export const runtime = 'edge';
+// This handler uses Axios and the Neon server client. The previous Edge
+// deployment produced Cloudflare "Illegal invocation" errors; Node.js is the
+// supported default for this dependency mix and has no meaningful latency
+// benefit to trade for that instability on a database-backed chart endpoint.
+export const runtime = 'nodejs';
 
 async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
+  if (!rateLimit(`tcg-price-history:${ipKey(request)}`, PRICE_HISTORY_MAX_REQUESTS_PER_MINUTE)) {
+    return NextResponse.json(
+      { error: 'Too many price history requests' },
+      { status: 429, headers: { 'Cache-Control': 'private, no-store' } },
+    );
+  }
+
   const { cardId } = await params;
 
   if (!isValidTcgCardId(cardId)) {

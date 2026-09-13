@@ -74,7 +74,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
               // eslint-disable-next-line @next/next/no-img-element -- satori requires a raw img element.
               <img src={imageUrl} alt={name} width={280} height={280} style={{ objectFit: 'contain' }} />
             ) : (
-              <div style={{ display: 'flex', fontFamily: 'Pixelify Sans', fontSize: '120px', color: OG_THEME.textDim }}>✦</div>
+              <div style={{ display: 'flex', fontFamily: 'Pixelify Sans', fontSize: '120px', color: OG_THEME.textDim }}>*</div>
             )}
           </div>
 
