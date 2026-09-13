@@ -14,6 +14,7 @@ import {
   filterAnniversary30Cards,
   mergeAnniversary30Cards,
 } from '@/lib/anniversary-30-cards';
+import { buildAnniversary30CardItemList } from '@/lib/anniversary-30-seo';
 
 describe('30th Celebration verified data', () => {
   it('uses the requested editorial snapshot and release date', () => {
@@ -75,5 +76,22 @@ describe('30th Celebration verified data', () => {
     expect(filterAnniversary30Cards(cards, 'illustration-rare')).toHaveLength(18);
     expect(filterAnniversary30Cards(cards, 'special-illustration-rare')).toHaveLength(10);
     expect(filterAnniversary30Cards(cards, 'futuristic-rare')).toHaveLength(2);
+  });
+
+  it('only emits structured card links for validated provider identities', () => {
+    const model = buildAnniversary30CardItemList({
+      pageUrl: 'https://lunidex.app/en/30e-anniversaire',
+      language: 'en',
+      name: '30th Celebration cards',
+      cards: [
+        { ...ANNIVERSARY_30_PIKACHU_CARDS[0], lunidexCardId: '30th-023' },
+        { ...ANNIVERSARY_30_PIKACHU_CARDS[1], lunidexCardId: 'invalid' },
+        ANNIVERSARY_30_PIKACHU_CARDS[2],
+      ],
+      getCardUrl: (id) => `https://lunidex.app/en/tcg/cards/${id}`,
+    });
+
+    expect(model.numberOfItems).toBe(1);
+    expect(model.itemListElement[0]?.item.url).toBe('https://lunidex.app/en/tcg/cards/30th-023');
   });
 });

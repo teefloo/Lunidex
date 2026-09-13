@@ -229,7 +229,7 @@ export default function Anniversary30Tracker({
         </button>
       </div>
 
-      {migrationText && (
+      {migration && migrationText && (
         <div className="mt-5 rounded-sm border border-primary/25 bg-primary/5 p-4" role="status" aria-live="polite">
           <p className="text-sm font-black uppercase tracking-[0.08em] text-primary">{labels.migrationTitle}</p>
           <p className="mt-2 text-sm leading-6 text-foreground/65">{migrationText}</p>
