@@ -108,6 +108,9 @@ function buildAnniversary30PageData(
 export const getAnniversary30PageData = cache(async (
   _language: Anniversary30Language,
 ): Promise<Anniversary30PageData> => {
+  // The provider catalogue is fetched in English so the stable card identity
+  // can be shared by the English and French page renders.
+  void _language;
   const manifest = getAnniversary30Manifest();
   let providerSet: TCGSet | undefined;
   let providerCards: TCGCard[] = [];
