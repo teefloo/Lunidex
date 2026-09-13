@@ -377,6 +377,31 @@ export function getAnniversary30Language(language: SupportedLanguage): Anniversa
   return isAnniversary30Language(language) ? language : 'en';
 }
 
+export type Anniversary30ReleaseState =
+  | { status: 'upcoming'; totalSeconds: number }
+  | { status: 'available'; totalSeconds: 0 };
+
+/**
+ * Calculate the release state from a UTC date-only boundary. A date-only
+ * boundary keeps the countdown deterministic across locales and avoids
+ * showing a negative timer after the release moment.
+ */
+export function getAnniversary30ReleaseState(
+  now: Date,
+  releaseDate: string = ANNIVERSARY_30_RELEASE_DATE,
+): Anniversary30ReleaseState {
+  const releaseTimestamp = Date.parse(`${releaseDate}T00:00:00.000Z`);
+  const nowTimestamp = now.getTime();
+  if (!Number.isFinite(releaseTimestamp) || !Number.isFinite(nowTimestamp) || nowTimestamp >= releaseTimestamp) {
+    return { status: 'available', totalSeconds: 0 };
+  }
+
+  return {
+    status: 'upcoming',
+    totalSeconds: Math.max(0, Math.ceil((releaseTimestamp - nowTimestamp) / 1000)),
+  };
+}
+
 export function createEmptyAnniversary30Progress(): Anniversary30Progress {
   return { version: 1, checkedSlotIds: [] };
 }

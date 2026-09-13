@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import type { TCGCard } from '@/types/tcg';
 import {
+  ANNIVERSARY_30_RELEASE_DATE,
   ANNIVERSARY_30_LAST_VERIFIED_DATE,
   ANNIVERSARY_30_PRODUCTS,
+  getAnniversary30ReleaseState,
 } from '@/lib/anniversary-30';
 import {
   ANNIVERSARY_30_CARD_MANIFEST,
@@ -16,6 +18,17 @@ import {
 describe('30th Celebration verified data', () => {
   it('uses the requested editorial snapshot and release date', () => {
     expect(ANNIVERSARY_30_LAST_VERIFIED_DATE).toBe('2026-09-12');
+    expect(ANNIVERSARY_30_RELEASE_DATE).toBe('2026-09-16');
+  });
+
+  it('keeps the countdown bounded before, at, and after release', () => {
+    const before = getAnniversary30ReleaseState(new Date('2026-09-15T23:59:59.000Z'));
+    expect(before.status).toBe('upcoming');
+    expect(before.totalSeconds).toBe(1);
+    expect(getAnniversary30ReleaseState(new Date('2026-09-16T00:00:00.000Z')))
+      .toEqual({ status: 'available', totalSeconds: 0 });
+    expect(getAnniversary30ReleaseState(new Date('2026-09-17T00:00:00.000Z')))
+      .toEqual({ status: 'available', totalSeconds: 0 });
   });
 
   it('contains the 30 real Pikachu cards in collector order', () => {
