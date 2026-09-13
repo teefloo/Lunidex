@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import type { TCGCard } from '@/types/tcg';
 import {
   ANNIVERSARY_30_LAST_VERIFIED_DATE,
   ANNIVERSARY_30_PRODUCTS,
@@ -8,6 +9,7 @@ import {
   ANNIVERSARY_30_CARD_MANIFEST,
   ANNIVERSARY_30_PIKACHU_CARDS,
   getAnniversary30Manifest,
+  mergeAnniversary30Cards,
 } from '@/lib/anniversary-30-cards';
 
 describe('30th Celebration verified data', () => {
@@ -35,5 +37,16 @@ describe('30th Celebration verified data', () => {
     expect(new Set(ANNIVERSARY_30_PRODUCTS.map((product) => product.id)).size)
       .toBe(ANNIVERSARY_30_PRODUCTS.length);
     expect(ANNIVERSARY_30_PRODUCTS).toHaveLength(14);
+  });
+
+  it('keeps the complete manifest when the provider returns a partial list', () => {
+    const result = mergeAnniversary30Cards(ANNIVERSARY_30_CARD_MANIFEST, [
+      { id: 'provider-023', localId: '023', name: 'Pikachu', image: '/provider.webp' } as TCGCard,
+    ]);
+
+    expect(result.filter((card) => card.scope === 'pikachu')).toHaveLength(30);
+    expect(result.find((card) => card.localId === '023')?.lunidexCardId).toBe('provider-023');
+    expect(result.find((card) => card.localId === '052')?.lunidexCardId).toBeUndefined();
+    expect(result.find((card) => card.localId === '023')?.imageStatus).toBe('available');
   });
 });
