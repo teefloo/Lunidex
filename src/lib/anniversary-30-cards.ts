@@ -394,6 +394,31 @@ export const ANNIVERSARY_30_CARD_SCOPES: readonly Anniversary30CardScope[] = [
   'promo',
 ];
 
+const ANNIVERSARY_30_FEATURE_CARD_NAMES = [
+  'Pikachu ex',
+  'Mew ex',
+  'Mewtwo ex',
+  'Lugia',
+  'Ho-Oh',
+] as const;
+
+export function getAnniversary30FeaturedCards(
+  cards: readonly Anniversary30Card[],
+): Anniversary30Card[] {
+  return ANNIVERSARY_30_FEATURE_CARD_NAMES.flatMap((name) => {
+    const card = cards.find((entry) => entry.scope === 'numbered-main' && entry.name === name);
+    return card ? [card] : [];
+  });
+}
+
+export function getAnniversary30FuturisticRareCards(
+  cards: readonly Anniversary30Card[],
+): Anniversary30Card[] {
+  return cards.filter(
+    (card) => card.scope === 'secret-rare' && canonicalRarity(card.rarity) === 'futuristicrare',
+  );
+}
+
 export function getAnniversary30Manifest(
   cards: readonly Anniversary30Card[] = ANNIVERSARY_30_CARD_MANIFEST,
 ): Anniversary30CardDataset {

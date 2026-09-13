@@ -19,11 +19,16 @@ import {
   ANNIVERSARY_30_PUBLICATION_DATE,
   ANNIVERSARY_30_RELEASE_DATE,
   ANNIVERSARY_30_SOURCES,
+  type Anniversary30Card,
   getAnniversary30Language,
   isAnniversary30Language,
 } from '@/lib/anniversary-30';
 import { getAnniversary30PageData } from '@/lib/anniversary-30-server';
 import { buildAnniversary30CardItemList } from '@/lib/anniversary-30-seo';
+import {
+  getAnniversary30FeaturedCards,
+  getAnniversary30FuturisticRareCards,
+} from '@/lib/anniversary-30-cards';
 import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
 import { serializeJsonLd } from '@/lib/json-ld';
 import {
@@ -41,6 +46,21 @@ export const revalidate = 3600;
 const FACT_KEYS = ['release', 'booster', 'pikachu', 'pikachu_ex', 'foil', 'classic'] as const;
 const FAQ_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 const PRODUCT_MONTHS = ['2026-09', '2026-10', '2026-11'] as const;
+const VALID_PROVIDER_CARD_ID = /^[a-z0-9][a-z0-9._:-]*-[a-z0-9][a-z0-9._:-]*$/i;
+
+function getAnniversary30CardLink(
+  card: Anniversary30Card,
+  language: 'en' | 'fr',
+): { href: string; internal: boolean } | null {
+  if (card.lunidexCardId && VALID_PROVIDER_CARD_ID.test(card.lunidexCardId)) {
+    return {
+      href: `${localeHref(`/tcg/cards/${encodeURIComponent(card.lunidexCardId)}`, language)}?tcgLang=${encodeURIComponent(language)}`,
+      internal: true,
+    };
+  }
+
+  return card.officialUrl ? { href: card.officialUrl, internal: false } : null;
+}
 
 async function getPageContext() {
   const requestedLanguage = await getServerLanguage();
@@ -114,6 +134,8 @@ export default async function Anniversary30Page() {
     throw new Error('Unable to create a valid 30th Celebration collection key.');
   }
 
+  const featuredCards = getAnniversary30FeaturedCards(pageData.cards);
+  const futuristicCards = getAnniversary30FuturisticRareCards(pageData.cards);
   const pageUrl = `${SITE_URL}${localizedPath}`;
   const facts = FACT_KEYS.map((key) => ({
     id: key,
@@ -316,6 +338,8 @@ export default async function Anniversary30Page() {
                 <li><Link href="#summary" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_summary')}</Link></li>
                 <li><Link href="#pikachu" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_pikachu')}</Link></li>
                 <li><Link href="#checklist" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_checklist')}</Link></li>
+                <li><Link href="#highlights" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_highlights')}</Link></li>
+                <li><Link href="#futuristic" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_futuristic')}</Link></li>
                 <li><Link href="#classic" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_classic')}</Link></li>
                 <li><Link href="#products" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_products')}</Link></li>
                 <li><Link href="#faq" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">{t('anniversary_30.toc_faq')}</Link></li>
@@ -432,6 +456,91 @@ export default async function Anniversary30Page() {
                 className="mt-6"
               />
             </section>
+
+            {featuredCards.length > 0 && (
+              <section id="highlights" className="mt-14 scroll-mt-28" aria-labelledby="anniversary-highlights-title">
+                <div className="max-w-3xl">
+                  <p className="page-eyebrow">{t('anniversary_30.highlights_eyebrow')}</p>
+                  <h2 id="anniversary-highlights-title" className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
+                    {t('anniversary_30.highlights_title')}
+                  </h2>
+                  <p className="mt-4 leading-8 text-foreground/70">{t('anniversary_30.highlights_body')}</p>
+                </div>
+                <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                  {featuredCards.map((card) => {
+                    const cardLink = getAnniversary30CardLink(card, language);
+                    const imageSource = card.imageUrl?.[language] ?? card.imageUrl?.en;
+                    return (
+                      <article key={card.id} className="section-frame flex min-w-0 flex-col overflow-hidden">
+                        <div className="relative aspect-[2.15/3] overflow-hidden bg-background/55">
+                          {imageSource ? (
+                            <Image
+                              src={imageSource}
+                              alt={`${card.name} — ${card.collectorNumber}`}
+                              fill
+                              unoptimized
+                              sizes="(min-width: 1024px) 18vw, (min-width: 640px) 42vw, 44vw"
+                              className="object-contain p-2"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center p-5 text-center">
+                              <span className="text-[10px] font-black uppercase leading-5 tracking-[0.12em] text-foreground/45">
+                                {card.imageStatus === 'not-published'
+                                  ? t('anniversary_30.checklist_image_not_published')
+                                  : t('anniversary_30.checklist_image_unavailable')}
+                              </span>
+                            </div>
+                          )}
+                          <span className="absolute left-2 top-2 rounded-sm border border-border/50 bg-background/85 px-1.5 py-1 text-[10px] font-black tabular-nums text-foreground/70">
+                            {card.collectorNumber}
+                          </span>
+                        </div>
+                        <div className="flex flex-1 flex-col p-4">
+                          <p className="text-[10px] font-black uppercase tracking-[0.08em] text-primary">{card.rarity}</p>
+                          <h3 className="mt-2 text-lg font-extrabold tracking-tight">{card.name}</h3>
+                          {card.illustrator && (
+                            <p className="mt-2 text-xs leading-5 text-foreground/55">
+                              {t('anniversary_30.checklist_illustrator')}: {card.illustrator}
+                            </p>
+                          )}
+                          {cardLink && (
+                            cardLink.internal ? (
+                              <Link href={cardLink.href} className="mt-auto inline-flex min-h-11 items-center pt-4 text-xs font-black uppercase tracking-[0.08em] text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
+                                {t('anniversary_30.checklist_view_card')}
+                              </Link>
+                            ) : (
+                              <a href={cardLink.href} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex min-h-11 items-center pt-4 text-xs font-black uppercase tracking-[0.08em] text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
+                                {t('anniversary_30.checklist_official_source')}
+                              </a>
+                            )
+                          )}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {futuristicCards.length > 0 && (
+              <section id="futuristic" className="mt-14 scroll-mt-28 section-frame p-6 md:p-8" aria-labelledby="anniversary-futuristic-title">
+                <div className="max-w-3xl">
+                  <p className="page-eyebrow">{t('anniversary_30.futuristic_eyebrow')}</p>
+                  <h2 id="anniversary-futuristic-title" className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
+                    {t('anniversary_30.futuristic_title')}
+                  </h2>
+                  <p className="mt-4 leading-8 text-foreground/70">{t('anniversary_30.futuristic_body')}</p>
+                </div>
+                <Anniversary30CardGrid
+                  cards={futuristicCards}
+                  collectionKey={collectionKey}
+                  language={language}
+                  labels={cardLabels}
+                  filters={['all']}
+                  className="mt-7"
+                />
+              </section>
+            )}
 
             <section id="classic" className="mt-14 scroll-mt-28" aria-labelledby="anniversary-classic-title">
               <div className="max-w-3xl">

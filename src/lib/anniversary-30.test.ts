@@ -11,6 +11,8 @@ import {
   ANNIVERSARY_30_CARD_MANIFEST,
   ANNIVERSARY_30_PIKACHU_CARDS,
   getAnniversary30Manifest,
+  getAnniversary30FeaturedCards,
+  getAnniversary30FuturisticRareCards,
   filterAnniversary30Cards,
   mergeAnniversary30Cards,
 } from '@/lib/anniversary-30-cards';
@@ -76,6 +78,27 @@ describe('30th Celebration verified data', () => {
     expect(filterAnniversary30Cards(cards, 'illustration-rare')).toHaveLength(18);
     expect(filterAnniversary30Cards(cards, 'special-illustration-rare')).toHaveLength(10);
     expect(filterAnniversary30Cards(cards, 'futuristic-rare')).toHaveLength(2);
+  });
+
+  it('selects stable highlight cards without duplicating secret variants', () => {
+    const featured = getAnniversary30FeaturedCards(getAnniversary30Manifest().cards);
+
+    expect(featured.map((card) => card.name)).toEqual([
+      'Pikachu ex',
+      'Mew ex',
+      'Mewtwo ex',
+      'Lugia',
+      'Ho-Oh',
+    ]);
+    expect(featured.every((card) => card.scope === 'numbered-main')).toBe(true);
+  });
+
+  it('keeps the two Futuristic Rare cards as a separate family', () => {
+    const futuristic = getAnniversary30FuturisticRareCards(getAnniversary30Manifest().cards);
+
+    expect(futuristic).toHaveLength(2);
+    expect(futuristic.map((card) => card.name).sort()).toEqual(['Mew ex', 'Mewtwo ex']);
+    expect(futuristic.every((card) => card.scope === 'secret-rare')).toBe(true);
   });
 
   it('only emits structured card links for validated provider identities', () => {
