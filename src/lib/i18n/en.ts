@@ -939,6 +939,9 @@ export default {
         matrix_title: 'Feature comparison matrix',
         matrix_criterion: 'Criterion',
         matrix_note: 'Feature statements were checked against the linked public sources on the date shown above. “Not stated” means the checked source did not establish the feature, not that it can never exist.',
+        related_title: 'Continue with related Lunidex guides',
+        related_collection_guide: 'Read the Pokémon card collection tracker guide',
+        related_tcg_guide: 'Read the Pokémon TCG workspace guide',
       },
       guide: {
         eyebrow: 'Usage guide',

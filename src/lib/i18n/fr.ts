@@ -939,6 +939,9 @@ export default {
         matrix_title: "Matrice factuelle des fonctionnalités",
         matrix_criterion: "Critère",
         matrix_note: "Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+        related_title: "Continuer avec les guides Lunidex associés",
+        related_collection_guide: "Lire le guide du suivi de collection de cartes Pokémon",
+        related_tcg_guide: "Lire le guide de l’espace Pokémon TCG",
       },
       guide: {
         eyebrow: "Guide d’utilisation",

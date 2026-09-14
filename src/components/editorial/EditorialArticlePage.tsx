@@ -38,6 +38,10 @@ export default function EditorialArticlePage({
   const text = (field: string) => t(`${key}.${field}`);
   const competitorName = text('name');
   const comparisonRows = article.comparisonRows ?? [];
+  const relatedLinkLabels: Record<string, string> = {
+    '/guides/pokemon-card-collection-tracker': t('editorial.article.related_collection_guide'),
+    '/guides/tcg-workspace-guide': t('editorial.article.related_tcg_guide'),
+  };
   const pageUrl = `${SITE_URL}${canonicalPath}`;
   const faqs = [
     { question: text('faq_q1'), answer: text('faq_a1') },
@@ -205,6 +209,23 @@ export default function EditorialArticlePage({
                 </Link>
               </div>
             </nav>
+
+            {article.relatedPaths?.length ? (
+              <nav className="mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
+                <p className="page-eyebrow">{t('editorial.article.related_title')}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {article.relatedPaths.map((path) => {
+                    const label = relatedLinkLabels[path];
+                    if (!label) return null;
+                    return (
+                      <Link key={path} href={localeHref(path, language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </nav>
+            ) : null}
           </article>
         </main>
       </div>

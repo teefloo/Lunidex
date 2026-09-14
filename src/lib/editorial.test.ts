@@ -44,4 +44,14 @@ describe('editorial SEO registry', () => {
     expect(isEditorialIndexable('fr')).toBe(true);
     expect(isEditorialIndexable('de')).toBe(false);
   });
+
+  it('connects TCG comparisons to the collection intent hub', () => {
+    for (const slug of ['pokecardex', 'zebradex', 'collectr', 'pokellector', 'cardzia']) {
+      const article = getCompetitorArticle(slug);
+      expect(article?.relatedPaths).toEqual([
+        '/guides/pokemon-card-collection-tracker',
+        '/guides/tcg-workspace-guide',
+      ]);
+    }
+  });
 });

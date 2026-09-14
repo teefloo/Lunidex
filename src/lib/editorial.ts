@@ -37,6 +37,7 @@ export type CompetitorArticleDefinition = {
   sources: readonly EditorialSource[];
   productPath: string;
   comparisonRows?: readonly ComparisonRowKey[];
+  relatedPaths?: readonly string[];
 };
 
 export type FeatureGuideDefinition = {
@@ -98,6 +99,7 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     ],
     productPath: '/tcg',
     comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
   {
     slug: 'zebradex',
@@ -105,6 +107,7 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     sources: [{ label: 'ZebraDex official site', url: 'https://zebradex.fr/index.php' }],
     productPath: '/tcg',
     comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
   {
     slug: 'collectr',
@@ -112,6 +115,7 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     sources: [{ label: 'Collectr official site', url: 'https://www.getcollectr.com/' }],
     productPath: '/tcg',
     comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
   {
     slug: 'pokellector',
@@ -119,6 +123,7 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     sources: [{ label: 'Pokéllector official site', url: 'https://www.pokellector.com/' }],
     productPath: '/tcg',
     comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
   {
     slug: 'cardzia',
@@ -129,6 +134,7 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     ],
     productPath: '/tcg',
     comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
 ];
 
