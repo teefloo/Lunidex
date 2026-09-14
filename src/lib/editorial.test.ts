@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   COMPETITOR_ARTICLES,
   COMPARISON_ROW_KEYS,
+  FEATURE_GUIDES,
   buildEditorialLanguages,
   getCompetitorArticle,
   getEditorialDates,
@@ -103,5 +104,19 @@ describe('editorial SEO registry', () => {
     }
 
     expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-14');
+  });
+
+  it('dates the generic intent guides and links the TCG guide to the collection hub', () => {
+    for (const path of [
+      '/guides/pokemon-reference-guide',
+      '/guides/team-tools-guide',
+      '/guides/tcg-workspace-guide',
+    ]) {
+      expect(getEditorialDates(path).updatedAt).toBe('2026-09-14');
+    }
+
+    expect(FEATURE_GUIDES.find((guide) => guide.slug === 'tcg-workspace-guide')?.relatedPaths).toEqual([
+      '/guides/pokemon-card-collection-tracker',
+    ]);
   });
 });

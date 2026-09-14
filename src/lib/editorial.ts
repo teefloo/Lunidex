@@ -44,6 +44,7 @@ export type FeatureGuideDefinition = {
   slug: string;
   path: string;
   productPaths: string[];
+  relatedPaths?: readonly string[];
 };
 
 /**
@@ -153,6 +154,7 @@ export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
     slug: 'tcg-workspace-guide',
     path: '/guides/tcg-workspace-guide',
     productPaths: ['/tcg', '/tcg/start', '/tcg/collection', '/tcg/wishlist', '/tcg/deck-builder'],
+    relatedPaths: ['/guides/pokemon-card-collection-tracker'],
   },
   {
     slug: 'progress-account-guide',

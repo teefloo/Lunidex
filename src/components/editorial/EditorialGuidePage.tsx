@@ -37,6 +37,10 @@ export default function EditorialGuidePage({
   const guideTranslationKey = guide.slug.replace(/-guide$/, '').replaceAll('-', '_');
   const key = `editorial.guides.${guideTranslationKey}`;
   const text = (field: string) => t(`${key}.${field}`);
+  const relatedLinkLabels: Record<string, string> = {
+    '/guides/pokemon-card-collection-tracker': t('editorial.article.related_collection_guide'),
+    '/guides/tcg-workspace-guide': t('editorial.article.related_tcg_guide'),
+  };
   const pageUrl = `${SITE_URL}${canonicalPath}`;
   const faqs = [
     { question: text('faq_q1'), answer: text('faq_a1') },
@@ -172,6 +176,19 @@ export default function EditorialGuidePage({
                 </Link>
               </div>
             </nav>
+
+            {guide.relatedPaths?.length ? (
+              <nav className="mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
+                <p className="page-eyebrow">{t('editorial.article.related_title')}</p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {guide.relatedPaths.map((path) => (
+                    <Link key={path} href={localeHref(path, language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                      {relatedLinkLabels[path] ?? path}
+                    </Link>
+                  ))}
+                </div>
+              </nav>
+            ) : null}
           </article>
         </main>
       </div>
