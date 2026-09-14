@@ -8,6 +8,46 @@ import {
   getEditorialDates,
   isEditorialIndexable,
 } from './editorial';
+import de from './i18n/de';
+import en from './i18n/en';
+import es from './i18n/es';
+import fr from './i18n/fr';
+import itLocale from './i18n/it';
+import ja from './i18n/ja';
+import ko from './i18n/ko';
+import zh from './i18n/zh';
+
+const localizedCollectionGuides: Array<Record<string, string>> = [
+  en.translation.collection_guide,
+  fr.translation.collection_guide,
+  es.translation.collection_guide,
+  de.translation.collection_guide,
+  itLocale.translation.collection_guide,
+  ja.translation.collection_guide,
+  ko.translation.collection_guide,
+  zh.translation.collection_guide,
+];
+
+const collectionGuideMatrixKeys = [
+  'matrix_title',
+  'matrix_intro',
+  'matrix_criterion',
+  'matrix_lunidex',
+  'matrix_catalog_value',
+  'matrix_ownership_value',
+  'matrix_progress_value',
+  'matrix_sync_value',
+  'matrix_scanner_label',
+  'matrix_scanner_value',
+  'matrix_market_label',
+  'matrix_market_value',
+  'matrix_platform_label',
+  'matrix_platform_value',
+  'cta_workspace',
+  'cta_collectr',
+  'cta_pokellector',
+  'cta_cardzia',
+] as const;
 
 describe('editorial SEO registry', () => {
   it('registers the new source-backed competitor pages', () => {
@@ -53,5 +93,15 @@ describe('editorial SEO registry', () => {
         '/guides/tcg-workspace-guide',
       ]);
     }
+  });
+
+  it('keeps the collection matrix complete in every supported locale', () => {
+    for (const guide of localizedCollectionGuides) {
+      for (const key of collectionGuideMatrixKeys) {
+        expect(guide[key]).toBeTruthy();
+      }
+    }
+
+    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-14');
   });
 });

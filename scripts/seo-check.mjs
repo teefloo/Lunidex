@@ -74,7 +74,7 @@ check(!/(?:1025|1,025|1 025|1\.025)/.test(localeSource), 'Fixed Pokémon counts 
 check(localeSource.includes('team_description:') && localeSource.includes('collection_guide:'), 'Team and collection guide metadata keys are missing');
 check(localeSources[0].includes("team_description: 'Build up to six Pokémon") || localeSources[0].includes('team_description: \'Build up to six Pokémon'), 'Team metadata must target immediate team use');
 check(localeSources[0].includes("page_description: 'Browse the Pokémon Trading Card Game catalog."), 'TCG metadata must target the public catalog');
-check(localeSources[0].includes("meta_description: 'Learn what to look for in a Pokémon card collection tracker"), 'Collection guide metadata must target collection organization');
+check(localeSources[0].includes("meta_description: 'Learn how to choose a Pokémon card collection app and tracker"), 'Collection guide metadata must target collection organization');
 const teamDescription = localeSources[0].match(/team_description:\s*'([^']+)'/)?.[1];
 const collectionDescription = localeSources[0].match(/collection_guide:\s*\{[\s\S]*?meta_description:\s*'([^']+)'/)?.[1];
 check(Boolean(teamDescription && collectionDescription && teamDescription !== collectionDescription), 'Team and collection guide snippets must remain distinct');

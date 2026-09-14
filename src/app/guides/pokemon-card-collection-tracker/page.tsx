@@ -91,6 +91,16 @@ export default async function PokemonCardCollectionTrackerGuide() {
     },
   ];
 
+  const matrixRows = [
+    { label: t('collection_guide.criteria_catalog_title'), value: t('collection_guide.matrix_catalog_value') },
+    { label: t('collection_guide.criteria_ownership_title'), value: t('collection_guide.matrix_ownership_value') },
+    { label: t('collection_guide.criteria_sets_title'), value: t('collection_guide.matrix_progress_value') },
+    { label: t('collection_guide.criteria_sync_title'), value: t('collection_guide.matrix_sync_value') },
+    { label: t('collection_guide.matrix_scanner_label'), value: t('collection_guide.matrix_scanner_value') },
+    { label: t('collection_guide.matrix_market_label'), value: t('collection_guide.matrix_market_value') },
+    { label: t('collection_guide.matrix_platform_label'), value: t('collection_guide.matrix_platform_value') },
+  ];
+
   const faqs = [
     { question: t('collection_guide.faq_q1'), answer: t('collection_guide.faq_a1') },
     { question: t('collection_guide.faq_q2'), answer: t('collection_guide.faq_a2') },
@@ -112,7 +122,7 @@ export default async function PokemonCardCollectionTrackerGuide() {
       datePublished: PUBLISHED_AT,
       dateModified: LAST_UPDATED,
       about: 'Pokémon TCG collection tracking',
-      keywords: 'Pokémon card collection tracker, Pokémon TCG collection app, organize Pokémon cards, card collection guide',
+      keywords: 'Pokémon card collection tracker, Pokémon card collection app, free Pokémon card tracker, organize Pokémon cards, card collection guide',
     }),
     articleSection: t('collection_guide.eyebrow'),
     citation: [
@@ -203,6 +213,32 @@ export default async function PokemonCardCollectionTrackerGuide() {
               </div>
             </section>
 
+            <section className="mx-auto mt-12 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-matrix-title">
+              <h2 id="collection-guide-matrix-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.matrix_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('collection_guide.matrix_intro')}</p>
+              <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+                <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+                  <caption className="sr-only">{t('collection_guide.matrix_title')}</caption>
+                  <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">
+                    <tr>
+                      <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('collection_guide.matrix_criterion')}</th>
+                      <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('collection_guide.matrix_lunidex')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matrixRows.map((row) => (
+                      <tr key={row.label} className="align-top even:bg-card/25">
+                        <th scope="row" className="border-b border-border/40 px-4 py-3 font-bold text-foreground/75">{row.label}</th>
+                        <td className="border-b border-border/40 px-4 py-3 leading-6 text-foreground/70">{row.value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
             <section className="mx-auto mt-12 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-limitations-title">
               <h2 id="collection-guide-limitations-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('collection_guide.limitations_title')}
@@ -271,6 +307,18 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 </Link>
                 <Link href={localeHref('/compare/lunidex-vs-pokecardex-zebradex', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
                   {t('collection_guide.cta_comparison')}
+                </Link>
+                <Link href={localeHref('/guides/tcg-workspace-guide', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_workspace')}
+                </Link>
+                <Link href={localeHref('/compare/lunidex-vs-collectr', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_collectr')}
+                </Link>
+                <Link href={localeHref('/compare/lunidex-vs-pokellector', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_pokellector')}
+                </Link>
+                <Link href={localeHref('/compare/lunidex-vs-cardzia', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('collection_guide.cta_cardzia')}
                 </Link>
                 <Link href={localeHref('/about', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
                   {t('collection_guide.cta_about')}
