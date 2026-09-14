@@ -17,6 +17,10 @@ const editorialSource = await readFile(join(projectRoot, 'src/lib/editorial.ts')
 const localeFiles = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'];
 const localeSources = await Promise.all(localeFiles.map((locale) => readFile(join(projectRoot, `src/lib/i18n/${locale}.ts`), 'utf8')));
 const localeSource = localeSources.join('\n');
+const llmsSource = await readFile(join(projectRoot, 'public/llms.txt'), 'utf8');
+const llmsFullSource = await readFile(join(projectRoot, 'public/llms-full.txt'), 'utf8');
+const aiSource = await readFile(join(projectRoot, 'public/ai.txt'), 'utf8');
+const aiAssets = { 'llms.txt': llmsSource, 'llms-full.txt': llmsFullSource, 'ai.txt': aiSource };
 
 const failures = [];
 const check = (condition, message) => {
@@ -52,6 +56,41 @@ check(pokemonPageSource.includes('alternates:') && pokemonPageSource.includes('s
 check(editorialSource.includes('buildEditorialLanguages'), 'Editorial routes must expose the limited translated hreflang map');
 check(editorialSource.includes("'platform',\n  'scope',\n  'scanner',\n  'prices',\n  'offline',\n  'accountSync',\n  'cost'"), 'Editorial comparison matrix keys are incomplete');
 check(editorialSource.includes('sources: readonly EditorialSource[]'), 'Editorial articles must expose a typed source list');
+check(editorialSource.includes("slug: 'pokellector'") && editorialSource.includes('https://www.pokellector.com/'), 'Editorial registry omits the Pokéllector source-backed entry');
+check(editorialSource.includes("slug: 'cardzia'") && editorialSource.includes('https://cardzia.fr/') && editorialSource.includes('play.google.com/store/apps/details?id=fr.cardzia.app'), 'Editorial registry omits the Cardzia source-backed entry');
+
+for (const [assetName, assetSource] of Object.entries(aiAssets)) {
+  check(assetSource.includes('2026-09-14'), `${assetName} has an outdated review date`);
+}
+
+const genericIntentPaths = [
+  '/en/guides/pokemon-card-collection-tracker',
+  '/en/guides/tcg-workspace-guide',
+  '/en/guides/pokemon-reference-guide',
+  '/en/guides/team-tools-guide',
+  '/en/guides/team-builder-guide',
+  '/en/compare/lunidex-vs-collectr',
+  '/en/compare/lunidex-vs-pokecardex',
+  '/en/compare/lunidex-vs-zebradex',
+  '/en/compare/lunidex-vs-pokellector',
+  '/en/compare/lunidex-vs-cardzia',
+];
+for (const path of genericIntentPaths) {
+  check(llmsSource.includes(path), `AI asset omits the canonical intent route: ${path}`);
+}
+
+const forbiddenAiPatterns = [
+  /(?:most complete|ultimate)\s+(?:online\s+)?pok[eé]dex/i,
+  /\bbest\s+pokemon\b/i,
+  /\b(?:1025|1,025|1 025|1\.025)\b/,
+  /guaranteed\s+(?:market|collection|price|valuation)/i,
+];
+for (const [assetName, assetSource] of Object.entries(aiAssets)) {
+  for (const pattern of forbiddenAiPatterns) {
+    check(!pattern.test(assetSource), `${assetName} contains a forbidden unsupported claim: ${pattern}`);
+  }
+  check(!/\bLunidex\b[^\n]{0,120}\b(?:App Store|Google Play)\b/i.test(assetSource), `${assetName} claims current Lunidex store availability`);
+}
 
 const forbiddenClaims = [
   'most complete Pokédex',
