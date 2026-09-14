@@ -187,6 +187,7 @@ export default function EditorialArticlePage({
                 {t('editorial.article.sources_title')}
               </h2>
               <p className="mt-4 text-sm leading-7 text-foreground/70">{t('editorial.article.checked', { date: formattedDate })}</p>
+              <p className="mt-3 text-sm leading-7 text-foreground/60">{t('editorial.article.sources_note')}</p>
               <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
                 <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
                   {t('editorial.article.source_lunidex')}

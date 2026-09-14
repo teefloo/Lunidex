@@ -50,6 +50,24 @@ const collectionGuideMatrixKeys = [
   'cta_cardzia',
 ] as const;
 
+const competitorRequiredFields = [
+  'name',
+  'nav_label',
+  'heading',
+  'meta_title',
+  'meta_description',
+  'intro',
+  'answer',
+  'scope',
+  'shared',
+  'difference',
+  'fit',
+  'faq_q1',
+  'faq_a1',
+  'faq_q2',
+  'faq_a2',
+] as const;
+
 describe('editorial SEO registry', () => {
   it('registers the new source-backed competitor pages', () => {
     for (const slug of ['pokellector', 'cardzia']) {
@@ -118,5 +136,43 @@ describe('editorial SEO registry', () => {
     expect(FEATURE_GUIDES.find((guide) => guide.slug === 'tcg-workspace-guide')?.relatedPaths).toEqual([
       '/guides/pokemon-card-collection-tracker',
     ]);
+  });
+
+  it('keeps English and French competitor copy complete', () => {
+    const localeCompetitors = [
+      en.translation.editorial.competitors,
+      fr.translation.editorial.competitors,
+    ] as unknown as Array<Record<string, Record<string, unknown>>>;
+
+    for (const competitors of localeCompetitors) {
+      for (const article of COMPETITOR_ARTICLES) {
+        const copy = competitors[article.slug.replaceAll('-', '_')];
+        expect(copy).toBeDefined();
+
+        for (const field of competitorRequiredFields) {
+          expect(copy?.[field]).toEqual(expect.any(String));
+          expect(String(copy?.[field] ?? '').trim()).not.toBe('');
+        }
+
+        if (article.comparisonRows) {
+          const matrix = copy?.matrix as Record<string, Record<string, unknown>> | undefined;
+          expect(matrix).toBeDefined();
+          for (const row of COMPARISON_ROW_KEYS) {
+            expect(matrix?.[row]?.label).toEqual(expect.any(String));
+            expect(matrix?.[row]?.lunidex).toEqual(expect.any(String));
+            expect(matrix?.[row]?.competitor).toEqual(expect.any(String));
+          }
+        }
+      }
+    }
+
+    for (const locale of localeCompetitors) {
+      for (const slug of ['pokellector', 'cardzia']) {
+        expect(locale[slug]?.faq_q1).toEqual(expect.any(String));
+        expect(locale[slug]?.faq_a1).toEqual(expect.any(String));
+        expect(locale[slug]?.faq_q2).toEqual(expect.any(String));
+        expect(locale[slug]?.faq_a2).toEqual(expect.any(String));
+      }
+    }
   });
 });
