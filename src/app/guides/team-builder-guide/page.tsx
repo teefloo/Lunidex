@@ -132,7 +132,7 @@ export default async function TeamBuilderGuide() {
               <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-foreground/70 md:text-lg">
                 {t('team_guide.intro')}
               </p>
-              <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-foreground/45">
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-foreground/60">
                 <time dateTime={PUBLISHED_AT}>{t('blog.published', { date: formattedPublishedDate })}</time>
                 <span aria-hidden="true"> · </span>
                 <time dateTime={LAST_UPDATED}>{t('team_guide.updated', { date: formattedDate })}</time>
