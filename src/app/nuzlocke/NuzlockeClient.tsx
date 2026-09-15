@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Plus, Trash2, Skull, Heart, Package, Trophy, Search } from 'lucide-react';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { formatName, cn } from '@/lib/utils';
 import type { NuzlockeEncounterStatus } from '@/types/nuzlocke';
 
@@ -39,6 +40,7 @@ export default function NuzlockeClient() {
   const [routeName, setRouteName] = useState('');
   const [pokemonSearch, setPokemonSearch] = useState('');
   const [selectedPokemon, setSelectedPokemon] = useState<{ id: number; name: string; displayName: string } | null>(null);
+  const localeHref = useLocaleHref();
 
   const selectedRun = runs.find((r) => r.id === selectedRunId) ?? null;
 
@@ -105,10 +107,48 @@ export default function NuzlockeClient() {
       <main className="page-shell pb-20 pt-8">
         <PageHeader
           title={t('nuzlocke.title', { defaultValue: 'Nuzlocke Tracker' })}
-          subtitle={t('nuzlocke.subtitle', { defaultValue: 'Track your Nuzlocke run: one catch per route, permadeath on faint' })}
+          subtitle={t('nuzlocke_guide.intro', { defaultValue: 'Track runs, encounters, one catch per route, and Pokémon statuses.' })}
           eyebrow={t('nuzlocke.eyebrow', { defaultValue: 'Challenge Mode' })}
           icon={Trophy}
         />
+
+        <section
+          className="mx-auto mb-8 max-w-4xl rounded-sm border border-primary/20 bg-primary/5 p-5 md:p-6"
+          aria-labelledby="nuzlocke-tracker-overview-title"
+        >
+          <h2 id="nuzlocke-tracker-overview-title" className="text-xl font-black tracking-tight md:text-2xl">
+            {t('nuzlocke_guide.answer_title')}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/75 md:text-base">
+            {t('nuzlocke_guide.answer_body')}
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/65">
+            {t('nuzlocke_guide.how_intro')}
+          </p>
+          <Link
+            href={localeHref('/guides/nuzlocke-guide')}
+            className="mt-4 inline-flex font-bold text-primary underline-offset-4 hover:underline"
+          >
+            {t('nuzlocke_guide.nav_label')}
+            <span aria-hidden="true" className="ml-1">↗</span>
+          </Link>
+          <nav className="mt-6 border-t border-primary/15 pt-4" aria-label={t('team_guide.cta_title')}>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground/45">
+              {t('team_guide.cta_title')}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary">
+              <Link href={localeHref('/pokedex')} className="underline-offset-4 hover:underline">
+                {t('pokedex.title')}
+              </Link>
+              <Link href={localeHref('/team')} className="underline-offset-4 hover:underline">
+                {t('team.title')}
+              </Link>
+              <Link href={localeHref('/tcg')} className="underline-offset-4 hover:underline">
+                {t('tcg.page_heading')}
+              </Link>
+            </div>
+          </nav>
+        </section>
 
         <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="page-surface p-4 space-y-4 xl:sticky xl:top-24 xl:h-fit">

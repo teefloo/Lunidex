@@ -281,6 +281,28 @@ export default function TeamPage() {
             {t('team_guide.nav_label')}
             <span aria-hidden="true" className="ml-1">↗</span>
           </Link>
+          <nav className="mt-6 border-t border-primary/15 pt-4" aria-label={t('team_guide.cta_title')}>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground/45">
+              {t('team_guide.cta_title')}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary">
+              <Link href={localeHref('/pokedex')} className="underline-offset-4 hover:underline">
+                {t('pokedex.title')}
+              </Link>
+              <Link href={localeHref('/types')} className="underline-offset-4 hover:underline">
+                {t('types_page.type_chart')}
+              </Link>
+              <Link href={localeHref('/ev-iv')} className="underline-offset-4 hover:underline">
+                {t('ev_iv.title')}
+              </Link>
+              <Link href={localeHref('/nuzlocke')} className="underline-offset-4 hover:underline">
+                {t('nuzlocke.title')}
+              </Link>
+              <Link href={localeHref('/tcg')} className="underline-offset-4 hover:underline">
+                {t('tcg.page_heading')}
+              </Link>
+            </div>
+          </nav>
         </section>
 
         <div className="grid lg:grid-cols-12 gap-8">

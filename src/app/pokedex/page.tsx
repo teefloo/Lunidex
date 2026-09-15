@@ -10,7 +10,7 @@ import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/se
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { DEFAULT_OG_IMAGE, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
+import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 
@@ -89,12 +89,19 @@ export default async function PokedexPage() {
     path: `/${lang}/pokedex`,
     name: pokedexTitle,
     description: t('pokedex.meta_description'),
+    about: pokedexTitle,
+    keywords: t('pokedex.meta_title'),
   });
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
+    { name: pokedexTitle, path: '/pokedex' },
+  ], lang);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <script id="pokedex-item-list-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(itemListJsonLd) }} />
       <script id="pokedex-webpage-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(webPageJsonLd) }} />
+      <script id="pokedex-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <div className="app-page pokedex-redesign">
         <Header />
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
@@ -123,6 +130,11 @@ export default async function PokedexPage() {
                 <Link href={localeHref('/moves', lang)} className="underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
                 <Link href={localeHref('/abilities', lang)} className="underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>
                 <Link href={localeHref('/items', lang)} className="underline-offset-4 hover:underline">{t('list.items', { defaultValue: 'Items' })}</Link>
+              </nav>
+              <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('team_guide.cta_title')}>
+                <Link href={localeHref('/team', lang)} className="underline-offset-4 hover:underline">{t('team.title')}</Link>
+                <Link href={localeHref('/nuzlocke', lang)} className="underline-offset-4 hover:underline">{t('nuzlocke.title')}</Link>
+                <Link href={localeHref('/tcg', lang)} className="underline-offset-4 hover:underline">{t('tcg.page_heading')}</Link>
               </nav>
             </div>
           </section>

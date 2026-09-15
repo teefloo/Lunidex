@@ -60,10 +60,13 @@ check(editorialSource.includes("slug: 'pokellector'") && editorialSource.include
 check(editorialSource.includes("slug: 'cardzia'") && editorialSource.includes('https://cardzia.fr/') && editorialSource.includes('play.google.com/store/apps/details?id=fr.cardzia.app'), 'Editorial registry omits the Cardzia source-backed entry');
 
 for (const [assetName, assetSource] of Object.entries(aiAssets)) {
-  check(assetSource.includes('2026-09-14'), `${assetName} has an outdated review date`);
+  check(assetSource.includes('2026-09-15'), `${assetName} has an outdated review date`);
 }
 
 const genericIntentPaths = [
+  '/en/pokedex',
+  '/en/team',
+  '/en/nuzlocke',
   '/en/guides/pokemon-card-collection-tracker',
   '/en/guides/tcg-workspace-guide',
   '/en/guides/pokemon-reference-guide',

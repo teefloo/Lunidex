@@ -121,7 +121,7 @@ describe('editorial SEO registry', () => {
       }
     }
 
-    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-14');
+    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-15');
   });
 
   it('dates the generic intent guides and links the TCG guide to the collection hub', () => {

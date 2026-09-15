@@ -44,8 +44,8 @@ export default async function TeamLayout({
   const lang = await getServerLanguage();
   const t = await getServerT();
   const breadcrumb = buildBreadcrumbJsonLd([
-    { name: 'Lunidex', path: '/' },
-    { name: 'Team Builder', path: '/team' },
+    { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
+    { name: t('team.title'), path: '/team' },
   ], lang);
   return (
     <>

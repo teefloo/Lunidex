@@ -53,7 +53,7 @@ export type FeatureGuideDefinition = {
  * apart when an article is updated.
  */
 export const EDITORIAL_ARTICLE_DATES = {
-  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-14' },
+  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-15' },
   '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-09-14' },
   '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-24' },
   '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-24' },

@@ -305,6 +305,12 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 <Link href={localeHref('/tcg', language)} className="glass-btn glass-btn-active touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
                   {t('collection_guide.cta_catalog')}
                 </Link>
+                <Link href={localeHref('/pokedex', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('pokedex.title')}
+                </Link>
+                <Link href={localeHref('/team', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                  {t('team.title')}
+                </Link>
                 <Link href={localeHref('/compare/lunidex-vs-pokecardex-zebradex', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
                   {t('collection_guide.cta_comparison')}
                 </Link>
