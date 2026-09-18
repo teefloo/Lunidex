@@ -31,6 +31,7 @@ const EVENT_DEDUPLICATION_WINDOW_MS = 750;
 let initialized = false;
 let featuresStarted = false;
 let lastIdentifiedUserId: string | null = null;
+let pendingConsent: ProductConsent | null = null;
 const recentEvents = new Map<string, number>();
 
 function isConfigured(): boolean {
@@ -178,11 +179,14 @@ export function initializePostHog(): void {
   });
 
   initialized = true;
+  if (pendingConsent) {
+    const consent = pendingConsent;
+    pendingConsent = null;
+    applyPostHogConsent(consent);
+  }
 }
 
-export function syncPostHogConsent(consent: ProductConsent): void {
-  if (!initialized) return;
-
+function applyPostHogConsent(consent: ProductConsent): void {
   if (consent.productMeasurement === 'granted') {
     if (!posthog.has_opted_in_capturing()) {
       posthog.opt_in_capturing({ captureEventName: false });
@@ -200,6 +204,14 @@ export function syncPostHogConsent(consent: ProductConsent): void {
     posthog.opt_out_capturing();
   }
   lastIdentifiedUserId = null;
+}
+
+export function syncPostHogConsent(consent: ProductConsent): void {
+  pendingConsent = consent;
+  if (!initialized) return;
+
+  pendingConsent = null;
+  applyPostHogConsent(consent);
 }
 
 export function syncPostHogIdentity(
@@ -302,6 +314,7 @@ export function resetPostHogStateForTests(): void {
   initialized = false;
   featuresStarted = false;
   lastIdentifiedUserId = null;
+  pendingConsent = null;
   recentEvents.clear();
 }
 
