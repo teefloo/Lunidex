@@ -118,17 +118,11 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                   aria-label={t('tcg.open_card_detail', { name: card.name })}
                   className="relative h-full w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                 >
-                  {card.image ? (
-                    <TCGCardImage
-                      card={card}
-                      sizes="(min-width: 1280px) 12vw, (min-width: 768px) 20vw, 40vw"
-                      className="object-contain opacity-80 transition-opacity group-hover:opacity-100"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span>
-                    </div>
-                  )}
+                  <TCGCardImage
+                    card={card}
+                    sizes="(min-width: 1280px) 12vw, (min-width: 768px) 20vw, 40vw"
+                    className="object-contain opacity-80 transition-opacity group-hover:opacity-100"
+                  />
                   <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
                     <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">
                       {card.name}
@@ -221,18 +215,12 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                   className="flex min-w-0 flex-1 items-center gap-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md">
-                    {card.image ? (
-                      <TCGCardImage
-                        card={card}
-                        fill
-                        sizes="40px"
-                        className="object-contain"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-muted/40">
-                        <span className="text-[6px] font-bold text-foreground/20">N/A</span>
-                      </div>
-                    )}
+                    <TCGCardImage
+                      card={card}
+                      fill
+                      sizes="40px"
+                      className="object-contain"
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold">{card.name}</p>

@@ -11,6 +11,7 @@ import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
+import { TCG_CARD_PLACEHOLDER } from '@/lib/tcg-images';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -91,7 +92,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
   const card = await getPageCard(id, tcgLanguage);
   if (!card) notFound();
 
-  const imageUrl = card.imageUrl || card.image || `${SITE_URL}/images/card-placeholder.svg`;
+  const imageUrl = card.imageUrl || card.image || `${SITE_URL}${TCG_CARD_PLACEHOLDER}`;
   const setName = card.set?.name ?? '';
   const setId = card.set?.id ?? '';
   const rarityLabel = isMeaningfulCardValue(card.rarity)

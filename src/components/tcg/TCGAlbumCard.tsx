@@ -34,6 +34,7 @@ interface TCGAlbumCardProps {
   onOwnershipChange?: (owned: boolean) => void;
   collectionKey?: string;
   language?: TCGCardLanguage;
+  priority?: boolean;
 }
 
 const VARIANT_LABELS: Record<TCGPhysicalVariant, string> = {
@@ -73,6 +74,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   onOwnershipChange,
   collectionKey,
   language = 'en',
+  priority = false,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -216,11 +218,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
         aria-expanded={collectionKey ? isPanelOpen : undefined}
         aria-controls={collectionKey ? `tcg-variants-${card.id}` : undefined}
       >
-        {card.image ? (
-          <TCGCardImage card={card} sizes="(min-width: 1280px) 16vw, (min-width: 768px) 25vw, 45vw" className={cn('object-contain p-1 transition-transform group-hover:scale-105', !owned && 'grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100')} />
-        ) : (
-          <div className="flex h-full items-center justify-center"><span className="text-[11px] font-bold uppercase text-foreground/30">{card.name}</span></div>
-        )}
+        <TCGCardImage card={card} priority={priority} sizes="(min-width: 1280px) 16vw, (min-width: 768px) 25vw, 45vw" className={cn('object-contain p-1 transition-transform group-hover:scale-105', !owned && 'grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100')} />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
           <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">{card.name}</p>
           <p className="text-[11px] text-white/60">#{card.localId}</p>
@@ -325,6 +323,7 @@ function areTCGAlbumCardPropsEqual(previous: TCGAlbumCardProps, next: TCGAlbumCa
     && previous.showMissing === next.showMissing
     && previous.collectionKey === next.collectionKey
     && previous.language === next.language
+    && previous.priority === next.priority
     && sameOwnerships(previous.ownerships ?? [], next.ownerships ?? []);
 }
 

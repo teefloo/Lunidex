@@ -10,7 +10,7 @@ interface TCGImageCard {
   set?: Pick<TCGSet, 'id' | 'logo' | 'symbol'>;
 }
 
-const TCG_CARD_PLACEHOLDER = '/images/card-placeholder.svg';
+export const TCG_CARD_PLACEHOLDER = '/images/pokemon-card-back.webp';
 
 const OPTIMIZABLE_TCG_HOSTS = new Set([
   'assets.tcgdex.net',
@@ -18,6 +18,10 @@ const OPTIMIZABLE_TCG_HOSTS = new Set([
   'images.scrydex.com',
   'images.pokemontcg.io',
 ]);
+
+export function hasTCGCardImage(card: Pick<TCGCard, 'image' | 'imageUrl'>): boolean {
+  return Boolean(card.image || card.imageUrl);
+}
 
 export function isOptimizableTcgImage(src: string): boolean {
   if (src.startsWith('/')) return true;

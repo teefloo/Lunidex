@@ -218,10 +218,11 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
 
       {/* Grid */}
       <div id="album-card-grid" className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {filteredCards.map((card) => (
+        {filteredCards.map((card, index) => (
           <TCGAlbumCard
             key={card.id}
             card={card}
+            priority={index === 0}
             owned={ownedIds.has(card.id)}
             onView={openCard}
             collectionKey={resolvedCollectionKey}

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import type { TCGCard } from '@/types/tcg';
-import { getTCGCardImageCandidates, isOptimizableTcgImage } from '@/lib/tcg-images';
+import { TCG_CARD_PLACEHOLDER, getTCGCardImageCandidates, isOptimizableTcgImage } from '@/lib/tcg-images';
 
 interface TCGCardImageProps {
   card: TCGCard;
@@ -18,7 +18,7 @@ export function TCGCardImage({ card, alt, fill = true, priority = false, sizes, 
   const [imageIndex, setImageIndex] = useState(0);
   const imageCandidates = useMemo(() => getTCGCardImageCandidates(card), [card]);
 
-  const src = imageCandidates[imageIndex] ?? imageCandidates.at(-1) ?? '/images/card-placeholder.svg';
+  const src = imageCandidates[imageIndex] ?? imageCandidates.at(-1) ?? TCG_CARD_PLACEHOLDER;
 
   return (
     <Image
