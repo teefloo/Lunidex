@@ -105,6 +105,7 @@ type ResetPasswordInput = { newPassword: string; token: string };
 const AUTH_ACTION_TIMEOUT_MS = 15_000;
 const AUTH_SESSION_TIMEOUT_MS = 5_000;
 const AUTH_SDK_TIMEOUT_MS = 8_000;
+const AUTH_SESSION_REFRESH_INTERVAL_MS = 5 * 60_000;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -481,24 +482,38 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
 
   useEffect(() => {
     let active = true;
-    const refresh = async () => {
-      try {
-        const result = await requestAuthSession();
-        if (active) setState({ data: result.data, isPending: false });
-      } catch {
-        if (active) setState({ data: null, isPending: false });
-      }
+    let refreshPromise: Promise<void> | null = null;
+
+    const refresh = (): Promise<void> => {
+      if (refreshPromise) return refreshPromise;
+
+      refreshPromise = (async () => {
+        try {
+          const result = await requestAuthSession();
+          if (active) setState({ data: result.data, isPending: false });
+        } catch {
+          if (active) setState({ data: null, isPending: false });
+        } finally {
+          refreshPromise = null;
+        }
+      })();
+
+      return refreshPromise;
     };
 
     void refresh();
-    const refreshOnFocus = () => void refresh();
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') void refresh();
+    };
     const refreshOnAuthChange = () => void refresh();
-    window.addEventListener('focus', refreshOnFocus);
+    window.addEventListener('focus', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
     window.addEventListener('primedex:auth-changed', refreshOnAuthChange);
-    const intervalId = window.setInterval(refreshOnFocus, 30_000);
+    const intervalId = window.setInterval(refreshWhenVisible, AUTH_SESSION_REFRESH_INTERVAL_MS);
     return () => {
       active = false;
-      window.removeEventListener('focus', refreshOnFocus);
+      window.removeEventListener('focus', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
       window.removeEventListener('primedex:auth-changed', refreshOnAuthChange);
       window.clearInterval(intervalId);
     };

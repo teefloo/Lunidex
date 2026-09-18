@@ -6,8 +6,8 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
-const RESOURCE_PROBE_CACHE_TTL_MS = 5 * 60 * 1000;
-const RESOURCE_PROBE_FAILURE_TTL_MS = 15 * 1000;
+const RESOURCE_PROBE_CACHE_TTL_MS = 60 * 60 * 1000;
+const RESOURCE_PROBE_FAILURE_TTL_MS = RESOURCE_PROBE_CACHE_TTL_MS;
 const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 512;
 // Empty Japanese/Korean set payloads contain only metadata and are currently
 // smaller than 400 bytes. Confirm those compact responses with a GET only when
@@ -20,7 +20,8 @@ const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko'
 // Canonical public URLs already carry their locale. Avoiding Set-Cookie on
 // those responses keeps them eligible for the Vercel CDN cache; the client
 // provider persists the selected locale for unprefixed redirects below.
-const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent)/i;
+const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent|lightpanda)/i;
+const OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER = /^(?:null|undefined)$/i;
 // These paths are common WordPress probes but are not part of Lunidex. Return
 // a cacheable edge 404 before Next renders the global not-found route.
 const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'];
@@ -116,6 +117,21 @@ function shouldPersistLocaleCookie(request: NextRequest): boolean {
   return !AUTOMATED_CLIENT_PATTERN.test(userAgent);
 }
 
+function isNextPrefetchRequest(request: NextRequest): boolean {
+  return request.headers.get('next-router-prefetch') === '1'
+    || request.headers.get('purpose')?.toLowerCase() === 'prefetch'
+    || request.headers.get('sec-purpose')?.toLowerCase() === 'prefetch';
+}
+
+function isFlightRequest(request: NextRequest): boolean {
+  return request.headers.get('rsc') === '1' || isNextPrefetchRequest(request);
+}
+
+function isAutomatedPrefetchRequest(request: NextRequest): boolean {
+  if (request.method !== 'GET' || !isNextPrefetchRequest(request)) return false;
+  return AUTOMATED_CLIENT_PATTERN.test(request.headers.get('user-agent') ?? '');
+}
+
 function isKnownScannerPath(pathname: string): boolean {
   const unlocalizedPath = pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/)/, '');
   return KNOWN_SCANNER_PATH_PREFIXES.some(
@@ -123,7 +139,31 @@ function isKnownScannerPath(pathname: string): boolean {
   );
 }
 
+function hasObviouslyInvalidResourceIdentifier(pathname: string, locale: string): boolean {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] !== locale) return false;
+
+  const identifier = segments.length === 3 && ['pokemon', 'moves', 'abilities', 'items'].includes(segments[1] ?? '')
+    ? segments[2]
+    : segments.length === 4
+      && segments[1] === 'tcg'
+      && ['cards', 'sets'].includes(segments[2] ?? '')
+      ? segments[3]
+      : undefined;
+
+  if (!identifier) return false;
+  try {
+    return OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER.test(decodeURIComponent(identifier));
+  } catch {
+    return true;
+  }
+}
+
 function isPublicLocalizedRoute(segments: string[]): boolean {
+  if (segments.length === 1 && isSupportedLanguage(segments[0] ?? '')) {
+    return true;
+  }
+
   if (segments.length === 2 && PUBLIC_SINGLE_SEGMENT_ROUTES.has(segments[1] ?? '')) {
     return true;
   }
@@ -405,6 +445,18 @@ export async function proxy(request: NextRequest) {
     });
   }
 
+  // Headless crawlers such as Lightpanda execute Next's automatic Link
+  // prefetches. A single indexed page can therefore fan out into every link
+  // in the footer, and each Flight prefetch would otherwise invoke the full
+  // App Router render. Drop only requests that carry an explicit prefetch
+  // signal; real HTML documents from the same crawler remain crawlable.
+  if (isAutomatedPrefetchRequest(request)) {
+    return new NextResponse(null, {
+      status: 204,
+      headers: { 'Cache-Control': 'private, no-store' },
+    });
+  }
+
   const segments = pathname.split('/').filter(Boolean);
   const firstSegment = segments[0];
   const hasLocalePrefix = isSupportedLanguage(firstSegment ?? '');
@@ -447,8 +499,12 @@ export async function proxy(request: NextRequest) {
     // Flight responses and the page itself remains the source of truth for
     // those requests; avoiding a second upstream probe keeps navigation fast.
     const accept = (request.headers.get('accept') ?? '').toLowerCase();
-    const isDocumentRequest = request.method === 'HEAD'
-      || (request.method === 'GET' && (accept.includes('text/html') || accept.includes('*/*')));
+    const isDocumentRequest = !isFlightRequest(request)
+      && (request.method === 'HEAD'
+        || (request.method === 'GET' && (accept.includes('text/html') || accept.includes('*/*'))));
+    if (isDocumentRequest && hasObviouslyInvalidResourceIdentifier(pathname, urlLocale)) {
+      return hardNotFoundResponse(request, urlLocale);
+    }
     if (isDocumentRequest) {
       const isPrivateCollectionAlbum = segments.length === 4
         && segments[1] === 'tcg'
