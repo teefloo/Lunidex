@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { Button } from '@/components/ui/button';
 import { getProductConsent, setProductConsent, type ProductConsent } from '@/lib/product-measurement';
+import { PRODUCT_CONSENT_POLICY_VERSION, PRODUCT_CONSENT_VERSION } from '@/lib/posthog-consent';
 
 const STORAGE_KEY = 'primedex-cookie-consent';
 
@@ -91,7 +92,7 @@ export default function CookieBanner() {
   const restoreFocus = () => window.setTimeout(() => openerRef.current?.focus(), 0);
 
   const save = (audience: boolean, product: boolean) => {
-    writeStoredConsent({ version: 2, policyVersion: '2026-07-29', chosenAt: new Date().toISOString(), audiencePerformance: audience ? 'granted' : 'denied', productMeasurement: product ? 'granted' : 'denied' });
+    writeStoredConsent({ version: PRODUCT_CONSENT_VERSION, policyVersion: PRODUCT_CONSENT_POLICY_VERSION, chosenAt: new Date().toISOString(), audiencePerformance: audience ? 'granted' : 'denied', productMeasurement: product ? 'granted' : 'denied' });
     restoreFocus();
   };
   const handleAccept = () => save(true, true);

@@ -19,6 +19,7 @@ import {
 } from '@/lib/anniversary-30-migration';
 import { getTCGCollectionCardIds } from '@/lib/tcg-collections';
 import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -149,10 +150,10 @@ export default function Anniversary30Tracker({
 
     if (migratedAll && writeStorageValue(ANNIVERSARY_30_STORAGE_KEY, plan.serializedState)) {
       setActionMessage(labels.migrationDone);
-      capturePostHogEvent('anniversary_30_migration', { status: 'completed' });
+      capturePostHogEvent(POSTHOG_EVENTS.anniversary30Migration, { status: 'completed' });
     } else if (!migratedAll) {
       setActionMessage(labels.migrationPendingIdentity);
-      capturePostHogEvent('anniversary_30_migration', { status: 'partial' });
+      capturePostHogEvent(POSTHOG_EVENTS.anniversary30Migration, { status: 'partial' });
     }
     setMigrationBusy(false);
   }, [collectionKey, labels.migrationDone, labels.migrationPendingIdentity, setVariantQuantity]);

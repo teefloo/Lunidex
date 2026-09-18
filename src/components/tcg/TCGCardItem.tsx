@@ -14,6 +14,8 @@ import { TCGHolographicCard } from './TCGHolographicCard';
 import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 interface TCGCardItemProps {
   card: TCGCard;
@@ -130,20 +132,25 @@ export const TCGCardItem = memo(function TCGCardItem({
           type="button"
           onClick={(event) => {
             event.stopPropagation();
+            const nextOwned = !owned;
             if (!resolvedCollectionKey) {
               toggleTCGOwned(card.id);
-              return;
-            }
-            if (owned) {
+            } else if (owned) {
               removeTCGCollectionCard(resolvedCollectionKey, card.id);
-              return;
+            } else {
+              setTCGCollectionVariantQuantity(
+                resolvedCollectionKey,
+                card.id,
+                getTCGDefaultPhysicalVariant(card.variants) ?? 'unspecified',
+                1,
+              );
             }
-            setTCGCollectionVariantQuantity(
-              resolvedCollectionKey,
-              card.id,
-              getTCGDefaultPhysicalVariant(card.variants) ?? 'unspecified',
-              1,
-            );
+            capturePostHogEvent(POSTHOG_EVENTS.tcgCardOwnershipToggled, {
+              card_id: card.id,
+              set_id: card.set?.id,
+              state: nextOwned ? 'added' : 'removed',
+              surface: 'tcg_catalog',
+            });
           }}
           className={cn(
             'touch-target inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border text-[11px] font-black uppercase tracking-[0.08em] transition-[color,background-color,border-color]',

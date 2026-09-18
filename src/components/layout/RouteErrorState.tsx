@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
@@ -8,6 +9,7 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import LunidexLogo from '@/components/ui/LunidexLogo';
+import { capturePostHogException } from '@/lib/posthog-client';
 
 interface RouteErrorStateProps {
   error: Error & { digest?: string };
@@ -18,6 +20,14 @@ interface RouteErrorStateProps {
 export default function RouteErrorState({ error, reset, scope }: RouteErrorStateProps) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+
+  useEffect(() => {
+    capturePostHogException(error, {
+      feature: scope ?? 'route-boundary',
+      route: window.location.pathname,
+      operation: 'route-boundary',
+    });
+  }, [error, scope]);
 
   return (
     <div className="app-page min-h-screen px-4 py-24 text-foreground">

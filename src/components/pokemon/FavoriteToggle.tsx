@@ -4,6 +4,8 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export default function FavoriteToggle({ className }: { className?: string }) {
   const showFavoritesOnly = usePrimeDexStore(s => s.showFavoritesOnly);
@@ -15,7 +17,13 @@ export default function FavoriteToggle({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+      onClick={() => {
+        setShowFavoritesOnly(!showFavoritesOnly);
+        capturePostHogEvent(POSTHOG_EVENTS.pokemonFilterChanged, {
+          filter: 'favorites',
+          value: !showFavoritesOnly ? 'on' : 'off',
+        });
+      }}
       data-active={showFavoritesOnly}
       aria-label={favoritesLabel}
       aria-pressed={showFavoritesOnly}

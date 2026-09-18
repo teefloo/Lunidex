@@ -14,6 +14,8 @@ import { memo, useCallback } from 'react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -196,6 +198,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     } else {
       addFavorite(pokemonId);
     }
+    capturePostHogEvent(POSTHOG_EVENTS.pokemonActionToggled, {
+      action: 'favorite',
+      state: isFav ? 'removed' : 'added',
+      pokemon_id: pokemonId,
+      surface: 'pokedex_card',
+    });
   };
 
   const toggleCompare = (event: MouseEvent<HTMLButtonElement>) => {
@@ -206,6 +214,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     } else {
       addToCompare(pokemonId);
     }
+    capturePostHogEvent(POSTHOG_EVENTS.pokemonActionToggled, {
+      action: 'compare',
+      state: isComp ? 'removed' : 'added',
+      pokemon_id: pokemonId,
+      surface: 'pokedex_card',
+    });
   };
 
   const toggleTeam = (event: MouseEvent<HTMLButtonElement>) => {
@@ -216,6 +230,12 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     } else {
       addToTeam(pokemonId);
     }
+    capturePostHogEvent(POSTHOG_EVENTS.pokemonActionToggled, {
+      action: 'team',
+      state: isTeam ? 'removed' : 'added',
+      pokemon_id: pokemonId,
+      surface: 'pokedex_card',
+    });
   };
 
   const types: PokemonCardType[] = (pokemon.types || pokemon.pokemon_v2_pokemontypes || []).map((typeItem): PokemonCardType | null => {
@@ -238,7 +258,15 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const handleToggleCaught = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    if (pokemon.id) toggleCaught(pokemon.id);
+    if (pokemon.id) {
+      toggleCaught(pokemon.id);
+      capturePostHogEvent(POSTHOG_EVENTS.pokemonActionToggled, {
+        action: 'caught',
+        state: caught ? 'removed' : 'added',
+        pokemon_id: pokemon.id,
+        surface: 'pokedex_card',
+      });
+    }
   };
 
   return (

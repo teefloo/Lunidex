@@ -13,6 +13,8 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import AuthModal from '@/components/auth/AuthModal';
 import { HANDLE_REGEX, HANDLE_MIN_LENGTH, HANDLE_MAX_LENGTH } from '@/types/dashboard';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 /**
  * Account panel shown on the dashboard. Surfaces the signed-in identity and the
@@ -181,7 +183,16 @@ export default function AccountCard() {
   const initial = (displayName || email).charAt(0).toUpperCase() || '?';
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+      capturePostHogEvent(POSTHOG_EVENTS.authSignedOut, { result: 'success' });
+    } catch (error) {
+      capturePostHogEvent(POSTHOG_EVENTS.authSignedOut, {
+        result: 'error',
+        error_type: error instanceof Error ? error.name : 'Error',
+      });
+      throw error;
+    }
     toast.success(tt('auth.signed_out', 'Signed out. Your synced data remains in your account.'));
     router.push(localeHref('/'));
   };

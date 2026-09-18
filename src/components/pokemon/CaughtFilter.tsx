@@ -4,6 +4,8 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export default function CaughtFilter({ className }: { className?: string }) {
   const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
@@ -22,7 +24,10 @@ export default function CaughtFilter({ className }: { className?: string }) {
         <button
           key={mode.id}
           type="button"
-          onClick={() => setShowCaughtOnly(mode.id)}
+          onClick={() => {
+            setShowCaughtOnly(mode.id);
+            capturePostHogEvent(POSTHOG_EVENTS.pokemonFilterChanged, { filter: 'caught_state', value: mode.id });
+          }}
           aria-label={mode.label}
           aria-pressed={showCaughtOnly === mode.id}
           className={cn(

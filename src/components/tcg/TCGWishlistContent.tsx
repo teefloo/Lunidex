@@ -18,6 +18,8 @@ import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { decodeTCGCollectionKey } from '@/lib/tcg-collections';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 interface TCGWishlistContentProps {
   setsMap: Map<string, { set: TCGSet; cards: TCGCard[] }>;
@@ -139,6 +141,7 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleTCGWishlist(card.id);
+                      capturePostHogEvent(POSTHOG_EVENTS.tcgWishlistToggled, { card_id: card.id, state: 'removed', surface: 'suggestions' });
                     }}
                     aria-label={t('tcg.compare_remove_card')}
                     className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
@@ -234,9 +237,10 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                   type="button"
                   onClick={() => {
                     toggleTCGWishlist(card.id);
+                    capturePostHogEvent(POSTHOG_EVENTS.tcgWishlistToggled, { card_id: card.id, state: 'removed', surface: 'wishlist' });
                   }}
                   aria-label={t('tcg.compare_remove_card')}
-              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

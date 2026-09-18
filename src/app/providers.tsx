@@ -16,6 +16,7 @@ import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { VercelInsights } from '@/components/analytics/VercelInsights';
 import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
 import { PostHogConsentBridge } from '@/components/analytics/PostHogConsentBridge';
+import { PostHogIdentityBridge } from '@/components/analytics/PostHogIdentityBridge';
 import { RegisterPWA } from '@/components/pwa/RegisterPWA';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
@@ -207,6 +208,7 @@ export default function Providers({ children, initialLanguage, initialTranslatio
                 <RegisterPWA />
                 <SentryConsentBridge />
                 <PostHogConsentBridge />
+                <PostHogIdentityBridge />
                 <VercelInsights />
                 <DeferredOverlays />
               </ThemeProvider>

@@ -5,6 +5,8 @@ import { Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export default function SearchBar() {
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
@@ -31,6 +33,10 @@ export default function SearchBar() {
     if (localSearch === searchTerm) return;
     const timer = setTimeout(() => {
       setSearchTerm(localSearch);
+      const length = localSearch.trim().length;
+      capturePostHogEvent(POSTHOG_EVENTS.pokemonSearchSubmitted, {
+        query_length_bucket: length === 0 ? 'empty' : length <= 3 ? '1_3' : length <= 8 ? '4_8' : '9_plus',
+      });
     }, 300);
     return () => clearTimeout(timer);
   }, [localSearch, searchTerm, setSearchTerm]);

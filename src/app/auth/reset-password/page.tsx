@@ -10,6 +10,8 @@ import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useRouter } from 'next/navigation';
 import LunidexLogo from '@/components/ui/LunidexLogo';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
@@ -67,9 +69,11 @@ export default function ResetPasswordPage() {
     try {
       const { error } = await updatePassword(password, resetToken);
       if (error) {
+        capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'error', error_type: error.name });
         toast.error(error.message);
         return;
       }
+      capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'success' });
       toast.success(tt('auth.password_updated', 'Your password has been updated.'));
       router.replace(localeHref('/dashboard'));
     } finally {
@@ -98,7 +102,7 @@ export default function ResetPasswordPage() {
             {tt('auth.reset_loading', 'Verifying your reset link…')}
           </div>
         ) : hasResetToken ? (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-ph-no-capture>
             <p className="text-sm leading-6 text-foreground/60">
               {tt('auth.reset_subtitle', 'Choose a new password for your Lunidex account.')}
             </p>

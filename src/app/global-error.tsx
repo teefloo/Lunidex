@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { reportSentryException } from '@/lib/sentry-observability';
+import { capturePostHogException } from '@/lib/posthog-client';
 
 export default function GlobalError({
   error,
@@ -13,6 +14,11 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     reportSentryException(error, {
+      feature: 'route-boundary',
+      route: window.location.pathname,
+      operation: 'global-error',
+    });
+    capturePostHogException(error, {
       feature: 'route-boundary',
       route: window.location.pathname,
       operation: 'global-error',

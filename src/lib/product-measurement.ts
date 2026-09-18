@@ -2,8 +2,18 @@
 
 import { normalizeCampaignSlug } from '@/lib/campaigns';
 import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import {
+  createUnsetProductConsent,
+  PRODUCT_CONSENT_POLICY_VERSION,
+  PRODUCT_CONSENT_VERSION,
+  PRODUCT_MEASUREMENT_CONSENT_COOKIE,
+  PRODUCT_MEASUREMENT_CONSENT_COOKIE_MAX_AGE,
+  type ProductConsent,
+  type ProductMeasurementConsent,
+} from '@/lib/posthog-consent';
 
-export type ProductMeasurementConsent = 'granted' | 'denied' | 'unset';
+export type { ProductConsent, ProductMeasurementConsent } from '@/lib/posthog-consent';
 
 const CONSENT_KEY = 'primedex-consent-v2';
 const SESSION_KEY = 'primedex-product-measurement-session';
@@ -12,16 +22,16 @@ const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 let cachedSerializedConsent: string | null | undefined;
 
 export type ProductEvent =
-  | 'tcg_start_opened'
-  | 'tcg_set_search_used'
-  | 'tcg_set_selected'
-  | 'tcg_album_opened'
-  | 'tcg_first_value_reached'
-  | 'tcg_activation_completed'
-  | 'tcg_sync_prompt_shown'
-  | 'tcg_sync_prompt_actioned'
-  | 'tcg_returned_after_activation'
-  | 'tcg_activation_error';
+  | typeof POSTHOG_EVENTS.tcgStartOpened
+  | typeof POSTHOG_EVENTS.tcgSetSearchUsed
+  | typeof POSTHOG_EVENTS.tcgSetSelected
+  | typeof POSTHOG_EVENTS.tcgAlbumOpened
+  | typeof POSTHOG_EVENTS.tcgFirstValueReached
+  | typeof POSTHOG_EVENTS.tcgActivationCompleted
+  | typeof POSTHOG_EVENTS.tcgSyncPromptShown
+  | typeof POSTHOG_EVENTS.tcgSyncPromptActioned
+  | typeof POSTHOG_EVENTS.tcgReturnedAfterActivation
+  | typeof POSTHOG_EVENTS.tcgActivationError;
 
 export type TcgStartSource = 'home_cta' | 'catalog' | 'direct' | 'seo' | 'campaign';
 
@@ -48,15 +58,7 @@ export function getTcgStartAttribution(search: string): TcgStartAttribution | un
     : undefined;
 }
 
-export interface ProductConsent {
-  version: 2;
-  policyVersion: '2026-07-29';
-  chosenAt: string;
-  audiencePerformance: ProductMeasurementConsent;
-  productMeasurement: ProductMeasurementConsent;
-}
-
-const defaultConsent: ProductConsent = { version: 2, policyVersion: '2026-07-29', chosenAt: '', audiencePerformance: 'unset', productMeasurement: 'unset' };
+const defaultConsent = createUnsetProductConsent();
 
 export function getProductConsent(): ProductConsent {
   if (typeof window === 'undefined') return defaultConsent;
@@ -65,7 +67,7 @@ export function getProductConsent(): ProductConsent {
     if (serialized === cachedSerializedConsent) return cachedConsent;
     cachedSerializedConsent = serialized;
     const value = JSON.parse(serialized ?? 'null') as Partial<ProductConsent> | null;
-    if (value?.version === 2 && value.policyVersion === '2026-07-29' && typeof value.chosenAt === 'string' && isConsent(value.audiencePerformance) && isConsent(value.productMeasurement)) {
+    if (value?.version === PRODUCT_CONSENT_VERSION && value.policyVersion === PRODUCT_CONSENT_POLICY_VERSION && typeof value.chosenAt === 'string' && isConsent(value.audiencePerformance) && isConsent(value.productMeasurement)) {
       cachedConsent = value as ProductConsent;
       return cachedConsent;
     }
@@ -92,6 +94,12 @@ export function setProductConsent(next: ProductConsent): void {
     if (next.productMeasurement !== 'granted') {
       window.localStorage.removeItem(ACTIVATED_KEY);
       window.sessionStorage.removeItem(SESSION_KEY);
+    }
+    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+    if (next.productMeasurement === 'unset') {
+      document.cookie = `${PRODUCT_MEASUREMENT_CONSENT_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
+    } else {
+      document.cookie = `${PRODUCT_MEASUREMENT_CONSENT_COOKIE}=${next.productMeasurement}; Path=/; Max-Age=${PRODUCT_MEASUREMENT_CONSENT_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
     }
     window.dispatchEvent(new Event('primedex-consent-changed'));
   } catch {}
@@ -123,8 +131,12 @@ function saveSession(session: { emitted: ProductEvent[]; lastActivity: number; a
 }
 
 const milestoneEvents = new Set<ProductEvent>([
-  'tcg_start_opened', 'tcg_set_search_used', 'tcg_first_value_reached', 'tcg_activation_completed',
-  'tcg_sync_prompt_shown', 'tcg_returned_after_activation',
+  POSTHOG_EVENTS.tcgStartOpened,
+  POSTHOG_EVENTS.tcgSetSearchUsed,
+  POSTHOG_EVENTS.tcgFirstValueReached,
+  POSTHOG_EVENTS.tcgActivationCompleted,
+  POSTHOG_EVENTS.tcgSyncPromptShown,
+  POSTHOG_EVENTS.tcgReturnedAfterActivation,
 ]);
 
 export function trackProductEvent(event: ProductEvent, propertyA?: string, propertyB?: string): void {
@@ -155,6 +167,6 @@ export function trackReturnAfterActivation(action: 'owned_add' | 'owned_remove' 
     if (!Number.isFinite(activatedAt) || activatedAt <= 0) return;
     const days = (Date.now() - activatedAt) / 86_400_000;
     const bucket = days <= 7 ? 'day_0_7' : days <= 30 ? 'day_8_30' : days <= 90 ? 'day_31_90' : 'day_91_plus';
-    trackProductEvent('tcg_returned_after_activation', bucket, action);
+    trackProductEvent(POSTHOG_EVENTS.tcgReturnedAfterActivation, bucket, action);
   } catch {}
 }

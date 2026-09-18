@@ -99,6 +99,7 @@ export default function AccountMenu({ className, onInteraction, onRequestAuth, s
       href={localeHref('/dashboard')}
       aria-label={dashboardLabel}
       title={tooltip}
+      data-ph-no-capture
       onClick={onInteraction}
       className={cn('site-header-action', className)}
     >

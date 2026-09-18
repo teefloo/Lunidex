@@ -16,6 +16,8 @@ import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 const MAX_DECK_SIZE = 60;
 
@@ -43,7 +45,14 @@ export default function DeckBuilderClient() {
   const handleSearchChange = (value: string): void => {
     setSearchTerm(value);
     if (searchTimerRef.current !== null) window.clearTimeout(searchTimerRef.current);
-    searchTimerRef.current = window.setTimeout(() => setCommittedSearchTerm(value), 300);
+    searchTimerRef.current = window.setTimeout(() => {
+      setCommittedSearchTerm(value);
+      if (value.trim().length > 1) {
+        capturePostHogEvent(POSTHOG_EVENTS.tcgDeckSearchUsed, {
+          query_length_bucket: value.trim().length <= 3 ? '1_3' : value.trim().length <= 8 ? '4_8' : '9_plus',
+        });
+      }
+    }, 300);
   };
   const [newDeckName, setNewDeckName] = useState('');
 
@@ -108,6 +117,7 @@ export default function DeckBuilderClient() {
   const handleCreateDeck = () => {
     const name = newDeckName.trim() || t('tcg.deck_builder.default_deck_name', { defaultValue: 'New Deck' });
     const id = createDeck(name);
+    capturePostHogEvent(POSTHOG_EVENTS.tcgDeckCreated, { has_custom_name: Boolean(newDeckName.trim()) });
     setSelectedDeckId(id);
     setNewDeckName('');
   };
@@ -173,6 +183,7 @@ export default function DeckBuilderClient() {
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteDeck(deck.id);
+                        capturePostHogEvent(POSTHOG_EVENTS.tcgDeckDeleted, { result: 'success' });
                         if (selectedDeckId === deck.id) setSelectedDeckId(null);
                       }}
                       className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center text-foreground/30 transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -251,7 +262,14 @@ export default function DeckBuilderClient() {
                           <button
                             key={card.id}
                             type="button"
-                            onClick={() => addCard(selectedDeck.id, card.id, isEnergyBasic)}
+                            onClick={() => {
+                              addCard(selectedDeck.id, card.id, isEnergyBasic);
+                              capturePostHogEvent(POSTHOG_EVENTS.tcgDeckCardAdded, {
+                                card_id: card.id,
+                                category: card.category,
+                                basic_energy: isEnergyBasic,
+                              });
+                            }}
                             disabled={totalCount >= MAX_DECK_SIZE}
                             className="group relative rounded-sm border border-border/60 bg-card/40 p-1.5 text-left transition-all hover:border-primary/40 disabled:opacity-40"
                           >
@@ -305,7 +323,10 @@ export default function DeckBuilderClient() {
                           <div className="flex shrink-0 items-center gap-2">
                             <button
                               type="button"
-                              onClick={() => removeCard(selectedDeck.id, entry.cardId)}
+                              onClick={() => {
+                                removeCard(selectedDeck.id, entry.cardId);
+                                capturePostHogEvent(POSTHOG_EVENTS.tcgDeckCardRemoved, { card_id: entry.cardId });
+                              }}
                               aria-label={t('tcg.deck_builder.decrease_card', { name: entry.card?.name ?? entry.cardId, defaultValue: `Decrease ${entry.card?.name ?? entry.cardId} quantity` })}
                               className="inline-flex min-h-11 min-w-11 items-center justify-center text-foreground/40 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                             >
@@ -314,7 +335,14 @@ export default function DeckBuilderClient() {
                             <span className="w-6 text-center text-xs font-black">{entry.quantity}</span>
                             <button
                               type="button"
-                              onClick={() => addCard(selectedDeck.id, entry.cardId, entry.card?.category === 'Energy' && entry.card?.energyType !== 'Special')}
+                              onClick={() => {
+                                addCard(selectedDeck.id, entry.cardId, entry.card?.category === 'Energy' && entry.card?.energyType !== 'Special');
+                                capturePostHogEvent(POSTHOG_EVENTS.tcgDeckCardAdded, {
+                                  card_id: entry.cardId,
+                                  category: entry.card?.category,
+                                  basic_energy: entry.card?.category === 'Energy' && entry.card?.energyType !== 'Special',
+                                });
+                              }}
                               disabled={totalCount >= MAX_DECK_SIZE || (entry.card?.category !== 'Energy' && entry.quantity >= 4)}
                               aria-label={t('tcg.deck_builder.increase_card', { name: entry.card?.name ?? entry.cardId, defaultValue: `Increase ${entry.card?.name ?? entry.cardId} quantity` })}
                               className="inline-flex min-h-11 min-w-11 items-center justify-center text-foreground/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-30"

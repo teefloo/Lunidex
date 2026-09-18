@@ -1,4 +1,5 @@
 import { flushSentryEvents, reportHttpFailure, reportSentryException } from '@/lib/sentry-observability';
+import { capturePostHogServerException } from '@/lib/posthog-server';
 
 export function withObservedRouteHandler<F extends (...args: never[]) => Response | Promise<Response>>(
   route: string,
@@ -9,7 +10,7 @@ export function withObservedRouteHandler<F extends (...args: never[]) => Respons
     const requestCandidate = args[0] as unknown;
     const request = requestCandidate && typeof requestCandidate === 'object' && 'method' in requestCandidate
       && typeof requestCandidate.method === 'string'
-      ? { method: requestCandidate.method }
+      ? requestCandidate as { method: string; url?: string; headers?: Headers | Record<string, string | string[] | undefined> }
       : undefined;
     try {
       const response = await handler(...args);
@@ -21,6 +22,14 @@ export function withObservedRouteHandler<F extends (...args: never[]) => Respons
           status: response.status,
           operation: 'route-handler',
         });
+        await capturePostHogServerException(new Error('Route handler returned a server failure'), {
+          feature,
+          route,
+          method: request?.method,
+          status: response.status,
+          operation: 'route-handler',
+          request,
+        });
         await flushSentryEvents();
       }
       return response as Awaited<ReturnType<F>>;
@@ -30,6 +39,13 @@ export function withObservedRouteHandler<F extends (...args: never[]) => Respons
         route,
         method: request?.method,
         operation: 'route-handler',
+      });
+      await capturePostHogServerException(error, {
+        feature,
+        route,
+        method: request?.method,
+        operation: 'route-handler',
+        request,
       });
       await flushSentryEvents();
       throw error;

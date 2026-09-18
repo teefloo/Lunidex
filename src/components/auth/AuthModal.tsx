@@ -15,6 +15,8 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import LunidexLogo from '@/components/ui/LunidexLogo';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { capturePostHogEvent } from '@/lib/posthog-client';
 
 type Mode = 'signin' | 'signup';
 
@@ -58,30 +60,41 @@ export default function AuthModal({
     if (busy) return;
     setBusy(true);
     setErrorMessage(null);
+    const authEvent = mode === 'signup' ? POSTHOG_EVENTS.authSignUp : POSTHOG_EVENTS.authSignIn;
+    capturePostHogEvent(authEvent, { method: 'password', result: 'started' });
 
     try {
       if (mode === 'signup') {
         const { error } = await signUp(email, password, name);
         if (error) {
+          capturePostHogEvent(authEvent, { method: 'password', result: 'error', error_type: error.name });
           const message = authErrorMessage(error);
           setErrorMessage(message);
           toast.error(message);
           return;
         }
+        capturePostHogEvent(authEvent, { method: 'password', result: 'success' });
         toast.success(tt('auth.check_email', 'Account created — check your inbox to confirm your email.'));
         onOpenChange(false);
       } else {
         const { error } = await signIn(email, password);
         if (error) {
+          capturePostHogEvent(authEvent, { method: 'password', result: 'error', error_type: error.name });
           const message = authErrorMessage(error);
           setErrorMessage(message);
           toast.error(message);
           return;
         }
+        capturePostHogEvent(authEvent, { method: 'password', result: 'success' });
         toast.success(tt('auth.signed_in', 'Signed in. Syncing your collection…'));
         onOpenChange(false);
       }
     } catch (error) {
+      capturePostHogEvent(authEvent, {
+        method: 'password',
+        result: 'error',
+        error_type: error instanceof Error ? error.name : 'Error',
+      });
       const message = unexpectedAuthErrorMessage(error);
       setErrorMessage(message);
       toast.error(message);
@@ -100,16 +113,24 @@ export default function AuthModal({
 
     setBusy(true);
     setErrorMessage(null);
+    capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'started' });
     try {
       const { error } = await resetPassword(normalizedEmail);
       if (error) {
+        capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'error', error_type: error.name });
         const message = authErrorMessage(error);
         setErrorMessage(message);
         toast.error(message);
         return;
       }
+      capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'success' });
       toast.success(tt('auth.reset_sent', 'Password reset email sent.'));
     } catch (error) {
+      capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, {
+        method: 'email',
+        result: 'error',
+        error_type: error instanceof Error ? error.name : 'Error',
+      });
       const message = unexpectedAuthErrorMessage(error);
       setErrorMessage(message);
       toast.error(message);
@@ -120,7 +141,7 @@ export default function AuthModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" data-ph-no-capture>
         <DialogHeader>
           <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />
           <DialogTitle className="text-xl font-black tracking-tight">
@@ -135,7 +156,7 @@ export default function AuthModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3" data-ph-no-capture>
           {mode === 'signup' && (
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/60">

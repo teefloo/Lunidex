@@ -5,6 +5,8 @@ import { TYPE_COLORS } from '@/types/pokemon';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export default function TypeFilter() {
   const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
@@ -19,7 +21,10 @@ export default function TypeFilter() {
         {selectedTypes.length > 0 && (
           <button
             type="button"
-            onClick={() => setSelectedTypes([])}
+            onClick={() => {
+              setSelectedTypes([]);
+              capturePostHogEvent(POSTHOG_EVENTS.pokemonFilterChanged, { filter: 'type', action: 'clear' });
+            }}
             className="pokedex-filter-clear flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-destructive bg-destructive/10 border border-destructive/30 rounded-sm hover:bg-destructive/20 transition-all duration-100 whitespace-nowrap overflow-hidden min-h-[44px] shadow-[var(--shadow-pixel-sm)]"
             aria-label={t('filters.clear_types', { count: selectedTypes.length })}
           >
@@ -37,7 +42,14 @@ export default function TypeFilter() {
             <button
               key={type}
               type="button"
-              onClick={() => toggleType(type)}
+              onClick={() => {
+                toggleType(type);
+                capturePostHogEvent(POSTHOG_EVENTS.pokemonFilterChanged, {
+                  filter: 'type',
+                  action: isActive ? 'removed' : 'added',
+                  value: type,
+                });
+              }}
               aria-label={label}
               aria-pressed={isActive}
               className={cn(

@@ -9,6 +9,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { hasSyncAccess, requestSyncAccess, type SyncAccessStatus } from '@/store/sync-access';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { localeHref } from '@/lib/seo';
 import {
   filterAnniversary30Cards,
@@ -181,7 +182,7 @@ export function Anniversary30CardGrid({
 
   function handleFilterChange(filter: Anniversary30CardFilter): void {
     setActiveFilter(filter);
-    capturePostHogEvent('anniversary_30_filter_changed', { filter });
+    capturePostHogEvent(POSTHOG_EVENTS.anniversary30FilterChanged, { filter });
   }
 
   function handleToggle(card: Anniversary30Card): void {
@@ -201,7 +202,7 @@ export function Anniversary30CardGrid({
     }
 
     setActionMessage(null);
-    capturePostHogEvent('anniversary_30_card_toggled', {
+    capturePostHogEvent(POSTHOG_EVENTS.anniversary30CardToggled, {
       owned: after,
       scope: card.scope,
     });

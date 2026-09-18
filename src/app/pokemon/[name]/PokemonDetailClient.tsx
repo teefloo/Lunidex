@@ -30,9 +30,11 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { cn, formatId, formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
-import React, { useState, useMemo, useEffect, type CSSProperties } from 'react';
+import React, { useState, useMemo, useEffect, useRef, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
 import { languageToPokemonLanguageId } from '@/lib/languages';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 interface LocalizedGqlData {
   pokemon_v2_pokemonspeciesnames: { 
@@ -236,6 +238,16 @@ export function PokemonDetailClient({
   const species = data?.species;
   const form = data?.form;
   const localized = data?.localized;
+
+  const viewedPokemonIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!pokemon || viewedPokemonIdRef.current === pokemon.id) return;
+    viewedPokemonIdRef.current = pokemon.id;
+    capturePostHogEvent(POSTHOG_EVENTS.pokemonDetailViewed, {
+      pokemon_id: pokemon.id,
+      surface: 'pokemon_detail',
+    });
+  }, [pokemon]);
 
   // Add to history when pokemon data is loaded
   useEffect(() => {

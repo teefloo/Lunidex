@@ -12,6 +12,8 @@ import {
 import { isSupportedLanguage } from '@/lib/languages';
 import { normalizeDisplayName } from '@/lib/json-ld';
 import { getNeonAuthClient, isNeonAuthConfigured, loadNeonAuthClient } from './client';
+import { capturePostHogEvent } from '@/lib/posthog-client';
+import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
 export interface AppUser {
   id: string;
@@ -424,13 +426,21 @@ function DeferredAuthProvider({
         }
       },
       signInWithOAuth: async (provider) => {
+        capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: 'started' });
         const client = await loadClient();
-        if (!client) return unavailable();
+        if (!client) {
+          capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: 'error', error_type: 'AuthUnavailable' });
+          return unavailable();
+        }
         try {
           const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
-          return { error: normalizeError(result.error) };
+          const error = normalizeError(result.error);
+          capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'success', ...(error ? { error_type: error.name } : {}) });
+          return { error };
         } catch (error) {
-          return { error: normalizeError(error) };
+          const normalized = normalizeError(error);
+          capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: 'error', error_type: normalized?.name ?? 'Error' });
+          return { error: normalized };
         }
       },
       signOut: async () => {
@@ -582,11 +592,16 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       }
     },
     signInWithOAuth: async (provider) => {
+      capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: 'started' });
       try {
         const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
-        return { error: normalizeError(result.error) };
+        const error = normalizeError(result.error);
+        capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'success', ...(error ? { error_type: error.name } : {}) });
+        return { error };
       } catch (error) {
-        return { error: normalizeError(error) };
+        const normalized = normalizeError(error);
+        capturePostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: 'error', error_type: normalized?.name ?? 'Error' });
+        return { error: normalized };
       }
     },
     signOut: async () => {
