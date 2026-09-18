@@ -28,7 +28,7 @@ export type FallbackKind =
 
 type SanitizedContext = Record<string, string | number | boolean>;
 
-const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409]);
+const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409, 429]);
 const MAX_DEDUPLICATION_KEYS = 256;
 const MAX_VALUE_LENGTH = 80;
 const deduplicationKeys = new Set<string>();
@@ -159,6 +159,14 @@ function isAbortError(error: unknown): boolean {
   return candidate.name === 'AbortError'
     || candidate.code === 'ERR_CANCELED'
     || candidate.__CANCEL__ === true;
+}
+
+/** Browser fetch reports transient connectivity failures as TypeError. */
+export function isLikelyNetworkError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { name?: unknown; message?: unknown };
+  if (candidate.name !== 'TypeError' || typeof candidate.message !== 'string') return false;
+  return /failed to fetch|fetch failed|network(?:error| request failed)|load failed/i.test(candidate.message);
 }
 
 export function shouldIgnoreHttpFailure(input: HttpFailureInput): boolean {

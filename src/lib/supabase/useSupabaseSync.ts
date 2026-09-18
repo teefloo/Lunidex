@@ -6,7 +6,8 @@ import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
-import { reportFallback } from '@/lib/sentry-observability';
+import { isLikelyNetworkError, reportFallback } from '@/lib/sentry-observability';
+import { retryAsync } from '@/lib/retry';
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import {
   advanceSyncMetadata,
@@ -60,16 +61,24 @@ function getDeviceId(): string {
 }
 
 async function loadRemoteState(): Promise<RemoteState> {
-  const response = await fetchAppApi('/api/user-state', { cache: 'no-store' });
-  if (!response.ok) throw new RemoteStateError(response.status);
-  const payload = (await response.json()) as unknown;
-  const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
-    ? payload as { data?: unknown; updatedAt?: unknown }
-    : {};
-  return {
-    data: candidate.data ?? {},
-    updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : null,
-  };
+  return retryAsync(async () => {
+    const response = await fetchAppApi('/api/user-state', { cache: 'no-store' });
+    if (!response.ok) throw new RemoteStateError(response.status);
+    const payload = (await response.json()) as unknown;
+    const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
+      ? payload as { data?: unknown; updatedAt?: unknown }
+      : {};
+    return {
+      data: candidate.data ?? {},
+      updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : null,
+    };
+  }, {
+    attempts: 3,
+    delayMs: (attempt) => (attempt + 1) * 250,
+    shouldRetry: (error) => error instanceof RemoteStateError
+      ? error.status >= 500
+      : isLikelyNetworkError(error),
+  });
 }
 
 async function saveRemoteState(

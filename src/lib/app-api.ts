@@ -1,7 +1,7 @@
 'use client';
 
 import { getNeonAccessToken } from '@/lib/neon/client';
-import { reportHttpFailure, type ObservabilityContext } from '@/lib/sentry-observability';
+import { isLikelyNetworkError, reportHttpFailure, type ObservabilityContext } from '@/lib/sentry-observability';
 
 /** Returns the current Neon Auth JWT for server-side application API calls. */
 export async function getAppAccessToken(): Promise<string | null> {
@@ -44,6 +44,7 @@ export async function fetchAppApi(
       route,
       method,
       operation: observability.operation,
+      ...(isLikelyNetworkError(error) ? { service: 'application-api' } : {}),
     });
     throw error;
   }

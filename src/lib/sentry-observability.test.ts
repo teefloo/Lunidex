@@ -41,9 +41,10 @@ describe('sentry observability', () => {
     resetSentryDeduplicationForTests();
   });
 
-  it('ignores expected HTTP statuses, cancellations, and empty searches', () => {
+  it('ignores expected HTTP statuses, rate limits, cancellations, and empty searches', () => {
     expect(shouldIgnoreHttpFailure({ status: 404 })).toBe(true);
     expect(shouldIgnoreHttpFailure({ status: 409 })).toBe(true);
+    expect(shouldIgnoreHttpFailure({ status: 429 })).toBe(true);
     expect(shouldIgnoreHttpFailure({ status: 500 })).toBe(false);
     expect(shouldIgnoreHttpFailure({ error: new DOMException('Aborted', 'AbortError') })).toBe(true);
     expect(shouldIgnoreHttpFailure({ operation: 'search', emptyResult: true })).toBe(true);
@@ -99,6 +100,17 @@ describe('sentry observability', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(Sentry.captureException).toHaveBeenCalledTimes(1);
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
+  });
+
+  it('reports browser fetch transport failures as warnings', async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new TypeError('Failed to fetch'));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(fetchAppApi('/api/user-state', { method: 'GET' }, { feature: 'sync' }))
+      .rejects.toThrow('Failed to fetch');
+
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex upstream failure: TypeError', 'warning');
   });
 
   it('does not report expected application API responses', async () => {

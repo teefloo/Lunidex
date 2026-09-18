@@ -555,7 +555,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
         </div>
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap xl:w-auto xl:justify-end">
           <Button className="w-full sm:w-auto" type="button" onClick={() => openForm()} disabled={Boolean(overviewError && !currentOverview)}><Plus aria-hidden="true" />{t('tcg.sealed.add_transaction')}</Button>
-          <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => void syncMutation.mutateAsync()} disabled={syncMutation.isPending}><RefreshCw className={syncMutation.isPending ? 'animate-spin' : ''} aria-hidden="true" />{t('tcg.sealed.sync')}</Button>
+          <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => syncMutation.mutate()} disabled={syncMutation.isPending}><RefreshCw className={syncMutation.isPending ? 'animate-spin' : ''} aria-hidden="true" />{t('tcg.sealed.sync')}</Button>
           <Button className="w-full sm:w-auto" type="button" variant="ghost" onClick={() => void exportFile('csv')} disabled={exporting || Boolean(overviewError && !currentOverview)}><Download aria-hidden="true" />{exporting ? t('tcg.sealed.exporting') : t('tcg.sealed.export_csv')}</Button>
         </div>
       </div>
@@ -573,8 +573,8 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
       {view === 'sales' ? <SalesView data={currentOverview} language={language} t={t} onEdit={(transaction) => openForm({ transaction, product: transactionProducts.get(transaction.cardmarketProductId) })} onVoid={onVoid} /> : null}
       {view === 'cashflow' ? <CashflowView data={currentOverview} language={language} t={t} group={rangeGroup} onGroupChange={setRangeGroup} /> : null}
       {view === 'analytics' ? <AnalyticsView data={currentOverview} language={language} t={t} /> : null}
-      {view === 'catalogue' ? <CatalogueView data={catalogue.data} error={catalogue.error} query={catalogueQuery} page={cataloguePage} language={language} t={t} onQuery={(value) => { setCatalogueQuery(value); setCataloguePage(0); }} onPage={setCataloguePage} onAdd={(product) => openForm({ product, kind: 'buy' })} onRetry={() => void catalogue.refetch()} onSync={() => void syncMutation.mutateAsync()} syncing={syncMutation.isPending} loading={catalogue.isPending} /> : null}
-      {view === 'sources' ? <SourcesView data={sources.data} loading={sources.isPending} error={sources.error} language={language} t={t} onSync={() => void syncMutation.mutateAsync()} syncing={syncMutation.isPending} onRetry={() => void sources.refetch()} /> : null}
+      {view === 'catalogue' ? <CatalogueView data={catalogue.data} error={catalogue.error} query={catalogueQuery} page={cataloguePage} language={language} t={t} onQuery={(value) => { setCatalogueQuery(value); setCataloguePage(0); }} onPage={setCataloguePage} onAdd={(product) => openForm({ product, kind: 'buy' })} onRetry={() => void catalogue.refetch()} onSync={() => syncMutation.mutate()} syncing={syncMutation.isPending} loading={catalogue.isPending} /> : null}
+      {view === 'sources' ? <SourcesView data={sources.data} loading={sources.isPending} error={sources.error} language={language} t={t} onSync={() => syncMutation.mutate()} syncing={syncMutation.isPending} onRetry={() => void sources.refetch()} /> : null}
       {view === 'product' ? <ProductView data={productDetail.data} loading={productDetail.isPending} error={productDetail.error} language={language} t={t} localizedHref={localizedHref} onAdd={(product) => openForm({ product, kind: 'buy' })} onEdit={(transaction) => openForm({ transaction, product: productDetail.data?.product })} onVoid={onVoid} onRetry={() => void productDetail.refetch()} /> : null}
     </> : null}
     {!(overviewError && !currentOverview) ? <p className="mt-8 text-center text-xs text-foreground/40">{t('tcg.sealed.private_note')}</p> : null}

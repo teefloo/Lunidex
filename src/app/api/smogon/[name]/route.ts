@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
+import { reportHttpFailure } from '@/lib/sentry-observability';
 
 // Cache the full PS formats-data payload at the module level so the Edge
 // runtime re-uses it across requests within the same invocation.
@@ -16,17 +17,23 @@ async function getPSData(): Promise<Record<string, unknown>> {
   const now = Date.now();
   if (psCache && now - psCacheTime < PS_CACHE_TTL) return psCache;
 
-  const res = await fetch(PS_FORMATS_URL, {
-    next: { revalidate: 86400 },
-    headers: { 'User-Agent': 'Lunidex/1.0 (+https://lunidex.app)' },
-  });
+  const staleCache = psCache;
+  try {
+    const res = await fetch(PS_FORMATS_URL, {
+      next: { revalidate: 86400 },
+      headers: { 'User-Agent': 'Lunidex/1.0 (+https://lunidex.app)' },
+    });
 
-  if (!res.ok) throw new Error(`PS data fetch failed: ${res.status}`);
+    if (!res.ok) throw new Error(`PS data fetch failed: ${res.status}`);
 
-  const data = (await res.json()) as Record<string, unknown>;
-  psCache = data;
-  psCacheTime = now;
-  return data;
+    const data = (await res.json()) as Record<string, unknown>;
+    psCache = data;
+    psCacheTime = now;
+    return data;
+  } catch (error) {
+    if (staleCache) return staleCache;
+    throw error;
+  }
 }
 
 export const runtime = 'edge';
@@ -65,8 +72,20 @@ async function getSmogonData(
     return NextResponse.json(entry, {
       headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
     });
-  } catch {
-    return NextResponse.json(null, { status: 502 });
+  } catch (error) {
+    reportHttpFailure(error, {
+      feature: 'smogon',
+      service: 'pokemonshowdown',
+      route: '/api/smogon/:name',
+      method: 'GET',
+      operation: 'formats-data',
+    });
+    // Smogon data is an optional enhancement to the Pokémon page. Returning
+    // an empty result lets the client keep the page usable and avoids turning
+    // a temporary provider outage into an application-level 502.
+    return NextResponse.json(null, {
+      headers: { 'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400' },
+    });
   }
 }
 
