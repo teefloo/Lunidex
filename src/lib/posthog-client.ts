@@ -188,9 +188,11 @@ export function initializePostHog(): void {
 
 function applyPostHogConsent(consent: ProductConsent): void {
   if (consent.productMeasurement === 'granted') {
-    if (!posthog.has_opted_in_capturing()) {
-      posthog.opt_in_capturing({ captureEventName: false });
-    }
+    // Re-assert opt-in on every initialization. A persisted opt-in can make
+    // has_opted_in_capturing() true before the SDK request queue is started;
+    // opt_in_capturing() also restarts that queue without emitting a consent
+    // event, so captures are not stranded in a disabled batcher.
+    posthog.opt_in_capturing({ captureEventName: false });
     startConsentFeatures();
     return;
   }

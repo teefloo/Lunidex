@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockPostHog = vi.hoisted(() => {
-  const state = { optedIn: false, optedOut: false };
+  const state = {
+    optedIn: false,
+    optedOut: false,
+    initOptedIn: false,
+    initOptedOut: true,
+  };
   const instance = {
     capture: vi.fn(),
     captureException: vi.fn(),
@@ -9,8 +14,8 @@ const mockPostHog = vi.hoisted(() => {
     has_opted_out_capturing: vi.fn(() => state.optedOut),
     identify: vi.fn(),
     init: vi.fn(() => {
-      state.optedIn = false;
-      state.optedOut = true;
+      state.optedIn = state.initOptedIn;
+      state.optedOut = state.initOptedOut;
     }),
     opt_in_capturing: vi.fn(() => {
       state.optedIn = true;
@@ -34,9 +39,15 @@ const mockPostHog = vi.hoisted(() => {
     reset() {
       state.optedIn = false;
       state.optedOut = false;
+      state.initOptedIn = false;
+      state.initOptedOut = true;
       for (const method of Object.values(instance)) {
         if (typeof method === 'function' && 'mockClear' in method) method.mockClear();
       }
+    },
+    setInitConsent(optedIn: boolean, optedOut: boolean) {
+      state.initOptedIn = optedIn;
+      state.initOptedOut = optedOut;
     },
   };
 });
@@ -103,5 +114,22 @@ describe('PostHog client consent ordering', () => {
         persistence: 'cookie',
       }),
     );
+  });
+
+  it('restarts capture when a persisted opt-in is already present at initialization', async () => {
+    mockPostHog.setInitConsent(true, false);
+    vi.resetModules();
+    const { initializePostHog, syncPostHogConsent } = await import('./posthog-client');
+
+    syncPostHogConsent({
+      audiencePerformance: 'denied',
+      chosenAt: '2026-09-19T00:00:00.000Z',
+      policyVersion: '2026-09-19',
+      productMeasurement: 'granted',
+      version: 3,
+    });
+    initializePostHog();
+
+    expect(mockPostHog.instance.opt_in_capturing).toHaveBeenCalledWith({ captureEventName: false });
   });
 });
