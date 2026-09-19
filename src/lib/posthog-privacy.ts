@@ -135,6 +135,11 @@ export function sanitizePostHogProperties(input: Record<string, unknown>): PostH
 export function sanitizePostHogEvent(event: CaptureResult | null): CaptureResult | null {
   if (!event) return null;
   const properties = sanitizePostHogProperties(event.properties as Record<string, unknown>);
+  // PostHog adds its project API key as `token` to the event envelope after
+  // capture(). In this before_send hook it is an ingestion requirement, not a
+  // user-provided property, so preserve only the SDK-provided value here.
+  const sdkToken = (event.properties as Record<string, unknown> | undefined)?.token;
+  if (typeof sdkToken === 'string' && sdkToken.length > 0) properties.token = sdkToken;
   const currentPath = typeof properties.$pathname === 'string'
     ? properties.$pathname
     : typeof properties.$current_url === 'string'

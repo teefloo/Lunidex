@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   normalizePostHogRoute,
+  sanitizePostHogEvent,
   sanitizePostHogProperties,
 } from './posthog-privacy';
 
@@ -33,5 +34,23 @@ describe('PostHog privacy helpers', () => {
     });
 
     expect(properties.message).toBe('Login failed for [redacted-email] token=[redacted]');
+  });
+
+  it('preserves the SDK ingestion token only on the PostHog event envelope', () => {
+    expect(sanitizePostHogProperties({ token: 'user-provided-secret' })).toEqual({});
+
+    const event = sanitizePostHogEvent({
+      event: 'pokemon_search_submitted',
+      uuid: '00000000-0000-4000-8000-000000000001',
+      properties: {
+        token: 'project-token',
+        feature: 'pokemon',
+      },
+    });
+
+    expect(event?.properties).toEqual({
+      token: 'project-token',
+      feature: 'pokemon',
+    });
   });
 });
