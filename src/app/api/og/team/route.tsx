@@ -1,11 +1,13 @@
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
 
-import { getPokemonDetail, getTypeRelations, type TypeRelations } from '@/lib/api';
+import { getPokemonDetailCached, getTypeRelationsCached } from '@/lib/api/server-cache';
+import type { TypeRelations } from '@/lib/api';
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
 import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { getTrustedOgImageUrl } from '@/lib/og/assets';
+import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { OG_SIZE, OG_THEME, OG_TYPE_COLORS, synergyColor } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
@@ -52,9 +54,10 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const lang: SupportedLanguage = isSupportedLanguage(langParam) ? langParam : 'en';
   const t = getServerTForLanguage(lang);
 
-  // All Pokémon data flows through the @/lib/api barrel.
+  // Use the shared server cache so repeated share-image requests do not fan
+  // out to PokéAPI for the same team.
   const team = (
-    await Promise.all(ids.map((id) => getPokemonDetail(String(id)).catch(() => null)))
+    await Promise.all(ids.map((id) => getPokemonDetailCached(String(id)).catch(() => null)))
   ).filter((pokemon): pokemon is PokemonDetail => pokemon !== null);
 
   // analyzeTeam only reads relations for the types the team actually carries.
@@ -62,7 +65,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const relationEntries = await Promise.all(
     teamTypes.map(async (typeName) => {
       try {
-        return [typeName, await getTypeRelations(typeName)] as const;
+        return [typeName, await getTypeRelationsCached(typeName)] as const;
       } catch {
         return null;
       }
@@ -323,6 +326,6 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
         </div>
       </div>
     ),
-    { width: OG_SIZE.width, height: OG_SIZE.height, fonts },
+    { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
 }

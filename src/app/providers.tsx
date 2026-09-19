@@ -190,7 +190,9 @@ export default function Providers({ children, initialLanguage, initialTranslatio
         gcTime: 60 * 60 * 1000,
         retry: 1,
         refetchOnWindowFocus: false,
-        refetchOnReconnect: 'always',
+        // Respect each query's staleTime on reconnect. Re-fetching fresh data
+        // on every network transition creates avoidable API/function traffic.
+        refetchOnReconnect: true,
       },
     },
   }));

@@ -66,15 +66,18 @@ function hasAnyPrice(snapshot: PriceSnapshot): boolean {
 async function recordSnapshotIfDue(
   sql: NonNullable<ReturnType<typeof getNeonClient>>,
   cardId: string,
+  latestRecordedAt?: string,
 ): Promise<void> {
   try {
-    const [latest] = await sql`
-      select recorded_at
-      from public.tcg_price_history
-      where card_id = ${cardId}
-      order by recorded_at desc
-      limit 1
-    ` as Array<{ recorded_at: string }>;
+    const latest = latestRecordedAt === undefined
+      ? (await sql`
+          select recorded_at
+          from public.tcg_price_history
+          where card_id = ${cardId}
+          order by recorded_at desc
+          limit 1
+        ` as Array<{ recorded_at: string }>)[0]
+      : { recorded_at: latestRecordedAt };
 
     if (
       latest?.recorded_at &&
@@ -167,7 +170,9 @@ async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
     order by recorded_at asc
   ` as PriceHistoryRow[];
 
-  await recordSnapshotIfDue(sql, cardId);
+  // The history query is already ordered by recorded_at, so avoid a second
+  // database read whenever the requested window contains an existing point.
+  await recordSnapshotIfDue(sql, cardId, rows.length > 0 ? rows.at(-1)?.recorded_at : undefined);
 
   const history = rows.map((row) => ({
     id: Number(row.id),

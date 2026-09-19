@@ -290,16 +290,31 @@ export function normalizeSealedDraft(input: unknown): SealedTransactionDraft {
   }
 }
 
-export async function getSealedTransactions(sql: NeonSql, userId: string): Promise<SealedTransaction[]> {
-  const rows = await sql`
-    select id::text, revision, kind, cardmarket_product_id, language, date::text,
-      quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
-      payment_fees_cents, other_costs_cents, platform, counterparty, notes,
-      storage, allocation_method, selections, voided, created_at::text, updated_at::text
-    from public.tcg_sealed_transactions
-    where user_id = ${userId}::uuid
-    order by date asc, created_at asc, id asc
-  ` as SealedTransactionRow[];
+export async function getSealedTransactions(
+  sql: NeonSql,
+  userId: string,
+  productId?: number,
+): Promise<SealedTransaction[]> {
+  const rows = productId === undefined
+    ? await sql`
+        select id::text, revision, kind, cardmarket_product_id, language, date::text,
+          quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
+          payment_fees_cents, other_costs_cents, platform, counterparty, notes,
+          storage, allocation_method, selections, voided, created_at::text, updated_at::text
+        from public.tcg_sealed_transactions
+        where user_id = ${userId}::uuid
+        order by date asc, created_at asc, id asc
+      ` as SealedTransactionRow[]
+    : await sql`
+        select id::text, revision, kind, cardmarket_product_id, language, date::text,
+          quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
+          payment_fees_cents, other_costs_cents, platform, counterparty, notes,
+          storage, allocation_method, selections, voided, created_at::text, updated_at::text
+        from public.tcg_sealed_transactions
+        where user_id = ${userId}::uuid
+          and cardmarket_product_id = ${productId}
+        order by date asc, created_at asc, id asc
+      ` as SealedTransactionRow[];
   return rows.map(mapTransaction);
 }
 
@@ -515,22 +530,26 @@ export async function getSealedOverview(
   const syncRows = syncResult as unknown as SyncRunRow[];
   const settingRows = settingResult as unknown as SettingRow[];
   const lastSync = settingRows[0] ? jsonObject(settingRows[0].value) : null;
-  const cachedPoints = historyPoints.length > 0
-    ? historyPoints.map((point) => point)
-    : [];
+  const cachedPoints = historyPoints.length > 0 ? historyPoints : [];
   if (cachedPoints.length > 0) {
     try {
-      await sql.transaction(cachedPoints.map((point) => sql`
+      await sql`
         insert into public.tcg_sealed_portfolio_daily
           (user_id, day, transaction_revision, price_revision, data)
-        values (
-          ${userId}::uuid, ${point.day}::date, ${revision}, ${priceRevision}, ${JSON.stringify(point)}::jsonb
-        )
+        select
+          ${userId}::uuid,
+          (point->>'day')::date,
+          ${revision},
+          ${priceRevision},
+          point
+        from jsonb_array_elements(${JSON.stringify(cachedPoints)}::jsonb) as point
         on conflict (user_id, day) do update set
           transaction_revision = excluded.transaction_revision,
           price_revision = excluded.price_revision,
           data = excluded.data
-      `));
+        where public.tcg_sealed_portfolio_daily.transaction_revision <> excluded.transaction_revision
+          or public.tcg_sealed_portfolio_daily.price_revision <> excluded.price_revision
+      `;
     } catch {
       // The cache is an optimization. A failed aggregate write must never
       // hide the deterministic replay result returned above.
@@ -566,13 +585,12 @@ export async function getSealedOverview(
 export async function getSealedProductDetail(sql: NeonSql, userId: string, id: number) {
   const [products, transactions, prices] = await Promise.all([
     getSealedProducts(sql, userId, [id]),
-    getSealedTransactions(sql, userId),
+    getSealedTransactions(sql, userId, id),
     getSealedPrices(sql, [id]),
   ]);
   const product = products[0];
   if (!product) throw new SealedNotFoundError('Sealed product not found.');
-  const ownTransactions = transactions.filter((transaction) => transaction.cardmarketProductId === id);
-  const summary = summarizeSealedPortfolio(ownTransactions, [product], prices, new Date().toISOString().slice(0, 10));
+  const summary = summarizeSealedPortfolio(transactions, [product], prices, new Date().toISOString().slice(0, 10));
   const valuation = selectSealedValuation(prices);
   const trendValues = prices.map((price) => price.metrics.trendCents).filter((value): value is number => value !== null);
   const changeSince = (day: string | null | undefined) => {
@@ -585,7 +603,7 @@ export async function getSealedProductDetail(sql: NeonSql, userId: string, id: n
   return {
     product,
     ...summary,
-    transactions: ownTransactions,
+    transactions,
     prices: prices.slice(-366),
     valuation,
     observed: {
@@ -986,6 +1004,28 @@ export async function synchronizeSealedCardmarket(sql: NeonSql, now = new Date()
       : 1;
     const fetchedAt = now.toISOString();
     const details = sourceDetails(data, fetchedAt, priceRevision);
+
+    // Cardmarket publications are immutable. Once the source timestamps and
+    // checksums match the last successful run, downloading and re-upserting
+    // the complete catalogue only burns database CPU/WAL without changing
+    // any user-visible data. Keep the successful run marker fresh, but skip
+    // the bulk writes.
+    if (!publicationChanged) {
+      await sql.transaction((tx) => [
+        tx`
+          insert into public.tcg_sealed_settings (key, value)
+          values ('last_sync', ${JSON.stringify(details)}::jsonb)
+          on conflict (key) do update set value = excluded.value
+        `,
+        tx`
+          update public.tcg_sealed_sync_runs
+          set status = 'success', finished_at = ${fetchedAt}::timestamptz, details = ${JSON.stringify(details)}::jsonb
+          where id = ${runId}::uuid
+        `,
+      ]);
+      return { ...details, runId };
+    }
+
     const productChunks: string[] = [];
     for (let index = 0; index < data.products.length; index += 500) productChunks.push(jsonProductBatch(data.products.slice(index, index + 500)));
     const priceChunks: string[] = [];

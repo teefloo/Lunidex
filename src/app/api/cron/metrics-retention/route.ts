@@ -8,8 +8,8 @@ import { withObservedRouteHandler } from '@/lib/api/observed-route';
  * Bounds append-only growth that no other code path cleans up:
  * - abandoned daily quiz attempts would otherwise stay `active` forever;
  * - tcg_price_history snapshots accumulate one row per card per interval.
- * `analytics.daily_metrics` is also re-purged here as a safety net alongside
- * the inline cleanup performed by the analytics ingest route.
+ * `analytics.daily_metrics` is also purged here so the ingestion path remains
+ * a single write on the hot path.
  */
 
 const QUIZ_ATTEMPT_EXPIRY_HOURS = 24;

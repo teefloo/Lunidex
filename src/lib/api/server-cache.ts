@@ -32,6 +32,7 @@ import {
   getPokemonForm,
   getPokemonList,
   getPokemonSpecies,
+  getTypeRelations,
 } from './rest';
 
 const INITIAL_CATALOG_LIMIT = 48;
@@ -57,6 +58,12 @@ const getPokemonFormPersistent = unstable_cache(
 const getPokemonEncountersPersistent = unstable_cache(
   (id: number) => getPokemonEncounters(id),
   ['lunidex:pokemon-encounters:v1'],
+  { revalidate: 86400 },
+);
+
+const getTypeRelationsPersistent = unstable_cache(
+  (type: string) => getTypeRelations(type),
+  ['lunidex:type-relations:v1'],
   { revalidate: 86400 },
 );
 
@@ -219,6 +226,7 @@ export const getPokemonDetailCached = cache(getPokemonDetailPersistent);
 export const getPokemonSpeciesCached = cache(getPokemonSpeciesPersistent);
 export const getPokemonFormCached = cache(getPokemonFormPersistent);
 export const getPokemonEncountersCached = cache(getPokemonEncountersPersistent);
+export const getTypeRelationsCached = cache(getTypeRelationsPersistent);
 export const getLocalizedPokemonDataCached = cache(getLocalizedPokemonDataPersistent);
 export const getPokemonListCached = cache(getPokemonListPersistent);
 export const getPokemonSummarySliceCached = cache(getPokemonSummarySlicePersistent);
