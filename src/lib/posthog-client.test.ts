@@ -89,4 +89,19 @@ describe('PostHog client consent ordering', () => {
       expect.objectContaining({ query_length_bucket: '4_8' }),
     );
   });
+
+  it('uses cookie persistence so a full application localStorage cannot block consent', async () => {
+    vi.resetModules();
+    const { initializePostHog } = await import('./posthog-client');
+
+    initializePostHog();
+
+    expect(mockPostHog.instance.init).toHaveBeenCalledWith(
+      'test-project-token',
+      expect.objectContaining({
+        opt_out_capturing_persistence_type: 'cookie',
+        persistence: 'cookie',
+      }),
+    );
+  });
 });
