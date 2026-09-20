@@ -32,9 +32,15 @@ import { getCardMarketValue } from '@/lib/tcg-collection';
 import { getCardmarketProductUrl } from '@/lib/tcg-marketplace';
 import { cn } from '@/lib/utils';
 import { TCGHolographicCard } from './TCGHolographicCard';
-import { encodeTCGCollectionKey, getTCGDefaultPhysicalVariant, isTCGCollectionCardOwned } from '@/lib/tcg-collections';
+import {
+  encodeTCGCollectionKey,
+  getTCGCollectionCardOwnerships,
+  getTCGDefaultPhysicalVariant,
+  isTCGCollectionCardOwned,
+} from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
+import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -50,6 +56,7 @@ interface TCGCardDetailModalProps {
   priority?: boolean;
   tcgLanguage?: TCGCardLanguage;
   collectionKey?: string;
+  onOwnershipChange?: (owned: boolean) => void;
 }
 
 export function TCGCardDetailModal({
@@ -60,6 +67,7 @@ export function TCGCardDetailModal({
   priority = true,
   tcgLanguage,
   collectionKey,
+  onOwnershipChange,
 }: TCGCardDetailModalProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -82,6 +90,7 @@ export function TCGCardDetailModal({
   // Card data follows the independent TCG language, never the interface
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
+  const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
 
   useEffect(() => {
     void import('../../styles/pokemon-cards-css.css');
@@ -97,7 +106,7 @@ export function TCGCardDetailModal({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        onClose();
+        if (!isVariantSheetOpen) onClose();
       }
     };
 
@@ -107,12 +116,16 @@ export function TCGCardDetailModal({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, isVariantSheetOpen, onClose]);
 
   useEffect(() => {
     if (isOpen) {
       closeButtonRef.current?.focus();
     }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) setIsVariantSheetOpen(false);
   }, [isOpen]);
 
   const { data: hydratedCard, isFetching } = useQuery({
@@ -158,6 +171,11 @@ export function TCGCardDetailModal({
   const owned = resolvedCollectionKey
     ? isTCGCollectionCardOwned(resolvedCollectionKey, displayCard.id, store.tcgCollectionCards)
     : isTCGOwned(displayCard.id);
+  const collectionOwnerships = resolvedCollectionKey
+    ? getTCGCollectionCardOwnerships(resolvedCollectionKey, store.tcgCollectionCards)
+      .filter((ownership) => ownership.cardId === displayCard.id)
+    : [];
+  const totalOwnedQuantity = collectionOwnerships.reduce((sum, ownership) => sum + ownership.quantity, 0);
   const wishlisted = isTCGWishlist(displayCard.id);
   const marketValue = getCardMarketValue(displayCard, displayCurrency);
   const marketValueLabel = marketValue
@@ -332,13 +350,16 @@ export function TCGCardDetailModal({
                       badge={compared ? tcgCompareList.length : undefined}
                     />
                     {resolvedCollectionKey ? (
-                      <div
-                        role="status"
-                        aria-label={t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: `Manage variants for ${displayCard.name}` })}
-                        className="flex min-h-11 items-center justify-center rounded-xl border border-primary/25 bg-primary/10 px-3 text-center text-[11px] font-black uppercase tracking-[0.08em] text-primary"
-                      >
-                        {owned ? t('tcg.collection_owned_variants', { defaultValue: 'Variants managed in collection' }) : t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: 'Manage variants in the collection card' })}
-                      </div>
+                      <ActionPill
+                        active={owned}
+                        onClick={() => setIsVariantSheetOpen(true)}
+                        label={owned
+                          ? t('tcg.collection_owned_variants', { defaultValue: 'Owned variants' })
+                          : t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: `Manage variants for ${displayCard.name}` })}
+                        badge={totalOwnedQuantity > 0 ? totalOwnedQuantity : undefined}
+                        ariaExpanded={isVariantSheetOpen}
+                        ariaControls={`tcg-collection-variants-${displayCard.id}`}
+                      />
                     ) : (
                       <ActionPill active={owned} onClick={handleOwnedToggle} label={t('tcg.mark_owned')} />
                     )}
@@ -497,6 +518,17 @@ export function TCGCardDetailModal({
           </div>
         </div>
       </motion.section>
+
+      {resolvedCollectionKey && (
+        <TCGCollectionVariantSheet
+          card={displayCard}
+          collectionKey={resolvedCollectionKey}
+          language={resolvedLang}
+          open={isVariantSheetOpen}
+          onOpenChange={setIsVariantSheetOpen}
+          onOwnershipChange={onOwnershipChange}
+        />
+      )}
     </div>,
     document.body,
   );
@@ -649,16 +681,22 @@ function ActionPill({
   onClick,
   label,
   badge,
+  ariaExpanded,
+  ariaControls,
 }: {
   active: boolean;
   onClick: () => void;
   label: string;
   badge?: number;
+  ariaExpanded?: boolean;
+  ariaControls?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
       className={cn(
         'touch-target relative w-full rounded-xl border px-3 text-center text-[11px] font-black uppercase tracking-[0.12em] transition-all duration-100 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card',
         active
