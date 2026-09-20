@@ -606,23 +606,101 @@ export async function getSealedOverview(
   };
 }
 
+export function summarizeSealedProductDetail(
+  transactions: readonly SealedTransaction[],
+  products: readonly SealedProduct[],
+  prices: readonly SealedPriceSnapshot[],
+  productId: number,
+  asOf: string,
+): ReturnType<typeof summarizeSealedPortfolio> {
+  const fullSummary = summarizeSealedPortfolio(transactions, products, prices, asOf);
+  const positions = fullSummary.positions.filter((position) => position.cardmarketProductId === productId);
+  const lots = fullSummary.lots.filter((lot) => lot.transaction.cardmarketProductId === productId);
+  const sales = fullSummary.sales.filter((sale) => sale.transaction.cardmarketProductId === productId);
+  const exchanges = fullSummary.exchanges.filter((exchange) => (
+    exchange.transaction.cardmarketProductId === productId
+    || exchange.transaction.exchangeGive?.cardmarketProductId === productId
+  ));
+  const sum = <K extends keyof typeof positions[number]>(key: K): number => (
+    positions.reduce((total, position) => total + Number(position[key]), 0)
+  );
+  const missingPrices = positions.filter((position) => position.quantity > 0 && position.valueCents === null);
+  const knownValueCents = positions.reduce((total, position) => total + (position.valueCents ?? 0), 0);
+  const valueCents = missingPrices.length > 0 ? null : knownValueCents;
+  const latentCents = valueCents === null ? null : valueCents - sum('costCents');
+  const realizedCents = sum('realizedCents');
+  const totalCents = latentCents === null ? null : realizedCents + latentCents;
+  const sold = sum('sold');
+  const bought = sum('bought');
+  const totals = {
+    units: sum('quantity'),
+    costCents: sum('costCents'),
+    valueCents,
+    latentCents,
+    realizedCents,
+    totalCents,
+    spentCents: sum('spentCents'),
+    grossSalesCents: sum('grossSalesCents'),
+    netSalesCents: sum('netSalesCents'),
+    buyFeesCents: sum('buyFeesCents'),
+    sellFeesCents: sum('sellFeesCents'),
+    bought,
+    sold,
+    exchangeIn: sum('exchangeIn'),
+    exchangeOut: sum('exchangeOut'),
+    distinct: positions.filter((position) => position.quantity > 0).length,
+    missingPrices: missingPrices.length,
+    roi: totalCents === null || sum('spentCents') === 0 ? null : (totalCents / sum('spentCents')) * 100,
+    cashFlowCents: sum('netSalesCents') - sum('spentCents'),
+    soldCostCents: sales.reduce((total, sale) => total + sale.costCents, 0),
+    averageEntryCents: bought > 0 ? sum('spentCents') / bought : null,
+    averageExitCents: sold > 0 ? sum('grossSalesCents') / sold : null,
+    holdingDays: sold > 0
+      ? sales.reduce((total, sale) => total + sale.holdingDays * sale.transaction.quantity, 0) / sold
+      : null,
+    winningSales: sales.length > 0 ? (sales.filter((sale) => sale.profitCents > 0).length / sales.length) * 100 : null,
+    losingSales: sales.length > 0 ? (sales.filter((sale) => sale.profitCents < 0).length / sales.length) * 100 : null,
+    profitPerSoldUnitCents: sold > 0 ? realizedCents / sold : null,
+    sellThrough: bought > 0 ? (sold / bought) * 100 : null,
+  } satisfies ReturnType<typeof summarizeSealedPortfolio>['totals'];
+  return { positions, lots, sales, exchanges, totals };
+}
+
 export async function getSealedProductDetail(sql: NeonSql, userId: string, id: number) {
-  const transactions = await getSealedTransactions(sql, userId, id);
+  const allTransactions = await getSealedTransactions(sql, userId);
+  const transactions = allTransactions.filter((transaction) => (
+    transaction.cardmarketProductId === id
+    || transaction.exchangeGive?.cardmarketProductId === id
+  ));
   const productIds = [...new Set([
+    id,
+    ...allTransactions.flatMap((transaction) => [
+      transaction.cardmarketProductId,
+      ...(transaction.exchangeGive ? [transaction.exchangeGive.cardmarketProductId] : []),
+    ]),
+  ])];
+  const [allProducts, prices] = await Promise.all([
+    getSealedProducts(sql, userId, productIds),
+    getSealedPrices(sql, [id]),
+  ]);
+  const product = allProducts.find((candidate) => candidate.cardmarketProductId === id);
+  if (!product) throw new SealedNotFoundError('Sealed product not found.');
+  const relatedProductIds = new Set([
     id,
     ...transactions.flatMap((transaction) => [
       transaction.cardmarketProductId,
       ...(transaction.exchangeGive ? [transaction.exchangeGive.cardmarketProductId] : []),
     ]),
-  ])];
-  const [products, prices] = await Promise.all([
-    getSealedProducts(sql, userId, productIds),
-    getSealedPrices(sql, productIds),
   ]);
-  const product = products.find((candidate) => candidate.cardmarketProductId === id);
-  if (!product) throw new SealedNotFoundError('Sealed product not found.');
+  const products = allProducts.filter((candidate) => relatedProductIds.has(candidate.cardmarketProductId));
   const productPrices = prices.filter((price) => price.cardmarketProductId === id);
-  const summary = summarizeSealedPortfolio(transactions, products, prices, new Date().toISOString().slice(0, 10));
+  const summary = summarizeSealedProductDetail(
+    allTransactions,
+    allProducts,
+    prices,
+    id,
+    new Date().toISOString().slice(0, 10),
+  );
   const valuation = selectSealedValuation(productPrices);
   const trendValues = productPrices.map((price) => price.metrics.trendCents).filter((value): value is number => value !== null);
   const changeSince = (day: string | null | undefined) => {

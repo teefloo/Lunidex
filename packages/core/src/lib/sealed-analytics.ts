@@ -129,7 +129,7 @@ export function summarizeSealedPortfolio(
     missingPrices: missingPrices.length,
     roi: totalCents === null ? null : ratio(totalCents, sum('spentCents')),
     cashFlowCents: sum('netSalesCents') - sum('spentCents'),
-    soldCostCents: sum('spentCents') - sum('costCents'),
+    soldCostCents: ledger.sales.reduce((total, sale) => total + sale.costCents, 0),
     averageEntryCents: sum('bought') > 0 ? sum('spentCents') / sum('bought') : null,
     averageExitCents: sold > 0 ? sum('grossSalesCents') / sold : null,
     holdingDays,

@@ -432,6 +432,7 @@ describe('sealed exchanges', () => {
       netSalesCents: 0,
       realizedCents: 0,
       cashFlowCents: -1_000,
+      soldCostCents: 0,
       exchangeIn: 1,
       exchangeOut: 1,
     });
@@ -441,6 +442,7 @@ describe('sealed exchanges', () => {
       netSalesCents: 1_500,
       realizedCents: 500,
       cashFlowCents: 500,
+      soldCostCents: 1_000,
       exchangeIn: 1,
       exchangeOut: 1,
     });

@@ -534,7 +534,7 @@ function TransactionForm({ state, products, ownedProducts, exchangeProducts, lot
     }
     onSave({ ...form, ...moneyValues, selections }, existing);
   };
-  const quantityField = () => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.receive')} · {t('tcg.sealed.quantity')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="number" inputMode="numeric" min={1} step={1} value={form.quantity} onChange={(event) => setField('quantity', Math.max(1, Math.floor(Number(event.target.value) || 1)))} /></label>;
+  const quantityField = () => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{form.kind === 'exchange' ? `${t('tcg.sealed.receive')} · ` : ''}{t('tcg.sealed.quantity')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="number" inputMode="numeric" min={1} step={1} value={form.quantity} onChange={(event) => setField('quantity', Math.max(1, Math.floor(Number(event.target.value) || 1)))} /></label>;
   const giveQuantityField = () => <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.give')} · {t('tcg.sealed.quantity')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="number" inputMode="numeric" min={1} step={1} value={form.exchangeGive?.quantity ?? 1} onChange={(event) => setForm((current) => ({ ...current, exchangeGive: current.exchangeGive ? { ...current.exchangeGive, quantity: Math.max(1, Math.floor(Number(event.target.value) || 1)) } : undefined }))} /></label>;
   const moneyField = (label: string, key: SealedMoneyField) => {
     const errorId = `sealed-${key}-error`;
