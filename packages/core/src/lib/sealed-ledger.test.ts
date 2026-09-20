@@ -55,6 +55,35 @@ function transaction(
   };
 }
 
+function exchangeTransaction(
+  id: string,
+  overrides: Record<string, unknown> = {},
+): SealedTransaction {
+  const { exchangeGive: exchangeGiveOverride, ...transactionOverrides } = overrides;
+  const value = transaction(id, {
+    cardmarketProductId: 200,
+    language: 'fr',
+    quantity: 1,
+    unitPriceCents: 0,
+    feesCents: 0,
+    shippingCents: 0,
+    discountCents: 0,
+    paymentFeesCents: 0,
+    otherCostsCents: 0,
+    ...transactionOverrides,
+    kind: 'exchange' as unknown as SealedTransactionDraft['kind'],
+  });
+  return {
+    ...value,
+    kind: 'exchange',
+    exchangeGive: exchangeGiveOverride ?? {
+      cardmarketProductId: 100,
+      language: 'fr',
+      quantity: 1,
+    },
+  } as unknown as SealedTransaction;
+}
+
 describe('sealed ledger', () => {
   it('calculates buy and sell cash with the same fee semantics as scelle', () => {
     const buy = draft();
@@ -144,6 +173,317 @@ describe('sealed ledger', () => {
   });
 });
 
+describe('sealed exchanges', () => {
+  it('moves one unit and its historical cost without creating a sale or cashflow', () => {
+    const buy = transaction('buy-give', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('exchange-1');
+
+    const result = replaySealedLedger([buy, exchange]);
+
+    expect(result.sales).toEqual([]);
+    expect(result.exchanges[0]).toMatchObject({
+      transaction: { id: 'exchange-1' },
+      costCents: 1_000,
+    });
+    expect(result.positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        cardmarketProductId: 100,
+        quantity: 0,
+        costCents: 0,
+        exchangeOut: 1,
+      }),
+      expect.objectContaining({
+        cardmarketProductId: 200,
+        quantity: 1,
+        costCents: 1_000,
+        exchangeIn: 1,
+      }),
+    ]));
+    expect(calculateSealedCashflow(
+      [buy, exchange],
+      '2026-09-01',
+      '2026-09-01',
+      'day',
+    )).toMatchObject([
+      expect.objectContaining({
+        buysCents: 1_000,
+        netSalesCents: 0,
+        recoveredCents: 0,
+        netCents: -1_000,
+      }),
+    ]);
+  });
+
+  it('transfers the total source cost across different quantities', () => {
+    const buy = transaction('buy-three', {
+      cardmarketProductId: 100,
+      quantity: 3,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('exchange-three-for-two', {
+      date: '2026-09-02',
+      quantity: 2,
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: 3 },
+    });
+
+    const result = replaySealedLedger([buy, exchange]);
+
+    expect(result.exchanges[0].costCents).toBe(3_000);
+    expect(result.positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 100, quantity: 0, costCents: 0 }),
+      expect.objectContaining({ cardmarketProductId: 200, quantity: 2, costCents: 3_000 }),
+    ]));
+  });
+
+  it('adds transferred cost to an existing destination position and keeps direct buys distinct', () => {
+    const source = transaction('buy-source', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const destination = transaction('buy-destination', {
+      cardmarketProductId: 200,
+      quantity: 1,
+      unitPriceCents: 500,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('exchange-existing-destination', {
+      date: '2026-09-02',
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: 1 },
+    });
+
+    const destinationPosition = replaySealedLedger([source, destination, exchange]).positions
+      .find((position) => position.cardmarketProductId === 200);
+
+    expect(destinationPosition).toMatchObject({
+      quantity: 2,
+      costCents: 1_500,
+      bought: 1,
+      exchangeIn: 1,
+    });
+  });
+
+  it('creates a costed position for a destination that has no direct purchase', () => {
+    const source = transaction('buy-source-only', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('exchange-new-destination', {
+      date: '2026-09-02',
+      cardmarketProductId: 300,
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: 1 },
+    });
+
+    expect(replaySealedLedger([source, exchange]).positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        cardmarketProductId: 300,
+        quantity: 1,
+        costCents: 1_000,
+        bought: 0,
+        exchangeIn: 1,
+      }),
+    ]));
+  });
+
+  it('rejects invalid exchange legs, money fields and allocations', () => {
+    const source = transaction('buy-validation-source', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+
+    expect(() => replaySealedLedger([source, exchangeTransaction('too-much', {
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: 2 },
+    })])).toThrow(SealedDomainError);
+    expect(() => replaySealedLedger([source, exchangeTransaction('zero-receive', { quantity: 0 })])).toThrow(SealedDomainError);
+    expect(() => replaySealedLedger([source, exchangeTransaction('negative-give', {
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: -1 },
+    })])).toThrow(SealedDomainError);
+    expect(() => replaySealedLedger([source, exchangeTransaction('money', { unitPriceCents: 1 })])).toThrow(SealedDomainError);
+
+    const missingGive = exchangeTransaction('missing-give');
+    delete (missingGive as unknown as { exchangeGive?: unknown }).exchangeGive;
+    expect(() => replaySealedLedger([source, missingGive])).toThrow(SealedDomainError);
+
+    expect(() => replaySealedLedger([source, exchangeTransaction('wrong-lot', {
+      allocationMethod: 'manual',
+      selections: [{ lotId: 'not-source', quantity: 1 }],
+    })])).toThrow(SealedDomainError);
+
+    expect(() => validateSealedTransactionDraft(
+      exchangeTransaction('future-exchange', { date: '2026-09-11' }),
+      now,
+    )).toThrow(SealedDomainError);
+  });
+
+  it('keeps different exchange languages in separate positions and allows a same-day sale', () => {
+    const source = transaction('buy-fr-source', {
+      cardmarketProductId: 100,
+      language: 'fr',
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('same-day-exchange', {
+      language: 'en',
+      exchangeGive: { cardmarketProductId: 100, language: 'fr', quantity: 1 },
+    });
+    const sale = transaction('same-day-sale', {
+      kind: 'sell',
+      cardmarketProductId: 200,
+      language: 'en',
+      quantity: 1,
+      unitPriceCents: 1_500,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+      date: '2026-09-01',
+    });
+
+    const result = replaySealedLedger([source, exchange, sale]);
+
+    expect(result.sales).toHaveLength(1);
+    expect(result.sales[0].costCents).toBe(1_000);
+    expect(result.positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 100, language: 'fr', exchangeOut: 1 }),
+      expect.objectContaining({ cardmarketProductId: 200, language: 'en', exchangeIn: 1, sold: 1 }),
+    ]));
+  });
+
+  it('does not mutate transactions when replay validation fails', () => {
+    const source = transaction('immutable-source', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const invalid = exchangeTransaction('immutable-invalid', {
+      allocationMethod: 'manual',
+      selections: [{ lotId: 'missing', quantity: 1 }],
+    });
+    const before = JSON.stringify([source, invalid]);
+
+    expect(() => replaySealedLedger([source, invalid])).toThrow(SealedDomainError);
+    expect(JSON.stringify([source, invalid])).toBe(before);
+  });
+
+  it('keeps exchange cost out of financial totals and applies market valuation to received stock', () => {
+    const buy = transaction('accounting-buy', {
+      cardmarketProductId: 100,
+      quantity: 1,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const exchange = exchangeTransaction('accounting-exchange', {
+      date: '2026-09-02',
+      cardmarketProductId: 200,
+    });
+    const sale = transaction('accounting-sale', {
+      kind: 'sell',
+      date: '2026-09-03',
+      cardmarketProductId: 200,
+      quantity: 1,
+      unitPriceCents: 1_500,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const products = [product, { ...product, cardmarketProductId: 200, name: 'Received test' }];
+    const prices = [snapshotForProduct(100, '2026-09-03', 1_200), snapshotForProduct(200, '2026-09-03', 2_000)];
+    const receivedSummary = summarizeSealedPortfolio([buy, exchange], products, prices, '2026-09-03');
+    const summary = summarizeSealedPortfolio([buy, exchange, sale], products, prices, '2026-09-03');
+
+    expect(receivedSummary.positions.find((position) => position.cardmarketProductId === 200)).toMatchObject({
+      costCents: 1_000,
+      valueCents: 2_000,
+      latentCents: 1_000,
+    });
+    expect(receivedSummary.totals).toMatchObject({
+      spentCents: 1_000,
+      grossSalesCents: 0,
+      netSalesCents: 0,
+      realizedCents: 0,
+      cashFlowCents: -1_000,
+      exchangeIn: 1,
+      exchangeOut: 1,
+    });
+    expect(summary.totals).toMatchObject({
+      spentCents: 1_000,
+      grossSalesCents: 1_500,
+      netSalesCents: 1_500,
+      realizedCents: 500,
+      cashFlowCents: 500,
+      exchangeIn: 1,
+      exchangeOut: 1,
+    });
+    expect(calculateSealedCashflow([buy, exchange, sale], '2026-09-01', '2026-09-03', 'day')
+      .map((row) => row.period)).toEqual(['2026-09-01', '2026-09-03']);
+  });
+
+  it('replays edited and voided exchanges without retaining the old destination leg', () => {
+    const source = transaction('replay-source', {
+      cardmarketProductId: 100,
+      quantity: 2,
+      unitPriceCents: 1_000,
+      feesCents: 0,
+      shippingCents: 0,
+      discountCents: 0,
+    });
+    const original = exchangeTransaction('replay-exchange', {
+      date: '2026-09-02',
+      cardmarketProductId: 200,
+    });
+    const replacement = exchangeTransaction('replay-exchange', {
+      date: '2026-09-02',
+      cardmarketProductId: 300,
+    });
+    const edited = replaySealedLedger([source, replacement]);
+    const voided = { ...original, voided: true };
+    const cancelled = replaySealedLedger([source, voided]);
+
+    expect(edited.positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 300, quantity: 1, costCents: 1_000 }),
+    ]));
+    expect(edited.positions).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 200, quantity: 1 }),
+    ]));
+    expect(cancelled.positions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 100, quantity: 2, costCents: 2_000 }),
+    ]));
+    expect(cancelled.positions).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ cardmarketProductId: 200, quantity: 1 }),
+    ]));
+  });
+});
+
 function snapshot(day: string, avg1Cents: number | null, trendCents = avg1Cents): SealedPriceSnapshot {
   return {
     cardmarketProductId: 100,
@@ -159,6 +499,10 @@ function snapshot(day: string, avg1Cents: number | null, trendCents = avg1Cents)
       avg30Cents: avg1Cents,
     },
   };
+}
+
+function snapshotForProduct(productId: number, day: string, avg1Cents: number): SealedPriceSnapshot {
+  return { ...snapshot(day, avg1Cents), cardmarketProductId: productId };
 }
 
 describe('sealed valuation', () => {
