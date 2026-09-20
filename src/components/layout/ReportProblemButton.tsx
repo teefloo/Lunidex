@@ -4,6 +4,8 @@ import { MessageSquareWarning } from 'lucide-react';
 import * as Sentry from '@sentry/nextjs';
 import { useRef, useState } from 'react';
 
+import { capturePostHogException } from '@/lib/posthog-client';
+
 interface FeedbackDialog {
   appendToDom: () => void;
   open: () => void;
@@ -88,6 +90,11 @@ export function ReportProblemButton({
           dialogRef.current = null;
         },
         onFormSubmitted: () => {
+          capturePostHogException(new Error('A user reported a visual problem'), {
+            feature: 'visual-feedback',
+            operation: 'visual-problem-submitted',
+            route: window.location.pathname,
+          });
           dialogRef.current?.removeFromDom();
           dialogRef.current = null;
         },

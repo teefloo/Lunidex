@@ -132,4 +132,46 @@ describe('PostHog client consent ordering', () => {
 
     expect(mockPostHog.instance.opt_in_capturing).toHaveBeenCalledWith({ captureEventName: false });
   });
+
+  it('captures a user-reported visual problem as an exception after consent', async () => {
+    vi.resetModules();
+    const {
+      capturePostHogException,
+      initializePostHog,
+      syncPostHogConsent,
+    } = await import('./posthog-client');
+
+    syncPostHogConsent({
+      audiencePerformance: 'denied',
+      chosenAt: '2026-09-19T00:00:00.000Z',
+      policyVersion: '2026-09-19',
+      productMeasurement: 'granted',
+      version: 3,
+    });
+    initializePostHog();
+    capturePostHogException(new Error('A user reported a visual problem'), {
+      feature: 'visual-feedback',
+      operation: 'visual-problem-submitted',
+      route: '/fr/pokedex',
+    });
+
+    expect(mockPostHog.instance.captureException).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'A user reported a visual problem',
+      }),
+      expect.objectContaining({
+        feature: 'visual-feedback',
+        operation: 'visual-problem-submitted',
+        route: '/pokedex',
+      }),
+    );
+    expect(mockPostHog.instance.capture).toHaveBeenCalledWith(
+      'feature_error',
+      expect.objectContaining({
+        feature: 'visual-feedback',
+        operation: 'visual-problem-submitted',
+        error_type: 'Error',
+      }),
+    );
+  });
 });
