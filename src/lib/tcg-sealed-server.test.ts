@@ -1,6 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { SealedPriceSnapshot, SealedProduct, SealedTransaction } from '@primedex/core';
-import { normalizeSealedDraft, SealedServerError, sealedExportCsv, summarizeSealedProductDetail } from './tcg-sealed-server';
+import type { NeonSql } from '@/lib/neon/server';
+import {
+  getSealedOverview,
+  getSealedPortfolioDaily,
+  normalizeSealedDraft,
+  SealedServerError,
+  sealedExportCsv,
+  summarizeSealedProductDetail,
+} from './tcg-sealed-server';
 
 const detailProduct = (cardmarketProductId: number, name: string): SealedProduct => ({
   cardmarketProductId,
@@ -54,6 +62,110 @@ const detailPrice = (cardmarketProductId: number): SealedPriceSnapshot => ({
     avg7Cents: 2_000,
     avg30Cents: 2_000,
   },
+});
+
+type TestSql = {
+  (strings: TemplateStringsArray, ...values: unknown[]): Promise<unknown[]>;
+  query: (query: string, params: unknown[]) => Promise<unknown[]>;
+  transaction: (callback: (tx: NeonSql) => unknown[]) => Promise<unknown[][]>;
+};
+
+function createOverviewSql(dailyRows: unknown[] = []) {
+  const statements: string[] = [];
+  const sql = (async (strings: TemplateStringsArray) => {
+    const statement = strings.join('?');
+    statements.push(statement);
+    if (statement.includes('select day::text, data')) return dailyRows;
+    return [];
+  }) as unknown as TestSql;
+  sql.query = async () => [];
+  sql.transaction = async (callback) => {
+    const tx = (async () => []) as unknown as NeonSql;
+    callback(tx);
+    return [[], [{ revision: 0 }]];
+  };
+  return { sql: sql as unknown as NeonSql, statements };
+}
+
+const validDailyPoint = {
+  day: '2026-09-19',
+  units: 0,
+  costCents: 0,
+  valueCents: 0,
+  latentCents: 0,
+  realizedCents: 0,
+  totalCents: 0,
+  spentCents: 0,
+  grossSalesCents: 0,
+  netSalesCents: 0,
+  buyFeesCents: 0,
+  sellFeesCents: 0,
+  bought: 0,
+  sold: 0,
+  exchangeIn: 0,
+  exchangeOut: 0,
+  distinct: 0,
+  missingPrices: 0,
+  roi: null,
+  cashFlowCents: 0,
+  soldCostCents: 0,
+  averageEntryCents: null,
+  averageExitCents: null,
+  holdingDays: null,
+  winningSales: null,
+  losingSales: null,
+  profitPerSoldUnitCents: null,
+  sellThrough: null,
+};
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+describe('sealed portfolio daily overview', () => {
+  it('records the consulted current day even when there is no price snapshot', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-20T12:00:00.000Z'));
+    const { sql, statements } = createOverviewSql();
+
+    const overview = await getSealedOverview(sql, '00000000-0000-4000-8000-000000000001');
+
+    expect(overview.history).toEqual([expect.objectContaining({ day: '2026-09-20', units: 0, valueCents: 0 })]);
+    expect(statements.some((statement) => statement.includes('insert into public.tcg_sealed_portfolio_daily'))).toBe(true);
+  });
+
+  it('reads only valid daily rows and avoids casting the open-ended sentinel date', async () => {
+    const dailyRows = [
+      { day: '2026-09-19', data: validDailyPoint },
+      { day: '2026-09-20', data: { day: '2026-09-20' } },
+    ];
+    const { sql, statements } = createOverviewSql(dailyRows);
+
+    const allDays = await getSealedPortfolioDaily(sql, '00000000-0000-4000-8000-000000000001', '0000-01-01', '2026-09-20');
+
+    expect(allDays).toEqual([validDailyPoint]);
+    expect(statements[0]).toContain('day <=');
+    expect(statements[0]).not.toContain('day >=');
+
+    statements.length = 0;
+    await getSealedPortfolioDaily(sql, '00000000-0000-4000-8000-000000000001', '2026-09-01', '2026-09-20');
+    expect(statements[0]).toContain('day >=');
+    expect(statements[0]).toContain('day <=');
+  });
+
+  it('merges persisted prior days while preferring the current calculation', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-20T12:00:00.000Z'));
+    const { sql } = createOverviewSql([
+      { day: '2026-09-19', data: validDailyPoint },
+      { day: '2026-09-20', data: { ...validDailyPoint, day: '2026-09-20', valueCents: 9_999 } },
+    ]);
+
+    const overview = await getSealedOverview(sql, '00000000-0000-4000-8000-000000000001');
+
+    expect(overview.history.map((point) => point.day)).toEqual(['2026-09-19', '2026-09-20']);
+    expect(overview.history.find((point) => point.day === '2026-09-20')?.valueCents).toBe(0);
+  });
 });
 
 describe('sealed exchange server boundary', () => {

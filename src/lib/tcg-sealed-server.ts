@@ -16,6 +16,7 @@ import { SEALED_PRODUCT_CATEGORY_IDS } from '@primedex/core/types/sealed';
 import type {
   SealedPriceMetrics,
   SealedPriceSnapshot,
+  SealedPortfolioPoint,
   SealedProduct,
   SealedProductLanguage,
   SealedSourceStatus,
@@ -28,6 +29,11 @@ import {
   SEALED_CARDMARKET_SOURCES,
   type DownloadedCardmarketData,
 } from '@/lib/tcg-sealed-cardmarket';
+import {
+  mergeSealedPortfolioHistory,
+  parseSealedPortfolioDailyPoint,
+  type SealedPortfolioDailyRow,
+} from '@/lib/tcg-sealed-history';
 
 const SEALED_CATEGORY_SQL = [...SEALED_PRODUCT_CATEGORY_IDS];
 const MAX_CATALOGUE_PAGE_SIZE = 48;
@@ -489,6 +495,34 @@ async function loadSealedPortfolio(sql: NeonSql, userId: string) {
   return { transactions, products, prices };
 }
 
+export async function getSealedPortfolioDaily(
+  sql: NeonSql,
+  userId: string,
+  from: string,
+  to: string,
+): Promise<SealedPortfolioPoint[]> {
+  const rows = from === '0000-01-01'
+    ? await sql`
+      select day::text, data
+      from public.tcg_sealed_portfolio_daily
+      where user_id = ${userId}::uuid
+        and day <= ${to}::date
+      order by day asc
+    `
+    : await sql`
+      select day::text, data
+      from public.tcg_sealed_portfolio_daily
+      where user_id = ${userId}::uuid
+        and day >= ${from}::date
+        and day <= ${to}::date
+      order by day asc
+    `;
+  return (rows as unknown as SealedPortfolioDailyRow[]).flatMap((row) => {
+    const point = parseSealedPortfolioDailyPoint(row);
+    return point ? [point] : [];
+  });
+}
+
 function validRange(from: string, to: string): boolean {
   const today = new Date().toISOString().slice(0, 10);
   return isSealedDate(from) && isSealedDate(to) && from <= to && to <= today;
@@ -513,11 +547,18 @@ export async function getSealedOverview(
   const today = new Date().toISOString().slice(0, 10);
   const current = summarizeSealedPortfolio(transactions, products, prices, today);
   const atEnd = summarizeSealedPortfolio(transactions, products, prices, to);
-  const days = sealedHistoryDays(prices, from, to);
-  const history = days.length <= 366
-    ? days
-    : days.filter((_, index) => index % Math.ceil(days.length / 366) === 0 || index === days.length - 1);
-  const historyPoints = history.map((day) => ({ day, ...summarizeSealedPortfolio(transactions, products, prices, day).totals }));
+  const priceDays = sealedHistoryDays(prices, from, to);
+  const historyDays = priceDays.length <= 366
+    ? priceDays
+    : priceDays.filter((_, index) => index % Math.ceil(priceDays.length / 366) === 0 || index === priceDays.length - 1);
+  const computedPoints = historyDays.map((day) => ({
+    day,
+    ...summarizeSealedPortfolio(transactions, products, prices, day).totals,
+  }));
+  const currentPoint = { day: today, ...current.totals };
+  const pointsForCache = mergeSealedPortfolioHistory([], [...computedPoints, currentPoint], '0000-01-01', today);
+  const pointsForResponse = mergeSealedPortfolioHistory([], pointsForCache, from, to);
+  let historyPoints = pointsForResponse;
   const cashflow = calculateSealedCashflow(transactions, from, to, group);
   const selected = transactions.filter((transaction) => !transaction.voided && transaction.date >= from && transaction.date <= to);
   const periodSales = current.sales.filter((sale) => sale.transaction.date >= from && sale.transaction.date <= to);
@@ -553,9 +594,8 @@ export async function getSealedOverview(
   const syncRows = syncResult as unknown as SyncRunRow[];
   const settingRows = settingResult as unknown as SettingRow[];
   const lastSync = settingRows[0] ? jsonObject(settingRows[0].value) : null;
-  const cachedPoints = historyPoints.length > 0 ? historyPoints : [];
-  if (cachedPoints.length > 0) {
-    try {
+  try {
+    if (pointsForCache.length > 0) {
       await sql`
         insert into public.tcg_sealed_portfolio_daily
           (user_id, day, transaction_revision, price_revision, data)
@@ -565,7 +605,7 @@ export async function getSealedOverview(
           ${revision},
           ${priceRevision},
           point
-        from jsonb_array_elements(${JSON.stringify(cachedPoints)}::jsonb) as point
+        from jsonb_array_elements(${JSON.stringify(pointsForCache)}::jsonb) as point
         on conflict (user_id, day) do update set
           transaction_revision = excluded.transaction_revision,
           price_revision = excluded.price_revision,
@@ -573,10 +613,12 @@ export async function getSealedOverview(
         where public.tcg_sealed_portfolio_daily.transaction_revision <> excluded.transaction_revision
           or public.tcg_sealed_portfolio_daily.price_revision <> excluded.price_revision
       `;
-    } catch {
-      // The cache is an optimization. A failed aggregate write must never
-      // hide the deterministic replay result returned above.
     }
+    const cachedRows = await getSealedPortfolioDaily(sql, userId, from, to);
+    historyPoints = mergeSealedPortfolioHistory(cachedRows, pointsForResponse, from, to);
+  } catch {
+    // The cache is an optimization. A failed read or write must never hide
+    // the deterministic replay result returned above.
   }
   return {
     revision,
