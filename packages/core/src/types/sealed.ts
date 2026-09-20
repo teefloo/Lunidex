@@ -16,7 +16,7 @@ export type SealedProductCategoryId = (typeof SEALED_PRODUCT_CATEGORY_IDS)[numbe
 export const SEALED_PRODUCT_LANGUAGES = ['unknown', 'en', 'fr', 'es', 'de', 'it', 'ja'] as const;
 export type SealedProductLanguage = (typeof SEALED_PRODUCT_LANGUAGES)[number];
 
-export type SealedTransactionKind = 'buy' | 'sell';
+export type SealedTransactionKind = 'buy' | 'sell' | 'exchange';
 export type SealedAllocationMethod = 'fifo' | 'manual';
 export type SealedPriceMetric = 'avg' | 'avg1' | 'avg7' | 'avg30' | 'trend' | 'low' | 'app_avg3';
 
@@ -52,6 +52,12 @@ export interface SealedPriceSnapshot {
   metrics: SealedPriceMetrics;
 }
 
+export interface SealedExchangeLeg {
+  cardmarketProductId: number;
+  language: SealedProductLanguage;
+  quantity: number;
+}
+
 export interface SealedAllocationSelection {
   lotId: string;
   quantity: number;
@@ -61,6 +67,7 @@ export interface SealedTransactionDraft {
   kind: SealedTransactionKind;
   cardmarketProductId: number;
   language: SealedProductLanguage;
+  exchangeGive?: SealedExchangeLeg;
   date: string;
   quantity: number;
   unitPriceCents: number;
@@ -112,11 +119,19 @@ export interface SealedSale {
   allocations: SealedAllocation[];
 }
 
+export interface SealedExchange {
+  transaction: SealedTransaction;
+  costCents: number;
+  allocations: SealedAllocation[];
+}
+
 export interface SealedPosition {
   cardmarketProductId: number;
   language: SealedProductLanguage;
   bought: number;
   sold: number;
+  exchangeIn: number;
+  exchangeOut: number;
   quantity: number;
   spentCents: number;
   costCents: number;
@@ -134,6 +149,7 @@ export interface SealedLedgerResult {
   positions: SealedPosition[];
   lots: SealedLot[];
   sales: SealedSale[];
+  exchanges: SealedExchange[];
 }
 
 export interface SealedValuation {
@@ -157,6 +173,8 @@ export interface SealedPortfolioTotals {
   sellFeesCents: number;
   bought: number;
   sold: number;
+  exchangeIn: number;
+  exchangeOut: number;
   distinct: number;
   missingPrices: number;
   roi: number | null;

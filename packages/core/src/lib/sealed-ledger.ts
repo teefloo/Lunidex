@@ -2,6 +2,8 @@ import {
   SEALED_PRODUCT_LANGUAGES,
   type SealedAllocation,
   type SealedAllocationMethod,
+  type SealedExchange,
+  type SealedExchangeLeg,
   type SealedLedgerResult,
   type SealedLot,
   type SealedPriceMetric,
@@ -30,6 +32,12 @@ export class SealedDomainError extends Error {
 function assertInteger(value: number, field: string, minimum = 0, maximum = MAX_MONEY_CENTS): void {
   if (!Number.isSafeInteger(value) || value < minimum || value > maximum) {
     throw new SealedDomainError(`${field} must be a safe integer between ${minimum} and ${maximum}.`);
+  }
+}
+
+function assertProductId(value: unknown, field: string): asserts value is number {
+  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value <= 0) {
+    throw new SealedDomainError(`${field} is invalid.`);
   }
 }
 
@@ -74,11 +82,23 @@ function ensureDraftShape(input: unknown): SealedTransactionDraft {
     throw new SealedDomainError('Transaction payload is invalid.');
   }
 
-  const value = input as Partial<SealedTransactionDraft>;
+  const value = input as Partial<SealedTransactionDraft> & { exchangeGive?: unknown };
+  const rawExchangeGive = value.exchangeGive;
+  const exchangeGive = rawExchangeGive && typeof rawExchangeGive === 'object' && !Array.isArray(rawExchangeGive)
+    ? (() => {
+      const give = rawExchangeGive as Partial<SealedExchangeLeg>;
+      return {
+        cardmarketProductId: give.cardmarketProductId as number,
+        language: give.language as SealedProductLanguage,
+        quantity: give.quantity as number,
+      };
+    })()
+    : undefined;
   const draft: SealedTransactionDraft = {
     kind: value.kind as SealedTransactionDraft['kind'],
     cardmarketProductId: value.cardmarketProductId as number,
     language: value.language as SealedProductLanguage,
+    exchangeGive,
     date: value.date as string,
     quantity: value.quantity as number,
     unitPriceCents: value.unitPriceCents as number,
@@ -108,12 +128,10 @@ export function validateSealedTransactionDraft(
 ): SealedTransactionDraft {
   const transaction = ensureDraftShape(input);
 
-  if (transaction.kind !== 'buy' && transaction.kind !== 'sell') {
+  if (transaction.kind !== 'buy' && transaction.kind !== 'sell' && transaction.kind !== 'exchange') {
     throw new SealedDomainError('Transaction kind is invalid.');
   }
-  if (!Number.isSafeInteger(transaction.cardmarketProductId) || transaction.cardmarketProductId <= 0) {
-    throw new SealedDomainError('Cardmarket product id is invalid.');
-  }
+  assertProductId(transaction.cardmarketProductId, 'Cardmarket product id');
   if (!isSealedProductLanguage(transaction.language)) {
     throw new SealedDomainError('Product language is invalid.');
   }
@@ -159,8 +177,36 @@ export function validateSealedTransactionDraft(
     if (transaction.discountCents > grossCents + transaction.feesCents) {
       throw new SealedDomainError('Purchase discount cannot exceed the purchase total.');
     }
-  } else if (transaction.discountCents !== 0) {
-    throw new SealedDomainError('A sale discount must be included in the unit price.');
+  } else if (transaction.kind === 'sell') {
+    if (transaction.exchangeGive) {
+      throw new SealedDomainError('Exchange give leg is only valid for exchanges.');
+    }
+    if (transaction.discountCents !== 0) {
+      throw new SealedDomainError('A sale discount must be included in the unit price.');
+    }
+  } else {
+    if (!transaction.exchangeGive) {
+      throw new SealedDomainError('Exchange give leg is required.');
+    }
+    if (
+      transaction.unitPriceCents !== 0
+      || transaction.feesCents !== 0
+      || transaction.shippingCents !== 0
+      || transaction.discountCents !== 0
+      || transaction.paymentFeesCents !== 0
+      || transaction.otherCostsCents !== 0
+    ) {
+      throw new SealedDomainError('Exchange money fields must be zero.');
+    }
+    assertProductId(transaction.exchangeGive.cardmarketProductId, 'Exchange give product id');
+    if (!isSealedProductLanguage(transaction.exchangeGive.language)) {
+      throw new SealedDomainError('Exchange give language is invalid.');
+    }
+    assertInteger(transaction.exchangeGive.quantity, 'Exchange give quantity', 1, MAX_QUANTITY);
+  }
+
+  if (transaction.kind !== 'exchange' && transaction.exchangeGive) {
+    throw new SealedDomainError('Exchange give leg is only valid for exchanges.');
   }
 
   return transaction;
@@ -198,6 +244,7 @@ export function validateSealedTransaction(
 }
 
 export function calculateSealedFees(transaction: SealedTransactionDraft): number {
+  if (transaction.kind === 'exchange') return 0;
   return transaction.feesCents
     + transaction.shippingCents
     + (transaction.kind === 'sell'
@@ -210,6 +257,7 @@ export function calculateSealedGrossCents(transaction: SealedTransactionDraft): 
 }
 
 export function calculateSealedCashCents(transaction: SealedTransactionDraft): number {
+  if (transaction.kind === 'exchange') return 0;
   const gross = calculateSealedGrossCents(transaction);
   const totalFees = calculateSealedFees(transaction);
   return transaction.kind === 'buy'
@@ -217,16 +265,22 @@ export function calculateSealedCashCents(transaction: SealedTransactionDraft): n
     : gross - totalFees;
 }
 
-function positionKey(transaction: SealedTransaction): string {
-  return `${transaction.cardmarketProductId}:${transaction.language}`;
+function positionKeyFor(cardmarketProductId: number, language: SealedProductLanguage): string {
+  return `${cardmarketProductId}:${language}`;
 }
 
-function positionTemplate(transaction: SealedTransaction) {
+function positionKey(transaction: SealedTransaction): string {
+  return positionKeyFor(transaction.cardmarketProductId, transaction.language);
+}
+
+function positionTemplate(cardmarketProductId: number, language: SealedProductLanguage, date: string) {
   return {
-    cardmarketProductId: transaction.cardmarketProductId,
-    language: transaction.language,
+    cardmarketProductId,
+    language,
     bought: 0,
     sold: 0,
+    exchangeIn: 0,
+    exchangeOut: 0,
     quantity: 0,
     spentCents: 0,
     costCents: 0,
@@ -235,14 +289,16 @@ function positionTemplate(transaction: SealedTransaction) {
     realizedCents: 0,
     buyFeesCents: 0,
     sellFeesCents: 0,
-    firstBuy: transaction.date,
-    lastBuy: transaction.date,
+    firstBuy: date,
+    lastBuy: date,
     lastSale: null,
   } as {
     cardmarketProductId: number;
     language: SealedProductLanguage;
     bought: number;
     sold: number;
+    exchangeIn: number;
+    exchangeOut: number;
     quantity: number;
     spentCents: number;
     costCents: number;
@@ -258,9 +314,10 @@ function positionTemplate(transaction: SealedTransaction) {
 }
 
 function sortTransactions(transactions: readonly SealedTransaction[]): SealedTransaction[] {
+  const kindOrder: Record<SealedTransaction['kind'], number> = { buy: 0, exchange: 1, sell: 2 };
   return [...transactions].sort((a, b) => (
     a.date.localeCompare(b.date)
-    || (a.kind === b.kind ? 0 : a.kind === 'buy' ? -1 : 1)
+    || kindOrder[a.kind] - kindOrder[b.kind]
     || a.createdAt.localeCompare(b.createdAt)
     || a.id.localeCompare(b.id)
   ));
@@ -277,6 +334,76 @@ function allocateCost(lot: SealedLot, quantity: number): number {
   return cost;
 }
 
+function allocateOutgoingLots(
+  transaction: SealedTransaction,
+  productId: number,
+  language: SealedProductLanguage,
+  quantity: number,
+  positionQuantity: number,
+  lots: Map<string, SealedLot>,
+  lotsByPosition: Map<string, string[]>,
+  fifoIndexes: Map<string, number>,
+): SealedAllocation[] {
+  if (positionQuantity < quantity) {
+    throw new SealedDomainError(`Insufficient stock on ${transaction.date}.`);
+  }
+
+  const key = positionKeyFor(productId, language);
+  const queue = lotsByPosition.get(key) ?? [];
+  let selections = transaction.selections;
+  if (transaction.allocationMethod !== 'manual') {
+    selections = [];
+    let cursor = fifoIndexes.get(key) ?? 0;
+    let needed = quantity;
+    while (needed > 0 && cursor < queue.length) {
+      const lot = lots.get(queue[cursor]);
+      if (!lot || lot.remaining <= 0) {
+        cursor += 1;
+        continue;
+      }
+      const selectedQuantity = Math.min(needed, lot.remaining);
+      selections.push({ lotId: lot.transaction.id, quantity: selectedQuantity });
+      needed -= selectedQuantity;
+      if (selectedQuantity === lot.remaining) cursor += 1;
+    }
+    fifoIndexes.set(key, cursor);
+    if (needed > 0) throw new SealedDomainError('Incomplete FIFO allocation.');
+  } else {
+    const selectionTotal = selections.reduce((sum, selection) => sum + selection.quantity, 0);
+    const uniqueLots = new Set(selections.map((selection) => selection.lotId));
+    if (selectionTotal !== quantity || uniqueLots.size !== selections.length) {
+      throw new SealedDomainError('Manual lots must total exactly the outgoing quantity without duplicates.');
+    }
+  }
+
+  let needed = quantity;
+  const allocations: SealedAllocation[] = [];
+  for (const selection of selections) {
+    if (!needed) break;
+    const lot = lots.get(selection.lotId);
+    if (
+      !lot
+      || lot.transaction.cardmarketProductId !== productId
+      || lot.transaction.language !== language
+      || lot.transaction.date > transaction.date
+      || selection.quantity > lot.remaining
+    ) {
+      throw new SealedDomainError('Lot is missing, later than the transaction, or unavailable.');
+    }
+    const selectedQuantity = Math.min(needed, selection.quantity);
+    const costCents = allocateCost(lot, selectedQuantity);
+    allocations.push({
+      lotId: lot.transaction.id,
+      quantity: selectedQuantity,
+      costCents,
+      holdingDays: dayDifference(lot.transaction.date, transaction.date),
+    });
+    needed -= selectedQuantity;
+  }
+  if (needed) throw new SealedDomainError('Incomplete lot allocation.');
+  return allocations;
+}
+
 /**
  * Replays the complete transaction stream. No database state is trusted as a
  * derived result: editing or voiding one event always rebuilds the ledger.
@@ -291,24 +418,20 @@ export function replaySealedLedger(
     !transaction.voided && transaction.date <= through
   )));
   const positions = new Map<string, ReturnType<typeof positionTemplate>>();
-  const lots = new Map<string, {
-    transaction: SealedTransaction;
-    remaining: number;
-    costCents: number;
-    consumed: number;
-    allocatedCostCents: number;
-  }>();
+  const lots = new Map<string, SealedLot>();
   const lotsByPosition = new Map<string, string[]>();
   const fifoIndexes = new Map<string, number>();
   const sales: SealedSale[] = [];
+  const exchanges: SealedExchange[] = [];
 
   for (const transaction of rows) {
     const validated = validateSealedTransaction(transaction, new Date(`${through}T23:59:59Z`));
-    const key = positionKey(validated);
-    const position = positions.get(key) ?? positionTemplate(validated);
-    positions.set(key, position);
 
     if (validated.kind === 'buy') {
+      const key = positionKey(validated);
+      const position = positions.get(key)
+        ?? positionTemplate(validated.cardmarketProductId, validated.language, validated.date);
+      positions.set(key, position);
       const costCents = -calculateSealedCashCents(validated);
       if (costCents < 0) throw new SealedDomainError('Purchase cost cannot be negative.');
       const lot = {
@@ -331,97 +454,100 @@ export function replaySealedLedger(
       continue;
     }
 
-    if (position.quantity < validated.quantity) {
-      throw new SealedDomainError(`Insufficient stock on ${validated.date}.`);
-    }
+    if (validated.kind === 'sell') {
+      const key = positionKey(validated);
+      const position = positions.get(key)
+        ?? positionTemplate(validated.cardmarketProductId, validated.language, validated.date);
+      positions.set(key, position);
+      const allocations = allocateOutgoingLots(
+        validated,
+        validated.cardmarketProductId,
+        validated.language,
+        validated.quantity,
+        position.quantity,
+        lots,
+        lotsByPosition,
+        fifoIndexes,
+      );
 
-    const queue = lotsByPosition.get(key) ?? [];
-    let selections = validated.selections;
-    if (validated.allocationMethod !== 'manual') {
-      selections = [];
-      let cursor = fifoIndexes.get(key) ?? 0;
-      let needed = validated.quantity;
-      while (needed > 0 && cursor < queue.length) {
-        const lot = lots.get(queue[cursor]);
-        if (!lot || lot.remaining <= 0) {
-          cursor += 1;
-          continue;
-        }
-        const quantity = Math.min(needed, lot.remaining);
-        selections.push({ lotId: lot.transaction.id, quantity });
-        needed -= quantity;
-        if (quantity === lot.remaining) cursor += 1;
-      }
-      fifoIndexes.set(key, cursor);
-      if (needed > 0) throw new SealedDomainError('Incomplete FIFO allocation.');
-    } else {
-      const selectionTotal = selections.reduce((sum, selection) => sum + selection.quantity, 0);
-      const uniqueLots = new Set(selections.map((selection) => selection.lotId));
-      if (selectionTotal !== validated.quantity || uniqueLots.size !== selections.length) {
-        throw new SealedDomainError('Manual lots must total exactly the sold quantity without duplicates.');
-      }
-    }
-
-    let needed = validated.quantity;
-    const allocations: SealedAllocation[] = [];
-    for (const selection of selections) {
-      if (!needed) break;
-      const lot = lots.get(selection.lotId);
-      if (
-        !lot
-        || lot.transaction.cardmarketProductId !== validated.cardmarketProductId
-        || lot.transaction.language !== validated.language
-        || lot.transaction.date > validated.date
-        || selection.quantity > lot.remaining
-      ) {
-        throw new SealedDomainError('Lot is missing, later than the sale, or unavailable.');
-      }
-      const quantity = Math.min(needed, selection.quantity);
-      const costCents = allocateCost(lot, quantity);
-      allocations.push({
-        lotId: lot.transaction.id,
-        quantity,
+      const costCents = allocations.reduce((sum, allocation) => sum + allocation.costCents, 0);
+      const netCents = calculateSealedCashCents(validated);
+      const profitCents = netCents - costCents;
+      const holdingDays = allocations.reduce(
+        (sum, allocation) => sum + allocation.holdingDays * allocation.quantity,
+        0,
+      ) / validated.quantity;
+      const sale: SealedSale = {
+        transaction: validated,
+        grossCents: calculateSealedGrossCents(validated),
+        feesCents: calculateSealedFees(validated),
+        netCents,
         costCents,
-        holdingDays: dayDifference(lot.transaction.date, validated.date),
-      });
-      needed -= quantity;
+        profitCents,
+        roi: costCents === 0 ? null : (profitCents / costCents) * 100,
+        holdingDays,
+        allocations,
+      };
+      sales.push(sale);
+
+      position.quantity -= validated.quantity;
+      position.sold += validated.quantity;
+      position.costCents -= costCents;
+      position.grossSalesCents += sale.grossCents;
+      position.netSalesCents += netCents;
+      position.realizedCents += profitCents;
+      position.sellFeesCents += calculateSealedFees(validated);
+      position.lastSale = validated.date;
+      continue;
     }
-    if (needed) throw new SealedDomainError('Incomplete lot allocation.');
 
+    const exchangeGive = validated.exchangeGive;
+    if (!exchangeGive) throw new SealedDomainError('Exchange give leg is required.');
+    const sourceKey = positionKeyFor(exchangeGive.cardmarketProductId, exchangeGive.language);
+    const sourcePosition = positions.get(sourceKey)
+      ?? positionTemplate(exchangeGive.cardmarketProductId, exchangeGive.language, validated.date);
+    positions.set(sourceKey, sourcePosition);
+    const allocations = allocateOutgoingLots(
+      validated,
+      exchangeGive.cardmarketProductId,
+      exchangeGive.language,
+      exchangeGive.quantity,
+      sourcePosition.quantity,
+      lots,
+      lotsByPosition,
+      fifoIndexes,
+    );
     const costCents = allocations.reduce((sum, allocation) => sum + allocation.costCents, 0);
-    const netCents = calculateSealedCashCents(validated);
-    const profitCents = netCents - costCents;
-    const holdingDays = allocations.reduce(
-      (sum, allocation) => sum + allocation.holdingDays * allocation.quantity,
-      0,
-    ) / validated.quantity;
-    const sale: SealedSale = {
-      transaction: validated,
-      grossCents: calculateSealedGrossCents(validated),
-      feesCents: calculateSealedFees(validated),
-      netCents,
-      costCents,
-      profitCents,
-      roi: costCents === 0 ? null : (profitCents / costCents) * 100,
-      holdingDays,
-      allocations,
-    };
-    sales.push(sale);
+    sourcePosition.quantity -= exchangeGive.quantity;
+    sourcePosition.costCents -= costCents;
+    sourcePosition.exchangeOut += exchangeGive.quantity;
 
-    position.quantity -= validated.quantity;
-    position.sold += validated.quantity;
-    position.costCents -= costCents;
-    position.grossSalesCents += sale.grossCents;
-    position.netSalesCents += netCents;
-    position.realizedCents += profitCents;
-    position.sellFeesCents += calculateSealedFees(validated);
-    position.lastSale = validated.date;
+    const receivedKey = positionKey(validated);
+    const receivedPosition = positions.get(receivedKey)
+      ?? positionTemplate(validated.cardmarketProductId, validated.language, validated.date);
+    positions.set(receivedKey, receivedPosition);
+    const lot: SealedLot = {
+      transaction: validated,
+      remaining: validated.quantity,
+      costCents,
+      consumed: 0,
+      allocatedCostCents: 0,
+    };
+    lots.set(validated.id, lot);
+    const receivedQueue = lotsByPosition.get(receivedKey) ?? [];
+    receivedQueue.push(validated.id);
+    lotsByPosition.set(receivedKey, receivedQueue);
+    receivedPosition.quantity += validated.quantity;
+    receivedPosition.costCents += costCents;
+    receivedPosition.exchangeIn += validated.quantity;
+    exchanges.push({ transaction: validated, costCents, allocations });
   }
 
   return {
     positions: [...positions.values()],
     lots: [...lots.values()],
     sales,
+    exchanges,
   };
 }
 

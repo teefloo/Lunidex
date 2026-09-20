@@ -40,6 +40,7 @@ export interface SealedPortfolioSummary {
   positions: SealedPositionView[];
   lots: ReturnType<typeof replaySealedLedger>['lots'];
   sales: ReturnType<typeof replaySealedLedger>['sales'];
+  exchanges: ReturnType<typeof replaySealedLedger>['exchanges'];
   totals: SealedPortfolioTotals;
 }
 
@@ -122,6 +123,8 @@ export function summarizeSealedPortfolio(
     sellFeesCents: sum('sellFeesCents'),
     bought: sum('bought'),
     sold,
+    exchangeIn: sum('exchangeIn'),
+    exchangeOut: sum('exchangeOut'),
     distinct: positions.filter((position) => position.quantity > 0).length,
     missingPrices: missingPrices.length,
     roi: totalCents === null ? null : ratio(totalCents, sum('spentCents')),
@@ -140,7 +143,7 @@ export function summarizeSealedPortfolio(
     sellThrough: ratio(sold, sum('bought')),
   };
 
-  return { positions, lots: ledger.lots, sales: ledger.sales, totals };
+  return { positions, lots: ledger.lots, sales: ledger.sales, exchanges: ledger.exchanges, totals };
 }
 
 /** Reproduces scelle's period cashflow view, including cumulative balances. */
@@ -158,6 +161,7 @@ export function calculateSealedCashflow(
     .sort((a, b) => a.date.localeCompare(b.date) || a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
 
   for (const transaction of ordered) {
+    if (transaction.kind === 'exchange') continue;
     if (transaction.kind === 'buy') investedCents -= calculateSealedCashCents(transaction);
     else recoveredCents += calculateSealedCashCents(transaction);
     if (transaction.date < from) continue;
