@@ -27,6 +27,7 @@ export interface SealedOverviewResponse {
   positions: SealedPortfolioSummary['positions'];
   lots: SealedLedgerResult['lots'];
   sales: SealedLedgerResult['sales'];
+  exchanges: SealedLedgerResult['exchanges'];
   history: SealedPortfolioPoint[];
   recent: Array<{ days: number; day: string; valueCents: number | null; deltaCents: number | null }>;
   cashflow: SealedCashflowRow[];
@@ -54,6 +55,7 @@ export interface SealedCatalogueResponse {
 
 export interface SealedProductDetailResponse extends SealedPortfolioSummary {
   product: SealedProduct;
+  products: SealedProduct[];
   transactions: SealedTransaction[];
   prices: SealedPriceSnapshot[];
   valuation: SealedPortfolioSummary['positions'][number]['valuation'];
@@ -150,6 +152,7 @@ export function updateSealedTransaction(
     kind: transaction.kind,
     cardmarketProductId: transaction.cardmarketProductId,
     language: transaction.language,
+    ...(transaction.exchangeGive ? { exchangeGive: transaction.exchangeGive } : {}),
     date: transaction.date,
     quantity: transaction.quantity,
     unitPriceCents: transaction.unitPriceCents,

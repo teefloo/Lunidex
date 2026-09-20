@@ -236,6 +236,7 @@ function ProductPriceHistoryChart({ prices, transactions, language, t }: { price
   const tradeTotals = new Map<string, { kind: 'buy' | 'sell'; quantity: number; totalCents: number; index: number }>();
   for (const transaction of transactions) {
     if (transaction.voided) continue;
+    if (transaction.kind === 'exchange') continue;
     const index = prices.findIndex((price) => price.day === transaction.date);
     if (index < 0) continue;
     const key = `${index}:${transaction.kind}`;

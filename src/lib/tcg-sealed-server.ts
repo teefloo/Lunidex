@@ -62,6 +62,9 @@ interface SealedTransactionRow {
   revision: number | string;
   kind: string;
   cardmarket_product_id: number | string;
+  exchange_give_product_id: number | string | null;
+  exchange_give_language: string | null;
+  exchange_give_quantity: number | string | null;
   language: string;
   date: string | Date;
   quantity: number | string;
@@ -179,12 +182,23 @@ function parseSelections(value: unknown): SealedTransaction['selections'] {
 }
 
 function mapTransaction(row: SealedTransactionRow): SealedTransaction {
+  const hasExchangeGive = row.exchange_give_product_id !== null
+    || row.exchange_give_language !== null
+    || row.exchange_give_quantity !== null;
+  const exchangeGive = hasExchangeGive
+    ? {
+      cardmarketProductId: row.exchange_give_product_id === null ? 0 : requiredNumber(row.exchange_give_product_id),
+      language: row.exchange_give_language ?? '',
+      quantity: row.exchange_give_quantity === null ? 0 : requiredNumber(row.exchange_give_quantity),
+    }
+    : undefined;
   const transaction = {
     id: row.id,
     revision: requiredNumber(row.revision),
     kind: row.kind,
     cardmarketProductId: requiredNumber(row.cardmarket_product_id),
     language: row.language,
+    exchangeGive,
     date: dayValue(row.date),
     quantity: requiredNumber(row.quantity),
     unitPriceCents: requiredNumber(row.unit_price_cents),
@@ -269,9 +283,10 @@ export function normalizeSealedDraft(input: unknown): SealedTransactionDraft {
       kind: value.kind,
       cardmarketProductId: value.cardmarketProductId,
       language: value.language ?? 'unknown',
+      exchangeGive: value.exchangeGive,
       date: value.date,
       quantity: value.quantity,
-      unitPriceCents: value.unitPriceCents,
+      unitPriceCents: value.unitPriceCents ?? (value.kind === 'exchange' ? 0 : undefined),
       feesCents: value.feesCents ?? 0,
       shippingCents: value.shippingCents ?? 0,
       discountCents: value.discountCents ?? 0,
@@ -296,8 +311,9 @@ export async function getSealedTransactions(
   productId?: number,
 ): Promise<SealedTransaction[]> {
   const rows = productId === undefined
-    ? await sql`
+      ? await sql`
         select id::text, revision, kind, cardmarket_product_id, language, date::text,
+          exchange_give_product_id, exchange_give_language, exchange_give_quantity,
           quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
           payment_fees_cents, other_costs_cents, platform, counterparty, notes,
           storage, allocation_method, selections, voided, created_at::text, updated_at::text
@@ -307,12 +323,16 @@ export async function getSealedTransactions(
       ` as SealedTransactionRow[]
     : await sql`
         select id::text, revision, kind, cardmarket_product_id, language, date::text,
+          exchange_give_product_id, exchange_give_language, exchange_give_quantity,
           quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
           payment_fees_cents, other_costs_cents, platform, counterparty, notes,
           storage, allocation_method, selections, voided, created_at::text, updated_at::text
         from public.tcg_sealed_transactions
         where user_id = ${userId}::uuid
-          and cardmarket_product_id = ${productId}
+          and (
+            cardmarket_product_id = ${productId}
+            or exchange_give_product_id = ${productId}
+          )
         order by date asc, created_at asc, id asc
       ` as SealedTransactionRow[];
   return rows.map(mapTransaction);
@@ -458,7 +478,10 @@ export async function searchSealedCatalogue(
 
 async function loadSealedPortfolio(sql: NeonSql, userId: string) {
   const transactions = await getSealedTransactions(sql, userId);
-  const ids = [...new Set(transactions.map((transaction) => transaction.cardmarketProductId))];
+  const ids = [...new Set(transactions.flatMap((transaction) => [
+    transaction.cardmarketProductId,
+    ...(transaction.exchangeGive ? [transaction.exchangeGive.cardmarketProductId] : []),
+  ]))];
   const [products, prices] = await Promise.all([
     getSealedProducts(sql, userId, ids),
     getSealedPrices(sql, ids),
@@ -562,6 +585,7 @@ export async function getSealedOverview(
     positions: current.positions,
     lots: current.lots,
     sales: current.sales,
+    exchanges: current.exchanges,
     history: historyPoints,
     recent,
     cashflow,
@@ -583,28 +607,37 @@ export async function getSealedOverview(
 }
 
 export async function getSealedProductDetail(sql: NeonSql, userId: string, id: number) {
-  const [products, transactions, prices] = await Promise.all([
-    getSealedProducts(sql, userId, [id]),
-    getSealedTransactions(sql, userId, id),
-    getSealedPrices(sql, [id]),
+  const transactions = await getSealedTransactions(sql, userId, id);
+  const productIds = [...new Set([
+    id,
+    ...transactions.flatMap((transaction) => [
+      transaction.cardmarketProductId,
+      ...(transaction.exchangeGive ? [transaction.exchangeGive.cardmarketProductId] : []),
+    ]),
+  ])];
+  const [products, prices] = await Promise.all([
+    getSealedProducts(sql, userId, productIds),
+    getSealedPrices(sql, productIds),
   ]);
-  const product = products[0];
+  const product = products.find((candidate) => candidate.cardmarketProductId === id);
   if (!product) throw new SealedNotFoundError('Sealed product not found.');
-  const summary = summarizeSealedPortfolio(transactions, [product], prices, new Date().toISOString().slice(0, 10));
-  const valuation = selectSealedValuation(prices);
-  const trendValues = prices.map((price) => price.metrics.trendCents).filter((value): value is number => value !== null);
+  const productPrices = prices.filter((price) => price.cardmarketProductId === id);
+  const summary = summarizeSealedPortfolio(transactions, products, prices, new Date().toISOString().slice(0, 10));
+  const valuation = selectSealedValuation(productPrices);
+  const trendValues = productPrices.map((price) => price.metrics.trendCents).filter((value): value is number => value !== null);
   const changeSince = (day: string | null | undefined) => {
     if (!day) return null;
-    const first = prices.find((price) => price.day === day);
-    const last = prices.at(-1);
+    const first = productPrices.find((price) => price.day === day);
+    const last = productPrices.at(-1);
     if (!first || !last || first.metrics.trendCents === null || first.metrics.trendCents <= 0 || last.metrics.trendCents === null) return null;
     return { metric: 'trend' as const, percent: (last.metrics.trendCents / first.metrics.trendCents - 1) * 100, from: day, to: last.day };
   };
   return {
     product,
+    products,
     ...summary,
     transactions,
-    prices: prices.slice(-366),
+    prices: productPrices.slice(-366),
     valuation,
     observed: {
       metric: 'trend',
@@ -675,15 +708,15 @@ export async function mutateSealedTransaction(
   if (options.mode === 'void' && old?.voided) {
     throw new SealedConflictError('This transaction is already cancelled.');
   }
-  const productId = options.mode === 'create'
-    ? (() => {
-      const draft = normalizeSealedDraft(input);
-      return draft.cardmarketProductId;
-    })()
-    : old!.cardmarketProductId;
-  const product = (await getSealedProducts(sql, userId, [productId]))[0];
-  if (!product) throw new SealedNotFoundError('Cardmarket sealed product not found.');
   const draft = options.mode === 'void' ? old! : normalizeSealedDraft(input);
+  const productIds = [...new Set([
+    draft.cardmarketProductId,
+    ...(draft.exchangeGive ? [draft.exchangeGive.cardmarketProductId] : []),
+  ])];
+  const products = await getSealedProducts(sql, userId, productIds);
+  if (products.length !== productIds.length) {
+    throw new SealedNotFoundError('Cardmarket sealed product not found.');
+  }
   const now = new Date().toISOString();
   const next = validateSealedTransaction({
     ...draft,
@@ -705,14 +738,26 @@ export async function mutateSealedTransaction(
     throw new SealedServerError('Invalid portfolio revision.', 400);
   }
   const newRevision = expectedRevision + 1;
-  const allocations = ledger.sales.flatMap((sale) => sale.allocations.map((allocation) => ({
-    saleId: sale.transaction.id,
-    lotId: allocation.lotId,
-    quantity: allocation.quantity,
-    costCents: allocation.costCents,
-    holdingDays: allocation.holdingDays,
-  })));
+  const allocations = [
+    ...ledger.sales.flatMap((sale) => sale.allocations.map((allocation) => ({
+      saleId: sale.transaction.id,
+      lotId: allocation.lotId,
+      quantity: allocation.quantity,
+      costCents: allocation.costCents,
+      holdingDays: allocation.holdingDays,
+    }))),
+    ...ledger.exchanges.flatMap((exchange) => exchange.allocations.map((allocation) => ({
+      saleId: exchange.transaction.id,
+      lotId: allocation.lotId,
+      quantity: allocation.quantity,
+      costCents: allocation.costCents,
+      holdingDays: allocation.holdingDays,
+    }))),
+  ];
   const serializedSelections = JSON.stringify(next.selections);
+  const exchangeGiveProductId = next.exchangeGive?.cardmarketProductId ?? null;
+  const exchangeGiveLanguage = next.exchangeGive?.language ?? null;
+  const exchangeGiveQuantity = next.exchangeGive?.quantity ?? null;
   const serializedBefore = old ? JSON.stringify(old) : null;
   const serializedAfter = JSON.stringify(next);
   const transactionResults = await sql.transaction((tx) => [
@@ -729,14 +774,16 @@ export async function mutateSealedTransaction(
     `,
     tx`
       insert into public.tcg_sealed_transactions (
-        id, user_id, cardmarket_product_id, date, revision, kind, language,
+        id, user_id, cardmarket_product_id, exchange_give_product_id, exchange_give_language,
+        exchange_give_quantity, date, revision, kind, language,
         quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
         payment_fees_cents, other_costs_cents, platform, counterparty, notes,
         storage, allocation_method, selections, voided, created_at, updated_at
       )
       select
-        ${next.id}::uuid, ${userId}::uuid, ${next.cardmarketProductId}, ${next.date}::date,
-        ${next.revision}, ${next.kind}, ${next.language}, ${next.quantity},
+        ${next.id}::uuid, ${userId}::uuid, ${next.cardmarketProductId},
+        ${exchangeGiveProductId}, ${exchangeGiveLanguage}, ${exchangeGiveQuantity},
+        ${next.date}::date, ${next.revision}, ${next.kind}, ${next.language}, ${next.quantity},
         ${next.unitPriceCents}, ${next.feesCents}, ${next.shippingCents}, ${next.discountCents},
         ${next.paymentFeesCents}, ${next.otherCostsCents}, ${next.platform}, ${next.counterparty},
         ${next.notes}, ${next.storage}, ${next.allocationMethod}, ${serializedSelections}::jsonb,
@@ -747,6 +794,9 @@ export async function mutateSealedTransaction(
       )
       on conflict (id) do update set
         cardmarket_product_id = excluded.cardmarket_product_id,
+        exchange_give_product_id = excluded.exchange_give_product_id,
+        exchange_give_language = excluded.exchange_give_language,
+        exchange_give_quantity = excluded.exchange_give_quantity,
         date = excluded.date,
         revision = excluded.revision,
         kind = excluded.kind,
@@ -884,7 +934,7 @@ function jsonProduct(product: SealedProduct) {
 }
 
 export function sealedExportCsv(exported: Awaited<ReturnType<typeof exportSealedPortfolio>>): string {
-  const header = ['id', 'kind', 'product_id', 'date', 'language', 'quantity', 'unit_price_eur', 'fees_eur', 'shipping_eur', 'discount_eur', 'payment_fees_eur', 'other_costs_eur', 'allocation_method', 'voided', 'notes'];
+  const header = ['id', 'kind', 'product_id', 'date', 'language', 'quantity', 'unit_price_eur', 'fees_eur', 'shipping_eur', 'discount_eur', 'payment_fees_eur', 'other_costs_eur', 'allocation_method', 'voided', 'notes', 'exchange_give_product_id', 'exchange_give_language', 'exchange_give_quantity'];
   const quote = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
   const rows = exported.transactions.map((transaction) => [
     transaction.id,
@@ -902,6 +952,9 @@ export function sealedExportCsv(exported: Awaited<ReturnType<typeof exportSealed
     transaction.allocationMethod,
     transaction.voided,
     transaction.notes,
+    transaction.exchangeGive?.cardmarketProductId ?? '',
+    transaction.exchangeGive?.language ?? '',
+    transaction.exchangeGive?.quantity ?? '',
   ].map(quote).join(','));
   return [header.map(quote).join(','), ...rows].join('\n');
 }
