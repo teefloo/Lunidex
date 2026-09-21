@@ -1,8 +1,33 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildTCGCollectionOverviewEntries,
+  filterTCGCollectionOverviewEntries,
+  parseTCGCollectionUrlState,
+  serializeTCGCollectionUrlState,
   sortTCGCollectionEntriesByRelease,
+  type TCGCollectionOverviewEntryWithProgress,
 } from './tcg-collection-overview';
+
+function entry(
+  id: string,
+  name: string,
+  releaseRank: number,
+  owned: number,
+  total = 10,
+): TCGCollectionOverviewEntryWithProgress {
+  return {
+    collectionKey: `tcg2:en:${id}`,
+    language: 'en',
+    set: { id, name, totalCards: total, releaseRank, dataLanguage: 'en' },
+    ownedIds: new Set(owned > 0 ? [`${id}-1`] : []),
+    ownedVariants: owned > 0 ? [{ cardId: `${id}-1`, variant: 'normal', quantity: owned }] : [],
+    completion: {
+      owned: Math.min(owned, total),
+      total,
+      percentage: total > 0 ? Math.round((Math.min(owned, total) / total) * 100) : 0,
+    },
+  };
+}
 
 describe('TCG collection overview ordering', () => {
   it('builds one collection entry for every catalog set', () => {
@@ -29,5 +54,83 @@ describe('TCG collection overview ordering', () => {
 
     expect(sorted.map((entry) => entry.set.id)).toEqual(['sv10', 'sv9', 'base1']);
     expect(sorted).toHaveLength(entries.length);
+  });
+});
+
+describe('TCG collection overview URL state', () => {
+  it('uses the personal recent-release view for missing or invalid values', () => {
+    expect(parseTCGCollectionUrlState(new URLSearchParams())).toEqual({
+      view: 'mine',
+      query: '',
+      sort: 'release-newest',
+      incompleteOnly: false,
+    });
+    expect(parseTCGCollectionUrlState(new URLSearchParams('view=other&sort=price&incomplete=yes&q=%20%20Darkrai%20'))).toEqual({
+      view: 'mine',
+      query: 'Darkrai',
+      sort: 'release-newest',
+      incompleteOnly: false,
+    });
+  });
+
+  it('serializes only non-default collection state', () => {
+    expect(serializeTCGCollectionUrlState({
+      view: 'all',
+      query: 'Darkrai',
+      sort: 'name-asc',
+      incompleteOnly: true,
+    })).toBe('view=all&q=Darkrai&sort=name-asc&incomplete=1');
+    expect(serializeTCGCollectionUrlState({
+      view: 'mine',
+      query: '',
+      sort: 'release-newest',
+      incompleteOnly: false,
+    })).toBe('');
+  });
+});
+
+describe('TCG collection overview selection', () => {
+  const entries = [
+    entry('complete', 'Complete Set', 3, 10),
+    entry('progress', 'Progress Set', 2, 4),
+    entry('missing', 'Missing Set', 1, 0),
+  ];
+
+  it('keeps completed personal sets until the incomplete filter is enabled', () => {
+    const personal = filterTCGCollectionOverviewEntries(entries, {
+      view: 'mine', query: '', sort: 'release-newest', incompleteOnly: false,
+    });
+    const incomplete = filterTCGCollectionOverviewEntries(entries, {
+      view: 'mine', query: '', sort: 'release-newest', incompleteOnly: true,
+    });
+
+    expect(personal.map((candidate) => candidate.set.id)).toEqual(['progress', 'complete']);
+    expect(incomplete.map((candidate) => candidate.set.id)).toEqual(['progress']);
+  });
+
+  it('searches the complete catalog before the caller applies a display cap', () => {
+    const catalog = [
+      ...Array.from({ length: 24 }, (_, index) => entry(`old-${index}`, `Old Set ${index}`, index + 1, 0)),
+      entry('target', 'Darkrai Discovery', 30, 0),
+    ];
+
+    const result = filterTCGCollectionOverviewEntries(catalog, {
+      view: 'all', query: 'darkrai', sort: 'release-newest', incompleteOnly: false,
+    });
+
+    expect(result.map((candidate) => candidate.set.id)).toEqual(['target']);
+    expect(result.slice(0, 24)).toHaveLength(1);
+  });
+
+  it('uses deterministic name ordering when names and release ranks tie', () => {
+    const result = filterTCGCollectionOverviewEntries([
+      entry('b', 'Alpha', 1, 0),
+      entry('a', 'Alpha', 1, 0),
+      entry('z', 'Zeta', 1, 0),
+    ], {
+      view: 'all', query: '', sort: 'name-asc', incompleteOnly: false,
+    });
+
+    expect(result.map((candidate) => candidate.set.id)).toEqual(['a', 'b', 'z']);
   });
 });
