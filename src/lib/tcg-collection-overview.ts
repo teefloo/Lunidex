@@ -24,6 +24,8 @@ export const TCG_COLLECTION_SORT_MODES = [
   'name-desc',
 ] as const;
 
+export const TCG_COLLECTION_CATALOG_BATCH_SIZE = 24;
+
 export type TCGCollectionSortMode = typeof TCG_COLLECTION_SORT_MODES[number];
 
 export interface TCGCollectionUrlState {
@@ -34,7 +36,7 @@ export interface TCGCollectionUrlState {
 }
 
 export interface TCGCollectionOverviewEntryWithProgress extends TCGCollectionOverviewEntry {
-  ownedIds: ReadonlySet<string>;
+  ownedIds: Set<string>;
   ownedVariants: readonly TCGOwnedVariant[];
   completion: {
     owned: number;
@@ -153,4 +155,18 @@ export function filterTCGCollectionOverviewEntries(
         || left.language.localeCompare(right.language)
       ));
   }
+}
+
+export function getTCGCollectionCatalogDisplay<T>(
+  entries: readonly T[],
+  visibleCount: number,
+): { entries: T[]; total: number; hasMore: boolean } {
+  const safeVisibleCount = Math.max(0, Math.trunc(visibleCount));
+  const visibleEntries = entries.slice(0, safeVisibleCount);
+
+  return {
+    entries: visibleEntries,
+    total: entries.length,
+    hasMore: visibleEntries.length < entries.length,
+  };
 }

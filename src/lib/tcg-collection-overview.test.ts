@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildTCGCollectionOverviewEntries,
   filterTCGCollectionOverviewEntries,
+  getTCGCollectionCatalogDisplay,
   parseTCGCollectionUrlState,
   serializeTCGCollectionUrlState,
   sortTCGCollectionEntriesByRelease,
@@ -132,5 +133,25 @@ describe('TCG collection overview selection', () => {
     });
 
     expect(result.map((candidate) => candidate.set.id)).toEqual(['a', 'b', 'z']);
+  });
+
+  it('limits catalog rendering only after filtering and reports more results', () => {
+    const catalog = Array.from({ length: 25 }, (_, index) => entry(
+      `set-${index}`,
+      `Set ${index}`,
+      index,
+      0,
+    ));
+
+    expect(getTCGCollectionCatalogDisplay(catalog, 24)).toMatchObject({
+      total: 25,
+      hasMore: true,
+    });
+    expect(getTCGCollectionCatalogDisplay(catalog, 24).entries).toHaveLength(24);
+    expect(getTCGCollectionCatalogDisplay(catalog, 48)).toMatchObject({
+      total: 25,
+      hasMore: false,
+      entries: catalog,
+    });
   });
 });

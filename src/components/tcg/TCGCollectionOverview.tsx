@@ -1,25 +1,41 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
-import { ChevronDown, Search, Sparkles, Trophy } from 'lucide-react';
+import { ChevronDown, Search, Trophy } from 'lucide-react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useTranslation } from '@/lib/i18n';
-import { fetchCollectionValue, fetchSetCollectionCards } from '@/lib/api/tcg';
-import { countPhysicalTCGCards, encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
+import { fetchCollectionValue } from '@/lib/api/tcg';
+import {
+  countPhysicalTCGCards,
+  encodeTCGCollectionKey,
+  getTCGCollectionCardIds,
+  getTCGCollectionCardOwnerships,
+} from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
-import { getTCGCardLanguageName } from '@/lib/tcg-language';
-import { getSetCompletionFromSet, summarizeCollectionSetValue, type TCGCollectionValueGroup, type TCGOwnedVariant } from '@/lib/tcg-collection';
-import { sortTCGCollectionEntriesByRelease, type TCGCollectionOverviewEntry } from '@/lib/tcg-collection-overview';
-import { normalizeSearchText } from '@/lib/pokemon-filter-utils';
+import {
+  getSetCompletionFromSet,
+  type TCGCollectionValueGroup,
+  type TCGOwnedVariant,
+} from '@/lib/tcg-collection';
+import {
+  filterTCGCollectionOverviewEntries,
+  getTCGCollectionCatalogDisplay,
+  parseTCGCollectionUrlState,
+  serializeTCGCollectionUrlState,
+  TCG_COLLECTION_CATALOG_BATCH_SIZE,
+  type TCGCollectionOverviewEntry,
+  type TCGCollectionOverviewEntryWithProgress,
+  type TCGCollectionSortMode,
+  type TCGCollectionUrlState,
+  type TCGCollectionView,
+} from '@/lib/tcg-collection-overview';
 import { TCGProgressBar } from './TCGProgressBar';
-import { TCGActiveSetInsights } from './TCGActiveSetInsights';
-import { TCGImageWithFallback } from './TCGImageWithFallback';
-import { getTCGSetImageCandidates } from '@/lib/tcg-images';
+import { TCGCollectionSetRow } from './TCGCollectionSetRow';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
 
 export type { TCGCollectionOverviewEntry } from '@/lib/tcg-collection-overview';
@@ -31,10 +47,18 @@ interface TCGCollectionOverviewProps {
 
 function formatCurrency(group: TCGCollectionValueGroup, locale: string): string {
   try {
-    return new Intl.NumberFormat(locale, { style: 'currency', currency: group.currency, maximumFractionDigits: 2 }).format(group.total);
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: group.currency,
+      maximumFractionDigits: 2,
+    }).format(group.total);
   } catch {
     return `${group.total.toFixed(2)} ${group.currency}`;
   }
+}
+
+function withQuery(path: string, query: string): string {
+  return query ? `${path}?${query}` : path;
 }
 
 export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TCGCollectionOverviewProps) {
@@ -42,7 +66,10 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   const mounted = useMounted();
   const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
+  const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchParamsString = searchParams.toString();
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const collectionCards = usePrimeDexStore((state) => state.tcgCollectionCards);
   const legacyStoreCards = usePrimeDexStore((state) => state.tcgLegacyOwnedCards);
@@ -50,53 +77,67 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   const transferCollectionCards = usePrimeDexStore((state) => state.transferTCGCollectionCards);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
-  const [filterInProgress, setFilterInProgress] = useState(false);
-  const [search, setSearch] = useState('');
-  const [sortMode, setSortMode] = useState<'progress' | 'release-newest' | 'release-oldest' | 'name-asc' | 'name-desc'>('release-newest');
   const searchId = useId();
   const sortId = useId();
   const setListId = useId();
+  const urlState = useMemo(
+    () => parseTCGCollectionUrlState(new URLSearchParams(searchParamsString)),
+    [searchParamsString],
+  );
+  const [visibleCatalogCount, setVisibleCatalogCount] = useState(TCG_COLLECTION_CATALOG_BATCH_SIZE);
+  const [expandedCollectionKey, setExpandedCollectionKey] = useState<string | null>(null);
+
+  const replaceUrlState = useCallback((nextState: TCGCollectionUrlState) => {
+    const params = new URLSearchParams(searchParamsString);
+    for (const key of ['view', 'q', 'sort', 'incomplete']) params.delete(key);
+    const serialized = new URLSearchParams(serializeTCGCollectionUrlState(nextState));
+    serialized.forEach((value, key) => params.set(key, value));
+    router.replace(withQuery(pathname, params.toString()), { scroll: false });
+  }, [pathname, router, searchParamsString]);
+
+  useEffect(() => {
+    setVisibleCatalogCount(TCG_COLLECTION_CATALOG_BATCH_SIZE);
+    setExpandedCollectionKey(null);
+  }, [urlState.incompleteOnly, urlState.query, urlState.sort, urlState.view]);
 
   const effectiveLegacyCards = legacyOwnedCards.length > 0 ? legacyOwnedCards : legacyStoreCards;
-  const physicalCount = useMemo(() => countPhysicalTCGCards(collectionCards, effectiveLegacyCards), [collectionCards, effectiveLegacyCards]);
-  const entries = useMemo(() => collections.map((entry) => {
+  const physicalCount = useMemo(
+    () => countPhysicalTCGCards(collectionCards, effectiveLegacyCards),
+    [collectionCards, effectiveLegacyCards],
+  );
+  const entries = useMemo<TCGCollectionOverviewEntryWithProgress[]>(() => collections.map((entry) => {
     const ownedIds = new Set(getTCGCollectionCardIds(entry.collectionKey, collectionCards));
     const ownedVariants: TCGOwnedVariant[] = getTCGCollectionCardOwnerships(entry.collectionKey, collectionCards)
       .map(({ cardId, variant, quantity }) => ({ cardId, variant, quantity }));
-    return { ...entry, ownedIds, ownedVariants, completion: getSetCompletionFromSet(entry.set, ownedIds) };
+    return {
+      ...entry,
+      ownedIds,
+      ownedVariants,
+      completion: getSetCompletionFromSet(entry.set, ownedIds),
+    };
   }), [collectionCards, collections]);
   const startedEntries = useMemo(
     () => entries.filter((entry) => entry.ownedVariants.length > 0),
     [entries],
   );
   const collectionValueQueries = useQueries({
-    queries: startedEntries.map((entry) => {
-      const ownership = entry.ownedVariants;
-      return {
-        // Include the selected currency so switching it immediately rebuilds
-        // coverage and totals without mixing EUR and USD source quotes.
-        queryKey: ['tcg', 'collection-value-v6', entry.collectionKey, ownership, displayCurrency],
-        queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionValue(ownership, entry.language, signal, displayCurrency),
-        staleTime: 60 * 60 * 1000,
-        retry: false,
-        enabled: mounted && ownership.length > 0,
-      };
-    }),
-  });
-  const collectionSetCardsQueries = useQueries({
     queries: startedEntries.map((entry) => ({
-      queryKey: ['tcg', 'collection-set-cards-v1', entry.collectionKey, displayCurrency],
-      queryFn: ({ signal }: { signal: AbortSignal }) => fetchSetCollectionCards(
-        entry.set.id,
+      queryKey: ['tcg', 'collection-value-v6', entry.collectionKey, entry.ownedVariants, displayCurrency],
+      queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionValue(
+        entry.ownedVariants,
         entry.language,
         signal,
         displayCurrency,
       ),
       staleTime: 60 * 60 * 1000,
       retry: false,
-      enabled: mounted,
+      enabled: mounted && entry.ownedVariants.length > 0,
     })),
   });
+  const valueQueryByCollectionKey = useMemo(
+    () => new Map(startedEntries.map((entry, index) => [entry.collectionKey, collectionValueQueries[index]])),
+    [collectionValueQueries, startedEntries],
+  );
   const totalValueGroups = useMemo(() => {
     const totals = new Map<string, TCGCollectionValueGroup>();
     for (const group of collectionValueQueries.flatMap((query) => query.data?.groups ?? [])) {
@@ -118,29 +159,26 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   const stats = useMemo(() => {
     const totalCards = startedEntries.reduce((sum, entry) => sum + entry.completion.total, 0);
     const ownedInCollections = startedEntries.reduce((sum, entry) => sum + entry.completion.owned, 0);
-    const completeSets = startedEntries.filter((entry) => entry.completion.total > 0 && entry.completion.owned >= entry.completion.total).length;
-    return { totalCards, totalOwned: physicalCount, ownedInCollections, completeSets, totalSets: startedEntries.length, percentage: totalCards > 0 ? Math.round((ownedInCollections / totalCards) * 100) : 0 };
-  }, [physicalCount, startedEntries]);
-  const filteredEntries = useMemo(() => {
-    const matchingEntries = entries.filter((entry) => {
-      if (filterInProgress && (entry.ownedVariants.length === 0 || entry.completion.owned >= entry.completion.total)) return false;
-      const normalizedSearch = normalizeSearchText(search);
-      return !normalizedSearch || normalizeSearchText(entry.set.name).includes(normalizedSearch);
-    });
-    if (sortMode === 'release-newest') return sortTCGCollectionEntriesByRelease(matchingEntries);
-    return matchingEntries.sort((a, b) => {
-    switch (sortMode) {
-      case 'release-oldest': return b.set.releaseRank - a.set.releaseRank;
-      case 'name-asc': return a.set.name.localeCompare(b.set.name);
-      case 'name-desc': return b.set.name.localeCompare(a.set.name);
-      default: return b.completion.percentage - a.completion.percentage || a.set.name.localeCompare(b.set.name) || a.language.localeCompare(b.language);
-    }
-    });
-  }, [entries, filterInProgress, search, sortMode]);
-  const activeEntries = useMemo(
-    () => filteredEntries.filter((entry) => entry.ownedVariants.length > 0),
-    [filteredEntries],
+    const completeSets = startedEntries.filter((entry) => (
+      entry.completion.total > 0 && entry.completion.owned >= entry.completion.total
+    )).length;
+    return {
+      totalCards,
+      ownedInCollections,
+      completeSets,
+      totalSets: startedEntries.length,
+      percentage: totalCards > 0 ? Math.round((ownedInCollections / totalCards) * 100) : 0,
+    };
+  }, [startedEntries]);
+  const selectedEntries = useMemo(
+    () => filterTCGCollectionOverviewEntries(entries, urlState),
+    [entries, urlState],
   );
+  const catalogDisplay = useMemo(
+    () => getTCGCollectionCatalogDisplay(selectedEntries, visibleCatalogCount),
+    [selectedEntries, visibleCatalogCount],
+  );
+  const visibleEntries = urlState.view === 'all' ? catalogDisplay.entries : selectedEntries;
   const legacyGroups = useMemo(() => {
     const groups = new Map<string, string[]>();
     for (const cardId of effectiveLegacyCards) {
@@ -150,179 +188,307 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     }
     return [...groups.entries()].sort(([left], [right]) => left.localeCompare(right));
   }, [effectiveLegacyCards]);
+  const returnQuery = useMemo(() => {
+    const params = new URLSearchParams();
+    const tcgLanguage = new URLSearchParams(searchParamsString).get('tcgLang');
+    if (tcgLanguage) params.set('tcgLang', tcgLanguage);
+    const overviewParams = new URLSearchParams(serializeTCGCollectionUrlState(urlState));
+    overviewParams.forEach((value, key) => params.set(key, value));
+    return params.toString();
+  }, [searchParamsString, urlState]);
 
-  const openCollectionInLanguage = (setId: string, language: TCGCardLanguage, sourceCollectionKey: string) => {
-    const targetCollectionKey = encodeTCGCollectionKey(language, setId);
-    if (!targetCollectionKey) return;
-    const sourceHasCards = getTCGCollectionCardOwnerships(sourceCollectionKey, collectionCards).length > 0;
-    if (sourceHasCards && !transferCollectionCards(sourceCollectionKey, targetCollectionKey)) return;
+  const getAlbumHref = useCallback((entry: TCGCollectionOverviewEntryWithProgress) => {
+    const params = new URLSearchParams();
+    if (returnQuery) params.set('return', returnQuery);
+    return withQuery(
+      localeHref(`/tcg/collection/${entry.language}/${encodeURIComponent(entry.set.id)}`),
+      params.toString(),
+    );
+  }, [localeHref, returnQuery]);
+
+  const openCollectionInLanguage = useCallback((entry: TCGCollectionOverviewEntryWithProgress, language: TCGCardLanguage): boolean => {
+    const targetCollectionKey = encodeTCGCollectionKey(language, entry.set.id);
+    if (!targetCollectionKey) return false;
+    const sourceHasCards = getTCGCollectionCardOwnerships(entry.collectionKey, collectionCards).length > 0;
+    if (sourceHasCards && !transferCollectionCards(entry.collectionKey, targetCollectionKey)) return false;
     setBrowseLanguage(language);
-    router.push(localeHref(`/tcg/collection/${language}/${encodeURIComponent(setId)}`));
-  };
+    const params = new URLSearchParams();
+    if (returnQuery) params.set('return', returnQuery);
+    router.push(withQuery(
+      localeHref(`/tcg/collection/${language}/${encodeURIComponent(entry.set.id)}`),
+      params.toString(),
+    ));
+    return true;
+  }, [collectionCards, localeHref, returnQuery, router, setBrowseLanguage, transferCollectionCards]);
 
   if (!mounted) return null;
+
+  const changeView = (view: TCGCollectionView) => replaceUrlState({ ...urlState, view });
+  const changeSort = (sort: TCGCollectionSortMode) => replaceUrlState({ ...urlState, sort });
+  const toggleIncomplete = () => replaceUrlState({ ...urlState, incompleteOnly: !urlState.incompleteOnly });
+  const noPersonalSets = startedEntries.length === 0;
+  const hasActiveFilters = Boolean(urlState.query || urlState.incompleteOnly || urlState.sort !== 'release-newest');
+
   return (
     <div className="space-y-8">
-      <div className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]">
-        <div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Trophy className="h-4 w-4 text-primary" aria-hidden="true" /><h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/70">{t('tcg.collection_recap_title')}</h2></div><Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-primary hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">{t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}</Link></div>
+      <section className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5 shadow-[var(--shadow-pixel)]" aria-labelledby="tcg-collection-summary-title">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-primary" aria-hidden="true" />
+            <h2 id="tcg-collection-summary-title" className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/70">
+              {t('tcg.collection_recap_title')}
+            </h2>
+          </div>
+          <Link
+            href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)}
+            className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/15 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          >
+            {t('tcg.collection_add_set', { defaultValue: 'Add a set' })}
+          </Link>
+        </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label={t('tcg.collection_total_owned')} value={physicalCount} />
+          <Stat
+            label={t('tcg.collection_physical_copies', { defaultValue: 'Physical copies' })}
+            value={physicalCount}
+            detail={t('tcg.collection_unique_cards_detail', { count: stats.ownedInCollections, defaultValue: `${stats.ownedInCollections} unique cards` })}
+          />
           <Stat label={t('tcg.collection_sets_completed')} value={`${stats.completeSets}/${stats.totalSets}`} />
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_overall_progress')}</p>
-            <p className="mt-1 text-3xl font-black leading-none">{stats.percentage}%</p>
+            <p className="mt-1 tabular-nums text-3xl font-black leading-none">{stats.percentage}%</p>
             <TCGProgressBar owned={stats.ownedInCollections} total={stats.totalCards} size="sm" className="mt-2 w-full" />
           </div>
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_value_estimate')}</p>
             {valuationPending && !hasValuationResult ? (
-              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_loading')}</p>
+              <p className="mt-1 text-sm font-bold text-foreground/55" aria-live="polite">{t('tcg.collection_loading')}</p>
             ) : totalValueGroups.length ? (
               <>
-                <p className="mt-1 break-words text-2xl font-black text-primary">{totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}</p>
+                <p className="mt-1 break-words text-2xl font-black text-primary">
+                  {totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}
+                </p>
                 {valuationPending && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_loading')}</p>}
                 {!valuationPending && valuationCoverage.unpriced > 0 && (
-                  <p className="text-[11px] font-bold text-amber-200/70">
-                    {t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}
-                  </p>
+                  <p className="text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}</p>
                 )}
               </>
             ) : physicalCount > 0 ? (
-              <>
-                <p className="mt-1 text-sm font-bold text-foreground/55">{valuationPending ? t('tcg.collection_loading') : t('tcg.collection_value_unavailable')}</p>
-                {!valuationPending && valuationCoverage.unpriced > 0 && (
-                  <p className="text-[11px] font-bold text-amber-200/70">
-                    {t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}
-                  </p>
-                )}
-              </>
+              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
             ) : (
               <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
             )}
           </div>
         </div>
-      </div>
-
-      {legacyGroups.length > 0 && <section className="rounded-sm border border-amber-500/30 bg-amber-500/10 p-5" aria-labelledby="tcg-legacy-title"><div><h2 id="tcg-legacy-title" className="text-sm font-black uppercase tracking-[0.12em] text-amber-100">{t('tcg.collection_legacy_title', { defaultValue: 'Historical cards need a language' })}</h2><p className="mt-1 text-sm leading-6 text-amber-100/70">{t('tcg.collection_legacy_description', { defaultValue: 'These cards were saved before language-aware collections. Attribute each set explicitly.' })}</p></div><div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{legacyGroups.map(([setId, cards]) => <LegacySetAttributionRow key={setId} setId={setId} cards={cards} browseLanguage={browseLanguage} onAssign={assignLegacy} />)}</div></section>}
-
-      <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-foreground/40" aria-hidden="true" />
-          <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/65">{t('tcg.collection_active_insights')}</h2>
-        </div>
-        {activeEntries.length === 0 ? (
-          <p className="rounded-sm border border-dashed border-border/30 bg-card/20 p-4 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/30">{t('tcg.collection_active_insights_hint')}</p>
-        ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
-            {activeEntries.map((entry) => {
-              const entryIndex = startedEntries.findIndex((candidate) => candidate.collectionKey === entry.collectionKey);
-              const setCardsQuery = collectionSetCardsQueries[entryIndex];
-              return (
-                <TCGActiveSetInsights
-                  key={entry.collectionKey}
-                  set={entry.set}
-                  ownedIds={entry.ownedIds}
-                  ownedVariants={entry.ownedVariants}
-                  resolvedLang={entry.language}
-                  collectionCards={setCardsQuery?.data}
-                  collectionCardsLoading={setCardsQuery?.isFetching}
-                />
-              );
-            })}
-          </div>
-        )}
       </section>
 
-      <section className="space-y-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-foreground/40" aria-hidden="true" /><h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/65">{t('tcg.collection_per_set')}</h2></div><p className="mt-1 max-w-2xl text-xs leading-5 text-foreground/50">{t('tcg.collection_language_per_set_hint', { defaultValue: 'Choose the card language separately for each collection. Changing it transfers the cards to the selected language; an empty previous variant remains in history but is hidden from this list.' })}</p></div><div className="grid w-full gap-2 sm:flex sm:w-auto sm:items-center"><label htmlFor={searchId} className="sr-only">{t('tcg.collection_search_sets')}</label><div className="flex min-h-11 w-full items-center gap-2 rounded-sm border border-border/30 bg-card/40 px-3 sm:w-48"><Search className="h-4 w-4 shrink-0 text-foreground/45" aria-hidden="true" /><input id={searchId} value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('tcg.collection_search_sets')} className="min-h-11 min-w-0 flex-1 bg-transparent text-[11px] font-bold text-foreground placeholder:text-foreground/45 focus:outline-none" /></div><div className="flex min-h-11 items-center gap-1 rounded-sm border border-border/30 bg-card/40 pl-3 pr-2"><label htmlFor={sortId} className="sr-only">{t('tcg.collection_sort_label')}</label><select id={sortId} value={sortMode} onChange={(event) => setSortMode(event.target.value as typeof sortMode)} className="min-h-11 min-w-0 appearance-none bg-transparent text-[11px] font-bold text-foreground/75 focus:outline-none"><option value="progress">{t('tcg.collection_sort_default')}</option><option value="release-newest">{t('tcg.collection_sort_release_newest')}</option><option value="release-oldest">{t('tcg.collection_sort_release_oldest')}</option><option value="name-asc">{t('tcg.collection_sort_name_asc')}</option><option value="name-desc">{t('tcg.collection_sort_name_desc')}</option></select><ChevronDown className="pointer-events-none h-4 w-4 text-foreground/45" aria-hidden="true" /></div><button type="button" onClick={() => setFilterInProgress((value) => !value)} aria-pressed={filterInProgress} aria-controls={setListId} className={`min-h-11 rounded-sm border px-3 text-[11px] font-bold ${filterInProgress ? 'border-primary/40 bg-primary/15 text-primary' : 'border-border/30 bg-card/40 text-foreground/70 hover:border-primary/30 hover:text-primary/60'}`}>{t('tcg.collection_in_progress')}</button></div></div>
-        {filteredEntries.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 rounded-sm border border-dashed border-border/30 bg-card/20 py-16 text-center">
-            <p className="text-sm font-black uppercase tracking-[0.1em] text-foreground/50">
-              {t('tcg.collection_not_started', { defaultValue: 'No collections started yet' })}
+      {legacyGroups.length > 0 && (
+        <section className="rounded-sm border border-amber-500/30 bg-amber-500/10 p-5" aria-labelledby="tcg-legacy-title">
+          <div>
+            <h2 id="tcg-legacy-title" className="text-sm font-black uppercase tracking-[0.12em] text-amber-100">
+              {t('tcg.collection_legacy_title', { defaultValue: 'Historical cards need a language' })}
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-amber-100/70">
+              {t('tcg.collection_legacy_description', { defaultValue: 'These cards were saved before language-aware collections. Attribute each set explicitly.' })}
             </p>
-            <Link
-              href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)}
-              className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary hover:bg-primary/15"
-            >
-              {t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}
-            </Link>
           </div>
-        ) : (
-          <div id={setListId} className="flex flex-col gap-3">
-            {filteredEntries.map((entry) => {
-              const isStarted = entry.ownedVariants.length > 0;
-              const missing = Math.max(entry.completion.total - entry.completion.owned, 0);
-              const entryIndex = startedEntries.findIndex((candidate) => candidate.collectionKey === entry.collectionKey);
-              const valueQuery = collectionValueQueries[entryIndex];
-              const setValue = valueQuery?.data?.bySet[entry.set.id];
-              const setCardsQuery = collectionSetCardsQueries[entryIndex];
-              const setValueSummary = setCardsQuery?.data
-                ? summarizeCollectionSetValue(setCardsQuery.data, displayCurrency)
-                : undefined;
-              const ownedUnpricedCount = setValue
-                ? Math.max(0, setValue.unpricedCount ?? 0, setValue.ownedCount - setValue.pricedCount)
-                : 0;
-              const setUnpricedCount = setValueSummary
-                ? Math.max(0, setValueSummary.cardCount - setValueSummary.pricedCardCount)
-                : 0;
-              const unpricedCount = Math.max(ownedUnpricedCount, setUnpricedCount);
-              const ownedValue = valueQuery?.isFetching && !setValue
-                ? t('tcg.collection_loading')
-                : setValue?.groups.length
-                  ? setValue.groups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')
-                  : t('tcg.collection_value_unavailable');
-              const totalValue = setCardsQuery?.isFetching && !setValueSummary
-                ? t('tcg.collection_loading')
-                : setValueSummary?.groups.length
-                  ? setValueSummary.groups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')
-                  : t('tcg.collection_value_unavailable');
-              const languageName = getTCGCardLanguageName(entry.language, interfaceLanguage);
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {legacyGroups.map(([setId, cards]) => (
+              <LegacySetAttributionRow
+                key={setId}
+                setId={setId}
+                cards={cards}
+                browseLanguage={browseLanguage}
+                onAssign={assignLegacy}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
-              return (
-                <div key={entry.collectionKey} className="group flex flex-col gap-3 rounded-sm border border-border/15 bg-card/30 p-3 shadow-[var(--shadow-pixel-sm)] transition-colors hover:border-primary/20 hover:bg-card/50 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
-                  <Link href={localeHref(`/tcg/collection/${entry.language}/${encodeURIComponent(entry.set.id)}`)} aria-label={t('tcg.collection_view_set', { name: `${entry.set.name} — ${languageName}` })} className="flex min-w-0 flex-1 items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary/70 sm:gap-4">
-                    {entry.set.logo && <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card/40"><TCGImageWithFallback candidates={getTCGSetImageCandidates(entry.set)} alt="" fill sizes="48px" className="object-contain p-1" /></div>}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="break-words text-sm font-bold transition-colors group-hover:text-primary">{entry.set.name}</p>
-                        <span className="rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.06em] text-primary">{languageName}</span>
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.06em] ${isStarted ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200' : 'border-border/30 bg-card/30 text-foreground/45'}`}>{t(isStarted ? 'tcg.collection_in_progress' : 'tcg.activation.album_title')}</span>
-                      </div>
-                      <TCGProgressBar owned={entry.completion.owned} total={entry.completion.total} size="sm" className="mt-2" />
-                      <p className="mt-1 text-[11px] font-bold text-foreground/60">{entry.completion.owned}/{entry.completion.total} · {missing} {t('tcg.collection_missing_count')}</p>
-                    </div>
-                  </Link>
-                  <div className="min-w-0 shrink-0 sm:w-48 sm:text-right">
-                    {isStarted ? (
-                      <>
-                        <p className="break-words text-[10px] font-black uppercase leading-tight tracking-[0.08em] text-foreground/45">
-                          {t('tcg.collection_set_owned_value')} / {t('tcg.collection_set_total_value')}
-                        </p>
-                        <p className="mt-1 break-words text-sm font-black leading-tight">
-                          <span className="text-primary">{ownedValue}</span>
-                          <span className="px-1 text-foreground/35">/</span>
-                          <span className="text-foreground/80">{totalValue}</span>
-                        </p>
-                        {unpricedCount > 0 && <p className="mt-0.5 text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_partial', { count: unpricedCount })}</p>}
-                      </>
-                    ) : (
-                      <span className="text-[11px] font-bold text-foreground/45">{t('tcg.collection_value_none_owned')}</span>
-                    )}
-                  </div>
-                  <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end">
-                    <TCGLanguageSelector value={entry.language} onChange={(nextLanguage) => openCollectionInLanguage(entry.set.id, nextLanguage, entry.collectionKey)} preserveQuery={false} ariaLabel={t('tcg.collection_language_for_set', { name: entry.set.name, defaultValue: `Language for ${entry.set.name}` })} />
-                  </div>
-                </div>
-              );
-            })}
+      <section className="space-y-4" aria-labelledby="tcg-collection-sets-title">
+        <div className="flex flex-col gap-4 rounded-sm border border-border/20 bg-card/20 p-3 sm:p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 id="tcg-collection-sets-title" className="text-base font-black tracking-tight text-balance">
+                {t(urlState.view === 'mine' ? 'tcg.collection_my_sets' : 'tcg.collection_all_sets', {
+                  defaultValue: urlState.view === 'mine' ? 'My sets' : 'All sets',
+                })}
+              </h2>
+              <p className="mt-1 max-w-2xl text-sm text-foreground/55">
+                {t(urlState.view === 'mine' ? 'tcg.collection_my_sets_description' : 'tcg.collection_all_sets_description', {
+                  defaultValue: urlState.view === 'mine'
+                    ? 'Your started sets, progress, and collection value.'
+                    : 'Browse every available set without loading the whole catalog at once.',
+                })}
+              </p>
+            </div>
+            <div className="inline-flex min-h-11 rounded-sm border border-border/40 bg-card/50 p-1" role="group" aria-label={t('tcg.collection_view_mode', { defaultValue: 'Collection view' })}>
+              <button
+                type="button"
+                onClick={() => changeView('mine')}
+                aria-pressed={urlState.view === 'mine'}
+                className={`min-h-9 rounded-sm px-3 text-[11px] font-black uppercase tracking-[0.07em] transition-[background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${urlState.view === 'mine' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-primary'}`}
+              >
+                {t('tcg.collection_my_sets', { defaultValue: 'My sets' })}
+              </button>
+              <button
+                type="button"
+                onClick={() => changeView('all')}
+                aria-pressed={urlState.view === 'all'}
+                className={`min-h-9 rounded-sm px-3 text-[11px] font-black uppercase tracking-[0.07em] transition-[background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${urlState.view === 'all' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-primary'}`}
+              >
+                {t('tcg.collection_all_sets', { defaultValue: 'All sets' })}
+              </button>
+            </div>
           </div>
+
+          <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+            <div className="flex min-h-11 min-w-0 items-center gap-2 rounded-sm border border-border/35 bg-card/55 px-3 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20">
+              <Search className="h-4 w-4 shrink-0 text-foreground/45" aria-hidden="true" />
+              <label htmlFor={searchId} className="sr-only">{t('tcg.collection_search_sets')}</label>
+              <input
+                id={searchId}
+                name="collection-set-search"
+                autoComplete="off"
+                value={urlState.query}
+                onChange={(event) => replaceUrlState({ ...urlState, query: event.target.value })}
+                placeholder={t('tcg.collection_search_sets_placeholder', { defaultValue: 'Search sets…' })}
+                className="min-h-11 min-w-0 flex-1 bg-transparent text-sm font-semibold text-foreground placeholder:text-foreground/45 focus:outline-none"
+              />
+            </div>
+            <div className="flex min-h-11 items-center gap-1 rounded-sm border border-border/35 bg-card/55 pl-3 pr-2">
+              <label htmlFor={sortId} className="sr-only">{t('tcg.collection_sort_label')}</label>
+              <select
+                id={sortId}
+                name="collection-set-sort"
+                value={urlState.sort}
+                onChange={(event) => changeSort(event.target.value as TCGCollectionSortMode)}
+                className="min-h-11 min-w-0 appearance-none bg-card text-[11px] font-bold text-foreground/80 outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                <option value="progress">{t('tcg.collection_sort_default')}</option>
+                <option value="release-newest">{t('tcg.collection_sort_release_newest')}</option>
+                <option value="release-oldest">{t('tcg.collection_sort_release_oldest')}</option>
+                <option value="name-asc">{t('tcg.collection_sort_name_asc')}</option>
+                <option value="name-desc">{t('tcg.collection_sort_name_desc')}</option>
+              </select>
+              <ChevronDown className="pointer-events-none h-4 w-4 text-foreground/45" aria-hidden="true" />
+            </div>
+            <button
+              type="button"
+              onClick={toggleIncomplete}
+              aria-pressed={urlState.incompleteOnly}
+              aria-controls={setListId}
+              className={`min-h-11 rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.07em] transition-[border-color,background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${urlState.incompleteOnly ? 'border-primary/40 bg-primary/15 text-primary' : 'border-border/35 bg-card/55 text-foreground/70 hover:border-primary/30 hover:text-primary'}`}
+            >
+              {t('tcg.collection_to_finish', { defaultValue: 'To finish' })}
+            </button>
+          </div>
+        </div>
+
+        {visibleEntries.length === 0 ? (
+          <EmptyCollectionState
+            personal={urlState.view === 'mine' && noPersonalSets}
+            hasActiveFilters={hasActiveFilters}
+            onReset={() => {
+              replaceUrlState({ view: urlState.view, query: '', sort: 'release-newest', incompleteOnly: false });
+            }}
+            startHref={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(browseLanguage)}`)}
+          />
+        ) : (
+          <>
+            <div id={setListId} className="flex flex-col gap-3" aria-live="polite">
+              {visibleEntries.map((entry) => {
+                const valueQuery = valueQueryByCollectionKey.get(entry.collectionKey);
+                const valuation = valueQuery?.data?.bySet[entry.set.id];
+                const albumHref = getAlbumHref(entry);
+                return (
+                  <TCGCollectionSetRow
+                    key={entry.collectionKey}
+                    entry={entry}
+                    view={urlState.view}
+                    albumHref={albumHref}
+                    valuation={valuation}
+                    valuationLoading={Boolean(valueQuery?.isFetching)}
+                    analysisOpen={expandedCollectionKey === entry.collectionKey}
+                    onAnalysisToggle={() => setExpandedCollectionKey((current) => (
+                      current === entry.collectionKey ? null : entry.collectionKey
+                    ))}
+                    onLanguageChange={(language) => openCollectionInLanguage(entry, language)}
+                  />
+                );
+              })}
+            </div>
+
+            {urlState.view === 'all' && catalogDisplay.hasMore && (
+              <div className="flex justify-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCatalogCount((count) => count + TCG_COLLECTION_CATALOG_BATCH_SIZE)}
+                  className="min-h-11 rounded-sm border border-primary/35 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  {t('tcg.collection_show_more', { defaultValue: 'Show more' })}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number | string }) {
-  return <div><p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{label}</p><p className="mt-1 text-3xl font-black leading-none">{value}</p></div>;
+function Stat({ label, value, detail }: { label: string; value: number | string; detail?: string }) {
+  return (
+    <div>
+      <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{label}</p>
+      <p className="mt-1 tabular-nums text-3xl font-black leading-none">{value}</p>
+      {detail && <p className="mt-1 text-[11px] font-bold text-foreground/50">{detail}</p>}
+    </div>
+  );
+}
+
+function EmptyCollectionState({
+  personal,
+  hasActiveFilters,
+  onReset,
+  startHref,
+}: {
+  personal: boolean;
+  hasActiveFilters: boolean;
+  onReset: () => void;
+  startHref: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 rounded-sm border border-dashed border-border/30 bg-card/20 px-5 py-16 text-center">
+      <p className="max-w-md text-base font-bold text-foreground/75">
+        {personal
+          ? t('tcg.collection_empty_personal', { defaultValue: 'No sets have cards yet.' })
+          : t('tcg.collection_no_results', { defaultValue: 'No sets match these filters.' })}
+      </p>
+      <p className="max-w-md text-sm text-foreground/55">
+        {personal
+          ? t('tcg.collection_empty_personal_description', { defaultValue: 'Add a set, then track the physical cards you own.' })
+          : t('tcg.collection_no_results_description', { defaultValue: 'Try a different name or reset the active filters.' })}
+      </p>
+      {personal ? (
+        <Link
+          href={startHref}
+          className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('tcg.collection_add_set', { defaultValue: 'Add a set' })}
+        </Link>
+      ) : hasActiveFilters ? (
+        <button
+          type="button"
+          onClick={onReset}
+          className="min-h-11 rounded-sm border border-primary/40 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('tcg.collection_reset_filters', { defaultValue: 'Reset filters' })}
+        </button>
+      ) : null}
+    </div>
+  );
 }
 
 function LegacySetAttributionRow({
@@ -343,7 +509,7 @@ function LegacySetAttributionRow({
   return (
     <div className="flex min-h-12 flex-col gap-2 rounded-sm border border-amber-200/20 bg-card/35 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
       <span className="min-w-0 truncate text-sm font-bold text-amber-50">
-        {setId} <span className="text-amber-100/60">({cards.length})</span>
+        {setId} <span className="tabular-nums text-amber-100/60">({cards.length})</span>
       </span>
       <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
         <TCGLanguageSelector
@@ -353,7 +519,11 @@ function LegacySetAttributionRow({
           ariaLabel={t('tcg.collection_language_for_set', { name: setId, defaultValue: `Language for ${setId}` })}
           className="bg-card/25"
         />
-        <button type="button" onClick={() => onAssign(setId, language)} className="min-h-10 shrink-0 rounded-sm border border-amber-200/30 px-3 text-[11px] font-black uppercase tracking-[0.08em] text-amber-100 hover:bg-amber-200/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70">
+        <button
+          type="button"
+          onClick={() => onAssign(setId, language)}
+          className="min-h-11 shrink-0 rounded-sm border border-amber-200/30 px-3 text-[11px] font-black uppercase tracking-[0.08em] text-amber-100 hover:bg-amber-200/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
+        >
           {t('tcg.collection_attribute', { defaultValue: 'Attribute' })}
         </button>
       </div>
