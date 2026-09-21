@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { AuthModalBoundary } from '@/components/auth/AuthModalBoundary';
@@ -24,7 +24,7 @@ export function HeaderMobileNav() {
 
   const localizedHref = (path: string) => `/${resolvedLang}${path}`;
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const restoreFocusOnCloseRef = useRef(true);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const label = (key: string, fallback: string) => {
     const translated = t(key, { defaultValue: fallback });
@@ -45,15 +45,8 @@ export function HeaderMobileNav() {
   const showToolsOpen = isToolsOpen ?? isToolsActive;
 
   const closeMenu = () => {
-    restoreFocusOnCloseRef.current = false;
     setIsOpen(false);
-  };
-  const handleOpenChange = (nextOpen: boolean) => {
-    setIsOpen(nextOpen);
-    if (!nextOpen && restoreFocusOnCloseRef.current) {
-      triggerRef.current?.focus();
-    }
-    restoreFocusOnCloseRef.current = true;
+    triggerRef.current?.focus();
   };
   const restoreMenuFocus = () => {
     triggerRef.current?.focus();
@@ -64,45 +57,72 @@ export function HeaderMobileNav() {
     if (!nextOpen) restoreMenuFocus();
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    panelRef.current?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMenu();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
   return (
     <div className="xl:hidden">
-      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-        <SheetTrigger
-          type="button"
-          ref={triggerRef}
-          aria-haspopup="dialog"
-          aria-expanded={isOpen}
-          aria-controls="lunidex-mobile-menu"
-          aria-label={menuLabel}
-          title={menuLabel}
-          className="site-header-menu-trigger site-header-action"
-        >
-          <Menu aria-hidden="true" className="h-4 w-4" />
-        </SheetTrigger>
+      <button
+        type="button"
+        ref={triggerRef}
+        onClick={() => setIsOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-controls="lunidex-mobile-menu"
+        aria-label={menuLabel}
+        title={menuLabel}
+        className="site-header-menu-trigger site-header-action"
+      >
+        <Menu aria-hidden="true" className="h-4 w-4" />
+      </button>
 
-        <SheetContent
-          id="lunidex-mobile-menu"
-          side="right"
-          showCloseButton={false}
-          aria-label={navigationLabel}
-          className="header-mobile-sheet motion-reduce:!transform-none motion-reduce:!transition-none"
-        >
-          <SheetHeader className="header-mobile-sheet-header">
+      {isOpen && (
+        <>
+          <button
+            type="button"
+            aria-label={closeLabel}
+            className="header-mobile-sheet-overlay"
+            onClick={closeMenu}
+          />
+          <div
+            id="lunidex-mobile-menu"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={navigationLabel}
+            tabIndex={-1}
+            className="header-mobile-sheet motion-reduce:!transform-none motion-reduce:!transition-none"
+          >
+            <div className="header-mobile-sheet-header">
             <HeaderLogo />
-            <SheetClose
+            <button
               type="button"
+              onClick={closeMenu}
               aria-label={closeLabel}
               title={closeLabel}
               className="site-header-action header-mobile-sheet-close"
             >
               <X aria-hidden="true" className="h-4 w-4" />
-            </SheetClose>
-            <SheetTitle className="sr-only">{navigationLabel}</SheetTitle>
-            <SheetDescription className="sr-only">{menuDescription}</SheetDescription>
-          </SheetHeader>
+            </button>
+            <p className="sr-only">{menuDescription}</p>
+          </div>
 
-          <div className="header-mobile-sheet-body">
-            <nav aria-label={navigationLabel} className="header-mobile-sheet-nav">
+            <div className="header-mobile-sheet-body">
+              <nav aria-label={navigationLabel} className="header-mobile-sheet-nav">
               <div className="header-mobile-sheet-section-label">{navigationLabel}</div>
               {PRIMARY_NAV_ITEMS.map((item) => {
                 const href = localizedHref(item.path);
@@ -161,22 +181,23 @@ export function HeaderMobileNav() {
                   </div>
                 )}
               </div>
-            </nav>
+              </nav>
 
-            <section className="header-mobile-sheet-actions" aria-labelledby="header-mobile-actions-title">
-              <h2 id="header-mobile-actions-title" className="header-mobile-sheet-section-label">{moreLabel}</h2>
-              <HeaderActions
-                placement="sheet"
-                onInteraction={closeMenu}
-                onRequestAuth={() => {
-                  closeMenu();
-                  setAuthOpen(true);
-                }}
-              />
-            </section>
+              <section className="header-mobile-sheet-actions" aria-labelledby="header-mobile-actions-title">
+                <h2 id="header-mobile-actions-title" className="header-mobile-sheet-section-label">{moreLabel}</h2>
+                <HeaderActions
+                  placement="sheet"
+                  onInteraction={closeMenu}
+                  onRequestAuth={() => {
+                    closeMenu();
+                    setAuthOpen(true);
+                  }}
+                />
+              </section>
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </>
+      )}
       {authOpen && (
         <AuthModalBoundary onClose={() => handleAuthOpenChange(false)}>
           <AuthModal open onOpenChange={handleAuthOpenChange} />

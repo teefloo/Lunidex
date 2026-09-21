@@ -42,16 +42,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const key = `editorial.competitors.${article.slug.replaceAll('-', '_')}`;
   const title = t(`${key}.meta_title`);
   const description = t(`${key}.meta_description`);
+  const shouldIndex = isEditorialIndexable(requestedLanguage);
 
   return {
     title: { absolute: title },
     description,
     alternates: {
       canonical: canonicalPath,
-      languages: buildEditorialLanguages(article.path),
+      ...(shouldIndex ? { languages: buildEditorialLanguages(article.path) } : {}),
     },
     robots: {
-      index: isEditorialIndexable(requestedLanguage),
+      index: shouldIndex,
       follow: true,
     },
     openGraph: {

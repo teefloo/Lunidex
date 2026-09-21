@@ -35,7 +35,7 @@ describe('TanStack Query observability', () => {
     })).rejects.toThrow('upstream failed');
 
     expect(attempts).toBe(2);
-    expect(Sentry.captureException).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(Sentry.captureException).toHaveBeenCalledTimes(1));
   });
 
   it('reports failed mutations without sending mutation variables', async () => {
@@ -53,7 +53,7 @@ describe('TanStack Query observability', () => {
 
     await expect(mutation.execute({ email: 'user@example.com' })).rejects.toThrow('mutation failed');
 
-    expect(Sentry.captureException).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(Sentry.captureException).toHaveBeenCalledTimes(1));
     expect(JSON.stringify(vi.mocked(Sentry.captureException).mock.calls)).not.toContain('user@example.com');
   });
 

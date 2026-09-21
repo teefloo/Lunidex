@@ -68,6 +68,7 @@ export default async function AboutPage() {
     { id: 'mission', title: t('about.mission_title'), body: t('about.mission_body') },
     { id: 'data-sources', title: t('about.data_sources_title'), body: t('about.data_sources_body') },
     { id: 'features', title: t('about.features_title'), body: t('about.features_body') },
+    { id: 'boundaries', title: t('about.boundaries_title'), body: t('about.boundaries_body') },
     { id: 'open-source', title: t('about.opensource_title'), body: t('about.opensource_body') },
     { id: 'contact', title: t('about.contact_title'), body: t('about.contact_body') },
   ];

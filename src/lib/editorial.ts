@@ -22,9 +22,24 @@ export const COMPARISON_ROW_KEYS = [
   'offline',
   'accountSync',
   'cost',
+  'wishlist',
+  'pokedex',
+  'teamBuilder',
+  'openSource',
+  'limits',
 ] as const;
 
 export type ComparisonRowKey = (typeof COMPARISON_ROW_KEYS)[number];
+
+export const GUIDE_EVIDENCE_ROW_KEYS = [
+  'cardEstimate',
+  'sealedPortfolio',
+  'priceHistory',
+  'sourceFreshness',
+  'marketLimits',
+] as const;
+
+export type GuideEvidenceRowKey = (typeof GUIDE_EVIDENCE_ROW_KEYS)[number];
 
 export type EditorialDateDefinition = {
   publishedAt: string;
@@ -45,6 +60,9 @@ export type FeatureGuideDefinition = {
   path: string;
   productPaths: string[];
   relatedPaths?: readonly string[];
+  sources?: readonly EditorialSource[];
+  evidenceRows?: readonly GuideEvidenceRowKey[];
+  faqCount?: 2 | 4;
 };
 
 /**
@@ -53,7 +71,7 @@ export type FeatureGuideDefinition = {
  * apart when an article is updated.
  */
 export const EDITORIAL_ARTICLE_DATES = {
-  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-15' },
+  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-21' },
   '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-09-14' },
   '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-24' },
   '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-24' },
@@ -66,10 +84,12 @@ export const EDITORIAL_ARTICLE_DATES = {
   '/compare/lunidex-vs-collectr': { publishedAt: '2026-08-18', updatedAt: '2026-09-14' },
   '/compare/lunidex-vs-pokellector': { publishedAt: '2026-09-14', updatedAt: '2026-09-14' },
   '/compare/lunidex-vs-cardzia': { publishedAt: '2026-09-14', updatedAt: '2026-09-14' },
-  '/guides/pokemon-reference-guide': { publishedAt: '2026-08-19', updatedAt: '2026-09-14' },
-  '/guides/team-tools-guide': { publishedAt: '2026-08-20', updatedAt: '2026-09-14' },
+  '/compare/lunidex-vs-cardmarket': { publishedAt: '2026-09-21', updatedAt: '2026-09-21' },
+  '/guides/pokemon-reference-guide': { publishedAt: '2026-08-19', updatedAt: '2026-09-21' },
+  '/guides/team-tools-guide': { publishedAt: '2026-08-20', updatedAt: '2026-09-21' },
   '/guides/tcg-workspace-guide': { publishedAt: '2026-08-21', updatedAt: '2026-09-14' },
   '/guides/progress-account-guide': { publishedAt: '2026-08-22', updatedAt: '2026-08-22' },
+  '/guides/pokemon-card-collection-value': { publishedAt: '2026-09-21', updatedAt: '2026-09-21' },
 } as const satisfies Record<string, EditorialDateDefinition>;
 
 export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
@@ -137,6 +157,22 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
     comparisonRows: COMPARISON_ROW_KEYS,
     relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
   },
+  {
+    slug: 'cardmarket',
+    path: '/compare/lunidex-vs-cardmarket',
+    sources: [
+      { label: 'Cardmarket Pokémon marketplace', url: 'https://www.cardmarket.com/en/Pokemon' },
+      { label: 'Cardmarket product catalogue', url: 'https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json' },
+      { label: 'Cardmarket price guide', url: 'https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json' },
+    ],
+    productPath: '/tcg',
+    comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: [
+      '/guides/pokemon-card-collection-tracker',
+      '/guides/pokemon-card-collection-value',
+      '/guides/tcg-workspace-guide',
+    ],
+  },
 ];
 
 export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
@@ -160,6 +196,23 @@ export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
     slug: 'progress-account-guide',
     path: '/guides/progress-account-guide',
     productPaths: ['/dashboard', '/favorites', '/friends', '/tcg/collection', '/tcg/wishlist'],
+  },
+  {
+    slug: 'pokemon-card-collection-value',
+    path: '/guides/pokemon-card-collection-value',
+    productPaths: ['/tcg/collection', '/tcg/sealed'],
+    relatedPaths: [
+      '/guides/pokemon-card-collection-tracker',
+      '/guides/tcg-workspace-guide',
+      '/compare/lunidex-vs-cardmarket',
+    ],
+    sources: [
+      { label: 'TCGdex', url: 'https://www.tcgdex.net/' },
+      { label: 'Cardmarket product catalogue', url: 'https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json' },
+      { label: 'Cardmarket price guide', url: 'https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json' },
+    ],
+    evidenceRows: GUIDE_EVIDENCE_ROW_KEYS,
+    faqCount: 4,
   },
 ];
 

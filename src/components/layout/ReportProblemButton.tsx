@@ -1,10 +1,7 @@
 'use client';
 
 import { MessageSquareWarning } from 'lucide-react';
-import * as Sentry from '@sentry/nextjs';
 import { useRef, useState } from 'react';
-
-import { capturePostHogException } from '@/lib/posthog-client';
 
 interface FeedbackDialog {
   appendToDom: () => void;
@@ -64,7 +61,8 @@ export function ReportProblemButton({
     setIsOpening(true);
 
     try {
-      const feedback = Sentry.getFeedback();
+      const { getFeedback } = await import('@sentry/nextjs');
+      const feedback = getFeedback();
       if (!feedback) {
         goToContact();
         return;
@@ -90,11 +88,15 @@ export function ReportProblemButton({
           dialogRef.current = null;
         },
         onFormSubmitted: () => {
-          capturePostHogException(new Error('A user reported a visual problem'), {
-            feature: 'visual-feedback',
-            operation: 'visual-problem-submitted',
-            route: window.location.pathname,
-          });
+          void import('@/lib/posthog-client')
+            .then(({ capturePostHogException }) => capturePostHogException(new Error('A user reported a visual problem'), {
+              feature: 'visual-feedback',
+              operation: 'visual-problem-submitted',
+              route: window.location.pathname,
+            }))
+            .catch(() => {
+              // Optional telemetry must never block the feedback flow.
+            });
           dialogRef.current?.removeFromDom();
           dialogRef.current = null;
         },

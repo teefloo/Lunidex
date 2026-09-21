@@ -2,9 +2,6 @@
 
 import { useEffect } from 'react';
 
-import { reportSentryException } from '@/lib/sentry-observability';
-import { capturePostHogException } from '@/lib/posthog-client';
-
 export default function GlobalError({
   error,
   reset,
@@ -13,15 +10,17 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    reportSentryException(error, {
+    const context = {
       feature: 'route-boundary',
       route: window.location.pathname,
       operation: 'global-error',
-    });
-    capturePostHogException(error, {
-      feature: 'route-boundary',
-      route: window.location.pathname,
-      operation: 'global-error',
+    };
+
+    void Promise.all([
+      import('@/lib/sentry-observability').then(({ reportSentryException }) => reportSentryException(error, context)),
+      import('@/lib/posthog-client').then(({ capturePostHogException }) => capturePostHogException(error, context)),
+    ]).catch(() => {
+      // Optional telemetry must never prevent the global recovery UI.
     });
   }, [error]);
 

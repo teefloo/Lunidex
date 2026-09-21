@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { HeaderLink } from './HeaderLink';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
 
@@ -42,40 +41,31 @@ export function HeaderDesktopNav() {
         ))}
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          type="button"
-          data-active={isToolsActive ? 'true' : undefined}
-          className="site-header-tools-trigger"
-        >
+      <details className="site-header-tools">
+        <summary data-active={isToolsActive ? 'true' : undefined} className="site-header-tools-trigger">
           <span>{toolsLabel}</span>
           <ChevronDown aria-hidden="true" className="site-header-tools-chevron h-3.5 w-3.5 transition-transform duration-150" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="site-header-tools-menu">
+        </summary>
+        <div className="site-header-tools-menu">
           {SECONDARY_NAV_ITEMS.map((item) => {
             const href = localizedHref(item.path);
             const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
             return (
-              <DropdownMenuItem
+              <Link
                 key={item.path}
-                render={
-                  <Link
-                    href={href}
-                    aria-current={isActive ? 'page' : undefined}
-                    data-active={isActive ? 'true' : undefined}
-                  />
-                }
+                href={href}
+                aria-current={isActive ? 'page' : undefined}
                 data-active={isActive ? 'true' : undefined}
                 className="site-header-tools-item"
               >
                 <item.icon aria-hidden="true" className="h-4 w-4 shrink-0" />
                 <span>{label(item.labelKey, item.fallback)}</span>
-              </DropdownMenuItem>
+              </Link>
             );
           })}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </div>
+      </details>
     </nav>
   );
 }

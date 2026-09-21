@@ -91,6 +91,14 @@ export default async function PokemonCardCollectionTrackerGuide() {
     },
   ];
 
+  const facts = [
+    { title: t('collection_guide.fact_free_title'), body: t('collection_guide.fact_free_body') },
+    { title: t('collection_guide.fact_start_title'), body: t('collection_guide.fact_start_body') },
+    { title: t('collection_guide.fact_offline_title'), body: t('collection_guide.fact_offline_body') },
+    { title: t('collection_guide.fact_sync_title'), body: t('collection_guide.fact_sync_body') },
+    { title: t('collection_guide.fact_platform_title'), body: t('collection_guide.fact_platform_body') },
+  ];
+
   const matrixRows = [
     { label: t('collection_guide.criteria_catalog_title'), value: t('collection_guide.matrix_catalog_value') },
     { label: t('collection_guide.criteria_ownership_title'), value: t('collection_guide.matrix_ownership_value') },
@@ -176,6 +184,25 @@ export default async function PokemonCardCollectionTrackerGuide() {
               <p className="mt-4 text-base leading-8 text-foreground/80">
                 {t('collection_guide.answer_body')}
               </p>
+            </section>
+
+            <section className="mx-auto mt-10 max-w-4xl" aria-labelledby="collection-guide-facts-title">
+              <div className="mx-auto max-w-3xl text-center">
+                <h2 id="collection-guide-facts-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                  {t('collection_guide.facts_title')}
+                </h2>
+                <p className="mt-4 leading-7 text-foreground/70">{t('collection_guide.facts_intro')}</p>
+              </div>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {facts.map((fact, index) => (
+                  <section key={fact.title} className="section-frame p-5" aria-labelledby={`collection-fact-${index}`}>
+                    <h3 id={`collection-fact-${index}`} className="text-lg font-extrabold tracking-tight">
+                      {fact.title}
+                    </h3>
+                    <p className="mt-3 leading-7 text-foreground/70">{fact.body}</p>
+                  </section>
+                ))}
+              </div>
             </section>
 
             {isAnniversary30Language(language) ? (

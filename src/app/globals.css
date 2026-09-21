@@ -7075,6 +7075,14 @@ body:has(.lunidex-home) .site-footer {
   }
 }
 
+/* Keep long editorial pages cheap to lay out before the reader reaches
+   their lower sections. The content remains in the DOM and crawlable.
+   ───────────────────────────────────────────────────────────────────── */
+.editorial-below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 38rem;
+}
+
 /* ─────────────────────────────────────────────────────────────────────
    Shared application header
    A quiet navigation rail keeps the Lunidex mark and collection progress
@@ -7184,16 +7192,29 @@ body:has(.lunidex-home) .site-footer {
 }
 
 .site-header-tools-trigger {
+  list-style: none;
   flex: 0 0 auto;
 }
 
-.site-header-tools-trigger[aria-expanded='true'] .site-header-tools-chevron {
+.site-header-tools-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.site-header-tools {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.site-header-tools[open] .site-header-tools-chevron {
   transform: rotate(180deg);
 }
 
 .site-header-tools-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 50;
   min-width: 13rem;
-  margin-top: 0.25rem;
   border-radius: 0.65rem;
   border-color: color-mix(in oklab, var(--foreground) 14%, transparent);
   background: var(--card);
@@ -7317,9 +7338,24 @@ body:has(.lunidex-home) .site-footer {
   flex: 0 0 auto;
 }
 
+.header-mobile-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  border: 0;
+  background: color-mix(in oklab, var(--foreground) 25%, transparent);
+  cursor: default;
+}
+
 .header-mobile-sheet {
   width: min(24rem, calc(100vw - 1rem)) !important;
   max-width: none !important;
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
   gap: 0 !important;
   overflow: hidden !important;
   /* The sheet is portaled outside .site-header, so reserve the device's

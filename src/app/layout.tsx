@@ -1,17 +1,23 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
+import { headers } from "next/headers";
 import { Pixelify_Sans, Nunito } from "next/font/google";
 import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { getServerT, getServerLanguage, getServerTranslations } from '@/lib/server-i18n';
+import {
+  getEditorialClientTranslations,
+  getServerT,
+  getServerLanguage,
+  getServerTranslations,
+} from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
-import { buildOrganizationJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildCreatorJsonLd, buildOrganizationJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
   SITE_URL,
   SITE_NAME,
@@ -156,14 +162,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   await connection();
+  const requestHeaders = await headers();
   const lang = await getServerLanguage();
   const t = await getServerT();
-  const initialTranslations = getServerTranslations(lang);
+  const requestPathname = requestHeaders.get('x-primedex-pathname') ?? '';
+  const isEditorialRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(requestPathname);
+  const initialTranslations = isEditorialRoute
+    ? getEditorialClientTranslations(lang)
+    : getServerTranslations(lang);
   const baseUrl = SITE_URL;
   const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
 
   const jsonLd = [
     buildOrganizationJsonLd(),
+    buildCreatorJsonLd(),
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -220,7 +232,11 @@ export default async function RootLayout({
         <SkipLink>
           {t('common.skip_to_content')}
         </SkipLink>
-         <Providers initialLanguage={lang} initialTranslations={initialTranslations}>
+         <Providers
+           initialLanguage={lang}
+           initialTranslations={initialTranslations}
+           initialTranslationsPartial={isEditorialRoute}
+         >
            <AppContent>
              <div id="main-content" tabIndex={-1}>
                {children}

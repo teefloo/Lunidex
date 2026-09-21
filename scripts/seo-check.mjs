@@ -13,7 +13,12 @@ const tcgLayoutSource = await readFile(join(projectRoot, 'src/app/tcg/layout.tsx
 const pokemonLayoutSource = await readFile(join(projectRoot, 'src/app/pokemon/[name]/layout.tsx'), 'utf8');
 const pokemonPageSource = await readFile(join(projectRoot, 'src/app/pokemon/[name]/page.tsx'), 'utf8');
 const pokemonClientSource = await readFile(join(projectRoot, 'src/app/pokemon/[name]/PokemonDetailClient.tsx'), 'utf8');
+const compareLayoutSource = await readFile(join(projectRoot, 'src/app/compare/layout.tsx'), 'utf8');
+const editorialGuideRouteSource = await readFile(join(projectRoot, 'src/app/guides/[slug]/page.tsx'), 'utf8');
+const editorialCompareRouteSource = await readFile(join(projectRoot, 'src/app/compare/[slug]/page.tsx'), 'utf8');
+const layoutSource = await readFile(join(projectRoot, 'src/app/layout.tsx'), 'utf8');
 const editorialSource = await readFile(join(projectRoot, 'src/lib/editorial.ts'), 'utf8');
+const seoSource = await readFile(join(projectRoot, 'src/lib/seo.ts'), 'utf8');
 const localeFiles = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'];
 const localeSources = await Promise.all(localeFiles.map((locale) => readFile(join(projectRoot, `src/lib/i18n/${locale}.ts`), 'utf8')));
 const localeSource = localeSources.join('\n');
@@ -54,13 +59,19 @@ check(!pokemonPageSource.includes('citation_title') && !pokemonPageSource.includ
 check(pokemonClientSource.includes('<main id="main-content"'), 'Pokémon detail page must expose a single main landmark');
 check(pokemonPageSource.includes('alternates:') && pokemonPageSource.includes('supportedLanguages.map'), 'Pokémon metadata must expose the localized canonical/hreflang map');
 check(editorialSource.includes('buildEditorialLanguages'), 'Editorial routes must expose the limited translated hreflang map');
-check(editorialSource.includes("'platform',\n  'scope',\n  'scanner',\n  'prices',\n  'offline',\n  'accountSync',\n  'cost'"), 'Editorial comparison matrix keys are incomplete');
+check(editorialSource.includes("'wishlist'") && editorialSource.includes("'pokedex'") && editorialSource.includes("'teamBuilder'") && editorialSource.includes("'openSource'") && editorialSource.includes("'limits'"), 'Editorial comparison matrix keys are incomplete');
 check(editorialSource.includes('sources: readonly EditorialSource[]'), 'Editorial articles must expose a typed source list');
 check(editorialSource.includes("slug: 'pokellector'") && editorialSource.includes('https://www.pokellector.com/'), 'Editorial registry omits the Pokéllector source-backed entry');
 check(editorialSource.includes("slug: 'cardzia'") && editorialSource.includes('https://cardzia.fr/') && editorialSource.includes('play.google.com/store/apps/details?id=fr.cardzia.app'), 'Editorial registry omits the Cardzia source-backed entry');
+check(editorialSource.includes("slug: 'cardmarket'") && editorialSource.includes('/compare/lunidex-vs-cardmarket'), 'Editorial registry omits the Cardmarket comparison');
+check(editorialSource.includes("slug: 'pokemon-card-collection-value'") && editorialSource.includes('/guides/pokemon-card-collection-value'), 'Editorial registry omits the collection value guide');
+check(seoSource.includes('CREATOR_PERSON_ID') && layoutSource.includes('buildCreatorJsonLd'), 'Root entity graph is missing the verified creator node');
+check(!compareLayoutSource.includes('buildBreadcrumbJsonLd'), 'Comparison layout must not emit a duplicate breadcrumb');
+check(editorialGuideRouteSource.includes('shouldIndex ? { languages: buildEditorialLanguages(guide.path) }'), 'Fallback guide locales must not emit hreflang links');
+check(editorialCompareRouteSource.includes('shouldIndex ? { languages: buildEditorialLanguages(article.path) }'), 'Fallback comparison locales must not emit hreflang links');
 
 for (const [assetName, assetSource] of Object.entries(aiAssets)) {
-  check(assetSource.includes('2026-09-15'), `${assetName} has an outdated review date`);
+  check(assetSource.includes('2026-09-21'), `${assetName} has an outdated review date`);
 }
 
 const genericIntentPaths = [
@@ -72,11 +83,13 @@ const genericIntentPaths = [
   '/en/guides/pokemon-reference-guide',
   '/en/guides/team-tools-guide',
   '/en/guides/team-builder-guide',
+  '/en/guides/pokemon-card-collection-value',
   '/en/compare/lunidex-vs-collectr',
   '/en/compare/lunidex-vs-pokecardex',
   '/en/compare/lunidex-vs-zebradex',
   '/en/compare/lunidex-vs-pokellector',
   '/en/compare/lunidex-vs-cardzia',
+  '/en/compare/lunidex-vs-cardmarket',
 ];
 for (const path of genericIntentPaths) {
   check(llmsSource.includes(path), `AI asset omits the canonical intent route: ${path}`);

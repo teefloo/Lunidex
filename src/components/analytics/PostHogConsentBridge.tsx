@@ -10,6 +10,7 @@ import {
 } from '@/lib/product-measurement';
 import {
   capturePostHogPageview,
+  initializePostHog,
   syncPostHogConsent,
 } from '@/lib/posthog-client';
 
@@ -23,6 +24,7 @@ export function PostHogConsentBridge() {
   const capturedPathRef = useRef<string | null>(null);
 
   useEffect(() => {
+    initializePostHog();
     syncPostHogConsent(consent);
   }, [consent]);
 

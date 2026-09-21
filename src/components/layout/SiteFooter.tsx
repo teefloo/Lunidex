@@ -118,6 +118,7 @@ export default async function SiteFooter() {
   const guideLinks: FooterLinkData[] = [
     { href: '/blog', label: t('nav.blog') },
     { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
+    { href: '/guides/pokemon-card-collection-value', label: t('editorial.guides.pokemon_card_collection_value.nav_label', { defaultValue: 'Pokémon card collection value guide' }) },
     { href: '/guides/team-builder-guide', label: t('team_guide.nav_label', { defaultValue: 'Team building guide' }) },
     { href: '/guides/progress-account-guide', label: t('editorial.guides.progress_account.nav_label', { defaultValue: 'Progress and account guide' }) },
     { href: '/guides/quiz-guide', label: t('quiz_guide.nav_label', { defaultValue: 'Quiz guide' }) },
@@ -126,6 +127,7 @@ export default async function SiteFooter() {
     { href: '/compare/lunidex-vs-pokecardex', label: t('editorial.competitors.pokecardex.nav_label', { defaultValue: 'Lunidex vs PokéCardex' }) },
     { href: '/compare/lunidex-vs-zebradex', label: t('editorial.competitors.zebradex.nav_label', { defaultValue: 'Lunidex vs ZebraDex' }) },
     { href: '/compare/lunidex-vs-collectr', label: t('editorial.competitors.collectr.nav_label', { defaultValue: 'Lunidex vs Collectr' }) },
+    { href: '/compare/lunidex-vs-cardmarket', label: t('editorial.competitors.cardmarket.nav_label', { defaultValue: 'Lunidex vs Cardmarket' }) },
     ...(isAnniversary30Language(language)
       ? [{ href: ANNIVERSARY_30_PATH, label: t('anniversary_30.nav_label') }]
       : []),

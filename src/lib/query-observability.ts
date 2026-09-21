@@ -1,12 +1,22 @@
 import { MutationCache, QueryCache } from '@tanstack/react-query';
 
-import {
-  featureFromQueryKey,
-  reportHttpFailure,
-  shouldIgnoreHttpFailure,
-  type ObservabilityContext,
-} from '@/lib/sentry-observability';
-import { capturePostHogFeatureError } from '@/lib/posthog-client';
+import type { ObservabilityContext } from '@/lib/sentry-observability';
+
+type SentryObservabilityModule = typeof import('@/lib/sentry-observability');
+type PostHogClientModule = typeof import('@/lib/posthog-client');
+
+let sentryObservabilityPromise: Promise<SentryObservabilityModule> | undefined;
+let postHogClientPromise: Promise<PostHogClientModule> | undefined;
+
+function loadSentryObservability(): Promise<SentryObservabilityModule> {
+  sentryObservabilityPromise ??= import('@/lib/sentry-observability');
+  return sentryObservabilityPromise;
+}
+
+function loadPostHogClient(): Promise<PostHogClientModule> {
+  postHogClientPromise ??= import('@/lib/posthog-client');
+  return postHogClientPromise;
+}
 
 function getErrorStatus(error: unknown): number | undefined {
   if (!error || typeof error !== 'object') return undefined;
@@ -19,16 +29,44 @@ function getQueryContext(feature: string, kind: 'query' | 'mutation'): Observabi
   return { feature, operation: kind, kind };
 }
 
-function captureProductError(error: unknown, context: ObservabilityContext & { status?: number }): void {
-  if (shouldIgnoreHttpFailure({ error, status: context.status, operation: context.operation })) return;
-  const candidate = error && typeof error === 'object' ? error as { name?: unknown } : {};
-  capturePostHogFeatureError({
-    feature: context.feature,
-    operation: context.operation,
-    kind: context.kind,
-    status: context.status,
-    error_type: typeof candidate.name === 'string' ? candidate.name : 'Error',
-  });
+function featureFromQueryKey(queryKey: readonly unknown[]): string {
+  const candidate = typeof queryKey[0] === 'string' ? queryKey[0].toLowerCase() : '';
+  const features = [
+    'pokemon',
+    'profile',
+    'quiz',
+    'friends',
+    'battle',
+    'tcg',
+    'price',
+    'notifications',
+    'notification',
+    'sync',
+    'smogon',
+  ];
+  return features.find((feature) => candidate.includes(feature)) ?? 'query';
+}
+
+function reportQueryFailure(error: unknown, context: ObservabilityContext & { status?: number }): void {
+  void loadSentryObservability()
+    .then((sentry) => {
+      if (sentry.shouldIgnoreHttpFailure({ error, status: context.status, operation: context.operation })) return;
+
+      sentry.reportHttpFailure(error, context);
+      return loadPostHogClient().then((posthog) => {
+        const candidate = error && typeof error === 'object' ? error as { name?: unknown } : {};
+        posthog.capturePostHogFeatureError({
+          feature: context.feature,
+          operation: context.operation,
+          kind: context.kind,
+          status: context.status,
+          error_type: typeof candidate.name === 'string' ? candidate.name : 'Error',
+        });
+      });
+    })
+    .catch(() => {
+      // Optional telemetry must never change query behavior.
+    });
 }
 
 function getMutationKey(mutation: { options: { mutationKey?: readonly unknown[] } }): readonly unknown[] {
@@ -43,8 +81,7 @@ export function createObservedQueryCache(): QueryCache {
         ...getQueryContext(feature, 'query'),
         status: getErrorStatus(error),
       };
-      reportHttpFailure(error, context);
-      captureProductError(error, context);
+      reportQueryFailure(error, context);
     },
   });
 }
@@ -57,8 +94,7 @@ export function createObservedMutationCache(): MutationCache {
         ...getQueryContext(feature, 'mutation'),
         status: getErrorStatus(error),
       };
-      reportHttpFailure(error, context);
-      captureProductError(error, context);
+      reportQueryFailure(error, context);
     },
   });
 }

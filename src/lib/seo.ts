@@ -21,6 +21,23 @@ export const DEFAULT_OG_IMAGE = {
   alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
 } as const;
 
+export const CREATOR_PERSON_ID = `${SITE_URL}/#person-esteban-deloge`;
+
+/**
+ * Identifies the public project creator without inventing social profiles or
+ * attributing the product to an unverified organization.
+ */
+export function buildCreatorJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': CREATOR_PERSON_ID,
+    name: 'Esteban Deloge',
+    url: 'https://github.com/teefloo',
+    sameAs: ['https://github.com/teefloo'],
+  };
+}
+
 /**
  * Shared entity node used by page schemas that identify Lunidex as the
  * publisher or author. Keeping one stable @id makes those references
@@ -47,6 +64,7 @@ export function buildOrganizationJsonLd() {
       height: 512,
     },
     sameAs: [GITHUB_REPO_URL],
+    founder: { '@id': CREATOR_PERSON_ID },
   };
 }
 
@@ -352,7 +370,7 @@ export function buildArticleJsonLd({
     '@id': `${SITE_URL}${path}#article`,
     datePublished,
     dateModified,
-    author: { '@id': `${SITE_URL}/#organization` },
+    author: { '@id': CREATOR_PERSON_ID },
     publisher: { '@id': `${SITE_URL}/#organization` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}#webpage` },
     image: [`${SITE_URL}${DEFAULT_OG_IMAGE.url}`],

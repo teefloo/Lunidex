@@ -79,6 +79,60 @@ export function getServerTranslations(lang: SupportedLanguage): ResourceLanguage
   return serverResources[lang].translation;
 }
 
+const EDITORIAL_CLIENT_TRANSLATION_PATHS = [
+  'common',
+  'nav',
+  'tcg.nav_collection',
+  'header',
+  'languages',
+  'settings',
+  'auth',
+  'dashboard.title',
+  'command_palette',
+  'search',
+  'legal.banner',
+  'pwa',
+] as const;
+
+function isTranslationRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Editorial pages render their article copy on the server. Keep only the
+ * client-facing shell strings in the RSC payload; the complete locale bundle
+ * remains available through `loadLanguage` when an interactive feature needs
+ * it or the user changes language.
+ */
+export function getEditorialClientTranslations(lang: SupportedLanguage): ResourceLanguage {
+  const source = serverResources[lang].translation as unknown as Record<string, unknown>;
+  const selected: Record<string, unknown> = {};
+
+  for (const path of EDITORIAL_CLIENT_TRANSLATION_PATHS) {
+    const segments = path.split('.');
+    let sourceValue: unknown = source;
+    let target: Record<string, unknown> = selected;
+
+    for (const [index, segment] of segments.entries()) {
+      if (!isTranslationRecord(sourceValue)) break;
+      sourceValue = sourceValue[segment];
+      if (index === segments.length - 1 || sourceValue === undefined) {
+        if (index === segments.length - 1 && sourceValue !== undefined) {
+          target[segment] = sourceValue;
+        }
+        break;
+      }
+      const existing = target[segment];
+      if (!isTranslationRecord(existing)) {
+        target[segment] = {};
+      }
+      target = target[segment] as Record<string, unknown>;
+    }
+  }
+
+  return selected as ResourceLanguage;
+}
+
 // Synchronous, language-explicit translator. Used where the locale comes from
 // the request (e.g. `?lang=` on OG image routes) instead of the cookie.
 export function getServerTForLanguage(lang: SupportedLanguage): TFunction {

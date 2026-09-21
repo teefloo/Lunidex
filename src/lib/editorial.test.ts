@@ -4,9 +4,11 @@ import {
   COMPETITOR_ARTICLES,
   COMPARISON_ROW_KEYS,
   FEATURE_GUIDES,
+  GUIDE_EVIDENCE_ROW_KEYS,
   buildEditorialLanguages,
   getCompetitorArticle,
   getEditorialDates,
+  getFeatureGuide,
   isEditorialIndexable,
 } from './editorial';
 import de from './i18n/de';
@@ -50,6 +52,21 @@ const collectionGuideMatrixKeys = [
   'cta_cardzia',
 ] as const;
 
+const collectionGuideFactKeys = [
+  'facts_title',
+  'facts_intro',
+  'fact_free_title',
+  'fact_free_body',
+  'fact_start_title',
+  'fact_start_body',
+  'fact_offline_title',
+  'fact_offline_body',
+  'fact_sync_title',
+  'fact_sync_body',
+  'fact_platform_title',
+  'fact_platform_body',
+] as const;
+
 const competitorRequiredFields = [
   'name',
   'nav_label',
@@ -69,6 +86,46 @@ const competitorRequiredFields = [
 ] as const;
 
 describe('editorial SEO registry', () => {
+  it('registers the value guide and Cardmarket comparison with evidence metadata', () => {
+    const valueGuide = getFeatureGuide('pokemon-card-collection-value');
+    const cardmarket = getCompetitorArticle('cardmarket');
+
+    expect(valueGuide).toMatchObject({
+      path: '/guides/pokemon-card-collection-value',
+      productPaths: ['/tcg/collection', '/tcg/sealed'],
+      evidenceRows: [...GUIDE_EVIDENCE_ROW_KEYS],
+      faqCount: 4,
+    });
+    expect(valueGuide?.sources?.every((source) => source.url.startsWith('https://'))).toBe(true);
+    expect(cardmarket).toMatchObject({
+      path: '/compare/lunidex-vs-cardmarket',
+      productPath: '/tcg',
+      comparisonRows: [...COMPARISON_ROW_KEYS],
+    });
+    expect(cardmarket?.sources.length).toBeGreaterThan(0);
+  });
+
+  it('requires the expanded comparison dimensions for every TCG comparison', () => {
+    for (const slug of ['pokecardex', 'zebradex', 'collectr', 'pokellector', 'cardzia', 'cardmarket']) {
+      expect(getCompetitorArticle(slug)?.comparisonRows).toEqual([...COMPARISON_ROW_KEYS]);
+    }
+
+    expect(COMPARISON_ROW_KEYS).toEqual([
+      'platform',
+      'scope',
+      'scanner',
+      'prices',
+      'offline',
+      'accountSync',
+      'cost',
+      'wishlist',
+      'pokedex',
+      'teamBuilder',
+      'openSource',
+      'limits',
+    ]);
+  });
+
   it('registers the new source-backed competitor pages', () => {
     for (const slug of ['pokellector', 'cardzia']) {
       const article = getCompetitorArticle(slug);
@@ -89,6 +146,14 @@ describe('editorial SEO registry', () => {
     expect(getEditorialDates('/compare/lunidex-vs-cardzia')).toEqual({
       publishedAt: '2026-09-14',
       updatedAt: '2026-09-14',
+    });
+    expect(getEditorialDates('/guides/pokemon-card-collection-value')).toEqual({
+      publishedAt: '2026-09-21',
+      updatedAt: '2026-09-21',
+    });
+    expect(getEditorialDates('/compare/lunidex-vs-cardmarket')).toEqual({
+      publishedAt: '2026-09-21',
+      updatedAt: '2026-09-21',
     });
   });
 
@@ -112,6 +177,12 @@ describe('editorial SEO registry', () => {
         '/guides/tcg-workspace-guide',
       ]);
     }
+
+    expect(getCompetitorArticle('cardmarket')?.relatedPaths).toEqual([
+      '/guides/pokemon-card-collection-tracker',
+      '/guides/pokemon-card-collection-value',
+      '/guides/tcg-workspace-guide',
+    ]);
   });
 
   it('keeps the collection matrix complete in every supported locale', () => {
@@ -119,9 +190,12 @@ describe('editorial SEO registry', () => {
       for (const key of collectionGuideMatrixKeys) {
         expect(guide[key]).toBeTruthy();
       }
+      for (const key of collectionGuideFactKeys) {
+        expect(guide[key]).toBeTruthy();
+      }
     }
 
-    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-15');
+    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-21');
   });
 
   it('dates the generic intent guides and links the TCG guide to the collection hub', () => {
@@ -130,7 +204,7 @@ describe('editorial SEO registry', () => {
       '/guides/team-tools-guide',
       '/guides/tcg-workspace-guide',
     ]) {
-      expect(getEditorialDates(path).updatedAt).toBe('2026-09-14');
+      expect(getEditorialDates(path).updatedAt).toBe(path === '/guides/tcg-workspace-guide' ? '2026-09-14' : '2026-09-21');
     }
 
     expect(FEATURE_GUIDES.find((guide) => guide.slug === 'tcg-workspace-guide')?.relatedPaths).toEqual([
@@ -172,6 +246,28 @@ describe('editorial SEO registry', () => {
         expect(locale[slug]?.faq_a1).toEqual(expect.any(String));
         expect(locale[slug]?.faq_q2).toEqual(expect.any(String));
         expect(locale[slug]?.faq_a2).toEqual(expect.any(String));
+      }
+    }
+  });
+
+  it('keeps the value guide copy complete in English and French', () => {
+    const locales = [en.translation.editorial.guides.pokemon_card_collection_value,
+      fr.translation.editorial.guides.pokemon_card_collection_value] as Array<Record<string, unknown>>;
+
+    for (const copy of locales) {
+      for (const field of [
+        'nav_label', 'heading', 'meta_title', 'meta_description', 'intro', 'answer', 'scope',
+        'step1', 'step2', 'step3', 'step4', 'limits',
+        'faq_q1', 'faq_a1', 'faq_q2', 'faq_a2', 'faq_q3', 'faq_a3', 'faq_q4', 'faq_a4',
+        'evidence_title', 'evidence_intro',
+        'evidence_card_estimate_label', 'evidence_card_estimate_value',
+        'evidence_sealed_portfolio_label', 'evidence_sealed_portfolio_value',
+        'evidence_price_history_label', 'evidence_price_history_value',
+        'evidence_source_freshness_label', 'evidence_source_freshness_value',
+        'evidence_market_limits_label', 'evidence_market_limits_value',
+      ]) {
+        expect(copy[field]).toEqual(expect.any(String));
+        expect(String(copy[field] ?? '').trim()).not.toBe('');
       }
     }
   });

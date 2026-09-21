@@ -521,6 +521,7 @@ export async function proxy(request: NextRequest) {
     // keeping the public URL separate from the physical route.
     const forwardedHeaders = new Headers(request.headers);
     forwardedHeaders.set('x-primedex-lang', urlLocale);
+    forwardedHeaders.set('x-primedex-pathname', pathname);
 
     // The locale in the URL is authoritative for this render. Do not attach a
     // preference cookie to the public page response: Set-Cookie makes an

@@ -17,7 +17,7 @@ type FaqLink = { href: string; label: string };
 type FaqEntry = { id: string; q: string; a: string; links?: FaqLink[] };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-09-01';
+const LAST_UPDATED = '2026-09-21';
 
 export const revalidate = 3600;
 
@@ -70,6 +70,8 @@ export default async function FaqPage() {
     collection: routeLink('/tcg/collection', 'tcg.nav_collection'),
     wishlist: routeLink('/tcg/wishlist', 'tcg.nav_wishlist'),
     deckBuilder: routeLink('/tcg/deck-builder', 'tcg.nav_deck_builder'),
+    valueGuide: routeLink('/guides/pokemon-card-collection-value', 'editorial.guides.pokemon_card_collection_value.nav_label'),
+    cardmarket: routeLink('/compare/lunidex-vs-cardmarket', 'editorial.competitors.lunidex_vs_cardmarket.nav_label'),
     offline: routeLink('/offline', 'offline.title'),
     dashboard: routeLink('/dashboard', 'footer.navigation.dashboard'),
     privacy: routeLink('/privacy', 'footer.legal.privacy'),
@@ -97,6 +99,12 @@ export default async function FaqPage() {
     { id: 'tcg-wishlist-and-decks', q: t('faq.q12'), a: answer('faq.a12'), links: [links.wishlist, links.deckBuilder] },
     { id: 'tcg-prices', q: t('faq.q13'), a: answer('faq.a13'), links: [links.tcg] },
     { id: 'tcg-scanner-marketplace', q: t('faq.q14'), a: answer('faq.a14'), links: [links.about] },
+    {
+      id: 'tcg-value-guide',
+      q: answer('editorial.guides.pokemon_card_collection_value.faq_q4'),
+      a: answer('editorial.guides.pokemon_card_collection_value.faq_a4'),
+      links: [links.valueGuide, links.cardmarket],
+    },
   ];
   const support: FaqEntry[] = [
     { id: 'data-storage-and-sync', q: t('faq.q15'), a: answer('faq.a15'), links: [links.privacy, links.dashboard] },

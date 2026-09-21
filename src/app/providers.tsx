@@ -7,28 +7,24 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import type { ResourceLanguage } from 'i18next';
 import type { i18n as I18nInstance } from 'i18next';
-import { createClientI18n, loadLanguage, persistLanguageCookie } from '@/lib/i18n';
+import {
+  createClientI18n,
+  isLanguageBundlePartial,
+  loadLanguage,
+  persistLanguageCookie,
+} from '@/lib/i18n';
 import type { SupportedLanguage } from '@/lib/languages';
 import { AuthProvider } from '@/lib/neon/AuthProvider';
-import { useNeonSync } from '@/lib/neon/useNeonSync';
 import dynamic from 'next/dynamic';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { VercelInsights } from '@/components/analytics/VercelInsights';
-import { SentryConsentBridge } from '@/components/analytics/SentryConsentBridge';
-import { PostHogConsentBridge } from '@/components/analytics/PostHogConsentBridge';
-import { PostHogIdentityBridge } from '@/components/analytics/PostHogIdentityBridge';
-import { RegisterPWA } from '@/components/pwa/RegisterPWA';
+import { IdleClientServices } from '@/components/IdleClientServices';
 import { SyncAuthPrompt } from '@/components/auth/SyncAuthPrompt';
 import { ClientLanguageProvider } from '@/lib/client-language';
 import { createObservedMutationCache, createObservedQueryCache } from '@/lib/query-observability';
+import { scheduleIdleTask } from '@/lib/idle-scheduler';
 
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
-
-function NeonSyncBridge() {
-  useNeonSync();
-  return null;
-}
 
 type MotionConfigProps = {
   children: ReactNode;
@@ -139,12 +135,17 @@ function ThemeProvider({ children, translationInstance }: ThemeProviderProps) {
   }, [theme, setSystemLanguage, _hasHydrated, systemLanguage]);
 
   useLayoutEffect(() => {
-    if (translationInstance.hasResourceBundle(routeLanguage, 'translation')) {
+    if (
+      translationInstance.hasResourceBundle(routeLanguage, 'translation')
+      && !isLanguageBundlePartial(translationInstance, routeLanguage)
+    ) {
       if (translationInstance.resolvedLanguage !== routeLanguage) {
         void translationInstance.changeLanguage(routeLanguage);
       }
       return;
     }
+
+    if (isLanguageBundlePartial(translationInstance, routeLanguage)) return;
 
     let active = true;
 
@@ -177,10 +178,40 @@ interface ProvidersProps {
   children: ReactNode;
   initialLanguage: SupportedLanguage;
   initialTranslations: ResourceLanguage;
+  initialTranslationsPartial?: boolean;
 }
 
-export default function Providers({ children, initialLanguage, initialTranslations }: ProvidersProps) {
-  const [translationInstance] = useState(() => createClientI18n(initialLanguage, initialTranslations));
+function DeferredInitialLanguageBundle({
+  enabled,
+  language,
+  translationInstance,
+}: {
+  enabled: boolean;
+  language: SupportedLanguage;
+  translationInstance: I18nInstance;
+}) {
+  useEffect(() => {
+    if (!enabled) return;
+
+    return scheduleIdleTask(() => {
+      void loadLanguage(translationInstance, language);
+    }, undefined, { minDelayMs: 6_000 });
+  }, [enabled, language, translationInstance]);
+
+  return null;
+}
+
+export default function Providers({
+  children,
+  initialLanguage,
+  initialTranslations,
+  initialTranslationsPartial = false,
+}: ProvidersProps) {
+  const [translationInstance] = useState(() => createClientI18n(
+    initialLanguage,
+    initialTranslations,
+    { initialTranslationsPartial },
+  ));
   const [queryClient] = useState(() => new QueryClient({
     queryCache: createObservedQueryCache(),
     mutationCache: createObservedMutationCache(),
@@ -205,13 +236,13 @@ export default function Providers({ children, initialLanguage, initialTranslatio
             <AuthProvider>
               <SyncAuthPrompt />
               <ThemeProvider translationInstance={translationInstance}>
-                <NeonSyncBridge />
+                <DeferredInitialLanguageBundle
+                  enabled={initialTranslationsPartial}
+                  language={initialLanguage}
+                  translationInstance={translationInstance}
+                />
                 {children}
-                <RegisterPWA />
-                <SentryConsentBridge />
-                <PostHogConsentBridge />
-                <PostHogIdentityBridge />
-                <VercelInsights />
+                <IdleClientServices />
                 <DeferredOverlays />
               </ThemeProvider>
             </AuthProvider>

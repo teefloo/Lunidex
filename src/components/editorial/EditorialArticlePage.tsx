@@ -41,6 +41,9 @@ export default function EditorialArticlePage({
   const relatedLinkLabels: Record<string, string> = {
     '/guides/pokemon-card-collection-tracker': t('editorial.article.related_collection_guide'),
     '/guides/tcg-workspace-guide': t('editorial.article.related_tcg_guide'),
+    '/guides/pokemon-card-collection-value': t('editorial.article.related_value_guide', {
+      defaultValue: 'Read the collection value guide',
+    }),
   };
   const pageUrl = `${SITE_URL}${canonicalPath}`;
   const faqs = [
@@ -112,7 +115,7 @@ export default function EditorialArticlePage({
               <p className="mt-4 text-base leading-8 text-foreground/80">{text('answer')}</p>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-scope-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-scope-title">
               <h2 id="editorial-article-scope-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.article.scope_title', { name: competitorName })}
               </h2>
@@ -120,7 +123,7 @@ export default function EditorialArticlePage({
             </section>
 
             {comparisonRows.length > 0 ? (
-              <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-matrix-title">
+              <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-matrix-title">
                 <h2 id="editorial-article-matrix-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                   {t('editorial.article.matrix_title')}
                 </h2>
@@ -148,7 +151,7 @@ export default function EditorialArticlePage({
               </section>
             ) : null}
 
-            <section className="mt-10 grid gap-8 lg:grid-cols-2" aria-label={t('editorial.article.difference_title')}>
+            <section className="editorial-below-fold mt-10 grid gap-8 lg:grid-cols-2" aria-label={t('editorial.article.difference_title')}>
               <div className="section-frame p-6 md:p-8">
                 <h2 className="text-2xl font-extrabold tracking-tight md:text-3xl">{t('editorial.article.shared_title')}</h2>
                 <p className="mt-4 leading-7 text-foreground/75">{text('shared')}</p>
@@ -159,14 +162,14 @@ export default function EditorialArticlePage({
               </div>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl rounded-sm border border-border/60 bg-card/30 p-6 md:p-8" aria-labelledby="editorial-article-fit-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl rounded-sm border border-border/60 bg-card/30 p-6 md:p-8" aria-labelledby="editorial-article-fit-title">
               <h2 id="editorial-article-fit-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.article.fit_title')}
               </h2>
               <p className="mt-4 leading-7 text-foreground/75">{text('fit')}</p>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-faq-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-article-faq-title">
               <h2 id="editorial-article-faq-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.article.faq_title', { name: competitorName })}
               </h2>
@@ -182,7 +185,7 @@ export default function EditorialArticlePage({
               </div>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-labelledby="editorial-article-sources-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-labelledby="editorial-article-sources-title">
               <h2 id="editorial-article-sources-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.article.sources_title')}
               </h2>
@@ -200,7 +203,7 @@ export default function EditorialArticlePage({
               </div>
             </section>
 
-            <nav className="mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.fit_title')}>
+            <nav className="editorial-below-fold mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.fit_title')}>
               <div className="flex flex-wrap gap-3">
                 <Link href={localeHref(article.productPath, language)} className="glass-btn glass-btn-active touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
                   {t('editorial.article.open_tool')}
@@ -212,7 +215,7 @@ export default function EditorialArticlePage({
             </nav>
 
             {article.relatedPaths?.length ? (
-              <nav className="mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
+              <nav className="editorial-below-fold mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
                 <p className="page-eyebrow">{t('editorial.article.related_title')}</p>
                 <div className="mt-4 flex flex-wrap gap-3">
                   {article.relatedPaths.map((path) => {

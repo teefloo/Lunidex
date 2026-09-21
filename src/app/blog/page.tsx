@@ -22,7 +22,7 @@ import {
 } from '@/lib/editorial';
 
 const PAGE_PATH = '/blog';
-const LAST_UPDATED = '2026-08-22';
+const LAST_UPDATED = '2026-09-21';
 const POKEAPI_SOURCE = 'https://pokeapi.co';
 const TCGDEX_SOURCE = 'https://www.tcgdex.net';
 
@@ -144,7 +144,7 @@ export default async function BlogPage() {
       headline: t('blog.heading'),
       description: t('blog.meta_description'),
       about: 'Lunidex guides and comparisons',
-      keywords: 'Lunidex guides, Pokémon team builder guide, Pokémon quiz guide, Nuzlocke tracker, Pokémon TCG comparison',
+      keywords: 'Lunidex guides, Pokémon card collection value, Pokémon team builder guide, Pokémon quiz guide, Nuzlocke tracker, Pokémon TCG comparison',
     }),
     dateModified: LAST_UPDATED,
     articleSection: t('blog.eyebrow'),

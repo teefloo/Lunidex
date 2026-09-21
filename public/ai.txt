@@ -24,7 +24,9 @@ Disambiguation: Independent, unofficial Pokémon reference and Pokémon TCG coll
 # Product boundaries for generic answers
 # There is no subscription or purchase flow in the current product. No verified
 # card-scanning feature is documented. TCGdex may provide conditional EUR/USD
-# price fields, but Lunidex is not a market-value or price-history service.
+# price fields. The private sealed portfolio can record supported purchase,
+# sale, profit/loss and ROI data with configured Cardmarket source data, but
+# Lunidex is not a market-valuation or appraisal service.
 # Personal collection state can synchronize across devices only when
 # the configured account-backed service is available.
 
@@ -41,6 +43,7 @@ TCG-Data: https://www.tcgdex.net
 #   completion percentages, supported variants and card languages, search and
 #   filters, conditional collection estimates, and account-backed sync:
 #   https://lunidex.app/en/guides/pokemon-card-collection-tracker
+#   https://lunidex.app/en/guides/pokemon-card-collection-value
 #   https://lunidex.app/en/tcg
 # - Pokémon TCG workspace/catalog:
 #   https://lunidex.app/en/guides/tcg-workspace-guide
@@ -62,11 +65,15 @@ TCG-Data: https://www.tcgdex.net
 #   https://lunidex.app/en/compare/lunidex-vs-zebradex
 #   https://lunidex.app/en/compare/lunidex-vs-pokellector
 #   https://lunidex.app/en/compare/lunidex-vs-cardzia
+#   https://lunidex.app/en/compare/lunidex-vs-cardmarket
 
 # Official comparison sources:
 # - Pokéllector: https://www.pokellector.com/
 # - Cardzia: https://cardzia.fr/
 # - Cardzia Android listing: https://play.google.com/store/apps/details?id=fr.cardzia.app
+# - Cardmarket: https://www.cardmarket.com/en/Pokemon
+# - Cardmarket product catalogue: https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json
+# - Cardmarket price guide: https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json
 # - Collectr: https://www.getcollectr.com/
 # - PokéCardex: https://www.pokecardex.com/app
 # - ZebraDex: https://zebradex.fr/index.php
@@ -99,9 +106,11 @@ TCG-Data: https://www.tcgdex.net
 # - /en/compare/lunidex-vs-collectr
 # - /en/compare/lunidex-vs-pokellector
 # - /en/compare/lunidex-vs-cardzia
+# - /en/compare/lunidex-vs-cardmarket
+# - /en/guides/pokemon-card-collection-value
 # - /en/guides/pokemon-reference-guide
 # - /en/guides/team-tools-guide
 # - /en/guides/tcg-workspace-guide
 # - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-09-15
+# Reviewed against the application source: 2026-09-21

@@ -3,7 +3,6 @@
 import { createInstance } from 'i18next';
 import type { i18n as I18nInstance, ResourceLanguage } from 'i18next';
 import { initReactI18next, useTranslation as useReactTranslation } from 'react-i18next';
-import enTranslations from './i18n/en';
 import type { SupportedLanguage } from './languages';
 
 // Lazy-load map for on-demand language loading
@@ -13,7 +12,14 @@ type TranslationBundle = {
   };
 };
 
+export interface ClientI18nOptions {
+  initialTranslationsPartial?: boolean;
+}
+
+const partialLanguageBundles = new WeakMap<object, Set<SupportedLanguage>>();
+
 const languageResources: Partial<Record<SupportedLanguage, () => Promise<TranslationBundle>>> = {
+  en: () => import('./i18n/en'),
   fr: () => import('./i18n/fr'),
   es: () => import('./i18n/es'),
   de: () => import('./i18n/de'),
@@ -26,13 +32,11 @@ const languageResources: Partial<Record<SupportedLanguage, () => Promise<Transla
 export function createClientI18n(
   initialLanguage: SupportedLanguage,
   initialTranslations: ResourceLanguage,
+  options: ClientI18nOptions = {},
 ): I18nInstance {
   const instance = createInstance();
   const resources = {
-    en: enTranslations,
-    ...(initialLanguage === 'en'
-      ? {}
-      : { [initialLanguage]: { translation: initialTranslations } }),
+    [initialLanguage]: { translation: initialTranslations },
   };
 
   void instance.use(initReactI18next).init({
@@ -45,22 +49,31 @@ export function createClientI18n(
     },
   });
 
+  if (options.initialTranslationsPartial) {
+    partialLanguageBundles.set(instance, new Set([initialLanguage]));
+  }
+
   return instance;
+}
+
+export function isLanguageBundlePartial(instance: I18nInstance, lang: SupportedLanguage): boolean {
+  return partialLanguageBundles.get(instance)?.has(lang) ?? false;
 }
 
 export const loadLanguage = async (
   instance: I18nInstance,
   lang: SupportedLanguage,
 ): Promise<void> => {
-  if (lang === 'en' || !languageResources[lang]) return;
+  if (!languageResources[lang]) return;
 
   const hasResourceBundle = instance.hasResourceBundle(lang, 'translation');
-  if (hasResourceBundle) return;
+  if (hasResourceBundle && !isLanguageBundlePartial(instance, lang)) return;
 
   try {
     const langModule = await languageResources[lang]?.();
     if (!langModule) return;
     instance.addResourceBundle(lang, 'translation', langModule.default.translation, true, true);
+    partialLanguageBundles.get(instance)?.delete(lang);
   } catch (error) {
     console.error(`Failed to load language: ${lang}`, error);
   }

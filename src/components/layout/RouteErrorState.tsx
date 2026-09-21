@@ -9,7 +9,6 @@ import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import LunidexLogo from '@/components/ui/LunidexLogo';
-import { capturePostHogException } from '@/lib/posthog-client';
 
 interface RouteErrorStateProps {
   error: Error & { digest?: string };
@@ -22,11 +21,15 @@ export default function RouteErrorState({ error, reset, scope }: RouteErrorState
   const localeHref = useLocaleHref();
 
   useEffect(() => {
-    capturePostHogException(error, {
-      feature: scope ?? 'route-boundary',
-      route: window.location.pathname,
-      operation: 'route-boundary',
-    });
+    void import('@/lib/posthog-client')
+      .then(({ capturePostHogException }) => capturePostHogException(error, {
+        feature: scope ?? 'route-boundary',
+        route: window.location.pathname,
+        operation: 'route-boundary',
+      }))
+      .catch(() => {
+        // Optional telemetry must never prevent the route recovery UI.
+      });
   }, [error, scope]);
 
   return (

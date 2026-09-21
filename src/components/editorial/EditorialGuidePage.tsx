@@ -11,7 +11,15 @@ import {
 import { serializeJsonLd } from '@/lib/json-ld';
 import { GITHUB_REPO_URL, SITE_NAME, SITE_URL } from '@/lib/site';
 import type { SupportedLanguage } from '@/lib/languages';
-import type { FeatureGuideDefinition } from '@/lib/editorial';
+import type { FeatureGuideDefinition, GuideEvidenceRowKey } from '@/lib/editorial';
+
+const evidenceTranslationKeys: Record<GuideEvidenceRowKey, string> = {
+  cardEstimate: 'card_estimate',
+  sealedPortfolio: 'sealed_portfolio',
+  priceHistory: 'price_history',
+  sourceFreshness: 'source_freshness',
+  marketLimits: 'market_limits',
+};
 
 type EditorialGuidePageProps = {
   guide: FeatureGuideDefinition;
@@ -40,12 +48,35 @@ export default function EditorialGuidePage({
   const relatedLinkLabels: Record<string, string> = {
     '/guides/pokemon-card-collection-tracker': t('editorial.article.related_collection_guide'),
     '/guides/tcg-workspace-guide': t('editorial.article.related_tcg_guide'),
+    '/guides/pokemon-card-collection-value': t('editorial.article.related_value_guide', {
+      defaultValue: 'Read the collection value guide',
+    }),
+    '/compare/lunidex-vs-cardmarket': t('editorial.article.related_cardmarket_compare', {
+      defaultValue: 'Read the Lunidex vs Cardmarket comparison',
+    }),
   };
   const pageUrl = `${SITE_URL}${canonicalPath}`;
   const faqs = [
     { question: text('faq_q1'), answer: text('faq_a1') },
     { question: text('faq_q2'), answer: text('faq_a2') },
+    ...(guide.faqCount === 4
+      ? [
+          { question: text('faq_q3'), answer: text('faq_a3') },
+          { question: text('faq_q4'), answer: text('faq_a4') },
+        ]
+      : []),
   ];
+  const sourceLinks = [
+    { label: t('editorial.guide.source_lunidex'), url: GITHUB_REPO_URL },
+    ...(guide.sources ?? []),
+  ];
+  const evidenceRows = (guide.evidenceRows ?? []).map((row) => {
+    const translationKey = evidenceTranslationKeys[row];
+    return {
+      label: text(`evidence_${translationKey}_label`),
+      value: text(`evidence_${translationKey}_value`),
+    };
+  });
 
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: SITE_NAME, path: '/' },
@@ -65,9 +96,7 @@ export default function EditorialGuidePage({
       keywords: `${text('heading')}, Lunidex guide, Pokémon tools guide`,
     }),
     articleSection: t('editorial.guide.eyebrow'),
-    citation: [
-      { '@type': 'WebPage', name: t('editorial.guide.source_lunidex'), url: GITHUB_REPO_URL },
-    ],
+    citation: sourceLinks.map((source) => ({ '@type': 'WebPage', name: source.label, url: source.url })),
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -110,14 +139,42 @@ export default function EditorialGuidePage({
               <p className="mt-4 text-base leading-8 text-foreground/80">{text('answer')}</p>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-scope-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-scope-title">
               <h2 id="editorial-guide-scope-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.scope_title')}
               </h2>
               <p className="mt-4 leading-7 text-foreground/75">{text('scope')}</p>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl" aria-labelledby="editorial-guide-steps-title">
+            {evidenceRows.length > 0 ? (
+              <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-evidence-title">
+                <h2 id="editorial-guide-evidence-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                  {text('evidence_title')}
+                </h2>
+                <p className="mt-4 leading-7 text-foreground/75">{text('evidence_intro')}</p>
+                <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+                  <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+                    <caption className="sr-only">{text('evidence_title')}</caption>
+                    <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">
+                      <tr>
+                        <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{t('editorial.article.matrix_criterion')}</th>
+                        <th scope="col" className="border-b border-border/60 px-4 py-3 font-black">{SITE_NAME}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {evidenceRows.map((row) => (
+                        <tr key={row.label} className="align-top even:bg-card/25">
+                          <th scope="row" className="border-b border-border/40 px-4 py-3 font-bold text-foreground/75">{row.label}</th>
+                          <td className="border-b border-border/40 px-4 py-3 leading-6 text-foreground/70">{row.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            ) : null}
+
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl" aria-labelledby="editorial-guide-steps-title">
               <h2 id="editorial-guide-steps-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.steps_title')}
               </h2>
@@ -131,14 +188,14 @@ export default function EditorialGuidePage({
               </ol>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-limits-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-limits-title">
               <h2 id="editorial-guide-limits-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.limits_title')}
               </h2>
               <p className="mt-4 leading-7 text-foreground/75">{text('limits')}</p>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-faq-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-faq-title">
               <h2 id="editorial-guide-faq-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.faq_title')}
               </h2>
@@ -154,17 +211,21 @@ export default function EditorialGuidePage({
               </div>
             </section>
 
-            <section className="mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-labelledby="editorial-guide-sources-title">
+            <section className="editorial-below-fold mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-labelledby="editorial-guide-sources-title">
               <h2 id="editorial-guide-sources-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.sources_title')}
               </h2>
               <p className="mt-4 text-sm leading-7 text-foreground/70">{t('editorial.guide.checked', { date: formattedDate })}</p>
-              <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex text-sm font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
-                {t('editorial.guide.source_lunidex')}
-              </a>
+              <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
+                {sourceLinks.map((source) => (
+                  <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                    {source.label}
+                  </a>
+                ))}
+              </div>
             </section>
 
-            <nav className="mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.guide.steps_title')}>
+            <nav className="editorial-below-fold mx-auto mt-10 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.guide.steps_title')}>
               <div className="flex flex-wrap gap-3">
                 {guide.productPaths.map((path) => (
                   <Link key={path} href={localeHref(path, language)} className="glass-btn glass-btn-active touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
@@ -178,7 +239,7 @@ export default function EditorialGuidePage({
             </nav>
 
             {guide.relatedPaths?.length ? (
-              <nav className="mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
+              <nav className="editorial-below-fold mx-auto mt-8 max-w-4xl border-t border-border/60 pt-8" aria-label={t('editorial.article.related_title')}>
                 <p className="page-eyebrow">{t('editorial.article.related_title')}</p>
                 <div className="mt-4 flex flex-wrap gap-3">
                   {guide.relatedPaths.map((path) => (
