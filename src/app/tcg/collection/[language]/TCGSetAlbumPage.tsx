@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
@@ -14,8 +15,8 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useTranslation } from '@/lib/i18n';
 import { RefreshCw } from 'lucide-react';
 import { TCGDataLangBanner } from '@/components/tcg/TCGUnsupportedLangBanner';
-import { TCGLanguageSelector } from '@/components/tcg/TCGLanguageSelector';
-import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
+import { TCGCollectionLanguageDialog } from '@/components/tcg/TCGCollectionLanguageDialog';
+import { encodeTCGCollectionKey, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { usePrimeDexStore } from '@/store/primedex';
 
@@ -24,6 +25,7 @@ interface TCGSetAlbumPageProps {
   language: string;
   activation?: boolean;
   collectionKey?: string;
+  returnQuery?: string;
 }
 
 export function TCGSetAlbumPage({
@@ -31,6 +33,7 @@ export function TCGSetAlbumPage({
   language,
   activation = false,
   collectionKey,
+  returnQuery,
 }: TCGSetAlbumPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -41,11 +44,32 @@ export function TCGSetAlbumPage({
   const resolvedLang: TCGCardLanguage = normalizeTCGCardLanguage(language, 'en') ?? 'en';
   const transferCollectionCards = usePrimeDexStore((state) => state.transferTCGCollectionCards);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
+  const collectionCards = usePrimeDexStore((state) => state.tcgCollectionCards);
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(resolvedLang, setId) ?? undefined;
+  const hasCollectionCards = useMemo(() => Boolean(
+    resolvedCollectionKey && getTCGCollectionCardOwnerships(resolvedCollectionKey, collectionCards).length > 0,
+  ), [collectionCards, resolvedCollectionKey]);
+  const getAlbumHref = (nextLanguage: TCGCardLanguage) => {
+    const params = new URLSearchParams();
+    if (activation) params.set('activation', '1');
+    if (returnQuery) params.set('return', returnQuery);
+    const query = params.toString();
+    return `${localeHref(`/tcg/collection/${nextLanguage}/${encodeURIComponent(setId)}`)}${query ? `?${query}` : ''}`;
+  };
   const tryEnglish = () => {
     setBrowseLanguage('en');
-    const activationQuery = activation ? '?activation=1' : '';
-    router.replace(`${localeHref(`/tcg/collection/en/${encodeURIComponent(setId)}`)}${activationQuery}`);
+    router.replace(getAlbumHref('en'));
+  };
+  const changeCollectionLanguage = (nextLanguage: TCGCardLanguage): boolean => {
+    const nextKey = encodeTCGCollectionKey(nextLanguage, setId);
+    if (!nextKey) return false;
+    const transferred = resolvedCollectionKey === nextKey
+      || !hasCollectionCards
+      || Boolean(resolvedCollectionKey && transferCollectionCards(resolvedCollectionKey, nextKey));
+    if (!transferred) return false;
+    setBrowseLanguage(nextLanguage);
+    router.push(getAlbumHref(nextLanguage));
+    return true;
   };
 
   const albumQuery = useQuery({
@@ -88,28 +112,22 @@ export function TCGSetAlbumPage({
         ) : albumQuery.data ? (
           <>
             <TCGDataLangBanner resolvedLang={resolvedLang} dataLanguage={albumQuery.data.dataLanguage} onTryEnglish={tryEnglish} />
-            <div className="mb-4 flex justify-end">
-              <TCGLanguageSelector
-                value={resolvedLang}
-                onChange={(nextLanguage) => {
-                  const nextKey = encodeTCGCollectionKey(nextLanguage, setId);
-                  if (!nextKey) return;
-                  const transferred = resolvedCollectionKey === nextKey
-                    ? true
-                    : Boolean(resolvedCollectionKey && transferCollectionCards(resolvedCollectionKey, nextKey));
-                  if (!transferred) return;
-                  setBrowseLanguage(nextLanguage);
-                  const activationQuery = activation ? '?activation=1' : '';
-                  router.push(`${localeHref(`/tcg/collection/${nextLanguage}/${encodeURIComponent(setId)}`)}${activationQuery}`);
-                }}
-              />
-            </div>
             <TCGAlbumPage
               set={albumQuery.data.set}
               cards={albumQuery.data.cards}
               activation={activation}
               language={resolvedLang}
               collectionKey={resolvedCollectionKey}
+              returnQuery={returnQuery}
+              headerAction={(
+                <TCGCollectionLanguageDialog
+                  currentLanguage={resolvedLang}
+                  setName={albumQuery.data.set.name}
+                  hasCards={hasCollectionCards}
+                  onConfirm={changeCollectionLanguage}
+                  compact
+                />
+              )}
             />
           </>
         ) : (

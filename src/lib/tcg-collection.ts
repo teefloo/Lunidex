@@ -207,6 +207,17 @@ export function getCompletionByRarity(
     .sort((a, b) => b.weight - a.weight);
 }
 
+/** Hide fallback-only rarity chips; unknown data is not a useful filter. */
+export function getDisplayableCompletionByRarity(
+  cards: TCGCard[],
+  ownedIds: Set<string>,
+): { rarity: string; owned: number; total: number; percentage: number; weight: number }[] {
+  const completion = getCompletionByRarity(cards, ownedIds);
+  return completion.some((entry) => entry.rarity !== 'unknown')
+    ? completion.filter((entry) => entry.rarity !== 'unknown')
+    : [];
+}
+
 export function getMissingCardsInSet(
   cards: TCGCard[],
   ownedIds: Set<string>,

@@ -3,11 +3,12 @@ import { notFound } from 'next/navigation';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { isTCGCardLanguage, normalizeTCGCardLanguage } from '@/lib/tcg-language';
+import { normalizeTCGCollectionReturnQuery } from '@/lib/tcg-collection-overview';
 import { TCGSetAlbumPage } from '../TCGSetAlbumPage';
 
 interface PageProps {
   params: Promise<{ language: string; setId: string }>;
-  searchParams: Promise<{ activation?: string | string[] | undefined }>;
+  searchParams: Promise<{ activation?: string | string[] | undefined; return?: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -41,5 +42,8 @@ export default async function LocalizedSetAlbumPage({ params, searchParams }: Pa
   if (!isTCGCardLanguage(language)) notFound();
   const query = await searchParams;
   const activation = (Array.isArray(query.activation) ? query.activation[0] : query.activation) === '1';
-  return <TCGSetAlbumPage setId={setId} language={language} activation={activation} />;
+  const rawReturn = Array.isArray(query.return) ? query.return[0] : query.return;
+  const normalizedReturnQuery = normalizeTCGCollectionReturnQuery(rawReturn);
+  const returnQuery = normalizedReturnQuery || undefined;
+  return <TCGSetAlbumPage setId={setId} language={language} activation={activation} returnQuery={returnQuery} />;
 }

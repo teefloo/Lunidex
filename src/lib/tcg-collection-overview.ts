@@ -1,6 +1,6 @@
 import type { TCGCollectionSetSummary } from '@/types/tcg';
 import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
-import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import type { TCGOwnedVariant } from '@/lib/tcg-collection';
 import { normalizeSearchText } from '@/lib/pokemon-filter-utils';
 
@@ -80,6 +80,18 @@ export function serializeTCGCollectionUrlState(state: TCGCollectionUrlState): st
   if (state.incompleteOnly) params.set('incomplete', '1');
 
   return params.toString();
+}
+
+/** Whitelist collection filters before they are carried through an album URL. */
+export function normalizeTCGCollectionReturnQuery(rawQuery: string | undefined): string {
+  if (!rawQuery) return '';
+  const params = new URLSearchParams(rawQuery);
+  const serialized = new URLSearchParams(
+    serializeTCGCollectionUrlState(parseTCGCollectionUrlState(params)),
+  );
+  const tcgLanguage = params.get('tcgLang');
+  if (isTCGCardLanguage(tcgLanguage)) serialized.set('tcgLang', tcgLanguage);
+  return serialized.toString();
 }
 
 export function buildTCGCollectionOverviewEntries(

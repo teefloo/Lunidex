@@ -3,6 +3,7 @@ import {
   buildTCGCollectionOverviewEntries,
   filterTCGCollectionOverviewEntries,
   getTCGCollectionCatalogDisplay,
+  normalizeTCGCollectionReturnQuery,
   parseTCGCollectionUrlState,
   serializeTCGCollectionUrlState,
   sortTCGCollectionEntriesByRelease,
@@ -87,6 +88,13 @@ describe('TCG collection overview URL state', () => {
       sort: 'release-newest',
       incompleteOnly: false,
     })).toBe('');
+  });
+
+  it('keeps only validated collection state in an album return query', () => {
+    expect(normalizeTCGCollectionReturnQuery('view=all&q=Darkrai&sort=name-asc&incomplete=1&tcgLang=ja&next=https%3A%2F%2Fevil.example')).toBe(
+      'view=all&q=Darkrai&sort=name-asc&incomplete=1&tcgLang=ja',
+    );
+    expect(normalizeTCGCollectionReturnQuery(undefined)).toBe('');
   });
 });
 

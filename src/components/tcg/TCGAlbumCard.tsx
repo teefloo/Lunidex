@@ -20,6 +20,7 @@ interface TCGAlbumCardProps {
   ownerships?: readonly TCGCollectionCardOwnership[];
   showMissing?: boolean;
   onView?: (card: TCGCard) => void;
+  onManage?: (card: TCGCard) => void;
   onOwnershipChange?: (owned: boolean) => void;
   collectionKey?: string;
   language?: TCGCardLanguage;
@@ -38,16 +39,17 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   ownerships = [],
   showMissing = true,
   onView,
+  onManage,
   onOwnershipChange,
   collectionKey,
   priority = false,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
+  const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
   const toggleOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
-  const toggleCollectionCard = usePrimeDexStore((state) => state.toggleTCGCollectionCard);
   const totalOwnedQuantity = ownerships.reduce((sum, ownership) => sum + ownership.quantity, 0);
 
-  const handleCardClick = () => {
+  const handleAdd = () => {
     if (!hasSyncAccess()) {
       requestSyncAccess();
       return;
@@ -58,7 +60,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
       ? liveState.isTCGCollectionCardOwned(collectionKey, card.id)
       : liveState.isTCGOwned(card.id);
 
-    if (collectionKey) toggleCollectionCard(collectionKey, card.id);
+    if (collectionKey) addCollectionCard(collectionKey, card.id);
     else toggleOwned(card.id);
 
     const nextState = usePrimeDexStore.getState();
@@ -77,16 +79,15 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
     )}>
       <button
         type="button"
-        onClick={handleCardClick}
+        onClick={() => onView?.(card)}
         className="group/card relative aspect-[2.15/3] cursor-pointer touch-manipulation overflow-hidden rounded-sm text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        aria-label={t(owned ? 'tcg.activation.remove_card_aria' : 'tcg.activation.add_card_aria', { name: card.name })}
-        aria-pressed={owned}
+        aria-label={t('detail.view_card_aria', { name: card.name })}
       >
         <TCGCardImage
           card={card}
           priority={priority}
           sizes="(min-width: 1280px) 16vw, (min-width: 768px) 25vw, 45vw"
-          className={cn('object-contain p-1 transition-transform group-hover/card:scale-105', !owned && 'grayscale opacity-70 group-hover/card:grayscale-0 group-hover/card:opacity-100')}
+          className={cn('object-contain p-1 transition-transform duration-100 group-hover/card:scale-105 motion-reduce:transition-none', !owned && 'grayscale opacity-70 group-hover/card:grayscale-0 group-hover/card:opacity-100')}
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6">
           <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">{card.name}</p>
@@ -127,16 +128,21 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
         </div>
       )}
 
-      <div className="pt-0.5">
-        <button
-          type="button"
-          onClick={() => onView?.(card)}
-          aria-label={t('detail.view_card_aria', { name: card.name })}
-          className="min-h-11 w-full rounded-sm border border-border/40 bg-card/50 px-2 text-[11px] font-black uppercase tracking-[0.05em] text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        >
-          {t('tcg.activation.view_card')}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={owned ? () => onManage?.(card) : handleAdd}
+        aria-label={t(owned ? 'tcg.collection_manage_card_aria' : 'tcg.activation.add_card_aria', { name: card.name, count: totalOwnedQuantity, defaultValue: owned ? `Manage ${card.name}` : `Add ${card.name}` })}
+        className={cn(
+          'min-h-11 w-full rounded-sm border px-2 text-[11px] font-black uppercase tracking-[0.05em] transition-[border-color,background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
+          owned
+            ? 'border-primary/40 bg-primary/10 text-primary hover:bg-primary/20'
+            : 'border-emerald-500/35 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20',
+        )}
+      >
+        {owned
+          ? t('tcg.collection_owned_manage', { count: totalOwnedQuantity, defaultValue: `Owned ×${totalOwnedQuantity} · Manage` })
+          : t('tcg.collection_add_card', { defaultValue: 'Add' })}
+      </button>
     </article>
   );
 }, areTCGAlbumCardPropsEqual);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
@@ -10,7 +10,7 @@ import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import {
   getSetCompletion,
-  getCompletionByRarity,
+  getDisplayableCompletionByRarity,
   getMissingCardsInSet,
   sortCardsByNumber,
   getRarityColor,
@@ -20,10 +20,12 @@ import { TCGProgressBar } from './TCGProgressBar';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
+import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
 import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
+import { isSameTcgRarity } from '@/lib/tcg-rarity';
 
 interface TCGAlbumPageProps {
   set: TCGSet;
@@ -31,9 +33,19 @@ interface TCGAlbumPageProps {
   activation?: boolean;
   language?: TCGCardLanguage;
   collectionKey?: string;
+  returnQuery?: string;
+  headerAction?: ReactNode;
 }
 
-export function TCGAlbumPage({ set, cards, activation = false, language, collectionKey }: TCGAlbumPageProps) {
+export function TCGAlbumPage({
+  set,
+  cards,
+  activation = false,
+  language,
+  collectionKey,
+  returnQuery,
+  headerAction,
+}: TCGAlbumPageProps) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
   const mounted = useMounted();
@@ -63,6 +75,8 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
   const [showMissingOnly, setShowMissingOnly] = useState(false);
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [managedCard, setManagedCard] = useState<TCGCard | null>(null);
+  const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [firstValueReached, setFirstValueReached] = useState(false);
   const [activationComplete, setActivationComplete] = useState(false);
   const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
@@ -74,9 +88,13 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
-  const rarityCompletion = useMemo(() => getCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
+  const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
-  const backHref = `${activation ? '/tcg/start' : '/tcg/collection'}?tcgLang=${encodeURIComponent(selectedLanguage)}`;
+  const backHref = activation
+    ? `/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`
+    : returnQuery
+      ? `/tcg/collection?${returnQuery}`
+      : `/tcg/collection?tcgLang=${encodeURIComponent(selectedLanguage)}`;
 
   const filteredCards = useMemo(() => {
     let result = sortedCards;
@@ -85,7 +103,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
       result = result.filter((c) => c.name.toLowerCase().includes(q));
     }
     if (rarityFilter) {
-      result = result.filter((c => (c.rarity ?? '').toLowerCase() === rarityFilter.toLowerCase()));
+      result = result.filter((card) => isSameTcgRarity(card.rarity, rarityFilter));
     }
     if (showMissingOnly) {
       result = result.filter((c) => !ownedIds.has(c.id));
@@ -97,6 +115,15 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
     setSelectedCard(card);
     setIsDetailOpen(true);
   }, []);
+
+  const openVariantSheet = useCallback((card: TCGCard) => {
+    if (!resolvedCollectionKey) {
+      openCard(card);
+      return;
+    }
+    setManagedCard(card);
+    setIsVariantSheetOpen(true);
+  }, [openCard, resolvedCollectionKey]);
 
   const handleOwnershipChange = useCallback((nowOwned: boolean) => {
     if (!nowOwned) return;
@@ -123,7 +150,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           {set.logo && (
             <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
               <TCGImageWithFallback
@@ -135,7 +162,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
               />
             </div>
           )}
-          <div>
+          <div className="min-w-0">
             <h1 className="text-lg font-black uppercase tracking-tight sm:text-xl">
               {activation && !firstValueReached ? t('tcg.activation.album_title') : set.name}
             </h1>
@@ -144,6 +171,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
             </p>
           </div>
         </div>
+        {headerAction && <div className="ml-auto shrink-0">{headerAction}</div>}
       </div>
 
       {activation && (
@@ -160,7 +188,7 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
         {activation && firstValueReached && (
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-emerald-500/35 bg-emerald-500/10 p-3" role="status" aria-live="polite">
             <p className="text-sm font-bold text-emerald-300">{t('tcg.activation.first_card_added', { owned: completion.owned, total: completion.total })}</p>
-            <button type="button" onClick={() => document.getElementById('album-card-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="min-h-11 rounded-sm border border-emerald-500/40 px-4 text-sm font-bold text-emerald-200 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+            <button type="button" onClick={() => document.getElementById('album-card-grid')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })} className="min-h-11 rounded-sm border border-emerald-500/40 px-4 text-sm font-bold text-emerald-200 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
               {t('tcg.activation.continue_adding')}
             </button>
           </div>
@@ -190,22 +218,25 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
       )}
 
       {/* Search + filter */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/30" />
           <input
             type="text"
+            name="album-card-search"
+            autoComplete="off"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('tcg.search_placeholder')}
-            className="h-9 w-full rounded-sm border border-border/30 bg-card/40 pl-9 pr-4 text-xs font-bold text-foreground placeholder:text-foreground/25 focus:border-primary/40 focus:outline-none"
+            placeholder={t('tcg.collection_search_cards_placeholder', { defaultValue: 'Search cards…' })}
+            className="min-h-11 w-full rounded-sm border border-border/30 bg-card/40 pl-9 pr-4 text-sm font-semibold text-foreground placeholder:text-foreground/35 focus-visible:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
           />
         </div>
         {missingCards.length > 0 && (
           <button
             type="button"
             onClick={() => setShowMissingOnly((prev) => !prev)}
-            className={`shrink-0 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em] transition-colors ${
+            aria-pressed={showMissingOnly}
+            className={`min-h-11 shrink-0 rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.06em] transition-[border-color,background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${
               showMissingOnly
                 ? 'border-rose-500/50 bg-rose-500/20 text-rose-300'
                 : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
@@ -217,23 +248,54 @@ export function TCGAlbumPage({ set, cards, activation = false, language, collect
       </div>
 
       {/* Grid */}
-      <div id="album-card-grid" className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {filteredCards.map((card, index) => (
-          <TCGAlbumCard
-            key={card.id}
-            card={card}
-            priority={index === 0}
-            owned={ownedIds.has(card.id)}
-            onView={openCard}
-            collectionKey={resolvedCollectionKey}
-            language={selectedLanguage}
-            ownerships={ownershipByCard.get(card.id) ?? []}
-            onOwnershipChange={handleOwnershipChange}
-          />
-        ))}
-      </div>
+      {filteredCards.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 rounded-sm border border-dashed border-border/30 bg-card/20 px-5 py-12 text-center" role="status">
+          <p className="text-sm font-bold text-foreground/75">{t('tcg.collection_no_cards_match', { defaultValue: 'No cards match these filters.' })}</p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearch('');
+              setRarityFilter(null);
+              setShowMissingOnly(false);
+            }}
+            className="min-h-11 rounded-sm border border-primary/40 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          >
+            {t('tcg.collection_reset_filters', { defaultValue: 'Reset filters' })}
+          </button>
+        </div>
+      ) : (
+        <div id="album-card-grid" className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          {filteredCards.map((card, index) => (
+            <TCGAlbumCard
+              key={card.id}
+              card={card}
+              priority={index === 0}
+              owned={ownedIds.has(card.id)}
+              onView={openCard}
+              onManage={openVariantSheet}
+              collectionKey={resolvedCollectionKey}
+              language={selectedLanguage}
+              ownerships={ownershipByCard.get(card.id) ?? []}
+              onOwnershipChange={handleOwnershipChange}
+            />
+          ))}
+        </div>
+      )}
 
       {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
+      {managedCard && resolvedCollectionKey && (
+        <TCGCollectionVariantSheet
+          card={managedCard}
+          collectionKey={resolvedCollectionKey}
+          language={selectedLanguage}
+          open={isVariantSheetOpen}
+          onOpenChange={(open) => {
+            setIsVariantSheetOpen(open);
+            if (!open) setManagedCard(null);
+          }}
+          onOwnershipChange={handleOwnershipChange}
+        />
+      )}
     </div>
   );
 }

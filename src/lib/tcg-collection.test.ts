@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   aggregateCollectionValueWithVariants,
   getCardMarketValue,
+  getDisplayableCompletionByRarity,
   getRarityWeight,
   getTopMissingCards,
   getTCGValueInCurrency,
@@ -380,5 +381,23 @@ describe('TCG physical variant pricing', () => {
     ];
 
     expect(getTopMissingCards(cards, new Set())).toEqual([]);
+  });
+});
+
+describe('TCG album rarity controls', () => {
+  it('hides fallback-only rarity controls and keeps meaningful groups', () => {
+    const unknownCards: TCGCard[] = [
+      { ...baseCard, id: 'set-001', rarity: undefined },
+      { ...baseCard, id: 'set-002', rarity: '' },
+    ];
+    const mixedCards: TCGCard[] = [
+      ...unknownCards,
+      { ...baseCard, id: 'set-003', rarity: 'Rare' },
+    ];
+
+    expect(getDisplayableCompletionByRarity(unknownCards, new Set(['set-001']))).toEqual([]);
+    expect(getDisplayableCompletionByRarity(mixedCards, new Set(['set-003']))).toEqual([
+      { rarity: 'rare', owned: 1, total: 1, percentage: 100, weight: getRarityWeight('rare') },
+    ]);
   });
 });
