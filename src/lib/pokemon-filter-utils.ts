@@ -6,6 +6,14 @@ export function normalizeSearchText(value: string): string {
     .trim();
 }
 
+/** A debounced search may update global state only while it still represents user input. */
+export function shouldCommitPokemonSearch(
+  localSearch: string,
+  pendingUserSearch: string | null,
+): boolean {
+  return pendingUserSearch !== null && pendingUserSearch === localSearch;
+}
+
 /**
  * Treat padded IDs and IDs prefixed with `#` as exact lookups while keeping
  * unpadded numeric input useful for partial ID searches.

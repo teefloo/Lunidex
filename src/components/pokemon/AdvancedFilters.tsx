@@ -130,7 +130,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
           </Badge>
         )}
       </SheetTrigger>
-      <SheetContent className="pokedex-filter-sheet w-full bg-background/95 border-l border-border/60 flex max-h-[calc(100dvh-1rem)] min-h-0 flex-col p-0 data-[side=right]:sm:max-w-none data-[side=right]:lg:w-[min(56rem,calc(100vw-1rem))]">
+      <SheetContent className="pokedex-filter-sheet w-full bg-background/95 border-l border-border/60 flex max-h-[calc(100dvh-1rem)] min-h-0 flex-col p-0 data-[side=right]:w-full data-[side=right]:sm:max-w-none data-[side=right]:sm:w-[min(42rem,calc(100vw-1rem))] data-[side=right]:lg:w-[min(56rem,calc(100vw-1rem))]">
         <SheetHeader className="border-b border-border/40 p-5 pb-4 pr-16 sm:pr-20 shrink-0">
           <div className="flex items-center justify-between gap-4">
             <SheetTitle className="text-2xl font-black uppercase tracking-tighter flex items-center gap-2">
@@ -230,6 +230,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                      id="filter-legendary"
                      aria-labelledby="filter-legendary-label"
                      aria-describedby="filter-legendary-description"
+                     className="after:-inset-y-3"
                      checked={isLegendary === true}
                      onCheckedChange={(checked) => setIsLegendary(checked ? true : null)}
                    />
@@ -243,6 +244,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                      id="filter-mythical"
                      aria-labelledby="filter-mythical-label"
                      aria-describedby="filter-mythical-description"
+                     className="after:-inset-y-3"
                      checked={isMythical === true}
                      onCheckedChange={(checked) => setIsMythical(checked ? true : null)}
                    />
@@ -459,7 +461,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 }}
                 max={25}
                 step={0.1}
-                className="py-4 cursor-pointer"
+                className="px-4 py-4 cursor-pointer"
                 {...getRangeSliderA11y(t('filters.height'))}
               />
             </div>
@@ -488,7 +490,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 }}
                 max={1200}
                 step={1}
-                className="py-4 cursor-pointer"
+                className="px-4 py-4 cursor-pointer"
                 {...getRangeSliderA11y(t('filters.weight'))}
               />
             </div>

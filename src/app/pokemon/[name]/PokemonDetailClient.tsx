@@ -657,35 +657,35 @@ export function PokemonDetailClient({
           className="max-w-4xl mx-auto"
         >          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
-              <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-5 lg:grid-cols-10 overflow-x-scroll">
-                <TabsTrigger value="about" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsList className="flex w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start overflow-x-scroll scrollbar-hide md:grid md:h-auto md:grid-cols-5 md:overflow-x-hidden">
+                <TabsTrigger value="about" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.about')}
                 </TabsTrigger>
-                <TabsTrigger value="stats" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="stats" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.stats')}
                 </TabsTrigger>
-                <TabsTrigger value="evolution" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="evolution" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.evolution')}
                 </TabsTrigger>
-                <TabsTrigger value="moves" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="moves" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.moveset')}
                 </TabsTrigger>
-                <TabsTrigger value="breeding" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="breeding" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.breeding')}
                 </TabsTrigger>
-                <TabsTrigger value="builds" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="builds" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.builds')}
                 </TabsTrigger>
-                <TabsTrigger value="locations" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="locations" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.where_to_find')}
                 </TabsTrigger>
-                <TabsTrigger value="cards" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="cards" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.cards')}
                 </TabsTrigger>
-                <TabsTrigger value="sprites" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="sprites" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <Images className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1" /> {t('detail.sprites')}
                 </TabsTrigger>
-                <TabsTrigger value="competitive" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="competitive" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('competitive.title')}
                 </TabsTrigger>
               </TabsList>

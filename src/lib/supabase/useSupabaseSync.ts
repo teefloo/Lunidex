@@ -18,6 +18,7 @@ import {
   hasRemovedSyncKeys,
   normalizeSyncMetadata,
   pickSyncState,
+  preserveLocalPreferences,
   reconcileRemoteState,
   reconcileSyncState,
   type SyncMetadata,
@@ -152,14 +153,15 @@ export function useNeonSync(): void {
     const resetSession = (status: 'checking' | 'unauthenticated' | 'unavailable'): void => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = null;
+      const resetState = preserveLocalPreferences(initialState, pickSyncState());
       applyingRemoteRef.current = true;
-      applySyncState(initialState);
+      applySyncState(resetState);
       applyingRemoteRef.current = false;
       previousSnapshotRef.current = pickSyncState();
-      acceptedSnapshotRef.current = initialState;
-      acceptedMetadataRef.current = normalizeSyncMetadata(undefined, initialState);
+      acceptedSnapshotRef.current = resetState;
+      acceptedMetadataRef.current = normalizeSyncMetadata(undefined, resetState);
       metadataRef.current = acceptedMetadataRef.current;
-      remoteSnapshotRef.current = initialState;
+      remoteSnapshotRef.current = resetState;
       remoteUpdatedAtRef.current = null;
       pushRequestedRef.current = false;
       setSyncAccessStatus(status);

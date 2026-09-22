@@ -7,39 +7,40 @@ import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { shouldCommitPokemonSearch } from '@/lib/pokemon-filter-utils';
 
 export default function SearchBar() {
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
   const setSearchTerm = usePrimeDexStore(s => s.setSearchTerm);
-  const [localSearch, setLocalSearch] = useState('');
+  const [localSearch, setLocalSearch] = useState(searchTerm);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pendingUserSearchRef = useRef<string | null>(null);
   const { t } = useTranslation();
   const searchPlaceholder = t('search.placeholder');
   const searchAriaLabel = t('search.placeholder');
   const clearLabel = t('search.clear');
 
-  const prevSearchTermRef = useRef(searchTerm);
-
   useEffect(() => {
-    if (prevSearchTermRef.current !== searchTerm) {
-      prevSearchTermRef.current = searchTerm;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Valid pattern: sync local state from external store
-      setLocalSearch(searchTerm);
-    }
+    if (pendingUserSearchRef.current !== null) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync the input with URL-driven store changes.
+    setLocalSearch(searchTerm);
   }, [searchTerm]);
 
   useEffect(() => {
-    if (localSearch === searchTerm) return;
+    if (!shouldCommitPokemonSearch(localSearch, pendingUserSearchRef.current)) return;
+    const nextSearch = localSearch;
     const timer = setTimeout(() => {
-      setSearchTerm(localSearch);
-      const length = localSearch.trim().length;
+      if (!shouldCommitPokemonSearch(nextSearch, pendingUserSearchRef.current)) return;
+      pendingUserSearchRef.current = null;
+      setSearchTerm(nextSearch);
+      const length = nextSearch.trim().length;
       capturePostHogEvent(POSTHOG_EVENTS.pokemonSearchSubmitted, {
         query_length_bucket: length === 0 ? 'empty' : length <= 3 ? '1_3' : length <= 8 ? '4_8' : '9_plus',
       });
     }, 300);
     return () => clearTimeout(timer);
-  }, [localSearch, searchTerm, setSearchTerm]);
+  }, [localSearch, setSearchTerm]);
 
   useEffect(() => {
     // "/" focuses this input; Cmd/Ctrl+K belongs exclusively to the global
@@ -77,7 +78,9 @@ export default function SearchBar() {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChange={(e) => {
-            setLocalSearch(e.target.value);
+            const nextSearch = e.target.value;
+            pendingUserSearchRef.current = nextSearch;
+            setLocalSearch(nextSearch);
           }}
           className="pokedex-search-input glass-control w-full py-6 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-muted-foreground focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/30 md:text-lg"
           aria-label={searchAriaLabel}
@@ -89,6 +92,7 @@ export default function SearchBar() {
         <button
           type="button"
           onClick={() => {
+            pendingUserSearchRef.current = null;
             setLocalSearch('');
             setSearchTerm('');
           }}

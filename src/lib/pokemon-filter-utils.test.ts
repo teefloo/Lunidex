@@ -3,6 +3,7 @@ import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
   normalizeSearchText,
+  shouldCommitPokemonSearch,
   shouldUseCompletePokemonSummary,
 } from './pokemon-filter-utils';
 
@@ -17,6 +18,12 @@ describe('pokemon filter utilities', () => {
     expect(getExactNumericPokemonId('#025')).toBe(25);
     expect(getExactNumericPokemonId('25')).toBeNull();
     expect(getExactNumericPokemonId('pikachu')).toBeNull();
+  });
+
+  it('commits only a current search value entered by the user', () => {
+    expect(shouldCommitPokemonSearch('', null)).toBe(false);
+    expect(shouldCommitPokemonSearch('Pikachu', 'Pikachu')).toBe(true);
+    expect(shouldCommitPokemonSearch('Pikachu', 'Pika')).toBe(false);
   });
 
   it('keeps unknown measurements after known values in either direction', () => {

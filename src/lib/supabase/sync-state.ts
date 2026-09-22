@@ -1,4 +1,11 @@
-import { usePrimeDexStore, SYNCED_KEYS, type PersistedState, type SyncedKey } from '@/store/primedex';
+import {
+  LOCAL_PREFERENCE_KEYS,
+  SYNCED_KEYS,
+  usePrimeDexStore,
+  type LocalPreferenceKey,
+  type PersistedState,
+  type SyncedKey,
+} from '@/store/primedex';
 import { DEFAULT_TCG_CARD_LANGUAGE, normalizeTCGCardLanguage } from '@/lib/tcg-language';
 import { DEFAULT_TCG_DISPLAY_CURRENCY, normalizeTCGDisplayCurrency } from '@/lib/tcg-currency';
 import {
@@ -318,6 +325,17 @@ export function getInitialSyncState(): PersistedState {
     tcgDisplayCurrency: current.tcgDisplayCurrency,
   };
   return Object.fromEntries(SYNCED_KEYS.map((key) => [key, state[key]])) as PersistedState;
+}
+
+/** Keep guest-visible browsing choices when a remote sync session resets. */
+export function preserveLocalPreferences(
+  initial: PersistedState,
+  current: PersistedState,
+): PersistedState {
+  const preferences = Object.fromEntries(
+    LOCAL_PREFERENCE_KEYS.map((key: LocalPreferenceKey) => [key, current[key]]),
+  ) as Pick<PersistedState, LocalPreferenceKey>;
+  return { ...initial, ...preferences };
 }
 
 export const applySyncState = (snapshot: Partial<PersistedState>): void => { usePrimeDexStore.setState(snapshot); };

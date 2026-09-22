@@ -1,11 +1,32 @@
 import { describe, expect, it } from 'vitest';
 import { decodeTCGCollectionCardKey, encodeTCGCollectionCardKey, encodeTCGCollectionKey, getTCGCollectionCardIdentity } from '@/lib/tcg-collections';
-import { advanceSyncMetadata, getInitialSyncState, normalizeSyncMetadata, reconcileSyncState } from './sync-state';
+import { advanceSyncMetadata, getInitialSyncState, normalizeSyncMetadata, preserveLocalPreferences, reconcileSyncState } from './sync-state';
 import type { PersistedState } from '@/store/primedex';
 
 function withTcg(state: PersistedState, patch: Partial<PersistedState>): PersistedState { return { ...state, ...patch }; }
 
 describe('language-aware sync merge', () => {
+  it('preserves local browsing preferences when resetting a sync session', () => {
+    const initial = getInitialSyncState();
+    const local = withTcg(initial, {
+      showCaughtOnly: 'uncaught',
+      selectedGeneration: 1,
+      selectedTypes: ['fire'],
+      isLegendary: true,
+      sortBy: 'name-asc',
+      favorites: [25],
+    });
+
+    const reset = preserveLocalPreferences(initial, local);
+
+    expect(reset.showCaughtOnly).toBe('uncaught');
+    expect(reset.selectedGeneration).toBe(1);
+    expect(reset.selectedTypes).toEqual(['fire']);
+    expect(reset.isLegendary).toBe(true);
+    expect(reset.sortBy).toBe('name-asc');
+    expect(reset.favorites).toEqual([]);
+  });
+
   it('merges additions from two devices and keeps a removal tombstone', () => {
     const initial = getInitialSyncState();
     const fr = encodeTCGCollectionKey('fr', 'base1')!; const ja = encodeTCGCollectionKey('ja', 'base1')!;
