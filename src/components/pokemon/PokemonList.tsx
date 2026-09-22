@@ -17,6 +17,7 @@ import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
   normalizeSearchText,
+  shouldUseCompletePokemonSummary,
 } from '@/lib/pokemon-filter-utils';
 
 type PokemonStatName = 'hp' | 'attack' | 'defense' | 'speed' | 'special-attack' | 'special-defense';
@@ -81,15 +82,10 @@ export default function PokemonList() {
 
   const resolvedLang = useClientLanguage();
 
-  // Detect whether any filter is non-default.
-  // Note: `showCaughtOnly` is intentionally excluded so the basic (infinite
-  // scroll) mode keeps serving the prefetched first page. Switching to the
-  // `allSummary` query on a first-click cold cache was triggering a network
-  // error that bubbled to the root error boundary.
-  const hasActiveFilters = selectedTypes.length > 0 ||
+  // Detect whether any filter other than collection views is non-default.
+  const hasOtherFilters = selectedTypes.length > 0 ||
     !!searchTerm ||
     !!selectedGeneration ||
-    showFavoritesOnly ||
     isLegendary !== null ||
     isMythical !== null ||
     selectedEggGroups.length > 0 ||
@@ -106,11 +102,17 @@ export default function PokemonList() {
     weightRange[1] < 1200 ||
     sortBy !== 'id-asc';
 
+  const useCompleteSummary = shouldUseCompletePokemonSummary({
+    hasOtherFilters,
+    showCaughtOnly,
+    showFavoritesOnly,
+  });
+
   // Before IndexedDB hydration completes, always use basic mode.
   // This matches the server render (all defaults) and prevents
   // query switching (infinite → allSummary) during hydration,
   // which was the root cause of the infinite load/stop cycle.
-  const isBasicMode = !_hasHydrated ? true : !hasActiveFilters;
+  const isBasicMode = !_hasHydrated ? true : !useCompleteSummary;
 
   // Whether stat-based advanced filters need the heavy allDetailed query
   const needsDetailedData = isLegendary !== null || isMythical !== null ||
@@ -137,7 +139,7 @@ export default function PokemonList() {
     sortBy.includes('weight');
 
   // 1. Summary Data : Loaded on demand (Search or Filters)
-  const { data: allSummary, isLoading: isLoadingSummary } = useQuery({
+  const { data: allSummary, isLoading: isLoadingSummary, error: summaryError } = useQuery({
     queryKey: pokemonKeys.allSummary(),
     queryFn: () => getAllPokemonSummary(),
     enabled: !isBasicMode || !!searchTerm, // Load only if filtering or searching
@@ -261,17 +263,7 @@ export default function PokemonList() {
         return summaryMap.get(id) || { ...p, id };
       }) || [];
 
-      // Apply the caught filter client-side over the prefetched basic slice
-      // so it works on first click without triggering the cold allSummary
-      // query. Users can load more pages to see additional caught/missing
-      // specimens.
-      if (showCaughtOnly === 'caught') {
-        results = basicResults.filter(p => caughtPokemon.includes(p.id));
-      } else if (showCaughtOnly === 'uncaught') {
-        results = basicResults.filter(p => !caughtPokemon.includes(p.id));
-      } else {
-        results = basicResults;
-      }
+      results = basicResults;
     } else {
       let sourceData: PokemonResultItem[] = needsDetailedData ? transformedDetailed : transformedSummary;
       
@@ -431,12 +423,13 @@ export default function PokemonList() {
     );
   }
 
-  if (detailedError) {
+  if (detailedError || (!isBasicMode && summaryError)) {
+    const dataError = detailedError ?? summaryError;
     return (
       <div className="pokedex-empty-state flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
         <SearchX className="w-20 h-20 text-red-500/40" />
         <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.error_loading')}</h2>
-        <p className="text-sm text-muted-foreground max-w-md">{(detailedError as Error).message || t('list.error_desc')}</p>
+        <p className="text-sm text-muted-foreground max-w-md">{(dataError as Error)?.message || t('list.error_desc')}</p>
         <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
           <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
         </Button>

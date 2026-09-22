@@ -19,12 +19,36 @@ export function usePokemonFilterUrl(): void {
   const sortBy = usePrimeDexStore((state) => state.sortBy);
   const showCaughtOnly = usePrimeDexStore((state) => state.showCaughtOnly);
   const showFavoritesOnly = usePrimeDexStore((state) => state.showFavoritesOnly);
+  const isLegendary = usePrimeDexStore((state) => state.isLegendary);
+  const isMythical = usePrimeDexStore((state) => state.isMythical);
+  const selectedEggGroups = usePrimeDexStore((state) => state.selectedEggGroups);
+  const selectedColors = usePrimeDexStore((state) => state.selectedColors);
+  const selectedShapes = usePrimeDexStore((state) => state.selectedShapes);
+  const minBaseStats = usePrimeDexStore((state) => state.minBaseStats);
+  const minAttack = usePrimeDexStore((state) => state.minAttack);
+  const minDefense = usePrimeDexStore((state) => state.minDefense);
+  const minSpeed = usePrimeDexStore((state) => state.minSpeed);
+  const minHp = usePrimeDexStore((state) => state.minHp);
+  const heightRange = usePrimeDexStore((state) => state.heightRange);
+  const weightRange = usePrimeDexStore((state) => state.weightRange);
   const setSearchTerm = usePrimeDexStore((state) => state.setSearchTerm);
   const setSelectedTypes = usePrimeDexStore((state) => state.setSelectedTypes);
   const setSelectedGeneration = usePrimeDexStore((state) => state.setSelectedGeneration);
   const setSortBy = usePrimeDexStore((state) => state.setSortBy);
   const setShowCaughtOnly = usePrimeDexStore((state) => state.setShowCaughtOnly);
   const setShowFavoritesOnly = usePrimeDexStore((state) => state.setShowFavoritesOnly);
+  const setIsLegendary = usePrimeDexStore((state) => state.setIsLegendary);
+  const setIsMythical = usePrimeDexStore((state) => state.setIsMythical);
+  const setSelectedEggGroups = usePrimeDexStore((state) => state.setSelectedEggGroups);
+  const setSelectedColors = usePrimeDexStore((state) => state.setSelectedColors);
+  const setSelectedShapes = usePrimeDexStore((state) => state.setSelectedShapes);
+  const setMinBaseStats = usePrimeDexStore((state) => state.setMinBaseStats);
+  const setMinAttack = usePrimeDexStore((state) => state.setMinAttack);
+  const setMinDefense = usePrimeDexStore((state) => state.setMinDefense);
+  const setMinSpeed = usePrimeDexStore((state) => state.setMinSpeed);
+  const setMinHp = usePrimeDexStore((state) => state.setMinHp);
+  const setHeightRange = usePrimeDexStore((state) => state.setHeightRange);
+  const setWeightRange = usePrimeDexStore((state) => state.setWeightRange);
   // Initialize synchronously from the address bar so the first apply-effect
   // run already sees the real query (a client-side mount can happen with a
   // populated URL while an effect-based read would race it with defaults).
@@ -70,6 +94,18 @@ export function usePokemonFilterUrl(): void {
       );
     }
     if (overwriteAll || parsed.fav !== undefined) setShowFavoritesOnly(parsed.fav ?? false);
+    if (overwriteAll || parsed.legendary !== undefined) setIsLegendary(parsed.legendary ?? null);
+    if (overwriteAll || parsed.mythical !== undefined) setIsMythical(parsed.mythical ?? null);
+    if (overwriteAll || parsed.eggGroups !== undefined) setSelectedEggGroups(parsed.eggGroups ?? []);
+    if (overwriteAll || parsed.colors !== undefined) setSelectedColors(parsed.colors ?? []);
+    if (overwriteAll || parsed.shapes !== undefined) setSelectedShapes(parsed.shapes ?? []);
+    if (overwriteAll || parsed.minBst !== undefined) setMinBaseStats(parsed.minBst ?? 0);
+    if (overwriteAll || parsed.minAttack !== undefined) setMinAttack(parsed.minAttack ?? 0);
+    if (overwriteAll || parsed.minDefense !== undefined) setMinDefense(parsed.minDefense ?? 0);
+    if (overwriteAll || parsed.minSpeed !== undefined) setMinSpeed(parsed.minSpeed ?? 0);
+    if (overwriteAll || parsed.minHp !== undefined) setMinHp(parsed.minHp ?? 0);
+    if (overwriteAll || parsed.heightRange !== undefined) setHeightRange(parsed.heightRange ?? [0, 25]);
+    if (overwriteAll || parsed.weightRange !== undefined) setWeightRange(parsed.weightRange ?? [0, 1200]);
 
     hasAppliedUrl.current = true;
     externalNavigationRef.current = false;
@@ -84,6 +120,18 @@ export function usePokemonFilterUrl(): void {
     setSortBy,
     setShowCaughtOnly,
     setShowFavoritesOnly,
+    setIsLegendary,
+    setIsMythical,
+    setSelectedEggGroups,
+    setSelectedColors,
+    setSelectedShapes,
+    setMinBaseStats,
+    setMinAttack,
+    setMinDefense,
+    setMinSpeed,
+    setMinHp,
+    setHeightRange,
+    setWeightRange,
     urlSearch,
   ]);
 
@@ -101,6 +149,18 @@ export function usePokemonFilterUrl(): void {
       sortBy,
       showCaughtOnly,
       showFavoritesOnly,
+      isLegendary,
+      isMythical,
+      selectedEggGroups,
+      selectedColors,
+      selectedShapes,
+      minBaseStats,
+      minAttack,
+      minDefense,
+      minSpeed,
+      minHp,
+      heightRange,
+      weightRange,
     });
     if (nextSearch === urlSearch) return;
 
@@ -133,6 +193,18 @@ export function usePokemonFilterUrl(): void {
     sortBy,
     showCaughtOnly,
     showFavoritesOnly,
+    isLegendary,
+    isMythical,
+    selectedEggGroups,
+    selectedColors,
+    selectedShapes,
+    minBaseStats,
+    minAttack,
+    minDefense,
+    minSpeed,
+    minHp,
+    heightRange,
+    weightRange,
     urlSearch,
   ]);
 }

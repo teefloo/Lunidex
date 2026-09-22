@@ -3,6 +3,7 @@ import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
   normalizeSearchText,
+  shouldUseCompletePokemonSummary,
 } from './pokemon-filter-utils';
 
 describe('pokemon filter utilities', () => {
@@ -22,5 +23,23 @@ describe('pokemon filter utilities', () => {
     expect(comparePokemonMeasurements(0, 1, 'asc')).toBeGreaterThan(0);
     expect(comparePokemonMeasurements(1, 0, 'desc')).toBeLessThan(0);
     expect(comparePokemonMeasurements(100, 50, 'desc')).toBeLessThan(0);
+  });
+
+  it('uses the complete catalogue for caught and favorite views', () => {
+    expect(shouldUseCompletePokemonSummary({
+      hasOtherFilters: false,
+      showCaughtOnly: 'caught',
+      showFavoritesOnly: false,
+    })).toBe(true);
+    expect(shouldUseCompletePokemonSummary({
+      hasOtherFilters: false,
+      showCaughtOnly: 'all',
+      showFavoritesOnly: true,
+    })).toBe(true);
+    expect(shouldUseCompletePokemonSummary({
+      hasOtherFilters: false,
+      showCaughtOnly: 'all',
+      showFavoritesOnly: false,
+    })).toBe(false);
   });
 });

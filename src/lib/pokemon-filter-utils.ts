@@ -25,6 +25,18 @@ export function getExactNumericPokemonId(searchTerm: string): number | null {
 
 type Measurement = number | null | undefined;
 
+export function shouldUseCompletePokemonSummary({
+  hasOtherFilters,
+  showCaughtOnly,
+  showFavoritesOnly,
+}: {
+  hasOtherFilters: boolean;
+  showCaughtOnly: 'all' | 'caught' | 'uncaught';
+  showFavoritesOnly: boolean;
+}): boolean {
+  return hasOtherFilters || showCaughtOnly !== 'all' || showFavoritesOnly;
+}
+
 /** Keep missing/non-positive PokéAPI measurements after known values. */
 export function comparePokemonMeasurements(
   left: Measurement,
