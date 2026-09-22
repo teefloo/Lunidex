@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useMounted } from '@/hooks/useMounted';
@@ -81,6 +81,7 @@ export function TCGAlbumPage({
   const [activationComplete, setActivationComplete] = useState(false);
   const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
   const firstValueReachedRef = useRef(false);
+  const cardSearchId = useId();
 
   useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
   useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
@@ -167,7 +168,7 @@ export function TCGAlbumPage({
               {activation && !firstValueReached ? t('tcg.activation.album_title') : set.name}
             </h1>
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/40">
-              {activation && !firstValueReached ? t('tcg.activation.album_description') : `${t('tcg.collection_owned')} — ${completion.owned}/${completion.total}`}
+              {activation && !firstValueReached ? t('tcg.activation.album_description') : <><span>{t('tcg.collection_owned')} — </span><span className="tabular-nums">{completion.owned}/{completion.total}</span></>}
             </p>
           </div>
         </div>
@@ -220,8 +221,10 @@ export function TCGAlbumPage({
       {/* Search + filter */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/30" />
+          <Search aria-hidden="true" className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/30" />
+          <label htmlFor={cardSearchId} className="sr-only">{t('tcg.collection_search_cards_placeholder', { defaultValue: 'Search cards' })}</label>
           <input
+            id={cardSearchId}
             type="text"
             name="album-card-search"
             autoComplete="off"
@@ -242,7 +245,7 @@ export function TCGAlbumPage({
                 : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
             }`}
           >
-            {t('tcg.collection_missing')} ({missingCards.length})
+            {t('tcg.collection_missing')} (<span className="tabular-nums">{missingCards.length}</span>)
           </button>
         )}
       </div>

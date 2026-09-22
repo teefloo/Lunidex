@@ -256,7 +256,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
             {t('tcg.collection_add_set', { defaultValue: 'Add a set' })}
           </Link>
         </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <Stat
             label={t('tcg.collection_physical_copies', { defaultValue: 'Physical copies' })}
             value={physicalCount}
@@ -274,7 +274,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
               <p className="mt-1 text-sm font-bold text-foreground/55" aria-live="polite">{t('tcg.collection_loading')}</p>
             ) : totalValueGroups.length ? (
               <>
-                <p className="mt-1 break-words text-2xl font-black text-primary">
+                <p className="mt-1 break-words text-2xl font-black tabular-nums text-primary">
                   {totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}
                 </p>
                 {valuationPending && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_loading')}</p>}
@@ -285,7 +285,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
             ) : physicalCount > 0 ? (
               <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
             ) : (
-              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_none_owned')}</p>
             )}
           </div>
         </div>

@@ -117,7 +117,7 @@ export function TCGCollectionSetRow({
           {started && valuationLoading && !valuation ? (
             <p className="mt-1 text-sm font-bold text-foreground/50" aria-live="polite">{t('tcg.collection_loading')}</p>
           ) : valuation?.groups.length ? (
-            <p className="mt-1 break-words text-sm font-black leading-tight text-primary">
+            <p className="mt-1 break-words text-sm font-black leading-tight tabular-nums text-primary">
               {valuation.groups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}
             </p>
           ) : started ? (

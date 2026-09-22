@@ -152,11 +152,24 @@ export function TCGActiveSetInsights({
                 {t('tcg.collection_set_owned_value')}
               </p>
               {insights.valuation.groups.length > 0 ? (
-                <p className="mt-1 break-words text-base font-black leading-tight text-primary sm:text-lg">
+                <p className="mt-1 break-words text-base font-black leading-tight tabular-nums text-primary sm:text-lg">
                   {insights.valuation.groups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}
                 </p>
               ) : (
                 <p className="mt-1 text-sm font-semibold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+              )}
+              {valuationQuery.isError && (
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-bold text-rose-300" role="alert">
+                  <span>{t('tcg.collection_insights_error')}</span>
+                  <button
+                    type="button"
+                    onClick={() => void valuationQuery.refetch()}
+                    className="inline-flex min-h-11 items-center gap-1 rounded-sm border border-rose-300/40 px-2 hover:bg-rose-300/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+                  >
+                    <RefreshCw className="h-3 w-3" aria-hidden="true" />
+                    {t('common.retry', { defaultValue: 'Retry' })}
+                  </button>
+                </div>
               )}
               {valuationUnpricedCount > 0 && (
                 <p className="mt-1 text-[11px] font-bold text-amber-200/70">
