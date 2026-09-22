@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { Languages, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,9 +42,10 @@ export function TCGCollectionLanguageDialog({
   const [open, setOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<TCGCardLanguage>(currentLanguage);
 
-  useEffect(() => {
-    if (open) setSelectedLanguage(currentLanguage);
-  }, [currentLanguage, open]);
+  const openDialog = () => {
+    setSelectedLanguage(currentLanguage);
+    setOpen(true);
+  };
 
   const handleConfirm = () => {
     if (selectedLanguage === currentLanguage) {
@@ -61,7 +62,7 @@ export function TCGCollectionLanguageDialog({
         variant="outline"
         size={compact ? 'icon-touch' : 'sm'}
         className={className}
-        onClick={() => setOpen(true)}
+        onClick={openDialog}
         aria-label={t('tcg.collection_options_for_set', { name: setName, defaultValue: `Options for ${setName}` })}
       >
         {compact ? <MoreHorizontal aria-hidden="true" /> : <><Languages aria-hidden="true" />{t('tcg.collection_options', { defaultValue: 'Options' })}</>}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
@@ -84,8 +84,15 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     () => parseTCGCollectionUrlState(new URLSearchParams(searchParamsString)),
     [searchParamsString],
   );
-  const [visibleCatalogCount, setVisibleCatalogCount] = useState(TCG_COLLECTION_CATALOG_BATCH_SIZE);
-  const [expandedCollectionKey, setExpandedCollectionKey] = useState<string | null>(null);
+  const collectionFilterKey = `${urlState.view}|${urlState.query}|${urlState.sort}|${urlState.incompleteOnly ? '1' : '0'}`;
+  const [catalogDisplayState, setCatalogDisplayState] = useState({
+    filterKey: '',
+    visibleCount: TCG_COLLECTION_CATALOG_BATCH_SIZE,
+  });
+  const [expandedAnalysisState, setExpandedAnalysisState] = useState<{ filterKey: string; collectionKey: string | null }>({
+    filterKey: '',
+    collectionKey: null,
+  });
 
   const replaceUrlState = useCallback((nextState: TCGCollectionUrlState) => {
     const params = new URLSearchParams(searchParamsString);
@@ -94,11 +101,6 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     serialized.forEach((value, key) => params.set(key, value));
     router.replace(withQuery(pathname, params.toString()), { scroll: false });
   }, [pathname, router, searchParamsString]);
-
-  useEffect(() => {
-    setVisibleCatalogCount(TCG_COLLECTION_CATALOG_BATCH_SIZE);
-    setExpandedCollectionKey(null);
-  }, [urlState.incompleteOnly, urlState.query, urlState.sort, urlState.view]);
 
   const effectiveLegacyCards = legacyOwnedCards.length > 0 ? legacyOwnedCards : legacyStoreCards;
   const physicalCount = useMemo(
@@ -175,10 +177,18 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     [entries, urlState],
   );
   const catalogDisplay = useMemo(
-    () => getTCGCollectionCatalogDisplay(selectedEntries, visibleCatalogCount),
-    [selectedEntries, visibleCatalogCount],
+    () => getTCGCollectionCatalogDisplay(
+      selectedEntries,
+      catalogDisplayState.filterKey === collectionFilterKey
+        ? catalogDisplayState.visibleCount
+        : TCG_COLLECTION_CATALOG_BATCH_SIZE,
+    ),
+    [catalogDisplayState, collectionFilterKey, selectedEntries],
   );
   const visibleEntries = urlState.view === 'all' ? catalogDisplay.entries : selectedEntries;
+  const expandedCollectionKey = expandedAnalysisState.filterKey === collectionFilterKey
+    ? expandedAnalysisState.collectionKey
+    : null;
   const legacyGroups = useMemo(() => {
     const groups = new Map<string, string[]>();
     for (const cardId of effectiveLegacyCards) {
@@ -410,9 +420,12 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
                     valuation={valuation}
                     valuationLoading={Boolean(valueQuery?.isFetching)}
                     analysisOpen={expandedCollectionKey === entry.collectionKey}
-                    onAnalysisToggle={() => setExpandedCollectionKey((current) => (
-                      current === entry.collectionKey ? null : entry.collectionKey
-                    ))}
+                    onAnalysisToggle={() => setExpandedAnalysisState((current) => ({
+                      filterKey: collectionFilterKey,
+                      collectionKey: current.filterKey === collectionFilterKey && current.collectionKey === entry.collectionKey
+                        ? null
+                        : entry.collectionKey,
+                    }))}
                     onLanguageChange={(language) => openCollectionInLanguage(entry, language)}
                   />
                 );
@@ -423,7 +436,10 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
               <div className="flex justify-center pt-1">
                 <button
                   type="button"
-                  onClick={() => setVisibleCatalogCount((count) => count + TCG_COLLECTION_CATALOG_BATCH_SIZE)}
+                  onClick={() => setCatalogDisplayState({
+                    filterKey: collectionFilterKey,
+                    visibleCount: catalogDisplay.entries.length + TCG_COLLECTION_CATALOG_BATCH_SIZE,
+                  })}
                   className="min-h-11 rounded-sm border border-primary/35 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
                   {t('tcg.collection_show_more', { defaultValue: 'Show more' })}
@@ -460,7 +476,7 @@ function EmptyCollectionState({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-sm border border-dashed border-border/30 bg-card/20 px-5 py-16 text-center">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-sm border border-dashed border-border/30 bg-card/20 px-5 py-16 text-center" role="status" aria-live="polite">
       <p className="max-w-md text-base font-bold text-foreground/75">
         {personal
           ? t('tcg.collection_empty_personal', { defaultValue: 'No sets have cards yet.' })

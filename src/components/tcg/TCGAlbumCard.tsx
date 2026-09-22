@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import type {
   TCGCard,
@@ -45,6 +45,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   priority = false,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
+  const [actionFeedback, setActionFeedback] = useState('');
   const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
   const toggleOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
   const totalOwnedQuantity = ownerships.reduce((sum, ownership) => sum + ownership.quantity, 0);
@@ -67,7 +68,10 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
     const nextOwned = collectionKey
       ? nextState.isTCGCollectionCardOwned(collectionKey, card.id)
       : nextState.isTCGOwned(card.id);
-    onOwnershipChange?.(!previousOwned && nextOwned);
+    if (!previousOwned && nextOwned) {
+      setActionFeedback(t('tcg.collection_card_added', { name: card.name, defaultValue: `${card.name} added to your collection` }));
+      onOwnershipChange?.(true);
+    }
   };
 
   if (!owned && !showMissing) return null;
@@ -76,7 +80,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
     <article className={cn(
       'tcg-album-card group flex min-w-0 flex-col gap-2 rounded-sm border p-1.5 shadow-[var(--shadow-pixel-sm)]',
       owned ? 'border-emerald-500/30 bg-card/40' : 'border-border/15 bg-card/20',
-    )}>
+    )} style={{ contentVisibility: 'auto', containIntrinsicSize: '280px' }}>
       <button
         type="button"
         onClick={() => onView?.(card)}
@@ -120,7 +124,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
                       : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200',
                   )}
                 >
-                  {label} ×{ownership.quantity}
+                  {label} <span className="tabular-nums">×{ownership.quantity}</span>
                 </span>
               );
             })}
@@ -143,6 +147,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
           ? t('tcg.collection_owned_manage', { count: totalOwnedQuantity, defaultValue: `Owned ×${totalOwnedQuantity} · Manage` })
           : t('tcg.collection_add_card', { defaultValue: 'Add' })}
       </button>
+      <span className="sr-only" role="status" aria-live="polite">{actionFeedback}</span>
     </article>
   );
 }, areTCGAlbumCardPropsEqual);
@@ -156,6 +161,9 @@ function areTCGAlbumCardPropsEqual(previous: TCGAlbumCardProps, next: TCGAlbumCa
     && previous.card.rarity === next.card.rarity
     && previous.owned === next.owned
     && previous.showMissing === next.showMissing
+    && previous.onView === next.onView
+    && previous.onManage === next.onManage
+    && previous.onOwnershipChange === next.onOwnershipChange
     && previous.collectionKey === next.collectionKey
     && previous.language === next.language
     && previous.priority === next.priority

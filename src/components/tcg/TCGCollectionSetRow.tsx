@@ -63,7 +63,10 @@ export function TCGCollectionSetRow({
   const analysisId = `tcg-set-analysis-${entry.collectionKey.replace(/[^a-z0-9_-]/gi, '-')}`;
 
   return (
-    <article className="min-w-0 rounded-sm border border-border/20 bg-card/35 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color] duration-100 hover:border-primary/30 hover:bg-card/55 sm:p-4">
+    <article
+      className="min-w-0 rounded-sm border border-border/20 bg-card/35 p-3 shadow-[var(--shadow-pixel-sm)] transition-[border-color,background-color] duration-100 hover:border-primary/30 hover:bg-card/55 sm:p-4"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '112px' }}
+    >
       <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center">
         <Link
           href={albumHref}
