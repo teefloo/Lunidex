@@ -33,7 +33,7 @@ import {
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
-import { hasSyncAccess, requestSyncAccess } from './sync-access';
+import { hasSyncAccess, requestSyncAccess, type SyncAccessRequest } from './sync-access';
 import { createResilientStorage } from './persistence';
 
 const isIndexedDbAvailable = (): boolean =>
@@ -385,6 +385,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       const applyStoreUpdate = (
         update: StoreUpdate | ((state: PrimeDexStore) => StoreUpdate),
         replace: false | undefined,
+        options: Pick<SyncAccessRequest, 'prompt'> = {},
       ): void => {
         const next = typeof update === 'function' ? update(get()) : update;
         // View filters and display preferences always apply locally; the
@@ -393,7 +394,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           (key) => SYNCED_KEY_SET.has(key) && !UNGATED_KEY_SET.has(key),
         );
         if (changesSyncableData && !hasSyncAccess()) {
-          requestSyncAccess();
+          requestSyncAccess(options);
           return;
         }
         baseSet(next, replace);
@@ -403,6 +404,10 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         replace?: false,
       ): void => applyStoreUpdate(update, replace);
       const set = guardedSet;
+      const setWithoutSyncPrompt = (
+        update: StoreUpdate | ((state: PrimeDexStore) => StoreUpdate),
+        replace?: false,
+      ): void => applyStoreUpdate(update, replace, { prompt: false });
 
       return ({
       favorites: [],
@@ -874,7 +879,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
 
       // History
       history: [],
-      addToHistory: (pokemon) => set((state) => {
+      addToHistory: (pokemon) => setWithoutSyncPrompt((state) => {
         const filtered = state.history.filter(p => p.id !== pokemon.id);
         return { history: [pokemon, ...filtered].slice(0, 10) };
       }),

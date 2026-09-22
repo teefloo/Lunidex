@@ -5,7 +5,11 @@ export type SyncAccessStatus =
   | 'unauthenticated'
   | 'unavailable';
 
-type SyncAccessRequiredHandler = () => void;
+export interface SyncAccessRequest {
+  prompt?: boolean;
+}
+
+type SyncAccessRequiredHandler = (request: SyncAccessRequest) => void;
 type SyncAccessRetryHandler = () => void;
 type SyncAccessStatusHandler = (nextStatus: SyncAccessStatus) => void;
 
@@ -52,6 +56,6 @@ export function retrySyncAccess(): void {
   for (const handler of retryHandlers) handler();
 }
 
-export function requestSyncAccess(): void {
-  for (const handler of handlers) handler();
+export function requestSyncAccess(request: SyncAccessRequest = {}): void {
+  for (const handler of handlers) handler(request);
 }

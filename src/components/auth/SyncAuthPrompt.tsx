@@ -16,7 +16,9 @@ export function SyncAuthPrompt() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => onSyncAccessRequired(() => {
+  useEffect(() => onSyncAccessRequired((request) => {
+    if (request.prompt === false) return;
+
     const status = getSyncAccessStatus();
     const toastOptions = { id: 'sync-access-prompt' };
     if (!enabled) {

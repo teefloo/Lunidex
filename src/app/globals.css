@@ -4113,7 +4113,7 @@ body:has(.lunidex-home) .site-footer a:hover {
 }
 
 .pokedex-caught-filter__option {
-  min-height: 2.55rem;
+  min-height: 2.75rem;
   border-radius: 0.65rem !important;
   color: rgba(235, 239, 255, 0.67) !important;
 }
