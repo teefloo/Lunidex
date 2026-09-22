@@ -468,7 +468,10 @@ export default function PokemonList() {
               </Badge>
               {filteredAndSortedResults && filteredAndSortedResults.length > 0 && (
                 <span className="text-[11px] text-muted-foreground">
-                  {t('list.showing', { defaultValue: `Showing ${displayedPokemon.length} of ${filteredAndSortedResults.length}` })}
+                  {t('list.showing', {
+                    shown: displayedPokemon.length,
+                    total: filteredAndSortedResults.length,
+                  })}
                 </span>
               )}
             </div>

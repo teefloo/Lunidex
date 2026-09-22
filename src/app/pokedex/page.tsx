@@ -106,6 +106,7 @@ export default async function PokedexPage() {
         <Header />
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
+          <PokemonList />
           <section className="page-shell mt-8" aria-labelledby="pokedex-priority-links-title">
             <div className="rounded-sm border border-border/50 bg-card/35 p-5 sm:p-7">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">
@@ -119,27 +120,26 @@ export default async function PokedexPage() {
                   <Link
                     key={slug}
                     href={localeHref(`/pokemon/${slug}`, lang)}
-                    className="rounded-sm border border-border/50 bg-background/40 px-3 py-2 text-sm font-bold text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
+                    className="inline-flex min-h-11 items-center rounded-sm border border-border/50 bg-background/40 px-3 py-2 text-sm font-bold text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
                   >
                     {slug.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')}
                   </Link>
                 ))}
               </div>
               <nav className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('pokedex_page.reference_hubs', { defaultValue: 'Pokédex reference hubs' })}>
-                <Link href={localeHref('/types', lang)} className="underline-offset-4 hover:underline">{t('list.types', { defaultValue: 'Types' })}</Link>
-                <Link href={localeHref('/moves', lang)} className="underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
-                <Link href={localeHref('/abilities', lang)} className="underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>
-                <Link href={localeHref('/items', lang)} className="underline-offset-4 hover:underline">{t('list.items', { defaultValue: 'Items' })}</Link>
+                <Link href={localeHref('/types', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.types', { defaultValue: 'Types' })}</Link>
+                <Link href={localeHref('/moves', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
+                <Link href={localeHref('/abilities', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>
+                <Link href={localeHref('/items', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.items', { defaultValue: 'Items' })}</Link>
               </nav>
               <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('team_guide.cta_title')}>
-                <Link href={localeHref('/team', lang)} className="underline-offset-4 hover:underline">{t('team.title')}</Link>
-                <Link href={localeHref('/nuzlocke', lang)} className="underline-offset-4 hover:underline">{t('nuzlocke.title')}</Link>
-                <Link href={localeHref('/tcg', lang)} className="underline-offset-4 hover:underline">{t('tcg.page_heading')}</Link>
+                <Link href={localeHref('/team', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('team.title')}</Link>
+                <Link href={localeHref('/nuzlocke', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('nuzlocke.title')}</Link>
+                <Link href={localeHref('/tcg', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('tcg.page_heading')}</Link>
               </nav>
             </div>
           </section>
           <PokemonOfTheDay />
-          <PokemonList />
           <ClientRecentlyViewed />
         </main>
       </div>

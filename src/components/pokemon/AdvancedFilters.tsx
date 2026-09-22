@@ -82,6 +82,16 @@ export default function AdvancedFilters({ className }: { className?: string }) {
   const resetFilters = usePrimeDexStore(s => s.resetFilters);
   const { t } = useTranslation();
 
+  const getSingleSliderA11y = (label: string) => ({
+    getAriaLabel: () => label,
+    getAriaValueText: (formattedValue: string) => `${label}: ${formattedValue}`,
+  });
+  const getRangeSliderA11y = (label: string) => ({
+    getAriaLabel: (index: number) => `${index === 0 ? t('filters.minimum') : t('filters.maximum')} ${label}`,
+    getAriaValueText: (formattedValue: string, _value: number, index: number) =>
+      `${index === 0 ? t('filters.minimum') : t('filters.maximum')} ${label}: ${formattedValue}`,
+  });
+
   const activeFiltersCount = [
     selectedTypes.length > 0,
     selectedGeneration !== null,
@@ -343,6 +353,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 max={800}
                 step={10}
                 className="py-4"
+                {...getSingleSliderA11y(t('filters.min_bst'))}
               />
               <div className="flex justify-between text-[11px] sm:text-[11px] font-black text-foreground/20 uppercase tracking-widest">
                 <span>0</span>
@@ -370,6 +381,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                     onValueChange={(val) => setMinHp(Array.isArray(val) ? val[0] : val as number)}
                     max={255}
                     step={5}
+                    {...getSingleSliderA11y(t('stats.hp_short'))}
                   />
                 </div>
 
@@ -385,6 +397,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                     onValueChange={(val) => setMinAttack(Array.isArray(val) ? val[0] : val as number)}
                     max={255}
                     step={5}
+                    {...getSingleSliderA11y(t('stats.attack_short'))}
                   />
                 </div>
 
@@ -400,6 +413,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                     onValueChange={(val) => setMinDefense(Array.isArray(val) ? val[0] : val as number)}
                     max={255}
                     step={5}
+                    {...getSingleSliderA11y(t('stats.defense_short'))}
                   />
                 </div>
 
@@ -415,6 +429,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                     onValueChange={(val) => setMinSpeed(Array.isArray(val) ? val[0] : val as number)}
                     max={255}
                     step={5}
+                    {...getSingleSliderA11y(t('stats.speed_short'))}
                   />
                 </div>
               </div>
@@ -445,6 +460,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 max={25}
                 step={0.1}
                 className="py-4 cursor-pointer"
+                {...getRangeSliderA11y(t('filters.height'))}
               />
             </div>
 
@@ -473,6 +489,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 max={1200}
                 step={1}
                 className="py-4 cursor-pointer"
+                {...getRangeSliderA11y(t('filters.weight'))}
               />
             </div>
           </div>

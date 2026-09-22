@@ -5,14 +5,21 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
+type SliderProps = SliderPrimitive.Root.Props & Pick<
+  SliderPrimitive.Thumb.Props,
+  "getAriaLabel" | "getAriaValueText"
+>
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  getAriaLabel,
+  getAriaValueText,
   ...props
-}: SliderPrimitive.Root.Props) {
+}: SliderProps) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -31,7 +38,6 @@ function Slider({
       value={value}
       min={min}
       max={max}
-      thumbAlignment="edge"
       {...props}
     >
       <SliderPrimitive.Control className="relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col">
@@ -48,6 +54,9 @@ function Slider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
+            index={index}
+            getAriaLabel={getAriaLabel}
+            getAriaValueText={getAriaValueText}
             className="relative block size-5 shrink-0 cursor-grab rounded-sm border border-primary/60 bg-card shadow-[var(--shadow-pixel-sm)] ring-ring/40 transition-[color,box-shadow,transform] select-none after:absolute after:-inset-4 hover:-translate-x-px hover:-translate-y-px hover:ring-2 focus-visible:ring-2 focus-visible:outline-hidden active:cursor-grabbing active:translate-x-0.5 active:translate-y-0.5 active:shadow-none active:ring-2 disabled:pointer-events-none disabled:opacity-50"
           />
         ))}
