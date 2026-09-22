@@ -224,6 +224,16 @@ export function parsePokemonDetailTab(value: string | null): PokemonDetailTab {
     : 'about';
 }
 
+export function setPokemonDetailTab(search: string, tab: PokemonDetailTab): string {
+  const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  if (tab === 'about') {
+    params.delete('tab');
+  } else {
+    params.set('tab', tab);
+  }
+  return params.toString();
+}
+
 export function buildPokemonReturnTarget(pathname: string, search: string): string {
   return `${pathname}${search}`;
 }

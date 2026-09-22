@@ -18,23 +18,28 @@ export function SyncAuthPrompt() {
 
   useEffect(() => onSyncAccessRequired(() => {
     const status = getSyncAccessStatus();
-    if (!enabled || (!user && status === 'unauthenticated')) {
+    const toastOptions = { id: 'sync-access-prompt' };
+    if (!enabled) {
       toast.error(t('auth.signin_subtitle', {
         defaultValue: 'Sign in to save and sync your data.',
-      }));
+      }), toastOptions);
+      return;
+    }
+    if (!user) {
+      setOpen(true);
       return;
     }
     if (status === 'unavailable') {
       retrySyncAccess();
       toast.error(t('auth.sync_unavailable', {
         defaultValue: 'Your account is signed in, but your saved data is temporarily unavailable. Please try again in a moment.',
-      }));
+      }), toastOptions);
       return;
     }
     if (status === 'checking' || status === 'loading') {
       toast.info(t('auth.sync_checking', {
         defaultValue: 'Your collection is still syncing. Please try again in a moment.',
-      }));
+      }), toastOptions);
       return;
     }
     setOpen(true);

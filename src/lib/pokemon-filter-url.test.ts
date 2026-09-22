@@ -52,6 +52,7 @@ describe('Pokédex detail navigation URL contracts', () => {
     const navigation = await import('./pokemon-filter-url') as typeof import('./pokemon-filter-url') & {
       parsePokemonDetailTab?: (value: string | null) => string;
       parsePokemonReturnTarget?: (value: string | null) => string | null;
+      setPokemonDetailTab?: (search: string, tab: string) => string;
     };
 
     expect(navigation.parsePokemonDetailTab).toEqual(expect.any(Function));
@@ -62,7 +63,11 @@ describe('Pokédex detail navigation URL contracts', () => {
     expect(navigation.parsePokemonDetailTab?.(null)).toBe('about');
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/pokedex?gen=1#pokemon-25')))
       .toBe('/fr/pokedex?gen=1#pokemon-25');
+    expect(navigation.parsePokemonReturnTarget?.('/fr/pokedex?q=pikachu&gen=1'))
+      .toBe('/fr/pokedex?q=pikachu&gen=1');
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('https://evil.example/'))).toBeNull();
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/pokemon/mew'))).toBeNull();
+    expect(navigation.setPokemonDetailTab?.('from=%2Ffr%2Fpokedex%3Fgen%3D1', 'stats'))
+      .toBe('from=%2Ffr%2Fpokedex%3Fgen%3D1&tab=stats');
   });
 });

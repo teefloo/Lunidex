@@ -3,7 +3,7 @@
 import { useQuery, useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonForm, getPokemonSpecies, getTypeRelations, getAbilityDetail } from '@/lib/api';
 import { getRecommendedItems } from '@/lib/held-items';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import {
   Loader2,
@@ -79,6 +79,11 @@ import { useTranslation } from '@/lib/i18n';
 import { getLocalizedPokemonData } from '@/lib/api';
 import type { AbilityBattleDesc } from '@/lib/ability-battle-descriptions';
 import { HeldItem } from '@/lib/held-items';
+import {
+  parsePokemonDetailTab,
+  parsePokemonReturnTarget,
+  setPokemonDetailTab,
+} from '@/lib/pokemon-filter-url';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -155,32 +160,34 @@ export function PokemonDetailClient({
   const params = useParams();
   const name = params?.name as string;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const localeHref = useLocaleHref();
+  const activeTab = parsePokemonDetailTab(searchParams.get('tab'));
   const [showShiny, setShowShiny] = useState(false);
   const [playingCry, setPlayingCry] = useState<'latest' | 'legacy' | null>(null);
   // Fine-grained slice: this page re-renders on every store keystroke if it
   // subscribes to the whole store.
   const {
-    isFavorite, addFavorite, removeFavorite,
-    toggleCaught, isCaught,
-    addToCompare, removeFromCompare, isInCompare,
-    addToTeam, removeFromTeam, isInTeam,
-    addToHistory, team,
+    favorites, caughtPokemon, compareList, team,
+    addFavorite, removeFavorite,
+    toggleCaught,
+    addToCompare, removeFromCompare,
+    addToTeam, removeFromTeam,
+    addToHistory,
     soundEnabled
   } = usePrimeDexStore(useShallow((state) => ({
-    isFavorite: state.isFavorite,
+    favorites: state.favorites,
+    caughtPokemon: state.caughtPokemon,
+    compareList: state.compareList,
+    team: state.team,
     addFavorite: state.addFavorite,
     removeFavorite: state.removeFavorite,
     toggleCaught: state.toggleCaught,
-    isCaught: state.isCaught,
     addToCompare: state.addToCompare,
     removeFromCompare: state.removeFromCompare,
-    isInCompare: state.isInCompare,
     addToTeam: state.addToTeam,
     removeFromTeam: state.removeFromTeam,
-    isInTeam: state.isInTeam,
     addToHistory: state.addToHistory,
-    team: state.team,
     soundEnabled: state.soundEnabled,
   })));
   const routeLanguage = useClientLanguage();
@@ -306,7 +313,10 @@ export function PokemonDetailClient({
     );
   }
 
-  const isFav = pokemon ? isFavorite(pokemon.id) : false;
+  const isFav = pokemon ? favorites.includes(pokemon.id) : false;
+  const isCaught = pokemon ? caughtPokemon.includes(pokemon.id) : false;
+  const isInCompare = pokemon ? compareList.includes(pokemon.id) : false;
+  const isInTeam = pokemon ? team.includes(pokemon.id) : false;
   const mainType = pokemon.types[0].type.name;
   const color = TYPE_COLORS[mainType] || '#A8A77A';
   
@@ -364,13 +374,51 @@ export function PokemonDetailClient({
     }
   };
 
+  const handleBackToPokedex = () => {
+    const currentSearchParams = typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search)
+      : searchParams;
+    const returnTarget = parsePokemonReturnTarget(currentSearchParams.get('from'));
+    if (!returnTarget) {
+      router.push(localeHref('/pokedex'));
+      return;
+    }
+
+    const canUseHistory = typeof window !== 'undefined' && typeof document !== 'undefined' && (() => {
+      if (!document.referrer) return false;
+      try {
+        const referrer = new URL(document.referrer);
+        const referrerTarget = `${referrer.pathname}${referrer.search}${referrer.hash}`;
+        return referrer.origin === window.location.origin
+          && parsePokemonReturnTarget(encodeURIComponent(referrerTarget)) !== null;
+      } catch {
+        return false;
+      }
+    })();
+
+    if (canUseHistory) {
+      router.back();
+    } else {
+      router.push(returnTarget);
+    }
+  };
+
+  const handleTabChange = (value: string) => {
+    const nextTab = parsePokemonDetailTab(value);
+    const nextSearch = setPokemonDetailTab(searchParams.toString(), nextTab);
+    router.replace(
+      localeHref(`/pokemon/${name}${nextSearch ? `?${nextSearch}` : ''}`),
+      { scroll: false },
+    );
+  };
+
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground pb-28 sm:pb-20 overflow-x-hidden relative">
 
       {/* Hero Section */}
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">
         <button
-          onClick={() => router.push(localeHref('/pokedex'))}
+          onClick={handleBackToPokedex}
           className="fixed top-[calc(6rem+env(safe-area-inset-top))] left-4 md:left-12 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55  rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
           aria-label={t('common.back') || 'Go back'}
         >
@@ -412,15 +460,15 @@ export function PokemonDetailClient({
             onClick={() => toggleCaught(pokemon.id)}
             className={cn(
               "rounded-full transition-all h-12 w-12",
-              isCaught(pokemon.id)
+              isCaught
                 ? "bg-primary text-primary-foreground shadow-[0_4px_16px_rgba(227,53,13,0.4)]"
                 : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
             )}
-            title={isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
-            aria-label={isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
-            aria-pressed={isCaught(pokemon.id)}
+            title={isCaught ? t('card.caught') : t('card.mark_caught')}
+            aria-label={isCaught ? t('card.caught') : t('card.mark_caught')}
+            aria-pressed={isCaught}
           >
-            <Zap className={cn("w-5 h-5", isCaught(pokemon.id) && "fill-current")} />
+            <Zap className={cn("w-5 h-5", isCaught && "fill-current")} />
           </Button>
 
           <Button
@@ -444,38 +492,38 @@ export function PokemonDetailClient({
           <Button
             variant="outline"
             size="icon"
-            onClick={() => isInCompare(pokemon.id) ? removeFromCompare(pokemon.id) : addToCompare(pokemon.id)}
+            onClick={() => isInCompare ? removeFromCompare(pokemon.id) : addToCompare(pokemon.id)}
             style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
             className={cn(
               "rounded-full transition-all h-12 w-12",
-              isInCompare(pokemon.id)
+              isInCompare
                 ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
             )}
-            title={isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
-            aria-label={isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
-            aria-pressed={isInCompare(pokemon.id)}
+            title={isInCompare ? t('card.remove_compare') : t('card.add_compare')}
+            aria-label={isInCompare ? t('card.remove_compare') : t('card.add_compare')}
+            aria-pressed={isInCompare}
           >
-            <Swords className={cn("w-5 h-5", isInCompare(pokemon.id) && "fill-current")} />
+            <Swords className={cn("w-5 h-5", isInCompare && "fill-current")} />
           </Button>
 
           <Button
             variant="outline"
             size="icon"
-            disabled={!isInTeam(pokemon.id) && team.length >= 6}
-            onClick={() => isInTeam(pokemon.id) ? removeFromTeam(pokemon.id) : addToTeam(pokemon.id)}
+            disabled={!isInTeam && team.length >= 6}
+            onClick={() => isInTeam ? removeFromTeam(pokemon.id) : addToTeam(pokemon.id)}
             style={{ '--chip': 'var(--action-team)' } as CSSProperties}
             className={cn(
               "rounded-full transition-all h-12 w-12",
-              isInTeam(pokemon.id)
+              isInTeam
                 ? "border-[color-mix(in_oklab,var(--chip)_42%,transparent)] bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/55 border-border/50 text-foreground/40 hover:text-foreground/70"
             )}
-            title={isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}
-            aria-label={isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}
-            aria-pressed={isInTeam(pokemon.id)}
+            title={isInTeam ? t('card.remove_team') : t('card.add_team')}
+            aria-label={isInTeam ? t('card.remove_team') : t('card.add_team')}
+            aria-pressed={isInTeam}
           >
-            <Star className={cn("w-5 h-5", isInTeam(pokemon.id) && "fill-current")} />
+            <Star className={cn("w-5 h-5", isInTeam && "fill-current")} />
           </Button>
         </div>
 
@@ -607,7 +655,7 @@ export function PokemonDetailClient({
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
           className="max-w-4xl mx-auto"
-        >          <Tabs defaultValue="about" className="w-full relative">
+        >          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
               <TabsList className="flex overflow-x-visible scrollbar-hide w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start md:grid md:grid-cols-5 lg:grid-cols-10 overflow-x-scroll">
                 <TabsTrigger value="about" className="whitespace-nowrap px-3 py-2.5 md:px-6 md:flex-1 rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
@@ -1088,16 +1136,16 @@ export function PokemonDetailClient({
             onClick={(e) => { e.stopPropagation(); if (pokemon?.id) toggleCaught(pokemon.id); }}
             className={cn(
               "flex-1 h-12 rounded-sm transition-all gap-2 border-0",
-              pokemon?.id && isCaught(pokemon.id)
+              pokemon?.id && isCaught
                 ? "bg-primary text-primary-foreground shadow-[0_4px_16px_rgba(227,53,13,0.4)]"
                 : "bg-card/50 text-foreground/70"
             )}
-            aria-label={pokemon?.id && isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
-            aria-pressed={!!(pokemon?.id && isCaught(pokemon.id))}
+            aria-label={pokemon?.id && isCaught ? t('card.caught') : t('card.mark_caught')}
+            aria-pressed={!!(pokemon?.id && isCaught)}
           >
-            <Zap className={cn("w-4 h-4", pokemon?.id && isCaught(pokemon.id) && "fill-current")} />
+            <Zap className={cn("w-4 h-4", pokemon?.id && isCaught && "fill-current")} />
             <span className="text-[11px] font-black uppercase tracking-widest leading-none">
-              {pokemon?.id && isCaught(pokemon.id) ? t('card.caught') : t('card.mark_caught')}
+              {pokemon?.id && isCaught ? t('card.caught') : t('card.mark_caught')}
             </span>
           </Button>
 
@@ -1108,7 +1156,7 @@ export function PokemonDetailClient({
             onClick={(e) => {
               e.stopPropagation();
               if (pokemon?.id) {
-                if (isFavorite(pokemon.id)) {
+                if (isFav) {
                   removeFavorite(pokemon.id);
                 } else {
                   addFavorite(pokemon.id);
@@ -1118,14 +1166,14 @@ export function PokemonDetailClient({
             style={{ '--chip': 'var(--action-favorite)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-sm transition-all border-0",
-              pokemon?.id && isFavorite(pokemon.id)
+              pokemon?.id && isFav
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
-            aria-label={pokemon?.id && isFavorite(pokemon.id) ? t('card.remove_favorite') : t('card.add_favorite')}
-            aria-pressed={!!(pokemon?.id && isFavorite(pokemon.id))}
+            aria-label={pokemon?.id && isFav ? t('card.remove_favorite') : t('card.add_favorite')}
+            aria-pressed={!!(pokemon?.id && isFav)}
           >
-            <Heart className={cn("w-5 h-5", pokemon?.id && isFavorite(pokemon.id) && "fill-current")} />
+            <Heart className={cn("w-5 h-5", pokemon?.id && isFav && "fill-current")} />
           </Button>
 
           {/* Compare Toggle */}
@@ -1135,7 +1183,7 @@ export function PokemonDetailClient({
             onClick={(e) => {
               e.stopPropagation();
               if (pokemon?.id) {
-                if (isInCompare(pokemon.id)) {
+                if (isInCompare) {
                   removeFromCompare(pokemon.id);
                 } else {
                   addToCompare(pokemon.id);
@@ -1145,25 +1193,25 @@ export function PokemonDetailClient({
             style={{ '--chip': 'var(--action-compare)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-sm transition-all border-0",
-              pokemon?.id && isInCompare(pokemon.id)
+              pokemon?.id && isInCompare
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
-            aria-label={pokemon?.id && isInCompare(pokemon.id) ? t('card.remove_compare') : t('card.add_compare')}
-            aria-pressed={!!(pokemon?.id && isInCompare(pokemon.id))}
+            aria-label={pokemon?.id && isInCompare ? t('card.remove_compare') : t('card.add_compare')}
+            aria-pressed={!!(pokemon?.id && isInCompare)}
           >
-            <Swords className={cn("w-5 h-5", pokemon?.id && isInCompare(pokemon.id) && "fill-current")} />
+            <Swords className={cn("w-5 h-5", pokemon?.id && isInCompare && "fill-current")} />
           </Button>
 
           {/* Team Toggle */}
           <Button
             variant="outline"
             size="icon"
-            disabled={!!(pokemon?.id && !isInTeam(pokemon.id) && team.length >= 6)}
+            disabled={!!(pokemon?.id && !isInTeam && team.length >= 6)}
             onClick={(e) => {
               e.stopPropagation();
               if (pokemon?.id) {
-                if (isInTeam(pokemon.id)) {
+                if (isInTeam) {
                   removeFromTeam(pokemon.id);
                 } else {
                   addToTeam(pokemon.id);
@@ -1173,14 +1221,14 @@ export function PokemonDetailClient({
             style={{ '--chip': 'var(--action-team)' } as CSSProperties}
             className={cn(
               "h-12 w-12 rounded-sm transition-all border-0",
-              pokemon?.id && isInTeam(pokemon.id)
+              pokemon?.id && isInTeam
                 ? "bg-[color-mix(in_oklab,var(--chip)_15%,transparent)] text-[var(--chip)]"
                 : "bg-card/50 text-foreground/40"
             )}
-            aria-label={pokemon?.id && isInTeam(pokemon.id) ? t('card.remove_team') : t('card.add_team')}
-            aria-pressed={!!(pokemon?.id && isInTeam(pokemon.id))}
+            aria-label={pokemon?.id && isInTeam ? t('card.remove_team') : t('card.add_team')}
+            aria-pressed={!!(pokemon?.id && isInTeam)}
           >
-            <Star className={cn("w-5 h-5", pokemon?.id && isInTeam(pokemon.id) && "fill-current")} />
+            <Star className={cn("w-5 h-5", pokemon?.id && isInTeam && "fill-current")} />
           </Button>
         </div>
       </div>

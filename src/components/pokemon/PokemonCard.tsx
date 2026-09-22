@@ -10,12 +10,14 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useCallback } from 'react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { buildPokemonReturnTarget } from '@/lib/pokemon-filter-url';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -91,6 +93,8 @@ export function PokemonCardSkeleton() {
 export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialData }: PokemonCardProps) {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const mounted = useMounted();
 
@@ -182,6 +186,11 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
   if (!pokemonId) return null;
 
+  const returnTarget = buildPokemonReturnTarget(
+    pathname,
+    searchParams.toString() ? `?${searchParams.toString()}` : '',
+  );
+
   const isFav = mounted && favorites.includes(pokemonId);
   const isComp = mounted && compareList.includes(pokemonId);
   const isTeam = mounted && team.includes(pokemonId);
@@ -270,7 +279,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   };
 
   return (
-    <div className="pokedex-card-shell group/specimen relative h-full py-1 px-1 sm:px-2">
+    <div id={`pokemon-${pokemonId}`} className="pokedex-card-shell group/specimen relative h-full scroll-mt-32 py-1 px-1 sm:px-2">
       <article
         className="pokedex-card relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2"
         style={{
@@ -278,7 +287,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
         } as CSSProperties}
       >
         <Link
-          href={localeHref(`/pokemon/${name}`)}
+          href={localeHref(`/pokemon/${name}?from=${encodeURIComponent(returnTarget)}`)}
           aria-label={displayName}
           className="pokedex-card-link absolute inset-0 z-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           onMouseEnter={prefetchDetails}
