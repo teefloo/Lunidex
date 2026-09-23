@@ -2482,6 +2482,7 @@ export default {
       open_card_detail: 'Open {{name}} card',
       card_meta_title: '{{name}} — Pokémon TCG card from {{set}} | Lunidex',
       card_meta_description: '{{name}} ({{rarity}}) from {{set}}. HP {{hp}}. View card details, attacks, abilities, and pricing on Lunidex.',
+      card_meta_description_no_rarity: '{{name}} from {{set}}. HP {{hp}}. View card details, attacks, abilities, and pricing on Lunidex.',
       set_meta_title: '{{name}} card list & checklist — Pokémon TCG | Lunidex',
       set_meta_description: 'Browse the complete {{name}} Pokémon TCG card list, use the checklist, and track your collection progress on Lunidex.',
       set_landing_checklist: 'Card list & checklist', set_landing_showing: 'Showing {{shown}} of {{total}} cards.', set_landing_complete: 'Complete card checklist',

@@ -9,7 +9,7 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
-import { PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
+import { getTCGCardMetaDescriptionKey, PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -32,19 +32,19 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   const setName = card.set?.name ?? '';
   const rarity = card.rarity ?? '';
-  const rarityLabel = isMeaningfulCardValue(rarity)
-    ? rarity
-    : t('tcg.unknown', { defaultValue: 'Unknown' });
   const title = t('tcg.card_meta_title', {
     name: card.name,
     set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
   });
-  const description = t('tcg.card_meta_description', {
-    name: card.name,
-    rarity: rarityLabel,
-    set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
-    hp: card.hp ?? '?',
-  });
+  const description = t(
+    getTCGCardMetaDescriptionKey(rarity),
+    {
+      name: card.name,
+      rarity,
+      set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
+      hp: card.hp ?? '?',
+    },
+  );
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
   const encodedCardId = encodeURIComponent(id);
   const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodedCardId}&lang=${tcgLanguage}`;
@@ -121,10 +121,6 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
       <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} />
     </>
   );
-}
-
-function isMeaningfulCardValue(value: string | undefined): value is string {
-  return Boolean(value && !['none', 'n/a', 'unknown'].includes(value.trim().toLowerCase()));
 }
 
 const getPageCard = cache(getTCGCardCached);

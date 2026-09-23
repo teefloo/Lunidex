@@ -14,6 +14,14 @@ export const PUBLIC_TCG_CARD_ROBOTS = {
   },
 } as const;
 
+export function getTCGCardMetaDescriptionKey(
+  rarity: string | null | undefined,
+): 'tcg.card_meta_description' | 'tcg.card_meta_description_no_rarity' {
+  const normalizedRarity = rarity?.trim().toLowerCase();
+  const hasRarity = Boolean(normalizedRarity && !['none', 'n/a', 'unknown'].includes(normalizedRarity));
+  return hasRarity ? 'tcg.card_meta_description' : 'tcg.card_meta_description_no_rarity';
+}
+
 export function getTCGSetPreviewCards(cards: TCGCard[]): TCGCard[] {
   return cards.slice(0, TCG_SET_IMAGE_PREVIEW_LIMIT);
 }
