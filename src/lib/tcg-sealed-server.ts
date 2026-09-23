@@ -844,7 +844,7 @@ export async function mutateSealedTransaction(
     revision: old ? old.revision + 1 : 1,
     createdAt: old?.createdAt ?? now,
     updatedAt: now,
-    voided: options.mode === 'void' ? true : false,
+    voided: options.mode === 'void' || Boolean(old?.voided),
   });
   let ledger;
   try {

@@ -48,6 +48,9 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
     );
   }
 
+  const effectText = card.effect || card.description || card.flavorText || '';
+  const hasEffectSections = Boolean(card.attacks?.length || getAbilities(card).length);
+
   return (
     <div className="app-page">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(227,53,13,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(12,194,181,0.12),transparent_34%)]" />
@@ -82,10 +85,10 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
               {card.name}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-              {card.description || card.flavorText || t('tcg.detail_empty')}
+              {effectText || t(hasEffectSections ? 'tcg.detail_description_empty' : 'tcg.detail_empty')}
             </p>
             <dl className="mt-6 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
-              {card.hp && <div><dt className="text-muted-foreground">{t('common.hp', { defaultValue: 'HP' })}</dt><dd className="font-bold">{card.hp}</dd></div>}
+              {card.hp && <div><dt className="text-muted-foreground">{t('stats.hp', { defaultValue: 'HP' })}</dt><dd className="font-bold">{card.hp}</dd></div>}
               {card.rarity && <div><dt className="text-muted-foreground">{t('tcg.rarity')}</dt><dd className="font-bold">{getTCGRarityLabel(card.rarity, t)}</dd></div>}
               {card.localId && <div><dt className="text-muted-foreground">{t('tcg.collector_no')}</dt><dd className="font-bold">#{card.localId}</dd></div>}
               {card.category && <div><dt className="text-muted-foreground">{t('tcg.card_category')}</dt><dd className="font-bold">{getTCGCategoryLabel(card.category, t)}</dd></div>}

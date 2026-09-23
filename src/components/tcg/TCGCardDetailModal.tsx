@@ -365,7 +365,7 @@ export function TCGCardDetailModal({
                   </div>
 
                   <p id={descriptionId} className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                    {effectText || t('tcg.detail_empty')}
+                    {effectText || t(attacks.length > 0 || abilities.length > 0 ? 'tcg.detail_description_empty' : 'tcg.detail_empty')}
                   </p>
 
                   <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">

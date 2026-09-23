@@ -151,7 +151,7 @@ export default function AuthModal({
           </DialogTitle>
           <DialogDescription>
             {mode === 'signin'
-              ? tt('auth.signin_subtitle', 'Sign in to sync your Pokédex across devices.')
+              ? tt('auth.signin_subtitle', 'Sign in to sync your collections and progress across devices.')
               : tt('auth.signup_subtitle', 'Save your collection, team and progress to the cloud.')}
           </DialogDescription>
         </DialogHeader>

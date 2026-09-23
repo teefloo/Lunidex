@@ -163,7 +163,7 @@ export default function AccountCard() {
             <div>
               <p className="text-sm font-bold text-foreground">{tt('auth.guest', 'Guest')}</p>
               <p className="text-xs text-foreground/55">
-                {tt('auth.signin_subtitle', 'Sign in to sync your Pokédex across devices.')}
+                {tt('auth.signin_subtitle', 'Sign in to sync your collections and progress across devices.')}
               </p>
             </div>
           </div>

@@ -117,6 +117,7 @@ export default function DeckBuilderClient() {
   const handleCreateDeck = () => {
     const name = newDeckName.trim() || t('tcg.deck_builder.default_deck_name', { defaultValue: 'New Deck' });
     const id = createDeck(name);
+    if (!id) return;
     capturePostHogEvent(POSTHOG_EVENTS.tcgDeckCreated, { has_custom_name: Boolean(newDeckName.trim()) });
     setSelectedDeckId(id);
     setNewDeckName('');
