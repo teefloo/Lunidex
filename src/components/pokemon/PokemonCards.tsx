@@ -36,7 +36,7 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName 
   
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
 
-  const { data: cards, isLoading, error } = useQuery({
+  const { data: cards, isLoading, error, refetch } = useQuery({
     queryKey: [...pokemonKeys.tcg.cards(name), tcgLang, queryName],
     queryFn: () => getPokemonCards(queryName, tcgLang, name),
     enabled: !!queryName,
@@ -53,7 +53,24 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName 
     );
   }
 
-  if (error || !cards || cards.length === 0) {
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 p-12 text-center min-h-[300px] glass-panel rounded-sm">
+        <p className="text-sm font-bold text-foreground/70">
+          {t('detail.cards_error', { defaultValue: 'Card data could not be loaded. Please try again.' })}
+        </p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="inline-flex min-h-11 items-center rounded-sm border border-primary/30 px-4 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('common.retry', { defaultValue: 'Retry' })}
+        </button>
+      </div>
+    );
+  }
+
+  if (!cards || cards.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center min-h-[300px] glass-panel rounded-sm">
         <p className="text-foreground/50 font-bold uppercase tracking-widest text-sm mb-2">

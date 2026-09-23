@@ -12,6 +12,7 @@ import { AuthModalBoundary } from '@/components/auth/AuthModalBoundary';
 import { HeaderActions } from './HeaderActions';
 import { HeaderLogo } from './HeaderLogo';
 import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
+import { getFocusTrapTarget } from '@/lib/focus-management';
 
 const AuthModal = dynamic(() => import('@/components/auth/AuthModal'), { ssr: false });
 
@@ -64,7 +65,29 @@ export function HeaderMobileNav() {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeMenu();
+      if (event.key === 'Escape') {
+        closeMenu();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = Array.from(panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      const activeElement = document.activeElement;
+      const destination = getFocusTrapTarget({
+        backwards: event.shiftKey,
+        focusIsInside: activeElement instanceof HTMLElement && focusable.includes(activeElement),
+        focusIsFirst: activeElement === focusable[0],
+        focusIsLast: activeElement === focusable[focusable.length - 1],
+        focusableCount: focusable.length,
+      });
+      if (destination) {
+        event.preventDefault();
+        focusable[destination === 'first' ? 0 : focusable.length - 1]?.focus();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
 
@@ -95,6 +118,8 @@ export function HeaderMobileNav() {
           <button
             type="button"
             aria-label={closeLabel}
+            aria-hidden="true"
+            tabIndex={-1}
             className="header-mobile-sheet-overlay"
             onClick={closeMenu}
           />

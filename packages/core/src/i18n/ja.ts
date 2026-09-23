@@ -4,6 +4,11 @@ export default {
     pokedex_page: {
       featured_eyebrow: 'ポケモン図鑑を探索',
       featured_title: '人気のポケモンと参考リソース',
+      featured_pokemon: {
+        pikachu: 'ピカチュウ', charizard: 'リザードン', mewtwo: 'ミュウツー', rayquaza: 'レックウザ', arceus: 'アルセウス',
+        garchomp: 'ガブリアス', lucario: 'ルカリオ', eevee: 'イーブイ', snorlax: 'カビゴン', dragonite: 'カイリュー',
+        gengar: 'ゲンガー', alakazam: 'フーディン', machamp: 'カイリキー', lapras: 'ラプラス', gyarados: 'ギャラドス',
+      },
       reference_hubs: 'ポケモン図鑑の参考リソース',
       pokemon_of_the_day: '今日のポケモン',
       play_daily_quiz: '今日のクイズをプレイ',
@@ -638,6 +643,7 @@ export default {
       cards: 'カード',
       no_cards_found: 'カードが見つかりません',
       no_cards_desc: 'このポケモンのカードはまだないかもしれません。',
+      cards_error: 'カード情報を読み込めませんでした。もう一度お試しください。',
       view_card_aria: '{{name}}のカードを見る',
       entry: 'Pokemon解説',
       size_comparison: 'サイズの比較',
@@ -677,6 +683,7 @@ export default {
       resistances: '耐性',
       immunities: '無効',
       evolution_chain: '進化チェーン',
+      current: '現在',
       no_evolution: '進化データなし',
       mega_evolutions: 'メガシンカ',
       mega_badge: 'メガ',

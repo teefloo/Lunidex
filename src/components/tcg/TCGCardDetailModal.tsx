@@ -41,6 +41,7 @@ import {
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
+import { getFocusTrapTarget } from '@/lib/focus-management';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -74,6 +75,7 @@ export function TCGCardDetailModal({
   const localeHref = useLocaleHref();
   const interfaceLanguage = useClientLanguage();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
   const store = usePrimeDexStore();
   const addTCGCompare = store.addTCGCompare ?? (() => undefined);
   const removeTCGCompare = store.removeTCGCompare ?? (() => undefined);
@@ -100,29 +102,52 @@ export function TCGCardDetailModal({
   useEffect(() => {
     if (!isOpen) return;
 
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
 
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
         if (!isVariantSheetOpen) onClose();
+        return;
+      }
+      if (event.key !== 'Tab' || isVariantSheetOpen) return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      const activeElement = document.activeElement;
+      const destination = getFocusTrapTarget({
+        backwards: event.shiftKey,
+        focusIsInside: activeElement instanceof HTMLElement && focusable.includes(activeElement),
+        focusIsFirst: activeElement === focusable[0],
+        focusIsLast: activeElement === focusable[focusable.length - 1],
+        focusableCount: focusable.length,
+      });
+      if (destination) {
+        event.preventDefault();
+        focusable[destination === 'first' ? 0 : focusable.length - 1]?.focus();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, isVariantSheetOpen, onClose]);
-
-  useEffect(() => {
-    if (isOpen) {
-      closeButtonRef.current?.focus();
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) setIsVariantSheetOpen(false);
@@ -249,6 +274,7 @@ export function TCGCardDetailModal({
       />
 
       <motion.section
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

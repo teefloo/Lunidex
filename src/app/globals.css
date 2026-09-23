@@ -4199,7 +4199,8 @@ body:has(.lunidex-home) .site-footer a:hover {
 
 .pokedex-filter-chip.text-primary-foreground[style] {
   border-color: rgba(255, 248, 252, 0.3) !important;
-  color: #fff !important;
+  background-color: var(--pokedex-filter-active-background) !important;
+  color: var(--pokedex-filter-active-foreground) !important;
   box-shadow: 0 7px 18px rgba(2, 7, 38, 0.22) !important;
 }
 
@@ -4941,6 +4942,8 @@ html:not(.dark) .pokedex-filter-chip.bg-primary {
 
 html:not(.dark) .pokedex-filter-chip.text-primary-foreground[style] {
   border-color: rgba(35, 62, 128, 0.18) !important;
+  background-color: var(--pokedex-filter-active-background) !important;
+  color: var(--pokedex-filter-active-foreground) !important;
   box-shadow: 0 7px 18px rgba(35, 62, 128, 0.12) !important;
 }
 

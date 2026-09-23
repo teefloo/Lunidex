@@ -11,13 +11,18 @@ import { useTranslation } from '@/lib/i18n';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { buildPokemonReturnTarget } from '@/lib/pokemon-filter-url';
+import {
+  getNextPokemonArtworkSource,
+  getOfficialArtworkSpeciesId,
+  shouldOptimizePokemonArtwork,
+} from '@/lib/pokemon-artwork';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -97,6 +102,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const mounted = useMounted();
+  const [failedArtworkSources, setFailedArtworkSources] = useState<string[]>([]);
 
   const favorites = usePrimeDexStore(s => s.favorites);
   const compareList = usePrimeDexStore(s => s.compareList);
@@ -145,6 +151,26 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const pokemonGqlData = pokemonData as GqlPokemonData | undefined;
 
   const pokemonName = pokemonData?.name || name;
+  const artworkPokemonId = pokemonData?.id || initialData?.pokemon.id || 0;
+  const baseSpeciesName = getBaseSpeciesName(pokemonName);
+  const { data: fallbackPokemon } = useQuery({
+    queryKey: ['pokemon-card-artwork-fallback', baseSpeciesName],
+    queryFn: () => getPokemonDetail(baseSpeciesName),
+    enabled: failedArtworkSources.length > 0 && baseSpeciesName !== pokemonName,
+    staleTime: Infinity,
+  });
+  const officialArtworkSpeciesId = getOfficialArtworkSpeciesId(artworkPokemonId);
+  const officialArtworkUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${officialArtworkSpeciesId}.png`;
+  const staticSpriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${artworkPokemonId}.png`;
+  const animatedSpriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${artworkPokemonId}.gif`;
+  const fallbackArtworkUrl = fallbackPokemon?.sprites.other?.['official-artwork']?.front_default
+    || fallbackPokemon?.sprites.front_default;
+  const artworkSrc = getNextPokemonArtworkSource(
+    animatedSprites
+      ? [animatedSpriteUrl, officialArtworkUrl, artworkPokemonId <= 1025 ? staticSpriteUrl : null, fallbackArtworkUrl]
+      : [officialArtworkUrl, artworkPokemonId <= 1025 ? staticSpriteUrl : null, fallbackArtworkUrl],
+    failedArtworkSources,
+  );
   let baseLocalizedName = pokemonName;
   if (speciesData?.names?.length) {
     const entry = speciesData.names.find(n => n?.language?.name === resolvedLang) || speciesData.names.find(n => n?.language?.name === 'en');
@@ -364,18 +390,25 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
             style={{ background: `radial-gradient(circle, ${hexToRgba(color, 0.18)} 0%, transparent 70%)` }}
             aria-hidden="true"
           />
-          <Image
-            src={animatedSprites
-              ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonId}.gif`
-              : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`}
-            alt={displayName}
-            fill
-            unoptimized
-            sizes="(max-width: 640px) 112px, 96px"
-            className="pokedex-card-art__image relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
-            priority={index < 4}
-            fetchPriority={index === 0 ? 'high' : undefined}
-          />
+          {artworkSrc ? (
+            <Image
+              src={artworkSrc}
+              alt={displayName}
+              fill
+              unoptimized={!shouldOptimizePokemonArtwork(artworkSrc, animatedSpriteUrl, animatedSprites)}
+              sizes="(max-width: 640px) 112px, 96px"
+              className="pokedex-card-art__image relative object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.18)] transition-all duration-500 group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.42)] dark:group-hover/specimen:drop-shadow-[0_20px_32px_rgba(0,0,0,0.24)]"
+              priority={index < 4}
+              fetchPriority={index === 0 ? 'high' : undefined}
+              onError={() => {
+                setFailedArtworkSources((failed) => (
+                  failed.includes(artworkSrc) ? failed : [...failed, artworkSrc]
+                ));
+              }}
+            />
+          ) : (
+            <PokeballIcon className="h-10 w-10 text-foreground/20" aria-hidden="true" />
+          )}
         </div>
 
         <div className="pokedex-card-copy pointer-events-none relative z-10 mt-1 flex flex-col items-center gap-0.5 px-1 pb-3 sm:mt-2 sm:pb-3">

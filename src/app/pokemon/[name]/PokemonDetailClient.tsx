@@ -30,9 +30,10 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { cn, formatId, formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
+import { getCurrentEvolutionSpeciesName } from '@/lib/evolution-utils';
 import React, { useState, useMemo, useEffect, useRef, type CSSProperties } from 'react';
 import dynamic from 'next/dynamic';
-import { languageToPokemonLanguageId } from '@/lib/languages';
+import { getPokemonApiLanguageCode, languageToPokemonLanguageId } from '@/lib/languages';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
@@ -226,7 +227,9 @@ export function PokemonDetailClient({
       const fetchedLang = initialLocalized?.pokemon_v2_pokemonspeciesnames?.[0]?.pokemon_v2_language?.name;
       // If the localized language passed from server does not match our current client language,
       // return undefined so that React Query fetches fresh localized data while showing a loader
-      const isMatching = !initialLocalized || fetchedLang === resolvedLang || (!fetchedLang && resolvedLang === 'en');
+      const isMatching = !initialLocalized
+        || fetchedLang === getPokemonApiLanguageCode(resolvedLang)
+        || (!fetchedLang && resolvedLang === 'en');
 
       if (isMatching) {
         return {
@@ -320,7 +323,7 @@ export function PokemonDetailClient({
   const mainType = pokemon.types[0].type.name;
   const color = TYPE_COLORS[mainType] || '#A8A77A';
   
-  const pokemonLanguageCode = resolvedLang === 'zh' ? 'zh-Hans' : resolvedLang;
+  const pokemonLanguageCode = getPokemonApiLanguageCode(resolvedLang);
   const baseLocalizedName = localized?.pokemon_v2_pokemonspeciesnames?.find((entry) => entry.pokemon_v2_language.name === pokemonLanguageCode)?.name
     || localized?.pokemon_v2_pokemonspeciesnames?.find((entry) => entry.pokemon_v2_language.name === 'en')?.name
     || species?.names?.find(n => n.language.name === pokemonLanguageCode)?.name
@@ -1019,7 +1022,11 @@ export function PokemonDetailClient({
               {species?.evolution_chain?.url ? (
                 <div className="glass-panel p-6 md:p-8 rounded-sm">
                   <h3 className="text-xl font-black mb-8 text-foreground/90 border-b border-border/60 pb-4 text-center">{t('detail.evolution_chain')}</h3>
-                  <EvolutionChain url={species.evolution_chain.url} currentSpeciesName={name.split('-')[0] || name} speciesData={species} />
+                  <EvolutionChain
+                    url={species.evolution_chain.url}
+                    currentSpeciesName={getCurrentEvolutionSpeciesName(pokemon.species?.name, name)}
+                    speciesData={species}
+                  />
                 </div>
               ) : (
                 <div className="glass-panel p-6 md:p-8 rounded-sm flex items-center justify-center min-h-[200px]">

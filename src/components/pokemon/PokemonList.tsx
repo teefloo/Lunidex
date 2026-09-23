@@ -17,6 +17,7 @@ import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
   normalizeSearchText,
+  shouldShowInitialPokemonListError,
   shouldUseCompletePokemonSummary,
 } from '@/lib/pokemon-filter-utils';
 
@@ -177,6 +178,8 @@ export default function PokemonList() {
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingInfinite,
+    error: infiniteError,
+    refetch: refetchInfinite,
   } = useInfiniteQuery({
     queryKey: pokemonKeys.lists(),
     queryFn: getPokemonList,
@@ -419,6 +422,27 @@ export default function PokemonList() {
     return (
       <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
         {Array.from({ length: 10 }).map((_, i) => <PokemonCardSkeleton key={i} />)}
+      </div>
+    );
+  }
+
+  if (shouldShowInitialPokemonListError(
+    isBasicMode,
+    (infiniteData?.pages.length ?? 0) > 0,
+    infiniteError,
+  )) {
+    return (
+      <div className="pokedex-empty-state flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
+        <SearchX className="w-20 h-20 text-red-500/40" />
+        <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.error_loading')}</h2>
+        <p className="text-sm text-muted-foreground max-w-md">{t('list.error_desc')}</p>
+        <Button
+          variant="outline"
+          onClick={() => void refetchInfinite()}
+          className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2"
+        >
+          <RotateCcw className="w-4 h-4" /> {t('common.retry', { defaultValue: 'Retry' })}
+        </Button>
       </div>
     );
   }

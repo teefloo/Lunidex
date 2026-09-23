@@ -107,6 +107,7 @@ function detectFormType(formName: string): string {
 }
 
 function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean }) {
+  const { t } = useTranslation();
   const localeHref = useLocaleHref();
   const resolvedLang = useClientLanguage();
 
@@ -177,7 +178,7 @@ function EvolutionItem({ name, isCurrent }: { name: string; isCurrent?: boolean 
           </span>
           {isCurrent && (
             <span className="text-[11px] sm:text-[11px] font-black uppercase tracking-widest text-foreground mt-1 block">
-              Current
+              {t('detail.current')}
             </span>
           )}
         </div>

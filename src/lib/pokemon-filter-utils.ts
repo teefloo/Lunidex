@@ -14,6 +14,10 @@ export function shouldCommitPokemonSearch(
   return pendingUserSearch !== null && pendingUserSearch === localSearch;
 }
 
+export function getPokemonSearchFromUrl(search: string): string {
+  return new URLSearchParams(search).get('q') ?? '';
+}
+
 /**
  * Treat padded IDs and IDs prefixed with `#` as exact lookups while keeping
  * unpadded numeric input useful for partial ID searches.
@@ -43,6 +47,14 @@ export function shouldUseCompletePokemonSummary({
   showFavoritesOnly: boolean;
 }): boolean {
   return hasOtherFilters || showCaughtOnly !== 'all' || showFavoritesOnly;
+}
+
+export function shouldShowInitialPokemonListError(
+  isBasicMode: boolean,
+  hasListData: boolean,
+  error: unknown,
+): boolean {
+  return isBasicMode && !hasListData && error !== null && error !== undefined;
 }
 
 /** Keep missing/non-positive PokéAPI measurements after known values. */

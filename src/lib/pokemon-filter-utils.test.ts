@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   comparePokemonMeasurements,
+  getPokemonSearchFromUrl,
   getExactNumericPokemonId,
   normalizeSearchText,
   shouldCommitPokemonSearch,
+  shouldShowInitialPokemonListError,
   shouldUseCompletePokemonSummary,
 } from './pokemon-filter-utils';
 
@@ -24,6 +26,18 @@ describe('pokemon filter utilities', () => {
     expect(shouldCommitPokemonSearch('', null)).toBe(false);
     expect(shouldCommitPokemonSearch('Pikachu', 'Pikachu')).toBe(true);
     expect(shouldCommitPokemonSearch('Pikachu', 'Pika')).toBe(false);
+  });
+
+  it('reads the search value restored by browser history navigation', () => {
+    expect(getPokemonSearchFromUrl('?q=%23025')).toBe('#025');
+    expect(getPokemonSearchFromUrl('?gen=1')).toBe('');
+  });
+
+  it('shows a retryable list error only when the initial list has no data', () => {
+    expect(shouldShowInitialPokemonListError(true, false, new Error('offline'))).toBe(true);
+    expect(shouldShowInitialPokemonListError(true, true, new Error('next page failed'))).toBe(false);
+    expect(shouldShowInitialPokemonListError(false, false, new Error('other query failed'))).toBe(false);
+    expect(shouldShowInitialPokemonListError(true, false, null)).toBe(false);
   });
 
   it('keeps unknown measurements after known values in either direction', () => {

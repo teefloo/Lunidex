@@ -4,6 +4,11 @@ export default {
     pokedex_page: {
       featured_eyebrow: 'Esplora il Pokédex',
       featured_title: 'Pokémon popolari e risorse di riferimento',
+      featured_pokemon: {
+        pikachu: 'Pikachu', charizard: 'Charizard', mewtwo: 'Mewtwo', rayquaza: 'Rayquaza', arceus: 'Arceus',
+        garchomp: 'Garchomp', lucario: 'Lucario', eevee: 'Eevee', snorlax: 'Snorlax', dragonite: 'Dragonite',
+        gengar: 'Gengar', alakazam: 'Alakazam', machamp: 'Machamp', lapras: 'Lapras', gyarados: 'Gyarados',
+      },
       reference_hubs: 'Risorse di riferimento del Pokédex',
       pokemon_of_the_day: 'Pokémon del giorno',
       play_daily_quiz: 'Gioca al quiz giornaliero',
@@ -638,6 +643,7 @@ export default {
       cards: 'Carte',
       no_cards_found: 'Nessuna carta trovata',
       no_cards_desc: 'Potrebbero non esserci ancora carte disponibili per questo Pokémon.',
+      cards_error: 'Impossibile caricare i dati delle carte. Riprova.',
       view_card_aria: 'Vedi la carta {{name}}',
       entry: 'Voce Lunidex',
       size_comparison: 'Confronto dimensioni',
@@ -677,6 +683,7 @@ export default {
       resistances: 'Resistenze',
       immunities: 'Immunità',
       evolution_chain: 'Catena evolutiva',
+      current: 'Attuale',
       no_evolution: 'Nessun dato evolutivo disponibile',
       mega_evolutions: 'Mega Evoluzioni',
       mega_badge: 'Mega',

@@ -7,6 +7,8 @@ import { X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { getReadableTextColor } from '@/lib/color-contrast';
+import type { CSSProperties } from 'react';
 
 export default function TypeFilter() {
   const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
@@ -59,9 +61,10 @@ export default function TypeFilter() {
                    : "bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border"
               )}
               style={isActive ? {
-                backgroundColor: color,
+                '--pokedex-filter-active-background': color,
+                '--pokedex-filter-active-foreground': getReadableTextColor(color),
                 boxShadow: `2px 2px 0 ${color}80`,
-              } : {}}
+              } as CSSProperties : {}}
             >
               {!isActive && (
                 <div
@@ -71,7 +74,10 @@ export default function TypeFilter() {
               )}
               <span className="relative z-10 flex items-center gap-2">
                 {isActive && (
-                  <span className="w-1.5 h-1.5 bg-primary-foreground" />
+                  <span
+                    className="w-1.5 h-1.5"
+                    style={{ backgroundColor: getReadableTextColor(color) }}
+                  />
                 )}
                 {label}
               </span>

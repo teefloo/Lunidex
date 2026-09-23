@@ -26,7 +26,7 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
 
   if (!card) {
     return (
-      <div className="page-shell py-24">
+      <main className="page-shell py-24">
         <div className="glass-surface mx-auto max-w-2xl rounded-[2rem] px-8 py-12 text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-sm bg-primary/10 text-primary">
             <Sparkles className="h-7 w-7" />
@@ -44,14 +44,14 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
             {t('tcg.back_to_catalog')}
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
     <div className="app-page">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(227,53,13,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(12,194,181,0.12),transparent_34%)]" />
-      <div className="page-shell py-20">
+      <main className="page-shell py-20">
         <button
           type="button"
           onClick={() => router.back()}
@@ -145,7 +145,7 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
             onClose={() => setIsModalOpen(false)}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 }

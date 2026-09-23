@@ -1,0 +1,17 @@
+export const FEATURED_POKEMON = [
+  { id: 25, slug: 'pikachu' },
+  { id: 6, slug: 'charizard' },
+  { id: 150, slug: 'mewtwo' },
+  { id: 384, slug: 'rayquaza' },
+  { id: 493, slug: 'arceus' },
+  { id: 445, slug: 'garchomp' },
+  { id: 448, slug: 'lucario' },
+  { id: 133, slug: 'eevee' },
+  { id: 143, slug: 'snorlax' },
+  { id: 149, slug: 'dragonite' },
+  { id: 94, slug: 'gengar' },
+  { id: 65, slug: 'alakazam' },
+  { id: 68, slug: 'machamp' },
+  { id: 131, slug: 'lapras' },
+  { id: 130, slug: 'gyarados' },
+] as const;

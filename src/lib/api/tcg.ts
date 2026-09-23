@@ -2,6 +2,9 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { attachAxiosSentryInstrumentation } from '@/lib/sentry-observability';
 import { getCachedData, setCachedData } from './cache';
+import { getBaseSpeciesName } from '@/lib/form-names';
+import { getCachedTcgCardsOrThrow } from '@/lib/tcg-error-fallback';
+import { isPokemonNameInCardTitle } from '@/lib/tcg-pokemon-association';
 import { createMemoryCache } from './memory-cache';
 import type {
   TCGCard,
@@ -2163,7 +2166,10 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v13-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v14-${tcgLang}-${pokemonName}`;
+  const baseEnglishName = englishName ? getBaseSpeciesName(englishName) : undefined;
+  const associationNames = [...new Set([pokemonName, englishName, baseEnglishName]
+    .filter((name): name is string => Boolean(name?.trim())))];
 
   try {
     const cached = await getCachedData<TCGCard[]>(cacheKey);
@@ -2177,18 +2183,23 @@ export const getPokemonCards = async (
     };
 
     const searchTerms = [pokemonName];
-    if (englishName && englishName.trim().toLowerCase() !== pokemonName.trim().toLowerCase()) {
-      searchTerms.push(englishName);
+    const englishSearchName = baseEnglishName || englishName;
+    if (englishSearchName && englishSearchName.trim().toLowerCase() !== pokemonName.trim().toLowerCase()) {
+      searchTerms.push(englishSearchName);
     }
 
     let cards: TCGCard[] = [];
     for (const searchTerm of searchTerms) {
-      cards = await fetchAllCardSearchPages({ ...searchFilters, searchTerm }, tcgLang);
+      const searchResults = await fetchAllCardSearchPages({ ...searchFilters, searchTerm }, tcgLang);
+      cards = searchResults.filter((card) => isPokemonNameInCardTitle(card.name, associationNames));
       if (cards.length > 0) break;
     }
 
     if (cards.length === 0 && tcgLang !== 'en' && englishName) {
-      const englishSummaries = await fetchAllCardSearchPages({ ...searchFilters, searchTerm: englishName }, 'en');
+      const englishSummaries = (await fetchAllCardSearchPages({
+        ...searchFilters,
+        searchTerm: englishSearchName || englishName,
+      }, 'en')).filter((card) => isPokemonNameInCardTitle(card.name, associationNames));
       const localizedCards = await mapWithConcurrency(
         englishSummaries,
         VISUAL_METADATA_CONCURRENCY,
@@ -2207,7 +2218,7 @@ export const getPokemonCards = async (
   } catch (error) {
     logTcgUpstreamFailure(`pokemon-cards:${cacheKey}`, `Error fetching cards for ${pokemonName}`, error);
     const staleCached = await getCachedData<TCGCard[]>(cacheKey, true);
-    return staleCached ? sortCardsByReleaseDate(staleCached) : [];
+    return sortCardsByReleaseDate(getCachedTcgCardsOrThrow(staleCached, error));
   }
 };
 

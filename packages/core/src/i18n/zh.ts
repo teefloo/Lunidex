@@ -4,6 +4,11 @@ export default {
     pokedex_page: {
       featured_eyebrow: '探索宝可梦图鉴',
       featured_title: '热门宝可梦与参考入口',
+      featured_pokemon: {
+        pikachu: '皮卡丘', charizard: '喷火龙', mewtwo: '超梦', rayquaza: '烈空坐', arceus: '阿尔宙斯',
+        garchomp: '烈咬陆鲨', lucario: '路卡利欧', eevee: '伊布', snorlax: '卡比兽', dragonite: '快龙',
+        gengar: '耿鬼', alakazam: '胡地', machamp: '怪力', lapras: '拉普拉斯', gyarados: '暴鲤龙',
+      },
       reference_hubs: '宝可梦图鉴参考入口',
       pokemon_of_the_day: '今日宝可梦',
       play_daily_quiz: '参加每日问答',
@@ -638,6 +643,7 @@ export default {
       cards: '卡牌',
       no_cards_found: '未找到卡牌',
       no_cards_desc: '这只宝可梦可能还没有卡牌。',
+      cards_error: '无法加载卡牌数据，请重试。',
       view_card_aria: '查看{{name}}的卡牌',
       entry: '图鉴描述',
       size_comparison: '大小对比',
@@ -677,6 +683,7 @@ export default {
       resistances: '抗性',
       immunities: '免疫',
       evolution_chain: '进化链',
+      current: '当前',
       no_evolution: '无进化数据',
       mega_evolutions: '超级进化',
       mega_badge: '超级',

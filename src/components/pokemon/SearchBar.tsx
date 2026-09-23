@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
-import { shouldCommitPokemonSearch } from '@/lib/pokemon-filter-utils';
+import { getPokemonSearchFromUrl, shouldCommitPokemonSearch } from '@/lib/pokemon-filter-utils';
+import { shouldFocusPokedexSearchOnSlash } from '@/lib/focus-management';
 
 export default function SearchBar() {
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
@@ -16,6 +17,7 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pendingUserSearchRef = useRef<string | null>(null);
+  const pendingSearchTimerRef = useRef<number | null>(null);
   const { t } = useTranslation();
   const searchPlaceholder = t('search.placeholder');
   const searchAriaLabel = t('search.placeholder');
@@ -30,7 +32,8 @@ export default function SearchBar() {
   useEffect(() => {
     if (!shouldCommitPokemonSearch(localSearch, pendingUserSearchRef.current)) return;
     const nextSearch = localSearch;
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
+      pendingSearchTimerRef.current = null;
       if (!shouldCommitPokemonSearch(nextSearch, pendingUserSearchRef.current)) return;
       pendingUserSearchRef.current = null;
       setSearchTerm(nextSearch);
@@ -39,19 +42,46 @@ export default function SearchBar() {
         query_length_bucket: length === 0 ? 'empty' : length <= 3 ? '1_3' : length <= 8 ? '4_8' : '9_plus',
       });
     }, 300);
-    return () => clearTimeout(timer);
+    pendingSearchTimerRef.current = timer;
+    return () => {
+      window.clearTimeout(timer);
+      if (pendingSearchTimerRef.current === timer) pendingSearchTimerRef.current = null;
+    };
   }, [localSearch, setSearchTerm]);
+
+  useEffect(() => {
+    const syncSearchFromHistory = () => {
+      if (pendingSearchTimerRef.current !== null) {
+        window.clearTimeout(pendingSearchTimerRef.current);
+        pendingSearchTimerRef.current = null;
+      }
+      pendingUserSearchRef.current = null;
+      setLocalSearch(getPokemonSearchFromUrl(window.location.search));
+    };
+
+    window.addEventListener('popstate', syncSearchFromHistory);
+    return () => window.removeEventListener('popstate', syncSearchFromHistory);
+  }, []);
 
   useEffect(() => {
     // "/" focuses this input; Cmd/Ctrl+K belongs exclusively to the global
     // command palette handled in AppContent, which would otherwise fight for
     // focus with this field on /pokedex.
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '/') {
-        if (document.activeElement !== inputRef.current) {
-          e.preventDefault();
-          inputRef.current?.focus();
-        }
+      if (e.key !== '/') return;
+
+      const target = e.target;
+      const targetIsEditable = target instanceof HTMLElement && (
+        target.isContentEditable
+        || target.matches('input, textarea, select, [role="textbox"], [contenteditable="true"]')
+      );
+
+      if (shouldFocusPokedexSearchOnSlash({
+        searchIsFocused: document.activeElement === inputRef.current,
+        targetIsEditable,
+      })) {
+        e.preventDefault();
+        inputRef.current?.focus();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -92,6 +122,10 @@ export default function SearchBar() {
         <button
           type="button"
           onClick={() => {
+            if (pendingSearchTimerRef.current !== null) {
+              window.clearTimeout(pendingSearchTimerRef.current);
+              pendingSearchTimerRef.current = null;
+            }
             pendingUserSearchRef.current = null;
             setLocalSearch('');
             setSearchTerm('');

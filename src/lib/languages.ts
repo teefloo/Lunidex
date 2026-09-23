@@ -36,6 +36,10 @@ export const languageToPokemonLanguageId = {
   zh: 12,
 } as const satisfies Record<SupportedLanguage, number>;
 
+export function getPokemonApiLanguageCode(language: string): string {
+  return language === 'zh' ? 'zh-Hans' : language;
+}
+
 export function isSupportedLanguage(language: string): language is SupportedLanguage {
   return (supportedLanguages as readonly string[]).includes(language);
 }

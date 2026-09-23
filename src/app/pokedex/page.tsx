@@ -13,6 +13,7 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { FEATURED_POKEMON } from '@/lib/pokemon-featured';
 
 export const revalidate = 3600;
 
@@ -60,12 +61,12 @@ export default async function PokedexPage() {
       queryFn: () => getPokemonSummarySliceCached(80, 0),
     }),
   ]);
-
-  const topPokemon = [
-    'pikachu', 'charizard', 'mewtwo', 'rayquaza', 'arceus',
-    'garchomp', 'lucario', 'eevee', 'snorlax', 'dragonite',
-    'gengar', 'alakazam', 'machamp', 'lapras', 'gyarados',
-  ];
+  const featuredPokemon = FEATURED_POKEMON.map((pokemon) => ({
+    ...pokemon,
+    displayName: t(`pokedex_page.featured_pokemon.${pokemon.slug}`, {
+      defaultValue: pokemon.slug.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' '),
+    }),
+  }));
 
   const itemListJsonLd = {
     '@context': 'https://schema.org',
@@ -75,12 +76,12 @@ export default async function PokedexPage() {
     description: t('pokedex.item_list_description'),
     url: `${baseUrl}/${lang}/pokedex`,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',
-    itemListElement: topPokemon.map((slug, index) => ({
+    itemListElement: featuredPokemon.map((pokemon, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      name: slug.charAt(0).toUpperCase() + slug.slice(1),
-      url: `${baseUrl}/${lang}/pokemon/${slug}`,
-      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${[25, 6, 150, 384, 493, 445, 448, 133, 143, 149, 94, 65, 68, 131, 130][index]}.png`,
+      name: pokemon.displayName,
+      url: `${baseUrl}/${lang}/pokemon/${pokemon.slug}`,
+      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
     })),
   };
 
@@ -116,13 +117,13 @@ export default async function PokedexPage() {
                 {t('pokedex_page.featured_title', { defaultValue: 'Popular Pokémon and reference hubs' })}
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
-                {topPokemon.map((slug) => (
+                {featuredPokemon.map((pokemon) => (
                   <Link
-                    key={slug}
-                    href={localeHref(`/pokemon/${slug}`, lang)}
+                    key={pokemon.slug}
+                    href={localeHref(`/pokemon/${pokemon.slug}`, lang)}
                     className="inline-flex min-h-11 items-center rounded-sm border border-border/50 bg-background/40 px-3 py-2 text-sm font-bold text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
                   >
-                    {slug.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')}
+                    {pokemon.displayName}
                   </Link>
                 ))}
               </div>

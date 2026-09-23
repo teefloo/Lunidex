@@ -4,6 +4,11 @@ export default {
     pokedex_page: {
       featured_eyebrow: '포켓몬 도감 탐색',
       featured_title: '인기 포켓몬 및 참고 허브',
+      featured_pokemon: {
+        pikachu: '피카츄', charizard: '리자몽', mewtwo: '뮤츠', rayquaza: '레쿠쟈', arceus: '아르세우스',
+        garchomp: '한카리아스', lucario: '루카리오', eevee: '이브이', snorlax: '잠만보', dragonite: '망나뇽',
+        gengar: '팬텀', alakazam: '후딘', machamp: '괴력몬', lapras: '라프라스', gyarados: '갸라도스',
+      },
       reference_hubs: '포켓몬 도감 참고 허브',
       pokemon_of_the_day: '오늘의 포켓몬',
       play_daily_quiz: '오늘의 퀴즈 플레이',
@@ -638,6 +643,7 @@ export default {
       cards: '카드',
       no_cards_found: '카드를 찾을 수 없습니다',
       no_cards_desc: '이 포켓몬의 카드는 아직 없을 수 있습니다.',
+      cards_error: '카드 정보를 불러오지 못했습니다. 다시 시도해 주세요.',
       view_card_aria: '{{name}} 카드 보기',
       entry: '도감 설명',
       size_comparison: '크기 비교',
@@ -677,6 +683,7 @@ export default {
       resistances: '저항',
       immunities: '무효',
       evolution_chain: '진화 체인',
+      current: '현재',
       no_evolution: '진화 데이터 없음',
       mega_evolutions: '메가진화',
       mega_badge: '메가',
