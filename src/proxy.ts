@@ -8,7 +8,7 @@ const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
 const RESOURCE_PROBE_CACHE_TTL_MS = 60 * 60 * 1000;
 const RESOURCE_PROBE_FAILURE_TTL_MS = RESOURCE_PROBE_CACHE_TTL_MS;
-const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 512;
+const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 8192;
 // Empty Japanese/Korean set payloads contain only metadata and are currently
 // smaller than 400 bytes. Confirm those compact responses with a GET only when
 // the English fallback is also absent, keeping valid fallback albums to their
@@ -325,6 +325,17 @@ function setCachedResourceProbe(key: string, result: boolean | null): void {
   });
 }
 
+function getEnglishFallbackCacheKey(probe: ResourceProbe): string | null {
+  return probe.fallbackUrl
+    ? getResourceProbeCacheKey({ kind: probe.kind, url: probe.fallbackUrl, headers: probe.headers })
+    : null;
+}
+
+function rememberAvailableEnglishFallback(probe: ResourceProbe, result: ResourceProbeResult): void {
+  const key = getEnglishFallbackCacheKey(probe);
+  if (key && result.available === true) setCachedResourceProbe(key, true);
+}
+
 async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | null> {
   const primaryResult = await probeResourceUrl(probe.url, probe.headers);
   const primaryIsCompact = isLimitedTcgSetProbe(probe)
@@ -336,6 +347,7 @@ async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | nu
     // Probe the fallback first. A valid English fallback means the route should
     // render and avoids downloading the localized empty payload a second time.
     const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+    rememberAvailableEnglishFallback(probe, fallbackResult);
     if (fallbackResult.available === true) return true;
     if (fallbackResult.available === null) return true;
     return confirmTcgSetHasCards(probe.url, probe.headers);
@@ -348,6 +360,7 @@ async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | nu
   if (!probe.fallbackUrl) return primaryResult.available;
 
   const fallbackResult = await probeResourceUrl(probe.fallbackUrl, probe.headers);
+  rememberAvailableEnglishFallback(probe, fallbackResult);
   if (primaryResult.available === false) return fallbackResult.available;
 
   // A successful fallback proves the route can render. If the localized probe
@@ -356,6 +369,11 @@ async function probeResourceUncached(probe: ResourceProbe): Promise<boolean | nu
 }
 
 async function probeResource(probe: ResourceProbe): Promise<boolean | null> {
+  // A confirmed English card or set can render in every supported locale via
+  // the existing fallback. Avoid repeating locale-specific HEAD requests.
+  const englishFallbackKey = getEnglishFallbackCacheKey(probe);
+  if (englishFallbackKey && getCachedResourceProbe(englishFallbackKey) === true) return true;
+
   const key = getResourceProbeCacheKey(probe);
   const cached = getCachedResourceProbe(key);
   if (cached !== undefined) return cached;
@@ -392,6 +410,7 @@ async function probeResourceUrl(
       signal: controller.signal,
     });
     if (response.status === 404) return { available: false, contentLength: null };
+    if (!response.ok) return { available: null, contentLength: null };
     const rawContentLength = response.headers.get('content-length');
     const contentLength = rawContentLength ? Number(rawContentLength) : null;
     return {

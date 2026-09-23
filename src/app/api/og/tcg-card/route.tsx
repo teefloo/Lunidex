@@ -7,6 +7,7 @@ import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { loadTrustedOgImageDataUrl } from '@/lib/og/assets';
 import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
+import { optimizeOgPngResponse } from '@/lib/og/optimize-png';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgTcgCardId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
@@ -16,7 +17,7 @@ import { SITE_URL } from '@/lib/site';
 // the 1 MB edge function size limit; the Node serverless function has headroom.
 export const runtime = 'nodejs';
 
-export async function GET(request: NextRequest): Promise<ImageResponse> {
+export async function GET(request: NextRequest): Promise<Response> {
   const search = request.nextUrl.searchParams;
   const id = normalizeOgTcgCardId(search.get('id'));
   const langParam = search.get('lang') ?? 'en';
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const subsetText = [name, rarity, setName, rarityLabel, host, 'Lunidex'].join(' ');
   const fonts = await loadOgFonts(lang, subsetText);
 
-  return new ImageResponse(
+  const image = new ImageResponse(
     (
       <div
         style={{
@@ -209,4 +210,5 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
     ),
     { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
+  return optimizeOgPngResponse(image);
 }
