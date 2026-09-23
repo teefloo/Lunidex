@@ -2166,7 +2166,7 @@ export const getPokemonCards = async (
   englishName?: string,
 ): Promise<TCGCard[]> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-pokemon-cards-v14-${tcgLang}-${pokemonName}`;
+  const cacheKey = `tcg-pokemon-cards-v15-${tcgLang}-${pokemonName}`;
   const baseEnglishName = englishName ? getBaseSpeciesName(englishName) : undefined;
   const associationNames = [...new Set([pokemonName, englishName, baseEnglishName]
     .filter((name): name is string => Boolean(name?.trim())))];
@@ -2212,7 +2212,8 @@ export const getPokemonCards = async (
       cards = localizedCards.filter((card): card is TCGCard => Boolean(card));
     }
 
-    const sorted = sortCardsByReleaseDate(cards);
+    const cardsWithSetMetadata = await attachPokemonCardSetMetadata(cards, tcgLang);
+    const sorted = sortCardsByReleaseDate(cardsWithSetMetadata);
     await setCachedData(cacheKey, sorted);
     return sorted;
   } catch (error) {
@@ -2221,6 +2222,45 @@ export const getPokemonCards = async (
     return sortCardsByReleaseDate(getCachedTcgCardsOrThrow(staleCached, error));
   }
 };
+
+async function attachPokemonCardSetMetadata(cards: TCGCard[], lang: string): Promise<TCGCard[]> {
+  const setIds = [...new Set(cards
+    .filter((card) => !card.set?.name)
+    .map((card) => card.set?.id ?? getCardSetId(card.id))
+    .filter((setId): setId is string => Boolean(setId)))];
+
+  const setResults = await mapWithConcurrency(setIds, VISUAL_METADATA_CONCURRENCY, async (setId) => {
+    try {
+      return [setId, await getSetById(setId, lang)] as const;
+    } catch {
+      // A missing set label should not make otherwise valid card results unusable.
+      return [setId, null] as const;
+    }
+  });
+  const setsById = new Map(setResults.filter(
+    (result): result is readonly [string, TCGSet] => result[1] !== null,
+  ));
+
+  return cards.map((card) => {
+    if (card.set?.name) return card;
+
+    const setId = card.set?.id ?? getCardSetId(card.id);
+    if (!setId) return card;
+
+    const set = setsById.get(setId);
+    if (!set) return card;
+
+    return {
+      ...card,
+      set: {
+        ...set,
+        ...card.set,
+        id: setId,
+        name: set.name,
+      },
+    };
+  });
+}
 
 /** Sort a Pokémon's TCG appearances from the newest expansion to the oldest. */
 export function sortCardsByReleaseDate(cards: TCGCard[]): TCGCard[] {

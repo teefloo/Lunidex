@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getPokemonCards } from '@/lib/api/tcg';
 import type { TCGCard } from '@/types/tcg';
 import { pokemonKeys } from '@/lib/api/keys';
-import { Loader2 } from 'lucide-react';
+import { ExternalLink, Loader2 } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
@@ -97,8 +97,8 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName 
   };
 
   return (
-    <div className="glass-panel p-6 md:p-8 rounded-sm">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
+    <div className="glass-panel rounded-sm p-4 sm:p-5 md:p-7">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
         <h3 className="flex items-center gap-3 text-2xl font-black">
           <span className="text-foreground/90">{t('detail.cards')}</span>
           <span className="rounded-md border border-border/50 bg-secondary/50 px-2 py-1 text-xs font-bold text-foreground/60">
@@ -113,35 +113,43 @@ export const PokemonCards: React.FC<PokemonCardsProps> = ({ name, localizedName 
         </Link>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"
+        className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,8.5rem),1fr))] gap-x-4 gap-y-7 md:max-lg:pe-14 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,10rem),1fr))] sm:gap-x-5 sm:gap-y-8 xl:grid-cols-[repeat(auto-fill,minmax(min(100%,12rem),1fr))]"
       >
         {cards.map((card) => (
-          <motion.div key={card.id} variants={itemVariants} className="relative z-10 perspective-1000 w-full flex items-center justify-center">
+          <motion.div key={card.id} variants={itemVariants} className="relative z-10 flex w-full min-w-0 flex-col items-center">
             <TCGHolographicCard
               card={card}
-              className="w-[100%] max-w-[280px]"
+              alt={[card.name, card.set?.name, card.localId].filter(Boolean).join(', ')}
+              className="w-full max-w-[250px]"
               onClick={setSelectedCard}
-              sizes="(min-width: 1024px) 220px, (min-width: 640px) 28vw, 45vw"
+              sizes="(min-width: 1280px) 220px, (min-width: 768px) 20vw, 42vw"
             />
-            <div className="mt-2 flex max-w-[280px] flex-wrap justify-center gap-x-2 gap-y-1 text-center text-[11px] font-bold">
-              <Link
-                href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(tcgLang)}`}
-                className="text-primary underline-offset-4 hover:underline"
-              >
-                {card.name}
-              </Link>
+            <div className="mt-1 flex min-h-11 w-full max-w-[250px] min-w-0 items-center gap-1.5">
               {card.set?.id ? (
                 <Link
                   href={`${localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}?tcgLang=${encodeURIComponent(tcgLang)}`}
-                  className="text-foreground/55 underline-offset-4 hover:text-primary hover:underline"
+                  title={card.set.name}
+                  className="min-w-0 flex-1 truncate text-center text-xs font-medium leading-5 text-foreground/65 underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
                   {card.set.name}
                 </Link>
+              ) : card.set?.name ? (
+                <span className="min-w-0 flex-1 truncate text-center text-xs font-medium leading-5 text-foreground/65" title={card.set.name}>
+                  {card.set.name}
+                </span>
               ) : null}
+              <Link
+                href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(tcgLang)}`}
+                aria-label={t('tcg.open_card_detail', { name: card.name })}
+                title={t('tcg.open_card_detail', { name: card.name })}
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-sm text-foreground/45 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                <ExternalLink className="size-4" aria-hidden="true" />
+              </Link>
             </div>
           </motion.div>
         ))}

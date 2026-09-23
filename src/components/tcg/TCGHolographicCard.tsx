@@ -12,6 +12,7 @@ interface TCGHolographicCardProps {
   card: TCGCard;
   className?: string;
   imageClassName?: string;
+  alt?: string;
   onClick?: (card: TCGCard) => void;
   priority?: boolean;
   quality?: 'low' | 'high';
@@ -25,6 +26,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   card,
   className,
   imageClassName,
+  alt,
   onClick,
   priority = false,
   quality = 'high',
@@ -199,7 +201,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
           <div className="card__front">
             <TCGImageWithFallback
               candidates={imageCandidates}
-              alt={card.name}
+              alt={alt ?? card.name}
               width={660}
               height={921}
               sizes={sizes}
