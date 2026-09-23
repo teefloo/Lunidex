@@ -136,8 +136,9 @@ export function TCGAlbumPage({
   }, [activation, language, returnQuery, set.id]);
   useEffect(() => {
     const handlePopState = () => rememberCollectionScrollRestore();
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    // Save before Next's popstate handler can unmount this route.
+    window.addEventListener('popstate', handlePopState, true);
+    return () => window.removeEventListener('popstate', handlePopState, true);
   }, [rememberCollectionScrollRestore]);
   useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
   useEffect(() => { if (activationComplete && activationMethod) { trackProductEvent('tcg_activation_completed', activationMethod); markProductActivation(); } }, [activationComplete, activationMethod]);
