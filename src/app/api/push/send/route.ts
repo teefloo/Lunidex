@@ -33,9 +33,7 @@ function ensureVapidConfigured() {
 // can't be used as an open push-spam relay; in production the actual price
 // checks that trigger sends should run from a scheduled server job iterating
 // `tcg_price_alerts` + `user_push_subscriptions`, calling
-// this same web-push logic server-side. This route also doubles as the
-// manual "send test notification" path used by the client-side helper in
-// `src/lib/push-notifications.ts`.
+// this same web-push logic server-side.
 async function postPushSend(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;

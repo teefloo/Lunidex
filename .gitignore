@@ -134,7 +134,6 @@ supabase/.temp/
 # Local database exports and migration artifacts
 .neon-migration/
 
-tsconfig.tsbuildinfo
 # =============================================================================
 # 5. Logs & Debug
 # =============================================================================
@@ -208,9 +207,6 @@ strix/
 
 # Prettier cache (if any)
 .prettiercache
-
-# TypeScript incremental compilation
-*.tsbuildinfo
 
 # Vercel
 .vercel

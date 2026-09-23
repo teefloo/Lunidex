@@ -16,7 +16,6 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:tcg": "vitest run",
     "seo:check": "node scripts/seo-check.mjs",
     "typecheck": "tsc --noEmit",
     "db:neon:export": "bash scripts/neon/export-supabase.sh",

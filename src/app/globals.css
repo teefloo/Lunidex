@@ -848,11 +848,6 @@ h1 { letter-spacing: 0; }
   from { transform: scaleX(0); }
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────────── */
-[data-slot="sheet-content"] [data-slot="scroll-area-scrollbar"] {
-  display: none;
-}
-
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
