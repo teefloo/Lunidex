@@ -553,8 +553,7 @@ export function PokemonDetailClient({
               height={400}
               sizes="(min-width: 768px) 384px, 288px"
               className="w-full h-full object-contain relative z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-translate-y-4"
-              priority
-              unoptimized
+              preload
             />
           </motion.div>
         </AnimatePresence>
