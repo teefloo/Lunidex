@@ -28,8 +28,12 @@ import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { isSameTcgRarity } from '@/lib/tcg-rarity';
 import {
+  parseTCGCollectionScrollPosition,
   shouldUseTCGCollectionHistoryBack,
   TCG_COLLECTION_HISTORY_TARGET_KEY,
+  TCG_COLLECTION_SCROLL_POSITION_KEY,
+  TCG_COLLECTION_SCROLL_RESTORE_KEY,
+  type TCGCollectionScrollPosition,
 } from '@/lib/tcg-collection-navigation';
 
 interface TCGAlbumPageProps {
@@ -87,29 +91,54 @@ export function TCGAlbumPage({
   const [activationComplete, setActivationComplete] = useState(false);
   const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
   const historyReturnTargetRef = useRef<string | null>(null);
+  const historyReturnScrollPositionRef = useRef<TCGCollectionScrollPosition | null>(null);
   const firstValueReachedRef = useRef(false);
   const cardSearchId = useId();
+
+  const rememberCollectionScrollRestore = useCallback(() => {
+    const scrollPosition = historyReturnScrollPositionRef.current;
+    if (!scrollPosition) return;
+
+    try {
+      window.sessionStorage.setItem(TCG_COLLECTION_SCROLL_RESTORE_KEY, JSON.stringify(scrollPosition));
+    } catch {
+      // Keep browser back available when session storage is disabled.
+    }
+  }, []);
 
   useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
   useEffect(() => {
     let storedTarget: string | null = null;
+    let storedScrollPosition: TCGCollectionScrollPosition | null = null;
     try {
       storedTarget = window.sessionStorage.getItem(TCG_COLLECTION_HISTORY_TARGET_KEY);
       window.sessionStorage.removeItem(TCG_COLLECTION_HISTORY_TARGET_KEY);
+      storedScrollPosition = parseTCGCollectionScrollPosition(
+        window.sessionStorage.getItem(TCG_COLLECTION_SCROLL_POSITION_KEY),
+      );
+      window.sessionStorage.removeItem(TCG_COLLECTION_SCROLL_POSITION_KEY);
     } catch {
       // Direct album links keep using the explicit collection URL below.
     }
     const currentPath = `${window.location.pathname}${window.location.search}`;
     if (storedTarget !== null) {
-      historyReturnTargetRef.current = shouldUseTCGCollectionHistoryBack(
+      const hasCollectionHistory = shouldUseTCGCollectionHistoryBack(
         storedTarget,
         currentPath,
         Boolean(returnQuery) && !activation,
-      ) ? currentPath : null;
+      );
+      historyReturnTargetRef.current = hasCollectionHistory ? currentPath : null;
+      historyReturnScrollPositionRef.current = hasCollectionHistory ? storedScrollPosition : null;
     } else if (historyReturnTargetRef.current !== currentPath) {
       historyReturnTargetRef.current = null;
+      historyReturnScrollPositionRef.current = null;
     }
   }, [activation, language, returnQuery, set.id]);
+  useEffect(() => {
+    const handlePopState = () => rememberCollectionScrollRestore();
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [rememberCollectionScrollRestore]);
   useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
   useEffect(() => { if (activationComplete && activationMethod) { trackProductEvent('tcg_activation_completed', activationMethod); markProductActivation(); } }, [activationComplete, activationMethod]);
 
@@ -176,6 +205,7 @@ export function TCGAlbumPage({
             const currentPath = `${window.location.pathname}${window.location.search}`;
             if (historyReturnTargetRef.current !== currentPath) return;
             event.preventDefault();
+            rememberCollectionScrollRestore();
             router.back();
           }}
           aria-label={`${t('common.back')} — ${t('tcg.collection_title')}`}

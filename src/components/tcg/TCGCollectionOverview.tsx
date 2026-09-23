@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
@@ -37,7 +37,12 @@ import {
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGCollectionSetRow } from './TCGCollectionSetRow';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
-import { TCG_COLLECTION_HISTORY_TARGET_KEY } from '@/lib/tcg-collection-navigation';
+import {
+  parseTCGCollectionScrollPosition,
+  TCG_COLLECTION_HISTORY_TARGET_KEY,
+  TCG_COLLECTION_SCROLL_POSITION_KEY,
+  TCG_COLLECTION_SCROLL_RESTORE_KEY,
+} from '@/lib/tcg-collection-navigation';
 
 export type { TCGCollectionOverviewEntry } from '@/lib/tcg-collection-overview';
 
@@ -220,10 +225,56 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   const rememberCollectionReturnTarget = useCallback((href: string) => {
     try {
       window.sessionStorage.setItem(TCG_COLLECTION_HISTORY_TARGET_KEY, href);
+      window.sessionStorage.setItem(TCG_COLLECTION_SCROLL_POSITION_KEY, JSON.stringify({
+        collectionPath: `${window.location.pathname}${window.location.search}`,
+        scrollY: Math.max(0, window.scrollY),
+      }));
     } catch {
       // Keep normal link navigation available when session storage is disabled.
     }
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    let serializedPosition: string | null;
+    try {
+      serializedPosition = window.sessionStorage.getItem(TCG_COLLECTION_SCROLL_RESTORE_KEY);
+    } catch {
+      return;
+    }
+    if (!serializedPosition) return;
+
+    const savedPosition = parseTCGCollectionScrollPosition(serializedPosition);
+    const currentPath = `${window.location.pathname}${window.location.search}`;
+    if (!savedPosition || savedPosition.collectionPath !== currentPath) {
+      try {
+        window.sessionStorage.removeItem(TCG_COLLECTION_SCROLL_RESTORE_KEY);
+      } catch {
+        // Ignore unavailable session storage.
+      }
+      return;
+    }
+
+    let firstFrame = 0;
+    let secondFrame = 0;
+    firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        try {
+          if (window.sessionStorage.getItem(TCG_COLLECTION_SCROLL_RESTORE_KEY) !== serializedPosition) return;
+          window.sessionStorage.removeItem(TCG_COLLECTION_SCROLL_RESTORE_KEY);
+        } catch {
+          // The in-memory target is still usable when session storage becomes unavailable.
+        }
+        window.scrollTo(0, savedPosition.scrollY);
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [mounted, pathname, searchParamsString]);
 
   const openCollectionInLanguage = useCallback((entry: TCGCollectionOverviewEntryWithProgress, language: TCGCardLanguage): boolean => {
     const targetCollectionKey = encodeTCGCollectionKey(language, entry.set.id);
