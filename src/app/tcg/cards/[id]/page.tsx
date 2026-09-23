@@ -6,12 +6,10 @@ import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { buildInLanguage } from '@/lib/seo';
 import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
-import { TCG_CARD_PLACEHOLDER } from '@/lib/tcg-images';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -92,42 +90,8 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
   const card = await getPageCard(id, tcgLanguage);
   if (!card) notFound();
 
-  const imageUrl = card.imageUrl || card.image || `${SITE_URL}${TCG_CARD_PLACEHOLDER}`;
   const setName = card.set?.name ?? '';
   const setId = card.set?.id ?? '';
-  const rarityLabel = isMeaningfulCardValue(card.rarity)
-    ? card.rarity
-    : t('tcg.unknown', { defaultValue: 'Unknown' });
-  const productDescription = t('tcg.card_meta_description', {
-    name: card.name,
-    rarity: rarityLabel,
-    set: setName || t('tcg.unknown', { defaultValue: 'TCG' }),
-    hp: card.hp ?? '?',
-  });
-  const productJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    inLanguage: buildInLanguage(currentLang),
-    name: card.name,
-    sku: card.id,
-    mpn: card.localId,
-    identifier: card.id,
-    image: imageUrl,
-    description: productDescription,
-    brand: { '@type': 'Brand', name: 'Pokémon' },
-    manufacturer: { '@type': 'Organization', name: 'The Pokémon Company' },
-    category: 'Trading Card',
-    url: `${SITE_URL}/${canonicalLanguage}/tcg/cards/${encodeURIComponent(card.id)}`,
-    additionalProperty: [
-      ...(card.hp ? [{ '@type': 'PropertyValue', name: 'HP', value: card.hp }] : []),
-      ...(card.rarity ? [{ '@type': 'PropertyValue', name: 'Rarity', value: card.rarity }] : []),
-      ...(card.category ? [{ '@type': 'PropertyValue', name: 'Category', value: card.category }] : []),
-      ...(card.stage ? [{ '@type': 'PropertyValue', name: 'Stage', value: card.stage }] : []),
-      ...(card.illustrator ? [{ '@type': 'PropertyValue', name: 'Illustrator', value: card.illustrator }] : []),
-      ...(card.set?.releaseDate ? [{ '@type': 'PropertyValue', name: 'Release Date', value: card.set.releaseDate }] : []),
-    ],
-  };
-
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -141,10 +105,6 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
