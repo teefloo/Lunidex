@@ -20,6 +20,7 @@ interface TCGCollectionSetRowProps {
   entry: TCGCollectionOverviewEntryWithProgress;
   view: TCGCollectionView;
   albumHref: string;
+  onAlbumNavigate: (href: string) => void;
   valuation?: TCGCollectionSetValuation;
   valuationLoading: boolean;
   analysisOpen: boolean;
@@ -43,6 +44,7 @@ export function TCGCollectionSetRow({
   entry,
   view,
   albumHref,
+  onAlbumNavigate,
   valuation,
   valuationLoading,
   analysisOpen,
@@ -70,6 +72,7 @@ export function TCGCollectionSetRow({
       <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center">
         <Link
           href={albumHref}
+          onNavigate={() => onAlbumNavigate(albumHref)}
           aria-label={t('tcg.collection_view_set', { name: `${entry.set.name} — ${languageName}` })}
           className="group min-w-0 flex flex-1 items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary/70 sm:gap-4"
         >
@@ -155,6 +158,7 @@ export function TCGCollectionSetRow({
           />
           <Link
             href={albumHref}
+            onNavigate={() => onAlbumNavigate(albumHref)}
             className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/35 bg-primary/10 px-3 text-[11px] font-black uppercase tracking-[0.07em] text-primary transition-[background-color,color] duration-100 hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             {t('tcg.collection_open_set', { defaultValue: 'Open set' })}

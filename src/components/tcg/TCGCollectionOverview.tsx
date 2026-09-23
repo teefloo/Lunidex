@@ -37,6 +37,7 @@ import {
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGCollectionSetRow } from './TCGCollectionSetRow';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
+import { TCG_COLLECTION_HISTORY_TARGET_KEY } from '@/lib/tcg-collection-navigation';
 
 export type { TCGCollectionOverviewEntry } from '@/lib/tcg-collection-overview';
 
@@ -216,6 +217,14 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     );
   }, [localeHref, returnQuery]);
 
+  const rememberCollectionReturnTarget = useCallback((href: string) => {
+    try {
+      window.sessionStorage.setItem(TCG_COLLECTION_HISTORY_TARGET_KEY, href);
+    } catch {
+      // Keep normal link navigation available when session storage is disabled.
+    }
+  }, []);
+
   const openCollectionInLanguage = useCallback((entry: TCGCollectionOverviewEntryWithProgress, language: TCGCardLanguage): boolean => {
     const targetCollectionKey = encodeTCGCollectionKey(language, entry.set.id);
     if (!targetCollectionKey) return false;
@@ -224,12 +233,14 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     setBrowseLanguage(language);
     const params = new URLSearchParams();
     if (returnQuery) params.set('return', returnQuery);
-    router.push(withQuery(
+    const albumHref = withQuery(
       localeHref(`/tcg/collection/${language}/${encodeURIComponent(entry.set.id)}`),
       params.toString(),
-    ));
+    );
+    rememberCollectionReturnTarget(albumHref);
+    router.push(albumHref);
     return true;
-  }, [collectionCards, localeHref, returnQuery, router, setBrowseLanguage, transferCollectionCards]);
+  }, [collectionCards, localeHref, rememberCollectionReturnTarget, returnQuery, router, setBrowseLanguage, transferCollectionCards]);
 
   if (!mounted) return null;
 
@@ -417,6 +428,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
                     entry={entry}
                     view={urlState.view}
                     albumHref={albumHref}
+                    onAlbumNavigate={rememberCollectionReturnTarget}
                     valuation={valuation}
                     valuationLoading={Boolean(valueQuery?.isFetching)}
                     analysisOpen={expandedCollectionKey === entry.collectionKey}

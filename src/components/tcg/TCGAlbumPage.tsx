@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -26,6 +27,10 @@ import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOw
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { isSameTcgRarity } from '@/lib/tcg-rarity';
+import {
+  shouldUseTCGCollectionHistoryBack,
+  TCG_COLLECTION_HISTORY_TARGET_KEY,
+} from '@/lib/tcg-collection-navigation';
 
 interface TCGAlbumPageProps {
   set: TCGSet;
@@ -47,6 +52,7 @@ export function TCGAlbumPage({
   headerAction,
 }: TCGAlbumPageProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const localeHref = useLocaleHref();
   const mounted = useMounted();
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
@@ -80,10 +86,30 @@ export function TCGAlbumPage({
   const [firstValueReached, setFirstValueReached] = useState(false);
   const [activationComplete, setActivationComplete] = useState(false);
   const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
+  const historyReturnTargetRef = useRef<string | null>(null);
   const firstValueReachedRef = useRef(false);
   const cardSearchId = useId();
 
   useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
+  useEffect(() => {
+    let storedTarget: string | null = null;
+    try {
+      storedTarget = window.sessionStorage.getItem(TCG_COLLECTION_HISTORY_TARGET_KEY);
+      window.sessionStorage.removeItem(TCG_COLLECTION_HISTORY_TARGET_KEY);
+    } catch {
+      // Direct album links keep using the explicit collection URL below.
+    }
+    const currentPath = `${window.location.pathname}${window.location.search}`;
+    if (storedTarget !== null) {
+      historyReturnTargetRef.current = shouldUseTCGCollectionHistoryBack(
+        storedTarget,
+        currentPath,
+        Boolean(returnQuery) && !activation,
+      ) ? currentPath : null;
+    } else if (historyReturnTargetRef.current !== currentPath) {
+      historyReturnTargetRef.current = null;
+    }
+  }, [activation, language, returnQuery, set.id]);
   useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
   useEffect(() => { if (activationComplete && activationMethod) { trackProductEvent('tcg_activation_completed', activationMethod); markProductActivation(); } }, [activationComplete, activationMethod]);
 
@@ -146,6 +172,12 @@ export function TCGAlbumPage({
       <div className="flex flex-wrap items-center gap-4">
         <Link
           href={localeHref(backHref)}
+          onNavigate={(event) => {
+            const currentPath = `${window.location.pathname}${window.location.search}`;
+            if (historyReturnTargetRef.current !== currentPath) return;
+            event.preventDefault();
+            router.back();
+          }}
           aria-label={`${t('common.back')} — ${t('tcg.collection_title')}`}
           className="flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >

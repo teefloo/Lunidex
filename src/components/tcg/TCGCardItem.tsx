@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { PackageCheck } from 'lucide-react';
+import { PackageCheck, Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { TCGCard } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -16,6 +16,7 @@ import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { getTCGCardOwnershipTogglePresentation } from '@/lib/tcg-card-ownership-actions';
 
 interface TCGCardItemProps {
   card: TCGCard;
@@ -41,26 +42,34 @@ export const TCGCardItem = memo(function TCGCardItem({
     toggleTCGOwned,
     removeTCGCollectionCard,
     setTCGCollectionVariantQuantity,
-    isTCGOwned,
     browseLanguage,
-    collectionKeys,
-    isCollectionCardOwned,
-  } = usePrimeDexStore(useShallow((state) => ({
-    toggleTCGOwned: state.toggleTCGOwned,
-    removeTCGCollectionCard: state.removeTCGCollectionCard,
-    setTCGCollectionVariantQuantity: state.setTCGCollectionVariantQuantity,
-    isTCGOwned: state.tcgOwnedCards.includes(card.id),
-    browseLanguage: state.tcgBrowseLanguage,
-    collectionKeys: state.tcgCollections,
-    isCollectionCardOwned: state.isTCGCollectionCardOwned,
-  })));
+    resolvedCollectionKey,
+    storeOwned,
+  } = usePrimeDexStore(useShallow((state) => {
+    const selectedLanguage = tcgLanguage ?? state.tcgBrowseLanguage;
+    const candidateCollectionKey = card.set?.id
+      ? encodeTCGCollectionKey(selectedLanguage, card.set.id)
+      : null;
+    const resolvedKey = collectionKey
+      ?? (candidateCollectionKey && state.tcgCollections.includes(candidateCollectionKey)
+        ? candidateCollectionKey
+        : null);
+
+    return {
+      toggleTCGOwned: state.toggleTCGOwned,
+      removeTCGCollectionCard: state.removeTCGCollectionCard,
+      setTCGCollectionVariantQuantity: state.setTCGCollectionVariantQuantity,
+      browseLanguage: state.tcgBrowseLanguage,
+      resolvedCollectionKey: resolvedKey,
+      storeOwned: resolvedKey
+        ? state.isTCGCollectionCardOwned(resolvedKey, card.id)
+        : state.tcgOwnedCards.includes(card.id),
+    };
+  }));
 
   const selectedLanguage = tcgLanguage ?? browseLanguage;
-  const candidateCollectionKey = card.set?.id ? encodeTCGCollectionKey(selectedLanguage, card.set.id) : null;
-  const resolvedCollectionKey = collectionKey ?? (candidateCollectionKey && collectionKeys.includes(candidateCollectionKey) ? candidateCollectionKey : null);
-  const owned = mounted && (resolvedCollectionKey
-    ? isCollectionCardOwned(resolvedCollectionKey, card.id)
-    : isTCGOwned);
+  const owned = mounted && storeOwned;
+  const ownershipPresentation = getTCGCardOwnershipTogglePresentation(owned);
   const isList = variant === 'list';
 
   return (
@@ -158,10 +167,13 @@ export const TCGCardItem = memo(function TCGCardItem({
               ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
               : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',
           )}
-          aria-label={`${t('tcg.owned_short')}: ${card.name}`}
+          aria-pressed={ownershipPresentation.pressed}
+          aria-label={t(ownershipPresentation.ariaLabelKey, { name: card.name })}
         >
-          <PackageCheck className="h-2 w-2" />
-          {t('tcg.owned_short')}
+          {owned
+            ? <PackageCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            : <Plus className="h-3.5 w-3.5" aria-hidden="true" />}
+          {t(ownershipPresentation.labelKey)}
         </button>
       </div>
     </article>

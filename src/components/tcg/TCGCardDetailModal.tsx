@@ -42,6 +42,10 @@ import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
 import { getFocusTrapTarget } from '@/lib/focus-management';
+import {
+  getTCGCardDetailCollectionPresentation,
+  getTCGCardOwnershipTogglePresentation,
+} from '@/lib/tcg-card-ownership-actions';
 
 // Lazy-load the heavy Recharts-based chart only when the card detail is open.
 const PriceChart = dynamic(
@@ -217,6 +221,10 @@ export function TCGCardDetailModal({
       })()
     : null;
   const cardmarketHref = getCardmarketProductUrl(displayCard, interfaceLanguage);
+  const collectionPresentation = resolvedCollectionKey
+    ? getTCGCardDetailCollectionPresentation(owned)
+    : null;
+  const ownershipPresentation = getTCGCardOwnershipTogglePresentation(owned);
 
   const handleShareCard = async () => {
     const url = new URL(
@@ -245,21 +253,32 @@ export function TCGCardDetailModal({
       requestSyncAccess();
       return;
     }
+    const wasOwned = owned;
     if (!resolvedCollectionKey) {
       toggleTCGOwned(displayCard.id);
-      return;
-    }
-    if (owned) {
+    } else if (owned) {
       removeTCGCollectionCard(resolvedCollectionKey, displayCard.id);
-      return;
+    } else {
+      const firstKnownVariant = getTCGDefaultPhysicalVariant(displayCard.variants);
+      setTCGCollectionVariantQuantity(
+        resolvedCollectionKey,
+        displayCard.id,
+        firstKnownVariant ?? 'unspecified',
+        1,
+      );
     }
-    const firstKnownVariant = getTCGDefaultPhysicalVariant(displayCard.variants);
-    setTCGCollectionVariantQuantity(
-      resolvedCollectionKey,
-      displayCard.id,
-      firstKnownVariant ?? 'unspecified',
-      1,
-    );
+
+    const nextState = usePrimeDexStore.getState();
+    const isNextOwned = resolvedCollectionKey
+      ? isTCGCollectionCardOwned(resolvedCollectionKey, displayCard.id, nextState.tcgCollectionCards)
+      : nextState.isTCGOwned(displayCard.id);
+    if (!wasOwned && isNextOwned) {
+      onOwnershipChange?.(true);
+      toast.success(t('tcg.collection_card_added', {
+        name: displayCard.name,
+        defaultValue: `${displayCard.name} added to your collection`,
+      }));
+    }
   };
 
   return createPortal(
@@ -375,19 +394,40 @@ export function TCGCardDetailModal({
                       label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
                       badge={compared ? tcgCompareList.length : undefined}
                     />
-                    {resolvedCollectionKey ? (
+                    {collectionPresentation ? (
                       <ActionPill
-                        active={owned}
-                        onClick={() => setIsVariantSheetOpen(true)}
-                        label={owned
-                          ? t('tcg.collection_owned_variants', { defaultValue: 'Owned variants' })
-                          : t('tcg.collection_manage_variants', { name: displayCard.name, defaultValue: `Manage variants for ${displayCard.name}` })}
+                        active={collectionPresentation.pressed}
+                        onClick={() => {
+                          if (collectionPresentation.behavior === 'manage-variants') {
+                            setIsVariantSheetOpen(true);
+                          } else {
+                            handleOwnedToggle();
+                          }
+                        }}
+                        label={t(collectionPresentation.labelKey, {
+                          defaultValue: collectionPresentation.behavior === 'manage-variants'
+                            ? 'Owned variants'
+                            : 'Add',
+                        })}
+                        ariaLabel={t(collectionPresentation.ariaLabelKey, {
+                          name: displayCard.name,
+                          count: totalOwnedQuantity,
+                        })}
+                        ariaPressed={collectionPresentation.pressed}
                         badge={totalOwnedQuantity > 0 ? totalOwnedQuantity : undefined}
-                        ariaExpanded={isVariantSheetOpen}
-                        ariaControls={`tcg-collection-variants-${displayCard.id}`}
+                        ariaExpanded={collectionPresentation.behavior === 'manage-variants' ? isVariantSheetOpen : undefined}
+                        ariaControls={collectionPresentation.behavior === 'manage-variants'
+                          ? `tcg-collection-variants-${displayCard.id}`
+                          : undefined}
                       />
                     ) : (
-                      <ActionPill active={owned} onClick={handleOwnedToggle} label={t('tcg.mark_owned')} />
+                      <ActionPill
+                        active={ownershipPresentation.pressed}
+                        onClick={handleOwnedToggle}
+                        label={t(ownershipPresentation.labelKey)}
+                        ariaLabel={t(ownershipPresentation.ariaLabelKey, { name: displayCard.name })}
+                        ariaPressed={ownershipPresentation.pressed}
+                      />
                     )}
                     <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
@@ -706,6 +746,8 @@ function ActionPill({
   active,
   onClick,
   label,
+  ariaLabel,
+  ariaPressed,
   badge,
   ariaExpanded,
   ariaControls,
@@ -713,6 +755,8 @@ function ActionPill({
   active: boolean;
   onClick: () => void;
   label: string;
+  ariaLabel?: string;
+  ariaPressed?: boolean;
   badge?: number;
   ariaExpanded?: boolean;
   ariaControls?: string;
@@ -721,6 +765,8 @@ function ActionPill({
     <button
       type="button"
       onClick={onClick}
+      aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
       aria-expanded={ariaExpanded}
       aria-controls={ariaControls}
       className={cn(
