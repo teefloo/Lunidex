@@ -11,6 +11,7 @@ import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
+import { TCGMarketSummary } from './TCGMarketSummary';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => module.TCGCardDetailModal),
@@ -95,6 +96,9 @@ export function TCGCardDetailRoute({ card, tcgLanguage = 'en' }: { card: TCGCard
               {card.illustrator && <div><dt className="text-muted-foreground">{t('tcg.illustrator')}</dt><dd className="font-bold">{card.illustrator}</dd></div>}
               {card.types && card.types.length > 0 && <div><dt className="text-muted-foreground">{t('tcg.pokemon_types')}</dt><dd className="font-bold">{card.types.join(', ')}</dd></div>}
             </dl>
+            <div className="mt-6 max-w-sm">
+              <TCGMarketSummary card={card} />
+            </div>
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}

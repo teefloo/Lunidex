@@ -482,6 +482,60 @@ export async function searchSealedCatalogue(
   };
 }
 
+/** Public catalogue search. This deliberately reads only global catalogue and price data. */
+export async function searchPublicSealedCatalogue(
+  sql: NeonSql,
+  queryText: string,
+  page: number,
+  pageSize = 24,
+) {
+  const search = parseSealedCatalogueSearch(queryText.slice(0, 150));
+  const boundedPage = Number.isSafeInteger(page) && page >= 0 ? Math.min(page, MAX_CATALOGUE_PAGE) : 0;
+  const boundedSize = Math.min(MAX_CATALOGUE_PAGE_SIZE, Math.max(1, Math.floor(pageSize)));
+  const params: unknown[] = [SEALED_CATEGORY_SQL];
+  const clauses: string[] = ['p.active = true', 'p.category_id = any($1::int[])'];
+  for (const term of search.terms) {
+    params.push(term);
+    const parameter = `$${params.length}`;
+    clauses.push(`(
+      p.name ilike '%' || ${parameter} || '%'
+      or p.category_name ilike '%' || ${parameter} || '%'
+      or p.cardmarket_product_id::text = ${parameter}
+      or p.expansion_id::text = ${parameter}
+    )`);
+  }
+  if (search.expansionId !== undefined) {
+    params.push(search.expansionId);
+    clauses.push(`p.expansion_id = $${params.length}`);
+  }
+  const where = clauses.join(' and ');
+  const limitParameter = params.length + 1;
+  const offsetParameter = params.length + 2;
+  const rows = await sql.query(`
+    select p.cardmarket_product_id, p.name, p.category_id, p.category_name,
+      p.expansion_id, p.cardmarket_url, p.image_available, p.source_at::text,
+      p.updated_at::text, p.active, null::text as alias
+    from public.tcg_sealed_products p
+    where ${where}
+    order by p.name asc, p.cardmarket_product_id asc
+    limit $${limitParameter} offset $${offsetParameter}
+  `, [...params, boundedSize, boundedPage * boundedSize]) as unknown as SealedProductRow[];
+  const countRows = await sql.query(`
+    select count(*)::int as count
+    from public.tcg_sealed_products p
+    where ${where}
+  `, params) as unknown as Array<{ count: number | string }>;
+  const products = rows.map(mapProduct);
+  const prices = await getSealedPrices(sql, products.map((product) => product.cardmarketProductId), new Date(Date.now() - 35 * 86_400_000).toISOString().slice(0, 10));
+  return {
+    products,
+    prices,
+    total: Number(countRows[0]?.count ?? 0),
+    page: boundedPage,
+    pageSize: boundedSize,
+  };
+}
+
 async function loadSealedPortfolio(sql: NeonSql, userId: string) {
   const transactions = await getSealedTransactions(sql, userId);
   const ids = [...new Set(transactions.flatMap((transaction) => [

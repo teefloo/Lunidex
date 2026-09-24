@@ -130,6 +130,10 @@ export interface TCGCardVariantDetailed {
 export interface TCGCardValue {
   amount: number;
   currency: string;
+  /** Marketplace supplying this quote. Older persisted values may not include it. */
+  provider?: 'tcgplayer' | 'cardmarket';
+  /** Provider-supplied price timestamp; card.updated is not a substitute. */
+  updatedAt?: string;
 }
 
 /**

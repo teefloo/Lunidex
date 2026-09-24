@@ -17,6 +17,7 @@ import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { getTCGCardOwnershipTogglePresentation } from '@/lib/tcg-card-ownership-actions';
+import { TCGMarketSummary } from './TCGMarketSummary';
 
 interface TCGCardItemProps {
   card: TCGCard;
@@ -136,6 +137,8 @@ export const TCGCardItem = memo(function TCGCardItem({
             </span>
           ) : null}
         </div>
+
+        <TCGMarketSummary card={card} compact />
 
         <button
           type="button"

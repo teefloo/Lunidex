@@ -5,13 +5,14 @@ import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMounted } from '@/hooks/useMounted';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import {
   getSetCompletion,
   getDisplayableCompletionByRarity,
+  estimateMissingCardsValue,
   getMissingCardsInSet,
   sortCardsByNumber,
   getRarityColor,
@@ -56,6 +57,7 @@ export function TCGAlbumPage({
   headerAction,
 }: TCGAlbumPageProps) {
   const { t } = useTranslation();
+  const interfaceLanguage = useClientLanguage();
   const router = useRouter();
   const localeHref = useLocaleHref();
   const mounted = useMounted();
@@ -142,6 +144,7 @@ export function TCGAlbumPage({
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
   const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
+  const completionEstimate = useMemo(() => estimateMissingCardsValue(missingCards), [missingCards]);
   const backHref = activation
     ? `/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`
     : returnQuery
@@ -253,6 +256,53 @@ export function TCGAlbumPage({
           </div>
         )}
       </section>
+
+      {missingCards.length > 0 && (
+        <section className="rounded-sm border border-border/35 bg-card/30 p-4" aria-labelledby="tcg-completion-estimate-title">
+          <h2 id="tcg-completion-estimate-title" className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/75">
+            {t('tcg.completion_estimate_title')}
+          </h2>
+          <p className="mt-1 text-xs font-semibold text-foreground/65">
+            {t('tcg.completion_estimate_coverage', {
+              priced: completionEstimate.pricedCount,
+              missing: missingCards.length,
+            })}
+          </p>
+          {completionEstimate.groups.length > 0 ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {completionEstimate.groups.map((group) => {
+                let formattedTotal: string;
+                try {
+                  formattedTotal = new Intl.NumberFormat(interfaceLanguage, {
+                    style: 'currency',
+                    currency: group.currency,
+                    maximumFractionDigits: 2,
+                  }).format(group.total);
+                } catch {
+                  formattedTotal = group.total.toFixed(2) + ' ' + group.currency;
+                }
+                return (
+                  <p key={group.provider + ':' + group.currency} className="rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-bold tabular-nums text-primary">
+                    {t('tcg.completion_estimate_partial_total', {
+                      total: formattedTotal,
+                      count: group.count,
+                      source: group.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer',
+                    })}
+                  </p>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="mt-2 text-sm font-semibold text-foreground/55">{t('tcg.completion_estimate_no_prices')}</p>
+          )}
+          {completionEstimate.unpricedCount > 0 && (
+            <p className="mt-2 text-[11px] font-medium text-amber-200/75">
+              {t('tcg.completion_estimate_unpriced', { count: completionEstimate.unpricedCount })}
+            </p>
+          )}
+          <p className="mt-2 text-[11px] text-muted-foreground">{t('tcg.completion_estimate_method')}</p>
+        </section>
+      )}
 
       {/* Rarity completion */}
       {rarityCompletion.length > 0 && (

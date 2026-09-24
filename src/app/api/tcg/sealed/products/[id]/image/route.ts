@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { rateLimit } from '@/lib/rate-limit';
+import { getNeonClient } from '@/lib/neon/server';
+import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getSealedImageUrl } from '@/lib/tcg-sealed-server';
-import { getSealedRequestContext, isSealedRequestContext, positiveId, sealedErrorResponse } from '@/lib/tcg-sealed-route';
+import { positiveId, sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
 import { sealedImageContentType } from '@/lib/tcg-sealed-image';
 
 export const runtime = 'nodejs';
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 
 async function getImage(request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<Response> {
-  const auth = await getSealedRequestContext(request);
-  if (!isSealedRequestContext(auth)) return auth;
-  if (!rateLimit(`tcg-sealed-image:${auth.userId}`, 60)) return NextResponse.json({ error: 'Too many sealed portfolio requests.' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
+  const sql = getNeonClient();
+  if (!sql) return unavailableResponse();
+  if (!rateLimit(`tcg-sealed-image:${ipKey(request)}`, 120)) return NextResponse.json({ error: 'Too many sealed product image requests.' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
   const id = positiveId((await context.params).id);
   if (id === null) return NextResponse.json({ error: 'Invalid sealed product id.' }, { status: 400 });
   try {
-    const candidates = await getSealedImageUrl(auth.sql, id);
+    const candidates = await getSealedImageUrl(sql, id);
     for (const url of candidates) {
       try {
         const response = await fetch(url, {
@@ -38,7 +39,7 @@ async function getImage(request: NextRequest, context: { params: Promise<{ id: s
           status: 200,
           headers: {
             'Content-Type': contentType,
-            'Cache-Control': 'private, max-age=86400, stale-while-revalidate=604800',
+            'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
             'X-Content-Type-Options': 'nosniff',
           },
         });

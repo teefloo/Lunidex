@@ -13,6 +13,7 @@ vi.mock('next/dynamic', () => ({
 
 vi.mock('@/hooks/useLocaleHref', () => ({
   useLocaleHref: () => (path: string) => path,
+  useClientLanguage: () => 'en',
 }));
 
 vi.mock('@/lib/i18n', () => ({

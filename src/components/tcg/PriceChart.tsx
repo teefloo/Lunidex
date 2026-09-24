@@ -37,6 +37,12 @@ function formatDate(iso: string, locale: string): string {
   return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 }
 
+function formatTimestamp(iso: string, locale: string): string | null {
+  const timestamp = new Date(iso);
+  if (!Number.isFinite(timestamp.getTime())) return null;
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(timestamp);
+}
+
 function toChartData(history: PriceHistoryEntry[], locale: string) {
   return history.map((entry) => ({
     date: formatDate(entry.recorded_at, locale),
@@ -156,6 +162,10 @@ export function PriceChart({ cardId }: PriceChartProps) {
   }
 
   const chartData = toChartData(history, interfaceLanguage);
+  const latestSnapshot = history.reduce((latest, entry) => (
+    new Date(entry.recorded_at).getTime() > new Date(latest.recorded_at).getTime() ? entry : latest
+  ), history[0]);
+  const latestSnapshotLabel = formatTimestamp(latestSnapshot.recorded_at, interfaceLanguage);
   const trend = computePriceTrend(history);
   const chartKey: 'usd' | 'eur' = displayCurrency === 'EUR' ? 'eur' : 'usd';
   const hasSelectedCurrencyHistory = chartData.some((entry) => entry[chartKey] != null);
@@ -247,9 +257,13 @@ export function PriceChart({ cardId }: PriceChartProps) {
       </div>
 
       {/* Data source note */}
-      <p className="text-right text-[11px] text-muted-foreground">
-        {t('tcg.price_history_sources')}
-      </p>
+      <div className="space-y-1 text-right text-[11px] text-muted-foreground">
+        <p>{t('tcg.price_history_sources')}</p>
+        {latestSnapshotLabel && (
+          <p>{t('tcg.price_history_last_snapshot', { date: latestSnapshotLabel })}</p>
+        )}
+        <p>{t('tcg.price_history_capture_note')}</p>
+      </div>
     </section>
   );
 }

@@ -17,6 +17,7 @@ const TABS = [
   { href: '/tcg/wishlist', key: 'tcg.nav_wishlist' },
   { href: '/tcg/deck-builder', key: 'tcg.nav_deck_builder' },
   { href: '/tcg/sealed', key: 'tcg.nav_sealed' },
+  { href: '/tcg/sealed/market', key: 'tcg.nav_sealed_market' },
   { href: '/friends', key: 'friends.title' },
 ] as const;
 
@@ -26,6 +27,7 @@ const FALLBACK_LABELS: Record<(typeof TABS)[number]['key'], string> = {
   'tcg.nav_wishlist': 'Wishlist',
   'tcg.nav_deck_builder': 'Deck builder',
   'tcg.nav_sealed': 'Sealed',
+  'tcg.nav_sealed_market': 'Sealed market',
   'friends.title': 'Friends',
 };
 
@@ -52,6 +54,7 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
 
   const isActive = (href: string) => {
     if (href === '/tcg') return normalizedPathname === '/tcg';
+    if (href === '/tcg/sealed') return normalizedPathname.startsWith(href) && !normalizedPathname.startsWith('/tcg/sealed/market');
     return normalizedPathname.startsWith(href);
   };
 

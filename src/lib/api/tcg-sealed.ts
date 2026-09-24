@@ -97,6 +97,22 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   return payload as T;
 }
 
+async function requestPublicJson<T>(path: string, signal?: AbortSignal): Promise<T> {
+  const response = await fetch(path, {
+    cache: 'no-store',
+    credentials: 'omit',
+    signal,
+  });
+  const payload = await response.json().catch(() => null) as { error?: unknown } | T | null;
+  if (!response.ok) {
+    const message = payload && typeof payload === 'object' && 'error' in payload && typeof payload.error === 'string'
+      ? payload.error
+      : 'Sealed market catalogue request failed.';
+    throw new SealedApiError(message, response.status);
+  }
+  return payload as T;
+}
+
 function jsonInit(method: 'POST' | 'PUT' | 'PATCH', body: unknown): RequestInit {
   return {
     method,
@@ -126,6 +142,15 @@ export function fetchSealedCatalogue(
 ): Promise<SealedCatalogueResponse> {
   const params = new URLSearchParams({ q: query, page: String(page) });
   return requestJson(`/api/tcg/sealed/catalogue?${params.toString()}`, { cache: 'no-store', signal });
+}
+
+export function fetchPublicSealedCatalogue(
+  query = '',
+  page = 0,
+  signal?: AbortSignal,
+): Promise<SealedCatalogueResponse> {
+  const params = new URLSearchParams({ q: query, page: String(page) });
+  return requestPublicJson(`/api/tcg/sealed/market-catalogue?${params.toString()}`, signal);
 }
 
 export function fetchSealedProduct(id: number, signal?: AbortSignal): Promise<SealedProductDetailResponse> {

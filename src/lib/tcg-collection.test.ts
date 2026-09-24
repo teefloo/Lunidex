@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   aggregateCollectionValueWithVariants,
+  estimateMissingCardsValue,
   getCardMarketValue,
   getDisplayableCompletionByRarity,
   getRarityWeight,
@@ -35,15 +36,15 @@ describe('TCG physical variant pricing', () => {
         },
       },
     };
-    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 1.25, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 4.5, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 4.5, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 1.25, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 4.5, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 4.5, currency: 'EUR', provider: 'cardmarket' });
     expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { normal: { marketPrice: 0 } } } }, 'normal')).toBeNull();
-    expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { reverse: { marketPrice: 1.75 } } } }, 'reverse')).toEqual({ amount: 1.75, currency: 'USD' });
-    expect(getTCGVariantValue({ ...card, pricing: { cardmarket: { unit: 'EUR' }, tcgplayer: { normal: { marketPrice: 2.25 } } } }, 'normal')).toEqual({ amount: 2.25, currency: 'USD' });
-    expect(getTCGVariantValue(card, 'normal', 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
-    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 4.5, currency: 'EUR' });
-    expect(getCardMarketValue(card, 'USD')).toEqual({ amount: 2.5, currency: 'USD' });
+    expect(getTCGVariantValue({ ...card, pricing: { tcgplayer: { reverse: { marketPrice: 1.75 } } } }, 'reverse')).toEqual({ amount: 1.75, currency: 'USD', provider: 'tcgplayer' });
+    expect(getTCGVariantValue({ ...card, pricing: { cardmarket: { unit: 'EUR' }, tcgplayer: { normal: { marketPrice: 2.25 } } } }, 'normal')).toEqual({ amount: 2.25, currency: 'USD', provider: 'tcgplayer' });
+    expect(getTCGVariantValue(card, 'normal', 'USD')).toEqual({ amount: 2.5, currency: 'USD', provider: 'tcgplayer' });
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 4.5, currency: 'EUR', provider: 'cardmarket' });
+    expect(getCardMarketValue(card, 'USD')).toEqual({ amount: 2.5, currency: 'USD', provider: 'tcgplayer' });
     expect(getTCGValueInCurrency({ amount: 1, currency: 'EUR' }, 'USD')).toBeNull();
   });
 
@@ -78,9 +79,9 @@ describe('TCG physical variant pricing', () => {
       ],
     };
 
-    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.03, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 0.17, currency: 'USD' });
-    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 25.53, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.03, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'reverse')).toEqual({ amount: 0.17, currency: 'USD', provider: 'tcgplayer' });
+    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 25.53, currency: 'EUR', provider: 'cardmarket' });
   });
 
   it('ignores a marked special printing when resolving a generic card price', () => {
@@ -109,8 +110,8 @@ describe('TCG physical variant pricing', () => {
       ],
     };
 
-    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.1, currency: 'EUR' });
-    expect(getCardMarketValue(card)).toEqual({ amount: 0.1, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'normal')).toEqual({ amount: 0.1, currency: 'EUR', provider: 'cardmarket' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 0.1, currency: 'EUR', provider: 'cardmarket' });
   });
 
   it('maps Cardmarket reverse-holo quotes to the reverse variant', () => {
@@ -130,8 +131,8 @@ describe('TCG physical variant pricing', () => {
       ],
     };
 
-    expect(getTCGVariantValue(card, 'holo', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'holo', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.09, currency: 'EUR', provider: 'cardmarket' });
   });
 
   it('keeps top-level prices when variants_detailed only contains metadata', () => {
@@ -151,10 +152,10 @@ describe('TCG physical variant pricing', () => {
       ],
     };
 
-    expect(getTCGVariantValue(card, 'normal', 'EUR')).toEqual({ amount: 0.02, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.07, currency: 'EUR' });
-    expect(getTCGVariantValue(card, 'reverse', 'USD')).toEqual({ amount: 0.22, currency: 'USD' });
-    expect(getCardMarketValue(card, 'EUR')).toEqual({ amount: 0.02, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'normal', 'EUR')).toEqual({ amount: 0.02, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'reverse', 'EUR')).toEqual({ amount: 0.07, currency: 'EUR', provider: 'cardmarket' });
+    expect(getTCGVariantValue(card, 'reverse', 'USD')).toEqual({ amount: 0.22, currency: 'USD', provider: 'tcgplayer' });
+    expect(getCardMarketValue(card, 'EUR')).toEqual({ amount: 0.02, currency: 'EUR', provider: 'cardmarket' });
   });
 
   it('multiplies quantities, groups currencies, and exposes unpriced variants', () => {
@@ -276,7 +277,7 @@ describe('TCG physical variant pricing', () => {
       variants: { holo: true },
       pricing: { tcgplayer: { unit: 'USD', holofoil: { marketPrice: 2.5 } } },
     };
-    expect(getCardMarketValue(card)).toEqual({ amount: 2.5, currency: 'USD' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 2.5, currency: 'USD', provider: 'tcgplayer' });
   });
 
   it('ignores a zero Cardmarket holo sentinel instead of valuing the card at zero', () => {
@@ -288,8 +289,8 @@ describe('TCG physical variant pricing', () => {
         tcgplayer: { unit: 'USD', holofoil: { marketPrice: 4.58 } },
       },
     };
-    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 2.92, currency: 'EUR' });
-    expect(getCardMarketValue(card)).toEqual({ amount: 2.92, currency: 'EUR' });
+    expect(getTCGVariantValue(card, 'holo')).toEqual({ amount: 2.92, currency: 'EUR', provider: 'cardmarket' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 2.92, currency: 'EUR', provider: 'cardmarket' });
   });
 
   it('uses a representative estimate for an unqualified card', () => {
@@ -297,7 +298,7 @@ describe('TCG physical variant pricing', () => {
       ...baseCard,
       pricing: { tcgplayer: { unit: 'USD', reverse: { marketPrice: 1.75 } } },
     };
-    expect(getCardMarketValue(card)).toEqual({ amount: 1.75, currency: 'USD' });
+    expect(getCardMarketValue(card)).toEqual({ amount: 1.75, currency: 'USD', provider: 'tcgplayer' });
     const collectionCard = toCollectionCard(card);
     const result = aggregateCollectionValueWithVariants([collectionCard], [
       { cardId: card.id, variant: 'unspecified', quantity: 2 },
@@ -352,8 +353,43 @@ describe('TCG physical variant pricing', () => {
 
     const [merged] = mergeCollectionCardDetails([summary], [pricedDetail]);
 
-    expect(merged.value).toEqual({ amount: 26.51, currency: 'EUR' });
+    expect(merged.value).toEqual({ amount: 26.51, currency: 'EUR', provider: 'cardmarket' });
     expect(merged.rarity).toBe('Ultra Rare');
+  });
+
+  it('estimates only priced missing cards and keeps provider currencies separate', () => {
+    const estimate = estimateMissingCardsValue([
+      {
+        ...baseCard,
+        id: 'set-001',
+        pricing: { cardmarket: { unit: 'EUR', trend: 1.245 } },
+      },
+      {
+        ...baseCard,
+        id: 'set-002',
+        pricing: { cardmarket: { unit: 'EUR', trend: 2.344 } },
+      },
+      {
+        ...baseCard,
+        id: 'set-003',
+        pricing: { tcgplayer: { unit: 'USD', normal: { marketPrice: 3.5 } } },
+      },
+      { ...baseCard, id: 'set-004' },
+      {
+        ...baseCard,
+        id: 'set-005',
+        pricing: { tcgplayer: { unit: 'USD', normal: { marketPrice: 0 } } },
+      },
+    ]);
+
+    expect(estimate).toEqual({
+      groups: [
+        { currency: 'EUR', provider: 'cardmarket', total: 3.59, count: 2 },
+        { currency: 'USD', provider: 'tcgplayer', total: 3.5, count: 1 },
+      ],
+      pricedCount: 3,
+      unpricedCount: 2,
+    });
   });
 
   it('ranks meaningful missing cards before bulk rarities and uses value as a tie-breaker', () => {

@@ -11,20 +11,23 @@ interface SealedPageProps {
 }
 
 function routeTitle(view: string | undefined, t: (key: string, options?: Record<string, unknown>) => string): string {
+  if (view === 'market') return t('tcg.sealed.public_market.title');
   if (view === 'collection' || view === 'journal' || view === 'sales' || view === 'cashflow' || view === 'analytics' || view === 'catalogue' || view === 'sources') return t(`tcg.sealed.${view}`);
   return t('tcg.sealed.title');
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [lang, t] = await Promise.all([getServerLanguage(), getServerT()]);
-  const title = routeTitle(undefined, t);
-  const description = t('tcg.sealed.subtitle');
+export async function generateMetadata({ params }: SealedPageProps): Promise<Metadata> {
+  const [lang, t, route] = await Promise.all([getServerLanguage(), getServerT(), params]);
+  const publicMarket = route.view?.length === 1 && route.view[0] === 'market';
+  const path = publicMarket ? '/tcg/sealed/market' : '/tcg/sealed';
+  const title = routeTitle(publicMarket ? 'market' : undefined, t);
+  const description = publicMarket ? t('tcg.sealed.public_market.subtitle') : t('tcg.sealed.subtitle');
   return {
     title,
     description,
-    robots: { index: false, follow: true },
-    alternates: { canonical: `/${lang}/tcg/sealed`, languages: buildSubpathLanguages('/tcg/sealed') },
-    openGraph: { title, description, url: `/${lang}/tcg/sealed`, images: [DEFAULT_OG_IMAGE] },
+    robots: { index: publicMarket, follow: true },
+    alternates: { canonical: `/${lang}${path}`, languages: buildSubpathLanguages(path) },
+    openGraph: { title, description, url: `/${lang}${path}`, images: [DEFAULT_OG_IMAGE] },
     twitter: { title, description },
   };
 }

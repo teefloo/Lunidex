@@ -133,6 +133,17 @@ export function TCGCollectionSetRow({
               {t('tcg.collection_value_partial', { count: unpricedCount })}
             </p>
           )}
+          {started && valuation && (
+            <>
+              <p className="mt-1 text-[10px] font-medium text-foreground/45">
+                {t('tcg.collection_value_coverage', {
+                  priced: valuation.pricedCount,
+                  owned: valuation.ownedCount,
+                })}
+              </p>
+              <p className="mt-1 text-[10px] text-muted-foreground">{t('tcg.collection_value_method')}</p>
+            </>
+          )}
         </div>
 
         <div className="flex min-h-11 flex-wrap items-center gap-2 lg:justify-end">

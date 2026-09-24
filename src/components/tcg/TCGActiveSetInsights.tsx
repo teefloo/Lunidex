@@ -176,6 +176,13 @@ export function TCGActiveSetInsights({
                   {t('tcg.collection_value_partial', { count: valuationUnpricedCount })}
                 </p>
               )}
+              <p className="mt-1 text-[10px] font-medium text-foreground/45">
+                {t('tcg.collection_value_coverage', {
+                  priced: insights.valuation.pricedCount,
+                  owned: insights.valuation.ownedCount,
+                })}
+              </p>
+              <p className="mt-1 text-[10px] text-muted-foreground">{t('tcg.collection_value_method')}</p>
             </div>
             <div className="min-w-0">
               <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/55">

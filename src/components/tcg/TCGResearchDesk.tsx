@@ -118,6 +118,7 @@ export function TCGResearchDesk({
     ...DEFAULT_TCG_CARD_FILTERS,
     ...parsedState.filters,
   }));
+  const [searchTermDraft, setSearchTermDraft] = useState(parsedState.filters.searchTerm ?? '');
   const [viewMode, setViewMode] = useState<TCGCardViewMode>(() => parsedState.viewMode);
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -189,6 +190,10 @@ export function TCGResearchDesk({
     : hasUserEditedFilters
       ? null
       : latestSetFallbackName;
+
+  useEffect(() => {
+    setSearchTermDraft(effectiveFilters.searchTerm ?? '');
+  }, [effectiveFilters.searchTerm]);
 
   useEffect(() => {
     // A set id is only meaningful inside the language-specific TCGdex catalog.
@@ -295,11 +300,13 @@ export function TCGResearchDesk({
   }, []);
   const updateFilters = useCallback((next: TCGCardFilters) => {
     cancelPendingSearch();
+    setSearchTermDraft(next.searchTerm ?? '');
     setHasUserEditedFilters(true);
     setFilters(normalizeFilters(next));
   }, [cancelPendingSearch]);
   useEffect(() => cancelPendingSearch, [cancelPendingSearch]);
   const updateSearchTerm = useCallback((value: string) => {
+    setSearchTermDraft(value);
     setHasUserEditedFilters(true);
     cancelPendingSearch();
     searchTermTimerRef.current = window.setTimeout(() => {
@@ -310,6 +317,7 @@ export function TCGResearchDesk({
 
   const clearFilters = useCallback(() => {
     cancelPendingSearch();
+    setSearchTermDraft('');
     setHasUserEditedFilters(false);
     setFilters(resetTCGCardFilters(latestSetFallbackId));
   }, [cancelPendingSearch, latestSetFallbackId]);
@@ -356,12 +364,14 @@ export function TCGResearchDesk({
     });
 
     if (preset === 'latest') {
+      setSearchTermDraft('');
       setFilters((current) => resetQuickPresetFilters(current, {
         selectedSet: latestSetFallbackId ?? current.selectedSet ?? null,
       }));
       return;
     }
 
+    setSearchTermDraft('Pikachu');
     setFilters((current) => resetQuickPresetFilters(current, {
       searchTerm: 'Pikachu',
     }));
@@ -373,7 +383,7 @@ export function TCGResearchDesk({
       <DiscoveryHero
         title={t('tcg.page_title')}
         subtitle={t('tcg.discover_subtitle')}
-        searchTerm={effectiveFilters.searchTerm ?? ''}
+        searchTerm={searchTermDraft}
         collections={setOptions}
         collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}

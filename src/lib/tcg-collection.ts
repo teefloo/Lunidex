@@ -451,7 +451,12 @@ function resolveValueFromPricing(
           ?? (allowTopLevelHoloBaseFallback ? getCardmarketBaseAmount(cardmarket) : undefined);
 
   if (typeof cardmarketAmount === 'number') {
-    const value = { amount: cardmarketAmount, currency: normalizeCurrency(cardmarket?.unit, 'EUR') };
+    const value: TCGCardValue = {
+      amount: cardmarketAmount,
+      currency: normalizeCurrency(cardmarket?.unit, 'EUR'),
+      provider: 'cardmarket',
+      ...(typeof cardmarket?.updated === 'string' ? { updatedAt: cardmarket.updated } : {}),
+    };
     if (!displayCurrency || value.currency === displayCurrency) return value;
   }
 
@@ -464,7 +469,12 @@ function resolveValueFromPricing(
         ?? toUsableMarketNumber(tier.midPrice)
         ?? toUsableMarketNumber(tier.lowPrice);
       if (typeof amount === 'number' && (!displayCurrency || currency === displayCurrency)) {
-        return { amount, currency };
+        return {
+          amount,
+          currency,
+          provider: 'tcgplayer',
+          ...(typeof tcgplayer.updated === 'string' ? { updatedAt: tcgplayer.updated } : {}),
+        };
       }
     }
   }
@@ -543,6 +553,47 @@ export function getCardMarketValue(card: TCGCard, displayCurrency?: TCGDisplayCu
   }
 
   return null;
+}
+
+export interface MissingCardsEstimateGroup {
+  currency: string;
+  provider: 'tcgplayer' | 'cardmarket';
+  total: number;
+  count: number;
+}
+
+export interface MissingCardsEstimate {
+  groups: MissingCardsEstimateGroup[];
+  pricedCount: number;
+  unpricedCount: number;
+}
+
+/** Sum one representative quote per missing card, keeping providers and currencies separate. */
+export function estimateMissingCardsValue(missingCards: TCGCard[]): MissingCardsEstimate {
+  const totals = new Map<string, MissingCardsEstimateGroup>();
+  let pricedCount = 0;
+
+  for (const card of missingCards) {
+    const value = getCardMarketValue(card);
+    if (!value || !Number.isFinite(value.amount) || value.amount <= 0) continue;
+    const currency = value.currency.trim().toUpperCase();
+    const provider = value.provider ?? (currency === 'EUR' ? 'cardmarket' : 'tcgplayer');
+    const key = provider + ':' + currency;
+    const group = totals.get(key) ?? { currency, provider, total: 0, count: 0 };
+    group.total += value.amount;
+    group.count += 1;
+    totals.set(key, group);
+    pricedCount += 1;
+  }
+
+  return {
+    groups: [...totals.values()].map((group) => ({
+      ...group,
+      total: Math.round(group.total * 100) / 100,
+    })),
+    pricedCount,
+    unpricedCount: Math.max(0, missingCards.length - pricedCount),
+  };
 }
 
 /** Keep a resolved source quote only when it matches the user's display currency. */

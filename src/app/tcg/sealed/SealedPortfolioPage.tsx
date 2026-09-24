@@ -65,6 +65,7 @@ import {
   createSealedTransaction,
   downloadSealedExport,
   fetchSealedCatalogue,
+  fetchPublicSealedCatalogue,
   fetchSealedOverview,
   fetchSealedProduct,
   fetchSealedSources,
@@ -87,7 +88,7 @@ import type {
   SealedTransactionDraft,
 } from '@primedex/core';
 
-type SealedView = 'dashboard' | 'collection' | 'journal' | 'sales' | 'cashflow' | 'analytics' | 'catalogue' | 'sources' | 'product';
+type SealedView = 'dashboard' | 'collection' | 'journal' | 'sales' | 'cashflow' | 'analytics' | 'catalogue' | 'market' | 'sources' | 'product';
 type FormState = { transaction?: SealedTransaction; product?: SealedProduct; giveProduct?: SealedProduct; kind?: 'buy' | 'sell' | 'exchange' };
 type PeriodPreset = 'all' | '1' | '7' | '30' | 'year' | 'custom';
 
@@ -615,13 +616,16 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   const [rangeGroup, setRangeGroup] = useState<'day' | 'month' | 'year'>('month');
   const [catalogueQuery, setCatalogueQuery] = useState('');
   const [cataloguePage, setCataloguePage] = useState(0);
+  const [marketQuery, setMarketQuery] = useState('');
+  const [marketPage, setMarketPage] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<unknown>(null);
-  const view: SealedView = rawView === 'product' || (rawView === 'products' && productId) ? 'product' : (['dashboard', 'collection', 'journal', 'sales', 'cashflow', 'analytics', 'catalogue', 'sources'].includes(rawView) ? rawView as SealedView : 'dashboard');
+  const view: SealedView = rawView === 'product' || (rawView === 'products' && productId) ? 'product' : (['dashboard', 'collection', 'journal', 'sales', 'cashflow', 'analytics', 'catalogue', 'market', 'sources'].includes(rawView) ? rawView as SealedView : 'dashboard');
   const ready = mounted && !authLoading && Boolean(user) && syncStatus === 'ready';
-  const overview = useQuery<SealedOverviewResponse>({ queryKey: ['tcg-sealed', 'overview', rangeGroup, periodFrom, periodTo], queryFn: ({ signal }) => fetchSealedOverview({ from: periodFrom || undefined, to: periodTo, group: rangeGroup, signal }), enabled: ready });
+  const overview = useQuery<SealedOverviewResponse>({ queryKey: ['tcg-sealed', 'overview', rangeGroup, periodFrom, periodTo], queryFn: ({ signal }) => fetchSealedOverview({ from: periodFrom || undefined, to: periodTo, group: rangeGroup, signal }), enabled: ready && view !== 'market' });
   const transactions = useQuery({ queryKey: ['tcg-sealed', 'transactions'], queryFn: ({ signal }) => fetchSealedTransactions(true, signal), enabled: ready && ['journal', 'sales'].includes(view) });
   const catalogue = useQuery<SealedCatalogueResponse>({ queryKey: ['tcg-sealed', 'catalogue', catalogueQuery, cataloguePage], queryFn: ({ signal }) => fetchSealedCatalogue(catalogueQuery, cataloguePage, signal), enabled: ready && view === 'catalogue' });
+  const publicMarket = useQuery<SealedCatalogueResponse>({ queryKey: ['tcg-sealed', 'public-market', marketQuery, marketPage], queryFn: ({ signal }) => fetchPublicSealedCatalogue(marketQuery, marketPage, signal), enabled: view === 'market' });
   const sources = useQuery<SealedSourcesResponse>({ queryKey: ['tcg-sealed', 'sources'], queryFn: ({ signal }) => fetchSealedSources(signal), enabled: ready && view === 'sources' });
   const productDetail = useQuery<SealedProductDetailResponse>({ queryKey: ['tcg-sealed', 'product', productId], queryFn: ({ signal }) => fetchSealedProduct(productId as number, signal), enabled: ready && view === 'product' && productId !== undefined });
   const invalidate = () => { void queryClient.invalidateQueries({ queryKey: ['tcg-sealed'] }); };
@@ -659,6 +663,22 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
       setExporting(false);
     }
   };
+
+  if (view === 'market') return <PageFrame>
+    <SealedSubnav view="market" localizedHref={localizedHref} t={t} />
+    <PublicMarketCatalogueView
+      data={publicMarket.data}
+      error={publicMarket.error}
+      query={marketQuery}
+      page={marketPage}
+      language={language}
+      t={t}
+      loading={publicMarket.isPending}
+      onQuery={(value) => { setMarketQuery(value); setMarketPage(0); }}
+      onPage={setMarketPage}
+      onRetry={() => void publicMarket.refetch()}
+    />
+  </PageFrame>;
 
   if (authLoading || !mounted || !user && syncStatus !== 'unauthenticated') return <PageFrame><LoadingState label={t('tcg.sealed.loading')} /></PageFrame>;
   if (!user || syncStatus === 'unauthenticated') return <PageFrame><SyncRequiredPanel /></PageFrame>;
@@ -814,6 +834,70 @@ function MetricLine({ label, value }: { label: string; value: string }) { return
 function CatalogueView({ data, error, query, page, language, t, onQuery, onPage, onAdd, onRetry, onSync, syncing, loading }: { data?: SealedCatalogueResponse; error: unknown; query: string; page: number; language: string; t: (key: string, options?: Record<string, unknown>) => string; onQuery: (value: string) => void; onPage: (page: number) => void; onAdd: (product: SealedProduct) => void; onRetry: () => void; onSync: () => void; syncing: boolean; loading: boolean }) {
   if (error) return <ErrorPanel error={error} onRetry={onRetry} t={t} />;
   return <div className="space-y-5"><div className="flex gap-2"><div className="relative min-w-0 flex-1"><Input value={query} onChange={(event) => onQuery(event.target.value)} placeholder={t('tcg.sealed.search')} aria-label={t('tcg.sealed.search')} /><Search className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-foreground/35" aria-hidden="true" /></div>{loading ? <Loader2 className="mt-3 h-5 w-5 animate-spin text-primary" aria-label={t('tcg.sealed.loading')} /> : null}</div>{data?.products.length ? <><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{data.products.map((product) => <Card key={product.cardmarketProductId} className="p-0"><CardContent className="flex gap-3 p-3"><ProductThumb product={product} size="md" /><div className="min-w-0 flex-1"><p className="line-clamp-2 text-sm font-black">{product.name}</p><p className="mt-1 text-xs text-foreground/45">{product.categoryName} · {product.expansionId}</p><div className="mt-3 text-sm font-bold">{money(data.prices.find((price) => price.cardmarketProductId === product.cardmarketProductId)?.metrics.trendCents ?? null, language)}</div><Button type="button" size="sm" className="mt-3 w-full" onClick={() => onAdd(product)}><Plus aria-hidden="true" />{t('tcg.sealed.buy')}</Button></div></CardContent></Card>)}</div><div className="flex items-center justify-between"><Button type="button" variant="outline" onClick={() => onPage(Math.max(0, page - 1))} disabled={page === 0}>←</Button><span className="text-xs font-bold text-foreground/50">{page + 1} / {Math.max(1, Math.ceil(data.total / data.pageSize))}</span><Button type="button" variant="outline" onClick={() => onPage(page + 1)} disabled={(page + 1) * data.pageSize >= data.total}>→</Button></div></> : <Card className="border-dashed"><CardContent className="flex flex-col items-center py-14 text-center"><Database className="h-10 w-10 text-primary/60" aria-hidden="true" /><p className="mt-4 text-sm text-foreground/55">{data ? t('tcg.sealed.no_catalogue') : t('tcg.sealed.catalogue_hint')}</p><div className="mt-4 flex flex-wrap justify-center gap-2"><Button variant="outline" type="button" onClick={onRetry}><RefreshCw aria-hidden="true" />{t('tcg.sealed.retry')}</Button><Button type="button" onClick={onSync} disabled={syncing}><RefreshCw className={syncing ? 'animate-spin' : ''} aria-hidden="true" />{t('tcg.sealed.sync')}</Button></div></CardContent></Card>}</div>;
+}
+
+function PublicMarketCatalogueView({ data, error, query, page, language, t, loading, onQuery, onPage, onRetry }: { data?: SealedCatalogueResponse; error: unknown; query: string; page: number; language: string; t: (key: string, options?: Record<string, unknown>) => string; loading: boolean; onQuery: (value: string) => void; onPage: (page: number) => void; onRetry: () => void }) {
+  const pricesByProduct = new Map((data?.prices ?? []).map((price) => [price.cardmarketProductId, price]));
+  const pageCount = Math.max(1, Math.ceil((data?.total ?? 0) / (data?.pageSize ?? 24)));
+
+  return <div className="space-y-6">
+    <section className="page-header-surface relative mb-6 overflow-hidden p-5 sm:p-7">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />
+      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <p className="page-eyebrow">{t('tcg.sealed.public_market.eyebrow')}</p>
+          <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{t('tcg.sealed.public_market.title')}</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/60">{t('tcg.sealed.public_market.subtitle')}</p>
+        </div>
+        <span className="inline-flex min-h-9 shrink-0 items-center rounded-sm border border-border/60 bg-background/25 px-3 text-xs font-bold text-foreground/65">{t('tcg.sealed.source_prices')}</span>
+      </div>
+    </section>
+
+    <div className="flex items-center gap-3" aria-busy={loading}>
+      <div className="relative min-w-0 flex-1">
+        <Input value={query} maxLength={150} onChange={(event) => onQuery(event.target.value)} placeholder={t('tcg.sealed.search')} aria-label={t('tcg.sealed.search')} />
+        <Search className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-foreground/35" aria-hidden="true" />
+      </div>
+      {loading ? <Loader2 className="h-5 w-5 shrink-0 animate-spin text-primary" aria-label={t('tcg.sealed.public_market.loading')} /> : null}
+    </div>
+
+    {error ? <Card role="alert" className="border-dashed"><CardContent className="flex flex-col items-center gap-4 py-12 text-center">
+      <Database className="h-9 w-9 text-primary/60" aria-hidden="true" />
+      <p className="max-w-xl text-sm text-foreground/65">{t('tcg.sealed.public_market.error')}</p>
+      <Button type="button" variant="outline" onClick={onRetry}><RefreshCw aria-hidden="true" />{t('tcg.sealed.retry')}</Button>
+    </CardContent></Card> : data?.products.length ? <>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {data.products.map((product) => {
+          const price = pricesByProduct.get(product.cardmarketProductId);
+          const trendCents = price?.metrics.trendCents ?? price?.metrics.avgCents ?? null;
+          return <Card key={product.cardmarketProductId} className="overflow-hidden p-0">
+            <CardContent className="flex h-full gap-3 p-3">
+              <ProductThumb product={product} size="md" />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <p className="line-clamp-2 text-sm font-black">{product.name}</p>
+                <p className="mt-1 text-xs text-foreground/45">{product.categoryName} · {t('tcg.sealed.id')} {product.cardmarketProductId}</p>
+                <p className="mt-3 text-[10px] font-black uppercase tracking-[0.1em] text-foreground/45">{t('tcg.sealed.market_price')}</p>
+                <p className="text-lg font-black tabular-nums">{trendCents === null ? t('tcg.sealed.price_unavailable') : money(trendCents, language)}</p>
+                {price ? <p className="mt-1 text-[10px] text-foreground/45">{t('tcg.sealed.public_market.updated')} · {dateLabel(price.day, language)}</p> : null}
+                <a href={product.cardmarketUrl} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: 'outline', size: 'sm' })} mt-auto min-h-10 w-full`}>
+                  <span>Cardmarket</span><ExternalLink aria-hidden="true" />
+                </a>
+              </div>
+            </CardContent>
+          </Card>;
+        })}
+      </div>
+      {data.total > data.pageSize ? <div className="flex items-center justify-between gap-3">
+        <Button type="button" variant="outline" aria-label={t('tcg.sealed.public_market.previous')} onClick={() => onPage(Math.max(0, page - 1))} disabled={page === 0}>←</Button>
+        <span className="text-xs font-bold text-foreground/50">{page + 1} / {pageCount}</span>
+        <Button type="button" variant="outline" aria-label={t('tcg.sealed.public_market.next')} onClick={() => onPage(page + 1)} disabled={(page + 1) * data.pageSize >= data.total}>→</Button>
+      </div> : null}
+    </> : <Card className="border-dashed"><CardContent className="flex flex-col items-center py-14 text-center">
+      <Database className="h-10 w-10 text-primary/60" aria-hidden="true" />
+      <p className="mt-4 text-sm text-foreground/55">{loading ? t('tcg.sealed.public_market.loading') : t('tcg.sealed.no_catalogue')}</p>
+      {data ? <Button className="mt-4" type="button" variant="outline" onClick={onRetry}><RefreshCw aria-hidden="true" />{t('tcg.sealed.retry')}</Button> : null}
+    </CardContent></Card>}
+  </div>;
 }
 
 function SourcesView({ data, loading, error, language, t, onSync, syncing, onRetry }: { data?: SealedSourcesResponse; loading: boolean; error: unknown; language: string; t: (key: string, options?: Record<string, unknown>) => string; onSync: () => void; syncing: boolean; onRetry: () => void }) { if (loading) return <LoadingState label={t('tcg.sealed.loading')} />; if (error) return <ErrorPanel error={error} onRetry={onRetry} t={t} />; return <div className="space-y-6"><Card><CardHeader><CardTitle className="flex items-center justify-between gap-3"><span>{t('tcg.sealed.sources')}</span><Button type="button" onClick={onSync} disabled={syncing}><RefreshCw className={syncing ? 'animate-spin' : ''} aria-hidden="true" />{t('tcg.sealed.sync')}</Button></CardTitle></CardHeader><CardContent className="grid gap-4 md:grid-cols-2"><SourceRow label={t('tcg.sealed.source_catalogue')} value={data?.sources.catalogue ?? '—'} /><SourceRow label={t('tcg.sealed.source_prices')} value={data?.sources.prices ?? '—'} /><SourceRow label={t('tcg.sealed.catalogue')} value={String(data?.catalogueCount ?? 0)} /><SourceRow label={t('tcg.sealed.market_price')} value={String(data?.priceCount ?? 0)} /><SourceRow label={t('tcg.sealed.last_sync')} value={dateLabel(data?.fetchedAt, language)} /><SourceRow label={t('tcg.sealed.official_source')} value={t('tcg.sealed.official_source')} /></CardContent></Card><Card><CardHeader><CardTitle>{t('tcg.sealed.journal')}</CardTitle></CardHeader><CardContent className="space-y-2">{data?.sync.length ? data.sync.map((run) => <div key={run.id} className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-border/50 p-3 text-sm"><span>{dateLabel(run.startedAt, language)}</span><Badge variant={run.status === 'success' ? 'default' : run.status === 'failed' ? 'destructive' : 'secondary'}>{run.status}</Badge></div>) : <p className="text-sm text-foreground/50">{t('tcg.sealed.not_synced')}</p>}</CardContent></Card></div>; }

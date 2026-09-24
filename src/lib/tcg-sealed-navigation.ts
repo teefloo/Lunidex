@@ -6,6 +6,7 @@ export const SEALED_SUBVIEWS = [
   { key: 'cashflow', labelKey: 'cashflow', path: '/tcg/sealed/cashflow' },
   { key: 'analytics', labelKey: 'analytics', path: '/tcg/sealed/analytics' },
   { key: 'catalogue', labelKey: 'catalogue', path: '/tcg/sealed/catalogue' },
+  { key: 'market', labelKey: 'public_market.title', path: '/tcg/sealed/market' },
   { key: 'sources', labelKey: 'sources', path: '/tcg/sealed/sources' },
 ] as const;
 

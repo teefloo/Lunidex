@@ -61,6 +61,7 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
     'tcg.nav_wishlist': t('tcg.nav_wishlist'),
     'tcg.nav_deck_builder': t('tcg.nav_deck_builder'),
     'tcg.nav_sealed': t('tcg.nav_sealed', { defaultValue: 'Sealed' }),
+    'tcg.nav_sealed_market': t('tcg.nav_sealed_market', { defaultValue: 'Sealed market' }),
     'friends.title': t('friends.title', { defaultValue: 'Friends' }),
   } as const;
   const breadcrumb = buildBreadcrumbJsonLd([
