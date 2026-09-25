@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isSupportedLanguage } from '@/lib/languages';
+import { isBlockedTcgCrawler } from '@/lib/blocked-crawlers';
 
 const COOKIE_NAME = 'primedex-lang';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
@@ -137,6 +138,30 @@ function isKnownScannerPath(pathname: string): boolean {
   return KNOWN_SCANNER_PATH_PREFIXES.some(
     (prefix) => unlocalizedPath === prefix || unlocalizedPath.startsWith(`${prefix}/`),
   );
+}
+
+function isBlockedTcgCardRequest(request: NextRequest): boolean {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return false;
+
+  const segments = request.nextUrl.pathname.split('/').filter(Boolean);
+  return isSupportedLanguage(segments[0] ?? '')
+    && segments.length === 4
+    && segments[1] === 'tcg'
+    && segments[2] === 'cards'
+    && !hasObviouslyInvalidResourceIdentifier(request.nextUrl.pathname, segments[0] ?? '')
+    && isBlockedTcgCrawler(request.headers.get('user-agent'));
+}
+
+function blockedCrawlerResponse(): NextResponse {
+  return new NextResponse(null, {
+    status: 403,
+    headers: {
+      'Cache-Control': 'private, no-store',
+      'CDN-Cache-Control': 'private, no-store',
+      'Vercel-CDN-Cache-Control': 'private, no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
+  });
 }
 
 function hasObviouslyInvalidResourceIdentifier(pathname: string, locale: string): boolean {
@@ -462,6 +487,12 @@ export async function proxy(request: NextRequest) {
         'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
       },
     });
+  }
+
+  // These two high-volume crawlers do not need a rendered TCG detail page.
+  // Stop them before resource validation can issue an upstream TCGdex probe.
+  if (isBlockedTcgCardRequest(request)) {
+    return blockedCrawlerResponse();
   }
 
   // Headless crawlers such as Lightpanda execute Next's automatic Link

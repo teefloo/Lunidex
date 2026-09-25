@@ -94,21 +94,25 @@ const EDITORIAL_CLIENT_TRANSLATION_PATHS = [
   'pwa',
 ] as const;
 
+const TCG_CARD_CLIENT_TRANSLATION_PATHS = [
+  ...EDITORIAL_CLIENT_TRANSLATION_PATHS,
+  'tcg',
+  'stats',
+  'detail',
+] as const;
+
 function isTranslationRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-/**
- * Editorial pages render their article copy on the server. Keep only the
- * client-facing shell strings in the RSC payload; the complete locale bundle
- * remains available through `loadLanguage` when an interactive feature needs
- * it or the user changes language.
- */
-export function getEditorialClientTranslations(lang: SupportedLanguage): ResourceLanguage {
+function selectClientTranslations(
+  lang: SupportedLanguage,
+  paths: readonly string[],
+): ResourceLanguage {
   const source = serverResources[lang].translation as unknown as Record<string, unknown>;
   const selected: Record<string, unknown> = {};
 
-  for (const path of EDITORIAL_CLIENT_TRANSLATION_PATHS) {
+  for (const path of paths) {
     const segments = path.split('.');
     let sourceValue: unknown = source;
     let target: Record<string, unknown> = selected;
@@ -131,6 +135,37 @@ export function getEditorialClientTranslations(lang: SupportedLanguage): Resourc
   }
 
   return selected as ResourceLanguage;
+}
+
+/**
+ * Editorial pages render their article copy on the server. Keep only the
+ * client-facing shell strings in the RSC payload; the complete locale bundle
+ * remains available through `loadLanguage` when an interactive feature needs
+ * it or the user changes language.
+ */
+export function getEditorialClientTranslations(lang: SupportedLanguage): ResourceLanguage {
+  return selectClientTranslations(lang, EDITORIAL_CLIENT_TRANSLATION_PATHS);
+}
+
+export interface InitialClientTranslations {
+  translations: ResourceLanguage;
+  partial: boolean;
+}
+
+/** Select a small initial client bundle for routes with known translation needs. */
+export function getInitialClientTranslations(
+  lang: SupportedLanguage,
+  pathname: string,
+): InitialClientTranslations {
+  if (/^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(pathname)) {
+    return { translations: getEditorialClientTranslations(lang), partial: true };
+  }
+
+  if (/^\/(?:en|fr|es|de|it|ja|ko|zh)\/tcg\/cards\/[^/]+\/?$/.test(pathname)) {
+    return { translations: selectClientTranslations(lang, TCG_CARD_CLIENT_TRANSLATION_PATHS), partial: true };
+  }
+
+  return { translations: getServerTranslations(lang), partial: false };
 }
 
 // Synchronous, language-explicit translator. Used where the locale comes from

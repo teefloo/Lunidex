@@ -6,10 +6,9 @@ import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import {
-  getEditorialClientTranslations,
+  getInitialClientTranslations,
   getServerT,
   getServerLanguage,
-  getServerTranslations,
 } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
@@ -166,10 +165,8 @@ export default async function RootLayout({
   const lang = await getServerLanguage();
   const t = await getServerT();
   const requestPathname = requestHeaders.get('x-primedex-pathname') ?? '';
-  const isEditorialRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(requestPathname);
-  const initialTranslations = isEditorialRoute
-    ? getEditorialClientTranslations(lang)
-    : getServerTranslations(lang);
+  const { translations: initialTranslations, partial: initialTranslationsPartial } =
+    getInitialClientTranslations(lang, requestPathname);
   const baseUrl = SITE_URL;
   const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
 
@@ -235,7 +232,7 @@ export default async function RootLayout({
          <Providers
            initialLanguage={lang}
            initialTranslations={initialTranslations}
-           initialTranslationsPartial={isEditorialRoute}
+           initialTranslationsPartial={initialTranslationsPartial}
          >
            <AppContent>
              <div id="main-content" tabIndex={-1}>

@@ -21,6 +21,41 @@ describe('public localized proxy responses', () => {
     );
   });
 
+  it.each(['ClaudeBot/1.0', 'Meta-ExternalAgent/1.0'])(
+    'blocks %s from every localized TCG card document before probing TCGdex',
+    async (userAgent) => {
+      const fetchMock = vi.spyOn(globalThis, 'fetch');
+      const locales = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'];
+
+      for (const locale of locales) {
+        for (const method of ['GET', 'HEAD'] as const) {
+          const response = await proxy(new NextRequest(`https://lunidex.test/${locale}/tcg/cards/sv01-001`, {
+            method,
+            headers: { accept: 'text/html', 'user-agent': userAgent },
+          }));
+
+          expect(response.status).toBe(403);
+          expect(response.headers.get('Cache-Control')).toBe('private, no-store');
+          expect(response.headers.get('CDN-Cache-Control')).toBe('private, no-store');
+          expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe('private, no-store');
+        }
+      }
+
+      expect(fetchMock).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(['Claude-User/1.0', 'Meta-ExternalFetcher/1.0', 'facebookexternalhit/1.1', 'Googlebot/2.1']) (
+    'preserves %s on TCG card routes',
+    async (userAgent) => {
+      const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/sv01-001', {
+        headers: { accept: 'text/x-component', rsc: '1', 'user-agent': userAgent },
+      }));
+
+      expect(response.status).toBe(200);
+    },
+  );
+
   it('marks document responses for Vercel CDN caching without enabling browser caching', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
       headers: { accept: 'text/html', 'user-agent': 'ClaudeBot/1.0' },
@@ -73,19 +108,22 @@ describe('public localized proxy responses', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('rejects obvious invalid resource identifiers without an upstream probe', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch');
+  it.each(['null', 'undefined', '%6eull', '%75ndefined'])(
+    'preserves cacheable 404 behavior for the invalid card identifier %s',
+    async (identifier) => {
+      const fetchMock = vi.spyOn(globalThis, 'fetch');
 
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg/cards/null', {
-      headers: { accept: 'text/html', 'user-agent': 'Meta-ExternalAgent/1.0' },
-    }));
+      const response = await proxy(new NextRequest(`https://lunidex.test/fr/tcg/cards/${identifier}`, {
+        headers: { accept: 'text/html', 'user-agent': 'Meta-ExternalAgent/1.0' },
+      }));
 
-    expect(response.status).toBe(404);
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-  });
+      expect(response.status).toBe(404);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
+        'public, s-maxage=3600, stale-while-revalidate=86400',
+      );
+    },
+  );
 
   it('does not treat Flight requests as document probes', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch');

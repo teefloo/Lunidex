@@ -18,7 +18,6 @@ export default function robots(): MetadataRoute.Robots {
     'OAI-SearchBot',
     'PerplexityBot',
     'Perplexity-User',
-    'ClaudeBot',
     'Claude-User',
     'anthropic-ai',
     'Claude-SearchBot',
@@ -31,7 +30,6 @@ export default function robots(): MetadataRoute.Robots {
     'YouBot',
     'MistralAI-User',
     'DeepseekBot',
-    'Meta-ExternalAgent',
     'Meta-ExternalFetcher',
     'Gemini-Deep-Research',
     'CCBot',
@@ -60,8 +58,18 @@ export default function robots(): MetadataRoute.Robots {
     disallow: ['/api/'],
   }));
 
+  const limitedTcgCrawlers = ['ClaudeBot', 'Meta-ExternalAgent'].map((userAgent) => ({
+    userAgent,
+    allow: ['/', '/api/og/'],
+    disallow: [
+      '/api/',
+      '/api/og/tcg-card',
+      ...['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'].map((language) => `/${language}/tcg/cards/`),
+    ],
+  }));
+
   return {
-    rules: [allowAll, ...explicitAiBots],
+    rules: [allowAll, ...explicitAiBots, ...limitedTcgCrawlers],
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   };

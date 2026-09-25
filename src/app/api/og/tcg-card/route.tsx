@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { getTCGCardCached } from '@/lib/api/server-cache';
 import { getTCGCardPngImage } from '@/lib/tcg-images';
@@ -12,12 +12,25 @@ import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgTcgCardId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
 import { SITE_URL } from '@/lib/site';
+import { isBlockedTcgCrawler } from '@/lib/blocked-crawlers';
 
 // Node.js runtime: the edge bundle (next/og + satori + vendored fonts) exceeds
 // the 1 MB edge function size limit; the Node serverless function has headroom.
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest): Promise<Response> {
+  if (isBlockedTcgCrawler(request.headers.get('user-agent'))) {
+    return new NextResponse(null, {
+      status: 403,
+      headers: {
+        'Cache-Control': 'private, no-store',
+        'CDN-Cache-Control': 'private, no-store',
+        'Vercel-CDN-Cache-Control': 'private, no-store',
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
+    });
+  }
+
   const search = request.nextUrl.searchParams;
   const id = normalizeOgTcgCardId(search.get('id'));
   const langParam = search.get('lang') ?? 'en';
