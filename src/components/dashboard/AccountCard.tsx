@@ -15,6 +15,7 @@ import AuthModal from '@/components/auth/AuthModal';
 import { HANDLE_REGEX, HANDLE_MIN_LENGTH, HANDLE_MAX_LENGTH } from '@/types/dashboard';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import ApiKeysCard from '@/components/dashboard/ApiKeysCard';
 
 /**
  * Account panel shown on the dashboard. Surfaces the signed-in identity and the
@@ -269,6 +270,8 @@ export default function AccountCard() {
           {tt('auth.signout_cta', 'Sign out')}
         </Button>
       </div>
+
+      <ApiKeysCard />
 
       {/* Public profile settings */}
       {profileLoaded && (

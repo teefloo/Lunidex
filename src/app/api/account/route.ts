@@ -62,6 +62,9 @@ async function claimDeletion(sql: NeonSql, userId: string): Promise<boolean> {
 /** Remove all application-owned personal data while retaining a tombstone. */
 async function removeApplicationData(sql: NeonSql, userId: string): Promise<void> {
   await sql.transaction((tx) => [
+    tx`delete from public.api_idempotency where user_id = ${userId}::uuid`,
+    tx`delete from public.api_keys where user_id = ${userId}::uuid`,
+    tx`delete from public.api_quota_buckets where subject_key = 'user:' || ${userId}::uuid::text`,
     tx`delete from public.battle_rooms where player1_id = ${userId}::uuid or player2_id = ${userId}::uuid`,
     tx`delete from public.friendships where requester_id = ${userId}::uuid or addressee_id = ${userId}::uuid`,
     tx`delete from public.user_state where user_id = ${userId}::uuid`,

@@ -2534,6 +2534,13 @@ team: '队伍',
       view_bulbapedia: '在Bulbapedia查看',
       open_calculator: '打开{{name}}的培育计算器',
     },
+    api_keys: {
+      title: '公开 API 密钥', description: '创建供服务器端集成使用的密钥。切勿将 API 密钥放入浏览器、公开代码库或共享日志。',
+      list_label: '你的 API 密钥', load_error: '无法加载 API 密钥。', create_error: '无法创建此 API 密钥。', revoke_error: '无法撤销此 API 密钥。', copy_error: '无法访问剪贴板。',
+      read_only: '只读', read_write: '读写', created: '创建时间', last_used: '上次使用', never_used: '从未使用', revoked: '已撤销', revoke: '撤销', empty: '尚无 API 密钥。',
+      created_once: '请立即复制此密钥。关闭后将无法再次查看。', secret_warning: '请将其保存在服务器端密钥管理器中。不要将其放入客户端代码或屏幕截图。', dismiss_secret: '隐藏密钥', copied: '已复制', copy: '复制密钥',
+      name_placeholder: '集成名称', name_label: 'API 密钥名称', permission_label: 'API 密钥权限', create: '创建密钥', limit: '最多可拥有五个有效密钥。',
+    },
     profile: {
       not_found_title: '个人资料未找到',
       not_found_desc: '此个人资料不存在或未公开。',

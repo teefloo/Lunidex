@@ -2533,6 +2533,13 @@ team: 'チーム',
       view_bulbapedia: 'Bulbapediaで見る',
       open_calculator: '{{name}}の育成計算機を開く',
     },
+    api_keys: {
+      title: '公開 API キー', description: 'サーバー側の連携用キーを作成します。API キーをブラウザー、公開リポジトリ、共有ログに含めないでください。',
+      list_label: 'API キー', load_error: 'API キーを読み込めませんでした。', create_error: 'API キーを作成できませんでした。', revoke_error: 'API キーを失効できませんでした。', copy_error: 'クリップボードを利用できません。',
+      read_only: '読み取り専用', read_write: '読み取りと書き込み', created: '作成日', last_used: '最終使用', never_used: '未使用', revoked: '失効済み', revoke: '失効', empty: 'API キーはありません。',
+      created_once: 'このキーを今すぐコピーしてください。再表示されません。', secret_warning: 'サーバー側のシークレット管理サービスに保存してください。クライアントコードやスクリーンショットに含めないでください。', dismiss_secret: 'キーを隠す', copied: 'コピーしました', copy: 'キーをコピー',
+      name_placeholder: '連携名', name_label: 'API キー名', permission_label: 'API キーの権限', create: 'キーを作成', limit: '有効なキーは最大 5 個です。',
+    },
     profile: {
       not_found_title: 'プロフィールが見つかりません',
       not_found_desc: 'このプロフィールは存在しないか、公開されていません。',

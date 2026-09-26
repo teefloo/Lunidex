@@ -68,6 +68,30 @@ async function getMetricsRetention(request: NextRequest): Promise<NextResponse> 
       )
       select count(*)::int as count from deleted
     ` as CountRow[];
+    const deletedApiUsage = await sql`
+      with deleted as (
+        delete from public.api_usage_daily
+        where day < current_date - 89
+        returning 1
+      )
+      select count(*)::int as count from deleted
+    ` as CountRow[];
+    const deletedApiBuckets = await sql`
+      with deleted as (
+        delete from public.api_quota_buckets
+        where window_start < now() - interval '2 days'
+        returning 1
+      )
+      select count(*)::int as count from deleted
+    ` as CountRow[];
+    const deletedIdempotency = await sql`
+      with deleted as (
+        delete from public.api_idempotency
+        where expires_at < now()
+        returning 1
+      )
+      select count(*)::int as count from deleted
+    ` as CountRow[];
 
     return NextResponse.json(
       {
@@ -75,6 +99,9 @@ async function getMetricsRetention(request: NextRequest): Promise<NextResponse> 
         expiredQuizAttempts: countFrom(expiredAttempts),
         deletedPriceHistoryRows: countFrom(deletedSnapshots),
         deletedDailyMetricsDays: countFrom(deletedMetrics),
+        deletedApiUsageRows: countFrom(deletedApiUsage),
+        deletedApiQuotaBuckets: countFrom(deletedApiBuckets),
+        deletedApiIdempotencyRows: countFrom(deletedIdempotency),
       },
       { headers: NO_STORE_HEADERS },
     );

@@ -2533,6 +2533,13 @@ team: 'Squadra',
       view_bulbapedia: 'Vedi su Bulbapedia',
       open_calculator: 'Apri Calcolatore Allevamento per {{name}}',
     },
+    api_keys: {
+      title: 'Chiavi API pubbliche', description: 'Crea chiavi per integrazioni lato server. Non inserire mai una chiave API in un browser, repository pubblico o registro condiviso.',
+      list_label: 'Le tue chiavi API', load_error: 'Impossibile caricare le chiavi API.', create_error: 'Impossibile creare questa chiave API.', revoke_error: 'Impossibile revocare questa chiave API.', copy_error: 'Gli appunti non sono disponibili.',
+      read_only: 'Sola lettura', read_write: 'Lettura e scrittura', created: 'Creata', last_used: 'Ultimo utilizzo', never_used: 'Mai utilizzata', revoked: 'Revocata', revoke: 'Revoca', empty: 'Nessuna chiave API.',
+      created_once: 'Copia subito questa chiave. Non verrà mostrata di nuovo.', secret_warning: 'Conservala in un gestore di segreti lato server. Non inserirla nel codice client o negli screenshot.', dismiss_secret: 'Nascondi chiave', copied: 'Copiata', copy: 'Copia chiave',
+      name_placeholder: 'Nome integrazione', name_label: 'Nome chiave API', permission_label: 'Permessi chiave API', create: 'Crea chiave', limit: 'Puoi avere fino a cinque chiavi attive.',
+    },
     profile: {
       not_found_title: 'Profilo non trovato',
       not_found_desc: 'Questo profilo non esiste o non è pubblico.',

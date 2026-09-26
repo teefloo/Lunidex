@@ -3149,6 +3149,13 @@ export default {
       view_bulbapedia: 'View on Bulbapedia',
       open_calculator: 'Open Breeding Calculator for {{name}}',
     },
+    api_keys: {
+      title: 'Public API keys', description: 'Create keys for server-side integrations. Never put an API key in a browser, public repository, or shared log.',
+      list_label: 'Your API keys', load_error: 'Could not load API keys.', create_error: 'Could not create this API key.', revoke_error: 'Could not revoke this API key.', copy_error: 'Clipboard access is unavailable.',
+      read_only: 'Read only', read_write: 'Read and write', created: 'Created', last_used: 'Last used', never_used: 'Never used', revoked: 'Revoked', revoke: 'Revoke', empty: 'No API keys yet.',
+      created_once: 'Copy this key now. It will not be shown again.', secret_warning: 'Store it in a server-side secret manager. Do not paste it into client-side code or screenshots.', dismiss_secret: 'Hide key', copied: 'Copied', copy: 'Copy key',
+      name_placeholder: 'Integration name', name_label: 'API key name', permission_label: 'API key permission', create: 'Create key', limit: 'You can have up to five active keys.',
+    },
     profile: {
       not_found_title: 'Profile Not Found',
       not_found_desc: 'This profile does not exist or is not public.',
