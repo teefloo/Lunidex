@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
-import { GITHUB_REPO_URL } from '@/lib/site';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
@@ -16,8 +15,10 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const links = [
     { href: '/pokedex', label: t('nav.pokedex') },
-    { href: '/tcg', label: t('tcg.nav_catalog') },
     { href: '/team', label: t('nav.team') },
+    { href: '/tcg', label: t('nav.tcg') },
+    { href: '/tcg/collection', label: t('tcg.nav_collection') },
+    { href: '/quiz', label: t('nav.quiz') },
   ];
   const menuLabel = t('header.open_menu');
   const closeLabel = t('common.close', { defaultValue: 'Close' });
@@ -43,9 +44,6 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
               {link.label}
             </Link>
           ))}
-          <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">
-            {t('footer.resources.github')}
-          </a>
         </nav>
 
         <HomeLanguageSelect className="field-header-language" />
@@ -66,8 +64,6 @@ export default async function HomeHeader({ initialSignedIn = false }: HomeHeader
           closeLabel={closeLabel}
           collectionStartLabel={t('lunidex_home.cta_start')}
           collectionResumeLabel={t('lunidex_home.cta_resume')}
-          githubLabel={t('footer.resources.github')}
-          githubUrl={GITHUB_REPO_URL}
           locale={language}
           languageControl={<HomeLanguageSelect />}
           initialSignedIn={initialSignedIn}

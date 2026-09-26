@@ -395,6 +395,9 @@ export function TCGResearchDesk({
         collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
+        filters={effectiveFilters}
+        onFiltersChange={updateFilters}
+        language={resolvedLang}
         selectedRarity={effectiveFilters.selectedRarity ?? null}
         isRarityOpen={isRarityOpen}
         onCollectionChange={(selectedSet) => {
@@ -416,25 +419,6 @@ export function TCGResearchDesk({
         onClearSearch={() => updateFilters(clearTCGCardSearch(effectiveFilters, latestSetFallbackId))}
         onOpenFilters={openFilters}
       />
-
-      {effectiveFilters.selectedSet && (
-        <section
-          id="tcg-quick-rarity"
-          className="page-surface px-5 py-4 sm:px-8"
-          aria-label={t('tcg.filter_rarity')}
-          hidden={!isRarityOpen}
-        >
-          {isRarityOpen && (
-            <TCGFilters
-              mode="quickRarity"
-              filters={effectiveFilters}
-              onChange={updateFilters}
-              autoApplyInitialSet={false}
-              language={resolvedLang}
-            />
-          )}
-        </section>
-      )}
 
       <div className="space-y-4">
         <section className="min-w-0 space-y-4" aria-labelledby="tcg-results-title">
@@ -537,6 +521,9 @@ function DiscoveryHero({
   collectionLabels,
   selectedCollectionId,
   sortValue,
+  filters,
+  onFiltersChange,
+  language,
   selectedRarity,
   isRarityOpen,
   onCollectionChange,
@@ -553,6 +540,9 @@ function DiscoveryHero({
   collectionLabels: Map<string, string>;
   selectedCollectionId: string | null;
   sortValue: string;
+  filters: TCGCardFilters;
+  onFiltersChange: (filters: TCGCardFilters) => void;
+  language: TCGCardLanguage;
   selectedRarity: string | null;
   isRarityOpen: boolean;
   onCollectionChange: (setId: string | null) => void;
@@ -701,6 +691,25 @@ function DiscoveryHero({
             </button>
           )}
         </div>
+
+        {selectedCollectionId && (
+          <div
+            id="tcg-quick-rarity"
+            className="border-t border-border/35 pt-4"
+            aria-label={t('tcg.filter_rarity')}
+            hidden={!isRarityOpen}
+          >
+            {isRarityOpen && (
+              <TCGFilters
+                mode="quickRarity"
+                filters={filters}
+                onChange={onFiltersChange}
+                autoApplyInitialSet={false}
+                language={language}
+              />
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

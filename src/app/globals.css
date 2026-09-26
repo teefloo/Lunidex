@@ -5686,6 +5686,14 @@ html.dark .lunidex-home::before {
   margin-top: 2rem;
 }
 
+.home-collection-access-note {
+  max-width: 35rem;
+  margin: 0.9rem 0 0;
+  color: var(--home-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .home-primary-cta,
 .home-secondary-cta,
 .home-inline-link {

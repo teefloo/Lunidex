@@ -55,6 +55,11 @@ export async function HomeArchiveExperience() {
                 <span aria-hidden="true">↗</span>
               </Link>
             </div>
+            {!initialSignedIn ? (
+              <p className="home-collection-access-note">
+                {t('lunidex_home.collection_account_note')}
+              </p>
+            ) : null}
           </div>
           <HomeHeroVisual />
         </section>

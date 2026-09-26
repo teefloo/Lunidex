@@ -13,8 +13,6 @@ interface HomeHeaderMobileMenuProps {
   closeLabel: string;
   collectionStartLabel: string;
   collectionResumeLabel: string;
-  githubLabel: string;
-  githubUrl: string;
   locale: string;
   languageControl?: ReactNode;
   initialSignedIn?: boolean;
@@ -27,8 +25,6 @@ export default function HomeHeaderMobileMenu({
   closeLabel,
   collectionStartLabel,
   collectionResumeLabel,
-  githubLabel,
-  githubUrl,
   locale,
   languageControl = null,
   initialSignedIn = false,
@@ -89,27 +85,23 @@ export default function HomeHeaderMobileMenu({
             </SheetClose>
             <SheetTitle className="sr-only">{navigationLabel}</SheetTitle>
           </SheetHeader>
-            <nav aria-label={navigationLabel} className="field-mobile-menu-links">
-              {links.map((link) => (
-                <Link key={link.href} href={link.href} onClick={closeMenu}>
-                  {link.label}
-                  <span aria-hidden="true">→</span>
-                </Link>
-              ))}
-              {languageControl}
-              <HomeCollectionEntry
-                locale={locale}
-                startLabel={collectionStartLabel}
-                resumeLabel={collectionResumeLabel}
-                className="field-mobile-menu-cta"
-                onClick={closeMenu}
-                initialSignedIn={initialSignedIn}
-              />
-              <a href={githubUrl} target="_blank" rel="noreferrer" onClick={closeMenu}>
-                {githubLabel}
-                <span aria-hidden="true">↗</span>
-              </a>
-            </nav>
+          <nav aria-label={navigationLabel} className="field-mobile-menu-links">
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} onClick={closeMenu}>
+                {link.label}
+                <span aria-hidden="true">→</span>
+              </Link>
+            ))}
+            {languageControl}
+            <HomeCollectionEntry
+              locale={locale}
+              startLabel={collectionStartLabel}
+              resumeLabel={collectionResumeLabel}
+              className="field-mobile-menu-cta"
+              onClick={closeMenu}
+              initialSignedIn={initialSignedIn}
+            />
+          </nav>
         </SheetContent>
       </Sheet>
     </div>
