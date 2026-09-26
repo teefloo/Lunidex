@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { decodeTCGCollectionCardKey, encodeTCGCollectionCardKey, encodeTCGCollectionKey, getTCGCollectionCardIdentity } from '@/lib/tcg-collections';
-import { advanceSyncMetadata, getInitialSyncState, normalizeSyncMetadata, preserveLocalPreferences, reconcileSyncState } from './sync-state';
+import { advanceSyncMetadata, extractSyncMetadata, getInitialSyncState, normalizeSyncMetadata, preserveLocalPreferences, reconcileSyncState } from './sync-state';
 import type { PersistedState } from '@/store/primedex';
+import { advanceTcgApiSyncMetadata, attachTcgApiSyncMetadata } from '@/lib/tcg-api-sync';
 
 function withTcg(state: PersistedState, patch: Partial<PersistedState>): PersistedState { return { ...state, ...patch }; }
 
@@ -125,5 +126,33 @@ describe('language-aware sync merge', () => {
     const newerModified = advanceSyncMetadata(modifiedMeta, modified, withTcg(modified, { tcgCollectionCards: [newerModifiedCard] }), 'device-b');
     const merged = reconcileSyncState(removed, withTcg(modified, { tcgCollectionCards: [newerModifiedCard] }), removedMeta, newerModified, { deviceId: 'device-a' });
     expect(merged.state.tcgCollectionCards).toEqual([newerModifiedCard]);
+  });
+
+  it('preserves API-written quantities when a stale browser snapshot syncs', () => {
+    const initial = getInitialSyncState();
+    const collection = encodeTCGCollectionKey('en', 'base1')!;
+    const beforeCard = encodeTCGCollectionCardKey(collection, 'base1-001', 'normal', 1)!;
+    const apiCard = encodeTCGCollectionCardKey(collection, 'base1-001', 'normal', 3)!;
+    const base = withTcg(initial, {
+      tcgCollections: [collection], tcgCollectionCards: [beforeCard], tcgActiveCollections: [collection],
+      tcgLegacyOwnedCards: [], tcgOwnedCards: ['base1-001'], tcgCollectionModelVersion: 3,
+    });
+    const baseMetadata = advanceSyncMetadata(normalizeSyncMetadata(undefined, initial), initial, base, 'device-base');
+    const staleBrowser = withTcg(base, { favorites: [25] });
+    const browserMetadata = advanceSyncMetadata(baseMetadata, base, staleBrowser, 'device-browser');
+    const apiState = withTcg(base, { tcgCollectionCards: [apiCard] });
+    const apiMetadata = advanceTcgApiSyncMetadata(baseMetadata, base, apiState, 'api:key-id');
+    const apiSnapshot = attachTcgApiSyncMetadata(apiState as unknown as Record<string, unknown>, apiMetadata);
+
+    const merged = reconcileSyncState(
+      staleBrowser,
+      apiSnapshot as Partial<PersistedState>,
+      browserMetadata,
+      extractSyncMetadata(apiSnapshot),
+      { deviceId: 'device-browser' },
+    );
+
+    expect(merged.state.tcgCollectionCards).toEqual([apiCard]);
+    expect(merged.state.favorites).toEqual([25]);
   });
 });

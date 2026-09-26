@@ -2546,6 +2546,13 @@ team: 'Equipo',
       view_bulbapedia: 'Ver en Bulbapedia',
       open_calculator: 'Abrir Calculadora de Cría para {{name}}',
     },
+    api_keys: {
+      title: 'Claves de API públicas', description: 'Crea claves para integraciones del lado del servidor. Nunca incluyas una clave en un navegador, repositorio público o registro compartido.',
+      list_label: 'Tus claves de API', load_error: 'No se pudieron cargar las claves de API.', create_error: 'No se pudo crear esta clave de API.', revoke_error: 'No se pudo revocar esta clave de API.', copy_error: 'El portapapeles no está disponible.',
+      read_only: 'Solo lectura', read_write: 'Lectura y escritura', created: 'Creada', last_used: 'Último uso', never_used: 'Nunca usada', revoked: 'Revocada', revoke: 'Revocar', empty: 'Aún no hay claves de API.',
+      created_once: 'Copia esta clave ahora. No volverá a mostrarse.', secret_warning: 'Guárdala en un gestor de secretos del servidor. No la pegues en código del cliente ni en capturas.', dismiss_secret: 'Ocultar clave', copied: 'Copiada', copy: 'Copiar clave',
+      name_placeholder: 'Nombre de la integración', name_label: 'Nombre de la clave de API', permission_label: 'Permisos de la clave de API', create: 'Crear clave', limit: 'Puedes tener hasta cinco claves activas.',
+    },
     profile: {
       not_found_title: 'Perfil no encontrado',
       not_found_desc: 'Este perfil no existe o no es público.',

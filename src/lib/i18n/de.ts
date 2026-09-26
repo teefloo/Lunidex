@@ -2529,6 +2529,13 @@ team: 'Team',
       view_bulbapedia: 'Auf Bulbapedia ansehen',
       open_calculator: 'Zucht-Rechner für {{name}} öffnen',
     },
+    api_keys: {
+      title: 'Öffentliche API-Schlüssel', description: 'Erstelle Schlüssel für serverseitige Integrationen. Füge API-Schlüssel niemals in einen Browser, ein öffentliches Repository oder ein geteiltes Protokoll ein.',
+      list_label: 'Deine API-Schlüssel', load_error: 'API-Schlüssel konnten nicht geladen werden.', create_error: 'Dieser API-Schlüssel konnte nicht erstellt werden.', revoke_error: 'Dieser API-Schlüssel konnte nicht widerrufen werden.', copy_error: 'Der Zugriff auf die Zwischenablage ist nicht verfügbar.',
+      read_only: 'Nur lesen', read_write: 'Lesen und schreiben', created: 'Erstellt', last_used: 'Zuletzt verwendet', never_used: 'Nie verwendet', revoked: 'Widerrufen', revoke: 'Widerrufen', empty: 'Noch keine API-Schlüssel.',
+      created_once: 'Kopiere diesen Schlüssel jetzt. Er wird nicht erneut angezeigt.', secret_warning: 'Speichere ihn in einem serverseitigen Secret-Manager. Füge ihn nicht in Client-Code oder Screenshots ein.', dismiss_secret: 'Schlüssel ausblenden', copied: 'Kopiert', copy: 'Schlüssel kopieren',
+      name_placeholder: 'Name der Integration', name_label: 'Name des API-Schlüssels', permission_label: 'Berechtigung des API-Schlüssels', create: 'Schlüssel erstellen', limit: 'Du kannst bis zu fünf aktive Schlüssel haben.',
+    },
     profile: {
       not_found_title: 'Profil nicht gefunden',
       not_found_desc: 'Dieses Profil existiert nicht oder ist nicht öffentlich.',
