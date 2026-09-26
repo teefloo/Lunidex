@@ -1,634 +1,782 @@
-# Graph Report - src  (2026-09-12)
+# Graph Report - Lunidex  (2026-09-26)
 
 ## Corpus Check
-- 499 files · ~392,764 words
-- Verdict: corpus is large enough that graph structure adds value.
+- Large corpus: 636 files · ~379,314 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder.
 
 ## Summary
-- 3255 nodes · 10329 edges · 120 communities (112 shown, 7 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 113 edges (avg confidence: 0.85)
+- 4710 nodes · 14635 edges · 154 communities (143 shown, 10 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 129 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Editorial Pages
-- Route Metadata and Auth
-- Account and Battle API
-- TCG Collection API
-- Sealed Portfolio UI
-- Pokémon Reference UI
-- Dashboard Shell
-- 404 Maze Game
-- Cloud Sync and Import
-- Compare and Favorites
-- TCG Collection Screens
-- Collection Data Routes
-- Sealed Pricing Sync
-- Auth and Contact UI
-- Pokémon Detail View
-- Navigation and Filters
-- Profile and Sharing
-- App Route Layouts
-- Reference Page Routes
-- Friend Profiles
-- Team Builder UI
-- EV/IV Calculator
-- Pokémon List Data
-- Collection Analytics
-- Auth Proxy Routes
-- Auth Context
-- Pokémon and TCG Fetchers
-- TCG Search API
-- Public API Telemetry
-- Breeding Calculator
-- Anniversary Tracker
-- Error Observability
-- TCG State Types
-- Reference Detail Pages
-- Friends API
-- Quiz Result API
-- TCG Research UI
-- Profile and Quiz Cards
-- TCG Card API
-- TCG Card Details
-- Header and Filters
-- Type Chart UI
-- Home Card Showcase
-- App Client Shell
-- Battle Simulator
-- Locale Proxy
-- Root and Home Layout
-- Home Experience
-- Local Preferences
-- Album Progress and Attribution
-- Move Detail Pages
+- UI Class Utilities
+- Localization and App State
+- Move Data and Query Cache
+- Server Side Localization
+- TCG Research Interface
+- Neon Security and Mutations
+- TCG Collection Views
+- SEO Metadata
+- Legacy Sync Compatibility
+- Shared UI Utilities
+- API Rate Limiting
+- Sealed TCG Server
+- Not Found Mini Game
+- Supported Application Languages
+- TCG Card Detail Interface
+- Shared TCG API
+- Sealed Portfolio Interface
+- Shared Neon Authentication
+- Web TCG Collection
+- TCG API Client
+- Dashboard Data
+- GraphQL Server Cache
+- Localized TCG Search
+- Pokemon Domain API
+- Structured SEO Metadata
+- Core Sync Compatibility
+- Authentication API Routes
 - Sitemap Generation
-- Quiz Leaderboards
-- API Client Layer
-- Legal Pages
+- Team and Compare Pages
+- Sealed Collection Ledger
+- Shared Collection State
+- Quiz API Routes
+- Error Observability
+- Localized Header
+- Stat Planning Tools
+- Localized Home Experience
+- TCG Research API
+- Web Authentication Provider
+- Friends Features
+- Locale Routing
+- Shared Persistent Store
+- Web Application Providers
+- Shared TCG Types
+- Analytics Privacy Controls
+- Items and User Profiles
+- Anniversary Collection
+- SEO Build Configuration
+- Workspace Package Overrides
+- Pokemon Detail Pages
+- Pokemon Breeding Tools
+- Web Package Dependencies
+- Open Graph API Routes
+- Battle Simulator Logic
+- Collection Variant Controls
+- Product Analytics Consent
+- Anniversary Card Data
+- TCG User State
+- Mobile Package Dependencies
+- Neon Account Schema
+- Shared Team Analysis
 - Quiz Experience
-- Sitemap Data
-- Local API Cache
-- Open Graph Routes
-- Encounter Components
-- Wishlist Navigation
-- Card Image Rendering
-- Legal Translations
-- Sealed Market Data
-- Price Chart Components
-- Open Graph API
-- Activity Statistics
-- Pokémon Name Formatting
-- TCG Card Metadata
-- Breeding and Nuzlocke
-- Route Error Boundaries
-- Client Providers
-- Sitemap Builders
-- Campaign Attribution
-- Set Progress Insights
-- Share Image Data
-- User State API
-- Battle Rooms
-- Competitive Team Data
-- Price Alerts
-- Trusted OG Assets
-- Account Deletion
-- Auth Recovery UI
-- Cookie Consent UI
-- Brand Fonts
-- Sentry Data Scrubbing
-- Pokémon OG Endpoint
-- TCG Set Pages
-- Analytics Consent Bridges
-- Desktop Navigation
-- Home Filter State
-- PostHog Analytics
-- Brand Concepts
-- Team Sharing
-- Home Collection Preview
-- Album Card Components
-- Push Notifications
-- Query Observability
-- Activity Heatmap
+- Profile Progress Store
+- Sealed Product API
+- Shared Pokemon Types
+- Pokemon Form Names
+- TCG Card and Set Pages
+- Mobile Pokemon Pages
+- Analytics Dependencies
+- Anniversary User Interface
+- Mobile Providers and Localization
+- Mobile Theme System
+- Neon Authentication Services
+- Error Reporting Client
+- Friends API Routes
+- Team Generation Filters
+- Application Notifications
+- Mobile REST Data Hooks
+- Pokemon Filter State
+- Social Image Helpers
+- Move Detail Page
+- Shared GraphQL Cache
+- Quiz Share Image API
+- Expo Runtime Configuration
+- UI Component Configuration
+- TCG Price History API
+- Analytics Identity Consent
+- Privacy and Cookie Pages
+- Pokemon List Interface
+- TCG Price Charts
+- Mobile Account Localization
+- Home Collection Previews
+- Mobile Package Manifest
+- Sealed Collection History
+- Sealed Portfolio Analytics
+- Web Root Layout
+- Holographic Card Effects
+- Web TypeScript Configuration
+- Core Package Configuration
+- Shared API Cache Storage
+- TCG Ownership and Languages
+- Cardmarket Sealed Imports
+- Server Analytics
+- Localized Legal Content
+- Battle Room Services
+- Web API Cache
+- Route Error Interface
+- Anniversary Page Data
+- Anniversary Data Migration
+- Core TypeScript Configuration
+- Lint Tooling
+- Competitive Pokemon Data
+- Sealed Product Types
+- Contact API
+- Analytics Product API
+- Pokemon Card API
+- Continuous Integration Workflow
+- Install Prompt Interface
+- Cookie Consent Interface
+- Legacy Quiz Sync
+- Mobile Core Exports
+- Workspace Build Scripts
+- Test Configuration
+- Social Image Rendering
+- Team Comparison Suggestions
 - Move Coverage Analysis
-- Team OG Endpoint
-- Memory Cache
-- Durable Local Storage
-- Sentry Client
-- Metrics Retention API
-- Smogon Endpoint
-- User Cards API
-- Team Export
-- Source Governance Guides
-- Saved Search API
-- Breeding Route
-- Home Tool Cards
-- Animated Home Copy
-- Request Instrumentation
-- Component Governance Guides
-- Team Builder Guide
-- Type Chart Guide
-- Library Governance Guide
-- Store Governance Guide
+- Mobile TypeScript Configuration
+- Core UI Utilities
+- In Memory API Cache
+- Pokemon Encounter Data
+- Cardmarket Product Links
+- Persistent Storage Layer
+- Pokemon Held Items
+- Mobile Build Scripts
+- Bug Report Interface
+- Pokemon Team Paste Parser
+- TCG Collection Valuation
+- Accessible Color Utilities
+- TCG User Cards API
+- Sitemap Index Route
+- Pokemon Artwork Data
+- TCG Rarity Rules
+- Saved TCG Searches
+- Home Text Animation
+- Social Image Optimization
+- Neon Import Script
+- Neon Migration Verification
+- Share Link Builder
+- TCG Album Actions
+- Native Neon API Settings
+- Legacy Data Export Script
+- Vercel Cron Configuration
+- PostCSS Build Configuration
+- Web Push Worker
 
 ## God Nodes (most connected - your core abstractions)
-1. `useTranslation` - 234 edges
-2. `cn()` - 219 edges
-3. `getServerLanguage()` - 181 edges
-4. `getServerT()` - 174 edges
-5. `usePrimeDexStore` - 133 edges
-6. `t()` - 119 edges
-7. `buildSubpathLanguages()` - 91 edges
-8. `useLocaleHref()` - 84 edges
-9. `serializeJsonLd()` - 81 edges
-10. `useClientLanguage()` - 70 edges
+1. `useTranslation` - 244 edges
+2. `cn()` - 211 edges
+3. `next` - 182 edges
+4. `getServerLanguage()` - 181 edges
+5. `getServerT()` - 173 edges
+6. `react` - 160 edges
+7. `usePrimeDexStore` - 153 edges
+8. `lucide-react` - 135 edges
+9. `t()` - 119 edges
+10. `buildSubpathLanguages()` - 91 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ComparePage()` --indirect_call--> `getAllPokemonSearchIndex()`  [INFERRED]
-  app/compare/page.tsx → lib/api/graphql.ts
-- `FavoritesPage()` --indirect_call--> `getAllPokemonNames()`  [INFERRED]
-  app/favorites/page.tsx → lib/api/rest.ts
-- `ItemCard()` --calls--> `formatName()`  [EXTRACTED]
-  app/items/ItemsPageClient.tsx → lib/utils.ts
-- `PokemonLearnerCard()` --calls--> `useLocaleHref()`  [EXTRACTED]
-  app/moves/MoveDetailModal.tsx → hooks/useLocaleHref.ts
-- `DeferredOverlays()` --calls--> `usePrimeDexStore`  [EXTRACTED]
-  app/providers.tsx → store/primedex.ts
+- `NeonSyncBridge()` --calls--> `useNeonSync()`  [EXTRACTED]
+  apps/mobile/src/providers/AppProviders.tsx → packages/core/src/supabase/useSupabaseSync.ts
+- `AccountScreen()` --calls--> `useAuth()`  [EXTRACTED]
+  apps/mobile/app/(tabs)/account.tsx → packages/core/src/neon/AuthProvider.tsx
+- `AccountScreen()` --calls--> `usePrimeDexStore`  [EXTRACTED]
+  apps/mobile/app/(tabs)/account.tsx → packages/core/src/store/primedex.ts
+- `FavoritesScreen()` --calls--> `usePrimeDexStore`  [EXTRACTED]
+  apps/mobile/app/(tabs)/favorites.tsx → packages/core/src/store/primedex.ts
+- `TeamScreen()` --calls--> `usePrimeDexStore`  [EXTRACTED]
+  apps/mobile/app/(tabs)/team.tsx → packages/core/src/store/primedex.ts
 
 ## Import Cycles
-- None detected.
+- 1-file cycle: `next.config.ts -> next.config.ts`
+- 1-file cycle: `src/app/api/analytics/product/route.ts -> src/app/api/analytics/product/route.ts`
+- 1-file cycle: `scripts/seo-check.mjs -> scripts/seo-check.mjs`
 
-## Hyperedges (group relationships)
-- **Lunidex Core Modes** — src_lib_og_assets_primedex_og_pokedex, src_lib_og_assets_primedex_og_teams, src_lib_og_assets_primedex_og_tcg [EXTRACTED 1.00]
+## Communities (154 total, 10 thin omitted)
 
-## Communities (120 total, 7 thin omitted)
-
-### Community 0 - "Editorial Pages"
-Cohesion: 0.06
-Nodes (81): Anniversary30Page(), FACT_KEYS, generateMetadata(), getPageContext(), revalidate, revalidate, BlogPage(), revalidate (+73 more)
-
-### Community 1 - "Route Metadata and Auth"
-Cohesion: 0.07
-Nodes (73): generateMetadata(), generateMetadata(), AboutPage(), generateMetadata(), generateMetadata(), BattlePage(), generateMetadata(), SwordsIcon (+65 more)
-
-### Community 2 - "Account and Battle API"
-Cohesion: 0.06
-Nodes (74): GET, getAccountExport(), ProfileRow, unavailable(), UserStateRow, BattleChatMessage, BattleRoomRow, BattleTeamMember (+66 more)
-
-### Community 3 - "TCG Collection API"
-Cohesion: 0.06
-Nodes (75): GET, getTcgCollectionSetCards(), getCollectionSetAlbumPersistent, buildCardQueryParams(), buildSetCollectionCards(), cardMatchesLocalFilters(), compareCards(), compareCollectorNumbers() (+67 more)
-
-### Community 4 - "Sealed Portfolio UI"
-Cohesion: 0.06
-Nodes (62): AliasEditor(), AnalyticsView(), CashflowView(), CatalogueView(), CollectionView(), DashboardView(), dateLabel(), dayShift() (+54 more)
-
-### Community 5 - "Pokémon Reference UI"
+### Community 0 - "UI Class Utilities"
 Cohesion: 0.04
-Nodes (47): SortKey, ItemCard(), itemSpriteUrl(), SortKey, buildLearners(), groupLearnersByMethod(), MoveDetailModal(), MoveDetailModalProps (+39 more)
+Nodes (102): react, @base-ui/react, class-variance-authority, cmdk, lucide-react, ResetPasswordPage(), EVIVPageClient(), TABS (+94 more)
 
-### Community 6 - "Dashboard Shell"
+### Community 1 - "Localization and App State"
+Cohesion: 0.06
+Nodes (90): AbilitiesPageClient(), ComparePage(), DashboardPage(), FavoritesPage(), ItemCard(), ItemsPageClient(), itemSpriteUrl(), SortKey (+82 more)
+
+### Community 2 - "Move Data and Query Cache"
+Cohesion: 0.03
+Nodes (64): @tanstack/react-query, framer-motion, SortKey, buildLearners(), groupLearnersByMethod(), MoveDetailModal(), MoveDetailModalProps, PokemonLearnerCard() (+56 more)
+
+### Community 3 - "Server Side Localization"
 Cohesion: 0.07
-Nodes (45): DashboardPage(), ThemeProvider(), AccountMenu(), AccountMenuProps, ExtensibleSection(), ICON_MAP, PokedexProgress(), PokedexProgressProps (+37 more)
+Nodes (83): generateMetadata(), generateMetadata(), AboutPage(), generateMetadata(), generateMetadata(), BattlePage(), generateMetadata(), generateMetadata() (+75 more)
 
-### Community 7 - "404 Maze Game"
+### Community 4 - "TCG Research Interface"
+Cohesion: 0.05
+Nodes (66): next, getTCGCardLanguageName(), TCG_CARD_LANGUAGES, TCGCardLanguage, BattleRoomSection(), TCGSetAlbumPageProps, TCGCollectionPage(), formatReleaseDate() (+58 more)
+
+### Community 5 - "Neon Security and Mutations"
+Cohesion: 0.06
+Nodes (83): getAccountExport(), BattleChatMessage, BattleRoomRow, BattleTeamMember, GET, getBattleRoom(), isPlainObject(), parseTeam() (+75 more)
+
+### Community 6 - "TCG Collection Views"
+Cohesion: 0.05
+Nodes (71): LocalizedSetAlbumPage(), formatCardValue(), formatCurrency(), TCGActiveSetInsights(), TCGActiveSetInsightsProps, TCGAlbumPage(), TCGAlbumPageProps, EmptyCollectionState() (+63 more)
+
+### Community 7 - "SEO Metadata"
+Cohesion: 0.07
+Nodes (49): next, dynamicParams, Props, revalidate, revalidate, SwordsIcon, revalidate, BreedingPage() (+41 more)
+
+### Community 8 - "Legacy Sync Compatibility"
+Cohesion: 0.05
+Nodes (67): DataExportImport(), ExportPayload, getImportPreview(), ImportPreview, validateImportPayload(), NeonSyncBridge(), AuthContext, retryAsync() (+59 more)
+
+### Community 9 - "Shared UI Utilities"
+Cohesion: 0.05
+Nodes (55): TCGCollectionCardOwnership, BreedingPageClient(), BreedingPageClientProps, isTabId(), TabId, EncounterLocations, DeckCard(), FriendCollection() (+47 more)
+
+### Community 10 - "API Rate Limiting"
+Cohesion: 0.09
+Nodes (55): DELETE, deleteAlias(), GET, getAlias(), PUT, putAlias(), GET, getCatalogue() (+47 more)
+
+### Community 11 - "Sealed TCG Server"
+Cohesion: 0.06
+Nodes (62): Sealed Price Snapshot, sealedHistoryDays(), EXPANSION_ALIASES, getSealedCardmarketUrl(), getSealedImageCandidates(), normalizeSearch(), parseSealedCatalogueSearch(), removePhrase() (+54 more)
+
+### Community 12 - "Not Found Mini Game"
 Cohesion: 0.06
 Nodes (68): advanceMazeGame(), cloneCoord(), coordKey(), countWalkableNeighbors(), createGeneratedRows(), createMazeGame(), createMazeLayout(), createMazeRound() (+60 more)
 
-### Community 8 - "Cloud Sync and Import"
+### Community 13 - "Supported Application Languages"
+Cohesion: 0.05
+Nodes (56): i18next, runtime, EditorialComparisonPage(), generateMetadata(), getPageContext(), PageProps, revalidate, EditorialFeatureGuidePage() (+48 more)
+
+### Community 14 - "TCG Card Detail Interface"
 Cohesion: 0.06
-Nodes (62): NeonSyncBridge(), DataExportImport(), ExportPayload, getImportPreview(), ImportPreview, validateImportPayload(), AuthContext, advanceSyncMetadata() (+54 more)
+Nodes (46): getTCGDefaultPhysicalVariant(), handleToggle(), handleMigrationAction(), handleReset(), TCGAlbumCard, ActionPill(), formatCardList(), formatRetreatCost() (+38 more)
 
-### Community 9 - "Compare and Favorites"
+### Community 15 - "Shared TCG API"
 Cohesion: 0.07
-Nodes (56): AbilitiesPageClient(), ResetPasswordPage(), ComparePage(), Legend, PolarAngleAxis, PolarGrid, Radar, RadarChart (+48 more)
+Nodes (55): buildCardQueryParams(), cardMatchesLocalFilters(), compareCards(), compareCollectorNumbers(), compareDates(), compareStrings(), DEFAULT_TCG_CARD_FILTERS, fetchAllCardSearchPages() (+47 more)
 
-### Community 10 - "TCG Collection Screens"
-Cohesion: 0.10
-Nodes (37): TCGSetAlbumPage(), TCGSetAlbumPageProps, TCGCollectionPage(), formatReleaseDate(), sortByReleaseDate(), TCGStartPage(), SyncRequiredPanel(), SyncStatusPanel() (+29 more)
+### Community 16 - "Sealed Portfolio Interface"
+Cohesion: 0.06
+Nodes (45): Sealed Transaction, Sealed Transaction Draft, AliasEditor(), AnalyticsView(), CashflowView(), CatalogueView(), CollectionView(), DashboardView() (+37 more)
 
-### Community 11 - "Collection Data Routes"
-Cohesion: 0.12
-Nodes (43): DELETE, deleteAlias(), GET, getAlias(), PUT, putAlias(), GET, getCatalogue() (+35 more)
+### Community 17 - "Shared Neon Authentication"
+Cohesion: 0.07
+Nodes (39): AppSession, AppUser, AuthContext, AuthContextValue, AuthProvider(), AuthResult, disabledValue(), mapSession() (+31 more)
 
-### Community 12 - "Sealed Pricing Sync"
+### Community 18 - "Web TCG Collection"
 Cohesion: 0.08
-Nodes (50): GET, NO_STORE_HEADERS, runSync(), runtime, SEALED_CARDMARKET_SOURCES, dayValue(), exportSealedPortfolio(), getSealedImageUrl() (+42 more)
+Nodes (54): TCG_DEFAULT_VARIANT_ORDER, aggregateCollectionValue(), aggregateCollectionValueBySet(), aggregateCollectionValueWithSets(), aggregateCollectionValueWithVariants(), aggregateSetTotalValue(), compareCollectionCardsByImportance(), computeActiveSetInsights() (+46 more)
 
-### Community 13 - "Auth and Contact UI"
-Cohesion: 0.07
-Nodes (38): AuthModal, AuthModal(), Mode, AuthModal, ContactForm(), FieldErrors, FieldName, FormValues (+30 more)
+### Community 19 - "TCG API Client"
+Cohesion: 0.05
+Nodes (55): cardMatchesLocalFilters(), compareCards(), compareCollectorNumbers(), compareDates(), compareStrings(), fetchAllCardSearchPages(), fetchCollectionSetAlbumForLanguage(), FetchCollectionValueOptions (+47 more)
 
-### Community 14 - "Pokémon Detail View"
+### Community 20 - "Dashboard Data"
 Cohesion: 0.06
-Nodes (45): AdvancedInfo, EvolutionChain, HeightComparison, LocalizedGqlData, POKE_COLORS, PokemonBuilds, PokemonCards, PokemonDetailClientProps (+37 more)
+Nodes (49): ExtensibleSectionProps, ACTION_ICONS, formatDate(), GeneralActivity(), GeneralActivityProps, PokedexProgressProps, ProfileAndBadgesProps, PublicProfileCardProps (+41 more)
 
-### Community 15 - "Navigation and Filters"
-Cohesion: 0.07
-Nodes (46): PAGE_ITEMS, StaticCommandItem, ConsentPreferencesButton(), FooterLinkGroup(), LANGUAGE_MAP, PokemonMovesProps, CatalogSearchInput(), FilterSection() (+38 more)
-
-### Community 16 - "Profile and Sharing"
-Cohesion: 0.06
-Nodes (47): ExtensibleSectionProps, ICON_MAP, ProfileAndBadges(), TIER_COLORS, TIER_LABELS, PublicProfileCardProps, ShareButton(), buildAbsoluteUrl() (+39 more)
-
-### Community 17 - "App Route Layouts"
-Cohesion: 0.10
-Nodes (33): CompareLayout(), CookiePolicyLayout(), DashboardLayout(), FaqCategory, FaqEntry, FaqLink, revalidate, FavoritesLayout() (+25 more)
-
-### Community 18 - "Reference Page Routes"
-Cohesion: 0.07
-Nodes (40): AbilitiesPage(), revalidate, ItemsPage(), revalidate, MovesPage(), revalidate, PokedexPage(), revalidate (+32 more)
-
-### Community 19 - "Friend Profiles"
-Cohesion: 0.07
-Nodes (37): FriendPrivacyCard(), DeckCard(), FriendCollection(), FriendDecks(), FriendHero(), FriendProfileClientProps, StatusPanel(), EMPTY_RELATIONS (+29 more)
-
-### Community 20 - "Team Builder UI"
-Cohesion: 0.07
-Nodes (44): MoveCoverageChecker, PolarAngleAxis, PolarGrid, Radar, RadarChart, RechartsTooltip, ResponsiveContainer, GENERATION_OPTIONS (+36 more)
-
-### Community 21 - "EV/IV Calculator"
-Cohesion: 0.06
-Nodes (41): EVIVCalculator, EVIVPageClient(), EVPlanner, TABS, BaseStats, calcHP(), calcStat(), DEFAULT_EVS (+33 more)
-
-### Community 22 - "Pokémon List Data"
-Cohesion: 0.09
-Nodes (44): PokemonCardSkeleton(), _buildInitialDataRaw(), _getCachedInitialData(), _initialDataCache, PokemonList(), PokemonStatMap, PokemonStatName, evictOldestIfNeeded() (+36 more)
-
-### Community 23 - "Collection Analytics"
-Cohesion: 0.09
-Nodes (42): aggregateCollectionValue(), aggregateCollectionValueBySet(), aggregateCollectionValueWithSets(), aggregateCollectionValueWithVariants(), aggregateSetTotalValue(), compareCollectionCardsByImportance(), computeActiveSetInsights(), computeCollectionStatsFromSets() (+34 more)
-
-### Community 24 - "Auth Proxy Routes"
-Cohesion: 0.10
-Nodes (31): AuthRouteContext, createHandler(), DELETE, GET, PATCH, POST, PUT, requestWithFreshSessionLookup() (+23 more)
-
-### Community 25 - "Auth Context"
-Cohesion: 0.13
-Nodes (37): normalizeDisplayName(), AppSession, AppUser, asRuntimeAuthClient(), AuthActionResponse, AuthContextValue, AuthErrorLike, AuthProvider() (+29 more)
-
-### Community 26 - "Pokémon and TCG Fetchers"
+### Community 21 - "GraphQL Server Cache"
 Cohesion: 0.08
-Nodes (35): GET, getTcgSets(), loadCollectionSetCatalog(), getAllMoves(), getItemDetail(), getAbilityDetail(), getAllPokemonNames(), getPokemonEncounters() (+27 more)
+Nodes (54): setCachedData(), buildPokemonDetailedSelection(), buildPokemonSearchSelection(), buildPokemonSummarySelection(), EXCLUDED_ITEM_CATEGORIES, fetchBatch(), fetchMoveBatches(), fetchPokemonBatches() (+46 more)
 
-### Community 27 - "TCG Search API"
-Cohesion: 0.09
-Nodes (34): buildCounts(), buildFacets(), GET, getTcgSearch(), getFilterOptions(), buildInsightLines(), buildTCGSearchInsights(), createSearchId() (+26 more)
-
-### Community 28 - "Public API Telemetry"
-Cohesion: 0.09
-Nodes (28): allowed, ephemeralClientKey(), EventName, forbidden(), POST, postProductAnalytics(), ProductPayload, ContactPayload (+20 more)
-
-### Community 29 - "Breeding Calculator"
-Cohesion: 0.09
-Nodes (33): BreedingCalculatorProps, IvEditor(), IvEditorProps, PokemonPickerProps, STAT_COLORS, STAT_LABELS, BreederPokemon, BreedingChainStep (+25 more)
-
-### Community 30 - "Anniversary Tracker"
-Cohesion: 0.10
-Nodes (32): anniversary30Listeners, Anniversary30Tracker(), handleReset(), handleToggle(), Anniversary30TrackerProps, fillTemplate(), getAnniversary30ServerSnapshot(), getAnniversary30Snapshot() (+24 more)
-
-### Community 31 - "Error Observability"
-Cohesion: 0.13
-Nodes (27): Error(), GlobalError(), attachAxiosSentryInstrumentation(), clampValue(), createSafeException(), deduplicationKeys, EXPECTED_HTTP_STATUSES, FallbackKind (+19 more)
-
-### Community 32 - "TCG State Types"
+### Community 22 - "Localized TCG Search"
 Cohesion: 0.07
-Nodes (29): DEFAULT_TCG_USER_STATE, TCG_USER_STATE_COOKIE, TCGUserState, TCGCardAbility, TCGCardAttack, TCGCardBooster, TCGCardCategory, TCGCardCount (+21 more)
+Nodes (53): GET, getTcgCollectionSetCards(), GET, getTcgSets(), loadCollectionSetCatalog(), getAllSetsPersistent, getCollectionSetAlbumPersistent, getInitialTcgCatalogPersistent (+45 more)
 
-### Community 33 - "Reference Detail Pages"
-Cohesion: 0.11
-Nodes (27): AbilityDetailPage(), dynamicParams, Props, revalidate, dynamicParams, generateMetadata(), ItemDetailPage(), itemSpriteUrl() (+19 more)
+### Community 23 - "Pokemon Domain API"
+Cohesion: 0.06
+Nodes (48): AdvancedInfo, PokemonDetailClientProps, AdvancedInfo(), AdvancedInfoProps, EncounterLocationsProps, PokemonBuildsProps, GqlPokemonData, PokemonCardProps (+40 more)
 
-### Community 34 - "Friends API"
-Cohesion: 0.11
-Nodes (31): accountDeletionInProgress(), canViewSnapshot(), CollectionPageRow, DeckSnapshotRow, DELETE, deleteFriends(), DirectoryRow, FriendshipRow (+23 more)
-
-### Community 35 - "Quiz Result API"
-Cohesion: 0.10
-Nodes (29): AnswerRow, AttemptPayload, invalidAttempt(), isUniqueViolation(), isUuid(), NewAttemptRow, noStoreHeaders(), POST (+21 more)
-
-### Community 36 - "TCG Research UI"
-Cohesion: 0.11
-Nodes (24): DeckBuilderClient(), CatalogSearchInputProps, FilterSectionProps, TCGFilters(), TCGFiltersProps, DiscoveryHero(), EmptyState(), normalizeFilters() (+16 more)
-
-### Community 37 - "Profile and Quiz Cards"
-Cohesion: 0.07
-Nodes (19): BADGE_ICON_MAP, GEN_TOTALS, PublicProfileCard(), HomeMotionSection(), HomeMotionSectionProps, CHALLENGE_COLORS, CHALLENGE_DOT, GameMode (+11 more)
-
-### Community 38 - "TCG Card API"
-Cohesion: 0.11
-Nodes (24): GET, getTcgCard(), GET, getTcgCompare(), CardPricing, extractPriceSnapshot(), GET, getPriceHistory() (+16 more)
-
-### Community 39 - "TCG Card Details"
-Cohesion: 0.11
-Nodes (20): ActionPill(), formatCardList(), formatRetreatCost(), getCategoryLabel(), getCategoryTone(), getEnergyTypeLabel(), getStageLabel(), getTrainerTypeLabel() (+12 more)
-
-### Community 40 - "Header and Filters"
-Cohesion: 0.13
-Nodes (20): HomeHeaderMobileMenu(), HomeHeaderMobileMenuProps, AuthModal, COLORS, EGG_GROUPS, GENERATIONS, SHAPES, AdvancedFilters (+12 more)
-
-### Community 41 - "Type Chart UI"
+### Community 24 - "Structured SEO Metadata"
 Cohesion: 0.09
-Nodes (21): containerVariants, itemVariants, typeBadgeStyle(), TypeChart, TypesPage(), BestUserCard(), MoveBestUsers(), MoveBestUsersProps (+13 more)
+Nodes (46): Anniversary30Page(), FACT_KEYS, FAQ_NUMBERS, generateMetadata(), getAnniversary30CardLink(), getPageContext(), PRODUCT_MONTH_LABEL_KEYS, PRODUCT_MONTHS (+38 more)
 
-### Community 42 - "Home Card Showcase"
+### Community 25 - "Core Sync Compatibility"
+Cohesion: 0.08
+Nodes (49): useAuth(), fetchAppApi(), PersistedState, SYNCED_KEYS, SyncedKey, onSyncAccessRetry(), setSyncAccessStatus(), advanceSyncMetadata() (+41 more)
+
+### Community 26 - "Authentication API Routes"
+Cohesion: 0.07
+Nodes (43): claimDeletion(), ClaimedDeletionRow, DELETE, deleteAccount(), DeletePayload, DeletionState, DeletionStateRow, getDeletionState() (+35 more)
+
+### Community 27 - "Sitemap Generation"
+Cohesion: 0.09
+Nodes (49): GET(), isSitemapFamily(), revalidate, ANNIVERSARY_30_INDEXABLE_LANGUAGES, ANNIVERSARY_30_LAST_MODIFIED_DATE, getAllAbilityNamesCached, getAllItemNamesCached, getAllMoveNamesCached (+41 more)
+
+### Community 28 - "Team and Compare Pages"
+Cohesion: 0.07
+Nodes (39): zustand, recharts, Legend, PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer (+31 more)
+
+### Community 29 - "Sealed Collection Ledger"
+Cohesion: 0.09
+Nodes (44): allocateCost(), allocateOutgoingLots(), assertInteger(), assertProductId(), assertText(), calculateSealedMarketChangePercent(), dateFromDay(), dayDifference() (+36 more)
+
+### Community 30 - "Shared Collection State"
+Cohesion: 0.17
+Nodes (44): addTCGCollectionCard(), adjustTCGCollectionVariantQuantity(), assignLegacyTCGSetToCollection(), COLLECTION_VARIANTS, copyTCGLegacyOwnedCards(), countPhysicalTCGCards(), createTCGCollection(), decodeTCGCollectionCardKey() (+36 more)
+
+### Community 31 - "Quiz API Routes"
+Cohesion: 0.07
+Nodes (41): AnswerRow, AttemptPayload, invalidAttempt(), isUniqueViolation(), isUuid(), NewAttemptRow, noStoreHeaders(), POST (+33 more)
+
+### Community 32 - "Error Observability"
+Cohesion: 0.08
+Nodes (38): dependencies, axios, axios-retry, GET, getPSData(), getSmogonData(), revalidate, runtime (+30 more)
+
+### Community 33 - "Localized Header"
+Cohesion: 0.07
+Nodes (32): AccountMenu(), AccountMenuProps, AuthModal, AuthModalBoundary, AuthModalBoundaryProps, AuthModalBoundaryState, AuthModalLoadError(), HomeLanguageSelect() (+24 more)
+
+### Community 34 - "Stat Planning Tools"
+Cohesion: 0.07
+Nodes (39): EVIVCalculator, EVPlanner, BaseStats, calcHP(), calcStat(), DEFAULT_EVS, DEFAULT_STATS, EVIVCalculator() (+31 more)
+
+### Community 35 - "Localized Home Experience"
+Cohesion: 0.09
+Nodes (28): HomeHeader(), HomeHeaderProps, artworkUrl(), HomeTeamPreview(), TEAM_PREVIEW, FooterLinkData, FooterLinkGroup(), FooterLinkGroupProps (+20 more)
+
+### Community 36 - "TCG Research API"
+Cohesion: 0.09
+Nodes (38): buildCounts(), buildFacets(), GET, getTcgSearch(), normalizeFilters(), TCGResearchDesk(), getFilterOptions(), buildInsightLines() (+30 more)
+
+### Community 37 - "Web Authentication Provider"
+Cohesion: 0.12
+Nodes (39): normalizeDisplayName(), AppSession, AppUser, asRuntimeAuthClient(), AuthActionResponse, AuthContextValue, AuthErrorLike, AuthProvider() (+31 more)
+
+### Community 38 - "Friends Features"
+Cohesion: 0.09
+Nodes (31): FriendPrivacyCard(), EMPTY_RELATIONS, FRIENDS_QUERY_KEY, FriendsClient(), RelationRow(), callApi(), CollectionPageResponse, DecksResponse (+23 more)
+
+### Community 39 - "Locale Routing"
+Cohesion: 0.09
+Nodes (38): getBrowserLanguage(), getLanguageId(), isSupportedLanguage(), resolveLanguage(), ANNIVERSARY_30_UNSUPPORTED_LOCALES, CachedResourceProbe, config, confirmTcgSetHasCards() (+30 more)
+
+### Community 40 - "Shared Persistent Store"
+Cohesion: 0.07
+Nodes (27): zustand, BADGE_DEFINITIONS, TCG_COLLECTION_MODEL_VERSION, storage, storage, PrimeDexStore, SYNCED_KEY_SET, Theme (+19 more)
+
+### Community 41 - "Web Application Providers"
+Cohesion: 0.09
+Nodes (30): CommandPalette, DeferredInitialLanguageBundle(), DeferredOverlays(), MotionConfigBoundary(), MotionConfigProps, Providers(), routeNeedsMotionConfig(), SettingsModal (+22 more)
+
+### Community 42 - "Shared TCG Types"
+Cohesion: 0.06
+Nodes (35): pokemonKeys, tcgKeys, TCGCollection, TCGCollectionState, TCGCollectionVariant, TCGCard, TCGCardAbility, TCGCardAttack (+27 more)
+
+### Community 43 - "Analytics Privacy Controls"
+Cohesion: 0.11
+Nodes (32): posthog-js, applyPostHogConsent(), capturePostHogException(), capturePostHogFeatureError(), capturePostHogNavigationStart(), capturePostHogPageview(), contextProperties(), currentLocale() (+24 more)
+
+### Community 44 - "Items and User Profiles"
+Cohesion: 0.09
+Nodes (30): AbilityDetailPage(), dynamicParams, generateMetadata(), ItemDetailPage(), itemSpriteUrl(), Props, revalidate, Home() (+22 more)
+
+### Community 45 - "Anniversary Collection"
+Cohesion: 0.07
+Nodes (30): Anniversary30Countdown(), Anniversary30CountdownProps, fillTemplate(), getDuration(), Anniversary30CardDataset, Anniversary30CardImageStatus, Anniversary30CardScope, Anniversary30Language (+22 more)
+
+### Community 46 - "SEO Build Configuration"
+Cohesion: 0.06
+Nodes (31): config, { getDefaultConfig }, path, workspaceRoot, expo, csp, nextConfig, projectRoot (+23 more)
+
+### Community 47 - "Workspace Package Overrides"
+Cohesion: 0.06
+Nodes (36): @xmldom/xmldom, @neondatabase/auth-ui, @daveyplate/better-auth-ui, postcss, sharp, overrides, @better-auth/api-key, @better-auth/core (+28 more)
+
+### Community 48 - "Pokemon Detail Pages"
 Cohesion: 0.10
-Nodes (21): HomeCardPreview(), HomeCardPreviewProps, HomeCardStyle, resetCardStyle(), RESTING_STYLE, HOME_FEATURED_CARDS, HomeHeroVisual(), TCGAlbumCardProps (+13 more)
+Nodes (29): AbilitiesPage(), revalidate, ItemsPage(), revalidate, MovesPage(), revalidate, PokemonLayout(), buildPokemonPath() (+21 more)
 
-### Community 43 - "App Client Shell"
+### Community 49 - "Pokemon Breeding Tools"
+Cohesion: 0.09
+Nodes (32): BreedingCalculatorProps, IvEditor(), IvEditorProps, PokemonPickerProps, STAT_COLORS, STAT_LABELS, BreederPokemon, BreedingChainStep (+24 more)
+
+### Community 50 - "Web Package Dependencies"
+Cohesion: 0.06
+Nodes (33): axios, axios-retry, i18next, idb-keyval, react, react-i18next, @tanstack/react-query, @types/react (+25 more)
+
+### Community 51 - "Open Graph API Routes"
+Cohesion: 0.10
+Nodes (26): artworkUrl(), formatDexNumber(), GET(), runtime, minimalPokemon, mocks, totalStats(), GET() (+18 more)
+
+### Community 52 - "Battle Simulator Logic"
 Cohesion: 0.11
-Nodes (19): AppContent(), DeferredToaster, InstallPrompt, BeforeInstallPromptEvent, detectInstallPromptMode(), InstallPrompt(), InstallPromptMode, isAndroidDevice() (+11 more)
+Nodes (30): BattleClient(), BattleSimulator, BattleLog(), BattleSimulator(), DamageBar(), MoveSelector(), PokemonSelector(), PokemonWithMoves (+22 more)
 
-### Community 44 - "Battle Simulator"
-Cohesion: 0.15
-Nodes (23): BattleClient(), BattleSimulator, BattleLog(), BattleSimulator(), DamageBar(), MoveSelector(), PokemonWithMoves, BattleLogEntry (+15 more)
+### Community 53 - "Collection Variant Controls"
+Cohesion: 0.10
+Nodes (25): react-dom, TCG_PHYSICAL_VARIANTS, TCGPhysicalVariant, HomeHeaderMobileMenu(), HomeHeaderMobileMenuProps, COLORS, EGG_GROUPS, GENERATIONS (+17 more)
 
-### Community 45 - "Locale Proxy"
-Cohesion: 0.12
-Nodes (25): ANNIVERSARY_30_UNSUPPORTED_LOCALES, CachedResourceProbe, config, confirmTcgSetHasCards(), detectLocaleFromAcceptLanguage(), getCachedResourceProbe(), getResourceProbe(), getResourceProbeCacheKey() (+17 more)
-
-### Community 46 - "Root and Home Layout"
+### Community 54 - "Product Analytics Consent"
 Cohesion: 0.11
-Nodes (19): bodyFont, displayFont, RootLayout(), supportedInLanguage, viewport, viewport, HomeFaqAnchorBehavior(), SkipLink() (+11 more)
+Nodes (26): CampaignRouteContext, GET(), ConsentPreferencesButton(), MAX_CAMPAIGN_SLUG_LENGTH, normalizeCampaignSlug(), createUnsetProductConsent(), PRODUCT_CONSENT_POLICY_VERSION, PRODUCT_CONSENT_VERSION (+18 more)
 
-### Community 47 - "Home Experience"
-Cohesion: 0.12
-Nodes (15): HomeCollectionSteps(), HomeHeader(), HomeHeaderProps, artworkUrl(), HomeTeamPreview(), TEAM_PREVIEW, FeedbackDialog, ReportProblemButton() (+7 more)
+### Community 55 - "Anniversary Card Data"
+Cohesion: 0.10
+Nodes (31): 30 URL, 30 URL, ANNIVERSARY_30_BASIC_ENERGY_CARDS, ANNIVERSARY_30_CARD_SCOPES, ANNIVERSARY_30_CLASSIC_CARDS, ANNIVERSARY_30_FEATURE_CARD_NAMES, ANNIVERSARY_30_NUMBERED_CARDS, ANNIVERSARY_30_PROMO_CARDS (+23 more)
 
-### Community 48 - "Local Preferences"
-Cohesion: 0.12
-Nodes (19): ClientRecentlyViewed(), RecentlyViewed, RecentlyViewed(), getLanguageId(), resolveLanguage(), isTheme(), LOCAL_PREFERENCE_KEYS, LocalPreferenceKey (+11 more)
+### Community 56 - "TCG User State"
+Cohesion: 0.07
+Nodes (28): DEFAULT_TCG_USER_STATE, TCG_USER_STATE_COOKIE, TCGUserState, TCGCardAbility, TCGCardAttack, TCGCardBooster, TCGCardCount, TCGCardLegalities (+20 more)
 
-### Community 49 - "Album Progress and Attribution"
+### Community 57 - "Mobile Package Dependencies"
+Cohesion: 0.06
+Nodes (30): devDependencies, @babel/core, babel-plugin-module-resolver, @types/react, typescript, axios, axios-retry, i18next (+22 more)
+
+### Community 58 - "Neon Account Schema"
 Cohesion: 0.16
-Nodes (21): TCGAlbumPage(), RARITY_TONES, TCGRarityBadge(), TCGRarityBadgeProps, currentSession(), markProductActivation(), saveSession(), trackProductEvent() (+13 more)
+Nodes (30): public.battle_rooms, analytics.daily_metrics, public.friend_collection_snapshots, public.friend_deck_snapshots, public.friend_directory, public.friendships, Core application schema migration, public.profiles (+22 more)
 
-### Community 50 - "Move Detail Pages"
+### Community 59 - "Shared Team Analysis"
+Cohesion: 0.12
+Nodes (27): Type Relations, TypeRelations, AutoCompleteOptions, AutoCompleteResult, buildPokemonDetailFromBasic(), calculateTeamSynergyScore(), classifyRoleByStats(), DEFAULT_AUTO_COMPLETE_OPTIONS (+19 more)
+
+### Community 60 - "Quiz Experience"
+Cohesion: 0.09
+Nodes (25): GameMode, GameState, GENERATIONS, QuizChallenge, QuizPageContent(), seededRandom(), shuffled(), TYPES (+17 more)
+
+### Community 61 - "Profile Progress Store"
+Cohesion: 0.07
+Nodes (24): ICON_MAP, ProfileAndBadges(), TIER_COLORS, TIER_LABELS, REGIONS, adjust TCG Collection Variant Quantity, assign Legacy TCG Set To Collection, count Physical TCG Cards (+16 more)
+
+### Community 62 - "Sealed Product API"
+Cohesion: 0.16
+Nodes (26): Sealed Cashflow Row, Sealed Ledger Result, Sealed Portfolio Summary, Sealed Source Status, SealedSourceStatus, SealedPortfolioPage(), createSealedTransaction(), downloadSealedExport() (+18 more)
+
+### Community 63 - "Shared Pokemon Types"
+Cohesion: 0.08
+Nodes (25): getThemeColor(), getTypeGradientStyle(), TYPE_ICONS, AbilityListItem, AbilityPokemonLearner, GraphQLAbilityData, GraphQLAbilityPokemonData, GraphQLMoveData (+17 more)
+
+### Community 64 - "Pokemon Form Names"
+Cohesion: 0.13
+Nodes (25): alt, contentType, Image(), runtime, size, collectAllSpeciesNames(), getCurrentEvolutionSpeciesName(), findLocalizedFormLabel() (+17 more)
+
+### Community 65 - "TCG Card and Set Pages"
+Cohesion: 0.13
+Nodes (24): generateMetadata(), getPageCard, PageProps, TCGCardPage(), buildChecklistMarkup(), buildSetLanguages(), escapeHtml(), formatReleaseDate() (+16 more)
+
+### Community 66 - "Mobile Pokemon Pages"
+Cohesion: 0.17
+Nodes (19): PokemonDetailScreen(), styles, usePokemonDetail(), FavoriteButton(), PokemonCardBase(), styles, StatBar(), styles (+11 more)
+
+### Community 67 - "Analytics Dependencies"
+Cohesion: 0.07
+Nodes (27): dependencies, axios, axios-retry, class-variance-authority, clsx, cmdk, @ducanh2912/next-pwa, framer-motion (+19 more)
+
+### Community 68 - "Anniversary User Interface"
+Cohesion: 0.11
+Nodes (24): getTCGCollectionCardIds(), Anniversary30CardGrid(), handleFilterChange(), Anniversary30CardGridLabels, Anniversary30CardGridProps, ANNIVERSARY_30_DEFAULT_FILTERS, FILTER_LABEL_KEYS, getCardUrl() (+16 more)
+
+### Community 69 - "Mobile Providers and Localization"
+Cohesion: 0.09
+Nodes (14): RootStack(), react-native-url-polyfill, Bundle, loaders, loadLanguage(), AppProviders(), LocaleBridge(), NeonSyncBridge() (+6 more)
+
+### Community 70 - "Mobile Theme System"
+Cohesion: 0.14
+Nodes (19): FavoritesScreen(), styles, PokedexScreen(), styles, TabsLayout(), styles, TeamScreen(), react-i18next (+11 more)
+
+### Community 71 - "Neon Authentication Services"
+Cohesion: 0.10
+Nodes (20): jose, GET, ProfileRow, unavailable(), UserStateRow, countFrom(), CountRow, GET (+12 more)
+
+### Community 72 - "Error Reporting Client"
+Cohesion: 0.16
+Nodes (20): @sentry/nextjs, register(), getEnvironment(), getTraceSampleRate(), hasDsn, initializeSentryClient(), isPerformanceConsentGranted(), ReplayIntegration (+12 more)
+
+### Community 73 - "Friends API Routes"
+Cohesion: 0.11
+Nodes (25): canViewSnapshot(), CollectionPageRow, DeckSnapshotRow, DELETE, DirectoryRow, FriendshipRow, FriendsPayload, GET (+17 more)
+
+### Community 74 - "Team Generation Filters"
+Cohesion: 0.14
+Nodes (24): GENERATION_OPTIONS, GenerationPicker(), GenerationPickerProps, parseGenerationValue(), AutoCompleteOptions, AutoCompleteResult, buildPokemonDetailFromBasic(), calculateTeamSynergyScore() (+16 more)
+
+### Community 75 - "Application Notifications"
+Cohesion: 0.12
+Nodes (18): notify, agentation, sonner, AppContent(), DeferredToaster, getSystemTheme(), subscribeSystemTheme(), Toaster() (+10 more)
+
+### Community 76 - "Mobile REST Data Hooks"
+Cohesion: 0.11
+Nodes (22): usePokemonList(), usePokemonSearchIndex(), usePokemonSpecies(), apiClient, GRAPHQL_API_BASE, graphqlClient, REST_API_BASE, AbilityDetail (+14 more)
+
+### Community 77 - "Pokemon Filter State"
+Cohesion: 0.11
+Nodes (22): HeroControls(), usePokemonFilterUrl(), HOME_SORT_VALUES, HomeFilterUrlSerializableState, HomeFilterUrlState, HomeSortValue, HomeViewValue, parseBoundedInteger() (+14 more)
+
+### Community 78 - "Social Image Helpers"
+Cohesion: 0.12
+Nodes (22): detectOgImageMimeType(), encodeBase64(), fetchOgImageDataUrl(), getTrustedOgImageUrl(), isTrustedHttpsUrl(), isTrustedOgFontUrl(), loadTrustedOgImageDataUrl(), pendingOgImageLoads (+14 more)
+
+### Community 79 - "Move Detail Page"
 Cohesion: 0.16
 Nodes (17): dynamicParams, fetchMoveDetail(), fetchPokemonStats(), generateMetadata(), GENERATION_LABELS, MoveDetailPage(), PokemonStatResult, Props (+9 more)
 
-### Community 51 - "Sitemap Generation"
-Cohesion: 0.13
-Nodes (21): GET(), revalidate, GET(), isSitemapFamily(), revalidate, assertSitemapIntegrity(), assertValidAbsoluteUrl(), EDITORIAL_SITEMAP_ROUTES (+13 more)
+### Community 80 - "Shared GraphQL Cache"
+Cohesion: 0.21
+Nodes (22): setCachedData(), buildPokemonDetailedSelection(), buildPokemonSearchSelection(), buildPokemonSummarySelection(), describeGraphQLResponse(), fetchBatch(), fetchMoveBatches(), fetchPokemonBatches() (+14 more)
 
-### Community 52 - "Quiz Leaderboards"
+### Community 81 - "Quiz Share Image API"
+Cohesion: 0.14
+Nodes (19): GET(), runtime, CHALLENGE_COLORS, CHALLENGE_LABELS, GET(), MODE_LABELS, runtime, GET() (+11 more)
+
+### Community 82 - "Expo Runtime Configuration"
+Cohesion: 0.09
+Nodes (21): package, tsconfigPaths, typedRoutes, expo, android, assetBundlePatterns, backgroundColor, experiments (+13 more)
+
+### Community 83 - "UI Component Configuration"
+Cohesion: 0.09
+Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
+
+### Community 84 - "TCG Price History API"
+Cohesion: 0.14
+Nodes (19): GET, getTcgCard(), GET, getTcgCompare(), CardPricing, extractPriceSnapshot(), GET, getPriceHistory() (+11 more)
+
+### Community 85 - "Analytics Identity Consent"
+Cohesion: 0.22
+Nodes (13): workbox-window, PostHogConsentBridge(), PostHogIdentityBridge(), SentryConsentBridge(), AnalyticsEvent, VercelInsights(), DeferredComponents, IdleClientServices() (+5 more)
+
+### Community 86 - "Privacy and Cookie Pages"
+Cohesion: 0.22
+Nodes (11): CookiePolicyPage(), PrivacyPage(), calloutIcon, calloutStyles, LegalDocumentView(), copy, MeasurementNotice(), getLegalDocuments() (+3 more)
+
+### Community 87 - "Pokemon List Interface"
+Cohesion: 0.16
+Nodes (19): PokemonCardSkeleton(), _buildInitialDataRaw(), _getCachedInitialData(), _initialDataCache, PokemonList(), PokemonStatMap, PokemonStatName, get All Pokemon Detailed (+11 more)
+
+### Community 88 - "TCG Price Charts"
+Cohesion: 0.15
+Nodes (17): ChartTooltip(), ChartTooltipProps, Days, formatChartAmount(), formatDate(), formatTimestamp(), PriceChart(), PriceChartProps (+9 more)
+
+### Community 89 - "Mobile Account Localization"
+Cohesion: 0.13
+Nodes (16): AccountScreen(), cardStyle(), LANGUAGE_LABELS, styles, THEME_OPTIONS, useTheme(), AppLanguage, getBrowserLanguage() (+8 more)
+
+### Community 90 - "Home Collection Previews"
+Cohesion: 0.15
+Nodes (13): HomeCardPreview(), HomeCardPreviewProps, HomeCardStyle, resetCardStyle(), RESTING_STYLE, HomeCollectionPreview(), HomeCollectionPreviewProps, HOME_FEATURED_CARDS (+5 more)
+
+### Community 91 - "Mobile Package Manifest"
 Cohesion: 0.11
-Nodes (19): LeaderboardRow(), PERIOD_LABELS, QuizLeaderboard(), QuizLeaderboardProps, DAILY_QUESTION_COUNT, LEADERBOARD_CHALLENGES, LEADERBOARD_MODES, LEADERBOARD_PERIODS (+11 more)
+Nodes (19): dependencies, axios, axios-retry, expo-constants, expo-image, expo-linking, expo-localization, expo-router (+11 more)
 
-### Community 53 - "API Client Layer"
-Cohesion: 0.12
-Nodes (19): apiClient, GRAPHQL_API_BASE, graphqlClient, REST_API_BASE, AbilityDetail, getAllAbilityNames(), getAllItemNames(), getAllMoveNames() (+11 more)
+### Community 92 - "Sealed Collection History"
+Cohesion: 0.16
+Nodes (16): Sealed Portfolio Point, Sealed Portfolio Totals, SealedPortfolioSummary, SealedCashflowRow, SealedPortfolioPoint, SealedPortfolioTotals, SealedPosition, SealedPositionView (+8 more)
 
-### Community 54 - "Legal Pages"
+### Community 93 - "Sealed Portfolio Analytics"
 Cohesion: 0.20
-Nodes (13): CookiePolicyPage(), LegalNoticePage(), PrivacyPage(), TermsPage(), calloutIcon, calloutStyles, LegalDocumentView(), copy (+5 more)
+Nodes (17): calculateSealedCashflow(), dayDate(), periodEnd(), ratio(), sealedRecentDays(), shiftDay(), summarizeSealedPortfolio(), calculateSealedCashCents() (+9 more)
 
-### Community 55 - "Quiz Experience"
+### Community 94 - "Web Root Layout"
 Cohesion: 0.15
-Nodes (20): GameMode, GameState, GENERATIONS, QuizChallenge, QuizPageContent(), seededRandom(), shuffled(), TYPES (+12 more)
+Nodes (16): bodyFont, displayFont, RootLayout(), supportedInLanguage, viewport, SkipLink(), SkipLinkProps, languageToOpenGraphLocale (+8 more)
 
-### Community 56 - "Sitemap Data"
-Cohesion: 0.15
-Nodes (21): getSetPageData(), getAllAbilityNamesCached, getAllItemNamesCached, getAllMoveNamesCached, getAllPokemonNamesCached, getAllSetsCached, getTCGSetCardsCached, assertNonEmpty() (+13 more)
+### Community 95 - "Holographic Card Effects"
+Cohesion: 0.22
+Nodes (17): BASIC_RARITIES, formatStageSubtype(), getArtWindow(), getCardSearchableText(), getSubtypeAttribute(), getSupertypeAttribute(), getTCGHoloData(), getTCGHoloRarity() (+9 more)
 
-### Community 57 - "Local API Cache"
+### Community 96 - "Web TypeScript Configuration"
+Cohesion: 0.11
+Nodes (18): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+10 more)
+
+### Community 97 - "Core Package Configuration"
+Cohesion: 0.11
+Nodes (17): exports, axios, axios-retry, idb-keyval, react, @react-native-async-storage/async-storage, zustand, license (+9 more)
+
+### Community 98 - "Shared API Cache Storage"
 Cohesion: 0.14
-Nodes (15): CacheItem, getCachedData(), getCacheKey(), getLocalStorage(), readCacheItem(), readLocalCache(), withTimeout(), fetchCollectionValue() (+7 more)
+Nodes (10): peerDependencies, react, @react-native-async-storage/async-storage, CacheItem, evictOldestIfNeeded(), getCachedData(), isCacheItem(), isRecord() (+2 more)
 
-### Community 58 - "Open Graph Routes"
-Cohesion: 0.14
-Nodes (16): runtime, alt, contentType, Image(), runtime, size, alt, contentType (+8 more)
+### Community 99 - "TCG Ownership and Languages"
+Cohesion: 0.18
+Nodes (14): MAX_TCG_COLLECTION_PHYSICAL_CARDS, DEFAULT_TCG_DISPLAY_CURRENCY, isTCGDisplayCurrency(), normalizeTCGDisplayCurrency(), TCG_DISPLAY_CURRENCIES, TCGDisplayCurrency, DEFAULT_TCG_CARD_LANGUAGE, TCG_CARD_LANGUAGE_ENGLISH_NAMES (+6 more)
 
-### Community 59 - "Encounter Components"
-Cohesion: 0.14
-Nodes (17): EncounterLocations, EncounterLocations(), EncounterLocationsProps, EmptyState(), EmptyStateProps, EmptyStateMotion(), EmptyStateMotionProps, EncounterEntry (+9 more)
+### Community 100 - "Cardmarket Sealed Imports"
+Cohesion: 0.18
+Nodes (17): SEALED_PRODUCT_CATEGORY_IDS, SealedPriceMetrics, decodeJson(), downloadAndParseSealedCardmarketData(), downloadBytes(), DownloadedCardmarketData, isRecord(), metricCents() (+9 more)
 
-### Community 60 - "Wishlist Navigation"
-Cohesion: 0.15
-Nodes (15): TCGWishlistPage(), buildTabHref(), FALLBACK_LABELS, normalizePathname(), TABS, TCGPageTabLabels, TCGPageTabs(), TCGPageTabsProps (+7 more)
+### Community 101 - "Server Analytics"
+Cohesion: 0.18
+Nodes (15): posthog-node, onRequestError(), getProductMeasurementConsentFromCookie(), asRequestLike(), capturePostHogServerException(), consentFromRequest(), deduplicationKeys, getCookieHeader() (+7 more)
 
-### Community 61 - "Card Image Rendering"
-Cohesion: 0.19
-Nodes (18): TCGCardImage(), TCGCardImageProps, adjust(), clamp(), getInitialHoloStyle(), hashToUnit(), HoloStyle, TCGHolographicCard (+10 more)
+### Community 102 - "Localized Legal Content"
+Cohesion: 0.16
+Nodes (10): Localized legal content, get Actual Legal Documents, deLegal, enLegal, esLegal, frLegal, itLegal, jaLegal (+2 more)
 
-### Community 62 - "Legal Translations"
-Cohesion: 0.13
-Nodes (12): en, fr, getActualLegalDocuments(), LegalDocuments, deLegal, enLegal, esLegal, frLegal (+4 more)
+### Community 103 - "Battle Room Services"
+Cohesion: 0.18
+Nodes (13): @neondatabase/auth, BattleRoom(), BattleRoomProps, BattleRoomState, ChatMessage, parseChatMessages(), readError(), getAppAccessToken() (+5 more)
 
-### Community 63 - "Sealed Market Data"
-Cohesion: 0.15
-Nodes (15): decodeJson(), downloadAndParseSealedCardmarketData(), downloadBytes(), DownloadedCardmarketData, isRecord(), metricCents(), nonNegativeInteger(), ParsedCardmarketData (+7 more)
+### Community 104 - "Web API Cache"
+Cohesion: 0.22
+Nodes (12): idb-keyval, CacheItem, evictOldestIfNeeded(), getCachedData(), getCacheKey(), getLocalStorage(), isIndexedDbAvailable(), readCacheItem() (+4 more)
 
-### Community 64 - "Price Chart Components"
-Cohesion: 0.15
-Nodes (16): ChartTooltip(), ChartTooltipProps, Days, formatChartAmount(), formatDate(), PriceChart(), PriceChartProps, toChartData() (+8 more)
-
-### Community 65 - "Open Graph API"
-Cohesion: 0.19
-Nodes (15): GET(), runtime, GET(), runtime, getTCGSetCached, PUBLIC_OG_CACHE_HEADERS, MAX_OG_POKEMON_NAME_LENGTH, MAX_OG_TCG_CARD_ID_LENGTH (+7 more)
-
-### Community 66 - "Activity Statistics"
-Cohesion: 0.12
-Nodes (17): ACTION_ICONS, formatDate(), GeneralActivity(), GeneralActivityProps, ProfileAndBadgesProps, CartesianGrid, Line, LineChart (+9 more)
-
-### Community 67 - "Pokémon Name Formatting"
-Cohesion: 0.20
-Nodes (17): findLocalizedFormLabel(), FORM_LABELS, FORM_MARKERS, FORM_MARKERS_SORTED, getFormLabel(), getFormMarker(), getPokemonDisplayName(), humanizeBaseName() (+9 more)
-
-### Community 68 - "TCG Card Metadata"
+### Community 106 - "Anniversary Page Data"
 Cohesion: 0.24
-Nodes (16): BASIC_RARITIES, formatStageSubtype(), getArtWindow(), getCardSearchableText(), getSubtypeAttribute(), getSupertypeAttribute(), getTCGHoloData(), getTCGHoloRarity() (+8 more)
+Nodes (16): Anniversary30Card, getAnniversary30Manifest(), getAnniversary30ManifestDataQuality(), Anniversary30PageData, Anniversary30ProviderStatus, buildAnniversary30PageData(), getAnniversary30PageData, getProviderStatus() (+8 more)
 
-### Community 69 - "Breeding and Nuzlocke"
-Cohesion: 0.18
-Nodes (13): BreedingPageClient(), BreedingPageClientProps, isTabId(), TabId, NuzlockeClient(), STATUS_CONFIG, BreedingCalculator(), getLocalizedPokemonName() (+5 more)
+### Community 107 - "Anniversary Data Migration"
+Cohesion: 0.22
+Nodes (15): Anniversary30PikachuSlotId, ANNIVERSARY_30_PIKACHU_SLOTS, Anniversary30MigrationPlan, Anniversary30MigrationState, createAnniversary30MigrationState(), getAnniversary30MigrationPlan(), isValidCardId(), LEGACY_SLOT_IDS (+7 more)
 
-### Community 71 - "Client Providers"
+### Community 108 - "Core TypeScript Configuration"
+Cohesion: 0.12
+Nodes (15): compilerOptions, esModuleInterop, isolatedModules, jsx, lib, module, moduleResolution, noEmit (+7 more)
+
+### Community 109 - "Lint Tooling"
 Cohesion: 0.14
-Nodes (13): CommandPalette, DeferredOverlays(), MotionConfigBoundary(), MotionConfigProps, ProvidersProps, routeNeedsMotionConfig(), SettingsModal, ThemeProviderProps (+5 more)
+Nodes (14): eslintConfig, devDependencies, agentation, eslint, eslint-config-next, metro, tailwindcss, @tailwindcss/postcss (+6 more)
 
-### Community 72 - "Sitemap Builders"
-Cohesion: 0.23
-Nodes (17): isTcgLangSupported(), absolutePath(), buildAbilitiesSitemapEntries(), buildGuidesSitemapEntries(), buildItemsSitemapEntries(), buildLanguages(), buildMovesSitemapEntries(), buildPokemonSitemapEntries() (+9 more)
-
-### Community 73 - "Campaign Attribution"
-Cohesion: 0.17
-Nodes (13): CampaignRouteContext, GET(), MAX_CAMPAIGN_SLUG_LENGTH, normalizeCampaignSlug(), defaultConsent, getTcgStartAttribution(), getTcgStartSource(), isConsent() (+5 more)
-
-### Community 74 - "Set Progress Insights"
-Cohesion: 0.18
-Nodes (14): formatCardValue(), formatCurrency(), TCGActiveSetInsights(), TCGActiveSetInsightsProps, TCGProgressBar(), TCGProgressBarProps, getActiveSetInsightsFallback(), getSetCompletionFromSet() (+6 more)
-
-### Community 75 - "Share Image Data"
-Cohesion: 0.15
-Nodes (14): GET(), CHALLENGE_COLORS, CHALLENGE_LABELS, GET(), MODE_LABELS, runtime, SupportedLanguage, normalizeOgEnum() (+6 more)
-
-### Community 76 - "User State API"
-Cohesion: 0.29
-Nodes (14): GET, getCurrentState(), getUserState(), isExpectedDependencyFailure(), isJsonObject(), isValidTimestamp(), PUT, putUserState() (+6 more)
-
-### Community 77 - "Battle Rooms"
-Cohesion: 0.23
-Nodes (11): BattleRoomSection(), BattleRoom(), BattleRoomProps, BattleRoomState, ChatMessage, parseChatMessages(), readError(), getNeonAccessToken() (+3 more)
-
-### Community 78 - "Competitive Team Data"
+### Community 110 - "Competitive Pokemon Data"
 Cohesion: 0.24
 Nodes (12): CompetitiveMeta, buildShowdownExport(), CompetitiveMeta(), Props, TIER_COLORS, TIER_DESCRIPTION_KEYS, useSmogonData(), fetchSmogonTier() (+4 more)
 
-### Community 79 - "Price Alerts"
-Cohesion: 0.24
-Nodes (13): AlertRow(), AlertRowProps, createAlert(), CreateAlertForm(), CreateFormProps, deleteAlert(), fetchAlerts(), getAuthHeader() (+5 more)
-
-### Community 80 - "Trusted OG Assets"
-Cohesion: 0.23
-Nodes (12): detectOgImageMimeType(), encodeBase64(), fetchOgImageDataUrl(), getTrustedOgImageUrl(), isTrustedHttpsUrl(), isTrustedOgFontUrl(), loadFirstTrustedOgImageDataUrl(), loadTrustedOgImageDataUrl() (+4 more)
-
-### Community 81 - "Account Deletion"
-Cohesion: 0.22
-Nodes (12): claimDeletion(), ClaimedDeletionRow, DELETE, deleteAccount(), DeletePayload, DeletionState, DeletionStateRow, getDeletionState() (+4 more)
-
-### Community 82 - "Auth Recovery UI"
-Cohesion: 0.21
-Nodes (9): AuthModalBoundary, AuthModalBoundaryProps, AuthModalBoundaryState, AuthModalLoadError(), AuthModal, SyncAuthPrompt(), getSyncAccessStatus(), onSyncAccessRequired() (+1 more)
-
-### Community 83 - "Cookie Consent UI"
-Cohesion: 0.26
-Nodes (11): ClientCookieBanner(), CookieBanner, CookieBanner(), getCurrentLanguage(), getServerSnapshot(), getSnapshot(), preferenceLabels, readStoredConsent() (+3 more)
-
-### Community 84 - "Brand Fonts"
-Cohesion: 0.21
-Nodes (12): CJK_FAMILY, loadBrandFonts(), loadCjkFont(), loadOgFonts(), NUNITO_EXTRA_BOLD_FONT_URL, NUNITO_FONT_URL, OgFont, OgFontWeight (+4 more)
-
-### Community 85 - "Sentry Data Scrubbing"
-Cohesion: 0.28
-Nodes (11): redactText(), redactUrl(), scrubSentryEvent(), scrubSentryFeedback(), scrubStacktrace(), SentryBreadcrumb, SentryEvent, SentryExceptionValue (+3 more)
-
-### Community 86 - "Pokémon OG Endpoint"
-Cohesion: 0.24
-Nodes (8): artworkUrl(), formatDexNumber(), GET(), runtime, minimalPokemon, mocks, totalStats(), normalizeOgPokemonName()
-
-### Community 87 - "TCG Set Pages"
-Cohesion: 0.29
-Nodes (11): buildChecklistMarkup(), buildSetLanguages(), escapeHtml(), formatReleaseDate(), generateMetadata(), PageProps, revalidate, TCGSetPage() (+3 more)
-
-### Community 88 - "Analytics Consent Bridges"
-Cohesion: 0.38
-Nodes (8): PostHogConsentBridge(), SentryConsentBridge(), AnalyticsEvent, VercelInsights(), syncPostHogConsent(), getProductConsent(), getServerProductConsent(), subscribeProductConsent()
-
-### Community 89 - "Desktop Navigation"
-Cohesion: 0.24
-Nodes (8): HeaderLink(), HeaderLinkProps, NAV_ITEMS, NavItem, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS, DropdownMenuContent(), DropdownMenuItem()
-
-### Community 90 - "Home Filter State"
-Cohesion: 0.24
-Nodes (10): HeroControls(), usePokemonFilterUrl(), HOME_SORT_VALUES, HomeFilterUrlState, HomeSortValue, HomeViewValue, parseHomeFilters(), serializeHomeFilters() (+2 more)
-
-### Community 91 - "PostHog Analytics"
-Cohesion: 0.30
-Nodes (11): capturePostHogEvent(), capturePostHogPageview(), initializePostHog(), isExcludedPath(), normalizePath(), PostHogEventProperties, sanitizeEvent(), sanitizeUrl() (+3 more)
-
-### Community 92 - "Brand Concepts"
-Cohesion: 0.26
-Nodes (12): Collectors, Cosmic Blue-Purple Atlas Aesthetic, Focused Field Guide, Lunidex Pokémon Companion Open Graph Artwork, Lunidex, Players, Pokédex, Pokémon Companion (+4 more)
-
-### Community 93 - "Team Sharing"
-Cohesion: 0.35
-Nodes (9): firstSearchParam(), generateMetadata(), resolveLang(), sanitizeCode(), SearchParamValue, SharePageProps, TeamSharePage(), RedirectToTeam() (+1 more)
-
-### Community 94 - "Home Collection Preview"
-Cohesion: 0.31
-Nodes (8): HomeCollectionEntry(), HomeCollectionEntryProps, HomeCollectionPreview(), HomeCollectionPreviewProps, useHomeFeaturedCards(), CollectionEntry, resolveCollectionEntry(), ResolveCollectionEntryInput
-
-### Community 95 - "Album Card Components"
+### Community 111 - "Sealed Product Types"
 Cohesion: 0.27
-Nodes (10): areTCGAlbumCardPropsEqual(), formatPrice(), quantityForVariant(), sameOwnerships(), TCGAlbumCard, VARIANT_HINTS, VARIANT_LABELS, VariantQuantityRow() (+2 more)
+Nodes (11): Sealed Product, Sealed Product Language, SealedProduct, SealedProductLanguage, SealedCatalogueResponse, getSealedExchangeProducts(), getSealedSaleProducts(), SealedExchangePositionWithProduct (+3 more)
 
-### Community 96 - "Push Notifications"
-Cohesion: 0.38
-Nodes (10): RFC-8291, fetchAppApi(), getAppAccessToken(), getVapidPublicKey(), isPushSupported(), removePushSubscription(), storePushSubscription(), subscribeToPush() (+2 more)
+### Community 112 - "Contact API"
+Cohesion: 0.22
+Nodes (12): resend, ContactPayload, headers, invalid(), isText(), LIMITS, POST, postContact() (+4 more)
 
-### Community 97 - "Query Observability"
-Cohesion: 0.42
-Nodes (8): Providers(), createClientI18n(), createObservedMutationCache(), createObservedQueryCache(), getErrorStatus(), getMutationKey(), getQueryContext(), featureFromQueryKey()
+### Community 113 - "Analytics Product API"
+Cohesion: 0.21
+Nodes (11): Node.js crypto, allowed, ephemeralClientKey(), EventName, forbidden(), POST, postProductAnalytics(), ProductPayload (+3 more)
 
-### Community 98 - "Activity Heatmap"
-Cohesion: 0.31
-Nodes (9): ActivityHeatMap(), computeGrid(), getColorLevel(), getDayLabels(), getMonthLabels(), HeatMapCell, LEVEL_CLASSES, toKey() (+1 more)
+### Community 114 - "Pokemon Card API"
+Cohesion: 0.23
+Nodes (8): getPokemonCards(), mocks, getCachedTcgCardsOrThrow(), containsWholePokemonName(), isNameBoundary(), isPokemonNameInCardTitle(), normalizeCardName(), scriptGroup()
 
-### Community 99 - "Move Coverage Analysis"
+### Community 115 - "Continuous Integration Workflow"
+Cohesion: 0.17
+Nodes (12): Build web application, Checkout repository, CI job, CI workflow, Type-check shared core, Lint mobile workspace, Type-check mobile workspace, Install dependencies with npm ci (+4 more)
+
+### Community 116 - "Install Prompt Interface"
+Cohesion: 0.26
+Nodes (10): InstallPrompt, BeforeInstallPromptEvent, detectInstallPromptMode(), InstallPrompt(), InstallPromptMode, isAndroidDevice(), isDismissed(), isStandaloneDisplayMode() (+2 more)
+
+### Community 117 - "Cookie Consent Interface"
+Cohesion: 0.27
+Nodes (10): ClientCookieBanner(), CookieBanner, CookieBanner(), getCurrentLanguage(), getServerSnapshot(), getSnapshot(), preferenceLabels, readStoredConsent() (+2 more)
+
+### Community 118 - "Legacy Quiz Sync"
+Cohesion: 0.24
+Nodes (11): LeaderboardPeriod, LeaderboardResponse, answerDailyQuizQuestion(), DailyQuizAnswerResult, DailyQuizAttempt, getAccessToken(), isValidQuestionId(), isValidQuestionIndex() (+3 more)
+
+### Community 119 - "Mobile Core Exports"
+Cohesion: 0.27
+Nodes (7): styles, darkPalette, lightPalette, ThemePalette, TYPE_COLOR, ThemeContext, ThemeContextValue
+
+### Community 120 - "Workspace Build Scripts"
+Cohesion: 0.18
+Nodes (11): scripts, build, db:neon:export, db:neon:import, db:neon:verify, dev, lint, seo:check (+3 more)
+
+### Community 121 - "Test Configuration"
+Cohesion: 0.18
+Nodes (4): vitest, mocks, mockPostHog, now
+
+### Community 122 - "Social Image Rendering"
+Cohesion: 0.24
+Nodes (8): Node.js fs/promises, alt, contentType, Image(), runtime, size, DEFAULT_OG_IMAGE_PATH, loadDefaultOgImage()
+
+### Community 123 - "Team Comparison Suggestions"
+Cohesion: 0.27
+Nodes (9): CompareSuggestions, CounterSuggestion, findCounterTypes(), findPartnerTypes(), getCompareSuggestions(), getTypesThatHitSuperEffective(), PartnerSuggestion, TypeRelationsForSuggestion (+1 more)
+
+### Community 124 - "Move Coverage Analysis"
 Cohesion: 0.24
 Nodes (8): analyzeMoveCoverage(), dedupeSuggestions(), getTypeEffectiveness(), MoveCoverageResult, MoveSuggestion, OFFENSIVE_DAMAGE_TYPES, PokemonMoveCoverage, SUPER_EFFECTIVE_MAP
 
-### Community 100 - "Team OG Endpoint"
-Cohesion: 0.33
-Nodes (8): GET(), parseTeamIds(), NOTE: satori (next/og) renders a stray black rectangle at the SVG origin when, runtime, spriteUrl(), getBrowserLanguage(), isSupportedLanguage(), synergyColor()
+### Community 125 - "Mobile TypeScript Configuration"
+Cohesion: 0.22
+Nodes (8): compilerOptions, paths, strict, exclude, extends, include, @primedex/core, expo/tsconfig.base
 
-### Community 101 - "Memory Cache"
+### Community 127 - "In Memory API Cache"
 Cohesion: 0.25
 Nodes (4): createMemoryCache(), MemoryCache, MemoryCacheEntry, MemoryCacheOptions
 
-### Community 102 - "Durable Local Storage"
+### Community 128 - "Pokemon Encounter Data"
+Cohesion: 0.25
+Nodes (8): EncounterEntry, EncounterLocationGroup, EncounterVersionGroup, groupEncountersByVersionGroup(), resolveVersionGroup(), VERSION_GROUP_BY_VERSION, VERSION_GROUP_LABELS, VERSION_GROUP_ORDER
+
+### Community 129 - "Cardmarket Product Links"
+Cohesion: 0.39
+Nodes (7): CARDMARKET_LANGUAGES, CardmarketLanguage, getCardmarketProductId(), getCardmarketProductUrl(), isValidProductId(), normalizeVariantType(), resolveCardmarketLanguage()
+
+### Community 130 - "Persistent Storage Layer"
 Cohesion: 0.31
 Nodes (6): createResilientStorage(), IndexedDbOperations, isUsablePersistedValue(), ResilientStorageOptions, persistedState, withTimeout()
 
-### Community 103 - "Sentry Client"
-Cohesion: 0.43
-Nodes (7): getEnvironment(), getTraceSampleRate(), hasDsn, initializeSentryClient(), isPerformanceConsentGranted(), ReplayIntegration, syncSentryPerformance()
+### Community 131 - "Pokemon Held Items"
+Cohesion: 0.25
+Nodes (7): getRecommendedItems(), GUTS_POKEMON, HeldItem, HeldItemPokemon, ITEMS, NOTABLE_NFE_POKEMON, POISON_HEAL_POKEMON
 
-### Community 104 - "Metrics Retention API"
+### Community 132 - "Mobile Build Scripts"
+Cohesion: 0.29
+Nodes (7): scripts, android, ios, lint, start, typecheck, web
+
+### Community 133 - "Bug Report Interface"
+Cohesion: 0.29
+Nodes (4): onRouterTransitionStart(), FeedbackDialog, ReportProblemButton(), ReportProblemButtonProps
+
+### Community 134 - "Pokemon Team Paste Parser"
 Cohesion: 0.38
-Nodes (6): countFrom(), CountRow, GET, getMetricsRetention(), NO_STORE_HEADERS, unauthorized()
+Nodes (6): MatchedSet, ParsedShowdownSet, parseShowdownPaste(), parseStatLine(), slugify(), STAT_ALIASES
 
-### Community 105 - "Smogon Endpoint"
-Cohesion: 0.40
-Nodes (5): GET, getPSData(), getSmogonData(), revalidate, runtime
+### Community 135 - "TCG Collection Valuation"
+Cohesion: 0.38
+Nodes (5): fetchCollectionValue(), getCollectionValuationTimeoutMs(), mapWithConcurrencyUntilTimeout(), worker(), normalizeOwnedVariantsForValuation()
 
-### Community 106 - "User Cards API"
+### Community 136 - "Accessible Color Utilities"
+Cohesion: 0.52
+Nodes (5): getContrastRatio(), getReadableTextColor(), parseHexColor(), relativeLuminance(), RGB
+
+### Community 137 - "TCG User Cards API"
 Cohesion: 0.60
 Nodes (5): DELETE(), GET(), legacyEndpointResponse(), PATCH(), POST()
 
-### Community 107 - "Team Export"
+### Community 138 - "Sitemap Index Route"
+Cohesion: 0.47
+Nodes (5): GET(), revalidate, escapeXml(), renderSitemapIndex(), sitemapIndexUrls()
+
+### Community 139 - "Pokemon Artwork Data"
 Cohesion: 0.53
-Nodes (5): buildTeamCanvas(), loadImage(), roundRect(), TeamExportButton(), TeamExportButtonProps
+Nodes (4): getNextPokemonArtworkSource(), getOfficialArtworkSpeciesId(), OFFICIAL_ARTWORK_SPECIES_ID_BY_FORM_ID, shouldOptimizePokemonArtwork()
 
-### Community 108 - "Source Governance Guides"
-Cohesion: 0.40
-Nodes (6): Web application source guide, App Router guide, Route Handler guide, Pokémon detail route guide, Quiz route guide, TCG route guide
+### Community 140 - "TCG Rarity Rules"
+Cohesion: 0.60
+Nodes (4): CANONICAL_RARITY_KEYS, getCanonicalTcgRarity(), isSameTcgRarity(), normalizeRarityText()
 
-### Community 109 - "Saved Search API"
+### Community 141 - "Saved TCG Searches"
 Cohesion: 0.70
 Nodes (4): DELETE(), GET(), legacyEndpointResponse(), POST()
 
-### Community 110 - "Breeding Route"
-Cohesion: 0.50
-Nodes (4): BreedingPage(), firstSearchParam(), Props, SearchParamValue
-
-### Community 111 - "Home Tool Cards"
-Cohesion: 0.40
-Nodes (3): HOME_TOOL_ICONS, HomeToolCardProps, HomeToolIcon
-
-### Community 112 - "Animated Home Copy"
+### Community 142 - "Home Text Animation"
 Cohesion: 0.50
 Nodes (4): HomeWordReveal(), HomeWordRevealProps, SegmenterLike, segmentText()
 
+### Community 145 - "Neon Migration Verification"
+Cohesion: 0.83
+Nodes (3): count_rows(), fail(), verify-migration.sh script
+
+### Community 146 - "Share Link Builder"
+Cohesion: 0.83
+Nodes (4): ShareButton(), buildAbsoluteUrl(), handleClick(), handleCopyLink()
+
 ## Knowledge Gaps
-- **744 isolated node(s):** `revalidate`, `FACT_KEYS`, `SortKey`, `revalidate`, `dynamicParams` (+739 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 896 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **1248 isolated node(s):** `name`, `slug`, `scheme`, `version`, `orientation` (+1243 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1461 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `useTranslation` connect `Dashboard Shell` to `Sealed Portfolio UI`, `Pokémon Reference UI`, `404 Maze Game`, `Cloud Sync and Import`, `Compare and Favorites`, `TCG Collection Screens`, `Auth and Contact UI`, `Pokémon Detail View`, `Navigation and Filters`, `Profile and Sharing`, `Friend Profiles`, `Team Builder UI`, `EV/IV Calculator`, `Pokémon List Data`, `Breeding Calculator`, `TCG Research UI`, `Profile and Quiz Cards`, `TCG Card Details`, `Header and Filters`, `Type Chart UI`, `App Client Shell`, `Local Preferences`, `Album Progress and Attribution`, `Quiz Leaderboards`, `Quiz Experience`, `Encounter Components`, `Wishlist Navigation`, `Card Image Rendering`, `Price Chart Components`, `Activity Statistics`, `Breeding and Nuzlocke`, `Route Error Boundaries`, `Set Progress Insights`, `Competitive Team Data`, `Auth Recovery UI`, `Cookie Consent UI`, `Desktop Navigation`, `Home Collection Preview`, `Album Card Components`, `Activity Heatmap`, `Team Export`?**
-  _High betweenness centrality (0.097) - this node is a cross-community bridge._
-- **Why does `cn()` connect `Navigation and Filters` to `Pokémon Reference UI`, `Dashboard Shell`, `404 Maze Game`, `Cloud Sync and Import`, `Compare and Favorites`, `TCG Collection Screens`, `Auth and Contact UI`, `Pokémon Detail View`, `Profile and Sharing`, `App Route Layouts`, `Friend Profiles`, `Team Builder UI`, `EV/IV Calculator`, `Breeding Calculator`, `Reference Detail Pages`, `TCG Research UI`, `Profile and Quiz Cards`, `TCG Card Details`, `Header and Filters`, `Type Chart UI`, `Battle Simulator`, `Root and Home Layout`, `Home Experience`, `Album Progress and Attribution`, `Quiz Leaderboards`, `Quiz Experience`, `Encounter Components`, `Wishlist Navigation`, `Card Image Rendering`, `Price Chart Components`, `Activity Statistics`, `Breeding and Nuzlocke`, `Route Error Boundaries`, `Set Progress Insights`, `Battle Rooms`, `Price Alerts`, `Desktop Navigation`, `Album Card Components`, `Activity Heatmap`?**
-  _High betweenness centrality (0.073) - this node is a cross-community bridge._
-- **Why does `getServerLanguage()` connect `Route Metadata and Auth` to `Editorial Pages`, `Reference Detail Pages`, `Team OG Endpoint`, `Campaign Attribution`, `Breeding Route`, `Root and Home Layout`, `Home Experience`, `App Route Layouts`, `Reference Page Routes`, `Move Detail Pages`, `Legal Pages`, `TCG Set Pages`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
-- **What connects `revalidate`, `FACT_KEYS`, `SortKey` to the rest of the system?**
-  _744 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Editorial Pages` be split into smaller, more focused modules?**
-  _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
-- **Should `Route Metadata and Auth` be split into smaller, more focused modules?**
-  _Cohesion score 0.06991260923845194 - nodes in this community are weakly interconnected._
-- **Should `Account and Battle API` be split into smaller, more focused modules?**
-  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
+- **How does mobile sync cross from AppProviders into the shared core sync module?**
+  _The graph connects NeonSyncBridge() to useNeonSync() across apps/mobile and packages/core; the implementation keeps its historical Supabase path._
+- **How do TCG research and collection screens reach the shared TCG API and local collection store?**
+  _The graph links the research UI, card search services, shared API modules, and collection state across web and core._
+- **How do Neon tables connect sealed products, transactions, allocations, and audit records?**
+  _The six migrations expose explicit table references across the sealed portfolio schema._

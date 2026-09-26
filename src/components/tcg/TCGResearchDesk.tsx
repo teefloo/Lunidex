@@ -12,6 +12,7 @@ import {
   Search,
   Sparkles,
   Filter,
+  Trophy,
   type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -123,6 +124,7 @@ export function TCGResearchDesk({
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isRarityOpen, setIsRarityOpen] = useState(false);
   const didSyncUrlRef = useRef(false);
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
     parsedState.filters.selectedSet
@@ -318,6 +320,7 @@ export function TCGResearchDesk({
   const clearFilters = useCallback(() => {
     cancelPendingSearch();
     setSearchTermDraft('');
+    setIsRarityOpen(false);
     setHasUserEditedFilters(false);
     setFilters(resetTCGCardFilters(latestSetFallbackId));
   }, [cancelPendingSearch, latestSetFallbackId]);
@@ -334,10 +337,14 @@ export function TCGResearchDesk({
     setIsModalOpen(true);
   }, []);
 
-  const openFilters = useCallback(() => setIsFiltersOpen(true), []);
+  const openFilters = useCallback(() => {
+    setIsRarityOpen(false);
+    setIsFiltersOpen(true);
+  }, []);
 
   const applyQuickPreset = useCallback((preset: 'latest' | 'pikachu') => {
     cancelPendingSearch();
+    setIsRarityOpen(false);
     setHasUserEditedFilters(true);
 
     const resetQuickPresetFilters = (current: TCGCardFilters, next: Partial<TCGCardFilters>): TCGCardFilters => normalizeFilters({
@@ -388,10 +395,16 @@ export function TCGResearchDesk({
         collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
-        onCollectionChange={(selectedSet) => updateFilters({
-          ...effectiveFilters,
-          selectedSet,
-        })}
+        selectedRarity={effectiveFilters.selectedRarity ?? null}
+        isRarityOpen={isRarityOpen}
+        onCollectionChange={(selectedSet) => {
+          setIsRarityOpen(false);
+          updateFilters({
+            ...effectiveFilters,
+            selectedSet,
+          });
+        }}
+        onRarityToggle={() => setIsRarityOpen((current) => !current)}
         onSortChange={(sortBy, sortOrder) => {
           updateFilters({
             ...effectiveFilters,
@@ -403,6 +416,25 @@ export function TCGResearchDesk({
         onClearSearch={() => updateFilters(clearTCGCardSearch(effectiveFilters, latestSetFallbackId))}
         onOpenFilters={openFilters}
       />
+
+      {effectiveFilters.selectedSet && (
+        <section
+          id="tcg-quick-rarity"
+          className="page-surface px-5 py-4 sm:px-8"
+          aria-label={t('tcg.filter_rarity')}
+          hidden={!isRarityOpen}
+        >
+          {isRarityOpen && (
+            <TCGFilters
+              mode="quickRarity"
+              filters={effectiveFilters}
+              onChange={updateFilters}
+              autoApplyInitialSet={false}
+              language={resolvedLang}
+            />
+          )}
+        </section>
+      )}
 
       <div className="space-y-4">
         <section className="min-w-0 space-y-4" aria-labelledby="tcg-results-title">
@@ -505,7 +537,10 @@ function DiscoveryHero({
   collectionLabels,
   selectedCollectionId,
   sortValue,
+  selectedRarity,
+  isRarityOpen,
   onCollectionChange,
+  onRarityToggle,
   onSortChange,
   onSearchChange,
   onClearSearch,
@@ -518,7 +553,10 @@ function DiscoveryHero({
   collectionLabels: Map<string, string>;
   selectedCollectionId: string | null;
   sortValue: string;
+  selectedRarity: string | null;
+  isRarityOpen: boolean;
   onCollectionChange: (setId: string | null) => void;
+  onRarityToggle: () => void;
   onSortChange: (sortBy: NonNullable<TCGCardFilters['sortBy']>, sortOrder: NonNullable<TCGCardFilters['sortOrder']>) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
@@ -633,6 +671,26 @@ function DiscoveryHero({
             <Filter className="h-3.5 w-3.5" />
             {t('tcg.filters')}
           </button>
+          {selectedCollectionId && (
+            <button
+              type="button"
+              aria-expanded={isRarityOpen}
+              aria-controls="tcg-quick-rarity"
+              aria-label={selectedRarity
+                ? `${t('tcg.filter_rarity')}: ${selectedRarity}`
+                : t('tcg.filter_rarity')}
+              onClick={onRarityToggle}
+              className={cn(
+                'inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 text-[11px] font-black uppercase tracking-[0.18em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
+                isRarityOpen || selectedRarity
+                  ? 'border-primary/35 bg-primary/10 text-primary'
+                  : 'border-border/50 bg-card/50 text-foreground/60 hover:border-primary/25 hover:bg-primary/10 hover:text-primary',
+              )}
+            >
+              <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
+              {t('tcg.filter_rarity')}
+            </button>
+          )}
           {searchTerm && (
             <button
               type="button"

@@ -36,13 +36,14 @@ import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
+import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 
 interface TCGFiltersProps {
   filters: TCGCardFilters;
   onChange: (filters: TCGCardFilters) => void;
-  mode?: 'simple' | 'advanced';
+  mode?: 'simple' | 'advanced' | 'quickRarity';
   onSimpleSetChange?: (setId: string) => void;
   onSimpleCategoryChange?: (category: TCGCardCategoryFilter) => void;
   onSimpleRarityChange?: (rarity: string) => void;
@@ -66,7 +67,7 @@ export function TCGFilters({
   const mounted = useMounted();
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
-  const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>('set');
+  const [activeSection, setActiveSection] = useState<'set' | 'rarity' | 'pokemon' | 'trainer' | 'energy' | 'research' | null>(null);
   const searchTimeoutRef = useRef<number | null>(null);
   const didApplyInitialSetRef = useRef(false);
 
@@ -83,6 +84,7 @@ export function TCGFilters({
   const selectedSet = filters.selectedSet || null;
   const shouldFetchSetRarities = mounted && !!selectedSet && (
     mode === 'simple'
+    || mode === 'quickRarity'
     || activeSection === 'rarity'
     || Boolean(filters.selectedRarity)
   );
@@ -346,6 +348,45 @@ export function TCGFilters({
     },
     [t],
   );
+
+  if (mode === 'quickRarity') {
+    return (
+      <div className="space-y-2" role="group" aria-label={t('tcg.filter_rarity')}>
+        <div className="flex flex-wrap gap-2">
+          {raritiesLoading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} aria-hidden="true" className="h-11 w-24 animate-pulse rounded-sm bg-card/50" />
+            ))
+          ) : rarityOptions.length === 0 ? (
+            <p className="text-sm text-foreground/55">
+              {t(selectedSet ? 'tcg.no_rarities_in_set' : 'tcg.no_rarities')}
+            </p>
+          ) : (
+            rarityOptions.map((rarity) => {
+              const isActive = isSameTcgRarity(filters.selectedRarity, rarity);
+              return (
+                <button
+                  key={rarity}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => updateFilter('selectedRarity', isActive ? null : rarity)}
+                  className={cn(
+                    FILTER_CONTROL_FOCUS_CLASS,
+                    'min-h-11 rounded-sm border px-3 py-2 text-[11px] font-black uppercase tracking-[0.12em] transition-colors',
+                    isActive
+                      ? 'border-amber-400/40 bg-amber-500/20 text-amber-300'
+                      : 'border-border/50 bg-card/50 text-foreground/60 hover:border-border/70 hover:bg-card/65 hover:text-foreground',
+                  )}
+                >
+                  {getTCGRarityLabel(rarity, t)}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (mode === 'simple') {
     return (

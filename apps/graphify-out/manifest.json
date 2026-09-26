@@ -1,0 +1,152 @@
+{
+  "mobile/app.json": {
+    "mtime": 1785760541.9125156,
+    "seen": 1790420531.472697,
+    "ast_hash": "c330429a65011fe403add9994e46318a",
+    "semantic_hash": "c330429a65011fe403add9994e46318a"
+  },
+  "mobile/app/(tabs)/_layout.tsx": {
+    "mtime": 1785793473.3922145,
+    "seen": 1790420531.4726999,
+    "ast_hash": "f1e21ae8c9e06634dadc6da22b9658bc",
+    "semantic_hash": "f1e21ae8c9e06634dadc6da22b9658bc"
+  },
+  "mobile/app/(tabs)/account.tsx": {
+    "mtime": 1786735821.1273918,
+    "seen": 1790420531.4727008,
+    "ast_hash": "b689a969653e6cecdd84b9eccc2f19eb",
+    "semantic_hash": "b689a969653e6cecdd84b9eccc2f19eb"
+  },
+  "mobile/app/(tabs)/favorites.tsx": {
+    "mtime": 1783122262.2249327,
+    "seen": 1790420531.472703,
+    "ast_hash": "9e70a327e026e3096431dfa85b9dcb6d",
+    "semantic_hash": "9e70a327e026e3096431dfa85b9dcb6d"
+  },
+  "mobile/app/(tabs)/index.tsx": {
+    "mtime": 1787874577.978152,
+    "seen": 1790420531.472704,
+    "ast_hash": "ee958eabf4a1d606030954be80f84cd1",
+    "semantic_hash": "ee958eabf4a1d606030954be80f84cd1"
+  },
+  "mobile/app/(tabs)/team.tsx": {
+    "mtime": 1783122262.2254705,
+    "seen": 1790420531.4727051,
+    "ast_hash": "8795e9190d5dad167c73a89e8e656426",
+    "semantic_hash": "8795e9190d5dad167c73a89e8e656426"
+  },
+  "mobile/app/_layout.tsx": {
+    "mtime": 1783122262.2258887,
+    "seen": 1790420531.472706,
+    "ast_hash": "a38b2b4284d62cd15ac09a0f899146a7",
+    "semantic_hash": "a38b2b4284d62cd15ac09a0f899146a7"
+  },
+  "mobile/app/pokemon/[name].tsx": {
+    "mtime": 1783678890.2130885,
+    "seen": 1790420531.472716,
+    "ast_hash": "62aab50b31d8fc06af59d61a99ed769b",
+    "semantic_hash": "62aab50b31d8fc06af59d61a99ed769b"
+  },
+  "mobile/babel.config.js": {
+    "mtime": 1783122262.226657,
+    "seen": 1790420531.472718,
+    "ast_hash": "050cf8d8492ef09f60ea6dd26d44aec0",
+    "semantic_hash": "050cf8d8492ef09f60ea6dd26d44aec0"
+  },
+  "mobile/metro.config.js": {
+    "mtime": 1783122262.2270982,
+    "seen": 1790420531.4727192,
+    "ast_hash": "9bdaa0cce804680f7d5ddb71acd0abd9",
+    "semantic_hash": "9bdaa0cce804680f7d5ddb71acd0abd9"
+  },
+  "mobile/package.json": {
+    "mtime": 1789133050.2460132,
+    "seen": 1790420531.47272,
+    "ast_hash": "b10d7b645631ed556e7a02282fc95e81",
+    "semantic_hash": "b10d7b645631ed556e7a02282fc95e81"
+  },
+  "mobile/src/api/hooks.ts": {
+    "mtime": 1787874384.323527,
+    "seen": 1790420531.4727209,
+    "ast_hash": "2ee19883c6372c3e60fdf292cfb748a3",
+    "semantic_hash": "2ee19883c6372c3e60fdf292cfb748a3"
+  },
+  "mobile/src/components/FavoriteButton.tsx": {
+    "mtime": 1783122262.2278824,
+    "seen": 1790420531.4727218,
+    "ast_hash": "79a1c80e8c08b56602935c0d774e3ac9",
+    "semantic_hash": "79a1c80e8c08b56602935c0d774e3ac9"
+  },
+  "mobile/src/components/PokemonCard.tsx": {
+    "mtime": 1783122262.228408,
+    "seen": 1790420531.472723,
+    "ast_hash": "7f99dd910880ae0ce52322a0d818b8ac",
+    "semantic_hash": "7f99dd910880ae0ce52322a0d818b8ac"
+  },
+  "mobile/src/components/Screen.tsx": {
+    "mtime": 1783122262.2285748,
+    "seen": 1790420531.472724,
+    "ast_hash": "b75d035699bd969705c6c294b72c6cc8",
+    "semantic_hash": "b75d035699bd969705c6c294b72c6cc8"
+  },
+  "mobile/src/components/StatBar.tsx": {
+    "mtime": 1783122262.229002,
+    "seen": 1790420531.472725,
+    "ast_hash": "6b9811da0cf0cfa05756698cea0e923a",
+    "semantic_hash": "6b9811da0cf0cfa05756698cea0e923a"
+  },
+  "mobile/src/components/TypeBadge.tsx": {
+    "mtime": 1783122262.2293122,
+    "seen": 1790420531.472726,
+    "ast_hash": "3ccf4b9a35892a27f1148938ce59d8a9",
+    "semantic_hash": "3ccf4b9a35892a27f1148938ce59d8a9"
+  },
+  "mobile/src/i18n/index.ts": {
+    "mtime": 1783122262.2295234,
+    "seen": 1790420531.472727,
+    "ast_hash": "d916fcf5309cb4130f6fd33f065af428",
+    "semantic_hash": "d916fcf5309cb4130f6fd33f065af428"
+  },
+  "mobile/src/lib/pokemon.ts": {
+    "mtime": 1783122262.2296984,
+    "seen": 1790420531.4727318,
+    "ast_hash": "72d2eb64d2b89e958bb9f50f5d4b4a38",
+    "semantic_hash": "72d2eb64d2b89e958bb9f50f5d4b4a38"
+  },
+  "mobile/src/providers/AppProviders.tsx": {
+    "mtime": 1786735798.9113517,
+    "seen": 1790420531.472733,
+    "ast_hash": "2e0fd2f7d14079aa6a0955176f8cb45c",
+    "semantic_hash": "2e0fd2f7d14079aa6a0955176f8cb45c"
+  },
+  "mobile/src/theme/ThemeProvider.tsx": {
+    "mtime": 1783122262.230346,
+    "seen": 1790420531.472734,
+    "ast_hash": "6d66968fbfa4408565ebe592a78319e2",
+    "semantic_hash": "6d66968fbfa4408565ebe592a78319e2"
+  },
+  "mobile/src/theme/colors.ts": {
+    "mtime": 1785720701.169261,
+    "seen": 1790420531.472735,
+    "ast_hash": "5e3af956b8a5311859dd6677463e4a11",
+    "semantic_hash": "5e3af956b8a5311859dd6677463e4a11"
+  },
+  "mobile/tsconfig.json": {
+    "mtime": 1785793452.1468256,
+    "seen": 1790420531.472737,
+    "ast_hash": "458e36036239c384e5a41f00d01a11e7",
+    "semantic_hash": "458e36036239c384e5a41f00d01a11e7"
+  },
+  "mobile/AGENTS.md": {
+    "mtime": 1786276396.795335,
+    "seen": 1790420531.472738,
+    "ast_hash": "a6541c82daac1d43b0b268dc4557f4a6",
+    "semantic_hash": "a6541c82daac1d43b0b268dc4557f4a6"
+  },
+  "mobile/README.md": {
+    "mtime": 1787874404.5875762,
+    "seen": 1790420531.472739,
+    "ast_hash": "8cbc426826a34045fa835f11c223d588",
+    "semantic_hash": "8cbc426826a34045fa835f11c223d588"
+  }
+}

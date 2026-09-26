@@ -5,6 +5,20 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 499
+    },
+    {
+      "date": "2026-09-26T11:18:26.792883+00:00",
+      "input_tokens": 0,
+      "output_tokens": 157,
+      "files": 761,
+      "usage_available": false,
+      "usage_note": "Codex subagent usage metadata was unavailable; token values came from extraction fragments and are not verified usage."
+    },
+    {
+      "date": "2026-09-26T12:00:28.977306+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 636
     }
   ],
   "total_input_tokens": 0,
