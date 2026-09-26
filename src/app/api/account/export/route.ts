@@ -20,7 +20,7 @@ async function getAccountExport(request: NextRequest): Promise<NextResponse> {
   const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  // The export fans out to ten parallel queries; keep it a rare operation.
+  // The export fans out to eleven parallel queries; keep it a rare operation.
   if (!rateLimit(`account-export:${user.id}`, 3)) {
     return NextResponse.json(
       { error: 'Too many export requests. Please try again later.' },
@@ -32,7 +32,7 @@ async function getAccountExport(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-  const [profiles, states, quizScores, priceAlerts, pushSubscriptions, friendDirectory, friendships, collectionSnapshots, deckSnapshots, battleRooms] = await Promise.all([
+  const [profiles, states, quizScores, priceAlerts, pushSubscriptions, friendDirectory, friendships, collectionSnapshots, deckSnapshots, battleRooms, apiKeys] = await Promise.all([
     sql`select id, name, email, public_handle, is_public, avatar_pokemon_id, caught_count, total_pokemon, unlocked_badges, team_ids, quiz_best_score, quiz_total_correct, member_since, quiz_best_streak, tcg_owned_count, caught_by_gen, allow_friend_requests, share_tcg_collection, share_tcg_decks, created_at, updated_at from public.profiles where id = ${user.id}::uuid`,
     sql`select data, updated_at from public.user_state where user_id = ${user.id}::uuid`,
     sql`select id, pseudo, mode, challenge, score, date, created_at from public.quiz_scores where user_id = ${user.id}::uuid order by created_at desc`,
@@ -43,6 +43,7 @@ async function getAccountExport(request: NextRequest): Promise<NextResponse> {
     sql`select user_id, card_ids, collection_state, updated_at from public.friend_collection_snapshots where user_id = ${user.id}::uuid`,
     sql`select user_id, decks, updated_at from public.friend_deck_snapshots where user_id = ${user.id}::uuid`,
     sql`select id, player1_id, player2_id, player1_team, player2_team, state, status, created_at from public.battle_rooms where player1_id = ${user.id}::uuid or player2_id = ${user.id}::uuid order by created_at desc`,
+    sql`select id, name, key_prefix, permission, created_at, last_used_at, revoked_at from public.api_keys where user_id = ${user.id}::uuid order by created_at desc`,
   ]);
 
   const rawUserState = (states as UserStateRow[])[0] ?? null;
@@ -65,6 +66,7 @@ async function getAccountExport(request: NextRequest): Promise<NextResponse> {
     collectionSnapshots,
     deckSnapshots,
     battleRooms,
+    apiKeys,
   };
 
   return NextResponse.json(exportData, {

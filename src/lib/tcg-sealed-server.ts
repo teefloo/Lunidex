@@ -344,6 +344,79 @@ export async function getSealedTransactions(
   return rows.map(mapTransaction);
 }
 
+export interface SealedTransactionPageOptions {
+  limit: number;
+  cursor?: { date: string; createdAt: string; id: string };
+  productId?: number;
+  language?: string;
+  kind?: 'buy' | 'sell' | 'exchange';
+  includeVoided?: boolean;
+  voided?: boolean;
+}
+
+export async function getSealedTransactionPage(
+  sql: NeonSql,
+  userId: string,
+  options: SealedTransactionPageOptions,
+): Promise<{ transactions: SealedTransaction[]; hasMore: boolean }> {
+  const params: unknown[] = [userId];
+  const clauses = ['user_id = $1::uuid'];
+  if (options.voided !== undefined) {
+    params.push(options.voided);
+    clauses.push(`voided = $${params.length}`);
+  } else if (!options.includeVoided) {
+    clauses.push('voided = false');
+  }
+  if (options.productId !== undefined) {
+    params.push(options.productId);
+    clauses.push(`(cardmarket_product_id = $${params.length} or exchange_give_product_id = $${params.length})`);
+  }
+  if (options.language !== undefined) {
+    params.push(options.language);
+    clauses.push(`(language = $${params.length} or exchange_give_language = $${params.length})`);
+  }
+  if (options.kind !== undefined) {
+    params.push(options.kind);
+    clauses.push(`kind = $${params.length}`);
+  }
+  if (options.cursor) {
+    params.push(options.cursor.date, options.cursor.createdAt, options.cursor.id);
+    clauses.push(`(date, created_at, id) < ($${params.length - 2}::date, $${params.length - 1}::timestamptz, $${params.length}::uuid)`);
+  }
+  params.push(options.limit + 1);
+  const rows = await sql.query(`
+    select id::text, revision, kind, cardmarket_product_id, language, date::text,
+      exchange_give_product_id, exchange_give_language, exchange_give_quantity,
+      quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
+      payment_fees_cents, other_costs_cents, platform, counterparty, notes,
+      storage, allocation_method, selections, voided, created_at::text, updated_at::text
+    from public.tcg_sealed_transactions
+    where ${clauses.join(' and ')}
+    order by date desc, created_at desc, id desc
+    limit $${params.length}
+  `, params) as unknown as SealedTransactionRow[];
+  const hasMore = rows.length > options.limit;
+  return { transactions: rows.slice(0, options.limit).map(mapTransaction), hasMore };
+}
+
+export async function getSealedTransaction(
+  sql: NeonSql,
+  userId: string,
+  id: string,
+): Promise<SealedTransaction | null> {
+  const rows = await sql`
+    select id::text, revision, kind, cardmarket_product_id, language, date::text,
+      exchange_give_product_id, exchange_give_language, exchange_give_quantity,
+      quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
+      payment_fees_cents, other_costs_cents, platform, counterparty, notes,
+      storage, allocation_method, selections, voided, created_at::text, updated_at::text
+    from public.tcg_sealed_transactions
+    where user_id = ${userId}::uuid and id = ${id}::uuid
+    limit 1
+  ` as SealedTransactionRow[];
+  return rows[0] ? mapTransaction(rows[0]) : null;
+}
+
 export async function getSealedRevision(sql: NeonSql, userId: string): Promise<number> {
   const [, rows] = await sql.transaction((tx) => [
     tx`
@@ -418,6 +491,51 @@ export async function getSealedPrices(
   query += ' order by day asc, cardmarket_product_id asc';
   const rows = await sql.query(query, params) as unknown as SealedPriceRow[];
   return rows.map(mapPrice);
+}
+
+/** Loads only the six dates needed for current value and 1/7/30-day deltas. */
+export async function getSealedCurrentPortfolio(sql: NeonSql, userId: string, asOf: string) {
+  const transactions = await getSealedTransactions(sql, userId);
+  const ids = [...new Set(transactions.flatMap((transaction) => [
+    transaction.cardmarketProductId,
+    ...(transaction.exchangeGive ? [transaction.exchangeGive.cardmarketProductId] : []),
+  ]))];
+  const days = [0, 1, 2, 3, 7, 30].map((offset) => {
+    const date = new Date(`${asOf}T00:00:00.000Z`);
+    date.setUTCDate(date.getUTCDate() - offset);
+    return date.toISOString().slice(0, 10);
+  });
+  const [products, priceRows, revision, priceRevision] = await Promise.all([
+    getSealedProducts(sql, userId, ids),
+    ids.length === 0 ? Promise.resolve([] as SealedPriceRow[]) : sql.query(`
+      select cardmarket_product_id, day::text, source_at::text, fetched_at::text,
+        avg_cents, low_cents, trend_cents, avg1_cents, avg7_cents, avg30_cents
+      from (
+        select cardmarket_product_id, day, source_at, fetched_at,
+        avg_cents, low_cents, trend_cents, avg1_cents, avg7_cents, avg30_cents
+        from public.tcg_sealed_price_snapshots
+        where cardmarket_product_id = any($1::int[])
+          and day = any($2::date[])
+        union
+        select cardmarket_product_id, day, source_at, fetched_at,
+          avg_cents, low_cents, trend_cents, avg1_cents, avg7_cents, avg30_cents
+        from (
+          select distinct on (cardmarket_product_id)
+            cardmarket_product_id, day, source_at, fetched_at,
+            avg_cents, low_cents, trend_cents, avg1_cents, avg7_cents, avg30_cents
+          from public.tcg_sealed_price_snapshots
+          where cardmarket_product_id = any($1::int[])
+            and day <= $3::date
+          order by cardmarket_product_id, day desc
+        ) latest_prices
+      ) selected_prices
+    `, [ids, days, asOf]) as unknown as SealedPriceRow[],
+    getSealedRevision(sql, userId),
+    getSealedPriceRevision(sql),
+  ]);
+  const prices = priceRows.map(mapPrice);
+  const summary = summarizeSealedPortfolio(transactions, products, prices, asOf);
+  return { summary, revision, priceRevision };
 }
 
 export async function searchSealedCatalogue(
@@ -871,8 +989,32 @@ export async function mutateSealedTransaction(
     id?: string;
     transactionRevision?: number;
     expectedRevision?: number;
+    idempotency?: { keyHash: string; requestHash: string };
   },
 ) {
+  if (options.idempotency) {
+    const cachedRows = await sql`
+      select request_hash, response
+      from public.api_idempotency
+      where user_id = ${userId}::uuid
+        and key_hash = ${options.idempotency.keyHash}
+        and expires_at > now()
+      limit 1
+    ` as Array<{ request_hash: string; response: unknown }>;
+    const cached = cachedRows[0];
+    if (cached) {
+      if (cached.request_hash.trim() !== options.idempotency.requestHash) {
+        throw new SealedConflictError('This idempotency key was already used for a different request.');
+      }
+      const response = jsonObject(cached.response);
+      return { ...response, replayed: true };
+    }
+  }
+
+  // Capture the revision before reading the ledger. If a concurrent write
+  // lands during the read, the guarded mutation below must conflict instead
+  // of validating old rows against a newer revision.
+  const currentRevision = await getSealedRevision(sql, userId);
   const all = await getSealedTransactions(sql, userId);
   const old = options.id ? all.find((transaction) => transaction.id === options.id) : undefined;
   if (options.mode !== 'create' && !old) throw new SealedNotFoundError('Sealed transaction not found.');
@@ -906,12 +1048,12 @@ export async function mutateSealedTransaction(
   } catch (error) {
     throw new SealedServerError(error instanceof Error ? error.message : 'The transaction makes the portfolio inconsistent.', 400);
   }
-  const currentRevision = await getSealedRevision(sql, userId);
   const expectedRevision = options.expectedRevision ?? currentRevision;
   if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 0) {
     throw new SealedServerError('Invalid portfolio revision.', 400);
   }
   const newRevision = expectedRevision + 1;
+  const mutationId = randomUUID();
   const allocations = [
     ...ledger.sales.flatMap((sale) => sale.allocations.map((allocation) => ({
       saleId: sale.transaction.id,
@@ -934,106 +1076,202 @@ export async function mutateSealedTransaction(
   const exchangeGiveQuantity = next.exchangeGive?.quantity ?? null;
   const serializedBefore = old ? JSON.stringify(old) : null;
   const serializedAfter = JSON.stringify(next);
-  const transactionResults = await sql.transaction((tx) => [
-    tx`
-      insert into public.tcg_sealed_user_revisions (user_id, revision)
-      values (${userId}::uuid, 0)
-      on conflict (user_id) do nothing
-    `,
-    tx`
-      update public.tcg_sealed_user_revisions
-      set revision = revision + 1
-      where user_id = ${userId}::uuid and revision = ${expectedRevision}
-      returning revision
-    `,
-    tx`
-      insert into public.tcg_sealed_transactions (
-        id, user_id, cardmarket_product_id, exchange_give_product_id, exchange_give_language,
-        exchange_give_quantity, date, revision, kind, language,
-        quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
-        payment_fees_cents, other_costs_cents, platform, counterparty, notes,
-        storage, allocation_method, selections, voided, created_at, updated_at
-      )
-      select
-        ${next.id}::uuid, ${userId}::uuid, ${next.cardmarketProductId},
-        ${exchangeGiveProductId}, ${exchangeGiveLanguage}, ${exchangeGiveQuantity},
-        ${next.date}::date, ${next.revision}, ${next.kind}, ${next.language}, ${next.quantity},
-        ${next.unitPriceCents}, ${next.feesCents}, ${next.shippingCents}, ${next.discountCents},
-        ${next.paymentFeesCents}, ${next.otherCostsCents}, ${next.platform}, ${next.counterparty},
-        ${next.notes}, ${next.storage}, ${next.allocationMethod}, ${serializedSelections}::jsonb,
-        ${next.voided}, ${next.createdAt}::timestamptz, ${next.updatedAt}::timestamptz
-      where exists (
-        select 1 from public.tcg_sealed_user_revisions
-        where user_id = ${userId}::uuid and revision = ${newRevision}
-      )
-      on conflict (id) do update set
-        cardmarket_product_id = excluded.cardmarket_product_id,
-        exchange_give_product_id = excluded.exchange_give_product_id,
-        exchange_give_language = excluded.exchange_give_language,
-        exchange_give_quantity = excluded.exchange_give_quantity,
-        date = excluded.date,
-        revision = excluded.revision,
-        kind = excluded.kind,
-        language = excluded.language,
-        quantity = excluded.quantity,
-        unit_price_cents = excluded.unit_price_cents,
-        fees_cents = excluded.fees_cents,
-        shipping_cents = excluded.shipping_cents,
-        discount_cents = excluded.discount_cents,
-        payment_fees_cents = excluded.payment_fees_cents,
-        other_costs_cents = excluded.other_costs_cents,
-        platform = excluded.platform,
-        counterparty = excluded.counterparty,
-        notes = excluded.notes,
-        storage = excluded.storage,
-        allocation_method = excluded.allocation_method,
-        selections = excluded.selections,
-        voided = excluded.voided,
-        updated_at = excluded.updated_at
-      where public.tcg_sealed_transactions.user_id = ${userId}::uuid
-    `,
-    tx`
-      delete from public.tcg_sealed_allocations
-      where user_id = ${userId}::uuid
-        and exists (
-          select 1 from public.tcg_sealed_user_revisions
-          where user_id = ${userId}::uuid and revision = ${newRevision}
+  const idempotentResponse = JSON.stringify({ transaction: next, revision: newRevision, allocations });
+  let transactionResults: unknown[][];
+  try {
+    transactionResults = await sql.transaction((tx) => {
+      const statements = [
+        tx`
+          insert into public.tcg_sealed_user_revisions (user_id, revision)
+          values (${userId}::uuid, 0)
+          on conflict (user_id) do nothing
+        `,
+      ];
+      if (options.idempotency) {
+        statements.push(tx`
+          insert into public.api_idempotency (user_id, key_hash, request_hash, response, expires_at)
+          values (
+            ${userId}::uuid,
+            ${options.idempotency.keyHash},
+            ${options.idempotency.requestHash},
+            ${idempotentResponse}::jsonb,
+            now() + interval '24 hours'
+          )
+          on conflict (user_id, key_hash) do update set
+            request_hash = excluded.request_hash,
+            response = excluded.response,
+            created_at = now(),
+            expires_at = excluded.expires_at
+          where public.api_idempotency.expires_at <= now()
+          returning key_hash
+        `);
+      }
+      statements.push(options.idempotency ? tx`
+        update public.tcg_sealed_user_revisions
+        set revision = revision + 1, last_mutation_id = ${mutationId}::uuid
+        where user_id = ${userId}::uuid
+          and revision = ${expectedRevision}
+          and last_mutation_id is distinct from ${mutationId}::uuid
+          and exists (
+            select 1 from public.api_idempotency
+            where user_id = ${userId}::uuid
+              and key_hash = ${options.idempotency.keyHash}
+              and response #>> '{transaction,id}' = ${next.id}
+          )
+        returning revision
+      ` : tx`
+        update public.tcg_sealed_user_revisions
+        set revision = revision + 1, last_mutation_id = ${mutationId}::uuid
+        where user_id = ${userId}::uuid
+          and revision = ${expectedRevision}
+          and last_mutation_id is distinct from ${mutationId}::uuid
+        returning revision
+      `);
+      statements.push(
+      tx`
+        insert into public.tcg_sealed_transactions (
+          id, user_id, cardmarket_product_id, exchange_give_product_id, exchange_give_language,
+          exchange_give_quantity, date, revision, kind, language,
+          quantity, unit_price_cents, fees_cents, shipping_cents, discount_cents,
+          payment_fees_cents, other_costs_cents, platform, counterparty, notes,
+          storage, allocation_method, selections, voided, created_at, updated_at
         )
-    `,
-    ...allocations.map((allocation) => tx`
-      insert into public.tcg_sealed_allocations
-        (user_id, sale_id, lot_id, quantity, cost_cents, holding_days)
-      select
-        ${userId}::uuid, ${allocation.saleId}::uuid, ${allocation.lotId}::uuid,
-        ${allocation.quantity}, ${allocation.costCents}, ${allocation.holdingDays}
-      where exists (
-        select 1 from public.tcg_sealed_user_revisions
-        where user_id = ${userId}::uuid and revision = ${newRevision}
-      )
-    `),
-    tx`
-      insert into public.tcg_sealed_audit
-        (user_id, transaction_id, action, before_data, after_data)
-      select
-        ${userId}::uuid, ${next.id}::uuid, ${options.mode},
-        ${serializedBefore}::jsonb, ${serializedAfter}::jsonb
-      where exists (
-        select 1 from public.tcg_sealed_user_revisions
-        where user_id = ${userId}::uuid and revision = ${newRevision}
-      )
-    `,
-    tx`
-      delete from public.tcg_sealed_portfolio_daily
-      where user_id = ${userId}::uuid
-        and exists (
+        select
+          ${next.id}::uuid, ${userId}::uuid, ${next.cardmarketProductId},
+          ${exchangeGiveProductId}, ${exchangeGiveLanguage}, ${exchangeGiveQuantity},
+          ${next.date}::date, ${next.revision}, ${next.kind}, ${next.language}, ${next.quantity},
+          ${next.unitPriceCents}, ${next.feesCents}, ${next.shippingCents}, ${next.discountCents},
+          ${next.paymentFeesCents}, ${next.otherCostsCents}, ${next.platform}, ${next.counterparty},
+          ${next.notes}, ${next.storage}, ${next.allocationMethod}, ${serializedSelections}::jsonb,
+          ${next.voided}, ${next.createdAt}::timestamptz, ${next.updatedAt}::timestamptz
+        where exists (
           select 1 from public.tcg_sealed_user_revisions
-          where user_id = ${userId}::uuid and revision = ${newRevision}
+          where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
         )
-    `,
-  ], { isolationLevel: 'Serializable' });
-  const guardRows = transactionResults[1] as RevisionRow[];
-  if (!guardRows[0]) throw new SealedConflictError();
-  return { transaction: next, revision: newRevision, allocations };
+        on conflict (id) do update set
+          cardmarket_product_id = excluded.cardmarket_product_id,
+          exchange_give_product_id = excluded.exchange_give_product_id,
+          exchange_give_language = excluded.exchange_give_language,
+          exchange_give_quantity = excluded.exchange_give_quantity,
+          date = excluded.date,
+          revision = excluded.revision,
+          kind = excluded.kind,
+          language = excluded.language,
+          quantity = excluded.quantity,
+          unit_price_cents = excluded.unit_price_cents,
+          fees_cents = excluded.fees_cents,
+          shipping_cents = excluded.shipping_cents,
+          discount_cents = excluded.discount_cents,
+          payment_fees_cents = excluded.payment_fees_cents,
+          other_costs_cents = excluded.other_costs_cents,
+          platform = excluded.platform,
+          counterparty = excluded.counterparty,
+          notes = excluded.notes,
+          storage = excluded.storage,
+          allocation_method = excluded.allocation_method,
+          selections = excluded.selections,
+          voided = excluded.voided,
+          updated_at = excluded.updated_at
+        where public.tcg_sealed_transactions.user_id = ${userId}::uuid
+      `,
+      tx`
+        delete from public.tcg_sealed_allocations
+        where user_id = ${userId}::uuid
+          and exists (
+            select 1 from public.tcg_sealed_user_revisions
+            where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
+          )
+      `,
+      ...allocations.map((allocation) => tx`
+        insert into public.tcg_sealed_allocations
+          (user_id, sale_id, lot_id, quantity, cost_cents, holding_days)
+        select
+          ${userId}::uuid, ${allocation.saleId}::uuid, ${allocation.lotId}::uuid,
+          ${allocation.quantity}, ${allocation.costCents}, ${allocation.holdingDays}
+        where exists (
+          select 1 from public.tcg_sealed_user_revisions
+          where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
+        )
+      `),
+      tx`
+        insert into public.tcg_sealed_audit
+          (user_id, transaction_id, action, before_data, after_data)
+        select
+          ${userId}::uuid, ${next.id}::uuid, ${options.mode},
+          ${serializedBefore}::jsonb, ${serializedAfter}::jsonb
+        where exists (
+          select 1 from public.tcg_sealed_user_revisions
+          where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
+        )
+      `,
+      tx`
+        delete from public.tcg_sealed_portfolio_daily
+        where user_id = ${userId}::uuid
+          and exists (
+            select 1 from public.tcg_sealed_user_revisions
+            where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
+        )
+      `,
+      );
+      if (options.idempotency) {
+        statements.push(tx`
+          delete from public.api_idempotency
+          where user_id = ${userId}::uuid
+            and key_hash = ${options.idempotency.keyHash}
+            and response #>> '{transaction,id}' = ${next.id}
+            and not exists (
+              select 1 from public.tcg_sealed_user_revisions
+              where user_id = ${userId}::uuid and revision = ${newRevision} and last_mutation_id = ${mutationId}::uuid
+            )
+        `);
+      }
+      return statements;
+    }, { isolationLevel: 'Serializable' }) as unknown as unknown[][];
+  } catch (error) {
+    const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
+    if (code !== '40001' && code !== '40P01') throw error;
+    if (options.idempotency) {
+      const cachedRows = await sql`
+        select request_hash, response
+        from public.api_idempotency
+        where user_id = ${userId}::uuid
+          and key_hash = ${options.idempotency.keyHash}
+          and expires_at > now()
+        limit 1
+      ` as Array<{ request_hash: string; response: unknown }>;
+      const cached = cachedRows[0];
+      if (cached) {
+        if (cached.request_hash.trim() !== options.idempotency.requestHash) {
+          throw new SealedConflictError('This idempotency key was already used for a different request.');
+        }
+        return { ...jsonObject(cached.response), replayed: true };
+      }
+    }
+    throw new SealedConflictError();
+  }
+  const revisionIndex = options.idempotency ? 2 : 1;
+  const guardRows = transactionResults[revisionIndex] as RevisionRow[];
+  if (!guardRows[0]) {
+    if (options.idempotency) {
+      const cachedRows = await sql`
+        select request_hash, response
+        from public.api_idempotency
+        where user_id = ${userId}::uuid
+          and key_hash = ${options.idempotency.keyHash}
+          and expires_at > now()
+        limit 1
+      ` as Array<{ request_hash: string; response: unknown }>;
+      const cached = cachedRows[0];
+      if (cached) {
+        if (cached.request_hash.trim() !== options.idempotency.requestHash) {
+          throw new SealedConflictError('This idempotency key was already used for a different request.');
+        }
+        return { ...jsonObject(cached.response), replayed: true };
+      }
+    }
+    throw new SealedConflictError();
+  }
+  return { transaction: next, revision: newRevision, allocations, replayed: false };
 }
 
 export async function setSealedAlias(sql: NeonSql, userId: string, productId: number, alias: string | null) {

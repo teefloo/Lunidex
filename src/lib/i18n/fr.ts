@@ -3171,6 +3171,13 @@ team: 'Équipe',
       view_bulbapedia: 'Voir sur Bulbapedia',
       open_calculator: 'Ouvrir le Calculateur d\'Élevage pour {{name}}',
     },
+    api_keys: {
+      title: 'Clés API publiques', description: 'Créez des clés pour vos intégrations côté serveur. Ne placez jamais une clé API dans un navigateur, un dépôt public ou un journal partagé.',
+      list_label: 'Vos clés API', load_error: 'Impossible de charger les clés API.', create_error: 'Impossible de créer cette clé API.', revoke_error: 'Impossible de révoquer cette clé API.', copy_error: 'Le presse-papiers est inaccessible.',
+      read_only: 'Lecture seule', read_write: 'Lecture et écriture', created: 'Créée', last_used: 'Dernière utilisation', never_used: 'Jamais utilisée', revoked: 'Révoquée', revoke: 'Révoquer', empty: 'Aucune clé API.',
+      created_once: 'Copiez cette clé maintenant. Elle ne sera plus affichée.', secret_warning: 'Conservez-la dans un gestionnaire de secrets côté serveur. Ne la collez pas dans du code client ni dans une capture d’écran.', dismiss_secret: 'Masquer la clé', copied: 'Copiée', copy: 'Copier la clé',
+      name_placeholder: 'Nom de l’intégration', name_label: 'Nom de la clé API', permission_label: 'Autorisation de la clé API', create: 'Créer une clé', limit: 'Vous pouvez avoir jusqu’à cinq clés actives.',
+    },
     profile: {
       not_found_title: 'Profil introuvable',
       not_found_desc: 'Ce profil n\'existe pas ou n\'est pas public.',

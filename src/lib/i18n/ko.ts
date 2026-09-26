@@ -2533,6 +2533,13 @@ team: '팀',
       view_bulbapedia: 'Bulbapedia에서 보기',
       open_calculator: '{{name}} 교배 계산기 열기',
     },
+    api_keys: {
+      title: '공개 API 키', description: '서버 측 연동용 키를 만드세요. API 키를 브라우저, 공개 저장소 또는 공유 로그에 넣지 마세요.',
+      list_label: '내 API 키', load_error: 'API 키를 불러오지 못했습니다.', create_error: 'API 키를 만들지 못했습니다.', revoke_error: 'API 키를 폐기하지 못했습니다.', copy_error: '클립보드를 사용할 수 없습니다.',
+      read_only: '읽기 전용', read_write: '읽기 및 쓰기', created: '생성일', last_used: '마지막 사용', never_used: '사용한 적 없음', revoked: '폐기됨', revoke: '폐기', empty: 'API 키가 없습니다.',
+      created_once: '지금 이 키를 복사하세요. 다시 표시되지 않습니다.', secret_warning: '서버 측 비밀 관리 도구에 저장하세요. 클라이언트 코드나 스크린샷에 넣지 마세요.', dismiss_secret: '키 숨기기', copied: '복사됨', copy: '키 복사',
+      name_placeholder: '연동 이름', name_label: 'API 키 이름', permission_label: 'API 키 권한', create: '키 만들기', limit: '활성 키는 최대 5개까지 만들 수 있습니다.',
+    },
     profile: {
       not_found_title: '프로필을 찾을 수 없음',
       not_found_desc: '이 프로필은 존재하지 않거나 공개되어 있지 않습니다.',
