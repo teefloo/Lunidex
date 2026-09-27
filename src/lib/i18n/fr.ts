@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -3173,6 +3174,7 @@ team: 'Équipe',
       view_bulbapedia: 'Voir sur Bulbapedia',
       open_calculator: 'Ouvrir le Calculateur d\'Élevage pour {{name}}',
     },
+    docs: docsTranslations.fr,
     api_docs: apiDocsTranslations.fr,
     api_keys: {
       title: 'Clés API publiques', description: 'Créez des clés pour vos intégrations côté serveur. Ne placez jamais une clé API dans un navigateur, un dépôt public ou un journal partagé.',

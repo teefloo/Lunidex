@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -2548,6 +2549,7 @@ team: 'Equipo',
       view_bulbapedia: 'Ver en Bulbapedia',
       open_calculator: 'Abrir Calculadora de Cría para {{name}}',
     },
+    docs: docsTranslations.es,
     api_docs: apiDocsTranslations.es,
     api_keys: {
       title: 'Claves de API públicas', description: 'Crea claves para integraciones del lado del servidor. Nunca incluyas una clave en un navegador, repositorio público o registro compartido.',

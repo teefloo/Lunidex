@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -2535,6 +2536,7 @@ team: '팀',
       view_bulbapedia: 'Bulbapedia에서 보기',
       open_calculator: '{{name}} 교배 계산기 열기',
     },
+    docs: docsTranslations.ko,
     api_docs: apiDocsTranslations.ko,
     api_keys: {
       title: '공개 API 키', description: '서버 측 연동용 키를 만드세요. API 키를 브라우저, 공개 저장소 또는 공유 로그에 넣지 마세요.',

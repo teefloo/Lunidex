@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -2535,6 +2536,7 @@ team: 'チーム',
       view_bulbapedia: 'Bulbapediaで見る',
       open_calculator: '{{name}}の育成計算機を開く',
     },
+    docs: docsTranslations.ja,
     api_docs: apiDocsTranslations.ja,
     api_keys: {
       title: '公開 API キー', description: 'サーバー側の連携用キーを作成します。API キーをブラウザー、公開リポジトリ、共有ログに含めないでください。',

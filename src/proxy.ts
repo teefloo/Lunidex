@@ -38,6 +38,7 @@ const PUBLIC_SINGLE_SEGMENT_ROUTES = new Set([
   'types',
   'compare',
   'blog',
+  'docs',
   'about',
   'faq',
   'contact',
