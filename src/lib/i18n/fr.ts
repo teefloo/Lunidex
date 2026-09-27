@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -3171,6 +3173,7 @@ team: 'Équipe',
       view_bulbapedia: 'Voir sur Bulbapedia',
       open_calculator: 'Ouvrir le Calculateur d\'Élevage pour {{name}}',
     },
+    api_docs: apiDocsTranslations.fr,
     api_keys: {
       title: 'Clés API publiques', description: 'Créez des clés pour vos intégrations côté serveur. Ne placez jamais une clé API dans un navigateur, un dépôt public ou un journal partagé.',
       list_label: 'Vos clés API', load_error: 'Impossible de charger les clés API.', create_error: 'Impossible de créer cette clé API.', revoke_error: 'Impossible de révoquer cette clé API.', copy_error: 'Le presse-papiers est inaccessible.',

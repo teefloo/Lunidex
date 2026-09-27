@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -2529,6 +2531,7 @@ team: 'Team',
       view_bulbapedia: 'Auf Bulbapedia ansehen',
       open_calculator: 'Zucht-Rechner für {{name}} öffnen',
     },
+    api_docs: apiDocsTranslations.de,
     api_keys: {
       title: 'Öffentliche API-Schlüssel', description: 'Erstelle Schlüssel für serverseitige Integrationen. Füge API-Schlüssel niemals in einen Browser, ein öffentliches Repository oder ein geteiltes Protokoll ein.',
       list_label: 'Deine API-Schlüssel', load_error: 'API-Schlüssel konnten nicht geladen werden.', create_error: 'Dieser API-Schlüssel konnte nicht erstellt werden.', revoke_error: 'Dieser API-Schlüssel konnte nicht widerrufen werden.', copy_error: 'Der Zugriff auf die Zwischenablage ist nicht verfügbar.',

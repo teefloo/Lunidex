@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -2533,6 +2535,7 @@ team: 'チーム',
       view_bulbapedia: 'Bulbapediaで見る',
       open_calculator: '{{name}}の育成計算機を開く',
     },
+    api_docs: apiDocsTranslations.ja,
     api_keys: {
       title: '公開 API キー', description: 'サーバー側の連携用キーを作成します。API キーをブラウザー、公開リポジトリ、共有ログに含めないでください。',
       list_label: 'API キー', load_error: 'API キーを読み込めませんでした。', create_error: 'API キーを作成できませんでした。', revoke_error: 'API キーを失効できませんでした。', copy_error: 'クリップボードを利用できません。',

@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -2533,6 +2535,7 @@ team: '팀',
       view_bulbapedia: 'Bulbapedia에서 보기',
       open_calculator: '{{name}} 교배 계산기 열기',
     },
+    api_docs: apiDocsTranslations.ko,
     api_keys: {
       title: '공개 API 키', description: '서버 측 연동용 키를 만드세요. API 키를 브라우저, 공개 저장소 또는 공유 로그에 넣지 마세요.',
       list_label: '내 API 키', load_error: 'API 키를 불러오지 못했습니다.', create_error: 'API 키를 만들지 못했습니다.', revoke_error: 'API 키를 폐기하지 못했습니다.', copy_error: '클립보드를 사용할 수 없습니다.',

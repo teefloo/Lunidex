@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { Check, Copy, KeyRound, Plus, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { BookOpen, Check, Copy, KeyRound, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { fetchAppApi } from '@/lib/app-api';
 import { useTranslation } from '@/lib/i18n';
 
@@ -29,6 +31,7 @@ type ApiKeyResponse = {
 
 export default function ApiKeysCard() {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [name, setName] = useState('');
   const [permission, setPermission] = useState<ApiKey['permission']>('read');
@@ -128,6 +131,13 @@ export default function ApiKeysCard() {
       <p className="text-xs leading-relaxed text-foreground/55">
         {tt('api_keys.description', 'Create keys for server-side integrations. Never put an API key in a browser, public repository, or shared log.')}
       </p>
+      <Link
+        href={localeHref('/docs/api')}
+        className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        <BookOpen aria-hidden="true" className="h-4 w-4" />
+        {tt('api_docs.nav_label', 'Public API guide')}
+      </Link>
 
       {loaded && (
         <ul className="space-y-2" aria-label={tt('api_keys.list_label', 'Your API keys')}>

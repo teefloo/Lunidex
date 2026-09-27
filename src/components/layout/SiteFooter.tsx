@@ -117,6 +117,7 @@ export default async function SiteFooter() {
 
   const guideLinks: FooterLinkData[] = [
     { href: '/blog', label: t('nav.blog') },
+    { href: '/docs/api', label: t('api_docs.nav_label') },
     { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
     { href: '/guides/pokemon-card-collection-value', label: t('editorial.guides.pokemon_card_collection_value.nav_label', { defaultValue: 'Pokémon card collection value guide' }) },
     { href: '/guides/team-builder-guide', label: t('team_guide.nav_label', { defaultValue: 'Team building guide' }) },

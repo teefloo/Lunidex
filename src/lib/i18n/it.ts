@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -2533,6 +2535,7 @@ team: 'Squadra',
       view_bulbapedia: 'Vedi su Bulbapedia',
       open_calculator: 'Apri Calcolatore Allevamento per {{name}}',
     },
+    api_docs: apiDocsTranslations.it,
     api_keys: {
       title: 'Chiavi API pubbliche', description: 'Crea chiavi per integrazioni lato server. Non inserire mai una chiave API in un browser, repository pubblico o registro condiviso.',
       list_label: 'Le tue chiavi API', load_error: 'Impossibile caricare le chiavi API.', create_error: 'Impossibile creare questa chiave API.', revoke_error: 'Impossibile revocare questa chiave API.', copy_error: 'Gli appunti non sono disponibili.',

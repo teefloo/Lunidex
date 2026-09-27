@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -2546,6 +2548,7 @@ team: 'Equipo',
       view_bulbapedia: 'Ver en Bulbapedia',
       open_calculator: 'Abrir Calculadora de Cría para {{name}}',
     },
+    api_docs: apiDocsTranslations.es,
     api_keys: {
       title: 'Claves de API públicas', description: 'Crea claves para integraciones del lado del servidor. Nunca incluyas una clave en un navegador, repositorio público o registro compartido.',
       list_label: 'Tus claves de API', load_error: 'No se pudieron cargar las claves de API.', create_error: 'No se pudo crear esta clave de API.', revoke_error: 'No se pudo revocar esta clave de API.', copy_error: 'El portapapeles no está disponible.',

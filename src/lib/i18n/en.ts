@@ -1,3 +1,5 @@
+import { apiDocsTranslations } from './api-docs';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -3149,6 +3151,7 @@ export default {
       view_bulbapedia: 'View on Bulbapedia',
       open_calculator: 'Open Breeding Calculator for {{name}}',
     },
+    api_docs: apiDocsTranslations.en,
     api_keys: {
       title: 'Public API keys', description: 'Create keys for server-side integrations. Never put an API key in a browser, public repository, or shared log.',
       list_label: 'Your API keys', load_error: 'Could not load API keys.', create_error: 'Could not create this API key.', revoke_error: 'Could not revoke this API key.', copy_error: 'Clipboard access is unavailable.',
