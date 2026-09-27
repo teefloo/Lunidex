@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, ChevronDown, KeyRound, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, ChevronDown, KeyRound, LockKeyhole, ShieldCheck } from 'lucide-react';
 
 import Header from '@/components/layout/Header';
 import { API_GUIDE_OPERATIONS, API_GUIDE_QUOTAS } from '@/lib/public-api-docs';
+import type { ApiGuideParameter } from '@/lib/public-api-docs';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE, localeHref } from '@/lib/seo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { CopyCodeButton } from './CopyCodeButton';
 
 const PAGE_PATH = '/docs/api';
 const API_BASE_URL = `${SITE_URL}/api/v1`;
@@ -91,11 +93,38 @@ const methodClasses: Record<(typeof API_GUIDE_OPERATIONS)[number]['method'], str
   PATCH: 'border-violet-500/30 bg-violet-500/10 text-violet-800 dark:text-violet-300',
 };
 
-function CodeBlock({ label, code }: { label: string; code: string }) {
+const accessClasses = {
+  public: 'border-border/70 bg-muted/40 text-foreground/75',
+  read: 'border-emerald-500/25 bg-emerald-500/5 text-emerald-800 dark:text-emerald-300',
+  write: 'border-violet-500/25 bg-violet-500/5 text-violet-800 dark:text-violet-300',
+} as const;
+
+function getAccessLevel(operation: (typeof API_GUIDE_OPERATIONS)[number]) {
+  if (operation.path === '/openapi.json') return 'public';
+  return operation.method === 'GET' ? 'read' : 'write';
+}
+
+function getOperationParameters(operation: (typeof API_GUIDE_OPERATIONS)[number]): readonly ApiGuideParameter[] {
+  return 'parameters' in operation ? operation.parameters : [];
+}
+
+type CodeCopyLabels = {
+  copy: string;
+  copied: string;
+  prompt: string;
+};
+
+function CodeBlock({ label, code, copyLabels }: { label: string; code: string; copyLabels: CodeCopyLabels }) {
   return (
     <figure className="min-w-0 overflow-hidden rounded-sm border border-border/70 bg-[#07144f] text-[#fff8fc]">
-      <figcaption className="border-b border-white/10 px-4 py-2 text-xs font-semibold text-slate-300">
+      <figcaption className="flex min-h-11 min-w-0 items-center justify-between gap-3 border-b border-white/10 px-3 py-0 text-xs font-semibold text-slate-300 sm:px-4">
         {label}
+        <CopyCodeButton
+          code={code}
+          copyLabel={copyLabels.copy}
+          copiedLabel={copyLabels.copied}
+          copyPrompt={copyLabels.prompt}
+        />
       </figcaption>
       <pre className="max-w-full overflow-x-auto p-4 text-[13px] leading-6 [tab-size:2]"><code>{code}</code></pre>
     </figure>
@@ -137,12 +166,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PublicApiGuidePage() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const docsHref = localeHref('/docs', language);
   const dashboardHref = localeHref('/dashboard', language);
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: SITE_NAME, path: '/' },
+    { name: t('api_docs.docs_home_label'), path: '/docs' },
     { name: t('api_docs.nav_label'), path: PAGE_PATH },
   ], language);
   const formatNumber = (value: number) => new Intl.NumberFormat(language).format(value);
+  const codeCopyLabels = {
+    copy: t('api_docs.copy_code'),
+    copied: t('api_docs.code_copied'),
+    prompt: t('api_docs.copy_prompt'),
+  };
   const tocLabels = tocIds.map((id) => ({ id, label: t(`api_docs.${id}_title`) }));
 
   return (
@@ -154,15 +190,21 @@ export default async function PublicApiGuidePage() {
       />
       <main className="page-shell relative min-h-screen pb-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <header className="relative overflow-hidden rounded-sm border border-primary/20 bg-card/80 px-5 py-10 text-center shadow-sm sm:px-9 sm:py-14 lg:px-12 lg:py-16">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-accent via-primary/70 to-accent" />
-            <h1 className="mx-auto max-w-5xl text-4xl font-black leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <Link
+            href={docsHref}
+            className="mb-4 inline-flex min-h-11 items-center gap-2 rounded-sm px-2 text-sm font-semibold text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+            {t('api_docs.back_to_docs')}
+          </Link>
+          <header className="rounded-sm border border-border/70 bg-card/70 p-5 sm:p-7 lg:p-8">
+            <h1 className="max-w-4xl text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
               {t('api_docs.page_title')}
             </h1>
-            <p className="mx-auto mt-5 max-w-4xl text-base leading-relaxed text-foreground/75 sm:text-lg sm:leading-8">
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-foreground/75 sm:text-base sm:leading-7">
               {t('api_docs.intro')}
             </p>
-            <div className="mx-auto mt-8 flex w-fit max-w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+            <div className="mt-5 flex w-full max-w-full flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <div className="flex min-h-11 w-full max-w-full flex-col items-start gap-1 rounded-sm border border-border/70 bg-background/75 px-4 py-2.5 text-left sm:w-fit sm:flex-row sm:items-center sm:gap-3">
                 <span className="shrink-0 text-xs font-semibold text-foreground/60">{t('api_docs.api_base_label')}</span>
                 <code className="max-w-full break-words font-mono text-[13px] font-semibold text-foreground">{API_BASE_URL}</code>
@@ -175,7 +217,7 @@ export default async function PublicApiGuidePage() {
                 {t('api_docs.dashboard_link')}
               </Link>
               <a
-                href={`${API_BASE_URL}/openapi.json`}
+                href="/api/v1/openapi.json"
                 className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-sm border border-[var(--border-strong)] bg-background px-4 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:w-auto"
               >
                 {t('api_docs.openapi_link')}
@@ -253,8 +295,8 @@ export default async function PublicApiGuidePage() {
                 ))}
               </ol>
               <div className="grid min-w-0 gap-4 xl:grid-cols-2">
-                <CodeBlock label={t('api_docs.curl_caption')} code={curlExample} />
-                <CodeBlock label={t('api_docs.node_caption')} code={nodeExample} />
+                <CodeBlock label={t('api_docs.curl_caption')} code={curlExample} copyLabels={codeCopyLabels} />
+                <CodeBlock label={t('api_docs.node_caption')} code={nodeExample} copyLabels={codeCopyLabels} />
               </div>
             </section>
 
@@ -285,7 +327,7 @@ export default async function PublicApiGuidePage() {
                 <li>{t('api_docs.pagination_filters')}</li>
                 <li>{t('api_docs.pagination_stale')}</li>
               </ul>
-              <CodeBlock label={t('api_docs.pagination_caption')} code={paginationExample} />
+              <CodeBlock label={t('api_docs.pagination_caption')} code={paginationExample} copyLabels={codeCopyLabels} />
             </section>
 
             <section id="routes" aria-labelledby="api-routes-title" className="scroll-mt-24 space-y-5">
@@ -299,15 +341,38 @@ export default async function PublicApiGuidePage() {
                     </h3>
                     <ul className="space-y-2">
                       {API_GUIDE_OPERATIONS.filter((operation) => operation.group === group.id).map((operation) => (
-                        <li key={`${operation.method}-${operation.path}`} className="grid min-w-0 gap-2 border-b border-border/70 py-3 last:border-0 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:items-start sm:gap-4 sm:py-4">
-                          <span className={`inline-flex min-h-7 w-fit min-w-14 items-center justify-center rounded-sm border px-2 font-mono text-[11px] font-bold ${methodClasses[operation.method]}`}>
-                            {operation.method}
-                          </span>
+                        <li key={`${operation.method}-${operation.path}`} className="grid min-w-0 gap-2 border-b border-border/70 py-3 last:border-0 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start sm:gap-4 sm:py-4">
+                          <div className="flex flex-wrap items-start gap-1.5 sm:flex-col">
+                            <span className={`inline-flex min-h-7 min-w-14 items-center justify-center rounded-sm border px-2 font-mono text-[11px] font-bold ${methodClasses[operation.method]}`}>
+                              {operation.method}
+                            </span>
+                            <span className={`inline-flex min-h-7 items-center rounded-sm border px-2 text-[11px] font-semibold leading-tight ${accessClasses[getAccessLevel(operation)]}`}>
+                              {t(`api_docs.access_${getAccessLevel(operation)}`)}
+                            </span>
+                          </div>
                           <div className="min-w-0">
                             <code className="block break-all font-mono text-sm font-semibold text-foreground">{operation.path}</code>
                             <p className="mt-1 text-sm leading-relaxed text-foreground/60">
                               {t(`api_docs.operations.${operation.translationKey}`)}
                             </p>
+                            <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1 text-xs leading-relaxed text-foreground/65">
+                              <span className="font-semibold text-foreground/75">{t('api_docs.parameters_label')}:</span>
+                              {getOperationParameters(operation).length > 0 ? (
+                                <ul className="flex min-w-0 flex-wrap gap-x-3 gap-y-1">
+                                  {getOperationParameters(operation).map((parameter) => (
+                                    <li key={`${parameter.location}-${parameter.name}`} className="inline-flex flex-wrap items-baseline gap-1">
+                                      <code className="font-mono font-semibold text-foreground">{parameter.name}</code>
+                                      <span>({t(`api_docs.parameter_${parameter.location}`)})</span>
+                                      {parameter.required && (
+                                        <span className="font-medium text-foreground/75">· {t('api_docs.parameter_required')}</span>
+                                      )}
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <span>{t('api_docs.no_parameters')}</span>
+                              )}
+                            </div>
                           </div>
                         </li>
                       ))}
@@ -323,7 +388,7 @@ export default async function PublicApiGuidePage() {
               <p className="max-w-3xl text-sm leading-relaxed text-foreground/70">{t('api_docs.cards_detail')}</p>
               <div className="space-y-4">
                 <p className="text-sm leading-relaxed text-foreground/70">{t('api_docs.cards_variants')}</p>
-                <CodeBlock label="PUT /cards/{cardId} · application/json" code={cardWriteExample} />
+                <CodeBlock label="PUT /cards/{cardId} · application/json" code={cardWriteExample} copyLabels={codeCopyLabels} />
               </div>
               <p className="text-sm leading-relaxed text-foreground/70">{t('api_docs.cards_legacy')}</p>
               <p className="flex items-start gap-3 rounded-sm border border-border/70 bg-muted/30 p-4 text-sm leading-relaxed text-foreground/70">
@@ -363,7 +428,7 @@ export default async function PublicApiGuidePage() {
                   <h3 className="font-bold text-foreground">{t('api_docs.transaction_mutation_title')}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-foreground/70">{t('api_docs.transaction_mutation_body')}</p>
                 </div>
-                <CodeBlock label={t('api_docs.mutation_example_caption')} code={sealedBuyExample} />
+                <CodeBlock label={t('api_docs.mutation_example_caption')} code={sealedBuyExample} copyLabels={codeCopyLabels} />
                 <p className="text-sm leading-relaxed text-foreground/70">{t('api_docs.transaction_revision_body')}</p>
                 <div className="grid gap-3 md:grid-cols-2">
                   <p className="rounded-sm border border-border/70 bg-background/70 p-4 text-sm leading-relaxed text-foreground/70">
@@ -374,7 +439,7 @@ export default async function PublicApiGuidePage() {
                       <code className="font-semibold text-foreground">POST /sealed/transactions/{'{id}'}/void</code>
                       <br />{t('api_docs.transaction_void_body')}
                     </p>
-                    <CodeBlock label="application/json" code={voidExample} />
+                    <CodeBlock label="application/json" code={voidExample} copyLabels={codeCopyLabels} />
                   </div>
                 </div>
               </article>
@@ -417,7 +482,7 @@ export default async function PublicApiGuidePage() {
               </div>
               <p className="text-sm leading-relaxed text-foreground/70">{t('api_docs.quota_retry')}</p>
               <a
-                href={`${API_BASE_URL}/openapi.json`}
+                href="/api/v1/openapi.json"
                 className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 {t('api_docs.openapi_link')}

@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -3151,6 +3152,7 @@ export default {
       view_bulbapedia: 'View on Bulbapedia',
       open_calculator: 'Open Breeding Calculator for {{name}}',
     },
+    docs: docsTranslations.en,
     api_docs: apiDocsTranslations.en,
     api_keys: {
       title: 'Public API keys', description: 'Create keys for server-side integrations. Never put an API key in a browser, public repository, or shared log.',

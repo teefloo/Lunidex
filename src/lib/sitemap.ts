@@ -74,6 +74,7 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'nuzlocke', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
   { path: 'tcg/sealed/market', changeFrequency: 'weekly', priority: 0.6 },
+  { path: 'docs', changeFrequency: 'monthly', priority: 0.65 },
   { path: 'docs/api', changeFrequency: 'monthly', priority: 0.7 },
   {
     path: ANNIVERSARY_30_PATH.slice(1),

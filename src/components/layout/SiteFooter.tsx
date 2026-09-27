@@ -110,6 +110,7 @@ export default async function SiteFooter() {
     { href: '/team', label: t('footer.navigation.team_builder') },
     { href: '/tcg', label: t('footer.navigation.tcg') },
     { href: '/tcg/collection', label: t('tcg.nav_collection') },
+    { href: '/docs', label: t('docs.nav_label') },
     { href: '/dashboard', label: t('footer.navigation.dashboard') },
     { href: '/quiz', label: t('footer.navigation.quiz') },
     { href: '/favorites', label: t('nav.favorites') },

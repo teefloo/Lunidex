@@ -1,4 +1,5 @@
 import { apiDocsTranslations } from './api-docs';
+import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -2536,6 +2537,7 @@ team: '队伍',
       view_bulbapedia: '在Bulbapedia查看',
       open_calculator: '打开{{name}}的培育计算器',
     },
+    docs: docsTranslations.zh,
     api_docs: apiDocsTranslations.zh,
     api_keys: {
       title: '公开 API 密钥', description: '创建供服务器端集成使用的密钥。切勿将 API 密钥放入浏览器、公开代码库或共享日志。',
