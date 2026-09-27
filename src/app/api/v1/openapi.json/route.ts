@@ -1,32 +1,128 @@
 import { NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
-const errorResponse = {
-  description: 'API error',
-  content: {
-    'application/json': {
-      schema: { $ref: '#/components/schemas/ErrorEnvelope' },
-      examples: {
-        unauthorized: { value: { error: { code: 'INVALID_API_KEY', message: 'A valid Lunidex API key is required.' } } },
-        validation: { value: { error: { code: 'VALIDATION_ERROR', message: 'The request is invalid.' } } },
-        conflict: { value: { error: { code: 'CONFLICT', message: 'The resource changed. Reload and try again.' } } },
-        rateLimited: { value: { error: { code: 'RATE_LIMITED', message: 'The API quota has been reached.' } } },
+function errorResponse(
+  status: number,
+  code: string,
+  message: string,
+  description: string,
+  examples?: Record<string, { summary: string; value: unknown }>,
+) {
+  return {
+    description,
+    ...(status === 429 ? {
+      headers: {
+        'Retry-After': {
+          description: 'Seconds until the quota window resets.',
+          schema: { type: 'integer', minimum: 1 },
+        },
+      },
+    } : {}),
+    content: {
+      'application/json': {
+        schema: { $ref: '#/components/schemas/ErrorEnvelope' },
+        ...(examples ? {
+          examples: {
+            primary: { summary: description, value: { error: { code, message } } },
+            ...examples,
+          },
+        } : { example: { error: { code, message } } }),
       },
     },
-  },
-};
+  };
+}
 
 const privateErrorResponses = {
-  '400': errorResponse,
-  '401': errorResponse,
-  '403': errorResponse,
-  '404': errorResponse,
-  '409': errorResponse,
-  '422': errorResponse,
-  '429': { ...errorResponse, description: 'Quota exceeded; includes Retry-After.' },
-  '410': errorResponse,
-  '500': errorResponse,
-  '503': errorResponse,
+  '400': errorResponse(400, 'VALIDATION_ERROR', 'The transaction is invalid.', 'The request could not be applied.'),
+  '401': errorResponse(401, 'INVALID_API_KEY', 'A valid Lunidex API key is required.', 'The bearer key is missing, invalid, or revoked.'),
+  '403': errorResponse(403, 'INSUFFICIENT_PERMISSION', 'This API key does not allow writes.', 'The API key does not have write permission.'),
+  '404': errorResponse(
+    404,
+    'NOT_FOUND',
+    'The requested resource was not found.',
+    'The resource does not exist or is not available to this account.',
+    {
+      cardMetadataUnavailable: {
+        summary: 'The card metadata could not be found.',
+        value: { error: { code: 'CARD_NOT_FOUND', message: 'The card metadata could not be found.' } },
+      },
+    },
+  ),
+  '409': errorResponse(
+    409,
+    'CURSOR_STALE',
+    'The resource changed after this cursor was created.',
+    'The cursor or optimistic revision is stale, or the operation conflicts with current state.',
+    {
+      revisionConflict: {
+        summary: 'An optimistic revision no longer matches.',
+        value: { error: { code: 'CONFLICT', message: 'The resource changed. Reload and try again.' } },
+      },
+      ambiguousOwnership: {
+        summary: 'The card is present in more than one collection.',
+        value: { error: { code: 'AMBIGUOUS_OWNERSHIP', message: 'This card exists in more than one collection for the selected language.' } },
+      },
+      stateConflict: {
+        summary: 'A concurrent card collection update could not be applied.',
+        value: { error: { code: 'STATE_CONFLICT', message: 'The collection changed concurrently. Retry the request.' } },
+      },
+    },
+  ),
+  '410': errorResponse(410, 'ACCOUNT_UNAVAILABLE', 'This account is being deleted.', 'The account is no longer available for API access.'),
+  '422': errorResponse(
+    422,
+    'VALIDATION_ERROR',
+    'The request is invalid.',
+    'A query parameter or request body failed validation.',
+    {
+      idempotencyKeyRequired: {
+        summary: 'A valid idempotency key is required when creating a transaction.',
+        value: { error: { code: 'IDEMPOTENCY_KEY_REQUIRED', message: 'A valid Idempotency-Key header is required.' } },
+      },
+      invalidCard: {
+        summary: 'The card does not have a valid set.',
+        value: { error: { code: 'INVALID_CARD', message: 'The card does not belong to a valid set.' } },
+      },
+      variantUnavailable: {
+        summary: 'The requested card variant is unavailable.',
+        value: { error: { code: 'VARIANT_UNAVAILABLE', message: 'This variant is not available for the card.' } },
+      },
+      collectionLimitReached: {
+        summary: 'The physical card collection limit would be exceeded.',
+        value: { error: { code: 'COLLECTION_LIMIT_REACHED', message: 'The collection is at its 10000-card limit.' } },
+      },
+      invalidCollection: {
+        summary: 'The resulting saved collection state is invalid.',
+        value: { error: { code: 'INVALID_COLLECTION', message: 'The updated collection is invalid.' } },
+      },
+    },
+  ),
+  '429': errorResponse(
+    429,
+    'RATE_LIMITED',
+    'The API quota has been reached.',
+    'A quota or invalid-key attempt limit has been reached.',
+    {
+      invalidKeyAttempts: {
+        summary: 'Too many requests with invalid API keys came from this IP address.',
+        value: { error: { code: 'RATE_LIMITED', message: 'Too many invalid API key attempts.' } },
+      },
+    },
+  ),
+  '500': errorResponse(
+    500,
+    'INTERNAL_ERROR',
+    'The API request failed.',
+    'An unexpected server error occurred.',
+    {
+      invalidSavedState: {
+        summary: 'The saved card collection state could not be normalized.',
+        value: { error: { code: 'INVALID_SAVED_STATE', message: 'The saved collection state is invalid.' } },
+      },
+    },
+  ),
+  '502': errorResponse(502, 'CARD_DATA_UNAVAILABLE', 'Card data could not be verified.', 'TCGdex card data could not be loaded to verify the card.'),
+  '503': errorResponse(503, 'API_UNAVAILABLE', 'The API is temporarily unavailable.', 'The database or account service is unavailable.'),
 };
 
 const privateResponses = {
@@ -35,6 +131,26 @@ const privateResponses = {
     content: { 'application/json': { schema: { $ref: '#/components/schemas/DataEnvelope' } } },
   },
   ...privateErrorResponses,
+};
+
+const sealedTransactionDraftProperties = {
+  kind: { type: 'string', enum: ['buy', 'sell', 'exchange'] },
+  cardmarketProductId: { type: 'integer', minimum: 1 },
+  language: { type: 'string', enum: ['unknown', 'en', 'fr', 'es', 'de', 'it', 'ja'] },
+  date: { type: 'string', format: 'date' },
+  quantity: { type: 'integer', minimum: 1 },
+  unitPriceCents: { type: 'integer', minimum: 0 },
+  feesCents: { type: 'integer', minimum: 0 },
+  shippingCents: { type: 'integer', minimum: 0 },
+  discountCents: { type: 'integer', minimum: 0 },
+  paymentFeesCents: { type: 'integer', minimum: 0 },
+  otherCostsCents: { type: 'integer', minimum: 0 },
+  exchangeGive: { type: 'object', properties: {
+    cardmarketProductId: { type: 'integer', minimum: 1 },
+    language: { type: 'string' },
+    quantity: { type: 'integer', minimum: 1 },
+  } },
+  allocationMethod: { type: 'string', enum: ['fifo', 'manual'] },
 };
 
 const secured = (summary: string, extra: Record<string, unknown> = {}) => ({
@@ -175,10 +291,23 @@ const specification = {
           required: true,
           content: { 'application/json': { schema: { $ref: '#/components/schemas/SealedTransactionWrite' }, example: { expectedRevision: 4, kind: 'buy', cardmarketProductId: 12345, language: 'en', date: '2026-09-26', quantity: 1, unitPriceCents: 2500 } } },
         },
-        responses: { ...privateErrorResponses, '201': {
-          description: 'Created; a repeated idempotency key returns the original result.',
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/DataEnvelope' } } },
-        } },
+        responses: {
+          ...privateErrorResponses,
+          '200': {
+            description: 'The stored result returned for a repeated Idempotency-Key and identical request body.',
+            content: { 'application/json': {
+              schema: { $ref: '#/components/schemas/DataEnvelope' },
+              example: { data: { transaction: { id: '00000000-0000-4000-8000-000000000002', revision: 1, kind: 'buy', cardmarketProductId: 12345, date: '2026-09-26', quantity: 1 }, revision: 5, allocations: [], replayed: true } },
+            } },
+          },
+          '201': {
+            description: 'Transaction created. A repeated idempotency key returns the original result with HTTP 200.',
+            content: { 'application/json': {
+              schema: { $ref: '#/components/schemas/DataEnvelope' },
+              example: { data: { transaction: { id: '00000000-0000-4000-8000-000000000002', revision: 1, kind: 'buy', cardmarketProductId: 12345, date: '2026-09-26', quantity: 1 }, revision: 5, allocations: [], replayed: false } },
+            } },
+          },
+        },
       }),
     },
     '/sealed/transactions/{id}': {
@@ -190,7 +319,7 @@ const specification = {
         } },
       }),
       patch: secured('Revise a sealed transaction using optimistic revisions', {
-        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/SealedTransactionWrite' } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/SealedTransactionUpdateWrite' } } } },
       }),
     },
     '/sealed/transactions/{id}/void': {
@@ -240,18 +369,14 @@ const specification = {
       SealedTransactionWrite: {
         type: 'object', required: ['expectedRevision', 'kind', 'cardmarketProductId', 'date', 'quantity'], properties: {
           expectedRevision: { type: 'integer', minimum: 0 },
-          revision: { type: 'integer', minimum: 1, description: 'Required on PATCH.' },
-          kind: { type: 'string', enum: ['buy', 'sell', 'exchange'] },
-          cardmarketProductId: { type: 'integer', minimum: 1 },
-          language: { type: 'string', enum: ['unknown', 'en', 'fr', 'es', 'de', 'it', 'ja'] },
-          date: { type: 'string', format: 'date' }, quantity: { type: 'integer', minimum: 1 },
-          unitPriceCents: { type: 'integer', minimum: 0 }, feesCents: { type: 'integer', minimum: 0 },
-          shippingCents: { type: 'integer', minimum: 0 }, discountCents: { type: 'integer', minimum: 0 },
-          paymentFeesCents: { type: 'integer', minimum: 0 }, otherCostsCents: { type: 'integer', minimum: 0 },
-          exchangeGive: { type: 'object', properties: {
-            cardmarketProductId: { type: 'integer', minimum: 1 }, language: { type: 'string' }, quantity: { type: 'integer', minimum: 1 },
-          } },
-          allocationMethod: { type: 'string', enum: ['fifo', 'manual'] },
+          ...sealedTransactionDraftProperties,
+        },
+      },
+      SealedTransactionUpdateWrite: {
+        type: 'object', required: ['revision', 'expectedRevision', 'kind', 'cardmarketProductId', 'date', 'quantity'], properties: {
+          revision: { type: 'integer', minimum: 1, description: 'Current revision of the transaction being updated.' },
+          expectedRevision: { type: 'integer', minimum: 0, description: 'Current revision of the account sealed portfolio.' },
+          ...sealedTransactionDraftProperties,
         },
       },
       VoidTransactionWrite: {
