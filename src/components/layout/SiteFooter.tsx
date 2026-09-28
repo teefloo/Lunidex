@@ -2,10 +2,12 @@ import Link from 'next/link';
 import {
   ArrowUpRight,
   BookOpen,
+  ChevronDown,
   Compass,
   Database,
   Github,
   LifeBuoy,
+  Package,
   ShieldCheck,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -38,6 +40,7 @@ interface FooterLinkGroupProps {
   title: string;
   className?: string;
   listClassName?: string;
+  collapsible?: boolean;
 }
 
 const footerLinkClassName = 'site-footer__link group/footer-link';
@@ -80,27 +83,46 @@ function FooterLinkGroup({
   title,
   className,
   listClassName,
+  collapsible = false,
 }: FooterLinkGroupProps) {
+  const linkList = (
+    <ul className={cn('site-footer__link-list', listClassName)}>
+      {links.map((link) => (
+        <li key={`${link.href}-${link.label}`}>
+          <FooterLink link={link} localize={localize} />
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <nav className={cn('site-footer__link-group', className)} aria-labelledby={id}>
-      <h2 id={id} className="site-footer__group-title">
-        <Icon aria-hidden="true" className="site-footer__group-icon h-4 w-4" />
-        <span>{title}</span>
-      </h2>
-      <ul className={cn('site-footer__link-list', listClassName)}>
-        {links.map((link) => (
-          <li key={`${link.href}-${link.label}`}>
-            <FooterLink link={link} localize={localize} />
-          </li>
-        ))}
-      </ul>
+      {collapsible ? (
+        <details className="site-footer__disclosure">
+          <summary id={id} className="site-footer__group-title site-footer__disclosure-summary">
+            <Icon aria-hidden="true" className="site-footer__group-icon h-4 w-4" />
+            <span className="site-footer__group-heading" role="heading" aria-level={2}>
+              {title}
+            </span>
+            <ChevronDown aria-hidden="true" className="site-footer__disclosure-icon h-4 w-4" />
+          </summary>
+          {linkList}
+        </details>
+      ) : (
+        <>
+          <h2 id={id} className="site-footer__group-title">
+            <Icon aria-hidden="true" className="site-footer__group-icon h-4 w-4" />
+            <span>{title}</span>
+          </h2>
+          {linkList}
+        </>
+      )}
     </nav>
   );
 }
 
 export default async function SiteFooter() {
-  const t = await getServerT();
-  const language = await getServerLanguage();
+  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const localizedHref = (href: string) => `/${language}${href}`;
   const year = new Date().getFullYear();
 
@@ -109,8 +131,8 @@ export default async function SiteFooter() {
     { href: '/types', label: t('footer.navigation.types') },
     { href: '/team', label: t('footer.navigation.team_builder') },
     { href: '/tcg', label: t('footer.navigation.tcg') },
-    { href: '/tcg/collection', label: t('tcg.nav_collection') },
     { href: '/docs', label: t('docs.nav_label') },
+    { href: '/docs/api', label: t('api_docs.nav_label') },
     { href: '/dashboard', label: t('footer.navigation.dashboard') },
     { href: '/quiz', label: t('footer.navigation.quiz') },
     { href: '/favorites', label: t('nav.favorites') },
@@ -118,7 +140,6 @@ export default async function SiteFooter() {
 
   const guideLinks: FooterLinkData[] = [
     { href: '/blog', label: t('nav.blog') },
-    { href: '/docs/api', label: t('api_docs.nav_label') },
     { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
     { href: '/guides/pokemon-card-collection-value', label: t('editorial.guides.pokemon_card_collection_value.nav_label', { defaultValue: 'Pokémon card collection value guide' }) },
     { href: '/guides/team-builder-guide', label: t('team_guide.nav_label', { defaultValue: 'Team building guide' }) },
@@ -186,21 +207,21 @@ export default async function SiteFooter() {
           <div className="site-footer__launch">
             <div>
               <div className="site-footer__launch-heading">
-                <Compass aria-hidden="true" className="h-5 w-5" />
-                <h2 id="footer-launch-title">{t('footer.navigation.pokedex')}</h2>
+                <Package aria-hidden="true" className="h-5 w-5" />
+                <h2 id="footer-launch-title">{t('tcg.nav_collection')}</h2>
               </div>
               <p className="site-footer__launch-copy">
-                {t('footer.brand.mission', { defaultValue: 'Mission: Complete the Pokédex' })}
+                {t('lunidex_home.steps_title')}
               </p>
             </div>
 
             <div className="site-footer__launch-actions">
               <Link
-                href={localizedHref('/pokedex')}
+                href={localizedHref('/tcg/collection')}
                 prefetch={false}
                 className="site-footer__launch-action site-footer__launch-action--primary"
               >
-                <span>{t('footer.navigation.pokedex')}</span>
+                <span>{t('lunidex_home.cta_start')}</span>
                 <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
               </Link>
               <a
@@ -224,26 +245,27 @@ export default async function SiteFooter() {
             icon={Compass}
             links={explorerLinks}
             localize={localizedHref}
-            className="site-footer__directory-primary"
             listClassName="site-footer__primary-links"
           />
 
-          <div className="site-footer__directory-rail">
-            <FooterLinkGroup
-              id="footer-guides-title"
-              title={t('footer.groups.guides', { defaultValue: t('footer.resources.title') })}
-              icon={BookOpen}
-              links={guideLinks}
-              localize={localizedHref}
-            />
-            <FooterLinkGroup
-              id="footer-support-title"
-              title={t('footer.groups.about_support', { defaultValue: t('footer.community.title') })}
-              icon={LifeBuoy}
-              links={supportLinks}
-              localize={localizedHref}
-            />
-          </div>
+          <FooterLinkGroup
+            id="footer-guides-title"
+            title={t('footer.groups.guides', { defaultValue: t('footer.resources.title') })}
+            icon={BookOpen}
+            links={guideLinks}
+            localize={localizedHref}
+            listClassName="site-footer__guide-links"
+            collapsible
+          />
+
+          <FooterLinkGroup
+            id="footer-support-title"
+            title={t('footer.groups.about_support', { defaultValue: t('footer.community.title') })}
+            icon={LifeBuoy}
+            links={supportLinks}
+            localize={localizedHref}
+            className="site-footer__directory-support"
+          />
         </div>
 
         <div className="site-footer__details">

@@ -5,6 +5,7 @@ import {
   authenticateApiKey,
   createApiKey,
   createApiKeyMaterial,
+  getUserSessionContext,
   isApiContext,
   listApiKeys,
   revokeApiKey,
@@ -13,8 +14,13 @@ import {
   sha256,
 } from '@/lib/public-api';
 
-const { getNeonClient } = vi.hoisted(() => ({ getNeonClient: vi.fn() }));
+const { getNeonClient, getNeonUserFromRequest, ensureNeonUser } = vi.hoisted(() => ({
+  getNeonClient: vi.fn(),
+  getNeonUserFromRequest: vi.fn(),
+  ensureNeonUser: vi.fn(),
+}));
 vi.mock('@/lib/neon/server', () => ({ getNeonClient }));
+vi.mock('@/lib/neon/auth', () => ({ getNeonUserFromRequest, ensureNeonUser }));
 
 const userId = '00000000-0000-4000-8000-000000000001';
 
@@ -82,7 +88,29 @@ function makeQuotaSql(permission: 'read' | 'read_write', blockedBuckets: string[
 }
 
 describe('public API key authentication and management', () => {
-  beforeEach(() => getNeonClient.mockReset());
+  beforeEach(() => {
+    getNeonClient.mockReset();
+    getNeonUserFromRequest.mockReset();
+    ensureNeonUser.mockReset();
+  });
+
+  it('returns an unavailable response when account access cannot be checked', async () => {
+    getNeonClient.mockReturnValue(makeSql());
+    getNeonUserFromRequest.mockResolvedValue({
+      id: userId,
+      email: 'trainer@example.test',
+      user_metadata: {},
+    });
+    ensureNeonUser.mockRejectedValue(new Error('database unavailable'));
+
+    const result = await getUserSessionContext(new NextRequest('https://lunidex.app/api/account/api-keys'));
+
+    expect(result).toBeInstanceOf(NextResponse);
+    expect((result as NextResponse).status).toBe(503);
+    await expect((result as NextResponse).json()).resolves.toMatchObject({
+      error: { code: 'API_UNAVAILABLE' },
+    });
+  });
 
   it('authenticates by token digest and scopes the context to the owning account', async () => {
     const material = createApiKeyMaterial();

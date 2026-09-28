@@ -607,7 +607,7 @@ export async function searchPublicSealedCatalogue(
   page: number,
   pageSize = 24,
 ) {
-  const search = parseSealedCatalogueSearch(queryText.slice(0, 150));
+  const search = parseSealedCatalogueSearch(Array.from(queryText).slice(0, 150).join(''));
   const boundedPage = Number.isSafeInteger(page) && page >= 0 ? Math.min(page, MAX_CATALOGUE_PAGE) : 0;
   const boundedSize = Math.min(MAX_CATALOGUE_PAGE_SIZE, Math.max(1, Math.floor(pageSize)));
   const params: unknown[] = [SEALED_CATEGORY_SQL];

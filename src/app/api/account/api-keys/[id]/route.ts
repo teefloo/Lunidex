@@ -9,8 +9,9 @@ async function deleteApiKey(
   request: NextRequest,
   routeContext: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  const originError = requireTrustedMutationOrigin(request);
-  if (originError) return originError;
+  if (requireTrustedMutationOrigin(request)) {
+    return apiError(403, 'INVALID_REQUEST_ORIGIN', 'Invalid request origin.');
+  }
   const context = await getUserSessionContext(request);
   if (!isApiContext(context)) return context;
   if (!rateLimit(`api-key-revoke:${context.userId}`, 20)) {

@@ -5316,7 +5316,7 @@ html:not(.dark) .pokedex-filter-sheet .bg-secondary\/20 {
 }
 
 body:not(:has(.pokedex-redesign)) .site-footer {
-  margin-top: clamp(4rem, 8vw, 8rem);
+  margin-top: clamp(3.25rem, 6vw, 6rem);
 }
 
 .site-footer .footer-link,
@@ -6595,7 +6595,7 @@ html.dark .lunidex-home::before {
 .site-footer {
   position: relative;
   z-index: 0;
-  margin-top: clamp(4rem, 8vw, 8rem);
+  margin-top: clamp(3.25rem, 6vw, 6rem);
   border-top: 1px solid var(--border) !important;
   background: color-mix(in oklab, var(--background) 92%, var(--card)) !important;
   color: var(--foreground);
@@ -6610,14 +6610,14 @@ body:has(.lunidex-home) .site-footer {
 .site-footer__inner {
   width: min(100%, 90rem);
   margin-inline: auto;
-  padding: clamp(2.75rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3.5rem) calc(1.25rem + env(safe-area-inset-bottom));
+  padding: clamp(2.25rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 3.5rem) calc(1.25rem + env(safe-area-inset-bottom));
 }
 
 .site-footer__masthead {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.92fr);
-  gap: clamp(2.5rem, 7vw, 7rem);
-  padding-bottom: clamp(2rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-bottom: clamp(1.75rem, 3vw, 2.5rem);
   border-bottom: 1px solid var(--border);
 }
 
@@ -6631,17 +6631,17 @@ body:has(.lunidex-home) .site-footer {
 
 .site-footer__brand-link {
   display: inline-flex;
-  min-height: 3.5rem;
+  min-height: 3rem;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.7rem;
   color: var(--foreground);
   text-decoration: none;
 }
 
 .site-footer__brand-mark {
   display: block;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 3rem;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -6656,7 +6656,7 @@ body:has(.lunidex-home) .site-footer {
   display: inline-flex;
   align-items: baseline;
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.65rem, 2.5vw, 2rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -6674,25 +6674,28 @@ body:has(.lunidex-home) .site-footer {
 
 .site-footer__brand-description {
   max-width: 31rem;
-  margin: 1.5rem 0 0;
-  color: var(--foreground);
-  font-size: clamp(1rem, 1.4vw, 1.12rem);
-  font-weight: 600;
-  line-height: 1.65;
+  margin: 0.9rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
 .site-footer__launch {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-inline-start: clamp(1.5rem, 3vw, 3rem);
-  border-inline-start: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  gap: 1.15rem;
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: color-mix(in oklab, var(--card) 84%, var(--background));
 }
 
 .site-footer__launch-heading {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.6rem;
   color: var(--primary);
 }
 
@@ -6700,41 +6703,40 @@ body:has(.lunidex-home) .site-footer {
   margin: 0;
   color: var(--foreground);
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
   font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
   text-wrap: balance;
 }
 
 .site-footer__launch-copy {
   max-width: 26rem;
-  margin: 0.85rem 0 0;
+  margin: 0.55rem 0 0;
   color: var(--muted-foreground);
   font-size: 0.88rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .site-footer__launch-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 2rem;
+  gap: 0.55rem;
 }
 
 .site-footer__launch-action {
   display: inline-flex;
   min-width: 0;
-  min-height: 2.75rem;
+  min-height: 2.8rem;
   align-items: center;
   justify-content: space-between;
   gap: 0.55rem;
-  padding: 0.65rem 0.85rem;
+  padding: 0.6rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 0.55rem;
+  border-radius: 0.6rem;
   background: transparent;
   color: var(--foreground);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 800;
   line-height: 1.25;
   text-decoration: none;
@@ -6762,31 +6764,24 @@ body:has(.lunidex-home) .site-footer {
 
 .site-footer__directory {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(2.5rem, 7vw, 7rem);
-  padding-block: clamp(2rem, 3vw, 2.75rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding-block: clamp(1.75rem, 3vw, 2.5rem);
   border-bottom: 1px solid var(--border);
-}
-
-.site-footer__directory-rail {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: start;
-  gap: clamp(1.75rem, 4vw, 4rem);
 }
 
 .site-footer__group-title {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.6rem;
   margin: 0;
   color: color-mix(in oklab, var(--foreground) 72%, var(--muted-foreground));
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
-  line-height: 1.35;
+  letter-spacing: 0.11em;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
@@ -6796,32 +6791,65 @@ body:has(.lunidex-home) .site-footer {
   stroke-width: 2.25;
 }
 
-.site-footer__directory-primary .site-footer__group-title {
-  color: var(--foreground);
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  letter-spacing: -0.035em;
-  line-height: 1;
-  text-transform: none;
-}
-
-.site-footer__directory-primary .site-footer__group-icon {
-  width: 1.15rem;
-  height: 1.15rem;
+.site-footer__group-heading {
+  min-width: 0;
 }
 
 .site-footer__link-list {
   display: grid;
-  gap: 0.15rem;
-  margin: 0.85rem 0 0;
+  gap: 0.1rem;
+  margin: 0.65rem 0 0;
   padding: 0;
   list-style: none;
 }
 
 .site-footer__primary-links {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(1rem, 3vw, 3rem);
-  row-gap: 0.15rem;
+  column-gap: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.site-footer__guide-links {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 0.75rem;
+}
+
+.site-footer__directory-support .site-footer__link-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.site-footer__disclosure-summary {
+  min-height: 2.75rem;
+  justify-content: flex-start;
+  padding-block: 0.35rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.site-footer__disclosure-summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-footer__disclosure-summary::marker {
+  content: '';
+}
+
+.site-footer__disclosure-summary:hover {
+  color: var(--foreground);
+}
+
+.site-footer__disclosure-icon {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  color: var(--muted-foreground);
+  transition: transform 160ms ease;
+}
+
+.site-footer__disclosure[open] .site-footer__disclosure-icon {
+  transform: rotate(180deg);
+}
+
+.site-footer__disclosure[open] .site-footer__link-list {
+  margin-top: 0.45rem;
 }
 
 .site-footer__link-list li {
@@ -6872,7 +6900,7 @@ body:has(.lunidex-home) .site-footer {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
   align-items: start;
-  gap: clamp(2rem, 6vw, 6rem);
+  gap: clamp(1.5rem, 4vw, 4rem);
   padding-block: 1.25rem;
   border-bottom: 1px solid var(--border);
 }
@@ -6964,37 +6992,47 @@ body:has(.lunidex-home) .site-footer {
   -webkit-tap-highlight-color: color-mix(in oklab, var(--primary) 18%, transparent);
 }
 
+.site-footer a:focus-visible,
+.site-footer button:focus-visible,
+.site-footer__disclosure-summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
 @media (max-width: 900px) {
-  .site-footer__masthead,
-  .site-footer__directory,
-  .site-footer__details {
+  .site-footer__masthead {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .site-footer__masthead,
   .site-footer__directory {
-    gap: 2.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
   }
 
   .site-footer__launch {
     min-height: 0;
-    flex-direction: row;
-    align-items: flex-end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     gap: 2rem;
-    padding-inline-start: 0;
-    padding-top: 2rem;
-    border-inline-start: 0;
-    border-top: 1px solid var(--border);
   }
 
   .site-footer__launch-actions {
     flex: 0 1 auto;
     justify-content: flex-end;
-    margin-top: 0;
   }
 
-  .site-footer__directory-rail {
-    gap: 2.5rem;
+  .site-footer__directory-support {
+    grid-column: 1 / -1;
+  }
+
+  .site-footer__directory-support .site-footer__link-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 0.75rem;
+  }
+
+  .site-footer__details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
   }
 
   .site-footer__sources {
@@ -7007,31 +7045,40 @@ body:has(.lunidex-home) .site-footer {
     padding-inline: 1.25rem;
   }
 
-  .site-footer__masthead,
+  .site-footer__masthead {
+    gap: 1.5rem;
+  }
+
   .site-footer__directory {
-    gap: 2.25rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
   }
 
   .site-footer__launch {
-    display: block;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
   }
 
   .site-footer__launch-actions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-top: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .site-footer__launch-action {
     min-width: 0;
   }
 
-  .site-footer__directory-rail {
-    gap: 1.75rem;
+  .site-footer__directory-support {
+    grid-column: auto;
+  }
+
+  .site-footer__directory-support .site-footer__link-list,
+  .site-footer__guide-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .site-footer__details {
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 
   .site-footer__base {
@@ -7050,12 +7097,12 @@ body:has(.lunidex-home) .site-footer {
     padding-inline: 0.9rem;
   }
 
-  .site-footer__directory-rail {
-    gap: 1rem;
+  .site-footer__primary-links {
+    column-gap: 0.35rem;
   }
 
-  .site-footer__primary-links {
-    column-gap: 0.75rem;
+  .site-footer__guide-links {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .site-footer__link {
@@ -7071,7 +7118,8 @@ body:has(.lunidex-home) .site-footer {
   .site-footer__brand-mark,
   .site-footer__launch-action,
   .site-footer__link,
-  .site-footer__link-icon {
+  .site-footer__link-icon,
+  .site-footer__disclosure-icon {
     transition: none;
   }
 

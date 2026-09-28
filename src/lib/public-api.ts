@@ -368,7 +368,7 @@ export async function getUserSessionContext(request: NextRequest): Promise<Publi
     }
   } catch (error) {
     if (isInactiveAccountError(error)) return apiError(410, 'ACCOUNT_UNAVAILABLE', 'This account is being deleted.');
-    throw error;
+    return apiError(503, 'API_UNAVAILABLE', 'The account service is temporarily unavailable.');
   }
   return { sql, userId: user.id, keyId: '', permission: 'read_write' };
 }

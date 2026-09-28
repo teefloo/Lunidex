@@ -7,7 +7,11 @@ const PAGE_SIZE = 24;
 
 async function getCatalogue(request: NextRequest): Promise<Response> {
   return runPublicApi(request, '/api/v1/sealed/catalogue', 'read', undefined, async ({ sql }) => {
-    const query = (request.nextUrl.searchParams.get('q') ?? '').trim().slice(0, 150);
+    const rawQuery = request.nextUrl.searchParams.get('q') ?? '';
+    if (Array.from(rawQuery).length > 150) {
+      return apiError(422, 'VALIDATION_ERROR', 'q must be 150 characters or fewer.');
+    }
+    const query = rawQuery.trim();
     const rawCursor = request.nextUrl.searchParams.get('cursor');
     const cursor = decodeApiCursor(rawCursor);
     if (rawCursor && !cursor) return apiError(422, 'VALIDATION_ERROR', 'cursor is invalid.');

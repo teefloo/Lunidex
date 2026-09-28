@@ -8,6 +8,7 @@ import {
   getSealedTransactionPage,
   normalizeSealedDraft,
   mutateSealedTransaction,
+  searchPublicSealedCatalogue,
   SealedConflictError,
   SealedServerError,
   sealedExportCsv,
@@ -169,6 +170,22 @@ describe('sealed portfolio daily overview', () => {
 
     expect(overview.history.map((point) => point.day)).toEqual(['2026-09-19', '2026-09-20']);
     expect(overview.history.find((point) => point.day === '2026-09-20')?.valueCents).toBe(0);
+  });
+});
+
+describe('public sealed catalogue search', () => {
+  it('preserves all 150 Unicode characters when bounding a query', async () => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = {
+      query: async (query: string, params: unknown[]) => {
+        statements.push({ query, params });
+        return [];
+      },
+    } as unknown as NeonSql;
+
+    await searchPublicSealedCatalogue(sql, '𐐀'.repeat(150), 0);
+
+    expect(statements[0]?.params[1]).toBe('𐐨'.repeat(150));
   });
 });
 

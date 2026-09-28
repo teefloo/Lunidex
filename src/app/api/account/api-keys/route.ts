@@ -10,19 +10,9 @@ import {
   createApiKey,
   getUserSessionContext,
   isApiContext,
+  listApiKeys,
   readJsonObject,
-  type ApiPermission,
 } from '@/lib/public-api';
-
-interface ApiKeyListRow {
-  id: string;
-  name: string;
-  key_prefix: string;
-  permission: ApiPermission;
-  created_at: string;
-  last_used_at: string | null;
-  revoked_at: string | null;
-}
 
 async function getApiKeys(request: NextRequest): Promise<NextResponse> {
   const context = await getUserSessionContext(request);
@@ -32,27 +22,17 @@ async function getApiKeys(request: NextRequest): Promise<NextResponse> {
       headers: { 'Retry-After': '60' },
     });
   }
-  const rows = await context.sql`
-    select id::text, name, key_prefix, permission, created_at::text,
-      last_used_at::text, revoked_at::text
-    from public.api_keys
-    where user_id = ${context.userId}::uuid
-    order by created_at desc, id desc
-  ` as ApiKeyListRow[];
-  return apiResponse(rows.map((row) => ({
-    id: row.id,
-    name: row.name,
-    permission: row.permission,
-    prefix: row.key_prefix,
-    createdAt: row.created_at,
-    lastUsedAt: row.last_used_at,
-    revokedAt: row.revoked_at,
-  })));
+  try {
+    return apiResponse(await listApiKeys(context));
+  } catch {
+    return apiError(503, 'API_UNAVAILABLE', 'The API key service is temporarily unavailable.');
+  }
 }
 
 async function postApiKey(request: NextRequest): Promise<NextResponse> {
-  const originError = requireTrustedMutationOrigin(request);
-  if (originError) return originError;
+  if (requireTrustedMutationOrigin(request)) {
+    return apiError(403, 'INVALID_REQUEST_ORIGIN', 'Invalid request origin.');
+  }
   const context = await getUserSessionContext(request);
   if (!isApiContext(context)) return context;
   if (!rateLimit(`api-key-create:${context.userId}`, 10)) {
