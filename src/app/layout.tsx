@@ -7,9 +7,9 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import {
   getEditorialClientTranslations,
+  getPublicClientTranslations,
   getServerT,
   getServerLanguage,
-  getServerTranslations,
 } from '@/lib/server-i18n';
 import { AppContent } from "./AppContent";
 import SiteFooter from "@/components/layout/SiteFooter";
@@ -169,7 +169,7 @@ export default async function RootLayout({
   const isEditorialRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(requestPathname);
   const initialTranslations = isEditorialRoute
     ? getEditorialClientTranslations(lang)
-    : getServerTranslations(lang);
+    : getPublicClientTranslations(lang);
   const baseUrl = SITE_URL;
   const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
 

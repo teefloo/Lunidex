@@ -79,6 +79,31 @@ export function getServerTranslations(lang: SupportedLanguage): ResourceLanguage
   return serverResources[lang].translation;
 }
 
+const SERVER_ONLY_CLIENT_TRANSLATION_NAMESPACES = [
+  'editorial',
+  'anniversary_30',
+  'faq',
+  'about',
+  'quiz_guide',
+] as const;
+
+/**
+ * Public pages render these translation namespaces entirely on the server.
+ * Keep them out of the serialized client provider payload while preserving
+ * the complete server bundle for page rendering and metadata.
+ */
+export function getPublicClientTranslations(lang: SupportedLanguage): ResourceLanguage {
+  const selected = {
+    ...serverResources[lang].translation,
+  } as Record<string, unknown>;
+
+  for (const namespace of SERVER_ONLY_CLIENT_TRANSLATION_NAMESPACES) {
+    delete selected[namespace];
+  }
+
+  return selected as ResourceLanguage;
+}
+
 const EDITORIAL_CLIENT_TRANSLATION_PATHS = [
   'common',
   'nav',

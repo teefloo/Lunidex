@@ -7,7 +7,7 @@ import { getServerTForLanguage } from '@/lib/server-i18n';
 import { isSupportedLanguage, type SupportedLanguage } from '@/lib/languages';
 import { loadTrustedOgImageDataUrl } from '@/lib/og/assets';
 import { PUBLIC_OG_CACHE_HEADERS } from '@/lib/og/cache';
-import { optimizeOgPngResponse } from '@/lib/og/optimize-png';
+import { optimizeOgImageResponse } from '@/lib/og/optimize-png';
 import { loadOgFonts } from '@/lib/og/fonts';
 import { normalizeOgTcgCardId, sanitizeOgText } from '@/lib/og/input';
 import { OG_SIZE, OG_THEME } from '@/lib/og/theme';
@@ -210,5 +210,5 @@ export async function GET(request: NextRequest): Promise<Response> {
     ),
     { width: OG_SIZE.width, height: OG_SIZE.height, fonts, headers: PUBLIC_OG_CACHE_HEADERS },
   );
-  return optimizeOgPngResponse(image);
+  return optimizeOgImageResponse(image);
 }

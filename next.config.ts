@@ -307,6 +307,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: '/opengraph-image',
+        destination: '/og/lunidex-og.jpg',
+      },
+      {
         source: '/:locale(en|fr|es|de|it|ja|ko|zh)/:path*',
         destination: '/:path*',
       },
@@ -400,6 +404,17 @@ const nextConfig: NextConfig = {
       {
         // Cache SVG and image assets
         source: '/(.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico))',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      {
+        // The legacy OG alias has no image extension, so it needs the same
+        // cache policy as the static JPEG rewrite destination.
+        source: '/opengraph-image',
         headers: [
           {
             key: 'Cache-Control',
