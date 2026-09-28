@@ -63,6 +63,8 @@ export type FeatureGuideDefinition = {
   sources?: readonly EditorialSource[];
   evidenceRows?: readonly GuideEvidenceRowKey[];
   faqCount?: 2 | 4;
+  checklistCount?: number;
+  hasExample?: boolean;
 };
 
 /**
@@ -71,8 +73,8 @@ export type FeatureGuideDefinition = {
  * apart when an article is updated.
  */
 export const EDITORIAL_ARTICLE_DATES = {
-  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-21' },
-  '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-09-14' },
+  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-28' },
+  '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-09-28' },
   '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-24' },
   '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-24' },
   '/compare/lunidex-vs-pokecardex-zebradex': { publishedAt: '2026-08-12', updatedAt: '2026-08-19' },
@@ -89,7 +91,8 @@ export const EDITORIAL_ARTICLE_DATES = {
   '/guides/team-tools-guide': { publishedAt: '2026-08-20', updatedAt: '2026-09-21' },
   '/guides/tcg-workspace-guide': { publishedAt: '2026-08-21', updatedAt: '2026-09-14' },
   '/guides/progress-account-guide': { publishedAt: '2026-08-22', updatedAt: '2026-08-22' },
-  '/guides/pokemon-card-collection-value': { publishedAt: '2026-09-21', updatedAt: '2026-09-21' },
+  '/guides/pokemon-card-collection-value': { publishedAt: '2026-09-21', updatedAt: '2026-09-28' },
+  '/guides/organize-pokemon-card-collection': { publishedAt: '2026-09-28', updatedAt: '2026-09-28' },
 } as const satisfies Record<string, EditorialDateDefinition>;
 
 export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
@@ -177,6 +180,15 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
 
 export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
   {
+    slug: 'organize-pokemon-card-collection',
+    path: '/guides/organize-pokemon-card-collection',
+    productPaths: ['/tcg', '/guides/pokemon-card-collection-tracker'],
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/pokemon-card-collection-value'],
+    sources: [{ label: 'TCGdex', url: 'https://www.tcgdex.net/' }],
+    checklistCount: 6,
+    hasExample: true,
+  },
+  {
     slug: 'pokemon-reference-guide',
     path: '/guides/pokemon-reference-guide',
     productPaths: ['/pokedex', '/types', '/moves', '/abilities', '/items'],
@@ -200,7 +212,7 @@ export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
   {
     slug: 'pokemon-card-collection-value',
     path: '/guides/pokemon-card-collection-value',
-    productPaths: ['/tcg/collection', '/tcg/sealed'],
+    productPaths: ['/tcg', '/tcg/sealed/market', '/tcg/collection', '/tcg/sealed', '/faq'],
     relatedPaths: [
       '/guides/pokemon-card-collection-tracker',
       '/guides/tcg-workspace-guide',

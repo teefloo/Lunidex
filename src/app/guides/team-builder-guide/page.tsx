@@ -137,6 +137,7 @@ export default async function TeamBuilderGuide() {
                 <span aria-hidden="true"> · </span>
                 <time dateTime={LAST_UPDATED}>{t('team_guide.updated', { date: formattedDate })}</time>
               </p>
+              <p className="mt-2 text-sm text-foreground/60">{t('blog.editorial_signature')}</p>
             </header>
 
             <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:p-8" aria-labelledby="team-guide-answer-title">
@@ -171,6 +172,17 @@ export default async function TeamBuilderGuide() {
                   </tbody>
                 </table>
               </div>
+            </section>
+
+            <section className="mx-auto mt-10 max-w-4xl rounded-sm border border-primary/25 bg-primary/5 p-6 md:p-8" aria-labelledby="team-guide-example-title">
+              <h2 id="team-guide-example-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('team_guide.example_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('team_guide.example_body')}</p>
+              <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('team_guide.example_links_label')}>
+                <Link href={localeHref('/types', language)} className="min-h-11 inline-flex items-center underline-offset-4 hover:underline">{t('team_guide.example_types_link')}</Link>
+                <Link href={localeHref('/pokedex', language)} className="min-h-11 inline-flex items-center underline-offset-4 hover:underline">{t('team_guide.example_pokedex_link')}</Link>
+              </nav>
             </section>
 
             <section className="mt-12" aria-labelledby="team-guide-how-title">

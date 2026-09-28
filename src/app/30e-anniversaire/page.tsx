@@ -294,6 +294,7 @@ export default async function Anniversary30Page() {
                 <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-foreground/70 md:text-lg lg:mx-0">
                   {t('anniversary_30.intro')}
                 </p>
+                <p className="mt-2 text-sm text-foreground/60">{t('blog.editorial_signature')}</p>
                 <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                   <Link href="#tracker" className="glass-btn glass-btn-active touch-target px-5 py-3 text-sm font-bold">
                     {t('anniversary_30.cta_tracker')}

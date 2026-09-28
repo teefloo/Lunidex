@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import Header from '@/components/layout/Header';
 import {
@@ -9,8 +10,9 @@ import {
   GITHUB_REPO_URL,
   GITHUB_ISSUES_URL,
 } from '@/lib/site';
-import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE, localeHref } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { isEditorialIndexable } from '@/lib/editorial';
 
 export const revalidate = 3600;
 
@@ -72,6 +74,19 @@ export default async function AboutPage() {
     { id: 'open-source', title: t('about.opensource_title'), body: t('about.opensource_body') },
     { id: 'contact', title: t('about.contact_title'), body: t('about.contact_body') },
   ];
+  const productLinks = [
+    { href: '/tcg', label: t('footer.navigation.tcg') },
+    { href: '/pokedex', label: t('footer.navigation.pokedex') },
+    { href: '/team', label: t('footer.navigation.team_builder') },
+    { href: '/faq', label: t('nav.faq') },
+    { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
+    ...(isEditorialIndexable(lang)
+      ? [
+          { href: '/guides/organize-pokemon-card-collection', label: t('editorial.guides.organize_pokemon_card_collection.nav_label') },
+          { href: '/guides/pokemon-card-collection-value', label: t('editorial.guides.pokemon_card_collection_value.nav_label') },
+        ]
+      : []),
+  ];
 
   return (
     <>
@@ -120,6 +135,16 @@ export default async function AboutPage() {
                 </section>
               ))}
             </div>
+
+            <nav className="mt-10 border-t border-border/60 pt-8" aria-label={t('about.features_title')}>
+              <div className="flex flex-wrap gap-3">
+                {productLinks.map((link) => (
+                  <Link key={link.href} href={localeHref(link.href, lang)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </nav>
 
             <aside className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <a

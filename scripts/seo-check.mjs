@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 const nextConfigSource = await readFile(join(projectRoot, 'next.config.ts'), 'utf8');
+const siteSource = await readFile(join(projectRoot, 'src/lib/site.ts'), 'utf8');
 const sitemapSource = await readFile(join(projectRoot, 'src/lib/sitemap.ts'), 'utf8');
 const routeSource = await readFile(join(projectRoot, 'src/app/sitemaps/[name]/route.ts'), 'utf8');
 const proxySource = await readFile(join(projectRoot, 'src/proxy.ts'), 'utf8');
@@ -26,6 +27,7 @@ const llmsSource = await readFile(join(projectRoot, 'public/llms.txt'), 'utf8');
 const llmsFullSource = await readFile(join(projectRoot, 'public/llms-full.txt'), 'utf8');
 const aiSource = await readFile(join(projectRoot, 'public/ai.txt'), 'utf8');
 const aiAssets = { 'llms.txt': llmsSource, 'llms-full.txt': llmsFullSource, 'ai.txt': aiSource };
+const canonicalOrigin = new URL(siteSource.match(/export const SITE_URL = '([^']+)'/)?.[1] ?? 'https://lunidex.app').origin;
 
 const failures = [];
 const check = (condition, message) => {
@@ -71,7 +73,13 @@ check(editorialGuideRouteSource.includes('shouldIndex ? { languages: buildEditor
 check(editorialCompareRouteSource.includes('shouldIndex ? { languages: buildEditorialLanguages(article.path) }'), 'Fallback comparison locales must not emit hreflang links');
 
 for (const [assetName, assetSource] of Object.entries(aiAssets)) {
-  check(assetSource.includes('2026-09-21'), `${assetName} has an outdated review date`);
+  const reviewDate = assetSource.match(/reviewed against (?:the )?(?:application )?source(?: on|:)\s*(\d{4}-\d{2}-\d{2})/i)?.[1];
+  check(Boolean(reviewDate), `${assetName} has no machine-readable review date`);
+  if (reviewDate) {
+    const timestamp = Date.parse(`${reviewDate}T00:00:00Z`);
+    const ageDays = Math.floor((Date.now() - timestamp) / 86_400_000);
+    check(Number.isFinite(timestamp) && ageDays >= 0 && ageDays <= 90, `${assetName} review date is in the future or older than 90 days: ${reviewDate}`);
+  }
 }
 
 const genericIntentPaths = [
@@ -84,6 +92,8 @@ const genericIntentPaths = [
   '/en/guides/team-tools-guide',
   '/en/guides/team-builder-guide',
   '/en/guides/pokemon-card-collection-value',
+  '/en/guides/organize-pokemon-card-collection',
+  '/fr/guides/organize-pokemon-card-collection',
   '/en/compare/lunidex-vs-collectr',
   '/en/compare/lunidex-vs-pokecardex',
   '/en/compare/lunidex-vs-zebradex',
@@ -151,48 +161,110 @@ if (!baseUrl) {
   process.exit(0);
 }
 
-const origin = new URL(baseUrl).origin;
-const response = await fetch(`${origin}/sitemap.xml`, { redirect: 'manual' });
+const runtimeOrigin = new URL(baseUrl).origin;
+const runtimeUrl = (canonicalUrl) => new URL(new URL(canonicalUrl).pathname, runtimeOrigin).href;
+const response = await fetch(`${runtimeOrigin}/sitemap.xml`, { redirect: 'manual' });
 check(response.status === 200, `Sitemap index returned HTTP ${response.status}`);
 const indexXml = await response.text();
 check(indexXml.includes('<sitemapindex'), 'Sitemap index is not a sitemapindex document');
 
 const childUrls = [...indexXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-check(childUrls.length === families.length, `Expected ${families.length} child sitemaps, found ${childUrls.length}`);
+const locales = ['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'];
+const expectedSitemapFiles = families.length * locales.length + locales.length * 3;
+check(childUrls.length === expectedSitemapFiles, `Expected ${expectedSitemapFiles} localized sitemap files, found ${childUrls.length}`);
 
 const allUrls = new Set();
-const samples = [];
+const urlRecords = new Map();
 for (const childUrl of childUrls) {
   const parsedChild = new URL(childUrl);
-  check(parsedChild.origin === origin, `Child sitemap has a foreign origin: ${childUrl}`);
-  const childResponse = await fetch(childUrl, { redirect: 'manual' });
-  check(childResponse.status === 200, `${childUrl} returned HTTP ${childResponse.status}`);
+  check(parsedChild.origin === canonicalOrigin, `Child sitemap has a foreign origin: ${childUrl}`);
+  const childResponse = await fetch(runtimeUrl(childUrl), { redirect: 'manual' });
+  check(childResponse.status === 200, `${runtimeUrl(childUrl)} returned HTTP ${childResponse.status}`);
   const xml = await childResponse.text();
   check(xml.includes('<urlset'), `${childUrl} is not a urlset document`);
+  check([...xml.matchAll(/<url>/g)].length <= 50_000, `${childUrl} exceeds the 50,000 URL protocol limit`);
+  check(Buffer.byteLength(xml, 'utf8') <= 50 * 1024 * 1024, `${childUrl} exceeds the 50 MB protocol limit`);
 
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   console.log(`${childUrl}: ${urls.length} URLs`);
   check(urls.length > 0, `${childUrl} is empty`);
 
-  for (const value of urls) {
+  const blocks = [...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]);
+  check(blocks.length === urls.length, `${childUrl} has malformed URL entries`);
+  for (const block of blocks) {
+    const value = block.match(/<loc>([^<]+)<\/loc>/)?.[1];
+    if (!value) continue;
     const url = new URL(value);
-    check(url.origin === origin, `Foreign URL in ${childUrl}: ${value}`);
-    check(/^\/(en|fr|es|de|it|ja|ko|zh)(\/|$)/.test(url.pathname), `Invalid locale in ${childUrl}: ${value}`);
+    check(url.origin === canonicalOrigin, `Foreign URL in ${childUrl}: ${value}`);
+    const localeMatch = url.pathname.match(/^\/(en|fr|es|de|it|ja|ko|zh)(?=\/|$)/);
+    check(Boolean(localeMatch), `Invalid locale in ${childUrl}: ${value}`);
     check(!/[?#[\]]/.test(value), `Query, fragment, or bracket in sitemap URL: ${value}`);
-    check(!forbiddenPaths.some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`)), `Private URL in ${childUrl}: ${value}`);
+    const pathWithoutLocale = url.pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '') || '/';
+    const privateSealedPath = pathWithoutLocale === '/tcg/sealed'
+      || (pathWithoutLocale.startsWith('/tcg/sealed/') && pathWithoutLocale !== '/tcg/sealed/market');
+    check(!privateSealedPath && !forbiddenPaths.some((path) => pathWithoutLocale === path || pathWithoutLocale.startsWith(`${path}/`)), `Private URL in ${childUrl}: ${value}`);
     check(!invalidMarkers.some((marker) => url.pathname.includes(marker)), `Invalid legacy URL in ${childUrl}: ${value}`);
     check(!allUrls.has(value), `Duplicate URL across sitemaps: ${value}`);
     allUrls.add(value);
-    if (samples.length < 12) samples.push(value);
+
+    const alternates = new Map();
+    for (const match of block.matchAll(/<xhtml:link\b[^>]*hreflang="([^"]+)"[^>]*href="([^"]+)"[^>]*\/>/g)) {
+      const [, language, href] = match;
+      check(!alternates.has(language), `${value} repeats hreflang ${language}`);
+      alternates.set(language, href);
+      try {
+        const alternateUrl = new URL(href);
+        check(alternateUrl.origin === canonicalOrigin, `${value} has a foreign hreflang URL: ${href}`);
+        const alternateLocale = alternateUrl.pathname.match(/^\/(en|fr|es|de|it|ja|ko|zh)(?=\/|$)/)?.[1];
+        check(Boolean(alternateLocale), `${value} has an invalid hreflang path: ${href}`);
+        if (language !== 'x-default') check(alternateLocale === language, `${value} hreflang ${language} points to the wrong locale: ${href}`);
+        const alternatePath = alternateUrl.pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '') || '/';
+        check(alternatePath === pathWithoutLocale, `${value} has a non-matching alternate path: ${href}`);
+      } catch {
+        check(false, `${value} has an invalid hreflang URL: ${href}`);
+      }
+    }
+    const pageLocale = localeMatch?.[1];
+    check(Boolean(pageLocale && alternates.get(pageLocale) === value), `${value} is missing its own hreflang entry`);
+    urlRecords.set(value, { pageLocale, alternates });
+  }
+}
+
+for (const [url, record] of urlRecords) {
+  for (const [language, alternateUrl] of record.alternates) {
+    if (language === 'x-default') continue;
+    const reciprocal = urlRecords.get(alternateUrl);
+    check(Boolean(reciprocal), `${url} hreflang ${language} does not have a sitemap entry: ${alternateUrl}`);
+    if (reciprocal) {
+      check(reciprocal.alternates.get(record.pageLocale) === url, `${url} and ${alternateUrl} do not have reciprocal hreflang links`);
+      check([...record.alternates.keys()].sort().join(',') === [...reciprocal.alternates.keys()].sort().join(','), `${url} and ${alternateUrl} declare different alternate sets`);
+    }
   }
 }
 
 if (process.env.SEO_CHECK_HTTP === '1') {
-  for (const url of samples) {
+  const pages = [
+    { path: '/en/guides/organize-pokemon-card-collection', indexable: true },
+    { path: '/fr/guides/organize-pokemon-card-collection', indexable: true },
+    { path: '/en/guides/pokemon-card-collection-tracker', indexable: true },
+    { path: '/de/guides/pokemon-card-collection-tracker', indexable: true },
+    { path: '/en/guides/pokemon-card-collection-value', indexable: true },
+    { path: '/fr/guides/pokemon-card-collection-value', indexable: true },
+    { path: '/en/guides/team-builder-guide', indexable: true },
+    { path: '/fr/guides/team-builder-guide', indexable: true },
+    { path: '/en/team', indexable: true },
+    { path: '/en/pokedex', indexable: true },
+    { path: '/en/faq', indexable: true },
+    { path: '/de/guides/pokemon-card-collection-value', indexable: false },
+  ];
+  for (const { path, indexable } of pages) {
+    const url = new URL(path, runtimeOrigin).href;
+    const canonicalUrl = new URL(path, canonicalOrigin).href;
     const pageResponse = await fetch(url, { redirect: 'manual' });
     check(pageResponse.status >= 200 && pageResponse.status < 300, `${url} returned HTTP ${pageResponse.status}`);
     const html = await pageResponse.text();
-    check(!/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html), `Sample URL is noindex: ${url}`);
+    const hasNoindex = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html);
+    check(hasNoindex === !indexable, `${url} has unexpected robots indexability`);
 
     const mainCount = (html.match(/<main\b/gi) ?? []).length;
     const h1Count = (html.match(/<h1\b/gi) ?? []).length;
@@ -201,8 +273,11 @@ if (process.env.SEO_CHECK_HTTP === '1') {
 
     const canonicalLinks = [...html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi)];
     check(canonicalLinks.length === 1, `${url} must render exactly one canonical link (found ${canonicalLinks.length})`);
+    const canonicalHref = canonicalLinks[0]?.[0].match(/\bhref=["']([^"']+)["']/i)?.[1];
+    if (indexable) check(canonicalHref === canonicalUrl, `${url} canonical does not point to the requested localized URL`);
+    else check(canonicalHref === new URL('/en/guides/pokemon-card-collection-value', canonicalOrigin).href, `${url} fallback canonical does not point to English`);
     const alternateLinks = [...html.matchAll(/<link\b[^>]*rel=["']alternate["'][^>]*>/gi)];
-    check(alternateLinks.length >= 3, `${url} must expose reciprocal locale links (found ${alternateLinks.length})`);
+    check(indexable ? alternateLinks.length >= 3 : alternateLinks.length === 0, `${url} has unexpected locale links (found ${alternateLinks.length})`);
     for (const match of alternateLinks) {
       const tag = match[0];
       const href = tag.match(/\bhref=["']([^"']+)["']/i)?.[1];
@@ -211,6 +286,7 @@ if (process.env.SEO_CHECK_HTTP === '1') {
       if (href && hreflang && hreflang !== 'x-default') {
         try {
           const alternateUrl = new URL(href);
+          check(alternateUrl.origin === canonicalOrigin, `${url} has a foreign hreflang origin: ${href}`);
           check(/^\/(en|fr|es|de|it|ja|ko|zh)(\/|$)/.test(alternateUrl.pathname), `${url} has an invalid hreflang path: ${href}`);
         } catch {
           check(false, `${url} has an invalid hreflang URL: ${href}`);

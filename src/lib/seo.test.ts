@@ -22,7 +22,7 @@ describe('SEO entity graph', () => {
     });
   });
 
-  it('attributes editorial articles to the creator and publishes them through Lunidex', () => {
+  it('attributes editorial articles to the visible Lunidex editorial signature', () => {
     const article = buildArticleJsonLd({
       lang: 'en',
       path: '/en/guides/example',
@@ -33,7 +33,7 @@ describe('SEO entity graph', () => {
       dateModified: '2026-09-21',
     });
 
-    expect(article.author).toEqual({ '@id': 'https://lunidex.app/#person-esteban-deloge' });
+    expect(article.author).toEqual({ '@id': 'https://lunidex.app/#organization' });
     expect(article.publisher).toEqual({ '@id': 'https://lunidex.app/#organization' });
   });
 });

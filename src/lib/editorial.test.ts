@@ -53,6 +53,23 @@ const collectionGuideMatrixKeys = [
 ] as const;
 
 const collectionGuideFactKeys = [
+  'manual_title',
+  'manual_intro',
+  'manual_step1',
+  'manual_step2',
+  'manual_step3',
+  'manual_step4',
+  'manual_step5',
+  'tool_choice_title',
+  'tool_choice_intro',
+  'tool_choice_manual',
+  'tool_choice_lunidex',
+  'tool_choice_scanner',
+  'tool_choice_dex_link',
+  'tool_choice_cardzia_link',
+  'tool_choice_or',
+  'source_dex',
+  'source_cardzia',
   'facts_title',
   'facts_intro',
   'fact_free_title',
@@ -92,11 +109,20 @@ describe('editorial SEO registry', () => {
 
     expect(valueGuide).toMatchObject({
       path: '/guides/pokemon-card-collection-value',
-      productPaths: ['/tcg/collection', '/tcg/sealed'],
+      productPaths: ['/tcg', '/tcg/sealed/market', '/tcg/collection', '/tcg/sealed', '/faq'],
       evidenceRows: [...GUIDE_EVIDENCE_ROW_KEYS],
       faqCount: 4,
     });
     expect(valueGuide?.sources?.every((source) => source.url.startsWith('https://'))).toBe(true);
+    expect(getFeatureGuide('organize-pokemon-card-collection')).toMatchObject({
+      path: '/guides/organize-pokemon-card-collection',
+      checklistCount: 6,
+      hasExample: true,
+    });
+    expect(getEditorialDates('/guides/organize-pokemon-card-collection')).toEqual({
+      publishedAt: '2026-09-28',
+      updatedAt: '2026-09-28',
+    });
     expect(cardmarket).toMatchObject({
       path: '/compare/lunidex-vs-cardmarket',
       productPath: '/tcg',
@@ -149,7 +175,7 @@ describe('editorial SEO registry', () => {
     });
     expect(getEditorialDates('/guides/pokemon-card-collection-value')).toEqual({
       publishedAt: '2026-09-21',
-      updatedAt: '2026-09-21',
+      updatedAt: '2026-09-28',
     });
     expect(getEditorialDates('/compare/lunidex-vs-cardmarket')).toEqual({
       publishedAt: '2026-09-21',
@@ -195,7 +221,7 @@ describe('editorial SEO registry', () => {
       }
     }
 
-    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-21');
+    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-28');
   });
 
   it('dates the generic intent guides and links the TCG guide to the collection hub', () => {

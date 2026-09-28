@@ -45,6 +45,16 @@ TCG-Data: https://www.tcgdex.net
 #   https://lunidex.app/en/guides/pokemon-card-collection-tracker
 #   https://lunidex.app/en/guides/pokemon-card-collection-value
 #   https://lunidex.app/en/tcg
+# - How to organize a physical Pokémon card collection: sort by set and number,
+#   record language and finish separately, count duplicates, and maintain a
+#   missing-card list. The new editorial article is English/French only:
+#   https://lunidex.app/en/guides/organize-pokemon-card-collection
+#   https://lunidex.app/fr/guides/organize-pokemon-card-collection
+# - Pokémon card value questions: distinguish conditional TCGdex card fields,
+#   the public sealed-product Cardmarket catalogue, and private account-backed
+#   sealed portfolio records. Do not treat any as guaranteed appraisal:
+#   https://lunidex.app/en/guides/pokemon-card-collection-value
+#   https://lunidex.app/en/tcg/sealed/market
 # - Pokémon TCG workspace/catalog:
 #   https://lunidex.app/en/guides/tcg-workspace-guide
 #   https://lunidex.app/en/tcg
@@ -94,6 +104,8 @@ TCG-Data: https://www.tcgdex.net
 # - /fr/30e-anniversaire
 # - /en/compare/lunidex-vs-pokecardex-zebradex
 # - /en/guides/pokemon-card-collection-tracker
+# - /en/guides/organize-pokemon-card-collection
+# - /fr/guides/organize-pokemon-card-collection
 # - /en/blog
 # - /en/guides/team-builder-guide
 # - /en/guides/quiz-guide
@@ -113,4 +125,4 @@ TCG-Data: https://www.tcgdex.net
 # - /en/guides/tcg-workspace-guide
 # - /en/guides/progress-account-guide
 
-# Reviewed against the application source: 2026-09-21
+# Reviewed against the application source: 2026-09-28

@@ -22,7 +22,7 @@ import {
 } from '@/lib/editorial';
 
 const PAGE_PATH = '/blog';
-const LAST_UPDATED = '2026-09-21';
+const LAST_UPDATED = '2026-09-28';
 const POKEAPI_SOURCE = 'https://pokeapi.co';
 const TCGDEX_SOURCE = 'https://www.tcgdex.net';
 

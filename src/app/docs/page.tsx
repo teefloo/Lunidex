@@ -17,6 +17,7 @@ import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE, localeH
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_NAME } from '@/lib/site';
+import { isEditorialIndexable } from '@/lib/editorial';
 
 const PAGE_PATH = '/docs';
 
@@ -65,6 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DocumentationPage() {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+  const editorialLinks = isEditorialIndexable(language);
   const groups: DocumentationGroup[] = [
     {
       id: 'pokemon',
@@ -78,9 +80,9 @@ export default async function DocumentationPage() {
         { href: '/abilities', label: t('nav.abilities') },
         { href: '/items', label: t('nav.items') },
       ],
-      guides: [
-        { href: '/guides/pokemon-reference-guide', label: t('docs.pokemon_reference_guide') },
-      ],
+      guides: editorialLinks
+        ? [{ href: '/guides/pokemon-reference-guide', label: t('docs.pokemon_reference_guide') }]
+        : [],
     },
     {
       id: 'team-tools',
@@ -97,10 +99,10 @@ export default async function DocumentationPage() {
         { href: '/nuzlocke', label: t('nuzlocke.title') },
       ],
       guides: [
-        { href: '/guides/team-tools-guide', label: t('docs.team_tools_guide') },
         { href: '/guides/team-builder-guide', label: t('docs.team_builder_guide') },
         { href: '/guides/quiz-guide', label: t('docs.quiz_guide') },
         { href: '/guides/nuzlocke-guide', label: t('docs.nuzlocke_guide') },
+        ...(editorialLinks ? [{ href: '/guides/team-tools-guide', label: t('docs.team_tools_guide') }] : []),
       ],
     },
     {
@@ -118,8 +120,13 @@ export default async function DocumentationPage() {
       ],
       guides: [
         { href: '/guides/pokemon-card-collection-tracker', label: t('docs.collection_tracker_guide') },
-        { href: '/guides/tcg-workspace-guide', label: t('docs.tcg_workspace_guide') },
-        { href: '/guides/pokemon-card-collection-value', label: t('docs.collection_value_guide') },
+        ...(editorialLinks
+          ? [
+              { href: '/guides/organize-pokemon-card-collection', label: t('editorial.guides.organize_pokemon_card_collection.nav_label') },
+              { href: '/guides/tcg-workspace-guide', label: t('docs.tcg_workspace_guide') },
+              { href: '/guides/pokemon-card-collection-value', label: t('docs.collection_value_guide') },
+            ]
+          : []),
       ],
     },
     {
@@ -132,9 +139,9 @@ export default async function DocumentationPage() {
         { href: '/favorites', label: t('nav.favorites') },
         { href: '/friends', label: t('friends.title') },
       ],
-      guides: [
+      guides: editorialLinks ? [
         { href: '/guides/progress-account-guide', label: t('docs.progress_account_guide') },
-      ],
+      ] : [],
     },
     {
       id: 'developers',

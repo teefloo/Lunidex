@@ -1,4 +1,3 @@
-import { isTcgLangSupported } from '@/lib/api/tcg';
 import { supportedLanguages } from '@/lib/languages';
 import {
   EDITORIAL_ROUTES,
@@ -25,6 +24,32 @@ export const SITEMAP_FAMILIES = [
 ] as const;
 
 export type SitemapFamily = (typeof SITEMAP_FAMILIES)[number];
+
+export const SITEMAP_MAX_URLS = 50_000;
+export const SITEMAP_MAX_BYTES = 50 * 1024 * 1024;
+export const TCG_CARD_SITEMAP_CHUNKS = 4;
+
+export type SitemapFileDescriptor = {
+  id: string;
+  family: SitemapFamily;
+  language: SupportedLanguage;
+  chunk: number;
+};
+
+export const SITEMAP_FILE_DESCRIPTORS: SitemapFileDescriptor[] = SITEMAP_FAMILIES.flatMap((family) => (
+  supportedLanguages.flatMap((language) => {
+    const chunks = family === 'tcg-cards' ? TCG_CARD_SITEMAP_CHUNKS : 1;
+    return Array.from({ length: chunks }, (_, index) => {
+      const chunk = index + 1;
+      const id = language === 'en'
+        ? (chunk === 1 ? family : `${family}-${chunk}`)
+        : (family === 'tcg-cards'
+          ? `${family}-${language}-${chunk}`
+          : `${family}-${language}`);
+      return { id, family, language, chunk };
+    });
+  })
+));
 
 export type SitemapEntry = {
   url: string;
@@ -114,9 +139,9 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
     priority: 0.72,
     lastModified: getEditorialDates('/guides/nuzlocke-guide').updatedAt,
   },
-  { path: 'blog', changeFrequency: 'monthly', priority: 0.65 },
-  { path: 'faq', changeFrequency: 'monthly', priority: 0.7 },
-  { path: 'about', changeFrequency: 'monthly', priority: 0.5 },
+  { path: 'blog', changeFrequency: 'monthly', priority: 0.65, lastModified: '2026-09-28' },
+  { path: 'faq', changeFrequency: 'monthly', priority: 0.7, lastModified: '2026-09-28' },
+  { path: 'about', changeFrequency: 'monthly', priority: 0.5, lastModified: '2026-09-28' },
   { path: 'contact', changeFrequency: 'monthly', priority: 0.5 },
 ];
 
@@ -149,12 +174,10 @@ function buildLanguages(
 
 export function buildTcgLanguages(path: string): Record<string, string> {
   const normalized = path ? `/${path.replace(/^\//, '')}` : '';
-  const languages = supportedLanguages
-    .filter(isTcgLangSupported)
-    .reduce<Record<string, string>>((result, language) => {
-      result[language] = `${SITE_URL}/${language}${normalized}`;
-      return result;
-    }, {});
+  const languages = supportedLanguages.reduce<Record<string, string>>((result, language) => {
+    result[language] = `${SITE_URL}/${language}${normalized}`;
+    return result;
+  }, {});
 
   return { ...languages, 'x-default': `${SITE_URL}/en${normalized}` };
 }
@@ -170,7 +193,7 @@ function toAbsoluteAlternates(alternates: Record<string, string>): Record<string
   );
 }
 
-export function buildStaticSitemapEntries(): SitemapEntry[] {
+export function buildStaticSitemapEntries(language: SupportedLanguage = 'en'): SitemapEntry[] {
   const editorialPaths = new Set(GUIDE_AND_COMPARISON_PATHS);
 
   return deduplicateSitemapEntries(
@@ -178,33 +201,43 @@ export function buildStaticSitemapEntries(): SitemapEntry[] {
       // Guide and comparison pages have their own family. Keeping them out of
       // this file prevents the old launch/editorial overlap from returning.
       .filter((route) => !editorialPaths.has(`/${route.path}`))
+      .filter((route) => !route.indexableLanguages || route.indexableLanguages.includes(language))
       .map((route) => ({
-        url: `${SITE_URL}/en${route.path ? `/${route.path}` : ''}`,
+        url: `${SITE_URL}/${language}${route.path ? `/${route.path}` : ''}`,
         lastModified: route.lastModified,
-        alternates: buildLanguages(route.path, route.indexableLanguages),
+        alternates: buildLanguages(route.path, route.indexableLanguages ?? supportedLanguages),
       })),
   );
 }
 
-export function buildGuidesSitemapEntries(): SitemapEntry[] {
+export function buildGuidesSitemapEntries(language: SupportedLanguage = 'en'): SitemapEntry[] {
   return deduplicateSitemapEntries(
-    GUIDE_AND_COMPARISON_PATHS.map((route) => ({
-      url: absolutePath(`/en${route}`),
-      lastModified: getEditorialDates(route).updatedAt,
-      alternates: toAbsoluteAlternates(buildEditorialLanguages(route)),
-    })),
+    GUIDE_AND_COMPARISON_PATHS.flatMap((route) => {
+      const isTranslatedEditorial = (EDITORIAL_ROUTES as readonly string[]).includes(route);
+      const indexableLanguages = isTranslatedEditorial ? ['en', 'fr'] as const : supportedLanguages;
+      if (isTranslatedEditorial && language !== 'en' && language !== 'fr') return [];
+      const alternates = isTranslatedEditorial
+        ? toAbsoluteAlternates(buildEditorialLanguages(route))
+        : buildLanguages(route, indexableLanguages);
+      return [{
+        url: absolutePath(`/${language}${route}`),
+        lastModified: getEditorialDates(route).updatedAt,
+        alternates,
+      }];
+    }),
   );
 }
 
 function buildReferenceEntries(
   family: 'moves' | 'abilities' | 'items',
   names: string[],
+  language: SupportedLanguage = 'en',
 ): SitemapEntry[] {
   return deduplicateSitemapEntries(
     names
       .filter((name) => /^[a-z0-9][a-z0-9-]*$/i.test(name))
       .map((name) => ({
-        url: absolutePath(`/en/${family}/${encodeURIComponent(name)}`),
+        url: absolutePath(`/${language}/${family}/${encodeURIComponent(name)}`),
         alternates: buildLanguages(`${family}/${encodeURIComponent(name)}`),
       })),
   );
@@ -212,12 +245,13 @@ function buildReferenceEntries(
 
 export function buildPokemonSitemapEntries(
   pokemon: { name: string; url: string }[],
+  language: SupportedLanguage = 'en',
 ): SitemapEntry[] {
   return deduplicateSitemapEntries(
     pokemon
       .filter((entry) => /^[a-z0-9][a-z0-9-]*$/i.test(entry.name))
       .map((entry) => ({
-        url: absolutePath(`/en/pokemon/${encodeURIComponent(entry.name)}`),
+        url: absolutePath(`/${language}/pokemon/${encodeURIComponent(entry.name)}`),
         alternates: buildLanguages(`pokemon/${encodeURIComponent(entry.name)}`),
       })),
   );
@@ -225,38 +259,39 @@ export function buildPokemonSitemapEntries(
 
 export function buildTcgSetSitemapEntries(
   sets: { id: string }[],
+  language: SupportedLanguage = 'en',
 ): SitemapEntry[] {
   return deduplicateSitemapEntries(
     sets
       .filter((set) => /^[a-z0-9][a-z0-9._-]*$/i.test(set.id))
       .map((set) => ({
-        url: absolutePath(`/en/tcg/sets/${encodeURIComponent(set.id)}`),
+        url: absolutePath(`/${language}/tcg/sets/${encodeURIComponent(set.id)}`),
         alternates: buildTcgLanguages(`tcg/sets/${encodeURIComponent(set.id)}`),
       })),
   );
 }
 
-export function buildTcgCardSitemapEntries(cardIds: string[]): SitemapEntry[] {
+export function buildTcgCardSitemapEntries(cardIds: string[], language: SupportedLanguage = 'en'): SitemapEntry[] {
   return deduplicateSitemapEntries(
     cardIds
       .filter((id) => /^[a-z0-9][a-z0-9._:-]*-[a-z0-9][a-z0-9._:-]*$/i.test(id))
       .map((id) => ({
-        url: absolutePath(`/en/tcg/cards/${encodeURIComponent(id)}`),
+        url: absolutePath(`/${language}/tcg/cards/${encodeURIComponent(id)}`),
         alternates: buildTcgLanguages(`tcg/cards/${encodeURIComponent(id)}`),
       })),
   );
 }
 
-export function buildMovesSitemapEntries(names: string[]): SitemapEntry[] {
-  return buildReferenceEntries('moves', names);
+export function buildMovesSitemapEntries(names: string[], language: SupportedLanguage = 'en'): SitemapEntry[] {
+  return buildReferenceEntries('moves', names, language);
 }
 
-export function buildAbilitiesSitemapEntries(names: string[]): SitemapEntry[] {
-  return buildReferenceEntries('abilities', names);
+export function buildAbilitiesSitemapEntries(names: string[], language: SupportedLanguage = 'en'): SitemapEntry[] {
+  return buildReferenceEntries('abilities', names, language);
 }
 
-export function buildItemsSitemapEntries(names: string[]): SitemapEntry[] {
-  return buildReferenceEntries('items', names);
+export function buildItemsSitemapEntries(names: string[], language: SupportedLanguage = 'en'): SitemapEntry[] {
+  return buildReferenceEntries('items', names, language);
 }
 
 function assertValidAbsoluteUrl(value: string, label: string): URL {
@@ -302,6 +337,7 @@ export function assertSitemapIntegrity(
 
   const seen = new Set<string>();
   const validLocalePattern = new RegExp(`^/(${supportedLanguages.join('|')})(?:/|$)`);
+  const stripLocale = (pathname: string) => pathname.replace(validLocalePattern, '/') || '/';
 
   for (const entry of entries) {
     const url = assertValidAbsoluteUrl(entry.url, 'URL');
@@ -311,27 +347,65 @@ export function assertSitemapIntegrity(
     if (!validLocalePattern.test(url.pathname)) {
       throw new Error(`Missing or invalid locale in sitemap ${family}: ${entry.url}`);
     }
-    if (PRIVATE_PATH_PREFIXES.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`))) {
+    const pathnameWithoutLocale = stripLocale(url.pathname);
+    const privatePrefixMatch = PRIVATE_PATH_PREFIXES.some((prefix) => pathnameWithoutLocale === prefix || pathnameWithoutLocale.startsWith(`${prefix}/`));
+    const privateSealedRoute = pathnameWithoutLocale === '/tcg/sealed'
+      || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && pathnameWithoutLocale !== '/tcg/sealed/market');
+    if (privatePrefixMatch || privateSealedRoute) {
       throw new Error(`Private URL in sitemap ${family}: ${entry.url}`);
     }
     if (INVALID_PATH_MARKERS.some((marker) => url.pathname.includes(marker))) {
       throw new Error(`Invalid legacy URL in sitemap ${family}: ${entry.url}`);
     }
 
-    for (const [language, alternate] of Object.entries(entry.alternates ?? {})) {
+    const pageLanguage = url.pathname.match(validLocalePattern)?.[1];
+    const alternates = entry.alternates ?? {};
+    if (!pageLanguage || alternates[pageLanguage] !== entry.url) {
+      throw new Error(`Missing self alternate for ${pageLanguage ?? 'unknown locale'} in sitemap ${family}: ${entry.url}`);
+    }
+
+    const normalizedPath = pathnameWithoutLocale;
+    for (const [language, alternate] of Object.entries(alternates)) {
       if (language !== 'x-default' && !supportedLanguages.includes(language as (typeof supportedLanguages)[number])) {
         throw new Error(`Invalid hreflang ${language} in sitemap ${family}: ${entry.url}`);
       }
       const alternateUrl = assertValidAbsoluteUrl(alternate, 'alternate URL');
-      if (!validLocalePattern.test(alternateUrl.pathname)) {
+      const alternateLocale = alternateUrl.pathname.match(validLocalePattern)?.[1];
+      if (!alternateLocale) {
         throw new Error(`Invalid alternate locale in sitemap ${family}: ${alternate}`);
+      }
+      if (language !== 'x-default' && alternateLocale !== language) {
+        throw new Error(`Alternate locale does not match hreflang ${language} in sitemap ${family}: ${alternate}`);
+      }
+      if (stripLocale(alternateUrl.pathname) !== normalizedPath) {
+        throw new Error(`Non-reciprocal alternate path in sitemap ${family}: ${alternate}`);
       }
     }
   }
 }
 
 export function sitemapIndexUrls(): string[] {
-  return SITEMAP_FAMILIES.map((family) => `${SITE_URL}/sitemaps/${family}.xml`);
+  return SITEMAP_FILE_DESCRIPTORS.map(({ id }) => `${SITE_URL}/sitemaps/${id}.xml`);
+}
+
+/** Split a stable, ordered inventory into balanced, non-overlapping fragments. */
+export function splitSitemapEntries<T>(entries: T[], chunkCount: number): T[][] {
+  if (!Number.isInteger(chunkCount) || chunkCount < 1) {
+    throw new Error(`Sitemap chunk count must be a positive integer; received ${chunkCount}.`);
+  }
+  const chunkSize = Math.ceil(entries.length / chunkCount);
+  return Array.from({ length: chunkCount }, (_, index) => (
+    entries.slice(index * chunkSize, (index + 1) * chunkSize)
+  ));
+}
+
+export function validateSitemapDocumentSize(urlCount: number, byteLength: number): void {
+  if (urlCount > SITEMAP_MAX_URLS) {
+    throw new Error(`Sitemap contains ${urlCount} URLs; the protocol limit is 50,000.`);
+  }
+  if (byteLength > SITEMAP_MAX_BYTES) {
+    throw new Error(`Sitemap is ${byteLength} bytes; the protocol limit is 50 MB.`);
+  }
 }
 
 function escapeXml(value: string): string {
@@ -375,10 +449,12 @@ export function renderUrlset(entries: SitemapEntry[]): string {
     ].filter(Boolean).join('\n');
   }).join('\n');
 
-  return [
+  const document = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     urls,
     '</urlset>',
   ].join('\n');
+  validateSitemapDocumentSize(entries.length, new TextEncoder().encode(document).length);
+  return document;
 }

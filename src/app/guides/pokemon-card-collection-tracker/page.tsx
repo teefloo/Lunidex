@@ -20,6 +20,8 @@ const PAGE_PATH = '/guides/pokemon-card-collection-tracker';
 const { publishedAt: PUBLISHED_AT, updatedAt: LAST_UPDATED } = getEditorialDates(PAGE_PATH);
 const POKEAPI_SOURCE = 'https://pokeapi.co';
 const TCGDEX_SOURCE = 'https://www.tcgdex.net';
+const DEX_SCANNER_SOURCE = 'https://dextcg.com/help/collection/scanning-your-cards';
+const CARDZIA_SOURCE = 'https://cardzia.fr/';
 
 export const revalidate = 86400;
 
@@ -175,6 +177,7 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 <span aria-hidden="true"> · </span>
                 <time dateTime={LAST_UPDATED}>{t('collection_guide.updated', { date: formattedDate })}</time>
               </p>
+              <p className="mt-2 text-sm text-foreground/60">{t('blog.editorial_signature')}</p>
             </header>
 
             <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:p-8" aria-labelledby="collection-guide-answer-title">
@@ -184,6 +187,38 @@ export default async function PokemonCardCollectionTrackerGuide() {
               <p className="mt-4 text-base leading-8 text-foreground/80">
                 {t('collection_guide.answer_body')}
               </p>
+            </section>
+
+            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-manual-title">
+              <h2 id="collection-guide-manual-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.manual_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('collection_guide.manual_intro')}</p>
+              <ol className="mt-5 grid gap-3 md:grid-cols-2">
+                {[1, 2, 3, 4, 5].map((step) => (
+                  <li key={step} className="rounded-sm border border-border/50 bg-card/30 p-4 leading-7 text-foreground/75">
+                    <span className="mr-2 font-mono font-bold text-primary">0{step}</span>
+                    {t(`collection_guide.manual_step${step}`)}
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="collection-guide-tool-choice-title">
+              <h2 id="collection-guide-tool-choice-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                {t('collection_guide.tool_choice_title')}
+              </h2>
+              <p className="mt-4 leading-7 text-foreground/75">{t('collection_guide.tool_choice_intro')}</p>
+              <ul className="mt-5 space-y-4 text-sm leading-7 text-foreground/75">
+                <li><strong>{t('collection_guide.tool_choice_manual_label')}</strong> {t('collection_guide.tool_choice_manual')}</li>
+                <li><strong>{t('collection_guide.tool_choice_lunidex_label')}</strong> {t('collection_guide.tool_choice_lunidex')}</li>
+                <li>
+                  <strong>{t('collection_guide.tool_choice_scanner_label')}</strong> {t('collection_guide.tool_choice_scanner')}{' '}
+                  <a href={DEX_SCANNER_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-4">{t('collection_guide.tool_choice_dex_link')}</a>{' '}
+                  {t('collection_guide.tool_choice_or')}{' '}
+                  <a href={CARDZIA_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-4">{t('collection_guide.tool_choice_cardzia_link')}</a>.
+                </li>
+              </ul>
             </section>
 
             <section className="mx-auto mt-10 max-w-4xl" aria-labelledby="collection-guide-facts-title">
@@ -322,6 +357,12 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 </a>
                 <a href={TCGDEX_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
                   TCGdex
+                </a>
+                <a href={DEX_SCANNER_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                  {t('collection_guide.source_dex')}
+                </a>
+                <a href={CARDZIA_SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                  {t('collection_guide.source_cardzia')}
                 </a>
               </div>
             </section>

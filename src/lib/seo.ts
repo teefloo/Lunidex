@@ -370,7 +370,7 @@ export function buildArticleJsonLd({
     '@id': `${SITE_URL}${path}#article`,
     datePublished,
     dateModified,
-    author: { '@id': CREATOR_PERSON_ID },
+    author: { '@id': `${SITE_URL}/#organization` },
     publisher: { '@id': `${SITE_URL}/#organization` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}#webpage` },
     image: [`${SITE_URL}${DEFAULT_OG_IMAGE.url}`],

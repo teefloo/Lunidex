@@ -11,13 +11,14 @@ import {
 } from '@/lib/site';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { isEditorialIndexable } from '@/lib/editorial';
 import { HelpCircle, Mail, MessageCircleQuestion } from 'lucide-react';
 
 type FaqLink = { href: string; label: string };
 type FaqEntry = { id: string; q: string; a: string; links?: FaqLink[] };
 type FaqCategory = { id: string; title: string; intro: string; entries: FaqEntry[] };
 
-const LAST_UPDATED = '2026-09-21';
+const LAST_UPDATED = '2026-09-28';
 
 export const revalidate = 3600;
 
@@ -68,6 +69,7 @@ export default async function FaqPage() {
     nuzlocke: routeLink('/nuzlocke', 'nuzlocke.title'),
     tcg: routeLink('/tcg', 'footer.navigation.tcg'),
     collection: routeLink('/tcg/collection', 'tcg.nav_collection'),
+    collectionGuide: routeLink('/guides/pokemon-card-collection-tracker', 'collection_guide.nav_label'),
     wishlist: routeLink('/tcg/wishlist', 'tcg.nav_wishlist'),
     deckBuilder: routeLink('/tcg/deck-builder', 'tcg.nav_deck_builder'),
     valueGuide: routeLink('/guides/pokemon-card-collection-value', 'editorial.guides.pokemon_card_collection_value.nav_label'),
@@ -95,16 +97,18 @@ export default async function FaqPage() {
   ];
   const tcg: FaqEntry[] = [
     { id: 'tcg-catalog', q: t('faq.q10'), a: answer('faq.a10'), links: [links.tcg] },
-    { id: 'tcg-collection', q: t('faq.q11'), a: answer('faq.a11'), links: [links.collection] },
+    { id: 'tcg-collection', q: t('faq.q11'), a: answer('faq.a11'), links: [links.collectionGuide, links.collection] },
     { id: 'tcg-wishlist-and-decks', q: t('faq.q12'), a: answer('faq.a12'), links: [links.wishlist, links.deckBuilder] },
     { id: 'tcg-prices', q: t('faq.q13'), a: answer('faq.a13'), links: [links.tcg] },
     { id: 'tcg-scanner-marketplace', q: t('faq.q14'), a: answer('faq.a14'), links: [links.about] },
-    {
-      id: 'tcg-value-guide',
-      q: answer('editorial.guides.pokemon_card_collection_value.faq_q4'),
-      a: answer('editorial.guides.pokemon_card_collection_value.faq_a4'),
-      links: [links.valueGuide, links.cardmarket],
-    },
+    ...(isEditorialIndexable(lang)
+      ? [{
+          id: 'tcg-value-guide',
+          q: answer('editorial.guides.pokemon_card_collection_value.faq_q4'),
+          a: answer('editorial.guides.pokemon_card_collection_value.faq_a4'),
+          links: [links.valueGuide, links.cardmarket],
+        }]
+      : []),
   ];
   const support: FaqEntry[] = [
     { id: 'data-storage-and-sync', q: t('faq.q15'), a: answer('faq.a15'), links: [links.privacy, links.dashboard] },

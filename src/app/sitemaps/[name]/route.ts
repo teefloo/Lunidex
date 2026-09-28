@@ -1,15 +1,10 @@
 import {
   renderUrlset,
-  SITEMAP_FAMILIES,
-  type SitemapFamily,
+  SITEMAP_FILE_DESCRIPTORS,
 } from '@/lib/sitemap';
 import { getSitemapEntries } from '@/lib/sitemap-data';
 
 export const revalidate = 21600;
-
-function isSitemapFamily(value: string): value is SitemapFamily {
-  return (SITEMAP_FAMILIES as readonly string[]).includes(value);
-}
 
 export async function GET(
   _request: Request,
@@ -17,12 +12,13 @@ export async function GET(
 ): Promise<Response> {
   const { name: rawName } = await params;
   const name = rawName.endsWith('.xml') ? rawName.slice(0, -4) : rawName;
-  if (!isSitemapFamily(name)) {
+  const descriptor = SITEMAP_FILE_DESCRIPTORS.find((candidate) => candidate.id === name);
+  if (!descriptor) {
     return new Response('Not found', { status: 404 });
   }
 
   try {
-    const entries = await getSitemapEntries(name);
+    const entries = await getSitemapEntries(descriptor.family, descriptor.language, descriptor.chunk);
     return new Response(renderUrlset(entries), {
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',

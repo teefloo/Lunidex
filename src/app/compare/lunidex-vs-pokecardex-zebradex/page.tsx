@@ -168,6 +168,7 @@ export default async function LunidexComparisonPage() {
                 <span aria-hidden="true"> · </span>
                 <time dateTime={LAST_UPDATED}>{t('comparison.updated', { date: formattedDate })}</time>
               </p>
+              <p className="mt-2 text-sm text-foreground/60">{t('blog.editorial_signature')}</p>
             </header>
 
             <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:p-8" aria-labelledby="comparison-verdict-title">

@@ -77,6 +77,22 @@ export default function EditorialGuidePage({
       value: text(`evidence_${translationKey}_value`),
     };
   });
+  const checklistItems = Array.from({ length: guide.checklistCount ?? 0 }, (_, index) => text(`checklist_item${index + 1}`));
+  const toolLabels: Record<string, string> = {
+    '/pokedex': t('footer.navigation.pokedex'),
+    '/team': t('footer.navigation.team_builder'),
+    '/tcg': t('footer.navigation.tcg'),
+    '/tcg/sealed/market': t('tcg.nav_sealed_market'),
+    '/tcg/collection': t('tcg.nav_collection'),
+    '/tcg/sealed': t('tcg.sealed.title'),
+    '/faq': t('nav.faq'),
+    '/guides/pokemon-card-collection-tracker': t('collection_guide.nav_label'),
+    '/guides/pokemon-card-collection-value': t('editorial.guides.pokemon_card_collection_value.nav_label'),
+    '/types': t('footer.navigation.types'),
+    '/moves': t('footer.navigation.moves', { defaultValue: 'Moves' }),
+    '/abilities': t('footer.navigation.abilities', { defaultValue: 'Abilities' }),
+    '/items': t('footer.navigation.items', { defaultValue: 'Items' }),
+  };
 
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: SITE_NAME, path: '/' },
@@ -130,6 +146,7 @@ export default function EditorialGuidePage({
                 <span aria-hidden="true"> · </span>
                 <time dateTime={lastUpdated}>{t('editorial.guide.checked', { date: formattedDate })}</time>
               </p>
+              <p className="mt-2 text-sm text-foreground/60">{t('blog.editorial_signature')}</p>
             </header>
 
             <section className="mx-auto mt-12 max-w-4xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:p-8" aria-labelledby="editorial-guide-answer-title">
@@ -188,6 +205,22 @@ export default function EditorialGuidePage({
               </ol>
             </section>
 
+            {guide.hasExample ? (
+              <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-example-title">
+                <h2 id="editorial-guide-example-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">{text('example_title')}</h2>
+                <p className="mt-4 leading-7 text-foreground/75">{text('example')}</p>
+              </section>
+            ) : null}
+
+            {checklistItems.length > 0 ? (
+              <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-checklist-title">
+                <h2 id="editorial-guide-checklist-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">{text('checklist_title')}</h2>
+                <ul className="mt-5 space-y-3 text-sm leading-7 text-foreground/75">
+                  {checklistItems.map((item, index) => <li key={index}>• {item}</li>)}
+                </ul>
+              </section>
+            ) : null}
+
             <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-limits-title">
               <h2 id="editorial-guide-limits-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                 {t('editorial.guide.limits_title')}
@@ -229,7 +262,7 @@ export default function EditorialGuidePage({
               <div className="flex flex-wrap gap-3">
                 {guide.productPaths.map((path) => (
                   <Link key={path} href={localeHref(path, language)} className="glass-btn glass-btn-active touch-target inline-flex items-center px-4 py-3 text-sm font-bold">
-                    {t('editorial.guide.open_tool')}: {path.replace(/^\//, '')}
+                    {t('editorial.guide.open_tool')}: {toolLabels[path] ?? path.replace(/^\//, '').replaceAll('/', ' · ')}
                   </Link>
                 ))}
                 <Link href={localeHref('/blog', language)} className="glass-btn touch-target inline-flex items-center px-4 py-3 text-sm font-bold">

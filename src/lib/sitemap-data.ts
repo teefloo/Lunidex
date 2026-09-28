@@ -10,6 +10,8 @@ import {
   buildStaticSitemapEntries,
   buildTcgCardSitemapEntries,
   buildTcgSetSitemapEntries,
+  splitSitemapEntries,
+  TCG_CARD_SITEMAP_CHUNKS,
   type SitemapEntry,
   type SitemapFamily,
   SITEMAP_REVALIDATE_SECONDS,
@@ -24,6 +26,7 @@ import {
 } from '@/lib/api/server-cache';
 import { isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import type { TCGSet } from '@/types/tcg';
+import type { SupportedLanguage } from '@/lib/languages';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
 const TCG_CARD_PAGE_SIZE = 250;
@@ -189,36 +192,45 @@ const getValidatedIndexableSets = unstable_cache(
   { revalidate: SITEMAP_REVALIDATE_SECONDS },
 );
 
-export async function getSitemapEntries(family: SitemapFamily): Promise<SitemapEntry[]> {
+export async function getSitemapEntries(
+  family: SitemapFamily,
+  language: SupportedLanguage = 'en',
+  chunk = 1,
+): Promise<SitemapEntry[]> {
+  if (!Number.isInteger(chunk) || chunk < 1 || (family === 'tcg-cards' && chunk > TCG_CARD_SITEMAP_CHUNKS) || (family !== 'tcg-cards' && chunk !== 1)) {
+    throw new Error(`Invalid sitemap fragment ${chunk} for ${family}.`);
+  }
+
   let entries: SitemapEntry[];
 
   switch (family) {
     case 'static':
-      entries = buildStaticSitemapEntries();
+      entries = buildStaticSitemapEntries(language);
       break;
     case 'guides':
-      entries = buildGuidesSitemapEntries();
+      entries = buildGuidesSitemapEntries(language);
       break;
     case 'pokemon':
-      entries = buildPokemonSitemapEntries(await getValidatedPokemonNames());
+      entries = buildPokemonSitemapEntries(await getValidatedPokemonNames(), language);
       break;
     case 'tcg-sets':
-      entries = buildTcgSetSitemapEntries(await getValidatedIndexableSets());
+      entries = buildTcgSetSitemapEntries(await getValidatedIndexableSets(), language);
       break;
     case 'tcg-cards':
-      entries = buildTcgCardSitemapEntries(await getCompleteTcgCardIdsCached());
+      entries = buildTcgCardSitemapEntries(await getCompleteTcgCardIdsCached(), language);
       break;
     case 'moves':
-      entries = buildMovesSitemapEntries(await getValidatedMoveNames());
+      entries = buildMovesSitemapEntries(await getValidatedMoveNames(), language);
       break;
     case 'abilities':
-      entries = buildAbilitiesSitemapEntries(await getValidatedAbilityNames());
+      entries = buildAbilitiesSitemapEntries(await getValidatedAbilityNames(), language);
       break;
     case 'items':
-      entries = buildItemsSitemapEntries(await getValidatedItemNames());
+      entries = buildItemsSitemapEntries(await getValidatedItemNames(), language);
       break;
   }
 
   assertSitemapIntegrity(entries, family);
+  if (family === 'tcg-cards') return splitSitemapEntries(entries, TCG_CARD_SITEMAP_CHUNKS)[chunk - 1] ?? [];
   return entries;
 }
