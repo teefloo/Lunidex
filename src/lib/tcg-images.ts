@@ -1,5 +1,6 @@
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { getTrustedOgImageUrl } from '@/lib/og/assets';
+import { getAnniversary30OfficialCardImage } from '@/lib/anniversary-30-images';
 
 interface TCGImageCard {
   id: string;
@@ -78,6 +79,23 @@ function addTcgDexLanguageVariants(base: string | undefined | null): string[] {
   return englishVariant ? [base, englishVariant] : [base];
 }
 
+function getAnniversary30ClassicImage(card: TCGImageCard): string | undefined {
+  const cardIdPrefix = '30th-c-';
+  const isClassicAnniversaryCard = card.set?.id === '30th-c' || card.id.startsWith(cardIdPrefix);
+  if (!isClassicAnniversaryCard) return undefined;
+
+  const localIds = [
+    card.localId,
+    card.number,
+    card.id.startsWith(cardIdPrefix) ? card.id.slice(cardIdPrefix.length) : undefined,
+  ];
+  const numericLocalId = localIds.find((value) => value && /^\d{1,3}$/.test(value));
+  const imageIndex = numericLocalId ? Number(numericLocalId) : 0;
+  if (!Number.isInteger(imageIndex) || imageIndex < 1 || imageIndex > 30) return undefined;
+
+  return getAnniversary30OfficialCardImage({ scope: 'classic-collection', imageIndex });
+}
+
 /**
  * Build a TCGdex image URL at the requested quality/format from a base image url
  * (with or without an extension). Returns undefined when no base is provided.
@@ -120,6 +138,7 @@ export function getTCGCardImageCandidates(
     .filter((group) => group.length > 0);
   const cardBases = cardBaseGroups.flat();
   const hasTcgDexSource = cardBases.some(isTcgDexAsset);
+  const anniversary30ClassicImage = getAnniversary30ClassicImage(card);
   const candidates = [
     ...cardBaseGroups.flatMap((group) => (
       group.some(isTcgDexAsset)
@@ -128,6 +147,7 @@ export function getTCGCardImageCandidates(
           )
         : group
     )),
+    ...(anniversary30ClassicImage ? [anniversary30ClassicImage] : []),
     ...(hasTcgDexSource ? [] : pokemonTcgFallbacks),
     TCG_CARD_PLACEHOLDER,
   ];

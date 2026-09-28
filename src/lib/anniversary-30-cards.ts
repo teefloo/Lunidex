@@ -1,4 +1,5 @@
 import type { TCGCard } from '@/types/tcg';
+import { getAnniversary30OfficialCardImage } from '@/lib/anniversary-30-images';
 
 import {
   ANNIVERSARY_30_CARD_LIST_SOURCE_URL,
@@ -11,37 +12,12 @@ import {
   type Anniversary30CardFilter,
   type Anniversary30CardScope,
 } from '@/lib/anniversary-30';
+export { getAnniversary30OfficialCardImage } from '@/lib/anniversary-30-images';
 
 const VERIFIED_AT = ANNIVERSARY_30_LAST_VERIFIED_DATE;
 const OFFICIAL_GALLERY_URL = ANNIVERSARY_30_OFFICIAL_GALLERY_URL;
 const CARD_LIST_URL = ANNIVERSARY_30_CARD_LIST_SOURCE_URL;
 const CLASSIC_LIST_URL = ANNIVERSARY_30_CLASSIC_SOURCE_URL;
-
-/**
- * The official gallery serves the card files from its public CDN rather than
- * from the gallery page origin. These assets are English-only, so the same
- * verified image is intentionally used for the English and French render.
- */
-const OFFICIAL_GALLERY_ASSET_PATH = 'https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us';
-
-function getGalleryAssetUrl(fileName: string): string {
-  return `${OFFICIAL_GALLERY_ASSET_PATH}/${fileName}-2x.png`;
-}
-
-export function getAnniversary30OfficialCardImage(input: {
-  scope: 'numbered-main' | 'secret-rare' | 'pikachu';
-  localId: string;
-} | {
-  scope: 'classic-collection';
-  imageIndex: number;
-}): string {
-  if (input.scope === 'classic-collection') {
-    return getGalleryAssetUrl(`2M6P_Classic_EN_${input.imageIndex}`);
-  }
-
-  const normalizedLocalId = input.localId.replace(/^0+/, '') || '0';
-  return getGalleryAssetUrl(`2M6P_EN_${Number(normalizedLocalId)}`);
-}
 
 type MainCardRow = readonly [name: string, rarity: string, illustrator?: string];
 
