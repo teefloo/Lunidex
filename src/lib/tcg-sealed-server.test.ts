@@ -9,6 +9,7 @@ import {
   normalizeSealedDraft,
   mutateSealedTransaction,
   searchPublicSealedCatalogue,
+  getPublicSealedProduct,
   SealedConflictError,
   SealedServerError,
   sealedExportCsv,
@@ -186,6 +187,43 @@ describe('public sealed catalogue search', () => {
     await searchPublicSealedCatalogue(sql, '𐐀'.repeat(150), 0);
 
     expect(statements[0]?.params[1]).toBe('𐐨'.repeat(150));
+  });
+
+  it('binds category and expansion filters and computes medians from positive recent prices', async () => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = { query: async (query: string, params: unknown[]) => {
+      statements.push({ query, params });
+      return statements.length === 2 ? [{ count: 3, priced_count: 2, median_cents: 1250 }] : [];
+    } } as unknown as NeonSql;
+
+    const result = await searchPublicSealedCatalogue(sql, 'box', 1, 24, { category: 53, expansion: 6569 });
+    expect(statements[0]?.params).toEqual([[53], 'box', 6569, 24, 24]);
+    expect(statements[1]?.query).toContain('percentile_cont(0.5)');
+    const latestPriceQueries = statements.filter((statement) => statement.query.includes('distinct on (cardmarket_product_id)'));
+    expect(latestPriceQueries).toHaveLength(2);
+    expect(latestPriceQueries.every((statement) => statement.query.includes('order by cardmarket_product_id, source_at desc'))).toBe(true);
+    expect(statements.map((statement) => statement.query).join(' ')).not.toMatch(/tcg_sealed_(aliases|transactions|portfolio)/);
+    expect(result).toMatchObject({ total: 3, pricedCount: 2, medianCents: 1250 });
+  });
+
+  it('uses only global catalogue and snapshot tables for public detail', async () => {
+    const statements: string[] = [];
+    const sql = { query: async (query: string) => {
+      statements.push(query);
+      return statements.length === 1 ? [{
+        cardmarket_product_id: 12, name: 'Test box', category_id: 53, category_name: 'Display',
+        expansion_id: 6569, cardmarket_url: '', image_available: false,
+        source_at: '2026-09-01', updated_at: '2026-09-01', active: true, alias: null,
+      }] : [];
+    } } as unknown as NeonSql;
+
+    const result = await getPublicSealedProduct(sql, 12);
+    expect(result.product.name).toBe('Test box');
+    expect(result.product.alias).toBeUndefined();
+    expect(result.prices).toEqual([]);
+    expect(statements[1]).toContain("source_at >= ($2::date::timestamp at time zone 'UTC')");
+    expect(statements[1]).toContain('order by source_at asc');
+    expect(statements.join(' ')).not.toMatch(/tcg_sealed_(aliases|transactions|portfolio)/);
   });
 });
 

@@ -24,6 +24,7 @@ import type {
   SealedTransactionDraft,
 } from '@primedex/core/types/sealed';
 import type { NeonSql } from '@/lib/neon/server';
+import type { PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import {
   downloadAndParseSealedCardmarketData,
   SEALED_CARDMARKET_SOURCES,
@@ -486,9 +487,9 @@ export async function getSealedPrices(
     where cardmarket_product_id = any($1::int[])`;
   if (from) {
     params.push(from);
-    query += ` and day >= $${params.length}::date`;
+    query += ` and source_at >= ($${params.length}::date::timestamp at time zone 'UTC')`;
   }
-  query += ' order by day asc, cardmarket_product_id asc';
+  query += ' order by source_at asc, cardmarket_product_id asc';
   const rows = await sql.query(query, params) as unknown as SealedPriceRow[];
   return rows.map(mapPrice);
 }
@@ -606,11 +607,12 @@ export async function searchPublicSealedCatalogue(
   queryText: string,
   page: number,
   pageSize = 24,
+  filters: Pick<PublicMarketFilters, 'category' | 'expansion'> = {},
 ) {
   const search = parseSealedCatalogueSearch(Array.from(queryText).slice(0, 150).join(''));
   const boundedPage = Number.isSafeInteger(page) && page >= 0 ? Math.min(page, MAX_CATALOGUE_PAGE) : 0;
   const boundedSize = Math.min(MAX_CATALOGUE_PAGE_SIZE, Math.max(1, Math.floor(pageSize)));
-  const params: unknown[] = [SEALED_CATEGORY_SQL];
+  const params: unknown[] = [filters.category ? [filters.category] : SEALED_CATEGORY_SQL];
   const clauses: string[] = ['p.active = true', 'p.category_id = any($1::int[])'];
   for (const term of search.terms) {
     params.push(term);
@@ -626,6 +628,10 @@ export async function searchPublicSealedCatalogue(
     params.push(search.expansionId);
     clauses.push(`p.expansion_id = $${params.length}`);
   }
+  if (filters.expansion !== undefined) {
+    params.push(filters.expansion);
+    clauses.push(`p.expansion_id = $${params.length}`);
+  }
   const where = clauses.join(' and ');
   const limitParameter = params.length + 1;
   const offsetParameter = params.length + 2;
@@ -639,18 +645,74 @@ export async function searchPublicSealedCatalogue(
     limit $${limitParameter} offset $${offsetParameter}
   `, [...params, boundedSize, boundedPage * boundedSize]) as unknown as SealedProductRow[];
   const countRows = await sql.query(`
-    select count(*)::int as count
+    with latest as (
+      select distinct on (cardmarket_product_id) cardmarket_product_id, trend_cents
+      from public.tcg_sealed_price_snapshots
+      where source_at >= now() - interval '3 days' and source_at <= now()
+      order by cardmarket_product_id, source_at desc
+    )
+    select count(*)::int as count, count(latest.trend_cents)::int as priced_count,
+      percentile_cont(0.5) within group (order by latest.trend_cents)::bigint as median_cents
     from public.tcg_sealed_products p
+    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id and latest.trend_cents > 0
     where ${where}
-  `, params) as unknown as Array<{ count: number | string }>;
+  `, params) as unknown as Array<{ count: number | string; priced_count: number | string; median_cents: number | string | null }>;
   const products = rows.map(mapProduct);
   const prices = await getSealedPrices(sql, products.map((product) => product.cardmarketProductId), new Date(Date.now() - 35 * 86_400_000).toISOString().slice(0, 10));
+  const categoryRows = await sql.query(`
+    with latest as (
+      select distinct on (cardmarket_product_id) cardmarket_product_id, trend_cents
+      from public.tcg_sealed_price_snapshots
+      where source_at >= now() - interval '3 days' and source_at <= now()
+      order by cardmarket_product_id, source_at desc
+    )
+    select p.category_id, p.category_name, count(*)::int as product_count,
+      count(latest.trend_cents)::int as priced_count,
+      percentile_cont(0.5) within group (order by latest.trend_cents)::bigint as median_cents
+    from public.tcg_sealed_products p
+    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id and latest.trend_cents > 0
+    where p.active = true and p.category_id = any($1::int[])
+    group by p.category_id, p.category_name
+    order by product_count desc, p.category_name asc
+  `, [SEALED_CATEGORY_SQL]) as unknown as Array<{ category_id: number | string; category_name: string; product_count: number | string; priced_count: number | string; median_cents: number | string | null }>;
   return {
     products,
     prices,
+    categories: categoryRows.map((row) => ({
+      id: Number(row.category_id),
+      name: row.category_name,
+      productCount: Number(row.product_count),
+      pricedCount: Number(row.priced_count),
+      medianCents: row.median_cents === null ? null : Number(row.median_cents),
+    })),
     total: Number(countRows[0]?.count ?? 0),
+    pricedCount: Number(countRows[0]?.priced_count ?? 0),
+    medianCents: countRows[0]?.median_cents == null ? null : Number(countRows[0].median_cents),
     page: boundedPage,
     pageSize: boundedSize,
+  };
+}
+
+/** Public detail intentionally bypasses the account product/transaction helpers. */
+export async function getPublicSealedProduct(sql: NeonSql, id: number) {
+  if (!Number.isSafeInteger(id) || id <= 0) throw new SealedServerError('Invalid product ID.', 400);
+  const rows = await sql.query(`
+    select p.cardmarket_product_id, p.name, p.category_id, p.category_name,
+      p.expansion_id, p.cardmarket_url, p.image_available, p.source_at::text,
+      p.updated_at::text, p.active, null::text as alias
+    from public.tcg_sealed_products p
+    where p.cardmarket_product_id = $1 and p.active = true and p.category_id = any($2::int[])
+    limit 1
+  `, [id, SEALED_CATEGORY_SQL]) as unknown as SealedProductRow[];
+  const row = rows[0];
+  if (!row) throw new SealedNotFoundError('Public sealed product not found.');
+  const since = new Date(Date.now() - 365 * 86_400_000).toISOString().slice(0, 10);
+  return {
+    product: mapProduct(row),
+    prices: await getSealedPrices(sql, [id], since),
+    // Source files currently provide neither a verified launch date nor MSRP.
+    releaseDate: null as string | null,
+    msrpCents: null as number | null,
   };
 }
 

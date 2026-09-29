@@ -18,6 +18,7 @@ export const SITEMAP_FAMILIES = [
   'pokemon',
   'tcg-sets',
   'tcg-cards',
+  'sealed-products',
   'moves',
   'abilities',
   'items',
@@ -70,6 +71,7 @@ export const SITEMAP_MINIMUM_ENTRIES: Record<SitemapFamily, number> = {
   pokemon: 900,
   'tcg-sets': 50,
   'tcg-cards': 10_000,
+  'sealed-products': 1,
   moves: 500,
   abilities: 150,
   items: 500,
@@ -208,6 +210,14 @@ export function buildStaticSitemapEntries(language: SupportedLanguage = 'en'): S
         alternates: buildLanguages(route.path, route.indexableLanguages ?? supportedLanguages),
       })),
   );
+}
+
+export function buildSealedProductSitemapEntries(ids: readonly number[], language: SupportedLanguage = 'en'): SitemapEntry[] {
+  return ids.map((id) => {
+    if (!Number.isSafeInteger(id) || id <= 0) throw new Error(`Invalid public sealed product ID: ${id}`);
+    const path = `tcg/sealed/market/${id}`;
+    return { url: `${SITE_URL}/${language}/${path}`, alternates: buildLanguages(path, supportedLanguages) };
+  });
 }
 
 export function buildGuidesSitemapEntries(language: SupportedLanguage = 'en'): SitemapEntry[] {
@@ -349,8 +359,9 @@ export function assertSitemapIntegrity(
     }
     const pathnameWithoutLocale = stripLocale(url.pathname);
     const privatePrefixMatch = PRIVATE_PATH_PREFIXES.some((prefix) => pathnameWithoutLocale === prefix || pathnameWithoutLocale.startsWith(`${prefix}/`));
+    const publicSealedProduct = /^\/tcg\/sealed\/market\/[1-9]\d*$/.test(pathnameWithoutLocale);
     const privateSealedRoute = pathnameWithoutLocale === '/tcg/sealed'
-      || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && pathnameWithoutLocale !== '/tcg/sealed/market');
+      || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && pathnameWithoutLocale !== '/tcg/sealed/market' && !publicSealedProduct);
     if (privatePrefixMatch || privateSealedRoute) {
       throw new Error(`Private URL in sitemap ${family}: ${entry.url}`);
     }
