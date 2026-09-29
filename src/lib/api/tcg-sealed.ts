@@ -1,4 +1,5 @@
 import { fetchAppApi } from '@/lib/app-api';
+import type { GuideIndexPoint, ProductMover, SeriesMover, GuideUnavailable } from '@/lib/tcg-sealed-guide';
 import type {
   SealedCashflowRow,
   SealedLedgerResult,
@@ -43,6 +44,13 @@ export interface SealedOverviewResponse {
   };
   sync: SealedSyncRun[];
   lastSync: Record<string, unknown> | null;
+}
+
+export interface PublicSealedGuideResponse {
+  asOf: string;
+  index: { status: 'available'; version: 'launch-v1'; basketSize: number; points: GuideIndexPoint[] } | GuideUnavailable;
+  products: { status: 'available'; movers: ProductMover[] } | GuideUnavailable;
+  series: { status: 'available'; movers: SeriesMover[] } | GuideUnavailable;
 }
 
 export interface SealedCatalogueResponse {
@@ -151,6 +159,10 @@ export function fetchPublicSealedCatalogue(
 ): Promise<SealedCatalogueResponse> {
   const params = new URLSearchParams({ q: query, page: String(page) });
   return requestPublicJson(`/api/tcg/sealed/market-catalogue?${params.toString()}`, signal);
+}
+
+export function fetchPublicSealedGuide(signal?: AbortSignal): Promise<PublicSealedGuideResponse> {
+  return requestPublicJson('/api/tcg/sealed/guide', signal);
 }
 
 export function fetchSealedProduct(id: number, signal?: AbortSignal): Promise<SealedProductDetailResponse> {

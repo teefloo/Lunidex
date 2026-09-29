@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { seedLaunchBasket } from '@/lib/tcg-sealed-guide';
 import {
   calculateSealedCashCents,
   replaySealedLedger,
@@ -1394,6 +1395,62 @@ function jsonProductBatch(products: readonly SealedProduct[]): string {
   return JSON.stringify(products.map(jsonProduct));
 }
 
+interface SealedGuideSeedRow {
+  cardmarket_product_id: number | string;
+  name: string;
+  expansion_id: number | string;
+  active: boolean;
+  day: string | Date;
+  source_at: string | Date;
+  trend_cents: number | string | null;
+}
+
+/** Freeze an index basket only from observations confirmed in the public snapshot table. */
+async function ensurePersistedSealedGuideBasket(sql: NeonSql, sourceAt: string): Promise<void> {
+  try {
+    const saved = await sql`
+      select key from public.tcg_sealed_settings
+      where key = 'sealed_guide_basket_launch_v1'
+      limit 1
+    ` as Array<{ key: string }>;
+    if (saved.length) return;
+
+    const rows = await sql.query(`
+      select p.cardmarket_product_id, p.name, p.expansion_id, p.active,
+        s.day::text, s.source_at::text, s.trend_cents
+      from public.tcg_sealed_price_snapshots s
+      join public.tcg_sealed_products p using (cardmarket_product_id)
+      where s.source_at = $1::timestamptz and p.active = true and s.trend_cents > 0
+      order by p.cardmarket_product_id asc
+      limit 200001
+    `, [sourceAt]) as unknown as SealedGuideSeedRow[];
+    if (rows.length > 200_000) return;
+
+    const basket = seedLaunchBasket(
+      rows.map((row) => ({
+        id: requiredNumber(row.cardmarket_product_id),
+        name: row.name,
+        expansionId: requiredNumber(row.expansion_id),
+        active: row.active,
+      })),
+      rows.map((row) => ({
+        productId: requiredNumber(row.cardmarket_product_id),
+        day: dayValue(row.day),
+        sourceAt: textValue(row.source_at),
+        trendCents: row.trend_cents === null ? null : requiredNumber(row.trend_cents),
+      })),
+    );
+    if (!basket) return;
+    await sql`
+      insert into public.tcg_sealed_settings (key, value)
+      values ('sealed_guide_basket_launch_v1', ${JSON.stringify(basket)}::jsonb)
+      on conflict (key) do nothing
+    `;
+  } catch {
+    // The source import is already committed; a later sync can retry this seed.
+  }
+}
+
 function priceBatch(prices: readonly SealedPriceSnapshot[]): string {
   return JSON.stringify(prices.map((price) => ({
     cardmarketProductId: price.cardmarketProductId,
@@ -1488,6 +1545,7 @@ export async function synchronizeSealedCardmarket(sql: NeonSql, now = new Date()
           where id = ${runId}::uuid
         `,
       ]);
+      await ensurePersistedSealedGuideBasket(sql, data.priceSourceAt);
       return { ...details, runId };
     }
 
@@ -1560,6 +1618,7 @@ export async function synchronizeSealedCardmarket(sql: NeonSql, now = new Date()
         where id = ${runId}::uuid
       `,
     ]);
+    await ensurePersistedSealedGuideBasket(sql, data.priceSourceAt);
     return { ...details, runId };
   } catch (error) {
     await markSyncFailed(sql, runId, error);
