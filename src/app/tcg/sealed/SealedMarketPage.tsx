@@ -65,6 +65,8 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
     </form>
     {(filters.q || filters.category !== undefined || filters.expansion !== undefined) ? <Link href={`/${lang}/tcg/sealed/market`} className="mt-3 inline-block text-sm font-bold text-primary underline-offset-4 hover:underline">{copy('clear_filters')}</Link> : null}
 
+    <div className="mt-7 rounded-sm border border-border/60 bg-card/40 p-5 sm:p-7"><PublicSealedGuideSection /></div>
+
     {data ? <>
       <div className="mt-7 grid gap-3 sm:grid-cols-3">
         <div className="rounded-sm border border-border/60 bg-card/50 p-4"><p className="text-xs font-bold uppercase tracking-wider text-foreground/55">{copy('products')}</p><p className="mt-2 text-3xl font-black tabular-nums">{new Intl.NumberFormat(lang).format(data.total)}</p></div>
