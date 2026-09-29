@@ -55,6 +55,10 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
       <p className="page-eyebrow">{copy('eyebrow')}</p>
       <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{copy('title')}</h1>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-foreground/65">{copy('subtitle')}</p>
+      <nav aria-label={copy('title')} className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary">
+        <Link href={`/${lang}/tcg/sealed/releases`} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{t('tcg.editorial_sealed.releases.link')}</Link>
+        <Link href={`/${lang}/tcg/sealed/buy-safely`} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{t('tcg.editorial_sealed.safety.link')}</Link>
+      </nav>
     </header>
 
     <form action={`/${lang}/tcg/sealed/market`} method="get" className="grid gap-3 rounded-sm border border-border/60 bg-card/60 p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">

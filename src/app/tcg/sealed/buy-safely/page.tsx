@@ -43,7 +43,7 @@ export default async function BuySafelyPage() {
         <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/65">{t('tcg.editorial_sealed.safety.intro')}</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/market`}>{label('market_link')}</Link>
-          <Link className="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-bold hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/releases`}>{label('releases_link')}</Link>
+          <Link className="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-bold hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/releases`}>{t('tcg.editorial_sealed.releases.link')}</Link>
         </div>
       </section>
       <ol className="grid gap-4 md:grid-cols-2">

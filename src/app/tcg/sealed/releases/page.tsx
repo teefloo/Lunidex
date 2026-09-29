@@ -44,7 +44,7 @@ export default async function SealedReleasesPage() {
         <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/65">{t('tcg.editorial_sealed.releases.intro')}</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/market`}>{label('market_link')}</Link>
-          <Link className="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-bold hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/buy-safely`}>{label('safety_link')}</Link>
+          <Link className="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-bold hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href={`/${language}/tcg/sealed/buy-safely`}>{t('tcg.editorial_sealed.safety.link')}</Link>
         </div>
       </section>
       <p className="mb-5 text-sm text-foreground/55">{label('date_note')}</p>
