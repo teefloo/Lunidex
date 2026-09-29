@@ -364,6 +364,7 @@ export function assertSitemapIntegrity(
     const pathnameWithoutLocale = stripLocale(url.pathname);
     const privatePrefixMatch = PRIVATE_PATH_PREFIXES.some((prefix) => pathnameWithoutLocale === prefix || pathnameWithoutLocale.startsWith(`${prefix}/`));
     const publicSealedProduct = /^\/tcg\/sealed\/market\/[1-9]\d*$/.test(pathnameWithoutLocale);
+    const publicSealedEditorial = ['/tcg/sealed/market', '/tcg/sealed/releases', '/tcg/sealed/buy-safely'].includes(pathnameWithoutLocale);
     const privateSealedRoute = pathnameWithoutLocale === '/tcg/sealed'
       || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && !publicSealedProduct && !publicSealedEditorial);
     if (privatePrefixMatch || privateSealedRoute) {

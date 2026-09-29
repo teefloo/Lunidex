@@ -4,6 +4,7 @@ import { Package, ExternalLink } from 'lucide-react';
 import type { SealedPriceSnapshot, SealedProduct } from '@primedex/core/types/sealed';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
 import { publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice, type PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import type { SupportedLanguage } from '@/lib/languages';
 
