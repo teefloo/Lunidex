@@ -1,9 +1,11 @@
+import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    booster_guides: boosterGuidesTranslations.ja,
     pokedex_page: {
       featured_eyebrow: 'ポケモン図鑑を探索',
       featured_title: '人気のポケモンと参考リソース',

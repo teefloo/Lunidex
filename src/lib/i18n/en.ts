@@ -1,9 +1,11 @@
+import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    booster_guides: boosterGuidesTranslations.en,
     pokedex_page: {
       featured_eyebrow: 'Explore the Pokédex',
       featured_title: 'Popular Pokémon and reference hubs',
