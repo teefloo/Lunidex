@@ -838,6 +838,7 @@ function CatalogueView({ data, error, query, page, language, t, onQuery, onPage,
 }
 
 function PublicMarketCatalogueView({ data, error, query, page, language, t, loading, onQuery, onPage, onRetry }: { data?: SealedCatalogueResponse; error: unknown; query: string; page: number; language: string; t: (key: string, options?: Record<string, unknown>) => string; loading: boolean; onQuery: (value: string) => void; onPage: (page: number) => void; onRetry: () => void }) {
+  const localizedHref = useLocaleHref();
   const pricesByProduct = new Map((data?.prices ?? []).map((price) => [price.cardmarketProductId, price]));
   const pageCount = Math.max(1, Math.ceil((data?.total ?? 0) / (data?.pageSize ?? 24)));
 
@@ -849,6 +850,7 @@ function PublicMarketCatalogueView({ data, error, query, page, language, t, load
           <p className="page-eyebrow">{t('tcg.sealed.public_market.eyebrow')}</p>
           <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{t('tcg.sealed.public_market.title')}</h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/60">{t('tcg.sealed.public_market.subtitle')}</p>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm font-bold text-primary"><Link href={localizedHref('/tcg/sealed/releases')} className="min-h-11 content-center underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t('tcg.editorial_sealed.labels.releases_link')}</Link><Link href={localizedHref('/tcg/sealed/buy-safely')} className="min-h-11 content-center underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t('tcg.editorial_sealed.labels.safety_link')}</Link></div>
         </div>
         <span className="inline-flex min-h-9 shrink-0 items-center rounded-sm border border-border/60 bg-background/25 px-3 text-xs font-bold text-foreground/65">{t('tcg.sealed.source_prices')}</span>
       </div>
@@ -885,6 +887,7 @@ function PublicMarketCatalogueView({ data, error, query, page, language, t, load
                 <a href={product.cardmarketUrl} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: 'outline', size: 'sm' })} mt-auto min-h-10 w-full`}>
                   <span>Cardmarket</span><ExternalLink aria-hidden="true" />
                 </a>
+                <Link href={localizedHref('/tcg/sealed/buy-safely')} className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t('tcg.editorial_sealed.labels.safety_link')}</Link>
               </div>
             </CardContent>
           </Card>;
@@ -970,6 +973,7 @@ function ProductView({ data, loading, error, language, t, localizedHref, onAdd, 
           <div className="mt-5 flex flex-wrap gap-2">
             <Button type="button" onClick={() => onAdd(data.product)}><Plus aria-hidden="true" />{t('tcg.sealed.buy')}</Button>
             <a href={data.product.cardmarketUrl} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline' })}><ExternalLink aria-hidden="true" />Cardmarket</a>
+            <Link href={localizedHref('/tcg/sealed/buy-safely')} className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t('tcg.editorial_sealed.labels.safety_link')}</Link>
           </div>
         </div>
         <Card className="p-0">

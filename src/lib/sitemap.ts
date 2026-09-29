@@ -101,6 +101,8 @@ export const LAUNCH_SITEMAP_ROUTES: StaticEntry[] = [
   { path: 'nuzlocke', changeFrequency: 'monthly', priority: 0.5 },
   { path: 'tcg', changeFrequency: 'weekly', priority: 0.6 },
   { path: 'tcg/sealed/market', changeFrequency: 'weekly', priority: 0.6 },
+  { path: 'tcg/sealed/releases', changeFrequency: 'weekly', priority: 0.55 },
+  { path: 'tcg/sealed/buy-safely', changeFrequency: 'monthly', priority: 0.55 },
   { path: 'docs', changeFrequency: 'monthly', priority: 0.65 },
   { path: 'docs/api', changeFrequency: 'monthly', priority: 0.7 },
   {
@@ -361,7 +363,7 @@ export function assertSitemapIntegrity(
     const privatePrefixMatch = PRIVATE_PATH_PREFIXES.some((prefix) => pathnameWithoutLocale === prefix || pathnameWithoutLocale.startsWith(`${prefix}/`));
     const publicSealedProduct = /^\/tcg\/sealed\/market\/[1-9]\d*$/.test(pathnameWithoutLocale);
     const privateSealedRoute = pathnameWithoutLocale === '/tcg/sealed'
-      || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && pathnameWithoutLocale !== '/tcg/sealed/market' && !publicSealedProduct);
+      || (pathnameWithoutLocale.startsWith('/tcg/sealed/') && !publicSealedProduct && !publicSealedEditorial);
     if (privatePrefixMatch || privateSealedRoute) {
       throw new Error(`Private URL in sitemap ${family}: ${entry.url}`);
     }
