@@ -100,21 +100,30 @@ function validBasket(value: GuideBasket | null): value is GuideBasket {
 export function buildGuideIndex(observations: readonly GuideObservation[], basket: GuideBasket | null, asOf: string): GuideResult<{ version: GuideBasket['version']; basketSize: number; points: GuideIndexPoint[] }> {
   if (!validBasket(basket)) return { status: 'unavailable', reason: 'missing_basket' };
   const baseline = new Map(basket.items.map((item) => [item.productId, item.trendCents]));
-  const byDay = new Map<string, Map<number, GuideObservation>>();
+  const byPublication = new Map<string, Map<number, GuideObservation>>();
   for (const point of observations) {
     if (point.sourceAt <= basket.sourceAt || point.day <= basket.day || point.day > asOf || !validDate(point.day) || !Number.isFinite(Date.parse(point.sourceAt)) || !positiveTrend(point.trendCents) || !baseline.has(point.productId)) continue;
-    const day = byDay.get(point.day) ?? new Map<number, GuideObservation>();
-    if (!day.has(point.productId) || point.sourceAt > day.get(point.productId)!.sourceAt) day.set(point.productId, point);
-    byDay.set(point.day, day);
+    const publication = byPublication.get(point.sourceAt) ?? new Map<number, GuideObservation>();
+    publication.set(point.productId, point);
+    byPublication.set(point.sourceAt, publication);
   }
-  const points: GuideIndexPoint[] = [{ day: basket.day, sourceAt: basket.sourceAt, value: 100, coverage: 1 }];
-  for (const [day, rows] of [...byDay].sort(([a], [b]) => a.localeCompare(b))) {
-    const comparable = [...rows.values()].filter((point) => baseline.has(point.productId));
+  // A source publication is comparable only on its own. Combining partial
+  // imports from separate publications on the same calendar day would invent
+  // coverage that Cardmarket never reported at one point in time.
+  const latestValidPublicationByDay = new Map<string, GuideIndexPoint>();
+  for (const [sourceAt, rows] of byPublication) {
+    const comparable = [...rows.values()];
     const coverage = comparable.length / basket.items.length;
     if (coverage < MIN_COVERAGE) continue;
+    const day = comparable[0]?.day;
+    if (!day) continue;
     const relative = comparable.reduce((sum, point) => sum + (point.trendCents as number) / baseline.get(point.productId)!, 0) / comparable.length;
-    points.push({ day, sourceAt: comparable.map((point) => point.sourceAt).sort().at(-1)!, value: Math.round(100 * relative * 10_000) / 10_000, coverage });
+    const candidate = { day, sourceAt, value: Math.round(100 * relative * 10_000) / 10_000, coverage };
+    const existing = latestValidPublicationByDay.get(day);
+    if (!existing || candidate.sourceAt > existing.sourceAt) latestValidPublicationByDay.set(day, candidate);
   }
+  const points: GuideIndexPoint[] = [{ day: basket.day, sourceAt: basket.sourceAt, value: 100, coverage: 1 }];
+  points.push(...[...latestValidPublicationByDay.values()].sort((a, b) => a.day.localeCompare(b.day)));
   if (points.length < 2) return { status: 'unavailable', reason: 'insufficient_coverage' };
   if (!isFresh(asOf, points.at(-1)!.sourceAt)) return { status: 'unavailable', reason: 'stale' };
   return { status: 'available', version: basket.version, basketSize: basket.items.length, points };

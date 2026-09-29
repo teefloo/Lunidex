@@ -43,6 +43,27 @@ describe('fixed Cardmarket guide basket', () => {
     expect(buildGuideIndex(observations.slice(0, 19), baseline, asOf)).toMatchObject({ status: 'unavailable', reason: 'insufficient_coverage' });
   });
 
+  it('does not combine disjoint publications from the same day to reach coverage', () => {
+    const observations = [
+      ...products.slice(0, 10).map((product) => ({ ...observation(product.id, asOf, 1500), sourceAt: `${asOf}T06:00:00.000Z` })),
+      ...products.slice(10, 20).map((product) => ({ ...observation(product.id, asOf, 1500), sourceAt: `${asOf}T12:00:00.000Z` })),
+    ];
+
+    expect(buildGuideIndex(observations, baseline, asOf)).toMatchObject({ status: 'unavailable', reason: 'insufficient_coverage' });
+  });
+
+  it('uses the latest same-day publication that independently meets coverage', () => {
+    const observations = [
+      ...products.slice(0, 20).map((product) => ({ ...observation(product.id, asOf, 1100), sourceAt: `${asOf}T06:00:00.000Z` })),
+      ...products.slice(20).map((product) => ({ ...observation(product.id, asOf, 1600), sourceAt: `${asOf}T12:00:00.000Z` })),
+    ];
+
+    expect(buildGuideIndex(observations, baseline, asOf)).toMatchObject({ status: 'available', points: [
+      { day: '2026-09-20', value: 100 },
+      { day: asOf, sourceAt: `${asOf}T06:00:00.000Z`, value: 110, coverage: 0.8 },
+    ] });
+  });
+
   it('returns unavailable for stale source data', () => {
     const observations = products.map((product) => observation(product.id, '2026-09-21', 1100));
     expect(buildGuideIndex(observations, baseline, asOf)).toMatchObject({ status: 'unavailable', reason: 'stale' });
