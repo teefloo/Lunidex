@@ -46,7 +46,7 @@ export default async function PublicSealedProductPage({ params }: ProductPagePro
     return null;
   }) : null;
   const copy = (key: string, options?: Record<string, unknown>) => t(`tcg.sealed.public_market.${key}`, options);
-  if (!detail) return <MarketFrame><div role="alert" className="rounded-sm border border-dashed border-border/60 p-10 text-center text-foreground/60">{copy('error')}</div></MarketFrame>;
+  if (!detail) return <MarketFrame><div className="mx-auto max-w-2xl"><h1 className="mb-4 text-2xl font-black">{copy('product_unavailable')}</h1><p role="alert" className="rounded-sm border border-dashed border-border/60 p-10 text-center text-foreground/60">{copy('error')}</p><Link href={`/${lang}/tcg/sealed/market`} className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">← {copy('back_to_market')}</Link></div></MarketFrame>;
 
   const { product, prices } = detail;
   const latest = summarizePublicPrice(prices, new Date().toISOString().slice(0, 10));

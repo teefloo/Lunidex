@@ -61,11 +61,12 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
       </nav>
     </header>
 
-    <form action={`/${lang}/tcg/sealed/market`} method="get" className="grid gap-3 rounded-sm border border-border/60 bg-card/60 p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+    <form action={`/${lang}/tcg/sealed/market`} method="get" autoComplete="off" className="grid gap-3 rounded-sm border border-border/60 bg-card/60 p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
       <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.search')}</span><input name="q" type="search" defaultValue={filters.q} maxLength={150} className="glass-control h-11 w-full px-3 text-sm" /></label>
       <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.category')}</span><select name="category" defaultValue={filters.category ?? ''} className="glass-control h-11 w-full px-3 text-sm"><option value="">{copy('all_categories')}</option>{data?.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
-      <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{copy('expansion_id')}</span><input name="expansion" type="number" min="0" step="1" defaultValue={filters.expansion ?? ''} placeholder={copy('all_expansions')} className="glass-control h-11 w-full px-3 text-sm" /></label>
+      <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{copy('expansion_id')}</span><input id="sealed-market-expansion" name="expansion" type="number" min="0" step="1" defaultValue={filters.expansion ?? ''} aria-describedby="sealed-market-expansion-hint" className="glass-control h-11 w-full px-3 text-sm" /></label>
       <button type="submit" className="inline-flex min-h-11 items-center justify-center rounded-sm border border-primary bg-primary px-4 text-sm font-bold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{copy('apply_filters')}</button>
+      <p id="sealed-market-expansion-hint" className="text-xs leading-5 text-foreground/55 sm:col-span-4">{copy('expansion_hint')}</p>
     </form>
     {(filters.q || filters.category !== undefined || filters.expansion !== undefined) ? <Link href={`/${lang}/tcg/sealed/market`} className="mt-3 inline-block text-sm font-bold text-primary underline-offset-4 hover:underline">{copy('clear_filters')}</Link> : null}
 

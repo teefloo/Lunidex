@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = t('contact.title', { defaultValue: 'Contact' });
   const description = t('contact.description', { defaultValue: 'Contact the Lunidex team.' });
   return {
-    title: `${title} — ${SITE_NAME}`,
+    title,
     description,
     alternates: { canonical: `/${lang}/contact`, languages: buildSubpathLanguages('/contact') },
     openGraph: { title: `${title} — ${SITE_NAME}`, description, url: `/${lang}/contact`, type: 'website', images: [DEFAULT_OG_IMAGE] },
