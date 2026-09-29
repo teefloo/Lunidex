@@ -4,6 +4,7 @@ import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { searchPublicSealedCatalogue } from '@/lib/tcg-sealed-server';
 import { sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
+import { parsePublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 
 const PUBLIC_MARKET_CACHE = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
 const PRIVATE_NO_STORE = { 'Cache-Control': 'private, no-store' };
@@ -15,12 +16,10 @@ async function getMarketCatalogue(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many market catalogue requests.' }, { status: 429, headers: PRIVATE_NO_STORE });
   }
 
-  const query = (request.nextUrl.searchParams.get('q') ?? '').slice(0, 150);
-  const pageValue = Number(request.nextUrl.searchParams.get('page') ?? 0);
-  const page = Number.isSafeInteger(pageValue) && pageValue >= 0 ? pageValue : 0;
+  const filters = parsePublicMarketFilters(request.nextUrl.searchParams);
   try {
     return NextResponse.json(
-      await searchPublicSealedCatalogue(sql, query, page),
+      await searchPublicSealedCatalogue(sql, filters.q, filters.page, 24, filters),
       { headers: { 'Cache-Control': PUBLIC_MARKET_CACHE } },
     );
   } catch (error) {

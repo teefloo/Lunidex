@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import { SealedPortfolioPage } from '../SealedPortfolioPage';
+import { SealedMarketPage } from '../SealedMarketPage';
+import { getNeonClient } from '@/lib/neon/server';
+import { searchPublicSealedCatalogue } from '@/lib/tcg-sealed-server';
+import { parsePublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
@@ -8,6 +12,7 @@ export const dynamic = 'force-dynamic';
 
 interface SealedPageProps {
   params: Promise<{ view?: string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 function routeTitle(view: string | undefined, t: (key: string, options?: Record<string, unknown>) => string): string {
@@ -32,10 +37,16 @@ export async function generateMetadata({ params }: SealedPageProps): Promise<Met
   };
 }
 
-export default async function SealedPage({ params }: SealedPageProps) {
+export default async function SealedPage({ params, searchParams }: SealedPageProps) {
   const [lang, t, route] = await Promise.all([getServerLanguage(), getServerT(), params]);
   const segments = route.view ?? [];
   const first = segments[0] ?? 'dashboard';
+  if (first === 'market' && segments.length === 1) {
+    const filters = parsePublicMarketFilters(await searchParams);
+    const sql = getNeonClient();
+    const data = sql ? await searchPublicSealedCatalogue(sql, filters.q, filters.page, 24, filters).catch(() => null) : null;
+    return <SealedMarketPage data={data} filters={filters} lang={lang} t={t} />;
+  }
   const parsedProductId = first === 'products' && /^\d+$/.test(segments[1] ?? '') ? Number(segments[1]) : NaN;
   const productId = Number.isSafeInteger(parsedProductId) && parsedProductId > 0 ? parsedProductId : undefined;
   const title = routeTitle(productId === undefined ? first : undefined, t);

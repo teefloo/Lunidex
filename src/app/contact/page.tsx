@@ -26,9 +26,24 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ContactPage() {
-  const t = await getServerT();
-  const lang = await getServerLanguage();
+type ContactSearchParams = Record<string, string | string[] | undefined>;
+
+function firstQueryValue(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? value[0] ?? '' : value ?? '';
+}
+
+export default async function ContactPage({ searchParams }: { searchParams: Promise<ContactSearchParams> }) {
+  const [t, lang, query] = await Promise.all([getServerT(), getServerLanguage(), searchParams]);
+  const hasMarketTopic = firstQueryValue(query.topic) === 'sealed-market';
+  const rawProductId = firstQueryValue(query.productId);
+  const parsedProductId = /^[1-9]\d{0,9}$/.test(rawProductId) ? Number(rawProductId) : NaN;
+  const productId = Number.isSafeInteger(parsedProductId) && parsedProductId <= 2_147_483_647 ? parsedProductId : undefined;
+  const initialSubject = hasMarketTopic ? t('contact.sealed_market_report_subject') : '';
+  const initialMessage = hasMarketTopic
+    ? productId === undefined
+      ? t('contact.sealed_market_report_general_message')
+      : t('contact.sealed_market_report_message', { id: productId })
+    : '';
   const title = t('contact.title', { defaultValue: 'Contact' });
   const description = t('contact.description', { defaultValue: 'Contact the Lunidex team.' });
   const breadcrumb = buildBreadcrumbJsonLd([
@@ -81,7 +96,7 @@ export default async function ContactPage() {
             </section>
             <section className="section-frame p-6 md:p-8" aria-labelledby="contact-form-title">
               <h2 id="contact-form-title" className="mb-6 text-xl font-extrabold tracking-tight">{t('contact.form_title')}</h2>
-              <ContactForm privacyHref={`/${lang}/privacy`} />
+              <ContactForm privacyHref={`/${lang}/privacy`} initialSubject={initialSubject} initialMessage={initialMessage} />
             </section>
           </article>
         </main>

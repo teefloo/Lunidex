@@ -18,9 +18,9 @@ const initialValues: FormValues = { name: '', email: '', subject: '', message: '
 const lengths: Record<FieldName, number> = { name: 120, email: 320, subject: 160, message: 5000 };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function ContactForm({ privacyHref }: { privacyHref: string }) {
+export function ContactForm({ privacyHref, initialSubject = '', initialMessage = '' }: { privacyHref: string; initialSubject?: string; initialMessage?: string }) {
   const { t } = useTranslation();
-  const [values, setValues] = useState<FormValues>(initialValues);
+  const [values, setValues] = useState<FormValues>(() => ({ ...initialValues, subject: initialSubject, message: initialMessage }));
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'unavailable' | 'error' | 'success'>('idle');

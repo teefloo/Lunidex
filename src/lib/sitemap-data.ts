@@ -8,6 +8,7 @@ import {
   buildMovesSitemapEntries,
   buildPokemonSitemapEntries,
   buildStaticSitemapEntries,
+  buildSealedProductSitemapEntries,
   buildTcgCardSitemapEntries,
   buildTcgSetSitemapEntries,
   splitSitemapEntries,
@@ -27,6 +28,8 @@ import {
 import { isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import type { TCGSet } from '@/types/tcg';
 import type { SupportedLanguage } from '@/lib/languages';
+import { getNeonClient } from '@/lib/neon/server';
+import { SEALED_PRODUCT_CATEGORY_IDS } from '@primedex/core/types/sealed';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
 const TCG_CARD_PAGE_SIZE = 250;
@@ -219,6 +222,18 @@ export async function getSitemapEntries(
     case 'tcg-cards':
       entries = buildTcgCardSitemapEntries(await getCompleteTcgCardIdsCached(), language);
       break;
+    case 'sealed-products': {
+      const sql = getNeonClient();
+      if (!sql) throw new Error('Public sealed product sitemap requires the catalogue data service.');
+      const rows = await sql.query(`
+        select cardmarket_product_id
+        from public.tcg_sealed_products
+        where active = true and category_id = any($1::int[])
+        order by cardmarket_product_id asc
+      `, [[...SEALED_PRODUCT_CATEGORY_IDS]]) as unknown as Array<{ cardmarket_product_id: number | string }>;
+      entries = buildSealedProductSitemapEntries(rows.map((row) => Number(row.cardmarket_product_id)), language);
+      break;
+    }
     case 'moves':
       entries = buildMovesSitemapEntries(await getValidatedMoveNames(), language);
       break;
