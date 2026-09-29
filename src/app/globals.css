@@ -7491,6 +7491,34 @@ body:has(.lunidex-home) .site-footer {
   list-style: none;
 }
 
+.home-catalog-preview-deck {
+  position: relative;
+}
+
+.home-catalog-preview-layer {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.home-catalog-preview-layer--pending {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.25rem);
+}
+
+.home-catalog-preview-layer--leaving {
+  opacity: 0;
+  transform: translateY(-0.25rem);
+}
+
+.home-catalog-preview-layer--entering {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .home-catalog-preview-cards li,
 .home-catalog-preview-card {
   min-width: 0;
@@ -7529,12 +7557,45 @@ body:has(.lunidex-home) .site-footer {
   line-height: 1.2;
 }
 
-.home-catalog-preview-card-value {
+.home-catalog-preview-card-rarity {
   color: var(--home-accent);
   font-size: 0.72rem;
   font-weight: 900;
-  font-variant-numeric: tabular-nums;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-catalog-preview-card-set {
+  overflow: hidden;
+  color: var(--home-muted);
+  font-size: 0.62rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-catalog-preview-image--empty {
+  background:
+    radial-gradient(ellipse at 50% 35%, color-mix(in oklab, var(--home-accent) 14%, transparent), transparent 56%),
+    color-mix(in oklab, var(--home-panel-raised) 76%, transparent);
+}
+
+.home-catalog-preview-card--empty {
+  pointer-events: none;
+}
+
+.home-catalog-preview-empty-line {
+  display: block;
+  width: 76%;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--home-line) 75%, transparent);
+}
+
+.home-catalog-preview-empty-line--short {
+  width: 48%;
 }
 
 .home-catalog-preview-card:hover .home-catalog-preview-image {
@@ -7860,8 +7921,12 @@ body:has(.lunidex-home) .site-footer {
     font-size: 0.68rem;
   }
 
-  .home-catalog-preview-card-value {
+  .home-catalog-preview-card-rarity {
     font-size: 0.65rem;
+  }
+
+  .home-catalog-preview-card-set {
+    font-size: 0.58rem;
   }
 
   .home-tools-section {
@@ -7961,6 +8026,11 @@ body:has(.lunidex-home) .site-footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .home-catalog-preview-layer {
+    transition: none;
+    transform: none;
+  }
+
   .home-catalog-preview-card:hover .home-catalog-preview-image {
     transform: none;
   }

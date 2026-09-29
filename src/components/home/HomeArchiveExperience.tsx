@@ -1,14 +1,11 @@
 import Link from 'next/link';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
-import { getTCGSetCardsCached } from '@/lib/api/server-cache';
 import { isNeonConfiguredServer } from '@/lib/neon/server';
 import { getServerAuthUser } from '@/lib/neon/auth';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
-import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
-import { getCardMarketValue, getRarityWeight } from '@/lib/tcg-collection';
-import { hasTCGCardImage } from '@/lib/tcg-images';
+import { HOME_CATALOG_PREVIEW_CARDS } from '@/lib/home-catalog-preview';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeCatalogPreview from './HomeCatalogPreview';
 import HomeCollectionSteps from './HomeCollectionSteps';
@@ -17,11 +14,10 @@ import HomePokedexPreview from './HomePokedexPreview';
 import HomeTeamPreview from './HomeTeamPreview';
 
 export async function HomeArchiveExperience() {
-  const [t, language, serverUser, initialCatalog] = await Promise.all([
+  const [t, language, serverUser] = await Promise.all([
     getServerT(),
     getServerLanguage(),
     getServerAuthUser(),
-    getTCGSetCardsCached(DEFAULT_LATEST_TCG_SET.id, 'en').catch(() => null),
   ]);
   const initialSignedIn = Boolean(serverUser);
   const collectionServiceAvailable = Boolean(
@@ -31,17 +27,6 @@ export async function HomeArchiveExperience() {
       && process.env.NEON_AUTH_COOKIE_SECRET
       && isNeonConfiguredServer,
   );
-  const previewCards = [...(initialCatalog ?? [])]
-    .filter(hasTCGCardImage)
-    .sort((left, right) => {
-      const leftValue = getCardMarketValue(left, 'EUR')?.amount ?? 0;
-      const rightValue = getCardMarketValue(right, 'EUR')?.amount ?? 0;
-      if (leftValue !== rightValue) return rightValue - leftValue;
-      const rarityDifference = getRarityWeight(right.rarity) - getRarityWeight(left.rarity);
-      return rarityDifference || left.id.localeCompare(right.id, undefined, { numeric: true, sensitivity: 'base' });
-    })
-    .slice(0, 3);
-
   return (
     <div className="lunidex-home">
       <HomeHeader initialSignedIn={initialSignedIn} serviceAvailable={collectionServiceAvailable} />
@@ -69,11 +54,7 @@ export async function HomeArchiveExperience() {
               />
             </div>
           </div>
-          <HomeCatalogPreview
-            cards={previewCards}
-            defaultSetId={DEFAULT_LATEST_TCG_SET.id}
-            defaultSetName={DEFAULT_LATEST_TCG_SET.name}
-          />
+          <HomeCatalogPreview cards={HOME_CATALOG_PREVIEW_CARDS} language={language} />
         </section>
 
         <HomeCollectionSteps />
