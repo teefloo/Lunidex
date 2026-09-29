@@ -130,7 +130,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
   );
   const collectionValueQueries = useQueries({
     queries: startedEntries.map((entry) => ({
-      queryKey: ['tcg', 'collection-value-v6', entry.collectionKey, entry.ownedVariants, displayCurrency],
+      queryKey: ['tcg', 'collection-value-v7', entry.collectionKey, entry.ownedVariants, displayCurrency],
       queryFn: ({ signal }: { signal: AbortSignal }) => fetchCollectionValue(
         entry.ownedVariants,
         entry.language,

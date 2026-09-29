@@ -56,6 +56,32 @@ describe('normalizeOwnedVariantsForValuation', () => {
 });
 
 describe('fetchCollectionValue', () => {
+  it('returns owned cards ranked by their actual owned-variant market value', async () => {
+    const result = await fetchCollectionValue(
+      [
+        { cardId: 'sv1-1', variant: 'normal', quantity: 1 },
+        { cardId: 'sv1-2', variant: 'normal', quantity: 3 },
+        { cardId: 'sv1-3', variant: 'normal', quantity: 1 },
+      ],
+      'en',
+      undefined,
+      'USD',
+      {
+        fetchCard: async (cardId) => {
+          if (cardId === 'sv1-1') return pricedCard(cardId, 'sv1', 12);
+          if (cardId === 'sv1-2') return pricedCard(cardId, 'sv1', 5);
+          return null;
+        },
+        cardTimeoutMs: 25,
+      },
+    );
+
+    expect(result.topCards.map(({ card, value }) => [card.id, value.amount])).toEqual([
+      ['sv1-1', 12],
+      ['sv1-2', 5],
+    ]);
+  });
+
   it('scales the valuation deadline for large collections instead of stopping at a fixed short cutoff', () => {
     expect(getCollectionValuationTimeoutMs(177, 6)).toBe(45_000);
     expect(getCollectionValuationTimeoutMs(600, 6)).toBe(90_000);

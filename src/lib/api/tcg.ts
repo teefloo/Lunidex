@@ -37,6 +37,10 @@ import {
   type TCGOwnedVariant,
   type TCGCollectionValuationResult,
 } from '@/lib/tcg-collection';
+import {
+  selectTopValuedCollectionCards,
+  type TCGCollectionValuedCard,
+} from '@/lib/tcg-collection-preview';
 import type { TCGDisplayCurrency } from '@/lib/tcg-currency';
 import { MAX_TCG_COLLECTION_PHYSICAL_CARDS } from '@primedex/core/lib/tcg-collections';
 import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
@@ -1102,6 +1106,11 @@ export interface FetchCollectionValueOptions {
   maxUniqueCards?: number;
 }
 
+export interface TCGCollectionValuationWithTopCards extends TCGCollectionValuationResult {
+  /** Three highest-value owned card IDs, using the exact owned finish when known. */
+  topCards: TCGCollectionValuedCard[];
+}
+
 /**
  * Give a valuation enough time to drain its bounded request queue. A fixed
  * short deadline made every large set look as if roughly the same number of
@@ -1191,12 +1200,12 @@ export const fetchCollectionValue = async (
   signal?: AbortSignal,
   displayCurrency?: TCGDisplayCurrency,
   options: FetchCollectionValueOptions = {},
-): Promise<TCGCollectionValuationResult> => {
+): Promise<TCGCollectionValuationWithTopCards> => {
   const ownedVariants = normalizeOwnedVariantsForValuation(ownedInput);
   const maxUniqueCards = Math.max(1, Math.floor(options.maxUniqueCards ?? TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS));
   const uniqueIds = [...new Set(ownedVariants.map((entry) => entry.cardId))].slice(0, maxUniqueCards);
   if (uniqueIds.length === 0) {
-    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, bySet: {} };
+    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, bySet: {}, topCards: [] };
   }
 
   const fetchCard = options.fetchCard ?? ((cardId: string, cardLanguage: string, cardSignal: AbortSignal) => (
@@ -1223,17 +1232,35 @@ export const fetchCollectionValue = async (
       }
     },
   );
-  const collectionCards = cards
-    .filter((card): card is TCGCard => Boolean(card))
-    .map((card) => toCollectionCard(card, undefined, displayCurrency));
+  const fullCards = cards.filter((card): card is TCGCard => Boolean(card));
+  const cardsById = new Map(fullCards.map((card) => [card.id, card]));
+  const collectionCards = fullCards.map((card) => toCollectionCard(card, undefined, displayCurrency));
   const valuation = aggregateCollectionValueWithVariants(collectionCards, ownedVariants, displayCurrency);
   const ownedCount = ownedVariants.reduce((sum, entry) => sum + entry.quantity, 0);
+  const collectionCardsById = new Map(collectionCards.map((card) => [card.id, card]));
+  const topCandidates: TCGCollectionValuedCard[] = [];
+  for (const ownership of ownedVariants) {
+    const card = cardsById.get(ownership.cardId);
+    if (!card) continue;
+    const collectionCard = collectionCardsById.get(ownership.cardId);
+    if (!collectionCard) continue;
+    const value = getTCGValueInCurrency(
+      ownership.variant === 'unspecified'
+        ? collectionCard.value
+        : collectionCard.variantValues?.[ownership.variant],
+      displayCurrency,
+    );
+    if (!value) continue;
+    topCandidates.push({ card, value });
+  }
+  const topCards = selectTopValuedCollectionCards(topCandidates, displayCurrency, 3);
 
   return {
     ...valuation,
     // A missing detail response is still an owned physical card without a price.
     ownedCount,
     unpricedCount: Math.max(0, ownedCount - valuation.pricedCount),
+    topCards,
   };
 };
 
