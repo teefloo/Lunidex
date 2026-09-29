@@ -2301,6 +2301,8 @@ export default {
           category_medians: "Category medians",
           unknown_expansion: 'Unreported expansion (ID {{id}})',
           latest_trend: "Latest trend",
+          safety_link: 'Official online buying advice',
+          external_note: 'This link opens an official external source. Check the seller and full offer before paying.',
         },
           sell_product_placeholder: 'Choose a product in stock', no_owned_products: 'No products in stock to sell. Record a purchase first.', available_units: '{{count}} in stock',
           exchange: 'Exchange', give: 'Give', receive: 'Receive', exchange_badge: 'Exchange', exchange_source_label: 'Product given', exchange_received_label: 'Product received', exchange_source_placeholder: 'Choose an owned product', exchange_received_placeholder: 'Choose a catalogue product', exchange_summary: 'Cost basis transferred', exchange_no_owned_source: 'No owned product is available to give.', exchange_cost_basis_hint: 'The historical acquisition cost of the given lots is transferred; no cash movement is recorded.',

@@ -86,7 +86,7 @@ describe('localized sitemaps', () => {
       { url: 'https://lunidex.app/en/tcg/sealed/products/123' },
     ], 'static')).toThrow(/Private URL/);
     expect(() => assertSitemapIntegrity([
-      { url: 'https://lunidex.app/en/tcg/sealed/market/products/123', alternates: { en: 'https://lunidex.app/en/tcg/sealed/market/products/123' } },
+      { url: 'https://lunidex.app/en/tcg/sealed/market/123', alternates: { en: 'https://lunidex.app/en/tcg/sealed/market/123' } },
     ], 'sealed-products')).not.toThrow();
   });
 
