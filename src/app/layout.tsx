@@ -166,6 +166,7 @@ export default async function RootLayout({
   const lang = await getServerLanguage();
   const t = await getServerT();
   const requestPathname = requestHeaders.get('x-primedex-pathname') ?? '';
+  const isHomeRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/?$/.test(requestPathname);
   const isEditorialRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(requestPathname);
   const initialTranslations = isEditorialRoute
     ? getEditorialClientTranslations(lang)
@@ -241,7 +242,7 @@ export default async function RootLayout({
              <div id="main-content" tabIndex={-1}>
                {children}
              </div>
-             <SiteFooter />
+             <SiteFooter compact={isHomeRoute} />
              <ClientCookieBanner />
            </AppContent>
          </Providers>

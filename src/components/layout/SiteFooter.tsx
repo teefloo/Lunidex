@@ -122,7 +122,11 @@ function FooterLinkGroup({
   );
 }
 
-export default async function SiteFooter() {
+interface SiteFooterProps {
+  compact?: boolean;
+}
+
+export default async function SiteFooter({ compact = false }: SiteFooterProps) {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const localizedHref = (href: string) => `/${language}${href}`;
   const year = new Date().getFullYear();
@@ -173,6 +177,14 @@ export default async function SiteFooter() {
     { href: 'https://tcgdex.net', label: t('footer.resources.tcgdex'), external: true },
   ];
 
+  const compactLinks: FooterLinkData[] = [
+    { href: '/tcg', label: t('footer.navigation.tcg') },
+    { href: '/pokedex', label: t('footer.navigation.pokedex') },
+    { href: '/team', label: t('footer.navigation.team_builder') },
+    { href: '/faq', label: t('nav.faq', { defaultValue: 'FAQ' }) },
+    { href: '/about', label: t('about.heading') },
+  ];
+
   const legalLinks: FooterLinkData[] = [
     { href: '/legal', label: t('footer.legal.legal_notice') },
     { href: '/privacy', label: t('footer.legal.privacy') },
@@ -182,10 +194,33 @@ export default async function SiteFooter() {
 
   return (
     <footer
-      className="site-footer"
+      className={cn('site-footer', compact && 'site-footer--compact')}
       aria-label={t('footer.navigation.title', { defaultValue: 'Footer navigation' })}
     >
       <div className="site-footer__inner">
+        {compact ? (
+          <div className="site-footer__compact-top">
+            <Link href={localizedHref('/')} prefetch={false} className="site-footer__compact-brand" aria-label={SITE_NAME}>
+              <LunidexLogo alt="" sizes="32px" className="h-8 w-8 object-contain" />
+              <span translate="no">Lunidex</span>
+            </Link>
+            <nav aria-label={t('footer.groups.explorer', { defaultValue: t('footer.navigation.title') })}>
+              <ul className="site-footer__compact-links">
+                {compactLinks.map((link) => (
+                  <li key={link.href}><FooterLink link={link} localize={localizedHref} /></li>
+                ))}
+              </ul>
+            </nav>
+            <nav aria-label={t('footer.resources.title')}>
+              <ul className="site-footer__compact-links">
+                {resourceLinks.map((link) => (
+                  <li key={link.href}><FooterLink link={link} localize={localizedHref} /></li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        ) : (
+          <>
         <div className="site-footer__masthead">
           <div className="site-footer__identity">
             <Link
@@ -299,6 +334,8 @@ export default async function SiteFooter() {
             </ul>
           </nav>
         </div>
+          </>
+        )}
 
         <div className="site-footer__base">
           <p className="site-footer__copyright">{t('home.footer_copyright', { year })}</p>
@@ -317,7 +354,7 @@ export default async function SiteFooter() {
                   className="site-footer__link site-footer__link--compact"
                 />
               </li>
-              <li>
+              {!compact ? <li>
                 <ReportProblemButton
                   addScreenshotLabel={t('feedback.add_screenshot')}
                   cancelLabel={t('feedback.cancel')}
@@ -337,7 +374,7 @@ export default async function SiteFooter() {
                   submitLabel={t('feedback.submit')}
                   successMessage={t('feedback.success')}
                 />
-              </li>
+              </li> : null}
             </ul>
           </nav>
         </div>

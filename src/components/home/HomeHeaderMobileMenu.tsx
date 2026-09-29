@@ -13,9 +13,13 @@ interface HomeHeaderMobileMenuProps {
   closeLabel: string;
   collectionStartLabel: string;
   collectionResumeLabel: string;
+  collectionInfoLabel: string;
+  collectionLabel: string;
   locale: string;
   languageControl?: ReactNode;
+  themeControl?: ReactNode;
   initialSignedIn?: boolean;
+  serviceAvailable?: boolean;
 }
 
 export default function HomeHeaderMobileMenu({
@@ -25,9 +29,13 @@ export default function HomeHeaderMobileMenu({
   closeLabel,
   collectionStartLabel,
   collectionResumeLabel,
+  collectionInfoLabel,
+  collectionLabel,
   locale,
   languageControl = null,
+  themeControl = null,
   initialSignedIn = false,
+  serviceAvailable = true,
 }: HomeHeaderMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -57,6 +65,7 @@ export default function HomeHeaderMobileMenu({
           type="button"
           ref={triggerRef}
           aria-haspopup="dialog"
+          aria-label={menuLabel}
           title={menuLabel}
           className="field-mobile-menu-trigger"
         >
@@ -86,22 +95,29 @@ export default function HomeHeaderMobileMenu({
             <SheetTitle className="sr-only">{navigationLabel}</SheetTitle>
           </SheetHeader>
           <nav aria-label={navigationLabel} className="field-mobile-menu-links">
+            <HomeCollectionEntry
+              locale={locale}
+              startLabel={collectionStartLabel}
+              resumeLabel={collectionResumeLabel}
+              unavailableLabel={collectionInfoLabel}
+              navLabel={collectionLabel}
+              className="field-mobile-menu-link"
+              onClick={closeMenu}
+              initialSignedIn={initialSignedIn}
+              serviceAvailable={serviceAvailable}
+              showArrow={false}
+            />
             {links.map((link) => (
               <Link key={link.href} href={link.href} onClick={closeMenu}>
                 {link.label}
                 <span aria-hidden="true">→</span>
               </Link>
             ))}
-            {languageControl}
-            <HomeCollectionEntry
-              locale={locale}
-              startLabel={collectionStartLabel}
-              resumeLabel={collectionResumeLabel}
-              className="field-mobile-menu-cta"
-              onClick={closeMenu}
-              initialSignedIn={initialSignedIn}
-            />
           </nav>
+          <div className="field-mobile-menu-controls">
+            {languageControl}
+            {themeControl}
+          </div>
         </SheetContent>
       </Sheet>
     </div>

@@ -30,11 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t('lunidex_home.og_title'), description: t('lunidex_home.meta_description'), url: `/${language}`,
       locale: languageToOpenGraphLocale[language], type: 'website', siteName: SITE_NAME,
-      images: [{ ...DEFAULT_OG_IMAGE, alt: t('lunidex_home.og_title') }],
+      images: [{ ...DEFAULT_OG_IMAGE, alt: t('lunidex_home.og_alt') }],
     },
     twitter: {
       card: 'summary_large_image', title: t('lunidex_home.og_title'), description: t('lunidex_home.meta_description'),
-      images: [{ ...DEFAULT_OG_IMAGE, alt: t('lunidex_home.og_title') }],
+      images: [{ ...DEFAULT_OG_IMAGE, alt: t('lunidex_home.og_alt') }],
     },
   };
 }

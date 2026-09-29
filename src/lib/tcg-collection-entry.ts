@@ -1,17 +1,23 @@
 export interface CollectionEntry {
-  mode: 'start' | 'resume';
-  path: '/tcg/start?source=home_cta' | '/tcg/collection';
+  mode: 'unavailable' | 'start' | 'resume';
+  path: '#collection-access' | '/tcg/start?source=home_cta' | '/tcg/collection';
 }
 
 interface ResolveCollectionEntryInput {
+  serviceAvailable: boolean;
+  isSignedIn: boolean;
   hasHydrated: boolean;
   ownedCount: number;
 }
 
-export function resolveCollectionEntry({ hasHydrated, ownedCount }: ResolveCollectionEntryInput): CollectionEntry {
-  if (!hasHydrated || ownedCount <= 0) {
-    return { mode: 'start', path: '/tcg/start?source=home_cta' };
+export function resolveCollectionEntry({ serviceAvailable, isSignedIn, hasHydrated, ownedCount }: ResolveCollectionEntryInput): CollectionEntry {
+  if (!serviceAvailable) {
+    return { mode: 'unavailable', path: '#collection-access' };
   }
 
-  return { mode: 'resume', path: '/tcg/collection' };
+  if (isSignedIn && hasHydrated && ownedCount > 0) {
+    return { mode: 'resume', path: '/tcg/collection' };
+  }
+
+  return { mode: 'start', path: '/tcg/start?source=home_cta' };
 }
