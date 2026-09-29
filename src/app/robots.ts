@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { supportedLanguages } from '@/lib/languages';
 import { SITE_URL } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
@@ -12,13 +13,24 @@ export default function robots(): MetadataRoute.Robots {
     disallow: ['/api/'] as string[],
   };
 
+  // Card-detail pages are an exhaustive, data-heavy TCG catalogue. Keep
+  // ClaudeBot's training crawl off those pages while preserving its access to
+  // other public content and keeping Claude's search and user-directed bots enabled.
+  const claudeBot = {
+    userAgent: 'ClaudeBot',
+    allow: ['/', '/api/og/'],
+    disallow: [
+      '/api/',
+      ...supportedLanguages.map((language) => `/${language}/tcg/cards/`),
+    ],
+  };
+
   const explicitAiBots = [
     'GPTBot',
     'ChatGPT-User',
     'OAI-SearchBot',
     'PerplexityBot',
     'Perplexity-User',
-    'ClaudeBot',
     'Claude-User',
     'anthropic-ai',
     'Claude-SearchBot',
@@ -61,7 +73,7 @@ export default function robots(): MetadataRoute.Robots {
   }));
 
   return {
-    rules: [allowAll, ...explicitAiBots],
+    rules: [allowAll, claudeBot, ...explicitAiBots],
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   };

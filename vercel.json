@@ -1,5 +1,24 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "name": "poke-app",
+  "routes": [
+    {
+      "src": "^/(?:en|fr|es|de|it|ja|ko|zh)/tcg/cards/[^/]+/?$",
+      "methods": ["GET", "HEAD"],
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": {
+            "re": "(?i).*\\bclaudebot\\b.*"
+          }
+        }
+      ],
+      "mitigate": {
+        "action": "deny"
+      }
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/metrics-retention",

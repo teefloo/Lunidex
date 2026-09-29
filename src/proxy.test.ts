@@ -87,6 +87,56 @@ describe('public localized proxy responses', () => {
     );
   });
 
+  it('stops ClaudeBot card detail requests before TCGdex probes and page rendering', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg/cards/base1-4', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0 (compatible; ClaudeBot/1.0)' },
+    }));
+
+    expect(response.status).toBe(403);
+    expect(response.headers.get('Cache-Control')).toBe('private, no-store');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('also stops ClaudeBot Flight requests to card details', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    const response = await proxy(new NextRequest('https://lunidex.test/ja/tcg/cards/sv10-001', {
+      headers: {
+        accept: 'text/x-component',
+        rsc: '1',
+        'user-agent': 'claudebot/1.1',
+      },
+    }));
+
+    expect(response.status).toBe(403);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps Claude search and user-directed bots able to open card details', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg/cards/cost-audit-searchbot-001', {
+      headers: { accept: 'text/html', 'user-agent': 'Claude-SearchBot/1.0' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not block ClaudeBot from non-card public pages', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/pokemon/pikachu', {
+      headers: { accept: 'text/html', 'user-agent': 'ClaudeBot/1.0' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('https://pokeapi.co/api/v2/pokemon/pikachu');
+  });
+
   it('does not treat Flight requests as document probes', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch');
 

@@ -21,6 +21,7 @@ const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko'
 // those responses keeps them eligible for the Vercel CDN cache; the client
 // provider persists the selected locale for unprefixed redirects below.
 const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent|lightpanda)/i;
+const CLAUDE_BOT_USER_AGENT_PATTERN = /(?:^|[^a-z0-9])claudebot(?:[^a-z0-9]|$)/i;
 const OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER = /^(?:null|undefined)$/i;
 // These paths are common WordPress probes but are not part of Lunidex. Return
 // a cacheable edge 404 before Next renders the global not-found route.
@@ -122,6 +123,16 @@ function isNextPrefetchRequest(request: NextRequest): boolean {
   return request.headers.get('next-router-prefetch') === '1'
     || request.headers.get('purpose')?.toLowerCase() === 'prefetch'
     || request.headers.get('sec-purpose')?.toLowerCase() === 'prefetch';
+}
+
+function shouldBlockClaudeBotTcgCard(request: NextRequest, segments: string[]): boolean {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return false;
+  if (!CLAUDE_BOT_USER_AGENT_PATTERN.test(request.headers.get('user-agent') ?? '')) return false;
+
+  return segments.length === 4
+    && segments[1] === 'tcg'
+    && segments[2] === 'cards'
+    && Boolean(segments[3]);
 }
 
 function isFlightRequest(request: NextRequest): boolean {
@@ -486,6 +497,16 @@ export async function proxy(request: NextRequest) {
 
   if (hasLocalePrefix) {
     const urlLocale = firstSegment!;
+
+    // ClaudeBot accounted for most of the recent card-catalog crawl. Its
+    // training pages remain disallowed in robots.txt; this guard also stops
+    // requests that ignore robots before they trigger upstream probes/rendering.
+    if (shouldBlockClaudeBotTcgCard(request, segments)) {
+      return new NextResponse(null, {
+        status: 403,
+        headers: { 'Cache-Control': 'private, no-store' },
+      });
+    }
 
     // There is no standalone /pokemon index; preserve the legacy entry point
     // with a real HTTP redirect to the localized Pokédex. Detail pages such
