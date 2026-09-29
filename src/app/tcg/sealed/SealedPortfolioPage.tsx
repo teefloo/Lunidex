@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useAuth } from '@/lib/neon/AuthProvider';
@@ -852,6 +853,8 @@ function PublicMarketCatalogueView({ data, error, query, page, language, t, load
         <span className="inline-flex min-h-9 shrink-0 items-center rounded-sm border border-border/60 bg-background/25 px-3 text-xs font-bold text-foreground/65">{t('tcg.sealed.source_prices')}</span>
       </div>
     </section>
+
+    <PublicSealedGuideSection />
 
     <div className="flex items-center gap-3" aria-busy={loading}>
       <div className="relative min-w-0 flex-1">
