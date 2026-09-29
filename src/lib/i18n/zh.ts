@@ -1,9 +1,11 @@
+import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    booster_guides: boosterGuidesTranslations.zh,
     pokedex_page: {
       featured_eyebrow: '探索宝可梦图鉴',
       featured_title: '热门宝可梦与参考入口',

@@ -44,6 +44,9 @@ describe('localized sitemaps', () => {
     const french = buildStaticSitemapEntries('fr');
 
     expect(english.some((entry) => entry.url.endsWith('/en/about'))).toBe(true);
+    expect(english.some((entry) => entry.url.endsWith('/en/tcg/pull-rates'))).toBe(true);
+    expect(french.some((entry) => entry.url.endsWith('/fr/tcg/booster-value'))).toBe(true);
+    expect(buildStaticSitemapEntries('ja').find((entry) => entry.url.endsWith('/ja/tcg/pull-rates'))?.alternates?.ko).toBe('https://lunidex.app/ko/tcg/pull-rates');
     expect(french.some((entry) => entry.url.endsWith('/fr/about'))).toBe(true);
     expect(french.some((entry) => entry.url.endsWith('/fr/30e-anniversaire'))).toBe(true);
     expect(buildStaticSitemapEntries('de').some((entry) => entry.url.endsWith('/de/30e-anniversaire'))).toBe(false);

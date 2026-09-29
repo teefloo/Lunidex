@@ -89,6 +89,10 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
             <TCGPageTabs initialLabels={initialTabLabels} />
           </Suspense>
+          <nav aria-label={t('tcg.page_title')} className="mx-auto mb-8 flex w-full max-w-6xl flex-wrap gap-3">
+            <Link href={localeHref('/tcg/pull-rates', lang)} className="glass-btn inline-flex min-h-11 items-center px-4 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.pull')}</Link>
+            <Link href={localeHref('/tcg/booster-value', lang)} className="glass-btn inline-flex min-h-11 items-center px-4 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.value')}</Link>
+          </nav>
           {isAnniversary30Language(lang) ? (
             <section className="anniversary-promo mx-auto w-full max-w-6xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8" aria-labelledby="tcg-anniversary-30-title">
               <div>

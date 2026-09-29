@@ -1,9 +1,11 @@
+import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    booster_guides: boosterGuidesTranslations.de,
     pokedex_page: {
       featured_eyebrow: 'Pokédex entdecken',
       featured_title: 'Beliebte Pokémon und Referenzbereiche',

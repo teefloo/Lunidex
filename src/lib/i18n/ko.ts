@@ -1,9 +1,11 @@
+import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    booster_guides: boosterGuidesTranslations.ko,
     pokedex_page: {
       featured_eyebrow: '포켓몬 도감 탐색',
       featured_title: '인기 포켓몬 및 참고 허브',
