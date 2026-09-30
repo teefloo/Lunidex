@@ -8,6 +8,7 @@ import { ContactForm } from '@/components/contact/ContactForm';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import { publishedPullStudyCopy } from '@/lib/i18n/booster-guides';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 export const revalidate = 3600;
@@ -35,15 +36,21 @@ function firstQueryValue(value: string | string[] | undefined): string {
 export default async function ContactPage({ searchParams }: { searchParams: Promise<ContactSearchParams> }) {
   const [t, lang, query] = await Promise.all([getServerT(), getServerLanguage(), searchParams]);
   const hasMarketTopic = firstQueryValue(query.topic) === 'sealed-market';
+  const hasBoosterSampleTopic = firstQueryValue(query.topic) === 'booster-sample';
+  const studyCopy = publishedPullStudyCopy[lang];
   const rawProductId = firstQueryValue(query.productId);
   const parsedProductId = /^[1-9]\d{0,9}$/.test(rawProductId) ? Number(rawProductId) : NaN;
   const productId = Number.isSafeInteger(parsedProductId) && parsedProductId <= 2_147_483_647 ? parsedProductId : undefined;
-  const initialSubject = hasMarketTopic ? t('contact.sealed_market_report_subject') : '';
-  const initialMessage = hasMarketTopic
-    ? productId === undefined
-      ? t('contact.sealed_market_report_general_message')
-      : t('contact.sealed_market_report_message', { id: productId })
-    : '';
+  const initialSubject = hasBoosterSampleTopic
+    ? studyCopy.sampleContactSubject
+    : hasMarketTopic ? t('contact.sealed_market_report_subject') : '';
+  const initialMessage = hasBoosterSampleTopic
+    ? studyCopy.sampleContactMessage
+    : hasMarketTopic
+      ? productId === undefined
+        ? t('contact.sealed_market_report_general_message')
+        : t('contact.sealed_market_report_message', { id: productId })
+      : '';
   const title = t('contact.title', { defaultValue: 'Contact' });
   const description = t('contact.description', { defaultValue: 'Contact the Lunidex team.' });
   const breadcrumb = buildBreadcrumbJsonLd([
