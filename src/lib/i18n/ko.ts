@@ -1682,7 +1682,7 @@ team: '팀',
       editorial_sealed: {
         releases: {
           title: "미개봉 상품 출시 일정",
-          intro: "프랑스 시장의 발표 일정을 포켓몬 공식 자료로 확인했습니다. 불확실한 날짜는 그대로 표시합니다.",
+          intro: "프랑스 시장의 발표 일정을 포켓몬 또는 PokéCardex 자료로 확인했습니다. 출처가 확인된 권장 가격을 표시하고, 불확실한 날짜는 정밀도를 낮춰 표시합니다.",
           link: "출시 일정 보기",
         },
         safety: {
@@ -1715,6 +1715,7 @@ team: '팀',
           report_link: "SignalConso 열기",
           external_note: "외부 사이트로 이동합니다. 결제 전에 상품과 판매자를 확인하세요.",
           no_match: "이 출시 정보에 연결된 Cardmarket 상품은 아직 편집자가 확인하지 않았습니다.",
+          suggested_price: "권장 소비자가: {{price}}",
         },
       },
       sealed: {

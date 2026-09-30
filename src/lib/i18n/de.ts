@@ -1682,7 +1682,7 @@ team: 'Team',
       editorial_sealed: {
         releases: {
           title: "Kalender für versiegelte Produkte",
-          intro: "Angekündigte Termine für Frankreich, anhand von Pokémon-Quellen geprüft. Ungefähre Termine bleiben ungenau.",
+          intro: "Angekündigte Termine für Frankreich, anhand von Pokémon- oder PokéCardex-Quellen geprüft. Empfohlene Preise erscheinen mit Quelle; ungenaue Termine bleiben ungenau.",
           link: "Neuheiten ansehen",
         },
         safety: {
@@ -1715,6 +1715,7 @@ team: 'Team',
           report_link: "SignalConso öffnen",
           external_note: "Ein externer Dienst wird geöffnet. Prüfe Angebot und Verkäufer vor der Zahlung.",
           no_match: "Für diese Veröffentlichung wurde noch kein Cardmarket-Produkt redaktionell zugeordnet.",
+          suggested_price: "Unverbindliche Preisempfehlung: {{price}}",
         },
       },
       sealed: {

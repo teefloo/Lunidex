@@ -2341,7 +2341,7 @@ team: 'Équipe',
       editorial_sealed: {
         releases: {
           title: "Calendrier des sorties scellées",
-          intro: "Dates annoncées pour le marché français, vérifiées auprès de Pokémon. Une date partielle reste volontairement imprécise.",
+          intro: "Dates annoncées pour le marché français, vérifiées auprès de Pokémon ou de PokéCardex. Les prix conseillés sont indiqués lorsqu’ils sont sourcés ; une date partielle reste volontairement imprécise.",
           link: "Voir les sorties",
         },
         safety: {
@@ -2374,6 +2374,7 @@ team: 'Équipe',
           report_link: "Ouvrir SignalConso",
           external_note: "Le lien ouvre un site tiers. Vérifiez l’offre et le vendeur avant de payer.",
           no_match: "Aucun produit Cardmarket n’a été relié à cette sortie par un éditeur.",
+          suggested_price: "Prix conseillé : {{price}}",
         },
       },
       sealed: {

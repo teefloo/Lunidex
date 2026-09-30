@@ -1682,7 +1682,7 @@ team: 'Squadra',
       editorial_sealed: {
         releases: {
           title: "Calendario delle uscite sigillate",
-          intro: "Date annunciate per la Francia, verificate su fonti Pokémon. Le date parziali restano volutamente imprecise.",
+          intro: "Date annunciate per la Francia, verificate su fonti Pokémon o PokéCardex. I prezzi consigliati appaiono quando sono documentati; le date parziali restano imprecise.",
           link: "Vedi le uscite",
         },
         safety: {
@@ -1715,6 +1715,7 @@ team: 'Squadra',
           report_link: "Apri SignalConso",
           external_note: "Si apre un sito esterno. Verifica offerta e venditore prima di pagare.",
           no_match: "Un redattore non ha ancora collegato un prodotto Cardmarket a questa uscita.",
+          suggested_price: "Prezzo consigliato: {{price}}",
         },
       },
       sealed: {

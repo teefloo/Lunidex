@@ -10,7 +10,7 @@ export type ReleaseStatus = 'announced' | 'released' | 'postponed';
 export interface EditorialSource {
   url: `https://${string}`;
   verifiedAt: `${number}-${number}-${number}`;
-  publisher: 'The Pokémon Company' | 'DGCCRF' | 'SignalConso';
+  publisher: 'The Pokémon Company' | 'PokéCardex' | 'DGCCRF' | 'SignalConso';
 }
 
 export interface SealedReleaseV1 {
@@ -21,6 +21,8 @@ export interface SealedReleaseV1 {
   window: ReleaseWindow;
   status: ReleaseStatus;
   source: EditorialSource;
+  /** French recommended retail price, stored in euro cents when sourced. */
+  retailPriceCents?: number;
   /** Only set after an editor confirms the exact catalogue match. */
   cardmarketProductId?: number;
 }
@@ -44,4 +46,9 @@ export function formatReleaseWindow(window: ReleaseWindow, language: SupportedLa
   return new Intl.DateTimeFormat(language, window.precision === 'day'
     ? { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }
     : { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(date);
+}
+
+export function sealedReleaseMarketHref(productId: number | undefined, language: SupportedLanguage): string | null {
+  if (!Number.isSafeInteger(productId) || (productId ?? 0) < 1 || (productId ?? 0) > 2_147_483_647) return null;
+  return `/${language}/tcg/sealed/market/${productId}`;
 }

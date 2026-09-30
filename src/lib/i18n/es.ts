@@ -1689,7 +1689,7 @@ team: 'Equipo',
       editorial_sealed: {
         releases: {
           title: "Calendario de lanzamientos sellados",
-          intro: "Fechas anunciadas para Francia, verificadas en fuentes de Pokémon. Las fechas parciales siguen siendo imprecisas.",
+          intro: "Fechas anunciadas para Francia, verificadas con fuentes de Pokémon o PokéCardex. Los precios recomendados aparecen cuando tienen fuente; las fechas parciales siguen siendo imprecisas.",
           link: "Ver lanzamientos",
         },
         safety: {
@@ -1722,6 +1722,7 @@ team: 'Equipo',
           report_link: "Abrir SignalConso",
           external_note: "Se abrirá un sitio externo. Comprueba la oferta y el vendedor antes de pagar.",
           no_match: "Un editor aún no ha vinculado un producto de Cardmarket a este lanzamiento.",
+          suggested_price: "Precio recomendado: {{price}}",
         },
       },
       sealed: {

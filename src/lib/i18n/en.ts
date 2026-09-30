@@ -2321,7 +2321,7 @@ export default {
         editorial_sealed: {
           releases: {
             title: "Sealed release calendar",
-            intro: "Announced dates for the French market, checked against Pokémon sources. Partial dates deliberately stay imprecise.",
+            intro: "Announced French-market dates checked against Pokémon or PokéCardex sources. Suggested prices appear when sourced; partial dates stay imprecise.",
             link: "See releases",
           },
           safety: {
@@ -2354,6 +2354,7 @@ export default {
             report_link: "Open SignalConso",
             external_note: "This opens a third-party site. Check the offer and seller before paying.",
             no_match: "An editor has not linked a Cardmarket product to this release.",
+            suggested_price: "Suggested retail price: {{price}}",
           },
         },
         sealed: {

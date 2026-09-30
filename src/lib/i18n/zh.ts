@@ -1682,7 +1682,7 @@ team: '队伍',
       editorial_sealed: {
         releases: {
           title: "未拆封产品发售日历",
-          intro: "依据宝可梦官方资料核对法国市场的已公布日期。未确定的日期保持原有精度。",
+          intro: "依据宝可梦或PokéCardex资料核对法国市场的已公布日期。仅展示有来源的建议零售价；日期不确定时会保留其实际精度。",
           link: "查看发售日程",
         },
         safety: {
@@ -1715,6 +1715,7 @@ team: '队伍',
           report_link: "打开 SignalConso",
           external_note: "即将打开第三方网站。付款前请核查商品和卖家。",
           no_match: "编辑尚未为该发售项目核实对应的 Cardmarket 商品。",
+          suggested_price: "建议零售价：{{price}}",
         },
       },
       sealed: {
