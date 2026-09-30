@@ -22,8 +22,13 @@ describe('public sealed market filters', () => {
     expect(publicMarketContactHref('../x', -1)).toBe('/en/contact?topic=sealed-market');
   });
 
-  it('uses known editorial labels and identifies unknown source IDs', () => {
-    expect(publicExpansionName(6569, 'fr')).toBe('#6569');
+  it('uses reviewed Cardmarket expansion labels in French and English and preserves unknown source IDs', () => {
+    expect(publicExpansionName(5546, 'fr')).toBe('Destinées de Paldea');
+    expect(publicExpansionName(5546, 'en')).toBe('Paldean Fates');
+    expect(publicExpansionName(5691, 'fr')).toBe('Mascarade Crépusculaire');
+    expect(publicExpansionName(6096, 'fr')).toBe('Rivalités Destinées');
+    expect(publicExpansionName(6569, 'fr')).toBe('Nuit Noire');
+    expect(publicExpansionName(6601, 'fr')).toBe('30ᵉ Anniversaire');
     expect(publicExpansionName(123456, 'en')).toBe('#123456');
   });
 });

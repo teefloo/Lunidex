@@ -52,8 +52,28 @@ export function publicMarketHref(filters: PublicMarketFilters): string {
   return `/tcg/sealed/market${params.size ? `?${params}` : ''}`;
 }
 
-/** Keep this empty until a Cardmarket expansion ID has a reviewed editorial crosswalk. */
-const CURATED_EXPANSIONS: Record<number, { en: string; fr: string }> = {};
+/** Cardmarket's public sealed catalogue snapshot (2026-09-29), cross-checked against the FR release register. */
+const CURATED_EXPANSIONS: Record<number, { en: string; fr: string }> = {
+  5335: { en: 'Black Bolt + White Flare', fr: 'Foudre Noire + Flamme Blanche' },
+  5546: { en: 'Paldean Fates', fr: 'Destinées de Paldea' },
+  5589: { en: 'Temporal Forces', fr: 'Forces Temporelles' },
+  5691: { en: 'Twilight Masquerade', fr: 'Mascarade Crépusculaire' },
+  5760: { en: 'Shrouded Fable', fr: 'Fable Nébuleuse' },
+  5802: { en: 'Stellar Crown', fr: 'Couronne Stellaire' },
+  5879: { en: 'Surging Sparks', fr: 'Étincelles Déferlantes' },
+  5944: { en: 'Prismatic Evolutions', fr: 'Évolutions Prismatiques' },
+  6006: { en: 'Journey Together', fr: 'Aventures Ensemble' },
+  6096: { en: 'Destined Rivals', fr: 'Rivalités Destinées' },
+  6134: { en: 'Black Bolt', fr: 'Foudre Noire' },
+  6135: { en: 'White Flare', fr: 'Flamme Blanche' },
+  6209: { en: 'Mega Evolution', fr: 'Méga-Évolution' },
+  6299: { en: 'Phantasmal Flames', fr: 'Flammes Fantasmagoriques' },
+  6395: { en: 'Ascended Heroes', fr: 'Héros Transcendants' },
+  6443: { en: 'Perfect Order', fr: 'Équilibre Parfait' },
+  6517: { en: 'Chaos Rising', fr: 'Chaos Ascendant' },
+  6569: { en: 'Pitch Black', fr: 'Nuit Noire' },
+  6601: { en: '30th Celebration', fr: '30ᵉ Anniversaire' },
+};
 
 export function publicExpansionName(id: number, language: string, unknownLabel = `#${id}`): string {
   const curated = CURATED_EXPANSIONS[id];
