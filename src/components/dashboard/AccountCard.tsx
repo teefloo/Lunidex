@@ -312,7 +312,7 @@ export default function AccountCard() {
                 disabled={isSaving || !!handleError || !publicHandle}
                 className="shrink-0"
               >
-                {isSaving ? '...' : tt('common.save', 'Save')}
+                {isSaving ? '...' : tt('account.save', 'Save')}
               </Button>
             </div>
             {handleError && (

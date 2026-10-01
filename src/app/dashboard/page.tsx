@@ -5,25 +5,28 @@ import PageHeader from '@/components/layout/PageHeader';
 import Link from 'next/link';
 import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
 import AccountCard from '@/components/dashboard/AccountCard';
-import SettingsCard from '@/components/dashboard/SettingsCard';
 import ProfileAndBadges from '@/components/dashboard/ProfileAndBadges';
 import QuizStatistics from '@/components/dashboard/QuizStatistics';
 import PokedexProgress from '@/components/dashboard/PokedexProgress';
 import ActivityHeatMap from '@/components/dashboard/ActivityHeatMap';
 import GeneralActivity from '@/components/dashboard/GeneralActivity';
 import ExtensibleSection from '@/components/dashboard/ExtensibleSection';
-import FriendPrivacyCard from '@/components/friends/FriendPrivacyCard';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import { BarChart3, AlertCircle, Users } from 'lucide-react';
+import { BarChart3, AlertCircle, Users, Settings } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/neon/AuthProvider';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
   const incrementVisit = usePrimeDexStore((state) => state.incrementVisit);
+  const toggleSettings = usePrimeDexStore((state) => state.toggleSettings);
+  const { enabled } = useAuth();
+  const [accountExpanded, setAccountExpanded] = useState(false);
   const { data, isLoading, isError } = useDashboardData();
 
   useEffect(() => {
@@ -40,28 +43,18 @@ export default function DashboardPage() {
           title={t('dashboard.title')}
           subtitle={t('dashboard.subtitle')}
           eyebrow={null}
+          variant="compact"
         />
 
-        <div className="mb-6">
-          <AccountCard />
-        </div>
-
-        <div className="mb-6">
-          <FriendPrivacyCard />
-        </div>
-
-        <div className="mb-6">
-          <Link href={localeHref('/friends')} className="glass-card flex items-center gap-3 rounded-sm p-5 transition-colors hover:border-primary/30 hover:bg-primary/5">
-            <span className="rounded-sm border border-primary/20 bg-primary/10 p-2 text-primary"><Users className="h-5 w-5" /></span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-black text-foreground/85">{t('friends.title', { defaultValue: 'Friends' })}</span>
-              <span className="block text-xs text-foreground/50">{t('friends.subtitle', { defaultValue: 'Manage friends and explore shared TCG collections.' })}</span>
-            </span>
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Link href={localeHref('/friends')} className="dashboard-quick-link">
+            <Users aria-hidden="true" className="h-4 w-4" />
+            {t('friends.title', { defaultValue: 'Friends' })}
           </Link>
-        </div>
-
-        <div className="mb-6">
-          <SettingsCard />
+          <Button type="button" variant="outline" onClick={toggleSettings} className="dashboard-quick-link">
+            <Settings aria-hidden="true" className="h-4 w-4" />
+            {t('nav.settings', { defaultValue: 'Settings' })}
+          </Button>
         </div>
 
         {isLoading ? (
@@ -74,27 +67,90 @@ export default function DashboardPage() {
             <p className="text-sm font-semibold text-foreground/60">{t('dashboard.errors.load_failed')}</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {/* Row 1: Profile + Quiz */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <ProfileAndBadges data={data} />
-              <div className="lg:col-span-2">
-                <QuizStatistics data={data} />
+          <>
+            <section className="glass-card mb-6 rounded-sm p-4 sm:p-5" aria-labelledby="dashboard-overview-title">
+              <h2 id="dashboard-overview-title" className="text-sm font-bold text-foreground">
+                {t('dashboard.overview_heading')}
+              </h2>
+              <dl className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="min-w-0 rounded-sm border border-border/40 bg-muted/20 p-3">
+                  <dt className="text-xs font-semibold text-foreground/55">{t('dashboard.pokedex.title')}</dt>
+                  <dd className="mt-1 text-lg font-black tabular-nums text-foreground">
+                    {data.pokedex.caughtPercent}%
+                  </dd>
+                  <p className="text-xs text-foreground/50">
+                    {t('dashboard.pokedex.progress', {
+                      count: data.pokedex.caughtCount,
+                      total: data.pokedex.totalPokemon,
+                    })}
+                  </p>
+                </div>
+                <div className="min-w-0 rounded-sm border border-border/40 bg-muted/20 p-3">
+                  <dt className="text-xs font-semibold text-foreground/55">{t('dashboard.extensible.tcg_owned')}</dt>
+                  <dd className="mt-1 text-lg font-black tabular-nums text-foreground">
+                    {data.extensible.find((metric) => metric.id === 'tcg-owned')?.value ?? 0}
+                  </dd>
+                </div>
+                <div className="min-w-0 rounded-sm border border-border/40 bg-muted/20 p-3">
+                  <dt className="text-xs font-semibold text-foreground/55">{t('dashboard.badges.title')}</dt>
+                  <dd className="mt-1 text-lg font-black tabular-nums text-foreground">
+                    {t('dashboard.badges.count', {
+                      count: data.badges.unlocked.length,
+                      total: data.badges.all.length,
+                    })}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+
+            <div className="dashboard-sections">
+              <details className="dashboard-section">
+                <summary>
+                  <span>{t('dashboard.section_progression')}</span>
+                </summary>
+                <div className="dashboard-section-content">
+                  <ProfileAndBadges data={data} />
+                  <PokedexProgress data={data} />
+                  <ExtensibleSection metrics={data.extensible} />
+                </div>
+              </details>
+
+              <details className="dashboard-section">
+                <summary>
+                  <span>{t('dashboard.section_quiz')}</span>
+                </summary>
+                <div className="dashboard-section-content">
+                  <QuizStatistics data={data} />
+                </div>
+              </details>
+
+              <details className="dashboard-section">
+                <summary>
+                  <span>{t('dashboard.section_activity')}</span>
+                </summary>
+                <div className="dashboard-section-content">
+                  <ActivityHeatMap />
+                  <GeneralActivity data={data} />
+                </div>
+              </details>
+            </div>
+          </>
+        )}
+
+        {enabled && (
+          <details
+            className="dashboard-section mt-6"
+            onToggle={(event) => setAccountExpanded(event.currentTarget.open)}
+          >
+            <summary>
+              <span>{t('dashboard.account_section')}</span>
+            </summary>
+            {accountExpanded && (
+              <div className="dashboard-section-content">
+                <AccountCard />
               </div>
-            </div>
-
-            {/* Row 2: Pokedex */}
-            <PokedexProgress data={data} />
-
-            {/* Row 2.5: Activity Heat Map */}
-            <ActivityHeatMap />
-
-            {/* Row 3: Activity + Extensible */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <GeneralActivity data={data} />
-              <ExtensibleSection metrics={data.extensible} />
-            </div>
-          </div>
+            )}
+          </details>
         )}
       </main>
     </div>

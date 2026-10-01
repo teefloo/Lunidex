@@ -61,6 +61,7 @@ export function useDashboardData(): {
     tcgLegacyOwnedCards,
     tcgWishlistCards,
     tcgSavedSearches,
+    hasHydrated,
   } = usePrimeDexStore(useShallow((state) => ({
     caughtPokemon: state.caughtPokemon,
     favorites: state.favorites,
@@ -80,6 +81,7 @@ export function useDashboardData(): {
     tcgLegacyOwnedCards: state.tcgLegacyOwnedCards,
     tcgWishlistCards: state.tcgWishlistCards,
     tcgSavedSearches: state.tcgSavedSearches,
+    hasHydrated: state._hasHydrated,
   })));
 
   const { data: allPokemon, isLoading, isError } = useQuery({
@@ -89,6 +91,7 @@ export function useDashboardData(): {
   });
 
   return useMemo(() => {
+    if (!hasHydrated) return { data: null, isLoading: true, isError: false };
     if (!allPokemon) return { data: null, isLoading, isError };
 
     const totalPokemon = allPokemon.length;
@@ -286,5 +289,5 @@ export function useDashboardData(): {
       isLoading: false,
       isError: false,
     };
-  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgCollectionCards, tcgLegacyOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, isLoading, isError]);
+  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgCollectionCards, tcgLegacyOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, hasHydrated, isLoading, isError]);
 }

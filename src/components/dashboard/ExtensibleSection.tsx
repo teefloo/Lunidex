@@ -13,6 +13,14 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   BarChart3: <BarChart3 className="w-4 h-4" />,
 };
 
+const METRIC_LABEL_KEYS: Record<string, string> = {
+  'tcg-owned': 'dashboard.extensible.tcg_owned',
+  'tcg-wishlist': 'dashboard.extensible.tcg_wishlist',
+  'saved-searches': 'dashboard.extensible.saved_searches',
+  'team-size': 'dashboard.extensible.team_size',
+  'favorites-count': 'dashboard.extensible.favorites_count',
+};
+
 interface ExtensibleSectionProps {
   metrics: ExtensibleMetric[];
 }
@@ -42,7 +50,7 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
             </div>
             <p className="text-lg md:text-xl font-black text-foreground tabular-nums">{metric.value}</p>
             <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-foreground/50">
-              {metric.label}
+              {METRIC_LABEL_KEYS[metric.id] ? t(METRIC_LABEL_KEYS[metric.id]) : metric.label}
             </p>
             {metric.subtitle && (
               <span className={cn(

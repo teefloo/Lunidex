@@ -3,6 +3,8 @@
 import { Calendar, Eye, BrainCircuit, Heart, Sword, Plus, Activity as ActivityIcon } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import type { DashboardData, ActivityAction } from '@/types/dashboard';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { formatActivityDate, translateActivityAction } from '@/lib/dashboard-activity';
 
 const ACTION_ICONS: Record<ActivityAction['type'], React.ReactNode> = {
   quiz: <BrainCircuit className="w-3.5 h-3.5" />,
@@ -17,24 +19,12 @@ interface GeneralActivityProps {
   data: DashboardData;
 }
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
-}
-
 export default function GeneralActivity({ data }: GeneralActivityProps) {
   const { t } = useTranslation();
+  const language = useClientLanguage();
   const { activity } = data;
+  const translateActivity = (key: string, values?: Record<string, string | number>) =>
+    String(t(key, values));
 
   return (
     <div className="glass-card rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden">
@@ -59,7 +49,7 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
             {t('dashboard.activity.last_visit')}
           </p>
           <p className="text-sm font-black text-foreground tabular-nums">
-            {activity.lastVisitDate ? formatDate(activity.lastVisitDate) : '-'}
+            {activity.lastVisitDate ? formatActivityDate(activity.lastVisitDate, language) : '-'}
           </p>
         </div>
       </div>
@@ -71,29 +61,32 @@ export default function GeneralActivity({ data }: GeneralActivityProps) {
         </p>
         {activity.recentActions.length > 0 ? (
           <div className="space-y-1.5">
-            {activity.recentActions.map((action) => (
-              <div
-                key={action.id}
-                className="flex items-center gap-3 p-2 rounded-sm border border-border/30 bg-muted/20 hover:bg-muted/40 transition-colors"
-              >
-                <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
-                  {ACTION_ICONS[action.type] || <ActivityIcon className="w-3.5 h-3.5" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground/80 truncate">
-                    {action.label}
-                  </p>
-                  {action.details && (
-                    <p className="text-xs font-medium text-foreground/40 truncate">
-                      {action.details}
+            {activity.recentActions.map((action) => {
+              const copy = translateActivityAction(action, translateActivity);
+              return (
+                <div
+                  key={action.id}
+                  className="flex items-center gap-3 p-2 rounded-sm border border-border/30 bg-muted/20 hover:bg-muted/40 transition-colors"
+                >
+                  <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
+                    {ACTION_ICONS[action.type] || <ActivityIcon className="w-3.5 h-3.5" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-foreground/80 truncate">
+                      {copy.label}
                     </p>
-                  )}
+                    {copy.details && (
+                      <p className="text-xs font-medium text-foreground/40 truncate">
+                        {copy.details}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-[11px] font-bold text-foreground/30 shrink-0 tabular-nums">
+                    {formatActivityDate(action.date, language)}
+                  </span>
                 </div>
-                <span className="text-[11px] font-bold text-foreground/30 shrink-0 tabular-nums">
-                  {formatDate(action.date)}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-6 text-center">

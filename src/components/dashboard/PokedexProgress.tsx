@@ -93,7 +93,7 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
                   style={{ backgroundColor: type.color }}
                 />
                 <span className="text-[11px] font-bold capitalize text-foreground/60 flex-1 truncate">
-                  {type.name}
+                  {t(`types.${type.name}`, { defaultValue: type.name })}
                 </span>
                 <span className="text-[11px] font-bold text-foreground/40 tabular-nums">{percent}%</span>
               </div>
