@@ -6,17 +6,19 @@ import { retrySyncAccess, type SyncAccessStatus } from '@/store/sync-access';
 
 interface SyncStatusPanelProps {
   status: Exclude<SyncAccessStatus, 'ready' | 'unauthenticated'>;
+  headingLevel?: 1 | 2;
 }
 
-export function SyncStatusPanel({ status }: SyncStatusPanelProps) {
+export function SyncStatusPanel({ status, headingLevel = 1 }: SyncStatusPanelProps) {
   const { t } = useTranslation();
   const unavailable = status === 'unavailable';
+  const Heading = headingLevel === 2 ? 'h2' : 'h1';
 
   return (
     <section className="mx-auto max-w-2xl page-surface px-5 py-8 text-center sm:px-8" aria-labelledby="sync-status-title">
-      <h1 id="sync-status-title" className="text-3xl font-black tracking-tight">
+      <Heading id="sync-status-title" className="text-3xl font-black tracking-tight">
         {t('auth.sync_title', { defaultValue: 'Collection synchronization' })}
-      </h1>
+      </Heading>
       <p className="mt-3 text-base leading-7 text-foreground/65">
         {t(unavailable ? 'auth.sync_unavailable' : 'auth.sync_checking', {
           defaultValue: unavailable

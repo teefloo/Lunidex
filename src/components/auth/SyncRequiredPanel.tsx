@@ -8,7 +8,11 @@ import { AuthModalBoundary } from './AuthModalBoundary';
 
 const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });
 
-export function SyncRequiredPanel() {
+interface SyncRequiredPanelProps {
+  headingLevel?: 1 | 2;
+}
+
+export function SyncRequiredPanel({ headingLevel = 1 }: SyncRequiredPanelProps) {
   const { enabled } = useAuth();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -19,12 +23,13 @@ export function SyncRequiredPanel() {
   const description = enabled
     ? t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })
     : t('auth.session_unavailable', { defaultValue: 'Accounts are currently unavailable.' });
+  const Heading = headingLevel === 2 ? 'h2' : 'h1';
 
   return (
     <section className="mx-auto max-w-2xl page-surface px-5 py-8 text-center sm:px-8" aria-labelledby="sync-required-title">
-      <h1 id="sync-required-title" className="text-3xl font-black tracking-tight">
+      <Heading id="sync-required-title" className="text-3xl font-black tracking-tight">
         {title}
-      </h1>
+      </Heading>
       <p className="mt-3 text-base leading-7 text-foreground/65">
         {description}
       </p>

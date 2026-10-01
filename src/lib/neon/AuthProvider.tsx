@@ -115,6 +115,8 @@ const AUTH_ACTION_TIMEOUT_MS = 15_000;
 const AUTH_SESSION_TIMEOUT_MS = 5_000;
 const AUTH_SDK_TIMEOUT_MS = 8_000;
 const AUTH_SESSION_REFRESH_INTERVAL_MS = 5 * 60_000;
+const AUTH_SESSION_RETRY_INITIAL_MS = 1_000;
+const AUTH_SESSION_RETRY_MAX_MS = 30_000;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -190,6 +192,7 @@ async function requestAuthSession(): Promise<{ data: SessionData }> {
     signal: AbortSignal.timeout(AUTH_SESSION_TIMEOUT_MS),
   });
   const result = await response.json().catch(() => null) as unknown;
+  if (response.status === 401) return { data: null as SessionData };
   if (!response.ok) {
     const message = normalizeError(result)?.message
       ?? response.statusText
@@ -500,22 +503,49 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
   useEffect(() => {
     let active = true;
     let refreshPromise: Promise<void> | null = null;
+    let retryTimer: number | null = null;
+    let retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
 
     const refresh = (): Promise<void> => {
       if (refreshPromise) return refreshPromise;
+      setState((current) => current.data === null && !current.isPending
+        ? { data: null, isPending: true }
+        : current);
 
       refreshPromise = (async () => {
         try {
           const result = await requestAuthSession();
-          if (active) setState({ data: result.data, isPending: false });
+          if (active) {
+            setState({ data: result.data, isPending: false });
+            retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
+            if (retryTimer !== null) {
+              window.clearTimeout(retryTimer);
+              retryTimer = null;
+            }
+          }
         } catch {
-          if (active) setState({ data: null, isPending: false });
+          if (active) {
+            setState((current) => current.data === null
+              ? { data: null, isPending: true }
+              : { data: current.data, isPending: false });
+            scheduleRetry();
+          }
         } finally {
           refreshPromise = null;
         }
       })();
 
       return refreshPromise;
+    };
+
+    const scheduleRetry = () => {
+      if (retryTimer !== null) return;
+      const delay = retryDelayMs;
+      retryDelayMs = Math.min(retryDelayMs * 2, AUTH_SESSION_RETRY_MAX_MS);
+      retryTimer = window.setTimeout(() => {
+        retryTimer = null;
+        void refresh();
+      }, delay);
     };
 
     void refresh();
@@ -533,6 +563,7 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
       document.removeEventListener('visibilitychange', refreshWhenVisible);
       window.removeEventListener('primedex:auth-changed', refreshOnAuthChange);
       window.clearInterval(intervalId);
+      if (retryTimer !== null) window.clearTimeout(retryTimer);
     };
   }, []);
 

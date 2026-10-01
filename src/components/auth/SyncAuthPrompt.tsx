@@ -12,7 +12,7 @@ const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });
 
 /** Opens the existing account flow when a syncable action is attempted. */
 export function SyncAuthPrompt() {
-  const { enabled, user } = useAuth();
+  const { enabled, loading, user } = useAuth();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -27,6 +27,12 @@ export function SyncAuthPrompt() {
       }), toastOptions);
       return;
     }
+    if (loading || status === 'checking' || status === 'loading') {
+      toast.info(t('auth.sync_checking', {
+        defaultValue: 'Your collection is still syncing. Please try again in a moment.',
+      }), toastOptions);
+      return;
+    }
     if (!user) {
       setOpen(true);
       return;
@@ -38,14 +44,8 @@ export function SyncAuthPrompt() {
       }), toastOptions);
       return;
     }
-    if (status === 'checking' || status === 'loading') {
-      toast.info(t('auth.sync_checking', {
-        defaultValue: 'Your collection is still syncing. Please try again in a moment.',
-      }), toastOptions);
-      return;
-    }
     setOpen(true);
-  }), [enabled, t, user]);
+  }), [enabled, loading, t, user]);
 
   if (!open) return null;
 

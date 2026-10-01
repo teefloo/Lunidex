@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { toast } from '@/lib/toast';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
 import {
@@ -28,7 +28,7 @@ export default function AuthModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { signIn, signUp, resetPassword } = useAuth();
+  const { signIn, signUp, resetPassword, user } = useAuth();
   const [mode, setMode] = useState<Mode>('signin');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -54,6 +54,10 @@ export default function AuthModal({
       ? error.message
       : tt('auth.request_failed', 'Unable to complete the request. Please try again.')
   );
+
+  useEffect(() => {
+    if (open && user) onOpenChange(false);
+  }, [onOpenChange, open, user]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();

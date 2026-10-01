@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { LogIn, UserRound } from 'lucide-react';
+import { LoaderCircle, LogIn, UserRound } from 'lucide-react';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
@@ -52,6 +52,10 @@ export default function AccountMenu({ className, onInteraction, onRequestAuth, s
   }
 
   if (!user) {
+    const actionLabel = loading
+      ? tt('auth.session_checking', 'Checking session…')
+      : tt('auth.signin_cta', 'Sign in');
+
     return (
       <>
         <button
@@ -65,13 +69,15 @@ export default function AccountMenu({ className, onInteraction, onRequestAuth, s
             setAuthOpen(true);
           }}
           disabled={loading}
-          title={tt('auth.signin_cta', 'Sign in')}
+          title={actionLabel}
           className={cn('site-header-action disabled:opacity-50', className)}
-          aria-label={tt('auth.signin_cta', 'Sign in')}
+          aria-label={actionLabel}
         >
-          <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
+          {loading
+            ? <LoaderCircle className="h-3.5 w-3.5 motion-safe:animate-spin" aria-hidden="true" />
+            : <LogIn className="h-3.5 w-3.5" aria-hidden="true" />}
           <span className={cn('site-header-account-label', !showLabel && 'hidden 2xl:inline')}>
-            {tt('auth.signin_cta', 'Sign in')}
+            {actionLabel}
           </span>
         </button>
         {authOpen && (
