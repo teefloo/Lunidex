@@ -5,6 +5,7 @@ import { getTCGCardCached } from '@/lib/api/server-cache';
 import { SITE_URL } from '@/lib/site';
 import { TCGCardDetailRoute } from '@/components/tcg/TCGCardDetailRoute';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import Header from '@/components/layout/Header';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
@@ -105,6 +106,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
@@ -83,17 +84,33 @@ export function TCGSetAlbumPage({
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative pb-40">
+        {authLoading || !user || syncStatus !== 'ready' || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
+          <div className="mb-6">
+            <Link
+              href={localeHref('/tcg/collection')}
+              className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              ← {t('tcg.collection_title')}
+            </Link>
+            <h1 className="mt-3 text-2xl font-black uppercase tracking-tight sm:text-3xl">
+              {t('tcg.collection_title')}
+            </h1>
+            <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">
+              {t('tcg.collection_subtitle')}
+            </p>
+          </div>
+        ) : null}
         {authLoading ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+            <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
         ) : !user || syncStatus === 'unauthenticated' ? (
-          <SyncRequiredPanel />
+          <SyncRequiredPanel headingLevel={2} />
         ) : syncStatus !== 'ready' ? (
-          <SyncStatusPanel status={syncStatus} />
+          <SyncStatusPanel status={syncStatus} headingLevel={2} />
         ) : albumQuery.isPending ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+          <div className="flex items-center justify-center py-20" aria-busy="true">
+            <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
         ) : albumQuery.isError && !albumQuery.data ? (
           <div className="mx-auto flex max-w-2xl flex-col items-center justify-center rounded-sm border border-destructive/30 bg-destructive/10 px-5 py-10 text-center" role="alert">

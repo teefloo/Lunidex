@@ -257,75 +257,6 @@ export function TCGAlbumPage({
         )}
       </section>
 
-      {missingCards.length > 0 && (
-        <section className="rounded-sm border border-border/35 bg-card/30 p-4" aria-labelledby="tcg-completion-estimate-title">
-          <h2 id="tcg-completion-estimate-title" className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/75">
-            {t('tcg.completion_estimate_title')}
-          </h2>
-          <p className="mt-1 text-xs font-semibold text-foreground/65">
-            {t('tcg.completion_estimate_coverage', {
-              priced: completionEstimate.pricedCount,
-              missing: missingCards.length,
-            })}
-          </p>
-          {completionEstimate.groups.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {completionEstimate.groups.map((group) => {
-                let formattedTotal: string;
-                try {
-                  formattedTotal = new Intl.NumberFormat(interfaceLanguage, {
-                    style: 'currency',
-                    currency: group.currency,
-                    maximumFractionDigits: 2,
-                  }).format(group.total);
-                } catch {
-                  formattedTotal = group.total.toFixed(2) + ' ' + group.currency;
-                }
-                return (
-                  <p key={group.provider + ':' + group.currency} className="rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-bold tabular-nums text-primary">
-                    {t('tcg.completion_estimate_partial_total', {
-                      total: formattedTotal,
-                      count: group.count,
-                      source: group.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer',
-                    })}
-                  </p>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="mt-2 text-sm font-semibold text-foreground/55">{t('tcg.completion_estimate_no_prices')}</p>
-          )}
-          {completionEstimate.unpricedCount > 0 && (
-            <p className="mt-2 text-[11px] font-medium text-amber-200/75">
-              {t('tcg.completion_estimate_unpriced', { count: completionEstimate.unpricedCount })}
-            </p>
-          )}
-          <p className="mt-2 text-[11px] text-muted-foreground">{t('tcg.completion_estimate_method')}</p>
-        </section>
-      )}
-
-      {/* Rarity completion */}
-      {rarityCompletion.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {rarityCompletion.map((r) => (
-            <button
-              key={r.rarity}
-              type="button"
-              onClick={() => setRarityFilter(rarityFilter === r.rarity ? null : r.rarity)}
-              aria-pressed={rarityFilter === r.rarity}
-              className="min-h-11 rounded-lg border border-border/20 bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:bg-card/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-            >
-              <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-foreground/40">
-                {getTCGRarityLabel(r.rarity, t)}
-              </span>
-              <span className={getRarityColor(r.rarity)}>
-                {r.owned}/{r.total}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Search + filter */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
@@ -392,6 +323,67 @@ export function TCGAlbumPage({
           ))}
         </div>
       )}
+
+      {rarityCompletion.length > 0 ? (
+        <details className="rounded-sm border border-border/35 bg-card/20 px-3">
+          <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-xs font-bold text-foreground/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            <span>
+              {t('tcg.filter_rarity')}
+              {rarityFilter ? ` · ${getTCGRarityLabel(rarityFilter, t)}` : ''}
+            </span>
+            <span className="text-[10px] font-semibold text-foreground/40">{rarityCompletion.length}</span>
+          </summary>
+          <div className="flex flex-wrap gap-2 border-t border-border/30 py-3">
+            {rarityCompletion.map((rarity) => (
+              <button
+                key={rarity.rarity}
+                type="button"
+                onClick={() => setRarityFilter(rarityFilter === rarity.rarity ? null : rarity.rarity)}
+                aria-pressed={rarityFilter === rarity.rarity}
+                className="min-h-11 rounded-sm border border-border/30 bg-card/35 px-3 py-2 text-left transition-colors hover:border-primary/30 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                <span className="block text-[10px] font-black uppercase tracking-[0.08em] text-foreground/50">
+                  {getTCGRarityLabel(rarity.rarity, t)}
+                </span>
+                <span className={getRarityColor(rarity.rarity)}>{rarity.owned}/{rarity.total}</span>
+              </button>
+            ))}
+          </div>
+        </details>
+      ) : null}
+
+      {missingCards.length > 0 ? (
+        <details className="rounded-sm border border-border/35 bg-card/20 px-3">
+          <summary className="min-h-11 cursor-pointer py-3 text-xs font-bold text-foreground/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            {t('tcg.completion_estimate_title')}
+          </summary>
+          <div className="border-t border-border/30 pb-3 pt-2" aria-labelledby="tcg-completion-estimate-title">
+            <h2 id="tcg-completion-estimate-title" className="sr-only">{t('tcg.completion_estimate_title')}</h2>
+            <p className="text-xs font-semibold text-foreground/65">
+              {t('tcg.completion_estimate_coverage', { priced: completionEstimate.pricedCount, missing: missingCards.length })}
+            </p>
+            {completionEstimate.groups.length > 0 ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {completionEstimate.groups.map((group) => {
+                  let formattedTotal: string;
+                  try {
+                    formattedTotal = new Intl.NumberFormat(interfaceLanguage, { style: 'currency', currency: group.currency, maximumFractionDigits: 2 }).format(group.total);
+                  } catch {
+                    formattedTotal = `${group.total.toFixed(2)} ${group.currency}`;
+                  }
+                  return (
+                    <p key={group.provider + ':' + group.currency} className="rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-bold tabular-nums text-primary">
+                      {t('tcg.completion_estimate_partial_total', { total: formattedTotal, count: group.count, source: group.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer' })}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : <p className="mt-2 text-sm font-semibold text-foreground/55">{t('tcg.completion_estimate_no_prices')}</p>}
+            {completionEstimate.unpricedCount > 0 ? <p className="mt-2 text-[11px] font-medium text-amber-200/75">{t('tcg.completion_estimate_unpriced', { count: completionEstimate.unpricedCount })}</p> : null}
+            <p className="mt-2 text-[11px] text-muted-foreground">{t('tcg.completion_estimate_method')}</p>
+          </div>
+        </details>
+      ) : null}
 
       {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
       {managedCard && resolvedCollectionKey && (

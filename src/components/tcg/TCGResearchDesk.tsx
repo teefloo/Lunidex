@@ -3,8 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
-  ArrowUpRight,
-  BookOpen,
   ChevronDown,
   Grid2X2,
   Grid3X3,
@@ -12,10 +10,9 @@ import {
   Search,
   Sparkles,
   Filter,
-  Trophy,
+  X,
   type LucideIcon,
 } from 'lucide-react';
-import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -27,16 +24,17 @@ import { cn } from '@/lib/utils';
 import type { TCGCard, TCGCardFilters, TCGCardViewMode, TCGSet } from '@/types/tcg';
 import {
   clearTCGCardSearch,
+  getLatestTCGSet,
   isInitialTcgCatalogCompatible,
   parseTCGSearchState,
   resetTCGCardFilters,
+  sortTCGSetsNewestFirst,
   serializeTCGSearchState,
 } from '@/lib/tcg-research';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 
@@ -96,6 +94,7 @@ export function TCGResearchDesk({
   const ownedIds = useMemo(() => new Set(tcgOwnedCards), [tcgOwnedCards]);
   const wishlistIds = useMemo(() => new Set(tcgWishlistCards), [tcgWishlistCards]);
   const parsedState = useMemo(() => parseTCGSearchState(searchParams), [searchParams]);
+  const isTCGStateHydrating = !mounted || !hasHydrated;
   const initialTcgLanguage: TCGCardLanguage = isTCGCardLanguage(initialLanguage) ? initialLanguage : 'en';
   // A valid URL parameter is authoritative for this view. Once mounted, the
   // selector effect mirrors it into the independent browse preference; the
@@ -124,7 +123,6 @@ export function TCGResearchDesk({
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [isRarityOpen, setIsRarityOpen] = useState(false);
   const didSyncUrlRef = useRef(false);
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
     parsedState.filters.selectedSet
@@ -152,7 +150,11 @@ export function TCGResearchDesk({
 
   const normalizedFilters = useMemo(() => normalizeFilters(filters), [filters]);
 
-  const { data: filterOptions } = useQuery({
+  const {
+    data: filterOptions,
+    isError: isFilterOptionsError,
+    refetch: refetchFilterOptions,
+  } = useQuery({
     queryKey: tcgKeys.filterOptions(resolvedLang),
     queryFn: () => getFilterOptions(resolvedLang),
     staleTime: 60 * 60 * 1000,
@@ -160,31 +162,33 @@ export function TCGResearchDesk({
   });
 
   const setOptions = useMemo(() => {
-    const sets = filterOptions?.sets ?? [];
-    if (sets.length === 0) return [];
-
-    const hasReleaseDates = sets.some((set) => Boolean(set.releaseDate));
-    if (!hasReleaseDates) {
-      return [...sets].reverse();
-    }
-
-    return [...sets].sort((a, b) => {
-      const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
-      const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
-      return dateB - dateA;
-    });
+    return sortTCGSetsNewestFirst(filterOptions?.sets ?? []);
   }, [filterOptions?.sets]);
 
   const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(setOptions), [setOptions]);
 
-  const latestSet = setOptions[0] ?? null;
+  const latestSet = getLatestTCGSet(setOptions);
   const latestSetId = latestSet?.id ?? null;
-  const latestSetFallbackId = latestSetId ?? initialLatestSet?.id ?? null;
-  const latestSetFallbackName = latestSet?.name ?? initialLatestSet?.name ?? t('tcg.unknown');
+  const initialLanguageIsResolved = Boolean(parsedState.tcgLang) || !isTCGStateHydrating;
+  const usableInitialLatestSet = initialLanguageIsResolved
+    && initialLanguage === resolvedLang
+    && !isTcgLangLimited(resolvedLang)
+    ? initialLatestSet
+    : null;
+  const provisionalInitialLatestSet = !parsedState.tcgLang && isTCGStateHydrating
+    ? initialLatestSet
+    : null;
+  const defaultLatestSet = usableInitialLatestSet ?? provisionalInitialLatestSet ?? latestSet;
+  const defaultSetId = defaultLatestSet?.id ?? null;
+  const latestSetFallbackId = usableInitialLatestSet?.id ?? latestSetId ?? null;
+  const latestSetFallbackName = defaultLatestSet?.name ?? t('tcg.unknown');
+  const isResolvingDefaultSet = !hasUserEditedFilters
+    && !normalizedFilters.selectedSet
+    && (!initialLanguageIsResolved || !defaultSetId);
   const effectiveFilters = useMemo(() => normalizeFilters({
     ...normalizedFilters,
-    selectedSet: normalizedFilters.selectedSet ?? (hasUserEditedFilters ? null : latestSetFallbackId),
-  }), [hasUserEditedFilters, latestSetFallbackId, normalizedFilters]);
+    selectedSet: normalizedFilters.selectedSet ?? (hasUserEditedFilters ? null : defaultSetId),
+  }), [defaultSetId, hasUserEditedFilters, normalizedFilters]);
   const urlFilters = normalizedFilters;
   const selectedSet = setOptions.find((set) => set.id === effectiveFilters.selectedSet) ?? latestSet;
   const activeSetName = effectiveFilters.selectedSet
@@ -242,7 +246,7 @@ export function TCGResearchDesk({
   }), [initialCards, initialHasMore]);
   const canUseInitialCatalog = isInitialTcgCatalogCompatible(
     effectiveFilters,
-    initialLatestSet?.id,
+    (usableInitialLatestSet ?? provisionalInitialLatestSet)?.id,
     initialLanguage,
     resolvedLang,
     initialCards.length > 0,
@@ -261,7 +265,7 @@ export function TCGResearchDesk({
     queryFn: async ({ pageParam, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, 24, signal, ownedIds, wishlistIds, false),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length + 1 : undefined,
-    enabled: mounted && hasHydrated,
+    enabled: mounted && hasHydrated && !isResolvingDefaultSet,
     staleTime: 5 * 60 * 1000,
     initialData: canUseInitialCatalog ? initialCatalogData : undefined,
   });
@@ -320,7 +324,6 @@ export function TCGResearchDesk({
   const clearFilters = useCallback(() => {
     cancelPendingSearch();
     setSearchTermDraft('');
-    setIsRarityOpen(false);
     setHasUserEditedFilters(false);
     setFilters(resetTCGCardFilters(latestSetFallbackId));
   }, [cancelPendingSearch, latestSetFallbackId]);
@@ -338,14 +341,11 @@ export function TCGResearchDesk({
   }, []);
 
   const openFilters = useCallback(() => {
-    setIsRarityOpen(false);
     setIsFiltersOpen(true);
   }, []);
 
   const applyQuickPreset = useCallback((preset: 'latest' | 'pikachu') => {
     cancelPendingSearch();
-    setIsRarityOpen(false);
-    setHasUserEditedFilters(true);
 
     const resetQuickPresetFilters = (current: TCGCardFilters, next: Partial<TCGCardFilters>): TCGCardFilters => normalizeFilters({
       ...current,
@@ -372,17 +372,41 @@ export function TCGResearchDesk({
 
     if (preset === 'latest') {
       setSearchTermDraft('');
+      setHasUserEditedFilters(Boolean(latestSetFallbackId));
       setFilters((current) => resetQuickPresetFilters(current, {
-        selectedSet: latestSetFallbackId ?? current.selectedSet ?? null,
+        selectedSet: latestSetFallbackId,
       }));
       return;
     }
 
+    setHasUserEditedFilters(true);
     setSearchTermDraft('Pikachu');
     setFilters((current) => resetQuickPresetFilters(current, {
       searchTerm: 'Pikachu',
     }));
   }, [cancelPendingSearch, latestSetFallbackId]);
+
+  const activeFilterChips: Array<{ id: string; label: string; next: TCGCardFilters }> = [];
+  const addFilterChip = (id: string, label: string, next: TCGCardFilters) => {
+    activeFilterChips.push({ id, label, next });
+  };
+  if (effectiveFilters.selectedSet) addFilterChip('set', `${t('tcg.filter_set')}: ${activeSetName ?? effectiveFilters.selectedSet}`, { ...effectiveFilters, selectedSet: null });
+  if (effectiveFilters.selectedCategory && effectiveFilters.selectedCategory !== 'all') addFilterChip('category', `${t('tcg.filter_category', { defaultValue: 'Category' })}: ${effectiveFilters.selectedCategory}`, { ...effectiveFilters, selectedCategory: 'all' });
+  if (effectiveFilters.selectedRarity) addFilterChip('rarity', `${t('tcg.filter_rarity')}: ${effectiveFilters.selectedRarity}`, { ...effectiveFilters, selectedRarity: null });
+  for (const type of effectiveFilters.selectedTypes ?? []) addFilterChip(`type-${type}`, `${t(`types.${type}`, { defaultValue: type })}`, { ...effectiveFilters, selectedTypes: (effectiveFilters.selectedTypes ?? []).filter((value) => value !== type) });
+  if (effectiveFilters.selectedPhase) addFilterChip('phase', `${t('tcg.filter_phase', { defaultValue: 'Stage' })}: ${effectiveFilters.selectedPhase}`, { ...effectiveFilters, selectedPhase: null });
+  for (const type of effectiveFilters.selectedTrainerTypes ?? []) addFilterChip(`trainer-${type}`, `${t('tcg.filter_trainer_type', { defaultValue: 'Trainer' })}: ${type}`, { ...effectiveFilters, selectedTrainerTypes: (effectiveFilters.selectedTrainerTypes ?? []).filter((value) => value !== type) });
+  for (const type of effectiveFilters.selectedEnergyTypes ?? []) addFilterChip(`energy-${type}`, `${t('tcg.filter_energy_type', { defaultValue: 'Energy' })}: ${type}`, { ...effectiveFilters, selectedEnergyTypes: (effectiveFilters.selectedEnergyTypes ?? []).filter((value) => value !== type) });
+  if (typeof effectiveFilters.minHp === 'number') addFilterChip('min-hp', `${t('tcg.filter_min_hp', { defaultValue: 'Min HP' })}: ${effectiveFilters.minHp}`, { ...effectiveFilters, minHp: undefined });
+  if (typeof effectiveFilters.maxHp === 'number') addFilterChip('max-hp', `${t('tcg.filter_max_hp', { defaultValue: 'Max HP' })}: ${effectiveFilters.maxHp}`, { ...effectiveFilters, maxHp: undefined });
+  if (effectiveFilters.illustrator) addFilterChip('illustrator', `${t('tcg.filter_illustrator', { defaultValue: 'Illustrator' })}: ${effectiveFilters.illustrator}`, { ...effectiveFilters, illustrator: undefined });
+  if (effectiveFilters.regulationMark) addFilterChip('regulation', `${t('tcg.filter_regulation', { defaultValue: 'Regulation mark' })}: ${effectiveFilters.regulationMark}`, { ...effectiveFilters, regulationMark: undefined });
+  for (const legality of effectiveFilters.legalities ?? []) addFilterChip(`legality-${legality}`, `${t('tcg.filter_legality', { defaultValue: 'Legality' })}: ${legality}`, { ...effectiveFilters, legalities: (effectiveFilters.legalities ?? []).filter((value) => value !== legality) });
+  if (typeof effectiveFilters.priceMin === 'number') addFilterChip('min-price', `${t('tcg.filter_price_min', { defaultValue: 'Min price' })}: ${effectiveFilters.priceMin}`, { ...effectiveFilters, priceMin: undefined });
+  if (typeof effectiveFilters.priceMax === 'number') addFilterChip('max-price', `${t('tcg.filter_price_max', { defaultValue: 'Max price' })}: ${effectiveFilters.priceMax}`, { ...effectiveFilters, priceMax: undefined });
+  if (effectiveFilters.releaseStart) addFilterChip('release-start', `${t('tcg.filter_release_start', { defaultValue: 'Released after' })}: ${effectiveFilters.releaseStart}`, { ...effectiveFilters, releaseStart: undefined });
+  if (effectiveFilters.releaseEnd) addFilterChip('release-end', `${t('tcg.filter_release_end', { defaultValue: 'Released before' })}: ${effectiveFilters.releaseEnd}`, { ...effectiveFilters, releaseEnd: undefined });
+  if (effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all') addFilterChip('owned-state', `${t('tcg.filter_owned_state', { defaultValue: 'Collection' })}: ${effectiveFilters.ownedState}`, { ...effectiveFilters, ownedState: 'all' });
 
   return (
     <div className="space-y-6 pb-24">
@@ -395,19 +419,13 @@ export function TCGResearchDesk({
         collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
-        filters={effectiveFilters}
-        onFiltersChange={updateFilters}
-        language={resolvedLang}
-        selectedRarity={effectiveFilters.selectedRarity ?? null}
-        isRarityOpen={isRarityOpen}
+        isCollectionOptionsLoading={isTCGStateHydrating || isResolvingDefaultSet || !filterOptions}
         onCollectionChange={(selectedSet) => {
-          setIsRarityOpen(false);
           updateFilters({
             ...effectiveFilters,
             selectedSet,
           });
         }}
-        onRarityToggle={() => setIsRarityOpen((current) => !current)}
         onSortChange={(sortBy, sortOrder) => {
           updateFilters({
             ...effectiveFilters,
@@ -420,18 +438,62 @@ export function TCGResearchDesk({
         onOpenFilters={openFilters}
       />
 
+      {activeFilterChips.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-2" role="region" aria-label={t('tcg.filters')}>
+          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground/45">{t('tcg.filters')}</span>
+          {activeFilterChips.map((chip) => (
+            <button
+              key={chip.id}
+              type="button"
+              onClick={() => updateFilters(chip.next)}
+              aria-label={`${t('tcg.clear')}: ${chip.label}`}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-sm border border-primary/25 bg-primary/8 px-2.5 text-xs font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              <span>{chip.label}</span>
+              <X aria-hidden="true" className="h-3.5 w-3.5" />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="min-h-11 px-2 text-xs font-bold text-foreground/55 underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          >
+            {t('tcg.clear')}
+          </button>
+        </div>
+      ) : null}
+
       <div className="space-y-4">
         <section className="min-w-0 space-y-4" aria-labelledby="tcg-results-title">
           <h2 id="tcg-results-title" className="sr-only">
             {t('tcg.results_heading', { defaultValue: 'Catalog results' })}
           </h2>
-          <ResultSummary
-            count={totalCards}
-            activeSetName={activeSetName}
-            isFetching={isFetching}
-          />
+          {!isTCGStateHydrating && !isResolvingDefaultSet ? (
+            <ResultSummary
+              count={totalCards}
+              activeSetName={activeSetName}
+              isFetching={isFetching}
+            />
+          ) : null}
 
-          {isLoading ? (
+          {isTCGStateHydrating ? (
+            <CardGridSkeleton viewMode={viewMode} />
+          ) : isResolvingDefaultSet ? (
+            isFilterOptionsError || filterOptions ? (
+              <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80" role="alert">
+                <p>{t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}</p>
+                <button
+                  type="button"
+                  onClick={() => void refetchFilterOptions()}
+                  className="mt-3 inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  {t('common.retry', { defaultValue: 'Retry' })}
+                </button>
+              </div>
+            ) : (
+              <CardGridSkeleton viewMode={viewMode} />
+            )
+          ) : isLoading ? (
             <CardGridSkeleton viewMode={viewMode} />
           ) : isError ? (
             <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80">
@@ -521,13 +583,8 @@ function DiscoveryHero({
   collectionLabels,
   selectedCollectionId,
   sortValue,
-  filters,
-  onFiltersChange,
-  language,
-  selectedRarity,
-  isRarityOpen,
+  isCollectionOptionsLoading,
   onCollectionChange,
-  onRarityToggle,
   onSortChange,
   onSearchChange,
   onClearSearch,
@@ -540,72 +597,22 @@ function DiscoveryHero({
   collectionLabels: Map<string, string>;
   selectedCollectionId: string | null;
   sortValue: string;
-  filters: TCGCardFilters;
-  onFiltersChange: (filters: TCGCardFilters) => void;
-  language: TCGCardLanguage;
-  selectedRarity: string | null;
-  isRarityOpen: boolean;
+  isCollectionOptionsLoading: boolean;
   onCollectionChange: (setId: string | null) => void;
-  onRarityToggle: () => void;
   onSortChange: (sortBy: NonNullable<TCGCardFilters['sortBy']>, sortOrder: NonNullable<TCGCardFilters['sortOrder']>) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onOpenFilters: () => void;
 }) {
   const { t } = useTranslation();
-  const localeHref = useLocaleHref();
 
   return (
-    <section className="page-surface px-5 py-6 sm:px-8 sm:py-7">
-      <div className="space-y-4">
-        <div className="relative inline-flex max-w-full">
-          <Sparkles className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
-          <select
-            value={selectedCollectionId ?? ''}
-            onChange={(event) => onCollectionChange(event.target.value || null)}
-            className="glass-control min-h-11 max-w-full cursor-pointer appearance-none px-3 py-2 pl-7 pr-8 text-sm font-semibold transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
-            aria-label={t('tcg.filter_set')}
-          >
-            <option value="">{t('tcg.all_collections')}</option>
-            {collections.map((collection) => (
-              <option key={collection.id} value={collection.id}>
-                {collectionLabels.get(collection.id) ?? collection.name}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/55" />
+    <section className="rounded-sm border border-border/35 bg-card/20 p-4 sm:p-5">
+      <div className="space-y-3">
+        <div>
+          <h1 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl">{title}</h1>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-foreground/55">{subtitle}</p>
         </div>
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-          <div className="space-y-3">
-            <h1 className="page-title text-4xl leading-none sm:text-5xl xl:text-6xl">
-              {title}
-            </h1>
-            <p className="page-subtitle max-w-2xl">
-              {subtitle}
-            </p>
-          </div>
-          <Link
-            href={localeHref('/guides/pokemon-card-collection-tracker')}
-            aria-label={t('collection_guide.nav_label')}
-            className="group inline-flex w-full max-w-xl items-center gap-3 rounded-sm border border-primary/25 bg-primary/5 p-3 text-left transition-[transform,border-color,background-color,box-shadow] duration-150 hover:-translate-y-px hover:border-primary/60 hover:bg-primary/10 hover:shadow-[var(--shadow-pixel-sm)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:w-auto lg:max-w-[22rem]"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-primary/30 bg-primary/10 text-primary">
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-primary">
-                {t('collection_guide.eyebrow')}
-              </span>
-              <span className="mt-1 block text-sm font-black leading-snug text-foreground/85">
-                {t('collection_guide.nav_label')}
-              </span>
-            </span>
-            <ArrowUpRight className="h-4 w-4 shrink-0 text-primary/65 transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-          </Link>
-        </div>
-      </div>
-
-      <div className="mt-5 space-y-4">
         <div className="relative isolate">
           <div className="pointer-events-none absolute left-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-sm border border-border/45 bg-card/75 text-primary/80 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.45)]">
             <Search className="h-4 w-4" />
@@ -620,7 +627,30 @@ function DiscoveryHero({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full md:w-[250px]">
+          <div className="relative w-full sm:w-auto sm:min-w-48 sm:max-w-[20rem]">
+            <Sparkles className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-primary" aria-hidden="true" />
+            {isCollectionOptionsLoading ? (
+              <div className="glass-control flex min-h-11 items-center px-3 pl-9 text-sm font-semibold text-foreground/50" aria-busy="true" aria-label={t('tcg.filter_set')}>
+                {t('tcg.collection_loading')}
+              </div>
+            ) : (
+              <select
+                value={selectedCollectionId ?? ''}
+                onChange={(event) => onCollectionChange(event.target.value || null)}
+                className="glass-control min-h-11 w-full cursor-pointer appearance-none px-3 pl-9 pr-8 text-sm font-semibold transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
+                aria-label={t('tcg.filter_set')}
+              >
+                <option value="">{t('tcg.all_collections')}</option>
+                {collections.map((collection) => (
+                  <option key={collection.id} value={collection.id}>
+                    {collectionLabels.get(collection.id) ?? collection.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/55" aria-hidden="true" />
+          </div>
+          <div className="w-full sm:w-auto sm:min-w-48 sm:max-w-[20rem]">
             <div className="relative overflow-hidden rounded-sm">
               <select
                 value={sortValue}
@@ -656,31 +686,11 @@ function DiscoveryHero({
           <button
             type="button"
             onClick={onOpenFilters}
-            className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/25 hover:bg-primary/10 hover:text-primary"
+            className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/25 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.14em] text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
           >
             <Filter className="h-3.5 w-3.5" />
             {t('tcg.filters')}
           </button>
-          {selectedCollectionId && (
-            <button
-              type="button"
-              aria-expanded={isRarityOpen}
-              aria-controls="tcg-quick-rarity"
-              aria-label={selectedRarity
-                ? `${t('tcg.filter_rarity')}: ${selectedRarity}`
-                : t('tcg.filter_rarity')}
-              onClick={onRarityToggle}
-              className={cn(
-                'inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 text-[11px] font-black uppercase tracking-[0.18em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
-                isRarityOpen || selectedRarity
-                  ? 'border-primary/35 bg-primary/10 text-primary'
-                  : 'border-border/50 bg-card/50 text-foreground/60 hover:border-primary/25 hover:bg-primary/10 hover:text-primary',
-              )}
-            >
-              <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
-              {t('tcg.filter_rarity')}
-            </button>
-          )}
           {searchTerm && (
             <button
               type="button"
@@ -692,24 +702,6 @@ function DiscoveryHero({
           )}
         </div>
 
-        {selectedCollectionId && (
-          <div
-            id="tcg-quick-rarity"
-            className="border-t border-border/35 pt-4"
-            aria-label={t('tcg.filter_rarity')}
-            hidden={!isRarityOpen}
-          >
-            {isRarityOpen && (
-              <TCGFilters
-                mode="quickRarity"
-                filters={filters}
-                onChange={onFiltersChange}
-                autoApplyInitialSet={false}
-                language={language}
-              />
-            )}
-          </div>
-        )}
       </div>
     </section>
   );

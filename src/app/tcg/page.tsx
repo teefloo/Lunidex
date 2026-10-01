@@ -1,16 +1,13 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { TCGCompareTrigger } from '@/components/tcg/TCGCompareTrigger';
-import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
-import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
 import { getInitialTcgCatalogCached } from '@/lib/api/server-cache';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
-import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, localeHref, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
@@ -59,10 +56,9 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
     'tcg.nav_catalog': t('tcg.nav_catalog'),
     'tcg.nav_collection': t('tcg.nav_collection'),
     'tcg.nav_wishlist': t('tcg.nav_wishlist'),
-    'tcg.nav_deck_builder': t('tcg.nav_deck_builder'),
-    'tcg.nav_sealed': t('tcg.nav_sealed', { defaultValue: 'Sealed' }),
     'tcg.nav_sealed_market': t('tcg.nav_sealed_market', { defaultValue: 'Sealed market' }),
-    'friends.title': t('friends.title', { defaultValue: 'Friends' }),
+    'booster_guides.links.pull': t('booster_guides.links.pull'),
+    'booster_guides.links.value': t('booster_guides.links.value'),
   } as const;
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
@@ -89,29 +85,9 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
             <TCGPageTabs initialLabels={initialTabLabels} />
           </Suspense>
-          <nav aria-label={t('tcg.page_title')} className="mx-auto mb-8 flex w-full max-w-6xl flex-wrap gap-3">
-            <Link href={localeHref('/tcg/pull-rates', lang)} className="glass-btn inline-flex min-h-11 items-center px-4 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.pull')}</Link>
-            <Link href={localeHref('/tcg/booster-value', lang)} className="glass-btn inline-flex min-h-11 items-center px-4 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.value')}</Link>
-          </nav>
-          {isAnniversary30Language(lang) ? (
-            <section className="anniversary-promo mx-auto w-full max-w-6xl rounded-sm border border-primary/30 bg-primary/5 p-6 md:flex md:items-center md:justify-between md:gap-8" aria-labelledby="tcg-anniversary-30-title">
-              <div>
-                <p className="page-eyebrow">{t('anniversary_30.eyebrow')}</p>
-                <h2 id="tcg-anniversary-30-title" className="mt-2 text-2xl font-extrabold tracking-tight">
-                  {t('anniversary_30.heading')}
-                </h2>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/70">
-                  {t('anniversary_30.intro')}
-                </p>
-              </div>
-              <Link href={`${localeHref(ANNIVERSARY_30_PATH, lang)}#tracker`} className="glass-btn glass-btn-active mt-5 inline-flex min-h-11 shrink-0 items-center px-4 py-3 text-sm font-bold md:mt-0">
-                {t('anniversary_30.cta_tracker')}
-              </Link>
-            </section>
-          ) : null}
           <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
             <TCGResearchDesk
-              initialLatestSet={DEFAULT_LATEST_TCG_SET}
+              initialLatestSet={initialCatalog?.latestSet ?? null}
               initialCards={initialCatalog?.cards ?? []}
               initialHasMore={initialCatalog?.hasMore ?? false}
               initialLanguage={initialTcgLanguage}

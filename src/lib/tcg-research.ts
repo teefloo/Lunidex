@@ -6,6 +6,7 @@ import type {
   TCGSavedSearch,
   TCGSearchFacets,
   TCGSearchInsights,
+  TCGSet,
 } from '@/types/tcg';
 import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 
@@ -18,6 +19,21 @@ export const MAX_TCG_SEARCH_VALUE_LENGTH = 128;
 export const MAX_TCG_FILTER_ITEM_LENGTH = 64;
 export const MAX_TCG_FILTER_LIST_ITEMS = 12;
 export const MAX_TCG_NUMERIC_FILTER = 1_000_000;
+
+export function sortTCGSetsNewestFirst(sets: readonly TCGSet[]): TCGSet[] {
+  const hasReleaseDates = sets.some((set) => Boolean(set.releaseDate));
+  if (!hasReleaseDates) return [...sets].reverse();
+
+  return [...sets].sort((a, b) => {
+    const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
+    const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : Number.NEGATIVE_INFINITY;
+    return dateB - dateA;
+  });
+}
+
+export function getLatestTCGSet(sets: readonly TCGSet[]): TCGSet | null {
+  return sortTCGSetsNewestFirst(sets)[0] ?? null;
+}
 
 export interface TCGSearchState {
   filters: TCGCardFilters;
@@ -56,7 +72,7 @@ export function clearTCGCardSearch(filters: TCGCardFilters, latestSetId?: string
 
 /**
  * The server-rendered catalog preview is scoped to one exact query: the
- * configured latest set, the resolved card language, and the default card
+ * data-derived latest set, the resolved card language, and the default card
  * sort with no additional filters. Reusing it for another query makes
  * TanStack Query consider unrelated cards fresh and can leave the previous
  * set visible indefinitely while the requested set never loads.

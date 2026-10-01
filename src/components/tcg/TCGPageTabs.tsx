@@ -2,47 +2,27 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
+import { ChevronDown, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { isSupportedLanguage } from '@/lib/languages';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { normalizeNavigationPath, resolveNavigationDestination, NAVIGATION_DESTINATIONS } from '@/lib/navigation-registry';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
 import { resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
 import { usePrimeDexStore } from '@/store/primedex';
 
-const TABS = [
-  { href: '/tcg', key: 'tcg.nav_catalog' },
-  { href: '/tcg/collection', key: 'tcg.nav_collection' },
-  { href: '/tcg/wishlist', key: 'tcg.nav_wishlist' },
-  { href: '/tcg/deck-builder', key: 'tcg.nav_deck_builder' },
-  { href: '/tcg/sealed', key: 'tcg.nav_sealed' },
-  { href: '/tcg/sealed/market', key: 'tcg.nav_sealed_market' },
-  { href: '/friends', key: 'friends.title' },
-] as const;
-
-const FALLBACK_LABELS: Record<(typeof TABS)[number]['key'], string> = {
-  'tcg.nav_catalog': 'Catalog',
-  'tcg.nav_collection': 'Collection',
-  'tcg.nav_wishlist': 'Wishlist',
-  'tcg.nav_deck_builder': 'Deck builder',
-  'tcg.nav_sealed': 'Sealed',
-  'tcg.nav_sealed_market': 'Sealed market',
-  'friends.title': 'Friends',
-};
-
-type TCGPageTabLabels = Record<(typeof TABS)[number]['key'], string>;
-
 interface TCGPageTabsProps {
-  initialLabels?: TCGPageTabLabels;
+  initialLabels?: Readonly<Record<string, string>>;
 }
 
-export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProps) {
+export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const localizedHref = useLocaleHref();
-  const normalizedPathname = normalizePathname(pathname);
+  const normalizedPathname = normalizeNavigationPath(pathname);
+  const toolsRef = useRef<HTMLDetailsElement>(null);
   const requestedTcgLanguage = searchParams.get('tcgLang');
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
@@ -51,50 +31,110 @@ export function TCGPageTabs({ initialLabels = FALLBACK_LABELS }: TCGPageTabsProp
     : hasHydrated
       ? browseLanguage
       : null;
-
-  const isActive = (href: string) => {
-    if (href === '/tcg') return normalizedPathname === '/tcg';
-    if (href === '/tcg/sealed') return normalizedPathname.startsWith(href) && !normalizedPathname.startsWith('/tcg/sealed/market');
-    return normalizedPathname.startsWith(href);
+  const destination = resolveNavigationDestination(pathname);
+  const isPersonalCollection = destination?.group === 'collection';
+  const visibleTabs = isPersonalCollection
+    ? NAVIGATION_DESTINATIONS.filter((item) => ['collection', 'wishlist', 'sealed-portfolio'].includes(item.id) && item.path !== null)
+    : NAVIGATION_DESTINATIONS.filter((item) => (item.id === 'catalog' || item.id === 'sealed-market') && item.path !== null);
+  const toolItems = NAVIGATION_DESTINATIONS.filter((item) => item.group === 'catalog' && !['catalog', 'sealed-market'].includes(item.id) && item.path !== null);
+  const selectedTool = toolItems.find((item) => item.id === destination?.id);
+  const showLanguageSelector = normalizedPathname === '/tcg'
+    || normalizedPathname === '/tcg/collection'
+    || normalizedPathname === '/tcg/wishlist'
+    || normalizedPathname === '/tcg/deck-builder';
+  const label = (key: string, fallback: string) => {
+    const translated = t(key, { defaultValue: initialLabels[key] ?? fallback });
+    return translated === key ? (initialLabels[key] ?? fallback) : translated;
+  };
+  const buildHref = (path: string) => {
+    const href = localizedHref(path);
+    if (!tcgLanguage || (!path.startsWith('/tcg/collection') && path !== '/tcg' && !path.startsWith('/tcg/'))) return href;
+    const params = new URLSearchParams({ tcgLang: tcgLanguage });
+    return `${href}?${params.toString()}`;
   };
 
+  const closeTools = () => {
+    if (toolsRef.current) toolsRef.current.open = false;
+  };
+
+  useEffect(() => {
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (toolsRef.current?.open && event.target instanceof Node && !toolsRef.current.contains(event.target)) {
+        closeTools();
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && toolsRef.current?.open) closeTools();
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
+
   return (
-    <div className="mx-auto mb-8 flex w-full flex-col gap-2 sm:w-fit sm:flex-row sm:items-stretch">
-      <div className="glass-toolbar grid w-full grid-cols-2 items-stretch gap-0.5 p-0.5 sm:inline-flex sm:w-fit sm:items-center">
-        {TABS.map((tab) => (
-          <Link
-            key={tab.href}
-            href={buildTabHref(localizedHref(tab.href), tab.href, tcgLanguage)}
-            aria-current={isActive(tab.href) ? 'page' : undefined}
-            className={cn(
-              'touch-target relative flex min-h-11 min-w-0 items-center justify-center rounded-sm px-2 text-center text-[11px] font-black uppercase leading-tight tracking-[0.12em] transition-[color,background-color,border-color,box-shadow] duration-100 sm:px-3.5',
-              isActive(tab.href)
-                ? cn(
-                  'border border-primary/40 bg-primary/15 text-primary shadow-[var(--shadow-pixel-sm)]',
-                  tab.href === '/tcg' && 'rounded-l-[0.95rem]',
-                )
-                : 'text-foreground/40 hover:text-foreground/70 hover:bg-muted/50',
-            )}
-          >
-            {t(tab.key, { defaultValue: initialLabels[tab.key] })}
-          </Link>
-        ))}
+    <nav className="tcg-local-navigation" aria-label={label('tcg.page_title', 'TCG workspace')}>
+      <div className="tcg-local-navigation-main">
+        <div className="tcg-local-navigation-links">
+          {visibleTabs.map((item) => {
+            if (!item.path) return null;
+            const Icon = item.icon;
+            const isActive = destination?.id === item.id || (destination?.id === 'collection-start' && item.id === 'collection');
+            const itemLabel = label(item.labelKey, item.fallback);
+            return (
+              <Link
+                key={item.id}
+                href={buildHref(item.path)}
+                aria-current={isActive ? 'page' : undefined}
+                data-active={isActive ? 'true' : undefined}
+                className="tcg-local-navigation-link"
+              >
+                <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />
+                <span>{itemLabel}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {!isPersonalCollection && toolItems.length > 0 ? (
+          <details ref={toolsRef} className="tcg-local-tools">
+            <summary className={cn('tcg-local-navigation-link tcg-local-tools-trigger', selectedTool && 'is-context-active')}>
+              <Wrench aria-hidden="true" className="h-4 w-4 shrink-0" />
+              <span>{selectedTool ? label(selectedTool.labelKey, selectedTool.fallback) : label('nav.tools', 'TCG tools')}</span>
+              <ChevronDown aria-hidden="true" className="tcg-local-tools-chevron h-3.5 w-3.5 shrink-0" />
+            </summary>
+            <div className="tcg-local-tools-menu" onClick={(event) => {
+              if ((event.target as HTMLElement).closest('a')) closeTools();
+            }}>
+              {toolItems.map((item) => {
+                if (!item.path) return null;
+                const Icon = item.icon;
+                const isActive = destination?.id === item.id;
+                return (
+                  <Link
+                    key={item.id}
+                    href={buildHref(item.path)}
+                    aria-current={isActive ? 'page' : undefined}
+                    data-active={isActive ? 'true' : undefined}
+                    className="tcg-local-tool-link"
+                  >
+                    <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />
+                    <span>{label(item.labelKey, item.fallback)}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </details>
+        ) : null}
       </div>
-      <Suspense fallback={<div className="min-h-11 w-full rounded-sm border border-border/45 bg-card/55 sm:w-36" aria-hidden="true" />}>
-        <TCGLanguageSelector className="w-full justify-between sm:w-auto sm:shrink-0" />
-      </Suspense>
-    </div>
+
+      {showLanguageSelector ? (
+        <Suspense fallback={<div className="h-11 w-full rounded-sm border border-border/45 bg-card/55 sm:w-36" aria-hidden="true" />}>
+          <TCGLanguageSelector className="w-full justify-between sm:w-auto sm:shrink-0" />
+        </Suspense>
+      ) : null}
+    </nav>
   );
-}
-
-function buildTabHref(localizedPath: string, tabPath: string, tcgLanguage: string | null): string {
-  if (!tcgLanguage || (tabPath !== '/tcg' && !tabPath.startsWith('/tcg/'))) return localizedPath;
-  const params = new URLSearchParams({ tcgLang: tcgLanguage });
-  return `${localizedPath}?${params.toString()}`;
-}
-
-function normalizePathname(pathname: string): string {
-  const [firstSegment, ...rest] = pathname.split('/').filter(Boolean);
-  if (!isSupportedLanguage(firstSegment ?? '')) return pathname;
-  return rest.length > 0 ? `/${rest.join('/')}` : '/';
 }

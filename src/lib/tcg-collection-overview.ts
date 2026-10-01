@@ -104,6 +104,16 @@ export function buildTCGCollectionOverviewEntries(
   });
 }
 
+export function getLatestTCGCollectionSet(
+  sets: readonly TCGCollectionSetSummary[],
+): TCGCollectionSetSummary | null {
+  return [...sets].sort((left, right) => (
+    left.releaseRank - right.releaseRank
+    || left.name.localeCompare(right.name)
+    || left.id.localeCompare(right.id)
+  ))[0] ?? null;
+}
+
 /** Keep the catalog order aligned with TCGdex: releaseRank 0 is newest. */
 export function sortTCGCollectionEntriesByRelease<T extends CollectionReleaseEntry>(
   entries: readonly T[],

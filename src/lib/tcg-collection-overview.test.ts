@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildTCGCollectionOverviewEntries,
   filterTCGCollectionOverviewEntries,
+  getLatestTCGCollectionSet,
   getTCGCollectionCatalogDisplay,
   normalizeTCGCollectionReturnQuery,
   parseTCGCollectionUrlState,
@@ -32,6 +33,16 @@ function entry(
 }
 
 describe('TCG collection overview ordering', () => {
+  it('selects the newest available collection by TCGdex release rank', () => {
+    const latest = getLatestTCGCollectionSet([
+      { id: 'me03', name: 'Perfect Order', totalCards: 120, releaseRank: 1, dataLanguage: 'en' },
+      { id: 'me04', name: 'Phantasmal Flames', totalCards: 130, releaseRank: 0, dataLanguage: 'en' },
+    ]);
+
+    expect(latest).toMatchObject({ id: 'me04', name: 'Phantasmal Flames' });
+    expect(getLatestTCGCollectionSet([])).toBeNull();
+  });
+
   it('builds one collection entry for every catalog set', () => {
     const entries = buildTCGCollectionOverviewEntries([
       { id: 'sv10', name: 'Destined Rivals', totalCards: 182, releaseRank: 0, dataLanguage: 'en' },

@@ -2,8 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   AlertTriangle,
@@ -32,7 +31,6 @@ import {
   WalletCards,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
-import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
@@ -280,30 +278,70 @@ function ProductPriceHistoryChart({ prices, transactions, language, t }: { price
 }
 
 function SealedSubnav({ view, localizedHref, t }: { view: SealedView; localizedHref: (path: string) => string; t: (key: string, options?: Record<string, unknown>) => string }) {
-  const router = useRouter();
+  const reportMenuRef = useRef<HTMLDetailsElement>(null);
+  const toolsMenuRef = useRef<HTMLDetailsElement>(null);
+  const primaryViews = SEALED_SUBVIEWS.filter((item) => item.section === 'main');
+  const reportViews = SEALED_SUBVIEWS.filter((item) => item.section === 'reports');
+  const toolViews = SEALED_SUBVIEWS.filter((item) => item.section === 'tools');
+  const activeReport = reportViews.some((item) => item.key === view);
+  const activeTool = toolViews.some((item) => item.key === view);
+
+  useEffect(() => {
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      for (const menu of [reportMenuRef.current, toolsMenuRef.current]) {
+        if (menu?.open && !menu.contains(event.target)) menu.open = false;
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      const openedMenu = [reportMenuRef.current, toolsMenuRef.current].find((menu) => menu?.open);
+      if (!openedMenu) return;
+      event.preventDefault();
+      openedMenu.open = false;
+      openedMenu.querySelector('summary')?.focus();
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
+  const renderLinks = (items: (typeof SEALED_SUBVIEWS)[number][]) => items.map((item) => (
+    <Link
+      key={item.key}
+      href={localizedHref(item.path)}
+      aria-current={view === item.key ? 'page' : undefined}
+      data-active={view === item.key ? 'true' : undefined}
+      className="sealed-subnav-link"
+    >
+      {t(`tcg.sealed.${item.labelKey}`)}
+    </Link>
+  ));
 
   return (
-    <nav className="mb-6" aria-label={t('tcg.sealed.title')}>
-      <div className="relative md:hidden">
-        <label htmlFor="sealed-view-select" className="sr-only">{t('tcg.sealed.title')}</label>
-        <select
-          id="sealed-view-select"
-          value={view}
-          onChange={(event) => router.push(localizedHref(getSealedSubnavPath(event.target.value)))}
-          className="glass-control h-12 w-full cursor-pointer appearance-none px-4 pr-10 text-sm font-black uppercase tracking-[0.12em] text-foreground focus:outline-none focus:ring-2 focus:ring-primary/35"
-          aria-label={t('tcg.sealed.title')}
-        >
-          {SEALED_SUBVIEWS.map((item) => (
-            <option key={item.key} value={item.key}>
-              {t(`tcg.sealed.${item.labelKey}`)}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" aria-hidden="true" />
-      </div>
-      <div className="glass-toolbar hidden w-full flex-wrap gap-1 p-1.5 md:flex">
-        {SEALED_SUBVIEWS.map((item) => <Link key={item.key} href={localizedHref(item.path)} aria-current={view === item.key ? 'page' : undefined} className={`touch-target inline-flex min-h-11 items-center whitespace-nowrap rounded-sm px-3 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${view === item.key ? 'border border-primary/40 bg-primary/15 text-primary' : 'text-foreground/50 hover:bg-muted/50 hover:text-foreground'}`}>{t(`tcg.sealed.${item.labelKey}`)}</Link>)}
-      </div>
+    <nav className="sealed-subnav" aria-label={t('tcg.sealed.title')}>
+      <div className="sealed-subnav-primary">{renderLinks(primaryViews)}</div>
+      <details ref={reportMenuRef} className="sealed-subnav-menu">
+        <summary className={activeReport ? 'sealed-subnav-menu-trigger is-active' : 'sealed-subnav-menu-trigger'}>
+          {t('tcg.sealed.reports', { defaultValue: 'Reports' })}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
+        </summary>
+        <div className="sealed-subnav-menu-panel">{renderLinks(reportViews)}</div>
+      </details>
+      <details ref={toolsMenuRef} className="sealed-subnav-menu">
+        <summary className={activeTool ? 'sealed-subnav-menu-trigger is-active' : 'sealed-subnav-menu-trigger'}>
+          {t('nav.tools', { defaultValue: 'Tools' })}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
+        </summary>
+        <div className="sealed-subnav-menu-panel">{renderLinks(toolViews)}</div>
+      </details>
+      <Link
+        href={localizedHref(getSealedSubnavPath('market'))}
+        aria-current={view === 'market' ? 'page' : undefined}
+        className="sealed-subnav-link sealed-subnav-market"
+      >
+        {t('tcg.nav_sealed_market', { defaultValue: 'Public sealed market' })}
+      </Link>
     </nav>
   );
 }
@@ -681,9 +719,23 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
     />
   </PageFrame>;
 
-  if (authLoading || !mounted || !user && syncStatus !== 'unauthenticated') return <PageFrame><LoadingState label={t('tcg.sealed.loading')} /></PageFrame>;
-  if (!user || syncStatus === 'unauthenticated') return <PageFrame><SyncRequiredPanel /></PageFrame>;
-  if (syncStatus !== 'ready') return <PageFrame><SyncStatusPanel status={syncStatus} /></PageFrame>;
+  const navigationView = view === 'product' ? 'collection' : view;
+  const privatePageContext = (
+    <>
+      <SealedSubnav view={navigationView} localizedHref={localizedHref} t={t} />
+      <section className="mb-6 max-w-3xl" aria-labelledby="sealed-page-title">
+        <p className="page-eyebrow">{t('tcg.sealed.eyebrow')}</p>
+        <h1 id="sealed-page-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
+          {t(view === 'product' ? 'tcg.sealed.product' : `tcg.sealed.${view}`)}
+        </h1>
+        <p className="mt-2 text-sm leading-6 text-foreground/60">{t('tcg.sealed.subtitle')}</p>
+      </section>
+    </>
+  );
+
+  if (authLoading || !mounted || !user && syncStatus !== 'unauthenticated') return <PageFrame>{privatePageContext}<LoadingState label={t('tcg.sealed.loading')} /></PageFrame>;
+  if (!user || syncStatus === 'unauthenticated') return <PageFrame>{privatePageContext}<SyncRequiredPanel headingLevel={2} /></PageFrame>;
+  if (syncStatus !== 'ready') return <PageFrame>{privatePageContext}<SyncStatusPanel status={syncStatus} headingLevel={2} /></PageFrame>;
 
   const currentOverview = overview.data;
   const overviewError = overview.error;
@@ -730,7 +782,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   </PageFrame>;
 }
 
-function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none"> <TCGPageTabs /> {children}</main></div>; }
+function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">{children}</main></div>; }
 function LoadingState({ label }: { label: string }) {
   return <div className="space-y-4" aria-busy="true" role="status">
     <span className="sr-only">{label}</span>

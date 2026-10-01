@@ -50,34 +50,27 @@ export function TCGCollectionPage() {
       <Header />
       <main
         className="page-shell page-shell--header-offset relative pb-40"
-        aria-labelledby={authLoading
-          ? undefined
-          : user && syncStatus === 'ready'
-            ? 'tcg-collection-title'
-            : syncStatus === 'checking' || syncStatus === 'loading' || syncStatus === 'unavailable'
-              ? 'sync-status-title'
-              : 'sync-required-title'}
+        aria-labelledby="tcg-collection-title"
       >
+        <TCGPageTabs />
+        <div className="mb-6">
+          <h1 id="tcg-collection-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
+            {t('tcg.collection_title')}
+          </h1>
+          <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">
+            {t('tcg.collection_subtitle')}
+          </p>
+        </div>
         {authLoading || !mounted || !hasHydrated ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+            <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
         ) : !user || syncStatus === 'unauthenticated' ? (
-          <SyncRequiredPanel />
+          <SyncRequiredPanel headingLevel={2} />
         ) : syncStatus !== 'ready' ? (
-          <SyncStatusPanel status={syncStatus} />
+          <SyncStatusPanel status={syncStatus} headingLevel={2} />
         ) : (
           <>
-            <TCGPageTabs />
-            <div className="mb-6">
-              <h1 id="tcg-collection-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
-                {t('tcg.collection_title')}
-              </h1>
-              <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">
-                {t('tcg.collection_subtitle')}
-              </p>
-            </div>
-
             {setsError && sets.length === 0 ? (
               <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-5" role="alert">
                 <p className="text-sm text-foreground/75">

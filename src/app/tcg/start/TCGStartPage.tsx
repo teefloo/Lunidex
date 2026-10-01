@@ -78,6 +78,20 @@ export function TCGStartPage() {
   }, [normalizedQuery, resolvedLanguage, sets]);
   const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(sets ?? []), [sets]);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
+  const startTitle = t('tcg.activation.start_title', { defaultValue: 'Add a collection' });
+  const startDescription = t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' });
+  const startContext = (
+    <div className="mb-6">
+      <Link
+        href={localeHref('/tcg/collection')}
+        className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+      >
+        ← {t('tcg.collection_title')}
+      </Link>
+      <h1 id="tcg-start-title" className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">{startTitle}</h1>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/60">{startDescription}</p>
+    </div>
+  );
 
   const tryEnglish = useCallback(() => {
     setBrowseLanguage('en');
@@ -95,8 +109,11 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24" aria-busy="true">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+        <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startContext}
+          <div role="status" aria-busy="true" aria-label={t('tcg.collection_loading')} className="flex min-h-[40vh] items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+          </div>
         </main>
       </div>
     );
@@ -106,8 +123,9 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
-          <SyncRequiredPanel />
+        <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startContext}
+          <SyncRequiredPanel headingLevel={2} />
         </main>
       </div>
     );
@@ -117,8 +135,9 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
-          <SyncRequiredPanel />
+        <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startContext}
+          <SyncRequiredPanel headingLevel={2} />
         </main>
       </div>
     );
@@ -128,8 +147,9 @@ export function TCGStartPage() {
     return (
       <div className="app-page">
         <Header />
-        <main className="page-shell page-shell--header-offset flex min-h-dvh items-center justify-center pb-24">
-          <SyncStatusPanel status={syncStatus} />
+        <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startContext}
+          <SyncStatusPanel status={syncStatus} headingLevel={2} />
         </main>
       </div>
     );
@@ -139,19 +159,25 @@ export function TCGStartPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset pb-24" aria-labelledby="tcg-start-title">
+        <Link
+          href={localeHref('/tcg/collection')}
+          className="mb-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+        >
+          ← {t('tcg.collection_title')}
+        </Link>
         <section className="mx-auto max-w-3xl">
           <div className="page-surface px-5 py-7 sm:px-8 sm:py-9">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
                 <h1 id="tcg-start-title" className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
-                  {t('tcg.activation.start_title', { defaultValue: 'Add a collection' })}
+                  {startTitle}
                 </h1>
               </div>
               <TCGLanguageSelector />
             </div>
             <p className="mt-3 max-w-2xl text-base leading-7 text-foreground/60">
-              {t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' })}
+              {startDescription}
             </p>
             <div className="mt-5">
               <TCGDataLangBanner resolvedLang={resolvedLanguage} onTryEnglish={tryEnglish} />

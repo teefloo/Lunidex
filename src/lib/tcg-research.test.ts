@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { TCGCardFilters } from '@/types/tcg';
-import { clearTCGCardSearch, isInitialTcgCatalogCompatible, resetTCGCardFilters } from './tcg-research';
+import type { TCGCardFilters, TCGSet } from '@/types/tcg';
+import {
+  clearTCGCardSearch,
+  getLatestTCGSet,
+  isInitialTcgCatalogCompatible,
+  resetTCGCardFilters,
+  sortTCGSetsNewestFirst,
+} from './tcg-research';
 
 const initialFilters: TCGCardFilters = {
   selectedSet: 'me03',
@@ -9,6 +15,22 @@ const initialFilters: TCGCardFilters = {
   sortOrder: 'asc',
   ownedState: 'all',
 };
+
+describe('TCG set release ordering', () => {
+  const sets: TCGSet[] = [
+    { id: 'me03', name: 'Perfect Order', releaseDate: '2026-03-27' },
+    { id: 'me04', name: 'Phantasmal Flames', releaseDate: '2026-05-22' },
+  ];
+
+  it('sorts by release date and selects the newest set instead of a fixed default', () => {
+    expect(sortTCGSetsNewestFirst(sets).map((set) => set.id)).toEqual(['me04', 'me03']);
+    expect(getLatestTCGSet(sets)).toMatchObject({ id: 'me04', name: 'Phantasmal Flames' });
+  });
+
+  it('returns no default when the set catalog is empty', () => {
+    expect(getLatestTCGSet([])).toBeNull();
+  });
+});
 
 describe('isInitialTcgCatalogCompatible', () => {
   it('accepts the exact server-rendered latest-set query', () => {

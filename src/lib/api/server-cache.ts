@@ -1,6 +1,5 @@
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
-import { DEFAULT_LATEST_TCG_SET } from '@/lib/tcg-default-latest-set';
 import {
   DEFAULT_TCG_CARD_FILTERS,
   getCollectionSetAlbum,
@@ -34,6 +33,7 @@ import {
   getPokemonSpecies,
   getTypeRelations,
 } from './rest';
+import { getLatestTCGCollectionSet } from '@/lib/tcg-collection-overview';
 
 const INITIAL_CATALOG_LIMIT = 48;
 
@@ -133,18 +133,27 @@ const getInitialTcgCatalogPersistent = unstable_cache(
     const timeoutId = setTimeout(() => controller.abort(), 3500);
 
     try {
-      return await searchCards(
-        { ...DEFAULT_TCG_CARD_FILTERS, selectedSet: DEFAULT_LATEST_TCG_SET.id },
+      const sets = await getCollectionSetCatalog(language, controller.signal);
+      const latestSet = getLatestTCGCollectionSet(sets);
+      if (!latestSet) return { latestSet: null, cards: [], hasMore: false };
+
+      const catalog = await searchCards(
+        { ...DEFAULT_TCG_CARD_FILTERS, selectedSet: latestSet.id },
         language,
         1,
         24,
         controller.signal,
-      );
+      ).catch(() => ({ cards: [], hasMore: false }));
+
+      return {
+        latestSet: { id: latestSet.id, name: latestSet.name },
+        ...catalog,
+      };
     } finally {
       clearTimeout(timeoutId);
     }
   },
-  ['lunidex:tcg-initial-catalog:v1'],
+  ['lunidex:tcg-initial-catalog:v2'],
   { revalidate: 3600 },
 );
 
