@@ -1,5 +1,5 @@
 # =============================================================================
-# PrimeDex — .gitignore (Monorepo Next.js 16 + Expo)
+# Lunidex — .gitignore (Next.js 16 web workspace)
 # https://git-scm.com/docs/gitignore
 # =============================================================================
 
@@ -44,47 +44,6 @@ out/
 build/
 dist/
 *.tsbuildinfo
-
-# Expo / React Native
-expo-build/
-.expo/
-.expo-shared/
-*.apk
-*.aab
-*.ipa
-
-# Metro bundler
-metro-cache/
-
-# iOS / Xcode
-ios/build/
-ios/Pods/
-ios/DerivedData/
-ios/*.xcworkspace/xcuserdata
-ios/*.xcworkspace/xcshareddata
-ios/*.pbxuser
-ios/*.mode1v3
-ios/*.mode2v3
-ios/*.perspectivev3
-ios/*.xcuserstate
-ios/*.xccheckout
-ios/*.moved-aside
-ios/*.hmap
-ios/*.ipa
-ios/*.dSYM.zip
-ios/*.dSYM
-
-# Android / Gradle
-android/build/
-android/app/build/
-android/.gradle/
-android/local.properties
-android/*.iml
-android/.idea/
-android/captures/
-android/hs_err_pid*
-android/app/src/main/assets/index.android.bundle
-
 
 # =============================================================================
 # 3. Testing & QA

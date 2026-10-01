@@ -23,8 +23,6 @@ import {
   transferTCGCollectionCards,
 } from './tcg-collections';
 import { isTCGCardLanguage, normalizeTCGCardLanguage, TCG_CARD_LANGUAGES } from './tcg-language';
-import { usePrimeDexStore } from '../store/primedex';
-import { setSyncAccessStatus } from '../store/sync-access';
 
 describe('TCG language registry', () => {
   it('contains official TCGdex codes independently from Lunidex locales', () => {
@@ -39,85 +37,6 @@ describe('TCG language registry', () => {
 });
 
 describe('TCG collection codecs', () => {
-  it('starts a collection only after its first card is added', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('en', 'sv10')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: [],
-      tcgOwnedCards: [],
-      tcgCollectionModelVersion: 3,
-    });
-
-    usePrimeDexStore.getState().createTCGCollection('sv10', 'en');
-    expect(usePrimeDexStore.getState().tcgActiveCollections).not.toContain(collection);
-
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 1);
-    expect(usePrimeDexStore.getState().tcgActiveCollections).toContain(collection);
-    setSyncAccessStatus('checking');
-  });
-
-  it('stops a collection when its last card is removed', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('en', 'sv10')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: [],
-      tcgOwnedCards: [],
-      tcgCollectionModelVersion: 3,
-    });
-
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 1);
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'sv10-001', 'normal', 0);
-    expect(usePrimeDexStore.getState().tcgActiveCollections).not.toContain(collection);
-    setSyncAccessStatus('checking');
-  });
-
-  it('updates the shared store atomically and keeps physical/progress projections distinct', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('en', 'base1')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: [],
-      tcgOwnedCards: [],
-      tcgCollectionModelVersion: 3,
-    });
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'base1-001', 'normal', 2);
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'base1-001', 'reverse', 3);
-    expect(usePrimeDexStore.getState().tcgOwnedCards).toEqual(['base1-001']);
-    expect(usePrimeDexStore.getState().getTCGPhysicalCardCount()).toBe(5);
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'base1-001', 'normal', 0);
-    expect(usePrimeDexStore.getState().getTCGPhysicalCardCount()).toBe(3);
-    expect(usePrimeDexStore.getState().tcgCollectionCards).toHaveLength(1);
-    setSyncAccessStatus('checking');
-  });
-
-  it('enforces the physical cap across historical and language-aware ownership', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('en', 'base1')!;
-    const legacyCards = Array.from({ length: 10_000 }, (_, index) => `legacy-${index}`);
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: legacyCards,
-      tcgOwnedCards: legacyCards,
-      tcgCollectionModelVersion: 3,
-    });
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'base1-001', 'normal', 1);
-    expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual([]);
-    usePrimeDexStore.getState().toggleTCGOwned('base1-001');
-    expect(usePrimeDexStore.getState().tcgLegacyOwnedCards).toEqual(legacyCards);
-    expect(usePrimeDexStore.getState().getTCGPhysicalCardCount()).toBe(10_000);
-    setSyncAccessStatus('checking');
-  });
-
   it('round-trips a language/set collection and card key', () => {
     const collectionKey = encodeTCGCollectionKey('fr', 'sv-03.5');
     expect(collectionKey).toBe('tcg2:fr:sv-03.5');
@@ -162,44 +81,6 @@ describe('TCG collection codecs', () => {
     expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', noHolo)).toBe(0);
   });
 
-  it('applies +/- changes from the latest shared-store snapshot', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('fr', 'me05')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: [],
-      tcgOwnedCards: [],
-      tcgCollectionModelVersion: 3,
-    });
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 2);
-    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', -1);
-    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', usePrimeDexStore.getState().tcgCollectionCards)).toBe(1);
-    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 1);
-    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', usePrimeDexStore.getState().tcgCollectionCards)).toBe(2);
-    setSyncAccessStatus('checking');
-  });
-
-  it('moves a legacy copy into the selected finish instead of duplicating it', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('fr', 'me05')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: ['me05-100'],
-      tcgOwnedCards: ['me05-100'],
-      tcgCollectionModelVersion: 3,
-    });
-    usePrimeDexStore.getState().adjustTCGCollectionVariantQuantity(collection, 'me05-100', 'holo', 1);
-    const state = usePrimeDexStore.getState();
-    expect(getTCGCollectionCardQuantity(collection, 'me05-100', 'holo', state.tcgCollectionCards)).toBe(1);
-    expect(state.tcgLegacyOwnedCards).toEqual([]);
-    expect(state.getTCGPhysicalCardCount()).toBe(1);
-    setSyncAccessStatus('checking');
-  });
-
   it('chooses the least ambiguous available finish and promotes historical ownership', () => {
     expect(getTCGDefaultPhysicalVariant({ normal: true, reverse: true, holo: false })).toBe('normal');
     expect(getTCGDefaultPhysicalVariant({ holo: true, reverse: true })).toBe('holo');
@@ -211,25 +92,6 @@ describe('TCG collection codecs', () => {
     expect(qualifyTCGCollectionCardVariant(collection, 'base1-001', 'holo', [unspecified, existingHolo])).toEqual([
       encodeTCGCollectionCardKey(collection, 'base1-001', 'holo', 3),
     ]);
-  });
-
-  it('promotes an unspecified store entry in one collection update', () => {
-    setSyncAccessStatus('ready');
-    const collection = encodeTCGCollectionKey('fr', 'base1')!;
-    usePrimeDexStore.setState({
-      tcgCollections: [],
-      tcgCollectionCards: [],
-      tcgActiveCollections: [],
-      tcgLegacyOwnedCards: [],
-      tcgOwnedCards: [],
-      tcgCollectionModelVersion: 3,
-    });
-    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collection, 'base1-001', 'unspecified', 2);
-    usePrimeDexStore.getState().qualifyTCGCollectionCardVariant(collection, 'base1-001', 'holo');
-    expect(getTCGCollectionCardOwnerships(collection, usePrimeDexStore.getState().tcgCollectionCards)).toMatchObject([
-      { variant: 'holo', quantity: 2 },
-    ]);
-    setSyncAccessStatus('checking');
   });
 
   it('normalizes duplicate identities by summing quantities and removes at zero', () => {

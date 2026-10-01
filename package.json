@@ -7,8 +7,7 @@
     "*.css"
   ],
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "next dev --webpack",
@@ -66,7 +65,6 @@
     "agentation": "^3.0.2",
     "eslint": "^9",
     "eslint-config-next": "^16.3.3",
-    "metro": "0.84.5",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.11"
@@ -76,20 +74,6 @@
       "postcss": "8.5.25",
       "sharp": "0.35.3"
     },
-    "metro": "0.84.5",
-    "metro-babel-transformer": "0.84.5",
-    "metro-cache": "0.84.5",
-    "metro-cache-key": "0.84.5",
-    "metro-config": "0.84.5",
-    "metro-core": "0.84.5",
-    "metro-file-map": "0.84.5",
-    "metro-minify-terser": "0.84.5",
-    "metro-resolver": "0.84.5",
-    "metro-runtime": "0.84.5",
-    "metro-source-map": "0.84.5",
-    "metro-symbolicate": "0.84.5",
-    "metro-transform-plugins": "0.84.5",
-    "metro-transform-worker": "0.84.5",
     "nanoid": "3.3.18",
     "serialize-javascript": "7.0.7",
     "uuid": "11.1.1",
@@ -101,12 +85,6 @@
     "decode-uri-component": "0.5.0",
     "fast-uri": "3.1.6",
     "js-yaml": "4.3.2",
-    "@expo/plist": {
-      "@xmldom/xmldom": "0.8.15"
-    },
-    "plist": {
-      "@xmldom/xmldom": "0.9.12"
-    },
     "@neondatabase/auth": {
       "@neondatabase/auth-ui": {
         "@daveyplate/better-auth-ui": "3.3.15"
