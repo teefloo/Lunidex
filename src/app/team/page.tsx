@@ -20,12 +20,13 @@ import {
   BarChart3,
   Loader2,
   Trash2,
+  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ShareButton } from '@/components/share/ShareButton';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { toast } from '@/lib/toast';
 import { analyzeTeam, calculateSynergyScore } from '@/lib/team-analysis';
@@ -66,6 +67,7 @@ const MoveCoverageChecker = dynamic(
 );
 
 export default function TeamPage() {
+  const actionsMenuRef = useRef<HTMLDetailsElement>(null);
   const { team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
     team: state.team,
     addToTeam: state.addToTeam,
@@ -80,6 +82,29 @@ export default function TeamPage() {
   const localeHref = useLocaleHref();
 
   const resolvedLang = useClientLanguage();
+
+  useEffect(() => {
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      const menu = actionsMenuRef.current;
+      if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) {
+        menu.open = false;
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      const menu = actionsMenuRef.current;
+      if (event.key !== 'Escape' || !menu?.open) return;
+      event.preventDefault();
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
 
   // Team sharing logic: Check for team in URL (`?code=25-6-9` or `?ids=25,6,9`)
   useEffect(() => {
@@ -212,15 +237,20 @@ export default function TeamPage() {
           eyebrow={t('team.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
           badge={(
-            <div className="flex flex-col items-end gap-3">
-              {team.length > 0 && team.length < 6 && (
-                <GenerationPicker
-                  value={targetGeneration}
-                  onChange={setTargetGeneration}
-                  label={t('team.generation_label')}
-                />
-              )}
-              <div className="flex flex-wrap items-center justify-end gap-3">
+            <details ref={actionsMenuRef} className="team-actions-menu">
+              <summary>{t('nav.more')}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" /></summary>
+              <div className="team-actions-menu-panel" onClick={(event) => {
+                if ((event.target as HTMLElement).closest('a, button')) {
+                  if (actionsMenuRef.current) actionsMenuRef.current.open = false;
+                }
+              }}>
+                {team.length > 0 && team.length < 6 ? (
+                  <GenerationPicker
+                    value={targetGeneration}
+                    onChange={setTargetGeneration}
+                    label={t('team.generation_label')}
+                  />
+                ) : null}
                 {team.length > 0 && team.length < 6 && (
                   <Button
                     variant="outline"
@@ -245,6 +275,19 @@ export default function TeamPage() {
                 {pokemonData.length > 0 && (
                   <TeamExportButton pokemonData={pokemonData} />
                 )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={team.length === 0}
+                  onClick={() => {
+                    navigator.clipboard.writeText(team.join('-')).then(() => {
+                      toast.success(t('detail.copied'));
+                    }).catch(() => {});
+                  }}
+                  className="rounded-full font-black uppercase tracking-widest"
+                >
+                  {t('team.copy_code')}
+                </Button>
                 {team.length < 6 && <ShowdownImportDialog />}
                 {pokemonData.length > 0 && (
                   <Button
@@ -257,57 +300,13 @@ export default function TeamPage() {
                   </Button>
                 )}
               </div>
-            </div>
+            </details>
           )}
         />
 
-        <section
-          className="mx-auto mb-8 max-w-4xl rounded-sm border border-primary/20 bg-primary/5 p-5 md:p-6"
-          aria-labelledby="team-builder-overview-title"
-        >
-          <h2 id="team-builder-overview-title" className="text-xl font-black tracking-tight md:text-2xl">
-            {t('team_guide.answer_title')}
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/75 md:text-base">
-            {t('team_guide.answer_body')}
-          </p>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/65">
-            {t('team_guide.how_intro')}
-          </p>
-          <Link
-            href={localeHref('/guides/team-builder-guide')}
-            className="mt-4 inline-flex font-bold text-primary underline-offset-4 hover:underline"
-          >
-            {t('team_guide.nav_label')}
-            <span aria-hidden="true" className="ml-1">↗</span>
-          </Link>
-          <nav className="mt-6 border-t border-primary/15 pt-4" aria-label={t('team_guide.cta_title')}>
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground/45">
-              {t('team_guide.cta_title')}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary">
-              <Link href={localeHref('/pokedex')} className="underline-offset-4 hover:underline">
-                {t('pokedex.title')}
-              </Link>
-              <Link href={localeHref('/types')} className="underline-offset-4 hover:underline">
-                {t('types_page.type_chart')}
-              </Link>
-              <Link href={localeHref('/ev-iv')} className="underline-offset-4 hover:underline">
-                {t('ev_iv.title')}
-              </Link>
-              <Link href={localeHref('/nuzlocke')} className="underline-offset-4 hover:underline">
-                {t('nuzlocke.title')}
-              </Link>
-              <Link href={localeHref('/tcg')} className="underline-offset-4 hover:underline">
-                {t('tcg.page_heading')}
-              </Link>
-            </div>
-          </nav>
-        </section>
-
-        <div className="grid lg:grid-cols-12 gap-8">
+        <div className="space-y-8">
           {/* Team Slots */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, idx) => {
                 const d = teamData[idx];
@@ -445,14 +444,14 @@ export default function TeamPage() {
                   </div>
 
                   {/* Stats Radar Chart */}
-                  <div className="glass-panel p-6 md:p-8 rounded-sm h-full flex flex-col">
-                    <h3 className="text-xl font-black mb-6 flex items-center gap-3">
+                  <details className="team-analysis-disclosure glass-panel rounded-sm">
+                    <summary>
                       <div className="p-2 bg-primary/10 rounded-sm">
                         <BarChart3 className="w-5 h-5 text-primary" />
                       </div>
                       {t('team.stat_balance')}
-                    </h3>
-                    <div className="flex-1 min-h-[250px] w-full">
+                    </summary>
+                    <div className="team-analysis-disclosure-content min-h-[250px] w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                           <PolarGrid stroke="rgba(255,255,255,0.1)" />
@@ -478,14 +477,15 @@ export default function TeamPage() {
                         </RadarChart>
                       </ResponsiveContainer>
                     </div>
-                  </div>
+                  </details>
                 </div>
 
-                <div className="glass-panel p-6 md:p-8 rounded-sm">
-                  <h3 className="text-2xl font-black mb-8 border-b border-border/60 pb-4 flex items-center gap-3">
-                    <Sword className="w-6 h-6 text-primary" />
+                <details className="team-analysis-disclosure glass-panel rounded-sm">
+                  <summary>
+                    <Sword aria-hidden="true" className="h-5 w-5 text-primary" />
                     {t('team.type_analysis')}
-                  </h3>
+                  </summary>
+                  <div className="team-analysis-disclosure-content">
 
                   <div className="grid md:grid-cols-2 gap-8">
                     {/* Defensive Analysis */}
@@ -539,29 +539,39 @@ export default function TeamPage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                  </div>
+                </details>
 
                 {/* Move Coverage Section */}
                 {pokemonData.length >= 2 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <MoveCoverageChecker />
-                  </motion.div>
+                  <details className="team-analysis-disclosure glass-panel rounded-sm">
+                    <summary>
+                      <Sword aria-hidden="true" className="h-5 w-5 text-primary" />
+                      {t('team.move_coverage', { defaultValue: 'Move coverage' })}
+                    </summary>
+                    <div className="team-analysis-disclosure-content">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        <MoveCoverageChecker />
+                      </motion.div>
+                    </div>
+                  </details>
                 )}
               </motion.div>
             )}
           </div>
 
-          {/* Sidebar / Suggestions */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="glass-panel p-6 rounded-sm">
-              <h3 className="text-lg font-black mb-6 border-b border-border/60 pb-4 flex items-center gap-2">
-                <Info className="w-5 h-5 text-primary" />
+          {/* Additional coverage details */}
+          {pokemonData.length > 0 && analysis && (
+            <details className="team-analysis-disclosure glass-panel rounded-sm">
+              <summary>
+                <Info aria-hidden="true" className="h-5 w-5 text-primary" />
                 {t('team.type_coverage')}
-              </h3>
+              </summary>
+              <div className="team-analysis-disclosure-content">
               
               <div className="space-y-6">
                 <div>
@@ -619,31 +629,22 @@ export default function TeamPage() {
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="glass-card p-6 rounded-sm relative overflow-hidden">
-              <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary/10 to-transparent" />
-              <h3 className="text-lg font-black mb-4 relative z-10">{t('team.export_title')}</h3>
-              <p className="text-xs text-foreground/50 mb-6 leading-relaxed relative z-10">
-                {t('team.export_desc')}
-              </p>
-              <div className="bg-background/50 p-3 rounded-sm border border-border/40 font-mono text-[11px] text-foreground/60 break-all mb-4 relative z-10">
-                {team.length > 0 ? team.join('-') : t('team.empty_team')}
               </div>
-              <Button 
-                disabled={team.length === 0} 
-                onClick={() => {
-                  navigator.clipboard.writeText(team.join('-')).then(() => {
-                    toast.success(t('detail.copied'));
-                  }).catch(() => {});
-                }}
-                className="w-full rounded-sm font-black uppercase tracking-widest h-12 shadow-lg shadow-primary/20"
-              >
-                {t('team.copy_code')}
-              </Button>
-            </div>
-          </div>
+            </details>
+          )}
         </div>
+
+        <details className="team-builder-help">
+          <summary>{t('team_guide.nav_label')}</summary>
+          <div className="team-builder-help-content">
+            <h2 className="text-xl font-black tracking-tight md:text-2xl">{t('team_guide.answer_title')}</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/75 md:text-base">{t('team_guide.answer_body')}</p>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/65">{t('team_guide.how_intro')}</p>
+            <Link href={localeHref('/guides/team-builder-guide')} className="mt-4 inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline">
+              {t('team_guide.nav_label')} <span aria-hidden="true" className="ml-1">↗</span>
+            </Link>
+          </div>
+        </details>
       </main>
     </div>
   );

@@ -12,6 +12,7 @@ import {
 import { pokemonKeys } from '@/lib/api/keys';
 import {
   Gamepad2,
+  ChevronDown,
   Trophy,
   Timer,
 
@@ -561,12 +562,7 @@ function QuizPageContent() {
     <div className="app-page relative overflow-x-hidden pb-20">
       <Header />
       
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[34rem] overflow-hidden opacity-55">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)]" />
-      </div>
-      
-      <main className="page-shell pt-24 pb-8 relative z-10 max-w-4xl">
+      <main className="page-shell pt-20 md:pt-24 pb-8 relative z-10 max-w-4xl">
         {gameState === 'idle' || gameState === 'finished' ? (
           <PageHeader
             icon={Gamepad2}
@@ -589,7 +585,7 @@ function QuizPageContent() {
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
 
                 {gameState === 'finished' && (
-                  <motion.div 
+                  <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1, transition: { type: 'spring', bounce: 0.5 } }}
                     className="space-y-4 relative z-10 text-center"
@@ -619,26 +615,34 @@ function QuizPageContent() {
                   />
                 )}
 
-                <div className="relative z-10 space-y-8">
-                  {/* Daily Challenge - Premium styled button */}
+                <div className="relative z-10 space-y-5">
+                  <Button
+                    onClick={() => startGame('classic', 'marathon')}
+                    className="w-full min-h-14 rounded-sm font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-colors hover:bg-primary"
+                  >
+                    <Gamepad2 className="w-5 h-5 mr-2" />
+                    {t('quiz.classic')}
+                  </Button>
+
                   <Button
                     onClick={() => startGame('classic', 'marathon', true)}
-                    className="w-full h-18 rounded-sm font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-all duration-300 hover:bg-primary"
+                    variant="outline"
+                    className="w-full min-h-12 rounded-sm font-bold uppercase tracking-[0.12em] text-xs md:text-sm border-border/60 hover:border-primary/30 hover:bg-primary/5"
                   >
-                    <Calendar className="w-5 h-5 mr-2" />
+                    <Calendar className="w-4 h-4 mr-2" />
                     {t('quiz.daily')}
                   </Button>
 
-                  {/* Online daily leaderboard (hidden when Neon is unconfigured) */}
-                  <QuizLeaderboard refreshKey={leaderboardRefresh} />
+                  <details className="quiz-disclosure">
+                    <summary>
+                      <Filter aria-hidden="true" className="h-4 w-4 text-primary" />
+                      <span>{t('quiz.customize')}</span>
+                      <ChevronDown aria-hidden="true" className="quiz-disclosure-chevron h-4 w-4" />
+                    </summary>
+                    <div className="quiz-disclosure-content">
 
                   {/* Filters Section */}
                   <div className="space-y-4 bg-card/50 dark:bg-card/35 p-5 md:p-6 rounded-sm border border-border/50 dark:border-border/40">
-                    <div className="flex items-center gap-2 mb-3 justify-center">
-                      <Filter className="w-4 h-4 text-primary" />
-                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/50">{t('quiz.customize')}</span>
-                    </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2 text-left relative">
                         <label htmlFor="quiz-gen-select" className="text-[11px] sm:text-[11px] font-bold uppercase tracking-widest text-foreground/50 ml-2">{t('filters.generation')}</label>
@@ -672,6 +676,8 @@ function QuizPageContent() {
                     </div>
                   </div>
                   
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/50">{t('quiz.customize')}</p>
+
                   {/* Challenge Type Selection */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
@@ -681,10 +687,17 @@ function QuizPageContent() {
                     ].map((mode) => (
                       <motion.button 
                         key={mode.id}
+                        type="button"
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => startGame(mode.id)} 
-                        className="h-24 md:h-26 rounded-sm flex flex-col items-center justify-center gap-2 group bg-card/50 dark:bg-card/35 border border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 relative overflow-hidden"
+                        onClick={() => setQuizChallenge(mode.id)}
+                        aria-pressed={quizChallenge === mode.id}
+                        className={cn(
+                          'min-h-20 rounded-sm flex flex-col items-center justify-center gap-2 group border transition-colors relative overflow-hidden px-3 py-3 text-center',
+                          quizChallenge === mode.id
+                            ? 'border-primary/40 bg-primary/10 text-primary'
+                            : 'border-border/50 bg-card/50 text-foreground/70 hover:border-primary/30 hover:bg-primary/5',
+                        )}
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="flex items-center gap-2 font-bold uppercase tracking-[0.12em] text-[11px] md:text-xs text-foreground/60 group-hover:text-primary transition-colors">
@@ -696,54 +709,69 @@ function QuizPageContent() {
                     ))}
                   </div>
 
-                  {/* Game Mode Selection */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => startGame(quizChallenge, 'time-attack')}
-                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[11px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-primary/30 hover:bg-primary/5"
-                    >
-                      <Timer className="w-4 h-4 text-blue-400" />
-                      {t('quiz.time_attack')} <span className="opacity-50 ml-1">(30s)</span>
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      onClick={() => startGame(quizChallenge, 'survival')}
-                      className="h-14 rounded-sm flex items-center justify-center gap-2 font-bold uppercase tracking-[0.1em] text-[11px] sm:text-[11px] border-border/50 dark:border-border/40 hover:border-red-500/30 hover:bg-red-500/5"
-                    >
-                      <Heart className="w-4 h-4 text-red-400" />
-                      {t('quiz.survival')} <span className="opacity-50 ml-1">(3 {t('quiz.lives')})</span>
-                    </Button>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="group" aria-label={t('quiz.customize')}>
+                    {([
+                      { id: 'marathon' as GameMode, label: t('quiz.marathon'), icon: <Flame className="h-4 w-4 text-orange-400" /> },
+                      { id: 'survival' as GameMode, label: t('quiz.survival'), icon: <Heart className="h-4 w-4 text-red-400" /> },
+                      { id: 'time-attack' as GameMode, label: t('quiz.time_attack'), icon: <Timer className="h-4 w-4 text-blue-400" /> },
+                    ]).map((mode) => (
+                      <Button
+                        key={mode.id}
+                        type="button"
+                        variant="outline"
+                        aria-pressed={gameMode === mode.id}
+                        onClick={() => setGameMode(mode.id)}
+                        className={cn(
+                          'min-h-12 justify-center gap-2 rounded-sm text-xs font-bold uppercase tracking-[0.08em]',
+                          gameMode === mode.id && 'border-primary/40 bg-primary/10 text-primary',
+                        )}
+                      >
+                        {mode.icon}
+                        {mode.label}
+                        {mode.id === 'time-attack' && <span className="opacity-55">(30s)</span>}
+                        {mode.id === 'survival' && <span className="opacity-55">(3 {t('quiz.lives')})</span>}
+                      </Button>
+                    ))}
                   </div>
 
-                  {/* High Scores */}
-                  {quizHighScores && (
-                    <div className="pt-6 border-t border-border/50 dark:border-border/40 grid grid-cols-3 gap-3">
-                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.classic')}</p>
-                        <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.classic}</p>
-                      </div>
-                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.silhouette')}</p>
-                        <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.silhouette}</p>
-                      </div>
-                      <div className="bg-card/50 dark:bg-card/35 rounded-sm p-3 text-center border border-border/50 dark:border-border/40 hover:border-border/70 transition-colors">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50 mb-1">{t('quiz.stats_mode')}</p>
-                        <p className="text-xl md:text-2xl font-black text-primary drop-shadow-[0_0_8px_rgba(227,53,13,0.3)]">{quizHighScores.stats}</p>
-                      </div>
+                  <Button onClick={() => startGame(quizChallenge, gameMode)} className="min-h-12 w-full rounded-sm font-black uppercase tracking-[0.12em]">
+                    <Gamepad2 aria-hidden="true" className="mr-2 h-4 w-4" />
+                    {t('quiz.start')}
+                  </Button>
+
                     </div>
-                  )}
+                  </details>
                 </div>
               </motion.div>
 
-              {/* Achievements Section */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="glass-card p-6 md:p-8 rounded-sm space-y-6 relative overflow-hidden"
-              >
+              <details className="quiz-disclosure">
+                <summary>
+                  <Trophy aria-hidden="true" className="h-4 w-4 text-yellow-500" />
+                  <span>{t('quiz.records_and_achievements')}</span>
+                  <ChevronDown aria-hidden="true" className="quiz-disclosure-chevron h-4 w-4" />
+                </summary>
+                <div className="quiz-disclosure-content space-y-6">
+                  <QuizLeaderboard refreshKey={leaderboardRefresh} />
+                  {quizHighScores && (
+                    <section className="grid grid-cols-3 gap-3" aria-label={t('quiz.achievements')}>
+                      {([
+                        ['classic', t('quiz.classic')],
+                        ['silhouette', t('quiz.silhouette')],
+                        ['stats', t('quiz.stats_mode')],
+                      ] as const).map(([key, label]) => (
+                        <div key={key} className="rounded-sm border border-border/50 bg-card/50 p-3 text-center">
+                          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/50">{label}</p>
+                          <p className="text-xl font-black text-primary md:text-2xl">{quizHighScores[key]}</p>
+                        </div>
+                      ))}
+                    </section>
+                  )}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="glass-card rounded-sm p-5 md:p-6 space-y-5 relative overflow-hidden"
+                  >
                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
                 <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.25em] flex items-center justify-center gap-3 text-foreground/60">
                   <div className="w-6 md:w-8 h-px bg-gradient-to-r from-transparent to-yellow-500/50" />
@@ -784,7 +812,9 @@ function QuizPageContent() {
                     );
                   })}
                 </div>
-              </motion.div>
+                  </motion.div>
+                </div>
+              </details>
             </div>
           ) : (
             <div className="space-y-6 md:space-y-8 animate-fade-in-up">
