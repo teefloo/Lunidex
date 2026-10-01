@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
@@ -10,7 +9,7 @@ import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/se
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
+import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { FEATURED_POKEMON } from '@/lib/pokemon-featured';
@@ -108,38 +107,6 @@ export default async function PokedexPage() {
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
           <PokemonList />
-          <section className="page-shell mt-8" aria-labelledby="pokedex-priority-links-title">
-            <div className="rounded-sm border border-border/50 bg-card/35 p-5 sm:p-7">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">
-                {t('pokedex_page.featured_eyebrow', { defaultValue: 'Explore the Pokédex' })}
-              </p>
-              <h2 id="pokedex-priority-links-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
-                {t('pokedex_page.featured_title', { defaultValue: 'Popular Pokémon and reference hubs' })}
-              </h2>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {featuredPokemon.map((pokemon) => (
-                  <Link
-                    key={pokemon.slug}
-                    href={localeHref(`/pokemon/${pokemon.slug}`, lang)}
-                    className="inline-flex min-h-11 items-center rounded-sm border border-border/50 bg-background/40 px-3 py-2 text-sm font-bold text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    {pokemon.displayName}
-                  </Link>
-                ))}
-              </div>
-              <nav className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('pokedex_page.reference_hubs', { defaultValue: 'Pokédex reference hubs' })}>
-                <Link href={localeHref('/types', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.types', { defaultValue: 'Types' })}</Link>
-                <Link href={localeHref('/moves', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.moves', { defaultValue: 'Moves' })}</Link>
-                <Link href={localeHref('/abilities', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.abilities', { defaultValue: 'Abilities' })}</Link>
-                <Link href={localeHref('/items', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('list.items', { defaultValue: 'Items' })}</Link>
-              </nav>
-              <nav className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary" aria-label={t('team_guide.cta_title')}>
-                <Link href={localeHref('/team', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('team.title')}</Link>
-                <Link href={localeHref('/nuzlocke', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('nuzlocke.title')}</Link>
-                <Link href={localeHref('/tcg', lang)} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">{t('tcg.page_heading')}</Link>
-              </nav>
-            </div>
-          </section>
           <PokemonOfTheDay />
           <ClientRecentlyViewed />
         </main>

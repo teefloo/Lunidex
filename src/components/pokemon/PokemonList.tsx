@@ -7,7 +7,7 @@ import { getPokemonSummarySlice } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
 import { PokemonCard, PokemonCardSkeleton } from './PokemonCard';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Loader2, RotateCcw, SearchX } from 'lucide-react';
+import { Loader2, RotateCcw, SearchX, X } from 'lucide-react';
 import { PokemonBasicData, GraphQLPokemonSummary, LocalizedNameEntry, PokemonSpecies } from '@/types/pokemon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -57,23 +57,40 @@ export default function PokemonList() {
   // Atomic selectors
   const searchTerm = usePrimeDexStore(s => s.searchTerm);
   const selectedTypes = usePrimeDexStore(s => s.selectedTypes);
+  const setSelectedTypes = usePrimeDexStore(s => s.setSelectedTypes);
   const selectedGeneration = usePrimeDexStore(s => s.selectedGeneration);
+  const setSelectedGeneration = usePrimeDexStore(s => s.setSelectedGeneration);
   const showFavoritesOnly = usePrimeDexStore(s => s.showFavoritesOnly);
+  const setShowFavoritesOnly = usePrimeDexStore(s => s.setShowFavoritesOnly);
   const favorites = usePrimeDexStore(s => s.favorites);
   const sortBy = usePrimeDexStore(s => s.sortBy);
+  const setSortBy = usePrimeDexStore(s => s.setSortBy);
   const isLegendary = usePrimeDexStore(s => s.isLegendary);
+  const setIsLegendary = usePrimeDexStore(s => s.setIsLegendary);
   const isMythical = usePrimeDexStore(s => s.isMythical);
+  const setIsMythical = usePrimeDexStore(s => s.setIsMythical);
   const selectedEggGroups = usePrimeDexStore(s => s.selectedEggGroups);
+  const setSelectedEggGroups = usePrimeDexStore(s => s.setSelectedEggGroups);
   const selectedColors = usePrimeDexStore(s => s.selectedColors);
+  const setSelectedColors = usePrimeDexStore(s => s.setSelectedColors);
   const selectedShapes = usePrimeDexStore(s => s.selectedShapes);
+  const setSelectedShapes = usePrimeDexStore(s => s.setSelectedShapes);
   const minBaseStats = usePrimeDexStore(s => s.minBaseStats);
+  const setMinBaseStats = usePrimeDexStore(s => s.setMinBaseStats);
   const minAttack = usePrimeDexStore(s => s.minAttack);
+  const setMinAttack = usePrimeDexStore(s => s.setMinAttack);
   const minDefense = usePrimeDexStore(s => s.minDefense);
+  const setMinDefense = usePrimeDexStore(s => s.setMinDefense);
   const minSpeed = usePrimeDexStore(s => s.minSpeed);
+  const setMinSpeed = usePrimeDexStore(s => s.setMinSpeed);
   const minHp = usePrimeDexStore(s => s.minHp);
+  const setMinHp = usePrimeDexStore(s => s.setMinHp);
   const heightRange = usePrimeDexStore(s => s.heightRange);
+  const setHeightRange = usePrimeDexStore(s => s.setHeightRange);
   const weightRange = usePrimeDexStore(s => s.weightRange);
+  const setWeightRange = usePrimeDexStore(s => s.setWeightRange);
   const showCaughtOnly = usePrimeDexStore(s => s.showCaughtOnly);
+  const setShowCaughtOnly = usePrimeDexStore(s => s.setShowCaughtOnly);
   const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const storeResetFilters = usePrimeDexStore(s => s.resetFilters);
   const _hasHydrated = usePrimeDexStore(s => s._hasHydrated);
@@ -418,6 +435,37 @@ export default function PokemonList() {
                         (!isBasicMode && !needsDetailedData && isLoadingSummary) ||
                         (!isBasicMode && filteredAndSortedResults === null);
 
+  const activeFilterChips: Array<{ id: string; label: string; onRemove: () => void }> = [];
+  const addFilterChip = (id: string, label: string, onRemove: () => void) => activeFilterChips.push({ id, label, onRemove });
+  const displayFilterValue = (value: string) => value.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const regionByGeneration: Record<number, string> = {
+    1: 'kanto', 2: 'johto', 3: 'hoenn', 4: 'sinnoh', 5: 'unova', 6: 'kalos', 7: 'alola', 8: 'galar', 9: 'paldea',
+  };
+  for (const type of selectedTypes) {
+    addFilterChip(`type-${type}`, t(`types.${type}`), () => setSelectedTypes(selectedTypes.filter((value) => value !== type)));
+  }
+  if (selectedGeneration) {
+    addFilterChip('generation', t(`regions.${regionByGeneration[selectedGeneration]}`, { defaultValue: `${t('filters.generation')} ${selectedGeneration}` }), () => setSelectedGeneration(null));
+  }
+  if (showFavoritesOnly) addFilterChip('favorites', t('nav.favorites'), () => setShowFavoritesOnly(false));
+  if (showCaughtOnly !== 'all') {
+    const label = showCaughtOnly === 'caught' ? t('caught_filter.caught') : t('caught_filter.missing');
+    addFilterChip('caught', label, () => setShowCaughtOnly('all'));
+  }
+  if (isLegendary !== null) addFilterChip('legendary', `${t('filters.legendary')}${isLegendary ? '' : ` · ${t('common.no', { defaultValue: 'No' })}`}`, () => setIsLegendary(null));
+  if (isMythical !== null) addFilterChip('mythical', `${t('filters.mythical')}${isMythical ? '' : ` · ${t('common.no', { defaultValue: 'No' })}`}`, () => setIsMythical(null));
+  for (const group of selectedEggGroups) addFilterChip(`egg-${group}`, `${t('filters.egg_groups', { defaultValue: 'Egg group' })}: ${displayFilterValue(group)}`, () => setSelectedEggGroups(selectedEggGroups.filter((value) => value !== group)));
+  for (const color of selectedColors) addFilterChip(`color-${color}`, `${t('filters.color', { defaultValue: 'Color' })}: ${displayFilterValue(color)}`, () => setSelectedColors(selectedColors.filter((value) => value !== color)));
+  for (const shape of selectedShapes) addFilterChip(`shape-${shape}`, `${t('filters.shape', { defaultValue: 'Shape' })}: ${displayFilterValue(shape)}`, () => setSelectedShapes(selectedShapes.filter((value) => value !== shape)));
+  if (minBaseStats > 0) addFilterChip('min-bst', `${t('filters.min_bst', { defaultValue: 'Min BST' })}: ${minBaseStats}`, () => setMinBaseStats(0));
+  if (minAttack > 0) addFilterChip('min-attack', `${t('filters.min_attack', { defaultValue: 'Min attack' })}: ${minAttack}`, () => setMinAttack(0));
+  if (minDefense > 0) addFilterChip('min-defense', `${t('filters.min_defense', { defaultValue: 'Min defense' })}: ${minDefense}`, () => setMinDefense(0));
+  if (minSpeed > 0) addFilterChip('min-speed', `${t('filters.min_speed', { defaultValue: 'Min speed' })}: ${minSpeed}`, () => setMinSpeed(0));
+  if (minHp > 0) addFilterChip('min-hp', `${t('filters.min_hp', { defaultValue: 'Min HP' })}: ${minHp}`, () => setMinHp(0));
+  if (heightRange[0] > 0 || heightRange[1] < 25) addFilterChip('height', `${t('filters.height', { defaultValue: 'Height' })}: ${heightRange[0]}–${heightRange[1]}`, () => setHeightRange([0, 25]));
+  if (weightRange[0] > 0 || weightRange[1] < 1200) addFilterChip('weight', `${t('filters.weight', { defaultValue: 'Weight' })}: ${weightRange[0]}–${weightRange[1]}`, () => setWeightRange([0, 1200]));
+  if (sortBy !== 'id-asc') addFilterChip('sort', `${t('list.sort', { defaultValue: 'Sort' })}: ${displayFilterValue(sortBy)}`, () => setSortBy('id-asc'));
+
   if (isDataLoading) {
     return (
       <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2 px-2 sm:px-2 mt-8">
@@ -505,6 +553,27 @@ export default function PokemonList() {
           </div>
         </div>
       )}
+
+      {activeFilterChips.length > 0 ? (
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-2 px-4 sm:px-2" role="region" aria-label={t('filters.button')}>
+          <span className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground/45">{t('filters.button')}</span>
+          {activeFilterChips.map((chip) => (
+            <button
+              key={chip.id}
+              type="button"
+              onClick={chip.onRemove}
+              aria-label={`${t('filters.reset')}: ${chip.label}`}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-sm border border-primary/25 bg-primary/8 px-2.5 text-xs font-bold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              <span>{chip.label}</span>
+              <X aria-hidden="true" className="h-3.5 w-3.5" />
+            </button>
+          ))}
+          <button type="button" onClick={resetFilters} className="min-h-11 px-2 text-xs font-bold text-foreground/55 underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+            {t('filters.clear_all')}
+          </button>
+        </div>
+      ) : null}
 
       <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
         <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">

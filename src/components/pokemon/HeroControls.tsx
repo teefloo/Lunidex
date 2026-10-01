@@ -1,8 +1,6 @@
 'use client';
 
 import SearchBar from '@/components/pokemon/SearchBar';
-import TypeFilter from '@/components/pokemon/TypeFilter';
-import RegionFilter from '@/components/pokemon/RegionFilter';
 import FavoriteToggle from '@/components/pokemon/FavoriteToggle';
 import CaughtFilter from '@/components/pokemon/CaughtFilter';
 import SortSelector from '@/components/pokemon/SortSelector';
@@ -13,28 +11,20 @@ export default function HeroControls() {
   usePokemonFilterUrl();
 
   return (
-    <div className="pokedex-controls w-full">
+    <div className="pokedex-controls flex w-full flex-col gap-3">
       <div className="pokedex-search-stage relative z-20" id="hero-search-bar">
         <SearchBar />
       </div>
 
-      <div className="pokedex-control-row w-full flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
-        {/* Mobile: 2-col grid (Favorites + Filters), then full-width Caught row */}
-        <div className="pokedex-control-actions flex flex-col gap-2 sm:flex sm:flex-row sm:items-center sm:gap-2.5">
-          <div className="grid grid-cols-2 gap-2 sm:contents">
-            <FavoriteToggle className="w-full sm:w-auto" />
-            <AdvancedFiltersWrapper className="w-full sm:w-auto" />
-          </div>
-          <CaughtFilter className="w-full sm:w-auto [&>button]:flex-1" />
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="grid grid-cols-2 gap-2 sm:contents">
+          <FavoriteToggle className="w-full sm:w-auto" />
+          <AdvancedFiltersWrapper className="w-full sm:w-auto" />
         </div>
-        <div className="flex-shrink-0">
+        <CaughtFilter className="w-full sm:w-auto" />
+        <div className="sm:ml-auto">
           <SortSelector />
         </div>
-      </div>
-
-      <div className="pokedex-filter-rails mt-5 pt-5 w-full space-y-4 relative z-10">
-        <RegionFilter />
-        <TypeFilter />
       </div>
     </div>
   );

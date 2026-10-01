@@ -30,7 +30,7 @@ export default function CompareBar() {
   if (compareList.length === 0) return null;
 
   return (
-    <div className="fixed bottom-[calc(2rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl">
+    <div className="compare-bar-overlay fixed left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl">
       <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

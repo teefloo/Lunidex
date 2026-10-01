@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseHomeFilters, serializeHomeFilters } from './pokemon-filter-url';
+import { POKEMON_DETAIL_TABS, parseHomeFilters, serializeHomeFilters } from './pokemon-filter-url';
 
 describe('Pokédex URL filters', () => {
   it('round-trips advanced filters in deterministic URL order', () => {
@@ -59,6 +59,13 @@ describe('Pokédex detail navigation URL contracts', () => {
     expect(navigation.parsePokemonReturnTarget).toEqual(expect.any(Function));
 
     expect(navigation.parsePokemonDetailTab?.('stats')).toBe('stats');
+    expect(navigation.parsePokemonDetailTab?.('abilities')).toBe('abilities');
+    expect(POKEMON_DETAIL_TABS.slice(0, 5)).toEqual([
+      'about', 'stats', 'evolution', 'moves', 'cards',
+    ]);
+    expect(POKEMON_DETAIL_TABS).toEqual(expect.arrayContaining([
+      'about', 'stats', 'evolution', 'abilities', 'moves', 'breeding', 'builds', 'locations', 'cards', 'sprites', 'competitive',
+    ]));
     expect(navigation.parsePokemonDetailTab?.('unknown')).toBe('about');
     expect(navigation.parsePokemonDetailTab?.(null)).toBe('about');
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/pokedex?gen=1#pokemon-25')))

@@ -22,6 +22,7 @@ import {
   Sparkles,
   Images,
   Egg,
+  ChevronDown,
   ExternalLink,
 } from 'lucide-react';
 import { PokemonDetail, PokemonForm, PokemonSpecies, PokemonEncounter, TYPE_COLORS } from '@/types/pokemon';
@@ -164,6 +165,16 @@ export function PokemonDetailClient({
   const searchParams = useSearchParams();
   const localeHref = useLocaleHref();
   const activeTab = parsePokemonDetailTab(searchParams.get('tab'));
+  const secondaryTabLabels: Record<string, string> = {
+    abilities: t('detail.abilities'),
+    breeding: t('detail.breeding'),
+    builds: t('detail.builds'),
+    locations: t('detail.where_to_find'),
+    sprites: t('detail.sprites'),
+    competitive: t('competitive.title'),
+  };
+  const activeSecondaryLabel = secondaryTabLabels[activeTab];
+  const [isMoreTabsOpen, setIsMoreTabsOpen] = useState(false);
   const [showShiny, setShowShiny] = useState(false);
   const [playingCry, setPlayingCry] = useState<'latest' | 'legacy' | null>(null);
   // Fine-grained slice: this page re-renders on every store keystroke if it
@@ -192,6 +203,28 @@ export function PokemonDetailClient({
     soundEnabled: state.soundEnabled,
   })));
   const routeLanguage = useClientLanguage();
+  const moreTabsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    if (moreTabsRef.current?.open) moreTabsRef.current.open = false;
+    setIsMoreTabsOpen(false);
+  }, [activeSecondaryLabel]);
+
+  const closeMoreTabs = () => {
+    if (moreTabsRef.current) moreTabsRef.current.open = false;
+    setIsMoreTabsOpen(false);
+  };
+
+  useEffect(() => {
+    if (!isMoreTabsOpen) return;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!(event.target instanceof Node) || moreTabsRef.current?.contains(event.target)) return;
+      if (moreTabsRef.current) moreTabsRef.current.open = false;
+      setIsMoreTabsOpen(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
+  }, [isMoreTabsOpen]);
 
   const [abilityDescs, setAbilityDescs] = useState<Record<string, AbilityBattleDesc> | null>(null);
   useEffect(() => {
@@ -408,6 +441,7 @@ export function PokemonDetailClient({
 
   const handleTabChange = (value: string) => {
     const nextTab = parsePokemonDetailTab(value);
+    closeMoreTabs();
     const nextSearch = setPokemonDetailTab(searchParams.toString(), nextTab);
     router.replace(
       localeHref(`/pokemon/${name}${nextSearch ? `?${nextSearch}` : ''}`),
@@ -659,38 +693,49 @@ export function PokemonDetailClient({
           className="max-w-4xl mx-auto"
         >          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full relative">
             <div className="relative mb-8 -mx-4 px-4 md:mx-0 md:px-0 pb-4 overflow-visible">
-              <TabsList className="flex w-full min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start overflow-x-scroll scrollbar-hide md:grid md:h-auto md:grid-cols-5 md:overflow-x-hidden">
-                <TabsTrigger value="about" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <div className="flex items-start gap-2">
+                <TabsList aria-label={t('detail.about')} className="flex min-w-0 flex-1 min-h-[3.5rem] rounded-sm bg-secondary/30 p-1 border border-border/40 gap-1 justify-start overflow-x-auto scrollbar-hide md:grid md:h-auto md:grid-cols-5 md:overflow-x-hidden">
+                <TabsTrigger value="about" className="whitespace-nowrap flex-1 px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.about')}
                 </TabsTrigger>
-                <TabsTrigger value="stats" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="stats" className="whitespace-nowrap flex-1 px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.stats')}
                 </TabsTrigger>
-                <TabsTrigger value="evolution" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="evolution" className="whitespace-nowrap flex-1 px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.evolution')}
                 </TabsTrigger>
-                <TabsTrigger value="moves" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="moves" className="whitespace-nowrap flex-1 px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.moveset')}
                 </TabsTrigger>
-                <TabsTrigger value="breeding" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  {t('detail.breeding')}
-                </TabsTrigger>
-                <TabsTrigger value="builds" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  {t('detail.builds')}
-                </TabsTrigger>
-                <TabsTrigger value="locations" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  {t('detail.where_to_find')}
-                </TabsTrigger>
-                <TabsTrigger value="cards" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="cards" className="whitespace-nowrap flex-1 px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {t('detail.cards')}
                 </TabsTrigger>
-                <TabsTrigger value="sprites" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  <Images className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1" /> {t('detail.sprites')}
-                </TabsTrigger>
-                <TabsTrigger value="competitive" className="whitespace-nowrap flex-none px-3 py-2.5 md:min-w-0 md:min-h-11 md:h-auto md:flex-none md:whitespace-normal md:break-words md:px-3 md:py-2 md:leading-tight rounded-sm text-[11px] md:text-xs font-black uppercase transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  {t('competitive.title')}
-                </TabsTrigger>
               </TabsList>
+                <details
+                  ref={moreTabsRef}
+                  className="pokemon-detail-more"
+                  onToggle={(event) => setIsMoreTabsOpen(event.currentTarget.open)}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Escape' || !moreTabsRef.current?.open) return;
+                    event.preventDefault();
+                    closeMoreTabs();
+                    moreTabsRef.current.querySelector('summary')?.focus();
+                  }}
+                >
+                  <summary className="pokemon-detail-more-trigger">
+                    <span>{activeSecondaryLabel ?? t('nav.more')}</span>
+                    <ChevronDown aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                  </summary>
+                  <TabsList aria-label={t('nav.more')} className="pokemon-detail-more-tabs">
+                    <TabsTrigger value="abilities" className="pokemon-detail-more-tab">{t('detail.abilities')}</TabsTrigger>
+                    <TabsTrigger value="breeding" className="pokemon-detail-more-tab">{t('detail.breeding')}</TabsTrigger>
+                    <TabsTrigger value="builds" className="pokemon-detail-more-tab">{t('detail.builds')}</TabsTrigger>
+                    <TabsTrigger value="locations" className="pokemon-detail-more-tab">{t('detail.where_to_find')}</TabsTrigger>
+                    <TabsTrigger value="sprites" className="pokemon-detail-more-tab"><Images className="h-4 w-4" />{t('detail.sprites')}</TabsTrigger>
+                    <TabsTrigger value="competitive" className="pokemon-detail-more-tab">{t('competitive.title')}</TabsTrigger>
+                  </TabsList>
+                </details>
+              </div>
               {/* Mobile scroll indicator */}
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none md:hidden z-10 opacity-40">
                 <div className="w-1 h-8 bg-gradient-to-b from-transparent via-primary to-transparent rounded-full" />
@@ -805,68 +850,6 @@ export function PokemonDetailClient({
 
                 <div className="mt-8 pt-6 border-t border-border/60">
                   <h3 className="text-[11px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.abilities')}
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {pokemon.abilities.map((_, i) => i).sort((a, b) => pokemon.abilities[a].ability.name.localeCompare(pokemon.abilities[b].ability.name)).map((originalIdx) => {
-                      const a = pokemon.abilities[originalIdx];
-                      const abilityData = abilityQueries[originalIdx]?.data;
-                      let description = t('detail.no_ability_desc');
-                      let localizedName = formatName(a.ability.name);
-                      let battleDesc = '';
-                      if (abilityData) {
-                        const nameEntry = abilityData.names.find(n => n.language.name === resolvedLang)
-                                       || abilityData.names.find(n => n.language.name === 'en');
-                        if (nameEntry) localizedName = nameEntry.name;
-
-                        const langEffect = abilityData.effect_entries.find(e => e.language.name === resolvedLang);
-                        const langFlavor = abilityData.flavor_text_entries.find(e => e.language.name === resolvedLang);
-                        const enEffect = abilityData.effect_entries.find(e => e.language.name === 'en');
-                        const enFlavor = abilityData.flavor_text_entries.find(e => e.language.name === 'en');
-                        
-                        description = langEffect?.short_effect 
-                                   || langFlavor?.flavor_text 
-                                   || langEffect?.effect 
-                                   || enEffect?.short_effect 
-                                   || enFlavor?.flavor_text 
-                                   || enEffect?.effect 
-                                   || description;
-
-                        const battleMapping = abilityDescs?.[a.ability.name];
-                        if (battleMapping) {
-                          battleDesc = battleMapping[resolvedLang as keyof typeof battleMapping] 
-                                    || battleMapping.en;
-                        }
-                      }
-
-                      return (
-                        <div key={a.ability.name} className="flex flex-col gap-2 p-4 bg-secondary/20 border border-border/40 rounded-sm group hover:bg-secondary/40 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="font-black text-sm text-foreground/80 group-hover:text-primary transition-colors">{localizedName}</span>
-                              {a.is_hidden && <span className="px-1.5 py-0.5 bg-primary/20 text-[11px] md:text-[11px] font-black text-primary uppercase tracking-tighter rounded">{t('detail.hidden')}</span>}
-                            </div>
-                            {abilityQueries[originalIdx]?.isLoading && <Loader2 className="w-3 h-3 animate-spin text-primary/50" />}
-                          </div>
-                          {battleDesc && (
-                            <div className="flex items-start gap-2 p-2.5 bg-primary/5 border border-primary/10 rounded-sm">
-                              <Zap className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                              <p className="text-xs text-primary/90 leading-relaxed font-medium">
-                                {battleDesc}
-                              </p>
-                            </div>
-                          )}
-                          <p className="text-xs text-foreground/60 leading-relaxed">
-                            {description.replace(/\n|\f/g, ' ')}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-border/60">
-                  <h3 className="text-[11px] text-foreground/40 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('detail.recommended_items')}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -892,6 +875,64 @@ export function PokemonDetailClient({
                   pokemonImage={pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default}
                 />
               </div>
+            </TabsContent>
+
+            <TabsContent value="abilities" className="space-y-6">
+              <section className="glass-panel rounded-sm p-6 md:p-8" aria-labelledby="pokemon-abilities-title">
+                <h2 id="pokemon-abilities-title" className="mb-5 flex items-center gap-2 border-b border-border/60 pb-4 text-xl font-black">
+                  <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
+                  {t('detail.abilities')}
+                </h2>
+                <div className="grid grid-cols-1 gap-3">
+                  {pokemon.abilities
+                    .map((_, index) => index)
+                    .sort((left, right) => pokemon.abilities[left].ability.name.localeCompare(pokemon.abilities[right].ability.name))
+                    .map((originalIdx) => {
+                      const ability = pokemon.abilities[originalIdx];
+                      const abilityData = abilityQueries[originalIdx]?.data;
+                      let description = t('detail.no_ability_desc');
+                      let localizedName = formatName(ability.ability.name);
+                      let battleDesc = '';
+                      if (abilityData) {
+                        const nameEntry = abilityData.names.find((entry) => entry.language.name === resolvedLang)
+                          || abilityData.names.find((entry) => entry.language.name === 'en');
+                        if (nameEntry) localizedName = nameEntry.name;
+                        const localizedEffect = abilityData.effect_entries.find((entry) => entry.language.name === resolvedLang);
+                        const localizedFlavor = abilityData.flavor_text_entries.find((entry) => entry.language.name === resolvedLang);
+                        const englishEffect = abilityData.effect_entries.find((entry) => entry.language.name === 'en');
+                        const englishFlavor = abilityData.flavor_text_entries.find((entry) => entry.language.name === 'en');
+                        description = localizedEffect?.short_effect
+                          || localizedFlavor?.flavor_text
+                          || localizedEffect?.effect
+                          || englishEffect?.short_effect
+                          || englishFlavor?.flavor_text
+                          || englishEffect?.effect
+                          || description;
+                        const battleMapping = abilityDescs?.[ability.ability.name];
+                        if (battleMapping) battleDesc = battleMapping[resolvedLang as keyof typeof battleMapping] || battleMapping.en;
+                      }
+
+                      return (
+                        <article key={ability.ability.name} className="flex flex-col gap-2 rounded-sm border border-border/40 bg-secondary/20 p-4 transition-colors hover:bg-secondary/40">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-sm font-black text-foreground/85">{localizedName}</h3>
+                              {ability.is_hidden ? <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-black uppercase text-primary">{t('detail.hidden')}</span> : null}
+                            </div>
+                            {abilityQueries[originalIdx]?.isLoading ? <Loader2 className="h-3 w-3 animate-spin text-primary/50" aria-label={t('common.loading')} /> : null}
+                          </div>
+                          {battleDesc ? (
+                            <div className="flex items-start gap-2 rounded-sm border border-primary/10 bg-primary/5 p-2.5">
+                              <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+                              <p className="text-xs font-medium leading-relaxed text-primary/90">{battleDesc}</p>
+                            </div>
+                          ) : null}
+                          <p className="text-xs leading-relaxed text-foreground/60">{description.replace(/\n|\f/g, ' ')}</p>
+                        </article>
+                      );
+                    })}
+                </div>
+              </section>
             </TabsContent>
 
             {/* Stats Tab */}

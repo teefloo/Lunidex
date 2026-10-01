@@ -55,10 +55,11 @@ export const POKEMON_DETAIL_TABS = [
   'stats',
   'evolution',
   'moves',
+  'cards',
+  'abilities',
   'breeding',
   'builds',
   'locations',
-  'cards',
   'sprites',
   'competitive',
 ] as const;
