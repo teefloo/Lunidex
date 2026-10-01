@@ -1,8 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { TCGCard } from '@/types/tcg';
 import { TCG_CARD_PLACEHOLDER, getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { useTranslation } from '@/lib/i18n';
 import { localeHref } from '@/lib/seo';
@@ -14,6 +16,11 @@ import {
   type HomeCatalogPreviewCard,
 } from '@/lib/home-catalog-preview';
 import type { SupportedLanguage } from '@/lib/languages';
+
+const TCGCardDetailModal = dynamic(
+  () => import('@/components/tcg/TCGCardDetailModal').then((module) => module.TCGCardDetailModal),
+  { ssr: false },
+);
 
 interface HomeCatalogPreviewProps {
   cards: readonly HomeCatalogPreviewCard[];
@@ -91,6 +98,7 @@ export default function HomeCatalogPreview({ cards, language }: HomeCatalogPrevi
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [documentVisible, setDocumentVisible] = useState(true);
   const [interactionPaused, setInteractionPaused] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
 
   const cancelPreparedSelection = useCallback(() => {
     retryCountRef.current = 0;
@@ -240,6 +248,18 @@ export default function HomeCatalogPreview({ cards, language }: HomeCatalogPrevi
         {card ? (
           <Link
             href={localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}
+            onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              event.preventDefault();
+              setSelectedCard({
+                id: card.id,
+                localId: card.localId,
+                name: card.name,
+                rarity: card.rarity,
+                image: card.image,
+                set: card.set,
+              });
+            }}
             aria-label={`${card.name}, ${getRarityLabel(card, t)}, ${card.set.name}, ${card.localId} — ${t('lunidex_home.open_card')}`}
             className="home-catalog-preview-card"
             tabIndex={isLayerAccessible ? undefined : -1}
@@ -328,6 +348,14 @@ export default function HomeCatalogPreview({ cards, language }: HomeCatalogPrevi
           </ul>
         ) : null}
       </div>
+      {selectedCard && (
+        <TCGCardDetailModal
+          card={selectedCard}
+          isOpen
+          onClose={() => setSelectedCard(null)}
+          tcgLanguage="en"
+        />
+      )}
     </section>
   );
 }

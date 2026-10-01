@@ -5,23 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Users,
-  ArrowLeftRight,
-  LayoutGrid,
-  Shapes,
   Swords,
-  Package,
   Sparkles,
-  BrainCircuit,
-  Shield,
-  Egg,
-  Heart,
-  Home,
-  Calculator,
-  HelpCircle,
-  Trophy,
-  LayoutTemplate,
-  type LucideIcon,
 } from 'lucide-react';
 import {
   Command,
@@ -45,38 +30,19 @@ import { pokemonKeys } from '@/lib/api/keys';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
-
-interface StaticCommandItem {
-  path: string;
-  icon: LucideIcon;
-  labelKey: string;
-  fallback: string;
-}
-
-const PAGE_ITEMS: StaticCommandItem[] = [
-  { path: '/', icon: Home, labelKey: 'nav.home', fallback: 'Home' },
-  { path: '/team', icon: Users, labelKey: 'nav.team', fallback: 'Team Builder' },
-  { path: '/compare', icon: ArrowLeftRight, labelKey: 'nav.compare', fallback: 'Compare' },
-  { path: '/tcg', icon: LayoutGrid, labelKey: 'nav.tcg', fallback: 'TCG Catalog' },
-  { path: '/types', icon: Shapes, labelKey: 'nav.types', fallback: 'Types' },
-  { path: '/moves', icon: Swords, labelKey: 'nav.moves', fallback: 'Moves' },
-  { path: '/items', icon: Package, labelKey: 'nav.items', fallback: 'Items' },
-  { path: '/abilities', icon: Sparkles, labelKey: 'nav.abilities', fallback: 'Abilities' },
-  { path: '/quiz', icon: BrainCircuit, labelKey: 'nav.quiz', fallback: 'Quiz' },
-  { path: '/battle', icon: Shield, labelKey: 'nav.battle', fallback: 'Battle' },
-  { path: '/breeding', icon: Egg, labelKey: 'nav.breeding', fallback: 'Breeding' },
-  { path: '/ev-iv', icon: Calculator, labelKey: 'nav.ev_iv', fallback: 'EV/IV Calc' },
-  { path: '/favorites', icon: Heart, labelKey: 'nav.favorites', fallback: 'Favorites' },
-  { path: '/faq', icon: HelpCircle, labelKey: 'nav.faq', fallback: 'FAQ' },
-  { path: '/nuzlocke', icon: Trophy, labelKey: 'nuzlocke.title', fallback: 'Nuzlocke Tracker' },
-  { path: '/tcg/deck-builder', icon: LayoutTemplate, labelKey: 'tcg.nav_deck_builder', fallback: 'Deck Builder' },
-];
+import { usePrimeDexStore } from '@/store/primedex';
+import {
+  NAVIGATION_DESTINATIONS,
+  PRIMARY_NAVIGATION,
+  matchesDestinationSearch,
+} from '@/lib/navigation-registry';
 
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 
 export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const toggleSettings = usePrimeDexStore((state) => state.toggleSettings);
   const [open, setOpen] = useState(initialOpen);
   const [search, setSearch] = useState('');
 
@@ -90,10 +56,16 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
 
   const hasQuery = search.trim().length > 0;
 
+  const handleOpenChange = useCallback((nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) setSearch('');
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
+        setSearch('');
         setOpen((prev) => !prev);
       }
     };
@@ -185,13 +157,12 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
   }, [search, allAbilities]);
 
   const pageResults = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    if (!query) return PAGE_ITEMS;
-    return PAGE_ITEMS.filter((item) => {
+    const destinations = hasQuery ? NAVIGATION_DESTINATIONS : PRIMARY_NAVIGATION;
+    return destinations.filter((item) => {
       const label = t(item.labelKey, { defaultValue: item.fallback }) || item.fallback;
-      return label.toLowerCase().includes(query) || item.path.toLowerCase().includes(query);
+      return matchesDestinationSearch(item, search, resolvedLang, label);
     });
-  }, [search, t]);
+  }, [hasQuery, resolvedLang, search, t]);
 
   const navigate = useCallback((href: string) => {
     setOpen(false);
@@ -202,7 +173,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
   return (
     <CommandDialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       title={t('command_palette.title', { defaultValue: 'Command Palette' })}
       description={t('command_palette.description', { defaultValue: 'Search pages and Pokémon' })}
     >
@@ -224,8 +195,16 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
                 const label = t(item.labelKey, { defaultValue: item.fallback }) || item.fallback;
                 return (
                   <CommandItem
-                    key={item.path}
-                    onSelect={() => navigate(localizedHref(item.path))}
+                    key={item.id}
+                    onSelect={() => {
+                      if (item.action === 'settings') {
+                        toggleSettings();
+                        setOpen(false);
+                        setSearch('');
+                      } else if (item.path) {
+                        navigate(localizedHref(item.path));
+                      }
+                    }}
                   >
                     <Icon className="h-4 w-4" />
                     <span>{label}</span>
@@ -235,7 +214,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
             </CommandGroup>
           )}
 
-          {itemResults.length > 0 && (
+          {hasQuery && itemResults.length > 0 && (
             <CommandGroup heading={t('command_palette.items', { defaultValue: 'Items' })}>
               {itemResults.map((item) => {
                 const localizedName = item.pokemon_v2_itemnames[0]?.name || formatName(item.name);
@@ -267,7 +246,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
             </CommandGroup>
           )}
 
-          {moveResults.length > 0 && (
+          {hasQuery && moveResults.length > 0 && (
             <CommandGroup heading={t('command_palette.moves', { defaultValue: 'Moves' })}>
               {moveResults.map((move) => {
                 const localizedName = move.pokemon_v2_movenames[0]?.name || formatName(move.name);
@@ -290,7 +269,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
             </CommandGroup>
           )}
 
-          {abilityResults.length > 0 && (
+          {hasQuery && abilityResults.length > 0 && (
             <CommandGroup heading={t('command_palette.abilities', { defaultValue: 'Abilities' })}>
               {abilityResults.map((ability) => {
                 const localizedName = ability.pokemon_v2_abilitynames[0]?.name || formatName(ability.name);
@@ -310,7 +289,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
             </CommandGroup>
           )}
 
-          {pokemonResults.length > 0 && (
+          {hasQuery && pokemonResults.length > 0 && (
             <CommandGroup heading={t('command_palette.pokemon', { defaultValue: 'Pokémon' })}>
               {pokemonResults.map((pokemon) => {
                 const speciesNames = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames || [];

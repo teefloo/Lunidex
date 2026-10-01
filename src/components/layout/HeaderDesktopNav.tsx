@@ -1,69 +1,82 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import { HeaderLink } from './HeaderLink';
-import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
+import { PRIMARY_NAVIGATION, resolveActivePrimaryNavigation, resolveNavigationDestination } from '@/lib/navigation-registry';
+import { SecondaryNavigationLinks } from './SecondaryNavigationLinks';
 
 export function HeaderDesktopNav() {
   const { t } = useTranslation();
-  const resolvedLang = useClientLanguage();
   const pathname = usePathname();
-  const localizedHref = (path: string) => `/${resolvedLang}${path}`;
-  const isToolsActive = SECONDARY_NAV_ITEMS.some((item) => {
-    const href = localizedHref(item.path);
-    return pathname === href || pathname.startsWith(`${href}/`);
-  });
+  const localeHref = useLocaleHref();
+  const moreRef = useRef<HTMLDetailsElement>(null);
+  const activePrimary = resolveActivePrimaryNavigation(pathname);
+  const activeDestination = resolveNavigationDestination(pathname);
+  const moreIsActive = activeDestination?.group === 'space' || activeDestination?.group === 'resources';
+
+  const closeMore = () => {
+    if (!moreRef.current) return;
+    moreRef.current.open = false;
+  };
+
+  useEffect(() => {
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (moreRef.current?.open && event.target instanceof Node && !moreRef.current.contains(event.target)) {
+        closeMore();
+      }
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
+  }, []);
 
   const label = (key: string, fallback: string) => {
     const translated = t(key, { defaultValue: fallback });
-    return translated && translated !== key ? translated : fallback;
+    return translated === key ? fallback : translated;
   };
 
-  const navigationLabel = label('header.navigation', 'Primary navigation');
-  const toolsLabel = label('nav.tools', 'Tools');
-
   return (
-    <nav className="site-header-nav hidden min-w-0 items-center gap-1 xl:flex" aria-label={navigationLabel}>
+    <nav className="site-header-nav hidden min-w-0 items-center gap-1 lg:flex" aria-label={label('header.navigation', 'Primary navigation')}>
       <div className="site-header-nav-primary flex min-w-0 items-center gap-0.5">
-        {PRIMARY_NAV_ITEMS.map((item) => (
-          <HeaderLink
-            key={item.path}
-            href={localizedHref(item.path)}
-            variant="ghost"
-            className="site-header-nav-link"
-          >
-            {label(item.labelKey, item.fallback)}
-          </HeaderLink>
-        ))}
+        {PRIMARY_NAVIGATION.map((item) => {
+          if (!item.path || !item.primary) return null;
+          const isActive = item.primary === activePrimary;
+          return (
+            <Link
+              key={item.id}
+              href={localeHref(item.path)}
+              prefetch={false}
+              aria-current={isActive ? 'page' : undefined}
+              data-active={isActive ? 'true' : undefined}
+              className="site-header-nav-link"
+            >
+              {label(item.labelKey, item.fallback)}
+            </Link>
+          );
+        })}
       </div>
 
-      <details className="site-header-tools">
-        <summary data-active={isToolsActive ? 'true' : undefined} className="site-header-tools-trigger">
-          <span>{toolsLabel}</span>
+      <details
+        ref={moreRef}
+        className="site-header-more"
+        onKeyDown={(event) => {
+          if (event.key !== 'Escape' || !moreRef.current?.open) return;
+          event.preventDefault();
+          moreRef.current.open = false;
+          moreRef.current.querySelector('summary')?.focus();
+        }}
+      >
+        <summary className="site-header-more-trigger" data-active={moreIsActive ? 'true' : undefined}>
+          <span>{label('nav.more', 'More')}</span>
           <ChevronDown aria-hidden="true" className="site-header-tools-chevron h-3.5 w-3.5 transition-transform duration-150" />
         </summary>
-        <div className="site-header-tools-menu">
-          {SECONDARY_NAV_ITEMS.map((item) => {
-            const href = localizedHref(item.path);
-            const isActive = pathname === href || pathname.startsWith(`${href}/`);
-
-            return (
-              <Link
-                key={item.path}
-                href={href}
-                aria-current={isActive ? 'page' : undefined}
-                data-active={isActive ? 'true' : undefined}
-                className="site-header-tools-item"
-              >
-                <item.icon aria-hidden="true" className="h-4 w-4 shrink-0" />
-                <span>{label(item.labelKey, item.fallback)}</span>
-              </Link>
-            );
-          })}
+        <div className="site-header-more-menu" onClick={(event) => {
+          if ((event.target as HTMLElement).closest('a, button')) closeMore();
+        }}>
+          <SecondaryNavigationLinks onNavigate={closeMore} />
         </div>
       </details>
     </nav>

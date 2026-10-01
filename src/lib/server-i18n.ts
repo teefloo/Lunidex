@@ -87,6 +87,11 @@ const SERVER_ONLY_CLIENT_TRANSLATION_NAMESPACES = [
   'quiz_guide',
 ] as const;
 
+export function isEditorialClientRoute(pathname: string): boolean {
+  const normalizedPath = pathname.replace(/\/+$/, '');
+  return /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides\/[^/]+|compare\/[^/]+)$/.test(normalizedPath);
+}
+
 /**
  * Public pages render these translation namespaces entirely on the server.
  * Keep them out of the serialized client provider payload while preserving

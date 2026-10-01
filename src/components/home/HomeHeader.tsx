@@ -4,8 +4,8 @@ import { localeHref } from '@/lib/seo';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeHeaderMobileMenu from './HomeHeaderMobileMenu';
-import { HomeLanguageSelect } from './HomeLanguageSelect';
-import HomeThemeToggle from './HomeThemeToggle';
+import { HomeHeaderMoreMenu } from './HomeHeaderMoreMenu';
+import { HeaderActions } from '@/components/layout/HeaderActions';
 
 interface HomeHeaderProps {
   initialSignedIn?: boolean;
@@ -15,10 +15,10 @@ interface HomeHeaderProps {
 export default async function HomeHeader({ initialSignedIn = false, serviceAvailable = true }: HomeHeaderProps) {
   const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
   const links = [
+    { href: '/tcg', label: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }) },
     { href: '/pokedex', label: t('nav.pokedex') },
-    { href: '/team', label: t('nav.team') },
+    { href: '/team', label: t('nav.play', { defaultValue: 'Play' }) },
   ];
-  const mobileLinks = [...links, { href: '/quiz', label: t('nav.quiz') }];
   const menuLabel = t('header.open_menu');
   const closeLabel = t('common.close', { defaultValue: 'Close' });
 
@@ -54,18 +54,12 @@ export default async function HomeHeader({ initialSignedIn = false, serviceAvail
               {link.label}
             </Link>
           ))}
+          <HomeHeaderMoreMenu />
         </nav>
 
-        <HomeLanguageSelect className="field-header-language" />
-        <HomeThemeToggle />
-
-        <Link href={localeHref('/tcg', language)} className="field-header-cta">
-          {t('tcg.nav_catalog')}
-          <span aria-hidden="true">↗</span>
-        </Link>
+        <HeaderActions placement="toolbar" />
 
         <HomeHeaderMobileMenu
-          links={mobileLinks.map((link) => ({ ...link, href: localeHref(link.href, language) }))}
           menuLabel={menuLabel}
           navigationLabel={t('header.navigation', { defaultValue: 'Primary navigation' })}
           closeLabel={closeLabel}
@@ -74,8 +68,6 @@ export default async function HomeHeader({ initialSignedIn = false, serviceAvail
           collectionInfoLabel={t('lunidex_home.cta_collection_info')}
           collectionLabel={t('tcg.nav_collection')}
           locale={language}
-          languageControl={<HomeLanguageSelect />}
-          themeControl={<HomeThemeToggle />}
           initialSignedIn={initialSignedIn}
           serviceAvailable={serviceAvailable}
         />

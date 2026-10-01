@@ -32,7 +32,13 @@ export default async function LegalNoticePage() {
       <Header />
       <main className="page-shell py-20">
         <div className="max-w-3xl mx-auto">
-          <LegalDocumentView doc={doc} />
+          <LegalDocumentView
+            doc={doc}
+            tableOfContentsLabel={t('legal.common.table_of_contents')}
+            dateSummary={doc.lastUpdated === doc.effectiveDate
+              ? t('legal.common.updated_and_effective', { date: doc.lastUpdated })
+              : `${t('legal.common.last_updated', { date: doc.lastUpdated })} · ${t('legal.common.effective_date', { date: doc.effectiveDate })}`}
+          />
           <p className="mt-12 text-xs text-muted-foreground">{t('legal.common.fallback_notice')}</p>
         </div>
       </main>

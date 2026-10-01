@@ -1,29 +1,24 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useEffect } from 'react';
-import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Menu, X } from 'lucide-react';
-import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { AuthModalBoundary } from '@/components/auth/AuthModalBoundary';
+import { getFocusTrapTarget } from '@/lib/focus-management';
+import { resolveNavigationDestination } from '@/lib/navigation-registry';
 import { HeaderActions } from './HeaderActions';
 import { HeaderLogo } from './HeaderLogo';
-import { PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from './nav-items';
-import { getFocusTrapTarget } from '@/lib/focus-management';
+import { SecondaryNavigationLinks } from './SecondaryNavigationLinks';
 
 const AuthModal = dynamic(() => import('@/components/auth/AuthModal'), { ssr: false });
 
 export function HeaderMobileNav() {
   const { t } = useTranslation();
-  const resolvedLang = useClientLanguage();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
-
-  const localizedHref = (path: string) => `/${resolvedLang}${path}`;
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -31,19 +26,11 @@ export function HeaderMobileNav() {
     const translated = t(key, { defaultValue: fallback });
     return translated === key ? fallback : translated;
   };
-
-  const menuLabel = label('header.open_menu', 'Open menu');
+  const menuLabel = label('nav.more', 'More');
   const navigationLabel = label('header.navigation', 'Primary navigation');
-  const menuDescription = label('header.menu_description', 'Browse Lunidex navigation and account tools.');
   const closeLabel = label('common.close', 'Close');
-  const toolsLabel = label('nav.tools', 'Tools');
-  const moreLabel = label('nav.more', 'More');
-  const isToolsActive = SECONDARY_NAV_ITEMS.some((item) => {
-    const href = localizedHref(item.path);
-    return pathname === href || pathname.startsWith(`${href}/`);
-  });
-  const [isToolsOpen, setIsToolsOpen] = useState<boolean | null>(null);
-  const showToolsOpen = isToolsOpen ?? isToolsActive;
+  const activeDestination = resolveNavigationDestination(pathname);
+  const moreIsActive = activeDestination?.group === 'space' || activeDestination?.group === 'resources';
 
   const closeMenu = () => {
     setIsOpen(false);
@@ -98,7 +85,7 @@ export function HeaderMobileNav() {
   }, [isOpen]);
 
   return (
-    <div className="xl:hidden">
+    <div className="lg:hidden">
       <button
         type="button"
         ref={triggerRef}
@@ -106,6 +93,7 @@ export function HeaderMobileNav() {
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls="lunidex-mobile-menu"
+        data-active={moreIsActive ? 'true' : undefined}
         aria-label={menuLabel}
         title={menuLabel}
         className="site-header-menu-trigger site-header-action"
@@ -133,83 +121,26 @@ export function HeaderMobileNav() {
             className="header-mobile-sheet motion-reduce:!transform-none motion-reduce:!transition-none"
           >
             <div className="header-mobile-sheet-header">
-            <HeaderLogo />
-            <button
-              type="button"
-              onClick={closeMenu}
-              aria-label={closeLabel}
-              title={closeLabel}
-              className="site-header-action header-mobile-sheet-close"
-            >
-              <X aria-hidden="true" className="h-4 w-4" />
-            </button>
-            <p className="sr-only">{menuDescription}</p>
-          </div>
+              <HeaderLogo />
+              <button
+                type="button"
+                onClick={closeMenu}
+                aria-label={closeLabel}
+                title={closeLabel}
+                className="site-header-action header-mobile-sheet-close"
+              >
+                <X aria-hidden="true" className="h-4 w-4" />
+              </button>
+            </div>
 
             <div className="header-mobile-sheet-body">
               <nav aria-label={navigationLabel} className="header-mobile-sheet-nav">
-              <div className="header-mobile-sheet-section-label">{navigationLabel}</div>
-              {PRIMARY_NAV_ITEMS.map((item) => {
-                const href = localizedHref(item.path);
-                const isActive = pathname === href || pathname.startsWith(`${href}/`);
-
-                return (
-                  <Link
-                    key={item.path}
-                    href={href}
-                    prefetch={false}
-                    onClick={closeMenu}
-                    aria-current={isActive ? 'page' : undefined}
-                    data-active={isActive ? 'true' : undefined}
-                    className="header-mobile-sheet-link"
-                  >
-                    <item.icon aria-hidden="true" className="h-4 w-4 shrink-0" />
-                    <span>{label(item.labelKey, item.fallback)}</span>
-                  </Link>
-                );
-              })}
-
-              <div className="header-mobile-sheet-tools">
-                <button
-                  type="button"
-                  aria-expanded={showToolsOpen}
-                  onClick={() => setIsToolsOpen(!showToolsOpen)}
-                  className="header-mobile-sheet-tools-trigger"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="header-mobile-sheet-tools-mark" aria-hidden="true">+</span>
-                    <span>{toolsLabel}</span>
-                  </span>
-                  <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform duration-150 motion-reduce:transition-none ${showToolsOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {showToolsOpen && (
-                  <div className="header-mobile-sheet-tools-list">
-                    {SECONDARY_NAV_ITEMS.map((item) => {
-                      const href = localizedHref(item.path);
-                      const isActive = pathname === href || pathname.startsWith(`${href}/`);
-
-                      return (
-                        <Link
-                          key={item.path}
-                          href={href}
-                          prefetch={false}
-                          onClick={closeMenu}
-                          aria-current={isActive ? 'page' : undefined}
-                          data-active={isActive ? 'true' : undefined}
-                          className="header-mobile-sheet-link header-mobile-sheet-tool-link"
-                        >
-                          <item.icon aria-hidden="true" className="h-4 w-4 shrink-0" />
-                          <span>{label(item.labelKey, item.fallback)}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                <SecondaryNavigationLinks onNavigate={closeMenu} />
               </nav>
-
               <section className="header-mobile-sheet-actions" aria-labelledby="header-mobile-actions-title">
-                <h2 id="header-mobile-actions-title" className="header-mobile-sheet-section-label">{moreLabel}</h2>
+                <h2 id="header-mobile-actions-title" className="header-mobile-sheet-section-label">
+                  {label('nav.account', 'Account')}
+                </h2>
                 <HeaderActions
                   placement="sheet"
                   onInteraction={closeMenu}

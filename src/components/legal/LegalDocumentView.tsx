@@ -113,15 +113,19 @@ function Callout({ callout }: { callout: LegalCallout }) {
 
 export default function LegalDocumentView({
   doc,
+  tableOfContentsLabel,
+  dateSummary,
 }: {
   doc: LegalDocument;
+  tableOfContentsLabel: string;
+  dateSummary: string;
 }) {
   return (
     <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold text-foreground sm:text-4xl">{doc.title}</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          {doc.lastUpdated} · {doc.effectiveDate}
+          {dateSummary}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/85">{doc.intro}</p>
         {doc.preamble ? (
@@ -130,11 +134,11 @@ export default function LegalDocumentView({
       </div>
 
       <nav
-        aria-label="Table of contents"
+        aria-label={tableOfContentsLabel}
         className="rounded-sm border border-foreground/10 bg-foreground/[0.02] p-4"
       >
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Table of contents
+          {tableOfContentsLabel}
         </p>
         <ol className="mt-2 space-y-1 text-sm">
           {doc.sections.map((section) => (

@@ -1,45 +1,20 @@
 import {
-  BookOpen,
-  Users,
-  BrainCircuit,
-  Shapes,
-  Swords,
-  LayoutGrid,
-  ArrowLeftRight,
-  Egg,
-  Shield,
-  Package,
-  Sparkles,
-  Calculator,
-  Newspaper,
-} from 'lucide-react';
-import type { ComponentType } from 'react';
+  NAVIGATION_DESTINATIONS,
+  PRIMARY_NAVIGATION,
+  type NavigationDestination,
+} from '@/lib/navigation-registry';
 
-export interface NavItem {
-  path: string;
-  icon: ComponentType<{ className?: string }>;
-  labelKey: string;
-  fallback: string;
-}
+export type NavItem = NavigationDestination & { path: string };
 
-export const PRIMARY_NAV_ITEMS: NavItem[] = [
-  { path: '/pokedex',          icon: BookOpen,    labelKey: 'nav.pokedex',            fallback: 'Pokédex' },
-  { path: '/team',             icon: Users,       labelKey: 'nav.team',               fallback: 'Team' },
-  { path: '/tcg',              icon: LayoutGrid,  labelKey: 'nav.tcg',                fallback: 'TCG' },
-  { path: '/tcg/collection',   icon: Package,     labelKey: 'tcg.nav_collection',    fallback: 'Collection' },
-  { path: '/quiz',             icon: BrainCircuit,labelKey: 'nav.quiz',               fallback: 'Quiz' },
-  { path: '/blog',             icon: Newspaper,   labelKey: 'nav.blog',               fallback: 'Blog' },
-];
+export const PRIMARY_NAV_ITEMS = PRIMARY_NAVIGATION.filter(
+  (item): item is typeof item & { path: string } => item.path !== null,
+);
 
-export const SECONDARY_NAV_ITEMS: NavItem[] = [
-  { path: '/compare',   icon: ArrowLeftRight, labelKey: 'nav.compare',   fallback: 'Compare' },
-  { path: '/types',     icon: Shapes,         labelKey: 'nav.types',     fallback: 'Types' },
-  { path: '/moves',     icon: Swords,         labelKey: 'nav.moves',     fallback: 'Moves' },
-  { path: '/items',     icon: Package,        labelKey: 'nav.items',     fallback: 'Items' },
-  { path: '/abilities', icon: Sparkles,       labelKey: 'nav.abilities', fallback: 'Abilities' },
-  { path: '/battle',    icon: Shield,         labelKey: 'nav.battle',    fallback: 'Battle tools' },
-  { path: '/breeding',  icon: Egg,            labelKey: 'nav.breeding',  fallback: 'Breeding' },
-  { path: '/ev-iv',     icon: Calculator,     labelKey: 'nav.ev_iv',     fallback: 'EV/IV' },
-];
+/** Kept as a compatibility export for existing local feature menus. */
+export const SECONDARY_NAV_ITEMS = NAVIGATION_DESTINATIONS.filter(
+  (item): item is NavItem => item.path !== null && item.group === 'play' && !item.primary,
+);
 
-export const NAV_ITEMS: NavItem[] = [...PRIMARY_NAV_ITEMS, ...SECONDARY_NAV_ITEMS];
+export const NAV_ITEMS = NAVIGATION_DESTINATIONS.filter(
+  (item): item is NavItem => item.path !== null,
+);

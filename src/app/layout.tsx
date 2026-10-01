@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import {
   getEditorialClientTranslations,
   getPublicClientTranslations,
+  isEditorialClientRoute,
   getServerT,
   getServerLanguage,
 } from '@/lib/server-i18n';
@@ -167,7 +168,7 @@ export default async function RootLayout({
   const t = await getServerT();
   const requestPathname = requestHeaders.get('x-primedex-pathname') ?? '';
   const isHomeRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/?$/.test(requestPathname);
-  const isEditorialRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/(?:guides|compare)(?:\/|$)/.test(requestPathname);
+  const isEditorialRoute = isEditorialClientRoute(requestPathname);
   const initialTranslations = isEditorialRoute
     ? getEditorialClientTranslations(lang)
     : getPublicClientTranslations(lang);

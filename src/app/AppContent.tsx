@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import CompareBarSlot from "@/components/pokemon/CompareBarSlot";
+import { PrimaryBottomNav } from '@/components/layout/PrimaryBottomNav';
 import dynamic from 'next/dynamic';
 import { TOAST_REQUEST_EVENT } from '@/lib/toast';
 
@@ -86,6 +87,7 @@ export function AppContent({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
+      <PrimaryBottomNav />
       <CompareBarSlot />
       <ToastBoundary />
       <InstallPrompt />

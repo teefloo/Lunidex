@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { supportedLanguages } from './languages';
-import { getPublicClientTranslations, getServerTranslations } from './server-i18n';
+import { getPublicClientTranslations, getServerTranslations, isEditorialClientRoute } from './server-i18n';
 
 const serverOnlyNamespaces = ['editorial', 'anniversary_30', 'faq', 'about', 'quiz_guide'] as const;
 
@@ -23,5 +23,30 @@ describe('getPublicClientTranslations', () => {
       expect(publicTranslations.tcg).toEqual(serverTranslations.tcg);
       expect(publicTranslations.pokemon).toEqual(serverTranslations.pokemon);
     }
+  });
+
+  it('ships the compact dashboard and account copy in every client locale', () => {
+    for (const language of supportedLanguages) {
+      const publicTranslations = getPublicClientTranslations(language) as unknown as Record<string, unknown>;
+      const dashboard = publicTranslations.dashboard as Record<string, unknown>;
+      const account = publicTranslations.account as Record<string, unknown>;
+
+      expect(dashboard.overview_heading).toEqual(expect.any(String));
+      expect(dashboard.overview_heading).not.toBe('dashboard.overview_heading');
+      expect(dashboard.account_section).toEqual(expect.any(String));
+      expect(dashboard.account_section).not.toBe('dashboard.account_section');
+      expect(account.data_title).toEqual(expect.any(String));
+      expect(account.data_description).toEqual(expect.any(String));
+    }
+  });
+});
+
+describe('isEditorialClientRoute', () => {
+  it('keeps the interactive comparison workspace on the full client translation bundle', () => {
+    expect(isEditorialClientRoute('/fr/compare')).toBe(false);
+    expect(isEditorialClientRoute('/fr/compare/')).toBe(false);
+    expect(isEditorialClientRoute('/fr/compare/lunidex-vs-pokecardex-zebradex')).toBe(true);
+    expect(isEditorialClientRoute('/fr/guides/quiz-guide')).toBe(true);
+    expect(isEditorialClientRoute('/fr/tcg')).toBe(false);
   });
 });

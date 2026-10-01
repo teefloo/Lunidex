@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { SecondaryNavigationLinks } from '@/components/layout/SecondaryNavigationLinks';
 
 interface HomeHeaderMobileMenuProps {
-  links: Array<{ href: string; label: string }>;
   menuLabel: string;
   navigationLabel: string;
   closeLabel: string;
@@ -16,14 +15,11 @@ interface HomeHeaderMobileMenuProps {
   collectionInfoLabel: string;
   collectionLabel: string;
   locale: string;
-  languageControl?: ReactNode;
-  themeControl?: ReactNode;
   initialSignedIn?: boolean;
   serviceAvailable?: boolean;
 }
 
 export default function HomeHeaderMobileMenu({
-  links,
   menuLabel,
   navigationLabel,
   closeLabel,
@@ -32,8 +28,6 @@ export default function HomeHeaderMobileMenu({
   collectionInfoLabel,
   collectionLabel,
   locale,
-  languageControl = null,
-  themeControl = null,
   initialSignedIn = false,
   serviceAvailable = true,
 }: HomeHeaderMobileMenuProps) {
@@ -107,17 +101,8 @@ export default function HomeHeaderMobileMenu({
               serviceAvailable={serviceAvailable}
               showArrow={false}
             />
-            {links.map((link) => (
-              <Link key={link.href} href={link.href} onClick={closeMenu}>
-                {link.label}
-                <span aria-hidden="true">→</span>
-              </Link>
-            ))}
+            <SecondaryNavigationLinks onNavigate={closeMenu} />
           </nav>
-          <div className="field-mobile-menu-controls">
-            {languageControl}
-            {themeControl}
-          </div>
         </SheetContent>
       </Sheet>
     </div>

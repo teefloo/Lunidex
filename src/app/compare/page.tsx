@@ -311,7 +311,7 @@ export default function ComparePage() {
                 className="rounded-sm font-black uppercase tracking-widest gap-2"
               >
                 <Copy className="h-4 w-4" />
-                {t('compare.copy_link')}
+                {t('share_menu.copy_link')}
               </Button>
               <Button
                 variant="outline"
