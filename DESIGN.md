@@ -3,7 +3,7 @@ name: Lunidex
 description: A localized Pokémon companion for Pokédex reference, team building, and Pokémon TCG collection tracking.
 project_id: "N/A — local repository; no Stitch project is linked to this workspace"
 audited: 2026-08-23
-scope: "Next.js web application; the Expo mobile boundary is documented separately below"
+scope: "Next.js web application"
 source_of_truth:
   - src/app/globals.css
   - src/styles/shadcn-tailwind.css
@@ -48,7 +48,6 @@ The landing page is a more editorial expression of the same system. It uses the 
 | Generic application routes | `.app-page:not(.pokedex-redesign):not(.lunidex-home)` | Indigo/periwinkle page background, rounded data surfaces, framed page headers, and the shared header/footer. |
 | Pokédex route | `.pokedex-redesign` | Dedicated cobalt field with star-like texture, luminous lavender controls, hero mark, search/filter console, and specimen cards. |
 | Home route | `.lunidex-home` | Cobalt landing composition with hero artwork, bento previews, collection steps, local-first/open-source cards, and FAQ. |
-| Mobile app | `apps/mobile/src/theme/colors.ts` | Native palette and geometry; it does not inherit web CSS or web glass classes. |
 
 `src/app/globals.css` contains older compatibility selectors before the final route-scoped rules. When a selector appears more than once, use the effective route-specific definition near the end of the file and the tokens documented here. The former warm parchment landing experiment and per-generation theme system are not the current web design system.
 
@@ -300,29 +299,7 @@ The body has a repeated `240px` SVG fractal-noise layer: light mode uses multipl
 
 Every animation needs a reduced-motion path. Under `prefers-reduced-motion: reduce`, transitions collapse to near-zero, entrance content is immediately visible, card tilt and holographic motion stop, the Pokédex orb stops, and no information depends on an animation completing.
 
-## 7. Mobile platform boundary
-
-The Expo companion shares domain data and the canonical Pokémon type hex values, but it has an independent native palette. Do not port web CSS classes, `color-mix()`, backdrop blur, or web shadow geometry into React Native.
-
-| Token | Mobile light | Mobile dark |
-| --- | --- | --- |
-| Background | `#F5F6FB` | `#0B1020` |
-| Surface | `#FFFFFF` | `#141A2E` |
-| Alternate surface | `#EEF0F7` | `#1B2238` |
-| Card | `#FFFFFF` | `#161D33` |
-| Border | `#E3E6F0` | `#28304A` |
-| Text | `#11131C` | `#F3F5FC` |
-| Muted text | `#5B6071` | `#A3ABC4` |
-| Faint text | `#9AA0B4` | `#6F7796` |
-| Primary | `#4F46E5` | `#7C83FF` |
-| Primary text | `#FFFFFF` | `#0B1020` |
-| Accent | `#EC4899` | `#F472B6` |
-| Danger | `#E11D48` | `#FB7185` |
-| Success | `#16A34A` | `#4ADE80` |
-
-Mobile overlays and shadows are native-specific. Keep the contract equivalent, but let each platform express its own surface, navigation, and touch conventions.
-
-## 8. Do and don’t
+## 7. Do and don’t
 
 ### Do
 
@@ -344,7 +321,7 @@ Mobile overlays and shadows are native-specific. Keep the contract equivalent, b
 - Do not use gradient text; the existing `gradient-text-*` classes intentionally render foreground text.
 - Do not hard-code English copy, hide overflow to force a localized label into one line, or remove accessible names from icon-only controls.
 
-## 9. Prompting vocabulary for new screens
+## 8. Prompting vocabulary for new screens
 
 Describe the system semantically: “cobalt-indigo Pokémon field console,” “blue-white periwinkle light canvas,” “deep ultramarine dark canvas,” “raised white/cobalt data cards,” “lavender primary action,” “thin translucent border,” “soft diffused elevation,” “Pixelify display headings,” “Nunito reading copy,” and “monospace catalog metadata.”
 

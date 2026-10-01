@@ -20,7 +20,7 @@
 - Keep replay deterministic, use FIFO by default, support manual allocation, and recompute edits/voids from the complete event stream.
 - Make the SQL change additive in `neon/migrations/0006_tcg_sealed_exchanges.sql`; do not execute a production migration.
 - Keep the eight web locales synchronized: `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`.
-- Preserve the existing desktop/mobile style and the current buy/sell behavior; do not add soulte or payment-complement handling.
+- Preserve the existing desktop and responsive web layouts and current buy/sell behavior; do not add soulte or payment-complement handling.
 - Persist only compact transaction data and derived projections; keep remote catalogue and price responses out of Zustand persistence.
 
 ## Review Focus
@@ -619,7 +619,6 @@ Run:
 npx vitest run packages/core/src/lib/sealed-ledger.test.ts src/lib/tcg-sealed-sale-products.test.ts src/lib/tcg-sealed-display.test.ts src/lib/tcg-sealed-server.test.ts
 npm run lint
 npm run typecheck
-npm run typecheck --workspace=@primedex/mobile
 ```
 
 Expected: no buy/sell regressions and no consumer type errors.
@@ -705,7 +704,6 @@ Run separately:
 npm run lint
 npm run typecheck
 npx tsc --project packages/core/tsconfig.json --noEmit
-npm run typecheck --workspace=@primedex/mobile
 npm run build
 ```
 
@@ -748,5 +746,4 @@ If Neon is unavailable, record the established unavailable/private-sync state an
 - [ ] **Step 5: Commit only verification-driven fixes and report evidence.**
 
 For any defect, add or update a failing test first, repeat the red/green cycle, and commit the focused fix with the required co-author line. After the final fix, rerun every command supporting the final claims.
-
 

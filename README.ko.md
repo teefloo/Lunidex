@@ -13,7 +13,6 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Expo 57](https://img.shields.io/badge/Mobile-Expo%2057-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
 [온라인 앱](https://lunidex.app) · [저장소](https://github.com/teefloo/Lunidex) · [Issues](https://github.com/teefloo/Lunidex/issues)
 
@@ -35,7 +34,7 @@ Lunidex는 npm workspaces를 사용하는 독립적인 오픈 소스 모노레�
 
 웹 앱은 **9개 세대의 포켓몬 1,025종**을 다루며 영어, 프랑스어, 스페인어, 독일어, 이탈리아어, 일본어, 한국어, 중국어 간체 등 8개 인터페이스 언어를 지원합니다. 포르투갈어는 번역된 README로 제공되지만 웹 UI 언어에는 포함되지 않습니다.
 
-공개 참고 페이지는 계정 없이 사용할 수 있습니다. 개인 워크스페이스(즐겨찾기, 포획한 포켓몬, 팀, 퀴즈 진행도, TCG 컬렉션, 위시리스트, 저장된 검색, 메모, 덱 등)는 Neon Auth와 Neon PostgreSQL을 설정하고 동기화할 때 사용할 수 있습니다. 웹 표시 설정은 IndexedDB에 저장하고 Expo 앱은 AsyncStorage를 사용합니다.
+공개 참고 페이지는 계정 없이 사용할 수 있습니다. 개인 워크스페이스(즐겨찾기, 포획한 포켓몬, 팀, 퀴즈 진행도, TCG 컬렉션, 위시리스트, 저장된 검색, 메모.
 
 > [!NOTE]
 > Lunidex는 독립적인 비공식 팬 프로젝트입니다. 포켓몬 캐릭터 이름, 상표, 일러스트, 이미지 및 관련 지식재산권은 각 권리자에게 귀속됩니다. Lunidex는 Nintendo, Creatures Inc., GAME FREAK inc. 또는 The Pokémon Company와 제휴·승인·후원 관계가 없으며 공식적으로 연결된 프로젝트도 아닙니다.
@@ -54,7 +53,6 @@ Lunidex는 npm workspaces를 사용하는 독립적인 오픈 소스 모노레�
 | **공유 및 소셜 기능** | Showdown 팀을 가져오고 내보내며, 읽기 전용 팀 링크를 공유하고, 공개 프로필을 만들고, 친구를 관리하고, 퀴즈 순위표와 계정 기반 배틀룸을 이용합니다. |
 | **Pokémon TCG 워크스페이스** | 카드와 세트를 탐색하고 카탈로그를 필터링하며 카드를 비교합니다. 보유 카드와 원하는 카드, 세트 진행도, 저장된 검색과 메모, 덱을 관리하고 TCGdex가 제공하는 경우 가격 필드도 표시합니다. |
 | **PWA 및 저장** | 웹 앱을 PWA로 설치할 수 있습니다. Service Worker가 앱 셸과 일부 외부 리소스를 캐시해 재방문 안정성을 높이며, 계정 데이터는 서버 API 뒤에서 관리됩니다. |
-| **모바일 컴패니언** | `@primedex/core`의 공통 API 클라이언트, 타입, Zustand 상태, 저장 계약, 번역, Neon 헬퍼를 사용해 iOS, Android, 웹에서 Expo 앱을 실행합니다. |
 
 ## 앱 둘러보기
 
@@ -97,38 +95,12 @@ npm run dev
 > [!IMPORTANT]
 > 개발 및 프로덕션 빌드는 의도적으로 webpack을 사용합니다. `npm run dev`는 `next dev --webpack`, `npm run build`는 `next build --webpack`을 실행합니다. Next.js 설정에 Turbopack root도 선언되어 있지만 이 옵션을 유지하세요.
 
-## 모바일 앱
-
-Expo 컴패니언은 [`apps/mobile`](./apps/mobile)에 있습니다. 현재 도감 목록과 검색, 상세 화면, 즐겨찾기, 팀, 계정, 테마, 언어 설정을 포함합니다. 아직 웹의 전체 기능과 동일하지 않으며 나머지 도구는 Next.js 앱에서 이용할 수 있습니다.
-
-저장소 루트에서 실행합니다.
-
-```bash
-npm run start --workspace=@primedex/mobile
-```
-
-Expo 메뉴에서 iOS, Android 또는 웹 미리보기를 열 수 있습니다. 패키지는 `android`, `ios`, `web` 스크립트도 제공합니다.
-
-```bash
-npm run android --workspace=@primedex/mobile
-npm run ios --workspace=@primedex/mobile
-npm run web --workspace=@primedex/mobile
-```
-
-Expo 전용 환경 변수와 아키텍처 설명은 [모바일 README](./apps/mobile/README.md)를 참고하세요.
-
 ## 구성
 
 공개 참고 페이지를 보는 데 환경 변수는 필요하지 않습니다. 계정, 서버, 문의, 알림 또는 개발용 선택적 통합을 활성화할 때 템플릿을 복사하세요.
 
 ```bash
 cp .env.example .env.local
-```
-
-Expo 앱에서는 `apps/mobile/.env.example`을 템플릿으로 사용합니다.
-
-```bash
-cp apps/mobile/.env.example apps/mobile/.env
 ```
 
 | 변수 | 범위 | 용도 |
@@ -138,16 +110,15 @@ cp apps/mobile/.env.example apps/mobile/.env
 | `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | 서버 전용 | Neon Auth 프록시 및 JWT 검증 엔드포인트. |
 | `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | 서버 전용 | 인증 쿠키 보호 및 JWT 검증 조건. |
 | `NEON_DATABASE_URL` / `DATABASE_URL` | 서버 전용 | Neon PostgreSQL 연결. Vercel의 Neon 통합은 `DATABASE_URL`을 제공하며 로컬에서는 `NEON_DATABASE_URL`을 사용할 수 있습니다. |
-| `EXPO_PUBLIC_NEON_AUTH_URL`, `EXPO_PUBLIC_APP_URL` | 모바일 / 공개 | Expo가 사용하는 Neon Auth 및 배포된 앱 엔드포인트. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 공개 | 선택적인 Google Search Console 인증 값. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 | `true`일 때 Agentation UI 리뷰 오버레이 활성화. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 공개 | 선택적인 브라우저 Push 구독 키. |
 | `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | 서버 전용 | 선택적인 서버 측 Push 전송 설정. |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | 서버 전용 | Resend를 통한 선택적인 문의 폼 이메일 전송. |
-| `SUPABASE_DB_URL` | 마이그레이션 전용 | 보존된 Supabase-to-Neon export 스크립트가 사용하는 원본 연결. Web 또는 모바일 runtime 변수로 사용하지 마세요. |
+| `SUPABASE_DB_URL` | 마이그레이션 전용 | 보존된 Supabase-to-Neon export 스크립트가 사용하는 원본 연결입니다. Web runtime 변수로 사용하지 않습니다. |
 
 > [!WARNING]
-> 연결 문자열, JWKS 설정, 쿠키 시크릿, VAPID 개인 키, Resend 키, 마이그레이션 URL을 `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, 소스 파일, 로그 또는 커밋에 노출하지 마세요.
+> 연결 문자열, JWKS 설정, 쿠키 시크릿, VAPID 개인 키, Resend 키, 마이그레이션 URL을 `NEXT_PUBLIC_*`, 소스 파일, 로그 또는 커밋에 노출하지 마세요.
 
 <details>
 <summary><strong>개발에서 Agentation 활성화</strong></summary>
@@ -171,11 +142,9 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run dev` | Next.js 개발 서버를 시작합니다. |
 | `npm run build` | 프로덕션 빌드를 생성합니다. |
 | `npm run start` | 프로덕션 빌드를 제공합니다. |
-| `npm run lint` | Web, core, mobile 소스를 lint합니다. |
+| `npm run lint` | Web 및 core 소스를 lint합니다. |
 | `npm run typecheck` | Web workspace의 타입을 확인합니다. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core`의 타입을 확인합니다. |
-| `npm run typecheck --workspace=@primedex/mobile` | Expo 앱의 타입을 확인합니다. |
-| `npm run lint --workspace=@primedex/mobile` | Expo 앱을 lint합니다. |
 | `npm run db:neon:export` | 보존된 원본 데이터를 마이그레이션용으로 export합니다. |
 | `npm run db:neon:import` | Neon 스키마를 적용하고 준비된 export를 import합니다. |
 | `npm run db:neon:verify` | 원본과 Neon 마이그레이션 결과를 비교합니다. |
@@ -183,15 +152,14 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 > [!WARNING]
 > Neon import 및 verify 명령은 외부 데이터베이스에 접근합니다. 먼저 [`neon/AGENTS.md`](./neon/AGENTS.md)와 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)를 읽고 승인된 테스트 또는 staging 대상을 사용하세요.
 
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml)의 CI workflow는 의존성 설치, lint, Web/core 타입 검사, 프로덕션 빌드, 모바일 타입 검사를 실행합니다.
+`.github/workflows/ci.yml`의 CI workflow는 의존성을 설치하고 lint, 타입 검사, SEO 검증, 프로덕션 빌드를 실행합니다.
 
 ## 아키텍처
 
 ```text
 .
 ├── src/                 Next.js 16 / React 19 Web 애플리케이션
-├── packages/core/       @primedex/core: 공통 API 클라이언트, 타입, store, i18n, helper
-├── apps/mobile/         @primedex/mobile Expo Router 컴패니언
+├── packages/core/       `@primedex/core`: 도메인 타입 및 TCG/미개봉 상품 헬퍼
 ├── neon/migrations/     활성 Neon PostgreSQL 애플리케이션 스키마
 ├── supabase/            보관된 Edge Function 및 보안 기록
 ├── scripts/neon/        관리되는 export, import, verify 스크립트
@@ -206,21 +174,17 @@ Web (Next.js App Router)
   ├── Zustand ──▶ IndexedDB 표시 설정
   └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL 사용자 워크스페이스
 
-Mobile (Expo Router)
-  └── @primedex/core ──▶ AsyncStorage + 설정된 경우 Neon Auth/API
 ```
 
 주요 경계:
 
 - **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query, PWA 계층.
-- **공유 core:** UI와 분리된 도메인 타입, API 클라이언트, Zustand store, i18n 번들, Neon helper, 순수 유틸리티를 Web과 모바일이 공유합니다.
-- **데이터 접근:** 외부 요청은 `src/lib/api`와 `packages/core/src/api`의 중앙 API façade를 통하며 프레젠테이션 컴포넌트는 별도의 API 클라이언트를 만들지 않습니다.
-- **저장:** Web 표시 설정은 IndexedDB와 브라우저 fallback을 사용하고 네이티브 저장은 AsyncStorage를 사용합니다. 인증된 워크스페이스 데이터는 Neon API로 동기화되어 `user_state`에 저장됩니다.
-- **플랫폼 경계:** 대응하는 `*.ts` 및 `*.native.ts` adapter가 도메인 로직을 복제하지 않고 브라우저와 React Native의 저장소/설정을 분리합니다.
+- **공유 core:** Web 앱은 이식 가능한 도메인 타입과 TCG/미개봉 상품 순수 헬퍼를 사용합니다.
+- **데이터 접근:** Web 요청은 src/lib/api의 중앙 API façade를 통합니다. 프레젠테이션 컴포넌트에 별도 API 클라이언트를 추가하지 않습니다.
+- **저장:** Web 표시 설정은 IndexedDB와 브라우저 fallback을 사용합니다. 인증된 워크스페이스 데이터는 Neon API로 동기화되어 user_state에 저장됩니다.
 - **현지화:** 로케일 접두사 라우트와 번역 번들은 `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`를 지원합니다.
 
 > [!IMPORTANT]
-> 표시 제품명은 Lunidex이지만 `primedex`, `@primedex/core`, `@primedex/mobile`, `usePrimeDexStore`, 저장소 키, 라우트 slug, Expo scheme, bundle identifier는 호환성이 중요한 역사적 식별자입니다. 의도적인 마이그레이션 없이 변경하지 마세요.
 
 ## 데이터 소스 및 출처
 
@@ -256,7 +220,6 @@ Vercel에서는:
 
 ## 관련 문서
 
-- [모바일 설정 및 기능 범위](./apps/mobile/README.md)
 - [제품 컨텍스트](./PRODUCT.md)
 - [디자인 시스템](./DESIGN.md)
 - [Neon 마이그레이션 runbook](./docs/neon-migration.md)

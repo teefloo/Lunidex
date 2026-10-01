@@ -3,6 +3,8 @@
 **Date:** 2026-07-20
 **Status:** Approved for specification review
 
+> Historical note (2026-10-01): this specification describes the repository before removal of its native companion. Its Expo, mobile-workspace, and AsyncStorage references are archival; the current repository contains only the web application.
+
 ## Goal
 
 Refresh the repository documentation so that the English README is an accurate,

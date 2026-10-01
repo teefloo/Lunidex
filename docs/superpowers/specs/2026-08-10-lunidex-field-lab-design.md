@@ -171,5 +171,5 @@ Before handoff, verify:
 
 - New product capabilities, new account/sync behavior, new analytics, new API endpoints, or store schema changes.
 - A full Three.js world, custom Pokémon models, generated Pokémon art, or Kage-derived assets/compositions.
-- Changes to secondary route styling, mobile app styling, package names, storage keys, or public URLs.
+- Changes to secondary-route styling, responsive web styling, package names, storage keys, or public URLs.
 - A new visual design system separate from `DESIGN.md` and `src/app/globals.css`.

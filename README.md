@@ -13,7 +13,6 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Expo 57](https://img.shields.io/badge/Mobile-Expo%2057-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
 [Live app](https://lunidex.app) · [Repository](https://github.com/teefloo/Lunidex) · [Issues](https://github.com/teefloo/Lunidex/issues)
 
@@ -37,7 +36,7 @@ Lunidex is open-source software distributed under the MIT License. See [`LICENSE
 
 The web app covers **1,025 Pokémon across nine generations** and supports eight interface locales: English, French, Spanish, German, Italian, Japanese, Korean, and Simplified Chinese. Portuguese is available as a translated repository README, but is not a web UI locale.
 
-Public reference pages work without an account. The personal workspace—favorites, caught Pokémon, teams, quiz progress, TCG collections, wishlists, saved searches, notes, decks, and related features—uses Neon Auth and Neon PostgreSQL when configured and synchronized. Web display preferences use IndexedDB; the Expo app uses AsyncStorage.
+Public reference pages work without an account. The personal workspace—favorites, caught Pokémon, teams, quiz progress, TCG collections, wishlists, saved searches, notes, decks, and related features—uses Neon Auth and Neon PostgreSQL when configured and synchronized. Web display preferences use IndexedDB.
 
 > [!NOTE]
 > Pokémon, Pokémon character names, trademarks, artwork, imagery, and related intellectual property belong to their respective rights holders. Lunidex is an independent fan project and is not affiliated with, endorsed by, sponsored by, or otherwise officially connected with Nintendo, Creatures Inc., GAME FREAK inc., or The Pokémon Company.
@@ -56,7 +55,6 @@ Public reference pages work without an account. The personal workspace—favorit
 | **Sharing and social tools** | Import and export Showdown teams, share read-only team links, create public profiles, manage friends, view quiz leaderboards, and use account-backed battle rooms. |
 | **Pokémon TCG workspace** | Browse cards and sets, filter the catalog, compare cards, track owned and wanted cards, review set progress, save searches and notes, build decks, and display upstream price fields when TCGdex provides them. |
 | **PWA and persistence** | Install the web app as a PWA. The service worker caches the app shell and selected upstream resources for resilient repeat visits, while account data remains behind the server API. |
-| **Mobile companion** | Use the Expo app on iOS, Android, or the web with shared API clients, types, Zustand state, persistence contracts, translations, and Neon helpers from `@primedex/core`. |
 
 ## Explore the app
 
@@ -99,38 +97,12 @@ Open [http://localhost:3000](http://localhost:3000). The locale proxy redirects 
 > [!IMPORTANT]
 > Development and production builds intentionally use webpack: `npm run dev` runs `next dev --webpack`, and `npm run build` runs `next build --webpack`. Keep the flag even though the Next.js configuration also declares a Turbopack root.
 
-## Mobile app
-
-The Expo companion lives in [`apps/mobile`](./apps/mobile). It currently includes the Pokédex list, search, detail views, favorites, team, account, theme, and language settings. It is not yet at full web feature parity; the remaining web tools stay available in the Next.js app.
-
-Start it from the repository root:
-
-```bash
-npm run start --workspace=@primedex/mobile
-```
-
-Use the Expo prompt to open iOS, Android, or a web preview. The package also exposes `android`, `ios`, and `web` scripts:
-
-```bash
-npm run android --workspace=@primedex/mobile
-npm run ios --workspace=@primedex/mobile
-npm run web --workspace=@primedex/mobile
-```
-
-For mobile-specific environment variables and architecture notes, see the [mobile README](./apps/mobile/README.md).
-
 ## Configuration
 
 No environment variables are required for public reference browsing. Copy the template when enabling optional account, server, contact, push, or development integrations:
 
 ```bash
 cp .env.example .env.local
-```
-
-For the Expo app, use `apps/mobile/.env.example` as the template:
-
-```bash
-cp apps/mobile/.env.example apps/mobile/.env
 ```
 
 | Variable(s) | Scope | Purpose |
@@ -140,16 +112,15 @@ cp apps/mobile/.env.example apps/mobile/.env
 | `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | Server-only | Neon Auth proxy and JWT verification endpoints. |
 | `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Server-only | Auth cookie protection and JWT validation constraints. |
 | `NEON_DATABASE_URL` / `DATABASE_URL` | Server-only | Neon PostgreSQL connection. Vercel's Neon integration supplies `DATABASE_URL`; local tooling can use `NEON_DATABASE_URL`. |
-| `EXPO_PUBLIC_NEON_AUTH_URL`, `EXPO_PUBLIC_APP_URL` | Mobile / public | Neon Auth and deployed application endpoints used by Expo. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / public | Optional Google Search Console verification value. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Development | Enables the Agentation UI-review overlay when set to `true`. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / public | Optional browser push subscription key. |
 | `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Server-only | Optional server-side push delivery configuration. |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Server-only | Optional contact-form email delivery through Resend. |
-| `SUPABASE_DB_URL` | Migration-only | Source connection used by the retained Supabase-to-Neon export scripts; never a web or mobile runtime variable. |
+| `SUPABASE_DB_URL` | Migration-only | Source connection for the retained Supabase-to-Neon export scripts; never a web runtime variable. |
 
 > [!WARNING]
-> Never expose connection strings, JWKS settings, cookie secrets, VAPID private material, Resend keys, or migration URLs through `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, source files, logs, or commits.
+> Never expose connection strings, JWKS settings, cookie secrets, VAPID private material, Resend keys, or migration URLs through `NEXT_PUBLIC_*`, source files, logs, or commits.
 
 <details>
 <summary><strong>Enable Agentation during development</strong></summary>
@@ -173,11 +144,9 @@ Run root commands from the repository root:
 | `npm run dev` | Start the Next.js development server. |
 | `npm run build` | Create a production build. |
 | `npm run start` | Serve the production build. |
-| `npm run lint` | Lint web, core, and mobile sources. |
+| `npm run lint` | Lint web and core sources. |
 | `npm run typecheck` | Type-check the web workspace. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | Type-check `@primedex/core`. |
-| `npm run typecheck --workspace=@primedex/mobile` | Type-check the Expo app. |
-| `npm run lint --workspace=@primedex/mobile` | Lint the Expo app. |
 | `npm run db:neon:export` | Export the retained source data for migration. |
 | `npm run db:neon:import` | Apply the Neon schema and import a prepared export. |
 | `npm run db:neon:verify` | Compare the source and Neon migration result. |
@@ -185,15 +154,14 @@ Run root commands from the repository root:
 > [!WARNING]
 > The Neon import and verification commands access external databases. Read [`neon/AGENTS.md`](./neon/AGENTS.md) and [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) first, and use an approved disposable or staging target.
 
-The CI workflow in [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs dependency installation, linting, web and core type-checks, the production build, and the mobile type-check.
+The CI workflow in `.github/workflows/ci.yml` installs dependencies, runs lint, type-checking, SEO validation, and the production build.
 
 ## Architecture
 
 ```text
 .
 ├── src/                 Next.js 16 / React 19 web application
-├── packages/core/       @primedex/core shared API clients, types, store, i18n, and helpers
-├── apps/mobile/         @primedex/mobile Expo Router companion
+├── packages/core/       `@primedex/core` portable domain types and TCG/sealed-product helpers
 ├── neon/migrations/     Active Neon PostgreSQL application schema
 ├── supabase/            Archived Edge Function and historical security material
 ├── scripts/neon/        Controlled export, import, and verification scripts
@@ -208,21 +176,18 @@ Web (Next.js App Router)
   ├── Zustand ──▶ IndexedDB display preferences
   └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL user workspace
 
-Mobile (Expo Router)
-  └── @primedex/core ──▶ AsyncStorage + Neon Auth/API when configured
 ```
 
 Key boundaries:
 
 - **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query, and the PWA layer.
-- **Shared core:** platform-agnostic domain types, API clients, Zustand store, i18n bundles, Neon helpers, and pure utilities are shared by web and mobile.
-- **Data access:** remote requests go through the centralized API façade in `src/lib/api` and `packages/core/src/api`; presentational components do not add ad hoc API clients.
-- **Persistence:** web display preferences use IndexedDB with a browser fallback; native persistence uses AsyncStorage. Authenticated workspace data is synchronized through the Neon API and stored in `user_state`.
-- **Platform seam:** matching `*.ts` and `*.native.ts` adapters keep browser and React Native storage/configuration separate without copying domain logic.
+- **Shared core:** the web app uses portable domain types and pure TCG/sealed-product helpers.
+- **Data access:** web requests go through the centralized API façade in src/lib/api; presentational components do not add ad hoc API clients.
+- **Persistence:** web display preferences use IndexedDB with a browser fallback. Authenticated workspace data syncs through the Neon API and is stored in user_state.
 - **Localization:** locale-prefixed routes and translation bundles support `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, and `zh`.
 
 > [!IMPORTANT]
-> Lunidex is the visible product name, but `primedex`, `@primedex/core`, `@primedex/mobile`, `usePrimeDexStore`, storage keys, route slugs, Expo schemes, and bundle identifiers are compatibility-sensitive historical identifiers. Keep them unchanged unless a deliberate migration is part of the task.
+> Lunidex is the visible product name, but primedex, `@primedex/core`, `usePrimeDexStore`, storage keys, route slugs, and existing public domains are compatibility-sensitive historical identifiers. Keep them unchanged unless a deliberate migration is part of the task.
 
 ## Data sources and attribution
 
@@ -258,7 +223,6 @@ See the [Neon migration runbook](./docs/neon-migration.md) for the schema, envir
 
 ## Related docs
 
-- [Mobile setup and parity notes](./apps/mobile/README.md)
 - [Product context](./PRODUCT.md)
 - [Design system](./DESIGN.md)
 - [Neon migration runbook](./docs/neon-migration.md)

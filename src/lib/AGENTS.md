@@ -11,3 +11,13 @@ This guide supplements `src/AGENTS.md` for the web API façade, pure helpers, lo
 - Keep `src/lib/neon/server.ts`, `server-auth.ts`, and other server-only helpers out of client imports. Browser authentication uses the Neon Auth client; server APIs authenticate and enforce ownership.
 - Treat `src/lib/supabase` as a compatibility path for sync/leaderboard clients, not as permission to introduce Supabase runtime assumptions.
 - Validate external/user data at boundaries with explicit interfaces or unions. Do not introduce `any` or broad unstructured records.
+
+## Verification
+
+Run the focused Vitest file when changing a helper with existing coverage, then run the root lint and type checks as appropriate:
+
+```bash
+npx vitest run path/to/file.test.ts
+npm run lint
+npm run typecheck
+```

@@ -13,7 +13,6 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Expo 57](https://img.shields.io/badge/Mobile-Expo%2057-000020?style=flat-square&logo=expo&logoColor=white)](./apps/mobile)
 
 [在线应用](https://lunidex.app) · [代码仓库](https://github.com/teefloo/Lunidex) · [Issues](https://github.com/teefloo/Lunidex/issues)
 
@@ -35,7 +34,7 @@ Lunidex 是一个独立的开源 npm workspaces 单体仓库，将宝可梦图�
 
 Web 应用涵盖**九个世代的 1,025 只宝可梦**，支持英语、法语、西班牙语、德语、意大利语、日语、韩语和简体中文八种界面语言。葡萄牙语作为翻译版 README 提供，但不是 Web 界面语言。
 
-公开参考页面无需账户即可使用。个人工作空间（收藏、已捕获宝可梦、队伍、测验进度、TCG 收藏、愿望清单、已保存搜索、备注、套牌及相关功能）在配置并完成同步后使用 Neon Auth 和 Neon PostgreSQL。Web 显示偏好使用 IndexedDB，Expo 应用使用 AsyncStorage。
+公开参考页面无需账户即可使用。个人工作空间（收藏、已捕获宝可梦、队伍、测验进度、TCG 收藏、愿望清单、已保存搜索、备注、套牌及相关功能）在配置并完成同步后使用 Neon Auth 和 Neon PostgreSQL。Web 显示偏好使用 IndexedDB。
 
 > [!NOTE]
 > Lunidex 是一个独立的非官方粉丝项目。宝可梦角色名称、商标、插图、图像及相关知识产权归各自权利人所有。Lunidex 与 Nintendo、Creatures Inc.、GAME FREAK inc. 或 The Pokémon Company 没有隶属、认可或赞助关系，也不是与其官方关联的项目。
@@ -54,7 +53,6 @@ Web 应用涵盖**九个世代的 1,025 只宝可梦**，支持英语、法语�
 | **分享与社交功能** | 导入和导出 Showdown 队伍，分享只读队伍链接，创建公开资料，管理好友，查看测验排行榜，并使用与账户关联的对战房间。 |
 | **宝可梦 TCG 工作空间** | 浏览卡牌和系列，筛选目录，比较卡牌，跟踪已拥有和想要的卡牌，查看系列进度，保存搜索和备注，构建套牌，并在 TCGdex 提供数据时显示价格字段。 |
 | **PWA 与持久化** | 将 Web 应用安装为 PWA。Service Worker 会缓存应用外壳和部分上游资源，以提升重复访问的稳定性；账户数据仍由服务器 API 保护。 |
-| **移动端伴侣应用** | 在 iOS、Android 或 Web 上使用 Expo 应用，并共享 `@primedex/core` 中的 API 客户端、类型、Zustand 状态、持久化契约、翻译和 Neon 工具。 |
 
 ## 探索应用
 
@@ -97,38 +95,12 @@ npm run dev
 > [!IMPORTANT]
 > 开发和生产构建有意使用 webpack：`npm run dev` 执行 `next dev --webpack`，`npm run build` 执行 `next build --webpack`。即使 Next.js 配置中也声明了 Turbopack root，也请保留此选项。
 
-## 移动应用
-
-Expo 伴侣应用位于 [`apps/mobile`](./apps/mobile)。当前包含图鉴列表和搜索、详情页、收藏、队伍、账户、主题和语言设置。它尚未实现完整的 Web 功能对等；其余工具仍可在 Next.js 应用中使用。
-
-在仓库根目录启动：
-
-```bash
-npm run start --workspace=@primedex/mobile
-```
-
-通过 Expo 菜单可以打开 iOS、Android 或 Web 预览。该 package 也提供 `android`、`ios` 和 `web` 脚本：
-
-```bash
-npm run android --workspace=@primedex/mobile
-npm run ios --workspace=@primedex/mobile
-npm run web --workspace=@primedex/mobile
-```
-
-有关 Expo 专用环境变量和架构说明，请参阅[移动端 README](./apps/mobile/README.md)。
-
 ## 配置
 
 浏览公开参考页面不需要环境变量。启用账户、服务器、联系表单、通知或开发集成时，请复制模板：
 
 ```bash
 cp .env.example .env.local
-```
-
-对于 Expo 应用，请使用 `apps/mobile/.env.example` 作为模板：
-
-```bash
-cp apps/mobile/.env.example apps/mobile/.env
 ```
 
 | 变量 | 范围 | 用途 |
@@ -138,16 +110,15 @@ cp apps/mobile/.env.example apps/mobile/.env
 | `NEON_AUTH_BASE_URL`、`NEON_AUTH_JWKS_URL` | 仅服务器 | Neon Auth 代理和 JWT 验证端点。 |
 | `NEON_AUTH_COOKIE_SECRET`、`NEON_AUTH_JWT_ISSUER`、`NEON_AUTH_JWT_AUDIENCE` | 仅服务器 | 认证 Cookie 保护和 JWT 验证约束。 |
 | `NEON_DATABASE_URL` / `DATABASE_URL` | 仅服务器 | Neon PostgreSQL 连接。Vercel 的 Neon 集成提供 `DATABASE_URL`；本地可以使用 `NEON_DATABASE_URL`。 |
-| `EXPO_PUBLIC_NEON_AUTH_URL`、`EXPO_PUBLIC_APP_URL` | 移动端 / 公开 | Expo 使用的 Neon Auth 和已部署应用端点。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公开 | 可选的 Google Search Console 验证值。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 开发环境 | 值为 `true` 时启用 Agentation UI 审查浮层。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公开 | 可选的浏览器 Push 订阅公钥。 |
 | `VAPID_PRIVATE_KEY`、`VAPID_SUBJECT` | 仅服务器 | 可选的服务器端 Push 发送配置。 |
 | `RESEND_API_KEY`、`CONTACT_TO_EMAIL`、`CONTACT_FROM_EMAIL` | 仅服务器 | 通过 Resend 发送联系表单邮件（可选）。 |
-| `SUPABASE_DB_URL` | 仅迁移 | 保留的 Supabase-to-Neon 导出脚本使用的源连接；绝不能作为 Web 或移动端 runtime 变量。 |
+| `SUPABASE_DB_URL` | 仅限迁移 | 保留的 Supabase-to-Neon 导出脚本使用的源连接；不是 Web 运行时变量。 |
 
 > [!WARNING]
-> 不要通过 `NEXT_PUBLIC_*`、`EXPO_PUBLIC_*`、源文件、日志或提交暴露连接字符串、JWKS 设置、Cookie 密钥、VAPID 私钥材料、Resend 密钥或迁移 URL。
+> 不要通过 `NEXT_PUBLIC_*`、源文件、日志或提交暴露连接字符串、JWKS 设置、Cookie 密钥、VAPID 私钥材料、Resend 密钥或迁移 URL。
 
 <details>
 <summary><strong>在开发环境中启用 Agentation</strong></summary>
@@ -171,11 +142,9 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run dev` | 启动 Next.js 开发服务器。 |
 | `npm run build` | 创建生产构建。 |
 | `npm run start` | 提供生产构建。 |
-| `npm run lint` | 检查 Web、core 和 mobile 源码。 |
+| `npm run lint` | 检查 Web 和 core 源码。 |
 | `npm run typecheck` | 检查 Web workspace 类型。 |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | 检查 `@primedex/core` 类型。 |
-| `npm run typecheck --workspace=@primedex/mobile` | 检查 Expo 应用类型。 |
-| `npm run lint --workspace=@primedex/mobile` | 检查 Expo 应用。 |
 | `npm run db:neon:export` | 导出保留源数据用于迁移。 |
 | `npm run db:neon:import` | 应用 Neon 架构并导入准备好的导出文件。 |
 | `npm run db:neon:verify` | 比较源数据和 Neon 迁移结果。 |
@@ -183,15 +152,14 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 > [!WARNING]
 > Neon 导入和验证命令会访问外部数据库。请先阅读 [`neon/AGENTS.md`](./neon/AGENTS.md) 和 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)，并使用获批准的测试或 staging 目标。
 
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) 中的 CI workflow 会安装依赖，运行 lint、Web/core 类型检查、生产构建和移动端类型检查。
+`.github/workflows/ci.yml` 中的 CI 会安装依赖并运行 lint、类型检查、SEO 验证和生产构建。
 
 ## 架构
 
 ```text
 .
 ├── src/                 Next.js 16 / React 19 Web 应用
-├── packages/core/       @primedex/core：共享 API 客户端、类型、store、i18n 和工具
-├── apps/mobile/         @primedex/mobile Expo Router 伴侣应用
+├── packages/core/       `@primedex/core`：领域类型、TCG 与未拆封商品 helpers
 ├── neon/migrations/     当前使用的 Neon PostgreSQL 应用架构
 ├── supabase/            已归档的 Edge Function 和安全历史资料
 ├── scripts/neon/        受控的导出、导入和验证脚本
@@ -206,21 +174,18 @@ Web (Next.js App Router)
   ├── Zustand ──▶ IndexedDB 显示偏好
   └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL 用户工作空间
 
-Mobile (Expo Router)
-  └── @primedex/core ──▶ AsyncStorage + 配置后使用的 Neon Auth/API
 ```
 
 主要边界：
 
 - **Web：** Next.js 16 App Router、React 19、TypeScript、Tailwind CSS 4、Base UI、Framer Motion、TanStack Query 和 PWA 层。
-- **共享 core：** Web 和移动端共享与 UI 无关的领域类型、API 客户端、Zustand store、i18n 语言包、Neon 工具和纯函数工具。
-- **数据访问：** 远程请求都经过 `src/lib/api` 和 `packages/core/src/api` 中的集中式 API 门面；展示组件不会自行创建 API 客户端。
-- **持久化：** Web 显示偏好使用 IndexedDB 和浏览器 fallback；原生端使用 AsyncStorage。已认证的工作空间通过 Neon API 同步并存储在 `user_state` 中。
-- **平台边界：** 对应的 `*.ts` 和 `*.native.ts` 适配器分离浏览器与 React Native 的存储和配置，不复制领域逻辑。
+- **共享 core：** Web 应用使用可移植的领域类型以及 TCG/未拆封商品纯函数。
+- **数据访问：** Web 请求通过 src/lib/api 中央 API façade；展示组件不会自行添加 API 客户端。
+- **持久化：** Web 显示偏好使用 IndexedDB 和浏览器 fallback。已认证的工作空间通过 Neon API 同步并存储在 user_state 中。
 - **本地化：** 带语言前缀的路由和翻译语言包支持 `en`、`fr`、`es`、`de`、`it`、`ja`、`ko` 和 `zh`。
 
 > [!IMPORTANT]
-> Lunidex 是对外使用的产品名，但 `primedex`、`@primedex/core`、`@primedex/mobile`、`usePrimeDexStore`、存储键、路由 slug、Expo scheme 和 bundle identifier 都是对兼容性敏感的历史标识。除非进行明确迁移，否则不要修改它们。
+> Lunidex 是对外使用的产品名。primedex、`@primedex/core`、`usePrimeDexStore`、存储键、路由 slug 和现有公共域名都是对兼容性敏感的历史标识。除非进行明确迁移，否则不要修改它们。
 
 ## 数据来源与归属
 
@@ -256,7 +221,6 @@ npm run start
 
 ## 相关文档
 
-- [移动端设置和功能对等说明](./apps/mobile/README.md)
 - [产品上下文](./PRODUCT.md)
 - [设计系统](./DESIGN.md)
 - [Neon 迁移 runbook](./docs/neon-migration.md)

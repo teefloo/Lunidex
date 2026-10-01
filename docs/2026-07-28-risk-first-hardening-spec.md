@@ -4,6 +4,8 @@
 **Scope:** confirmed P0/P1 defects and the directly related P2 corrections.  
 **Non-goals:** a web/core rewrite, a product redesign, production deployment, production data changes, and broad mobile feature parity.
 
+> Historical note (2026-10-01): the MOBILE findings and Expo/native-device validation below describe the former native companion, which has since been removed. They remain here as audit history and are not current implementation requirements.
+
 ## Baseline and evidence standard
 
 The starting tree is `master` at `3b0fd815ceb03893ad0ed9297b1abbd33f71bdf9` with no user changes. The audit inventoried 606 tracked files. Baseline lint, root typecheck, core typecheck, mobile typecheck, 290 tests, and the production build passed; lint emitted five pre-existing warnings. The build and initial checks ran on Node 26 because Node 22 was not initially installed; Node 22.23.1 is now available for final validation.
@@ -82,7 +84,6 @@ npm run typecheck
 npm run test -- --run
 npm run build
 npx tsc --project packages/core/tsconfig.json --noEmit
-npm run typecheck --workspace=@primedex/mobile
 ```
 
 The final browser pass covers production worker headers/registration, English and French routes, light/dark themes, desktop/tablet/mobile, keyboard interaction, console/network errors, and no-Supabase local-first mode. Database-policy and native-device claims remain explicitly unverified if no isolated service/device is available.

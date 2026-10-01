@@ -96,8 +96,8 @@ npm run db:neon:verify
 ~~~
 
 Ne pas utiliser la connexion poolée pour pg_dump/pg_restore. Ne pas ajouter
-ces variables à NEXT_PUBLIC_*, EXPO_PUBLIC_*, au bundle mobile ou à des logs
-CI. L'import est destiné à une cible vide ; il ne contient aucune commande
+ces variables à NEXT_PUBLIC_*, au bundle web ou à des logs CI. L'import est
+destiné à une cible vide ; il ne contient aucune commande
 DROP, TRUNCATE ou suppression de données.
 
 ## Validation effectuée après bascule

@@ -152,9 +152,9 @@ If the visible data falls back to English inside a French page, that does not ne
 
 ## Web and mobile should share domain language decisions
 
-Lunidex is a monorepo with a Next.js web application and an Expo companion. Shared types and translation/domain contracts live under `packages/core` where possible.
+Lunidex is a web application built with Next.js. Portable domain types and pure helpers used by the web app live under `packages/core`; interface translations live under `src/lib/i18n`.
 
-That avoids two platforms independently deciding:
+That keeps shared domain decisions in one place:
 
 - how locales are named;
 - what fallback language to use;

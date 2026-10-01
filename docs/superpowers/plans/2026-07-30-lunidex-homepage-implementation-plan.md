@@ -121,7 +121,6 @@
    - `npm run lint`
    - `npm run typecheck`
    - `npx tsc --project packages/core/tsconfig.json --noEmit`
-   - `npm run typecheck --workspace=@primedex/mobile`
    - `npm run test -- --run`
    - `npm run build`
    - `git diff --check`

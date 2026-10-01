@@ -1,12 +1,12 @@
 # Web store guide
 
-This guide applies to the web-only Zustand store in `src/store/primedex.ts`. It is separate from the platform-neutral store in `packages/core/src/store/`.
+This guide applies to the web application's Zustand store in `src/store/primedex.ts`.
 
 ## Persistence and synchronization
 
-- Persistence uses Zustand `persist` with the IndexedDB adapter from `idb-keyval`. Keep browser storage details in this module and do not make the shared core store depend on them.
+- Persistence uses Zustand `persist` with the IndexedDB adapter from `idb-keyval`. Keep browser storage details in this module.
 - Persist only IDs, primitives, filters, and small user-owned records. Never persist full PokéAPI, TCGdex, GraphQL, or other remote responses.
-- `SYNCED_KEYS` is the compatibility contract for local persistence and the Neon sync implementation reached through `src/lib/supabase/sync-state.ts`. When changing a synchronized field, align its default, hydration, server representation, and the corresponding core consumer deliberately; the web and core store shapes are not identical.
+- `SYNCED_KEYS` is the compatibility contract for local persistence and the Neon sync implementation reached through `src/lib/supabase/sync-state.ts`. When changing a synchronized field, align its default, hydration, and server representation deliberately.
 - `_hasHydrated` becomes true after asynchronous rehydration. Do not make persisted-state decisions before it is available, and keep the initial render SSR-safe.
 
 ## Usage and invariants
@@ -21,6 +21,7 @@ This guide applies to the web-only Zustand store in `src/store/primedex.ts`. It 
 When store behavior changes, run:
 
 ```bash
+npx vitest run src/store
 npm run lint
 npm run typecheck
 ```

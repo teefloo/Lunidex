@@ -4,7 +4,7 @@
 
 ## Schema contract
 
-- Review the complete `neon/migrations/0001_lunidex_app.sql` before changing tables, functions, indexes, projections, or constraints. The schema is consumed by `src/lib/neon/`, server Route Handlers, the shared state sync, and the migration scripts.
+- Review the complete `neon/migrations/0001_lunidex_app.sql` before changing tables, functions, indexes, projections, or constraints. The schema is consumed by `src/lib/neon/`, server Route Handlers, the web state sync, and the migration scripts.
 - Neon Auth owns authentication credentials and sessions. `app.users` is the application-side identity projection; do not add password hashes, refresh tokens, or client-visible connection strings to this schema.
 - Server/API code authenticates with Neon Auth and enforces ownership. Do not reintroduce Supabase `auth.uid()`, `anon`, or `authenticated` assumptions into the Neon schema without an explicit architecture change.
 - Keep JSONB `public.user_state`, public-profile/friend projections, quiz scores, TCG prices/alerts, push subscriptions, and analytics contracts compatible with their callers and with `SYNCED_KEYS`.
@@ -12,7 +12,7 @@
 
 ## Environment and verification
 
-- Vercel supplies the server-only `DATABASE_URL`; local server/migration scripts use `NEON_DATABASE_URL`. Neither belongs in client or mobile variables.
+- Vercel supplies the server-only `DATABASE_URL`; local server/migration scripts use `NEON_DATABASE_URL`. Neither belongs in browser-exposed variables.
 - The root scripts are the available migration workflow:
 
 ```bash
@@ -23,4 +23,4 @@ npm run db:neon:verify
 
 Their prerequisites, source/target variables, ignored artifact directory, and mutation warnings are defined in `scripts/neon/AGENTS.md`. Importing or verifying against a real database is an external operation; use an approved disposable/staging target and do not run it against production casually.
 
-After a schema contract change, run the root CI checks and the relevant core/mobile type-checks.
+After a schema contract change, run the root CI checks and the migration-specific validation described in `scripts/neon/AGENTS.md` when the change affects migration behavior.
