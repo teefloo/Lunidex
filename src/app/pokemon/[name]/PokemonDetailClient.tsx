@@ -803,7 +803,7 @@ export function PokemonDetailClient({
                           {gameIndices.length} {t('detail.game_appearances')}
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-1">
+                      <div tabIndex={0} className="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
                         {gameIndices.map((entry) => (
                           <span
                             key={`${entry.version.name}-${entry.game_index}`}

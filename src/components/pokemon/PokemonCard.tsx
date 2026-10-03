@@ -425,7 +425,9 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                   key={`${typeName}-${i}`}
                   className="type-bar px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] sm:px-2 sm:py-0.5 sm:text-[11px]"
                   style={{
-                    color: typeColor,
+                    color: 'var(--foreground)',
+                    borderColor: hexToRgba(typeColor, 0.46),
+                    backgroundColor: hexToRgba(typeColor, 0.12),
                   }}
                 >
                   {t(`types.${typeName}`)}
@@ -438,7 +440,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
                 style={{
                   borderColor: 'color-mix(in oklab, var(--action-legendary) 55%, transparent)',
                   background: 'color-mix(in oklab, var(--action-legendary) 15%, transparent)',
-                  color: 'color-mix(in oklab, var(--action-legendary) 82%, var(--foreground) 18%)',
+                  color: 'var(--foreground)',
                 }}
                 title={isMythical ? t('card.mythical') : t('card.legendary')}
               >

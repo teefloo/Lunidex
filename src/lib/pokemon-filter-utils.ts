@@ -37,6 +37,12 @@ export function getExactNumericPokemonId(searchTerm: string): number | null {
 
 type Measurement = number | null | undefined;
 
+/** The top of the height slider represents an open-ended 25 m+ bound. */
+export function isHeightWithinRange(height: number, min: number, max: number): boolean {
+  if (!Number.isFinite(height)) return false;
+  return height >= min && (max >= 25 || height <= max);
+}
+
 export function shouldUseCompletePokemonSummary({
   hasOtherFilters,
   showCaughtOnly,

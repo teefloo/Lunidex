@@ -3,6 +3,7 @@ import {
   comparePokemonMeasurements,
   getPokemonSearchFromUrl,
   getExactNumericPokemonId,
+  isHeightWithinRange,
   normalizeSearchText,
   shouldCommitPokemonSearch,
   shouldShowInitialPokemonListError,
@@ -44,6 +45,14 @@ describe('pokemon filter utilities', () => {
     expect(comparePokemonMeasurements(0, 1, 'asc')).toBeGreaterThan(0);
     expect(comparePokemonMeasurements(1, 0, 'desc')).toBeLessThan(0);
     expect(comparePokemonMeasurements(100, 50, 'desc')).toBeLessThan(0);
+  });
+
+  it('treats the 25 m slider endpoint as an explicit open-ended height bound', () => {
+    expect(isHeightWithinRange(28, 20, 25)).toBe(true);
+    expect(isHeightWithinRange(24.9, 20, 24.9)).toBe(true);
+    expect(isHeightWithinRange(25.1, 20, 24.9)).toBe(false);
+    expect(isHeightWithinRange(19.9, 20, 25)).toBe(false);
+    expect(isHeightWithinRange(Number.NaN, 0, 25)).toBe(false);
   });
 
   it('uses the complete catalogue for caught and favorite views', () => {

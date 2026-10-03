@@ -148,9 +148,9 @@ export default function TypesPage() {
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-secondary/30 rounded-sm">
-                  <Flame className="w-4 h-4 text-foreground/60" />
+                  <Flame className="w-4 h-4 text-foreground/80" />
                 </div>
-                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h2>
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/80">{t('types_page.select_type')}</h2>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 {Object.keys(TYPE_COLORS).map((type) => (
@@ -285,9 +285,9 @@ export default function TypesPage() {
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-secondary/30 rounded-sm">
-                <Flame className="w-4 h-4 text-foreground/60" />
+                <Flame className="w-4 h-4 text-foreground/80" />
               </div>
-              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/50">{t('types_page.select_type')}</h2>
+              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/80">{t('types_page.select_type')}</h2>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
               {Object.keys(TYPE_COLORS).map((type) => (
@@ -355,7 +355,7 @@ export default function TypesPage() {
                   </div>
                   <div>
                     <h2 className="text-3xl md:text-4xl font-black capitalize tracking-tight">{t(`types.${selectedType}`)}</h2>
-                    <p className="text-foreground/40 font-bold uppercase tracking-widest text-[11px] mt-1">{t('types_page.elemental_mastery')}</p>
+                    <p className="text-foreground/80 font-bold uppercase tracking-widest text-[11px] mt-1">{t('types_page.elemental_mastery')}</p>
                   </div>
                 </div>
 
@@ -484,7 +484,7 @@ export default function TypesPage() {
                         />
                       </div>
                       <span className="font-black capitalize text-xs group-hover:text-primary transition-colors text-center truncate w-full">{p.name}</span>
-                      <span className="text-[11px] font-bold text-foreground/40 mt-0.5 tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
+                      <span className="text-[11px] font-bold text-foreground/80 mt-0.5 tracking-widest">{p.pokemon_v2_pokemonstats.reduce((s, curr) => s + curr.base_stat, 0)}</span>
                     </motion.div>
                   </Link>
                 ))}
@@ -503,7 +503,7 @@ export default function TypesPage() {
                   <div className="p-2 bg-red-500/10 rounded-sm h-fit flex-shrink-0">
                     <ShieldAlert className="w-4 h-4 text-red-500" />
                   </div>
-                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/60 leading-relaxed">
+                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/80 leading-relaxed">
                     {t('types_page.watch_out', {
                       types: typeRels?.damage_relations.double_damage_from.map(t_rel => t(`types.${t_rel.name}`)).join(', '),
                       type: t(`types.${selectedType}`)
@@ -514,7 +514,7 @@ export default function TypesPage() {
                   <div className="p-2 bg-blue-500/10 rounded-sm h-fit flex-shrink-0">
                     <Sword className="w-4 h-4 text-blue-500" />
                   </div>
-                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/60 leading-relaxed">
+                  <p className="min-w-0 max-w-prose flex-1 text-xs text-foreground/80 leading-relaxed">
                     {t('types_page.not_effective', {
                       type: t(`types.${selectedType}`),
                       types: typeRels?.damage_relations.half_damage_to.map(t_rel => t(`types.${t_rel.name}`)).join(', ')

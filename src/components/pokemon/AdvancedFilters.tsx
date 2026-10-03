@@ -88,8 +88,11 @@ export default function AdvancedFilters({ className }: { className?: string }) {
   });
   const getRangeSliderA11y = (label: string) => ({
     getAriaLabel: (index: number) => `${index === 0 ? t('filters.minimum') : t('filters.maximum')} ${label}`,
-    getAriaValueText: (formattedValue: string, _value: number, index: number) =>
-      `${index === 0 ? t('filters.minimum') : t('filters.maximum')} ${label}: ${formattedValue}`,
+    getAriaValueText: (formattedValue: string, value: number, index: number) => {
+      const isOpenHeightBound = label === t('filters.height') && index === 1 && value >= 25;
+      const accessibleValue = isOpenHeightBound ? `${formattedValue}m+` : formattedValue;
+      return `${index === 0 ? t('filters.minimum') : t('filters.maximum')} ${label}: ${accessibleValue}`;
+    },
   });
 
   const activeFiltersCount = [
@@ -446,7 +449,7 @@ export default function AdvancedFilters({ className }: { className?: string }) {
                 <div className="flex gap-2">
                   <Badge variant="outline" className="font-black border-border/60">{heightRange[0].toFixed(1)}m</Badge>
                   <span className="text-foreground/20">-</span>
-                  <Badge variant="outline" className="font-black border-border/60">{heightRange[1].toFixed(1)}m</Badge>
+                  <Badge variant="outline" className="font-black border-border/60">{heightRange[1].toFixed(1)}m{heightRange[1] >= 25 ? '+' : ''}</Badge>
                 </div>
               </div>
               <Slider

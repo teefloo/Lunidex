@@ -62,7 +62,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
     setLastHoveredCell(cell);
   }, []);
 
-  const handleCellKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>, atk: string, def: string) => {
+  const handleCellKeyDown = useCallback((event: KeyboardEvent<HTMLButtonElement>, atk: string, def: string) => {
     const atkIndex = TYPE_ORDER.indexOf(atk as TypeName);
     const defIndex = TYPE_ORDER.indexOf(def as TypeName);
     let nextAtk = atkIndex;
@@ -104,21 +104,21 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
 
   const getCellBg = (value: number, atkType: string, defType: string): string => {
     if (highlightedCell && (atkType === highlightedCell.atk || defType === highlightedCell.def)) {
-      if (value === 2) return 'bg-emerald-500/70';
+      if (value === 2) return 'bg-emerald-300';
       if (value === 0.5) return 'bg-red-500/50';
-      if (value === 0) return 'bg-zinc-800/90';
+      if (value === 0) return 'bg-zinc-800';
       return 'bg-card/50';
     }
-    if (value === 2) return 'bg-emerald-500/50';
+    if (value === 2) return 'bg-emerald-200';
     if (value === 0.5) return 'bg-red-500/35';
-    if (value === 0) return 'bg-zinc-800/70';
+    if (value === 0) return 'bg-zinc-800';
     return 'bg-transparent';
   };
 
   const getCellTextColor = (value: number): string => {
-    if (value === 2) return 'text-primary-foreground font-black';
+    if (value === 2) return 'text-emerald-950 font-black';
     if (value === 0.5) return 'text-foreground/90 font-bold';
-    if (value === 0) return 'text-zinc-400 font-bold';
+    if (value === 0) return 'text-zinc-100 font-bold';
     return 'text-foreground/15';
   };
 
@@ -157,7 +157,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             className="touch-target rounded-sm border border-border/50 bg-card/50 p-2 hover:bg-card/70 transition-colors"
             aria-label={collapsed ? t('types_page.expand') : t('types_page.collapse')}
           >
-            {collapsed ? <ChevronDown className="w-4 h-4 text-foreground/50" /> : <ChevronUp className="w-4 h-4 text-foreground/50" />}
+            {collapsed ? <ChevronDown className="w-4 h-4 text-foreground/80" /> : <ChevronUp className="w-4 h-4 text-foreground/80" />}
           </button>
         </div>
 
@@ -172,21 +172,21 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
             <span className="font-black uppercase text-xs px-2 py-1 rounded-md" style={{ backgroundColor: TYPE_COLORS[tooltipInfo.atk] + '30', color: TYPE_COLORS[tooltipInfo.atk] }}>
               {t(`types.${tooltipInfo.atk}`)}
             </span>
-            <span className="text-foreground/30 text-lg">→</span>
+            <span className="text-foreground/80 text-lg">→</span>
             <span className="font-black uppercase text-xs px-2 py-1 rounded-md" style={{ backgroundColor: TYPE_COLORS[tooltipInfo.def] + '30', color: TYPE_COLORS[tooltipInfo.def] }}>
               {t(`types.${tooltipInfo.def}`)}
             </span>
-            <span className="text-foreground/30 text-lg">=</span>
+            <span className="text-foreground/80 text-lg">=</span>
             <span className={cn(
               'font-black text-xl',
               tooltipInfo.value === 2 && 'text-emerald-400',
               tooltipInfo.value === 0.5 && 'text-red-400',
               tooltipInfo.value === 0 && 'text-zinc-500',
-              tooltipInfo.value === 1 && 'text-foreground/50',
+              tooltipInfo.value === 1 && 'text-foreground/80',
             )}>
               {tooltipInfo.value}×
             </span>
-            <span className="text-xs text-foreground/40 ml-2">
+            <span className="text-xs text-foreground/80 ml-2">
               {tooltipInfo.value === 2 && t('types_page.super_effective')}
               {tooltipInfo.value === 0.5 && t('types_page.not_very_effective')}
               {tooltipInfo.value === 0 && t('types_page.no_effect')}
@@ -203,10 +203,10 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
         {/* Legend */}
         <div className="flex flex-wrap gap-4 mt-4">
           {[
-            { label: t('types_page.super_effective'), color: 'bg-emerald-500/60', textColor: 'text-emerald-400' },
-            { label: t('types_page.normal_damage'), color: 'bg-card/50 border border-border/60', textColor: 'text-foreground/40' },
-            { label: t('types_page.not_very_effective'), color: 'bg-red-500/40', textColor: 'text-red-400' },
-            { label: t('types_page.no_effect'), color: 'bg-zinc-800/80', textColor: 'text-zinc-400' },
+            { label: t('types_page.super_effective'), color: 'bg-emerald-500/60', textColor: 'text-emerald-800 dark:text-emerald-300' },
+            { label: t('types_page.normal_damage'), color: 'bg-card/50 border border-border/60', textColor: 'text-foreground/80' },
+            { label: t('types_page.not_very_effective'), color: 'bg-red-500/40', textColor: 'text-red-800 dark:text-red-300' },
+            { label: t('types_page.no_effect'), color: 'bg-zinc-800/80', textColor: 'text-muted-foreground' },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div className={cn('w-3 h-3 rounded-sm', item.color)} />
@@ -232,7 +232,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                 {t('types_page.scroll_hint', { defaultValue: 'Swipe horizontally to explore the full matrix' })}
               </p>
               <div className="min-w-[750px]">
-                <table className="w-full border-separate border-spacing-[2px]" style={{ tableLayout: 'fixed' }} role="grid" aria-label={t('types_page.type_chart')}>
+                <table className="w-full border-separate border-spacing-[2px]" style={{ tableLayout: 'fixed' }} aria-label={t('types_page.type_chart')}>
                   <colgroup>
                     <col style={{ width: '80px' }} />
                     {TYPE_ORDER.map((_, i) => (
@@ -242,10 +242,10 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                   <thead>
                     <tr>
                       <th className="p-2 sticky left-0 z-30 bg-background/95  rounded-lg shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]">
-                        <div className="flex items-center justify-center text-[11px] font-black text-foreground/30 uppercase tracking-wider gap-1">
-                          <span className="text-primary/60">ATK</span>
+                        <div className="flex items-center justify-center text-[11px] font-black text-foreground/80 uppercase tracking-wider gap-1">
+                          <span className="text-primary">ATK</span>
                           <span className="text-foreground/15">╲</span>
-                          <span className="text-foreground/40">DEF</span>
+                          <span className="text-foreground/80">DEF</span>
                         </div>
                       </th>
                       {TYPE_ORDER.map((defType) => (
@@ -269,7 +269,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                               className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full shadow-sm ring-1 ring-foreground/10 group-hover:ring-foreground/30 transition-all"
                               style={{ backgroundColor: TYPE_COLORS[defType] }}
                             />
-                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/50 leading-none truncate max-w-[2.5rem]">
+                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/80 leading-none truncate max-w-[2.5rem]">
                               {t(`types.${defType}`).slice(0, 4)}
                             </span>
                           </button>
@@ -297,7 +297,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                               className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full shadow-sm ring-1 ring-foreground/10 group-hover:ring-foreground/30 transition-all flex-shrink-0"
                               style={{ backgroundColor: TYPE_COLORS[atkType] }}
                             />
-                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/60 leading-none truncate max-w-[3rem]">
+                            <span className="text-[11px] md:text-[11px] font-black uppercase tracking-tight text-foreground/80 leading-none truncate max-w-[3rem]">
                               {t(`types.${atkType}`).slice(0, 5)}
                             </span>
                           </button>
@@ -316,7 +316,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                               onMouseEnter={() => handleCellHover(atkType, defType)}
                               onMouseLeave={handleCellLeave}
                             >
-                              <div
+                              <button
+                                type="button"
                                 className={cn(
                                   'flex aspect-square w-full cursor-pointer items-center justify-center rounded-md transition-[transform,box-shadow,background-color] duration-150',
                                   getCellBg(val, atkType, defType),
@@ -329,9 +330,8 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                                       : '',
                                   val === 1 && 'border border-border/30'
                                 )}
-                                role="gridcell"
                                 tabIndex={selectedCell ? (isSelected ? 0 : -1) : (atkType === TYPE_ORDER[0] && defType === TYPE_ORDER[0] ? 0 : -1)}
-                                aria-selected={isSelected}
+                                aria-pressed={isSelected}
                                 data-type-cell={`${atkType}-${defType}`}
                                 onClick={() => selectCell(atkType, defType)}
                                 onFocus={() => selectCell(atkType, defType)}
@@ -339,7 +339,7 @@ export default function TypeChart({ onTypeClick }: TypeChartProps) {
                                 aria-label={`${t(`types.${atkType}`)} vs ${t(`types.${defType}`)}: ${val}×`}
                               >
                                 {getCellLabel(val)}
-                              </div>
+                              </button>
                             </td>
                           );
                         })}

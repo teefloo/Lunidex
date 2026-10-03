@@ -16,6 +16,7 @@ import { useClientLanguage } from '@/hooks/useLocaleHref';
 import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
+  isHeightWithinRange,
   normalizeSearchText,
   shouldShowInitialPokemonListError,
   shouldUseCompletePokemonSummary,
@@ -363,9 +364,7 @@ export default function PokemonList() {
           const rawHeight = Number(p.height);
           if (Number.isNaN(rawHeight)) return false;
           const h = rawHeight / 10;
-          const meetsMin = h >= minH;
-          const meetsMax = maxH >= 25 || h <= maxH;
-          return meetsMin && meetsMax;
+          return isHeightWithinRange(h, minH, maxH);
         });
       }
       if (weightRange[0] > 0 || weightRange[1] < 1200) {
@@ -462,9 +461,12 @@ export default function PokemonList() {
   if (minDefense > 0) addFilterChip('min-defense', `${t('filters.min_defense', { defaultValue: 'Min defense' })}: ${minDefense}`, () => setMinDefense(0));
   if (minSpeed > 0) addFilterChip('min-speed', `${t('filters.min_speed', { defaultValue: 'Min speed' })}: ${minSpeed}`, () => setMinSpeed(0));
   if (minHp > 0) addFilterChip('min-hp', `${t('filters.min_hp', { defaultValue: 'Min HP' })}: ${minHp}`, () => setMinHp(0));
-  if (heightRange[0] > 0 || heightRange[1] < 25) addFilterChip('height', `${t('filters.height', { defaultValue: 'Height' })}: ${heightRange[0]}–${heightRange[1]}`, () => setHeightRange([0, 25]));
+  if (heightRange[0] > 0 || heightRange[1] < 25) {
+    const upperHeight = `${heightRange[1]}m${heightRange[1] >= 25 ? '+' : ''}`;
+    addFilterChip('height', `${t('filters.height', { defaultValue: 'Height' })}: ${heightRange[0]}m–${upperHeight}`, () => setHeightRange([0, 25]));
+  }
   if (weightRange[0] > 0 || weightRange[1] < 1200) addFilterChip('weight', `${t('filters.weight', { defaultValue: 'Weight' })}: ${weightRange[0]}–${weightRange[1]}`, () => setWeightRange([0, 1200]));
-  if (sortBy !== 'id-asc') addFilterChip('sort', `${t('list.sort', { defaultValue: 'Sort' })}: ${displayFilterValue(sortBy)}`, () => setSortBy('id-asc'));
+  if (sortBy !== 'id-asc') addFilterChip('sort', `${t('sort.label')}: ${t(`sort.${sortBy}`)}`, () => setSortBy('id-asc'));
 
   if (isDataLoading) {
     return (
