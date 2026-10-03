@@ -1,5 +1,6 @@
 'use client';
 
+import { parseSharedPokemonIds } from '@/lib/shared-pokemon-ids';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -8,6 +9,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { getAllPokemonSearchIndex, getPokemonDetail, getPokemonSpecies, getTypeRelations } from '@/lib/api';
 import { TypeRelations } from '@/lib/api/rest';
 import { TYPE_COLORS, PokemonDetail, PokemonSpecies } from '@/types/pokemon';
+import { getReadableTextColor } from '@/lib/color-contrast';
 import { analyzeTeam } from '@/lib/team-analysis';
 import { getCompareSuggestions } from '@/lib/counter-suggestions';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
@@ -76,16 +78,10 @@ export default function ComparePage() {
   });
 
   const sharedCompareIds = useMemo(() => {
-    const raw = searchParams.get('ids');
-    if (!raw) return [];
-    return raw
-      .split(',')
-      .map((value) => Number.parseInt(value, 10))
-      .filter((value) => Number.isFinite(value) && value > 0)
-      .slice(0, 3);
+    return parseSharedPokemonIds(searchParams.get('ids'), 3);
   }, [searchParams]);
 
-  const isSharedCompare = sharedCompareIds.length > 0;
+  const isSharedCompare = searchParams.has('ids');
   const activeCompareIds = isSharedCompare ? sharedCompareIds : compareList;
 
   const buildCompareUrl = useCallback((ids: number[]) => {
@@ -172,6 +168,7 @@ export default function ComparePage() {
   });
 
   const isLoading = pokemonQueries.some(q => q.isLoading);
+  const failedCompareIds = activeCompareIds.filter((_, index) => pokemonQueries[index]?.isError);
   const compareData = useMemo(() => 
     pokemonQueries.map(q => q.data).filter((d): d is { pokemon: PokemonDetail, species: PokemonSpecies | null } => !!d),
     [pokemonQueries]
@@ -278,7 +275,7 @@ export default function ComparePage() {
               <Button
                 variant="destructive"
                 onClick={handleClearCompare}
-                className="rounded-sm font-black uppercase tracking-widest gap-2"
+                className="rounded-sm font-black uppercase tracking-widest gap-2 dark:text-foreground"
               >
                 <Trash2 className="w-4 h-4" />
                 {t('compare.clear')}
@@ -372,10 +369,44 @@ export default function ComparePage() {
           )}
         </section>
 
+        {failedCompareIds.length > 0 && compareData.length > 0 && (
+          <div role="alert" className="mb-6 rounded-sm border border-destructive/40 bg-card p-4">
+            <p>{t('compare.load_error', { ids: failedCompareIds.join(', ') })}</p>
+            <Button className="mt-3" onClick={() => pokemonQueries.filter((query) => query.isError).forEach((query) => { void query.refetch(); })}>
+              {t('common.retry')}
+            </Button>
+            {isSharedCompare && (
+              <Button variant="outline" className="ml-2 mt-3" onClick={handleClearCompare}>
+                {t('compare.clear')}
+              </Button>
+            )}
+          </div>
+        )}
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-96 gap-4">
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
             <p className="text-foreground/40 font-semibold tracking-widest uppercase text-sm">{t('list.loading')}</p>
+          </div>
+        ) : isSharedCompare && activeCompareIds.length === 0 ? (
+          <div role="alert" className="flex flex-col items-center justify-center py-20 text-center rounded-sm border-2 border-dashed border-destructive/30 bg-card px-5">
+            <AlertTriangle className="mb-5 h-12 w-12 text-destructive" />
+            <h3 className="mb-2 text-2xl font-black text-foreground">{t('compare.unavailable_title')}</h3>
+            <p className="mb-6 max-w-xl text-sm text-muted-foreground">{t('compare.invalid_link')}</p>
+            <Button variant="outline" onClick={handleClearCompare}>{t('compare.clear')}</Button>
+          </div>
+        ) : failedCompareIds.length > 0 && compareData.length === 0 ? (
+          <div role="alert" className="flex flex-col items-center justify-center py-20 text-center rounded-sm border-2 border-dashed border-destructive/30 bg-card px-5">
+            <AlertTriangle className="mb-5 h-12 w-12 text-destructive" />
+            <h3 className="mb-2 text-2xl font-black text-foreground">{t('compare.unavailable_title')}</h3>
+            <p className="mb-6 max-w-xl text-sm text-muted-foreground">
+              {t('compare.load_error', { ids: failedCompareIds.join(', ') })}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button onClick={() => pokemonQueries.filter((query) => query.isError).forEach((query) => { void query.refetch(); })}>
+                {t('common.retry')}
+              </Button>
+              {isSharedCompare && <Button variant="outline" onClick={handleClearCompare}>{t('compare.clear')}</Button>}
+            </div>
           </div>
         ) : compareData.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-muted-foreground rounded-sm border-2 border-dashed border-border/60 bg-card">
@@ -494,7 +525,7 @@ export default function ComparePage() {
                   {/* Threats / Counters */}
                   {suggestions.counters.length > 0 && (
                     <div className="space-y-4">
-                      <h4 className="text-sm font-black uppercase tracking-widest text-red-500/60 flex items-center gap-2">
+                      <h4 className="text-sm font-black uppercase tracking-widest text-red-800 dark:text-red-300 flex items-center gap-2">
                         <ShieldAlert className="w-4 h-4" /> {t('compare.counters_title')}
                       </h4>
                       <p className="text-[11px] text-muted-foreground font-bold">{t('compare.counters_desc')}</p>
@@ -519,7 +550,7 @@ export default function ComparePage() {
                                 <span
                                   key={threat}
                                   className="px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15"
-                                  style={{ color: TYPE_COLORS[threat] }}
+                                  style={{ backgroundColor: TYPE_COLORS[threat], color: getReadableTextColor(TYPE_COLORS[threat]) }}
                                 >
                                   {t(`types.${threat}`)}
                                 </span>
@@ -534,7 +565,7 @@ export default function ComparePage() {
                   {/* Recommended Partners */}
                   {suggestions.partners.length > 0 && (
                     <div className="space-y-4">
-                      <h4 className="text-sm font-black uppercase tracking-widest text-green-500/60 flex items-center gap-2">
+                      <h4 className="text-sm font-black uppercase tracking-widest text-green-800 dark:text-green-300 flex items-center gap-2">
                         <Heart className="w-4 h-4" /> {t('compare.partners_title')}
                       </h4>
                       <p className="text-[11px] text-muted-foreground font-bold">{t('compare.partners_desc')}</p>
@@ -579,7 +610,7 @@ export default function ComparePage() {
                 {/* Shared Weaknesses */}
                 {suggestions.sharedWeaknesses.length > 0 && (
                   <div className="mt-8 pt-6 border-t border-border/40">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-orange-500/60 flex items-center gap-2 mb-4">
+                    <h4 className="text-sm font-black uppercase tracking-widest text-orange-800 dark:text-orange-300 flex items-center gap-2 mb-4">
                       <AlertTriangle className="w-4 h-4" /> {t('compare.shared_weaknesses')}
                     </h4>
                     <p className="text-[11px] text-muted-foreground font-bold mb-4">{t('compare.shared_weaknesses_desc')}</p>
@@ -588,7 +619,7 @@ export default function ComparePage() {
                         <span
                           key={type}
                           className="px-3 py-1.5 rounded-sm border border-orange-500/10 bg-orange-500/5 text-[11px] font-black uppercase"
-                          style={{ color: TYPE_COLORS[type] }}
+                          style={{ backgroundColor: TYPE_COLORS[type], color: getReadableTextColor(TYPE_COLORS[type]) }}
                         >
                           {t(`types.${type}`)}
                         </span>
@@ -610,7 +641,7 @@ export default function ComparePage() {
                           key={stat}
                           className="px-3 py-1.5 rounded-sm bg-yellow-500/5 border border-yellow-500/10 text-[11px] font-black uppercase text-yellow-500"
                         >
-                          {t(`stats.${stat}`)}
+                          {t(`team.${stat}`)}
                         </span>
                       ))}
                     </div>
@@ -702,7 +733,7 @@ export default function ComparePage() {
                           </h4>
                           <div className={cn(
                             "px-2 py-0.5 rounded-sm text-[11px] sm:text-[11px] font-black uppercase tracking-tighter",
-                            isOverallBest ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400" : "bg-secondary/50 text-muted-foreground"
+                            isOverallBest ? "bg-yellow-500/20 text-yellow-800 dark:text-yellow-300" : "bg-secondary/50 text-muted-foreground"
                           )}>
                             {t('compare.total')}: {totalStats} {isOverallBest ? t('compare.best') : ''}
                           </div>

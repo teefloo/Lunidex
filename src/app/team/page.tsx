@@ -1,5 +1,8 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
+import { parseSharedPokemonIds } from '@/lib/shared-pokemon-ids';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import GenerationPicker from '@/components/team/GenerationPicker';
@@ -7,6 +10,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { useQueries } from '@tanstack/react-query';
 import { getPokemonDetail, getPokemonSpecies, getTypeRelations, getAllPokemonDetailed } from '@/lib/api';
+import { getReadableTextColor } from '@/lib/color-contrast';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { TypeRelations } from '@/lib/api/rest';
 import {
@@ -68,12 +72,18 @@ const MoveCoverageChecker = dynamic(
 
 export default function TeamPage() {
   const actionsMenuRef = useRef<HTMLDetailsElement>(null);
-  const { team, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
+  const { team: savedTeam, addToTeam, removeFromTeam, clearTeam } = usePrimeDexStore(useShallow((state) => ({
     team: state.team,
     addToTeam: state.addToTeam,
     removeFromTeam: state.removeFromTeam,
     clearTeam: state.clearTeam,
   })));
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const isSharedTeam = searchParams.has('code') || searchParams.has('ids');
+  const team = isSharedTeam
+    ? parseSharedPokemonIds(searchParams.get('code') ?? searchParams.get('ids'), 6)
+    : savedTeam;
   const [isAutoCompleting, setIsAutoCompleting] = useState(false);
   const [targetGeneration, setTargetGeneration] = useState<TargetGeneration>(
     DEFAULT_AUTO_COMPLETE_OPTIONS.targetGeneration
@@ -106,22 +116,6 @@ export default function TeamPage() {
     };
   }, []);
 
-  // Team sharing logic: Check for team in URL (`?code=25-6-9` or `?ids=25,6,9`)
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const teamCode = urlParams.get('code') ?? urlParams.get('ids');
-    if (teamCode && team.length === 0) {
-      const ids = teamCode.split(/[-,]/).map(Number).filter(id => !isNaN(id));
-      if (ids.length > 0) {
-        ids.forEach(id => addToTeam(id));
-        toast.success(t('team.toast_loaded'));
-        // Clear URL param without reloading
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-      }
-    }
-  }, [addToTeam, team.length, t]);
-
   const pokemonQueries = useQueries({
     queries: team.map(id => ({
       queryKey: ['pokemon-team', id],
@@ -137,7 +131,6 @@ export default function TeamPage() {
   });
 
   const pokemonData = pokemonQueries.map(q => q.data).filter((d): d is { pokemon: NonNullable<typeof d>['pokemon']; species: NonNullable<typeof d>['species'] } => !!d?.pokemon).map(d => d.pokemon);
-  const teamData = pokemonQueries.map(q => q.data).filter((d): d is { pokemon: NonNullable<typeof d>['pokemon']; species: NonNullable<typeof d>['species'] } => !!d?.pokemon);
 
   // Fetch relations for all 18 types so suggestion logic can recommend
   // types that resist the team's weaknesses but aren't yet on the team.
@@ -236,7 +229,15 @@ export default function TeamPage() {
           subtitle={`${t('team.subtitle')} (${pokemonData.length}/6)`}
           eyebrow={t('team.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
-          badge={(
+          badge={isSharedTeam ? (
+            <ShareButton
+              url={shareTeamPath}
+              title={t('team.title')}
+              description={t('team.share_copied')}
+              label={t('detail.share')}
+              className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
+            />
+          ) : (
             <details ref={actionsMenuRef} className="team-actions-menu">
               <summary>{t('nav.more')}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" /></summary>
               <div className="team-actions-menu-panel" onClick={(event) => {
@@ -305,11 +306,27 @@ export default function TeamPage() {
         />
 
         <div className="space-y-8">
+          {isSharedTeam && (
+            <div role="status" className="rounded-sm border border-primary/25 bg-primary/5 px-4 py-3 text-sm font-medium text-foreground">
+              <p>{team.length > 0 ? t('team.shared_read_only') : t('team.shared_invalid')}</p>
+              {pokemonData.length === team.length && team.length > 0 && (
+                <Button className="mt-3" onClick={() => {
+                  if (!hasSyncAccess()) { requestSyncAccess(); return; }
+                  team.forEach((id) => addToTeam(id));
+                  const saved = usePrimeDexStore.getState().team;
+                  if (team.every((id) => saved.includes(id))) {
+                    toast.success(t('team.toast_loaded'));
+                    router.push(localeHref('/team'));
+                  } else toast.warning(t('team.import_team_full'));
+                }}>{t('team.save_shared')}</Button>
+              )}
+            </div>
+          )}
           {/* Team Slots */}
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, idx) => {
-                const d = teamData[idx];
+              {Array.from({ length: isSharedTeam ? team.length : 6 }).map((_, idx) => {
+                const d = pokemonQueries[idx]?.data;
                 const p = d?.pokemon;
                 const s_data = d?.species;
                 const displayName = s_data?.names?.find((n) => n.language.name === resolvedLang)?.name || p?.name;
@@ -322,13 +339,15 @@ export default function TeamPage() {
                         animate={{ scale: 1, opacity: 1 }}
                         className="glass-panel h-full p-4 rounded-sm flex flex-col items-center relative group"
                       >
-                        <button
-                          onClick={() => removeFromTeam(p.id)}
-                          className="touch-target absolute top-2 right-2 z-20 rounded-full bg-secondary/50 p-2 text-foreground/55 hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-[color,background-color,opacity]"
-                          aria-label={t('card.remove_team')}
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                        {!isSharedTeam && (
+                          <button
+                            onClick={() => removeFromTeam(p.id)}
+                            className="touch-target absolute top-2 right-2 z-20 rounded-full bg-secondary/50 p-2 text-foreground/55 hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-[color,background-color,opacity]"
+                            aria-label={t('card.remove_team')}
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
                         
                         <div className="relative w-28 h-28 mb-4">
                           <div className="absolute inset-x-5 bottom-3 top-10 rounded-sm bg-gradient-to-t from-primary/10 to-transparent transition-opacity group-hover:opacity-80" />
@@ -349,7 +368,7 @@ export default function TeamPage() {
                           <span 
                             key={typeItem.type.name} 
                             className="px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase"
-                            style={{ backgroundColor: `${TYPE_COLORS[typeItem.type.name]}cc`, color: 'white' }}
+                            style={{ backgroundColor: TYPE_COLORS[typeItem.type.name], color: getReadableTextColor(TYPE_COLORS[typeItem.type.name]) }}
                           >
                             {t(`types.${typeItem.type.name}`)}
                           </span>
@@ -363,6 +382,15 @@ export default function TeamPage() {
                           {t('team.details')}
                         </Link>
                       </motion.div>
+                    ) : team[idx] ? (
+                      <div className="glass-panel flex h-full flex-col items-center justify-center gap-3 rounded-sm p-4" role="status">
+                        {pokemonQueries[idx]?.isError ? (
+                          <>
+                            <p>{t('list.error_desc')}</p>
+                            <Button onClick={() => { void pokemonQueries[idx]?.refetch(); }}>{t('common.retry')}</Button>
+                          </>
+                        ) : <><Loader2 aria-hidden="true" className="h-6 w-6 animate-spin" /><p>{t('list.loading')}</p></>}
+                      </div>
                     ) : (
                       <Link href={localeHref('/pokedex')} className="block h-full">
                         <div className="h-full rounded-sm border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-foreground/20 hover:border-primary/30 hover:text-primary/40 hover:bg-primary/5 transition-all group">
@@ -426,13 +454,13 @@ export default function TeamPage() {
                       </div>
                       
                       <div className="p-4 rounded-sm bg-secondary/20 border border-border/40">
-                        <p className="text-[11px] font-black uppercase tracking-widest text-red-500/60 mb-3">{t('team.main_weaknesses')}</p>
+                        <p className="text-[11px] font-black uppercase tracking-widest text-red-700 dark:text-red-300 mb-3">{t('team.main_weaknesses')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.weaknesses.slice(0, 3).map(([type]) => (
                             <div 
                               key={type} 
                               className="px-3 py-1.5 rounded-sm border border-border/40 shadow-sm text-primary-foreground flex items-center gap-2"
-                              style={{ backgroundColor: TYPE_COLORS[type] }}
+                              style={{ backgroundColor: TYPE_COLORS[type], color: getReadableTextColor(TYPE_COLORS[type]) }}
                             >
                               <span className="text-[11px] font-black uppercase">{t(`types.${type}`)}</span>
                             </div>
@@ -496,22 +524,22 @@ export default function TeamPage() {
                       
                       <div className="space-y-4">
                         <div>
-                          <p className="text-[11px] font-black text-red-500/60 uppercase mb-2">{t('team.weaknesses')}</p>
+                          <p className="text-[11px] font-black text-red-700 dark:text-red-300 uppercase mb-2">{t('team.weaknesses')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.weaknesses.map(([type, val]) => (
                               <div key={type} className="px-3 py-1.5 rounded-sm border border-red-500/10 bg-red-500/5 flex items-center gap-2">
-                                <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                                <span className="type-label text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                                 <span className="text-[11px] font-bold opacity-40">{val}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <p className="text-[11px] font-black text-green-500/60 uppercase mb-2">{t('team.resistances')}</p>
+                          <p className="text-[11px] font-black text-green-800 dark:text-green-300 uppercase mb-2">{t('team.resistances')}</p>
                           <div className="flex flex-wrap gap-2">
                             {analysis.resistances.map(([type, val]) => (
                               <div key={type} className="px-3 py-1.5 rounded-sm border border-green-500/10 bg-green-500/5 flex items-center gap-2">
-                                <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                                <span className="type-label text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                                 <span className="text-[11px] font-bold opacity-40">+{val}</span>
                               </div>
                             ))}
@@ -527,11 +555,11 @@ export default function TeamPage() {
                       </h4>
                       
                       <div className="space-y-4">
-                        <p className="text-[11px] font-black text-yellow-500/60 uppercase mb-2">{t('team.super_effective_coverage')}</p>
+                        <p className="text-[11px] font-black text-yellow-800 dark:text-yellow-300 uppercase mb-2">{t('team.super_effective_coverage')}</p>
                         <div className="flex flex-wrap gap-2">
                           {analysis.coverage.map(([type, val]) => (
                             <div key={type} className="px-3 py-1.5 rounded-sm border border-yellow-500/10 bg-yellow-500/5 flex items-center gap-2">
-                              <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                              <span className="type-label text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                               <span className="text-[11px] font-bold opacity-40">{val}</span>
                             </div>
                           ))}
@@ -578,7 +606,7 @@ export default function TeamPage() {
                   <p className="text-[11px] font-black uppercase tracking-widest text-foreground/40 mb-3">{t('team.types_present')}</p>
                   <div className="flex flex-wrap gap-2">
                     {Array.from(analysis?.typeCoverage || []).map(t_name => (
-                      <span key={t_name} className="px-3 py-1 rounded-lg text-[11px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm" style={{ backgroundColor: TYPE_COLORS[t_name] }}>
+                      <span key={t_name} className="px-3 py-1 rounded-lg text-[11px] sm:text-[11px] font-black uppercase text-primary-foreground shadow-sm" style={{ backgroundColor: TYPE_COLORS[t_name], color: getReadableTextColor(TYPE_COLORS[t_name]) }}>
                         {t(`types.${t_name}`)}
                       </span>
                     ))}
@@ -601,12 +629,12 @@ export default function TeamPage() {
                 {analysis && (
                   <div className="pt-4 border-t border-border/40 space-y-6">
                     <div>
-                      <p className="text-[11px] font-black uppercase tracking-widest text-primary/60 mb-3">{t('team.coverage_gaps')}</p>
+                      <p className="text-[11px] font-black uppercase tracking-widest text-foreground mb-3">{t('team.coverage_gaps')}</p>
                       <p className="text-[11px] text-foreground/50 mb-4">{t('team.coverage_gaps_desc')}</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.suggestions.types.map(type => (
                           <div key={type} className="flex-1 min-w-[80px] p-3 rounded-sm bg-secondary/20 border border-border/40 text-center group hover:border-primary/30 transition-all cursor-default">
-                            <span className="text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
+                            <span className="type-label text-[11px] font-black uppercase" style={{ color: TYPE_COLORS[type] }}>{t(`types.${type}`)}</span>
                           </div>
                         ))}
                         {analysis.suggestions.types.length === 0 && <p className="text-[11px] italic text-foreground/30">{t('team.no_type_weaknesses')}</p>}

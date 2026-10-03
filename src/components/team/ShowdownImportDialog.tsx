@@ -12,6 +12,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getAllPokemonNames } from '@/lib/api/rest';
@@ -25,9 +26,7 @@ interface MatchedSet {
 
 export function ShowdownImportDialog() {
   const { t } = useTranslation();
-  const team = usePrimeDexStore((s) => s.team);
   const addToTeam = usePrimeDexStore((s) => s.addToTeam);
-  const isInTeam = usePrimeDexStore((s) => s.isInTeam);
 
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
@@ -66,20 +65,26 @@ export function ShowdownImportDialog() {
 
   const handleAddAll = () => {
     if (!matches) return;
-    const remainingSlots = 6 - team.length;
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      toast.info(t('team.import_requires_sync'));
+      return;
+    }
+    const remainingSlots = 6 - usePrimeDexStore.getState().team.length;
     let added = 0;
     let skipped = 0;
 
     for (const { pokemonId } of matches) {
-      if (added >= remainingSlots) {
+      const currentTeam = usePrimeDexStore.getState().team;
+      if (currentTeam.length >= 6 || added >= remainingSlots) {
         skipped++;
         continue;
       }
-      if (!pokemonId || isInTeam(pokemonId)) {
+      if (!pokemonId || currentTeam.includes(pokemonId)) {
         continue;
       }
       addToTeam(pokemonId);
-      added++;
+      if (!currentTeam.includes(pokemonId) && usePrimeDexStore.getState().team.includes(pokemonId)) added++;
     }
 
     if (added > 0) {
@@ -126,7 +131,7 @@ export function ShowdownImportDialog() {
             />
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
+                {t('common.close')}
               </Button>
               <Button onClick={handleParse} disabled={!text.trim() || isParsing}>
                 {t('team.import_parse', { defaultValue: 'Parse' })}
