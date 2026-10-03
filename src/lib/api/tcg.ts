@@ -2090,11 +2090,15 @@ export const searchCards = async (
  */
 export const getFilterOptions = async (lang = 'en'): Promise<TCGFilterOptions> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-filter-options-v7-${tcgLang}`;
+  const cacheKey = `tcg-filter-options-v8-${tcgLang}`;
   const cached = await getCachedData<TCGFilterOptions>(cacheKey);
 
   try {
-    const sets = await getAllSets(tcgLang);
+    // The picker needs names, counts and release order. Probing every set's
+    // detail endpoint here adds hundreds of requests to a cold mobile visit.
+    // The compact catalog already supplies an authoritative releaseRank;
+    // card availability is checked when the selected set is opened.
+    const sets = await getCollectionSetCatalog(tcgLang);
     const options: TCGFilterOptions = {
       categories: cached?.categories ?? TCG_CARD_CATEGORIES,
       sets,

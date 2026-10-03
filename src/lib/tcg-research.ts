@@ -21,6 +21,11 @@ export const MAX_TCG_FILTER_LIST_ITEMS = 12;
 export const MAX_TCG_NUMERIC_FILTER = 1_000_000;
 
 export function sortTCGSetsNewestFirst(sets: readonly TCGSet[]): TCGSet[] {
+  const rankedSets = sets.filter((set): set is TCGSet & { releaseRank: number } =>
+    'releaseRank' in set && typeof set.releaseRank === 'number' && Number.isFinite(set.releaseRank));
+  if (rankedSets.length === sets.length && rankedSets.length > 0) {
+    return [...rankedSets].sort((a, b) => a.releaseRank - b.releaseRank);
+  }
   const hasReleaseDates = sets.some((set) => Boolean(set.releaseDate));
   if (!hasReleaseDates) return [...sets].reverse();
 

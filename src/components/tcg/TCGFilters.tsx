@@ -850,7 +850,7 @@ export function TCGFilters({
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="tcg-illustrator" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-illustrator" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.illustrator', { defaultValue: 'Illustrator' })}
                 </label>
                 <input
@@ -864,7 +864,7 @@ export function TCGFilters({
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="tcg-regulation-mark" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-regulation-mark" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.regulation', { defaultValue: 'Regulation mark' })}
                 </label>
                 <input
@@ -880,7 +880,7 @@ export function TCGFilters({
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="tcg-price-min" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-price-min" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.price_min', { defaultValue: 'Price min' })}
                 </label>
                 <input
@@ -895,7 +895,7 @@ export function TCGFilters({
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="tcg-price-max" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-price-max" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.price_max', { defaultValue: 'Price max' })}
                 </label>
                 <input
@@ -912,7 +912,7 @@ export function TCGFilters({
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="tcg-release-start" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-release-start" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.release_start', { defaultValue: 'Release from' })}
                 </label>
                 <input
@@ -925,7 +925,7 @@ export function TCGFilters({
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="tcg-release-end" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30">
+                <label htmlFor="tcg-release-end" className="ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground">
                   {t('tcg.release_end', { defaultValue: 'Release to' })}
                 </label>
                 <input

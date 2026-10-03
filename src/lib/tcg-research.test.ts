@@ -30,6 +30,15 @@ describe('TCG set release ordering', () => {
   it('returns no default when the set catalog is empty', () => {
     expect(getLatestTCGSet([])).toBeNull();
   });
+  it('preserves compact catalog release order without fetching every release date', () => {
+    const ranked = [
+      { id: 'base1', name: 'Base Set', releaseRank: 2 },
+      { id: 'me04', name: 'Latest', releaseRank: 0 },
+      { id: 'me03', name: 'Previous', releaseRank: 1 },
+    ];
+    expect(sortTCGSetsNewestFirst(ranked).map((set) => set.id)).toEqual(['me04', 'me03', 'base1']);
+    expect(getLatestTCGSet(ranked)?.id).toBe('me04');
+  });
 });
 
 describe('isInitialTcgCatalogCompatible', () => {

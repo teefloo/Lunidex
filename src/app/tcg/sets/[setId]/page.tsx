@@ -85,7 +85,7 @@ function buildChecklistMarkup(
       .join(' · ');
 
     const cardHref = `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`, language)}?tcgLang=${encodeURIComponent(tcgLanguage)}`;
-    return `<li><a href="${escapeHtml(cardHref)}" aria-label="${escapeHtml(t('tcg.open_card_detail', { name: card.name }))}" class="flex min-h-16 items-start gap-3 px-4 py-3 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 sm:items-center sm:gap-5"><span class="w-20 shrink-0 font-mono text-xs font-bold text-foreground/55 sm:w-24">${escapeHtml(collectorNumber)}</span><span class="min-w-0 flex-1"><span class="block font-bold text-foreground">${escapeHtml(card.name)}</span>${metadata ? `<span class="mt-1 block text-xs leading-5 text-foreground/55">${metadata}</span>` : ''}</span><span class="hidden shrink-0 text-xs font-black uppercase tracking-[0.08em] text-primary sm:inline">${escapeHtml(t('tcg.card_row_hint'))}</span></a></li>`;
+    return `<li><a href="${escapeHtml(cardHref)}" aria-label="${escapeHtml(t('tcg.open_card_detail', { name: card.name }))}" class="flex min-h-16 items-start gap-3 px-4 py-3 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 sm:items-center sm:gap-5"><span class="w-20 shrink-0 font-mono text-xs font-bold text-foreground/80 sm:w-24">${escapeHtml(collectorNumber)}</span><span class="min-w-0 flex-1"><span class="block font-bold text-foreground">${escapeHtml(card.name)}</span>${metadata ? `<span class="mt-1 block text-xs leading-5 text-foreground/80">${metadata}</span>` : ''}</span><span class="hidden shrink-0 text-xs font-black uppercase tracking-[0.08em] text-primary sm:inline">${escapeHtml(t('tcg.card_row_hint'))}</span></a></li>`;
   }).join('');
 }
 
@@ -212,7 +212,7 @@ export default async function TCGSetPage({ params, searchParams }: PageProps) {
                 {set.name} — {t('tcg.set_landing_checklist', { defaultValue: 'Card list and checklist' })}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-foreground/65">{pageDescription}</p>
-              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-foreground/55">
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-foreground/80">
                 <span>{t('tcg.activation.card_total', { count: total })}</span>
                 <span>{releaseDate}</span>
                 {set.serie?.name ? <span>{t('tcg.series', { defaultValue: 'Series' })}: {set.serie.name}</span> : null}
@@ -269,7 +269,7 @@ export default async function TCGSetPage({ params, searchParams }: PageProps) {
                       className="aspect-[5/7] w-full rounded-sm object-contain"
                     />
                     <span className="mt-2 block truncate px-1 pb-1 text-xs font-bold text-foreground/70 group-hover:text-primary">{card.name}</span>
-                    <span className="flex items-center justify-between gap-2 px-1 pb-1 text-[10px] font-bold uppercase tracking-[0.06em] text-foreground/45">
+                    <span className="flex items-center justify-between gap-2 px-1 pb-1 text-[10px] font-bold uppercase tracking-[0.06em] text-foreground/85">
                       <span>{card.localId || card.number || card.id}</span>
                       {card.rarity ? <span className="truncate text-right">{getTCGRarityLabel(card.rarity, t)}</span> : null}
                     </span>

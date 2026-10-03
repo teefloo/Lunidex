@@ -6,15 +6,18 @@ import { useTranslation } from '@/lib/i18n';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
+import type { SupportedLanguage } from '@/lib/languages';
 
 interface TCGMarketSummaryProps {
   card: TCGCard;
   compact?: boolean;
+  interfaceLanguage?: SupportedLanguage;
 }
 
-export function TCGMarketSummary({ card, compact = false }: TCGMarketSummaryProps) {
+export function TCGMarketSummary({ card, compact = false, interfaceLanguage }: TCGMarketSummaryProps) {
   const { t } = useTranslation();
-  const locale = useClientLanguage();
+  const clientLanguage = useClientLanguage();
+  const locale = interfaceLanguage ?? clientLanguage;
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const value = getCardMarketValue(card, displayCurrency);
   const provider = value?.provider
@@ -45,6 +48,7 @@ export function TCGMarketSummary({ card, compact = false }: TCGMarketSummaryProp
       formattedTimestamp = new Intl.DateTimeFormat(locale, {
         dateStyle: 'medium',
         timeStyle: 'short',
+        timeZone: 'UTC',
       }).format(timestamp);
     }
   }
@@ -75,7 +79,7 @@ export function TCGMarketSummary({ card, compact = false }: TCGMarketSummaryProp
         <>
           <p className="mt-1 text-[10px] text-muted-foreground">
             {formattedTimestamp
-              ? t('tcg.market_provider_timestamp', { date: formattedTimestamp })
+              ? t('tcg.market_provider_timestamp', { date: `${formattedTimestamp} UTC` })
               : t('tcg.market_provider_timestamp_unavailable')}
           </p>
           {!compact && (

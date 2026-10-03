@@ -120,7 +120,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
-      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} />
+      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} interfaceLanguage={canonicalLanguage} />
     </>
   );
 }

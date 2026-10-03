@@ -190,9 +190,9 @@ export function TCGResearchDesk({
     selectedSet: normalizedFilters.selectedSet ?? (hasUserEditedFilters ? null : defaultSetId),
   }), [defaultSetId, hasUserEditedFilters, normalizedFilters]);
   const urlFilters = normalizedFilters;
-  const selectedSet = setOptions.find((set) => set.id === effectiveFilters.selectedSet) ?? latestSet;
+  const selectedSet = setOptions.find((set) => set.id === effectiveFilters.selectedSet);
   const activeSetName = effectiveFilters.selectedSet
-    ? selectedSet?.name ?? latestSetFallbackName
+    ? selectedSet?.name ?? (defaultLatestSet?.id === effectiveFilters.selectedSet ? defaultLatestSet.name : effectiveFilters.selectedSet)
     : hasUserEditedFilters
       ? null
       : latestSetFallbackName;
@@ -399,12 +399,12 @@ export function TCGResearchDesk({
   for (const type of effectiveFilters.selectedEnergyTypes ?? []) addFilterChip(`energy-${type}`, `${t('tcg.filter_energy_type', { defaultValue: 'Energy' })}: ${type}`, { ...effectiveFilters, selectedEnergyTypes: (effectiveFilters.selectedEnergyTypes ?? []).filter((value) => value !== type) });
   if (typeof effectiveFilters.minHp === 'number') addFilterChip('min-hp', `${t('tcg.filter_min_hp', { defaultValue: 'Min HP' })}: ${effectiveFilters.minHp}`, { ...effectiveFilters, minHp: undefined });
   if (typeof effectiveFilters.maxHp === 'number') addFilterChip('max-hp', `${t('tcg.filter_max_hp', { defaultValue: 'Max HP' })}: ${effectiveFilters.maxHp}`, { ...effectiveFilters, maxHp: undefined });
-  if (effectiveFilters.illustrator) addFilterChip('illustrator', `${t('tcg.filter_illustrator', { defaultValue: 'Illustrator' })}: ${effectiveFilters.illustrator}`, { ...effectiveFilters, illustrator: undefined });
+  if (effectiveFilters.illustrator) addFilterChip('illustrator', `${t('tcg.illustrator')}: ${effectiveFilters.illustrator}`, { ...effectiveFilters, illustrator: undefined });
   if (effectiveFilters.regulationMark) addFilterChip('regulation', `${t('tcg.filter_regulation', { defaultValue: 'Regulation mark' })}: ${effectiveFilters.regulationMark}`, { ...effectiveFilters, regulationMark: undefined });
   for (const legality of effectiveFilters.legalities ?? []) addFilterChip(`legality-${legality}`, `${t('tcg.filter_legality', { defaultValue: 'Legality' })}: ${legality}`, { ...effectiveFilters, legalities: (effectiveFilters.legalities ?? []).filter((value) => value !== legality) });
-  if (typeof effectiveFilters.priceMin === 'number') addFilterChip('min-price', `${t('tcg.filter_price_min', { defaultValue: 'Min price' })}: ${effectiveFilters.priceMin}`, { ...effectiveFilters, priceMin: undefined });
+  if (typeof effectiveFilters.priceMin === 'number') addFilterChip('min-price', `${t('tcg.price_min')}: ${effectiveFilters.priceMin}`, { ...effectiveFilters, priceMin: undefined });
   if (typeof effectiveFilters.priceMax === 'number') addFilterChip('max-price', `${t('tcg.filter_price_max', { defaultValue: 'Max price' })}: ${effectiveFilters.priceMax}`, { ...effectiveFilters, priceMax: undefined });
-  if (effectiveFilters.releaseStart) addFilterChip('release-start', `${t('tcg.filter_release_start', { defaultValue: 'Released after' })}: ${effectiveFilters.releaseStart}`, { ...effectiveFilters, releaseStart: undefined });
+  if (effectiveFilters.releaseStart) addFilterChip('release-start', `${t('tcg.release_start')}: ${effectiveFilters.releaseStart}`, { ...effectiveFilters, releaseStart: undefined });
   if (effectiveFilters.releaseEnd) addFilterChip('release-end', `${t('tcg.filter_release_end', { defaultValue: 'Released before' })}: ${effectiveFilters.releaseEnd}`, { ...effectiveFilters, releaseEnd: undefined });
   if (effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all') addFilterChip('owned-state', `${t('tcg.filter_owned_state', { defaultValue: 'Collection' })}: ${effectiveFilters.ownedState}`, { ...effectiveFilters, ownedState: 'all' });
 
