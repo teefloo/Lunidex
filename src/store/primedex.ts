@@ -1012,7 +1012,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       storage: createJSONStorage(() => storage),
       version: 3,
       migrate: (persisted) => {
-        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown } | null;
+        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown; soundEnabled?: unknown; animatedSprites?: unknown } | null;
         // Rewrite the old online-session envelope so retired generation-theme
         // preferences disappear without touching the legacy collection store.
         const restoredTcgLanguage = normalizeTCGCardLanguage(stored?.tcgBrowseLanguage);
@@ -1026,6 +1026,8 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
             ? { tcgBrowseLanguage: restoredTcgLanguage }
             : {}),
           tcgDisplayCurrency: restoredTcgCurrency,
+          ...(typeof stored?.soundEnabled === 'boolean' ? { soundEnabled: stored.soundEnabled } : {}),
+          ...(typeof stored?.animatedSprites === 'boolean' ? { animatedSprites: stored.animatedSprites } : {}),
         };
       },
       onRehydrateStorage: () => (state) => {
@@ -1039,12 +1041,14 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       partialize: (state) => ({
         language: state.language,
         theme: state.theme,
+        soundEnabled: state.soundEnabled,
+        animatedSprites: state.animatedSprites,
         tcgBrowseLanguage: state.tcgBrowseLanguage,
         tcgDisplayCurrency: state.tcgDisplayCurrency,
       }),
       // Ignore any other legacy fields an old snapshot may still carry.
       merge: (persisted, currentState) => {
-        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown } | null;
+        const stored = persisted as { language?: unknown; theme?: unknown; tcgBrowseLanguage?: unknown; tcgDisplayCurrency?: unknown; soundEnabled?: unknown; animatedSprites?: unknown } | null;
         const restoredTcgLanguage = normalizeTCGCardLanguage(stored?.tcgBrowseLanguage);
         const restoredTcgCurrency = normalizeTCGDisplayCurrency(stored?.tcgDisplayCurrency);
         return {
@@ -1057,6 +1061,8 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
             ? { tcgBrowseLanguage: restoredTcgLanguage }
             : {}),
           tcgDisplayCurrency: restoredTcgCurrency,
+          ...(typeof stored?.soundEnabled === 'boolean' ? { soundEnabled: stored.soundEnabled } : {}),
+          ...(typeof stored?.animatedSprites === 'boolean' ? { animatedSprites: stored.animatedSprites } : {}),
         };
       },
     }

@@ -1,14 +1,16 @@
 'use client';
 
-import { SYNCED_KEYS, type PersistedState } from '@/store/primedex';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
+import { type PersistedState } from '@/store/primedex';
 import { pickSyncState, applySyncState } from '@/lib/supabase/sync-state';
 import { useTranslation } from '@/lib/i18n';
 import { toast } from '@/lib/toast';
 import { useRef, useState, useCallback } from 'react';
-import { Download, Upload, AlertTriangle, Check, X, FileJson } from 'lucide-react';
+import { Download, Upload, AlertTriangle, Check, FileJson } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { countPhysicalTCGCards } from '@/lib/tcg-collections';
-import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
+import { validateImportPayload } from '@/lib/user-backup';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface ExportPayload {
   version: string;
@@ -25,68 +27,6 @@ interface ImportPreview {
   tcgCollections: string[];
   tcgWishlistCards: string[];
   badges: string[];
-}
-
-function validateImportPayload(
-  json: unknown,
-): { valid: true; data: PersistedState } | { valid: false; error: string } {
-  if (typeof json !== 'object' || json === null) {
-    return { valid: false, error: 'Invalid JSON structure' };
-  }
-
-  const obj = json as Record<string, unknown>;
-
-  if (!('version' in obj) || typeof obj.version !== 'string') {
-    return { valid: false, error: 'Missing or invalid version field' };
-  }
-  if (!/^\d+\.\d+$/.test(obj.version) || !['1.0', '2.0', '3.0'].includes(obj.version)) {
-    return { valid: false, error: 'Unsupported backup version' };
-  }
-
-  if (!('data' in obj) || typeof obj.data !== 'object' || obj.data === null) {
-    return { valid: false, error: 'Missing or invalid data field' };
-  }
-
-  const data = obj.data as Record<string, unknown>;
-
-  if (Array.isArray(data.favorites) && data.favorites.length > 2000) {
-    return { valid: false, error: 'Favorites list exceeds 2000 entries' };
-  }
-
-  if (Array.isArray(data.team) && data.team.length > 6) {
-    return { valid: false, error: 'Team exceeds 6 members' };
-  }
-
-  if (Array.isArray(data.caughtPokemon) && data.caughtPokemon.length > 2000) {
-    return { valid: false, error: 'Caught Pokémon list exceeds 2000 entries' };
-  }
-
-  if (Array.isArray(data.tcgOwnedCards) && data.tcgOwnedCards.length > 10000) {
-    return { valid: false, error: 'TCG owned cards list exceeds 10000 entries' };
-  }
-  if (Array.isArray(data.tcgCollectionCards) && data.tcgCollectionCards.length > 10000) {
-    return { valid: false, error: 'TCG collection cards list exceeds 10000 entries' };
-  }
-
-  if (Array.isArray(data.tcgWishlistCards) && data.tcgWishlistCards.length > 5000) {
-    return { valid: false, error: 'TCG wishlist exceeds 5000 entries' };
-  }
-
-  if (Array.isArray(data.badges) && data.badges.length > 500) {
-    return { valid: false, error: 'Badges list exceeds 500 entries' };
-  }
-
-  const normalized = normalizeUserStateData(data);
-  if (!normalized) return { valid: false, error: 'Invalid TCG collection data' };
-
-  const syncedData: Record<string, unknown> = {};
-  for (const key of SYNCED_KEYS) {
-    if (key in normalized) {
-      syncedData[key] = normalized[key];
-    }
-  }
-
-  return { valid: true, data: syncedData as PersistedState };
 }
 
 function getImportPreview(data: PersistedState): ImportPreview {
@@ -149,7 +89,7 @@ export function DataExportImport() {
           const json = JSON.parse(event.target?.result as string);
           const result = validateImportPayload(json);
           if (!result.valid) {
-            toast.error(t('settings.import_invalid') + ': ' + result.error);
+            toast.error(t('settings.import_invalid'));
             return;
           }
           setImportData(result.data);
@@ -167,6 +107,11 @@ export function DataExportImport() {
 
   const handleImportConfirm = useCallback(() => {
     if (!importData) return;
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      toast.info(t('settings.import_requires_sync'));
+      return;
+    }
     try {
       applySyncState(importData);
       setImportOpen(false);
@@ -229,30 +174,13 @@ export function DataExportImport() {
         </div>
       </div>
 
-      {importOpen && preview && (
-        <div
-          className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('settings.import_confirm_title')}
-        >
-          <div
-            className="absolute inset-0 bg-foreground/22"
-            onClick={handleImportCancel}
-          />
-          <div className="glass-surface relative w-full max-w-sm rounded-sm p-6 overflow-hidden z-10">
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-border/60">
-              <h3 className="text-lg font-black text-foreground tracking-tight">
-                {t('settings.import_confirm_title')}
-              </h3>
-              <button
-                onClick={handleImportCancel}
-                className="rounded-full p-1.5 text-foreground/50 hover:text-foreground transition-colors"
-                aria-label={t('common.close')}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      <Dialog open={importOpen} onOpenChange={(open) => { if (!open) handleImportCancel(); }}>
+        {preview && (
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>{t('settings.import_confirm_title')}</DialogTitle>
+              <DialogDescription className="sr-only">{t('settings.import_warning')}</DialogDescription>
+            </DialogHeader>
 
             <div className="space-y-3 mb-6">
               <div className="flex items-start gap-3 p-3 rounded-sm bg-yellow-500/10 border border-yellow-500/20">
@@ -309,9 +237,9 @@ export function DataExportImport() {
                 {t('settings.import_confirm')}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </DialogContent>
+        )}
+      </Dialog>
     </>
   );
 }
