@@ -10,11 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getServerT();
   return {
     title: {
-      absolute: `${t('common.not_found_title', { defaultValue: 'Page Not Found' })} | Lunidex`,
+      absolute: `${t('not_found_page.title')} | Lunidex`,
     },
-    description: t('common.not_found_desc', {
-      defaultValue: "The Pokémon you're looking for might have fled! The page doesn't exist or has been moved.",
-    }),
+    description: t('not_found_page.description'),
     robots: {
       index: false,
       follow: true,
@@ -40,22 +38,18 @@ export default async function NotFound() {
           </div>
           <p className="page-eyebrow justify-center">Lunidex</p>
           <h1 className="mb-4 text-2xl font-black md:text-3xl">
-            {t('common.not_found_title', { defaultValue: 'Page Not Found' })}
+            {t('not_found_page.title')}
           </h1>
           <p className="mb-6 max-w-md leading-relaxed text-foreground/60">
-            {t('common.not_found_desc', {
-              defaultValue: "The Pokémon you're looking for might have fled! The page doesn't exist or has been moved.",
-            })}
+            {t('not_found_page.description')}
           </p>
           <p className="mb-8 max-w-md text-sm leading-6 text-foreground/45">
-            {t('common.not_found_hint', {
-              defaultValue: 'Use the arrows, WASD, or the pad to recover 4-0-4 and open the portal.',
-            })}
+            {t('not_found_page.hint')}
           </p>
 
-          <nav aria-label="Quick navigation" className="flex flex-col justify-center gap-3 sm:flex-row">
+          <nav aria-label={t('not_found_page.quick_navigation')} className="flex flex-col justify-center gap-3 sm:flex-row">
             <Link href={`/${lang}`} className="glass-btn px-6 py-3 font-bold">
-              {t('common.browse_pokedex', { defaultValue: 'Browse Pokédex' })}
+              {t('not_found_page.pokedex_link')}
             </Link>
             <Link href={`/${lang}/team`} className="glass-btn px-6 py-3 font-bold">
               {t('nav.team')}
@@ -65,8 +59,8 @@ export default async function NotFound() {
             </Link>
           </nav>
 
-          <div className="mt-12 space-y-1 text-xs text-foreground/30">
-            <p>{t('common.more_tools', { defaultValue: 'More tools from Lunidex:' })}</p>
+          <div className="mt-12 space-y-1 text-xs text-foreground/80">
+            <p>{t('not_found_page.more_tools')}</p>
             <div className="flex flex-wrap justify-center gap-2">
               <Link href={`/${lang}/compare`} className="transition-colors hover:text-foreground/50 underline">
                 {t('nav.compare')}

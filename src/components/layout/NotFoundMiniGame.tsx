@@ -320,32 +320,18 @@ function noticeText(t: ReturnType<typeof useTranslation>['t'], notice: MazeNotic
   switch (notice) {
     case 'fragment':
       return exitUnlocked
-        ? t('common.not_found_maze_fragment_complete', {
-            defaultValue: '404 restored. The portal is open.',
-          })
-        : t('common.not_found_maze_fragment', {
-            defaultValue: 'Fragment recovered. Keep exploring the maze.',
-          });
+        ? t('not_found_page.maze_fragment_complete')
+        : t('not_found_page.maze_fragment');
     case 'blocked':
-      return t('common.not_found_maze_blocked', {
-        defaultValue: 'That hedge blocks the route.',
-      });
+      return t('not_found_page.maze_blocked');
     case 'locked':
-      return t('common.not_found_maze_locked', {
-        defaultValue: 'The portal is sealed until you recover 4-0-4.',
-      });
+      return t('not_found_page.maze_locked');
     case 'won':
-      return t('common.not_found_maze_won', {
-        defaultValue: 'Route cleared. Returning to Lunidex...',
-      });
+      return t('not_found_page.maze_won');
     case 'exploring':
       return exitUnlocked
-        ? t('common.not_found_maze_exit_open', {
-            defaultValue: 'All fragments found. Head to the portal.',
-          })
-        : t('common.not_found_maze_exploring', {
-            defaultValue: 'Find the three glowing fragments to rebuild 4-0-4.',
-          });
+        ? t('not_found_page.maze_exit_open')
+        : t('not_found_page.maze_exploring');
   }
 }
 
@@ -545,11 +531,11 @@ export default function NotFoundMiniGame() {
   const progressPercent = `${Math.round((collectedCount / FRAGMENT_TOTAL) * 100)}%`;
   const message = noticeText(t, hud.notice, hud.exitUnlocked);
   const statusLabel = hud.status === 'won'
-    ? t('common.not_found_maze_clear', { defaultValue: 'Cleared' })
-    : t('common.not_found_maze_live', { defaultValue: 'Exploring' });
+    ? t('not_found_page.maze_clear')
+    : t('not_found_page.maze_live');
   const exitLabel = hud.exitUnlocked
-    ? t('common.not_found_maze_exit_open_label', { defaultValue: 'Open' })
-    : t('common.not_found_maze_exit_locked_label', { defaultValue: 'Locked' });
+    ? t('not_found_page.maze_exit_open_label')
+    : t('not_found_page.maze_exit_locked_label');
   const bestValue = hud.bestSteps === null ? '--' : hud.bestSteps;
   const foundCounts = layout.fragments.reduce<Record<'0' | '4', number>>((counts, fragment) => {
     if (hud.foundFragmentIds.includes(fragment.id)) {
@@ -583,20 +569,18 @@ export default function NotFoundMiniGame() {
         <div className="space-y-2">
           <p className="page-eyebrow">Route 404</p>
           <h2 className="page-title text-3xl md:text-4xl">
-            {t('common.not_found_game_title', { defaultValue: 'The Lost Link Maze' })}
+            {t('not_found_page.game_title')}
           </h2>
           <p className="page-subtitle max-w-xl text-sm md:text-base">
-            {t('common.not_found_game_desc', {
-              defaultValue: 'Recover the 4-0-4 fragments, unlock the portal, and find the way back to Lunidex.',
-            })}
+            {t('not_found_page.game_desc')}
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:min-w-[19rem]">
-          <Metric icon={CircleDot} label={t('common.not_found_fragments', { defaultValue: 'Fragments' })} value={`${collectedCount}/${FRAGMENT_TOTAL}`} />
-          <Metric icon={ArrowRight} label={t('common.not_found_steps', { defaultValue: 'Steps' })} value={hud.steps} />
-          <Metric icon={Trophy} label={t('common.not_found_best', { defaultValue: 'Best' })} value={bestValue} />
-          <Metric icon={hud.exitUnlocked ? LockOpen : Lock} label={t('common.not_found_exit', { defaultValue: 'Exit' })} value={exitLabel} />
+          <Metric icon={CircleDot} label={t('not_found_page.fragments')} value={`${collectedCount}/${FRAGMENT_TOTAL}`} />
+          <Metric icon={ArrowRight} label={t('not_found_page.steps')} value={hud.steps} />
+          <Metric icon={Trophy} label={t('not_found_page.best')} value={bestValue} />
+          <Metric icon={hud.exitUnlocked ? LockOpen : Lock} label={t('not_found_page.exit')} value={exitLabel} />
         </div>
       </div>
 
@@ -615,9 +599,7 @@ export default function NotFoundMiniGame() {
             height={MAZE_CANVAS_HEIGHT}
             className="not-found-game-canvas"
             role="img"
-            aria-label={t('common.not_found_canvas_label', {
-              defaultValue: 'Route 404 maze board',
-            })}
+            aria-label={t('not_found_page.canvas_label')}
             onPointerDown={() => {
               if (gameRef.current.status !== 'playing') {
                 restartGame();
@@ -653,12 +635,11 @@ export default function NotFoundMiniGame() {
                   {statusLabel}
                 </p>
                 <h3 className="mt-2 text-2xl font-black">
-                  {t('common.not_found_overlay_win_title', { defaultValue: 'Portal unlocked' })}
+                  {t('not_found_page.overlay_win_title')}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-white/70">{message}</p>
                 <p className="mt-3 text-sm font-bold text-white">
-                  {t('common.not_found_overlay_score', {
-                    defaultValue: 'Steps {{steps}} · Best {{best}}',
+                  {t('not_found_page.overlay_score', {
                     steps: hud.steps,
                     best: bestValue,
                   })}
@@ -669,7 +650,7 @@ export default function NotFoundMiniGame() {
                   onClick={restartGame}
                 >
                   <RotateCcw className="h-4 w-4" />
-                  {t('common.not_found_restart', { defaultValue: 'Restart' })}
+                  {t('not_found_page.restart')}
                 </Button>
               </div>
             </div>
@@ -679,30 +660,26 @@ export default function NotFoundMiniGame() {
         <div className="grid gap-3 md:grid-cols-3">
           <div className="glass-card rounded-sm p-3 md:min-h-28">
             <p className="text-[11px] font-black uppercase tracking-[0.24em] text-foreground/40">
-              {t('common.not_found_goal', { defaultValue: 'Goal' })}
+              {t('not_found_page.goal')}
             </p>
             <p className="mt-2 text-sm leading-6 text-foreground/65">
-              {t('common.not_found_goal_desc', {
-                defaultValue: 'Collect the three glowing 4-0-4 fragments, then step through the portal.',
-              })}
+              {t('not_found_page.goal_desc')}
             </p>
           </div>
 
           <div className="glass-card rounded-sm p-3 md:min-h-28">
             <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.22em] text-foreground/40">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>{t('common.not_found_controls', { defaultValue: 'Controls' })}</span>
+              <span>{t('not_found_page.controls')}</span>
             </div>
             <p className="mt-2 text-sm leading-6 text-foreground/65">
-              {t('common.not_found_controls_desc', {
-                defaultValue: 'Use arrows, WASD, or hold the pad to move tile by tile. Press R to reset.',
-              })}
+              {t('not_found_page.controls_desc')}
             </p>
           </div>
 
           <div className="glass-card rounded-sm p-3 md:min-h-28">
             <div className="flex items-center justify-between gap-2 text-[11px] font-black uppercase tracking-[0.22em] text-foreground/40">
-              <span>{t('common.not_found_progress', { defaultValue: 'Sequence' })}</span>
+              <span>{t('not_found_page.progress')}</span>
               <span>{collectedCount}/{FRAGMENT_TOTAL}</span>
             </div>
             <div className="mt-3 flex gap-2">
@@ -722,12 +699,8 @@ export default function NotFoundMiniGame() {
             </div>
             <p className="mt-3 text-xs leading-5 text-foreground/50">
               {hud.exitUnlocked
-                ? t('common.not_found_score_hint_open', {
-                    defaultValue: 'The portal is active. Reach it in as few steps as you can.',
-                  })
-                : t('common.not_found_score_hint_locked', {
-                    defaultValue: 'Hedges stop movement. The portal stays locked until the full 4-0-4 is restored.',
-                  })}
+                ? t('not_found_page.score_hint_open')
+                : t('not_found_page.score_hint_locked')}
             </p>
           </div>
         </div>
@@ -758,7 +731,7 @@ export default function NotFoundMiniGame() {
             onClick={restartGame}
           >
             <RotateCcw className="h-4 w-4" />
-            {t('common.not_found_restart', { defaultValue: 'Restart' })}
+            {t('not_found_page.restart')}
           </Button>
         </div>
       </div>
