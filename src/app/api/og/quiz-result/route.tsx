@@ -32,7 +32,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const search = request.nextUrl.searchParams;
 
   const score = parseOgInteger(search.get('score'), 0, 0, 999);
-  const total = parseOgInteger(search.get('total'), 10, 1, 999);
+  const total = parseOgInteger(search.get('total'), 10, 0, 999);
   const mode = normalizeOgEnum(search.get('mode'), ['marathon', 'survival', 'time-attack'] as const, 'marathon');
   const challenge = normalizeOgEnum(search.get('challenge'), ['classic', 'silhouette', 'stats'] as const, 'classic');
   const streak = parseOgInteger(search.get('streak'), 0, 0, 999);
@@ -42,8 +42,8 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
   const t = getServerTForLanguage(lang);
 
   const challengeColor = CHALLENGE_COLORS[challenge] ?? CHALLENGE_COLORS.classic;
-  const challengeLabel = t(`quiz.${challenge}`, { defaultValue: CHALLENGE_LABELS[challenge] ?? challenge });
-  const modeLabel = t(`quiz.${mode}`, { defaultValue: MODE_LABELS[mode] ?? mode });
+  const challengeLabel = t(`quiz.${challenge === 'stats' ? 'stats_mode' : challenge}`, { defaultValue: CHALLENGE_LABELS[challenge] ?? challenge });
+  const modeLabel = t(`quiz.${mode.replace('-', '_')}`, { defaultValue: MODE_LABELS[mode] ?? mode });
   const correctLabel = t('quiz.correct', { defaultValue: 'Correct' });
   const streakLabel = t('quiz.streak', { defaultValue: 'Streak' });
   const badgesLabel = t('quiz.achievements', { defaultValue: 'Badges' });

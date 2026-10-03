@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/site';
 import { toast } from '@/lib/toast';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 
 type QuizChallenge = 'classic' | 'silhouette' | 'stats';
 type GameMode = 'time-attack' | 'survival' | 'marathon';
@@ -39,10 +40,12 @@ export default function QuizResultCard({
   badgesEarned,
 }: QuizResultCardProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
+  const language = useClientLanguage();
 
-  const ogUrl = `${SITE_URL}/api/og/quiz-result?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}`;
+  const ogUrl = `${SITE_URL}/api/og/quiz-result?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}&lang=${language}`;
   const shareText = t('quiz.share_text', { score, total, defaultValue: `I scored ${score}/${total} in Lunidex Quiz!` });
-  const shareUrl = `${SITE_URL}/quiz?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}`;
+  const shareUrl = `${SITE_URL}${localeHref('/quiz')}?score=${score}&total=${total}&mode=${mode}&challenge=${challenge}&streak=${streak}&badges=${badgesEarned}`;
 
   const handleShareTwitter = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
@@ -114,12 +117,12 @@ export default function QuizResultCard({
           <div className="flex items-center gap-2 px-3 py-1.5 bg-background/50 border border-border/50 rounded-sm">
             <div className={cn('w-3 h-3 border border-foreground/20', CHALLENGE_DOT[challenge])} />
             <span className="text-xs font-bold uppercase tracking-wider text-foreground/80">
-              {t(`quiz.${challenge}`)}
+              {t(`quiz.${challenge === 'stats' ? 'stats_mode' : challenge}`)}
             </span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-background/50 border border-border/50 rounded-sm">
             <span className="text-xs font-bold uppercase tracking-wider text-foreground/80">
-              {t(`quiz.${mode}`)}
+              {t(`quiz.${mode.replace('-', '_')}`)}
             </span>
           </div>
         </div>
@@ -131,8 +134,8 @@ export default function QuizResultCard({
               {t('quiz.streak')}
             </p>
             <div className="flex items-baseline gap-1">
-              <Flame className={cn('w-5 h-5', streak > 0 ? 'text-amber-500' : 'text-foreground/20')} />
-              <span className={cn('font-pixel text-3xl', streak > 0 ? 'text-amber-500' : 'text-foreground/30')}>
+              <Flame className={cn('w-5 h-5', streak > 0 ? 'text-amber-800 dark:text-amber-300' : 'text-foreground/20')} />
+              <span className={cn('font-pixel text-3xl', streak > 0 ? 'text-amber-800 dark:text-amber-300' : 'text-foreground/30')}>
                 {streak}
               </span>
             </div>
@@ -155,21 +158,24 @@ export default function QuizResultCard({
       <div className="grid grid-cols-3 gap-2">
         <button
           onClick={handleShareTwitter}
-          className="flex items-center justify-center gap-2 h-10 rounded-sm bg-[#1DA1F2]/10 border border-[#1DA1F2]/30 text-[#1DA1F2] text-xs font-bold uppercase tracking-wider hover:bg-[#1DA1F2]/20 transition-colors"
+          aria-label="Twitter"
+          className="touch-target flex items-center justify-center gap-2 min-h-11 rounded-sm bg-[#1DA1F2]/10 border border-[#1DA1F2]/30 text-[#126396] dark:text-sky-300 text-xs font-bold uppercase tracking-wider hover:bg-[#1DA1F2]/20 transition-colors"
         >
           <Twitter className="w-4 h-4" />
           <span className="hidden sm:inline">Twitter</span>
         </button>
         <button
           onClick={handleCopyImage}
-          className="flex items-center justify-center gap-2 h-10 rounded-sm bg-primary/10 border border-primary/30 text-primary text-xs font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors"
+          aria-label={t('quiz.copy_image', { defaultValue: 'Image' })}
+          className="touch-target flex items-center justify-center gap-2 min-h-11 rounded-sm bg-primary/10 border border-primary/30 text-primary text-xs font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors"
         >
           <Download className="w-4 h-4" />
           <span className="hidden sm:inline">{t('quiz.copy_image', { defaultValue: 'Image' })}</span>
         </button>
         <button
           onClick={handleCopyLink}
-          className="flex items-center justify-center gap-2 h-10 rounded-sm bg-foreground/5 border border-border/50 text-foreground/60 text-xs font-bold uppercase tracking-wider hover:bg-foreground/10 transition-colors"
+          aria-label={t('quiz.share_link', { defaultValue: 'Link' })}
+          className="touch-target flex items-center justify-center gap-2 min-h-11 rounded-sm bg-foreground/5 border border-border/50 text-foreground/80 text-xs font-bold uppercase tracking-wider hover:bg-foreground/10 transition-colors"
         >
           <Share2 className="w-4 h-4" />
           <span className="hidden sm:inline">{t('quiz.share_link', { defaultValue: 'Link' })}</span>

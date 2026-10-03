@@ -606,8 +606,8 @@ function QuizPageContent() {
 
                 {gameState === 'finished' && (
                   <QuizResultCard
-                    score={score}
-                    total={totalQuestions || 10}
+                    score={correctCount}
+                    total={totalQuestions}
                     mode={gameMode}
                     challenge={quizChallenge}
                     streak={sessionStreak}
