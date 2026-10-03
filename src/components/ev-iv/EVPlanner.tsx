@@ -140,19 +140,21 @@ export default function EVPlanner() {
     <div className="space-y-6">
       {/* Pokémon search */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+        <label htmlFor="ev-planner-pokemon" className="text-[11px] font-bold uppercase tracking-widest text-foreground">
           {t('ev_iv.pokemon_label')}
         </label>
         <div className="flex gap-2">
           <input
             type="text"
             name="pokemon"
+            id="ev-planner-pokemon"
             autoComplete="off"
             value={pokemonInput}
             onChange={(e) => setPokemonInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="garchomp"
-            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/55 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
+            aria-label={t('ev_iv.pokemon_label')}
+            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/70 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
           />
           <Button
             variant="outline"
@@ -160,15 +162,17 @@ export default function EVPlanner() {
             onClick={handleSearch}
             disabled={isFetching}
             className="rounded-sm border-border/60"
-            aria-label="Search"
+            aria-label={t('ev_iv.search_pokemon')}
           >
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        {isFetching && <p className="text-[11px] text-foreground/55 animate-pulse" aria-live="polite">Loading…</p>}
-        {isError   && <p className="text-[11px] text-red-400" role="alert">Pokémon not found.</p>}
+        {isFetching && <p className="text-[11px] text-foreground animate-pulse" aria-live="polite">{t('ev_iv.loading')}</p>}
+        {isError   && <p className="text-[11px] text-red-700 dark:text-red-300" role="alert">{t('ev_iv.not_found')}</p>}
         {baseStats && !isFetching && (
-          <p className="text-[11px] text-emerald-400 font-semibold capitalize" aria-live="polite">{pokemonName} loaded</p>
+          <p className="text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold capitalize" aria-live="polite">
+            {t('ev_iv.base_stats_loaded', { name: pokemonName })}
+          </p>
         )}
       </div>
 
@@ -177,7 +181,7 @@ export default function EVPlanner() {
 
       {/* IVs */}
       <div className="space-y-3">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">IVs</p>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground">{t('ev_iv.ivs_label')}</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {STAT_KEYS.map((key) => (
             <StatInput
@@ -195,10 +199,10 @@ export default function EVPlanner() {
       {/* EVs */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground">
             {t('ev_iv.ev_label')}
           </p>
-          <span className={`text-[11px] font-black tabular-nums ${totalEVs > 510 ? 'text-red-400' : 'text-foreground/50'}`}>
+          <span className={`text-[11px] font-black tabular-nums ${totalEVs > 510 ? 'text-red-700 dark:text-red-300' : 'text-foreground'}`}>
             {t('ev_iv.total_ev')}: {totalEVs}/510
           </span>
         </div>
@@ -243,9 +247,9 @@ export default function EVPlanner() {
       {stats50 && stats100 && (
         <div className="border-t border-border/30 pt-4 space-y-3">
           <div className="grid grid-cols-3 gap-px bg-border/30 rounded-sm overflow-hidden text-[11px] font-black uppercase tracking-widest">
-            <div className="bg-card/50 px-3 py-2 text-foreground/40">Stat</div>
-            <div className="bg-card/50 px-3 py-2 text-center text-foreground/40">Lv 50</div>
-            <div className="bg-card/50 px-3 py-2 text-center text-foreground/40">Lv 100</div>
+            <div className="bg-card/50 px-3 py-2 text-foreground">{t('ev_iv.table_stat')}</div>
+            <div className="bg-card/50 px-3 py-2 text-center text-foreground">{t('ev_iv.level_50')}</div>
+            <div className="bg-card/50 px-3 py-2 text-center text-foreground">{t('ev_iv.level_100')}</div>
           </div>
           {STAT_KEYS.map((key) => {
             const isMaxed = evs[key] === 252;
@@ -254,7 +258,7 @@ export default function EVPlanner() {
                 key={key}
                 className={`grid grid-cols-3 gap-px rounded-sm overflow-hidden text-sm ${isMaxed ? 'ring-1 ring-primary/30' : ''}`}
               >
-                <div className={`px-3 py-2 text-[11px] font-bold uppercase tracking-widest ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground/50'}`}>
+                <div className={`px-3 py-2 text-[11px] font-bold uppercase tracking-widest ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground'}`}>
                   {statLabel[key]}
                 </div>
                 <div className={`px-3 py-2 text-center font-black tabular-nums ${isMaxed ? 'bg-primary/10 text-primary' : 'bg-card/40 text-foreground/80'}`}>

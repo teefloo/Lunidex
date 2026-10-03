@@ -44,7 +44,7 @@ export default async function EVIVPage() {
             <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground/90">
               {t('ev_iv.title')}
             </h1>
-            <p className="text-sm text-foreground/50 font-medium max-w-md mx-auto">
+            <p className="text-sm text-foreground/80 font-medium max-w-md mx-auto">
               {t('ev_iv.meta_description')}
             </p>
           </div>

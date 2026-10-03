@@ -28,7 +28,7 @@ export default function StatInput({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-foreground">
           {label}
         </span>
         <span className={`text-xs font-black tabular-nums ${accent}`}>{value}</span>

@@ -174,19 +174,20 @@ export default function EVIVCalculator() {
     <div className="space-y-6">
       {/* Pokémon search */}
       <div className="space-y-1.5">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+        <label htmlFor="ev-iv-pokemon" className="text-[11px] font-bold uppercase tracking-widest text-foreground">
           {t('ev_iv.pokemon_label')}
         </label>
         <div className="flex gap-2">
           <input
             type="text"
             name="pokemon"
+            id="ev-iv-pokemon"
             autoComplete="off"
             value={pokemonInput}
             onChange={(e) => setPokemonInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="pikachu"
-            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/55 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
+            className="touch-target flex-1 rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground placeholder:text-foreground/70 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]"
           />
           <Button
             variant="outline"
@@ -194,20 +195,20 @@ export default function EVIVCalculator() {
             onClick={handleSearch}
             disabled={isFetching}
             className="rounded-sm border-border/60"
-            aria-label="Search"
+            aria-label={t('ev_iv.search_pokemon')}
           >
             <Search className="h-4 w-4" />
           </Button>
         </div>
         {isFetching && (
-          <p className="text-[11px] text-foreground/55 animate-pulse" aria-live="polite">Loading…</p>
+          <p className="text-[11px] text-foreground animate-pulse" aria-live="polite">{t('ev_iv.loading')}</p>
         )}
         {isError && (
-          <p className="text-[11px] text-red-400" role="alert">Pokémon not found. Check the name and retry.</p>
+          <p className="text-[11px] text-red-700 dark:text-red-300" role="alert">{t('ev_iv.not_found')}</p>
         )}
         {baseStats && !isFetching && (
-          <p className="text-[11px] text-emerald-400 font-semibold" aria-live="polite">
-            Base stats loaded for <span className="capitalize">{pokemonName}</span>
+          <p className="text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold" aria-live="polite">
+            {t('ev_iv.base_stats_loaded', { name: pokemonName })}
           </p>
         )}
       </div>
@@ -215,12 +216,13 @@ export default function EVIVCalculator() {
       {/* Level + Nature */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+          <label htmlFor="ev-iv-level" className="text-[11px] font-bold uppercase tracking-widest text-foreground">
             {t('ev_iv.level_label')}
           </label>
           <input
             type="number"
             name="level"
+            id="ev-iv-level"
             inputMode="numeric"
             min={1}
             max={100}
@@ -238,7 +240,7 @@ export default function EVIVCalculator() {
 
       {/* Actual stats */}
       <div className="space-y-3">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-foreground">
           {t('ev_iv.stats_label')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -258,11 +260,11 @@ export default function EVIVCalculator() {
       {/* EV distribution */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground/50">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-foreground">
             {t('ev_iv.ev_label')}
           </p>
           <span
-            className={`text-[11px] font-black tabular-nums ${totalEVs > 510 ? 'text-red-400' : 'text-foreground/50'}`}
+            className={`text-[11px] font-black tabular-nums ${totalEVs > 510 ? 'text-red-700 dark:text-red-300' : 'text-foreground'}`}
           >
             {t('ev_iv.total_ev')}: {totalEVs}/510
           </span>
@@ -284,7 +286,7 @@ export default function EVIVCalculator() {
 
       {/* Actions */}
       {baseStats && !hasCompleteStats && (
-        <p className="text-xs text-foreground/65" role="status">
+        <p className="text-xs text-foreground" role="status">
           {t('ev_iv.complete_stats_required', { defaultValue: 'Enter an in-game value for each stat before calculating IVs.' })}
         </p>
       )}
@@ -329,7 +331,7 @@ export default function EVIVCalculator() {
                 className="flex items-center justify-between px-3 py-2 rounded-sm border border-red-500/30 bg-red-500/10"
                 role="status"
               >
-                <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/60 w-16 shrink-0">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-foreground w-16 shrink-0">
                   {statLabelKey[key]}
                 </span>
                 <span className="text-xs font-black text-red-400">

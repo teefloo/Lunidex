@@ -41,7 +41,7 @@ export default function IVResult({
 
   return (
     <div className={`flex items-center justify-between px-3 py-2 rounded-sm border ${bg}`}>
-      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/60 w-16 shrink-0">
+      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground w-16 shrink-0">
         {label}
       </span>
       <span className={`text-xs font-black tabular-nums ${color}`}>{text}</span>
