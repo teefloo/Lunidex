@@ -78,12 +78,12 @@ export default function DashboardPage() {
                   <dd className="mt-1 text-lg font-black tabular-nums text-foreground">
                     {data.pokedex.caughtPercent}%
                   </dd>
-                  <p className="text-xs text-foreground/50">
+                  <dd className="text-xs text-foreground/50">
                     {t('dashboard.pokedex.progress', {
                       count: data.pokedex.caughtCount,
                       total: data.pokedex.totalPokemon,
                     })}
-                  </p>
+                  </dd>
                 </div>
                 <div className="min-w-0 rounded-sm border border-border/40 bg-muted/20 p-3">
                   <dt className="text-xs font-semibold text-foreground/55">{t('dashboard.extensible.tcg_owned')}</dt>

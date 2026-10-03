@@ -56,7 +56,7 @@ export default function ExtensibleSection({ metrics }: ExtensibleSectionProps) {
               <span className={cn(
                 'text-[11px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full',
                 metric.subtitle === 'TCG'
-                  ? 'bg-indigo-500/15 text-indigo-500'
+                  ? 'bg-indigo-500/15 text-indigo-800 dark:text-indigo-300'
                   : 'bg-muted/60 text-foreground/40'
               )}>
                 {metric.subtitle}

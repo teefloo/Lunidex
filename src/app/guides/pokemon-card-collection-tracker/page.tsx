@@ -280,7 +280,7 @@ export default async function PokemonCardCollectionTrackerGuide() {
                 {t('collection_guide.matrix_title')}
               </h2>
               <p className="mt-4 leading-7 text-foreground/75">{t('collection_guide.matrix_intro')}</p>
-              <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+              <div tabIndex={0} className="mt-5 overflow-x-auto rounded-sm border border-border/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
                 <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
                   <caption className="sr-only">{t('collection_guide.matrix_title')}</caption>
                   <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">

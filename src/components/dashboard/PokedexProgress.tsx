@@ -40,8 +40,8 @@ export default function PokedexProgress({ data }: PokedexProgressProps) {
             className="h-full origin-left rounded-full bg-gradient-to-r from-primary via-teal-400 to-emerald-400 transition-transform duration-1000 ease-out"
             style={{ transform: `scaleX(${pokedex.caughtPercent / 100})` }}
           />
-          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-            {pokedex.caughtPercent}%
+          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-foreground">
+            <span className="rounded-sm bg-card px-1">{pokedex.caughtPercent}%</span>
           </span>
         </div>
         <p className="text-xs font-semibold text-foreground/40 text-center">

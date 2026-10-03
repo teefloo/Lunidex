@@ -126,7 +126,7 @@ function CodeBlock({ label, code, copyLabels }: { label: string; code: string; c
           copyPrompt={copyLabels.prompt}
         />
       </figcaption>
-      <pre className="max-w-full overflow-x-auto p-4 text-[13px] leading-6 [tab-size:2]"><code>{code}</code></pre>
+      <pre tabIndex={0} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary max-w-full overflow-x-auto p-4 text-[13px] leading-6 [tab-size:2]"><code>{code}</code></pre>
     </figure>
   );
 }

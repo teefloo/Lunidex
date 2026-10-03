@@ -61,7 +61,7 @@
   --muted: #eef3ff;
   --muted-foreground: #53658e;
 
-  --destructive: #c94355;
+  --destructive: #b63348;
 
   --border: rgba(35, 62, 128, 0.16);
   --border-strong: rgba(35, 62, 128, 0.3);
@@ -648,6 +648,10 @@ h1 { letter-spacing: 0; }
   box-shadow: var(--shadow-pixel-sm);
 }
 
+.glass-tag.type-accent {
+  color: var(--foreground);
+}
+
 /* ── Pixel card hover interaction ─────────────────────────────── */
 .type-glow {
   position: relative;
@@ -1085,7 +1089,7 @@ h1 { letter-spacing: 0; }
   gap: 0.45rem;
   border: 1px solid transparent;
   border-radius: 0.4rem;
-  color: color-mix(in oklab, var(--foreground) 60%, transparent);
+  color: var(--muted-foreground);
   cursor: pointer;
   font-size: 0.72rem;
   font-weight: 800;
@@ -8905,4 +8909,58 @@ body:has(.lunidex-home) .site-footer {
   .home-catalog-preview-card:hover .home-catalog-preview-image {
     transform: none;
   }
+}
+
+/* Keep all three 44px card actions inside narrow two-column mobile cards. */
+@media (max-width: 419px) {
+  .pokedex-card-actions {
+    width: auto;
+    gap: 0.25rem;
+  }
+  .pokedex-card-actions > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(2, 2.75rem);
+  }
+}
+
+/* Small input text zooms the viewport when focused in mobile Safari. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: max(1rem, 16px);
+  }
+}
+
+/* Navigation labels must remain readable over the translucent mobile bar. */
+.primary-bottom-nav-link {
+  color: var(--muted-foreground);
+}
+html:not(.dark) .type-accent {
+  color: var(--foreground) !important;
+}
+
+/* Secondary copy must remain readable on both theme surfaces. These legacy
+   opacity utilities failed AA in catalogues, guides and account empty states. */
+@layer utilities {
+:is(
+  [class~="text-foreground/10"],
+  [class~="text-foreground/15"],
+  [class~="text-foreground/20"],
+  [class~="text-foreground/25"],
+  [class~="text-foreground/30"],
+  [class~="text-foreground/35"],
+  [class~="text-foreground/40"],
+  [class~="text-foreground/45"],
+  [class~="text-foreground/50"],
+  [class~="text-foreground/55"],
+  [class~="text-foreground/60"],
+  [class~="text-foreground/65"]
+) {
+  color: color-mix(in oklab, var(--foreground) 80%, transparent);
+}
+}
+
+.type-label {
+  color: var(--foreground) !important;
 }

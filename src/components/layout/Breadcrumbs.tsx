@@ -20,7 +20,7 @@ export function Breadcrumbs({ items, homeLabel = 'Home', className }: Breadcrumb
 
   return (
     <nav aria-label="Breadcrumb" className={cn('page-shell px-5 pt-24 md:px-8', className)}>
-      <ol className="flex flex-wrap items-center gap-y-2 text-xs font-medium text-foreground/50">
+      <ol className="flex flex-wrap items-center gap-y-2 text-xs font-medium text-foreground/80">
         {items.map((item, index) => {
           const isCurrent = index === items.length - 1 || !item.href;
           return (

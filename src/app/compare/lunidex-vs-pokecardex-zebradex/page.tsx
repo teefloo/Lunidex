@@ -209,7 +209,7 @@ export default async function LunidexComparisonPage() {
                   </h2>
                 </div>
               </div>
-              <div className="overflow-x-auto rounded-sm border border-border/60 bg-card/30">
+              <div tabIndex={0} className="overflow-x-auto rounded-sm border border-border/60 bg-card/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
                 <table className="w-full min-w-[920px] border-collapse text-left text-sm">
                   <caption className="sr-only">{t('comparison.table_caption')}</caption>
                   <thead className="bg-foreground text-background">

@@ -603,7 +603,7 @@ export default async function Anniversary30Page() {
                                   : t('anniversary_30.products.boosters', { count: product.boosterCount })}
                               </span>
                               {product.classicBoosterCount && (
-                                <span className="rounded-sm border border-amber-400/25 bg-amber-400/5 px-2 py-1 text-amber-300">
+                                <span className="rounded-sm border border-amber-400/25 bg-amber-400/5 px-2 py-1 text-amber-800 dark:text-amber-300">
                                   {t('anniversary_30.products.classic_boosters', { count: product.classicBoosterCount })}
                                 </span>
                               )}

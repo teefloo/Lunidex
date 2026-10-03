@@ -51,7 +51,7 @@ function Section({ section, depth = 0 }: { section: LegalSection; depth?: number
       ) : null}
 
       {section.table ? (
-        <div className="mt-4 overflow-x-auto rounded-lg border border-foreground/10 bg-background/40">
+        <div tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border border-foreground/10 bg-background/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-foreground/5 text-left">

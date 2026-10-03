@@ -128,7 +128,7 @@ export default function EditorialArticlePage({
                 <h2 id="editorial-article-matrix-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">
                   {t('editorial.article.matrix_title')}
                 </h2>
-                <div className="mt-5 overflow-x-auto rounded-sm border border-border/60">
+                <div tabIndex={0} className="mt-5 overflow-x-auto rounded-sm border border-border/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
                   <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
                     <thead className="bg-card/60 text-xs uppercase tracking-[0.12em] text-foreground/55">
                       <tr>
