@@ -24,6 +24,7 @@ import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useCatalogFilter } from '@/hooks/useCatalogFilter';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { cn } from '@/lib/utils';
@@ -33,6 +34,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAllMoves } from '@/lib/api/graphql';
+import { getReadableTextColor } from '@/lib/color-contrast';
 import { TYPE_COLORS, type GraphQLMoveData, type MoveListItem } from '@/types/pokemon';
 import MoveDetailModal from './MoveDetailModal';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
@@ -72,10 +74,10 @@ export default function MovesPageClient({
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedClass, setSelectedClass] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortKey>('name');
+  const [searchTerm, setSearchTerm] = useCatalogFilter<string>('q', '');
+  const [selectedType, setSelectedType] = useCatalogFilter<string | null>('type', null, ALL_TYPES);
+  const [selectedClass, setSelectedClass] = useCatalogFilter<string | null>('category', null, DAMAGE_CLASSES);
+  const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id', 'power']);
   const [selectedMove, setSelectedMove] = useState<MoveListItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(48);
 
@@ -244,7 +246,7 @@ export default function MovesPageClient({
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
-                              ? 'border-primary/35 bg-primary/15 text-primary'
+                              ? 'border-primary/35 bg-primary/15 text-primary dark:text-foreground'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                           )}
                           aria-pressed={active}
@@ -276,7 +278,7 @@ export default function MovesPageClient({
                               ? 'border-transparent text-primary-foreground shadow-[0_0_16px_rgba(227,53,13,0.14)]'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                           )}
-                          style={active ? { backgroundColor: typeColor } : undefined}
+                          style={active ? { backgroundColor: typeColor, color: getReadableTextColor(typeColor) } : undefined}
                           aria-pressed={active}
                           aria-label={t(`types.${type}`)}
                         >
@@ -303,7 +305,7 @@ export default function MovesPageClient({
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
-                              ? 'border-primary/35 bg-primary/15 text-primary'
+                              ? 'border-primary/35 bg-primary/15 text-primary dark:text-foreground'
                               : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                           )}
                           aria-pressed={active}
@@ -443,7 +445,7 @@ export function MoveCard({
     >
       <div
         className="absolute inset-x-0 top-0 h-1.5 rounded-t-[1.5rem]"
-        style={{ backgroundColor: typeColor }}
+        style={{ backgroundColor: typeColor, color: getReadableTextColor(typeColor) }}
       />
 
       <div className="flex items-start justify-between gap-3 pt-1.5">
@@ -456,7 +458,7 @@ export function MoveCard({
           </h3>
         </div>
 
-        <Badge className="shrink-0 text-primary-foreground" style={{ backgroundColor: typeColor }}>
+        <Badge className="shrink-0 text-primary-foreground" style={{ backgroundColor: typeColor, color: getReadableTextColor(typeColor) }}>
           {t(`types.${move.type}`)}
         </Badge>
       </div>

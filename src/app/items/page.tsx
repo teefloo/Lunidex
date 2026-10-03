@@ -39,7 +39,8 @@ export default async function ItemsPage() {
   const initialItems = await getInitialItemsCached(initialLanguageId)
     .catch(() => []);
   const queryClient = new QueryClient();
-  queryClient.setQueryData(['items', initialLanguageId], initialItems);
+  // This bounded server preview must not mark the complete catalog fresh.
+  queryClient.setQueryData(['items', initialLanguageId], initialItems, { updatedAt: 0 });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

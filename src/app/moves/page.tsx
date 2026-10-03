@@ -39,7 +39,8 @@ export default async function MovesPage() {
   const queryClient = new QueryClient();
   const initialMoves = await getInitialMovesCached(initialLanguageId)
     .catch(() => []);
-  queryClient.setQueryData(['moves', initialLanguageId], initialMoves);
+  // This bounded server preview must not mark the complete catalog fresh.
+  queryClient.setQueryData(['moves', initialLanguageId], initialMoves, { updatedAt: 0 });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

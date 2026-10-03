@@ -16,6 +16,7 @@ import {
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useCatalogFilter } from '@/hooks/useCatalogFilter';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { cn } from '@/lib/utils';
@@ -40,8 +41,8 @@ export default function AbilitiesPageClient({
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<SortKey>('name');
+  const [searchTerm, setSearchTerm] = useCatalogFilter<string>('q', '');
+  const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id']);
   const [visibleCount, setVisibleCount] = useState(48);
 
   const {
@@ -130,11 +131,11 @@ export default function AbilitiesPageClient({
           <aside className="xl:sticky xl:top-24 xl:h-fit">
             <div className="page-surface p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground">
                   <Filter className="h-3.5 w-3.5 text-primary" />
-                  {t('abilities_page.filters', { defaultValue: 'Filters' })}
+                  {t('items_page.filters')}
                 </div>
-                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/60">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset', { defaultValue: 'Reset' })}
                 </Button>
@@ -180,7 +181,7 @@ export default function AbilitiesPageClient({
                         className={cn(
                           'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
-                            ? 'border-primary/35 bg-primary/15 text-primary'
+                            ? 'border-primary/35 bg-primary/15 text-primary dark:text-foreground'
                             : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                         )}
                         aria-pressed={active}

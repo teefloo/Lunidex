@@ -39,14 +39,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     || t('items_page.subtitle', { defaultValue: `Details about the ${displayName} item.` });
 
   return {
-    title: `${localizedName} — Item`,
+    title: `${localizedName} — ${t('items_page.item_name', { defaultValue: 'Item' })}`,
     description,
     alternates: {
       canonical: `/${lang}/items/${name}`,
       languages: buildSubpathLanguages(`/items/${name}`),
     },
     openGraph: {
-      title: `${localizedName} — Item`,
+      title: `${localizedName} — ${t('items_page.item_name', { defaultValue: 'Item' })}`,
       description,
       url: `/${lang}/items/${name}`,
       type: 'website',
@@ -92,7 +92,7 @@ export default async function ItemDetailPage({ params }: Props) {
     ...buildWebPageJsonLd({
       lang,
       path: routePath,
-      name: `${localizedName} — ${t('items_page.title', { defaultValue: 'Item' })}`,
+      name: `${localizedName} — ${t('items_page.item_name', { defaultValue: 'Item' })}`,
       description: effectDescription,
       keywords: `${localizedName}, Pokémon item, Pokémon items`,
     }),
@@ -133,7 +133,7 @@ export default async function ItemDetailPage({ params }: Props) {
         <div className="mb-6">
           <Link
             href={`/${lang}/items`}
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/85 transition-all hover:border-border/90 hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('items_page.back_to_items', { defaultValue: 'Back to Items' })}
@@ -154,7 +154,7 @@ export default async function ItemDetailPage({ params }: Props) {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30">
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/85">
                 #{String(item.id).padStart(4, '0')}
               </p>
               <h1 className="mt-1 text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
@@ -162,12 +162,12 @@ export default async function ItemDetailPage({ params }: Props) {
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {item.pokemon_v2_itemcategory && (
-                  <Badge variant="outline" className="border-border/70 text-foreground/60">
+                  <Badge variant="outline" className="border-border/70 text-foreground/85">
                     {formatName(item.pokemon_v2_itemcategory.name)}
                   </Badge>
                 )}
                 {item.cost > 0 && (
-                  <Badge variant="ghost" className="text-foreground/45">
+                  <Badge variant="ghost" className="text-foreground/85">
                     ₽{item.cost.toLocaleString()}
                   </Badge>
                 )}
@@ -181,18 +181,18 @@ export default async function ItemDetailPage({ params }: Props) {
             <section className="rounded-sm border border-border/70 bg-card/35 p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" />
-                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/85">
                   {t('items_page.effect_label', { defaultValue: 'Effect' })}
                 </h2>
               </div>
-              <p className="text-sm leading-7 text-foreground/70">
+              <p className="text-sm leading-7 text-foreground/90">
                 {effectDescription}
               </p>
             </section>
 
             {flavorText && flavorText !== effectDescription && (
               <section className="rounded-sm border border-border/70 bg-card/35 p-5">
-                <p className="text-sm italic leading-7 text-foreground/55">
+                <p className="text-sm italic leading-7 text-foreground/85">
                   &ldquo;{flavorText}&rdquo;
                 </p>
               </section>
@@ -203,14 +203,14 @@ export default async function ItemDetailPage({ params }: Props) {
             <div className="rounded-sm border border-border/70 bg-card/35 p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Package className="h-4 w-4 text-primary" />
-                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/40">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/85">
                   {t('items_page.info_label', { defaultValue: 'Item Info' })}
                 </h2>
               </div>
               <dl className="space-y-3">
                 {item.pokemon_v2_itemcategory && (
                   <div className="flex items-center justify-between gap-2">
-                    <dt className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">
+                    <dt className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/85">
                       <Tag className="h-3 w-3" />
                       {t('items_page.category_label', { defaultValue: 'Category' })}
                     </dt>
@@ -218,7 +218,7 @@ export default async function ItemDetailPage({ params }: Props) {
                   </div>
                 )}
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">
+                  <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/85">
                     {t('items_page.cost_label', { defaultValue: 'Cost' })}
                   </dt>
                   <dd className="text-sm font-bold">{item.cost > 0 ? `₽${item.cost.toLocaleString()}` : '—'}</dd>

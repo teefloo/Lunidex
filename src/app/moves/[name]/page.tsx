@@ -510,7 +510,7 @@ function InfoRow({
   return (
     <div className="flex items-center justify-between gap-2">
       <dt className="text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35">{label}</dt>
-      <dd className="text-sm font-bold" style={color ? { color } : undefined}>
+      <dd className="type-label text-sm font-bold" style={color ? { color } : undefined}>
         {value}
       </dd>
     </div>

@@ -17,6 +17,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useCatalogFilter } from '@/hooks/useCatalogFilter';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { cn, formatName } from '@/lib/utils';
@@ -45,9 +46,9 @@ export default function ItemsPageClient({
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortKey>('name');
+  const [searchTerm, setSearchTerm] = useCatalogFilter<string>('q', '');
+  const [selectedCategory, setSelectedCategory] = useCatalogFilter<string | null>('category', null);
+  const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id', 'cost']);
   const [visibleCount, setVisibleCount] = useState(48);
 
   const {
@@ -140,11 +141,11 @@ export default function ItemsPageClient({
           <aside className="xl:sticky xl:top-24 xl:h-[calc(100vh-7rem)]">
             <div className="page-surface h-full overflow-hidden p-4">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/80">
                   <Filter className="h-3.5 w-3.5 text-primary" />
                   {t('items_page.filters', { defaultValue: 'Filters' })}
                 </div>
-                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/60">
+                <Button type="button" variant="ghost" size="touch" onClick={clearFilters} className="text-[11px] uppercase tracking-[0.18em] text-foreground/80">
                   <RefreshCw className="h-3.5 w-3.5" />
                   {t('filters.reset', { defaultValue: 'Reset' })}
                 </Button>
@@ -153,7 +154,7 @@ export default function ItemsPageClient({
               <div className="space-y-4 overflow-y-auto pr-1 scrollbar-premium xl:max-h-[calc(100vh-13rem)]">
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-4">
-                    <Search className="h-4 w-4 text-foreground/30" />
+                    <Search className="h-4 w-4 text-foreground/80" />
                   </div>
                   <input
                     type="text"
@@ -168,7 +169,7 @@ export default function ItemsPageClient({
                     <button
                       type="button"
                       onClick={() => setSearchTerm('')}
-                      className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/55 transition-colors hover:text-foreground"
+                      className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/80 transition-colors hover:text-foreground"
                       aria-label={t('search.clear', { defaultValue: 'Clear search' })}
                     >
                       <X className="h-4 w-4" />
@@ -191,8 +192,8 @@ export default function ItemsPageClient({
                         className={cn(
                           'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
-                            ? 'border-primary/35 bg-primary/15 text-primary'
-                            : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
+                            ? 'border-primary/35 bg-primary/15 text-primary dark:text-foreground'
+                            : 'border-border/60 bg-card/50 text-foreground/80 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                         )}
                         aria-pressed={active}
                       >
@@ -204,7 +205,7 @@ export default function ItemsPageClient({
 
                 <div className="rounded-sm border border-border/70 bg-card/35 p-4">
                   <div className="mb-3 flex items-center gap-2">
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/80">
                       {t('items_page.filter_by_category', { defaultValue: 'Category' })}
                     </h4>
                   </div>
@@ -219,8 +220,8 @@ export default function ItemsPageClient({
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
-                              ? 'border-primary/35 bg-primary/15 text-primary'
-                              : 'border-border/60 bg-card/50 text-foreground/55 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
+                              ? 'border-primary/35 bg-primary/15 text-primary dark:text-foreground'
+                              : 'border-border/60 bg-card/50 text-foreground/80 hover:border-border/90 hover:bg-card/65 hover:text-foreground',
                           )}
                           aria-pressed={active}
                         >
@@ -237,7 +238,7 @@ export default function ItemsPageClient({
           <section className="min-w-0 space-y-6">
             <div className="page-surface p-4">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/80">
                   {isFetching && !isLoading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                   ) : (
@@ -253,7 +254,7 @@ export default function ItemsPageClient({
                   <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground/90">
                     {t('items_page.load_error', { defaultValue: 'Failed to load items' })}
                   </h3>
-                  <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/35">
+                  <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/80">
                     {error instanceof Error ? error.message : ''}
                   </p>
                   <Button className="mt-6 h-11 px-5 uppercase tracking-[0.18em]" onClick={() => void refetch()}>
@@ -292,7 +293,7 @@ export default function ItemsPageClient({
                   {visibleCount < filteredItems.length && (
                     <div className="col-span-full flex flex-col items-center gap-2 pt-3">
                       <p className="text-xs text-muted-foreground" aria-live="polite">
-                        {t('items_page.showing_results', { defaultValue: `Showing ${visibleItems.length} of ${filteredItems.length}` })}
+                        {t('items_page.showing_results', { visible: visibleItems.length, total: filteredItems.length })}
                       </p>
                       <Button type="button" size="touch" variant="outline" onClick={() => setVisibleCount((count) => count + 48)}>
                         {t('common.show_more', { defaultValue: 'Show more' })}
@@ -321,6 +322,7 @@ function ItemCard({
   localeHref: (path: string) => string;
 }) {
   const [imgError, setImgError] = useState(false);
+  const locale = useClientLanguage();
 
   return (
     <motion.div
@@ -347,7 +349,7 @@ function ItemCard({
                 unoptimized
               />
             ) : (
-              <PokeballIcon className="h-4 w-4 text-foreground/30" aria-hidden="true" />
+              <PokeballIcon className="h-4 w-4 text-foreground/80" aria-hidden="true" />
             )}
           </div>
           <ExternalLink className="h-3.5 w-3.5 shrink-0 text-foreground/20 transition-colors group-hover:text-primary" />
@@ -357,18 +359,18 @@ function ItemCard({
           {item.localizedName}
         </h3>
 
-        <p className="mt-2 line-clamp-2 flex-1 text-xs leading-5 text-foreground/45">
+        <p className="mt-2 line-clamp-2 flex-1 text-xs leading-5 text-foreground/80">
           {item.shortEffect || t('items_page.no_description', { defaultValue: 'No description available.' })}
         </p>
 
         <div className="mt-3 flex items-center justify-between gap-2">
           {item.category && (
-            <Badge variant="outline" className="border-border/70 text-[11px] text-foreground/55">
+            <Badge variant="outline" className="border-border/70 text-[11px] text-foreground/80">
               {formatName(item.category)}
             </Badge>
           )}
           {item.cost > 0 && (
-            <span className="text-[11px] font-black text-foreground/40">₽{item.cost.toLocaleString()}</span>
+            <span className="text-[11px] font-black text-foreground/80">₽{item.cost.toLocaleString(locale)}</span>
           )}
         </div>
       </Link>

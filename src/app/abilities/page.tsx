@@ -39,7 +39,8 @@ export default async function AbilitiesPage() {
   const initialAbilities = await getInitialAbilitiesCached(initialLanguageId)
     .catch(() => []);
   const queryClient = new QueryClient();
-  queryClient.setQueryData(['abilities', initialLanguageId], initialAbilities);
+  // This bounded server preview must not mark the complete catalog fresh.
+  queryClient.setQueryData(['abilities', initialLanguageId], initialAbilities, { updatedAt: 0 });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
