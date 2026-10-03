@@ -1,0 +1,138 @@
+[
+  {
+    "path": "/fr",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Explorez les cartes Pokémon."
+    ]
+  },
+  {
+    "path": "/fr/pokedex",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Pokédex Pokémon en ligne"
+    ]
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Pikachu"
+    ]
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Constructeur d’équipe Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/types",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Maître des Types"
+    ]
+  },
+  {
+    "path": "/fr/tcg",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Catalogue JCC Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/moves?q=Tonnerre",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Capacités"
+    ]
+  },
+  {
+    "path": "/fr/ev-iv",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Calculateur EV/IV"
+    ]
+  },
+  {
+    "path": "/fr/breeding",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Calculateur d'Élevage"
+    ]
+  },
+  {
+    "path": "/fr/battle",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Simulateur de combat"
+    ]
+  },
+  {
+    "path": "/fr/privacy",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Politique de confidentialité"
+    ]
+  },
+  {
+    "path": "/fr/guides/team-builder-guide",
+    "errors": [],
+    "geometry": {
+      "width": 1440,
+      "scroll": 1432
+    },
+    "heading": [
+      "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex"
+    ]
+  },
+  {
+    "flow": "desktop-search",
+    "matchingLinks": 1
+  }
+]

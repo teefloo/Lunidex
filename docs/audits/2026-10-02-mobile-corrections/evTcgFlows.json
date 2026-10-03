@@ -1,0 +1,141 @@
+[
+  {
+    "flow": "ev-limit",
+    "ranges": [
+      "252",
+      "252",
+      "6",
+      "0",
+      "0",
+      "0"
+    ],
+    "body": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nStatistiques De Base Chargées : Pikachu\n\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIV\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 510/510\nPV ★\n252\nATTAQUE ★\n252\nDÉFENSE\n6\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX\nSTAT\nNIV. 50\nNIV. 100\nPV\n142\n274\nATTAQUE\n107\n209\nDÉFENSE\n61\n117\nATQ. SPÉ.\n70\n136\nDÉF. SPÉ.\n70\n136\nVITESSE\n110\n216"
+  },
+  {
+    "flow": "ev-reset",
+    "ranges": [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ]
+  },
+  {
+    "flow": "tcg-selects",
+    "selects": [
+      {
+        "name": "Langue des cartes",
+        "value": "en",
+        "options": [
+          {
+            "text": "anglais",
+            "value": "en"
+          },
+          {
+            "text": "français",
+            "value": "fr"
+          },
+          {
+            "text": "espagnol",
+            "value": "es"
+          },
+          {
+            "text": "italien",
+            "value": "it"
+          }
+        ]
+      },
+      {
+        "name": "Extension",
+        "value": "30th-c",
+        "options": [
+          {
+            "text": "Toutes les collections",
+            "value": ""
+          },
+          {
+            "text": "30th Classic Collection",
+            "value": "30th-c"
+          },
+          {
+            "text": "30th Celebration",
+            "value": "30th"
+          },
+          {
+            "text": "Pitch Black",
+            "value": "me05"
+          }
+        ]
+      },
+      {
+        "name": "Trier par",
+        "value": "id-asc",
+        "options": [
+          {
+            "text": "Nom A-Z",
+            "value": "name-asc"
+          },
+          {
+            "text": "Nom Z-A",
+            "value": "name-desc"
+          },
+          {
+            "text": "Numéro croissant",
+            "value": "number-asc"
+          },
+          {
+            "text": "Numéro décroissant",
+            "value": "number-desc"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "flow": "tcg-drawer",
+    "body": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFermer",
+    "controls": [
+      {
+        "text": "DERNIÈRES CARTES",
+        "label": null,
+        "role": null,
+        "type": "button"
+      },
+      {
+        "text": "VUE LISTE",
+        "label": null,
+        "role": "radio",
+        "type": "button"
+      },
+      {
+        "text": "GRILLE · 2 CARTES",
+        "label": null,
+        "role": "radio",
+        "type": "button"
+      },
+      {
+        "text": "GRILLE · 4 CARTES",
+        "label": null,
+        "role": "radio",
+        "type": "button"
+      },
+      {
+        "text": "Fermer",
+        "label": "Fermer",
+        "role": null,
+        "type": "button"
+      }
+    ]
+  },
+  {
+    "flow": "tcg-card",
+    "body": "30TH CLASSIC COLLECTION\n#001\nPOKÉMON\nAUCUN\nSTADE 2\nCHARIZARD\nPV\n120\n\nAucune description complémentaire disponible.\n\nCOMPARER\nAJOUTER\nLISTE DE SOUHAITS\nPARTAGER\n\nPRIX MARCHÉ\n\n167,52 €\n\nVIA CARDMARKET\n\nVOIR SUR CARDMARKET\nEXTENSION\nEXTENSION\n30th Classic Collection\nN° COLLECTOR\n#001 / 30\nILLUSTRATEUR\nMitsuhiro Arita\nRÉGLEMENTATION\nAucun\nPAGE DU POKÉMON\nOuvrir la page du Pokémon\nPOKÉMON\nTYPES DE POKÉMON\nFire\nSTADE\nStade 2\nÉVOLUE DE\nAucun\nFAIBLESSES\nWater ×2\nRÉSISTANCES\nFighting -30\nCOÛT DE RETRAITE\n● ● ●\nTALENTS\nENERGY BURN\n\nAs often as you like during your turn (before your attack), you may turn all Energy attached to Charizard into Fire Energy for the rest of the turn. This power can't be used if Charizard is Asleep, Confused, or Paralyzed.\n\nCAPACITÉS\nFIRE\nFIRE\nFIRE\nFIRE\nFIRE SPIN\n100\n\nDiscard 2 Energy cards attached to Charizard in order to use this attack.\n\nOUVRIR LES DONNÉES BRUTES",
+    "url": "http://127.0.0.1:3101/fr/tcg"
+  },
+  {
+    "flow": "tcg-close",
+    "dialogs": 0
+  }
+]

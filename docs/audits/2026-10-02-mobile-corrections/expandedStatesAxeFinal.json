@@ -1,0 +1,52 @@
+[
+  {
+    "path": "/fr/dashboard",
+    "configure": "dashboard",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 4,
+        "nodes": [
+          {
+            "html": "<span class=\"absolute inset-0 flex items-center justify-center text-[11px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]\">0%</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.08 (foreground color: #ffffff, background color: #f3f6ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"text-[11px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-500\">TCG</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.73 (foreground color: #615fff, background color: #e7e6ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"text-[11px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-500\">TCG</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.73 (foreground color: #615fff, background color: #e7e6ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/fr/pokedex",
+    "configure": "filters",
+    "violations": []
+  },
+  {
+    "path": "/fr/tcg",
+    "configure": "card",
+    "violations": []
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "configure": "team",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-widest text-primary/60 mb-3\">Lacunes de couverture</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.92 (foreground color: #978ed3, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  }
+]

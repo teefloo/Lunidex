@@ -1,0 +1,176 @@
+[
+  {
+    "path": "/fr/tcg/sealed/analytics",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/sales",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/sources",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/buy-safely",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/cashflow",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sets/sv03.5",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/catalogue",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/start",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/collection",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/wishlist",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/journal",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/team",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/market/611877",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/team/share?code=25-6-9&lang=fr",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/market/products/611877",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/terms",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/products/1",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/types",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<span class=\"text-primary/60\">ATK</span>",
+            "target": [
+              ".text-primary\\/60"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.83 (foreground color: #928bd3, background color: #f3f6ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/releases",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/u/audit-inexistant",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]

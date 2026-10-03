@@ -1,0 +1,22 @@
+{
+  "egg": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\nCHANGER DE POKÉMON\nCapacités Œuf De Pikachu\n\nGroupes d'œufs: ground, fairy\n\n0 CAPACITÉS\n\nAUCUNE CAPACITÉ ŒUF\n\npikachu ne peut apprendre aucune capacité par reproduction.\n\nOUVRIR LE CALCULATEUR D'ÉLEVAGE POUR PIKACHU",
+  "type": {
+    "cells": 324,
+    "pressed": 1,
+    "focused": "normal-fire"
+  },
+  "quiz": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits",
+  "buttons": [
+    "Classique",
+    "Défi Quotidien",
+    "Toutes les Générations▼",
+    "Tous les Types▼",
+    "ClassiqueAfficher l'image",
+    "SilhouetteC'est qui ?",
+    "StatsStats de base",
+    "Marathon",
+    "Survie(3 Vies)",
+    "Contre la montre(30s)",
+    "Commencer"
+  ]
+}

@@ -1,0 +1,204 @@
+[
+  {
+    "path": "/fr/quiz",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/items",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/items/potion",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/legal",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/moves",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 413,
+        "nodes": [
+          {
+            "html": "<span data-slot=\"badge\" data-variant=\"default\" class=\"group/badge inline-f...\" style=\"background-color: rg...\">",
+            "target": [
+              "article:nth-child(12) > .pt-1\\.5.items-start.justify-between > .border-primary\\/30.bg-primary\\/90.text-primary-foreground"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.65 (foreground color: #ffffff, background color: #808692, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30\">#177</p>",
+            "target": [
+              "article:nth-child(13) > .pt-1\\.5.items-start.justify-between > .flex-1.min-w-0 > .text-foreground\\/30.tracking-\\[0\\.18em\\]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #6b7799, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span data-slot=\"badge\" data-variant=\"outline\" class=\"group/badge inline-f...\">",
+            "target": [
+              "article:nth-child(13) > .flex-wrap.mt-3.flex:nth-child(3) > .bg-card.text-foreground\\/55[data-variant=\"outline\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #6b7799, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span data-slot=\"badge\" data-variant=\"ghost\" class=\"group/badge inline-f...\">",
+            "target": [
+              "article:nth-child(13) > .flex-wrap.mt-3.flex:nth-child(3) > .border-transparent.text-foreground\\/45[data-variant=\"ghost\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.29 (foreground color: #6b7799, background color: #fafbff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-3 line-clamp-3 text-sm leading-6 text-foreground/45\">Le lanceur projette une tornade sur l’ennemi pour infliger des dégâts. Taux de critiques élevé.</p>",
+            "target": [
+              "article:nth-child(13) > .line-clamp-3.leading-6.text-foreground\\/45"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #6b7799, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/moves/thunderbolt",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr/sv03.5",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/deck-builder",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/offline",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/pokedex",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/privacy",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]

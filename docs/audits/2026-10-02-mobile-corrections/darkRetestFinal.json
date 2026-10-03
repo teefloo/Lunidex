@@ -1,0 +1,34 @@
+[
+  {
+    "path": "/fr/abilities",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/moves",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/items",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]

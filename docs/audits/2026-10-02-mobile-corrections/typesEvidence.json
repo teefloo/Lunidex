@@ -1,0 +1,10 @@
+{
+  "table": 1,
+  "cells": 360,
+  "before": "Normal",
+  "focused": {
+    "tag": "BUTTON",
+    "label": "Normal"
+  },
+  "body": "Maître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nTableau d'efficacité des types\n\nDécouvrez comment chaque type se compare à tous les autres\n\nTouchez une case pour voir son multiplicateur\nSUPER EFFICACE (2×)\nNORMAL (1×)\nPAS TRÈS EFFICACE (½×)\nAUCUN EFFET (0×)\n\nFaites défiler horizontalement pour explorer toute la matrice\n\nATK\n╲\nDEF\n\t\nNORM\n\t\nFEU\n\t\nEAU\n\t\nÉLEC\n\t\nPLAN\n\t\nGLAC\n\t\nCOMB\n\t\nPOIS\n\t\nSOL\n\t\nVOL\n\t\nPSY\n\t\nINSE\n\t\nROCH\n\t\nSPEC\n\t\nDRAG\n\t\nTÉNÈ\n\t\nACIE\n\t\nFÉE\n\n\nNORMA\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n0\n\t\n\t\n\t\n½\n\t\n\n\nFEU\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n2\n\t\n\n\nEAU\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n\n\nÉLECT\n\t\n\t\n\t\n2\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n0\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\n\nPLANT\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n½\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n\n\nGLACE\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\n\nCOMBA\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n2\n\t\n0\n\t\n\t\n2\n\t\n2\n\t\n½\n\n\nPOISO\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n0\n\t\n2\n\n\nSOL\n\t\n\t\n2\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n0\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\n\nVOL\n\t\n\t\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n\n\nPSY\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n0\n\t\n½\n\t\n\n\nINSEC\n\t\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n½\n\n"
+}

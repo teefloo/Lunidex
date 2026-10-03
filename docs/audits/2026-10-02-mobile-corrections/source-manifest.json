@@ -1,0 +1,377 @@
+[
+  {
+    "file": "src/app/30e-anniversaire/page.tsx",
+    "sha256": "77065181e7fce6c280ce572502a07d53fd946108886852db437840a121c7f7be",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/abilities/AbilitiesPageClient.tsx",
+    "sha256": "dd8a3fac9a429e3dab4a4eec22bcd4f40d3c817554d31e01e0e184f2ae7add66",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/abilities/page.tsx",
+    "sha256": "a8b3d4d6b7902b206d9ca3f08a630fda2c3a7c1e631e2a585702591038b1a1ba",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/api/og/quiz-result/route.tsx",
+    "sha256": "6dfba4c291f03a93a535d518513196ac1623f4cf2aea6ed88486f0c182d6563d",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/battle/BattleClient.tsx",
+    "sha256": "87c06668f14fb9f56d4dbb7845a72f83f4a671881a849fe263615a090e073001",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/breeding/BreedingPageClient.tsx",
+    "sha256": "110183301bf24a1cd795ed51d87b988c9906a597fefcf5d33862704b3433ef48",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/compare/lunidex-vs-pokecardex-zebradex/page.tsx",
+    "sha256": "684ccc1e3596c0e9508cc4d66641c1cf813c6b1f1842fcada382a635c5cd5e47",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/compare/page.tsx",
+    "sha256": "792a675b39ddf981f395f93b83b30664452fd72ec1d32628b9b42142ecd233d1",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/dashboard/page.tsx",
+    "sha256": "dfbb8181f1bbb1c7b5a052704f02e682227c182bc55712192b9652e2cb69d9bb",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/docs/api/page.tsx",
+    "sha256": "f140b8defab1579357d71c18f9674705dd7bec27663c883a90ee6dee295b6236",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/ev-iv/EVIVPageClient.tsx",
+    "sha256": "4362cc112d8ba952d5324dabbd440d7333c3e8da496d8c44916f2785e8ad4099",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/ev-iv/page.tsx",
+    "sha256": "5a2992992824bb86382bca77a5271c9a40ee3df84201d5efa2c660f61e3b0653",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/globals.css",
+    "sha256": "75cb1c06818e27baa8f246beb9033b1e33d1e353369d8e5b1d2ffbb142ebe8f0",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/guides/pokemon-card-collection-tracker/page.tsx",
+    "sha256": "88f44f6253adb5cb67ca7761c75f54dcd052e00ab44fbfd68d16339795deec44",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/guides/team-builder-guide/page.tsx",
+    "sha256": "37d8b492590bf061f68e86ed4af416459377a798240913c38928f8ccd308c63a",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/items/ItemsPageClient.tsx",
+    "sha256": "9fa347fd7ad4fafd3f783368ae5c914cd966c13118ed9a3afd12259b91d8e71a",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/items/[name]/page.tsx",
+    "sha256": "13c87157a03325f1c73c701f9b8394f63163c859a7e642750f3c6a4d5889e601",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/items/page.tsx",
+    "sha256": "a7196c7c3a3f278d8e3128a9705119e8c97bcfad91bf3275acc76e542f0da855",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/moves/MovesPageClient.tsx",
+    "sha256": "b48b66f88ac6d28015f161e199ccd4bcf7cf4b6d4c9fc0e33000d7088e1a9e73",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/moves/[name]/page.tsx",
+    "sha256": "e7b93607a7d9ea59b1ea6ed6b90cebc9d5ff10a3c13ffebe921bdee80bfb69b2",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/moves/page.tsx",
+    "sha256": "15077e73fc4c90c2274fb41645bd0dcedd541059e21947732fb7d6667daae723",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/not-found.tsx",
+    "sha256": "69e10183402f82cb48018aeb052e5b6c4c9eed517b90212b32f3582945e60e69",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/pokemon/[name]/PokemonDetailClient.tsx",
+    "sha256": "a25d0aa0580c989bba423a17da3042fdcb97440b10bad2d77a3d3b6cc85f53c6",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/quiz/page.tsx",
+    "sha256": "25d98e1bee7e989b3203129e3729432c015fac22b7afd0dcbc58b032b9766656",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/tcg/cards/[id]/page.tsx",
+    "sha256": "96020eb46d5be035550402dcecdd53725076bcde4daa3595410a9211a70af1b0",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/tcg/sets/[setId]/page.tsx",
+    "sha256": "9c8bff9a0145d5e517da787df63c249d3bbf1fc9b567899a8ae82b7aa4c556d0",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/team/page.tsx",
+    "sha256": "226f766a907bd77dd0f65f4b60c52a9f50e0f50e80e1f062ced7c0b19874d630",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/app/types/page.tsx",
+    "sha256": "2ff560cd9ce479b7d3fa4fa402f2df04cbed5d33e25078737a157879a89bea64",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/battle/BattleSimulator.tsx",
+    "sha256": "2bbffeb70979c6b9762fae875762e52b33163d9a9cf241ab319c934baeb79f55",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/breeding/BreedingCalculator.tsx",
+    "sha256": "acc265de3aa14a262dc8a2f04511efb53e2faae3499f134d35e00f48c3d38425",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/dashboard/ExtensibleSection.tsx",
+    "sha256": "b24df773060cdc66c3b3ae5ece31476fea4e940f0dfb6d4b1151ced1c9db2e57",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/dashboard/PokedexProgress.tsx",
+    "sha256": "b8c367340447506b3560f84580fc292cc5f1187dffcf6e4d354b1a8ab0f1c6a3",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/editorial/EditorialArticlePage.tsx",
+    "sha256": "85ed57fee59c51e87050d8b8076cd35c3a5950b74be95e1a291c4024aa9d307e",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/editorial/EditorialGuidePage.tsx",
+    "sha256": "609cf5efc1101a34a7e2cab27e73c88a87d694af4a674d1ce977f2775da5b840",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/ev-iv/EVIVCalculator.tsx",
+    "sha256": "c238ff6bc00fdb82990ffaaabc99df4af41a7b22290615d01dd78e7ff0d79463",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/ev-iv/EVPlanner.tsx",
+    "sha256": "2bdd6bcfb11c50cd2b2aa206e809c700a1cec70bbb6f3041240f17a299bdf12d",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/ev-iv/IVResult.tsx",
+    "sha256": "3f02d968b337a9b4f919d4c38f594948f23873e2b4d7194f838033fbf9125b8e",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/ev-iv/NatureSelector.tsx",
+    "sha256": "fd615d315d27efa67987c831924b3843eb55d2ab3516ed902e1db47d98fbe365",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/ev-iv/StatInput.tsx",
+    "sha256": "56f10ad7123d928fb02d0dbf9241c9895234aa8f528f5d7b44b377b219a9040b",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/layout/Breadcrumbs.tsx",
+    "sha256": "412167fefe9aa306ef373fa41b3ff49c9d771c833cf4dfcc2d717401c8d2aef9",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/layout/DataExportImport.tsx",
+    "sha256": "bbb4a1583da52cb9caf1a287f4aa823f30b070f39c998c370892977027627921",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/layout/NotFoundMiniGame.tsx",
+    "sha256": "7ab7f1f0fb49e1ce138a56dc829ce10a645d9d837e03827c7c570e9e263923f5",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/legal/LegalDocumentView.tsx",
+    "sha256": "2780464897f065b9e005776661614a06b61b1a370d07196425625d2e2470682d",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/pokemon/AdvancedFilters.tsx",
+    "sha256": "d0d5cfa7c285f29c9b9539c99b37b14fc4944ba9fbba67e3e6850967ae3abcbe",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/pokemon/PokemonCard.tsx",
+    "sha256": "9dfd15df39bb80990b2d2e78e1b3bf422b5d19b04e37187da555abf21df5da1f",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/pokemon/PokemonList.tsx",
+    "sha256": "5e281169473494f0f264c6f3ab390b7ea8fafae392eaa585b337f9ea9d08eaef",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/pokemon/TypeChart.tsx",
+    "sha256": "6413b8f43fc8f9fcd2da0e96d044b618954318488f82a049cf22e80b230c3923",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/quiz/QuizResultCard.tsx",
+    "sha256": "98ebca4a333eb55210fd9ed90728a102f8e2051337244d97149694ce256d2966",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/tcg/TCGCardDetailRoute.tsx",
+    "sha256": "ad15ecb7ca677c4be3f78f1677d4796bd4d924655f6b06ec5f1ae1d082ea2fbc",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/tcg/TCGFilters.tsx",
+    "sha256": "2d69bd1037ecc67c2ad12d1f655fbb46e6ddf6cfa315e92883727c9a335d52eb",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/tcg/TCGMarketSummary.tsx",
+    "sha256": "af41d426d73b09784d3840e42ac71cdd173a10ee48af97a57ce470acceabf8cb",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/tcg/TCGResearchDesk.tsx",
+    "sha256": "cf13416bf82df8be21bd83cbe1e282176842a8515f5dd9b76186826e5de3462c",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/components/team/ShowdownImportDialog.tsx",
+    "sha256": "ac4aeefada5354261770594cea64736eef189edaa572025c8460e5bc5a390dbf",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/api/tcg.ts",
+    "sha256": "3c3f9e8eb8ab78daa42d2ea2510fe4adf5f6c4e19b7b9dd46e1a0f69af03d909",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/de.ts",
+    "sha256": "7f2545a7a79e2823e370e6d41d19f54080aae04846691a07877ea1c5de5c7d01",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/en.ts",
+    "sha256": "13e946e5a2559c3c2777986707b265337a8b379f1e453fa48204ac82015c5231",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/es.ts",
+    "sha256": "999d57b00d61a31fdb5b7559ae97c3bf3adc70d5978fde703039b5b79fa4414c",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/fr.ts",
+    "sha256": "8956bb871462fb2cd1532b39fc4f4e6f3aa42ec88d04511efbfdf0a78c9c264c",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/it.ts",
+    "sha256": "1fe59b920d19ef8f886f7072b458f576a822d09539b892c7b9903c8bce377934",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/ja.ts",
+    "sha256": "0285e396c0a9278f68671c18afbc7b6e62f5e9506fb2ca442b4e0907f646d839",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/ko.ts",
+    "sha256": "30cd7e926e13da7ff52bd8193c62a151548a95a6244e1a161755a4425a437fce",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/zh.ts",
+    "sha256": "5059949b9b48e17276767982064c0aba14f2e76d6b760371f8a8eb62ff623bcc",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/pokemon-filter-utils.test.ts",
+    "sha256": "26d5abaa664658b109bf8d49f87c355a63877351f3d45c75d4ba261a0cfa1cc0",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/pokemon-filter-utils.ts",
+    "sha256": "8c01629aa98278adf4faff64872a0a40b79656758fc3704372786afa92aeeb97",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/tcg-research.test.ts",
+    "sha256": "91e1ee92e2fd717a15e5ca2bde03eecf8f7bd0228056abea090fc851234d8177",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/tcg-research.ts",
+    "sha256": "9c2fb7d715cb22686312012b56b789a7517a9358f8633f94997884c2f85aab00",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/store/primedex.ts",
+    "sha256": "5249f9479e9d76b8d69cbbd589a96d32b25434f6fe3fa9d32d8f80cbd6c62815",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/hooks/useCatalogFilter.ts",
+    "sha256": "611ed7fd585e8fe76e5760a5e7b051d5906b7134ea455102b4e8cbf0e7face03",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/api/tcg-filter-options.test.ts",
+    "sha256": "cb2e2ed0d993b22f32f3e3ccaaf48b3cfbf8af09513f2336e22ed0455eea18ea",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/mobile-tools.ts",
+    "sha256": "0a72438077749c225795f6e9b1ee7b7a665dead28bbc433285a6dd118cde1512",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/i18n/not-found-page.ts",
+    "sha256": "5ba043d5a1399aa9c11a2baf1fbed0a6fb59f84a222521115b19f911839c996e",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/shared-pokemon-ids.test.ts",
+    "sha256": "335a8ed1a1b4b5968d36becf11a5de93df26bf8541bed92d0eac5c339f9b8765",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/shared-pokemon-ids.ts",
+    "sha256": "95503ddabf9c60b8ba1370cfae231bc5aad1af2eb6669a9289d085721e1f2a77",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/user-backup.test.ts",
+    "sha256": "b0d085a89c4200fd1c8cd99410f8ac54c3d6b34b5266de66dfa878a9493abe65",
+    "matchesBuildSource": true
+  },
+  {
+    "file": "src/lib/user-backup.ts",
+    "sha256": "b5a75f502f3b535fbd950ec04aa591324c30051ccdbbf457d5ca8969e4578a36",
+    "matchesBuildSource": true
+  }
+]

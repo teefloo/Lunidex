@@ -1,0 +1,590 @@
+[
+  {
+    "path": "/fr/contact",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/contact",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Contact",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nContact\n\nNOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollect",
+      "controls": 5
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/nuzlocke-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/nuzlocke-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Suivre une partie Nuzlocke avec Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE NUZLOCKE\n\nSuivre une partie Nuzlocke avec Lunidex\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 11 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nComment suivre une partie\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\n01\n\nCréez une partie et donnez-lui un nom ou une mention de jeu.\n\n02\n\nAjoutez une rencontre : saisissez le nom de la route ou du lieu et choisissez le Pokémon trouvé.\n\n03\n\nMettez à jour le statut de chaque rencontre au fil de la partie : vivant, mort ou en boîte.\n\n04\n\nLisez le bandeau de statistiques — total, vivants, morts, boîte — et démarrez une nouvelle partie quand un challenge se termine.\n\nRègles appliquées par le suivi\n• Une seule rencontre par route dans une partie : une route en double est refusée.\n• Un Pokémon mort ou en boîte reste visible avec son sprite pour que l’historique de la partie reste lisible.\n• Vous pouvez supprimer une partie ou retirer une rencontre à tout moment.\nQuestions sur le suivi Nuzlocke",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/organize-pokemon-card-collection",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/organize-pokemon-card-collection",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Comment organiser une collection de cartes Pokémon",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nComment organiser une collection de cartes Pokémon\n\nCommencez par un rangement physique que vous pourrez maintenir, puis reproduisez-le dans une liste avec une entrée par version de carte. Cette méthode convient à un petit classeur comme à une collection organisée par sets.\n\nPUBLIÉ LE 28 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPour organiser des cartes Pokémon, choisissez une règle de tri durable — généralement par set puis par numéro de carte. Protégez les cartes, notez la langue et la finition de chaque version, comptez séparément les doubles et mettez à jour la liste des cartes manquantes après chaque changement. Un tableur, une checklist papier ou un outil de collection peut contenir cette liste : choisissez selon les champs nécessaires et votre mode d’accès préféré.\n\nCe que couvre ce guide\n\nCette méthode organise une collection ; elle ne reconnaît pas une carte et ne l’évalue pas. Le code du set et le numéro de collection facilitent le rapprochement avec un catalogue. La langue, la finition, l’état et la quantité décrivent les exemplaires que vous possédez réellement.\n\nComment utiliser ces fonctions\n01\n\nDéfinissez votre objectif : un set, un Pokémon, une langue ou toute la collection. Choisissez un emplacement et une règle de tri avant de déplacer les cartes.\n\n02\n\nProtégez les cartes avec des pochettes, puis rangez-les en classeurs ou en boîtes. Triez par set puis par numéro ; gardez les promos et les cartes hors numérotation dans une section distincte.\n\n03\n\nCréez une entrée par set et numéro de carte. ",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/cookies",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/cookies",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Politique de cookies et de stockage local",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nPolitique de cookies et de stockage local\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les cookies, stockages locaux et intégrations de mesure réellement utilisés par Lunidex.\n\nLes intégrations de mesure facultative sont initialisées avec la collecte désactivée et ne capturent aucune donnée avant votre choix. Vous pouvez modifier ou retirer ce choix à tout moment.\n\nSOMMAIRE\n\n1. Éléments nécessaires et facultatifs\n2. Stockage local\n3. Mesure facultative\n4. Gérer vos choix\n5. Contact\n1. Éléments nécessaires et facultatifs\nÉlément\tFinalité\tDurée indicative\nprimedex-lang\tMémoriser la langue choisie\t1 an\nprimedex-consent-v2\tMémoriser les choix de mesure\tJusqu’à modification ou suppression\nprimedex-product-measurement-consent\tPermettre au serveur de respecter le choix PostHog\t1 an ou jusqu’au retrait\nCookies Neon Auth\tMaintenir la session de compte\tSelon la configuration Neon Auth\nSentry error monitoring\tSurveillance technique des erreurs et de la disponibilité\tSelon la configuration de conservation Sentry\nVercel Web Analytics, Speed Insights et Sentry performance/replay\tMesure d’audience et de performance après consentement\tAprès consentement, selon la configuration des fournisseurs\nMesure produit Neon et PostHog\tCompteurs TCG, vues de page, événements explicites, erreurs et performances après consentement\tSelon les configurations des fournisseurs\n2. Stockage local\n\nlocalStorage et sessionStorage servent notamment au consentement, aux marqueurs de session et à l’état technique de l’application. IndexedDB peut contenir un cache de réponses publiques Pokémon et TCG. Le stockage local n’est p",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/pokemon-card-collection-tracker",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-card-collection-tracker",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Suivi gratuit de collection de cartes Pokémon : organisez votre collection TCG",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE DE COLLECTION\n\nSuivi gratuit de collection de cartes Pokémon : organisez votre collection TCG\n\nUn guide pratique et sourcé pour utiliser Lunidex comme suivi de collection de cartes Pokémon : parcourez les cartes, marquez les cartes possédées et manquantes, puis consultez la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application web open source et gratuite à utiliser pour consulter un catalogue Pokémon TCG et suivre une collection personnelle. Dans l’espace associé à un compte, vous pouvez marquer les cartes possédées, voir les cartes manquantes et le pourcentage de complétion des sets, suivre les finitions et les langues de cartes prises en charge, rechercher et filtrer le catalogue et consulter une estimation de la valeur de la collection lorsque TCGdex fournit les champs de prix. Les pages de catalogue public sont consultables sans compte ; l’état personnel de collection dépend du service de compte configuré. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent pas de scanner de cartes.\n\nUne méthode simple pour suivre sa collection à la main\n\nUn tableur ou une checklist papier convient si vous voulez choisir chaque champ vous-même. Prévoyez une ligne par version de carte et réutilisez les mêmes identifiants à chaque mise à jour.\n\n01Choisissez le set que vous collectionnez et notez son nom ou son code.\n02Recopiez le numéro de chaque carte tel qu’il apparaît dans le set ; ajoutez son nom pour faci",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/dashboard",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/dashboard",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Tableau de Bord",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nTableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 1
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/pokemon-card-collection-value",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-card-collection-value",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Comment estimer la valeur d’une collection de cartes Pokémon avec Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nComment estimer la valeur d’une collection de cartes Pokémon avec Lunidex\n\nUn guide factuel sur les signaux de valeur disponibles dans Lunidex, avec une distinction claire entre estimations amont, portfolio scellé privé et expertise professionnelle.\n\nPUBLIÉ LE 21 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex peut afficher des champs de prix et des estimations conditionnelles lorsque les données TCGdex sont disponibles. Son portfolio scellé lié au compte peut enregistrer achats, ventes, valeur, profit ou perte, ROI et horodatages de source à partir du catalogue et du guide de prix Cardmarket configurés. Ces signaux servent à organiser une collection ; ils ne constituent ni une valorisation de marché garantie ni une expertise.\n\nCe que couvre ce guide\n\nCe guide couvre les estimations de cartes ordinaires dans /tcg/collection et le portfolio privé de produits scellés dans /tcg/sealed. Le guide public est lisible sans compte, tandis que les données personnelles du portfolio nécessitent le compte et le service de synchronisation configurés.\n\nCe que signifie chaque signal de valeur\n\nCes distinctions séparent une estimation utile de collection des affirmations que Lunidex ne peut pas vérifier.\n\nCe que signifie chaque signal de valeur\nCRITÈRE\tLUNIDEX\nEstimation d’une carte ordinaire\tEstimation visible fondée sur les champs de prix TCGdex lorsqu’une fiche de carte les fournit.\nPortfolio scellé\tEnregistrements privés liés au compte pour les produits scellés pris en charge, les achats, ventes, valeur, profits ou perte",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/docs",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/docs",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Documentation Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nDOCUMENTATION\n\nDocumentation Lunidex\n\nChoisissez votre objectif : explorer les Pokémon, préparer une équipe, gérer une collection Pokémon TCG, consulter votre progression ou utiliser l’API publique.\n\nExplorer les Pokémon\n\nPARCOURS CONSEILLÉ\n\nCommencez dans le Pokédex : cherchez un Pokémon et ouvrez sa fiche, puis utilisez le tableau des types ou les pages de capacités, talents et objets pour approfondir.\n\nPokédex\nTypes\nCapacités\nTalents\nObjets\nGUIDES DES FONCTIONNALITÉS\nGuide de référence Pokémon\nPréparer une équipe et une partie\n\nPARCOURS CONSEILLÉ\n\nComposez une équipe de six Pokémon maximum, comparez-en jusqu’à trois, puis affinez-la avec les outils EV/IV ou de reproduction. Combat, quiz et Nuzlocke proposent des parcours distincts.\n\nConstructeur d’équipe Pokémon\nComparer\nCalculateur EV/IV\nCalculateur d'Élevage\nSimulateur de combat\nQuel est ce Pokémon ?\nSuivi Nuzlocke\nGUIDES DES FONCTIONNALITÉS\nGuide de création d’équipe\nGuide du quiz\nGuide du Nuzlocke\nGuide des outils d’équipe et de jeu\nSuivre une collection Pokémon TCG\n\nPARCOURS CONSEILLÉ\n\nCherchez une carte ou une série, puis utilisez la collection, la liste de souhaits et les decks. Connectez-vous et attendez la synchronisation avant de modifier vos données ; les produits scellés ont leur propre portefeuille.\n\nJCC\nCommencez votre collection\nCollection\nListe de souhaits\nConstructeur de deck\nPortefeuille scellés\nGUIDES DES FONCTIONNALITÉS\nGuide du suivi de collection\nComment organiser une collection de cartes Pokémon\nGuide de l’espace Pokémon TCG\nGuide de la valeur d’une collection\nConsulter sa progression et son compte\n\nPARCOURS CONSEILLÉ\n\nExplorez d’abord ",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/pokemon-reference-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-reference-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Pokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nPokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions\n\nUn guide route par route des références Pokémon publiques de Lunidex, du Pokédex consultable aux pages d’attaques, capacités, objets et espèces.\n\nPUBLIÉ LE 19 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est un Pokédex Pokémon public et gratuit à utiliser en ligne, alimenté par PokéAPI. Commencez par /pokedex, ouvrez /pokemon/{name}, puis utilisez /types, /moves, /abilities ou /items pour une recherche ciblée. Les statistiques, types, capacités, évolutions, attaques, rencontres, formes et noms localisés dépendent des données amont disponibles pour la langue choisie.\n\nCe que couvre ce guide\n\nCe guide couvre /pokedex, /pokemon/{name}, /types, /moves, /abilities et /items. Ce sont des références publiques ; elles n’exposent pas l’espace personnel d’un autre utilisateur.\n\nComment utiliser ces fonctions\n01\n\nOuvrez le Pokédex et recherchez par nom, numéro, type, génération, région ou filtre disponible dans l’interface actuelle.\n\n02\n\nOuvrez une fiche comme /pokemon/pikachu pour lire le nom localisé, les types, statistiques, capacités, évolutions, attaques, rencontres et liens TCG disponibles.\n\n03\n\nUtilisez le tableau des types pour les matchups offensifs et défensifs, puis ouvrez une page d’attaque, de capacité ou d’objet pour sa définition et ses Pokémon associés.\n\n04\n\nEnvoyez le résultat vers le constructeur d’équipe ou la comparaison quand la question de référence devient une décision d’équipe.\n\nLuni\ndex\n\nSuivez votre collection Pokémon ",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/docs/api",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/docs/api",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "API publique Lunidex v1",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nRetour à la documentation\nAPI publique Lunidex v1\n\nConnectez un service serveur aux données déjà synchronisées avec un compte Lunidex. Créez une clé et envoyez une première requête, puis explorez les cartes, les produits scellés, la pagination et les écritures.\n\nURL de base\nhttps://lunidex.app/api/v1\nGérer les clés API\nOuvrir la spécification OpenAPI\nSur cette page\nClés réservées aux serveurs\n\nNe placez jamais une clé API dans le code d’un navigateur, une application mobile, un dépôt public, une URL, une capture d’écran ou un journal partagé. Gardez-la dans un gestionnaire de secrets côté serveur et transmettez-la uniquement dans l’en-tête Authorization.\n\nDémarrage rapide\n\nUne intégration a besoin d’une clé, d’un secret stocké côté serveur et d’une requête HTTPS vers l’URL de base de l’API.\n\n1\nCréer une clé\n\nOuvrez la carte des clés API dans le tableau de bord Lunidex. Nommez la clé et choisissez lecture seule ou lecture et écriture. Le secret complet n’apparaît qu’une fois : copiez-le avant de fermer le message.\n\n2\nStocker le secret sur votre serveur\n\nEnregistrez la clé sous LUNIDEX_API_KEY dans le gestionnaire de secrets de votre hébergeur. Ne la commitez pas et ne l’envoyez pas au navigateur.\n\n3\nEnvoyer la première requête\n\nAppelez GET /me depuis votre serveur. Les routes privées exigent l’en-tête Authorization: Bearer suivi de la clé.\n\ncURL · à exécuter dans un environnement serveur de confiance\nCopier le code\ncurl --fail-with-body \\\n  -H \"Authorization: Bearer $LUNIDEX_API_KEY\" \\\n  https://lunidex.app/api/v1/me\nNode.js · fetch côté serveur\nCopier le code\nconst API_BASE_URL = \"https://lunidex.app/api/v1\";\ncon",
+      "controls": 6
+    },
+    "small": {
+      "width": 340,
+      "scroll": 340,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/progress-account-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/progress-account-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Comment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nComment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex\n\nUn guide respectueux de la confidentialité pour les surfaces personnelles qui apparaissent après connexion ou après l’utilisation de la progression locale.\n\nPUBLIÉ LE 22 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nUtilisez les routes publiques sans compte, puis connectez-vous lorsque vous avez besoin de l’espace lié au compte pour synchroniser collection, progression, amis ou autres fonctions personnalisées. Les profils publics restent distincts des données privées du compte.\n\nCe que couvre ce guide\n\nCe guide couvre /dashboard, /favorites, /friends, /u/{handle}, les flux d’authentification et de réinitialisation, ainsi que les actions de progression proposées par le Pokédex, le Team Builder, le quiz et l’espace TCG.\n\nComment utiliser ces fonctions\n01\n\nCommencez par parcourir les pages publiques. Le Pokédex, les outils d’équipe, le quiz et le catalogue ne donnent pas accès aux données d’un autre utilisateur.\n\n02\n\nCréez un compte ou connectez-vous lorsque le service de synchronisation configuré doit enregistrer collection, équipe et progression sur plusieurs appareils.\n\n03\n\nUtilisez le tableau de bord pour consulter profil, badges, statistiques de quiz, progression Pokédex, activité, réglages et état de synchronisation.\n\n04\n\nUtilisez favoris, amis et profils publics uniquement pour les données et réglages de visibilité que vous choisissez ; ne les traitez jamais comme une source de données privées.\n\nLuni\ndex\n\nSuivez votre collecti",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/ev-iv",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/ev-iv",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Calculateur EV/IV",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCalculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout mo",
+      "controls": 20
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/quiz-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/quiz-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Jouer au quiz Pokémon Lunidex : modes, défis et badges",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE DU QUIZ\n\nJouer au quiz Pokémon Lunidex : modes, défis et badges\n\nUn guide pratique du quiz : trois types de défis, trois modes de jeu, le défi quotidien et les badges à débloquer — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 10 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe quiz permet de reconnaître des Pokémon à partir de l’illustration officielle, d’une silhouette ou des statistiques de base. Vous choisissez un type de défi (classique, silhouette, stats), puis un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies et le contre-la-montre 30 secondes. Un défi quotidien et cinq badges complètent l’expérience.\n\nComment jouer\n\nLa page du quiz fonctionne en quatre étapes : défi, mode, filtres, puis réponse.\n\n01\n\nChoisissez un type de défi : le classique montre l’illustration officielle, la silhouette montre le sprite en noir, les stats montrent des barres de statistiques de base avec les valeurs masquées.\n\n02\n\nChoisissez un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies, le contre-la-montre donne 30 secondes et récompense les réponses correctes rapides avec plus de points.\n\n03\n\nRéduisez le vivier avec les filtres de génération et de type si vous le souhaitez, puis répondez parmi les quatre propositions.\n\n04\n\nJouez au défi quotidien pour un ensemble fixe de dix questions déterminées par la date. Avec un compte connecté, la tentative est suivie et comptée au classement.\n\nLes cinq badges\n\nLes badges se débloquent selon vos performances. C",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/faq",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/faq",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Questions fréquentes",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nCENTRE D'AIDE\n\nQuestions fréquentes\n\nDes réponses claires sur les données, les outils, l’espace JCC, les comptes et le périmètre open source de Lunidex.\n\nRechercher des questions...\n\nFILTRER LES QUESTIONS PAR CATÉGORIE\n\n19\n\nToutes les questions\nBien démarrer\n4\nOutils Pokémon\n5\nEspace Pokémon JCC\n6\nDonnées et assistance\n4\n\n19 questions disponibles\n\nBien démarrer\n\nLe périmètre du produit, les comptes, les langues disponibles et les options d’installation.\n\nQu'est-ce que Lunidex ?\n\nLunidex est une application web Pokémon indépendante et non officielle ainsi qu’un catalogue Pokémon JCC. Elle réunit les données de référence Pokémon, les outils d’équipe et un espace de collection JCC. Elle n’est affiliée ni à Nintendo, ni à Game Freak, ni à The Pokémon Company.\n\nÀ PROPOS DE LUNIDEX\nFaut-il un compte ou un abonnement ?\n\nLes pages de référence et de catalogue publiques sont accessibles sans compte. L’application web utilise une session associée à un compte pour les changements personnels comme la collection, les équipes, les favoris et les autres progrès synchronisés. Le produit actuel ne comporte aucun abonnement ni parcours d’achat.\n\nTABLEAU DE BORD\nQuelles langues sont disponibles dans l’interface ?\n\nL’interface Lunidex est disponible en anglais, français, espagnol, allemand, italien, japonais, coréen et chinois. Les langues des données de cartes sont sélectionnées séparément et dépendent de ce que TCGdex fournit.\n\nPuis-je installer Lunidex sur un téléphone ?\n\nOui. Lunidex est une application web installable (PWA) qu’un navigateur compatible peut ajouter à l’écran d’accueil. Lunidex est actuellement proposé comme app",
+      "controls": 25
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/tcg-workspace-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/tcg-workspace-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Comment utiliser l’espace Pokémon TCG de Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nComment utiliser l’espace Pokémon TCG de Lunidex\n\nUn guide complet des routes TCG publiques et des surfaces de collection liées au compte dans Lunidex.\n\nPUBLIÉ LE 21 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application et un espace web de collection Pokémon TCG : parcourez le catalogue public en ligne sur /tcg, ouvrez les fiches de cartes et de sets, enregistrez les cartes possédées ou souhaitées, suivez la progression par set, gérez une wishlist et préparez des decks. Les faits du catalogue viennent de TCGdex ; l’état personnel de collection utilise l’espace associé au compte lorsque le service configuré est disponible. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent ni scanner de cartes ni historique de marché garanti.\n\nCe que couvre ce guide\n\nCe guide couvre /tcg, /tcg/cards/{id}, /tcg/collection, /tcg/collection/{language}/{setId}, /tcg/wishlist et /tcg/deck-builder. Les actions de collection sont séparées de la consultation publique du catalogue.\n\nComment utiliser ces fonctions\n01\n\nCommencez dans le catalogue TCG et recherchez par carte, série, type, rareté, PV ou filtre disponible dans l’interface.\n\n02\n\nOuvrez une fiche pour consulter les champs fournis par TCGdex, ou une série pour parcourir sa liste de cartes et sa surface de progression.\n\n03\n\nConnectez-vous et attendez que la synchronisation soit prête avant de modifier collection, wishlist, notes, recherches enregistrées ou decks.\n\n04\n\nUtilisez les vues de collection et de deck pour transformer la recherche en",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/favorites",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/favorites",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      },
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Mes Favoris",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nLUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (0)\n\nVotre collection est vide\n\nCommencez à ajouter vos Pokémon favoris en cliquant sur l'icône cœur !\n\nRETOUR AU LUNIDEX\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/team-builder-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/team-builder-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’ÉQUIPE\n\nComposer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex\n\nUn guide pratique du créateur d’équipe : six emplacements, analyse de synergie, couverture de types, auto-complétion et partage — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 9 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe créateur d’équipe calcule localement dans le navigateur la synergie, les faiblesses défensives et la couverture des types. Connectez-vous pour enregistrer et synchroniser votre équipe dans l’espace personnel.\n\nCe que renvoie l’analyse\n\nChaque ligne correspond à un résultat visible du créateur d’équipe actuel. C’est une aide à la préparation, pas un simulateur de combat ni un moteur de légalité des formats.\n\nENTRÉE OU INDICATEUR\tRÉSULTAT VISIBLE\nÉquipe de six\tAjoutez jusqu’à six Pokémon ; les membres présents servent d’entrée à chaque calcul.\nFaiblesses partagées\tAffiche les multiplicateurs défensifs et met en évidence les recouvrements pour repérer les faiblesses répétées.\nCouverture des types\tRésume les types offensifs couverts et signale les trous où les attaques actuelles n’ont pas de coup super efficace.\nStatistiques\tPrésente l’équilibre des statistiques de base dans le radar et les résumés associés ; toutes les conditions de combat ne sont pas simulées.\nScore de synergie\tUn résumé heuristique de 0 à 100 % de la couverture défensive. Utilisez-le pour comparer, pas comme garantie compétitive.\nExemple pratique\n\nSi deux membres de votre équipe sont faibles face à la Glace, notez cette faiblesse partag",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/friends",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/friends",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Amis",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nCOMMUNAUTÉ\n\nAmis\n\nGérez vos amis et explorez les collections JCC partagées.\n\nConnectez-vous pour utiliser les amis.\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/guides/team-tools-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/team-tools-guide",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Outils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE D’UTILISATION\n\nOutils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts\n\nUn guide pratique des outils complémentaires qui transforment les données Pokémon en parcours de préparation après le créateur d’équipe.\n\nPUBLIÉ LE 20 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe constructeur d’équipe Pokémon Lunidex accepte jusqu’à six Pokémon et fournit des repères d’équilibre comme la couverture de types, les faiblesses communes, la synergie, les suggestions et l’équilibre des statistiques. Compare peut examiner jusqu’à trois Pokémon ; le parcours peut importer du texte Showdown, créer des liens de partage et exporter une image avant de passer à EV/IV, Reproduction ou Combat. Ces outils ne garantissent pas la légalité en tournoi et ne remplacent pas un simulateur propre à un format.\n\nCe que couvre ce guide\n\nCe guide couvre /team, /compare, /types, /ev-iv, /breeding et /battle. Il explique aussi l’import Showdown et les liens de partage documentés par le Team Builder.\n\nComment utiliser ces fonctions\n01\n\nAjoutez jusqu’à six Pokémon dans /team et lisez les faiblesses défensives, résistances, couverture offensive, score de synergie, suggestions et équilibre des statistiques.\n\n02\n\nOuvrez /compare pour examiner jusqu’à trois Pokémon côte à côte : statistiques, radar, relations de types et suggestions de couverture ou de partenaires.\n\n03\n\nUtilisez /ev-iv pour planifier ou inverser un calcul de statistiques, /breeding pour l’héritage et les capacités œuf, et /types pour un matchup clair.\n\n04\n\nUtilisez /battle pour les s",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/friends/00000000-0000-0000-0000-000000000000",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/friends/00000000-0000-0000-0000-000000000000",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Profil ami",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nCOMMUNAUTÉ\n\nProfil ami\n\nConsultez les données JCC partagées.\n\nConnectez-vous pour utiliser les amis.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/fr/dashboard",
+    "colorScheme": "light",
+    "violations": []
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "colorScheme": "light",
+    "violations": []
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "colorScheme": "light",
+    "violations": []
+  },
+  {
+    "path": "/fr/dashboard",
+    "colorScheme": "dark",
+    "violations": []
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "colorScheme": "dark",
+    "violations": []
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "colorScheme": "dark",
+    "violations": []
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "step": "small-actions",
+    "controls": [
+      {
+        "name": "Tous",
+        "x": 32,
+        "w": 64.2578125,
+        "h": 44
+      },
+      {
+        "name": "Capturés",
+        "x": 96.2578125,
+        "w": 112.7734375,
+        "h": 44
+      },
+      {
+        "name": "Manquants",
+        "x": 209.03125,
+        "w": 109.5390625,
+        "h": 44
+      },
+      {
+        "name": "Ajouter à l'équipe",
+        "x": 208.2109375,
+        "w": 44,
+        "h": 44
+      },
+      {
+        "name": "Ajouter au comparateur",
+        "x": 256.2109375,
+        "w": 44,
+        "h": 44
+      },
+      {
+        "name": "Ajouter aux favoris",
+        "x": 208.2109375,
+        "w": 44,
+        "h": 44
+      },
+      {
+        "name": "Marquer comme capturé",
+        "x": 257.6015625,
+        "w": 44,
+        "h": 44
+      },
+      {
+        "name": "Ajouter à l'équipe",
+        "x": 208.2109375,
+        "w": 44,
+        "h": 44
+      }
+    ],
+    "scroll": 320
+  },
+  {
+    "step": "search",
+    "body": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n017\nAffichage de 17 Pokémon sur 17.\nTOUT EFFACER\nCAT. NO.\n#025\nPikachu\nÉLECTRIK\nCAT. NO.\n#10080\nPikachu Rock Star\nÉLECTRIK\nCAT. NO.\n#10081\nPikachu Belle\nÉLECTRIK\nCAT. NO.\n#10082\nPikachu Pop Star\nÉLECTRIK\nCAT. NO.\n#10083\nPikachu Phd\nÉLECTRIK\nCAT. NO.\n#10084\nPikachu Libre\nÉLECTRIK\nCAT. NO.\n#10085\nPikachu Cosplay\nÉLECTRIK\nCAT. NO.\n#10094\nPikachu Original Cap\nÉLECTRIK\nCAT. NO.\n#10095\nPikachu Hoenn Cap\nÉLECTRIK\nCAT. NO.\n#10096\nPikachu Sinnoh Cap\nÉLECTRIK\nCAT. NO.\n#10097\nPikachu Unova Cap\nÉLECTRIK\nCAT. NO.\n#10098\nPikachu Kalos Cap\nÉLECTRIK\nCAT. NO.\n#10099\nPikachu Alola Cap\nÉLECTRIK\nCAT. NO.\n#10148\nPikachu Partner Cap\nÉLECTRIK\nCAT. NO.\n#10158\nPikachu Partenaire de départ\nÉLECTRIK\nCAT. NO.\n#10160\nPikachu World Cap\nÉLECTRIK\nCAT. NO.\n#10199\nPikachu Gigamax\nÉLECTRIK\n\nPOKÉMON DU JOUR\n\nHÉLÉDELLE\nNORMAL\nVOL\nJouer au quiz du jour"
+  },
+  {
+    "step": "compare-guest",
+    "alerts": [
+      "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+    ]
+  },
+  {
+    "step": "filter-fire",
+    "body": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n103\nAffichage de 20 Pokémon sur 103.\nTOUT EFFACER\nFILTRES\nFeu\nTout effacer\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#037\nGoupix\nFEU\nCAT. NO.\n#038\nFeunard\nFEU\nCAT. NO.\n#058\nCaninos\nFEU\nCAT. NO.\n#059\nArcanin\nFEU\nCAT. NO.\n#077\nPonyta\nFEU\nCAT. NO.\n#078\nGalopa\nFEU\nCAT. NO.\n#126\nMagmar\nFEU\nCAT. NO.\n#136\nPyroli\nFEU\nCAT. NO.\n#146\nSulfura\nFEU\nVOL\nCAT. NO.\n#155\nHéricendre\nFEU\nCAT. NO.\n#156\nFeurisson\nFEU\nCAT. NO.\n#157\nTyphlosion\nFEU\nCAT. NO.\n#218\nLimagma\nFEU\nCAT. NO.\n#219\nVolcaropod\nFEU\nROCHE\nCAT. NO.\n#228\nMalosse\nTÉNÈBRES\nFEU\nCAT. NO.\n#229\nDémolosse\nTÉNÈBRES\nFEU\nCAT. NO.\n#240\nMagby\nFEU\nVOIR PLUS\n(20 / 103)\n\nPOKÉMON DU JOUR\n\nHÉLÉDELLE\nNORMAL\nVOL\nJouer au quiz du jour",
+    "dialogs": 0
+  },
+  {
+    "step": "sort-options",
+    "options": []
+  },
+  {
+    "step": "landscape",
+    "width": 812,
+    "scroll": 812
+  }
+]

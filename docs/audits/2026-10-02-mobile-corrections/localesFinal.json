@@ -1,0 +1,114 @@
+[
+  {
+    "lang": "it",
+    "htmlLang": "it",
+    "heading": [
+      "Calcolatore EV/IV"
+    ],
+    "font": "16px",
+    "links": [
+      "/it",
+      "/it/tcg/collection",
+      "/it/tcg",
+      "/it/pokedex"
+    ]
+  },
+  {
+    "lang": "en",
+    "htmlLang": "en",
+    "heading": [
+      "EV/IV Calculator"
+    ],
+    "font": "16px",
+    "links": [
+      "/en",
+      "/en/tcg/collection",
+      "/en/tcg",
+      "/en/pokedex"
+    ]
+  },
+  {
+    "lang": "fr",
+    "htmlLang": "fr",
+    "heading": [
+      "Calculateur EV/IV"
+    ],
+    "font": "16px",
+    "links": [
+      "/fr",
+      "/fr/tcg/collection",
+      "/fr/tcg",
+      "/fr/pokedex"
+    ]
+  },
+  {
+    "lang": "ja",
+    "htmlLang": "ja",
+    "heading": [
+      "EV/IV計算機"
+    ],
+    "font": "16px",
+    "links": [
+      "/ja",
+      "/ja/tcg/collection",
+      "/ja/tcg",
+      "/ja/pokedex"
+    ]
+  },
+  {
+    "lang": "es",
+    "htmlLang": "es",
+    "heading": [
+      "Calculadora EV/IV"
+    ],
+    "font": "16px",
+    "links": [
+      "/es",
+      "/es/tcg/collection",
+      "/es/tcg",
+      "/es/pokedex"
+    ]
+  },
+  {
+    "lang": "ko",
+    "htmlLang": "ko",
+    "heading": [
+      "EV/IV 계산기"
+    ],
+    "font": "16px",
+    "links": [
+      "/ko",
+      "/ko/tcg/collection",
+      "/ko/tcg",
+      "/ko/pokedex"
+    ]
+  },
+  {
+    "lang": "de",
+    "htmlLang": "de",
+    "heading": [
+      "EV/IV-Rechner"
+    ],
+    "font": "16px",
+    "links": [
+      "/de",
+      "/de/tcg/collection",
+      "/de/tcg",
+      "/de/pokedex"
+    ]
+  },
+  {
+    "lang": "zh",
+    "htmlLang": "zh",
+    "heading": [
+      "EV/IV计算器"
+    ],
+    "font": "16px",
+    "links": [
+      "/zh",
+      "/zh/tcg/collection",
+      "/zh/tcg",
+      "/zh/pokedex"
+    ]
+  }
+]

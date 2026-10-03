@@ -1,0 +1,24 @@
+{
+  "elapsedMs": 10578,
+  "setRequests": 221,
+  "detailRequests": 220,
+  "uniqueDetailRequests": 220,
+  "sample": [
+    "https://api.tcgdex.net/v2/en/sets",
+    "https://api.tcgdex.net/v2/en/sets/miscp",
+    "https://api.tcgdex.net/v2/en/sets/base1",
+    "https://api.tcgdex.net/v2/en/sets/base2",
+    "https://api.tcgdex.net/v2/en/sets/basep",
+    "https://api.tcgdex.net/v2/en/sets/wp",
+    "https://api.tcgdex.net/v2/en/sets/base3",
+    "https://api.tcgdex.net/v2/en/sets/jumbo",
+    "https://api.tcgdex.net/v2/en/sets/base4",
+    "https://api.tcgdex.net/v2/en/sets/base5",
+    "https://api.tcgdex.net/v2/en/sets/gym1",
+    "https://api.tcgdex.net/v2/en/sets/gym2",
+    "https://api.tcgdex.net/v2/en/sets/neo1",
+    "https://api.tcgdex.net/v2/en/sets/neo2",
+    "https://api.tcgdex.net/v2/en/sets/si1"
+  ],
+  "body": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nToutes les collections\n30th Classic Collection\n30th Celebration\nPitch Black\nChaos Rising\nPerfect Order\nPaldean Wonders\nAscended Heroes\nFantastical Parade\nCrimson Blaze\nPhantasmal Flames\nMega Rising\nMEP Black Star Promos\nMega Evolution\nMega Evolution Energy\nSecluded Springs\nWisdom of Sea and Sky\nWhite Flare\nBlack Bolt\nEevee Grove\nDestined R"
+}

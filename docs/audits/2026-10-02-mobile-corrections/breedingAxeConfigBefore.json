@@ -1,0 +1,83 @@
+[
+  {
+    "id": "color-contrast",
+    "count": 12,
+    "nodes": [
+      {
+        "html": "<span class=\"w-8 text-[11px] font-black uppercase tracking-wider text-red-400\">HP</span>",
+        "target": [
+          ".space-y-3:nth-child(1) > .gap-3.items-center.flex:nth-child(2) > .text-red-400.w-8.tracking-wider"
+        ],
+        "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.88 (foreground color: #ff6467, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+      },
+      {
+        "html": "<span class=\"w-8 text-[11px] font-black uppercase tracking-wider text-orange-400\">Atk</span>",
+        "target": [
+          ".space-y-3:nth-child(1) > .gap-3.items-center.flex:nth-child(3) > .text-orange-400.w-8.tracking-wider"
+        ],
+        "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.37 (foreground color: #ff8904, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+      },
+      {
+        "html": "<span class=\"w-8 text-[11px] font-black uppercase tracking-wider text-yellow-400\">Def</span>",
+        "target": [
+          ".space-y-3:nth-child(1) > .gap-3.items-center.flex:nth-child(4) > .text-yellow-400.w-8.tracking-wider"
+        ],
+        "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.57 (foreground color: #fdc700, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+      },
+      {
+        "html": "<span class=\"w-8 text-[11px] font-black uppercase tracking-wider text-blue-400\">SpA</span>",
+        "target": [
+          ".space-y-3:nth-child(1) > .gap-3.items-center.flex:nth-child(5) > .text-blue-400.w-8.tracking-wider"
+        ],
+        "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.63 (foreground color: #51a2ff, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+      }
+    ]
+  },
+  {
+    "id": "label",
+    "count": 12,
+    "nodes": [
+      {
+        "html": "<input aria-orientation=\"horizontal\" aria-valuenow=\"31\" id=\"base-ui-_r_3_\" max=\"31\" min=\"0\" step=\"1\" type=\"range\" value=\"31\" style=\"clip-path: inset(50%...\">",
+        "target": [
+          "#base-ui-_r_3_"
+        ],
+        "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+      },
+      {
+        "html": "<input aria-orientation=\"horizontal\" aria-valuenow=\"31\" id=\"base-ui-_r_7_\" max=\"31\" min=\"0\" step=\"1\" type=\"range\" value=\"31\" style=\"clip-path: inset(50%...\">",
+        "target": [
+          "#base-ui-_r_7_"
+        ],
+        "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+      },
+      {
+        "html": "<input aria-orientation=\"horizontal\" aria-valuenow=\"31\" id=\"base-ui-_r_b_\" max=\"31\" min=\"0\" step=\"1\" type=\"range\" value=\"31\" style=\"clip-path: inset(50%...\">",
+        "target": [
+          "#base-ui-_r_b_"
+        ],
+        "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+      },
+      {
+        "html": "<input aria-orientation=\"horizontal\" aria-valuenow=\"0\" id=\"base-ui-_r_f_\" max=\"31\" min=\"0\" step=\"1\" type=\"range\" value=\"0\" style=\"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 100%; height: 100%; margin: -1px; position: fixed; top: 0px; left: 0px;\">",
+        "target": [
+          "#base-ui-_r_f_"
+        ],
+        "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+      }
+    ]
+  },
+  {
+    "id": "select-name",
+    "count": 1,
+    "nodes": [
+      {
+        "html": "<select class=\"touch-target w-full max-w-xs rounded-sm border border-border/60 bg-background/50 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary capitalize\">",
+        "target": [
+          "select"
+        ],
+        "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+      }
+    ]
+  }
+]

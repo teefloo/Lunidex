@@ -1,0 +1,643 @@
+[
+  {
+    "path": "/fr/quiz",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/quiz",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      },
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Quel est ce Pokémon ?",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nLUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 13
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/items",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/items",
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Objets",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nOBJETS\n\nObjets\n\nConsultez les objets tenus, les baies, les pierres d’évolution et autres objets\n\n800 OBJETS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\nPRIX\nCATÉGORIE\nALL MAIL\nAPRICORN BALLS\nAPRICORN BOX\nBAD HELD ITEMS\nBAKING ONLY\nCATCHING BONUS\nCHOICE\nCOLLECTIBLES\nDEX COMPLETION\nEFFORT DROP\nEFFORT TRAINING\nEVENT ITEMS\nEVOLUTION\nFLUTES\nGAMEPLAY\nHEALING\nHELD ITEMS\nIN A PINCH\nJEWELS\nLOOT\nMEDICINE\nMEGA STONES\nMEMORIES\nMULCH\nNATURE MINTS\nOTHER\nPICKY HEALING\nPLATES\nPP RECOVERY\nREVIVAL\nSCARVES\nSPECIAL BALLS\nSPECIES CANDIES\nSPECIES SPECIFIC\nSPELUNKING\nSTANDARD BALLS\nSTAT BOOSTS\nSTATUS CURES\nTRAINING\nTYPE ENHANCEMENT\nTYPE PROTECTION\nVITAMINS\nZ CRYSTALS\n800 OBJETS\nABC AVENTURE\n\nUn manuel détaillant le savoir indispensable à un Dresseur partant à l’aventure. Écrit par une connaissance.\n\nGAMEPLAY\nABSOLITE\n\nUne variété de Méga-Gemme. Tenue par un Absol, elle lui permet de méga-évoluer durant un combat.\n\nMEGA STONES\nACCRO GRIFFE\n\nObjet à tenir augmentant la durée des attaques à tours multiples telles que Ligotage et Étreinte.\n\nHELD ITEMS\n₽4 000\nAÉROZÉLITE\n\nUne cristallisation de la Force Z, permettant de transformer les capacités de type Vol en capacité Z.\n\nZ CRYSTALS\nBIS BALL\n\nUne Poké Ball un peu spéciale qui fonctionne particulièrement bien sur les espèces de Pokémon déjà capturées.\n\nSPECIAL BALLS\n₽1 000\nCARBONE\n\nUne boisson très nutritive qui monte la Vitesse de base d’un Pokémon.\n\nVITAMINS\n₽10 000\nCENDRE SACRÉE\n\nRanime tous les Pokémon K.O. et restaure tous leurs PV.\n\nREVIVAL\n₽50 000\nCHRONO BALL\n\nUne Poké Ball un peu spéciale qui fonctionne de mieux en mieux à mesure que le combat s’éternise.\n\nSPECIAL BALLS\n₽1 000\nEAU FRAÎCHE\n\n",
+      "controls": 49
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/pokemon-cards/img/grain.webp"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/pokemon-cards/img/grain.webp"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Catalogue JCC Pokémon",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCatalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nChargement de la collection…\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nFILTRES\nExtension: 30th Classic Collection\nEffacer\nRésultats du catalogue\nCARTES TROUVÉES\n24 cartes dans 30th Classic Collection\nCHARIZARD\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 120\n\nPRIX MARCHÉ\n\n167,52 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nDELCATTY\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 70\n\nPRIX MARCHÉ\n\n5,01 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nMETAGROSS\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 100\n\nPRIX MARCHÉ\n\n9,54 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nGENESECT EX\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 170\n\nPRIX MARCHÉ\n\n5,90 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nMISTY\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nDRESSEUR\n\nPRIX MARCHÉ\n\n7,64 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nDARK TYRANITAR\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 120\n\nPRIX MARCHÉ\n\n14,04 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nSNEASEL\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 60\n\nPRIX MARCHÉ\n\n4,80 €\nCardmarket\n\n",
+      "controls": 55
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/items/potion",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/items/potion",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      },
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Potion",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nObjets\nPotion\nBACK TO ITEMS\n\n#0017\n\nPOTION\nHEALING\n₽200\nEFFECT\n\nUn spray qui soigne les blessures. Restaure 20 PV à un Pokémon.\n\nITEM INFO\nCATEGORY\nHealing\nCOST\n₽200\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/booster-value",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/pokemon-cards/img/grain.webp"
+      },
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Valeur attendue d’un booster Pokémon",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCatalogue JCC\nFréquences de tirage\nValeur des boosters\nValeur attendue d’un booster Pokémon\n\nComprendre comment les ouvertures observées et les prix en euros permettent d’estimer la valeur brute des cartes.\n\nÉtat des données\n\nAucun échantillon validé avec une couverture complète des prix Cardmarket en euros n’est publié. La valeur chiffrée est indisponible.\n\nCalcul de la valeur\n\nOn multiplie l’effectif de chaque variante observée par son prix Cardmarket en euros, puis on divise la somme par le nombre de boosters ouverts. On compare cette valeur brute au prix du booster correspondant.\n\nCouverture des prix\n\nL’échantillon et les prix doivent concerner la même extension, région et type de booster. Chaque variante observée doit avoir un prix Cardmarket en euros, et le prix du booster doit être sourcé.\n\nUne estimation, pas un gain\n\nLes prix changent. L’état, les frais de vente, l’expédition, les taxes et les invendus modifient le montant reçu. Une moyenne passée ne garantit aucun bénéfice.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions ",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/legal",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/legal",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Mentions légales",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nMentions légales\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes informations identifient l’éditeur du projet et ses principaux prestataires techniques. Elles sont présentées sous réserve des informations contractuelles et administratives à jour.\n\nLunidex est un projet personnel, indépendant et non commercial.\n\nSOMMAIRE\n\n1. Éditeur\n2. Hébergement et services\n3. Activité\n4. Contact\n5. Non-affiliation\n1. Éditeur\nChamp\tValeur\nNom du projet\tLunidex\nÉditeur / responsable de la publication\tEsteban Deloge (particulier non professionnel)\nStatut\tProjet personnel indépendant et non commercial\nContact\tcontact@lunidex.app\n2. Hébergement et services\n\nL’application est déployée avec Vercel. Hébergeur : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — privacy@vercel.com. L’authentification et la base applicative peuvent être fournies par Neon lorsque la configuration de production les active. Resend peut être utilisé pour acheminer les messages de contact. Les données Pokémon et TCG sont demandées à des services tiers identifiés dans la politique de confidentialité.\n\n3. Activité\n\nLunidex est un Pokédex, un espace d’outils Pokémon et un catalogue TCG gratuits, sans publicité et sans transaction commerciale dans le code actuel. Les fonctions de compte et de synchronisation sont facultatives pour la consultation publique.\n\n4. Contact\n\nPour toute question, signalement ou demande relative aux données, écrivez à contact@lunidex.app.\n\n5. Non-affiliation\n\nLunidex n’est pas affilié, sponsorisé ni approuvé par Nintendo, Game Freak, Creatures Inc. ou The Pokémon Company.\n\nCe document juridique est princ",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/cards/sv03.5-199",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Charizard ex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nCatalogue JCC\n151\nCharizard ex\nRETOUR\n\n151\n\nCharizard ex\n\nAucune description complémentaire disponible.\n\nPV\n330\nRareté\nSpecial illustration rare\nN° collector\n#199\nCatégorie\nPokémon\nIllustrateur\nmiki kudo\nTypes de Pokémon\nFire\n\nPRIX MARCHÉ\n\n471,10 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nMéthode et limites du prix\nVOIR LES DÉTAILS DE CHARIZARD EX\nCAPACITÉS\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookie",
+      "controls": 2
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/moves",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/moves",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Capacités",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nCAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n48 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n48 CAPACITÉS\n\n48\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nCHARGEMENT DES CAPACITÉS...\nTOUS LES TYPES\n\n#036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne charge violente qui blesse aussi légèrement le lanceur.\n\nPUIS\n\n90\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#047\n\nBERCEUSE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nUne berceuse plonge l’ennemi dans un profond sommeil.\n\nPUIS\n\n—\n\nPRÉC\n\n55%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#033\n\nCHARGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur charge l’ennemi et le percute de tout son corps.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#029\n\nCOUP D’BOULE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur donne un coup de tête. Peut apeurer l’ennemi.\n\nPUIS\n\n70\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#015\n\nCOUPE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nCoupe l’ennemi avec des lames ou des griffes. Hors combat, permet de couper des arbres fins.\n\nPUIS\n\n50\n\nPRÉC\n\n95%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#013\n\nCOUPE-VENT\nNORMAL\nSPÉCIAL\nGÉNÉRATION 1\n\nAttaque en 2 tours. Des lames de vent fra",
+      "controls": 74
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/collection",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Ma Collection",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCollection\nListe de souhaits\nScellés\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nMA COLLECTION\n\nVOTRE COLLECTION JCC AU COMPLET EN UN COUP D'ŒIL.\n\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 1
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/moves/thunderbolt",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/moves/thunderbolt",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Tonnerre",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nCapacités\nTonnerre\nRETOUR AUX CAPACITÉS\n\n#0085\n\nTONNERRE\nÉLECTRIK\nSPÉCIAL\nINTRODUIT EN GEN I\nPUISSANCE\n90\nPRÉCISION\n100%\nPP\n15\nPRIORITÉ\n0\nCHANCE D'EFFET\n10%\nEFFET COMPLET\n\nInflige des dégats réguliers. A une chance de paralyser la cible.\n\nENTRÉE POKÉDEX\n\n“Une grosse décharge électrique tombe sur l’ennemi. Peut aussi le paralyser.”\n\nPOKÉMON APPRENANT TONNERRE\n356\nRattata\nRaticate\nPikachu\nRaichu\nNidoran F\nNidorina\nNidoqueen\nNidoran M\nNidorino\nNidoking\nClefairy\nClefable\nJigglypuff\nWigglytuff\nMeowth\nPersian\nMankey\nPrimeape\nMagnemite\nMagneton\nGrimer\nMuk\nGastly\nHaunter\nGengar\nVoltorb\nElectrode\nLickitung\nKoffing\nWeezing\nRhyhorn\nRhydon\nChansey\nKangaskhan\nStaryu\nStarmie\nMr Mime\nElectabuzz\nTauros\nGyarados\nLapras\nJolteon\nPorygon\nSnorlax\nZapdos\nDratini\nDragonair\nDragonite\nMewtwo\nMew\nVOIR LES 356 POKÉMON\nMEILLEURS UTILISATEURS\n\nTop Pokémon par Attaque Spé.\n\n1\nMagneton\n120\n2\nClefable\n95\n3\nMagnemite\n95\n4\nRaichu\n90\n5\nNidoking\n85\n6\nWigglytuff\n85\nDÉTAILS DE LA CAPACITÉ\nCATÉGORIE\nSpécial\nPUISSANCE\n90\nPRÉCISION\n100%\nPP\n15\nPRIORITÉ\n0\nCHANCE D'EFFET\n10%\nGÉNÉRATION\nGen I\nSÉLECTIONNER UN TYPE\nÉlectrik\nCT/CS\nRED-BLUE\nYELLOW\nRUBY-SAPPHIRE\nEMERALD\nFIRERED-LEAFGREEN\nDIAMOND-PEARL\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marque",
+      "controls": 1
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection/fr",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "La connexion n’a pas pu être confirmée. Réessayez.",
+      "body": "Aller au contenu principal\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320
+    }
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/nuzlocke",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Suivi Nuzlocke",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nMODE CHALLENGE\n\nSuivi Nuzlocke\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\nGuide du suivi Nuzlocke\n↗\n\nCONTINUER L’EXPLORATION\n\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nCatalogue JCC\nMES PARTIES\nCréer une partie\n\nAucune partie pour le moment.\n\nCréez ou sélectionnez une partie pour commencer à noter les rencontres.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légal",
+      "controls": 3
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr/sv03.5",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection/fr/sv03.5",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Ma Collection",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n← Ma Collection\nMA COLLECTION\n\nVOTRE COLLECTION JCC AU COMPLET EN UN COUP D'ŒIL.\n\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLa connexion n’a pas pu être confirmée. Réessayez.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/offline",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/offline",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Lunidex est momentanément hors ligne",
+      "body": "Aller au contenu principal\n\nSIGNAL PERDU\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 1
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/deck-builder",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/deck-builder",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Constructeur de deck",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCatalogue\nMarché des scellés\nConstructeur de deck\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\n\nCATALOGUE\n\nConstructeur de deck\n\nConstruisez un deck Pokémon TCG de 60 cartes (4 exemplaires max. par carte, sauf les Énergies de base)\n\nMES DECKS\n\nAucun deck pour le moment.\n\nCréez ou sélectionnez un deck pour commencer.\n\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 3
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/pokedex",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/pokedex",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Pokédex Pokémon en ligne",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nPokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nNIRONDELLE\nNORMAL\nVOL\nJouer au quiz du jour\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nM",
+      "controls": 89
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/pull-rates",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Fréquences de tirage des boosters Pokémon",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCatalogue JCC\nFréquences de tirage\nValeur des boosters\nFréquences de tirage des boosters Pokémon\n\nComprendre les fréquences de rareté observées pour une extension, une région et un type de booster précis.\n\nÉtat des données\n\nLunidex n’a pas publié d’échantillon validé, relevé booster par booster. Des résultats indépendants publiés figurent ci-dessous ; les fréquences des boosters français restent indisponibles.\n\nÉtudes d’ouvertures publiées\n\nLes études ci-dessous portent sur des boosters en anglais. Chaque fiche indique l’éditeur du compte rendu et, si la source le précise, l’origine du comptage. La région d’impression peut ne pas être précisée ; ces chiffres ne sont ni des taux officiels Pokémon ni des estimations pour les boosters français.\n\nVous avez des données d’ouverture de boosters français ou anglais ? Envoyez un lien public ou un relevé anonymisé indiquant l’extension, la langue et la région d’impression, le type de produit, les dates, le nombre de boosters, les raretés et les variantes de cartes. Les échantillons sont vérifiés avant leur ajout aux données Lunidex.\n\nProposer un échantillon d’ouvertures\nTemporal Forces\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n16,83% ± 0,79%\nIntervalle de confiance à 95 %\nUltra-rare\n6,67% ± 0,53%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n5,00% ± 0,46%\nIntervalle de confiance à 95 %\nRare illustration\n7,72% ± 0,56%\nIntervalle de confiance à 95 %\nRa",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/pokemon/pikachu",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Pikachu",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nPokémon\nPikachu\n#025\nPikachu\n\nExplorez Pikachu : statistiques, types (Électrik), évolutions, attaques, talents et suggestions de movesets sur Lunidex.\n\nPOKÉMON SOURIS\n\nFORÊT\n\nJAUNE\nÉLECTRIK\nCri actuel\nCri historique\nÀ PROPOS\nSTATISTIQUES\nÉVOLUTION\nCAPACITÉS\nCARTES\nPlus\nEntrée Lunidex\n\nIl lui arrive de remettre d’aplomb un Pikachu allié en lui envoyant une décharge électrique.\n\nPOIDS\n\n6 kg\n\nTAILLE\n\n0.4 m\n\nDONNÉES POKÉDEX\n\nORDRE\n\n#35\n\nFORME PAR DÉFAUT\n\nOui\n\nFORMES\n\n1\nPikachu\n\nINDICES DE JEU\n\n46 APPARITIONS EN JEU\nRed · #84\nBlue · #84\nYellow · #84\nGold · #25\nSilver · #25\nCrystal · #25\nRuby · #25\nSapphire · #25\nEmerald · #25\nFirered · #25\nLeafgreen · #25\nDiamond · #25\nPearl · #25\nPlatinum · #25\nHeartgold · #25\nSoulsilver · #25\nBlack · #25\nWhite · #25\nBlack 2 · #25\nWhite 2 · #25\nX · #25\nY · #25\nOmega Ruby · #25\nAlpha Sapphire · #25\nSun · #25\nMoon · #25\nUltra Sun · #25\nUltra Moon · #25\nLets Go Pikachu · #25\nLets Go Eevee · #25\nSword · #25\nShield · #25\nThe Isle Of Armor Sword · #25\nThe Crown Tundra Sword · #25\nBrilliant Diamond · #25\nShining Pearl · #25\nLegends Arceus · #25\nScarlet · #25\nViolet · #25\nThe Teal Mask Scarlet · #25\nThe Indigo Disk Scarlet · #25\nRed Japan · #84\nGreen Japan · #84\nBlue Japan · #84\nLegends Za · #25\nMega Dimension · #25\n\nOBJETS TENUS\n\n2\nOran Berry\nRuby · 50%\nSapphire · 50%\nEmerald · 50%\nDiamond · 50%\nPearl · 50%\nPlatinum · 50%\nHeartgold · 50%\nSoulsilver · 50%\nBlack · 50%\nWhite · 50%\nLight Ball\nRuby · 5%\nSapphire · 5%\nEmerald · 5%\nDiamond · 5%\nPearl · 5%\nPlatinum · 5%\nHeartgold · 5%\nSoulsilver · 5%\nBlack · 1%\nWhite · 1%\nBlack 2 · 5%\nWhite 2 · 5%\nX · 5%\nY · 5%\nOmega Ruby · 5%\nAlpha Sapphir",
+      "controls": 24
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed",
+    "errors": [],
+    "network": [
+      {
+        "status": 400,
+        "url": "http://127.0.0.1:3101/_next/image"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Tableau de bord",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nTableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nTableau de bord\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  },
+  {
+    "path": "/fr/privacy",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/privacy",
+    "errors": [],
+    "network": [
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-32x32.png"
+      },
+      {
+        "status": 500,
+        "url": "http://127.0.0.1:3101/favicon-16x16.png"
+      }
+    ],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Politique de confidentialité",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nPolitique de confidentialité\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les données traitées par Lunidex selon les fonctionnalités réellement activées. Elle ne constitue pas un avis juridique personnalisé.\n\nLa consultation du Pokédex et du catalogue TCG reste possible sans compte. Les fonctions qui enregistrent un espace personnel utilisent une session de compte et la synchronisation Neon lorsqu’elle est configurée.\n\nSOMMAIRE\n\n1. Compte et données personnelles\n2. Finalités et bases légales\n3. Stockage dans le navigateur\n4. Mesure, logs et données techniques\n5. Services, destinataires et transferts\n6. Durées de conservation\n7. Vos droits et contact\n1. Compte et données personnelles\n\nResponsable du traitement : Esteban Deloge, éditeur non professionnel de Lunidex. Pour toute question relative aux données personnelles, utilisez contact@lunidex.app.\n\nLa création d’un compte est facultative pour consulter les pages publiques. Lorsqu’un compte est créé, Neon Auth traite l’adresse e-mail, les identifiants de session et, si vous le fournissez, le nom ou pseudo. La connexion par Google ou GitHub peut être proposée selon la configuration du service ; le fournisseur choisi participe alors au parcours d’authentification.\n\nUne fois connecté, votre espace personnel peut synchroniser avec Neon les données que vous choisissez d’utiliser : favoris, Pokémon capturés, équipes, comparaisons, progression, quiz, collection et listes TCG, recherches sauvegardées, réglages et autres fonctions associées. Les profils publics, amis, alertes de prix, salons de combat et notifications ne sont traités que si vou",
+      "controls": 0
+    },
+    "small": {
+      "width": 320,
+      "scroll": 320,
+      "mainWidth": 320
+    }
+  }
+]

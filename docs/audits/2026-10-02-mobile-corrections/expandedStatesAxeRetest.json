@@ -1,0 +1,62 @@
+[
+  {
+    "path": "/fr/dashboard",
+    "colorScheme": "light",
+    "violations": []
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "colorScheme": "light",
+    "violations": []
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "colorScheme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"px-2 py-0.5 rounded-sm text-[11px] sm:text-[11px] font-black uppercase tracking-tighter bg-yellow-500/20 text-yellow-600 dark:text-yellow-400\">Total: 534 (Meilleur)</div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #d08700, background color: #fbefcc, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/fr/dashboard",
+    "colorScheme": "dark",
+    "violations": []
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "colorScheme": "dark",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 12,
+        "nodes": [
+          {
+            "html": "<span class=\"type-label text-[11px] font-black uppercase\" style=\"color: rgb(182, 161, 54);\">Roche</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.23 (foreground color: #b6a136, background color: #1d387f, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"type-label text-[11px] font-black uppercase\" style=\"color: rgb(238, 129, 48);\">Feu</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #ee8130, background color: #104080, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"type-label text-[11px] font-black uppercase\" style=\"color: rgb(194, 46, 40);\">Combat</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.79 (foreground color: #c22e28, background color: #104080, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "colorScheme": "dark",
+    "violations": []
+  }
+]

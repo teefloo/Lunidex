@@ -1,0 +1,333 @@
+[
+  {
+    "path": "/fr",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr",
+    "ms": 4731,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Explorez les cartes Pokémon.",
+      "body": "Aller au contenu principal\nLunidex\nRechercher dans Lunidex\n\nCATALOGUE POKÉMON TCG\n\nExplorez les cartes Pokémon.\n\nParcourez les cartes et les extensions sans compte. Le suivi d’une collection nécessite un compte et un service de synchronisation disponible.\n\nEXPLORER LES CARTES\n↗\nCOMMENCER MA COLLECTION\n\nÀ DÉCOUVRIR DANS LE CATALOGUE\n\nCartes rares à découvrir\nEXPLORER LES CARTES\n↗\nCharizard ex\n228\nRare hyper\nObsidian Flames\nUmbreon VMAX\n215\nRare secrète\nEvolving Skies\nGreninja ex\n214\nRare illustration spéciale\nTwilight Masquerade\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\nChoisissez une extension\n\nPartez de n’importe quelle extension du catalogue.\n\nMarquez vos cartes\n\nIndiquez les cartes que vous possédez dans cette extension.\n\nSuivez votre progression\n\nVoyez ce que vous avez et ce qu’il vous reste à trouver.\n\nD’AUTRES OUTILS POKÉMON\n\nUn Pokédex et un outil d’équipe, aussi.\n\nConsultez les fiches Pokémon et préparez une équipe depuis le même espace que le catalogue de cartes.\n\nExplorer le Pokédex\nEXPLORER LE POKÉDEX\nPOKÉDEX POKÉMON EN LIGNE\nPikachu\nÉLECTRIK\nSTATISTIQUES\nPV\n35\nATTAQUE\n55\nDÉFENSE\n40\nATTAQUE SPÉ.\n50\nDÉFENSE SPÉ.\n50\nVITESSE\n90\nÉVOLUTION\nPichu\n→\nPikachu\n→\nRaichu\nEXPLORER LE POKÉDEX\n↗\nConstruire une équipe\nCONSTRUCTEUR D’ÉQUIPE\nCOMPOSEZ VOTRE ÉQUIPE.\nCharizard\nFEU\nVOL\nBlastoise\nEAU\nGengar\nSPECTRE\nPOISON\nLucario\nCOMBAT\nACIER\nSylveon\nFÉE\nPikachu\nÉLECTRIK\n\nComposez une équipe et vérifiez sa couverture de types.\n\nCOMPOSEZ VOTRE ÉQUIPE.\n↗\n\nCOMPTE ET DONNÉES ENREGISTRÉES\n\nVotre collection, avec des conditions d’accès claires.\n\nLes pages pub",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/30e-anniversaire",
+    "url": "http://127.0.0.1:3000/fr/30e-anniversaire",
+    "ms": 10534,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "30e anniversaire du JCC Pokémon : cartes Pikachu et produits",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nRédaction Lunidex\n\nOuvrir le tracker\nOuvrir le catalogue TCG\nSortie mondiale\n16 septembre 2026\n\nSTATUT DE SORTIE\n\nStatut de sortie\n\nVISUEL OFFICIEL POKÉMON\nOUVRIR LA SOURCE OFFICIELLE\n\nSUR CETTE PAGE\n\nEn bref\nCartes Pikachu\nChecklist complète\nCartes remarquables\nRareté Futuriste\nCollection Classique\nProduits annoncés\nQuestions fréquentes\nSources officielles\nCe qui est confirmé\n\nL’extension 30e Anniversaire du JCC Pokémon est sortie dans le monde entier le 16 septembre 2026. Chaque booster contient l’une des 30 cartes Pikachu et l’extension comprend des cartes brillantes, notamment des cartes Énergie de base. Cette page conserve la checklist complète même lorsqu’une fiche ou une image amont est temporairement indisponible.\n\nSORTIE MONDIALE\n16 septembre 2026\nCARTES PIKACHU CONFIRMÉES\n30 illustrations uniques\nDANS CHAQUE BOOSTER\nUne carte Pikachu\nFICHES DE CHECKLIST\n213 fiches\n\nINFORMATIONS CONFIRMÉES SUR L'EXTENSION\n\nInformations confirmées sur l'extension\nSortie mondiale\n\nL'extension 30e Anniversaire du JCC Pokémon doit sortir simultanément dans le monde entier le 16 septembre 2026.\n\nContenu des boosters\n\nChaque booster doit contenir cinq cartes brillantes, dont l'une des 30 illustrations uniques de Pikachu, ainsi qu'une carte Énergie de base brillante.\n\n",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "name": "Réinitialiser le tracker Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Toutes 30",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Manquantes 30",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Marquer possédée: Pikachu",
+          "placeholder": null
+        }
+      ]
+    }
+  },
+  {
+    "path": "/fr/abilities",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/abilities",
+    "ms": 11697,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Talents",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nTALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTERS\nRÉINITIALISER FILTRE\nNOM\nID\n48 TALENTS\n\n#011\n\nABSORBE-EAU\n\nSi le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#010\n\nABSORBE-VOLT\n\nSi le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#043\n\nANTI-BRUIT\n\nProtège le Pokémon de toutes les capacités sonores.\n\nGÉNÉRATION 3\n\n#040\n\nARMUMAGMA\n\nLe magma qui recouvre le corps du Pokémon le protège\\ncontre le gel.\n\nGÉNÉRATION 3\n\n#004\n\nARMURBASTON\n\nLe Pokémon est protégé des coups critiques\\npar une solide carapace.\n\nGÉNÉRATION 3\n\n#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3\n\n#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3\n\n#036\n\nCALQUE\n\nLorsque le Pokémon entre au combat, il calque le talent d'un ennemi pour remplacer le sien.\n\nGÉNÉRATION 3\n\n#034\n\nCHLOROPHYLLE\n\nAugmente la Vitesse du Pokémon s'il y a du soleil.\n\nGÉNÉRATION 3\n\n#013\n\nCIEL GRIS\n\nAnnule tous les effets liés à la météo.\n\nGÉNÉRATION 3\n\n#037\n\nCOLOFORCE\n\nDouble la puissance des attaques physiques.\n\nGÉNÉRATION 3\n\n#029\n\nCORPS SAIN\n\nEmpêche les stats du Pokémon de baisser à cause du talent ou d'une capacité de l'advers",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "name": "Réinitialiser filtre",
+          "placeholder": null
+        },
+        {
+          "tag": "INPUT",
+          "name": "",
+          "placeholder": "Rechercher un talent par nom ou effet..."
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Nom",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "ID",
+          "placeholder": null
+        }
+      ]
+    }
+  },
+  {
+    "path": "/fr/abilities/static",
+    "url": "http://127.0.0.1:3000/fr/abilities/static",
+    "ms": 11810,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Statik",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nTalents\nStatik\nBACK TO ABILITIES\n\n#009\n\nSTATIK\nSÉRIE PRINCIPALE\nEFFET\n\nQuand une capacité crée un contact avec ce Pokémon, le lanceur de cette capacité a 30% de chances d'être paralysé. Les Pokémon immunisés aux capacités de type Électrik peuvent toujours être paralysés par ce talent. Monde extérieur: Si le Pokémon en tête d'équipe à ce talent, il y a 50% de chances que les rencontres soient avec un Pokémon de type Électrik, si possible.\n\nENTRÉE POKÉDEX\n\n“Paralyse au toucher.”\n\nPOKÉMON AVEC CE TALENT (38)\nPikachu\nRaichu\nVoltorbe\nÉlectrode\nÉlektek\nÉlecthor\nH\nPichu\nWattouat\nLainergie\nPharamp\nÉlekid\nDynavolt\nÉlecsprint\nEmolga\nLimonde\nToxizap\nGalvagla\nPohm\nTêtampoule\nAmpibidou\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nVoltorbe\nÉlectrode\nPOKÉMON AVEC CE TALENT\nPOKÉMON\n38\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confiden",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/about",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/about",
+    "ms": 4893,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "À propos de Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nÀ PROPOS\n\nÀ propos de Lunidex\n\nUn outil indépendant de suivi de collection Pokémon TCG, avec Pokédex et outils d’équipe.\n\nUn suivi de collection Pokémon TCG et un espace de travail\nLunidex est une application web Pokémon indépendante et non officielle. Elle aide les collectionneurs à suivre leurs extensions, leurs cartes possédées et manquantes et leur progression, puis réunit un Pokédex et des outils d’équipe au même endroit. Lunidex n’est pas une marketplace de cartes.\nNotre mission\nLunidex existe pour rendre les données Pokémon claires, utiles et accessibles dans plusieurs langues. Le projet réunit des outils de référence, la construction d’équipes et des fonctions de collection Pokémon TCG, en respectant les limites des données amont.\n\nLunidex est maintenu comme un petit projet de fans open source. La disponibilité du produit, des comptes et des sources amont peut évoluer ; les pages publiques décrivent le périmètre actuellement documenté.\nSources de données et attribution\nToutes les données Pokémon (stats, types, talents, capacités, évolutions, sprites, artwork officiel) proviennent du projet open source PokeAPI (pokeapi.co), une base de données communautaire et gratuite.\n\nLes données de cartes à jouer (cartes, sets, raretés, prix) proviennent de TCGdex (tcgdex.net), une base de données Pokémon TCG ouverte.\n\nPokémon, les noms de personnages Pokémon et les propriétés associées sont des marques déposées de Nintendo, Game Freak et Creatures Inc. Lunidex est un projet de fans non commercial et n'est pas affilié à",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/auth/reset-password",
+    "url": "http://127.0.0.1:3000/fr/auth/reset-password",
+    "ms": 11587,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Modifier votre mot de passe",
+      "body": "Aller au contenu principal\n\nLUNIDEX\n\nModifier votre mot de passe\nVérification de votre lien de réinitialisation…\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/battle",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/battle",
+    "ms": 11148,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Simulateur de combat",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nLUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nDAMAGE CALCULATOR\nLoading simulator…\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/blog",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/blog",
+    "ms": 12189,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Guides et comparatifs Lunidex",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nBLOG\n\nGuides et comparatifs Lunidex\n\nDes articles pratiques et sourcés sur Lunidex : guides des parcours Pokémon, équipe, TCG, progression, quiz et Nuzlocke, ainsi que des comparatifs avec d’autres outils Pokémon.\n\nMIS À JOUR LE 28 SEPT. 2026\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nOuvrir le tracker\n\nGUIDES D’UTILISATION\n\nComment utiliser Lunidex\n\nDes guides pas à pas fondés sur les fonctions et familles de routes réellement présentes dans le produit.\n\nGUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide\n\nGUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLire le guide\n\nGUIDE DU QUIZ\n\nGuide du quiz Pokémon — Modes, défis et badges | Lunidex\n\nComment fonctionne le quiz Pokémon Lunidex : défis classique, silhouette et stats ; modes marathon, survie et contre-la-montre ; le défi quotidien et les ",
+      "controls": []
+    }
+  },
+  {
+    "path": "/fr/breeding",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/breeding",
+    "ms": 11109,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Calculateur d'Élevage",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nCalculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPARENT 2 (PENSION)\n\nCONFIGURER\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "name": "Calculateur de CVs",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Explorateur Capacités Œuf",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "1Parents",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "2Configuration",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "3Résultats",
+          "placeholder": null
+        },
+        {
+          "tag": "INPUT",
+          "name": "",
+          "placeholder": "Rechercher un Pokémon…"
+        },
+        {
+          "tag": "INPUT",
+          "name": "",
+          "placeholder": "Rechercher un Pokémon…"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Configurer ",
+          "placeholder": null
+        }
+      ]
+    }
+  },
+  {
+    "path": "/fr/compare",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/compare",
+    "ms": 13372,
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Comparer les Pokémon",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nLUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nAucun Pokémon à comparer\n\nAjoutez au moins deux Pokémon pour les comparer\n\nPARCOURIR LE LUNIDEX\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCollection\nCatalogue\nPokédex\nJouer",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "name": "Retour",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Tout effacer",
+          "placeholder": null
+        },
+        {
+          "tag": "INPUT",
+          "name": "Rechercher un Pokémon (nom ou id)...",
+          "placeholder": "Rechercher un Pokémon (nom ou id)..."
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Copier le lien",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Tout effacer",
+          "placeholder": null
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Parcourir le Lunidex",
+          "placeholder": null
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "body": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n29s\nSALARSEN FORME AIGÜE\nARTIKODIN\nHÉLÉDELLE\nMACKOGNEUR",
+  "buttons": [
+    "Salarsen Forme Aigüe",
+    "Artikodin",
+    "Hélédelle",
+    "Mackogneur"
+  ],
+  "images": [
+    {
+      "alt": "Mystery Pokemon",
+      "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/277.png"
+    }
+  ]
+}

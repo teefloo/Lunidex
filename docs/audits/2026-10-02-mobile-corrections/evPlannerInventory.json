@@ -1,0 +1,90 @@
+{
+  "body": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIV\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX",
+  "inputs": [
+    {
+      "label": "Pokémon",
+      "type": "text",
+      "value": "",
+      "placeholder": "garchomp"
+    },
+    {
+      "label": "PV",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "Attaque",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "Défense",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "Atq. Spé.",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "Déf. Spé.",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "Vitesse",
+      "type": "number",
+      "value": "31",
+      "placeholder": ""
+    },
+    {
+      "label": "PV",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    },
+    {
+      "label": "Attaque",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    },
+    {
+      "label": "Défense",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    },
+    {
+      "label": "Atq. Spé.",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    },
+    {
+      "label": "Déf. Spé.",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    },
+    {
+      "label": "Vitesse",
+      "type": "range",
+      "value": "0",
+      "placeholder": ""
+    }
+  ],
+  "buttons": [
+    "Calculateur IV",
+    "Planificateur EV",
+    "",
+    "Réinitialiser",
+    "Vitesse max"
+  ]
+}

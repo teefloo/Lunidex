@@ -1,0 +1,25 @@
+{
+  "body": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nDAMAGE CALCULATOR\n\nATTAQUANT\n\nPikachu\n\nELECTRIC\nHP\n35\nATK\n55\nDEF\n40\nSP.ATK\n50\nSP.DEF\n50\nSPEED\n90\n\n6 capacités offensives chargées\n\nDÉFENSEUR\n\nCharizard\n\nFIRE\nFLYING\nHP\n78\nATK\n84\nDEF\n78\nSP.ATK\n109\nSP.DEF\n85\nSPEED\n100\n\n7 capacités offensives chargées\n\nCHOIX DE LA CAPACITÉ\n\nThunder-Punch (75)\nBody-Slam (85)\nTake-Down (90)\nSurf (90)\nThunder-Shock (40)\nThunderbolt (90)\n\nCONDITIONS\n\nMÉTÉO\n\nAucune\n\nTERRAIN\n\nAucun\nÉlectrik\nHerbu\nPsychique\nBrumeux\n\nMODIFICATEURS\n\nCoup critique\nAdaptabilité\nBrûlé\n\nDUEL AUTOMATIQUE\n\nLes deux Pokémon utilisent leurs meilleures capacités à chaque tour\n\nSIMULER LE COMBAT",
+  "buttons": [
+    "thunder-punch (75)",
+    "body-slam (85)",
+    "take-down (90)",
+    "surf (90)",
+    "thunder-shock (40)",
+    "thunderbolt (90)",
+    "Aucune",
+    "Soleil",
+    "Pluie",
+    "Tempête de sable",
+    "Neige",
+    "Aucun",
+    "Électrik",
+    "Herbu",
+    "Psychique",
+    "Brumeux",
+    "Coup critique",
+    "Adaptabilité",
+    "Brûlé",
+    "Simuler le combat"
+  ]
+}

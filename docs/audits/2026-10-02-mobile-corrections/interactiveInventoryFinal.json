@@ -1,0 +1,606 @@
+[
+  {
+    "key": "pokedex",
+    "body": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nHÉLÉDELLE\nNORMAL\nVOL\nJouer au quiz du jour",
+    "buttons": [
+      {
+        "text": "FAVORIS (0)",
+        "label": "Favoris (0)",
+        "role": null
+      },
+      {
+        "text": "FILTRES",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "TOUS",
+        "label": "Tous",
+        "role": null
+      },
+      {
+        "text": "CAPTURÉS",
+        "label": "Capturés",
+        "role": null
+      },
+      {
+        "text": "MANQUANTS",
+        "label": "Manquants",
+        "role": null
+      },
+      {
+        "text": "ID (CROISSANT)",
+        "label": null,
+        "role": "combobox"
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Marquer comme capturé",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris",
+        "role": null
+      }
+    ],
+    "inputs": [
+      {
+        "placeholder": "Rechercher un Pokémon (nom ou id)...",
+        "label": "Rechercher un Pokémon (nom ou id)...",
+        "type": "text"
+      },
+      {
+        "placeholder": "",
+        "label": null,
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "key": "ev",
+    "body": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER",
+    "buttons": [
+      {
+        "text": "CALCULATEUR IV",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "PLANIFICATEUR EV",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Rechercher un Pokémon…",
+        "role": null
+      },
+      {
+        "text": "CALCULER LES IV",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "RÉINITIALISER",
+        "label": null,
+        "role": null
+      }
+    ],
+    "inputs": [
+      {
+        "placeholder": "pikachu",
+        "label": null,
+        "type": "text"
+      },
+      {
+        "placeholder": "",
+        "label": null,
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "PV",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "Attaque",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "Défense",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "Atq. Spé.",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "Déf. Spé.",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "Vitesse",
+        "type": "number"
+      },
+      {
+        "placeholder": "",
+        "label": "PV",
+        "type": "range"
+      },
+      {
+        "placeholder": "",
+        "label": "Attaque",
+        "type": "range"
+      },
+      {
+        "placeholder": "",
+        "label": "Défense",
+        "type": "range"
+      },
+      {
+        "placeholder": "",
+        "label": "Atq. Spé.",
+        "type": "range"
+      },
+      {
+        "placeholder": "",
+        "label": "Déf. Spé.",
+        "type": "range"
+      },
+      {
+        "placeholder": "",
+        "label": "Vitesse",
+        "type": "range"
+      }
+    ]
+  },
+  {
+    "key": "tcg",
+    "body": " UTC\n\nAJOUTER\nERIKA'S JIGGLYPUFF\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 50\n\nPRIX MARCHÉ\n\n11,02 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nRAYQUAZA EX\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 170\n\nPRIX MARCHÉ\n\n21,95 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nSOLGALEO GX\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 250\n\nPRIX MARCHÉ\n\n6,50 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nGENGAR\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 130\n\nPRIX MARCHÉ\n\n52,26 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nDARKRAI & CRESSELIA LEGEND\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 150\n\nPRIX MARCHÉ\n\n16,68 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nDARKRAI & CRESSELIA LEGEND\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 150\n\nPRIX MARCHÉ\n\n13,58 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nN\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nDRESSEUR\n\nPRIX MARCHÉ\n\n10,33 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nPALKIA\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 120\n\nPRIX MARCHÉ\n\n11,20 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nM GARDEVOIR EX\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 210\n\nPRIX MARCHÉ\n\n12,90 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nSHINING CELEBI\n\n30TH CLASSIC COLLECTION\n\nAUCUN\nPOKÉMON\nHP 50\n\nPRIX MARCHÉ\n\n31,48 €\nCardmarket\n\nHorodatage source : 2 oct. 2026, 09:52 UTC\n\nAJOUTER\nCHARGER PLUS DE CARTES",
+    "buttons": [
+      {
+        "text": "FILTRES",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "Extension: 30th Classic Collection",
+        "label": "Effacer: Extension: 30th Classic Collection",
+        "role": null
+      },
+      {
+        "text": "Effacer",
+        "label": null,
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Charizard",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Charizard à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Delcatty",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Delcatty à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Metagross",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Metagross à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Genesect EX",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Genesect EX à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Misty",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Misty à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Dark Tyranitar",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Dark Tyranitar à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Sneasel",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Sneasel à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Pikachu & Zekrom GX",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Pikachu & Zekrom GX à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Greninja BREAK",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Greninja BREAK à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Uxie",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Uxie à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Crobat G",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Crobat G à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Raikou",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Raikou à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Buzzwole GX",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Buzzwole GX à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Pikachu",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Pikachu à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Erika's Jigglypuff",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Erika's Jigglypuff à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Rayquaza EX",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Rayquaza EX à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Solgaleo GX",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Solgaleo GX à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Gengar",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Gengar à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Darkrai & Cresselia LEGEND",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Darkrai & Cresselia LEGEND à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de Darkrai & Cresselia LEGEND",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter Darkrai & Cresselia LEGEND à ma collection",
+        "role": null
+      },
+      {
+        "text": "",
+        "label": "Voir les détails de N",
+        "role": null
+      },
+      {
+        "text": "AJOUTER",
+        "label": "Ajouter N à ma collection",
+        "role": null
+      }
+    ],
+    "inputs": [
+      {
+        "placeholder": "Rechercher dans la base de cartes...",
+        "label": null,
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "key": "settings",
+    "body": "PECTRE\nPOISON\nLucario\nCOMBAT\nACIER\nSylveon\nFÉE\nPikachu\nÉLECTRIK\n\nComposez une équipe et vérifiez sa couverture de types.\n\nCOMPOSEZ VOTRE ÉQUIPE.\n↗\n\nCOMPTE ET DONNÉES ENREGISTRÉES\n\nVotre collection, avec des conditions d’accès claires.\n\nLes pages publiques, dont le catalogue de cartes, le Pokédex et l’outil Équipe, sont accessibles sans compte. La gestion d’une collection personnelle nécessite un compte connecté et un service de synchronisation disponible. Les données de collection sont conservées dans ce navigateur et synchronisées avec votre compte lorsque le service est disponible.\n\nLunidex est un projet indépendant et non officiel.\n\nCOMPRENDRE LE SUIVI DE COLLECTION\nÀ PROPOS DE LUNIDEX\n↗\nOpen source\n\nCode source, README et changelog\n\nLunidex est distribué sous licence MIT. Le code source complet est disponible sur GitHub. Vous pouvez le lire, l'auditer, le forker ou l'héberger vous-même. Les contributions de code et de traduction sont les bienvenues.\n\nGITHUB\n↗\nQuestions sur Lunidex\n\nLes informations utiles pour parcourir les cartes et gérer une collection.\n\nFaut-il un compte pour explorer les cartes ?\n+\nOù sont enregistrées les données de ma collection ?\n+\nComment suivre une extension ?\n+\nPuis-je préparer une équipe Pokémon sans compte ?\n+\n\nÀ VOUS DE JOUER\n\nTrouvez votre prochaine carte.\n\nParcourez le catalogue public, puis commencez une collection personnelle lorsque le compte et la synchronisation sont disponibles.\n\nEXPLORER LES CARTES\n↗\nCOMPRENDRE LE SUIVI DE COLLECTION",
+    "buttons": [],
+    "inputs": [],
+    "globalButtons": [
+      {
+        "text": "Rechercher dans Lunidex",
+        "label": "Rechercher dans Lunidex"
+      },
+      {
+        "text": "",
+        "label": "Ouvrir le menu"
+      },
+      {
+        "text": "Gérer mes préférences",
+        "label": null
+      }
+    ]
+  }
+]

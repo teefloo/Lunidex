@@ -1,0 +1,266 @@
+[
+  {
+    "path": "/fr",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/pokedex",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/tcg/sets/sv03.5",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/dashboard",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/moves",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<button type=\"button\" class=\"touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color] border-primary/35 bg-primary/15 text-primary\" aria-pressed=\"true\">Nom</button>",
+            "target": [
+              ".border-primary\\/35"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.43 (foreground color: #c9b8ff, background color: #2d4e98, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/quiz",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/items",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<button type=\"button\" class=\"touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color] border-primary/35 bg-primary/15 text-primary\" aria-pressed=\"true\">Nom</button>",
+            "target": [
+              ".border-primary\\/35"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.43 (foreground color: #c9b8ff, background color: #2d4e98, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/battle",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/abilities",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<button type=\"button\" class=\"touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color] border-primary/35 bg-primary/15 text-primary\" aria-pressed=\"true\">Nom</button>",
+            "target": [
+              ".border-primary\\/35"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.43 (foreground color: #c9b8ff, background color: #2d4e98, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/breeding",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/types",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/ev-iv",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/team?code=25-6-9",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/guides/team-builder-guide",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/compare?ids=25,6,9",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 7,
+        "nodes": [
+          {
+            "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-...\">",
+            "target": [
+              ".border-destructive\\/60"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.01 (foreground color: #ff8d9b, background color: #354687, font size: 10.5pt (14px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15\" style=\"color: rgb(194, 46, 40);\">Combat</span>",
+            "target": [
+              ".bg-red-500\\/5.border-red-500\\/10.space-y-2:nth-child(1) > .gap-1\\.5.flex-wrap.flex > .bg-red-500\\/10.border-red-500\\/15.px-2:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.89 (foreground color: #c22e28, background color: #333778, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15\" style=\"color: rgb(194, 46, 40);\">Combat</span>",
+            "target": [
+              ".bg-red-500\\/5.border-red-500\\/10.space-y-2:nth-child(3) > .gap-1\\.5.flex-wrap.flex > .bg-red-500\\/10.border-red-500\\/15.px-2"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.89 (foreground color: #c22e28, background color: #333778, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15\" style=\"color: rgb(163, 62, 161);\">Poison</span>",
+            "target": [
+              ".bg-red-500\\/5.border-red-500\\/10.space-y-2:nth-child(4) > .gap-1\\.5.flex-wrap.flex > .bg-red-500\\/10.border-red-500\\/15.px-2:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.92 (foreground color: #a33ea1, background color: #333778, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-sm text-[11px] font-black uppercase bg-red-500/10 border border-red-500/15\" style=\"color: rgb(194, 46, 40);\">Combat</span>",
+            "target": [
+              ".bg-red-500\\/5.border-red-500\\/10.space-y-2:nth-child(5) > .gap-1\\.5.flex-wrap.flex > .bg-red-500\\/10.border-red-500\\/15.px-2:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.89 (foreground color: #c22e28, background color: #333778, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/privacy",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  },
+  {
+    "path": "/fr/tcg",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375,
+      "theme": "font-body __variable_dd643d __variable_cd8e69 dark"
+    }
+  }
+]

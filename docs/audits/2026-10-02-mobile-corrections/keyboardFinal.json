@@ -1,0 +1,22 @@
+[
+  {
+    "flow": "breeding-tab-delay",
+    "focused": "Pikachu\n#025",
+    "selected": true,
+    "image": [
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+        "naturalWidth": 96
+      }
+    ]
+  },
+  {
+    "flow": "battle-tab-delay",
+    "focused": "Pikachu\n#025",
+    "text": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nCALCULATEUR DE DÉGÂTS\n\nATTAQUANT\n\nPikachu\n\nÉLECTRIK\nHP\n35\nATK\n55\nDEF\n40\nSP.ATK\n50\nSP.DEF\n50\nSPEED\n90\n\n6 capacités offensives chargées\n\nDÉFENSEUR\n\nCHOIX DE LA CAPACITÉ\n\nThunder-Punch (75)\nBody-Slam (85)\nTake-Down (90)\nSurf (90)\nThunder-Shock (40)\nThunderbolt (90)\n\nCONDITIONS\n\nMÉTÉO\n\nAucune\n\nTERRAIN\n\nAucun\nÉlectrik\nHerbu\nPsychique\nBrumeux\n\nMODIFICATEURS\n\nCoup critique\nAdaptabilité\nBrûlé\n\nDUEL AUTOMATIQUE\n\nLes deux Pokémon utilisent leurs meilleures capacités à chaque tour\n\nSIMULER LE COMBAT"
+  },
+  {
+    "flow": "types-final",
+    "axe": []
+  }
+]

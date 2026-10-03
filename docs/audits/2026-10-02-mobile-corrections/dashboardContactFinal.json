@@ -1,0 +1,27 @@
+[
+  {
+    "flow": "dashboard-Progression",
+    "open": "",
+    "text": "Progression\nDresseur Trainer\n\nMEMBRE DEPUIS: INCONNU\n\nPARTAGER\nNIVEAU DU DRESSEUR\nNv. 1\n\nDébutant\n\n36 / 100 XP\n\nBADGES\n0 / 15\n\nVerrouillés\n\nPROCHAIN BADGE\n\nPremière Capture\n\n0 / 1\n\nQUÊTE HEBDOMADAIRE\n\nCapturez des types Feu\n\nCapturez 10 Pokémon de type Feu\n\n0 / 10\n\n+50 XP\nPROGRESSION DU POKÉDEX\nCapturés: 0\nVus: 0\n0%\n\n0 / 1302 capturés\n\nPAR GÉNÉRATION\n\nGen 1\n0/232\nGen 2\n0/112\nGen 3\n0/165\nGen 4\n0/123\nGen 5\n0/178\nGen 6\n0/92\nGen 7\n0/125\nGen 8\n0/132\nGen 9\n0/143\n\nPAR TYPE\n\nEau\n0%\nNormal\n0%\nPlante\n0%\nVol\n0%\nPsy\n0%\nÉlectrik\n0%\nDragon\n0%\nInsecte\n0%\nFeu\n0%\nPoison\n0%\nRoche\n0%\nCombat\n0%\nTénèbres\n0%\nSol\n0%\nSpectre\n0%\nAcier\n0%\nFée\n0%\nGlace\n0%\n\nJAMAIS VUS\n\nBulbasaur\nIvysaur\nVenusaur\nCharmander\nCharmeleon\n\nIl est temps d'explorer !\n\nSTATS SUPPLÉMENTAIRES\n\n0\n\nCARTES TCG POSSÉDÉES\n\nTCG\n\n0\n\nLISTE DE SOUHAITS TCG\n\nTCG\n\n0\n\nRECHERCHES SAUVEGARDÉES\n\nTCG\n\n0\n\nTAILLE DE L'ÉQUIPE\n\n0\n\nFAVORIS"
+  },
+  {
+    "flow": "dashboard-Quiz",
+    "open": "",
+    "text": "Quiz\nSTATS QUIZ\n\nJouez à un quiz pour voir vos statistiques !\n\nCOMMENCER LE QUIZ"
+  },
+  {
+    "flow": "dashboard-Activité",
+    "open": "",
+    "text": "Activité\nCARTE D'ACTIVITÉ\n\nAucune activité pour l'instant\n\nACTIVITÉ\n\nVISITES\n\n0\n\nDERNIÈRE VISITE\n\n-\n\nACTIVITÉ RÉCENTE\n\nAucune activité récente"
+  },
+  {
+    "flow": "contact-error-focus",
+    "focus": "contact-name",
+    "errors": [
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire."
+    ]
+  }
+]

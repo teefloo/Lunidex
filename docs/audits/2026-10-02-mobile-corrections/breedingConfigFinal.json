@@ -1,0 +1,90 @@
+{
+  "keyboardSelection": true,
+  "changeClears": true,
+  "image": [
+    {
+      "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+      "width": 0
+    }
+  ],
+  "sliders": [
+    "Pikachu HP",
+    "Pikachu Atk",
+    "Pikachu Def",
+    "Pikachu SpA",
+    "Pikachu SpD",
+    "Pikachu Spe",
+    "Métamorph HP",
+    "Métamorph Atk",
+    "Métamorph Def",
+    "Métamorph SpA",
+    "Métamorph SpD",
+    "Métamorph Spe"
+  ],
+  "buttons": [
+    "Calculateur de CVs",
+    "Explorateur Capacités Œuf",
+    "1Parents",
+    "2Configuration",
+    "3Résultats",
+    "Aucun",
+    "Nœud Câlin",
+    "Pierre Immobile",
+    "Ceinture Puissance",
+    "Brassard Puissance",
+    "Ceinturon Puissance",
+    "Lentille Puissance",
+    "Bandana Puissance",
+    "Chevillère Puissance",
+    "Aucun",
+    "Nœud Câlin",
+    "Pierre Immobile",
+    "Ceinture Puissance",
+    "Brassard Puissance",
+    "Ceinturon Puissance",
+    "Lentille Puissance",
+    "Bandana Puissance",
+    "Chevillère Puissance",
+    "HP",
+    "Atk",
+    "Def",
+    "SpA",
+    "SpD",
+    "Spe",
+    " Retour",
+    "Voir les Résultats "
+  ],
+  "selects": [
+    {
+      "label": "Caractère Cible",
+      "options": [
+        "hardy (neutral)",
+        "lonely (+Atk/-Def)",
+        "brave (+Atk/-Spe)",
+        "adamant (+Atk/-SpA)",
+        "naughty (+Atk/-SpD)",
+        "bold (+Def/-Atk)",
+        "docile (neutral)",
+        "relaxed (+Def/-Spe)",
+        "impish (+Def/-SpA)",
+        "lax (+Def/-SpD)",
+        "timid (+Spe/-Atk)",
+        "hasty (+Spe/-Def)",
+        "serious (neutral)",
+        "jolly (+Spe/-SpA)",
+        "naive (+Spe/-SpD)",
+        "modest (+SpA/-Atk)",
+        "mild (+SpA/-Def)",
+        "quiet (+SpA/-Spe)",
+        "bashful (neutral)",
+        "rash (+SpA/-SpD)",
+        "calm (+SpD/-Atk)",
+        "gentle (+SpD/-Def)",
+        "sassy (+SpD/-Spe)",
+        "careful (+SpD/-SpA)",
+        "quirky (neutral)"
+      ]
+    }
+  ],
+  "axe": []
+}

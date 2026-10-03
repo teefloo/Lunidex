@@ -1,0 +1,49 @@
+[
+  {
+    "flow": "market-state",
+    "axe": [],
+    "body": "Catalogue\nMarché des scellés\nOutils\n\nDONNÉES DE MARCHÉ PUBLIQUES\n\nMarché des produits scellés\n\nParcourez les produits Pokémon scellés et leurs dernières données du guide de prix Cardmarket. Les prix sont indicatifs et peuvent évoluer.\n\nRechercher des produits scellés\nCatégorie\nToutes les catégories\nID extension\nAppliquer les filtres\n\nLaissez vide pour inclure toutes les extensions.\n\nImpossible de charger le catalogue du marché. Réessayez dans un instant.\n\nVoir les sorties\nConseils avant achat\nAnalyses\nSignaler une erreur"
+  },
+  {
+    "flow": "height-endpoint",
+    "text": "OUGE\nBLEU\nJAUNE\nVERT\nNOIR\nBRUN\nVIOLET\nGRIS\nBLANC\nROSE\nFORMES\nBALLE\nGRIBOUILLIS\nPOISSON\nBRAS\nBLOB\nBIPÈDE\nJAMBES\nAILES\nTENTACULES\nTÊTES\nHUMANOÏDE\nAILES D'INSECTE\nARMURE\nSTATISTIQUES DE BASE MIN (BST)\n0+ TOTAL\n0\n400 (MOY)\n800\nSTATS DE BASE MIN\nPV\n0+\nATK\n0+\nDEF\n0+\nVIT\n0+\nTAILLE (M)\n0.0M\n-\n25.0M+\nPOIDS (KG)\n0KG\n-\n1200KG\nVOIR LES RÉSULTATS FILTRÉS\nFermer",
+    "sliders": [
+      {
+        "label": "Statistiques de base min (BST)",
+        "value": "0"
+      },
+      {
+        "label": "PV",
+        "value": "0"
+      },
+      {
+        "label": "ATK",
+        "value": "0"
+      },
+      {
+        "label": "DEF",
+        "value": "0"
+      },
+      {
+        "label": "VIT",
+        "value": "0"
+      },
+      {
+        "label": "Minimum Taille (m)",
+        "value": "0"
+      },
+      {
+        "label": "Maximum Taille (m)",
+        "value": "25"
+      },
+      {
+        "label": "Minimum Poids (kg)",
+        "value": "0"
+      },
+      {
+        "label": "Maximum Poids (kg)",
+        "value": "1200"
+      }
+    ]
+  }
+]

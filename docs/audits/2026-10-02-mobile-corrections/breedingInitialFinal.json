@@ -1,0 +1,21 @@
+{
+  "inputs": [
+    {
+      "placeholder": "Rechercher un Pokémon…",
+      "label": "Parent 1 (Pension)"
+    },
+    {
+      "placeholder": "Rechercher un Pokémon…",
+      "label": "Parent 2 (Pension)"
+    }
+  ],
+  "buttons": [
+    "Calculateur de CVs",
+    "Explorateur Capacités Œuf",
+    "1Parents",
+    "2Configuration",
+    "3Résultats",
+    "Configurer "
+  ],
+  "body": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPARENT 2 (PENSION)\n\nCONFIGURER"
+}

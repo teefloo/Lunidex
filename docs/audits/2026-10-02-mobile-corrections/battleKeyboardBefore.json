@@ -1,0 +1,26 @@
+{
+  "keyboard": {
+    "selected": false
+  },
+  "body": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nDAMAGE CALCULATOR\n\nATTAQUANT\n\nDÉFENSEUR\n\nCharizard\n#006\nCharizard-Mega-X\n#10034\nCharizard-Mega-Y\n#10035\nCharizard-Gmax\n#10196\n\nCHOIX DE LA CAPACITÉ\n\nSélectionnez d’abord un attaquant\n\nCONDITIONS\n\nMÉTÉO\n\nAucune\n\nTERRAIN\n\nAucun\nÉlectrik\nHerbu\nPsychique\nBrumeux\n\nMODIFICATEURS\n\nCoup critique\nAdaptabilité\nBrûlé\n\nDUEL AUTOMATIQUE\n\nLes deux Pokémon utilisent leurs meilleures capacités à chaque tour\n\nSIMULER LE COMBAT",
+  "buttons": [
+    "charizard#006",
+    "charizard-mega-x#10034",
+    "charizard-mega-y#10035",
+    "charizard-gmax#10196",
+    "Aucune",
+    "Soleil",
+    "Pluie",
+    "Tempête de sable",
+    "Neige",
+    "Aucun",
+    "Électrik",
+    "Herbu",
+    "Psychique",
+    "Brumeux",
+    "Coup critique",
+    "Adaptabilité",
+    "Brûlé",
+    "Simuler le combat"
+  ]
+}

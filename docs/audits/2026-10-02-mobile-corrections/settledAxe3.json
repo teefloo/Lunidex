@@ -1,0 +1,162 @@
+[
+  {
+    "path": "/fr/quiz",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/items",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/items/potion",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/legal",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/moves",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/moves/thunderbolt",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/collection/fr/sv03.5",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/offline",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/deck-builder",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/pokedex",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/privacy",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]

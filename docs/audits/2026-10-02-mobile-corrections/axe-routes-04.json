@@ -1,0 +1,218 @@
+[
+  {
+    "path": "/fr/tcg/sealed/sales",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/analytics",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/sources",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/buy-safely",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/cashflow",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sets/sv03.5",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/catalogue",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/start",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/collection",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/wishlist",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/journal",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/team",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/market/611877",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/team/share?code=25-6-9&lang=fr",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 9,
+        "nodes": [
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase\" style=\"background-color: rgba(247, 208, 44, 0.8); color: white;\">Électrik</span>",
+            "target": [
+              ".h-64:nth-child(1) > .p-4.flex-col.h-full > .gap-1.justify-center.flex > .py-0\\.5.border-border\\/40.px-2"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.39 (foreground color: #ffffff, background color: #f8d956, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase\" style=\"background-color: rgba(238, 129, 48, 0.8); color: white;\">Feu</span>",
+            "target": [
+              ".h-64:nth-child(2) > .p-4.flex-col.h-full > .gap-1.justify-center.flex > .py-0\\.5.border-border\\/40.px-2:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.2 (foreground color: #ffffff, background color: #f19a59, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase\" style=\"background-color: rgba(169, 143, 243, 0.8); color: white;\">Vol</span>",
+            "target": [
+              ".py-0\\.5.border-border\\/40.px-2:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.14 (foreground color: #ffffff, background color: #baa5f5, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"px-2 py-0.5 rounded-lg border border-border/40 text-[11px] sm:text-[11px] font-black uppercase\" style=\"background-color: rgba(99, 144, 240, 0.8); color: white;\">Eau</span>",
+            "target": [
+              ".h-64:nth-child(3) > .p-4.flex-col.h-full > .gap-1.justify-center.flex > .py-0\\.5.border-border\\/40.px-2"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.41 (foreground color: #ffffff, background color: #82a6f3, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-[11px] font-bold text-foreground/40 uppercase tracking-widest\">Cohésion d'équipe</p>",
+            "target": [
+              ".gap-3.items-center.flex > div:nth-child(2) > .text-foreground\\/40.tracking-widest"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.35 (foreground color: #a0a8be, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/market/products/611877",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/terms",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/products/1",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/types",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/u/audit-inexistant",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<p class=\"mb-8 max-w-md px-6 text-center text-sm font-medium text-foreground/40\">Ce profil n'existe pas ou n'est pas public.</p>",
+            "target": [
+              ".mb-8"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.37 (foreground color: #a1a8be, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/tcg/sealed/releases",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]

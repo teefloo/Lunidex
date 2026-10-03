@@ -1,0 +1,171 @@
+[
+  {
+    "flow": "faq-search-expand",
+    "body": "CENTRE D'AIDE\n\nQuestions fréquentes\n\nDes réponses claires sur les données, les outils, l’espace JCC, les comptes et le périmètre open source de Lunidex.\n\nRechercher des questions...\n\nFILTRER LES QUESTIONS PAR CATÉGORIE\n\n7\n\nToutes les questions\nBien démarrer\n4\nOutils Pokémon\n5\nEspace Pokémon JCC\n6\nDonnées et assistance\n4\n\n7 questions correspondent à « compte »\n\nBien démarrer\n\nLe périmètre du produit, les comptes, les langues disponibles et les options d’installation.\n\nFaut-il un compte ou un abonnement ?\n\nLes pages de référence et de catalogue publiques sont accessibles sans compte. L’application web utilise une session associée à un compte pour les changements personnels comme la collection, les équipes, les favoris et les autres progrès synchronisés. Le produit actuel ne comporte aucun abonnement ni parcours d’achat.\n\nTABLEAU DE BORD\nOutils Pokémon\n\nLa couverture de référence et les outils pour les équipes, les comparaisons, les quiz et les runs Nuzlocke.\n\nQue suit le gestionnaire Nuzlocke ?\n\nL’espace Nuzlocke enregistre les runs, une rencontre par route et des statuts comme vivant, mort ou dans une boîte. Vous pouvez gérer plusieurs runs et consulter leurs statistiques. Les runs personnels utilisent l’espace associé au compte.\n\nSUIVI NUZLOCKE\nEspace Pokémon JCC\n\nCe que le catalogue JCC peut suivre, l’origine de ses données et les limites à connaître.\n\nQue contient le catalogu"
+  },
+  {
+    "flow": "navigation",
+    "links": [
+      {
+        "label": "Luni\ndex",
+        "href": "/fr"
+      },
+      {
+        "label": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "label": "Scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "label": "Commencer ma collection",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "label": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "label": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "label": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "label": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "label": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "label": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "label": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "label": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "label": "Quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "label": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "label": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "label": "Combat",
+        "href": "/fr/battle"
+      },
+      {
+        "label": "Élevage",
+        "href": "/fr/breeding"
+      },
+      {
+        "label": "Calc. EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "label": "Favoris",
+        "href": "/fr/favorites"
+      },
+      {
+        "label": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "label": "Amis",
+        "href": "/fr/friends"
+      },
+      {
+        "label": "Blog",
+        "href": "/fr/blog"
+      },
+      {
+        "label": "Guides",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "label": "Documentation et API",
+        "href": "/fr/docs"
+      },
+      {
+        "label": "Tracker du 30e anniversaire",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "label": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "label": "Présentation de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "label": "Contact",
+        "href": "/fr/contact"
+      },
+      {
+        "label": "Comparatif des applis de collection",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      },
+      {
+        "label": "Tableau de Bord",
+        "href": "/fr/dashboard"
+      }
+    ]
+  },
+  {
+    "flow": "contact-validation",
+    "alerts": [
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire."
+    ],
+    "focus": ""
+  },
+  {
+    "flow": "contact-fields",
+    "fields": [
+      {
+        "name": "website",
+        "id": "contact-website",
+        "type": "text"
+      },
+      {
+        "name": "name",
+        "id": "contact-name",
+        "type": "text"
+      },
+      {
+        "name": "email",
+        "id": "contact-email",
+        "type": "email"
+      },
+      {
+        "name": "subject",
+        "id": "contact-subject",
+        "type": "text"
+      },
+      {
+        "name": "message",
+        "id": "contact-message",
+        "type": "textarea"
+      }
+    ]
+  }
+]

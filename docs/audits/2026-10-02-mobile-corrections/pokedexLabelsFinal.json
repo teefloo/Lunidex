@@ -1,0 +1,158 @@
+[
+  {
+    "q": "pikachu",
+    "colorScheme": "light",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      },
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      },
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      }
+    ]
+  },
+  {
+    "q": "mewtwo",
+    "colorScheme": "light",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "PSY",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(249, 85, 135, 0.12)",
+        "border": "rgba(249, 85, 135, 0.46)"
+      },
+      {
+        "text": "PSY",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(249, 85, 135, 0.12)",
+        "border": "rgba(249, 85, 135, 0.46)"
+      },
+      {
+        "text": "COMBAT",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(194, 46, 40, 0.12)",
+        "border": "rgba(194, 46, 40, 0.46)"
+      }
+    ]
+  },
+  {
+    "q": "bulbasaur",
+    "colorScheme": "light",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "PLANTE",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(122, 199, 76, 0.12)",
+        "border": "rgba(122, 199, 76, 0.46)"
+      },
+      {
+        "text": "POISON",
+        "color": "rgb(20, 38, 93)",
+        "background": "rgba(163, 62, 161, 0.12)",
+        "border": "rgba(163, 62, 161, 0.46)"
+      }
+    ]
+  },
+  {
+    "q": "pikachu",
+    "colorScheme": "dark",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      },
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      },
+      {
+        "text": "ÉLECTRIK",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(247, 208, 44, 0.12)",
+        "border": "rgba(247, 208, 44, 0.46)"
+      }
+    ]
+  },
+  {
+    "q": "mewtwo",
+    "colorScheme": "dark",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "PSY",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(249, 85, 135, 0.12)",
+        "border": "rgba(249, 85, 135, 0.46)"
+      },
+      {
+        "text": "PSY",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(249, 85, 135, 0.12)",
+        "border": "rgba(249, 85, 135, 0.46)"
+      },
+      {
+        "text": "COMBAT",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(194, 46, 40, 0.12)",
+        "border": "rgba(194, 46, 40, 0.46)"
+      }
+    ]
+  },
+  {
+    "q": "bulbasaur",
+    "colorScheme": "dark",
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "labels": [
+      {
+        "text": "PLANTE",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(122, 199, 76, 0.12)",
+        "border": "rgba(122, 199, 76, 0.46)"
+      },
+      {
+        "text": "POISON",
+        "color": "rgb(255, 248, 252)",
+        "background": "rgba(163, 62, 161, 0.12)",
+        "border": "rgba(163, 62, 161, 0.46)"
+      }
+    ]
+  }
+]

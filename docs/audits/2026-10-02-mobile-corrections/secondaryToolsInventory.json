@@ -1,0 +1,153 @@
+[
+  {
+    "path": "/fr/nuzlocke",
+    "text": "MODE CHALLENGE\n\nSuivi Nuzlocke\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\nGuide du suivi Nuzlocke\n↗\n\nCONTINUER L’EXPLORATION\n\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nCatalogue JCC\nMES PARTIES\nCréer une partie\n\nAucune partie pour le moment.\n\nCréez ou sélectionnez une partie pour commencer à noter les rencontres.",
+    "buttons": [
+      {
+        "text": "Créer une partie",
+        "label": null
+      }
+    ],
+    "inputs": [
+      {
+        "placeholder": "Nom de la partie…",
+        "label": null,
+        "type": "text"
+      },
+      {
+        "placeholder": "Jeu (ex. Émeraude)…",
+        "label": null,
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "path": "/fr/dashboard",
+    "text": "Tableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nEn bref\nProgression du Pokédex\n0%\n0 / 1302 capturés\nCartes TCG Possédées\n0\nBadges\n0 / 15\nProgression\nQuiz\nActivité",
+    "buttons": [
+      {
+        "text": "Paramètres",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      }
+    ],
+    "inputs": []
+  },
+  {
+    "path": "/fr/30e-anniversaire",
+    "text": "ÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nRédaction Lunidex\n\nOuvrir le tracker\nOuvrir le catalogue TCG\nSortie mondiale\n16 septembre 2026\n\nSTATUT DE SORTIE\n\nDisponible dans le monde entier\n\nVISUEL OFFICIEL POKÉMON\nOUVRIR LA SOURCE OFFICIELLE\n\nSUR CETTE PAGE\n\nEn bref\nCartes Pikachu\nChecklist complète\nCartes remarquables\nRareté Futuriste\nCollection Classique\nProduits annoncés\nQuestions fréquentes\nSources officielles\nCe qui est confirmé\n\nL’extension 30e Anniversaire du JCC Pokémon est sortie dans le monde entier le 16 septembre 2026. Chaque booster contient l’une des 30 cartes Pikachu et l’extension comprend des cartes brillantes, notamment des cartes Énergie de base. Cette page conserve la checklist complète même lorsqu’une fiche ou une image amont est temporairement indisponible.\n\nSORTIE MONDIALE\n16 septembre 2026\nCARTES PIKACHU CONFIRMÉES\n30 illustrations uniques\nDANS CHAQUE BOOSTER\nUne carte Pikachu\nFICHES DE CHECKLIST\n213 fiches\n\nINFORMATIONS CONFIRMÉES SUR L'EXTENSION\n\nInformations confirmées sur l'extension\nSortie mondiale\n\nL'extension 30e Anniversaire du JCC Pokémon doit sortir simultanément dans le monde entier le 16 septembre 2026.\n\nContenu des boosters\n\nChaque booster doit contenir cinq cartes brillantes, dont l'une des 30 illustrations uniques de Pikachu, ainsi qu'une carte Énergie de base brillante.\n\n30 cartes Pikachu rare\n\nLes cartes Pikachu rare confirmées portent une numérotation spéciale Pikachu. Chacune possède une illustration, un artiste et des attaques propres.\n\nDeux révélations Pikachu-ex\n\nDeux cartes Pikachu-ex illustration spéciale",
+    "buttons": [
+      {
+        "text": "Réinitialiser le tracker",
+        "label": "Réinitialiser le tracker Pikachu"
+      },
+      {
+        "text": "TOUTES 30",
+        "label": null
+      },
+      {
+        "text": "MANQUANTES 30",
+        "label": null
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      },
+      {
+        "text": "MARQUER POSSÉDÉE",
+        "label": "Marquer possédée: Pikachu"
+      }
+    ],
+    "inputs": []
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "text": "Catalogue JCC\nFréquences de tirage\nValeur des boosters\nValeur attendue d’un booster Pokémon\n\nComprendre comment les ouvertures observées et les prix en euros permettent d’estimer la valeur brute des cartes.\n\nÉtat des données\n\nAucun échantillon validé avec une couverture complète des prix Cardmarket en euros n’est publié. La valeur chiffrée est indisponible.\n\nCalcul de la valeur\n\nOn multiplie l’effectif de chaque variante observée par son prix Cardmarket en euros, puis on divise la somme par le nombre de boosters ouverts. On compare cette valeur brute au prix du booster correspondant.\n\nCouverture des prix\n\nL’échantillon et les prix doivent concerner la même extension, région et type de booster. Chaque variante observée doit avoir un prix Cardmarket en euros, et le prix du booster doit être sourcé.\n\nUne estimation, pas un gain\n\nLes prix changent. L’état, les frais de vente, l’expédition, les taxes et les invendus modifient le montant reçu. Une moyenne passée ne garantit aucun bénéfice.",
+    "buttons": [],
+    "inputs": []
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "text": "Catalogue JCC\nFréquences de tirage\nValeur des boosters\nFréquences de tirage des boosters Pokémon\n\nComprendre les fréquences de rareté observées pour une extension, une région et un type de booster précis.\n\nÉtat des données\n\nLunidex n’a pas publié d’échantillon validé, relevé booster par booster. Des résultats indépendants publiés figurent ci-dessous ; les fréquences des boosters français restent indisponibles.\n\nÉtudes d’ouvertures publiées\n\nLes études ci-dessous portent sur des boosters en anglais. Chaque fiche indique l’éditeur du compte rendu et, si la source le précise, l’origine du comptage. La région d’impression peut ne pas être précisée ; ces chiffres ne sont ni des taux officiels Pokémon ni des estimations pour les boosters français.\n\nVous avez des données d’ouverture de boosters français ou anglais ? Envoyez un lien public ou un relevé anonymisé indiquant l’extension, la langue et la région d’impression, le type de produit, les dates, le nombre de boosters, les raretés et les variantes de cartes. Les échantillons sont vérifiés avant leur ajout aux données Lunidex.\n\nProposer un échantillon d’ouvertures\nTemporal Forces\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n16,83% ± 0,79%\nIntervalle de confiance à 95 %\nUltra-rare\n6,67% ± 0,53%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n5,00% ± 0,46%\nIntervalle de confiance à 95 %\nRare illustration\n7,72% ± 0,56%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,17% ± 0,23%\nIntervalle de confiance à 95 %\nRare hyper\n0,72% ± 0,18%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le",
+    "buttons": [],
+    "inputs": []
+  },
+  {
+    "path": "/fr/tcg/sealed/catalogue",
+    "text": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nCatalogue\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "buttons": [],
+    "inputs": []
+  },
+  {
+    "path": "/fr/tcg/deck-builder",
+    "text": "Catalogue\nMarché des scellés\nConstructeur de deck\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\n\nCATALOGUE\n\nConstructeur de deck\n\nConstruisez un deck Pokémon TCG de 60 cartes (4 exemplaires max. par carte, sauf les Énergies de base)\n\nMES DECKS\n\nAucun deck pour le moment.\n\nCréez ou sélectionnez un deck pour commencer.",
+    "buttons": [
+      {
+        "text": "",
+        "label": "Créer un deck"
+      }
+    ],
+    "inputs": [
+      {
+        "placeholder": "Nom du deck…",
+        "label": null,
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/market/products/611877",
+    "text": "Catalogue\nMarché des scellés\nOutils\nFiche produit indisponible\n\nImpossible de charger le catalogue du marché. Réessayez dans un instant.\n\n← Retour au marché",
+    "buttons": [],
+    "inputs": []
+  },
+  {
+    "path": "/fr/u/audit-inexistant",
+    "text": "LUNIDEX\n\nProfil introuvable\n\nCe profil n'existe pas ou n'est pas public.\n\nACCUEIL",
+    "buttons": [],
+    "inputs": []
+  }
+]

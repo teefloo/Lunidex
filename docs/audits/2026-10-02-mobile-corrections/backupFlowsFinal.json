@@ -1,0 +1,38 @@
+[
+  {
+    "step": "settings",
+    "dialogs": [
+      "ParamètresParamètresEffets sonoresSprites animésUtiliser des GIFs animés sur les cartes PokémonThèmeClairSombreSystèmeDevise TCGAfficher les prix TCGdex dans cette devise lorsqu’ils sont disponibles.Euro (EUR)Dollar américain (USD)Langue🌐Auto🇺🇸en🇫🇷fr🇩🇪de🇪🇸es🇮🇹it🇯🇵ja🇰🇷ko🇨🇳zhExport & Import de donnéesSauvegardez vos données ou restaurez une sauvegarde précédente.ExporterImporterv1.0.0Fermer"
+    ],
+    "switches": [
+      {
+        "label": "Activer le son",
+        "text": "",
+        "checked": "false"
+      },
+      {
+        "label": "Désactiver les sprites animés",
+        "text": "",
+        "checked": "true"
+      }
+    ]
+  },
+  {
+    "step": "malformed-backup",
+    "toasts": [
+      "Fichier invalide"
+    ]
+  },
+  {
+    "step": "backup-preview",
+    "dialogs": [
+      "Importer les donnéesCela écrasera vos données actuelles. Cette action est irréversible.Cela écrasera vos données actuelles. Cette action est irréversible.Favoris1Équipe1Pokémon capturés0Cartes TCG0Liste de souhaits0Badges0FermerImporterFermer"
+    ],
+    "focused": "<button class=\"flex-1 py-2.5 px-4 rounded-sm text-xs font-bold bg-muted/55 text-foreground/80 hover:bg-muted/80 transition-colors\">Fermer</button>"
+  },
+  {
+    "step": "preview-escape",
+    "dialogs": 1,
+    "focused": ""
+  }
+]

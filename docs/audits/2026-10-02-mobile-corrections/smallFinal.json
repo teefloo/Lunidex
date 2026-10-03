@@ -1,0 +1,1051 @@
+[
+  {
+    "path": "/fr/cookies",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/cookies",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Politique de cookies et de stockage local"
+    ]
+  },
+  {
+    "path": "/fr/legal",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/legal",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Mentions légales"
+    ]
+  },
+  {
+    "path": "/fr",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Explorez les cartes Pokémon."
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/catalogue",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/catalogue",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Catalogue"
+    ]
+  },
+  {
+    "path": "/fr/dashboard",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/dashboard",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Tableau de Bord"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/collection",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/collection",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Collection"
+    ]
+  },
+  {
+    "path": "/fr/moves",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/moves",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Capacités"
+    ]
+  },
+  {
+    "path": "/fr/30e-anniversaire",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/30e-anniversaire",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "30e anniversaire du JCC Pokémon : cartes Pikachu et produits"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/journal",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/journal",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Journal"
+    ]
+  },
+  {
+    "path": "/fr/docs",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/docs",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Documentation Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/moves/thunderbolt",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/moves/thunderbolt",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Tonnerre"
+    ]
+  },
+  {
+    "path": "/fr/abilities",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/abilities",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Talents"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/market/611877",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/market/611877",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Fiche produit indisponible"
+    ]
+  },
+  {
+    "path": "/fr/docs/api",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/docs/api",
+    "errors": [],
+    "geometry": {
+      "width": 340,
+      "scroll": 340
+    },
+    "heading": [
+      "API publique Lunidex v1"
+    ]
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/nuzlocke",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Suivi Nuzlocke"
+    ]
+  },
+  {
+    "path": "/fr/abilities/static",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/abilities/static",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Statik"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/market/products/611877",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/market/products/611877",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Fiche produit indisponible"
+    ]
+  },
+  {
+    "path": "/fr/ev-iv",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/ev-iv",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Calculateur EV/IV"
+    ]
+  },
+  {
+    "path": "/fr/offline",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/offline",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex est momentanément hors ligne"
+    ]
+  },
+  {
+    "path": "/fr/about",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/about",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "À propos de Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/products/1",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/products/1",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Produit"
+    ]
+  },
+  {
+    "path": "/fr/faq",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/faq",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Questions fréquentes"
+    ]
+  },
+  {
+    "path": "/fr/auth/reset-password",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/auth/reset-password",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Modifier votre mot de passe"
+    ]
+  },
+  {
+    "path": "/fr/pokedex",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/pokedex",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Pokédex Pokémon en ligne"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/releases",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/releases",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Calendrier des sorties scellées"
+    ]
+  },
+  {
+    "path": "/fr/favorites",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/favorites",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Mes Favoris"
+    ]
+  },
+  {
+    "path": "/fr/battle",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/battle",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Simulateur de combat"
+    ]
+  },
+  {
+    "path": "/fr/pokemon/pikachu",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/pokemon/pikachu",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Pikachu"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/sales",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/sales",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Ventes"
+    ]
+  },
+  {
+    "path": "/fr/friends",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/friends",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Amis"
+    ]
+  },
+  {
+    "path": "/fr/blog",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/blog",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Guides et comparatifs Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/privacy",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/privacy",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Politique de confidentialité"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/sources",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/sources",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Sources"
+    ]
+  },
+  {
+    "path": "/fr/friends/00000000-0000-0000-0000-000000000000",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/friends/00000000-0000-0000-0000-000000000000",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Profil ami"
+    ]
+  },
+  {
+    "path": "/fr/breeding",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/breeding",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Calculateur d'Élevage"
+    ]
+  },
+  {
+    "path": "/fr/quiz",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/quiz",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Quel est ce Pokémon ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sets/sv03.5",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sets/sv03.5",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "151 — Liste des cartes et checklist"
+    ]
+  },
+  {
+    "path": "/fr/guides/nuzlocke-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/nuzlocke-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Suivre une partie Nuzlocke avec Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/compare",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Comparer les Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/tcg",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Catalogue JCC Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/tcg/start",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/start",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Commencez votre collection"
+    ]
+  },
+  {
+    "path": "/fr/guides/organize-pokemon-card-collection",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/organize-pokemon-card-collection",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Comment organiser une collection de cartes Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-bulbapedia",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-bulbapedia",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Bulbapedia : outils structurés ou encyclopédie Pokémon ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/booster-value",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Valeur attendue d’un booster Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/tcg/wishlist",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/wishlist",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Liste de souhaits"
+    ]
+  },
+  {
+    "path": "/fr/guides/pokemon-card-collection-tracker",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-card-collection-tracker",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Suivi gratuit de collection de cartes Pokémon : organisez votre collection TCG"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardmarket",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-cardmarket",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Cardmarket : espace Pokémon ou marketplace ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/cards/sv03.5-199",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Charizard ex"
+    ]
+  },
+  {
+    "path": "/fr/team",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/team",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Constructeur d’équipe Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/guides/pokemon-card-collection-value",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-card-collection-value",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Comment estimer la valeur d’une collection de cartes Pokémon avec Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardzia",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-cardzia",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/collection",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Ma Collection"
+    ]
+  },
+  {
+    "path": "/fr/team/share?code=25-6-9&lang=fr",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/team?code=25-6-9&lang=fr",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Constructeur d’équipe Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/guides/pokemon-reference-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/pokemon-reference-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Pokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-collectr",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-collectr",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/collection/fr",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection/fr",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": []
+  },
+  {
+    "path": "/fr/terms",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/terms",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Conditions générales d’utilisation"
+    ]
+  },
+  {
+    "path": "/fr/guides/progress-account-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/progress-account-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Comment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-pokecardex",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou PokéCardex : quel parcours de collection TCG choisir ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/collection/fr/sv03.5",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/collection/fr/sv03.5",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Ma Collection"
+    ]
+  },
+  {
+    "path": "/fr/types",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/types",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Maître des Types"
+    ]
+  },
+  {
+    "path": "/fr/guides/quiz-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/quiz-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Jouer au quiz Pokémon Lunidex : modes, défis et badges"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/deck-builder",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/deck-builder",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Constructeur de deck"
+    ]
+  },
+  {
+    "path": "/fr/u/audit-inexistant",
+    "status": 404,
+    "url": "http://127.0.0.1:3101/fr/u/audit-inexistant",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": []
+  },
+  {
+    "path": "/fr/guides/tcg-workspace-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/tcg-workspace-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Comment utiliser l’espace Pokémon TCG de Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokellector",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-pokellector",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/pull-rates",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Fréquences de tirage des boosters Pokémon"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/market",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/market",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Marché des produits scellés"
+    ]
+  },
+  {
+    "path": "/fr/guides/team-builder-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/team-builder-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-database",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-pokemon-database",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Pokémon Database : quel outil de référence choisir ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Tableau de bord"
+    ]
+  },
+  {
+    "path": "/fr/guides/team-tools-guide",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/guides/team-tools-guide",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Outils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-showdown",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-pokemon-showdown",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou Pokémon Showdown : préparer une équipe ou combattre en ligne ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/analytics",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/analytics",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Analyses"
+    ]
+  },
+  {
+    "path": "/fr/items",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/items",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Objets"
+    ]
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-zebradex",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/compare/lunidex-vs-zebradex",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Lunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/buy-safely",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/buy-safely",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Acheter des cartes et produits scellés avec prudence"
+    ]
+  },
+  {
+    "path": "/fr/items/potion",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/items/potion",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Potion"
+    ]
+  },
+  {
+    "path": "/fr/contact",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/contact",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Contact"
+    ]
+  },
+  {
+    "path": "/fr/tcg/sealed/cashflow",
+    "status": 200,
+    "url": "http://127.0.0.1:3101/fr/tcg/sealed/cashflow",
+    "errors": [],
+    "geometry": {
+      "width": 320,
+      "scroll": 320
+    },
+    "heading": [
+      "Cashflow"
+    ]
+  }
+]

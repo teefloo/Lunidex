@@ -1,0 +1,82 @@
+destination,HTTP,largeur,largeur_document,erreurs_JS,portee,limite
+/fr,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/30e-anniversaire,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/abilities,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/abilities/static,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/about,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/auth/reset-password,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/battle,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/blog,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/breeding,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-bulbapedia,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-cardmarket,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-cardzia,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-collectr,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-pokecardex,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-pokecardex-zebradex,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-pokellector,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-pokemon-database,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-pokemon-showdown,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/compare/lunidex-vs-zebradex,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/contact,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/cookies,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/dashboard,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/docs,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/docs/api,200,340,340,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/ev-iv,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/faq,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/favorites,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/friends,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/friends/00000000-0000-0000-0000-000000000000,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/guides/nuzlocke-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/guides/organize-pokemon-card-collection,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/pokemon-card-collection-tracker,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/pokemon-card-collection-value,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/pokemon-reference-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/progress-account-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/quiz-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/tcg-workspace-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/team-builder-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/guides/team-tools-guide,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/items,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/items/potion,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/legal,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/moves,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/moves/thunderbolt,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/nuzlocke,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/offline,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/pokedex,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/pokemon/pikachu,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/privacy,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/quiz,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/booster-value,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/cards/sv03.5-199,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/collection,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/tcg/collection/fr,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/tcg/collection/fr/sv03.5,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/tcg/deck-builder,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/tcg/pull-rates,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/sealed,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/analytics,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/buy-safely,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/cashflow,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/catalogue,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/collection,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/journal,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/market,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/market/611877,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/market/products/611877,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/products/1,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/releases,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/sales,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sealed/sources,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Donnees personnelles ou flux catalogue indisponibles localement ; etat d acces/rendu
+/fr/tcg/sets/sv03.5,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/start,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/tcg/wishlist,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,Compte et synchronisation non disponibles ; rendu uniquement pour le parcours personnel
+/fr/team,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/team/share?code=25-6-9&lang=fr,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/terms,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/types,200,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,
+/fr/u/audit-inexistant,404,320,320,,Rendu et geometrie mobile ; voir rapport pour les interactions,

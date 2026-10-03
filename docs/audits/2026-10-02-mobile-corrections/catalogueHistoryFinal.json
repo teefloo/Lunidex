@@ -1,0 +1,29 @@
+[
+  {
+    "path": "abilities",
+    "back": {
+      "url": "http://127.0.0.1:3101/fr/abilities?q=Technicien",
+      "query": "Technicien"
+    },
+    "reloadQuery": "Technicien",
+    "body": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n307 TALENTS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\n1 TALENTS\n\n#101\n\nTECHNICIEN\n\nAugmente la puissance des capacités les plus faibles.\n\nGÉNÉRATION 4"
+  },
+  {
+    "path": "items",
+    "back": {
+      "url": "http://127.0.0.1:3101/fr/items?q=Restes",
+      "query": "Restes"
+    },
+    "reloadQuery": "Restes",
+    "body": "OBJETS\n\nObjets\n\nConsultez les objets tenus, les baies, les pierres d’évolution et autres objets\n\n800 OBJETS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\nPRIX\nCATÉGORIE\nALL MAIL\nAPRICORN BALLS\nAPRICORN BOX\nBAD HELD ITEMS\nBAKING ONLY\nCATCHING BONUS\nCHOICE\nCOLLECTIBLES\nDEX COMPLETION\nEFFORT DROP\nEFFORT TRAINING\nEVENT ITEMS\nEVOLUTION\nFLUTES\nGAMEPLAY\nHEALING\nHELD ITEMS\nIN A PINCH\nJEWELS\nLOOT\nMEDICINE\nMEGA STONES\nMEMORIES\nMULCH\nNATURE MINTS\nOTHER\nPICKY HEALING\nPLATES\nPP RECOVERY\nREVIVAL\nSCARVES\nSPECIAL BALLS\nSPECIES CANDIES\nSPECIES SPECIFIC\nSPELUNKING\nSTANDARD BALLS\nSTAT BOOSTS\nSTATUS CURES\nTRAINING\nTYPE ENHANCEMENT\nTYPE PROTECTION\nVITAMINS\nZ CRYSTALS\n1 OBJETS\nRESTES\n\nObjet à tenir permettant de restaurer les PV du porteur graduellement durant le combat.\n\nHELD ITEMS\n₽4 000"
+  },
+  {
+    "path": "moves",
+    "back": {
+      "url": "http://127.0.0.1:3101/fr/moves?q=Tonnerre",
+      "query": "Tonnerre"
+    },
+    "reloadQuery": "Tonnerre",
+    "body": "endre.\n\n937 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n2 capacités\n\nPHYSIQUE\n\n395\n\nSPÉCIAL\n\n265\n\nSTATUT\n\n277\n\n937 CAPACITÉS\n\n937\n\n2 CAPACITÉS\n\n2\n\nPHYSIQUE\n\n395\n\nSPÉCIAL\n\n265\n\n2 CAPACITÉS\n1 ACTIFS\nTOUS LES TYPES\n\n#719\n\nGIGA-TONNERRE\nÉLECTRIK\nSPÉCIAL\nGÉNÉRATION 7\n\nLe Pikachu à casquette utilise la Force Z pour augmenter sa puissance électrique avant de la déchaîner sur la cible. Taux de critique élevé.\n\nPUIS\n\n195\n\nPRÉC\n\n—\n\nPP\n\n1\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#085\n\nTONNERRE\nÉLECTRIK\nSPÉCIAL\nGÉNÉRATION 1\n\nUne grosse décharge électrique tombe sur l’ennemi. Peut aussi le paralyser.\n\nPUIS\n\n90\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ"
+  }
+]

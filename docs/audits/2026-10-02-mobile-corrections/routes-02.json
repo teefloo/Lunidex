@@ -1,0 +1,102 @@
+[
+  {
+    "path": "/fr/compare/lunidex-vs-bulbapedia",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/compare/lunidex-vs-bulbapedia",
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Lunidex ou Bulbapedia : outils structurés ou encyclopédie Pokémon ?",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nANALYSE CONCURRENTIELLE\n\nLunidex ou Bulbapedia : outils structurés ou encyclopédie Pokémon ?\n\nUn comparatif équitable pour choisir entre un espace Pokémon structuré et une encyclopédie maintenue par sa communauté.\n\nPUBLIÉ LE 14 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nBulbapedia est une encyclopédie Pokémon communautaire qui vise une couverture large de la franchise. Lunidex est un espace de référence et de collection centré sur la recherche"
+    }
+  },
+  {
+    "path": "/fr/contact",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/contact",
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Contact",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nAccueil\nContact\n\nNOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.\n\nLuni\ndex\n\nSuivez v"
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Lunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nGUIDE DU COLLECTIONNEUR\n\nLunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?\n\nCe guide compare trois produits Pokémon dont les périmètres sont différents. Il sépare les fonctionnalités vérifiées dans le code de Lunidex de celles décrites par chaque concurrent sur ses propres pages publiques.\n\nPUBLIÉ LE 12 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES PAGES PUBLIQUES DES CONCURRENTS LE 19 AOÛT 2026.\n\nRédaction Lunidex\n\nCe que montre le comparatif\n\nLunidex est un outil d’un autre type : il réunit un Pok"
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardmarket",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-cardmarket\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/cookies",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/cookies\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokellector",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-pokellector\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardzia",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/compare/lunidex-vs-cardzia",
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Lunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nANALYSE CONCURRENTIELLE\n\nLunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?\n\nUn comparatif sourcé entre un espace web centré sur Pokémon et l’application française multi-TCG Cardzia.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardzia se présente comme une application française multi-TCG pour scanner des cartes, estimer leur valeur à partir de données du marché français, suivre une collection et sa compléti"
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-database",
+    "status": 200,
+    "url": "http://127.0.0.1:3000/fr/compare/lunidex-vs-pokemon-database",
+    "errors": [],
+    "dom": {
+      "width": 375,
+      "scroll": 375,
+      "heading": "Lunidex ou Pokémon Database : quel outil de référence choisir ?",
+      "body": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\n\nANALYSE CONCURRENTIELLE\n\nLunidex ou Pokémon Database : quel outil de référence choisir ?\n\nUn comparatif sourcé entre Lunidex et Pokémon Database pour les personnes qui cherchent des données Pokémon fiables et des outils pratiques.\n\nPUBLIÉ LE 13 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokémon Database est un site de référence Pokémon concis, avec des pages de Pokédex et des outils de mécaniques de jeu. Lunidex est un espace web localisé qui "
+    }
+  },
+  {
+    "path": "/fr/dashboard",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/dashboard\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-collectr",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-collectr\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-showdown",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-pokemon-showdown\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/docs",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/docs\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-pokecardex\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-zebradex",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/compare/lunidex-vs-zebradex\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "path": "/fr/docs/api",
+    "error": "page.goto: Timeout 25000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:3000/fr/docs/api\", waiting until \"domcontentloaded\"\n"
+  }
+]

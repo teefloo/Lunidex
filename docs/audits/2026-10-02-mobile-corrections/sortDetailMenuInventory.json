@@ -1,0 +1,194 @@
+[
+  {
+    "step": "sort",
+    "head": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nID (DÉCROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n103\nAffichage de 20 Pokémon sur 103.\nTOUT EFFACER\nFILTRES\nFeu\nSort: Id Desc\nTout effacer\nCAT. NO.\n#10274\nOgerpon Hearthflame Mask\nPLANTE\nFEU\nCAT. NO.\n#10251\nTauros Forme de Paldea\nCOMBAT\nFEU\nCAT. NO.\n#10233\nTyphlosion Forme de Hisui\nFEU\nSPECTRE\nCAT. NO.\n#10230\nArcanin Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10229\nCaninos Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10220\nScoloc"
+  },
+  {
+    "step": "detail-controls",
+    "tabs": [
+      "À propos",
+      "Statistiques",
+      "Évolution",
+      "Capacités",
+      "Cartes"
+    ],
+    "buttons": [
+      {
+        "text": "",
+        "label": "Retour"
+      },
+      {
+        "text": "Cri actuel",
+        "label": "Jouer le cri actuel"
+      },
+      {
+        "text": "Cri historique",
+        "label": "Jouer le cri historique"
+      },
+      {
+        "text": "À PROPOS",
+        "label": null
+      },
+      {
+        "text": "STATISTIQUES",
+        "label": null
+      },
+      {
+        "text": "ÉVOLUTION",
+        "label": null
+      },
+      {
+        "text": "CAPACITÉS",
+        "label": null
+      },
+      {
+        "text": "CARTES",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "MARQUER COMME CAPTURÉ",
+        "label": "Marquer comme capturé"
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris"
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur"
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe"
+      }
+    ]
+  },
+  {
+    "step": "menu",
+    "body": [
+      "LunidexCollectionListe de souhaitsScellésCommencer ma collectionCatalogueMarché des scellésConstructeur de deckFréquences de tirageValeur des boostersPokédexTypesCapacitésTalentsObjetsJouerQuizSuivi NuzlockeComparerCombatÉlevageCalc. EV/IVMon espaceFavorisTableau de bordAmisParamètresRessourcesBlogGuidesDocumentation et APITracker du 30e anniversaireFAQPrésentation de LunidexContactComparatif des applis de collectionCompteTableau de Bord"
+    ],
+    "buttons": [
+      {
+        "text": "Rechercher dans Lunidex",
+        "label": "Rechercher dans Lunidex"
+      },
+      {
+        "text": "",
+        "label": "Plus"
+      },
+      {
+        "text": "",
+        "label": "Fermer"
+      },
+      {
+        "text": "",
+        "label": "Fermer"
+      },
+      {
+        "text": "Paramètres",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": "Retour"
+      },
+      {
+        "text": "Cri actuel",
+        "label": "Jouer le cri actuel"
+      },
+      {
+        "text": "Cri historique",
+        "label": "Jouer le cri historique"
+      },
+      {
+        "text": "À PROPOS",
+        "label": null
+      },
+      {
+        "text": "STATISTIQUES",
+        "label": null
+      },
+      {
+        "text": "ÉVOLUTION",
+        "label": null
+      },
+      {
+        "text": "CAPACITÉS",
+        "label": null
+      },
+      {
+        "text": "CARTES",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "",
+        "label": null
+      },
+      {
+        "text": "MARQUER COMME CAPTURÉ",
+        "label": "Marquer comme capturé"
+      },
+      {
+        "text": "",
+        "label": "Ajouter aux favoris"
+      },
+      {
+        "text": "",
+        "label": "Ajouter au comparateur"
+      },
+      {
+        "text": "",
+        "label": "Ajouter à l'équipe"
+      },
+      {
+        "text": "Gérer mes préférences",
+        "label": null
+      },
+      {
+        "text": "Signaler un problème",
+        "label": null
+      }
+    ]
+  }
+]

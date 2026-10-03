@@ -1,0 +1,639 @@
+[
+  {
+    "path": "/fr/compare/lunidex-vs-bulbapedia",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardmarket",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardzia",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-collectr",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/30e-anniversaire",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1286,
+        "nodes": [
+          {
+            "html": "<p class=\"mt-5 text-sm leading-7 text-foreground/60\">Les actions de collection nécessitent une session synchronisée et authentifiée. Votre ancien tracker v1 reste intact pendant l'import des cartes cochées dans la collection TCG.</p>",
+            "target": [
+              ".text-foreground\\/60.mt-5.leading-7"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.09 (foreground color: #727c9e, background color: #fefeff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-xs font-black uppercase tracking-[0.12em] text-foreground/50\">Filtrer la checklist</p>",
+            "target": [
+              "div > .mt-7 > .justify-between.gap-3.flex-wrap > .tracking-\\[0\\.12em\\].text-xs.text-foreground\\/50"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8992ae, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"tabular-nums text-foreground/45\">30</span>",
+            "target": [
+              "div > .mt-7 > .mt-4[role=\"tablist\"][aria-label=\"Filtrer la checklist\"] > .border-primary\\/50.bg-primary\\/15.text-\\[11px\\] > .tabular-nums.text-foreground\\/45"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.55 (foreground color: #868db0, background color: #e4e2f4, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"min-h-11 rounded-sm ...\">",
+            "target": [
+              ".mt-7 > .mt-4[role=\"tablist\"][aria-label=\"Filtrer la checklist\"] > .bg-card\\/35.text-\\[11px\\].hover\\:text-foreground"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span class=\"tabular-nums text-foreground/45\">30</span>",
+            "target": [
+              ".mt-7 > .mt-4[role=\"tablist\"][aria-label=\"Filtrer la checklist\"] > .bg-card\\/35.text-\\[11px\\].hover\\:text-foreground > .tabular-nums.text-foreground\\/45"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/abilities",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 24,
+        "nodes": [
+          {
+            "html": "<div class=\"flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35\">",
+            "target": [
+              "aside > .page-surface.p-4 > .mb-4.justify-between.gap-3 > .text-foreground\\/35.gap-2.tracking-\\[0\\.18em\\]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.09 (foreground color: #adb3c6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-...\">",
+            "target": [
+              ".text-foreground\\/60"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #727d9e, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "target": [
+              ".hover\\:border-border\\/90"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<div class=\"flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35\">",
+            "target": [
+              ".mb-4.flex-wrap.justify-between > .text-foreground\\/35.gap-2.tracking-\\[0\\.18em\\]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.09 (foreground color: #adb3c6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30\">#054</p>",
+            "target": [
+              "a[href$=\"truant\"] > .items-start.justify-between.gap-3 > .flex-1.min-w-0 > .text-foreground\\/30.tracking-\\[0\\.18em\\].font-black"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.85 (foreground color: #b9bece, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "violations": [
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"overflow-x-auto rounded-sm border border-border/60 bg-card/30\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/abilities/static",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 5,
+        "nodes": [
+          {
+            "html": "<a class=\"inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground\" href=\"/fr/abilities\">",
+            "target": [
+              ".px-3"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.49 (foreground color: #7b86a6, background color: #f9fbff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-[0.18em] text-foreground/30\">#009</p>",
+            "target": [
+              ".tracking-\\[0\\.18em\\].text-foreground\\/30"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.85 (foreground color: #b4bbce, background color: #f9fbff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span data-slot=\"badge\" data-variant=\"outline\" class=\"group/badge inline-f...\">",
+            "target": [
+              ".group\\/badge"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #727d9e, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-sm italic leading-7 text-foreground/55\">“Paralyse au toucher.”</p>",
+            "target": [
+              ".italic.leading-7.text-foreground\\/55"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.47 (foreground color: #7a85a6, background color: #f7f9ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<dt class=\"text-[11px] font-black uppercase tracking-[0.16em] text-foreground/35\">Pokémon</dt>",
+            "target": [
+              "dt"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.07 (foreground color: #a8afc6, background color: #f7f9ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokellector",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/about",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 2,
+        "nodes": [
+          {
+            "html": "<p class=\"text-xs font-bold uppercase tracking-wider text-foreground/50\">GitHub</p>",
+            "target": [
+              ".p-5.hover\\:border-primary.transition-colors:nth-child(1) > .text-xs.uppercase.tracking-wider"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8992ae, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"text-xs font-bold uppercase tracking-wider text-foreground/50\">Issues</p>",
+            "target": [
+              ".p-5.hover\\:border-primary.transition-colors:nth-child(2) > .text-xs.uppercase.tracking-wider"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8992ae, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-database",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/auth/reset-password",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<p class=\"text-sm leading-6 text-foreground/60\">Ce lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.</p>",
+            "target": [
+              ".leading-6"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #727d9e, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-showdown",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/battle",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-zebradex",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 3,
+        "nodes": [
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Critère</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(1)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<th scope=\"col\" class=\"border-b border-border/60 px-4 py-3 font-black\">Lunidex</th>",
+            "target": [
+              ".font-black.border-border\\/60[scope=\"col\"]:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<p class=\"mt-4 text-xs leading-6 text-foreground/55\">Les fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.</p>",
+            "target": [
+              ".text-foreground\\/55.text-xs.mt-4"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<div class=\"mt-5 overflow-x-auto rounded-sm border border-border/60\">",
+            "target": [
+              ".overflow-x-auto"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/blog",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 20,
+        "nodes": [
+          {
+            "html": "<time datetime=\"2026-08-08\" class=\"text-xs font-bold uppercase tracking-[0.14em] text-foreground/45\">Publié le 8 août 2026</time>",
+            "target": [
+              "time[datetime=\"2026-08-08\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<time datetime=\"2026-08-09\" class=\"text-xs font-bold uppercase tracking-[0.14em] text-foreground/45\">Publié le 9 août 2026</time>",
+            "target": [
+              "time[datetime=\"2026-08-09\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<time datetime=\"2026-08-10\" class=\"text-xs font-bold uppercase tracking-[0.14em] text-foreground/45\">Publié le 10 août 2026</time>",
+            "target": [
+              "time[datetime=\"2026-08-10\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<time datetime=\"2026-08-11\" class=\"text-xs font-bold uppercase tracking-[0.14em] text-foreground/45\">Publié le 11 août 2026</time>",
+            "target": [
+              "time[datetime=\"2026-08-11\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<time datetime=\"2026-09-28\" class=\"text-xs font-bold uppercase tracking-[0.14em] text-foreground/45\">Publié le 28 sept. 2026</time>",
+            "target": [
+              "time[datetime=\"2026-09-28\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.67 (foreground color: #959db6, background color: #fefeff, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/breeding",
+    "violations": [],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  },
+  {
+    "path": "/fr/compare",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "count": 1,
+        "nodes": [
+          {
+            "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-...\">",
+            "target": [
+              ".border-destructive\\/60"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.1 (foreground color: #c94355, background color: #f9ebee, font size: 10.5pt (14px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "scroll": 375
+    }
+  }
+]
