@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-02T00:33:55.561Z",
+  "text": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\nCHANGER DE POKÉMON\n\nERREUR DE CHARGEMENT DES CAPACITÉS ŒUF",
+  "failures": [
+    {
+      "url": "https://pokeapi.co/api/v2/pokemon/audit-inexistant",
+      "status": 404
+    },
+    {
+      "url": "https://pokeapi.co/api/v2/pokemon-species/audit-inexistant",
+      "status": 404
+    },
+    {
+      "url": "https://pokeapi.co/api/v2/pokemon/audit-inexistant",
+      "status": 404
+    },
+    {
+      "url": "https://pokeapi.co/api/v2/pokemon-species/audit-inexistant",
+      "status": 404
+    }
+  ]
+}

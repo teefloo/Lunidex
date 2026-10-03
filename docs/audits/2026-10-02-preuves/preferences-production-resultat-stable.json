@@ -1,0 +1,15 @@
+{
+  "step": "reload-stabilized",
+  "switches": [
+    {
+      "aria": "Désactiver le son",
+      "checked": "true"
+    },
+    {
+      "aria": "Activer les sprites animés",
+      "checked": "false"
+    }
+  ],
+  "dark": "font-body __variable_fb3440 __variable_eff0f4 dark",
+  "closed": true
+}

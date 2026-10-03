@@ -1,0 +1,96 @@
+[
+  {
+    "action": "EV-PV",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nGarchomp Loaded\n\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIVS\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 252/510\nPV ★\n252\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX\nSTAT\nLV 50\nLV 100\nPV\n215\n420\nATTAQUE\n150\n296\nDÉFENSE\n115\n226\nATQ. SPÉ.\n100\n196\nDÉF. SPÉ.\n105\n206\nVITESSE\n122\n240",
+    "ranges": [
+      {
+        "name": "PV ★",
+        "value": "252"
+      },
+      {
+        "name": "Attaque",
+        "value": "0"
+      },
+      {
+        "name": "Défense",
+        "value": "0"
+      },
+      {
+        "name": "Atq. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Déf. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Vitesse",
+        "value": "0"
+      }
+    ]
+  },
+  {
+    "action": "EV-Attaque",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nGarchomp Loaded\n\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIVS\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 504/510\nPV ★\n252\nATTAQUE ★\n252\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX\nSTAT\nLV 50\nLV 100\nPV\n215\n420\nATTAQUE\n182\n359\nDÉFENSE\n115\n226\nATQ. SPÉ.\n100\n196\nDÉF. SPÉ.\n105\n206\nVITESSE\n122\n240",
+    "ranges": [
+      {
+        "name": "PV ★",
+        "value": "252"
+      },
+      {
+        "name": "Attaque ★",
+        "value": "252"
+      },
+      {
+        "name": "Défense",
+        "value": "0"
+      },
+      {
+        "name": "Atq. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Déf. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Vitesse",
+        "value": "0"
+      }
+    ]
+  },
+  {
+    "action": "EV-Défense",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nGarchomp Loaded\n\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIVS\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 510/510\nPV ★\n252\nATTAQUE ★\n252\nDÉFENSE\n6\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX\nSTAT\nLV 50\nLV 100\nPV\n215\n420\nATTAQUE\n182\n359\nDÉFENSE\n116\n227\nATQ. SPÉ.\n100\n196\nDÉF. SPÉ.\n105\n206\nVITESSE\n122\n240",
+    "ranges": [
+      {
+        "name": "PV ★",
+        "value": "252"
+      },
+      {
+        "name": "Attaque ★",
+        "value": "252"
+      },
+      {
+        "name": "Défense",
+        "value": "6"
+      },
+      {
+        "name": "Atq. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Déf. Spé.",
+        "value": "0"
+      },
+      {
+        "name": "Vitesse",
+        "value": "0"
+      }
+    ]
+  },
+  {
+    "action": "IV99",
+    "value": "31"
+  }
+]

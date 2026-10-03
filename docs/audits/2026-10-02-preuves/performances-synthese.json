@@ -1,0 +1,110 @@
+[
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 359,
+    "lcp_ms_mediane": 376,
+    "ressources_mediane": 69
+  },
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 193,
+    "lcp_ms_mediane": 204,
+    "ressources_mediane": 66
+  },
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 331,
+    "lcp_ms_mediane": 368,
+    "ressources_mediane": 122
+  },
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 241,
+    "lcp_ms_mediane": 268,
+    "ressources_mediane": 102
+  },
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 335,
+    "lcp_ms_mediane": 988,
+    "ressources_mediane": 250
+  },
+  {
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 200,
+    "lcp_ms_mediane": 616,
+    "ressources_mediane": 90
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 229,
+    "lcp_ms_mediane": 268,
+    "ressources_mediane": 65
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 122,
+    "lcp_ms_mediane": 148,
+    "ressources_mediane": 65
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 735,
+    "lcp_ms_mediane": 804,
+    "ressources_mediane": 121
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 327,
+    "lcp_ms_mediane": 344,
+    "ressources_mediane": 121
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "n": 3,
+    "dom_ms_mediane": 207,
+    "lcp_ms_mediane": 780,
+    "ressources_mediane": 250
+  },
+  {
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "n": 3,
+    "dom_ms_mediane": 156,
+    "lcp_ms_mediane": 440,
+    "ressources_mediane": 112
+  }
+]

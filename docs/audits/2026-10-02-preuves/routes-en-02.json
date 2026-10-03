@@ -1,0 +1,3774 @@
+[
+  {
+    "path": "/en/abilities",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/abilities",
+    "duration": 1614,
+    "title": "Abilities | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Abilities"
+    ],
+    "main": "ABILITIES\n\nAbilities\n\nExplore every Pokémon ability, its effects and strategies, plus the full list of Pokémon that can have it.\n\n48 ABILITIES\nFILTERS\nRESET ALL FILTERS\nNAME\nID\n48 ABILITIES\n\n#004\n\nBATTLE ARMOR\n\nProtects against critical hits.\n\nGENERATION 3\n\n#034\n\nCHLOROPHYLL\n\nDoubles Speed during strong sunlight.\n\nGENERATION 3\n\n#029\n\nCLEAR BODY\n\nPrevents stats from being lowered by other Pokémon.\n\nGENERATION 3\n\n#013\n\nCLOUD NINE\n\nNegates all effects of weather, but does not prevent the weather itself.\n\nGENERATION 3\n\n#016\n\nCOLOR CHANGE\n\nChanges type to match when hit by a damaging move.\n\nGENERATION 3\n\n#014\n\nCOMPOUND EYES\n\nIncreases moves' accuracy to 1.3×.\n\nGENERATION 3\n\n#006\n\nDAMP\n\nPrevents self destruct, explosion, and aftermath from working while the Pokémon is in battle.\n\nGENERATION 3\n\n#002\n\nDRIZZLE\n\nSummons rain that lasts indefinitely upon entering battle.\n\nGENERATION 3\n\n#048\n\nEARLY BIRD\n\nMakes sleep pass twice as quickly.\n\nGENERATION 3\n\n#027\n\nEFFECT SPORE\n\nHas a 30% chance of inflcting either paralysis, poison, or sleep on attacking Pokémon on contact.\n\nGENERATION 3\n\n#018\n\nFLASH FIRE\n\nProtects against fire moves. Once one has been blocked, the Pokémon's own Fire moves inflict 1.5× damage until it leaves battle.\n\nGENERATION 3\n\n#037\n\nHUGE POWER\n\nDoubles Attack in battle.\n\nGENERATION 3\n\n#035\n\nILLUMINATE\n\nDoubles the wild encounter rate.\n\nGENERATION 3\n\n#017\n\nIMMUNITY\n\nPrevents poison.\n\nGENERATION 3\n\n#039\n\nINNER FOCUS\n\nPrevents flinching.\n\nGENERATION 3\n\n#015\n\nINSOMNIA\n\nPrevents sleep.\n\nGENERATION 3\n\n#022\n\nINTIMIDATE\n\nLowers opponents' Attack one stage upon entering battle.\n\nGENERATION 3\n\n#026\n\nLEVITATE\n\nEvades ground moves.\n\nGENERATION 3\n\n#031\n\nLIGHTNING ROD\n\nRedirects single-target electric moves to this Pokémon where possible. Absorbs Electric moves, raising Special Attack one stage.\n\nGENERATION 3\n\n#007\n\nLIMBER\n\nPrevents paralysis.\n\nGENERATION 3\n\n#040\n\nMAGMA ARMOR\n\nPrevents freezing.\n\nGENERATION 3\n\n#042\n\nMAGNET PULL\n\nPrevents steel opponents from fleeing or switching out.\n\nGENERATION 3\n\n#030\n\nNATURAL CURE\n\nCures any major status ailment upon switching out.\n\nGENERATION 3\n\n#012\n\nOBLIVIOUS\n\nPrevents infatuation and protects against captivate.\n\nGENERATION 3\n\n#020\n\nOWN TEMPO\n\nPrevents confusion.\n\nGENERATION 3\n\n#038\n\nPOISON POINT\n\nHas a 30% chance of poisoning attacking Pokémon on contact.\n\nGENERATION 3\n\n#046\n\nPRESSURE\n\nIncreases the PP cost of moves targetting the Pokémon by one.\n\nGENERATION 3\n\n#044\n\nRAIN DISH\n\nHeals for 1/16 max HP after each turn during rain.\n\nGENERATION 3\n\n#024\n\nROUGH SKIN\n\nDamages attacking Pokémon for 1/8 their max HP on contact.\n\nGENERATION 3\n\n#045\n\nSAND STREAM\n\nSummons a sandstorm that lasts indefinitely upon entering battle.\n\nGENERATION 3\n\n#008\n\nSAND VEIL\n\nIncreases evasion to 1.25× during a sandstorm. Protects against sandstorm damage.\n\nGENERATION 3\n\n#032\n\nSERENE GRACE\n\nDoubles the chance of moves' extra effects occurring.\n\nGENERATION 3\n\n#023\n\nSHADOW TAG\n\nPrevents opponents from fleeing or switching out.\n\nGENERATION 3\n\n#019\n\nSHIELD DUST\n\nProtects against incoming moves' extra effects.\n\nGENERATION 3\n\n#043\n\nSOUNDPROOF\n\nProtects against sound-based moves.\n\nGENERATION 3\n\n#003\n\nSPEED BOOST\n\nRaises Speed one stage after each turn.\n\nGENERATION 3\n\n#009\n\nSTATIC\n\nHas a 30% chance of paralyzing attacking Pokémon on contact.\n\nGENERATION 3\n\n#001\n\nSTENCH\n\nHas a 10% chance of making target Pokémon flinch with each hit.\n\nGENERATION 3\n\n#005\n\nSTURDY\n\nPrevents being KOed from full HP, leaving 1 HP instead. Protects against the one-hit KO moves regardless of HP.\n\nGENERATION 3\n\n#021\n\nSUCTION CUPS\n\nPrevents being forced out of battle by other Pokémon's moves.\n\nGENERATION 3\n\n#033\n\nSWIFT SWIM\n\nDoubles Speed during rain.\n\nGENERATION 3\n\n#028\n\nSYNCHRONIZE\n\nCopies burns, paralysis, and poison received onto the Pokémon that inflicted them.\n\nGENERATION 3\n\n#047\n\nTHICK FAT\n\nHalves damage from fire and ice moves.\n\nGENERATION 3\n\n#036\n\nTRACE\n\nCopies an opponent's ability upon entering battle.\n\nGENERATION 3\n\n#010\n\nVOLT ABSORB\n\nAbsorbs electric moves, healing for 1/4 max HP.\n\nGENERATION 3\n\n#011\n\nWATER ABSORB\n\nAbsorbs water moves, healing for 1/4 max HP.\n\nGENERATION 3\n\n#041\n\nWATER VEIL\n\nPrevents burns.\n\nGENERATION 3\n\n#025\n\nWONDER GUARD\n\nProtects against damaging moves that are not super effective.\n\nGENERATION 3",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Reset all filters",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search abilities by name or effect...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Name",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ID",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "#004Battle ArmorProtects against critical hits.Generation 3",
+        "href": "/en/abilities/battle-armor"
+      },
+      {
+        "text": "#034ChlorophyllDoubles Speed during strong sunlight.Generation 3",
+        "href": "/en/abilities/chlorophyll"
+      },
+      {
+        "text": "#029Clear BodyPrevents stats from being lowered by other Pokémon.Generation 3",
+        "href": "/en/abilities/clear-body"
+      },
+      {
+        "text": "#013Cloud NineNegates all effects of weather, but does not prevent the weather itself.Generation 3",
+        "href": "/en/abilities/cloud-nine"
+      },
+      {
+        "text": "#016Color ChangeChanges type to match when hit by a damaging move.Generation 3",
+        "href": "/en/abilities/color-change"
+      },
+      {
+        "text": "#014Compound EyesIncreases moves' accuracy to 1.3×.Generation 3",
+        "href": "/en/abilities/compound-eyes"
+      },
+      {
+        "text": "#006DampPrevents self destruct, explosion, and aftermath from working while the Pokémon is in battle",
+        "href": "/en/abilities/damp"
+      },
+      {
+        "text": "#002DrizzleSummons rain that lasts indefinitely upon entering battle.Generation 3",
+        "href": "/en/abilities/drizzle"
+      },
+      {
+        "text": "#048Early BirdMakes sleep pass twice as quickly.Generation 3",
+        "href": "/en/abilities/early-bird"
+      },
+      {
+        "text": "#027Effect SporeHas a 30% chance of inflcting either paralysis, poison, or sleep on attacking Pokémo",
+        "href": "/en/abilities/effect-spore"
+      },
+      {
+        "text": "#018Flash FireProtects against fire moves.  Once one has been blocked, the Pokémon's own Fire moves ",
+        "href": "/en/abilities/flash-fire"
+      },
+      {
+        "text": "#037Huge PowerDoubles Attack in battle.Generation 3",
+        "href": "/en/abilities/huge-power"
+      },
+      {
+        "text": "#035IlluminateDoubles the wild encounter rate.Generation 3",
+        "href": "/en/abilities/illuminate"
+      },
+      {
+        "text": "#017ImmunityPrevents poison.Generation 3",
+        "href": "/en/abilities/immunity"
+      },
+      {
+        "text": "#039Inner FocusPrevents flinching.Generation 3",
+        "href": "/en/abilities/inner-focus"
+      },
+      {
+        "text": "#015InsomniaPrevents sleep.Generation 3",
+        "href": "/en/abilities/insomnia"
+      },
+      {
+        "text": "#022IntimidateLowers opponents' Attack one stage upon entering battle.Generation 3",
+        "href": "/en/abilities/intimidate"
+      },
+      {
+        "text": "#026LevitateEvades ground moves.Generation 3",
+        "href": "/en/abilities/levitate"
+      },
+      {
+        "text": "#031Lightning RodRedirects single-target electric moves to this Pokémon where possible.  Absorbs Ele",
+        "href": "/en/abilities/lightning-rod"
+      },
+      {
+        "text": "#007LimberPrevents paralysis.Generation 3",
+        "href": "/en/abilities/limber"
+      },
+      {
+        "text": "#040Magma ArmorPrevents freezing.Generation 3",
+        "href": "/en/abilities/magma-armor"
+      },
+      {
+        "text": "#042Magnet PullPrevents steel opponents from fleeing or switching out.Generation 3",
+        "href": "/en/abilities/magnet-pull"
+      },
+      {
+        "text": "#030Natural CureCures any major status ailment upon switching out.Generation 3",
+        "href": "/en/abilities/natural-cure"
+      },
+      {
+        "text": "#012ObliviousPrevents infatuation and protects against captivate.Generation 3",
+        "href": "/en/abilities/oblivious"
+      },
+      {
+        "text": "#020Own TempoPrevents confusion.Generation 3",
+        "href": "/en/abilities/own-tempo"
+      },
+      {
+        "text": "#038Poison PointHas a 30% chance of poisoning attacking Pokémon on contact.Generation 3",
+        "href": "/en/abilities/poison-point"
+      },
+      {
+        "text": "#046PressureIncreases the PP cost of moves targetting the Pokémon by one.Generation 3",
+        "href": "/en/abilities/pressure"
+      },
+      {
+        "text": "#044Rain DishHeals for 1/16 max HP after each turn during rain.Generation 3",
+        "href": "/en/abilities/rain-dish"
+      },
+      {
+        "text": "#024Rough SkinDamages attacking Pokémon for 1/8 their max HP on contact.Generation 3",
+        "href": "/en/abilities/rough-skin"
+      },
+      {
+        "text": "#045Sand StreamSummons a sandstorm that lasts indefinitely upon entering battle.Generation 3",
+        "href": "/en/abilities/sand-stream"
+      },
+      {
+        "text": "#008Sand VeilIncreases evasion to 1.25× during a sandstorm.  Protects against sandstorm damage.Gener",
+        "href": "/en/abilities/sand-veil"
+      },
+      {
+        "text": "#032Serene GraceDoubles the chance of moves' extra effects occurring.Generation 3",
+        "href": "/en/abilities/serene-grace"
+      },
+      {
+        "text": "#023Shadow TagPrevents opponents from fleeing or switching out.Generation 3",
+        "href": "/en/abilities/shadow-tag"
+      },
+      {
+        "text": "#019Shield DustProtects against incoming moves' extra effects.Generation 3",
+        "href": "/en/abilities/shield-dust"
+      },
+      {
+        "text": "#043SoundproofProtects against sound-based moves.Generation 3",
+        "href": "/en/abilities/soundproof"
+      },
+      {
+        "text": "#003Speed BoostRaises Speed one stage after each turn.Generation 3",
+        "href": "/en/abilities/speed-boost"
+      },
+      {
+        "text": "#009StaticHas a 30% chance of paralyzing attacking Pokémon on contact.Generation 3",
+        "href": "/en/abilities/static"
+      },
+      {
+        "text": "#001StenchHas a 10% chance of making target Pokémon flinch with each hit.Generation 3",
+        "href": "/en/abilities/stench"
+      },
+      {
+        "text": "#005SturdyPrevents being KOed from full HP, leaving 1 HP instead.  Protects against the one-hit KO m",
+        "href": "/en/abilities/sturdy"
+      },
+      {
+        "text": "#021Suction CupsPrevents being forced out of battle by other Pokémon's moves.Generation 3",
+        "href": "/en/abilities/suction-cups"
+      },
+      {
+        "text": "#033Swift SwimDoubles Speed during rain.Generation 3",
+        "href": "/en/abilities/swift-swim"
+      },
+      {
+        "text": "#028SynchronizeCopies burns, paralysis, and poison received onto the Pokémon that inflicted them.Gen",
+        "href": "/en/abilities/synchronize"
+      },
+      {
+        "text": "#047Thick FatHalves damage from fire and ice moves.Generation 3",
+        "href": "/en/abilities/thick-fat"
+      },
+      {
+        "text": "#036TraceCopies an opponent's ability upon entering battle.Generation 3",
+        "href": "/en/abilities/trace"
+      },
+      {
+        "text": "#010Volt AbsorbAbsorbs electric moves, healing for 1/4 max HP.Generation 3",
+        "href": "/en/abilities/volt-absorb"
+      },
+      {
+        "text": "#011Water AbsorbAbsorbs water moves, healing for 1/4 max HP.Generation 3",
+        "href": "/en/abilities/water-absorb"
+      },
+      {
+        "text": "#041Water VeilPrevents burns.Generation 3",
+        "href": "/en/abilities/water-veil"
+      },
+      {
+        "text": "#025Wonder GuardProtects against damaging moves that are not super effective.Generation 3",
+        "href": "/en/abilities/wonder-guard"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/abilities/static",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/abilities/static",
+    "duration": 1489,
+    "title": "Static — Ability | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Static"
+    ],
+    "main": "BACK TO ABILITIES\n\n#009\n\nSTATIC\nMAIN SERIES\nEFFECT\n\nWhenever a move makes contact with this Pokémon, the move's user has a 30% chance of being paralyzed. Pokémon that are immune to Electric-type moves can still be paralyzed by this ability. Overworld: If the lead Pokémon has this ability, there is a 50% chance that encounters will be with an Electric Pokémon, if applicable.\n\nPOKÉDEX ENTRY\n\n“Paralyzes on contact.”\n\nPOKÉMON WITH THIS ABILITY (38)\nPikachu\nRaichu\nVoltorb\nElectrode\nElectabuzz\nZapdos\nH\nPichu\nMareep\nFlaaffy\nAmpharos\nElekid\nElectrike\nManectric\nEmolga\nStunfisk\nToxel\nArctozolt\nPawmi\nTadbulb\nBellibolt\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nPikachu\nVoltorb\nElectrode\nPOKÉMON WITH THIS ABILITY\nPOKÉMON\n38",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Back to Abilities",
+        "href": "/en/abilities"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu"
+      },
+      {
+        "text": "Raichu",
+        "href": "/en/pokemon/raichu"
+      },
+      {
+        "text": "Voltorb",
+        "href": "/en/pokemon/voltorb"
+      },
+      {
+        "text": "Electrode",
+        "href": "/en/pokemon/electrode"
+      },
+      {
+        "text": "Electabuzz",
+        "href": "/en/pokemon/electabuzz"
+      },
+      {
+        "text": "ZapdosH",
+        "href": "/en/pokemon/zapdos"
+      },
+      {
+        "text": "Pichu",
+        "href": "/en/pokemon/pichu"
+      },
+      {
+        "text": "Mareep",
+        "href": "/en/pokemon/mareep"
+      },
+      {
+        "text": "Flaaffy",
+        "href": "/en/pokemon/flaaffy"
+      },
+      {
+        "text": "Ampharos",
+        "href": "/en/pokemon/ampharos"
+      },
+      {
+        "text": "Elekid",
+        "href": "/en/pokemon/elekid"
+      },
+      {
+        "text": "Electrike",
+        "href": "/en/pokemon/electrike"
+      },
+      {
+        "text": "Manectric",
+        "href": "/en/pokemon/manectric"
+      },
+      {
+        "text": "Emolga",
+        "href": "/en/pokemon/emolga"
+      },
+      {
+        "text": "Stunfisk",
+        "href": "/en/pokemon/stunfisk"
+      },
+      {
+        "text": "Toxel",
+        "href": "/en/pokemon/toxel"
+      },
+      {
+        "text": "Arctozolt",
+        "href": "/en/pokemon/arctozolt"
+      },
+      {
+        "text": "Pawmi",
+        "href": "/en/pokemon/pawmi"
+      },
+      {
+        "text": "Tadbulb",
+        "href": "/en/pokemon/tadbulb"
+      },
+      {
+        "text": "Bellibolt",
+        "href": "/en/pokemon/bellibolt"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-rock-star"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-belle"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-pop-star"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-phd"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-libre"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-cosplay"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-original-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-hoenn-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-sinnoh-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-unova-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-kalos-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-alola-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-partner-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-starter"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-world-cap"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu-gmax"
+      },
+      {
+        "text": "Voltorb",
+        "href": "/en/pokemon/voltorb-hisui"
+      },
+      {
+        "text": "Electrode",
+        "href": "/en/pokemon/electrode-hisui"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/items",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/items",
+    "duration": 1461,
+    "title": "Items | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Items"
+    ],
+    "main": "ITEMS\n\nItems\n\nBrowse held items, berries, evolution stones, and more\n\n48 ITEMS\nFILTERS\nRESET ALL FILTERS\nNAME\nID\nCOST\nCATEGORY\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n48 ITEMS\nANTIDOTE\n\nCures poison.\n\nSTATUS CURES\n₽200\nAWAKENING\n\nCures sleep.\n\nSTATUS CURES\n₽200\nBERRY JUICE\n\nRestores 20 HP.\n\nHEALING\n₽200\nBURN HEAL\n\nCures a burn.\n\nSTATUS CURES\n₽200\nCARBOS\n\nRaises Speed effort and happiness.\n\nVITAMINS\n₽10,000\nCHERISH BALL\n\nTries to catch a wild Pokémon.\n\nSPECIAL BALLS\nDIVE BALL\n\nTries to catch a wild Pokémon. Success rate is 3.5× when underwater, fishing, or surfing.\n\nSPECIAL BALLS\n₽1,000\nDUSK BALL\n\nTries to catch a wild Pokémon. Success rate is 3.5× at night and in caves.\n\nSPECIAL BALLS\n₽1,000\nELIXIR\n\nRestores 10 PP for each move.\n\nPP RECOVERY\n₽3,000\nENERGY POWDER\n\nRestores 50 HP, but lowers happiness.\n\nHEALING\n₽500\nENERGY ROOT\n\nRestores 200 HP, but lowers happiness.\n\nHEALING\n₽1,200\nETHER\n\nRestores 10 PP for one move.\n\nPP RECOVERY\n₽1,200\nFRESH WATER\n\nRestores 50 HP.\n\nHEALING\n₽200\nFULL HEAL\n\nCures any status ailment and confusion.\n\nSTATUS CURES\n₽400\nFULL RESTORE\n\nRestores HP to full and cures any status ailment and confusion.\n\nHEALING\n₽3,000\nGREAT BALL\n\nTries to catch a wild Pokémon. Success rate is 1.5×.\n\nSTANDARD BALLS\n₽600\nHEAL BALL\n\nTries to catch a wild Pokémon. Caught Pokémon are immediately healed.\n\nSPECIAL BALLS\n₽300\nHEAL POWDER\n\nCures any status ailment, but lowers happiness.\n\nSTATUS CURES\n₽300\nHP UP\n\nRaises HP effort and happiness.\n\nVITAMINS\n₽10,000\nHYPER POTION\n\nRestores 200 HP.\n\nHEALING\n₽1,500\nICE HEAL\n\nCures freezing.\n\nSTATUS CURES\n₽200\nIRON\n\nRaises Defense effort and happiness.\n\nVITAMINS\n₽10,000\nLAVA COOKIE\n\nCures any status ailment and confusion.\n\nSTATUS CURES\n₽350\nLEMONADE\n\nRestores 80 HP.\n\nHEALING\n₽400\nLUXURY BALL\n\nTries to catch a wild Pokémon. Caught Pokémon start with 200 happiness.\n\nSPECIAL BALLS\n₽3,000\nMASTER BALL\n\nCatches a wild Pokémon every time.\n\nSTANDARD BALLS\nMAX ELIXIR\n\nRestores PP to full for each move.\n\nPP RECOVERY\n₽4,500\nMAX ETHER\n\nRestores PP to full for one move.\n\nPP RECOVERY\n₽2,000\nMAX POTION\n\nRestores HP to full.\n\nHEALING\n₽2,500\nMAX REVIVE\n\nRevives with full HP.\n\nREVIVAL\n₽4,000\nMOOMOO MILK\n\nRestores 100 HP.\n\nHEALING\n₽600\nNEST BALL\n\nTries to catch a wild Pokémon. Success rate is 3.9× for level 1 Pokémon, and drops steadily to 1× at level 30.\n\nSPECIAL BALLS\n₽1,000\nNET BALL\n\nTries to catch a wild Pokémon. Success rate is 3× for water and bug Pokémon.\n\nSPECIAL BALLS\n₽1,000\nPARALYZE HEAL\n\nCures paralysis.\n\nSTATUS CURES\n₽200\nPOKÉ BALL\n\nTries to catch a wild Pokémon.\n\nSTANDARD BALLS\n₽200\nPOTION\n\nRestores 20 HP.\n\nHEALING\n₽200\nPREMIER BALL\n\nTries to catch a wild Pokémon.\n\nSPECIAL BALLS\n₽20\nPROTEIN\n\nRaises Attack effort and happiness.\n\nVITAMINS\n₽10,000\nQUICK BALL\n\nTries to catch a wild Pokémon. Success rate is 4× (Gen V: 5×), but only on the first turn.\n\nSPECIAL BALLS\n₽1,000\nREPEAT BALL\n\nTries to catch a wild Pokémon. Success rate is 3× for previously-caught Pokémon.\n\nSPECIAL BALLS\n₽1,000\nREVIVAL HERB\n\nRevives with full HP, but lowers happiness.\n\nREVIVAL\n₽2,800\nREVIVE\n\nRevives with half HP.\n\nREVIVAL\n₽2,000\nSACRED ASH\n\nRevives all fainted Pokémon with full HP.\n\nREVIVAL\n₽50,000\nSAFARI BALL\n\nTries to catch a wild Pokémon in the Great Marsh or Safari Zone. Success rate is 1.5×.\n\nSTANDARD BALLS\nSODA POP\n\nRestores 60 HP.\n\nHEALING\n₽300\nSUPER POTION\n\nRestores 50 HP.\n\nHEALING\n₽700\nTIMER BALL\n\nTries to catch a wild Pokémon. Success rate increases by 0.1× (Gen V: 0.3×) every turn, to a max of 4×.\n\nSPECIAL BALLS\n₽1,000\nULTRA BALL\n\nTries to catch a wild Pokémon. Success rate is 2×.\n\nSTANDARD BALLS\n₽800",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Reset all filters",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search items...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Name",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ID",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Cost",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Healing",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pp Recovery",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Revival",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Special Balls",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Standard Balls",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Status Cures",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Vitamins",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "AntidoteCures poison.Status Cures₽200",
+        "href": "/en/items/antidote"
+      },
+      {
+        "text": "AwakeningCures sleep.Status Cures₽200",
+        "href": "/en/items/awakening"
+      },
+      {
+        "text": "Berry JuiceRestores 20 HP.Healing₽200",
+        "href": "/en/items/berry-juice"
+      },
+      {
+        "text": "Burn HealCures a burn.Status Cures₽200",
+        "href": "/en/items/burn-heal"
+      },
+      {
+        "text": "CarbosRaises Speed effort and happiness.Vitamins₽10,000",
+        "href": "/en/items/carbos"
+      },
+      {
+        "text": "Cherish BallTries to catch a wild Pokémon.Special Balls",
+        "href": "/en/items/cherish-ball"
+      },
+      {
+        "text": "Dive BallTries to catch a wild Pokémon. Success rate is 3.5× when underwater, fishing, or surfing.Sp",
+        "href": "/en/items/dive-ball"
+      },
+      {
+        "text": "Dusk BallTries to catch a wild Pokémon.  Success rate is 3.5× at night and in caves.Special Balls₽1,",
+        "href": "/en/items/dusk-ball"
+      },
+      {
+        "text": "ElixirRestores 10 PP for each move.Pp Recovery₽3,000",
+        "href": "/en/items/elixir"
+      },
+      {
+        "text": "Energy PowderRestores 50 HP, but lowers happiness.Healing₽500",
+        "href": "/en/items/energy-powder"
+      },
+      {
+        "text": "Energy RootRestores 200 HP, but lowers happiness.Healing₽1,200",
+        "href": "/en/items/energy-root"
+      },
+      {
+        "text": "EtherRestores 10 PP for one move.Pp Recovery₽1,200",
+        "href": "/en/items/ether"
+      },
+      {
+        "text": "Fresh WaterRestores 50 HP.Healing₽200",
+        "href": "/en/items/fresh-water"
+      },
+      {
+        "text": "Full HealCures any status ailment and confusion.Status Cures₽400",
+        "href": "/en/items/full-heal"
+      },
+      {
+        "text": "Full RestoreRestores HP to full and cures any status ailment and confusion.Healing₽3,000",
+        "href": "/en/items/full-restore"
+      },
+      {
+        "text": "Great BallTries to catch a wild Pokémon.  Success rate is 1.5×.Standard Balls₽600",
+        "href": "/en/items/great-ball"
+      },
+      {
+        "text": "Heal BallTries to catch a wild Pokémon.  Caught Pokémon are immediately healed.Special Balls₽300",
+        "href": "/en/items/heal-ball"
+      },
+      {
+        "text": "Heal PowderCures any status ailment, but lowers happiness.Status Cures₽300",
+        "href": "/en/items/heal-powder"
+      },
+      {
+        "text": "HP UpRaises HP effort and happiness.Vitamins₽10,000",
+        "href": "/en/items/hp-up"
+      },
+      {
+        "text": "Hyper PotionRestores 200 HP.Healing₽1,500",
+        "href": "/en/items/hyper-potion"
+      },
+      {
+        "text": "Ice HealCures freezing.Status Cures₽200",
+        "href": "/en/items/ice-heal"
+      },
+      {
+        "text": "IronRaises Defense effort and happiness.Vitamins₽10,000",
+        "href": "/en/items/iron"
+      },
+      {
+        "text": "Lava CookieCures any status ailment and confusion.Status Cures₽350",
+        "href": "/en/items/lava-cookie"
+      },
+      {
+        "text": "LemonadeRestores 80 HP.Healing₽400",
+        "href": "/en/items/lemonade"
+      },
+      {
+        "text": "Luxury BallTries to catch a wild Pokémon.  Caught Pokémon start with 200 happiness.Special Balls₽3,0",
+        "href": "/en/items/luxury-ball"
+      },
+      {
+        "text": "Master BallCatches a wild Pokémon every time.Standard Balls",
+        "href": "/en/items/master-ball"
+      },
+      {
+        "text": "Max ElixirRestores PP to full for each move.Pp Recovery₽4,500",
+        "href": "/en/items/max-elixir"
+      },
+      {
+        "text": "Max EtherRestores PP to full for one move.Pp Recovery₽2,000",
+        "href": "/en/items/max-ether"
+      },
+      {
+        "text": "Max PotionRestores HP to full.Healing₽2,500",
+        "href": "/en/items/max-potion"
+      },
+      {
+        "text": "Max ReviveRevives with full HP.Revival₽4,000",
+        "href": "/en/items/max-revive"
+      },
+      {
+        "text": "Moomoo MilkRestores 100 HP.Healing₽600",
+        "href": "/en/items/moomoo-milk"
+      },
+      {
+        "text": "Nest BallTries to catch a wild Pokémon.  Success rate is 3.9× for level 1 Pokémon, and drops steadil",
+        "href": "/en/items/nest-ball"
+      },
+      {
+        "text": "Net BallTries to catch a wild Pokémon.  Success rate is 3× for water and bug Pokémon.Special Balls₽1",
+        "href": "/en/items/net-ball"
+      },
+      {
+        "text": "Paralyze HealCures paralysis.Status Cures₽200",
+        "href": "/en/items/paralyze-heal"
+      },
+      {
+        "text": "Poké BallTries to catch a wild Pokémon.Standard Balls₽200",
+        "href": "/en/items/poke-ball"
+      },
+      {
+        "text": "PotionRestores 20 HP.Healing₽200",
+        "href": "/en/items/potion"
+      },
+      {
+        "text": "Premier BallTries to catch a wild Pokémon.Special Balls₽20",
+        "href": "/en/items/premier-ball"
+      },
+      {
+        "text": "ProteinRaises Attack effort and happiness.Vitamins₽10,000",
+        "href": "/en/items/protein"
+      },
+      {
+        "text": "Quick BallTries to catch a wild Pokémon. Success rate is 4× (Gen V: 5×), but only on the first turn.",
+        "href": "/en/items/quick-ball"
+      },
+      {
+        "text": "Repeat BallTries to catch a wild Pokémon.  Success rate is 3× for previously-caught Pokémon.Special ",
+        "href": "/en/items/repeat-ball"
+      },
+      {
+        "text": "Revival HerbRevives with full HP, but lowers happiness.Revival₽2,800",
+        "href": "/en/items/revival-herb"
+      },
+      {
+        "text": "ReviveRevives with half HP.Revival₽2,000",
+        "href": "/en/items/revive"
+      },
+      {
+        "text": "Sacred AshRevives all fainted Pokémon with full HP.Revival₽50,000",
+        "href": "/en/items/sacred-ash"
+      },
+      {
+        "text": "Safari BallTries to catch a wild Pokémon in the Great Marsh or Safari Zone.  Success rate is 1.5×.St",
+        "href": "/en/items/safari-ball"
+      },
+      {
+        "text": "Soda PopRestores 60 HP.Healing₽300",
+        "href": "/en/items/soda-pop"
+      },
+      {
+        "text": "Super PotionRestores 50 HP.Healing₽700",
+        "href": "/en/items/super-potion"
+      },
+      {
+        "text": "Timer BallTries to catch a wild Pokémon. Success rate increases by 0.1× (Gen V: 0.3×) every turn, to",
+        "href": "/en/items/timer-ball"
+      },
+      {
+        "text": "Ultra BallTries to catch a wild Pokémon.  Success rate is 2×.Standard Balls₽800",
+        "href": "/en/items/ultra-ball"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/items/potion",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/items/potion",
+    "duration": 1532,
+    "title": "Potion — Item | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Potion"
+    ],
+    "main": "BACK TO ITEMS\n\n#0017\n\nPOTION\nHEALING\n₽200\nEFFECT\n\nUsed on a friendly Pokémon : Restores 20 HP.\n\n“Restores the HP of a POKéMON by 20 points.”\n\nITEM INFO\nCATEGORY\nHealing\nCOST\n₽200",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Back to Items",
+        "href": "/en/items"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/tcg",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg",
+    "duration": 1441,
+    "title": "Pokémon TCG Catalog | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Pokémon TCG Catalog"
+    ],
+    "main": "Catalog\nSealed market\nTools\nCARD LANGUAGE\nCARDS\nEnglish\nFrench\nSpanish\nItalian\nPortuguese\nBrazilian Portuguese\nEuropean Portuguese\nGerman\nDutch\nPolish\nRussian\nJapanese\nKorean\nChinese (Taiwan)\nIndonesian\nThai\nChinese (China)\nPokémon TCG Catalog\n\nSearch cards, browse the latest expansions, and open details in one tap.\n\nAll Collections\n30th Classic Collection\n30th Celebration\nPitch Black\nChaos Rising\nPerfect Order\nPaldean Wonders\nAscended Heroes\nFantastical Parade\nCrimson Blaze\nPhantasmal Flames\nMega Rising\nMEP Black Star Promos\nMega Evolution\nMega Evolution Energy\nSecluded Springs\nWisdom of Sea and Sky\nWhite Flare\nBlack Bolt\nEevee Grove\nDestined Rivals\nExtradimensional Crisis\nCelestial Guardians\nJourney Together\nShining Revelry\nTriumphant Light\nSpace-Time Smackdown\nPrismatic Evolutions\nMythical Island\nMcDonald's Collection 2024\nSurging Sparks\nGenetic Apex\nPromos-A\nStellar Crown\nShrouded Fable\nTwilight Masquerade\nTemporal Forces\nPaldean Fates\nParadox Rift\nMy First Battle\n151\nObsidian Flames\nMcDonald's Collection 2023\nPaldea Evolved\nScarlet & Violet\nScarlet & Violet Energy\nSVP Black Star Promos\nCrown Zenith Galarian Gallery\nCrown Zenith\nSilver Tempest Trainer Gallery\nSilver Tempest\nLost Origin\nLost Origin Trainer Gallery\nMcDonald's Collection 2022\nPokémon GO\nAstral Radiance Trainer Gallery\nAstral Radiance\nBrilliant Stars Trainer Gallery\nBrilliant Stars\nFusion Strike\nCelebrations\nCelebrations Classic Collection\nEvolving Skies\nChilling Reign\nBattle Styles\nShining Fates Shiny Vault\nShining Fates\nMcDonald's Collection 2021\nVivid Voltage\nChampion's Path\nPokémon Futsal 2020\nDarkness Ablaze\nRebel Clash\nSword & Shield\nSWSH Black Star Promos\nCosmic Eclipse\nMcDonald's Collection 2019\nHidden Fates\nHidden Fates Shiny Vault\nUnified Minds\nUnbroken Bonds\nDetective Pikachu\nTeam Up\nLost Thunder\nMcDonald's Collection 2018\nDragon Majesty\nCelestial Storm\nForbidden Light\nUltra Prism\nCrimson Invasion\nShining Legends\nBurning Shadows\nMcDonald's Collection 2017\nGuardians Rising\nSM trainer Kit (Lycanroc)\nSM trainer Kit (Alolan Raichu)\nSM Black Star Promos\nSun & Moon\nEvolutions\nMcDonald's Collection 2016\nSteam Siege\nFates Collide\nXY trainer Kit (Suicune)\nXY trainer Kit (Pikachu Libre)\nGenerations\nBREAKpoint\nMcDonald's Collection 2015\nBREAKthrough\nAncient Origins\nRoaring Skies\nXY trainer Kit (Latias)\nXY trainer Kit (Latios)\nDouble Crisis\nPrimal Clash\nPhantom Forces\nXY trainer Kit (Bisharp)\nXY trainer Kit (Wigglytuff)\nFurious Fists\nMcDonald's Collection 2014\nFlashfire\nXY trainer Kit (Sylveon)\nXY trainer Kit (Noivern)\nXY\nYellow A Alternate\nKalos Starter Set\nLegendary Treasures\nRadiant Collection\nXY Black Star Promos\nPlasma Blast\nPlasma Freeze\nPlasma Storm\nBoundaries Crossed\nDragon Vault\nDragons Exalted\nMcDonald's Collection 2012\nDark Explorers\nNext Destinies\nNoble Victories\nBW trainer Kit (Excadrill)\nBW trainer Kit (Zoroark)\nEmerging Powers\nMcDonald's Collection 2011\nBW Black Star Promos\nBlack & White\nCall of Legends\nTriumphant\nUndaunted\nUnleashed\nHS trainer Kit (Raichu)\nHS trainer Kit (Gyarados)\nHGSS Black Star Promos\nHeartGold SoulSilver\nPokémon Rumble\nArceus\nSupreme Victors\nRising Rivals\nPOP Series 9\nPlatinum\nStormfront\nPOP Series 8\nLegends Awakened\nMajestic Dawn\nPOP Series 7\nGreat Encounters\nSecret Wonders\nDP trainer Kit (Lucario)\nDP trainer Kit (Manaphy)\nPOP Series 6\nMysterious Treasures\nDP Black Star Promos\nDiamond & Pearl\nPOP Series 5\nPower Keepers\nDragon Frontiers\nCrystal Guardians\nPOP Series 4\nHolon Phantoms\nPOP Series 3\nEX trainer Kit 2 (Plusle)\nEX trainer Kit 2 (Minun)\nLegend Maker\nDelta Species\nUnseen Forces Unown Collection\nUnseen Forces\nPOP Series 2\nEmerald\nDeoxys\nTeam Rocket Returns\nFireRed & LeafGreen\nPOP Series 1\nPoké Card Creator Pack\nEX trainer Kit (Latias)\nEX trainer Kit (Latios)\nHidden Legends\nTeam Magma vs Team Aqua\nDragon\nNintendo Black Star Promos\nSandstorm\nRuby & Sapphire\nSkyridge\nAquapolis\nBest of game\nExpedition Base Set\nSample\nLegendary Collection\nNeo Destiny\nNeo Revelation\nSouthern Islands\nNeo Discovery\nNeo Genesis\nGym Challenge\nGym Heroes\nTeam Rocket\nBase Set 2\nJumbo cards\nFossil\nW Promotional\nWizards Black Star Promos\nJungle\nBase Set\nMiscellaneous Promos\nName A-Z\nName Z-A\nCard number low to high\nCard number high to low\nCard ID A-Z\nCard ID Z-A\nHP High to Low\nHP Low to High\nRarity A-Z\nRarity Z-A\nPrice low to high\nPrice high to low\nFILTERS\nFILTERS\nSet: 30th Celebration\nClear\nCatalog results\nCARDS FOUND\n24 cards in 30th Celebration\nEXEGGCUTE\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 60\n\nMARKET PRICE\n\nNo pricing available\nADD\nALOLAN EXEGGUTOR\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 150\n\nMARKET PRICE\n\nNo pricing available\nADD\nVOLBEAT\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 80\n\nMARKET PRICE\n\nNo pricing available\nADD\nILLUMISE\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 80\n\nMARKET PRICE\n\nNo pricing available\nADD\nTROPIUS\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 120\n\nMARKET PRICE\n\nNo pricing available\nADD\nCHERUBI\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 40\n\nMARKET PRICE\n\nNo pricing available\nADD\nCHERRIM\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 80\n\nMARKET PRICE\n\nNo pricing available\nADD\nVIVILLON\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 120\n\nMARKET PRICE\n\nNo pricing available\nADD\nVULPIX\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 70\n\nMARKET PRICE\n\nNo pricing available\nADD\nNINETALES\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 110\n\nMARKET PRICE\n\nNo pricing available\nADD\nMOLTRES\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 120\n\nMARKET PRICE\n\nNo pricing available\nADD\nHO-OH\n\n30TH CELEBRATION\n\nRARE\nPOKÉMON\nHP 130\n\nMARKET PRICE\n\nNo pricing available\nADD\nVICTINI\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 80\n\nMARKET PRICE\n\nNo pricing available\nADD\nRESHIRAM\n\n30TH CELEBRATION\n\nRARE\nPOKÉMON\nHP 130\n\nMARKET PRICE\n\nNo pricing available\nADD\nFUECOCO EX\n\n30TH CELEBRATION\n\nDOUBLE RARE\nPOKÉMON\nHP 210\n\nMARKET PRICE\n\nNo pricing available\nADD\nSLOWPOKE\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 80\n\nMARKET PRICE\n\nNo pricing available\nADD\nLAPRAS\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 130\n\nMARKET PRICE\n\nNo pricing available\nADD\nARTICUNO\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 120\n\nMARKET PRICE\n\nNo pricing available\nADD\nKYOGRE\n\n30TH CELEBRATION\n\nRARE\nPOKÉMON\nHP 140\n\nMARKET PRICE\n\nNo pricing available\nADD\nPALKIA\n\n30TH CELEBRATION\n\nRARE\nPOKÉMON\nHP 130\n\nMARKET PRICE\n\nNo pricing available\nADD\nGRENINJA EX\n\n30TH CELEBRATION\n\nDOUBLE RARE\nPOKÉMON\nHP 300\n\nMARKET PRICE\n\nNo pricing available\nADD\nWISHIWASHI\n\n30TH CELEBRATION\n\nCOMMON\nPOKÉMON\nHP 30\n\nMARKET PRICE\n\nNo pricing available\nADD\nPIKACHU\n\n30TH CELEBRATION\n\nPIKACHU RARE\nPOKÉMON\nHP 70\n\nMARKET PRICE\n\nNo pricing available\nADD\nPIKACHU\n\n30TH CELEBRATION\n\nPIKACHU RARE\nPOKÉMON\nHP 70\n\nMARKET PRICE\n\nNo pricing available\nADD\nLOAD MORE CARDS",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "EnglishFrenchSpanishItalianPortugueseBrazilian PortugueseEuropean PortugueseGermanDutchPolishRussianJapaneseKoreanChines",
+        "label": "Card language",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search card names...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "All Collections30th Classic Collection30th CelebrationPitch BlackChaos RisingPerfect OrderPaldean WondersAscended Heroes",
+        "label": "Set",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "Name A-ZName Z-ACard number low to highCard number high to lowCard ID A-ZCard ID Z-AHP High to LowHP Low to HighRarity A",
+        "label": "Sort cards",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Filters",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Set: 30th Celebration",
+        "label": "Clear: Set: 30th Celebration",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Clear",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Exeggcute card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Exeggcute to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Alolan Exeggutor card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Alolan Exeggutor to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Volbeat card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Volbeat to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Illumise card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Illumise to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Tropius card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Tropius to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Cherubi card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Cherubi to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Cherrim card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Cherrim to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Vivillon card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Vivillon to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Vulpix card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Vulpix to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Ninetales card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Ninetales to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Moltres card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Moltres to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Ho-Oh card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Ho-Oh to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Victini card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Victini to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Reshiram card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Reshiram to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Fuecoco ex card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Fuecoco ex to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Slowpoke card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Slowpoke to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Lapras card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Lapras to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Articuno card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Articuno to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Kyogre card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Kyogre to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Palkia card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Palkia to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Greninja ex card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Greninja ex to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Wishiwashi card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Wishiwashi to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Open Pikachu card",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add",
+        "label": "Add Pikachu to my collection",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Load more cards",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Exeggcute",
+        "href": "/en/tcg/cards/30th-001?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Alolan Exeggutor",
+        "href": "/en/tcg/cards/30th-002?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Volbeat",
+        "href": "/en/tcg/cards/30th-003?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Illumise",
+        "href": "/en/tcg/cards/30th-004?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Tropius",
+        "href": "/en/tcg/cards/30th-005?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Cherubi",
+        "href": "/en/tcg/cards/30th-006?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Cherrim",
+        "href": "/en/tcg/cards/30th-007?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Vivillon",
+        "href": "/en/tcg/cards/30th-008?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Vulpix",
+        "href": "/en/tcg/cards/30th-009?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Ninetales",
+        "href": "/en/tcg/cards/30th-010?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Moltres",
+        "href": "/en/tcg/cards/30th-011?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Ho-Oh",
+        "href": "/en/tcg/cards/30th-012?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Victini",
+        "href": "/en/tcg/cards/30th-013?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Reshiram",
+        "href": "/en/tcg/cards/30th-014?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Fuecoco ex",
+        "href": "/en/tcg/cards/30th-015?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Slowpoke",
+        "href": "/en/tcg/cards/30th-016?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Lapras",
+        "href": "/en/tcg/cards/30th-017?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Articuno",
+        "href": "/en/tcg/cards/30th-018?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Kyogre",
+        "href": "/en/tcg/cards/30th-019?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Palkia",
+        "href": "/en/tcg/cards/30th-020?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Greninja ex",
+        "href": "/en/tcg/cards/30th-021?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Wishiwashi",
+        "href": "/en/tcg/cards/30th-022?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/tcg/cards/30th-023?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/tcg/cards/30th-024?tcgLang=en"
+      },
+      {
+        "text": "30th Celebration",
+        "href": "/en/tcg/sets/30th?tcgLang=en"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/cards/sv03.5-199",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/cards/sv03.5-199",
+    "duration": 1341,
+    "title": "Charizard ex — Pokémon TCG card from 151 | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Charizard ex"
+    ],
+    "main": "BACK\n\n151\n\nCharizard ex\n\nNo additional description is available.\n\nHP\n330\nRarity\nSpecial illustration rare\nCollector No.\n#199\nCategory\nPokémon\nIllustrator\nmiki kudo\nPokémon types\nFire\n\nMARKET PRICE\n\n€488.30\nCardmarket\n\nSource timestamp: Oct 1, 2026, 12:54 AM\n\nPricing method & limits\nOPEN CHARIZARD EX CARD\nMOVES\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Back",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Open Charizard ex card",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/tcg/sets/sv03.5",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sets/sv03.5",
+    "duration": 1433,
+    "title": "151 card list & checklist — Pokémon TCG | Lunidex",
+    "lang": "en",
+    "h1": [
+      "151 — Card list & checklist"
+    ],
+    "main": "CARD LIST & CHECKLIST\n\n151 — Card list & checklist\n\nBrowse the complete 151 Pokémon TCG card list, use the checklist, and track your collection progress on Lunidex.\n\n207 cards\nSep 22, 2023\nSeries: Scarlet & Violet\nOfficial: 165\nChoose this set\nShare\n\nCATALOG\n\nCard list & checklist\n207 cards\nBulbasaur\n001\nIvysaur\n002\nVenusaur ex\n003\nCharmander\n004\nCharmeleon\n005\nCharizard ex\n006\nSquirtle\n007\nWartortle\n008\nBlastoise ex\n009\nCaterpie\n010\nMetapod\n011\nButterfree\n012\nWeedle\n013\nKakuna\n014\nBeedrill\n015\nPidgey\n016\nPidgeotto\n017\nPidgeot\n018\nRattata\n019\nRaticate\n020\nSpearow\n021\nFearow\n022\nEkans\n023\nArbok ex\n024\nPikachu\n025\nRaichu\n026\nSandshrew\n027\nSandslash\n028\nNidoran♀\n029\nNidorina\n030\nNidoqueen\n031\nNidoran♂\n032\nNidorino\n033\nNidoking\n034\nClefairy\n035\nClefable\n036\n\nSHOWING 36 OF 207 CARDS.\n\nComplete card checklist\n207 cards\n001\nBulbasaur\nOPEN THE CARD TO VIEW FULL DETAILS.\n002\nIvysaur\nOPEN THE CARD TO VIEW FULL DETAILS.\n003\nVenusaur ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n004\nCharmander\nOPEN THE CARD TO VIEW FULL DETAILS.\n005\nCharmeleon\nOPEN THE CARD TO VIEW FULL DETAILS.\n006\nCharizard ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n007\nSquirtle\nOPEN THE CARD TO VIEW FULL DETAILS.\n008\nWartortle\nOPEN THE CARD TO VIEW FULL DETAILS.\n009\nBlastoise ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n010\nCaterpie\nOPEN THE CARD TO VIEW FULL DETAILS.\n011\nMetapod\nOPEN THE CARD TO VIEW FULL DETAILS.\n012\nButterfree\nOPEN THE CARD TO VIEW FULL DETAILS.\n013\nWeedle\nOPEN THE CARD TO VIEW FULL DETAILS.\n014\nKakuna\nOPEN THE CARD TO VIEW FULL DETAILS.\n015\nBeedrill\nOPEN THE CARD TO VIEW FULL DETAILS.\n016\nPidgey\nOPEN THE CARD TO VIEW FULL DETAILS.\n017\nPidgeotto\nOPEN THE CARD TO VIEW FULL DETAILS.\n018\nPidgeot\nOPEN THE CARD TO VIEW FULL DETAILS.\n019\nRattata\nOPEN THE CARD TO VIEW FULL DETAILS.\n020\nRaticate\nOPEN THE CARD TO VIEW FULL DETAILS.\n021\nSpearow\nOPEN THE CARD TO VIEW FULL DETAILS.\n022\nFearow\nOPEN THE CARD TO VIEW FULL DETAILS.\n023\nEkans\nOPEN THE CARD TO VIEW FULL DETAILS.\n024\nArbok ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n025\nPikachu\nOPEN THE CARD TO VIEW FULL DETAILS.\n026\nRaichu\nOPEN THE CARD TO VIEW FULL DETAILS.\n027\nSandshrew\nOPEN THE CARD TO VIEW FULL DETAILS.\n028\nSandslash\nOPEN THE CARD TO VIEW FULL DETAILS.\n029\nNidoran♀\nOPEN THE CARD TO VIEW FULL DETAILS.\n030\nNidorina\nOPEN THE CARD TO VIEW FULL DETAILS.\n031\nNidoqueen\nOPEN THE CARD TO VIEW FULL DETAILS.\n032\nNidoran♂\nOPEN THE CARD TO VIEW FULL DETAILS.\n033\nNidorino\nOPEN THE CARD TO VIEW FULL DETAILS.\n034\nNidoking\nOPEN THE CARD TO VIEW FULL DETAILS.\n035\nClefairy\nOPEN THE CARD TO VIEW FULL DETAILS.\n036\nClefable\nOPEN THE CARD TO VIEW FULL DETAILS.\n037\nVulpix\nOPEN THE CARD TO VIEW FULL DETAILS.\n038\nNinetales ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n039\nJigglypuff\nOPEN THE CARD TO VIEW FULL DETAILS.\n040\nWigglytuff ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n041\nZubat\nOPEN THE CARD TO VIEW FULL DETAILS.\n042\nGolbat\nOPEN THE CARD TO VIEW FULL DETAILS.\n043\nOddish\nOPEN THE CARD TO VIEW FULL DETAILS.\n044\nGloom\nOPEN THE CARD TO VIEW FULL DETAILS.\n045\nVileplume\nOPEN THE CARD TO VIEW FULL DETAILS.\n046\nParas\nOPEN THE CARD TO VIEW FULL DETAILS.\n047\nParasect\nOPEN THE CARD TO VIEW FULL DETAILS.\n048\nVenonat\nOPEN THE CARD TO VIEW FULL DETAILS.\n049\nVenomoth\nOPEN THE CARD TO VIEW FULL DETAILS.\n050\nDiglett\nOPEN THE CARD TO VIEW FULL DETAILS.\n051\nDugtrio\nOPEN THE CARD TO VIEW FULL DETAILS.\n052\nMeowth\nOPEN THE CARD TO VIEW FULL DETAILS.\n053\nPersian\nOPEN THE CARD TO VIEW FULL DETAILS.\n054\nPsyduck\nOPEN THE CARD TO VIEW FULL DETAILS.\n055\nGolduck\nOPEN THE CARD TO VIEW FULL DETAILS.\n056\nMankey\nOPEN THE CARD TO VIEW FULL DETAILS.\n057\nPrimeape\nOPEN THE CARD TO VIEW FULL DETAILS.\n058\nGrowlithe\nOPEN THE CARD TO VIEW FULL DETAILS.\n059\nArcanine\nOPEN THE CARD TO VIEW FULL DETAILS.\n060\nPoliwag\nOPEN THE CARD TO VIEW FULL DETAILS.\n061\nPoliwhirl\nOPEN THE CARD TO VIEW FULL DETAILS.\n062\nPoliwrath\nOPEN THE CARD TO VIEW FULL DETAILS.\n063\nAbra\nOPEN THE CARD TO VIEW FULL DETAILS.\n064\nKadabra\nOPEN THE CARD TO VIEW FULL DETAILS.\n065\nAlakazam ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n066\nMachop\nOPEN THE CARD TO VIEW FULL DETAILS.\n067\nMachoke\nOPEN THE CARD TO VIEW FULL DETAILS.\n068\nMachamp\nOPEN THE CARD TO VIEW FULL DETAILS.\n069\nBellsprout\nOPEN THE CARD TO VIEW FULL DETAILS.\n070\nWeepinbell\nOPEN THE CARD TO VIEW FULL DETAILS.\n071\nVictreebel\nOPEN THE CARD TO VIEW FULL DETAILS.\n072\nTentacool\nOPEN THE CARD TO VIEW FULL DETAILS.\n073\nTentacruel\nOPEN THE CARD TO VIEW FULL DETAILS.\n074\nGeodude\nOPEN THE CARD TO VIEW FULL DETAILS.\n075\nGraveler\nOPEN THE CARD TO VIEW FULL DETAILS.\n076\nGolem ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n077\nPonyta\nOPEN THE CARD TO VIEW FULL DETAILS.\n078\nRapidash\nOPEN THE CARD TO VIEW FULL DETAILS.\n079\nSlowpoke\nOPEN THE CARD TO VIEW FULL DETAILS.\n080\nSlowbro\nOPEN THE CARD TO VIEW FULL DETAILS.\n081\nMagnemite\nOPEN THE CARD TO VIEW FULL DETAILS.\n082\nMagneton\nOPEN THE CARD TO VIEW FULL DETAILS.\n083\nFarfetch'd\nOPEN THE CARD TO VIEW FULL DETAILS.\n084\nDoduo\nOPEN THE CARD TO VIEW FULL DETAILS.\n085\nDodrio\nOPEN THE CARD TO VIEW FULL DETAILS.\n086\nSeel\nOPEN THE CARD TO VIEW FULL DETAILS.\n087\nDewgong\nOPEN THE CARD TO VIEW FULL DETAILS.\n088\nGrimer\nOPEN THE CARD TO VIEW FULL DETAILS.\n089\nMuk\nOPEN THE CARD TO VIEW FULL DETAILS.\n090\nShellder\nOPEN THE CARD TO VIEW FULL DETAILS.\n091\nCloyster\nOPEN THE CARD TO VIEW FULL DETAILS.\n092\nGastly\nOPEN THE CARD TO VIEW FULL DETAILS.\n093\nHaunter\nOPEN THE CARD TO VIEW FULL DETAILS.\n094\nGengar\nOPEN THE CARD TO VIEW FULL DETAILS.\n095\nOnix\nOPEN THE CARD TO VIEW FULL DETAILS.\n096\nDrowzee\nOPEN THE CARD TO VIEW FULL DETAILS.\n097\nHypno\nOPEN THE CARD TO VIEW FULL DETAILS.\n098\nKrabby\nOPEN THE CARD TO VIEW FULL DETAILS.\n099\nKingler\nOPEN THE CARD TO VIEW FULL DETAILS.\n100\nVoltorb\nOPEN THE CARD TO VIEW FULL DETAILS.\n101\nElectrode\nOPEN THE CARD TO VIEW FULL DETAILS.\n102\nExeggcute\nOPEN THE CARD TO VIEW FULL DETAILS.\n103\nExeggutor\nOPEN THE CARD TO VIEW FULL DETAILS.\n104\nCubone\nOPEN THE CARD TO VIEW FULL DETAILS.\n105\nMarowak\nOPEN THE CARD TO VIEW FULL DETAILS.\n106\nHitmonlee\nOPEN THE CARD TO VIEW FULL DETAILS.\n107\nHitmonchan\nOPEN THE CARD TO VIEW FULL DETAILS.\n108\nLickitung\nOPEN THE CARD TO VIEW FULL DETAILS.\n109\nKoffing\nOPEN THE CARD TO VIEW FULL DETAILS.\n110\nWeezing\nOPEN THE CARD TO VIEW FULL DETAILS.\n111\nRhyhorn\nOPEN THE CARD TO VIEW FULL DETAILS.\n112\nRhydon\nOPEN THE CARD TO VIEW FULL DETAILS.\n113\nChansey\nOPEN THE CARD TO VIEW FULL DETAILS.\n114\nTangela\nOPEN THE CARD TO VIEW FULL DETAILS.\n115\nKangaskhan ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n116\nHorsea\nOPEN THE CARD TO VIEW FULL DETAILS.\n117\nSeadra\nOPEN THE CARD TO VIEW FULL DETAILS.\n118\nGoldeen\nOPEN THE CARD TO VIEW FULL DETAILS.\n119\nSeaking\nOPEN THE CARD TO VIEW FULL DETAILS.\n120\nStaryu\nOPEN THE CARD TO VIEW FULL DETAILS.\n121\nStarmie\nOPEN THE CARD TO VIEW FULL DETAILS.\n122\nMr. Mime\nOPEN THE CARD TO VIEW FULL DETAILS.\n123\nScyther\nOPEN THE CARD TO VIEW FULL DETAILS.\n124\nJynx ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n125\nElectabuzz\nOPEN THE CARD TO VIEW FULL DETAILS.\n126\nMagmar\nOPEN THE CARD TO VIEW FULL DETAILS.\n127\nPinsir\nOPEN THE CARD TO VIEW FULL DETAILS.\n128\nTauros\nOPEN THE CARD TO VIEW FULL DETAILS.\n129\nMagikarp\nOPEN THE CARD TO VIEW FULL DETAILS.\n130\nGyarados\nOPEN THE CARD TO VIEW FULL DETAILS.\n131\nLapras\nOPEN THE CARD TO VIEW FULL DETAILS.\n132\nDitto\nOPEN THE CARD TO VIEW FULL DETAILS.\n133\nEevee\nOPEN THE CARD TO VIEW FULL DETAILS.\n134\nVaporeon\nOPEN THE CARD TO VIEW FULL DETAILS.\n135\nJolteon\nOPEN THE CARD TO VIEW FULL DETAILS.\n136\nFlareon\nOPEN THE CARD TO VIEW FULL DETAILS.\n137\nPorygon\nOPEN THE CARD TO VIEW FULL DETAILS.\n138\nOmanyte\nOPEN THE CARD TO VIEW FULL DETAILS.\n139\nOmastar\nOPEN THE CARD TO VIEW FULL DETAILS.\n140\nKabuto\nOPEN THE CARD TO VIEW FULL DETAILS.\n141\nKabutops\nOPEN THE CARD TO VIEW FULL DETAILS.\n142\nAerodactyl\nOPEN THE CARD TO VIEW FULL DETAILS.\n143\nSnorlax\nOPEN THE CARD TO VIEW FULL DETAILS.\n144\nArticuno\nOPEN THE CARD TO VIEW FULL DETAILS.\n145\nZapdos ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n146\nMoltres\nOPEN THE CARD TO VIEW FULL DETAILS.\n147\nDratini\nOPEN THE CARD TO VIEW FULL DETAILS.\n148\nDragonair\nOPEN THE CARD TO VIEW FULL DETAILS.\n149\nDragonite\nOPEN THE CARD TO VIEW FULL DETAILS.\n150\nMewtwo\nOPEN THE CARD TO VIEW FULL DETAILS.\n151\nMew ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n152\nAntique Dome Fossil\nOPEN THE CARD TO VIEW FULL DETAILS.\n153\nAntique Helix Fossil\nOPEN THE CARD TO VIEW FULL DETAILS.\n154\nAntique Old Amber\nOPEN THE CARD TO VIEW FULL DETAILS.\n155\nBig Air Balloon\nOPEN THE CARD TO VIEW FULL DETAILS.\n156\nBill's Transfer\nOPEN THE CARD TO VIEW FULL DETAILS.\n157\nCycling Road\nOPEN THE CARD TO VIEW FULL DETAILS.\n158\nDaisy's Help\nOPEN THE CARD TO VIEW FULL DETAILS.\n159\nEnergy Sticker\nOPEN THE CARD TO VIEW FULL DETAILS.\n160\nErika's Invitation\nOPEN THE CARD TO VIEW FULL DETAILS.\n161\nGiovanni's Charisma\nOPEN THE CARD TO VIEW FULL DETAILS.\n162\nGrabber\nOPEN THE CARD TO VIEW FULL DETAILS.\n163\nLeftovers\nOPEN THE CARD TO VIEW FULL DETAILS.\n164\nProtective Goggles\nOPEN THE CARD TO VIEW FULL DETAILS.\n165\nRigid Band\nOPEN THE CARD TO VIEW FULL DETAILS.\n166\nBulbasaur\nOPEN THE CARD TO VIEW FULL DETAILS.\n167\nIvysaur\nOPEN THE CARD TO VIEW FULL DETAILS.\n168\nCharmander\nOPEN THE CARD TO VIEW FULL DETAILS.\n169\nCharmeleon\nOPEN THE CARD TO VIEW FULL DETAILS.\n170\nSquirtle\nOPEN THE CARD TO VIEW FULL DETAILS.\n171\nWartortle\nOPEN THE CARD TO VIEW FULL DETAILS.\n172\nCaterpie\nOPEN THE CARD TO VIEW FULL DETAILS.\n173\nPikachu\nOPEN THE CARD TO VIEW FULL DETAILS.\n174\nNidoking\nOPEN THE CARD TO VIEW FULL DETAILS.\n175\nPsyduck\nOPEN THE CARD TO VIEW FULL DETAILS.\n176\nPoliwhirl\nOPEN THE CARD TO VIEW FULL DETAILS.\n177\nMachoke\nOPEN THE CARD TO VIEW FULL DETAILS.\n178\nTangela\nOPEN THE CARD TO VIEW FULL DETAILS.\n179\nMr. Mime\nOPEN THE CARD TO VIEW FULL DETAILS.\n180\nOmanyte\nOPEN THE CARD TO VIEW FULL DETAILS.\n181\nDragonair\nOPEN THE CARD TO VIEW FULL DETAILS.\n182\nVenusaur ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n183\nCharizard ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n184\nBlastoise ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n185\nArbok ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n186\nNinetales ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n187\nWigglytuff ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n188\nAlakazam ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n189\nGolem ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n190\nKangaskhan ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n191\nJynx ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n192\nZapdos ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n193\nMew ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n194\nBill's Transfer\nOPEN THE CARD TO VIEW FULL DETAILS.\n195\nDaisy's Help\nOPEN THE CARD TO VIEW FULL DETAILS.\n196\nErika's Invitation\nOPEN THE CARD TO VIEW FULL DETAILS.\n197\nGiovanni's Charisma\nOPEN THE CARD TO VIEW FULL DETAILS.\n198\nVenusaur ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n199\nCharizard ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n200\nBlastoise ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n201\nAlakazam ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n202\nZapdos ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n203\nErika's Invitation\nOPEN THE CARD TO VIEW FULL DETAILS.\n204\nGiovanni's Charisma\nOPEN THE CARD TO VIEW FULL DETAILS.\n205\nMew ex\nOPEN THE CARD TO VIEW FULL DETAILS.\n206\nSwitch\nOPEN THE CARD TO VIEW FULL DETAILS.\n207\nBasic Psychic Energy\nOPEN THE CARD TO VIEW FULL DETAILS.\nStart your collection\n\nChoose a set and mark the cards you own to track your progress.\n\nChoose this set",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Share",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Choose this set",
+        "href": "/en/tcg/collection/en/sv03.5?activation=1"
+      },
+      {
+        "text": "Bulbasaur001",
+        "href": "/en/tcg/cards/sv03.5-001?tcgLang=en"
+      },
+      {
+        "text": "Ivysaur002",
+        "href": "/en/tcg/cards/sv03.5-002?tcgLang=en"
+      },
+      {
+        "text": "Venusaur ex003",
+        "href": "/en/tcg/cards/sv03.5-003?tcgLang=en"
+      },
+      {
+        "text": "Charmander004",
+        "href": "/en/tcg/cards/sv03.5-004?tcgLang=en"
+      },
+      {
+        "text": "Charmeleon005",
+        "href": "/en/tcg/cards/sv03.5-005?tcgLang=en"
+      },
+      {
+        "text": "Charizard ex006",
+        "href": "/en/tcg/cards/sv03.5-006?tcgLang=en"
+      },
+      {
+        "text": "Squirtle007",
+        "href": "/en/tcg/cards/sv03.5-007?tcgLang=en"
+      },
+      {
+        "text": "Wartortle008",
+        "href": "/en/tcg/cards/sv03.5-008?tcgLang=en"
+      },
+      {
+        "text": "Blastoise ex009",
+        "href": "/en/tcg/cards/sv03.5-009?tcgLang=en"
+      },
+      {
+        "text": "Caterpie010",
+        "href": "/en/tcg/cards/sv03.5-010?tcgLang=en"
+      },
+      {
+        "text": "Metapod011",
+        "href": "/en/tcg/cards/sv03.5-011?tcgLang=en"
+      },
+      {
+        "text": "Butterfree012",
+        "href": "/en/tcg/cards/sv03.5-012?tcgLang=en"
+      },
+      {
+        "text": "Weedle013",
+        "href": "/en/tcg/cards/sv03.5-013?tcgLang=en"
+      },
+      {
+        "text": "Kakuna014",
+        "href": "/en/tcg/cards/sv03.5-014?tcgLang=en"
+      },
+      {
+        "text": "Beedrill015",
+        "href": "/en/tcg/cards/sv03.5-015?tcgLang=en"
+      },
+      {
+        "text": "Pidgey016",
+        "href": "/en/tcg/cards/sv03.5-016?tcgLang=en"
+      },
+      {
+        "text": "Pidgeotto017",
+        "href": "/en/tcg/cards/sv03.5-017?tcgLang=en"
+      },
+      {
+        "text": "Pidgeot018",
+        "href": "/en/tcg/cards/sv03.5-018?tcgLang=en"
+      },
+      {
+        "text": "Rattata019",
+        "href": "/en/tcg/cards/sv03.5-019?tcgLang=en"
+      },
+      {
+        "text": "Raticate020",
+        "href": "/en/tcg/cards/sv03.5-020?tcgLang=en"
+      },
+      {
+        "text": "Spearow021",
+        "href": "/en/tcg/cards/sv03.5-021?tcgLang=en"
+      },
+      {
+        "text": "Fearow022",
+        "href": "/en/tcg/cards/sv03.5-022?tcgLang=en"
+      },
+      {
+        "text": "Ekans023",
+        "href": "/en/tcg/cards/sv03.5-023?tcgLang=en"
+      },
+      {
+        "text": "Arbok ex024",
+        "href": "/en/tcg/cards/sv03.5-024?tcgLang=en"
+      },
+      {
+        "text": "Pikachu025",
+        "href": "/en/tcg/cards/sv03.5-025?tcgLang=en"
+      },
+      {
+        "text": "Raichu026",
+        "href": "/en/tcg/cards/sv03.5-026?tcgLang=en"
+      },
+      {
+        "text": "Sandshrew027",
+        "href": "/en/tcg/cards/sv03.5-027?tcgLang=en"
+      },
+      {
+        "text": "Sandslash028",
+        "href": "/en/tcg/cards/sv03.5-028?tcgLang=en"
+      },
+      {
+        "text": "Nidoran♀029",
+        "href": "/en/tcg/cards/sv03.5-029?tcgLang=en"
+      },
+      {
+        "text": "Nidorina030",
+        "href": "/en/tcg/cards/sv03.5-030?tcgLang=en"
+      },
+      {
+        "text": "Nidoqueen031",
+        "href": "/en/tcg/cards/sv03.5-031?tcgLang=en"
+      },
+      {
+        "text": "Nidoran♂032",
+        "href": "/en/tcg/cards/sv03.5-032?tcgLang=en"
+      },
+      {
+        "text": "Nidorino033",
+        "href": "/en/tcg/cards/sv03.5-033?tcgLang=en"
+      },
+      {
+        "text": "Nidoking034",
+        "href": "/en/tcg/cards/sv03.5-034?tcgLang=en"
+      },
+      {
+        "text": "Clefairy035",
+        "href": "/en/tcg/cards/sv03.5-035?tcgLang=en"
+      },
+      {
+        "text": "Clefable036",
+        "href": "/en/tcg/cards/sv03.5-036?tcgLang=en"
+      },
+      {
+        "text": "001BulbasaurOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-001?tcgLang=en"
+      },
+      {
+        "text": "002IvysaurOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-002?tcgLang=en"
+      },
+      {
+        "text": "003Venusaur exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-003?tcgLang=en"
+      },
+      {
+        "text": "004CharmanderOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-004?tcgLang=en"
+      },
+      {
+        "text": "005CharmeleonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-005?tcgLang=en"
+      },
+      {
+        "text": "006Charizard exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-006?tcgLang=en"
+      },
+      {
+        "text": "007SquirtleOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-007?tcgLang=en"
+      },
+      {
+        "text": "008WartortleOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-008?tcgLang=en"
+      },
+      {
+        "text": "009Blastoise exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-009?tcgLang=en"
+      },
+      {
+        "text": "010CaterpieOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-010?tcgLang=en"
+      },
+      {
+        "text": "011MetapodOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-011?tcgLang=en"
+      },
+      {
+        "text": "012ButterfreeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-012?tcgLang=en"
+      },
+      {
+        "text": "013WeedleOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-013?tcgLang=en"
+      },
+      {
+        "text": "014KakunaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-014?tcgLang=en"
+      },
+      {
+        "text": "015BeedrillOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-015?tcgLang=en"
+      },
+      {
+        "text": "016PidgeyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-016?tcgLang=en"
+      },
+      {
+        "text": "017PidgeottoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-017?tcgLang=en"
+      },
+      {
+        "text": "018PidgeotOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-018?tcgLang=en"
+      },
+      {
+        "text": "019RattataOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-019?tcgLang=en"
+      },
+      {
+        "text": "020RaticateOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-020?tcgLang=en"
+      },
+      {
+        "text": "021SpearowOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-021?tcgLang=en"
+      },
+      {
+        "text": "022FearowOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-022?tcgLang=en"
+      },
+      {
+        "text": "023EkansOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-023?tcgLang=en"
+      },
+      {
+        "text": "024Arbok exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-024?tcgLang=en"
+      },
+      {
+        "text": "025PikachuOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-025?tcgLang=en"
+      },
+      {
+        "text": "026RaichuOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-026?tcgLang=en"
+      },
+      {
+        "text": "027SandshrewOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-027?tcgLang=en"
+      },
+      {
+        "text": "028SandslashOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-028?tcgLang=en"
+      },
+      {
+        "text": "029Nidoran♀Open the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-029?tcgLang=en"
+      },
+      {
+        "text": "030NidorinaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-030?tcgLang=en"
+      },
+      {
+        "text": "031NidoqueenOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-031?tcgLang=en"
+      },
+      {
+        "text": "032Nidoran♂Open the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-032?tcgLang=en"
+      },
+      {
+        "text": "033NidorinoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-033?tcgLang=en"
+      },
+      {
+        "text": "034NidokingOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-034?tcgLang=en"
+      },
+      {
+        "text": "035ClefairyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-035?tcgLang=en"
+      },
+      {
+        "text": "036ClefableOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-036?tcgLang=en"
+      },
+      {
+        "text": "037VulpixOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-037?tcgLang=en"
+      },
+      {
+        "text": "038Ninetales exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-038?tcgLang=en"
+      },
+      {
+        "text": "039JigglypuffOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-039?tcgLang=en"
+      },
+      {
+        "text": "040Wigglytuff exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-040?tcgLang=en"
+      },
+      {
+        "text": "041ZubatOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-041?tcgLang=en"
+      },
+      {
+        "text": "042GolbatOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-042?tcgLang=en"
+      },
+      {
+        "text": "043OddishOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-043?tcgLang=en"
+      },
+      {
+        "text": "044GloomOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-044?tcgLang=en"
+      },
+      {
+        "text": "045VileplumeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-045?tcgLang=en"
+      },
+      {
+        "text": "046ParasOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-046?tcgLang=en"
+      },
+      {
+        "text": "047ParasectOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-047?tcgLang=en"
+      },
+      {
+        "text": "048VenonatOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-048?tcgLang=en"
+      },
+      {
+        "text": "049VenomothOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-049?tcgLang=en"
+      },
+      {
+        "text": "050DiglettOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-050?tcgLang=en"
+      },
+      {
+        "text": "051DugtrioOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-051?tcgLang=en"
+      },
+      {
+        "text": "052MeowthOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-052?tcgLang=en"
+      },
+      {
+        "text": "053PersianOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-053?tcgLang=en"
+      },
+      {
+        "text": "054PsyduckOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-054?tcgLang=en"
+      },
+      {
+        "text": "055GolduckOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-055?tcgLang=en"
+      },
+      {
+        "text": "056MankeyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-056?tcgLang=en"
+      },
+      {
+        "text": "057PrimeapeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-057?tcgLang=en"
+      },
+      {
+        "text": "058GrowlitheOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-058?tcgLang=en"
+      },
+      {
+        "text": "059ArcanineOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-059?tcgLang=en"
+      },
+      {
+        "text": "060PoliwagOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-060?tcgLang=en"
+      },
+      {
+        "text": "061PoliwhirlOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-061?tcgLang=en"
+      },
+      {
+        "text": "062PoliwrathOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-062?tcgLang=en"
+      },
+      {
+        "text": "063AbraOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-063?tcgLang=en"
+      },
+      {
+        "text": "064KadabraOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-064?tcgLang=en"
+      },
+      {
+        "text": "065Alakazam exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-065?tcgLang=en"
+      },
+      {
+        "text": "066MachopOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-066?tcgLang=en"
+      },
+      {
+        "text": "067MachokeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-067?tcgLang=en"
+      },
+      {
+        "text": "068MachampOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-068?tcgLang=en"
+      },
+      {
+        "text": "069BellsproutOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-069?tcgLang=en"
+      },
+      {
+        "text": "070WeepinbellOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-070?tcgLang=en"
+      },
+      {
+        "text": "071VictreebelOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-071?tcgLang=en"
+      },
+      {
+        "text": "072TentacoolOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-072?tcgLang=en"
+      },
+      {
+        "text": "073TentacruelOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-073?tcgLang=en"
+      },
+      {
+        "text": "074GeodudeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-074?tcgLang=en"
+      },
+      {
+        "text": "075GravelerOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-075?tcgLang=en"
+      },
+      {
+        "text": "076Golem exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-076?tcgLang=en"
+      },
+      {
+        "text": "077PonytaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-077?tcgLang=en"
+      },
+      {
+        "text": "078RapidashOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-078?tcgLang=en"
+      },
+      {
+        "text": "079SlowpokeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-079?tcgLang=en"
+      },
+      {
+        "text": "080SlowbroOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-080?tcgLang=en"
+      },
+      {
+        "text": "081MagnemiteOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-081?tcgLang=en"
+      },
+      {
+        "text": "082MagnetonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-082?tcgLang=en"
+      },
+      {
+        "text": "083Farfetch'dOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-083?tcgLang=en"
+      },
+      {
+        "text": "084DoduoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-084?tcgLang=en"
+      },
+      {
+        "text": "085DodrioOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-085?tcgLang=en"
+      },
+      {
+        "text": "086SeelOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-086?tcgLang=en"
+      },
+      {
+        "text": "087DewgongOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-087?tcgLang=en"
+      },
+      {
+        "text": "088GrimerOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-088?tcgLang=en"
+      },
+      {
+        "text": "089MukOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-089?tcgLang=en"
+      },
+      {
+        "text": "090ShellderOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-090?tcgLang=en"
+      },
+      {
+        "text": "091CloysterOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-091?tcgLang=en"
+      },
+      {
+        "text": "092GastlyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-092?tcgLang=en"
+      },
+      {
+        "text": "093HaunterOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-093?tcgLang=en"
+      },
+      {
+        "text": "094GengarOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-094?tcgLang=en"
+      },
+      {
+        "text": "095OnixOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-095?tcgLang=en"
+      },
+      {
+        "text": "096DrowzeeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-096?tcgLang=en"
+      },
+      {
+        "text": "097HypnoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-097?tcgLang=en"
+      },
+      {
+        "text": "098KrabbyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-098?tcgLang=en"
+      },
+      {
+        "text": "099KinglerOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-099?tcgLang=en"
+      },
+      {
+        "text": "100VoltorbOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-100?tcgLang=en"
+      },
+      {
+        "text": "101ElectrodeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-101?tcgLang=en"
+      },
+      {
+        "text": "102ExeggcuteOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-102?tcgLang=en"
+      },
+      {
+        "text": "103ExeggutorOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-103?tcgLang=en"
+      },
+      {
+        "text": "104CuboneOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-104?tcgLang=en"
+      },
+      {
+        "text": "105MarowakOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-105?tcgLang=en"
+      },
+      {
+        "text": "106HitmonleeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-106?tcgLang=en"
+      },
+      {
+        "text": "107HitmonchanOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-107?tcgLang=en"
+      },
+      {
+        "text": "108LickitungOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-108?tcgLang=en"
+      },
+      {
+        "text": "109KoffingOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-109?tcgLang=en"
+      },
+      {
+        "text": "110WeezingOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-110?tcgLang=en"
+      },
+      {
+        "text": "111RhyhornOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-111?tcgLang=en"
+      },
+      {
+        "text": "112RhydonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-112?tcgLang=en"
+      },
+      {
+        "text": "113ChanseyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-113?tcgLang=en"
+      },
+      {
+        "text": "114TangelaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-114?tcgLang=en"
+      },
+      {
+        "text": "115Kangaskhan exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-115?tcgLang=en"
+      },
+      {
+        "text": "116HorseaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-116?tcgLang=en"
+      },
+      {
+        "text": "117SeadraOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-117?tcgLang=en"
+      },
+      {
+        "text": "118GoldeenOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-118?tcgLang=en"
+      },
+      {
+        "text": "119SeakingOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-119?tcgLang=en"
+      },
+      {
+        "text": "120StaryuOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-120?tcgLang=en"
+      },
+      {
+        "text": "121StarmieOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-121?tcgLang=en"
+      },
+      {
+        "text": "122Mr. MimeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-122?tcgLang=en"
+      },
+      {
+        "text": "123ScytherOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-123?tcgLang=en"
+      },
+      {
+        "text": "124Jynx exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-124?tcgLang=en"
+      },
+      {
+        "text": "125ElectabuzzOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-125?tcgLang=en"
+      },
+      {
+        "text": "126MagmarOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-126?tcgLang=en"
+      },
+      {
+        "text": "127PinsirOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-127?tcgLang=en"
+      },
+      {
+        "text": "128TaurosOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-128?tcgLang=en"
+      },
+      {
+        "text": "129MagikarpOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-129?tcgLang=en"
+      },
+      {
+        "text": "130GyaradosOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-130?tcgLang=en"
+      },
+      {
+        "text": "131LaprasOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-131?tcgLang=en"
+      },
+      {
+        "text": "132DittoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-132?tcgLang=en"
+      },
+      {
+        "text": "133EeveeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-133?tcgLang=en"
+      },
+      {
+        "text": "134VaporeonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-134?tcgLang=en"
+      },
+      {
+        "text": "135JolteonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-135?tcgLang=en"
+      },
+      {
+        "text": "136FlareonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-136?tcgLang=en"
+      },
+      {
+        "text": "137PorygonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-137?tcgLang=en"
+      },
+      {
+        "text": "138OmanyteOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-138?tcgLang=en"
+      },
+      {
+        "text": "139OmastarOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-139?tcgLang=en"
+      },
+      {
+        "text": "140KabutoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-140?tcgLang=en"
+      },
+      {
+        "text": "141KabutopsOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-141?tcgLang=en"
+      },
+      {
+        "text": "142AerodactylOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-142?tcgLang=en"
+      },
+      {
+        "text": "143SnorlaxOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-143?tcgLang=en"
+      },
+      {
+        "text": "144ArticunoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-144?tcgLang=en"
+      },
+      {
+        "text": "145Zapdos exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-145?tcgLang=en"
+      },
+      {
+        "text": "146MoltresOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-146?tcgLang=en"
+      },
+      {
+        "text": "147DratiniOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-147?tcgLang=en"
+      },
+      {
+        "text": "148DragonairOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-148?tcgLang=en"
+      },
+      {
+        "text": "149DragoniteOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-149?tcgLang=en"
+      },
+      {
+        "text": "150MewtwoOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-150?tcgLang=en"
+      },
+      {
+        "text": "151Mew exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-151?tcgLang=en"
+      },
+      {
+        "text": "152Antique Dome FossilOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-152?tcgLang=en"
+      },
+      {
+        "text": "153Antique Helix FossilOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-153?tcgLang=en"
+      },
+      {
+        "text": "154Antique Old AmberOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-154?tcgLang=en"
+      },
+      {
+        "text": "155Big Air BalloonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-155?tcgLang=en"
+      },
+      {
+        "text": "156Bill's TransferOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-156?tcgLang=en"
+      },
+      {
+        "text": "157Cycling RoadOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-157?tcgLang=en"
+      },
+      {
+        "text": "158Daisy's HelpOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-158?tcgLang=en"
+      },
+      {
+        "text": "159Energy StickerOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-159?tcgLang=en"
+      },
+      {
+        "text": "160Erika's InvitationOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-160?tcgLang=en"
+      },
+      {
+        "text": "161Giovanni's CharismaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-161?tcgLang=en"
+      },
+      {
+        "text": "162GrabberOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-162?tcgLang=en"
+      },
+      {
+        "text": "163LeftoversOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-163?tcgLang=en"
+      },
+      {
+        "text": "164Protective GogglesOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-164?tcgLang=en"
+      },
+      {
+        "text": "165Rigid BandOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-165?tcgLang=en"
+      },
+      {
+        "text": "166BulbasaurOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-166?tcgLang=en"
+      },
+      {
+        "text": "167IvysaurOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-167?tcgLang=en"
+      },
+      {
+        "text": "168CharmanderOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-168?tcgLang=en"
+      },
+      {
+        "text": "169CharmeleonOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-169?tcgLang=en"
+      },
+      {
+        "text": "170SquirtleOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-170?tcgLang=en"
+      },
+      {
+        "text": "171WartortleOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-171?tcgLang=en"
+      },
+      {
+        "text": "172CaterpieOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-172?tcgLang=en"
+      },
+      {
+        "text": "173PikachuOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-173?tcgLang=en"
+      },
+      {
+        "text": "174NidokingOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-174?tcgLang=en"
+      },
+      {
+        "text": "175PsyduckOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-175?tcgLang=en"
+      },
+      {
+        "text": "176PoliwhirlOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-176?tcgLang=en"
+      },
+      {
+        "text": "177MachokeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-177?tcgLang=en"
+      },
+      {
+        "text": "178TangelaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-178?tcgLang=en"
+      },
+      {
+        "text": "179Mr. MimeOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-179?tcgLang=en"
+      },
+      {
+        "text": "180OmanyteOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-180?tcgLang=en"
+      },
+      {
+        "text": "181DragonairOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-181?tcgLang=en"
+      },
+      {
+        "text": "182Venusaur exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-182?tcgLang=en"
+      },
+      {
+        "text": "183Charizard exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-183?tcgLang=en"
+      },
+      {
+        "text": "184Blastoise exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-184?tcgLang=en"
+      },
+      {
+        "text": "185Arbok exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-185?tcgLang=en"
+      },
+      {
+        "text": "186Ninetales exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-186?tcgLang=en"
+      },
+      {
+        "text": "187Wigglytuff exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-187?tcgLang=en"
+      },
+      {
+        "text": "188Alakazam exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-188?tcgLang=en"
+      },
+      {
+        "text": "189Golem exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-189?tcgLang=en"
+      },
+      {
+        "text": "190Kangaskhan exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-190?tcgLang=en"
+      },
+      {
+        "text": "191Jynx exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-191?tcgLang=en"
+      },
+      {
+        "text": "192Zapdos exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-192?tcgLang=en"
+      },
+      {
+        "text": "193Mew exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-193?tcgLang=en"
+      },
+      {
+        "text": "194Bill's TransferOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-194?tcgLang=en"
+      },
+      {
+        "text": "195Daisy's HelpOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-195?tcgLang=en"
+      },
+      {
+        "text": "196Erika's InvitationOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-196?tcgLang=en"
+      },
+      {
+        "text": "197Giovanni's CharismaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-197?tcgLang=en"
+      },
+      {
+        "text": "198Venusaur exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-198?tcgLang=en"
+      },
+      {
+        "text": "199Charizard exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-199?tcgLang=en"
+      },
+      {
+        "text": "200Blastoise exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-200?tcgLang=en"
+      },
+      {
+        "text": "201Alakazam exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-201?tcgLang=en"
+      },
+      {
+        "text": "202Zapdos exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-202?tcgLang=en"
+      },
+      {
+        "text": "203Erika's InvitationOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-203?tcgLang=en"
+      },
+      {
+        "text": "204Giovanni's CharismaOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-204?tcgLang=en"
+      },
+      {
+        "text": "205Mew exOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-205?tcgLang=en"
+      },
+      {
+        "text": "206SwitchOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-206?tcgLang=en"
+      },
+      {
+        "text": "207Basic Psychic EnergyOpen the card to view full details.",
+        "href": "/en/tcg/cards/sv03.5-207?tcgLang=en"
+      },
+      {
+        "text": "Choose this set",
+        "href": "/en/tcg/collection/en/sv03.5?activation=1"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/tcg/start",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/start",
+    "duration": 1548,
+    "title": "Start your collection | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Start your collection"
+    ],
+    "main": "← My Collection\nStart your collection\n\nSave your collection, team and progress to the cloud.\n\nWelcome back\n\nSign in to sync your collections and progress across devices.\n\nSIGN IN",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Sign in",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "← My Collection",
+        "href": "/en/tcg/collection"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/collection",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/collection",
+    "duration": 1288,
+    "title": "My Collection | Lunidex",
+    "lang": "en",
+    "h1": [
+      "My Collection"
+    ],
+    "main": "Collection\nWishlist\nSealed\nCARD LANGUAGE\nCARDS\nEnglish\nFrench\nSpanish\nItalian\nPortuguese\nBrazilian Portuguese\nEuropean Portuguese\nGerman\nDutch\nPolish\nRussian\nJapanese\nKorean\nChinese (Taiwan)\nIndonesian\nThai\nChinese (China)\nMY COLLECTION\n\nYOUR COMPLETE POKÉMON TCG COLLECTION AT A GLANCE.\n\nWelcome back\n\nSign in to sync your collections and progress across devices.\n\nSIGN IN",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "EnglishFrenchSpanishItalianPortugueseBrazilian PortugueseEuropean PortugueseGermanDutchPolishRussianJapaneseKoreanChines",
+        "label": "Card language",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Sign in",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Collection",
+        "href": "/en/tcg/collection?tcgLang=en"
+      },
+      {
+        "text": "Wishlist",
+        "href": "/en/tcg/wishlist?tcgLang=en"
+      },
+      {
+        "text": "Sealed",
+        "href": "/en/tcg/sealed?tcgLang=en"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/collection/fr",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/collection/fr",
+    "duration": 1329,
+    "title": "fr — My Collection",
+    "lang": "en",
+    "h1": [
+      "Welcome back"
+    ],
+    "main": "Skip to main content\nWelcome back\n\nSign in to sync your collections and progress across devices.\n\nSIGN IN\nLuni\ndex\n\nTrack your Pokémon TCG collection, then explore the Pokédex and build a team.\n\nCollection\n\nChoose a set. Mark what you own. See what is missing.\n\nStart my collection\nGitHub\nEXPLORE\nPokédex\nTypes\nTeam Builder\nTCG Catalog\nDocumentation\nPublic API guide\nDashboard\nQuiz\nFavorites\nGUIDES\nABOUT & SUPPORT\nFAQ\nAbout Lunidex\nContact\n\nDisclaimer Pokémon and Pokémon character names are trademarks of Nintendo. This site is not affiliated with Nintendo, Game Freak or The Pokémon Company.\n\nRESOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. All rights reserved.\n\nLEGAL\nLegal Notice\nPrivacy Policy\nTerms of Service\nCookie Policy\nManage my preferences\nReport a problem",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Sign in",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/collection/fr/sv03.5",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/collection/fr/sv03.5",
+    "duration": 1369,
+    "title": "sv03.5 — My Collection",
+    "lang": "en",
+    "h1": [
+      "My Collection"
+    ],
+    "main": "← My Collection\nMY COLLECTION\n\nYOUR COMPLETE POKÉMON TCG COLLECTION AT A GLANCE.\n\nWelcome back\n\nSign in to sync your collections and progress across devices.\n\nSIGN IN",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Sign in",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "← My Collection",
+        "href": "/en/tcg/collection"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/wishlist",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/wishlist",
+    "duration": 1643,
+    "title": "Wishlist | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Wishlist"
+    ],
+    "main": "Collection\nWishlist\nSealed\nCARD LANGUAGE\nCARDS\nEnglish\nFrench\nSpanish\nItalian\nPortuguese\nBrazilian Portuguese\nEuropean Portuguese\nGerman\nDutch\nPolish\nRussian\nJapanese\nKorean\nChinese (Taiwan)\nIndonesian\nThai\nChinese (China)\nWISHLIST\n\n0 CARDS\n\nMY WISHLIST (0)\nBy rarity\nBy set\nBy name\nCOPY\n\nWISHLIST IS EMPTY\n\nAdd cards from albums or mark sets as \"in progress\"\n\nNO SUGGESTIONS AVAILABLE\n\nMark sets as \"in progress\" in your collection to see suggestions",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "EnglishFrenchSpanishItalianPortugueseBrazilian PortugueseEuropean PortugueseGermanDutchPolishRussianJapaneseKoreanChines",
+        "label": "Card language",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "By rarityBy setBy name",
+        "label": "By rarity",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copy",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Collection",
+        "href": "/en/tcg/collection?tcgLang=en"
+      },
+      {
+        "text": "Wishlist",
+        "href": "/en/tcg/wishlist?tcgLang=en"
+      },
+      {
+        "text": "Sealed",
+        "href": "/en/tcg/sealed?tcgLang=en"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/deck-builder",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/deck-builder",
+    "duration": 1275,
+    "title": "Deck Builder | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Deck Builder"
+    ],
+    "main": "Catalog\nSealed market\nDeck Builder\nCARD LANGUAGE\nCARDS\nEnglish\nFrench\nSpanish\nItalian\nPortuguese\nBrazilian Portuguese\nEuropean Portuguese\nGerman\nDutch\nPolish\nRussian\nJapanese\nKorean\nChinese (Taiwan)\nIndonesian\nThai\nChinese (China)\n\nCATALOG\n\nDeck Builder\n\nBuild a 60-card Pokémon TCG deck (max 4 copies per card, except basic Energy)\n\nMY DECKS\n\nNo decks yet.\n\nCreate or select a deck to start building.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "EnglishFrenchSpanishItalianPortugueseBrazilian PortugueseEuropean PortugueseGermanDutchPolishRussianJapaneseKoreanChines",
+        "label": "Card language",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Deck name...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Create deck",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/pull-rates",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/pull-rates",
+    "duration": 1485,
+    "title": "Pokémon TCG booster pull rates | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Pokémon TCG booster pull rates"
+    ],
+    "main": "TCG catalog\nPull rates\nBooster value\nPokémon TCG booster pull rates\n\nUnderstand observed rarity frequencies for a specific set, region and booster type.\n\nData status\n\nLunidex has not published a validated pack-by-pack sample. Published third-party results appear below; French-pack rates remain unavailable.\n\nPublished opening studies\n\nThe studies below use English-language booster packs. Each card identifies who published the report and, when disclosed, who counted the packs. The print region may be unreported; none are official Pokémon odds or estimates for French-language packs.\n\nHave English or French pack-opening data? Send a public source or anonymized log with the set, pack language and region, booster type, dates, pack count, rarity counts and card variants. We review samples before adding them to Lunidex data.\n\nSubmit an opening sample\nTemporal Forces\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n16.83% ± 0.79%\n95% confidence interval\nUltra Rare\n6.67% ± 0.53%\n95% confidence interval\nACE SPEC Rare\n5.00% ± 0.46%\n95% confidence interval\nIllustration Rare\n7.72% ± 0.56%\n95% confidence interval\nSpecial Illustration Rare\n1.17% ± 0.23%\n95% confidence interval\nHyper Rare\n0.72% ± 0.18%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nPaldean Fates\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 1,500 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n15.89% ± 1.69%\n95% confidence interval\nUltra Rare\n6.61% ± 1.15%\n95% confidence interval\nShiny Rare\n25.44% ± 2.01%\n95% confidence interval\nShiny Ultra Rare\n7.72% ± 1.23%\n95% confidence interval\nIllustration Rare\n7.22% ± 1.20%\n95% confidence interval\nSpecial Illustration Rare\n1.72% ± 0.60%\n95% confidence interval\nHyper Rare\n1.61% ± 0.58%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nPrismatic Evolutions\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 1,200 packs in the study\n\nREPORTED FREQUENCY\n\nPoké Ball Foil\n33.10% ± 2.60%\n95% confidence interval\nDouble Rare\n16.51% ± 2.05%\n95% confidence interval\nUltra Rare\n7.46% ± 1.45%\n95% confidence interval\nACE SPEC Rare\n4.68% ± 1.17%\n95% confidence interval\nMaster Ball Foil\n4.92% ± 1.19%\n95% confidence interval\nSpecial Illustration Rare\nFor Special Illustration Rare, TCGplayer reports average cards per pack. Multi-hit packs mean this is not the probability of a pack containing at least one.\n2.22% ± 0.81%\n95% confidence interval\nHyper Rare\n0.56% ± 0.41%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nScarlet & Violet—151\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 1,500 packs in the study\n\nREPORTED FREQUENCY\n\nFoil Energy\n24.83% ± 2.00%\n95% confidence interval\nDouble Rare\n13.28% ± 1.57%\n95% confidence interval\nUltra Rare\n6.44% ± 1.13%\n95% confidence interval\nIllustration Rare\n8.50% ± 1.29%\n95% confidence interval\nSpecial Illustration Rare\n3.11% ± 0.80%\n95% confidence interval\nHyper Rare\n1.94% ± 0.64%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nStellar Crown\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n16.90% ± 0.79%\n95% confidence interval\nUltra Rare\n6.75% ± 0.53%\n95% confidence interval\nACE SPEC Rare\n4.94% ± 0.46%\n95% confidence interval\nIllustration Rare\n7.79% ± 0.57%\n95% confidence interval\nSpecial Illustration Rare\n1.11% ± 0.22%\n95% confidence interval\nHyper Rare\n0.73% ± 0.18%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nBlack Bolt + White Flare\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 350 packs per set\n\nREPORTED FREQUENCY\n\nPoké Ball Foil\n30.56% ± 3.36%\n95% confidence interval\nDouble Rare\n21.11% ± 2.98%\n95% confidence interval\nUltra Rare\n5.83% ± 1.71%\n95% confidence interval\nIllustration Rare\n16.39% ± 2.70%\n95% confidence interval\nMaster Ball Foil\n5.14% ± 1.61%\n95% confidence interval\nSpecial Illustration Rare\n1.25% ± 0.81%\n95% confidence interval\n\nTCGplayer pooled these sets assuming their pull rates were the same or nearly the same.\n\nRead the source article\n\nSource checked Sep 30, 2026\n\nTwilight Masquerade\nPack language: English\nPrint market: not reported by source\n\nArticle by PokéBeach · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 6 packs\nUltra Rare\nAbout 1 in 15 packs\nACE SPEC Rare\nAbout 1 in 20 packs\nIllustration Rare\nAbout 1 in 13 packs\nSpecial Illustration Rare\nAbout 1 in 86 packs\nHyper Rare\nAbout 1 in 146 packs\nRead the source article\n\nSource checked Sep 30, 2026\n\nSurging Sparks\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n16.94% ± 0.79%\n95% confidence interval\nUltra Rare\n6.74% ± 0.53%\n95% confidence interval\nACE SPEC Rare\n5.03% ± 0.46%\n95% confidence interval\nIllustration Rare\n7.67% ± 0.56%\n95% confidence interval\nSpecial Illustration Rare\n1.15% ± 0.22%\n95% confidence interval\nHyper Rare\n0.53% ± 0.15%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nJourney Together\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 5 packs\nIllustration Rare\nAbout 1 in 12 packs\nUltra Rare\nAbout 1 in 15 packs\nSpecial Illustration Rare\nAbout 1 in 86 packs\nHyper Rare\nAbout 1 in 137 packs\nRead the source article\n\nSource checked Sep 30, 2026\n\nDestined Rivals\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 5 packs\nIllustration Rare\nAbout 1 in 12 packs\nUltra Rare\nAbout 1 in 16 packs\nSpecial Illustration Rare\nAbout 1 in 94 packs\nHyper Rare\nAbout 1 in 149 packs\nRead the source article\n\nSource checked Sep 30, 2026\n\nMega Evolution\nPack language: English\nPrint market: not reported by source\n\nArticle by PokéBeach · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 5,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 5 packs\nIllustration Rare\nAbout 1 in 9 packs\nUltra Rare\nAbout 1 in 12 packs\nSpecial Illustration Rare\nAbout 1 in 101 packs\nMega Hyper Rare\nAbout 1 in 1,260 packs\nRead the source article\n\nSource checked Sep 30, 2026\n\nPhantasmal Flames\nPack language: English\nPrint market: not reported by source\n\nArticle by PokéBeach · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 5,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 5 packs\nIllustration Rare\nAbout 1 in 9 packs\nUltra Rare\nAbout 1 in 12 packs\nSpecial Illustration Rare\nAbout 1 in 80 packs\nMega Hyper Rare\nAbout 1 in 1,260 packs\nRead the source article\n\nSource checked Sep 30, 2026\n\nAscended Heroes\nPack language: English\nPrint market: not reported by source\n\nArticle by PokéBeach · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 2,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\nAbout 1 in 5 packs\nIllustration Rare\nAbout 1 in 9 packs\nUltra Rare\nAbout 1 in 21 packs\nMega Attack Rare\nAbout 1 in 29 packs\nSpecial Illustration Rare\nAbout 1 in 70 packs\nMega Hyper Rare\nAbout 1 in 540 packs\n\nGod packs are excluded; these rates cover regular booster packs only.\n\nRead the source article\n\nSource checked Sep 30, 2026\n\nPerfect Order\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 3,500 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n20.97% ± 1.34%\n95% confidence interval\nIllustration Rare\n11.20% ± 1.03%\n95% confidence interval\nUltra Rare\n8.54% ± 0.92%\n95% confidence interval\nSpecial Illustration Rare\n1.23% ± 0.36%\n95% confidence interval\nMega Hyper Rare\n0.06% ± 0.08%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nChaos Rising\nPack language: English\nPrint market: not reported by source\n\nArticle by TCGplayer · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 8,500 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n20.30% ± 0.85%\n95% confidence interval\nUltra Rare\n8.29% ± 0.58%\n95% confidence interval\nIllustration Rare\n10.66% ± 0.65%\n95% confidence interval\nSpecial Illustration Rare\n1.21% ± 0.23%\n95% confidence interval\nMega Hyper Rare\n0.10% ± 0.07%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\nPitch Black\nPack language: English\nPrint market: not reported by source\n\nArticle by Obsidia TCG · data collected by not reported\n\nProduct type: booster pack · Opening period not reported by source\n\nMore than 4,000 packs in the study\n\nREPORTED FREQUENCY\n\nDouble Rare\n21.02% ± 1.21%\n95% confidence interval\nUltra Rare\n8.30% ± 0.82%\n95% confidence interval\nIllustration Rare\n11.01% ± 0.93%\n95% confidence interval\nSpecial Illustration Rare\n1.25% ± 0.33%\n95% confidence interval\nMega Hyper Rare\n0.09% ± 0.09%\n95% confidence interval\nRead the source article\n\nSource checked Sep 30, 2026\n\n30th Celebration\nPack language: English\nPrint market: not reported by source\n\nArticle by PokéBeach · data collected by TCGplayer\n\nProduct type: booster pack · Opening period not reported by source\n\n3,000 packs in the study\n\nREPORTED FREQUENCY\n\nIllustration Rare\nAbout 1 in 5 packs\nClassic Collection\nAbout 1 in 10 packs\nSpecial Illustration Rare\nAbout 1 in 21 packs\nFuturistic Rare\nAbout 1 in 120 packs\n\nTCGplayer could not reliably determine the rates for the three RGB Mew cards from 3,000 English packs.\n\nRead the source article\n\nSource checked Sep 30, 2026\n\nHow a rate is calculated\n\nFor each rarity, divide the number of cards observed by the number of packs opened. The result is observed copies per pack, not the probability that a pack contains at least one card of that rarity.\n\nWhat a sample must show\n\nA usable sample names its source, set, region, booster type, opening dates, pack count, cards per pack and counts for every observed rarity. Rarity totals must match the recorded card variants.\n\nHow to read the result\n\nOpenings vary. A sample describes what was observed, not a guaranteed result for your next pack. Without pack-level hit records, aggregated card counts cannot establish the chance of at least one hit.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "TCG catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value"
+      },
+      {
+        "text": "Submit an opening sample",
+        "href": "/en/contact?topic=booster-sample"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/robot/28c0ad22-00a4-428f-b22d-e7fee9ec50bc/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Paldean-Fates-Pull-Rates/23de3e93-0d0f-4ae0-abc4-13664f3001a3/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Prismatic-Evolutions-Pull-Rates/d94889ea-f76a-4a13-b74d-5b0b071220a7/?source=syndication"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Scarlet-Violet-151-Pull-Rates/b237df74-fbb0-40d0-9e13-d69ee6e804d9/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Stellar-Crown-Pull-Rates/2c0743dd-dbd0-4504-9ff8-be5a72dd04d1/?source=syndication"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Black-Bolt-and-White-Flare-Pull-Rates/bac92199-a2a7-4668-b4a4-2647a111776f?pubDate=20250723"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.pokebeach.com/2024/05/twilight-masquerade-pull-rates-revealed-gold-cards-just-slightly-rarer"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Surging-Sparks-Pull-Rates/6ccfb6ab-f26a-4ce8-bab5-5f91c85ec70e/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Journey-Together-Pull-Rates/1b9f379f-97cb-45cc-b6f6-a1a070a422cd/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Destined-Rivals-Pull-Rates/43ba832e-44c9-45a4-ae2e-594df2defdda/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.pokebeach.com/2025/09/mega-evolution-pull-rates-revealed-gold-cards-nearly-impossible-to-pull-at-highest-pull-rates-ever-seen"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.pokebeach.com/2025/11/phantasmal-flames-pull-rates-revealed-chances-of-pulling-mega-charizard-ex"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.pokebeach.com/2026/02/ascended-heroes-pull-rates-finally-determined-better-than-usual"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Perfect-Order-Pull-Rates/73148119-ebcb-40b7-84b6-52b3a6d0c631/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Chaos-Rising-Pull-Rates/304e8bfc-175a-4d31-93fe-5bb1be11e5d2/"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://obsidia-tcg.store/blogs/news/pokemon-tcg-pitch-black-pull-rates-mega-darkrai-ex-odds"
+      },
+      {
+        "text": "Read the source article",
+        "href": "https://www.pokebeach.com/2026/09/30th-celebration-pull-rates-and-most-valuable-cards-worldwide-friendliest-pull-rates-of-the-modern-era"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/booster-value",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/booster-value",
+    "duration": 1374,
+    "title": "Pokémon TCG booster expected value | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Pokémon TCG booster expected value"
+    ],
+    "main": "TCG catalog\nPull rates\nBooster value\nPokémon TCG booster expected value\n\nLearn how observed openings and matching EUR prices can estimate a booster’s gross card value.\n\nData status\n\nNo validated opening sample with complete matching EUR Cardmarket prices is published yet. Numeric expected value is unavailable.\n\nHow value is estimated\n\nMultiply each observed card-variant count by its matching Cardmarket EUR price. Add those amounts and divide by packs opened. Compare that gross card value with a matching booster price.\n\nWhat prices must cover\n\nThe opening sample and price snapshot must match the set, region and booster type. Every observed card variant needs a corresponding Cardmarket EUR quote, and the booster price needs its own source.\n\nAn estimate, not a return\n\nMarket prices move. Condition, selling fees, shipping, taxes and unsold cards can change the amount received. An average from past openings does not promise a profitable pack.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "TCG catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed",
+    "duration": 1722,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Dashboard"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nDashboard\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/market",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/market",
+    "duration": 3484,
+    "title": "Sealed product market | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Sealed product market"
+    ],
+    "main": "Catalog\nSealed market\nTools\n\nPUBLIC MARKET DATA\n\nSealed product market\n\nBrowse Pokémon sealed products with recent Cardmarket price guide data. Prices are indicative and may change.\n\nSearch sealed products\nCategory\nAll categories\nPokémon Box Set\nPokémon Booster\nPokémon Display\nPokémon Tins\nPokémon Theme Decks\nPokémon Blisters\nPokémon Elite Trainer Boxes\nPCG Set\nPokémon Trainer Kits\nExpansion ID\nApply filters\n\nLeave blank to include all expansions.\n\nProducts\n4,349\n\nPokémon Box Set · Unreported expansion (ID 4310)\n\n10th Movie Commemoration Set\n\nLatest trend · Cardmarket price guide\n\n€521.94\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Booster · Unreported expansion (ID 3214)\n\n10th Pokémon Card Gym Promo Sword & Shield Booster\n\nLatest trend · Cardmarket price guide\n\n€3.88\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Booster · Unreported expansion (ID 3214)\n\n11th Pokémon Card Gym Promo Sword & Shield Booster\n\nLatest trend · Cardmarket price guide\n\n€3.38\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Booster · Unreported expansion (ID 3214)\n\n12th Pokémon Card Gym Promo Sword & Shield Booster\n\nLatest trend · Cardmarket price guide\n\n€3.16\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +1.9% · 30-day change: —\n\nView product →\n\nPokémon Elite Trainer Boxes · Unreported expansion (ID 5402)\n\n151 10 Elite Trainer Box Case\n\nLatest trend · Cardmarket price guide\n\n€4,469.26\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151 Alakazam ex Collection\n\nLatest trend · Cardmarket price guide\n\n€96.76\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -3.1% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151 Binder Collection\n\nLatest trend · Cardmarket price guide\n\n€134.22\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +3.7% · 30-day change: —\n\nView product →\n\nPokémon Booster · Unreported expansion (ID 5402)\n\n151 Booster\n\nLatest trend · Cardmarket price guide\n\n€24.72\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -2.8% · 30-day change: —\n\nView product →\n\nPokémon Display · Unreported expansion (ID 5402)\n\n151 Booster Bundle\n\nLatest trend · Cardmarket price guide\n\n€153.33\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +6.5% · 30-day change: —\n\nView product →\n\nPokémon Display · Unreported expansion (ID 5402)\n\n151 Booster Bundle Display\n\nLatest trend · Cardmarket price guide\n\n€1,758.19\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -0.5% · 30-day change: —\n\nView product →\n\nPokémon Elite Trainer Boxes · Unreported expansion (ID 5402)\n\n151 Elite Trainer Box\n\nLatest trend · Cardmarket price guide\n\n€404.79\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +5.4% · 30-day change: —\n\nView product →\n\nPokémon Elite Trainer Boxes · Unreported expansion (ID 5402)\n\n151 Pokémon Center Elite Trainer Box\n\nLatest trend · Cardmarket price guide\n\n€1,348.81\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151 Poster Collection\n\nLatest trend · Cardmarket price guide\n\n€70.00\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -6.3% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151 Sam's Club 4-Pack Mini Tin Bundle\n\nLatest trend · Cardmarket price guide\n\nPrice unavailable\n\nPrice guide date: Source data is not available.\n\n7-day change: — · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5838)\n\n151 Simplified Chinese New Year 2025 Gift Box\n\nLatest trend · Cardmarket price guide\n\n€81.44\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +2.2% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151 Ultra-Premium Collection\n\nLatest trend · Cardmarket price guide\n\n€649.45\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -6.8% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151 Zapdos ex Collection\n\nLatest trend · Cardmarket price guide\n\n€112.25\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -1.4% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Arcanine Mini Tin\n\nLatest trend · Cardmarket price guide\n\n€45.28\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +3.3% · 30-day change: —\n\nView product →\n\nPokémon Box Set · Unreported expansion (ID 5402)\n\n151: Blooming Waters Premium Collection\n\nLatest trend · Cardmarket price guide\n\n€254.77\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -7.5% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Costco 5-Pack Mini Tin Bundle\n\nLatest trend · Cardmarket price guide\n\n€105.26\n\nPrice guide date: Sep 30, 2026\n\n7-day change: 0% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Dragonite Mini Tin\n\nLatest trend · Cardmarket price guide\n\n€49.31\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -2.9% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Electabuzz Mini Tin\n\nLatest trend · Cardmarket price guide\n\n€46.09\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -0.2% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Gengar Mini Tin\n\nLatest trend · Cardmarket price guide\n\n€29.64\n\nPrice guide date: Sep 30, 2026\n\n7-day change: -24.8% · 30-day change: —\n\nView product →\n\nPokémon Tins · Unreported expansion (ID 5402)\n\n151: Kadabra Mini Tin\n\nLatest trend · Cardmarket price guide\n\n€41.73\n\nPrice guide date: Sep 30, 2026\n\n7-day change: +0.6% · 30-day change: —\n\nView product →\nPrevious page\n1 / 182\nNext page\nSee releases\nTips before buying\nAnalytics\nReport a data issue",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "search",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "All categoriesPokémon Box SetPokémon BoosterPokémon DisplayPokémon TinsPokémon Theme DecksPokémon BlistersPokémon Elite ",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Apply filters",
+        "label": null,
+        "placeholder": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/611877"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/679460"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/679459"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/678838"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719692"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719699"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719697"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719694"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719695"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/794902"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719691"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719693"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719696"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/903970"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/804852"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719698"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719700"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719701"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/807118"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/794913"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719702"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719703"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719704"
+      },
+      {
+        "text": "View product →",
+        "href": "/en/tcg/sealed/market/719705"
+      },
+      {
+        "text": "Previous page",
+        "href": "/en/tcg/sealed/market"
+      },
+      {
+        "text": "Next page",
+        "href": "/en/tcg/sealed/market?page=1"
+      },
+      {
+        "text": "See releases",
+        "href": "/en/tcg/sealed/releases"
+      },
+      {
+        "text": "Tips before buying",
+        "href": "/en/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Pokémon Box Set€106.961106 Products",
+        "href": "/en/tcg/sealed/market?category=1015"
+      },
+      {
+        "text": "Pokémon Booster€14.16786 Products",
+        "href": "/en/tcg/sealed/market?category=52"
+      },
+      {
+        "text": "Pokémon Display€267.39619 Products",
+        "href": "/en/tcg/sealed/market?category=53"
+      },
+      {
+        "text": "Pokémon Tins€43.74571 Products",
+        "href": "/en/tcg/sealed/market?category=1014"
+      },
+      {
+        "text": "Pokémon Theme Decks€49.92559 Products",
+        "href": "/en/tcg/sealed/market?category=54"
+      },
+      {
+        "text": "Pokémon Blisters€31.56495 Products",
+        "href": "/en/tcg/sealed/market?category=1083"
+      },
+      {
+        "text": "Pokémon Elite Trainer Boxes€455.46171 Products",
+        "href": "/en/tcg/sealed/market?category=1016"
+      },
+      {
+        "text": "PCG Set€38.7829 Products",
+        "href": "/en/tcg/sealed/market?category=1654"
+      },
+      {
+        "text": "Pokémon Trainer Kits€119.4113 Products",
+        "href": "/en/tcg/sealed/market?category=1013"
+      },
+      {
+        "text": "Report a data issue",
+        "href": "/en/contact?topic=sealed-market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/market/611877",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/market/611877",
+    "duration": 1611,
+    "title": "10th Movie Commemoration Set — Sealed product market | Lunidex",
+    "lang": "en",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "main": "Catalog\nSealed market\nTools\n← Back to market\n\nPOKÉMON BOX SET · UNREPORTED EXPANSION (ID 4310)\n\n10th Movie Commemoration Set\n\nCardmarket ID 611877\n\nLATEST TREND\n\n€521.94\n\nPrice guide date: Sep 30, 2026, 7:55 AM\n\n7-day change\n\n0%\n\n30-day change\n\n—\n\nRelease date: Source data unavailable\n\nMSRP: Source data unavailable\n\nCardmarket\nTips before buying\n\nThis opens a third-party site. Check the offer and seller before paying.\n\nPrice observations\nSep 30, 2026, 7:55 AM\n€521.94\nSep 28, 2026, 12:47 AM\n€521.94\nSep 27, 2026, 12:44 AM\n€521.94\nSep 25, 2026, 12:48 AM\n€521.94\nSep 22, 2026, 12:48 AM\n€521.94\nSep 20, 2026, 12:42 AM\n€521.94\nSep 17, 2026, 12:44 AM\n€521.94\nSep 14, 2026, 12:46 AM\n€521.94\nSep 10, 2026, 12:48 AM\n€521.94\nMethodology\n\nPrices are Cardmarket guide trend values in EUR, not sale offers or transaction prices. Category medians use each product’s latest positive trend quote from the last three days. Changes compare a current quote with an observation 7 or 30 days earlier, allowing up to three days of source delay. Missing or stale observations are omitted.\n\nCardmarket price guide · Cardmarket\n\nReport a data issue\n\nInclude the product ID and the incorrect field in your message.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Back to market",
+        "href": "/en/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Tips before buying",
+        "href": "/en/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Report a data issue",
+        "href": "/en/contact?topic=sealed-market&productId=611877"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

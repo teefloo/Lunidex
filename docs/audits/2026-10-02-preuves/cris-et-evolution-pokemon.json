@@ -1,0 +1,132 @@
+[
+  {
+    "step": "Jouer le cri actuel",
+    "media": [
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg",
+        "result": "native-play-resolved"
+      }
+    ]
+  },
+  {
+    "step": "Jouer le cri historique",
+    "media": [
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg",
+        "result": "native-play-resolved"
+      }
+    ]
+  },
+  {
+    "step": "evolution-controls",
+    "buttons": [
+      "",
+      "",
+      "Shiny",
+      "",
+      "",
+      "",
+      "",
+      " Cri actuel",
+      " Cri historique",
+      "À propos",
+      "Statistiques",
+      "Évolution",
+      "Capacités",
+      "Cartes",
+      "Talents",
+      "Reproduction",
+      "Suggestions de moveset",
+      "Localisations",
+      "Sprites",
+      "Compétitif",
+      "Marquer comme capturé",
+      "",
+      "",
+      ""
+    ],
+    "links": [
+      {
+        "href": "/fr/pokemon/pichu",
+        "text": "#172Pichu"
+      },
+      {
+        "href": "/fr/pokemon/pikachu",
+        "text": "#025PikachuActuel"
+      },
+      {
+        "href": "/fr/pokemon/raichu",
+        "text": "#026Raichu"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-rock-star",
+        "text": "Rockstar#10080Pikachu Rock Star"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-belle",
+        "text": "Cosplay#10081Pikachu Belle"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-pop-star",
+        "text": "Idole#10082Pikachu Pop Star"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-phd",
+        "text": "Cosplay#10083Pikachu Phd"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-libre",
+        "text": "Cosplay#10084Pikachu Libre"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-cosplay",
+        "text": "Cosplay#10085Pikachu Cosplay"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-original-cap",
+        "text": "Origin#10094Pikachu Original Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-hoenn-cap",
+        "text": "Original#10095Pikachu Hoenn Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-sinnoh-cap",
+        "text": "Original#10096Pikachu Sinnoh Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-unova-cap",
+        "text": "Original#10097Pikachu Unova Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-kalos-cap",
+        "text": "Original#10098Pikachu Kalos Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-alola-cap",
+        "text": "Alola#10099Pikachu Alola Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-partner-cap",
+        "text": "Partenaire#10148Pikachu Partner Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-starter",
+        "text": "Original#10158Pikachu Partenaire de départ"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-world-cap",
+        "text": "Original#10160Pikachu World Cap"
+      },
+      {
+        "href": "/fr/pokemon/pikachu-gmax",
+        "text": "Gigamax#10199Pikachu Gigamax"
+      },
+      {
+        "href": "/fr/pokemon/raichu-alola",
+        "text": "Alola#10100Raichu Forme d'Alola"
+      }
+    ],
+    "text": "#025\nPikachu\n\nExplorez Pikachu : statistiques, types (Électrik), évolutions, attaques, talents et suggestions de movesets sur Lunidex.\n\nPOKÉMON SOURIS\n\nFORÊT\n\nJAUNE\nÉLECTRIK\nCri actuel\nCri historique\nÀ PROPOS\nSTATISTIQUES\nÉVOLUTION\nCAPACITÉS\nCARTES\nPlus\nChaîne d'évolution\n#172\nPichu\n#025\nPikachu\nACTUEL\n#026\nRaichu\nFORMES ALTERNATIVES\nROCKSTAR\n#10080\nPikachu Rock Star\nCOSPLAY\n#10081\nPikachu Belle\nIDOLE\n#10082\nPikachu Pop Star\nCOSPLAY\n#10083\nPikachu Phd\nCOSPLAY\n#10084\nPikachu Libre\nCOSPLAY\n#10085\nPikachu Cosplay\nORIGIN\n#10094\nPikachu Original Cap\nORIGINAL\n#10095\nPikachu Hoenn Cap\nORIGINAL\n#10096\nPikachu Sinnoh Cap\nORIGINAL\n#10097\nPikachu Unova Cap\nORIGINAL\n#10098\nPikachu Kalos Cap\nALOLA\n#10099\nPikachu Alola Cap\nPARTENAIRE\n#10148\nPikachu Partner Cap\nORIGINAL\n#10158\nPikachu Partenaire De Départ\nORIGINAL\n#10160\nPikachu World Cap\nGIGAMAX\n#10199\nPikachu Gigamax\nALOLA\n#10100\nRaichu Forme D'Alola\nMÉGA\n#10304\nRaichu Méga X\nMÉGA\n#10305\nRaichu Méga Y"
+  }
+]

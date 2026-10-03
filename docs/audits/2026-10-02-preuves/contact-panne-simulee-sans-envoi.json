@@ -1,0 +1,19 @@
+[
+  {
+    "step": "pending",
+    "disabled": true,
+    "busy": "true"
+  },
+  {
+    "step": "503-local-interception",
+    "intercepted": [
+      {
+        "method": "POST",
+        "url": "http://localhost:3101/api/contact"
+      }
+    ],
+    "text": "NOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nL’envoi automatique n’est pas encore configuré. Utilisez le lien e-mail ci-dessous pour nous écrire directement.\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.",
+    "emailRetained": "audit@example.invalid",
+    "disabled": false
+  }
+]

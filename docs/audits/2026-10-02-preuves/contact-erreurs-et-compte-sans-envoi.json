@@ -1,0 +1,49 @@
+[
+  {
+    "step": "contact-empty",
+    "alerts": [
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      ""
+    ],
+    "focus": "contact-name"
+  },
+  {
+    "step": "contact-invalid",
+    "alerts": [
+      "Ce champ est obligatoire.",
+      "Saisissez une adresse e-mail valide.",
+      "Ce champ est obligatoire.",
+      "Ce champ est obligatoire.",
+      ""
+    ]
+  },
+  {
+    "step": "signup-fields",
+    "text": "Créer votre compte\n\nEnregistrez votre collection, votre équipe et votre progression dans le cloud.\n\nNOM\nE-MAIL\nMOT DE PASSE\nCréer un compte\n\nVous avez déjà un compte ? Se connecter\n\nFermer",
+    "fields": [
+      {
+        "type": "text",
+        "required": true,
+        "min": -1
+      },
+      {
+        "type": "email",
+        "required": true,
+        "min": -1
+      },
+      {
+        "type": "password",
+        "required": true,
+        "min": 6
+      }
+    ]
+  },
+  {
+    "step": "reset-empty",
+    "toast": [],
+    "text": "Ravi de vous revoir\n\nConnectez-vous pour synchroniser vos collections et votre progression entre vos appareils.\n\nE-MAIL\nMOT DE PASSE\nMot de passe oublié ?\nSe connecter\n\nVous n’avez pas de compte ? Créer un compte\n\nFermer"
+  }
+]

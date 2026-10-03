@@ -1,0 +1,4783 @@
+{
+  "pages": [
+    {
+      "source": "src/app/30e-anniversaire/page.tsx",
+      "route": "/30e-anniversaire",
+      "representants": [
+        "/en/30e-anniversaire",
+        "/fr/30e-anniversaire"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/abilities/[name]/page.tsx",
+      "route": "/abilities/[name]",
+      "representants": [
+        "/en/abilities/static",
+        "/fr/abilities/static"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/abilities/page.tsx",
+      "route": "/abilities",
+      "representants": [
+        "/en/abilities",
+        "/fr/abilities"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/about/page.tsx",
+      "route": "/about",
+      "representants": [
+        "/en/about",
+        "/fr/about"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/auth/reset-password/page.tsx",
+      "route": "/auth/reset-password",
+      "representants": [
+        "/en/auth/reset-password",
+        "/fr/auth/reset-password"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/battle/page.tsx",
+      "route": "/battle",
+      "representants": [
+        "/en/battle",
+        "/fr/battle"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/blog/page.tsx",
+      "route": "/blog",
+      "representants": [
+        "/en/blog",
+        "/fr/blog"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/breeding/page.tsx",
+      "route": "/breeding",
+      "representants": [
+        "/en/breeding",
+        "/fr/breeding"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/compare/[slug]/page.tsx",
+      "route": "/compare/[slug]",
+      "representants": [
+        "/en/compare/lunidex-vs-bulbapedia",
+        "/en/compare/lunidex-vs-cardmarket",
+        "/en/compare/lunidex-vs-cardzia",
+        "/en/compare/lunidex-vs-collectr",
+        "/en/compare/lunidex-vs-pokecardex",
+        "/en/compare/lunidex-vs-pokecardex-zebradex",
+        "/en/compare/lunidex-vs-pokellector",
+        "/en/compare/lunidex-vs-pokemon-database",
+        "/en/compare/lunidex-vs-pokemon-showdown",
+        "/en/compare/lunidex-vs-zebradex",
+        "/fr/compare/lunidex-vs-bulbapedia",
+        "/fr/compare/lunidex-vs-cardmarket",
+        "/fr/compare/lunidex-vs-cardzia",
+        "/fr/compare/lunidex-vs-collectr",
+        "/fr/compare/lunidex-vs-pokecardex",
+        "/fr/compare/lunidex-vs-pokecardex-zebradex",
+        "/fr/compare/lunidex-vs-pokellector",
+        "/fr/compare/lunidex-vs-pokemon-database",
+        "/fr/compare/lunidex-vs-pokemon-showdown",
+        "/fr/compare/lunidex-vs-zebradex"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/compare/lunidex-vs-pokecardex-zebradex/page.tsx",
+      "route": "/compare/lunidex-vs-pokecardex-zebradex",
+      "representants": [
+        "/en/compare/lunidex-vs-pokecardex-zebradex",
+        "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/compare/page.tsx",
+      "route": "/compare",
+      "representants": [
+        "/en/compare",
+        "/fr/compare"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/contact/page.tsx",
+      "route": "/contact",
+      "representants": [
+        "/en/contact",
+        "/fr/contact"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/cookies/page.tsx",
+      "route": "/cookies",
+      "representants": [
+        "/en/cookies",
+        "/fr/cookies"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/dashboard/page.tsx",
+      "route": "/dashboard",
+      "representants": [
+        "/en/dashboard",
+        "/fr/dashboard"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/docs/api/page.tsx",
+      "route": "/docs/api",
+      "representants": [
+        "/en/docs/api",
+        "/fr/docs/api"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/docs/page.tsx",
+      "route": "/docs",
+      "representants": [
+        "/en/docs",
+        "/fr/docs"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/ev-iv/page.tsx",
+      "route": "/ev-iv",
+      "representants": [
+        "/en/ev-iv",
+        "/fr/ev-iv"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/faq/page.tsx",
+      "route": "/faq",
+      "representants": [
+        "/en/faq",
+        "/fr/faq"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/favorites/page.tsx",
+      "route": "/favorites",
+      "representants": [
+        "/en/favorites",
+        "/fr/favorites"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/friends/[friendId]/page.tsx",
+      "route": "/friends/[friendId]",
+      "representants": [
+        "/en/friends/00000000-0000-0000-0000-000000000000",
+        "/fr/friends/00000000-0000-0000-0000-000000000000"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/friends/page.tsx",
+      "route": "/friends",
+      "representants": [
+        "/en/friends",
+        "/fr/friends"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/guides/[slug]/page.tsx",
+      "route": "/guides/[slug]",
+      "representants": [
+        "/en/guides/nuzlocke-guide",
+        "/en/guides/organize-pokemon-card-collection",
+        "/en/guides/pokemon-card-collection-tracker",
+        "/en/guides/pokemon-card-collection-value",
+        "/en/guides/pokemon-reference-guide",
+        "/en/guides/progress-account-guide",
+        "/en/guides/quiz-guide",
+        "/en/guides/tcg-workspace-guide",
+        "/en/guides/team-builder-guide",
+        "/en/guides/team-tools-guide",
+        "/fr/guides/nuzlocke-guide",
+        "/fr/guides/organize-pokemon-card-collection",
+        "/fr/guides/pokemon-card-collection-tracker",
+        "/fr/guides/pokemon-card-collection-value",
+        "/fr/guides/pokemon-reference-guide",
+        "/fr/guides/progress-account-guide",
+        "/fr/guides/quiz-guide",
+        "/fr/guides/tcg-workspace-guide",
+        "/fr/guides/team-builder-guide",
+        "/fr/guides/team-tools-guide"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/guides/nuzlocke-guide/page.tsx",
+      "route": "/guides/nuzlocke-guide",
+      "representants": [
+        "/en/guides/nuzlocke-guide",
+        "/fr/guides/nuzlocke-guide"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/guides/pokemon-card-collection-tracker/page.tsx",
+      "route": "/guides/pokemon-card-collection-tracker",
+      "representants": [
+        "/en/guides/pokemon-card-collection-tracker",
+        "/fr/guides/pokemon-card-collection-tracker"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/guides/quiz-guide/page.tsx",
+      "route": "/guides/quiz-guide",
+      "representants": [
+        "/en/guides/quiz-guide",
+        "/fr/guides/quiz-guide"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/guides/team-builder-guide/page.tsx",
+      "route": "/guides/team-builder-guide",
+      "representants": [
+        "/en/guides/team-builder-guide",
+        "/fr/guides/team-builder-guide"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/items/[name]/page.tsx",
+      "route": "/items/[name]",
+      "representants": [
+        "/en/items/potion",
+        "/fr/items/potion"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/items/page.tsx",
+      "route": "/items",
+      "representants": [
+        "/en/items",
+        "/fr/items"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/legal/page.tsx",
+      "route": "/legal",
+      "representants": [
+        "/en/legal",
+        "/fr/legal"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/moves/[name]/page.tsx",
+      "route": "/moves/[name]",
+      "representants": [
+        "/en/moves/thunderbolt",
+        "/fr/moves/thunderbolt"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/moves/page.tsx",
+      "route": "/moves",
+      "representants": [
+        "/en/moves",
+        "/fr/moves"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/nuzlocke/page.tsx",
+      "route": "/nuzlocke",
+      "representants": [
+        "/en/nuzlocke",
+        "/fr/nuzlocke"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/offline/page.tsx",
+      "route": "/offline",
+      "representants": [
+        "/en/offline",
+        "/fr/offline"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/page.tsx",
+      "route": "/",
+      "representants": [
+        "/en",
+        "/fr"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/pokedex/page.tsx",
+      "route": "/pokedex",
+      "representants": [
+        "/en/pokedex",
+        "/fr/pokedex"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/pokemon/[name]/page.tsx",
+      "route": "/pokemon/[name]",
+      "representants": [
+        "/en/pokemon/pikachu",
+        "/fr/pokemon/pikachu"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/privacy/page.tsx",
+      "route": "/privacy",
+      "representants": [
+        "/en/privacy",
+        "/fr/privacy"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/quiz/page.tsx",
+      "route": "/quiz",
+      "representants": [
+        "/en/quiz",
+        "/fr/quiz"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/booster-value/page.tsx",
+      "route": "/tcg/booster-value",
+      "representants": [
+        "/en/tcg/booster-value",
+        "/fr/tcg/booster-value"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/cards/[id]/page.tsx",
+      "route": "/tcg/cards/[id]",
+      "representants": [
+        "/en/tcg/cards/sv03.5-199",
+        "/fr/tcg/cards/sv03.5-199"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/collection/[language]/[setId]/page.tsx",
+      "route": "/tcg/collection/[language]/[setId]",
+      "representants": [
+        "/en/tcg/collection/fr/sv03.5",
+        "/fr/tcg/collection/fr/sv03.5"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/collection/[language]/page.tsx",
+      "route": "/tcg/collection/[language]",
+      "representants": [
+        "/en/tcg/collection/fr",
+        "/fr/tcg/collection/fr"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/collection/page.tsx",
+      "route": "/tcg/collection",
+      "representants": [
+        "/en/tcg/collection",
+        "/fr/tcg/collection"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/deck-builder/page.tsx",
+      "route": "/tcg/deck-builder",
+      "representants": [
+        "/en/tcg/deck-builder",
+        "/fr/tcg/deck-builder"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/page.tsx",
+      "route": "/tcg",
+      "representants": [
+        "/en/tcg",
+        "/fr/tcg"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/pull-rates/page.tsx",
+      "route": "/tcg/pull-rates",
+      "representants": [
+        "/en/tcg/pull-rates",
+        "/fr/tcg/pull-rates"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sealed/[[...view]]/page.tsx",
+      "route": "/tcg/sealed/[[...view]]",
+      "representants": [
+        "/en/tcg/sealed",
+        "/en/tcg/sealed/analytics",
+        "/en/tcg/sealed/cashflow",
+        "/en/tcg/sealed/catalogue",
+        "/en/tcg/sealed/collection",
+        "/en/tcg/sealed/journal",
+        "/en/tcg/sealed/products/1",
+        "/en/tcg/sealed/sales",
+        "/en/tcg/sealed/sources",
+        "/fr/tcg/sealed",
+        "/fr/tcg/sealed/analytics",
+        "/fr/tcg/sealed/cashflow",
+        "/fr/tcg/sealed/catalogue",
+        "/fr/tcg/sealed/collection",
+        "/fr/tcg/sealed/journal",
+        "/fr/tcg/sealed/products/1",
+        "/fr/tcg/sealed/sales",
+        "/fr/tcg/sealed/sources"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sealed/buy-safely/page.tsx",
+      "route": "/tcg/sealed/buy-safely",
+      "representants": [
+        "/en/tcg/sealed/buy-safely",
+        "/fr/tcg/sealed/buy-safely"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sealed/market/[id]/page.tsx",
+      "route": "/tcg/sealed/market/[id]",
+      "representants": [
+        "/en/tcg/sealed/market/611877",
+        "/fr/tcg/sealed/market/611877"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sealed/market/products/[id]/page.tsx",
+      "route": "/tcg/sealed/market/products/[id]",
+      "representants": [
+        "/en/tcg/sealed/market/products/611877",
+        "/fr/tcg/sealed/market/products/611877"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sealed/releases/page.tsx",
+      "route": "/tcg/sealed/releases",
+      "representants": [
+        "/en/tcg/sealed/releases",
+        "/fr/tcg/sealed/releases"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/sets/[setId]/page.tsx",
+      "route": "/tcg/sets/[setId]",
+      "representants": [
+        "/en/tcg/sets/sv03.5",
+        "/fr/tcg/sets/sv03.5"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/start/page.tsx",
+      "route": "/tcg/start",
+      "representants": [
+        "/en/tcg/start",
+        "/fr/tcg/start"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/tcg/wishlist/page.tsx",
+      "route": "/tcg/wishlist",
+      "representants": [
+        "/en/tcg/wishlist",
+        "/fr/tcg/wishlist"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/team/page.tsx",
+      "route": "/team",
+      "representants": [
+        "/en/team",
+        "/fr/team"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/team/share/page.tsx",
+      "route": "/team/share",
+      "representants": [
+        "/en/team/share?code=25-6-9&lang=en",
+        "/fr/team/share?code=25-6-9&lang=fr"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/terms/page.tsx",
+      "route": "/terms",
+      "representants": [
+        "/en/terms",
+        "/fr/terms"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/types/page.tsx",
+      "route": "/types",
+      "representants": [
+        "/en/types",
+        "/fr/types"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    },
+    {
+      "source": "src/app/u/[handle]/page.tsx",
+      "route": "/u/[handle]",
+      "representants": [
+        "/en/u/audit-inexistant",
+        "/fr/u/audit-inexistant"
+      ],
+      "validation": "Rendu observé et tests spécifiques dans matrice ; parcours authentifiés bloqués le cas échéant"
+    }
+  ],
+  "handlers": [
+    "src/app/api/account/api-keys/[id]/route.ts",
+    "src/app/api/account/api-keys/route.ts",
+    "src/app/api/account/export/route.ts",
+    "src/app/api/account/route.ts",
+    "src/app/api/agentation/health/route.ts",
+    "src/app/api/analytics/product/route.ts",
+    "src/app/api/auth/[[...path]]/route.ts",
+    "src/app/api/battle/room/route.ts",
+    "src/app/api/contact/route.ts",
+    "src/app/api/cron/metrics-retention/route.ts",
+    "src/app/api/cron/tcg-sealed-sync/route.ts",
+    "src/app/api/friends/route.ts",
+    "src/app/api/profile/route.ts",
+    "src/app/api/push/send/route.ts",
+    "src/app/api/push/subscription/route.ts",
+    "src/app/api/quiz/attempt/route.ts",
+    "src/app/api/quiz/leaderboard/route.ts",
+    "src/app/api/smogon/[name]/route.ts",
+    "src/app/api/tcg/cards/[id]/route.ts",
+    "src/app/api/tcg/collection/set-cards/route.ts",
+    "src/app/api/tcg/compare/route.ts",
+    "src/app/api/tcg/price-alerts/route.ts",
+    "src/app/api/tcg/price-history/[cardId]/route.ts",
+    "src/app/api/tcg/saved-searches/route.ts",
+    "src/app/api/tcg/sealed/aliases/[id]/route.ts",
+    "src/app/api/tcg/sealed/catalogue/route.ts",
+    "src/app/api/tcg/sealed/export/route.ts",
+    "src/app/api/tcg/sealed/guide/route.ts",
+    "src/app/api/tcg/sealed/market-catalogue/route.ts",
+    "src/app/api/tcg/sealed/market-products/[id]/route.ts",
+    "src/app/api/tcg/sealed/overview/route.ts",
+    "src/app/api/tcg/sealed/products/[id]/image/route.ts",
+    "src/app/api/tcg/sealed/products/[id]/route.ts",
+    "src/app/api/tcg/sealed/sources/route.ts",
+    "src/app/api/tcg/sealed/transactions/[id]/route.ts",
+    "src/app/api/tcg/sealed/transactions/[id]/void/route.ts",
+    "src/app/api/tcg/sealed/transactions/route.ts",
+    "src/app/api/tcg/search/route.ts",
+    "src/app/api/tcg/sets/route.ts",
+    "src/app/api/tcg/user-cards/route.ts",
+    "src/app/api/user-state/route.ts",
+    "src/app/api/v1/cards/[cardId]/route.ts",
+    "src/app/api/v1/cards/route.ts",
+    "src/app/api/v1/me/route.ts",
+    "src/app/api/v1/openapi.json/route.ts",
+    "src/app/api/v1/sealed/catalogue/route.ts",
+    "src/app/api/v1/sealed/positions/[productId]/route.ts",
+    "src/app/api/v1/sealed/positions/route.ts",
+    "src/app/api/v1/sealed/transactions/[id]/route.ts",
+    "src/app/api/v1/sealed/transactions/[id]/void/route.ts",
+    "src/app/api/v1/sealed/transactions/route.ts",
+    "src/app/api/v1/summary/route.ts",
+    "src/app/go/[campaign]/route.ts",
+    "src/app/sitemap.xml/route.ts",
+    "src/app/sitemaps/[name]/route.ts"
+  ],
+  "api_methodes": [
+    {
+      "source": "src/app/api/account/api-keys/[id]/route.ts",
+      "path": "/api/account/api-keys/1",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/account/api-keys/route.ts",
+      "path": "/api/account/api-keys",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/account/api-keys/route.ts",
+      "path": "/api/account/api-keys",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/account/export/route.ts",
+      "path": "/api/account/export",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/account/route.ts",
+      "path": "/api/account",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/agentation/health/route.ts",
+      "path": "/api/agentation/health",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/analytics/product/route.ts",
+      "path": "/api/analytics/product",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/auth/[[...path]]/route.ts",
+      "path": "/api/auth/get-session",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/auth/[[...path]]/route.ts",
+      "path": "/api/auth/get-session",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/auth/[[...path]]/route.ts",
+      "path": "/api/auth/get-session",
+      "method": "PUT"
+    },
+    {
+      "source": "src/app/api/auth/[[...path]]/route.ts",
+      "path": "/api/auth/get-session",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/auth/[[...path]]/route.ts",
+      "path": "/api/auth/get-session",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/battle/room/route.ts",
+      "path": "/api/battle/room",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/battle/room/route.ts",
+      "path": "/api/battle/room",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/battle/room/route.ts",
+      "path": "/api/battle/room",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/contact/route.ts",
+      "path": "/api/contact",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/cron/metrics-retention/route.ts",
+      "path": "/api/cron/metrics-retention",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/cron/tcg-sealed-sync/route.ts",
+      "path": "/api/cron/tcg-sealed-sync",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/friends/route.ts",
+      "path": "/api/friends",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/friends/route.ts",
+      "path": "/api/friends",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/friends/route.ts",
+      "path": "/api/friends",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/friends/route.ts",
+      "path": "/api/friends",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/profile/route.ts",
+      "path": "/api/profile",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/profile/route.ts",
+      "path": "/api/profile",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/push/send/route.ts",
+      "path": "/api/push/send",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/push/subscription/route.ts",
+      "path": "/api/push/subscription",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/push/subscription/route.ts",
+      "path": "/api/push/subscription",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/quiz/attempt/route.ts",
+      "path": "/api/quiz/attempt",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/quiz/leaderboard/route.ts",
+      "path": "/api/quiz/leaderboard",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/quiz/leaderboard/route.ts",
+      "path": "/api/quiz/leaderboard",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/smogon/[name]/route.ts",
+      "path": "/api/smogon/pikachu",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/cards/[id]/route.ts",
+      "path": "/api/tcg/cards/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/collection/set-cards/route.ts",
+      "path": "/api/tcg/collection/set-cards",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/compare/route.ts",
+      "path": "/api/tcg/compare",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/price-alerts/route.ts",
+      "path": "/api/tcg/price-alerts",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/price-alerts/route.ts",
+      "path": "/api/tcg/price-alerts",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/price-alerts/route.ts",
+      "path": "/api/tcg/price-alerts",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/tcg/price-alerts/route.ts",
+      "path": "/api/tcg/price-alerts",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/tcg/price-history/[cardId]/route.ts",
+      "path": "/api/tcg/price-history/sv03.5-199",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/saved-searches/route.ts",
+      "path": "/api/tcg/saved-searches",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/saved-searches/route.ts",
+      "path": "/api/tcg/saved-searches",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/saved-searches/route.ts",
+      "path": "/api/tcg/saved-searches",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/aliases/[id]/route.ts",
+      "path": "/api/tcg/sealed/aliases/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/aliases/[id]/route.ts",
+      "path": "/api/tcg/sealed/aliases/1",
+      "method": "PUT"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/aliases/[id]/route.ts",
+      "path": "/api/tcg/sealed/aliases/1",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/catalogue/route.ts",
+      "path": "/api/tcg/sealed/catalogue",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/export/route.ts",
+      "path": "/api/tcg/sealed/export",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/guide/route.ts",
+      "path": "/api/tcg/sealed/guide",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/market-catalogue/route.ts",
+      "path": "/api/tcg/sealed/market-catalogue",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/market-products/[id]/route.ts",
+      "path": "/api/tcg/sealed/market-products/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/overview/route.ts",
+      "path": "/api/tcg/sealed/overview",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/products/[id]/image/route.ts",
+      "path": "/api/tcg/sealed/products/1/image",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/products/[id]/route.ts",
+      "path": "/api/tcg/sealed/products/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/sources/route.ts",
+      "path": "/api/tcg/sealed/sources",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/sources/route.ts",
+      "path": "/api/tcg/sealed/sources",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/transactions/[id]/route.ts",
+      "path": "/api/tcg/sealed/transactions/1",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/transactions/[id]/void/route.ts",
+      "path": "/api/tcg/sealed/transactions/1/void",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/transactions/route.ts",
+      "path": "/api/tcg/sealed/transactions",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sealed/transactions/route.ts",
+      "path": "/api/tcg/sealed/transactions",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/search/route.ts",
+      "path": "/api/tcg/search",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/sets/route.ts",
+      "path": "/api/tcg/sets",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/user-cards/route.ts",
+      "path": "/api/tcg/user-cards",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/tcg/user-cards/route.ts",
+      "path": "/api/tcg/user-cards",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/tcg/user-cards/route.ts",
+      "path": "/api/tcg/user-cards",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/tcg/user-cards/route.ts",
+      "path": "/api/tcg/user-cards",
+      "method": "DELETE"
+    },
+    {
+      "source": "src/app/api/user-state/route.ts",
+      "path": "/api/user-state",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/user-state/route.ts",
+      "path": "/api/user-state",
+      "method": "PUT"
+    },
+    {
+      "source": "src/app/api/v1/cards/[cardId]/route.ts",
+      "path": "/api/v1/cards/sv03.5-199",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/cards/[cardId]/route.ts",
+      "path": "/api/v1/cards/sv03.5-199",
+      "method": "PUT"
+    },
+    {
+      "source": "src/app/api/v1/cards/route.ts",
+      "path": "/api/v1/cards",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/me/route.ts",
+      "path": "/api/v1/me",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/openapi.json/route.ts",
+      "path": "/api/v1/openapi.json",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/catalogue/route.ts",
+      "path": "/api/v1/sealed/catalogue",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/positions/[productId]/route.ts",
+      "path": "/api/v1/sealed/positions/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/positions/route.ts",
+      "path": "/api/v1/sealed/positions",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/transactions/[id]/route.ts",
+      "path": "/api/v1/sealed/transactions/1",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/transactions/[id]/route.ts",
+      "path": "/api/v1/sealed/transactions/1",
+      "method": "PATCH"
+    },
+    {
+      "source": "src/app/api/v1/sealed/transactions/[id]/void/route.ts",
+      "path": "/api/v1/sealed/transactions/1/void",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/v1/sealed/transactions/route.ts",
+      "path": "/api/v1/sealed/transactions",
+      "method": "GET"
+    },
+    {
+      "source": "src/app/api/v1/sealed/transactions/route.ts",
+      "path": "/api/v1/sealed/transactions",
+      "method": "POST"
+    },
+    {
+      "source": "src/app/api/v1/summary/route.ts",
+      "path": "/api/v1/summary",
+      "method": "GET"
+    }
+  ],
+  "sources_interactives": [
+    {
+      "source": "src/app/abilities/AbilitiesPageClient.tsx",
+      "interactions": [
+        {
+          "ligne": 137,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 151,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 160,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 179,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 219,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 240,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 257,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/auth/reset-password/page.tsx",
+      "interactions": [
+        {
+          "ligne": 105,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 119,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 133,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 147,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/battle/BattleRoomSection.tsx",
+      "interactions": [
+        {
+          "ligne": 101,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 116,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 117,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 125,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/breeding/BreedingPageClient.tsx",
+      "interactions": [
+        {
+          "ligne": 92,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 126,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 129,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 169,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 183,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/compare/page.tsx",
+      "interactions": [
+        {
+          "ligne": 272,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 280,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 298,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 309,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 318,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 343,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 385,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 562,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 647,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/dashboard/page.tsx",
+      "interactions": [
+        {
+          "ligne": 54,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/docs/api/CopyCodeButton.tsx",
+      "interactions": [
+        {
+          "ligne": 30,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/ev-iv/EVIVPageClient.tsx",
+      "interactions": [
+        {
+          "ligne": 43,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/global-error.tsx",
+      "interactions": [
+        {
+          "ligne": 36,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/items/ItemsPageClient.tsx",
+      "interactions": [
+        {
+          "ligne": 147,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 161,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 170,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 190,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 218,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 259,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 280,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 297,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/moves/MoveDetailModal.tsx",
+      "interactions": [
+        {
+          "ligne": 65,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 358,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/moves/MovesPageClient.tsx",
+      "interactions": [
+        {
+          "ligne": 212,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 221,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 243,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 272,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 302,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 390,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 401,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 490,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 598,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 605,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 711,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 737,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/nuzlocke/NuzlockeClient.tsx",
+      "interactions": [
+        {
+          "ligne": 162,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 169,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 173,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 191,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 199,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 251,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 262,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 278,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 294,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 342,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 357,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/pokemon/[name]/PokemonDetailClient.tsx",
+      "interactions": [
+        {
+          "ligne": 458,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 480,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 497,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 514,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 532,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 551,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 668,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 678,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 694,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 718,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 1183,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1203,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1230,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1258,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/quiz/page.tsx",
+      "interactions": [
+        {
+          "ligne": 620,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 628,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 649,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 664,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 693,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 723,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 737,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1029,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/tcg/collection/TCGCollectionPage.tsx",
+      "interactions": [
+        {
+          "ligne": 81,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 117,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/tcg/collection/[language]/TCGSetAlbumPage.tsx",
+      "interactions": [
+        {
+          "ligne": 122,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/tcg/deck-builder/DeckBuilderClient.tsx",
+      "interactions": [
+        {
+          "ligne": 148,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 154,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 174,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 184,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 214,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 238,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 245,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 266,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 327,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 339,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/tcg/sealed/SealedPortfolioPage.tsx",
+      "interactions": [
+        {
+          "ligne": 381,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 394,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 398,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 417,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 473,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 477,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 615,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 616,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 619,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 621,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 626,
+          "evenements": [
+            "onOpenChange=",
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 628,
+          "evenements": [
+            "onChange=",
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 630,
+          "evenements": [
+            "onChange=",
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 631,
+          "evenements": [
+            "onChange=",
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 632,
+          "evenements": [
+            "onChange=",
+            "onClick=",
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 635,
+          "evenements": [
+            "onChange=",
+            "onChange=",
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 636,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 637,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 639,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 757,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 758,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 759,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 798,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 811,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 852,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 853,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 854,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 856,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 872,
+          "evenements": [
+            "onClick=",
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 879,
+          "evenements": [
+            "onClick=",
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 882,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 889,
+          "evenements": [
+            "onChange=",
+            "onClick=",
+            "onClick=",
+            "onClick=",
+            "onClick=",
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 915,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 924,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 949,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 951,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 956,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 961,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 982,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 990,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 1026,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/tcg/start/TCGStartPage.tsx",
+      "interactions": [
+        {
+          "ligne": 194,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 214,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 221,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 234,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/team/page.tsx",
+      "interactions": [
+        {
+          "ligne": 242,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 250,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 258,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 282,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 295,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 326,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/app/types/page.tsx",
+      "interactions": [
+        {
+          "ligne": 298,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/anniversary/Anniversary30CardGrid.tsx",
+      "interactions": [
+        {
+          "ligne": 235,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 297,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/anniversary/Anniversary30Tracker.tsx",
+      "interactions": [
+        {
+          "ligne": 224,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 245,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/AccountMenu.tsx",
+      "interactions": [
+        {
+          "ligne": 43,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 63,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 85,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 109,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/AuthModal.tsx",
+      "interactions": [
+        {
+          "ligne": 147,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 163,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 176,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 195,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 214,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 224,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 252,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/AuthModalBoundary.tsx",
+      "interactions": [
+        {
+          "ligne": 56,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 64,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/SyncAuthPrompt.tsx",
+      "interactions": [
+        {
+          "ligne": 54,
+          "evenements": [
+            "onOpenChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/SyncRequiredPanel.tsx",
+      "interactions": [
+        {
+          "ligne": 39,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 47,
+          "evenements": [
+            "onOpenChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/auth/SyncStatusPanel.tsx",
+      "interactions": [
+        {
+          "ligne": 32,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/battle/BattleRoom.tsx",
+      "interactions": [
+        {
+          "ligne": 213,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 279,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 280,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 289,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/battle/BattleSimulator.tsx",
+      "interactions": [
+        {
+          "ligne": 135,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 257,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 438,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 448,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 459,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 477,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 500,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 530,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 580,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 588,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/breeding/BreedingCalculator.tsx",
+      "interactions": [
+        {
+          "ligne": 192,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 205,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 273,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 430,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 467,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 474,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 489,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 496,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 551,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 589,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 610,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 629,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 630,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 641,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 667,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 681,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 688,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 836,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 843,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/breeding/EggMoveExplorer.tsx",
+      "interactions": [
+        {
+          "ligne": 69,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 199,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/command/CommandPalette.tsx",
+      "interactions": [
+        {
+          "ligne": 176,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 183,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 199,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 224,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 256,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 279,
+          "evenements": [
+            "onSelect="
+          ]
+        },
+        {
+          "ligne": 305,
+          "evenements": [
+            "onSelect="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/contact/ContactForm.tsx",
+      "interactions": [
+        {
+          "ligne": 87,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 96,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 100,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 106,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 111,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/AccountCard.tsx",
+      "interactions": [
+        {
+          "ligne": 171,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 176,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 268,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 296,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 311,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 328,
+          "evenements": [
+            "onCheckedChange="
+          ]
+        },
+        {
+          "ligne": 344,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 386,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 390,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/ApiKeysCard.tsx",
+      "interactions": [
+        {
+          "ligne": 163,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 178,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 185,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 191,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 194,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 202,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/ProfileAndBadges.tsx",
+      "interactions": [
+        {
+          "ligne": 349,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/PublicProfileCard.tsx",
+      "interactions": [
+        {
+          "ligne": 101,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/QuizLeaderboard.tsx",
+      "interactions": [
+        {
+          "ligne": 93,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/dashboard/SettingsCard.tsx",
+      "interactions": [
+        {
+          "ligne": 33,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 55,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ev-iv/EVIVCalculator.tsx",
+      "interactions": [
+        {
+          "ligne": 186,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 187,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 194,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 228,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 234,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 250,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 276,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 293,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 302,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ev-iv/EVPlanner.tsx",
+      "interactions": [
+        {
+          "ligne": 152,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 153,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 160,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 176,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 187,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 211,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 224,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 233,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ev-iv/NatureSelector.tsx",
+      "interactions": [
+        {
+          "ligne": 59,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ev-iv/StatInput.tsx",
+      "interactions": [
+        {
+          "ligne": 44,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 59,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/friends/FriendPrivacyCard.tsx",
+      "interactions": [
+        {
+          "ligne": 36,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 96,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 102,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 108,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/friends/FriendProfileClient.tsx",
+      "interactions": [
+        {
+          "ligne": 75,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 78,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 194,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/friends/FriendsClient.tsx",
+      "interactions": [
+        {
+          "ligne": 55,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 59,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 65,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 74,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 132,
+          "evenements": [
+            "onSubmit="
+          ]
+        },
+        {
+          "ligne": 141,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCatalogPreview.tsx",
+      "interactions": [
+        {
+          "ligne": 251,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCollectionEntry.tsx",
+      "interactions": [
+        {
+          "ligne": 59,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeHeaderMobileMenu.tsx",
+      "interactions": [
+        {
+          "ligne": 57,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 99,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeHeaderMoreMenu.tsx",
+      "interactions": [
+        {
+          "ligne": 36,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 47,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeLanguageSelect.tsx",
+      "interactions": [
+        {
+          "ligne": 37,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/home/HomeThemeToggle.tsx",
+      "interactions": [
+        {
+          "ligne": 28,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/BackToTopButton.tsx",
+      "interactions": [
+        {
+          "ligne": 71,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/ConsentPreferencesButton.tsx",
+      "interactions": [
+        {
+          "ligne": 14,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/CookieBanner.tsx",
+      "interactions": [
+        {
+          "ligne": 150,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 154,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 157,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 161,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 164,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 165,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/DataExportImport.tsx",
+      "interactions": [
+        {
+          "ligne": 200,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 211,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 227,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 241,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 249,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 293,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 302,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/HeaderActions.tsx",
+      "interactions": [
+        {
+          "ligne": 38,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/HeaderDesktopNav.tsx",
+      "interactions": [
+        {
+          "ligne": 65,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 76,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/HeaderMobileNav.tsx",
+      "interactions": [
+        {
+          "ligne": 92,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 112,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 127,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 159,
+          "evenements": [
+            "onOpenChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/InstallPrompt.tsx",
+      "interactions": [
+        {
+          "ligne": 191,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 195,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 199,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 204,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 210,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/NotFoundMiniGame.tsx",
+      "interactions": [
+        {
+          "ligne": 669,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 758,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/ReportProblemButton.tsx",
+      "interactions": [
+        {
+          "ligne": 127,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/RouteErrorState.tsx",
+      "interactions": [
+        {
+          "ligne": 51,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/SecondaryNavigationLinks.tsx",
+      "interactions": [
+        {
+          "ligne": 62,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/SettingsModal.tsx",
+      "interactions": [
+        {
+          "ligne": 56,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 79,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 104,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 129,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 159,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 185,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/layout/SkipLink.tsx",
+      "interactions": [
+        {
+          "ligne": 21,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/moves/MoveLearnerGrid.tsx",
+      "interactions": [
+        {
+          "ligne": 100,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 134,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/AdvancedFilters.tsx",
+      "interactions": [
+        {
+          "ligne": 143,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 169,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 200,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 235,
+          "evenements": [
+            "onCheckedChange="
+          ]
+        },
+        {
+          "ligne": 249,
+          "evenements": [
+            "onCheckedChange="
+          ]
+        },
+        {
+          "ligne": 268,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 297,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 326,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 354,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 383,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 399,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 415,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 431,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 454,
+          "evenements": [
+            "onValueChange="
+          ]
+        },
+        {
+          "ligne": 483,
+          "evenements": [
+            "onValueChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/CaughtFilter.tsx",
+      "interactions": [
+        {
+          "ligne": 27,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/CompareBar.tsx",
+      "interactions": [
+        {
+          "ligne": 80,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 102,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/CompetitiveMeta.tsx",
+      "interactions": [
+        {
+          "ligne": 213,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 231,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/FavoriteToggle.tsx",
+      "interactions": [
+        {
+          "ligne": 20,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/PokemonCard.tsx",
+      "interactions": [
+        {
+          "ligne": 338,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 355,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 372,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 454,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/PokemonCards.tsx",
+      "interactions": [
+        {
+          "ligne": 64,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 128,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/PokemonList.tsx",
+      "interactions": [
+        {
+          "ligne": 489,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 505,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 517,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 550,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 564,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 572,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 592,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/RecentlyViewed.tsx",
+      "interactions": [
+        {
+          "ligne": 34,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/RegionFilter.tsx",
+      "interactions": [
+        {
+          "ligne": 36,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 53,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/SearchBar.tsx",
+      "interactions": [
+        {
+          "ligne": 110,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 124,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/SortSelector.tsx",
+      "interactions": [
+        {
+          "ligne": 41,
+          "evenements": [
+            "onValueChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/SpriteGallery.tsx",
+      "interactions": [
+        {
+          "ligne": 59,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 73,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/TypeChart.tsx",
+      "interactions": [
+        {
+          "ligne": 156,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 261,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 289,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 336,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 338,
+          "evenements": [
+            "onKeyDown="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/pokemon/TypeFilter.tsx",
+      "interactions": [
+        {
+          "ligne": 26,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 47,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/quiz/QuizResultCard.tsx",
+      "interactions": [
+        {
+          "ligne": 157,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 164,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 171,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/share/ShareButton.tsx",
+      "interactions": [
+        {
+          "ligne": 134,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 163,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/PriceChart.tsx",
+      "interactions": [
+        {
+          "ligne": 205,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGActiveSetInsights.tsx",
+      "interactions": [
+        {
+          "ligne": 140,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 166,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGAlbumCard.tsx",
+      "interactions": [
+        {
+          "ligne": 89,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 146,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGAlbumPage.tsx",
+      "interactions": [
+        {
+          "ligne": 253,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 271,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 279,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 298,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 341,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 395,
+          "evenements": [
+            "onOpenChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCardDetailModal.tsx",
+      "interactions": [
+        {
+          "ligne": 290,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 312,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 393,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 400,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 426,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 432,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 433,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 594,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 767,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCardDetailRoute.tsx",
+      "interactions": [
+        {
+          "ligne": 41,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 61,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 104,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCardItem.tsx",
+      "interactions": [
+        {
+          "ligne": 85,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 102,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 112,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 145,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCollectionLanguageDialog.tsx",
+      "interactions": [
+        {
+          "ligne": 65,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 71,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 90,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 102,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 105,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCollectionOverview.tsx",
+      "interactions": [
+        {
+          "ligne": 405,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 413,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 431,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 442,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 455,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 507,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 568,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 601,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 608,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCollectionSetRow.tsx",
+      "interactions": [
+        {
+          "ligne": 153,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCollectionVariantSheet.tsx",
+      "interactions": [
+        {
+          "ligne": 179,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 211,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 236,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 340,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 355,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 357,
+          "evenements": [
+            "onKeyDown="
+          ]
+        },
+        {
+          "ligne": 374,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGComparePanel.tsx",
+      "interactions": [
+        {
+          "ligne": 63,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 88,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 98,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 169,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 207,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGCompareTrigger.tsx",
+      "interactions": [
+        {
+          "ligne": 28,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGFilters.tsx",
+      "interactions": [
+        {
+          "ligne": 372,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 423,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 465,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 490,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 517,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 537,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 575,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 648,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 686,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 720,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 735,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 749,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 781,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 820,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 861,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 875,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 892,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 907,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 922,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 935,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 948,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 971,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1022,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 1083,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 1094,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGHolographicCard.tsx",
+      "interactions": [
+        {
+          "ligne": 188,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGLanguageSelector.tsx",
+      "interactions": [
+        {
+          "ligne": 86,
+          "evenements": [
+            "onChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGLegacySetAlbumResolver.tsx",
+      "interactions": [
+        {
+          "ligne": 93,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 97,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGPageTabs.tsx",
+      "interactions": [
+        {
+          "ligne": 108,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGResearchDesk.tsx",
+      "interactions": [
+        {
+          "ligne": 423,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 448,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 458,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 487,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 514,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 534,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 545,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 554,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 558,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 623,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 639,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 657,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 688,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 697,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 762,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 799,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 848,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 856,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 863,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 870,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGUnsupportedLangBanner.tsx",
+      "interactions": [
+        {
+          "ligne": 54,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 69,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 92,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 109,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/tcg/TCGWishlistContent.tsx",
+      "interactions": [
+        {
+          "ligne": 116,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 141,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 170,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 180,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 213,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 238,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/team/GenerationPicker.tsx",
+      "interactions": [
+        {
+          "ligne": 33,
+          "evenements": [
+            "onValueChange="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/team/ShowdownImportDialog.tsx",
+      "interactions": [
+        {
+          "ligne": 97,
+          "evenements": [
+            "onOpenChange="
+          ]
+        },
+        {
+          "ligne": 122,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 128,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 131,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 169,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 173,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/team/TeamExportButton.tsx",
+      "interactions": [
+        {
+          "ligne": 242,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ui/EmptyState.tsx",
+      "interactions": [
+        {
+          "ligne": 51,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ui/FaqSection.tsx",
+      "interactions": [
+        {
+          "ligne": 158,
+          "evenements": [
+            "onChange="
+          ]
+        },
+        {
+          "ligne": 166,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 187,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 202,
+          "evenements": [
+            "onClick="
+          ]
+        },
+        {
+          "ligne": 266,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    },
+    {
+      "source": "src/components/ui/input-group.tsx",
+      "interactions": [
+        {
+          "ligne": 57,
+          "evenements": [
+            "onClick="
+          ]
+        }
+      ]
+    }
+  ],
+  "tests": [
+    "packages/core/src/lib/sealed-ledger.test.ts",
+    "packages/core/src/lib/tcg-collections.test.ts",
+    "src/app/api/account/api-keys/[id]/route.test.ts",
+    "src/app/api/account/api-keys/route.test.ts",
+    "src/app/api/auth/[[...path]]/route.test.ts",
+    "src/app/api/og/pokemon/route.test.ts",
+    "src/app/api/smogon/[name]/route.test.ts",
+    "src/app/api/tcg/sealed/guide/route.test.ts",
+    "src/app/api/v1/openapi.json/route.test.ts",
+    "src/app/api/v1/sealed/catalogue/route.test.ts",
+    "src/app/robots.test.ts",
+    "src/components/auth/AccountMenu.test.ts",
+    "src/components/auth/AuthModal.test.ts",
+    "src/components/auth/SyncAuthPrompt.test.ts",
+    "src/components/layout/SecondaryNavigationLinks.test.ts",
+    "src/components/tcg/TCGCardDetailRoute.test.ts",
+    "src/components/ui/slider.test.ts",
+    "src/lib/anniversary-30-migration.test.ts",
+    "src/lib/anniversary-30.test.ts",
+    "src/lib/api/cache.test.ts",
+    "src/lib/api/memory-cache.test.ts",
+    "src/lib/api/observed-route.test.ts",
+    "src/lib/api/rest.test.ts",
+    "src/lib/api/tcg-pokemon-cards.test.ts",
+    "src/lib/color-contrast.test.ts",
+    "src/lib/dashboard-activity.test.ts",
+    "src/lib/editorial.test.ts",
+    "src/lib/focus-management.test.ts",
+    "src/lib/home-catalog-preview.test.ts",
+    "src/lib/idle-scheduler.test.ts",
+    "src/lib/navigation-registry.test.ts",
+    "src/lib/neon/AuthProvider.test.ts",
+    "src/lib/neon/auth.test.ts",
+    "src/lib/neon/server-auth.test.ts",
+    "src/lib/og/assets.test.ts",
+    "src/lib/og/input.test.ts",
+    "src/lib/og/optimize-png.test.ts",
+    "src/lib/pokedex-copy.test.ts",
+    "src/lib/pokemon-artwork.test.ts",
+    "src/lib/pokemon-featured.test.ts",
+    "src/lib/pokemon-filter-url.test.ts",
+    "src/lib/pokemon-filter-utils.test.ts",
+    "src/lib/pokemon-localization.test.ts",
+    "src/lib/pokemon-route.test.ts",
+    "src/lib/posthog-client.test.ts",
+    "src/lib/posthog-consent.test.ts",
+    "src/lib/posthog-events.test.ts",
+    "src/lib/posthog-privacy.test.ts",
+    "src/lib/public-api-auth.test.ts",
+    "src/lib/public-api-docs.test.ts",
+    "src/lib/public-api-tcg.test.ts",
+    "src/lib/public-api.test.ts",
+    "src/lib/query-observability.test.ts",
+    "src/lib/query-options.test.ts",
+    "src/lib/rate-limit.test.ts",
+    "src/lib/retry.test.ts",
+    "src/lib/sentry-common.test.ts",
+    "src/lib/sentry-observability.test.ts",
+    "src/lib/seo.test.ts",
+    "src/lib/server-i18n.test.ts",
+    "src/lib/sitemap.test.ts",
+    "src/lib/supabase/sync-state.test.ts",
+    "src/lib/tcg-album-card-actions.test.ts",
+    "src/lib/tcg-booster-evidence.test.ts",
+    "src/lib/tcg-card-ownership-actions.test.ts",
+    "src/lib/tcg-collection-entry.test.ts",
+    "src/lib/tcg-collection-navigation.test.ts",
+    "src/lib/tcg-collection-overview.test.ts",
+    "src/lib/tcg-collection-preview.test.ts",
+    "src/lib/tcg-collection.test.ts",
+    "src/lib/tcg-error-fallback.test.ts",
+    "src/lib/tcg-images.test.ts",
+    "src/lib/tcg-labels.test.ts",
+    "src/lib/tcg-language.test.ts",
+    "src/lib/tcg-marketplace.test.ts",
+    "src/lib/tcg-merchant-dossier.test.ts",
+    "src/lib/tcg-owned-cards.test.ts",
+    "src/lib/tcg-pokemon-association.test.ts",
+    "src/lib/tcg-published-pull-studies.test.ts",
+    "src/lib/tcg-release-calendar.test.ts",
+    "src/lib/tcg-research.test.ts",
+    "src/lib/tcg-sealed-cardmarket.test.ts",
+    "src/lib/tcg-sealed-display.test.ts",
+    "src/lib/tcg-sealed-guide-server.test.ts",
+    "src/lib/tcg-sealed-guide.test.ts",
+    "src/lib/tcg-sealed-history.test.ts",
+    "src/lib/tcg-sealed-image.test.ts",
+    "src/lib/tcg-sealed-input.test.ts",
+    "src/lib/tcg-sealed-public-market.test.ts",
+    "src/lib/tcg-sealed-route.test.ts",
+    "src/lib/tcg-sealed-sale-products.test.ts",
+    "src/lib/tcg-sealed-server.test.ts",
+    "src/lib/tcg-seo.test.ts",
+    "src/lib/tcg-set-label.test.ts",
+    "src/lib/tcg-valuation.test.ts",
+    "src/lib/tcg-wishlist.test.ts",
+    "src/proxy.test.ts",
+    "src/store/persistence.test.ts",
+    "src/store/primedex-tcg-collections.test.ts",
+    "src/store/sync-access.test.ts"
+  ],
+  "note": "Inventaire source, pas résultats de tests. Les états internes/helpers ne constituent pas des parcours utilisateurs autonomes."
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "challenge": "Classique",
+    "mode": "Marathon",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nCHARGEMENT...\nKANGOUREX MÉGA\nCORAYON FORME DE GALAR\nDINGLU\nSCARABRUTE",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n1/5\nFAUX\nKANGOUREX MÉGA\nCORAYON FORME DE GALAR\nDINGLU\nSCARABRUTE",
+    "images": [
+      {
+        "alt": "Mystery Pokemon",
+        "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1003.png"
+      }
+    ]
+  },
+  {
+    "challenge": "Classique",
+    "mode": "Survie",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nCHARGEMENT...\nPALMAVAL\nCHAPOTUS\nFUNÉCIRE\nBAGGAÏD",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\nFAUX\nPALMAVAL\nCHAPOTUS\nFUNÉCIRE\nBAGGAÏD",
+    "images": [
+      {
+        "alt": "Mystery Pokemon",
+        "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/857.png"
+      }
+    ]
+  },
+  {
+    "challenge": "Classique",
+    "mode": "Contre la montre",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n30s\nCHARGEMENT...\nPITROUILLE AVERAGE\nMEWTWO\nMARCACRIN\nCABRIOLAINE",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n30s\nFAUX\nPITROUILLE AVERAGE\nMEWTWO\nMARCACRIN\nCABRIOLAINE",
+    "images": [
+      {
+        "alt": "Mystery Pokemon",
+        "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/672.png"
+      }
+    ]
+  },
+  {
+    "challenge": "Silhouette",
+    "mode": "Marathon",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  },
+  {
+    "challenge": "Silhouette",
+    "mode": "Survie",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  },
+  {
+    "challenge": "Silhouette",
+    "mode": "Contre la montre",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Marathon",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Survie",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Contre la montre",
+    "harnessError": "locator.click: Error: strict mode violation: locator('main summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:"
+  }
+]

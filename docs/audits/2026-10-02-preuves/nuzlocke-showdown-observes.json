@@ -1,0 +1,24 @@
+[
+  {
+    "step": "empty",
+    "toast": [
+      "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+    ]
+  },
+  {
+    "step": "valid-local",
+    "text": "MODE CHALLENGE\n\nSuivi Nuzlocke\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\nGuide du suivi Nuzlocke\n↗\n\nCONTINUER L’EXPLORATION\n\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nCatalogue JCC\nMES PARTIES\nCréer une partie\n\nAucune partie pour le moment.\n\nCréez ou sélectionnez une partie pour commencer à noter les rencontres.",
+    "toast": [
+      "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+    ]
+  },
+  {
+    "step": "showdown",
+    "text": "Import Showdown\n\nPaste one or more Pokémon Showdown export sets below. Recognized species will be added to your team; item, ability, EVs, nature, and moves are shown for reference.\n\nCancel\nParse\nFermer",
+    "buttons": [
+      "Cancel",
+      "Parse",
+      "Fermer"
+    ]
+  }
+]

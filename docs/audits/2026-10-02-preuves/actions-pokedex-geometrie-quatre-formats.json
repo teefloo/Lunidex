@@ -1,0 +1,142 @@
+[
+  {
+    "width": 360,
+    "height": 800,
+    "geometry": {
+      "card": {
+        "left": 11.1953125,
+        "right": 167.203125,
+        "width": 156.0078125
+      },
+      "overflow": "hidden",
+      "buttons": [
+        {
+          "label": "Ajouter à l'équipe",
+          "left": 51.5625,
+          "right": 95.5625,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter au comparateur",
+          "left": 99.5625,
+          "right": 143.5625,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter aux favoris",
+          "left": 147.5625,
+          "right": 191.5625,
+          "width": 44,
+          "clipped": true
+        }
+      ]
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "geometry": {
+      "card": {
+        "left": 11.1953125,
+        "right": 182.203125,
+        "width": 171.0078125
+      },
+      "overflow": "hidden",
+      "buttons": [
+        {
+          "label": "Ajouter à l'équipe",
+          "left": 51.5625,
+          "right": 95.5625,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter au comparateur",
+          "left": 99.5625,
+          "right": 143.5625,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter aux favoris",
+          "left": 147.5625,
+          "right": 191.5625,
+          "width": 44,
+          "clipped": true
+        }
+      ]
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "geometry": {
+      "card": {
+        "left": 11.1953125,
+        "right": 245.125,
+        "width": 233.9296875
+      },
+      "overflow": "hidden",
+      "buttons": [
+        {
+          "label": "Ajouter à l'équipe",
+          "left": 97.71875,
+          "right": 141.71875,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter au comparateur",
+          "left": 145.71875,
+          "right": 189.71875,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter aux favoris",
+          "left": 193.71875,
+          "right": 237.71875,
+          "width": 44,
+          "clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "geometry": {
+      "card": {
+        "left": 151.1953125,
+        "right": 357.28125,
+        "width": 206.0859375
+      },
+      "overflow": "hidden",
+      "buttons": [
+        {
+          "label": "Ajouter à l'équipe",
+          "left": 209.875,
+          "right": 253.875,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter au comparateur",
+          "left": 257.875,
+          "right": 301.875,
+          "width": 44,
+          "clipped": false
+        },
+        {
+          "label": "Ajouter aux favoris",
+          "left": 305.875,
+          "right": 349.875,
+          "width": 44,
+          "clipped": false
+        }
+      ]
+    }
+  }
+]

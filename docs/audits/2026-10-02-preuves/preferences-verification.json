@@ -1,0 +1,44 @@
+[
+  {
+    "name": "switches",
+    "switches": [
+      {
+        "label": "Activer le son",
+        "checked": "false"
+      },
+      {
+        "label": "Désactiver les sprites animés",
+        "checked": "true"
+      }
+    ]
+  },
+  {
+    "name": "export",
+    "filename": "primedex-backup-2026-10-01.json"
+  },
+  {
+    "name": "language",
+    "url": "http://localhost:3101/fr/pokedex",
+    "lang": "fr"
+  },
+  {
+    "name": "persist-reload",
+    "url": "http://localhost:3101/fr/pokedex",
+    "htmlClass": "font-body __variable_dd643d __variable_cd8e69 dark",
+    "text": "Paramètres\n\nParamètres\n\nEffets sonores\nSprites animés\nUtiliser des GIFs animés sur les cartes Pokémon\nThème\nClair\nSombre\nSystème\nDevise TCG\nAfficher les prix TCGdex dans cette devise lorsqu’ils sont disponibles.\nEuro (EUR)\nDollar américain (USD)\nLangue\n🌐\nAUTO\n🇺🇸\nEN\n🇫🇷\nFR\n🇩🇪\nDE\n🇪🇸\nES\n🇮🇹\nIT\n🇯🇵\nJA\n🇰🇷\nKO\n🇨🇳\nZH\nExport & Import de données\n\nSauvegardez vos données ou restaurez une sauvegarde précédente.\n\nExporter\nImporter\n\nV1.0.0\n\nFermer",
+    "switches": [
+      {
+        "label": "Désactiver le son",
+        "checked": "true"
+      },
+      {
+        "label": "Activer les sprites animés",
+        "checked": "false"
+      }
+    ]
+  },
+  {
+    "name": "escape",
+    "dialogs": 0
+  }
+]

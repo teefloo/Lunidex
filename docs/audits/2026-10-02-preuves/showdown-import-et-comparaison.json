@@ -1,0 +1,28 @@
+[
+  {
+    "step": "invalid-preview",
+    "text": "Import Showdown\n\nPaste one or more Pokémon Showdown export sets below. Recognized species will be added to your team; item, ability, EVs, nature, and moves are shown for reference.\n\n???SPECIES NOT RECOGNIZED\n\nBack\nAdd to Team\nFermer",
+    "disabled": true
+  },
+  {
+    "step": "valid-preview",
+    "text": "Import Showdown\n\nPaste one or more Pokémon Showdown export sets below. Recognized species will be added to your team; item, ability, EVs, nature, and moves are shown for reference.\n\nPikachu\n\nLight Ball · Static · Timid Nature\n\nThunderbolt / Volt Switch\n\nBack\nAdd to Team\nFermer"
+  },
+  {
+    "step": "add-isolated-no-neon",
+    "text": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe",
+    "toast": [
+      "Added 1 Pokémon to your team.",
+      "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+    ]
+  },
+  {
+    "step": "reload",
+    "text": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe"
+  },
+  {
+    "step": "compare-shared",
+    "url": "http://localhost:3101/fr/compare?ids=25,6",
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOMBAT\nPLANTE\nSévérité 1\nGLACE\nPOISON\nINSECTE\nGLACE\nSévérité 1\nCOMBAT\nROCHE\nACIER\nPARTENAIRES RECOMMANDÉS\n\nTypes qui couvrent les faiblesses ou comblent les lacunes\n\nCOMBAT\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nSOL\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nACIER\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nNORMAL\nComplète la couverture de types\nAJOUTER À LA COMPARAISON\nEAU\nComplète la couverture de types\nAJOUTER À LA COMPARAISON\nPLANTE\nComplète la couverture de types\nAJOUTER À LA COMPARAISON\nFAIBLESSES PARTAGÉES\n\nPlusieurs membres sont faibles face à ces types\n\nROCHE\nDÉFICIENCES DE STATS\n\nVotre équipe pourrait bénéficier de Pokémon avec des stats plus élevées :\n\nSTATS.DEFENSIVE\n#025\nPikachu\nÉLECTRIK\nTAILLE\n0.4 m\nPOIDS\n6 kg\nSTATS DE BASE\nTOTAL: 320\nPV\n35\nATK\n55\nDEF\n40\nASP\n50\nDSP\n50\nVIT\n90\nTALENTS\nStatic\nLightning RodCaché\n#006\nDracaufeu\nFEU\nVOL\nTAILLE\n1.7 m\nPOIDS\n90.5 kg\nSTATS DE BASE\nTOTAL: 534 (MEILLEUR)\nPV\n78 (MEILLEUR)\nATK\n84 (MEILLEUR)\nDEF\n78 (MEILLEUR)\nASP\n109 (MEILLEUR)\nDSP\n85 (MEILLEUR)\nVIT\n100 (MEILLEUR)\nTALENTS\nBlaze\nSolar PowerCaché"
+  }
+]

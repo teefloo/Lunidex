@@ -1,0 +1,870 @@
+[
+  {
+    "path": "/fr/guides/pokemon-card-collection-value",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/pokemon-card-collection-value",
+    "duration": 1315,
+    "title": "Guide de la valeur d’une collection Pokémon — Estimations, scellé et limites | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Comment estimer la valeur d’une collection de cartes Pokémon avec Lunidex"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nComment estimer la valeur d’une collection de cartes Pokémon avec Lunidex\n\nUn guide factuel sur les signaux de valeur disponibles dans Lunidex, avec une distinction claire entre estimations amont, portfolio scellé privé et expertise professionnelle.\n\nPUBLIÉ LE 21 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex peut afficher des champs de prix et des estimations conditionnelles lorsque les données TCGdex sont disponibles. Son portfolio scellé lié au compte peut enregistrer achats, ventes, valeur, profit ou perte, ROI et horodatages de source à partir du catalogue et du guide de prix Cardmarket configurés. Ces signaux servent à organiser une collection ; ils ne constituent ni une valorisation de marché garantie ni une expertise.\n\nCe que couvre ce guide\n\nCe guide couvre les estimations de cartes ordinaires dans /tcg/collection et le portfolio privé de produits scellés dans /tcg/sealed. Le guide public est lisible sans compte, tandis que les données personnelles du portfolio nécessitent le compte et le service de synchronisation configurés.\n\nCe que signifie chaque signal de valeur\n\nCes distinctions séparent une estimation utile de collection des affirmations que Lunidex ne peut pas vérifier.\n\nCe que signifie chaque signal de valeur\nCRITÈRE\tLUNIDEX\nEstimation d’une carte ordinaire\tEstimation visible fondée sur les champs de prix TCGdex lorsqu’une fiche de carte les fournit.\nPortfolio scellé\tEnregistrements privés liés au compte pour les produits scellés pris en charge, les achats, ventes, valeur, profits ou pertes et ROI.\nHistorique des prix\tSnapshots pour les cartes prises en charge ou données scellées synchronisées lorsque le chemin de source possède un historique ; pas une chronologie universelle du marché.\nSource et fraîcheur\tLes imports du catalogue et du guide de prix Cardmarket exposent le contexte et les horodatages de source ; les mises à jour amont peuvent modifier les chiffres et la couverture.\nLimites de marché\tLunidex ne fournit ni authentification, ni gradation d’état, ni garantie de liquidité, ni expertise, ni checkout de transaction.\nComment utiliser ces fonctions\n01\n\nOuvrez une carte ou un set dans le catalogue TCG public et vérifiez si la fiche amont contient les champs de prix nécessaires à une estimation.\n\n02\n\nUtilisez l’espace de collection pour consulter les cartes possédées ou manquantes, la progression par set et l’estimation conditionnelle visible lorsque les prix sont fournis.\n\n03\n\nConnectez-vous avant d’utiliser /tcg/sealed pour enregistrer dans votre portfolio privé les achats, ventes, coûts, valeur, profit ou perte et ROI.\n\n04\n\nLisez toujours la source et l’horodatage avec le nombre affiché, puis comparez les décisions importantes avec l’annonce et l’état actuels du produit au lieu de traiter l’estimation comme une expertise.\n\nLimites et périmètre pratique\n\nLa couverture, la fraîcheur, la devise, la correspondance produit, l’état, la langue, le contexte vendeur et la disponibilité amont peuvent évoluer. L’historique existe seulement lorsque le chemin de données pris en charge possède des snapshots. Lunidex n’authentifie pas une carte, ne garantit pas la liquidité et ne fournit pas de conseil financier ou d’expertise.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net/"
+      },
+      {
+        "text": "Cardmarket product catalogue",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json"
+      },
+      {
+        "text": "Cardmarket price guide",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json"
+      },
+      {
+        "text": "Ouvrir la fonction: TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir la fonction: Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Ouvrir la fonction: Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Ouvrir la fonction: Portefeuille scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Ouvrir la fonction: FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Lire le comparatif Lunidex et Cardmarket",
+        "href": "/fr/compare/lunidex-vs-cardmarket"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "duration": 1369,
+    "title": "Lunidex vs PokéCardex vs ZebraDex — Comparatif de collection Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Lunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?"
+    ],
+    "main": "GUIDE DU COLLECTIONNEUR\n\nLunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?\n\nCe guide compare trois produits Pokémon dont les périmètres sont différents. Il sépare les fonctionnalités vérifiées dans le code de Lunidex de celles décrites par chaque concurrent sur ses propres pages publiques.\n\nPUBLIÉ LE 12 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES PAGES PUBLIQUES DES CONCURRENTS LE 19 AOÛT 2026.\n\nRédaction Lunidex\n\nCe que montre le comparatif\n\nLunidex est un outil d’un autre type : il réunit un Pokédex, des références Pokémon et des outils d’équipe avec un catalogue TCG et un espace de collection. Il ne faut pas le choisir pour un scanner de cartes ou un portefeuille de marché dédié tant que ces fonctions ne sont pas explicitement ajoutées et documentées. PokéCardex ou ZebraDex sont plus adaptés lorsque le scan, les variantes de cartes, la valeur du portefeuille ou les échanges sont le besoin principal.\n\nComment lire ce comparatif\n\nLes informations sur Lunidex sont vérifiées dans le dépôt et les routes publiques actuels. Les informations sur PokéCardex et ZebraDex renvoient à leurs pages officielles. « Non établi » signifie que les sources Lunidex citées ne documentent pas la fonctionnalité ; cela ne prétend pas qu’une future version ne pourrait pas la proposer.\n\nDépôt source Lunidex\nPage officielle de l’application PokéCardex\nSite officiel et fiche d’application ZebraDex\n\nGUIDE DU COLLECTIONNEUR\n\nFonctionnalités documentées dans les sources citées\nFonctionnalités documentées dans les sources citées\nFonctionnalité\tLunidex\tPokéCardex\tZebraDex\nFormat du produit\tApplication web avec manifeste PWA installable. Aucune application iOS ou Android native ne fait partie du dépôt.\tSite web et application Android/iOS, selon la page officielle de l’application.\tPlateforme web avec disponibilité iOS et Android annoncée sur son site public et sa fiche d’application.\nSuivi de collection\tCatalogue TCG, état des cartes possédées et souhaitées, progression par set et vues de collection dans l’espace web associé à un compte.\tCollection par carte et par version, listes de souhaits, classeurs et produits scellés sont décrits sur sa page d’application.\tCollection, wishlist, liste d’échange, classeurs et produits scellés sont décrits sur son site public.\nScanner de cartes\tNon établi dans les sources Lunidex vérifiées pour cette page.\tUn scanner de cartes en temps réel est décrit sur la page officielle de l’application.\tLe scan et l’ajout rapide sont décrits sur le site officiel et la fiche d’application.\nPrix et valeur de collection\tLes champs de prix et estimations de collection peuvent être renvoyés lorsque TCGdex fournit ces données ; la couverture dépend de la source amont.\tLe suivi des prix, les références Cardmarket/TCGPlayer et les estimations sont décrits sur la page officielle de l’application.\tLes prix français quotidiens, la valeur de collection et les tendances du marché sont décrits sur le site officiel et la fiche d’application.\nRéférence Pokémon et outils d’équipe\tPokédex, fiches Pokémon, constructeur d’équipe, outil de comparaison et tableau des 18 types font partie de l’application web.\tUne fonction Pokédex est listée sur la page officielle ; l’analyse d’équipes des jeux vidéo n’est pas évaluée ici.\tLes sources citées portent sur la collection TCG, les prix et les échanges ; les fonctions de référence Pokémon et d’équipe ne sont pas établies ici.\nStockage et synchronisation\tLa navigation publique ne nécessite pas de compte. Dans le runtime web actuel, l’état personnel de collection est associé à un compte et synchronisé par le service configuré.\tLa sauvegarde et la synchronisation cloud avec un compte PokéCardex, ainsi que l’usage hors ligne, sont décrits sur la page officielle de l’application.\tLe parcours public des classeurs demande de créer un compte pour ajouter des cartes et retrouver sa collection ailleurs.\n\nLes descriptions des concurrents renvoient à des pages publiques et peuvent évoluer. Ce comparatif n’est ni un classement ni une recommandation commerciale.\n\nLes faits vérifiables sur Lunidex\n\nPour les questions génériques mises en évidence par le rapport GEO, voici les réponses Lunidex les plus défendables :\n\nRéférence Pokémon et outils d’équipe: Le Pokédex et les pages de référence couvrent les noms, types, statistiques, talents, capacités, évolutions, rencontres et autres données Pokémon fournies par PokéAPI.\nRéférence Pokémon et outils d’équipe: Le constructeur d’équipe accepte jusqu’à six Pokémon et calcule la couverture des types, les faiblesses partagées et la synergie de l’équipe.\nSuivi de collection: L’espace TCG expose les cartes et sets de TCGdex, les cartes possédées ou souhaitées, la progression par set et les champs de prix lorsqu’ils sont fournis par la source amont.\nComment lire ce comparatif: Les sources amont sont PokéAPI pour les données de référence Pokémon et TCGdex pour les cartes et sets Pokémon TCG.\nQuestions pour choisir un outil de collection\nLunidex possède-t-il un scanner de cartes ?\nLunidex suit-il les prix des cartes ?\nQuel outil choisir pour une collection de cartes Pokémon ?\nLunidex propose-t-il une application mobile ?\n\nEXPLORER LES PAGES SOURCES\n\nÀ propos de Lunidex\nFAQ Lunidex\nOuvrir le catalogue TCG\nOuvrir le constructeur d’équipe\nLire le guide de collection",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Page officielle de l’application PokéCardex",
+        "href": "https://www.pokecardex.com/app"
+      },
+      {
+        "text": "Site officiel et fiche d’application ZebraDex",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "FAQ Lunidex",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir le constructeur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le guide de collection",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-database",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-pokemon-database",
+    "duration": 2115,
+    "title": "Lunidex ou Pokémon Database — Comparatif des références Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Pokémon Database : quel outil de référence choisir ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Pokémon Database : quel outil de référence choisir ?\n\nUn comparatif sourcé entre Lunidex et Pokémon Database pour les personnes qui cherchent des données Pokémon fiables et des outils pratiques.\n\nPUBLIÉ LE 13 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokémon Database est un site de référence Pokémon concis, avec des pages de Pokédex et des outils de mécaniques de jeu. Lunidex est un espace web localisé qui réunit référence Pokémon, analyse d’équipe, quiz et collection de cartes Pokémon TCG.\n\nÀ quoi sert Pokémon Database\n\nPokémon Database propose un Pokédex avec statistiques, descriptions, sprites, évolutions et capacités. Son plan de site public liste aussi un tableau des types, des ressources sur la reproduction et les EV/IV, des outils de couverture et des sections par jeu.\n\nLes points communs\n\nLes deux produits permettent de rechercher des Pokémon, des types, des capacités et des informations de jeu sans passer par un fil social ou une marketplace.\n\nCe qui distingue Lunidex\n\nLunidex relie les pages de référence à une équipe de six Pokémon, à la comparaison et aux outils de combat, aux routes localisées, à la progression personnelle et à un catalogue TCG. Pokémon Database se concentre sur une référence concise et héberge aussi PokéBase : les parcours sont différents.\n\nQuel outil choisir ?\n\nChoisissez Pokémon Database pour une page de référence rapide ou un index étendu des mécaniques. Choisissez Lunidex si la recherche doit mener à l’analyse d’équipe, à la progression personnelle ou à la recherche de cartes Pokémon TCG.\n\nQuestions sur Lunidex et Pokémon Database\nLunidex est-il une alternative à Pokémon Database ?\nQuel site est le meilleur pour construire une équipe Pokémon ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des pages publiques concurrentes le 22 août 2026.\n\nLes descriptions des concurrents sont des instantanés des sources publiques liées et peuvent évoluer. Ce comparatif n’est ni un classement ni une recommandation commerciale.\n\nDépôt source Lunidex\nPokémon Database Pokédex\nOuvrir l’outil Lunidex concerné\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Pokémon Database Pokédex",
+        "href": "https://pokemondb.net/pokedex"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-bulbapedia",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-bulbapedia",
+    "duration": 1478,
+    "title": "Lunidex ou Bulbapedia — Alternative à l’encyclopédie Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Bulbapedia : outils structurés ou encyclopédie Pokémon ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Bulbapedia : outils structurés ou encyclopédie Pokémon ?\n\nUn comparatif équitable pour choisir entre un espace Pokémon structuré et une encyclopédie maintenue par sa communauté.\n\nPUBLIÉ LE 14 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nBulbapedia est une encyclopédie Pokémon communautaire qui vise une couverture large de la franchise. Lunidex est un espace de référence et de collection centré sur la recherche, l’analyse, la progression personnelle et les outils TCG.\n\nÀ quoi sert Bulbapedia\n\nBulbapedia est conçu pour la lecture encyclopédique : mécaniques de jeu, personnages, lieux, médias, histoire et sujets Pokémon variés. Sa page À propos explique que les contributeurs peuvent créer et améliorer les articles selon le modèle wiki.\n\nLes points communs\n\nLes deux projets peuvent répondre à une question de référence et relier une espèce ou un concept à des informations associées. Ce sont deux projets indépendants et non officiels, sans affiliation avec Nintendo ou The Pokémon Company.\n\nCe qui distingue Lunidex\n\nLunidex utilise des routes interactives structurées pour le Pokédex, les types, les équipes, les quiz, le suivi Nuzlocke et les collections TCG. Bulbapedia convient mieux au contexte narratif et aux renvois dans la franchise ; Lunidex convient mieux à un parcours orienté action.\n\nQuel outil choisir ?\n\nChoisissez Bulbapedia quand la question est « qu’est-ce que ce sujet Pokémon et comment s’inscrit-il dans la franchise ? ». Choisissez Lunidex quand l’étape suivante consiste à filtrer, comparer des statistiques, construire une équipe ou suivre une collection.\n\nQuestions sur Lunidex et Bulbapedia\nLunidex peut-il remplacer Bulbapedia ?\nLunidex propose-t-il des outils TCG que Bulbapedia n’a pas ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des pages publiques concurrentes le 22 août 2026.\n\nLes descriptions des concurrents sont des instantanés des sources publiques liées et peuvent évoluer. Ce comparatif n’est ni un classement ni une recommandation commerciale.\n\nDépôt source Lunidex\nBulbapedia About page\nOuvrir l’outil Lunidex concerné\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Bulbapedia About page",
+        "href": "https://bulbapedia.bulbagarden.net/wiki/Bulbapedia:About"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokemon-showdown",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-pokemon-showdown",
+    "duration": 1302,
+    "title": "Lunidex ou Pokémon Showdown — Comparatif des team builders",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Pokémon Showdown : préparer une équipe ou combattre en ligne ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Pokémon Showdown : préparer une équipe ou combattre en ligne ?\n\nUn comparatif pratique pour décider si vous avez besoin d’un espace de préparation, d’un simulateur de combat ou des deux.\n\nPUBLIÉ LE 15 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokémon Showdown est un simulateur de combats compétitifs dans le navigateur, avec Teambuilder, import/export, ladders, tournois et plusieurs formats. Lunidex est un espace Pokémon plus large dont le Team Builder met l’accent sur la couverture de types, la synergie, la référence et la préparation personnelle.\n\nÀ quoi sert Pokémon Showdown\n\nLa présentation officielle de Smogon décrit le jeu dans le navigateur, les ladders, les tournois, un Pokédex à jour et l’import/export du Teambuilder. Pokémon Showdown est donc centré sur la préparation et le combat compétitif.\n\nLes points communs\n\nLes deux outils permettent d’assembler jusqu’à six Pokémon. Pokémon Showdown prend en charge l’import/export de texte d’équipe, tandis que Lunidex prend en charge l’import Showdown et les liens de partage.\n\nCe qui distingue Lunidex\n\nLunidex ajoute des routes Pokédex localisées, des références de types et de capacités, une collection TCG, des quiz, un suivi Nuzlocke et une analyse d’équipe avec couverture et synergie. Pokémon Showdown reste spécialisé dans les combats en ligne, les formats, les ladders et la communauté compétitive.\n\nQuel outil choisir ?\n\nChoisissez Pokémon Showdown pour affronter d’autres joueurs, tester un format ou utiliser son écosystème compétitif. Choisissez Lunidex pour étudier les Pokémon, diagnostiquer une équipe, gérer votre progression ou relier les jeux à une collection TCG.\n\nQuestions sur Lunidex et Pokémon Showdown\nPuis-je envoyer une équipe Lunidex vers Pokémon Showdown ?\nLunidex remplace-t-il les combats de Pokémon Showdown ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des pages publiques concurrentes le 22 août 2026.\n\nLes descriptions des concurrents sont des instantanés des sources publiques liées et peuvent évoluer. Ce comparatif n’est ni un classement ni une recommandation commerciale.\n\nDépôt source Lunidex\nPokémon Showdown simulator overview\nOuvrir l’outil Lunidex concerné\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Pokémon Showdown simulator overview",
+        "href": "https://www.smogon.com/sim/"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokecardex",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-pokecardex",
+    "duration": 1271,
+    "title": "Lunidex ou PokéCardex — Comparatif de collection Pokémon TCG",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou PokéCardex : quel parcours de collection TCG choisir ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou PokéCardex : quel parcours de collection TCG choisir ?\n\nUn comparatif sourcé entre un espace Pokémon généraliste et un produit dédié à la collection TCG.\n\nPUBLIÉ LE 16 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokéCardex est un site et une application mobile centrés sur le TCG ; sa page produit décrit la gestion de collection, le scan, les prix, les classeurs, les statistiques, le hors-ligne et la sauvegarde. Lunidex associe catalogue et collection TCG à un Pokédex et à des outils d’équipe Pokémon.\n\nÀ quoi sert PokéCardex\n\nPokéCardex présente un parcours spécialisé avec versions, états, quantités, langues, prix issus de marketplaces, scanner, classeurs personnalisés, statistiques et sauvegarde de compte selon ses informations publiques.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tPOKÉCARDEX\nPlateforme\tApplication web avec une expérience PWA installable.\tSite web et application Android, selon la fiche officielle.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tGestion de collection Pokémon TCG avec versions, classeurs, quantités et statistiques.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tLe scan de cartes est décrit dans les supports officiels.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; pas d’expertise.\tLes références Cardmarket, TCGPlayer et les estimations de prix sont décrites dans les supports officiels.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tLe fonctionnement hors ligne est décrit dans les supports officiels.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tLa sauvegarde et la synchronisation avec un compte sont décrites dans les supports officiels.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLa fiche officielle décrit une application gratuite avec une offre Plus.\nWishlist\tLa wishlist est disponible dans l’espace TCG associé au compte.\tUne wishlist dédiée n’est pas établie dans la source officielle vérifiée.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tLa source officielle vérifiée est centrée sur la collection TCG plutôt que sur un Pokédex général.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans la source officielle vérifiée.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source open source n’est pas établi dans la source officielle vérifiée.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher.\tLe comparatif reflète la source publique liée et peut évoluer avec le produit.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéCardex official application page",
+        "href": "https://www.pokecardex.com/app"
+      },
+      {
+        "text": "PokéCardex Google Play listing",
+        "href": "https://play.google.com/store/apps/details?id=com.application.pokecardex"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-zebradex",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-zebradex",
+    "duration": 1281,
+    "title": "Lunidex ou ZebraDex — Comparatif de collection Pokémon TCG",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?\n\nUn comparatif clair pour les collectionneurs qui regardent une application TCG française à côté d’un espace web Pokémon plus large.\n\nPUBLIÉ LE 17 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nZebraDex se concentre sur la collection Pokémon TCG et décrit publiquement le scan, les prix français, la valeur de collection, les classeurs, les wishlists, les échanges et les produits scellés. Lunidex associe catalogue et collection TCG à un Pokédex localisé, des outils d’équipe et la progression Pokémon.\n\nÀ quoi sert ZebraDex\n\nLe site public de ZebraDex présente une expérience centrée sur la collection avec prix français, scan, valeur de portefeuille, progression master set, classeurs, wishlist, échanges et outil de centrage. Ces éléments viennent de la page produit officielle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tZEBRADEX\nPlateforme\tApplication web avec une expérience PWA installable.\tService de collection web/mobile orienté France, selon le site officiel.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tCollection Pokémon TCG, classeurs, wishlists, échanges et produits scellés.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tLe scan et l’ajout rapide sont décrits dans les sources officielles.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; la couverture peut changer.\tLes prix français, la valeur de collection et les tendances sont décrits dans les sources liées.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tLe fonctionnement hors ligne n’est pas établi dans la source publique vérifiée.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tLe classeur public demande un compte pour ajouter des cartes et retrouver la collection ; les détails de synchronisation ne sont pas complets.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLa source publique propose un démarrage gratuit ; les conditions payantes ne sont pas établies ici.\nWishlist\tLa wishlist est disponible dans l’espace TCG associé au compte.\tUne wishlist dédiée n’est pas établie dans la source publique vérifiée.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tLa source vérifiée est centrée sur le contenu encyclopédique plutôt que sur un espace Pokédex structuré comparable à Lunidex.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans la source publique vérifiée.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source open source n’est pas établi dans la source publique vérifiée.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher.\tLe comparatif reflète la source publique liée et peut évoluer avec le produit.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "ZebraDex official site",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-collectr",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-collectr",
+    "duration": 1345,
+    "title": "Lunidex ou Collectr — Comparatif de collection de cartes Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace centré sur Pokémon et un portfolio multi-TCG.\n\nPUBLIÉ LE 18 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCollectr se présente comme un tracker de portfolios pour jeux de cartes à collectionner, avec valeurs de marché, scan, historique de prix, analyse d’échanges et fonctions communautaires. Lunidex est un espace centré sur Pokémon qui réunit catalogue TCG, Pokédex, analyse d’équipe, quiz et progression.\n\nÀ quoi sert Collectr\n\nLe site public de Collectr décrit des portfolios groupés par TCG, une valeur de collection actualisée, le scan, un guide de prix, l’analyse d’échanges et la découverte sociale. Il s’adresse aux collectionneurs qui veulent du contexte de marché sur plusieurs jeux.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCOLLECTR\nPlateforme\tApplication web avec une expérience PWA installable.\tProduit de portfolio de cartes avec présence web et liens vers les applications mobiles.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tPortfolios multi-TCG, valeur de collection, scan, analyse d’échanges et découverte sociale.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tLe scan et l’ajout de cartes sont décrits sur le site officiel.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; pas de valorisation de marché.\tLes valeurs de marché, l’historique et le guide de prix sont décrits sur le site officiel.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tLe fonctionnement hors ligne n’est pas indiqué dans la source publique vérifiée.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tLes portfolios et fonctions communautaires sont associés à un compte ; la politique exacte de synchronisation n’est pas indiquée ici.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLe site officiel propose un accès gratuit et une option de tarification PRO.\nWishlist\tLa wishlist est disponible dans l’espace TCG associé au compte.\tLa gestion d’une wishlist ou de cartes recherchées n’est pas établie dans la source officielle vérifiée.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tLa source officielle vérifiée est centrée sur la collection Pokémon TCG plutôt que sur un Pokédex général.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans la source officielle vérifiée.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source open source n’est pas établi dans la source officielle vérifiée.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher.\tLe comparatif reflète la source publique liée et peut évoluer avec le produit.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Collectr official site",
+        "href": "https://www.getcollectr.com/"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-pokellector",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-pokellector",
+    "duration": 1292,
+    "title": "Lunidex ou Pokéllector — Comparatif d’index de cartes Pokémon TCG",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace Pokémon plus large et un index web de cartes Pokémon TCG.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokéllector est un index web de cartes Pokémon TCG dont la page d’accueil indique vouloir indexer les cartes Pokémon et aider les collectionneurs à suivre leur collection ou à retrouver une carte pour un deck. Lunidex associe la recherche publique dans un catalogue TCG à un état de collection lié au compte, à la progression par set, au Pokédex et aux outils d’équipe.\n\nÀ quoi sert Pokéllector\n\nLa source Pokéllector vérifiée présente Browse Sets, des pages de cartes et de sets, une recherche, une navigation anglaise et japonaise ainsi que des liens de connexion et d’inscription. La source consultée n’établit ni scanner, ni historique de prix, ni parcours hors ligne, ni détails de synchronisation personnelle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tPOKÉLLECTOR\nPlateforme\tApplication web avec une expérience PWA installable.\tIndex de cartes web ; le site mentionne des applications mobiles, mais leurs détails actuels ne sont pas établis dans la source vérifiée.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tIndex de cartes et de sets Pokémon TCG avec navigation et contexte de suivi de collection.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tNon indiqué dans la source Pokéllector vérifiée.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; pas de valorisation de marché.\tNon indiqué dans la source Pokéllector vérifiée.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tNon indiqué dans la source Pokéllector vérifiée.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tLes liens de connexion et d’inscription sont visibles, mais les détails de synchronisation personnelle ne sont pas établis dans la source vérifiée.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLe coût et les formules ne sont pas indiqués dans la source vérifiée.\nWishlist\tLa wishlist est disponible dans l’espace TCG associé au compte.\tUne wishlist dédiée n’est pas établie dans la source vérifiée.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tLa source vérifiée est un index Pokémon TCG ciblé plutôt qu’un Pokédex général.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans la source vérifiée.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source open source n’est pas établi dans la source vérifiée.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher.\tLe comparatif reflète la source publique liée et peut évoluer avec le produit.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Pokéllector official site",
+        "href": "https://www.pokellector.com/"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardzia",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-cardzia",
+    "duration": 1307,
+    "title": "Lunidex ou Cardzia — Comparatif d’application de collection Pokémon TCG",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?\n\nUn comparatif sourcé entre un espace web centré sur Pokémon et l’application française multi-TCG Cardzia.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardzia se présente comme une application française multi-TCG pour scanner des cartes, estimer leur valeur à partir de données du marché français, suivre une collection et sa complétion, gérer des produits scellés et configurer des alertes de prix. Lunidex est un espace web centré sur Pokémon pour la recherche TCG publique, l’état personnel lié au compte, la référence Pokédex et les outils d’équipe.\n\nÀ quoi sert Cardzia\n\nLe site Cardzia et sa fiche Google Play vérifiés décrivent le scan, les estimations du marché français, les états possédé et manquant, la progression par série, la valeur de collection, les produits scellés, les alertes de prix et plusieurs TCG. Les sources vérifiées n’établissent pas le comportement de synchronisation hors ligne de Cardzia.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDZIA\nPlateforme\tApplication web avec une expérience PWA installable.\tSite web et fiche Android sur Google Play ; le site officiel présente aussi un accès iOS et Android.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tCollection multi-TCG française, suivi de valeur et gestion de produits scellés.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tLe scan et la détection automatique de cartes ou de séries sont décrits dans les sources vérifiées.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; pas de valorisation de marché.\tLes estimations sont décrites comme fondées sur les ventes du marché français, avec historique et alertes de prix.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tLa synchronisation hors ligne n’est pas établie dans les sources vérifiées.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tLes fonctions de collection sont documentées, mais les détails de synchronisation du compte ne sont pas établis dans les sources vérifiées.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLe scan gratuit et illimité est décrit avec une offre Cardzia Pro et des achats intégrés.\nWishlist\tLa wishlist est disponible dans l’espace TCG associé au compte.\tLa gestion des cartes recherchées ou d’une wishlist n’est pas établie dans la source vérifiée.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tLa source vérifiée est une application française de collection multi-TCG plutôt qu’un Pokédex général.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans la source vérifiée.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source open source n’est pas établi dans la source vérifiée.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher.\tLe comparatif reflète la source publique liée et peut évoluer avec le produit.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Cardzia official site",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Cardzia Google Play listing",
+        "href": "https://play.google.com/store/apps/details?id=fr.cardzia.app"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/compare/lunidex-vs-cardmarket",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/compare/lunidex-vs-cardmarket",
+    "duration": 1369,
+    "title": "Lunidex ou Cardmarket — Comparatif de collection de cartes Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Lunidex ou Cardmarket : espace Pokémon ou marketplace ?"
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardmarket : espace Pokémon ou marketplace ?\n\nUn comparatif sourcé entre un espace de travail Pokémon et la marketplace et les sources de produits de Cardmarket.\n\nPUBLIÉ LE 21 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardmarket est une marketplace où l’on peut rechercher des produits, acheter ou vendre des cartes et des produits scellés selon ses règles actuelles. Lunidex est un espace web gratuit à utiliser pour rechercher des cartes Pokémon TCG, suivre un état de collection personnel, consulter un Pokédex et préparer des équipes. Lunidex ne remplace pas un parcours de transaction marketplace.\n\nÀ quoi sert Cardmarket\n\nLes pages Cardmarket et les fichiers publics de produits vérifiés établissent des informations de marketplace, de catalogue et de prix. Ils n’établissent ni Pokédex, ni constructeur d’équipe Pokémon, ni code open source, ni espace personnel tout-en-un comparable à Lunidex.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDMARKET\nPlateforme\tApplication web avec une expérience PWA installable.\tSite marketplace et pages publiques de produits et de données de prix.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tAnnonces marketplace Pokémon TCG, catalogue de produits et données liées au marché.\nScanner de cartes\tUn scanner de cartes n’est pas établi dans les sources Lunidex vérifiées.\tUn workflow de scan n’est pas établi dans les sources Cardmarket vérifiées.\nPrix\tChamps et estimations TCGdex lorsqu’ils sont fournis ; pas une expertise.\tLes pages et fichiers publics Cardmarket fournissent des données de produits et de prix marketplace ; les prix et disponibilités peuvent évoluer.\nHors ligne\tLe shell et les pages en cache peuvent rester accessibles ; les nouvelles données demandent une connexion.\tUn usage hors ligne de la collection ou de la marketplace n’est pas établi dans les sources officielles vérifiées.\nCompte et synchronisation\tL’état de collection personnel utilise le parcours de synchronisation associé au compte configuré.\tUn compte Cardmarket permet les activités marketplace, mais un workflow de synchronisation de collection privée comparable à Lunidex n’est pas établi dans les sources vérifiées.\nCoût\tAucun achat, abonnement ou paiement n’apparaît dans le code actuel.\tLes frais de marketplace, l’expédition et les conditions dépendent des règles Cardmarket et de la transaction concernée.\nWishlist\tL’espace TCG lié au compte permet de gérer une wishlist.\tUn workflow de wishlist personnelle comparable à Lunidex n’est pas établi dans les sources officielles vérifiées.\nPokédex\tDes routes de référence Pokédex localisées font partie de la même application web.\tCardmarket n’est pas présenté comme un Pokédex général des jeux Pokémon.\nConstructeur d’équipe\tLe produit comprend un constructeur d’équipe Pokémon et des outils d’analyse associés.\tUn workflow de construction d’équipe Pokémon n’est pas établi dans les sources officielles vérifiées.\nOpen source\tLe dépôt source Lunidex est public sous la licence du projet.\tUn code source Cardmarket open source n’est pas établi par les sources marketplace vérifiées.\nLimites\tLa couverture, la fraîcheur, les champs amont et la disponibilité du compte limitent ce que Lunidex peut afficher ; les valeurs ne sont pas des expertises.\tLes annonces, l’état des vendeurs, les frais, la disponibilité et les prix nécessitent une vérification actuelle sur Cardmarket et ne constituent pas une valorisation garantie.\n\nLes fonctionnalités sont vérifiées sur les sources publiques liées à la date indiquée ci-dessus. « Non indiqué » signifie que la source consultée n’établit pas la fonctionnalité, pas qu’elle est impossible.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Cardmarket Pokémon marketplace",
+        "href": "https://www.cardmarket.com/en/Pokemon"
+      },
+      {
+        "text": "Cardmarket product catalogue",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json"
+      },
+      {
+        "text": "Cardmarket price guide",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json"
+      },
+      {
+        "text": "Ouvrir l’outil Lunidex concerné",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de la valeur de collection",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "Lire le guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

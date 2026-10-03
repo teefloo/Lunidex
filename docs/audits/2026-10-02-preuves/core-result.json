@@ -1,0 +1,1 @@
+{"command": ["npx", "--no-install", "tsc", "--project", "packages/core/tsconfig.json", "--noEmit"], "exit": 0, "seconds": 1.53}

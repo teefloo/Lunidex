@@ -1,0 +1,34 @@
+[
+  {
+    "requested": "https://lunidex-14vz9bgha-teeflo.vercel.app/fr",
+    "final": "https://vercel.com/login",
+    "status": 200,
+    "title": "Login – Vercel",
+    "text": "Skip to content\n\nSign Up\n\nLog in to Vercel\nContinue with Email\nContinue with Google\nContinue with GitHub\nContinue with ChatGPT\nContinue with SAML SSO\nContinue with Passkey\nShow other options\n\nDon't have an account? Sign Up\n\nTerms\nPrivacy Policy",
+    "redaction": "Paramètres SSO et nonce supprimés."
+  },
+  {
+    "requested": "https://lunidex-mjfgeu7s8-teeflo.vercel.app/fr",
+    "final": "https://vercel.com/login",
+    "status": 200,
+    "title": "Login – Vercel",
+    "text": "Skip to content\n\nSign Up\n\nLog in to Vercel\nContinue with Email\nContinue with Google\nContinue with GitHub\nContinue with ChatGPT\nContinue with SAML SSO\nContinue with Passkey\nShow other options\n\nDon't have an account? Sign Up\n\nTerms\nPrivacy Policy",
+    "redaction": "Paramètres SSO et nonce supprimés."
+  },
+  {
+    "requested": "https://lunidex-c43j3vy62-teeflo.vercel.app/fr",
+    "final": "https://vercel.com/login",
+    "status": 200,
+    "title": "Login – Vercel",
+    "text": "Skip to content\n\nSign Up\n\nLog in to Vercel\nContinue with Email\nContinue with Google\nContinue with GitHub\nContinue with ChatGPT\nContinue with SAML SSO\nContinue with Passkey\nShow other options\n\nDon't have an account? Sign Up\n\nTerms\nPrivacy Policy",
+    "redaction": "Paramètres SSO et nonce supprimés."
+  },
+  {
+    "requested": "https://lunidex-rgrqysk0l-teeflo.vercel.app/fr",
+    "final": "https://vercel.com/login",
+    "status": 200,
+    "title": "Login – Vercel",
+    "text": "Skip to content\n\nSign Up\n\nLog in to Vercel\nContinue with Email\nContinue with Google\nContinue with GitHub\nContinue with ChatGPT\nContinue with SAML SSO\nContinue with Passkey\nShow other options\n\nDon't have an account? Sign Up\n\nTerms\nPrivacy Policy",
+    "redaction": "Paramètres SSO et nonce supprimés."
+  }
+]

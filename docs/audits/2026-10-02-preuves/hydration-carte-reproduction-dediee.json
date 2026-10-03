@@ -1,0 +1,24 @@
+[
+  {
+    "locale": "fr",
+    "url": "https://lunidex.app/fr/tcg/cards/sv03.5-199",
+    "errors": [
+      {
+        "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "stack": "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at r1 (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:37413)\n    at r2 (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:38446)\n    at https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:133319\n    at sk (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:138481)\n    at sy (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:129731)\n    at https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:124549\n    at so (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:124650)\n    at sG (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:151237)\n    at MessagePort.A (https://lunidex.app/_next/static/chunks/8928-e8943e5e8a7c4848.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:63416)"
+      }
+    ],
+    "text": "RETOUR\n\n151\n\nCharizard ex\n\nAucune description complémentaire disponible.\n\nPV\n330\nRareté\nSpecial illustration rare\nN° collector\n#199\nCatégorie\nPokémon\nIllustrateur\nmiki kudo\nTypes de Pokémon\nFire\n\nPRIX MARCHÉ\n\n488,30 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 00:54\n\nMéthode et limites du prix\nVOIR LES DÉTAILS DE CHARIZARD EX\nCAPACITÉS\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon."
+  },
+  {
+    "locale": "en",
+    "url": "https://lunidex.app/en/tcg/cards/sv03.5-199",
+    "errors": [
+      {
+        "message": "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "stack": "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at r1 (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:37413)\n    at r2 (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:38446)\n    at https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:133319\n    at sk (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:138481)\n    at sy (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:129731)\n    at https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:124549\n    at so (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:124650)\n    at sG (https://lunidex.app/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:151237)\n    at MessagePort.A (https://lunidex.app/_next/static/chunks/8928-e8943e5e8a7c4848.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon:1:63416)"
+      }
+    ],
+    "text": "BACK\n\n151\n\nCharizard ex\n\nNo additional description is available.\n\nHP\n330\nRarity\nSpecial illustration rare\nCollector No.\n#199\nCategory\nPokémon\nIllustrator\nmiki kudo\nPokémon types\nFire\n\nMARKET PRICE\n\n€488.30\nCardmarket\n\nSource timestamp: Oct 1, 2026, 12:54 AM\n\nPricing method & limits\nOPEN CHARIZARD EX CARD\nMOVES\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon."
+  }
+]

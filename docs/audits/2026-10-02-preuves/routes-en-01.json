@@ -1,0 +1,3048 @@
+[
+  {
+    "path": "/en",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en",
+    "duration": 1434,
+    "title": "Lunidex — Pokémon TCG Card Catalog & Collection Tracker",
+    "lang": "en",
+    "h1": [
+      "Explore Pokémon cards."
+    ],
+    "main": "POKÉMON TCG CATALOG\n\nExplore Pokémon cards.\n\nBrowse cards and sets without signing in. Collection tracking needs an account and an available sync service.\n\nEXPLORE CARDS\n↗\nSTART MY COLLECTION\n\nACROSS THE TCG CATALOG\n\nRare cards to discover\nEXPLORE CARDS\n↗\nCharizard ex\n228\nHyper Rare\nObsidian Flames\nUmbreon VMAX\n215\nSecret Rare\nEvolving Skies\nGreninja ex\n214\nSpecial Illustration Rare\nTwilight Masquerade\nChoose a set. Mark what you own. See what is missing.\nChoose a set\n\nStart with any set in the catalog.\n\nMark your cards\n\nRecord the cards you own in that set.\n\nFollow your progress\n\nSee what you have and what is still missing.\n\nMORE POKÉMON TOOLS\n\nA Pokédex and team builder, too.\n\nExplore Pokémon reference pages and prepare a team alongside the card catalog.\n\nExplore the Pokédex\nEXPLORE THE POKÉDEX\nONLINE POKÉMON POKÉDEX\nPikachu\nELECTRIC\nSTATS\nHP\n35\nATTACK\n55\nDEFENSE\n40\nSP. ATTACK\n50\nSP. DEFENSE\n50\nSPEED\n90\nEVOLUTION\nPichu\n→\nPikachu\n→\nRaichu\nEXPLORE THE POKÉDEX\n↗\nBuild a team\nTEAM BUILDER\nBUILD YOUR TEAM.\nCharizard\nFIRE\nFLYING\nBlastoise\nWATER\nGengar\nGHOST\nPOISON\nLucario\nFIGHTING\nSTEEL\nSylveon\nFAIRY\nPikachu\nELECTRIC\n\nCreate a team and check its type coverage.\n\nBUILD YOUR TEAM.\n↗\n\nACCOUNTS AND SAVED DATA\n\nYour collection, with clear access conditions.\n\nPublic pages, including the card catalog, Pokédex, and Team tool, are available without an account. Managing a personal collection requires a signed-in account and an available sync service. Collection data is kept in this browser and synchronizes with your account when the service is available.\n\nLunidex is an independent, unofficial project.\n\nSTART MY COLLECTION\nABOUT LUNIDEX\n↗\nOpen source\n\nSource code, README, and changelog\n\nLunidex is licensed under the MIT License. The full source code is on GitHub. You can read it, audit it, fork it, or host it yourself. Code and translation contributions are welcome.\n\nGITHUB\n↗\nQuestions about Lunidex\n\nWhat you need to know about browsing cards and managing a collection.\n\nDo I need an account to explore cards?\n+\nWhere is my collection data saved?\n+\nHow do I track a set?\n+\nCan I prepare a Pokémon team without an account?\n+\n\nSTART EXPLORING\n\nFind your next card.\n\nBrowse the public catalog, then start a personal collection when account and sync access are available.\n\nEXPLORE CARDS\n↗\nSTART MY COLLECTION",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Explore cards↗",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Start my collection",
+        "href": "/en/tcg/start?source=home_cta"
+      },
+      {
+        "text": "Explore cards↗",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Charizard ex228Hyper RareObsidian Flames",
+        "href": "/en/tcg/cards/sv03-228"
+      },
+      {
+        "text": "Umbreon VMAX215Secret RareEvolving Skies",
+        "href": "/en/tcg/cards/swsh7-215"
+      },
+      {
+        "text": "Greninja ex214Special Illustration RareTwilight Masquerade",
+        "href": "/en/tcg/cards/sv06-214"
+      },
+      {
+        "text": "Explore the Pokédex↗",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Build your team.↗",
+        "href": "/en/team"
+      },
+      {
+        "text": "Start my collection",
+        "href": "/en/tcg/start?source=home_cta"
+      },
+      {
+        "text": "About Lunidex↗",
+        "href": "/en/about"
+      },
+      {
+        "text": "GitHub↗",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Explore cards↗",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Start my collection",
+        "href": "/en/tcg/start?source=home_cta"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/pokedex",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/pokedex",
+    "duration": 1784,
+    "title": "Online Pokémon Pokédex — Stats, Moves & Forms | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Online Pokémon Pokédex"
+    ],
+    "main": "Online Pokémon Pokédex\nFAVORITES (0)\nFILTERS\nALL\nCAUGHT\nMISSING\nSORT BY\nID (LOW TO HIGH)\n\nBrowse Pokémon stats, types, moves, abilities, evolutions, forms, generations, and locations in an online Pokédex powered by PokéAPI.\n\nPokémon List\nCAT. NO.\n#001\nBulbasaur\nGRASS\nPOISON\nCAT. NO.\n#002\nIvysaur\nGRASS\nPOISON\nCAT. NO.\n#003\nVenusaur\nGRASS\nPOISON\nCAT. NO.\n#004\nCharmander\nFIRE\nCAT. NO.\n#005\nCharmeleon\nFIRE\nCAT. NO.\n#006\nCharizard\nFIRE\nFLYING\nCAT. NO.\n#007\nSquirtle\nWATER\nCAT. NO.\n#008\nWartortle\nWATER\nCAT. NO.\n#009\nBlastoise\nWATER\nCAT. NO.\n#010\nCaterpie\nBUG\nCAT. NO.\n#011\nMetapod\nBUG\nCAT. NO.\n#012\nButterfree\nBUG\nFLYING\nCAT. NO.\n#013\nWeedle\nBUG\nPOISON\nCAT. NO.\n#014\nKakuna\nBUG\nPOISON\nCAT. NO.\n#015\nBeedrill\nBUG\nPOISON\nCAT. NO.\n#016\nPidgey\nNORMAL\nFLYING\nCAT. NO.\n#017\nPidgeotto\nNORMAL\nFLYING\nCAT. NO.\n#018\nPidgeot\nNORMAL\nFLYING\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRaticate\nNORMAL\nLOAD MORE\n\nPOKÉMON OF THE DAY\n\nSHIFTRY\nGRASS\nDARK\nPlay the daily quiz",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Search Pokémon (name or id)...",
+        "placeholder": "Search Pokémon (name or id)...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Favorites (0)",
+        "label": "Favorites (0)",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Filters",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "All",
+        "label": "All",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "PokeballCaught",
+        "label": "Caught",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Missing",
+        "label": "Missing",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ID (Low to High)▼",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to team",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to comparison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to favorites",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pokeball",
+        "label": "Mark as Caught",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Load More",
+        "label": "Load More",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "",
+        "href": "/en/pokemon/bulbasaur?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/ivysaur?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/venusaur?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/charmander?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/charmeleon?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/charizard?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/squirtle?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/wartortle?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/blastoise?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/caterpie?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/metapod?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/butterfree?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/weedle?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/kakuna?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/beedrill?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/pidgey?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/pidgeotto?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/pidgeot?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/rattata?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/raticate?from=%2Fen%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/en/pokemon/shiftry"
+      },
+      {
+        "text": "Shiftry",
+        "href": "/en/pokemon/shiftry"
+      },
+      {
+        "text": "Play the daily quiz",
+        "href": "/en/quiz"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/pokemon/pikachu",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/pokemon/pikachu",
+    "duration": 1643,
+    "title": "Pikachu — Stats, Evolutions, Moves & Suggested Sets | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Pikachu"
+    ],
+    "main": "#025\nPikachu\n\nExplore Pikachu: base stats, Electric type matchups, evolution, moves, abilities, locations, and suggested movesets on Lunidex.\n\nMOUSE POKÉMON\n\nFOREST\n\nYELLOW\nELECTRIC\nLatest Cry\nLegacy Cry\nABOUT\nSTATS\nEVOLUTION\nMOVES\nCARDS\nMore\nLunidex Entry\n\nWhen several of these POKéMON gather, their electricity could build and cause lightning storms.\n\nWEIGHT\n\n6 kg\n\nHEIGHT\n\n0.4 m\n\nPOKÉDEX DATA\n\nORDER\n\n#35\n\nDEFAULT FORM\n\nYes\n\nFORMS\n\n1\nPikachu\n\nGAME INDICES\n\n46 GAME APPEARANCES\nRed · #84\nBlue · #84\nYellow · #84\nGold · #25\nSilver · #25\nCrystal · #25\nRuby · #25\nSapphire · #25\nEmerald · #25\nFirered · #25\nLeafgreen · #25\nDiamond · #25\nPearl · #25\nPlatinum · #25\nHeartgold · #25\nSoulsilver · #25\nBlack · #25\nWhite · #25\nBlack 2 · #25\nWhite 2 · #25\nX · #25\nY · #25\nOmega Ruby · #25\nAlpha Sapphire · #25\nSun · #25\nMoon · #25\nUltra Sun · #25\nUltra Moon · #25\nLets Go Pikachu · #25\nLets Go Eevee · #25\nSword · #25\nShield · #25\nThe Isle Of Armor Sword · #25\nThe Crown Tundra Sword · #25\nBrilliant Diamond · #25\nShining Pearl · #25\nLegends Arceus · #25\nScarlet · #25\nViolet · #25\nThe Teal Mask Scarlet · #25\nThe Indigo Disk Scarlet · #25\nRed Japan · #84\nGreen Japan · #84\nBlue Japan · #84\nLegends Za · #25\nMega Dimension · #25\n\nHELD ITEMS\n\n2\nOran Berry\nRuby · 50%\nSapphire · 50%\nEmerald · 50%\nDiamond · 50%\nPearl · 50%\nPlatinum · 50%\nHeartgold · 50%\nSoulsilver · 50%\nBlack · 50%\nWhite · 50%\nLight Ball\nRuby · 5%\nSapphire · 5%\nEmerald · 5%\nDiamond · 5%\nPearl · 5%\nPlatinum · 5%\nHeartgold · 5%\nSoulsilver · 5%\nBlack · 1%\nWhite · 1%\nBlack 2 · 5%\nWhite 2 · 5%\nX · 5%\nY · 5%\nOmega Ruby · 5%\nAlpha Sapphire · 5%\nSun · 5%\nMoon · 5%\nUltra Sun · 5%\nUltra Moon · 5%\nRECOMMENDED HELD ITEMS\nSitrus Berry\nRestores 25% HP when health drops below 50%. Provides a reliable one-time burst of healing.\nBREEDING\n\nEGG GROUPS\n\nField\nFairy\n\nGENDER RATIO\n\n50%\n50%\nTRAINING\n\nCATCH RATE\n\n190\n\nBASE HAPPINESS\n\n70\n\nBASE EXP\n\n112\n\nGROWTH RATE\n\nMedium\n\nSIZE COMPARISON\n\nHUMAN\n\n1.7m\n\nPIKACHU\n\n0.4m\n\nPIKACHU IS SHORTER THAN AN AVERAGE HUMAN.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Back",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Share",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Shiny",
+        "label": "Show Shiny",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Mark as Caught",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to favorites",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to comparison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Add to team",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Latest Cry",
+        "label": "Play latest cry",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Legacy Cry",
+        "label": "Play legacy cry",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "About",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Stats",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Evolution",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Moves",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Cards",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Abilities",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Breeding",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Moveset suggestions",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Locations",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Sprites",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Competitive",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/team",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/team",
+    "duration": 1348,
+    "title": "Pokémon Team Builder — Coverage & Sharing | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Pokémon Team Builder"
+    ],
+    "main": "LUNIDEX\n\nPokémon Team Builder\n\nFree Pokémon Team Builder with type coverage, shared weakness analysis, synergy scoring, and a Gen 9 generation filter (0/6)\n\nMore\nADD POKÉMON\nADD POKÉMON\nADD POKÉMON\nADD POKÉMON\nADD POKÉMON\nADD POKÉMON\nTeam builder guide",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copy Team Code",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Import Showdown",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Add Pokémon",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Team builder guide ↗",
+        "href": "/en/guides/team-builder-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/types",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/types",
+    "duration": 1398,
+    "title": "Pokémon Type Chart — Strengths, Weaknesses & Matchups | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Type Master"
+    ],
+    "main": "Type Master\n\nMaster the elements and conquer every battle\n\nSELECT TYPE\nNORMAL\nFIRE\nWATER\nELECTRIC\nGRASS\nICE\nFIGHTING\nPOISON\nGROUND\nFLYING\nPSYCHIC\nBUG\nROCK\nGHOST\nDRAGON\nDARK\nSTEEL\nFAIRY\nType Effectiveness Chart\n\nSee how every type matches up against every other type\n\nHover or select a cell to see the multiplier\nSUPER EFFECTIVE (2×)\nNORMAL (1×)\nNOT VERY EFFECTIVE (½×)\nNO EFFECT (0×)\nATK\n╲\nDEF\n\t\nNORM\n\t\nFIRE\n\t\nWATE\n\t\nELEC\n\t\nGRAS\n\t\nICE\n\t\nFIGH\n\t\nPOIS\n\t\nGROU\n\t\nFLYI\n\t\nPSYC\n\t\nBUG\n\t\nROCK\n\t\nGHOS\n\t\nDRAG\n\t\nDARK\n\t\nSTEE\n\t\nFAIR\n\n\nNORMA\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n0\n\t\n\t\n\t\n½\n\t\n\n\nFIRE\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n2\n\t\n\n\nWATER\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n\n\nELECT\n\t\n\t\n\t\n2\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n0\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\n\nGRASS\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n½\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n\n\nICE\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\n\nFIGHT\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n2\n\t\n0\n\t\n\t\n2\n\t\n2\n\t\n½\n\n\nPOISO\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n0\n\t\n2\n\n\nGROUN\n\t\n\t\n2\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n0\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\n\nFLYIN\n\t\n\t\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n\n\nPSYCH\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n0\n\t\n½\n\t\n\n\nBUG\n\t\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n½\n\n\nROCK\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\n\nGHOST\n\t\n0\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\n\nDRAGO\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n0\n\n\nDARK\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n½\n\n\nSTEEL\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n½\n\t\n2\n\n\nFAIRY\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n½\n\t\nFire\n\nELEMENTAL MASTERY\n\nSTRONG AGAINST\nBUG\nSTEEL\nGRASS\nICE\nRESISTS\nBUG\nSTEEL\nFIRE\nGRASS\nICE\nFAIRY\nWEAK TO\nGROUND\nROCK\nWATER\nNOT EFFECTIVE AGAINST\nROCK\nFIRE\nWATER\nDRAGON\nEmblematic Pokémon\nGroudon-Primal\n770\nHo-Oh\n680\nReshiram\n680\nCharizard-Mega-X\n634\nCharizard-Mega-Y\n634\nBlaziken-Mega\n630\nStrategic Tips for Fire types\n\nWatch out for Ground, Rock, Water moves. These will deal double damage to your Fire Pokémon.\n\nYour Fire moves are not very effective against Rock, Fire, Water, Dragon. Try to switch or use coverage moves!",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Normal",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fire",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Water",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Electric",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Grass",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ice",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fighting",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Poison",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ground",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Flying",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Psychic",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bug",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rock",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ghost",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dragon",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dark",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Steel",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fairy",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Collapse",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Norm",
+        "label": "Normal",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fire",
+        "label": "Fire",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Wate",
+        "label": "Water",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Elec",
+        "label": "Electric",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gras",
+        "label": "Grass",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ice",
+        "label": "Ice",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Figh",
+        "label": "Fighting",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pois",
+        "label": "Poison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Grou",
+        "label": "Ground",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Flyi",
+        "label": "Flying",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Psyc",
+        "label": "Psychic",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bug",
+        "label": "Bug",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rock",
+        "label": "Rock",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ghos",
+        "label": "Ghost",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Drag",
+        "label": "Dragon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dark",
+        "label": "Dark",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Stee",
+        "label": "Steel",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fair",
+        "label": "Fairy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Norma",
+        "label": "Normal",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Water",
+        "label": "Water",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Elect",
+        "label": "Electric",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Grass",
+        "label": "Grass",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fight",
+        "label": "Fighting",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Poiso",
+        "label": "Poison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Groun",
+        "label": "Ground",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Flyin",
+        "label": "Flying",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Psych",
+        "label": "Psychic",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ghost",
+        "label": "Ghost",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Drago",
+        "label": "Dragon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Steel",
+        "label": "Steel",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fairy",
+        "label": "Fairy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "groudon-primal770",
+        "href": "/en/pokemon/groudon-primal"
+      },
+      {
+        "text": "ho-oh680",
+        "href": "/en/pokemon/ho-oh"
+      },
+      {
+        "text": "reshiram680",
+        "href": "/en/pokemon/reshiram"
+      },
+      {
+        "text": "charizard-mega-x634",
+        "href": "/en/pokemon/charizard-mega-x"
+      },
+      {
+        "text": "charizard-mega-y634",
+        "href": "/en/pokemon/charizard-mega-y"
+      },
+      {
+        "text": "blaziken-mega630",
+        "href": "/en/pokemon/blaziken-mega"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/quiz",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/quiz",
+    "duration": 1429,
+    "title": "Who's That Pokémon? — Pokémon Quiz & Trivia Game | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Who's That Pokémon?"
+    ],
+    "main": "LUNIDEX\n\nWho's That Pokémon?\n\nTest your knowledge and beat your highscore\n\nCLASSIC\nDAILY CHALLENGE\nCustomize your challenge\nRecords & achievements",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Classic",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Daily Challenge",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "All Generations▼",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "All Types▼",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ClassicShow image",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "SilhouetteWho's that?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "StatsBase stats",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marathon",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Survival(3 Lives)",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Time Attack(30s)",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Start Quiz",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Week",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "All-time",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/api/auth/token",
+        "status": 401
+      }
+    ]
+  },
+  {
+    "path": "/en/battle",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/battle",
+    "duration": 1280,
+    "title": "Battle Simulator | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Battle Simulator"
+    ],
+    "main": "LUNIDEX\n\nBattle Simulator\n\nSimulate Pokémon battles with the Gen 9 damage formula, calculate damage and KO chances, and run full AI duels.\n\nDAMAGE CALCULATOR\n\nATTACKER\n\nDEFENDER\n\nMOVE (FROM ATTACKER'S MOVESET)\n\nSelect an attacker first\n\nBATTLE CONDITIONS\n\nWEATHER\n\nNone\nSun\nRain\nSandstorm\nSnow\n\nTERRAIN\n\nNone\nElectric\nGrassy\nPsychic\nMisty\n\nMODIFIERS\n\nCritical\nAdaptability\nBurned\n\nAI DUEL MODE\n\nBoth Pokémon use their best moves each turn\n\nSIMULATE BATTLE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search Pokémon...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "none",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "sun",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "rain",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "sandstorm",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "snow",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "electric",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "grassy",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "psychic",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "misty",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Critical",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Adaptability",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Burned",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Simulate Battle",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/compare",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/compare",
+    "duration": 1497,
+    "title": "Compare Pokémon Side-by-Side — Stats, Types & Abilities | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Compare Pokémon"
+    ],
+    "main": "LUNIDEX\n\nCompare Pokémon\n\nComparing\n\nCLEAR ALL\nCOPY LINK\nCLEAR ALL\nNo Pokémon to compare\n\nAdd at least two Pokémon to compare them\n\nBROWSE LUNIDEX",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Back",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Clear All",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Search Pokémon (name or id)...",
+        "placeholder": "Search Pokémon (name or id)...",
+        "type": "search",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copy link",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Clear All",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Browse Lunidex",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/breeding",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/breeding",
+    "duration": 1437,
+    "title": "Breeding Calculator | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Breeding Calculator"
+    ],
+    "main": "Breeding Calculator\n\nGen 6+ rules — Destiny Knot, Everstone, Power Items. Compatible with Gen 9 Picnic Breeding.\n\nIV CALCULATOR\nEGG MOVE EXPLORER\n1\nPARENTS\n2\nCONFIGURATION\n3\nRESULTS\nSelect Parents\n\nChoose the two Pokémon you want to breed\n\nPARENT 1 (NURSERY)\n\nPARENT 2 (NURSERY)\n\nCONFIGURE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "IV Calculator",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Egg Move Explorer",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "1Parents",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2Configuration",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3Results",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search Pokémon…",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Configure",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/ev-iv",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/ev-iv",
+    "duration": 1320,
+    "title": "EV/IV Calculator — Competitive Stat Tool | Lunidex",
+    "lang": "en",
+    "h1": [
+      "EV/IV Calculator"
+    ],
+    "main": "EV/IV Calculator\n\nCalculate the exact IV range for any Pokémon from in-game stats, and plan the perfect EV spread at level 50 or 100.\n\nIV CALCULATOR\nEV PLANNER\nPOKÉMON\nLEVEL\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIN-GAME STATS\n\nHP\n0\nATTACK\n0\nDEFENSE\n0\nSP. ATK\n0\nSP. DEF\n0\nSPEED\n0\n\nEV DISTRIBUTION\n\nTotal EVs: 0/510\nHP\n0\nATTACK\n0\nDEFENSE\n0\nSP. ATK\n0\nSP. DEF\n0\nSPEED\n0\nCALCULATE IVS\nRESET",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "IV Calculator",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "EV Planner",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "pikachu",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Search",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "HardyLonelyBraveAdamantNaughtyBoldDocileRelaxedImpishLaxTimidHastySeriousJollyNaiveModestMildQuietBashfulRashCalmGentleS",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "HP",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attack",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Defense",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Sp. Atk",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Sp. Def",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Speed",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "HP",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attack",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Defense",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Sp. Atk",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Sp. Def",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Speed",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Calculate IVs",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Reset",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/nuzlocke",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/nuzlocke",
+    "duration": 1270,
+    "title": "Nuzlocke Tracker | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Nuzlocke Tracker"
+    ],
+    "main": "CHALLENGE MODE\n\nNuzlocke Tracker\n\nA practical guide to the Nuzlocke tracker: runs, encounters, one catch per route, and status tracking — based on the features that actually exist in Lunidex.\n\nShort answer\n\nThe Nuzlocke tracker records your challenge runs: create a run, add one encounter per route with the Pokémon you found, then follow each Pokémon status — alive, dead or boxed. A stats strip summarizes the run at a glance. In the current web runtime, run data uses the account-backed workspace; sign in to save and synchronize it.\n\nThe Nuzlocke page works in four steps: create a run, add encounters, update statuses, then review the statistics.\n\nNuzlocke tracker guide\n↗\n\nCONTINUE EXPLORING\n\nOnline Pokémon Pokédex\nPokémon Team Builder\nTCG Catalog\nMY RUNS\nCreate Run\n\nNo runs yet.\n\nCreate or select a run to start tracking encounters.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Run name...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Game (e.g. Emerald)...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Create Run",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Nuzlocke tracker guide↗",
+        "href": "/en/guides/nuzlocke-guide"
+      },
+      {
+        "text": "Online Pokémon Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Pokémon Team Builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "TCG Catalog",
+        "href": "/en/tcg"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/favorites",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/favorites",
+    "duration": 1495,
+    "title": "My Favorite Pokémon Collection | Lunidex",
+    "lang": "en",
+    "h1": [
+      "My Favorites"
+    ],
+    "main": "LUNIDEX\n\nMy Favorites\n\nYour personal collection (0)\n\nYour collection is empty\n\nStart adding your favorite Pokémon by clicking the heart icon on their cards!\n\nBACK TO LUNIDEX",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Back to Lunidex",
+        "href": "/en/pokedex"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/dashboard",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/dashboard",
+    "duration": 1302,
+    "title": "Dashboard | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Dashboard"
+    ],
+    "main": "Dashboard\n\nYour personal Pokémon journey at a glance\n\nFriends\nSettings\nAt a glance\nPokédex Progress\n0%\n\n0 / 1302 captured\n\nTCG Cards Owned\n0\nBadges\n0 / 15\nProgression\nQuiz\nActivity\nAccount and data",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Share",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Friends",
+        "href": "/en/friends"
+      },
+      {
+        "text": "bulbasaur",
+        "href": "/en/pokemon/bulbasaur"
+      },
+      {
+        "text": "ivysaur",
+        "href": "/en/pokemon/ivysaur"
+      },
+      {
+        "text": "venusaur",
+        "href": "/en/pokemon/venusaur"
+      },
+      {
+        "text": "charmander",
+        "href": "/en/pokemon/charmander"
+      },
+      {
+        "text": "charmeleon",
+        "href": "/en/pokemon/charmeleon"
+      },
+      {
+        "text": "Start Quiz",
+        "href": "/en/quiz"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/friends",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/friends",
+    "duration": 1591,
+    "title": "Friends | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Friends"
+    ],
+    "main": "COMMUNITY\n\nFriends\n\nManage friends and explore shared TCG collections.\n\nSign in to manage your friends and shared collections.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/friends/00000000-0000-0000-0000-000000000000",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/friends/00000000-0000-0000-0000-000000000000",
+    "duration": 1535,
+    "title": "Friend profile | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Friend profile"
+    ],
+    "main": "COMMUNITY\n\nFriend profile\n\nView shared Pokémon TCG data.\n\nSign in to use friends.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/u/audit-inexistant",
+    "status": 404,
+    "finalURL": "https://lunidex.app/en/u/audit-inexistant",
+    "duration": 1612,
+    "title": "Profile Not Found | Lunidex",
+    "lang": "en",
+    "h1": [],
+    "main": "LUNIDEX\n\nProfile Not Found\n\nThis profile does not exist or is not public.\n\nHOME",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Home",
+        "href": "/"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en/u/audit-inexistant",
+        "status": 404
+      },
+      {
+        "url": "https://lunidex.app/",
+        "status": 404
+      },
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/moves",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/moves",
+    "duration": 1645,
+    "title": "Moves | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Moves"
+    ],
+    "main": "MOVES\n\nMoves\n\nExplore every Pokémon move, with effects, types, power, accuracy, and the Pokémon that can learn it.\n\n48 MOVES\nCATALOG FILTERS\nRESET ALL FILTERS\nSORT BY\nNAME\nNAME\nID\nPOWER\nFILTER BY TYPE\nALL TYPES\nNORMAL\nFIRE\nWATER\nELECTRIC\nGRASS\nICE\nFIGHTING\nPOISON\nGROUND\nFLYING\nPSYCHIC\nBUG\nROCK\nGHOST\nDRAGON\nDARK\nSTEEL\nFAIRY\nCATEGORY\nALL CATEGORIES\nPHYSICAL\nSPECIAL\nSTATUS\n\nSEARCH UPDATES INSTANTLY. TYPE AND CATEGORY FILTERS CAN BE COMBINED SAFELY.\n\n48 moves\n\nPHYSICAL\n\n37\n\nSPECIAL\n\n2\n\nSTATUS\n\n9\n\n48 MOVES\n\n48\n\n48 MOVES\n\n48\n\nPHYSICAL\n\n37\n\nSPECIAL\n\n2\n\n48 MOVES\nALL TYPES\n\n#020\n\nBIND\nNORMAL\nPHYSICAL\nGENERATION 1\n\nBinds the target for 2-5 turns.\n\nPWR\n\n15\n\nACC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#044\n\nBITE\nDARK\nPHYSICAL\nGENERATION 1\n\nAn attack that may cause flinching.\n\nPWR\n\n60\n\nACC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nMOVE DETAILS\n\n#034\n\nBODY SLAM\nNORMAL\nPHYSICAL\nGENERATION 1\n\nAn attack that may cause paralysis.\n\nPWR\n\n85\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#004\n\nCOMET PUNCH\nNORMAL\nPHYSICAL\nGENERATION 1\n\nRepeatedly punches 2-5 times.\n\nPWR\n\n18\n\nACC\n\n85%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#015\n\nCUT\nNORMAL\nPHYSICAL\nGENERATION 1\n\nCuts using claws, scythes, etc.\n\nPWR\n\n50\n\nACC\n\n95%\n\nPP\n\n30\n\nPREVIEW\nMOVE DETAILS\n\n#024\n\nDOUBLE KICK\nFIGHTING\nPHYSICAL\nGENERATION 1\n\nA double kicking attack.\n\nPWR\n\n30\n\nACC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nMOVE DETAILS\n\n#003\n\nDOUBLE SLAP\nNORMAL\nPHYSICAL\nGENERATION 1\n\nRepeatedly slaps 2-5 times.\n\nPWR\n\n15\n\nACC\n\n85%\n\nPP\n\n10\n\nPREVIEW\nMOVE DETAILS\n\n#038\n\nDOUBLE-EDGE\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA tackle that also hurts the user.\n\nPWR\n\n120\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#007\n\nFIRE PUNCH\nFIRE\nPHYSICAL\nGENERATION 1\n\nA fiery punch. May cause a burn.\n\nPWR\n\n75\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#019\n\nFLY\nFLYING\nPHYSICAL\nGENERATION 1\n\n1st turn: Fly 2nd turn: Attack\n\nPWR\n\n90\n\nACC\n\n95%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#031\n\nFURY ATTACK\nNORMAL\nPHYSICAL\nGENERATION 1\n\nJabs the target 2-5 times.\n\nPWR\n\n15\n\nACC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#045\n\nGROWL\nNORMAL\nSTATUS\nGENERATION 1\n\nReduces the foe's ATTACK.\n\nPWR\n\n—\n\nACC\n\n100%\n\nPP\n\n40\n\nPREVIEW\nMOVE DETAILS\n\n#012\n\nGUILLOTINE\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA one-hit KO, pincer attack.\n\nPWR\n\n—\n\nACC\n\n30%\n\nPP\n\n5\n\nPREVIEW\nMOVE DETAILS\n\n#016\n\nGUST\nFLYING\nSPECIAL\nGENERATION 1\n\nWhips up a strong gust of wind.\n\nPWR\n\n40\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#029\n\nHEADBUTT\nNORMAL\nPHYSICAL\nGENERATION 1\n\nAn attack that may make foe flinch.\n\nPWR\n\n70\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#030\n\nHORN ATTACK\nNORMAL\nPHYSICAL\nGENERATION 1\n\nAn attack using a horn to jab.\n\nPWR\n\n65\n\nACC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nMOVE DETAILS\n\n#032\n\nHORN DRILL\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA one-hit KO, drill attack.\n\nPWR\n\n—\n\nACC\n\n30%\n\nPP\n\n5\n\nPREVIEW\nMOVE DETAILS\n\n#008\n\nICE PUNCH\nICE\nPHYSICAL\nGENERATION 1\n\nAn icy punch. May cause freezing.\n\nPWR\n\n75\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#026\n\nJUMP KICK\nFIGHTING\nPHYSICAL\nGENERATION 1\n\nMay miss, damaging the user.\n\nPWR\n\n100\n\nACC\n\n95%\n\nPP\n\n10\n\nPREVIEW\nMOVE DETAILS\n\n#002\n\nKARATE CHOP\nFIGHTING\nPHYSICAL\nGENERATION 1\n\nHas a high criti­ cal hit ratio.\n\nPWR\n\n50\n\nACC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nMOVE DETAILS\n\n#043\n\nLEER\nNORMAL\nSTATUS\nGENERATION 1\n\nReduces the foe's DEFENSE.\n\nPWR\n\n—\n\nACC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nMOVE DETAILS\n\n#025\n\nMEGA KICK\nNORMAL\nPHYSICAL\nGENERATION 1\n\nThe target is attacked by a kick launched with muscle-packed power.\n\nPWR\n\n120\n\nACC\n\n75%\n\nPP\n\n5\n\nPREVIEW\nMOVE DETAILS\n\n#005\n\nMEGA PUNCH\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA powerful punch thrown very hard.\n\nPWR\n\n80\n\nACC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#006\n\nPAY DAY\nNORMAL\nPHYSICAL\nGENERATION 1\n\nThrows coins. Gets them back later.\n\nPWR\n\n40\n\nACC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#042\n\nPIN MISSILE\nBUG\nPHYSICAL\nGENERATION 1\n\nFires pins that strike 2-5 times.\n\nPWR\n\n25\n\nACC\n\n95%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#040\n\nPOISON STING\nPOISON\nPHYSICAL\nGENERATION 1\n\nAn attack that may poison the target.\n\nPWR\n\n15\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#001\n\nPOUND\nNORMAL\nPHYSICAL\nGENERATION 1\n\nPounds with fore­ legs or tail.\n\nPWR\n\n40\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#013\n\nRAZOR WIND\nNORMAL\nSPECIAL\nGENERATION 1\n\n1st turn: Prepare 2nd turn: Attack\n\nPWR\n\n80\n\nACC\n\n100%\n\nPP\n\n10\n\nPREVIEW\nMOVE DETAILS\n\n#046\n\nROAR\nNORMAL\nSTATUS\nGENERATION 1\n\nScares wild foes to end battle.\n\nPWR\n\n—\n\nACC\n\n—\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#027\n\nROLLING KICK\nFIGHTING\nPHYSICAL\nGENERATION 1\n\nA fast, spinning kick.\n\nPWR\n\n60\n\nACC\n\n85%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#028\n\nSAND ATTACK\nGROUND\nSTATUS\nGENERATION 1\n\nReduces accuracy by throwing sand.\n\nPWR\n\n—\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#010\n\nSCRATCH\nNORMAL\nPHYSICAL\nGENERATION 1\n\nScratches with sharp claws.\n\nPWR\n\n40\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#047\n\nSING\nNORMAL\nSTATUS\nGENERATION 1\n\nMay cause the foe to fall asleep.\n\nPWR\n\n—\n\nACC\n\n55%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#021\n\nSLAM\nNORMAL\nPHYSICAL\nGENERATION 1\n\nSlams the foe with a tail, vine, etc.\n\nPWR\n\n80\n\nACC\n\n75%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#023\n\nSTOMP\nNORMAL\nPHYSICAL\nGENERATION 1\n\nAn attack that may cause flinching.\n\nPWR\n\n65\n\nACC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#048\n\nSUPERSONIC\nNORMAL\nSTATUS\nGENERATION 1\n\nSound waves that cause confusion.\n\nPWR\n\n—\n\nACC\n\n55%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#014\n\nSWORDS DANCE\nNORMAL\nSTATUS\nGENERATION 1\n\nA dance that in­ creases ATTACK.\n\nPWR\n\n—\n\nACC\n\n—\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#033\n\nTACKLE\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA full-body charge attack.\n\nPWR\n\n40\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#039\n\nTAIL WHIP\nNORMAL\nSTATUS\nGENERATION 1\n\nLowers the foe's DEFENSE.\n\nPWR\n\n—\n\nACC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nMOVE DETAILS\n\n#036\n\nTAKE DOWN\nNORMAL\nPHYSICAL\nGENERATION 1\n\nA tackle that also hurts the user.\n\nPWR\n\n90\n\nACC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#037\n\nTHRASH\nNORMAL\nPHYSICAL\nGENERATION 1\n\nWorks 2-3 turns and confuses user.\n\nPWR\n\n120\n\nACC\n\n100%\n\nPP\n\n10\n\nPREVIEW\nMOVE DETAILS\n\n#009\n\nTHUNDER PUNCH\nELECTRIC\nPHYSICAL\nGENERATION 1\n\nAn electric punch. It may paralyze.\n\nPWR\n\n75\n\nACC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nMOVE DETAILS\n\n#041\n\nTWINEEDLE\nBUG\nPHYSICAL\nGENERATION 1\n\nJabs the foe twice using stingers.\n\nPWR\n\n25\n\nACC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#022\n\nVINE WHIP\nGRASS\nPHYSICAL\nGENERATION 1\n\nWhips the foe with slender vines.\n\nPWR\n\n45\n\nACC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nMOVE DETAILS\n\n#011\n\nVISE GRIP\nNORMAL\nPHYSICAL\nGENERATION 1\n\nGrips with power­ ful pincers.\n\nPWR\n\n55\n\nACC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nMOVE DETAILS\n\n#018\n\nWHIRLWIND\nNORMAL\nSTATUS\nGENERATION 1\n\nBlows away the foe & ends battle.\n\nPWR\n\n—\n\nACC\n\n—\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS\n\n#017\n\nWING ATTACK\nFLYING\nPHYSICAL\nGENERATION 1\n\nStrikes the target with wings.\n\nPWR\n\n60\n\nACC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nMOVE DETAILS\n\n#035\n\nWRAP\nNORMAL\nPHYSICAL\nGENERATION 1\n\nSqueezes the foe for 2-5 turns.\n\nPWR\n\n15\n\nACC\n\n90%\n\nPP\n\n20\n\nPREVIEW\nMOVE DETAILS",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Reset all filters",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Search moves by name...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Name",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ID",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Power",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Normal",
+        "label": "Normal",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fire",
+        "label": "Fire",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Water",
+        "label": "Water",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Electric",
+        "label": "Electric",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Grass",
+        "label": "Grass",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ice",
+        "label": "Ice",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fighting",
+        "label": "Fighting",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Poison",
+        "label": "Poison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ground",
+        "label": "Ground",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Flying",
+        "label": "Flying",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Psychic",
+        "label": "Psychic",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bug",
+        "label": "Bug",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rock",
+        "label": "Rock",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ghost",
+        "label": "Ghost",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dragon",
+        "label": "Dragon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dark",
+        "label": "Dark",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Steel",
+        "label": "Steel",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fairy",
+        "label": "Fairy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Physical",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Special",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Status",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Move Details",
+        "href": "/en/moves/bind"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/bite"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/body-slam"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/comet-punch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/cut"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/double-kick"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/double-slap"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/double-edge"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/fire-punch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/fly"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/fury-attack"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/growl"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/guillotine"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/gust"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/headbutt"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/horn-attack"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/horn-drill"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/ice-punch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/jump-kick"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/karate-chop"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/leer"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/mega-kick"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/mega-punch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/pay-day"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/pin-missile"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/poison-sting"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/pound"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/razor-wind"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/roar"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/rolling-kick"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/sand-attack"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/scratch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/sing"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/slam"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/stomp"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/supersonic"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/swords-dance"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/tackle"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/tail-whip"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/take-down"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/thrash"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/thunder-punch"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/twineedle"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/vine-whip"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/vice-grip"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/whirlwind"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/wing-attack"
+      },
+      {
+        "text": "Move Details",
+        "href": "/en/moves/wrap"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/moves/thunderbolt",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/moves/thunderbolt",
+    "duration": 1985,
+    "title": "Thunderbolt — Move | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Thunderbolt"
+    ],
+    "main": "BACK TO MOVES\n\n#0085\n\nTHUNDERBOLT\nELECTRIC\nSPECIAL\nINTRODUCED IN GEN I\nPOWER\n90\nACCURACY\n100%\nPP\n15\nPRIORITY\n0\nEFFECT CHANCE\n10%\nFULL EFFECT\n\nInflicts regular damage. Has a chance to paralyze the target.\n\nPOKÉDEX ENTRY\n\n“The user attacks the target with a strong electric blast. This may also leave the target with paralysis.”\n\nPOKÉMON THAT LEARN THUNDERBOLT\n356\nRattata\nRaticate\nPikachu\nRaichu\nNidoran F\nNidorina\nNidoqueen\nNidoran M\nNidorino\nNidoking\nClefairy\nClefable\nJigglypuff\nWigglytuff\nMeowth\nPersian\nMankey\nPrimeape\nMagnemite\nMagneton\nGrimer\nMuk\nGastly\nHaunter\nGengar\nVoltorb\nElectrode\nLickitung\nKoffing\nWeezing\nRhyhorn\nRhydon\nChansey\nKangaskhan\nStaryu\nStarmie\nMr Mime\nElectabuzz\nTauros\nGyarados\nLapras\nJolteon\nPorygon\nSnorlax\nZapdos\nDratini\nDragonair\nDragonite\nMewtwo\nMew\nSHOW ALL 356 POKÉMON\nBEST USERS\n\nTop Pokémon by Sp. Attack\n\n1\nMagneton\n120\n2\nClefable\n95\n3\nMagnemite\n95\n4\nRaichu\n90\n5\nNidoking\n85\n6\nWigglytuff\n85\nMOVE DETAILS\nCATEGORY\nSpecial\nPOWER\n90\nACCURACY\n100%\nPP\n15\nPRIORITY\n0\nEFFECT CHANCE\n10%\nGENERATION\nGen I\nSELECT TYPE\nElectric\nTM/HM\nRED-BLUE\nYELLOW\nRUBY-SAPPHIRE\nEMERALD\nFIRERED-LEAFGREEN\nDIAMOND-PEARL",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show all 356 Pokémon",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Back to Moves",
+        "href": "/en/moves"
+      },
+      {
+        "text": "Rattata",
+        "href": "/en/pokemon/rattata"
+      },
+      {
+        "text": "Raticate",
+        "href": "/en/pokemon/raticate"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/en/pokemon/pikachu"
+      },
+      {
+        "text": "Raichu",
+        "href": "/en/pokemon/raichu"
+      },
+      {
+        "text": "Nidoran F",
+        "href": "/en/pokemon/nidoran-f"
+      },
+      {
+        "text": "Nidorina",
+        "href": "/en/pokemon/nidorina"
+      },
+      {
+        "text": "Nidoqueen",
+        "href": "/en/pokemon/nidoqueen"
+      },
+      {
+        "text": "Nidoran M",
+        "href": "/en/pokemon/nidoran-m"
+      },
+      {
+        "text": "Nidorino",
+        "href": "/en/pokemon/nidorino"
+      },
+      {
+        "text": "Nidoking",
+        "href": "/en/pokemon/nidoking"
+      },
+      {
+        "text": "Clefairy",
+        "href": "/en/pokemon/clefairy"
+      },
+      {
+        "text": "Clefable",
+        "href": "/en/pokemon/clefable"
+      },
+      {
+        "text": "Jigglypuff",
+        "href": "/en/pokemon/jigglypuff"
+      },
+      {
+        "text": "Wigglytuff",
+        "href": "/en/pokemon/wigglytuff"
+      },
+      {
+        "text": "Meowth",
+        "href": "/en/pokemon/meowth"
+      },
+      {
+        "text": "Persian",
+        "href": "/en/pokemon/persian"
+      },
+      {
+        "text": "Mankey",
+        "href": "/en/pokemon/mankey"
+      },
+      {
+        "text": "Primeape",
+        "href": "/en/pokemon/primeape"
+      },
+      {
+        "text": "Magnemite",
+        "href": "/en/pokemon/magnemite"
+      },
+      {
+        "text": "Magneton",
+        "href": "/en/pokemon/magneton"
+      },
+      {
+        "text": "Grimer",
+        "href": "/en/pokemon/grimer"
+      },
+      {
+        "text": "Muk",
+        "href": "/en/pokemon/muk"
+      },
+      {
+        "text": "Gastly",
+        "href": "/en/pokemon/gastly"
+      },
+      {
+        "text": "Haunter",
+        "href": "/en/pokemon/haunter"
+      },
+      {
+        "text": "Gengar",
+        "href": "/en/pokemon/gengar"
+      },
+      {
+        "text": "Voltorb",
+        "href": "/en/pokemon/voltorb"
+      },
+      {
+        "text": "Electrode",
+        "href": "/en/pokemon/electrode"
+      },
+      {
+        "text": "Lickitung",
+        "href": "/en/pokemon/lickitung"
+      },
+      {
+        "text": "Koffing",
+        "href": "/en/pokemon/koffing"
+      },
+      {
+        "text": "Weezing",
+        "href": "/en/pokemon/weezing"
+      },
+      {
+        "text": "Rhyhorn",
+        "href": "/en/pokemon/rhyhorn"
+      },
+      {
+        "text": "Rhydon",
+        "href": "/en/pokemon/rhydon"
+      },
+      {
+        "text": "Chansey",
+        "href": "/en/pokemon/chansey"
+      },
+      {
+        "text": "Kangaskhan",
+        "href": "/en/pokemon/kangaskhan"
+      },
+      {
+        "text": "Staryu",
+        "href": "/en/pokemon/staryu"
+      },
+      {
+        "text": "Starmie",
+        "href": "/en/pokemon/starmie"
+      },
+      {
+        "text": "Mr Mime",
+        "href": "/en/pokemon/mr-mime"
+      },
+      {
+        "text": "Electabuzz",
+        "href": "/en/pokemon/electabuzz"
+      },
+      {
+        "text": "Tauros",
+        "href": "/en/pokemon/tauros"
+      },
+      {
+        "text": "Gyarados",
+        "href": "/en/pokemon/gyarados"
+      },
+      {
+        "text": "Lapras",
+        "href": "/en/pokemon/lapras"
+      },
+      {
+        "text": "Jolteon",
+        "href": "/en/pokemon/jolteon"
+      },
+      {
+        "text": "Porygon",
+        "href": "/en/pokemon/porygon"
+      },
+      {
+        "text": "Snorlax",
+        "href": "/en/pokemon/snorlax"
+      },
+      {
+        "text": "Zapdos",
+        "href": "/en/pokemon/zapdos"
+      },
+      {
+        "text": "Dratini",
+        "href": "/en/pokemon/dratini"
+      },
+      {
+        "text": "Dragonair",
+        "href": "/en/pokemon/dragonair"
+      },
+      {
+        "text": "Dragonite",
+        "href": "/en/pokemon/dragonite"
+      },
+      {
+        "text": "Mewtwo",
+        "href": "/en/pokemon/mewtwo"
+      },
+      {
+        "text": "Mew",
+        "href": "/en/pokemon/mew"
+      },
+      {
+        "text": "1Magneton120",
+        "href": "/en/pokemon/magneton"
+      },
+      {
+        "text": "2Clefable95",
+        "href": "/en/pokemon/clefable"
+      },
+      {
+        "text": "3Magnemite95",
+        "href": "/en/pokemon/magnemite"
+      },
+      {
+        "text": "4Raichu90",
+        "href": "/en/pokemon/raichu"
+      },
+      {
+        "text": "5Nidoking85",
+        "href": "/en/pokemon/nidoking"
+      },
+      {
+        "text": "6Wigglytuff85",
+        "href": "/en/pokemon/wigglytuff"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  }
+]

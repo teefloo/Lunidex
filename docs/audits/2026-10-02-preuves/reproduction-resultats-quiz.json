@@ -1,0 +1,26 @@
+[
+  {
+    "action": "breeding-result",
+    "text": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nRésultats d'Élevage\n\nAnalyse des probabilités pour votre descendant cible\n\nPROBABILITÉ\n\n0.52%\n\nŒUFS ATTENDUS\n\n~192\n\nEMPLACEMENTS CVS\n\n5\n\nCARACTÈRE\n\nJolly ✓\n\nDÉTAIL D'HÉRITAGE DES CVS\n\nSTAT\tMEILLEURE SOURCE\tCV P1\tCV P2\tCIBLE\nHP\tParent1\t31\t31\t31 ✓\nAtk\tParent1\t31\t31\t31 ✓\nDef\tParent1\t31\t31\t31 ✓\nSpA\tParent1\t0\t0\t31 ✓\nSpD\tParent1\t31\t31\t31 ✓\nSpe\tParent1\t31\t31\t31 ✓\n\nL'Élevage Pique-Nique Gen 9 fonctionne avec les mêmes mécaniques — pas de Pension requise.\n\nEXPLORATEUR CAPACITÉS ŒUF\n\nVoir toutes les capacités œuf de Pikachu\n\nEXPLORER\nRETOUR\nNOUVELLE PAIRE"
+  },
+  {
+    "action": "egg-explorer",
+    "text": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n\nEntrez un Pokémon pour voir ses capacités œuf\n\nRECHERCHER",
+    "inputs": [
+      {
+        "placeholder": "ex. dracaufeu",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "action": "quiz-start",
+    "text": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nMORPEKO VENTRE PLEIN\nMIRAIDON\nMONTHRACITE\nTOXIZAP",
+    "buttons": [
+      "Morpeko Ventre Plein",
+      "Miraidon",
+      "Monthracite",
+      "Toxizap"
+    ]
+  }
+]

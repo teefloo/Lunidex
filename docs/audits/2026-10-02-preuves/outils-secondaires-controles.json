@@ -1,0 +1,222 @@
+[
+  {
+    "path": "/fr/go/audit-test",
+    "status": 307,
+    "location": "https://lunidex.app/fr/tcg/start?source=campaign&campaign=audit-test"
+  },
+  {
+    "path": "/fr/go/INVALID___",
+    "status": 404
+  },
+  {
+    "path": "/xx/pokedex",
+    "url": "https://lunidex.app/fr/xx/pokedex",
+    "buttons": [],
+    "inputs": [],
+    "text": "e tile by tile. Press R to reset.\n\nSEQUENCE\n0/3\n4\n0\n4\n\nHedges stop movement. The portal stays locked until the full 4-0-4 is restored.\n\nRESTART\n404\n\nLUNIDEX\n\nPage Not Found\n\nThe Pokémon you're looking for might have fled! The page doesn't exist or has been moved.\n\nUse the arrows, WASD, or the pad to recover 4-0-4 and open the portal.\n\nBrowse Pokédex\nÉquipe\nQuel est ce Pokémon ?\n\nMore tools from Lunidex:\n\nComparer\n·\nTypes\n·\nFavoris\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème"
+  },
+  {
+    "path": "/fr/faq",
+    "url": "https://lunidex.app/fr/faq",
+    "buttons": [
+      {
+        "text": "Toutes les questions",
+        "aria": null
+      },
+      {
+        "text": "Bien démarrer4",
+        "aria": null
+      },
+      {
+        "text": "Outils Pokémon5",
+        "aria": null
+      },
+      {
+        "text": "Espace Pokémon JCC6",
+        "aria": null
+      },
+      {
+        "text": "Données et assistance4",
+        "aria": null
+      },
+      {
+        "text": "Qu'est-ce que Lunidex ?",
+        "aria": null
+      },
+      {
+        "text": "Faut-il un compte ou un abonnement ?",
+        "aria": null
+      },
+      {
+        "text": "Quelles langues sont disponibles dans l’interface ?",
+        "aria": null
+      },
+      {
+        "text": "Puis-je installer Lunidex sur un téléphone ?",
+        "aria": null
+      },
+      {
+        "text": "Quelles données de référence Pokémon Lunidex propose-t-il ?",
+        "aria": null
+      },
+      {
+        "text": "Comment fonctionne le constructeur d’équipe ?",
+        "aria": null
+      },
+      {
+        "text": "Puis-je comparer des Pokémon et vérifier leurs matchups de types ?",
+        "aria": null
+      },
+      {
+        "text": "Comment fonctionne le quiz Pokémon ?",
+        "aria": null
+      },
+      {
+        "text": "Que suit le gestionnaire Nuzlocke ?",
+        "aria": null
+      },
+      {
+        "text": "Que contient le catalogue Pokémon JCC ?",
+        "aria": null
+      },
+      {
+        "text": "Comment suivre ma collection JCC ?",
+        "aria": null
+      },
+      {
+        "text": "Puis-je gérer une wishlist et des decks JCC ?",
+        "aria": null
+      },
+      {
+        "text": "Comment fonctionnent les prix JCC ?",
+        "aria": null
+      },
+      {
+        "text": "Lunidex scanne-t-il les cartes ou gère-t-il une marketplace ?",
+        "aria": null
+      },
+      {
+        "text": "La valeur affichée par Lunidex est-elle une expertise ?",
+        "aria": null
+      },
+      {
+        "text": "Où mes données personnelles sont-elles stockées et synchronisées ?",
+        "aria": null
+      },
+      {
+        "text": "Que fonctionne-t-il hors ligne ?",
+        "aria": null
+      },
+      {
+        "text": "Puis-je exporter ou supprimer les données de mon compte ?",
+        "aria": null
+      },
+      {
+        "text": "Comment contacter le projet ou y contribuer ?",
+        "aria": null
+      }
+    ],
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "name": "Rechercher des questions...",
+        "placeholder": "Rechercher des questions..."
+      }
+    ],
+    "text": "e de base de données totalement hors ligne.\n\nLUNIDEX EST MOMENTANÉMENT HORS LIGNE\nPuis-je exporter ou supprimer les données de mon compte ?\n\nUtilisez les contrôles d’export du tableau de bord et des paramètres pour télécharger votre espace synchronisé au format JSON, ou les contrôles du compte pour demander sa suppression. Les liens publics d’équipe sont distincts de ce fichier de sauvegarde. La page Confidentialité détaille les limites actuelles du compte et du stockage.\n\nTABLEAU DE BORD\nPOLITIQUE DE CONFIDENTIALITÉ\nComment contacter le projet ou y contribuer ?\n\nUtilisez le formulaire de contact Lunidex pour une question ou une demande, ou ouvrez une issue GitHub pour un bug reproductible. Lunidex est un projet de fans open source sous licence MIT ; les contributions de code et de traduction sont bienvenues. Pour un signalement de sécurité, contactez directement le projet au lieu de publier des informations sensibles.\n\nCONTACT\nÀ PROPOS DE LUNIDEX\n✦\n\n19\n\nD'autres questions ?\n\nContactez directement l’équipe, ouvrez une issue GitHub ou contribuez avec une correction ou une traduction. Lunidex est construit par la communauté, pour la communauté.\n\nCONTACTER LUNIDEX\nSIGNALER UN PROBLÈME"
+  },
+  {
+    "path": "/fr/tcg/sealed/releases",
+    "url": "https://lunidex.app/fr/tcg/sealed/releases",
+    "buttons": [],
+    "inputs": [],
+    "text": "kéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection Ultra-Premium 30ᵉ Anniversaire – Journée et Soirée\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Règne Delta\n\n6 novembre 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nEXTENSION\nMéga-Évolution – Règne Delta\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nPack 3 boosters Méga-Évolution – Règne Delta\n\n6 novembre 2026\n\nPrix conseillé : 17,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection autocollant réajustable 30ᵉ Anniversaire\n\n13 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur."
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "url": "https://lunidex.app/fr/tcg/pull-rates",
+    "buttons": [],
+    "inputs": [],
+    "text": "oduit : booster · Période de comptage non indiquée par la source\n\n3 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare illustration\nEnviron 1 booster sur 5\nCollection classique\nEnviron 1 booster sur 10\nRare illustration spéciale\nEnviron 1 booster sur 21\nRare futuriste\nEnviron 1 booster sur 120\n\nAvec 3 000 boosters anglais, TCGplayer n’a pas pu établir de fréquence fiable pour les trois cartes Mew RGB.\n\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nCalcul de la fréquence\n\nPour chaque rareté, on divise le nombre de cartes observées par le nombre de boosters ouverts. Le résultat indique des exemplaires observés par booster, pas la probabilité qu’un booster contienne au moins une carte de cette rareté.\n\nDonnées nécessaires\n\nUn échantillon exploitable précise sa source, son extension, sa région, son type de booster, ses dates, le nombre de boosters, les cartes par booster et les effectifs de chaque rareté. Les totaux doivent correspondre aux variantes recensées.\n\nInterpréter le résultat\n\nLes ouvertures varient. Un échantillon décrit des observations et ne garantit rien pour le prochain booster. Sans relevé par booster, les totaux ne donnent pas la probabilité d’au moins un tirage."
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "url": "https://lunidex.app/fr/tcg/booster-value",
+    "buttons": [],
+    "inputs": [],
+    "text": "Catalogue JCC\nFréquences de tirage\nValeur des boosters\nValeur attendue d’un booster Pokémon\n\nComprendre comment les ouvertures observées et les prix en euros permettent d’estimer la valeur brute des cartes.\n\nÉtat des données\n\nAucun échantillon validé avec une couverture complète des prix Cardmarket en euros n’est publié. La valeur chiffrée est indisponible.\n\nCalcul de la valeur\n\nOn multiplie l’effectif de chaque variante observée par son prix Cardmarket en euros, puis on divise la somme par le nombre de boosters ouverts. On compare cette valeur brute au prix du booster correspondant.\n\nCouverture des prix\n\nL’échantillon et les prix doivent concerner la même extension, région et type de booster. Chaque variante observée doit avoir un prix Cardmarket en euros, et le prix du booster doit être sourcé.\n\nUne estimation, pas un gain\n\nLes prix changent. L’état, les frais de vente, l’expédition, les taxes et les invendus modifient le montant reçu. Une moyenne passée ne garantit aucun bénéfice."
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "url": "https://lunidex.app/fr/nuzlocke",
+    "buttons": [
+      {
+        "text": "Créer une partie",
+        "aria": null
+      }
+    ],
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "name": null,
+        "placeholder": "Nom de la partie…"
+      },
+      {
+        "tag": "INPUT",
+        "name": null,
+        "placeholder": "Jeu (ex. Émeraude)…"
+      }
+    ],
+    "text": "MODE CHALLENGE\n\nSuivi Nuzlocke\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\nGuide du suivi Nuzlocke\n↗\n\nCONTINUER L’EXPLORATION\n\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nCatalogue JCC\nMES PARTIES\nCréer une partie\n\nAucune partie pour le moment.\n\nCréez ou sélectionnez une partie pour commencer à noter les rencontres."
+  },
+  {
+    "path": "/fr/compare",
+    "url": "https://lunidex.app/fr/compare",
+    "buttons": [
+      {
+        "text": "",
+        "aria": "Retour"
+      },
+      {
+        "text": "Tout effacer",
+        "aria": null
+      },
+      {
+        "text": "Copier le lien",
+        "aria": null
+      },
+      {
+        "text": "Tout effacer",
+        "aria": null
+      },
+      {
+        "text": "Parcourir le Lunidex",
+        "aria": null
+      }
+    ],
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "name": "Rechercher un Pokémon (nom ou id)...",
+        "placeholder": "Rechercher un Pokémon (nom ou id)..."
+      }
+    ],
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nAucun Pokémon à comparer\n\nAjoutez au moins deux Pokémon pour les comparer\n\nPARCOURIR LE LUNIDEX"
+  },
+  {
+    "path": "/fr/team",
+    "url": "https://lunidex.app/fr/team",
+    "buttons": [
+      {
+        "text": "Copier le code",
+        "aria": null
+      },
+      {
+        "text": "Import Showdown",
+        "aria": null
+      }
+    ],
+    "inputs": [],
+    "text": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe"
+  }
+]

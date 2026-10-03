@@ -1,0 +1,1760 @@
+[
+  {
+    "path": "/tcg/sealed/releases",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/releases",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/releases",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/releases",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/collection",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/collection",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/collection",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/collection",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/journal",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/journal",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/journal",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/journal",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/sales",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sales",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sales",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sales",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/cashflow",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/cashflow",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/cashflow",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/cashflow",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/analytics",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/analytics",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/analytics",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/analytics",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/catalogue",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/catalogue",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/catalogue",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/catalogue",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/sources",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sources",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sources",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/sources",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/tcg/sealed/products/1",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/products/1",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/products/1",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/tcg/sealed/products/1",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/about",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/about",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/about",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/about",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/faq",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/faq",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/faq",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/faq",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/contact",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/contact",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/contact",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/contact",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/docs",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/docs/api",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs/api",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs/api",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/docs/api",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/blog",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/blog",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/blog",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/blog",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/privacy",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/privacy",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/privacy",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/privacy",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/cookies",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/cookies",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/cookies",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/cookies",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/terms",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/terms",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/terms",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/terms",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/legal",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/legal",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/legal",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/legal",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  },
+  {
+    "path": "/30e-anniversaire",
+    "width": 360,
+    "height": 800,
+    "viewport": 360,
+    "scrollWidth": 352,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/30e-anniversaire",
+    "width": 390,
+    "height": 844,
+    "viewport": 390,
+    "scrollWidth": 382,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/30e-anniversaire",
+    "width": 768,
+    "height": 1024,
+    "viewport": 768,
+    "scrollWidth": 760,
+    "overflow": false,
+    "offscreen": []
+  },
+  {
+    "path": "/30e-anniversaire",
+    "width": 1440,
+    "height": 900,
+    "viewport": 1440,
+    "scrollWidth": 1432,
+    "overflow": false,
+    "offscreen": [
+      {
+        "tag": "A",
+        "text": "Liste de souhaits",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Scellés",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Commencer ma collection",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Types",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Capacités",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Talents",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Objets",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Favoris",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Tableau de bord",
+        "label": null
+      },
+      {
+        "tag": "A",
+        "text": "Amis",
+        "label": null
+      }
+    ]
+  }
+]

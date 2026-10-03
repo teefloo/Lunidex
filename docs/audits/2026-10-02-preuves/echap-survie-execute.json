@@ -1,0 +1,23 @@
+[
+  {
+    "case": "escape",
+    "dialogs": 0,
+    "focus": "BUTTON"
+  },
+  {
+    "case": "survival-start",
+    "text": "SCORE ACTUEL\n0\nRECORD\n0\nLUGIA\nTOGEPI\nTRIOPIKEUR FORME D'ALOLA\nBAGGAÏD",
+    "images": [
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/560.png",
+        "alt": "Mystery Pokemon"
+      }
+    ],
+    "buttons": [
+      "Lugia",
+      "Togepi",
+      "Triopikeur Forme d'Alola",
+      "Baggaïd"
+    ]
+  }
+]

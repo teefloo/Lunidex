@@ -1,0 +1,28 @@
+[
+  {
+    "step": "sortoptions",
+    "options": []
+  },
+  {
+    "step": "sort-desc",
+    "url": "https://lunidex.app/fr/pokedex?sort=name-desc",
+    "cards": [
+      "Cat. No.#718ZygardeDragonSol",
+      "Cat. No.#10118Zygarde 10 Power ConstructDragonSol",
+      "Cat. No.#10119Zygarde 50 Power ConstructDragonSol",
+      "Cat. No.#10120Zygarde Forme ComplèteDragonSol",
+      "Cat. No.#10181ZygardeDragonSol",
+      "Cat. No.#570ZoruaTénèbres"
+    ]
+  },
+  {
+    "step": "caught-empty",
+    "url": "https://lunidex.app/fr/pokedex?sort=name-desc&view=caught",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nNOM (Z-A)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nAUCUN POKÉMON TROUVÉ\nRÉINITIALISER FILTRE\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  },
+  {
+    "step": "missing",
+    "url": "https://lunidex.app/fr/pokedex?sort=name-desc&view=missing",
+    "cards": 20
+  }
+]

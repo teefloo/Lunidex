@@ -1,0 +1,23 @@
+[
+  {
+    "step": "invalid-stabilized",
+    "url": "https://lunidex.app/fr/compare?ids=9999999",
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nAucun Pokémon à comparer\n\nAjoutez au moins deux Pokémon pour les comparer\n\nPARCOURIR LE LUNIDEX",
+    "net": [
+      {
+        "url": "https://pokeapi.co/api/v2/pokemon/9999999",
+        "status": 404
+      },
+      {
+        "url": "https://pokeapi.co/api/v2/pokemon/9999999",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "step": "duplicate-repeat",
+    "url": "https://lunidex.app/fr/compare?ids=25,25,6,133",
+    "removers": 3,
+    "text": "tion\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOMBAT\nPLANTE\nSévérité 1\nGLACE\nPOISON\nINSECTE\nGLACE\nSévérité 1\nCOMBAT\nROCHE\nACIER\nPARTENAIRES RECOMMANDÉS\n\nTypes qui couvrent les faiblesses ou comblent les lacunes\n\nPLANTE\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nCOMBAT\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nSOL\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nINSECTE\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nACIER\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nNORMAL\nComplète la couverture de types\nAJOUTER À LA COMPARAISON\nFAIBLESSES PARTAGÉES\n\nPlusieurs membres sont faibles face à ces types\n\nSOL\nROCHE\nDÉFICIENCES DE STATS\n\nVotre équipe pourrait bénéficier de Pokémon avec des stats plus élevées :\n\nSTATS.OFFENSIVE\nSTATS.DEFENSIVE\n#025\nPikachu\nÉLECTRIK\nTAILLE\n0.4 m\nPOIDS\n6 kg\nSTATS DE BASE\nTOTAL: 320\nPV\n35\nATK\n55\nDEF\n40\nASP\n50\nDSP\n50\nVIT\n90\nTALENTS\nStatic\nLightning RodCaché\n#025\nPikachu\nÉLECTRIK\nTAILLE\n0.4 m\nPOIDS\n6 kg\nSTATS DE BASE\nTOTAL: 320\nPV\n35\nATK\n55\nDEF\n40\nASP\n50\nDSP\n50\nVIT\n90\nTALENTS\nStatic\nLightning RodCaché\n#006\nDracaufeu\nFEU\nVOL\nTAILLE\n1.7 m\nPOIDS\n90.5 kg\nSTATS DE BASE\nTOTAL: 534 (MEILLEUR)\nPV\n78 (MEILLEUR)\nATK\n84 (MEILLEUR)\nDEF\n78 (MEILLEUR)\nASP\n109 (MEILLEUR)\nDSP\n85 (MEILLEUR)\nVIT\n100 (MEILLEUR)\nTALENTS\nBlaze\nSolar PowerCaché"
+  }
+]

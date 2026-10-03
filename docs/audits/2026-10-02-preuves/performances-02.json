@@ -1,0 +1,194 @@
+[
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 371,
+    "metrics": {
+      "ttfb": 144.3999999910593,
+      "domContentLoaded": 362.29999999701977,
+      "load": 388.8999999910593,
+      "fcp": 376,
+      "lcp": 376,
+      "resources": 69
+    }
+  },
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 193,
+    "metrics": {
+      "ttfb": 27.799999997019768,
+      "domContentLoaded": 182.20000000298023,
+      "load": 254.59999999403954,
+      "fcp": 228,
+      "lcp": 228,
+      "resources": 66
+    }
+  },
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 325,
+    "metrics": {
+      "ttfb": 150.09999999403954,
+      "domContentLoaded": 318.29999999701977,
+      "load": 437.79999999701977,
+      "fcp": 364,
+      "lcp": 364,
+      "resources": 122
+    }
+  },
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 217,
+    "metrics": {
+      "ttfb": 27.899999991059303,
+      "domContentLoaded": 207.09999999403954,
+      "load": 272.79999999701977,
+      "fcp": 228,
+      "lcp": 228,
+      "resources": 121
+    }
+  },
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 363,
+    "metrics": {
+      "ttfb": 143.59999999403954,
+      "domContentLoaded": 358.29999999701977,
+      "load": 434.29999999701977,
+      "fcp": 340,
+      "lcp": 988,
+      "resources": 250
+    }
+  },
+  {
+    "run": 2,
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 171,
+    "metrics": {
+      "ttfb": 30.5,
+      "domContentLoaded": 166.1000000089407,
+      "load": 237.1000000089407,
+      "fcp": 200,
+      "lcp": 616,
+      "resources": 102
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 275,
+    "metrics": {
+      "ttfb": 79,
+      "domContentLoaded": 272.79999999701977,
+      "load": 272.8999999910593,
+      "fcp": 252,
+      "lcp": 252,
+      "resources": 65
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 139,
+    "metrics": {
+      "ttfb": 31.100000008940697,
+      "domContentLoaded": 134.6000000089407,
+      "load": 139.79999999701977,
+      "fcp": 148,
+      "lcp": 148,
+      "resources": 65
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 735,
+    "metrics": {
+      "ttfb": 574,
+      "domContentLoaded": 727.2999999970198,
+      "load": 786.0999999940395,
+      "fcp": 712,
+      "lcp": 712,
+      "resources": 121
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 350,
+    "metrics": {
+      "ttfb": 208.09999999403954,
+      "domContentLoaded": 342.40000000596046,
+      "load": 394.09999999403954,
+      "fcp": 372,
+      "lcp": 372,
+      "resources": 121
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 207,
+    "metrics": {
+      "ttfb": 69.70000000298023,
+      "domContentLoaded": 204.40000000596046,
+      "load": 310.5,
+      "fcp": 204,
+      "lcp": 640,
+      "resources": 250
+    }
+  },
+  {
+    "run": 2,
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 156,
+    "metrics": {
+      "ttfb": 38.70000000298023,
+      "domContentLoaded": 150.09999999403954,
+      "load": 174.5,
+      "fcp": 188,
+      "lcp": 452,
+      "resources": 112
+    }
+  }
+]

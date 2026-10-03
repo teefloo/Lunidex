@@ -1,0 +1,1602 @@
+[
+  {
+    "path": "/fr/tcg/deck-builder",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/deck-builder",
+    "duration": 1441,
+    "title": "Constructeur de deck | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Constructeur de deck"
+    ],
+    "main": "Catalogue\nMarché des scellés\nConstructeur de deck\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\n\nCATALOGUE\n\nConstructeur de deck\n\nConstruisez un deck Pokémon TCG de 60 cartes (4 exemplaires max. par carte, sauf les Énergies de base)\n\nMES DECKS\n\nAucun deck pour le moment.\n\nCréez ou sélectionnez un deck pour commencer.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "anglaisfrançaisespagnolitalienportugaisportugais brésilienportugais européenallemandnéerlandaispolonaisrussejaponaiscoré",
+        "label": "Langue des cartes",
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Nom du deck…",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Créer un deck",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/pull-rates",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/pull-rates",
+    "duration": 1451,
+    "title": "Fréquences de tirage des boosters Pokémon | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Fréquences de tirage des boosters Pokémon"
+    ],
+    "main": "Catalogue JCC\nFréquences de tirage\nValeur des boosters\nFréquences de tirage des boosters Pokémon\n\nComprendre les fréquences de rareté observées pour une extension, une région et un type de booster précis.\n\nÉtat des données\n\nLunidex n’a pas publié d’échantillon validé, relevé booster par booster. Des résultats indépendants publiés figurent ci-dessous ; les fréquences des boosters français restent indisponibles.\n\nÉtudes d’ouvertures publiées\n\nLes études ci-dessous portent sur des boosters en anglais. Chaque fiche indique l’éditeur du compte rendu et, si la source le précise, l’origine du comptage. La région d’impression peut ne pas être précisée ; ces chiffres ne sont ni des taux officiels Pokémon ni des estimations pour les boosters français.\n\nVous avez des données d’ouverture de boosters français ou anglais ? Envoyez un lien public ou un relevé anonymisé indiquant l’extension, la langue et la région d’impression, le type de produit, les dates, le nombre de boosters, les raretés et les variantes de cartes. Les échantillons sont vérifiés avant leur ajout aux données Lunidex.\n\nProposer un échantillon d’ouvertures\nTemporal Forces\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n16,83% ± 0,79%\nIntervalle de confiance à 95 %\nUltra-rare\n6,67% ± 0,53%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n5,00% ± 0,46%\nIntervalle de confiance à 95 %\nRare illustration\n7,72% ± 0,56%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,17% ± 0,23%\nIntervalle de confiance à 95 %\nRare hyper\n0,72% ± 0,18%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nPaldean Fates\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 1 500 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n15,89% ± 1,69%\nIntervalle de confiance à 95 %\nUltra-rare\n6,61% ± 1,15%\nIntervalle de confiance à 95 %\nRare brillante\n25,44% ± 2,01%\nIntervalle de confiance à 95 %\nUltra-rare brillante\n7,72% ± 1,23%\nIntervalle de confiance à 95 %\nRare illustration\n7,22% ± 1,20%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,72% ± 0,60%\nIntervalle de confiance à 95 %\nRare hyper\n1,61% ± 0,58%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nPrismatic Evolutions\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 1 200 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nPoké Ball brillante\n33,10% ± 2,60%\nIntervalle de confiance à 95 %\nRare double\n16,51% ± 2,05%\nIntervalle de confiance à 95 %\nUltra-rare\n7,46% ± 1,45%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n4,68% ± 1,17%\nIntervalle de confiance à 95 %\nMaster Ball brillante\n4,92% ± 1,19%\nIntervalle de confiance à 95 %\nRare illustration spéciale\nPour la rareté illustration spéciale, TCGplayer rapporte ici une moyenne de cartes par booster. Plusieurs cartes peuvent apparaître dans un même booster : ce chiffre n’est pas la probabilité d’en trouver au moins une.\n2,22% ± 0,81%\nIntervalle de confiance à 95 %\nRare hyper\n0,56% ± 0,41%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nScarlet & Violet—151\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 1 500 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nÉnergie brillante\n24,83% ± 2,00%\nIntervalle de confiance à 95 %\nRare double\n13,28% ± 1,57%\nIntervalle de confiance à 95 %\nUltra-rare\n6,44% ± 1,13%\nIntervalle de confiance à 95 %\nRare illustration\n8,50% ± 1,29%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n3,11% ± 0,80%\nIntervalle de confiance à 95 %\nRare hyper\n1,94% ± 0,64%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nStellar Crown\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n16,90% ± 0,79%\nIntervalle de confiance à 95 %\nUltra-rare\n6,75% ± 0,53%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n4,94% ± 0,46%\nIntervalle de confiance à 95 %\nRare illustration\n7,79% ± 0,57%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,11% ± 0,22%\nIntervalle de confiance à 95 %\nRare hyper\n0,73% ± 0,18%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nBlack Bolt + White Flare\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 350 boosters par extension\n\nFRÉQUENCE RAPPORTÉE\n\nPoké Ball brillante\n30,56% ± 3,36%\nIntervalle de confiance à 95 %\nRare double\n21,11% ± 2,98%\nIntervalle de confiance à 95 %\nUltra-rare\n5,83% ± 1,71%\nIntervalle de confiance à 95 %\nRare illustration\n16,39% ± 2,70%\nIntervalle de confiance à 95 %\nMaster Ball brillante\n5,14% ± 1,61%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,25% ± 0,81%\nIntervalle de confiance à 95 %\n\nTCGplayer a regroupé ces extensions en supposant que leurs fréquences étaient identiques ou presque.\n\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nTwilight Masquerade\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : PokéBeach · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 6\nUltra-rare\nEnviron 1 booster sur 15\nRare ACE SPEC\nEnviron 1 booster sur 20\nRare illustration\nEnviron 1 booster sur 13\nRare illustration spéciale\nEnviron 1 booster sur 86\nRare hyper\nEnviron 1 booster sur 146\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nSurging Sparks\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n16,94% ± 0,79%\nIntervalle de confiance à 95 %\nUltra-rare\n6,74% ± 0,53%\nIntervalle de confiance à 95 %\nRare ACE SPEC\n5,03% ± 0,46%\nIntervalle de confiance à 95 %\nRare illustration\n7,67% ± 0,56%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,15% ± 0,22%\nIntervalle de confiance à 95 %\nRare hyper\n0,53% ± 0,15%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nJourney Together\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 5\nRare illustration\nEnviron 1 booster sur 12\nUltra-rare\nEnviron 1 booster sur 15\nRare illustration spéciale\nEnviron 1 booster sur 86\nRare hyper\nEnviron 1 booster sur 137\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nDestined Rivals\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 5\nRare illustration\nEnviron 1 booster sur 12\nUltra-rare\nEnviron 1 booster sur 16\nRare illustration spéciale\nEnviron 1 booster sur 94\nRare hyper\nEnviron 1 booster sur 149\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nMega Evolution\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : PokéBeach · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 5 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 5\nRare illustration\nEnviron 1 booster sur 9\nUltra-rare\nEnviron 1 booster sur 12\nRare illustration spéciale\nEnviron 1 booster sur 101\nRare Méga hyper\nEnviron 1 booster sur 1 260\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nPhantasmal Flames\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : PokéBeach · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 5 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 5\nRare illustration\nEnviron 1 booster sur 9\nUltra-rare\nEnviron 1 booster sur 12\nRare illustration spéciale\nEnviron 1 booster sur 80\nRare Méga hyper\nEnviron 1 booster sur 1 260\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nAscended Heroes\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : PokéBeach · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 2 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\nEnviron 1 booster sur 5\nRare illustration\nEnviron 1 booster sur 9\nUltra-rare\nEnviron 1 booster sur 21\nRare attaque Méga\nEnviron 1 booster sur 29\nRare illustration spéciale\nEnviron 1 booster sur 70\nRare Méga hyper\nEnviron 1 booster sur 540\n\nLes god packs sont exclus ; les fréquences portent uniquement sur des boosters ordinaires.\n\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nPerfect Order\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 3 500 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n20,97% ± 1,34%\nIntervalle de confiance à 95 %\nRare illustration\n11,20% ± 1,03%\nIntervalle de confiance à 95 %\nUltra-rare\n8,54% ± 0,92%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,23% ± 0,36%\nIntervalle de confiance à 95 %\nRare Méga hyper\n0,06% ± 0,08%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nChaos Rising\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : TCGplayer · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 8 500 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n20,30% ± 0,85%\nIntervalle de confiance à 95 %\nUltra-rare\n8,29% ± 0,58%\nIntervalle de confiance à 95 %\nRare illustration\n10,66% ± 0,65%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,21% ± 0,23%\nIntervalle de confiance à 95 %\nRare Méga hyper\n0,10% ± 0,07%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nPitch Black\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : Obsidia TCG · comptage : non indiqué\n\nType de produit : booster · Période de comptage non indiquée par la source\n\nPlus de 4 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare double\n21,02% ± 1,21%\nIntervalle de confiance à 95 %\nUltra-rare\n8,30% ± 0,82%\nIntervalle de confiance à 95 %\nRare illustration\n11,01% ± 0,93%\nIntervalle de confiance à 95 %\nRare illustration spéciale\n1,25% ± 0,33%\nIntervalle de confiance à 95 %\nRare Méga hyper\n0,09% ± 0,09%\nIntervalle de confiance à 95 %\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\n30th Celebration\nLangue des boosters : anglais\nRégion d’impression : non précisée par la source\n\nArticle : PokéBeach · comptage : TCGplayer\n\nType de produit : booster · Période de comptage non indiquée par la source\n\n3 000 boosters dans l’étude\n\nFRÉQUENCE RAPPORTÉE\n\nRare illustration\nEnviron 1 booster sur 5\nCollection classique\nEnviron 1 booster sur 10\nRare illustration spéciale\nEnviron 1 booster sur 21\nRare futuriste\nEnviron 1 booster sur 120\n\nAvec 3 000 boosters anglais, TCGplayer n’a pas pu établir de fréquence fiable pour les trois cartes Mew RGB.\n\nLire la source\n\nSource vérifiée le 30 sept. 2026\n\nCalcul de la fréquence\n\nPour chaque rareté, on divise le nombre de cartes observées par le nombre de boosters ouverts. Le résultat indique des exemplaires observés par booster, pas la probabilité qu’un booster contienne au moins une carte de cette rareté.\n\nDonnées nécessaires\n\nUn échantillon exploitable précise sa source, son extension, sa région, son type de booster, ses dates, le nombre de boosters, les cartes par booster et les effectifs de chaque rareté. Les totaux doivent correspondre aux variantes recensées.\n\nInterpréter le résultat\n\nLes ouvertures varient. Un échantillon décrit des observations et ne garantit rien pour le prochain booster. Sans relevé par booster, les totaux ne donnent pas la probabilité d’au moins un tirage.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue JCC",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "text": "Proposer un échantillon d’ouvertures",
+        "href": "/fr/contact?topic=booster-sample"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/robot/28c0ad22-00a4-428f-b22d-e7fee9ec50bc/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Paldean-Fates-Pull-Rates/23de3e93-0d0f-4ae0-abc4-13664f3001a3/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Prismatic-Evolutions-Pull-Rates/d94889ea-f76a-4a13-b74d-5b0b071220a7/?source=syndication"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Scarlet-Violet-151-Pull-Rates/b237df74-fbb0-40d0-9e13-d69ee6e804d9/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Stellar-Crown-Pull-Rates/2c0743dd-dbd0-4504-9ff8-be5a72dd04d1/?source=syndication"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Black-Bolt-and-White-Flare-Pull-Rates/bac92199-a2a7-4668-b4a4-2647a111776f?pubDate=20250723"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.pokebeach.com/2024/05/twilight-masquerade-pull-rates-revealed-gold-cards-just-slightly-rarer"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Surging-Sparks-Pull-Rates/6ccfb6ab-f26a-4ce8-bab5-5f91c85ec70e/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Journey-Together-Pull-Rates/1b9f379f-97cb-45cc-b6f6-a1a070a422cd/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Destined-Rivals-Pull-Rates/43ba832e-44c9-45a4-ae2e-594df2defdda/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.pokebeach.com/2025/09/mega-evolution-pull-rates-revealed-gold-cards-nearly-impossible-to-pull-at-highest-pull-rates-ever-seen"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.pokebeach.com/2025/11/phantasmal-flames-pull-rates-revealed-chances-of-pulling-mega-charizard-ex"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.pokebeach.com/2026/02/ascended-heroes-pull-rates-finally-determined-better-than-usual"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Perfect-Order-Pull-Rates/73148119-ebcb-40b7-84b6-52b3a6d0c631/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.tcgplayer.com/content/article/Pok%C3%A9mon-TCG-Chaos-Rising-Pull-Rates/304e8bfc-175a-4d31-93fe-5bb1be11e5d2/"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://obsidia-tcg.store/blogs/news/pokemon-tcg-pitch-black-pull-rates-mega-darkrai-ex-odds"
+      },
+      {
+        "text": "Lire la source",
+        "href": "https://www.pokebeach.com/2026/09/30th-celebration-pull-rates-and-most-valuable-cards-worldwide-friendliest-pull-rates-of-the-modern-era"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/booster-value",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/booster-value",
+    "duration": 1258,
+    "title": "Valeur attendue d’un booster Pokémon | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Valeur attendue d’un booster Pokémon"
+    ],
+    "main": "Catalogue JCC\nFréquences de tirage\nValeur des boosters\nValeur attendue d’un booster Pokémon\n\nComprendre comment les ouvertures observées et les prix en euros permettent d’estimer la valeur brute des cartes.\n\nÉtat des données\n\nAucun échantillon validé avec une couverture complète des prix Cardmarket en euros n’est publié. La valeur chiffrée est indisponible.\n\nCalcul de la valeur\n\nOn multiplie l’effectif de chaque variante observée par son prix Cardmarket en euros, puis on divise la somme par le nombre de boosters ouverts. On compare cette valeur brute au prix du booster correspondant.\n\nCouverture des prix\n\nL’échantillon et les prix doivent concerner la même extension, région et type de booster. Chaque variante observée doit avoir un prix Cardmarket en euros, et le prix du booster doit être sourcé.\n\nUne estimation, pas un gain\n\nLes prix changent. L’état, les frais de vente, l’expédition, les taxes et les invendus modifient le montant reçu. Une moyenne passée ne garantit aucun bénéfice.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue JCC",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed",
+    "duration": 1460,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Tableau de bord"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nTableau de bord\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/market",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/market",
+    "duration": 2357,
+    "title": "Marché des produits scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Marché des produits scellés"
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nDONNÉES DE MARCHÉ PUBLIQUES\n\nMarché des produits scellés\n\nParcourez les produits Pokémon scellés et leurs dernières données du guide de prix Cardmarket. Les prix sont indicatifs et peuvent évoluer.\n\nRechercher des produits scellés\nCatégorie\nToutes les catégories\nPokémon Box Set\nPokémon Booster\nPokémon Display\nPokémon Tins\nPokémon Theme Decks\nPokémon Blisters\nPokémon Elite Trainer Boxes\nPCG Set\nPokémon Trainer Kits\nID extension\nAppliquer les filtres\n\nLaissez vide pour inclure toutes les extensions.\n\nProduits\n4 349\n\nPokémon Box Set · Extension non renseignée (ID 4310)\n\n10th Movie Commemoration Set\n\nDernière tendance · Guide des prix Cardmarket\n\n521,94 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Booster · Extension non renseignée (ID 3214)\n\n10th Pokémon Card Gym Promo Sword & Shield Booster\n\nDernière tendance · Guide des prix Cardmarket\n\n3,88 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Booster · Extension non renseignée (ID 3214)\n\n11th Pokémon Card Gym Promo Sword & Shield Booster\n\nDernière tendance · Guide des prix Cardmarket\n\n3,38 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Booster · Extension non renseignée (ID 3214)\n\n12th Pokémon Card Gym Promo Sword & Shield Booster\n\nDernière tendance · Guide des prix Cardmarket\n\n3,16 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +1,9% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Elite Trainer Boxes · Extension non renseignée (ID 5402)\n\n151 10 Elite Trainer Box Case\n\nDernière tendance · Guide des prix Cardmarket\n\n4 469,26 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151 Alakazam ex Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n96,76 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -3,1% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151 Binder Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n134,22 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +3,7% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Booster · Extension non renseignée (ID 5402)\n\n151 Booster\n\nDernière tendance · Guide des prix Cardmarket\n\n24,72 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -2,8% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Display · Extension non renseignée (ID 5402)\n\n151 Booster Bundle\n\nDernière tendance · Guide des prix Cardmarket\n\n153,33 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +6,5% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Display · Extension non renseignée (ID 5402)\n\n151 Booster Bundle Display\n\nDernière tendance · Guide des prix Cardmarket\n\n1 758,19 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -0,5% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Elite Trainer Boxes · Extension non renseignée (ID 5402)\n\n151 Elite Trainer Box\n\nDernière tendance · Guide des prix Cardmarket\n\n404,79 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +5,4% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Elite Trainer Boxes · Extension non renseignée (ID 5402)\n\n151 Pokémon Center Elite Trainer Box\n\nDernière tendance · Guide des prix Cardmarket\n\n1 348,81 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151 Poster Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n70,00 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -6,3% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151 Sam's Club 4-Pack Mini Tin Bundle\n\nDernière tendance · Guide des prix Cardmarket\n\nPrix indisponible\n\nDate du guide de prix: Les données source sont indisponibles.\n\nVariation sur 7 jours: — · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5838)\n\n151 Simplified Chinese New Year 2025 Gift Box\n\nDernière tendance · Guide des prix Cardmarket\n\n81,44 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +2,2% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151 Ultra-Premium Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n649,45 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -6,8% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151 Zapdos ex Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n112,25 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -1,4% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Arcanine Mini Tin\n\nDernière tendance · Guide des prix Cardmarket\n\n45,28 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +3,3% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Box Set · Extension non renseignée (ID 5402)\n\n151: Blooming Waters Premium Collection\n\nDernière tendance · Guide des prix Cardmarket\n\n254,77 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -7,5% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Costco 5-Pack Mini Tin Bundle\n\nDernière tendance · Guide des prix Cardmarket\n\n105,26 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: 0% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Dragonite Mini Tin\n\nDernière tendance · Guide des prix Cardmarket\n\n49,31 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -2,9% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Electabuzz Mini Tin\n\nDernière tendance · Guide des prix Cardmarket\n\n46,09 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -0,2% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Gengar Mini Tin\n\nDernière tendance · Guide des prix Cardmarket\n\n29,64 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: -24,8% · Variation sur 30 jours: —\n\nVoir le produit →\n\nPokémon Tins · Extension non renseignée (ID 5402)\n\n151: Kadabra Mini Tin\n\nDernière tendance · Guide des prix Cardmarket\n\n41,73 €\n\nDate du guide de prix: 30 sept. 2026\n\nVariation sur 7 jours: +0,6% · Variation sur 30 jours: —\n\nVoir le produit →\nPage précédente\n1 / 182\nPage suivante\nVoir les sorties\nConseils avant achat\nAnalyses\nSignaler une erreur",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "search",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "Toutes les catégoriesPokémon Box SetPokémon BoosterPokémon DisplayPokémon TinsPokémon Theme DecksPokémon BlistersPokémon",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appliquer les filtres",
+        "label": null,
+        "placeholder": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/611877"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/679460"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/679459"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/678838"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719692"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719699"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719697"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719694"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719695"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/794902"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719691"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719693"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719696"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/903970"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/804852"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719698"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719700"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719701"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/807118"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/794913"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719702"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719703"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719704"
+      },
+      {
+        "text": "Voir le produit →",
+        "href": "/fr/tcg/sealed/market/719705"
+      },
+      {
+        "text": "Page précédente",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Page suivante",
+        "href": "/fr/tcg/sealed/market?page=1"
+      },
+      {
+        "text": "Voir les sorties",
+        "href": "/fr/tcg/sealed/releases"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Pokémon Box Set106,96 €1106 Produits",
+        "href": "/fr/tcg/sealed/market?category=1015"
+      },
+      {
+        "text": "Pokémon Booster14,16 €786 Produits",
+        "href": "/fr/tcg/sealed/market?category=52"
+      },
+      {
+        "text": "Pokémon Display267,39 €619 Produits",
+        "href": "/fr/tcg/sealed/market?category=53"
+      },
+      {
+        "text": "Pokémon Tins43,74 €571 Produits",
+        "href": "/fr/tcg/sealed/market?category=1014"
+      },
+      {
+        "text": "Pokémon Theme Decks49,92 €559 Produits",
+        "href": "/fr/tcg/sealed/market?category=54"
+      },
+      {
+        "text": "Pokémon Blisters31,56 €495 Produits",
+        "href": "/fr/tcg/sealed/market?category=1083"
+      },
+      {
+        "text": "Pokémon Elite Trainer Boxes455,46 €171 Produits",
+        "href": "/fr/tcg/sealed/market?category=1016"
+      },
+      {
+        "text": "PCG Set38,78 €29 Produits",
+        "href": "/fr/tcg/sealed/market?category=1654"
+      },
+      {
+        "text": "Pokémon Trainer Kits119,41 €13 Produits",
+        "href": "/fr/tcg/sealed/market?category=1013"
+      },
+      {
+        "text": "Signaler une erreur",
+        "href": "/fr/contact?topic=sealed-market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/market/611877",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/market/611877",
+    "duration": 1837,
+    "title": "10th Movie Commemoration Set — Marché des produits scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n← Retour au marché\n\nPOKÉMON BOX SET · EXTENSION NON RENSEIGNÉE (ID 4310)\n\n10th Movie Commemoration Set\n\nID Cardmarket 611877\n\nDERNIÈRE TENDANCE\n\n521,94 €\n\nDate du guide de prix: 30 sept. 2026, 07:55\n\nVariation sur 7 jours\n\n0%\n\nVariation sur 30 jours\n\n—\n\nDate de sortie: Donnée source indisponible\n\nPrix public conseillé: Donnée source indisponible\n\nCardmarket\nConseils avant achat\n\nLe lien ouvre un site tiers. Vérifiez l’offre et le vendeur avant de payer.\n\nHistorique des prix\n30 sept. 2026, 07:55\n521,94 €\n28 sept. 2026, 00:47\n521,94 €\n27 sept. 2026, 00:44\n521,94 €\n25 sept. 2026, 00:48\n521,94 €\n22 sept. 2026, 00:48\n521,94 €\n20 sept. 2026, 00:42\n521,94 €\n17 sept. 2026, 00:44\n521,94 €\n14 sept. 2026, 00:46\n521,94 €\n10 sept. 2026, 00:48\n521,94 €\nMéthodologie\n\nLes prix sont les tendances du guide Cardmarket en EUR, et non des offres de vente ou des transactions. Les médianes utilisent le dernier prix positif de chaque produit sur trois jours. Les variations comparent une donnée récente à une observation datant de 7 ou 30 jours, avec trois jours de délai tolérés. Les données manquantes ou anciennes sont omises.\n\nGuide des prix Cardmarket · Cardmarket\n\nSignaler une erreur\n\nIndiquez l’ID du produit et le champ incorrect dans votre message.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Retour au marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Signaler une erreur",
+        "href": "/fr/contact?topic=sealed-market&productId=611877"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/market/products/611877",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/market/products/611877",
+    "duration": 1582,
+    "title": "10th Movie Commemoration Set — Marché des produits scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n← Retour au marché\n\nPOKÉMON BOX SET · EXTENSION NON RENSEIGNÉE (ID 4310)\n\n10th Movie Commemoration Set\n\nID Cardmarket 611877\n\nDERNIÈRE TENDANCE\n\n521,94 €\n\nDate du guide de prix: 30 sept. 2026, 07:55\n\nVariation sur 7 jours\n\n0%\n\nVariation sur 30 jours\n\n—\n\nDate de sortie: Donnée source indisponible\n\nPrix public conseillé: Donnée source indisponible\n\nCardmarket\nConseils avant achat\n\nLe lien ouvre un site tiers. Vérifiez l’offre et le vendeur avant de payer.\n\nHistorique des prix\n30 sept. 2026, 07:55\n521,94 €\n28 sept. 2026, 00:47\n521,94 €\n27 sept. 2026, 00:44\n521,94 €\n25 sept. 2026, 00:48\n521,94 €\n22 sept. 2026, 00:48\n521,94 €\n20 sept. 2026, 00:42\n521,94 €\n17 sept. 2026, 00:44\n521,94 €\n14 sept. 2026, 00:46\n521,94 €\n10 sept. 2026, 00:48\n521,94 €\nMéthodologie\n\nLes prix sont les tendances du guide Cardmarket en EUR, et non des offres de vente ou des transactions. Les médianes utilisent le dernier prix positif de chaque produit sur trois jours. Les variations comparent une donnée récente à une observation datant de 7 ou 30 jours, avec trois jours de délai tolérés. Les données manquantes ou anciennes sont omises.\n\nGuide des prix Cardmarket · Cardmarket\n\nSignaler une erreur\n\nIndiquez l’ID du produit et le champ incorrect dans votre message.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Retour au marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Signaler une erreur",
+        "href": "/fr/contact?topic=sealed-market&productId=611877"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/buy-safely",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/buy-safely",
+    "duration": 1382,
+    "title": "Acheter des cartes et produits scellés avec prudence | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Acheter des cartes et produits scellés avec prudence"
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nAcheter des cartes et produits scellés avec prudence\n\nQuelques vérifications concrètes avant de quitter Lunidex pour une place de marché. Ce guide concerne surtout les achats en France.\n\nVoir le marché\nVoir les sorties\n\n01\n\nVérifier le vendeur\n\nConsultez son identité, ses coordonnées, les mentions légales, les conditions de vente et des avis provenant de plusieurs sources.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n02\n\nComparer l’offre complète\n\nVérifiez le nom exact du produit, son état, le contenu annoncé, les frais de livraison et les délais. Une photo seule ne suffit pas.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n03\n\nProtéger le paiement\n\nVérifiez que le site utilise HTTPS et privilégiez un moyen de paiement sécurisé. Gardez la confirmation de commande et les échanges.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n04\n\nSe méfier des contrefaçons\n\nComparez l’emballage et les cartes avec les images officielles Pokémon. Un prix anormalement bas doit vous inciter à vérifier davantage.\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\nUn problème après l’achat ?\n\nSi vous rencontrez un problème avec un professionnel en France, SignalConso peut transmettre votre signalement et vous informer sur vos démarches.\n\nSource vérifiée le 2026-09-29\n\nOuvrir SignalConso",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Voir les sorties",
+        "href": "/fr/tcg/sealed/releases"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://support.pokemon.com/hc/fr/articles/360002068953-Est-ce-que-j-ai-achet%C3%A9-des-cartes-contrefaites"
+      },
+      {
+        "text": "Ouvrir SignalConso",
+        "href": "https://signal.conso.gouv.fr/fr/achat-site"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/releases",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/releases",
+    "duration": 1460,
+    "title": "Calendrier des sorties scellées | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Calendrier des sorties scellées"
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nCalendrier des sorties scellées\n\nDates annoncées pour le marché français, vérifiées auprès de Pokémon ou de PokéCardex. Les prix conseillés sont indiqués lorsqu’ils sont sourcés ; une date partielle reste volontairement imprécise.\n\nVoir le marché\nConseils avant achat\n\nLes dates peuvent changer. Consultez la source avant de commander ou précommander.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Forces Temporelles\n\n1e trimestre 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Destinées de Paldea\n\n26 janvier 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Mascarade Crépusculaire\n\n24 mai 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Fable Nébuleuse\n\n2 août 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Couronne Stellaire\n\n13 septembre 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Étincelles Déferlantes\n\n8 novembre 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Évolutions Prismatiques\n\n17 janvier 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Aventures Ensemble\n\n28 mars 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Rivalités Destinées\n\n30 mai 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Flamme Blanche\n\n18 juillet 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Foudre Noire\n\n18 juillet 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nMéga-Évolution\n\n10 octobre 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nMéga-Évolution – Flammes Fantasmagoriques\n\n14 novembre 2025\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 2 boosters janvier 2026 – Duopack Raikou\n\n2 janvier 2026\n\nPrix conseillé : 11,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nMéga-Évolution – Héros Transcendants\n\n30 janvier 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 2 boosters Méga-Évolution – Héros Transcendants\n\n30 janvier 2026\n\nPrix conseillé : 12,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 3 boosters Méga-Évolution – Héros Transcendants\n\n30 janvier 2026\n\nPrix conseillé : 19,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack Collection Journée Pokémon 2026\n\n30 janvier 2026\n\nPrix conseillé : 19,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîte Méga-Dracaufeu\n\n20 février 2026\n\nPrix conseillé : 25,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nCoffret Dresseur d’élite Méga-Évolution – Héros Transcendants\n\n20 février 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nMini-boîtes Méga-Évolution – Héros Transcendants\n\n20 février 2026\n\nPrix conseillé : 11,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 2 boosters mars 2026 – Duopack Mystherbe, Ortide et Rafflesia\n\n6 mars 2026\n\nPrix conseillé : 12,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîtier Stratégies et Combats – Équilibre Parfait\n\n14 mars 2026\n\nPrix conseillé : 30,00 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nCoffret Collection avec pin’s Deluxe Premiers Partenaires – Héros Transcendants\n\n20 mars 2026\n\nPrix conseillé : 32,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nCoffret Collection poster Premium – Héros Transcendants\n\n20 mars 2026\n\nPrix conseillé : 59,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nCoffret Dresseur d’élite Méga-Évolution – Équilibre Parfait\n\n27 mars 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Équilibre Parfait\n\n27 mars 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nEXTENSION\nMéga-Évolution – Équilibre Parfait\n\n27 mars 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nCoffret Méga-Évolution – Héros Transcendants – Méga-Méganium-ex, Méga-Roitiflam-ex et Méga-Aligatueur-ex\n\n24 avril 2026\n\nPrix conseillé : 25,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Héros Transcendants\n\n24 avril 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nCoffret Collection Premium Méga-Zygarde-ex\n\n1 mai 2026\n\nPrix conseillé : 49,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîtier Stratégies et Combats – Chaos Ascendant\n\n9 mai 2026\n\nPrix conseillé : 30,00 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nCoffret Dresseur d’élite Méga-Évolution – Chaos Ascendant\n\n22 mai 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nDeck Combat de Ligue Méga-Lucario-ex\n\n22 mai 2026\n\nPrix conseillé : 34,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Chaos Ascendant\n\n22 mai 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nEXTENSION\nMéga-Évolution – Chaos Ascendant\n\n22 mai 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 3 boosters Méga-Évolution – Chaos Ascendant\n\n22 mai 2026\n\nPrix conseillé : 17,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîte Méga Clair de Lune – Méga-Mélodelfe ou Méga-Ectoplasma\n\n5 juin 2026\n\nPrix conseillé : 25,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nCoffret Collection Premium Méga-Amphinobi-ex\n\n3 juillet 2026\n\nPrix conseillé : 49,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîtier Stratégies et Combats – Nuit Noire\n\n4 juillet 2026\n\nPrix conseillé : 30,00 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : blister de 2 boosters 30ᵉ Anniversaire\n\n3e trimestre 2026\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection K.O. 30ᵉ Anniversaire\n\n3e trimestre 2026\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nCoffret Dresseur d’élite Méga-Évolution – Nuit Noire\n\n17 juillet 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Nuit Noire\n\n17 juillet 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nEXTENSION\nMéga-Évolution – Nuit Noire\n\n17 juillet 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 3 boosters Méga-Évolution – Nuit Noire\n\n17 juillet 2026\n\nPrix conseillé : 17,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nCollection Illustration Premiers Partenaires – Série 3\n\n7 août 2026\n\nPrix conseillé : 19,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nPack 2 boosters août 2026 – Duopack Zarude\n\n7 août 2026\n\nPrix conseillé : 11,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nBoîte Méga Puissances – Méga-Zeraora, Méga-Darkrai ou Méga-Dracolosse\n\n28 août 2026\n\nPrix conseillé : 25,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\n30ᵉ Anniversaire\n\n16 septembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nJCC Pokémon : Coffret 30ᵉ Anniversaire – Nymphali-ex et Coffret 30ᵉ Anniversaire – Amphinobi-ex\n\n16 septembre 2026\n\nPrix conseillé : 25,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nPRODUIT SCELLÉ\nJCC Pokémon : Coffret Dresseur d’élite 30ᵉ Anniversaire\n\n16 septembre 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nSORTI\nPRODUIT SCELLÉ\nJCC Pokémon : Collection poster 30ᵉ Anniversaire\n\n16 septembre 2026\n\nPrix conseillé : 27,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : lot de boosters 30ᵉ Anniversaire du JCC Pokémon\n\n2 octobre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Mini-boîtes 30ᵉ Anniversaire\n\n2 octobre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nPack 2 boosters octobre 2026 – Duopack Mimiqui, Ectoplasma et Marshadow\n\n2 octobre 2026\n\nPrix conseillé : 12,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection classeur 30ᵉ Anniversaire\n\n23 octobre 2026\n\nPrix conseillé : 45,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nBoîtier Stratégies et Combats – Règne Delta\n\n24 octobre 2026\n\nPrix conseillé : 30,00 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Deck Combat 30ᵉ Anniversaire – Mentali-ex et Deck Combat 30ᵉ Anniversaire – Noctali-ex\n\n30 octobre 2026\n\nPrix conseillé : 24,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nCoffret Dresseur d’élite Méga-Évolution – Règne Delta\n\n6 novembre 2026\n\nPrix conseillé : 55,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection avec figurine 30ᵉ Anniversaire – Mew et Mewtwo\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection Premium Métamorph 30ᵉ Anniversaire\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\nVoir le marché\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection Ultra-Premium 30ᵉ Anniversaire – Journée et Soirée\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nLot de boosters Méga-Évolution – Règne Delta\n\n6 novembre 2026\n\nPrix conseillé : 35,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nEXTENSION\nMéga-Évolution – Règne Delta\n\n6 novembre 2026\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nPack 3 boosters Méga-Évolution – Règne Delta\n\n6 novembre 2026\n\nPrix conseillé : 17,99 €\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nANNONCÉ\nPRODUIT SCELLÉ\nJCC Pokémon : Collection autocollant réajustable 30ᵉ Anniversaire\n\n13 novembre 2026\n\nSource vérifiée le 2026-09-30\n\nLire la source · PokéCardex\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/galerie-produits/coffret-dresseur-delite-ecarlate-et-violet-forces-temporelles"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actus-pokemon/les-pokemon-chromatiques-brillent-avec-mimiqui-gardevoir-ex-dracaufeu-ex-et-dautres-dans-ecarlate-et-violet-destinees-de-paldea"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/admirez-les-nouvelles-cartes-de-lextension-ecarlate-et-violet-mascarade-crepusculaire-du-jcc-pokemon"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/nouvel-apercu-des-cartes-de-lextension-ecarlate-et-violet-fable-nebuleuse"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/obtenez-le-boitier-strategies-et-combats-ecarlate-et-violet-couronne-stellaire-en-avance"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/decouvrez-de-nouvelles-cartes-de-lextension-ecarlate-et-violet-etincelles-deferlantes-du-jcc-pokemon"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/860574"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/865397"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/864106"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/865406"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/865404"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/retablissez-lordre-dans-le-jcc-pokemon"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/860578"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/877282"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/877294"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/877284"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/obtenez-un-boitier-strategies-et-combats-mega-evolution-chaos-ascendant-du-jcc-pokemon-en-avant-premiere"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/885540"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895559"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/885542"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/885539"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/lextension-mega-evolution-nuit-noire-du-jcc-pokemon-est-a-present-disponible-dans-le-jcc-pokemon-live"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/lextension-30-anniversaire-du-jcc-pokemon-est-disponible"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895551"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895553"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895561"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895560"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market/895574"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/lextension-mega-evolution-regne-delta-du-jcc-pokemon-arrive-le-6-novembre-2026"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Lire la source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/collection",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/collection",
+    "duration": 1565,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Collection"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nCollection\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/journal",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/journal",
+    "duration": 1508,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Journal"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nJournal\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/sales",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/sales",
+    "duration": 1524,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Ventes"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nVentes\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

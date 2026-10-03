@@ -1,0 +1,40 @@
+[
+  {
+    "step": "contact",
+    "fields": [
+      {
+        "html": "<input id=\"contact-website\" tabindex=\"-1\" autocomplete=\"off\" name=\"website\">"
+      },
+      {
+        "html": "<input id=\"contact-name\" data-slot=\"input\" maxlength=\"120\" autocomplete=\"name\" aria-invalid=\"false\" placeholder=\"Votre nom ou pseudo\" class=\"glass-control h-11 w-full min-w-0 border-input/70 px-4 py-2 text-base transition-all outline-none file:inline-flex file:h-8 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:curs"
+      },
+      {
+        "html": "<input id=\"contact-email\" type=\"email\" data-slot=\"input\" inputmode=\"email\" maxlength=\"320\" autocomplete=\"email\" spellcheck=\"false\" aria-invalid=\"false\" placeholder=\"vous@exemple.com\" class=\"glass-control h-11 w-full min-w-0 border-input/70 px-4 py-2 text-base transition-all outline-none file:inline-flex file:h-8 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-r"
+      },
+      {
+        "html": "<input id=\"contact-subject\" data-slot=\"input\" maxlength=\"160\" autocomplete=\"off\" aria-invalid=\"false\" placeholder=\"Pourquoi nous écrivez-vous ?\" class=\"glass-control h-11 w-full min-w-0 border-input/70 px-4 py-2 text-base transition-all outline-none file:inline-flex file:h-8 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:pointer-events-none di"
+      },
+      {
+        "html": "<textarea data-slot=\"textarea\" class=\"flex field-sizing-content min-h-16 w-full rounded-sm border border-input/70 bg-card/80 px-3 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/25 dark:disabled:bg-input/80 dark:ari"
+      }
+    ],
+    "valid": true,
+    "invalid": [],
+    "buttons": [
+      "Envoyer le message"
+    ]
+  },
+  {
+    "step": "reset-no-token",
+    "text": "Aller au contenu principal\n\nLUNIDEX\n\nModifier votre mot de passe\n\nCe lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.\n\nBack home\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème"
+  },
+  {
+    "step": "start-buttons",
+    "buttons": [
+      "Rechercher dans Lunidex⌘K",
+      "Se connecter",
+      "Gérer mes préférences",
+      "Signaler un problème"
+    ]
+  }
+]

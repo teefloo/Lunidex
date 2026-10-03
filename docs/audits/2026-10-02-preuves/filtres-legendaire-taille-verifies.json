@@ -1,0 +1,17 @@
+[
+  {
+    "step": "legendary-stable",
+    "cards": 20,
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n118\nAffichage de 20 Pokémon sur 118.\nTOUT EFFACER\nFILTRES\nPokémon Légendaires\nTout effacer\nCAT. NO.\n#144\nArtikodin\nGLACE\nVOL\nCAT. NO.\n#145\nÉlecthor\nÉLECTRIK\nVOL\nCAT. NO.\n#146\nSulfura\nFEU\nVOL\nCAT. NO.\n#150\nMewtwo\nPSY\nCAT. NO.\n#243\nRaikou\nÉLECTRIK\nCAT. NO.\n#244\nEntei\nFEU\nCAT. NO.\n#245\nSuicune\nEAU\nCAT. NO.\n#249\nLugia\nPSY\nVOL\nCAT. NO.\n#250\nHo Oh\nFEU\nVOL\nCAT. NO.\n#377\nRegirock\nROCHE\nCAT. NO.\n#378\nRegice\nGLACE\nCAT. NO.\n#379\nRegisteel\nACIER\nCAT. NO.\n#380\nLatias\nDRAGON\nPSY\nCAT. NO.\n#381\nLatios\nDRAGON\nPSY\nCAT. NO.\n#382\nKyogre\nEAU\nCAT. NO.\n#383\nGroudon\nSOL\nCAT. NO.\n#384\nRayquaza\nDRAGON\nVOL\nCAT. NO.\n#480\nCréhelf\nPSY\nCAT. NO.\n#481\nCréfollet\nPSY\nCAT. NO.\n#482\nCréfadet\nPSY\nVOIR PLUS\n(20 / 118)\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  },
+  {
+    "step": "height25",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n018\nAffichage de 18 Pokémon sur 18.\nTOUT EFFACER\nFILTRES\nTaille (m): 25–25\nTout effacer\nCAT. NO.\n#10190\nÉthernatos\nPOISON\nDRAGON\nCAT. NO.\n#10196\nDracaufeu Gigamax\nFEU\nVOL\nCAT. NO.\n#10197\nTortank Gigamax\nEAU\nCAT. NO.\n#10200\nMiaouss Gigamax\nNORMAL\nCAT. NO.\n#10201\nMackogneur Gigamax\nCOMBAT\nCAT. NO.\n#10206\nRonflex Gigamax\nNORMAL\nCAT. NO.\n#10208\nMelmetal Gigamax\nACIER\nCAT. NO.\n#10209\nGorythmic Gigamax\nPLANTE\nCAT. NO.\n#10210\nPyrobut Gigamax\nFEU\nCAT. NO.\n#10211\nLézargus Gigamax\nEAU\nCAT. NO.\n#10215\nMonthracite Gigamax\nROCHE\nFEU\nCAT. NO.\n#10220\nScolocendre Gigamax\nFEU\nINSECTE\nCAT. NO.\n#10221\nSorcilence Gigamax\nPSY\nFÉE\nCAT. NO.\n#10222\nAngoliath Gigamax\nTÉNÈBRES\nFÉE\nCAT. NO.\n#10223\nCharmilly Gigamax\nFÉE\nCAT. NO.\n#10225\nDuralugon Gigamax\nACIER\nDRAGON\nCAT. NO.\n#10226\nShifours Style Poing Final\nCOMBAT\nTÉNÈBRES\nCAT. NO.\n#10227\nShifours Style Mille Poings\nCOMBAT\nEAU\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  },
+  {
+    "step": "upstream-known-height",
+    "status": 200,
+    "name": "charizard-gmax",
+    "heightDecimetres": 280
+  }
+]

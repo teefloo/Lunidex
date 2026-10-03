@@ -1,0 +1,75 @@
+{
+  "note": "Tests précédents négatifs provoqués par le blocage trop large de POST GraphQL en lecture ; garde limitée aux mutations API Lunidex.",
+  "results": [
+    {
+      "q": "évoli",
+      "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nÉvoli\n\n#133\n\nÉvoli Partenaire De Départ\n\n#10159\n\nÉvoli Gigamax\n\n#10205\n\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOM",
+      "buttons": [
+        "",
+        "Tout effacer",
+        "Copier le lien",
+        "Tout effacer",
+        "Évoli#133",
+        "Évoli Partenaire de départ#10159",
+        "Évoli Gigamax#10205",
+        "Ajouter à la comparaison"
+      ]
+    },
+    {
+      "q": "eevee",
+      "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nÉvoli\n\n#133\n\nÉvoli Partenaire De Départ\n\n#10159\n\nÉvoli Gigamax\n\n#10205\n\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOM",
+      "buttons": [
+        "",
+        "Tout effacer",
+        "Copier le lien",
+        "Tout effacer",
+        "Évoli#133",
+        "Évoli Partenaire de départ#10159",
+        "Évoli Gigamax#10205",
+        "Ajouter à la comparaison"
+      ]
+    },
+    {
+      "q": "bulbizarre",
+      "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nBulbizarre\n\n#001\n\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOMBAT\nPLANTE\nSévérité 1\nGLACE\nPOISON\nINSECTE\nGLACE\nSévér",
+      "buttons": [
+        "",
+        "Tout effacer",
+        "Copier le lien",
+        "Tout effacer",
+        "Bulbizarre#001",
+        "Ajouter à la comparaison",
+        "Ajouter à la comparaison",
+        "Ajouter à la comparaison"
+      ]
+    },
+    {
+      "q": "1",
+      "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nBulbizarre\n\n#001\n\nChenipan\n\n#010\n\nChrysacier\n\n#011\n\nPapilusion\n\n#012\n\nAspicot\n\n#013\n\nCoconfort\n\n#014\n\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité ",
+      "buttons": [
+        "",
+        "Tout effacer",
+        "Copier le lien",
+        "Tout effacer",
+        "Bulbizarre#001",
+        "Chenipan#010",
+        "Chrysacier#011",
+        "Papilusion#012"
+      ]
+    },
+    {
+      "q": "zzqa987",
+      "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nAucun Pokémon trouvé\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOMBAT\nPLANTE\nSévérité 1\nGLACE\nPOISON\nINSECTE\nGLACE\nSév",
+      "buttons": [
+        "",
+        "Tout effacer",
+        "Copier le lien",
+        "Tout effacer",
+        "Ajouter à la comparaison",
+        "Ajouter à la comparaison",
+        "Ajouter à la comparaison",
+        "Ajouter à la comparaison"
+      ]
+    }
+  ]
+}

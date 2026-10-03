@@ -1,0 +1,3341 @@
+[
+  {
+    "path": "/fr/legal",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/legal",
+    "duration": 1425,
+    "title": "Mentions légales | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Mentions légales"
+    ],
+    "main": "Mentions légales\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes informations identifient l’éditeur du projet et ses principaux prestataires techniques. Elles sont présentées sous réserve des informations contractuelles et administratives à jour.\n\nLunidex est un projet personnel, indépendant et non commercial.\n\nSOMMAIRE\n\n1. Éditeur\n2. Hébergement et services\n3. Activité\n4. Contact\n5. Non-affiliation\n1. Éditeur\nChamp\tValeur\nNom du projet\tLunidex\nÉditeur / responsable de la publication\tEsteban Deloge (particulier non professionnel)\nStatut\tProjet personnel indépendant et non commercial\nContact\tcontact@lunidex.app\n2. Hébergement et services\n\nL’application est déployée avec Vercel. Hébergeur : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — privacy@vercel.com. L’authentification et la base applicative peuvent être fournies par Neon lorsque la configuration de production les active. Resend peut être utilisé pour acheminer les messages de contact. Les données Pokémon et TCG sont demandées à des services tiers identifiés dans la politique de confidentialité.\n\n3. Activité\n\nLunidex est un Pokédex, un espace d’outils Pokémon et un catalogue TCG gratuits, sans publicité et sans transaction commerciale dans le code actuel. Les fonctions de compte et de synchronisation sont facultatives pour la consultation publique.\n\n4. Contact\n\nPour toute question, signalement ou demande relative aux données, écrivez à contact@lunidex.app.\n\n5. Non-affiliation\n\nLunidex n’est pas affilié, sponsorisé ni approuvé par Nintendo, Game Freak, Creatures Inc. ou The Pokémon Company.\n\nCe document juridique est principalement rédigé en français et en anglais. La version française fait foi en cas de divergence, sous réserve des dispositions impératives de votre pays de résidence.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "1. Éditeur",
+        "href": "#editor"
+      },
+      {
+        "text": "2. Hébergement et services",
+        "href": "#host"
+      },
+      {
+        "text": "3. Activité",
+        "href": "#activity"
+      },
+      {
+        "text": "4. Contact",
+        "href": "#contact"
+      },
+      {
+        "text": "5. Non-affiliation",
+        "href": "#affiliation"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/30e-anniversaire",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/30e-anniversaire",
+    "duration": 2619,
+    "title": "30e anniversaire du JCC Pokémon | cartes Pikachu | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "30e anniversaire du JCC Pokémon : cartes Pikachu et produits"
+    ],
+    "main": "ÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nRédaction Lunidex\n\nOuvrir le tracker\nOuvrir le catalogue TCG\nSortie mondiale\n16 septembre 2026\n\nSTATUT DE SORTIE\n\nDisponible dans le monde entier\n\nVISUEL OFFICIEL POKÉMON\nOUVRIR LA SOURCE OFFICIELLE\n\nSUR CETTE PAGE\n\nEn bref\nCartes Pikachu\nChecklist complète\nCartes remarquables\nRareté Futuriste\nCollection Classique\nProduits annoncés\nQuestions fréquentes\nSources officielles\nCe qui est confirmé\n\nL’extension 30e Anniversaire du JCC Pokémon est sortie dans le monde entier le 16 septembre 2026. Chaque booster contient l’une des 30 cartes Pikachu et l’extension comprend des cartes brillantes, notamment des cartes Énergie de base. Cette page conserve la checklist complète même lorsqu’une fiche ou une image amont est temporairement indisponible.\n\nSORTIE MONDIALE\n16 septembre 2026\nCARTES PIKACHU CONFIRMÉES\n30 illustrations uniques\nDANS CHAQUE BOOSTER\nUne carte Pikachu\nFICHES DE CHECKLIST\n213 fiches\n\nINFORMATIONS CONFIRMÉES SUR L'EXTENSION\n\nInformations confirmées sur l'extension\nSortie mondiale\n\nL'extension 30e Anniversaire du JCC Pokémon doit sortir simultanément dans le monde entier le 16 septembre 2026.\n\nContenu des boosters\n\nChaque booster doit contenir cinq cartes brillantes, dont l'une des 30 illustrations uniques de Pikachu, ainsi qu'une carte Énergie de base brillante.\n\n30 cartes Pikachu rare\n\nLes cartes Pikachu rare confirmées portent une numérotation spéciale Pikachu. Chacune possède une illustration, un artiste et des attaques propres.\n\nDeux révélations Pikachu-ex\n\nDeux cartes Pikachu-ex illustration spéciale rare ont été révélées avec l'esthétique du jour et de la nuit de l'extension.\n\nCartes brillantes et nouvelle rareté\n\nL'aperçu officiel décrit des cartes brillantes dans toute l'extension, y compris les cartes Énergie de base, et nomme la Rareté Futuriste comme nouvelle rareté du set.\n\nCollection Classique\n\nDes cartes classiques reviennent pour l'anniversaire. Pokémon précise que ces réimpressions ne sont pas légales en Standard, tandis que les formats qui autorisent les éditions originales peuvent toujours les utiliser.\n\nLES 30 CARTES PIKACHU\n\nLes 30 cartes Pikachu\n\nLes 30 cartes Pikachu rare confirmées utilisent une numérotation Pikachu spéciale de 01 à 30, correspondant aux numéros 023–052 de l’extension. Chaque carte possède sa propre illustration et son illustrateur. Ces mêmes fiches alimentent le tracker et la checklist générale ci-dessous.\n\nTRACKER LOCAL\n\nSuivre les 30 cartes Pikachu\n\nMarquez les cartes que vous possédez. Le tracker écrit dans la même collection TCG par langue que le reste de Lunidex : votre progression est donc disponible dans votre espace de collection après connexion.\n\n0/30 cartes Pikachu possédées\n\nRéinitialiser le tracker\n\nLes actions de collection nécessitent une session synchronisée et authentifiée. Votre ancien tracker v1 reste intact pendant l'import des cartes cochées dans la collection TCG.\n\nFILTRER LA CHECKLIST\n\nTOUTES 30\nMANQUANTES 30\n\nConnectez-vous pour enregistrer les changements de collection.\n\n#023\nPikachu\n\n023/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Ken Sugimori\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#024\nPikachu\n\n024/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: danciao\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#025\nPikachu\n\n025/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: satoma\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#026\nPikachu\n\n026/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Takeshi Nakamura\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#027\nPikachu\n\n027/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Asako Ito\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#028\nPikachu\n\n028/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: sowsow\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#029\nPikachu\n\n029/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: James Turner\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#030\nPikachu\n\n030/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: DOM\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#031\nPikachu\n\n031/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Atsushi Furusawa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#032\nPikachu\n\n032/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Tomokazu Komiya\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#033\nPikachu\n\n033/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Narumi Sato\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#034\nPikachu\n\n034/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: USGMEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#035\nPikachu\n\n035/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Susumu Maeya\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#036\nPikachu\n\n036/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: OKACHEKE\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#037\nPikachu\n\n037/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Yuu Nishida\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#038\nPikachu\n\n038/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Tetsu Kayama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#039\nPikachu\n\n039/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Teeziro\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#040\nPikachu\n\n040/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Shinji Kanda\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#041\nPikachu\n\n041/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Rianti Hidayat\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#042\nPikachu\n\n042/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Akira Komayama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#043\nPikachu\n\n043/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: OOYAMA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#044\nPikachu\n\n044/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: akagi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#045\nPikachu\n\n045/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Naoya Kimura\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#046\nPikachu\n\n046/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: svlt\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#047\nPikachu\n\n047/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Atsuko Nishida\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#048\nPikachu\n\n048/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: KIYOTAKA OSHIYAMA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#049\nPikachu\n\n049/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Nurikabe\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#050\nPikachu\n\n050/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Shimaris Yukichi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#051\nPikachu\n\n051/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: nagimiso\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#052\nPikachu\n\n052/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Kazuki Minami\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n\nDONNÉES DE CARTES VÉRIFIÉES\n\nChecklist complète du 30e Anniversaire\n\nParcourez les 158 cartes de l’extension principale, les 30 cartes de la Collection Classique, les Énergies de base et les promos actuellement listées. Les filtres apparaissent uniquement quand leurs fiches existent et une image amont manquante ne retire jamais une carte de la checklist HTML.\n\nDONNÉES FOURNISSEUR COMPLÈTES\n\nEXTENSION PRINCIPALE\n\n128\n\nRARE SECRÈTE\n\n30\n\nPIKACHU RARE\n\n30\n\nCLASSIQUE\n\n30\n\nÉNERGIE DE BASE\n\n8\n\nPROMO\n\n17\n\n25 fiches n’ont actuellement pas d’image fournisseur vérifiée.\n\nFILTRER LA CHECKLIST\n\nTOUTES 213\nMANQUANTES 213\nPIKACHU 30\nPOKÉMON-EX 34\nILLUSTRATION RARE 18\nILLUSTRATION SPÉCIALE RARE 10\nRARETÉ FUTURISTE 2\nCOLLECTION CLASSIQUE 30\n\nConnectez-vous pour enregistrer les changements de collection.\n\n#001\nExeggcute\n\n001/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Nelnal\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#002\nAlolan Exeggutor\n\n002/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Oswaldo KATO\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#003\nVolbeat\n\n003/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yoriyuki Ikegami\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#004\nIllumise\n\n004/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Shibuzoh\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#005\nTropius\n\n005/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Minahamu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#006\nCherubi\n\n006/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kurata So\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#007\nCherrim\n\n007/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: takashi shiraishi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#008\nVivillon\n\n008/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Jerky\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#009\nVulpix\n\n009/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: miki kudo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#010\nNinetales\n\n010/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: kodama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#011\nMoltres\n\n011/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: HYOGONOSUKE\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#012\nHo-Oh\n\n012/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Anesaki Dynamic\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#013\nVictini\n\n013/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Jiro Sasumo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#014\nReshiram\n\n014/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Uta\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#015\nFuecoco ex\n\n015/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#016\nSlowpoke\n\n016/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Uninori\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#017\nLapras\n\n017/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Masa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#018\nArticuno\n\n018/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: HYOGONOSUKE\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#019\nKyogre\n\n019/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Tonji Matsuno\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#020\nPalkia\n\n020/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: kawayoo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#021\nGreninja ex\n\n021/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#022\nWishiwashi\n\n022/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Narano\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#023\nPikachu\n\n023/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Ken Sugimori\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#024\nPikachu\n\n024/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: danciao\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#025\nPikachu\n\n025/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: satoma\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#026\nPikachu\n\n026/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Takeshi Nakamura\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#027\nPikachu\n\n027/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Asako Ito\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#028\nPikachu\n\n028/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: sowsow\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#029\nPikachu\n\n029/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: James Turner\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#030\nPikachu\n\n030/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: DOM\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#031\nPikachu\n\n031/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Atsushi Furusawa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#032\nPikachu\n\n032/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Tomokazu Komiya\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#033\nPikachu\n\n033/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Narumi Sato\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#034\nPikachu\n\n034/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: USGMEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#035\nPikachu\n\n035/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Susumu Maeya\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#036\nPikachu\n\n036/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: OKACHEKE\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#037\nPikachu\n\n037/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Yuu Nishida\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#038\nPikachu\n\n038/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Tetsu Kayama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#039\nPikachu\n\n039/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Teeziro\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#040\nPikachu\n\n040/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Shinji Kanda\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#041\nPikachu\n\n041/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Rianti Hidayat\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#042\nPikachu\n\n042/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Akira Komayama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#043\nPikachu\n\n043/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: OOYAMA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#044\nPikachu\n\n044/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: akagi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#045\nPikachu\n\n045/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Naoya Kimura\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#046\nPikachu\n\n046/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: svlt\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#047\nPikachu\n\n047/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Atsuko Nishida\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#048\nPikachu\n\n048/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: KIYOTAKA OSHIYAMA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#049\nPikachu\n\n049/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Nurikabe\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#050\nPikachu\n\n050/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Shimaris Yukichi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#051\nPikachu\n\n051/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: nagimiso\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#052\nPikachu\n\n052/128\n\nPIKACHU RARE\nPIKACHU RARE\n\nIllustrateur: Kazuki Minami\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#053\nPikachu ex\n\n053/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#054\nPikachu ex\n\n054/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: takuyoa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#055\nZapdos\n\n055/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: HYOGONOSUKE\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#056\nZekrom\n\n056/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: akagi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#057\nZeraora\n\n057/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Bun Toujo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#058\nToxel\n\n058/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Shimaris Yukichi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#059\nToxtricity\n\n059/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Haru Akasaka\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#060\nToxtricity\n\n060/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yuriko Akase\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#061\nMorpeko\n\n061/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Naoki Saito\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#062\nMiraidon\n\n062/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Kazumasa Yasukuni\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#063\nMewtwo\n\n063/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: nagimiso\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#064\nMewtwo ex\n\n064/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#065\nMew\n\n065/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: danciao\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#066\nMew ex\n\n066/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: aky CG Works\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#067\nMarill\n\n067/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Saya Tsuruta\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#068\nAzumarill\n\n068/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kagemaru Himeno\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#069\nEspeon\n\n069/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: aspara\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#070\nEspeon ex\n\n070/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#071\nSylveon ex\n\n071/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#072\nUnown\n\n072/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: mingo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#073\nDrifloon\n\n073/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Shinya Komatsu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#074\nCresselia\n\n074/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: KEIICHIRO ITO\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#075\nChandelure\n\n075/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yoshioka\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#076\nXerneas\n\n076/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: kodama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#077\nComfey\n\n077/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: sui\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#078\nCosmog\n\n078/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Mina Nakai\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#079\nCosmoem\n\n079/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Masako Tomii\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#080\nLunala\n\n080/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Bun Toujo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#081\nGimmighoul\n\n081/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Fujimoto Gold\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#082\nGroudon\n\n082/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Takumi Wada\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#083\nLucario\n\n083/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Hideki Ishikawa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#084\nSeismitoad\n\n084/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kurata So\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#085\nLycanroc\n\n085/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: matazo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#086\nKoraidon\n\n086/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Mitsuhiro Arita\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#087\nNidoran♀\n\n087/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Taira Akitsu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#088\nNidorina\n\n088/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Miki Tanaka\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#089\nAlolan Meowth\n\n089/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Natsumi Yoshida\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#090\nGengar ex\n\n090/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#091\nUmbreon\n\n091/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Iori Suzuki\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#092\nUmbreon ex\n\n092/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#093\nMurkrow\n\n093/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kouki Saitou\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#094\nScraggy\n\n094/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Souichirou Gunjima\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#095\nZorua\n\n095/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Atsuya Uki\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#096\nZoroark\n\n096/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Shiburingaru\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#097\nDeino\n\n097/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Gapao\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#098\nZweilous\n\n098/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: IKEDA Saki\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#099\nHydreigon\n\n099/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Ryuta Fuse\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#100\nYveltal\n\n100/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: hncl\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#101\nGalarian Meowth\n\n101/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Mékayu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#102\nJirachi ex\n\n102/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#103\nDialga\n\n103/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: toriyufu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#104\nFerrothorn\n\n104/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Po-Suzuki\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#105\nSolgaleo\n\n105/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Nurikabe\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#106\nZacian\n\n106/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: AKIRA EGAWA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#107\nZamazenta\n\n107/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Tsuyoshi Nagano\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#108\nGholdengo\n\n108/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Sanosuke Sakuma\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#109\nSalamence ex\n\n109/128\n\nEXTENSION PRINCIPALE\nDOUBLE RARE\n\nIllustrateur: 5ban Graphics\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#110\nJangmo-o\n\n110/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: miki kudo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#111\nHakamo-o\n\n111/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Jiro Sasumo\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#112\nKommo-o\n\n112/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: MARINA Chikazawa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#113\nMeowth\n\n113/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: MINAMINAMI Take\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#114\nKangaskhan\n\n114/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Pani Kobayashi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#115\nDitto\n\n115/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Toshinao Aoki\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#116\nEevee\n\n116/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Wintr Wandr\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#117\nEevee\n\n117/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: En Morikura\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#118\nEevee\n\n118/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Hitoshi Ariga\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#119\nSnorlax\n\n119/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Aya Kusube\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#120\nIgglybuff\n\n120/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kanami Ogata\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#121\nLugia\n\n121/128\n\nEXTENSION PRINCIPALE\nRARE\n\nIllustrateur: Kazuki Minami\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#122\nHisuian Zorua\n\n122/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Megumi Mizutani\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#123\nHisuian Zoroark\n\n123/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kamome Shirahama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#124\nMinior\n\n124/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: ryoma uratsuka\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#125\nMaushold\n\n125/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Kariya\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#126\nPoké Pad\n\n126/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yuka Morii\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#127\nSwitch\n\n127/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yuka Morii\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#128\nUltra Ball\n\n128/128\n\nEXTENSION PRINCIPALE\nCOMMON\n\nIllustrateur: Yuka Morii\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#129\nAlolan Exeggutor\n\n129/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: AYUMI ODASHIMA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#130\nMoltres\n\n130/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: mashu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#131\nLapras\n\n131/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: Ameikart\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#132\nArticuno\n\n132/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: mashu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#133\nZapdos\n\n133/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: mashu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#134\nToxtricity\n\n134/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: Kazumasa Yasukuni\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#135\nMorpeko\n\n135/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: Yoshimi Miyoshi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#136\nDrifloon\n\n136/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: Whisker\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#137\nChandelure\n\n137/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: YASHIRO Nanaco\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#138\nLycanroc\n\n138/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: Raita Kazama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#139\nAlolan Meowth\n\n139/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: OKUBO\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#140\nScraggy\n\n140/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: GOSSAN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#141\nGalarian Meowth\n\n141/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: OKUBO\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#142\nGholdengo\n\n142/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: toriyufu\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#143\nKommo-o\n\n143/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#144\nMeowth\n\n144/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: OKUBO\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#145\nHisuian Zorua\n\n145/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: 0313\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#146\nMaushold\n\n146/128\n\nRARE SECRÈTE\nILLUSTRATION RARE\n\nIllustrateur: osare\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#147\nFuecoco ex\n\n147/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: Atsushi Furusawa\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#148\nGreninja ex\n\n148/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: GIDORA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#149\nPikachu ex\n\n149/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: kantaro\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#150\nPikachu ex\n\n150/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: kantaro\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#151\nMewtwo ex\n\n151/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#152\nMew ex\n\n152/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#153\nSylveon ex\n\n153/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: You Iribi\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#154\nGengar ex\n\n154/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#155\nJirachi ex\n\n155/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: AKIRA EGAWA\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#156\nSalamence ex\n\n156/128\n\nRARE SECRÈTE\nSPECIAL ILLUSTRATION RARE\n\nIllustrateur: Ryota Murayama\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#157\nMewtwo ex\n\n157/128\n\nRARE SECRÈTE\nFUTURISTIC RARE\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#158\nMew ex\n\n158/128\n\nRARE SECRÈTE\nFUTURISTIC RARE\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#classic-01\nCharizard\n\n4/102\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-02\nDelcatty\n\n5/109\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-03\nMetagross δ\n\n11/113\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-04\nGenesect-EX\n\n11/101\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-05\nMisty\n\n18/132\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-06\nDark Tyranitar\n\n19/109\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-07\nSneasel\n\n25/111\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-08\nPikachu & Zekrom-GX\n\n33/181\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-09\nGreninja BREAK\n\n41/122\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-10\nUxie\n\n43/146\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-11\nCrobat G\n\n47/127\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-12\nRaikou\n\n050/185\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-13\nBuzzwole-GX\n\n57/111\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-14\nPikachu\n\n58/102\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-15\nErika's Jigglypuff\n\n69/132\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-16\nRayquaza-EX\n\n85/124\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-17\nSolgaleo-GX\n\n89/149\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-18\nGengar (Prime)\n\n94/102\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-19\nDarkrai & Cresselia LEGEND (top)\n\n99/102\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-20\nDarkrai & Cresselia LEGEND (bottom)\n\n100/102\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-21\nN\n\n101/101\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-22\nPalkia LV.X\n\n106/106\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-23\nM Gardevoir-EX\n\n106/160\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-24\nShining Celebi\n\n106/105\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-25\nScizor ex\n\n108/115\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-26\nMew VMAX\n\n114/264\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-27\nArceus VSTAR\n\n123/172\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-28\nZacian V\n\n138/202\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-29\nLugia\n\n149/147\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n#classic-30\nMagikarp\n\n203/193\n\nCLASSIQUE\nCLASSIC COLLECTION\n\nRapporté\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-grass\nBasic Grass Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-fire\nBasic Fire Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-water\nBasic Water Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-lightning\nBasic Lightning Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-psychic\nBasic Psychic Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-fighting\nBasic Fighting Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-darkness\nBasic Darkness Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#energy-metal\nBasic Metal Energy\n\n—\n\nÉNERGIE DE BASE\nBASIC ENERGY\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-094\nAlolan Exeggutor\n\nMEP 094\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-095\nLucario\n\nMEP 095\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-096\nMoltres\n\nMEP 096\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-097\nArticuno\n\nMEP 097\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-098\nZapdos\n\nMEP 098\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-099\nGreninja ex\n\nMEP 099\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-100\nSylveon ex\n\nMEP 100\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-101\nNidorina (full art)\n\nMEP 101\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-102\nVictini\n\nMEP 102\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-103\nZeraora\n\nMEP 103\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-104\nMewtwo\n\nMEP 104\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-105\nMew\n\nMEP 105\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE NON PUBLIÉE\n#MEP-106\nDitto\n\nMEP 106\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-107\nPikachu ex\n\nMEP 107\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-108\nEspeon ex\n\nMEP 108\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-109\nPikachu ex\n\nMEP 109\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\nIMAGE INDISPONIBLE\n#MEP-110\nUmbreon ex\n\nMEP 110\n\nPROMO\nPROMO\n\nListe vérifiée\n\nMARQUER POSSÉDÉEOUVRIR LA SOURCE OFFICIELLE\n\nCARTES À RETENIR\n\nCartes remarquables du 30e Anniversaire\n\nVoici un index visuel court des Pokémon et personnages révélés qui distinguent cette extension anniversaire. Ouvrez la fiche Lunidex lorsque l'identité fournisseur est validée, ou consultez la galerie officielle dans le cas contraire.\n\n053/128\n\nDOUBLE RARE\n\nPikachu ex\n\nIllustrateur: 5ban Graphics\n\nOUVRIR LE DÉTAIL\n066/128\n\nDOUBLE RARE\n\nMew ex\n\nIllustrateur: aky CG Works\n\nOUVRIR LE DÉTAIL\n064/128\n\nDOUBLE RARE\n\nMewtwo ex\n\nIllustrateur: 5ban Graphics\n\nOUVRIR LE DÉTAIL\n121/128\n\nRARE\n\nLugia\n\nIllustrateur: Kazuki Minami\n\nOUVRIR LE DÉTAIL\n012/128\n\nRARE\n\nHo-Oh\n\nIllustrateur: Anesaki Dynamic\n\nOUVRIR LE DÉTAIL\n\nNOUVELLE RARETÉ\n\nRareté Futuriste\n\nPokémon présente la Rareté Futuriste comme une nouvelle rareté de 30e Anniversaire. Le snapshot de base vérifié associe actuellement deux cartes à cette famille ; elles restent séparées de l'extension numérotée et pourront être mises à jour lorsque le catalogue fournisseur sera complet.\n\nFILTRER LA CHECKLIST\n\nTOUTES 2\n\nConnectez-vous pour enregistrer les changements de collection.\n\n#157\nMewtwo ex\n\n157/128\n\nRARE SECRÈTE\nFUTURISTIC RARE\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n#158\nMew ex\n\n158/128\n\nRARE SECRÈTE\nFUTURISTIC RARE\n\nIllustrateur: YOSHIROTTEN\n\nMARQUER POSSÉDÉEOUVRIR LE DÉTAIL\n\n30 RÉIMPRESSIONS\n\nCollection Classique\n\nLa Collection Classique réunit 30 cartes d'époques précédentes. Pokémon précise que ces réimpressions ne sont pas légales en Standard, tandis que les formats qui autorisent les éditions originales peuvent les utiliser.\n\n01 · CHARIZARD\n\n4/102 — Base Set (1999)\n\n02 · DELCATTY\n\n5/109 — EX Ruby & Sapphire (2003)\n\n03 · METAGROSS Δ\n\n11/113 — EX Delta Species (2005)\n\n04 · GENESECT-EX\n\n11/101 — Plasma Blast (2013)\n\n05 · MISTY\n\n18/132 — Gym Heroes (2000)\n\n06 · DARK TYRANITAR\n\n19/109 — EX Team Rocket Returns (2004)\n\n07 · SNEASEL\n\n25/111 — Neo Genesis (2000)\n\n08 · PIKACHU & ZEKROM-GX\n\n33/181 — Sun & Moon—Team Up (2019)\n\n09 · GRENINJA BREAK\n\n41/122 — XY—BREAKpoint (2016)\n\n10 · UXIE\n\n43/146 — Legends Awakened (2008)\n\n11 · CROBAT G\n\n47/127 — Platinum (2009)\n\n12 · RAIKOU\n\n050/185 — Vivid Voltage (2020)\n\n13 · BUZZWOLE-GX\n\n57/111 — Crimson Invasion (2017)\n\n14 · PIKACHU\n\n58/102 — Base Set (1999)\n\n15 · ERIKA'S JIGGLYPUFF\n\n69/132 — Gym Challenge (2000)\n\n16 · RAYQUAZA-EX\n\n85/124 — Dragons Exalted (2012)\n\n17 · SOLGALEO-GX\n\n89/149 — Sun & Moon (2017)\n\n18 · GENGAR (PRIME)\n\n94/102 — HS—Triumphant (2010)\n\n19 · DARKRAI & CRESSELIA LEGEND (TOP)\n\n99/102 — HS—Triumphant (2010)\n\n20 · DARKRAI & CRESSELIA LEGEND (BOTTOM)\n\n100/102 — HS—Triumphant (2010)\n\n21 · N\n\n101/101 — Noble Victories (2011)\n\n22 · PALKIA LV.X\n\n106/106 — Great Encounters (2008)\n\n23 · M GARDEVOIR-EX\n\n106/160 — Primal Clash (2015)\n\n24 · SHINING CELEBI\n\n106/105 — Neo Destiny (2002)\n\n25 · SCIZOR EX\n\n108/115 — EX Unseen Forces (2005)\n\n26 · MEW VMAX\n\n114/264 — Fusion Strike (2021)\n\n27 · ARCEUS VSTAR\n\n123/172 — Brilliant Stars (2022)\n\n28 · ZACIAN V\n\n138/202 — Sword & Shield (2020)\n\n29 · LUGIA\n\n149/147 — Aquapolis (2003), Crystal Type\n\n30 · MAGIKARP\n\n203/193 — Paldea Evolved (2023)\n\nPRODUITS ANNONCÉS\n\nProduits annoncés\n\nL'annonce officielle présente les produits prévus pour la sortie de l'extension et ceux annoncés pour plus tard dans l'année. Les fenêtres affichées reprennent uniquement les informations publiées par Pokémon.\n\nSeptembre 2026\nJCC Pokémon : blister de deux boosters 30e Anniversaire\n\nUne carte promo brillante d’Évoli, une pièce en plastique et deux boosters du 30e Anniversaire.\n\nPROMO BRILLANTE D’ÉVOLI ET PIÈCE EN PLASTIQUE\n\n2 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collection K.O. 30e Anniversaire\n\nUne carte promo brillante d’Évoli, une pièce en plastique et deux boosters du 30e Anniversaire dans une collection tournée vers le combat.\n\nPROMO BRILLANTE D’ÉVOLI ET PIÈCE EN PLASTIQUE\n\n2 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collection classeur 30e Anniversaire\n\nUn classeur thématique à neuf pochettes et cinq boosters du 30e Anniversaire.\n\nCLASSEUR THÉMATIQUE À NEUF POCHETTES\n\n5 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collection poster 30e Anniversaire\n\nUn poster représentant les images de plus de 160 cartes, trois cartes promo brillantes des Pokémon légendaires de Kanto et trois boosters.\n\nPOSTER ET TROIS PROMOS BRILLANTES DES OISEAUX LÉGENDAIRES DE KANTO\n\n3 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Coffrets 30e Anniversaire Nymphali-ex et Amphinobi-ex\n\nUne carte promo brillante de Nymphali-ex ou Amphinobi-ex, une version grand format brillante et quatre boosters du 30e Anniversaire.\n\nPROMO BRILLANTE ET CARTE GRAND FORMAT BRILLANTE\n\n4 BOOSTERS\nNYMPHALI-EX OU AMPHINOBI-EX\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Coffret Dresseur d’élite 30e Anniversaire\n\nNeuf boosters, une carte promo entièrement illustrée de Nidorina, des protège-cartes, des cartes Énergie de base brillantes, des dés, une pièce, des séparateurs, un coffret et un guide de jeu.\n\nPROTÈGE-CARTES, ÉNERGIES DE BASE BRILLANTES, DÉS, PIÈCE, SÉPARATEURS ET GUIDE\n\n9 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Coffret Dresseur d’élite Pokémon Center 30e Anniversaire\n\nTout le contenu du Coffret Dresseur d’élite standard, 11 boosters et deux cartes promo entièrement illustrées de Nidorina, dont une avec le logo Pokémon Center.\n\nVERSION POKÉMON CENTER AVEC ACCESSOIRE EXCLUSIF ESTAMPILLÉ\n\n11 BOOSTERS\nEXCLUSIVITÉ POKÉMON CENTER\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nOctobre 2026\nJCC Pokémon : lot de boosters 30e Anniversaire\n\nUn lot contenant six boosters du 30e Anniversaire.\n\nBOOSTERS\n\n6 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Mini-boîtes 30e Anniversaire\n\nDeux boosters, une page d’autocollants et une carte artistique correspondante dans chaque mini-boîte. Les dix illustrations forment deux images du jour et de la nuit.\n\nPLANCHE D’AUTOCOLLANTS ET CARTE ARTISTIQUE ASSORTIE\n\n2 BOOSTERS\nDIX ILLUSTRATIONS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Decks Combat 30e Anniversaire\n\nDes Decks Combat autour de Mentali-ex et Noctali-ex, avec un thème du jour et de la nuit.\n\nACCESSOIRES DE DECK PRÊT-À-JOUER\n\nAUCUN BOOSTER LISTÉ\nMENTALI-EX OU NOCTALI-EX\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nNovembre 2026\nJCC Pokémon : Collection autocollant réajustable 30e Anniversaire\n\nUne carte promo brillante de Noadkoko d’Alola ou Lucario, une page d’autocollants correspondante et trois boosters du 30e Anniversaire.\n\nPROMO BRILLANTE ET PLANCHE D’AUTOCOLLANTS TECHNIQUE\n\n3 BOOSTERS\nNOADKOKO D’ALOLA OU LUCARIO\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collection Premium Métamorph 30e Anniversaire\n\nUne carte promo brillante de Métamorph, un présentoir en acrylique et huit boosters du 30e Anniversaire.\n\nPROMO DE MÉTAMORPH ET PRÉSENTOIR EN ACRYLIQUE\n\n8 BOOSTERS\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collections Ultra-Premium 30e Anniversaire, Journée et Soirée\n\nDes collections du jour et de la nuit avec des cartes promo Pikachu-ex et Mentali-ex ou Noctali-ex, des accessoires, 29 boosters, un booster de la Collection Classique contenant trois cartes et une carte à code pour le JCC Pokémon Live.\n\nACCESSOIRES DU JOUR OU DE LA NUIT ET CODE POUR LE JCC POKÉMON LIVE\n\n29 BOOSTERS\n1 BOOSTER COLLECTION CLASSIQUE\nVERSIONS DU JOUR ET DE LA NUIT\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nJCC Pokémon : Collection avec figurine 30e Anniversaire, Mew et Mewtwo\n\nUne carte promo brillante, une carte grand format brillante, une figurine représentant Mew ou Mewtwo et cinq boosters du 30e Anniversaire.\n\nFIGURINE, PROMO ET CARTE GRAND FORMAT BRILLANTE\n\n5 BOOSTERS\nMEW OU MEWTWO\nANNONCE OFFICIELLE\nOUVRIR LA SOURCE OFFICIELLE\nQuestions sur l'extension du 30e anniversaire\nQuand est sortie l’extension 30e anniversaire du JCC Pokémon ?\nCombien de cartes Pikachu sont confirmées ?\nY a-t-il une carte Pikachu dans chaque booster ?\nLa liste complète des cartes est-elle disponible sur cette page ?\nQuels produits ont été annoncés ?\nLes réimpressions de la Collection Classique sont-elles légales en Standard ?\nCombien de cartes contient la checklist principale ?\nPourquoi une carte peut-elle apparaître sans image ou lien de détail ?\nSources officielles\n\nLes faits et descriptions de produits ci-dessous reposent sur les pages officielles de Pokémon liées ici. La disponibilité des produits et les prochaines révélations peuvent évoluer, la matrice des sources sera donc revue à chaque mise à jour. Mise à jour le 12 septembre 2026.\n\nPréparez-vous pour l’extension 30e Anniversaire du JCC Pokémon\n↗\nDes cartes Pikachu électrisantes dans l’extension 30e Anniversaire\n↗\nJCC Pokémon : produits 30e Anniversaire\n↗\nGalerie des produits du JCC Pokémon\n↗\nListe des cartes et guide des raretés du 30e Anniversaire\n↗\nListe des cartes de la Collection Classique\n↗\nOuvrir le catalogue TCG\nLire le guide de collection\nÀ propos de Lunidex",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Réinitialiser le tracker",
+        "label": "Réinitialiser le tracker Pikachu",
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Toutes 30",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manquantes 30",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Pikachu",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Toutes 213",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manquantes 213",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pikachu 30",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pokémon-ex 34",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Illustration rare 18",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Illustration spéciale rare 10",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rareté Futuriste 2",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Collection Classique 30",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Exeggcute",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Alolan Exeggutor",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Volbeat",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Illumise",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Tropius",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Cherubi",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Cherrim",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Vivillon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Vulpix",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Ninetales",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Moltres",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Ho-Oh",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Victini",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Reshiram",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Fuecoco ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Slowpoke",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Lapras",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Articuno",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Kyogre",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Palkia",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Greninja ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Wishiwashi",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Pikachu ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zapdos",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zekrom",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zeraora",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Toxel",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Toxtricity",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Morpeko",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Miraidon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Mewtwo",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Mewtwo ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Mew",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Mew ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Marill",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Azumarill",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Espeon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Espeon ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Sylveon ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Unown",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Drifloon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Cresselia",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Chandelure",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Xerneas",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Comfey",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Cosmog",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Cosmoem",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Lunala",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Gimmighoul",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Groudon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Lucario",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Seismitoad",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Lycanroc",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Koraidon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Nidoran♀",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Nidorina",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Alolan Meowth",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Gengar ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Umbreon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Umbreon ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Murkrow",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Scraggy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zorua",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zoroark",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Deino",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zweilous",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Hydreigon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Yveltal",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Galarian Meowth",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Jirachi ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Dialga",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Ferrothorn",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Solgaleo",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zacian",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zamazenta",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Gholdengo",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Salamence ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Jangmo-o",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Hakamo-o",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Kommo-o",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Meowth",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Kangaskhan",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Ditto",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Eevee",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Snorlax",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Igglybuff",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Lugia",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Hisuian Zorua",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Hisuian Zoroark",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Minior",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Maushold",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Poké Pad",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Switch",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Ultra Ball",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Charizard",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Delcatty",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Metagross δ",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Genesect-EX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Misty",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Dark Tyranitar",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Sneasel",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Pikachu & Zekrom-GX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Greninja BREAK",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Uxie",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Crobat G",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Raikou",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Buzzwole-GX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Erika's Jigglypuff",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Rayquaza-EX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Solgaleo-GX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Gengar (Prime)",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Darkrai & Cresselia LEGEND (top)",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Darkrai & Cresselia LEGEND (bottom)",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: N",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Palkia LV.X",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: M Gardevoir-EX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Shining Celebi",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Scizor ex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Mew VMAX",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Arceus VSTAR",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Zacian V",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Magikarp",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Grass Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Fire Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Water Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Lightning Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Psychic Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Fighting Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Darkness Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Basic Metal Energy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Marquer possédée",
+        "label": "Marquer possédée: Nidorina (full art)",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Toutes 2",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "#tracker"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "En bref",
+        "href": "#summary"
+      },
+      {
+        "text": "Cartes Pikachu",
+        "href": "#pikachu"
+      },
+      {
+        "text": "Checklist complète",
+        "href": "#checklist"
+      },
+      {
+        "text": "Cartes remarquables",
+        "href": "#highlights"
+      },
+      {
+        "text": "Rareté Futuriste",
+        "href": "#futuristic"
+      },
+      {
+        "text": "Collection Classique",
+        "href": "#classic"
+      },
+      {
+        "text": "Produits annoncés",
+        "href": "#products"
+      },
+      {
+        "text": "Questions fréquentes",
+        "href": "#faq"
+      },
+      {
+        "text": "Sources officielles",
+        "href": "#sources"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-023?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-024?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-025?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-026?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-027?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-028?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-029?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-030?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-031?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-032?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-033?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-034?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-035?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-036?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-037?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-038?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-039?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-040?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-041?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-042?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-043?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-044?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-045?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-046?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-047?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-048?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-049?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-050?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-051?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-052?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-001?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-002?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-003?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-004?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-005?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-006?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-007?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-008?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-009?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-010?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-011?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-012?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-013?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-014?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-015?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-016?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-017?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-018?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-019?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-020?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-021?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-022?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-023?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-024?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-025?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-026?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-027?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-028?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-029?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-030?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-031?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-032?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-033?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-034?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-035?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-036?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-037?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-038?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-039?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-040?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-041?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-042?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-043?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-044?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-045?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-046?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-047?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-048?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-049?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-050?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-051?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-052?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-053?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-054?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-055?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-056?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-057?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-058?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-059?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-060?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-061?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-062?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-063?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-064?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-065?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-066?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-067?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-068?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-069?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-070?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-071?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-072?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-073?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-074?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-075?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-076?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-077?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-078?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-079?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-080?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-081?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-082?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-083?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-084?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-085?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-086?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-087?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-088?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-089?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-090?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-091?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-092?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-093?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-094?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-095?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-096?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-097?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-098?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-099?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-100?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-101?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-102?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-103?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-104?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-105?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-106?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-107?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-108?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-109?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-110?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-111?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-112?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-113?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-114?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-115?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-116?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-117?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-118?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-119?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-120?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-121?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-122?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-123?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-124?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-125?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-126?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-127?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-128?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-129?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-130?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-131?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-132?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-133?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-134?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-135?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-136?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-137?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-138?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-139?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-140?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-141?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-142?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-143?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-144?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-145?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-146?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-147?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-148?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-149?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-150?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-151?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-152?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-153?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-154?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-155?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-156?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-157?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-158?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-053?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-066?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-064?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-121?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-012?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-157?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir le détail",
+        "href": "/fr/tcg/cards/30th-158?tcgLang=fr"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Ouvrir la source officielle",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Préparez-vous pour l’extension 30e Anniversaire du JCC Pokémon↗",
+        "href": "https://www.pokemon.com/us/news/get-ready-for-pokemon-tcg-30th-celebration"
+      },
+      {
+        "text": "Des cartes Pikachu électrisantes dans l’extension 30e Anniversaire↗",
+        "href": "https://www.pokemon.com/uk/news/get-ready-for-a-pikachu-parade-in-pokemon-tcg-30th-celebration"
+      },
+      {
+        "text": "JCC Pokémon : produits 30e Anniversaire↗",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "Galerie des produits du JCC Pokémon↗",
+        "href": "https://tcg.pokemon.com/en-us/galleries/30th-celebration/"
+      },
+      {
+        "text": "Liste des cartes et guide des raretés du 30e Anniversaire↗",
+        "href": "https://tcgscreener.com/guide/30th-celebration-card-list"
+      },
+      {
+        "text": "Liste des cartes de la Collection Classique↗",
+        "href": "https://www.pokebeach.com/2026/06/all-30-classic-collection-cards-from-30th-celebration"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Lire le guide de collection",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/offline",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/offline",
+    "duration": 1432,
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "lang": "fr",
+    "h1": [
+      "Lunidex est momentanément hors ligne"
+    ],
+    "main": "SIGNAL PERDU\n\nLNX / 00\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Réessayer",
+        "label": null,
+        "placeholder": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Retour à l’accueil",
+        "href": "/fr"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/auth/reset-password",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/auth/reset-password",
+    "duration": 1480,
+    "title": "Modifier votre mot de passe | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Modifier votre mot de passe"
+    ],
+    "main": "LUNIDEX\n\nModifier votre mot de passe\n\nCe lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.\n\nBack home",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Back home",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/team/share?code=25-6-9&lang=fr",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/team",
+    "duration": 1290,
+    "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Constructeur d’équipe Pokémon"
+    ],
+    "main": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copier le code",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Import Showdown",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ajouter",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Guide du créateur d’équipe ↗",
+        "href": "/fr/guides/team-builder-guide"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/team-builder-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/team-builder-guide",
+    "duration": 1300,
+    "title": "Guide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex"
+    ],
+    "main": "GUIDE D’ÉQUIPE\n\nComposer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex\n\nUn guide pratique du créateur d’équipe : six emplacements, analyse de synergie, couverture de types, auto-complétion et partage — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 9 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe créateur d’équipe calcule localement dans le navigateur la synergie, les faiblesses défensives et la couverture des types. Connectez-vous pour enregistrer et synchroniser votre équipe dans l’espace personnel.\n\nCe que renvoie l’analyse\n\nChaque ligne correspond à un résultat visible du créateur d’équipe actuel. C’est une aide à la préparation, pas un simulateur de combat ni un moteur de légalité des formats.\n\nENTRÉE OU INDICATEUR\tRÉSULTAT VISIBLE\nÉquipe de six\tAjoutez jusqu’à six Pokémon ; les membres présents servent d’entrée à chaque calcul.\nFaiblesses partagées\tAffiche les multiplicateurs défensifs et met en évidence les recouvrements pour repérer les faiblesses répétées.\nCouverture des types\tRésume les types offensifs couverts et signale les trous où les attaques actuelles n’ont pas de coup super efficace.\nStatistiques\tPrésente l’équilibre des statistiques de base dans le radar et les résumés associés ; toutes les conditions de combat ne sont pas simulées.\nScore de synergie\tUn résumé heuristique de 0 à 100 % de la couverture défensive. Utilisez-le pour comparer, pas comme garantie compétitive.\nExemple pratique\n\nSi deux membres de votre équipe sont faibles face à la Glace, notez cette faiblesse partagée et vérifiez si les autres membres et leurs attaques choisies peuvent répondre à des adversaires de type Glace. Utilisez le tableau des types pour les matchups défensifs et une fiche Pokémon pour confirmer ses types et ses attaques. Cet exemple explique la méthode et n’attribue aucun score à l’équipe.\n\nOuvrir le tableau des types\nParcourir le Pokédex\nComposer et analyser une équipe\n\nLa page d’équipe fonctionne en trois étapes : choisir ses Pokémon, lire l’analyse, puis affiner.\n\n01\n\nOuvrez le créateur d’équipe et ajoutez des Pokémon. Vous pouvez en ajouter jusqu’à six depuis le Pokédex, ou charger une équipe vide avec un code d’URL tel que ?code=25-6-9.\n\n02\n\nLisez l’analyse : le score de synergie, les faiblesses et résistances défensives, la couverture offensive et le radar de statistiques. Elle se met à jour automatiquement à chaque changement d’équipe.\n\n03\n\nServez-vous du panneau de suggestions pour repérer les types manquants, les trous de couverture ou les lacunes statistiques, puis ajoutez ou remplacez des membres.\n\n04\n\nUtilisez l’auto-complétion pour remplir les emplacements restants : choisissez une génération et Lunidex classe les candidats selon les rôles dont votre équipe a encore besoin.\n\nTirer le meilleur de l’analyse\n• Un score de synergie élevé signifie moins de faiblesses partagées ; le tableau défensif montre les multiplicateurs derrière le score.\n• Les suggestions de trous de couverture désignent les types que vos attaques actuelles ne frappent pas très efficacement.\n• L’auto-complétion peut exclure les Pokémon légendaires, mythiques et les formes spéciales, et permet de fixer un minimum de statistiques de base.\nEnregistrer, exporter et partager\n\nConnectez-vous pour enregistrer et synchroniser votre équipe. Vous pouvez exporter une image, la partager avec un code court ou importer une équipe Showdown existante.\n\nQuestions sur le créateur d’équipe\nCombien de Pokémon une équipe peut-elle contenir ?\nLe créateur d’équipe nécessite-t-il un compte ?\nQue signifie le score de synergie ?\nComment partager une équipe ?\nSources et date de mise à jour\n\nLes affirmations de cette page sont vérifiées à partir du dépôt Lunidex et des routes publiques. Les données Pokémon proviennent de PokéAPI.\n\nDépôt source Lunidex\nPokéAPI\n\nCONTINUER L’EXPLORATION\n\nOuvrir le créateur d’équipe\nLire le blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Ouvrir le tableau des types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Parcourir le Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le créateur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/quiz-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/quiz-guide",
+    "duration": 1406,
+    "title": "Guide du quiz Pokémon — Modes, défis et badges | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Jouer au quiz Pokémon Lunidex : modes, défis et badges"
+    ],
+    "main": "GUIDE DU QUIZ\n\nJouer au quiz Pokémon Lunidex : modes, défis et badges\n\nUn guide pratique du quiz : trois types de défis, trois modes de jeu, le défi quotidien et les badges à débloquer — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 10 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe quiz permet de reconnaître des Pokémon à partir de l’illustration officielle, d’une silhouette ou des statistiques de base. Vous choisissez un type de défi (classique, silhouette, stats), puis un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies et le contre-la-montre 30 secondes. Un défi quotidien et cinq badges complètent l’expérience.\n\nComment jouer\n\nLa page du quiz fonctionne en quatre étapes : défi, mode, filtres, puis réponse.\n\n01\n\nChoisissez un type de défi : le classique montre l’illustration officielle, la silhouette montre le sprite en noir, les stats montrent des barres de statistiques de base avec les valeurs masquées.\n\n02\n\nChoisissez un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies, le contre-la-montre donne 30 secondes et récompense les réponses correctes rapides avec plus de points.\n\n03\n\nRéduisez le vivier avec les filtres de génération et de type si vous le souhaitez, puis répondez parmi les quatre propositions.\n\n04\n\nJouez au défi quotidien pour un ensemble fixe de dix questions déterminées par la date. Avec un compte connecté, la tentative est suivie et comptée au classement.\n\nLes cinq badges\n\nLes badges se débloquent selon vos performances. Connectez-vous pour conserver les scores, les sessions et les badges dans l’espace synchronisé.\n\n• Quiz novice — atteindre 10 points.\n• Quiz master — atteindre 50 points en mode marathon.\n• Démon de vitesse — atteindre 100 points en mode contre-la-montre.\n• Œil d’aigle — marquer 20 points dans les défis silhouette.\n• Professeur — marquer 20 points dans les défis stats.\nQuestions sur le quiz\nLe défi quotidien nécessite-t-il un compte ?\nOù mes scores sont-ils enregistrés ?\nPuis-je jouer contre un Pokémon précis ?\nComment fonctionne le classement ?\nSources et date de mise à jour\n\nLes affirmations de cette page sont vérifiées à partir du dépôt Lunidex et des routes publiques. Les données Pokémon proviennent de PokéAPI.\n\nDépôt source Lunidex\nPokéAPI\n\nCONTINUER L’EXPLORATION\n\nJouer au quiz\nLire le blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Jouer au quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/nuzlocke-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/nuzlocke-guide",
+    "duration": 1427,
+    "title": "Suivi Nuzlocke — Suivre vos parties challenge | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Suivre une partie Nuzlocke avec Lunidex"
+    ],
+    "main": "GUIDE NUZLOCKE\n\nSuivre une partie Nuzlocke avec Lunidex\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 11 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nComment suivre une partie\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\n01\n\nCréez une partie et donnez-lui un nom ou une mention de jeu.\n\n02\n\nAjoutez une rencontre : saisissez le nom de la route ou du lieu et choisissez le Pokémon trouvé.\n\n03\n\nMettez à jour le statut de chaque rencontre au fil de la partie : vivant, mort ou en boîte.\n\n04\n\nLisez le bandeau de statistiques — total, vivants, morts, boîte — et démarrez une nouvelle partie quand un challenge se termine.\n\nRègles appliquées par le suivi\n• Une seule rencontre par route dans une partie : une route en double est refusée.\n• Un Pokémon mort ou en boîte reste visible avec son sprite pour que l’historique de la partie reste lisible.\n• Vous pouvez supprimer une partie ou retirer une rencontre à tout moment.\nQuestions sur le suivi Nuzlocke\nLe suivi applique-t-il automatiquement les règles Nuzlocke ?\nOù mes données sont-elles enregistrées ?\nPuis-je suivre plusieurs parties en même temps ?\nPuis-je changer le statut d’un Pokémon ?\nSources et date de mise à jour\n\nLes affirmations de cette page sont vérifiées à partir du dépôt Lunidex et des routes publiques. Les données Pokémon proviennent de PokéAPI.\n\nDépôt source Lunidex\nPokéAPI\n\nCONTINUER L’EXPLORATION\n\nOuvrir le suivi Nuzlocke\nLire le blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/pokemon-card-collection-tracker",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/pokemon-card-collection-tracker",
+    "duration": 1241,
+    "title": "Suivi gratuit de collection de cartes Pokémon | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Suivi gratuit de collection de cartes Pokémon : organisez votre collection TCG"
+    ],
+    "main": "GUIDE DE COLLECTION\n\nSuivi gratuit de collection de cartes Pokémon : organisez votre collection TCG\n\nUn guide pratique et sourcé pour utiliser Lunidex comme suivi de collection de cartes Pokémon : parcourez les cartes, marquez les cartes possédées et manquantes, puis consultez la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application web open source et gratuite à utiliser pour consulter un catalogue Pokémon TCG et suivre une collection personnelle. Dans l’espace associé à un compte, vous pouvez marquer les cartes possédées, voir les cartes manquantes et le pourcentage de complétion des sets, suivre les finitions et les langues de cartes prises en charge, rechercher et filtrer le catalogue et consulter une estimation de la valeur de la collection lorsque TCGdex fournit les champs de prix. Les pages de catalogue public sont consultables sans compte ; l’état personnel de collection dépend du service de compte configuré. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent pas de scanner de cartes.\n\nUne méthode simple pour suivre sa collection à la main\n\nUn tableur ou une checklist papier convient si vous voulez choisir chaque champ vous-même. Prévoyez une ligne par version de carte et réutilisez les mêmes identifiants à chaque mise à jour.\n\n01Choisissez le set que vous collectionnez et notez son nom ou son code.\n02Recopiez le numéro de chaque carte tel qu’il apparaît dans le set ; ajoutez son nom pour faciliter la recherche.\n03Notez séparément la langue et la finition : français, japonais, normale, holo ou reverse holo, par exemple.\n04Séparez la quantité possédée, les doubles et les cartes manquantes afin qu’une copie ne masque pas une autre version.\n05Après une ouverture de boosters ou un échange, mettez à jour la même liste et gardez une copie avant de la réorganiser.\nChoisir un outil selon son besoin\n\nIl n’existe pas un outil de collection idéal pour tous les usages. Comparez les informations publiées par chaque éditeur et vérifiez les fonctions dont vous avez vraiment besoin.\n\nPour tout personnaliser : utilisez un tableur ou une checklist papier si vous voulez définir vos champs ou éviter un compte.\nPour un catalogue web public et des outils Pokémon : Lunidex associe le catalogue de cartes et de sets TCGdex au Pokédex et aux outils d’équipe. Les données personnelles de collection utilisent l’espace associé au compte lorsque le service est disponible.\nSi le scan par caméra est indispensable : vérifiez d’abord les plateformes et les formules publiées par l’éditeur. Dex indique que son scanner relève de Dex+ et fonctionne sur iOS et Android ; Cardzia décrit son propre scan et suivi de collection sur son site. Détails du scanner Dex ou Détails du produit Cardzia.\nLes faits essentiels sur le suivi de collection\n\nCommencez par les informations utiles avant de choisir un outil de suivi.\n\nUtilisation gratuite\n\nL’application web Lunidex actuelle ne comporte ni abonnement ni parcours d’achat.\n\nCommencer sans tableur\n\nParcourez le catalogue public et créez une première checklist de set dans l’espace web ; les données personnelles commencent lorsque vous vous connectez.\n\nPWA installable\n\nUn navigateur compatible peut ajouter Lunidex à l’écran d’accueil. Les pages en cache peuvent rester accessibles hors connexion, mais les données fraîches demandent une connexion.\n\nSynchronisation facultative\n\nLa consultation publique ne demande pas de compte ; connectez-vous lorsque vous voulez retrouver votre collection personnelle sur plusieurs appareils et que le service configuré est disponible.\n\nÀ quoi s’attendre\n\nLunidex réunit catalogue et suivi TCG, Pokédex et outils d’équipe. Ce n’est ni une marketplace ni un scanner de cartes.\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nMarquez les cartes que vous possédez. Le tracker écrit dans la même collection TCG par langue que le reste de Lunidex : votre progression est donc disponible dans votre espace de collection après connexion.\n\nOuvrir le tracker\nLes critères d’un bon outil de collection\n\nUn bon outil doit rendre l’état de la collection compréhensible, afficher ses limites de source et aider le collectionneur à agir.\n\n01\n\nUn catalogue de cartes consultable\n\nCommencez par un catalogue de cartes et de sets que l’on peut rechercher et filtrer selon les champs pris en charge, comme le set, la rareté, le type, le stade ou les PV. Lunidex utilise TCGdex pour les données de catalogue Pokémon TCG et expose des routes publiques de cartes et de sets lorsque les données amont sont disponibles.\n\n02\n\nLangues, variantes et quantités\n\nLa langue des cartes est choisie séparément de la langue de l’interface. Le modèle de collection actuel peut enregistrer les quantités et des variantes physiques comme normale, reverse holo ou holo lorsque ces champs sont disponibles.\n\n03\n\nCartes possédées et souhaitées\n\nUn outil doit distinguer les cartes déjà possédées de celles d’une wishlist. Lunidex gère ces états dans l’espace web associé à un compte.\n\n04\n\nProgression par set\n\nLa progression par set transforme une grande collection en objectifs concrets. Lunidex affiche les cartes possédées et le total, les cartes manquantes, un pourcentage de complétion par set et un pourcentage global fondé sur le catalogue actuellement chargé.\n\n05\n\nDonnées de prix conditionnelles\n\nUn outil peut afficher des champs de prix ou une estimation de la valeur de collection lorsque le catalogue amont les renvoie. Lunidex peut afficher les valeurs TCGdex en EUR ou USD et calculer l’estimation visible de la collection lorsqu’elles sont fournies ; la couverture, la fraîcheur et les estimations dépendent des données amont.\n\n06\n\nUne limite de stockage claire\n\nUn produit doit expliquer ce qui est public et ce qui est personnel. Les pages de référence Lunidex sont consultables sans compte. Lorsque Neon Auth et le service de synchronisation configuré sont disponibles, connectez-vous pour enregistrer l’état personnel et le retrouver sur plusieurs appareils ; si le service est indisponible, les fonctions de compte restent indisponibles au lieu de présenter une collection vide.\n\nVue des fonctions d’un outil de collection\n\nCette vue distingue le catalogue public, l’état personnel de collection et les fonctions qui ne sont pas établies dans les sources Lunidex vérifiées.\n\nVue des fonctions d’un outil de collection\nCRITÈRE\tLUNIDEX\nUn catalogue de cartes consultable\tCatalogue public de cartes et de sets TCGdex, avec recherche et filtres lorsque les données amont sont disponibles.\nCartes possédées et souhaitées\tÉtat des cartes possédées, manquantes et wishlist dans l’espace web associé à un compte.\nProgression par set\tPourcentages de complétion par set et au global, selon le catalogue disponible.\nUne limite de stockage claire\tL’état personnel utilise le service de synchronisation lié au compte ; un service indisponible reste affiché comme indisponible.\nScanner de cartes\tFonction non établie dans les sources Lunidex vérifiées.\nPrix et valeur de marché\tChamps de prix et estimation de valeur TCGdex lorsqu’ils sont fournis ; pas de portefeuille de marché ni d’historique garanti.\nPlateforme\tApplication web avec PWA installable ; aucune fiche de store actuelle n’est revendiquée.\nCe que cette page ne promet pas\n\nLa couverture du catalogue et les prix dépendent des données amont. Une checklist numérique ne peut pas confirmer l’état physique ou l’authenticité d’une carte, et une estimation n’est pas un prix de vente. Les données personnelles de collection dépendent aussi du service de compte configuré.\n\n• L’existence d’un scanner de cartes n’est pas établie dans les sources Lunidex vérifiées pour ce guide.\n• Les champs et estimations de prix ne constituent pas un portefeuille de marché dédié ni un service garanti d’historique des prix.\n• Le dépôt contient l’application web installable ; aucune fiche App Store ou Google Play n’est revendiquée.\nCommencer avec Lunidex\n01\n\nOuvrez le catalogue TCG public et recherchez une carte ou un set.\n\n02\n\nConsultez les informations de carte ou de set fournies par TCGdex.\n\n03\n\nUtilisez l’espace de collection associé à un compte pour enregistrer vos cartes possédées, votre wishlist ou votre progression.\n\n04\n\nUtilisez la recherche, les filtres, les vues de set et les outils de collection pour revoir ce que vous possédez, ce qui vous manque, les variantes et langues prises en charge, ainsi que l’estimation conditionnelle de la collection.\n\nQuestions sur les outils de collection Pokémon\nLunidex permet-il de suivre une collection de cartes Pokémon ?\nLunidex scanne-t-il les cartes Pokémon ?\nLunidex affiche-t-il la valeur d’une collection de cartes Pokémon ?\nFaut-il un compte pour utiliser Lunidex ?\nSources et date de mise à jour\n\nLes affirmations de cette page sont vérifiées à partir du dépôt Lunidex et de ses routes publiques. Les données de référence Pokémon passent par PokéAPI et les données de cartes et de sets Pokémon TCG par TCGdex. La disponibilité des sources amont et les prix peuvent changer.\n\nDépôt source Lunidex\nPokéAPI\nTCGdex\nDocumentation du scanner Dex\nSite officiel Cardzia\n\nCONTINUER L’EXPLORATION\n\nOuvrir le catalogue TCG\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nLire le comparatif\nLire le guide de l’espace TCG\nComparer Lunidex et Collectr\nComparer Lunidex et Pokéllector\nComparer Lunidex et Cardzia\nÀ propos de Lunidex",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Détails du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Détails du produit Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire#tracker"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net"
+      },
+      {
+        "text": "Documentation du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Site officiel Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex Pokémon en ligne",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d’équipe Pokémon",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le comparatif",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      },
+      {
+        "text": "Lire le guide de l’espace TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Comparer Lunidex et Collectr",
+        "href": "/fr/compare/lunidex-vs-collectr"
+      },
+      {
+        "text": "Comparer Lunidex et Pokéllector",
+        "href": "/fr/compare/lunidex-vs-pokellector"
+      },
+      {
+        "text": "Comparer Lunidex et Cardzia",
+        "href": "/fr/compare/lunidex-vs-cardzia"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/organize-pokemon-card-collection",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/organize-pokemon-card-collection",
+    "duration": 1267,
+    "title": "Comment organiser une collection de cartes Pokémon",
+    "lang": "fr",
+    "h1": [
+      "Comment organiser une collection de cartes Pokémon"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nComment organiser une collection de cartes Pokémon\n\nCommencez par un rangement physique que vous pourrez maintenir, puis reproduisez-le dans une liste avec une entrée par version de carte. Cette méthode convient à un petit classeur comme à une collection organisée par sets.\n\nPUBLIÉ LE 28 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPour organiser des cartes Pokémon, choisissez une règle de tri durable — généralement par set puis par numéro de carte. Protégez les cartes, notez la langue et la finition de chaque version, comptez séparément les doubles et mettez à jour la liste des cartes manquantes après chaque changement. Un tableur, une checklist papier ou un outil de collection peut contenir cette liste : choisissez selon les champs nécessaires et votre mode d’accès préféré.\n\nCe que couvre ce guide\n\nCette méthode organise une collection ; elle ne reconnaît pas une carte et ne l’évalue pas. Le code du set et le numéro de collection facilitent le rapprochement avec un catalogue. La langue, la finition, l’état et la quantité décrivent les exemplaires que vous possédez réellement.\n\nComment utiliser ces fonctions\n01\n\nDéfinissez votre objectif : un set, un Pokémon, une langue ou toute la collection. Choisissez un emplacement et une règle de tri avant de déplacer les cartes.\n\n02\n\nProtégez les cartes avec des pochettes, puis rangez-les en classeurs ou en boîtes. Triez par set puis par numéro ; gardez les promos et les cartes hors numérotation dans une section distincte.\n\n03\n\nCréez une entrée par set et numéro de carte. Ajoutez le nom, la langue, la finition, la quantité et, si cela vous est utile, une note sur l’état ou l’emplacement.\n\n04\n\nSéparez les cartes manquantes des doubles. Après une ouverture de boosters ou un échange, mettez la même liste à jour et consultez-la avant un nouvel achat.\n\nExemple de ligne\n\nPour un exemple fictif : SET · 025 · Pikachu · français · reverse holo · quantité 2 · classeur B, page 4. Si vous possédez aussi une carte japonaise normale du même nom et numéro, créez une entrée séparée. Le set et le numéro identifient l’impression ; la langue, la finition et la quantité décrivent vos exemplaires.\n\nChecklist pour organiser sa collection\n• Définissez le périmètre et une règle de tri avant de réorganiser les cartes.\n• Utilisez des pochettes, puis classez les cartes par set et numéro.\n• Notez séparément le code du set, le numéro, le nom, la langue et la finition.\n• Indiquez les doubles comme une quantité ; distinguez les langues et finitions différentes.\n• Gardez les cartes manquantes dans une liste séparée des cartes possédées.\n• Mettez la liste à jour après les boosters, échanges ou ventes et gardez une copie.\nLimites et périmètre pratique\n\nUne checklist enregistre les informations saisies ; elle ne vérifie ni l’authenticité ni l’état physique d’une carte, et ne garantit pas son prix actuel. Les variantes et numérotations peuvent différer selon l’impression : vérifiez la carte exacte plutôt que son seul nom.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net/"
+      },
+      {
+        "text": "Ouvrir la fonction: TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir la fonction: Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Lire le guide de la valeur de collection",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/pokemon-reference-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/pokemon-reference-guide",
+    "duration": 1247,
+    "title": "Pokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Pokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nPokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions\n\nUn guide route par route des références Pokémon publiques de Lunidex, du Pokédex consultable aux pages d’attaques, capacités, objets et espèces.\n\nPUBLIÉ LE 19 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est un Pokédex Pokémon public et gratuit à utiliser en ligne, alimenté par PokéAPI. Commencez par /pokedex, ouvrez /pokemon/{name}, puis utilisez /types, /moves, /abilities ou /items pour une recherche ciblée. Les statistiques, types, capacités, évolutions, attaques, rencontres, formes et noms localisés dépendent des données amont disponibles pour la langue choisie.\n\nCe que couvre ce guide\n\nCe guide couvre /pokedex, /pokemon/{name}, /types, /moves, /abilities et /items. Ce sont des références publiques ; elles n’exposent pas l’espace personnel d’un autre utilisateur.\n\nComment utiliser ces fonctions\n01\n\nOuvrez le Pokédex et recherchez par nom, numéro, type, génération, région ou filtre disponible dans l’interface actuelle.\n\n02\n\nOuvrez une fiche comme /pokemon/pikachu pour lire le nom localisé, les types, statistiques, capacités, évolutions, attaques, rencontres et liens TCG disponibles.\n\n03\n\nUtilisez le tableau des types pour les matchups offensifs et défensifs, puis ouvrez une page d’attaque, de capacité ou d’objet pour sa définition et ses Pokémon associés.\n\n04\n\nEnvoyez le résultat vers le constructeur d’équipe ou la comparaison quand la question de référence devient une décision d’équipe.\n\nLimites et périmètre pratique\n\nLes faits Pokémon passent par PokéAPI et dépendent de la disponibilité amont et de la couverture de la langue. Une fiche ne garantit pas que chaque mécanique de jeu, forme, prix ou règle compétitive soit représenté.\n\nQuestions sur cette famille de fonctions\nFaut-il un compte pour utiliser le Pokédex Lunidex ?\nD’où viennent les données Pokémon de Lunidex ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des routes publiques le 21 sept. 2026.\n\nDépôt source Lunidex\nOuvrir la fonction: Pokédex\nOuvrir la fonction: Types\nOuvrir la fonction: Moves\nOuvrir la fonction: Abilities\nOuvrir la fonction: Items\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ouvrir la fonction: Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Ouvrir la fonction: Moves",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Ouvrir la fonction: Abilities",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Ouvrir la fonction: Items",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/team-tools-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/team-tools-guide",
+    "duration": 1306,
+    "title": "Outils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Outils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nOutils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts\n\nUn guide pratique des outils complémentaires qui transforment les données Pokémon en parcours de préparation après le créateur d’équipe.\n\nPUBLIÉ LE 20 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe constructeur d’équipe Pokémon Lunidex accepte jusqu’à six Pokémon et fournit des repères d’équilibre comme la couverture de types, les faiblesses communes, la synergie, les suggestions et l’équilibre des statistiques. Compare peut examiner jusqu’à trois Pokémon ; le parcours peut importer du texte Showdown, créer des liens de partage et exporter une image avant de passer à EV/IV, Reproduction ou Combat. Ces outils ne garantissent pas la légalité en tournoi et ne remplacent pas un simulateur propre à un format.\n\nCe que couvre ce guide\n\nCe guide couvre /team, /compare, /types, /ev-iv, /breeding et /battle. Il explique aussi l’import Showdown et les liens de partage documentés par le Team Builder.\n\nComment utiliser ces fonctions\n01\n\nAjoutez jusqu’à six Pokémon dans /team et lisez les faiblesses défensives, résistances, couverture offensive, score de synergie, suggestions et équilibre des statistiques.\n\n02\n\nOuvrez /compare pour examiner jusqu’à trois Pokémon côte à côte : statistiques, radar, relations de types et suggestions de couverture ou de partenaires.\n\n03\n\nUtilisez /ev-iv pour planifier ou inverser un calcul de statistiques, /breeding pour l’héritage et les capacités œuf, et /types pour un matchup clair.\n\n04\n\nUtilisez /battle pour les scénarios de dégâts et de duel IA pris en charge, puis exportez une image de l’équipe ou partagez-la si vous poursuivez le parcours ailleurs.\n\nLimites et périmètre pratique\n\nL’analyse repose sur les données et formules implémentées par Lunidex ; elle ne garantit pas la légalité officielle d’un tournoi et ne remplace pas la vérification des règles d’un jeu ou format précis.\n\nQuestions sur cette famille de fonctions\nCombien de Pokémon peut-on ajouter à une équipe Lunidex ?\nPuis-je exporter une équipe Lunidex vers Pokémon Showdown ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des routes publiques le 21 sept. 2026.\n\nDépôt source Lunidex\nOuvrir la fonction: Constructeur d'équipe\nOuvrir la fonction: compare\nOuvrir la fonction: ev-iv\nOuvrir la fonction: breeding\nOuvrir la fonction: battle\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Ouvrir la fonction: compare",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Ouvrir la fonction: ev-iv",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Ouvrir la fonction: breeding",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Ouvrir la fonction: battle",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/tcg-workspace-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/tcg-workspace-guide",
+    "duration": 1272,
+    "title": "Application et espace de collection Pokémon TCG — Cartes, wishlist et decks | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Comment utiliser l’espace Pokémon TCG de Lunidex"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nComment utiliser l’espace Pokémon TCG de Lunidex\n\nUn guide complet des routes TCG publiques et des surfaces de collection liées au compte dans Lunidex.\n\nPUBLIÉ LE 21 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application et un espace web de collection Pokémon TCG : parcourez le catalogue public en ligne sur /tcg, ouvrez les fiches de cartes et de sets, enregistrez les cartes possédées ou souhaitées, suivez la progression par set, gérez une wishlist et préparez des decks. Les faits du catalogue viennent de TCGdex ; l’état personnel de collection utilise l’espace associé au compte lorsque le service configuré est disponible. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent ni scanner de cartes ni historique de marché garanti.\n\nCe que couvre ce guide\n\nCe guide couvre /tcg, /tcg/cards/{id}, /tcg/collection, /tcg/collection/{language}/{setId}, /tcg/wishlist et /tcg/deck-builder. Les actions de collection sont séparées de la consultation publique du catalogue.\n\nComment utiliser ces fonctions\n01\n\nCommencez dans le catalogue TCG et recherchez par carte, série, type, rareté, PV ou filtre disponible dans l’interface.\n\n02\n\nOuvrez une fiche pour consulter les champs fournis par TCGdex, ou une série pour parcourir sa liste de cartes et sa surface de progression.\n\n03\n\nConnectez-vous et attendez que la synchronisation soit prête avant de modifier collection, wishlist, notes, recherches enregistrées ou decks.\n\n04\n\nUtilisez les vues de collection et de deck pour transformer la recherche en objectif de série, liste de cartes à trouver ou plan de deck de 60 cartes.\n\nLimites et périmètre pratique\n\nLunidex n’est pas une marketplace. Le catalogue ne permet pas d’inférer la présence d’un scanner, d’un historique de prix garanti ou d’une collection publique. Les prix et séries dépendent de TCGdex et du service lié au compte.\n\nQuestions sur cette famille de fonctions\nPeut-on parcourir le catalogue TCG Lunidex sans compte ?\nL’espace TCG Lunidex possède-t-il un scanner ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des routes publiques le 14 sept. 2026.\n\nDépôt source Lunidex\nOuvrir la fonction: TCG\nOuvrir la fonction: tcg · start\nOuvrir la fonction: Collection\nOuvrir la fonction: tcg · wishlist\nOuvrir la fonction: tcg · deck-builder\nRetour au blog\n\nCONTINUER AVEC LES GUIDES LUNIDEX ASSOCIÉS\n\nLire le guide du suivi de collection de cartes Pokémon",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir la fonction: tcg · start",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "Ouvrir la fonction: Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Ouvrir la fonction: tcg · wishlist",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Ouvrir la fonction: tcg · deck-builder",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Lire le guide du suivi de collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/guides/progress-account-guide",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/guides/progress-account-guide",
+    "duration": 1364,
+    "title": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+    "lang": "fr",
+    "h1": [
+      "Comment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex"
+    ],
+    "main": "GUIDE D’UTILISATION\n\nComment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex\n\nUn guide respectueux de la confidentialité pour les surfaces personnelles qui apparaissent après connexion ou après l’utilisation de la progression locale.\n\nPUBLIÉ LE 22 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 22 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nUtilisez les routes publiques sans compte, puis connectez-vous lorsque vous avez besoin de l’espace lié au compte pour synchroniser collection, progression, amis ou autres fonctions personnalisées. Les profils publics restent distincts des données privées du compte.\n\nCe que couvre ce guide\n\nCe guide couvre /dashboard, /favorites, /friends, /u/{handle}, les flux d’authentification et de réinitialisation, ainsi que les actions de progression proposées par le Pokédex, le Team Builder, le quiz et l’espace TCG.\n\nComment utiliser ces fonctions\n01\n\nCommencez par parcourir les pages publiques. Le Pokédex, les outils d’équipe, le quiz et le catalogue ne donnent pas accès aux données d’un autre utilisateur.\n\n02\n\nCréez un compte ou connectez-vous lorsque le service de synchronisation configuré doit enregistrer collection, équipe et progression sur plusieurs appareils.\n\n03\n\nUtilisez le tableau de bord pour consulter profil, badges, statistiques de quiz, progression Pokédex, activité, réglages et état de synchronisation.\n\n04\n\nUtilisez favoris, amis et profils publics uniquement pour les données et réglages de visibilité que vous choisissez ; ne les traitez jamais comme une source de données privées.\n\nLimites et périmètre pratique\n\nLes fonctions de compte dépendent de Neon Auth et du service serveur configuré. Un service indisponible doit être affiché comme indisponible, pas comme un espace personnel vide. Un profil public ne contient que les données rendues visibles par son propriétaire.\n\nQuestions sur cette famille de fonctions\nFaut-il un compte pour utiliser Lunidex ?\nUne autre personne peut-elle voir mon tableau de bord ou mes favoris ?\nSources et date de mise à jour\n\nVérifié à partir du dépôt Lunidex et des routes publiques le 22 août 2026.\n\nDépôt source Lunidex\nOuvrir la fonction: dashboard\nOuvrir la fonction: favorites\nOuvrir la fonction: friends\nOuvrir la fonction: Collection\nOuvrir la fonction: tcg · wishlist\nRetour au blog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: dashboard",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Ouvrir la fonction: favorites",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "Ouvrir la fonction: friends",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "Ouvrir la fonction: Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Ouvrir la fonction: tcg · wishlist",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

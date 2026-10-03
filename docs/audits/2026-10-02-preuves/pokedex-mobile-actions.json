@@ -1,0 +1,47 @@
+{
+  "geometry": {
+    "button": {
+      "left": 147.5625,
+      "right": 191.5625,
+      "width": 44
+    },
+    "ancestors": [
+      {
+        "tag": "DIV",
+        "class": "pointer-events-auto flex items-center gap-1",
+        "left": 51.5625,
+        "right": 191.5625,
+        "overflowX": "visible"
+      },
+      {
+        "tag": "DIV",
+        "class": "pokedex-card-actions pointer-events-none relative z-10 mb-1 flex w-full items-start justify-between sm:mb-1.5",
+        "left": 19.7890625,
+        "right": 161.796875,
+        "overflowX": "visible"
+      },
+      {
+        "tag": "ARTICLE",
+        "class": "pokedex-card relative flex h-[18rem] flex-col rounded-sm border border-border/50 bg-card/60 p-1.5 transition-all duration-150 hover:-translate-x-px hover:-translate-y-px sm:p-2",
+        "left": 11.1953125,
+        "right": 167.203125,
+        "overflowX": "hidden"
+      },
+      {
+        "tag": "DIV",
+        "class": "pokedex-card-shell group/specimen relative h-full scroll-mt-32 py-1 px-1 sm:px-2",
+        "left": 8,
+        "right": 170.3984375,
+        "overflowX": "visible"
+      },
+      {
+        "tag": "DIV",
+        "class": "pokemon-grid-item",
+        "left": 8,
+        "right": 170.3984375,
+        "overflowX": "visible"
+      }
+    ]
+  },
+  "click": "clicked"
+}

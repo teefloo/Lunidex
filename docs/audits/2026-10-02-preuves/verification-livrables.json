@@ -1,0 +1,25 @@
+{
+  "date_utc": "2026-10-02T00:49:04.123107+00:00",
+  "lignes_matrice": 998,
+  "statuts": {
+    "réussi": 860,
+    "échoué": 28,
+    "bloqué": 109,
+    "non exécuté": 1
+  },
+  "pages_avec_representants": 59,
+  "handlers": 55,
+  "methodes_routes_api": 81,
+  "fichiers_vitest": 100,
+  "anomalies": {
+    "P1": 3,
+    "P2": 11,
+    "P3": 1
+  },
+  "liens_fichiers_valides": 1192,
+  "preuves_manquantes": 0,
+  "reussites_fondees_sur_erreur_de_pilotage": 0,
+  "diff_fichiers_suivis": false,
+  "git_status": "?? docs/audits/",
+  "limite": "Contrôle de cohérence des livrables, pas nouvelle exécution fonctionnelle"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "cache-online",
+    "cache": [
+      {
+        "cache": "workbox-precache-v2-http://localhost:3101/",
+        "urls": [
+          "http://localhost:3101/_next/static/chunks/app/offline/page-e76cc3647ed38cae.js",
+          "http://localhost:3101/_next/static/chunks/app/pokedex/page-0b9dc73a0331e3d4.js",
+          "http://localhost:3101/offline"
+        ]
+      },
+      {
+        "cache": "pages-v3",
+        "urls": [
+          "http://localhost:3101/de/pokedex",
+          "http://localhost:3101/de/pokedex",
+          "http://localhost:3101/fr/pokedex",
+          "http://localhost:3101/fr/pokedex",
+          "http://localhost:3101/fr/pokedex"
+        ]
+      },
+      {
+        "cache": "tcgdex-data",
+        "urls": []
+      },
+      {
+        "cache": "pokeapi-data",
+        "urls": []
+      }
+    ]
+  },
+  {
+    "name": "offline-repeat",
+    "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+    "text": "Aller au contenu principal\nLuni\ndex\nCollection\nCatalogue\nPokédex\nJouer\nPlus\nRechercher dans Lunidex\nPokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRo"
+  }
+]

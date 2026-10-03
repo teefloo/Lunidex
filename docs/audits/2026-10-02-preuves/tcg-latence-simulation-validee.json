@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-02T00:35:50.769Z",
+  "environment": "local isolé ; +700ms avant chaque GET TCGdex, sans limitation de débit",
+  "early": {
+    "ms": 1276,
+    "text": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nChargement de la collection…\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nEFFACER\nFILTRES\nExtension: 30th Classic Collection\nEffacer\nRésultats du catalogue\nACTUALISATION DES CARTES\n0 cartes dans 30th Classic Collection",
+    "cards": 0
+  },
+  "late": {
+    "ms": 14302,
+    "text": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nChargement de la collection…\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nEFFACER\nFILTRES\nExtension: 30th Classic Collection\nEffacer\nRésultats du catalogue\nCARTES TROUVÉES\n3 cartes dans 30th Classic Collection\nCHARIZARD EX\n\n151\n\nDOUBLE RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n8,54 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER\nCHARIZARD EX\n\n151\n\nULTRA RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n38,63 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER\nCHARIZARD EX\n\n151\n\nSPECIAL ILLUSTRATION RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n488,30 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER",
+    "cards": 3
+  },
+  "reload": {
+    "url": "http://localhost:3101/fr/tcg?set=sv03.5&q=charizard",
+    "cards": 3
+  },
+  "delayedCount": 193,
+  "methods": [
+    "GET"
+  ]
+}

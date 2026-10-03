@@ -1,0 +1,41 @@
+[
+  {
+    "path": "moves",
+    "q": "tonnerre",
+    "result": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n0 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n0 CAPACITÉS\n\n0\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\n0 CAPACITÉS\n1 ACTIFS\nTOUS LES TYPES\nAUCUNE CAPACITÉ TROUVÉE\n\nEssayez de modifier votre recherche ou vos filtres\n\nRÉINITIALISER FILTRE",
+    "links": 0
+  },
+  {
+    "direct": "thunderbolt",
+    "title": [
+      "Tonnerre"
+    ],
+    "url": "https://lunidex.app/fr/moves/thunderbolt"
+  },
+  {
+    "path": "abilities",
+    "q": "intimidation",
+    "result": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTERS\nRÉINITIALISER FILTRE\nNOM\nID\n4 TALENTS\n\n#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3\n\n#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3\n\n#022\n\nINTIMIDATION\n\nLe Pokémon rugit lorsqu'il arrive au combat, ce qui intimide l'ennemi et baisse son Attaque.\n\nGÉNÉRATION 3\n\n#020\n\nTEMPO PERSO\n\nLe Pokémon vit sa vie à son propre rythme, ce qui l'immunise contre la confusion et l'intimidation.\n\nGÉNÉRATION 3",
+    "links": 4
+  },
+  {
+    "direct": "intimidate",
+    "title": [
+      "Intimidation"
+    ],
+    "url": "https://lunidex.app/fr/abilities/intimidate"
+  },
+  {
+    "path": "items",
+    "q": "restes",
+    "result": "OBJETS\n\nItems\n\nBrowse held items, berries, evolution stones, and more\n\n48 ITEMS\nFILTERS\nRÉINITIALISER FILTRE\nNAME\nID\nCOST\nCATEGORY\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n0 ITEMS\nNO ITEMS FOUND\nRÉINITIALISER FILTRE",
+    "links": 0
+  },
+  {
+    "direct": "leftovers",
+    "title": [
+      "Restes"
+    ],
+    "url": "https://lunidex.app/fr/items/leftovers"
+  }
+]

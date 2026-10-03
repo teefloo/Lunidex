@@ -1,0 +1,74 @@
+[
+  {
+    "lang": "fr",
+    "before": "https://lunidex.app/fr/pokedex",
+    "after": "https://lunidex.app/fr/pokedex",
+    "htmlLang": "fr",
+    "h1": [
+      "Pokédex Pokémon en ligne"
+    ]
+  },
+  {
+    "lang": "en",
+    "before": "https://lunidex.app/en/pokedex",
+    "after": "https://lunidex.app/en/pokedex",
+    "htmlLang": "en",
+    "h1": [
+      "Online Pokémon Pokédex"
+    ]
+  },
+  {
+    "lang": "es",
+    "before": "https://lunidex.app/es/pokedex",
+    "after": "https://lunidex.app/es/pokedex",
+    "htmlLang": "es",
+    "h1": [
+      "Pokédex"
+    ]
+  },
+  {
+    "lang": "de",
+    "before": "https://lunidex.app/de/pokedex",
+    "after": "https://lunidex.app/de/pokedex",
+    "htmlLang": "de",
+    "h1": [
+      "Pokédex"
+    ]
+  },
+  {
+    "lang": "it",
+    "before": "https://lunidex.app/it/pokedex",
+    "after": "https://lunidex.app/it/pokedex",
+    "htmlLang": "it",
+    "h1": [
+      "Pokédex"
+    ]
+  },
+  {
+    "lang": "ja",
+    "before": "https://lunidex.app/ja/pokedex",
+    "after": "https://lunidex.app/ja/pokedex",
+    "htmlLang": "ja",
+    "h1": [
+      "ポケモン図鑑"
+    ]
+  },
+  {
+    "lang": "ko",
+    "before": "https://lunidex.app/ko/pokedex",
+    "after": "https://lunidex.app/ko/pokedex",
+    "htmlLang": "ko",
+    "h1": [
+      "포켓몬 도감"
+    ]
+  },
+  {
+    "lang": "zh",
+    "before": "https://lunidex.app/zh/pokedex",
+    "after": "https://lunidex.app/zh/pokedex",
+    "htmlLang": "zh",
+    "h1": [
+      "宝可梦图鉴"
+    ]
+  }
+]

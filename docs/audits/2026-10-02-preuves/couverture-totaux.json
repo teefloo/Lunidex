@@ -1,0 +1,96 @@
+{
+  "total": 998,
+  "statuts": {
+    "réussi": 860,
+    "échoué": 28,
+    "bloqué": 109,
+    "non exécuté": 1
+  },
+  "hors_code": {
+    "réussi": 854,
+    "échoué": 28,
+    "bloqué": 109,
+    "non exécuté": 1
+  },
+  "fonctionnel_metier": {
+    "réussi": 137,
+    "échoué": 18,
+    "bloqué": 61
+  },
+  "categories": {
+    "API": {
+      "réussi": 56,
+      "bloqué": 41
+    },
+    "Accessibilité": {
+      "réussi": 7,
+      "échoué": 8,
+      "bloqué": 2
+    },
+    "Automatisé code": {
+      "réussi": 6
+    },
+    "Environnement": {
+      "bloqué": 5
+    },
+    "Fonctionnel": {
+      "réussi": 137,
+      "échoué": 18
+    },
+    "Langues": {
+      "réussi": 26
+    },
+    "Métier": {
+      "bloqué": 61
+    },
+    "Performance": {
+      "réussi": 36
+    },
+    "Rendu": {
+      "réussi": 160,
+      "échoué": 2
+    },
+    "Responsive": {
+      "réussi": 324
+    },
+    "Système": {
+      "réussi": 108
+    },
+    "Variantes": {
+      "non exécuté": 1
+    }
+  },
+  "domaines": {
+    "API": {
+      "réussi": 56,
+      "bloqué": 41
+    },
+    "Compte et espace personnel": {
+      "réussi": 38,
+      "bloqué": 17
+    },
+    "Navigation et contenus": {
+      "réussi": 306,
+      "bloqué": 16,
+      "non exécuté": 1
+    },
+    "Outils et jeux": {
+      "réussi": 83,
+      "échoué": 7,
+      "bloqué": 14
+    },
+    "Références Pokémon": {
+      "réussi": 129,
+      "échoué": 14
+    },
+    "Scellés": {
+      "réussi": 91,
+      "bloqué": 8
+    },
+    "TCG": {
+      "réussi": 157,
+      "échoué": 7,
+      "bloqué": 13
+    }
+  }
+}

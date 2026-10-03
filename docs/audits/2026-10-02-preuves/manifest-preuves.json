@@ -1,0 +1,2983 @@
+{
+  "genere_utc": "2026-10-02T00:49:04.404317+00:00",
+  "note": "La date est celle du fichier. Voir les horodatages internes pour les observations. Le manifeste exclut sa propre empreinte. Les fichiers secondaires ne prouvent pas seuls une anomalie.",
+  "fichiers": [
+    {
+      "fichier": "2026-10-02-audit-fonctionnel-lunidex.md",
+      "octets": 54466,
+      "sha256": "20529042c7fdc95df55f078f5c4687313ad9ba86c155f601fe4fbe3b4e2add20",
+      "artefact_modifie_utc": "2026-10-02T00:45:24.088103+00:00",
+      "classification": "livrable",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-inventaire-routes.md",
+      "octets": 20600,
+      "sha256": "abc1345af77b58668e416b4089a8c41fe148ec0b1614a191e4a5bca80a86fdc6",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.722015+00:00",
+      "classification": "livrable",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-matrice-couverture.csv",
+      "octets": 380963,
+      "sha256": "49c9d8ade6eaf2ffcc363af9b81a563000e54ee5cb09d9198db31aadc961e3b3",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.550793+00:00",
+      "classification": "livrable",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-matrice-couverture.md",
+      "octets": 350925,
+      "sha256": "2924cee9d813d04345817dc4a9285e9dfa99451ab598e177a9816ddec532bd9e",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.557893+00:00",
+      "classification": "livrable",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/README.md",
+      "octets": 3102,
+      "sha256": "2e5d6b999c3e7d6d81a3ffaf5c73016959fb01e8d86221f910eb1d0cbd526e09",
+      "artefact_modifie_utc": "2026-10-02T00:46:20.186984+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/accessibilite-01.json",
+      "octets": 17406,
+      "sha256": "11c3fde4bd664e27da2b8ee7abfc51aee8bd73c88ed35dfd566cb0961a977a8a",
+      "artefact_modifie_utc": "2026-10-01T22:44:27.730413+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0513",
+        "SCN-0514",
+        "SCN-0515",
+        "SCN-0516",
+        "SCN-0517",
+        "SCN-0518"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/accessibilite-02.json",
+      "octets": 10533,
+      "sha256": "9a960896711bf2dc36ab455452c83f62728a135fe4b724cfd6c1f10c583e8e0a",
+      "artefact_modifie_utc": "2026-10-01T22:50:04.540493+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0519",
+        "SCN-0520",
+        "SCN-0521",
+        "SCN-0522",
+        "SCN-0523",
+        "SCN-0524",
+        "SCN-0525",
+        "SCN-0526"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/accessibilite-filtres-tcg.json",
+      "octets": 4400,
+      "sha256": "645f58b6c766f495cc8c9b7ba2de0d5ad7b4aefdb88c46941c7d933b6a8da3a9",
+      "artefact_modifie_utc": "2026-10-01T23:57:17.584368+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0527"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/accueil-fr-desktop.png",
+      "octets": 1380975,
+      "sha256": "10a2c6bde4d78bbd36e894c85a679622ca97f056b9828ea6a740c98e9657aa56",
+      "artefact_modifie_utc": "2026-10-01T22:28:18.289772+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/actions-anonymes-reproduction.json",
+      "octets": 10359,
+      "sha256": "365e960cda7e3eeb2b575ccbded24b6b37e1ee84d109198a98ff11b0f1651051",
+      "artefact_modifie_utc": "2026-10-01T22:38:50.694937+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0787"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/actions-pokedex-geometrie-quatre-formats.json",
+      "octets": 2989,
+      "sha256": "44d378827c4f58d3bf23e481d0a016bf9c13cc45952c60dc24951821ae615503",
+      "artefact_modifie_utc": "2026-10-01T23:47:26.579001+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0895",
+        "SCN-0896"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/apercu-capacite-vues-tcg.json",
+      "octets": 186,
+      "sha256": "29ff1e519ab5d98a98f653febc67a6a19fed34dabc40a814c12dd45706b22b1f",
+      "artefact_modifie_utc": "2026-10-01T23:55:48.445074+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/api-cases.json",
+      "octets": 8502,
+      "sha256": "5f7e49806761fc035d93d5f4147d3221af5a959a328388c29ba916896447c0d2",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.508008+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0587",
+        "SCN-0588"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/api-lecture-local-01.json",
+      "octets": 4655,
+      "sha256": "cc19294a527ba4d81239111956e6d0d32ee1844cd16f4cd350a0abfcb4027951",
+      "artefact_modifie_utc": "2026-10-01T23:03:38.460392+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0528",
+        "SCN-0529",
+        "SCN-0530",
+        "SCN-0531",
+        "SCN-0532",
+        "SCN-0533",
+        "SCN-0534",
+        "SCN-0535",
+        "SCN-0536",
+        "SCN-0537",
+        "SCN-0538",
+        "SCN-0539",
+        "SCN-0540",
+        "SCN-0541",
+        "SCN-0542",
+        "SCN-0543",
+        "SCN-0544",
+        "SCN-0545"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/api-lecture-local-02.json",
+      "octets": 9922,
+      "sha256": "632947f5c3a306ac049599fa111a24f9196659a030e4862e707e4c72dce7eff6",
+      "artefact_modifie_utc": "2026-10-01T23:04:24.062302+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0546",
+        "SCN-0547",
+        "SCN-0548",
+        "SCN-0549",
+        "SCN-0550",
+        "SCN-0551",
+        "SCN-0552",
+        "SCN-0553",
+        "SCN-0554",
+        "SCN-0555",
+        "SCN-0556",
+        "SCN-0557",
+        "SCN-0558",
+        "SCN-0559",
+        "SCN-0560",
+        "SCN-0561",
+        "SCN-0562",
+        "SCN-0563",
+        "SCN-0564",
+        "SCN-0565",
+        "SCN-0566",
+        "SCN-0567"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/api-local-01.json",
+      "octets": 725,
+      "sha256": "a67d485a37ddd1d8ec0f8196d6acd7a3cd86df109b57037b7298f755c4bded76",
+      "artefact_modifie_utc": "2026-10-01T23:02:42.817986+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [
+        "SCN-0576",
+        "SCN-0577",
+        "SCN-0578",
+        "SCN-0579",
+        "SCN-0580",
+        "SCN-0581",
+        "SCN-0582",
+        "SCN-0583",
+        "SCN-0584",
+        "SCN-0585",
+        "SCN-0586",
+        "SCN-0589",
+        "SCN-0590",
+        "SCN-0591",
+        "SCN-0592",
+        "SCN-0593",
+        "SCN-0594",
+        "SCN-0595",
+        "SCN-0596",
+        "SCN-0597",
+        "SCN-0598",
+        "SCN-0599",
+        "SCN-0600",
+        "SCN-0601",
+        "SCN-0602",
+        "SCN-0603",
+        "SCN-0604",
+        "SCN-0605",
+        "SCN-0606",
+        "SCN-0607",
+        "SCN-0608",
+        "SCN-0609",
+        "SCN-0610",
+        "SCN-0611",
+        "SCN-0612",
+        "SCN-0613",
+        "SCN-0614",
+        "SCN-0615",
+        "SCN-0616"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/api-publiques-locales-cas-valides.json",
+      "octets": 2878,
+      "sha256": "74780dbdc5981c333d5d7af5bc7a275a34eec8108f4f74d9621d2df17d12112d",
+      "artefact_modifie_utc": "2026-10-01T23:59:49.911500+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0568",
+        "SCN-0569",
+        "SCN-0570",
+        "SCN-0571",
+        "SCN-0572",
+        "SCN-0573",
+        "SCN-0574",
+        "SCN-0575"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/audit-runner.py",
+      "octets": 1185,
+      "sha256": "6e9ecd7b94010298fb73b1186f82e369577aba3e7673d5f54dd319fbc3990677",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.507560+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/auth-email-password-invalides.json",
+      "octets": 1143,
+      "sha256": "8df00ecd57447bdb9bb58eaa582cf5bacc2ed843763f1cc8a3c8cc57ab69d832",
+      "artefact_modifie_utc": "2026-10-01T23:18:35.885334+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0852",
+        "SCN-0853",
+        "SCN-0855"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/auth-formulaire-et-initialisation.json",
+      "octets": 169,
+      "sha256": "532ea03f19537f32519e9045514b451d12c16bbc3a9c49e5674b7eec0ff2fc94",
+      "artefact_modifie_utc": "2026-10-01T22:39:59.460491+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/auth-formulaire-validation.json",
+      "octets": 1911,
+      "sha256": "1d62444fc2d89e934b36b796448cc919b6e4f4a94779eafc61cb949f18fe87cb",
+      "artefact_modifie_utc": "2026-10-01T22:41:32.167557+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/auth-idle-et-partage-reproduction.json",
+      "octets": 1541,
+      "sha256": "182d57336d242699c875d3f9f384745debe79ee6170b4c5a28e78d00061c4509",
+      "artefact_modifie_utc": "2026-10-01T22:51:55.492165+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0788",
+        "SCN-0884"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/build-result.json",
+      "octets": 65,
+      "sha256": "19012fa011f5a3b46a66565a0044f4e66aebd1507a9dc18b6e4a684df0be5871",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.507252+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/build.log",
+      "octets": 6852,
+      "sha256": "3ebf0af9dad9389acd26a6176d997d9937d22710214eeaebc13aac87279fb18a",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.506866+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0997"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/calculateurs-selection.json",
+      "octets": 4000,
+      "sha256": "faf684ecca4eb245cd0ff33e618992cbf730341ad48a1ed64f5cef4314e6ba2f",
+      "artefact_modifie_utc": "2026-10-01T22:53:09.992435+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/capacites-objets-filtres-apercu.json",
+      "octets": 2431,
+      "sha256": "36183c164e25e8f4c4a06f1a72d010a5367dd82dfeee45a720a4f30b75610510",
+      "artefact_modifie_utc": "2026-10-01T23:55:16.876507+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0799",
+        "SCN-0883"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/capacites-oeuf-chargees.json",
+      "octets": 586,
+      "sha256": "5efc86c912d1f5c2d430670bb3728bbec91cc203ff54288cc7ca80a4b647247a",
+      "artefact_modifie_utc": "2026-10-02T00:31:33.175036+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0918"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/capacites-oeuf-execution-validee.json",
+      "octets": 2436,
+      "sha256": "3bbbabb7dc3859b2a3d78055fdb3bb6de27091988c4e33b7583c8013f4613332",
+      "artefact_modifie_utc": "2026-10-02T00:32:23.881013+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0919",
+        "SCN-0920",
+        "SCN-0921"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/capacites-oeuf-filtres-sources.json",
+      "octets": 149,
+      "sha256": "cdb4a72e2a4bb1d7442e82f968214bc9a45ca5d1ddb6d0797365cb1014b1fd07",
+      "artefact_modifie_utc": "2026-10-02T00:31:54.541601+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/capacites-oeuf-invalide-valide.json",
+      "octets": 744,
+      "sha256": "775e9db4d34f7c465dcb32eaa4f7e19f1914560d2463ac7097cb99e55578652d",
+      "artefact_modifie_utc": "2026-10-02T00:33:56.131922+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0922"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/captures-formats.json",
+      "octets": 323,
+      "sha256": "2e9efd870e4fc7ce7057eb17dbd0556bb1349ea05d9621f437c2b7beb64459b6",
+      "artefact_modifie_utc": "2026-10-01T23:01:15.916775+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/catalogues-reproduction-et-tcg-controles.json",
+      "octets": 14775,
+      "sha256": "1109214f51930510cc79c6560402301f3874601d9a9af55f5f50c120fd382570",
+      "artefact_modifie_utc": "2026-10-01T23:14:24.182878+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0880",
+        "SCN-0882"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/changement-langue-attente.json",
+      "octets": 2147,
+      "sha256": "cd1e43c4719e9158c183848e7356897828eefdc6f5c53e41e98b320eaebdb41c",
+      "artefact_modifie_utc": "2026-10-01T22:47:31.890377+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0912"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/chargements-anonymes.json",
+      "octets": 1123,
+      "sha256": "989024172e1a2ed86daee4a59a10cf9e7e06313396dff5125652fd2963996c5a",
+      "artefact_modifie_utc": "2026-10-01T22:50:38.610312+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/clavier-recherche-types.json",
+      "octets": 4232,
+      "sha256": "773ead58abc1a5702c35052fb3ef69e4778355941be8d28f4b7b847fcd78a9ab",
+      "artefact_modifie_utc": "2026-10-01T23:19:23.265361+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0844",
+        "SCN-0845"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/combat-duel.json",
+      "octets": 2163,
+      "sha256": "df10638a1dc087884fda4922cb52fedfd6805eef14f399870ad5b9084eb6f9d6",
+      "artefact_modifie_utc": "2026-10-01T22:54:22.874636+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0810"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/combat-tablette.png",
+      "octets": 438316,
+      "sha256": "f85d13f0e34be6af703927742404f996b9771f5e991dd7be33188ced50bc4106",
+      "artefact_modifie_utc": "2026-10-01T23:01:15.363541+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-liens-invalides-reproduits.json",
+      "octets": 2245,
+      "sha256": "25ac46b8cf7b8349437a7cdf985e7d8a237d8e1f130900f4f6c2184d4cdaee7b",
+      "artefact_modifie_utc": "2026-10-01T23:45:53.799336+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0893",
+        "SCN-0894"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-recherche-localisee.json",
+      "octets": 5667,
+      "sha256": "960179f76e7b8e5e62567779a87aa08bcf48879374b31a69639b395d4ef70179",
+      "artefact_modifie_utc": "2026-10-01T23:35:25.908654+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-recherche-reproduction.json",
+      "octets": 2420,
+      "sha256": "934e8e0fc05c638df62965b28b4d6e66ca111e297d9d2a67ac6b582b195cf5f1",
+      "artefact_modifie_utc": "2026-10-01T23:36:00.703216+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-reseau-corrige.json",
+      "octets": 5125,
+      "sha256": "f7a405d284ff42e87a83beb0125d1c7e523922eb831ae6acba5edfc04b52deb5",
+      "artefact_modifie_utc": "2026-10-01T23:36:32.427836+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0801"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-types-menu-mobile.json",
+      "octets": 168,
+      "sha256": "88f137ce644304e87a7c9aef76965fc81ca87afb1861a47863fd52c86e6be06a",
+      "artefact_modifie_utc": "2026-10-01T23:37:25.672279+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/comparaison-types-mobile-execute.json",
+      "octets": 5873,
+      "sha256": "86b02fedb23e77361a22d6a62eea9da94c3e7c332e9c4f58a7fab77ad130e945",
+      "artefact_modifie_utc": "2026-10-01T23:37:59.820064+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0802",
+        "SCN-0803",
+        "SCN-0847"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/connexion-ecran-demarrage.json",
+      "octets": 445,
+      "sha256": "402ae9fb961cd476d0b141c7dc80ebde72878eab6ab37944624fc9c0427efe23",
+      "artefact_modifie_utc": "2026-10-01T22:41:03.920648+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/connexion-locale-indisponible.json",
+      "octets": 399,
+      "sha256": "1e721b2b94e0444269516d51761d2b50f18eb618b3cdf49794039ba06f3b408a",
+      "artefact_modifie_utc": "2026-10-02T00:44:59.529685+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/connexion.png",
+      "octets": 197620,
+      "sha256": "a586582f8dfd8d0202c8645bbc31efb46e0fe86f0af2a5f4ad66455fd3127bad",
+      "artefact_modifie_utc": "2026-10-01T22:41:30.361358+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/contact-auth-inspection-locale.json",
+      "octets": 164,
+      "sha256": "fb1a573e36d5c600884c41f8f4ff70bcfeae112fe8aa641b236ec9a1b97d1f71",
+      "artefact_modifie_utc": "2026-10-01T23:17:50.098032+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/contact-erreurs-et-compte-sans-envoi.json",
+      "octets": 1304,
+      "sha256": "a3647c62b122ff9e93d7f0f5058cbbb52d34667e54fa3051f1f8f63d4a28278e",
+      "artefact_modifie_utc": "2026-10-01T23:18:57.973150+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0854",
+        "SCN-0897"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/contact-panne-simulee-sans-envoi.json",
+      "octets": 989,
+      "sha256": "6ffdeb9fbbf28a04149b1ba8e277f2d388fe7cd3e8837cbfbb03f7a4b6754d97",
+      "artefact_modifie_utc": "2026-10-02T00:14:41.666023+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0898",
+        "SCN-0899"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/contact-validation-reset.json",
+      "octets": 3696,
+      "sha256": "9488b4366182767677ed8caff5412d6758195ca596cb63f1d502eccef1277862",
+      "artefact_modifie_utc": "2026-10-01T23:18:17.673848+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0857"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/core-result.json",
+      "octets": 127,
+      "sha256": "4e0b4117ea5d1ba4de1f14734cdd3fba0b10b4929483b34ec28d91777c2f75c1",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.506549+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/core.log",
+      "octets": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.505841+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0998"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/couverture-totaux.json",
+      "octets": 1601,
+      "sha256": "70d92bc7c916583605aef7837a4bd914385c61efd78393de2b3ff0e6b92b94b5",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.559777+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/cri-historique-forme-retour.json",
+      "octets": 1547,
+      "sha256": "5c36945506fdf23dab4aa718cb93ec61b98e32b9a89a430e2840c56402cf7a8f",
+      "artefact_modifie_utc": "2026-10-01T23:49:26.473484+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0793",
+        "SCN-0794"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/cris-et-evolution-pokemon.json",
+      "octets": 4209,
+      "sha256": "5db08b42306cb4a222e1354972e617b769d4caf4d3d70a920b6ea6bcacbe7b43",
+      "artefact_modifie_utc": "2026-10-01T23:48:38.247050+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0792"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/degats-et-reproduction-selection.json",
+      "octets": 3218,
+      "sha256": "460132039335596c88dea8344b320731fa2b8fe27b2be721467c8f852027daf9",
+      "artefact_modifie_utc": "2026-10-01T22:54:48.697763+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0809"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/echap-reproduction-et-survie.json",
+      "octets": 171,
+      "sha256": "8ede0bdbf2846b44c38320670db1c3def887b8f21dedc6611fa85becd753247e",
+      "artefact_modifie_utc": "2026-10-01T23:20:26.379327+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/echap-survie-execute.json",
+      "octets": 505,
+      "sha256": "11e76a8c9c38e0cba1d7ed7429e8fdeb0ea6ee24e1e1aa9cbbe5f1d060fc4484",
+      "artefact_modifie_utc": "2026-10-01T23:21:40.532573+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0846"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/echap-survie-reprise.json",
+      "octets": 151,
+      "sha256": "1a75d11e6b4563d2022e1d8fbbfda9c1bcfd133842bd2b1af41b998b01635ff5",
+      "artefact_modifie_utc": "2026-10-01T23:20:52.819343+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/environnement.json",
+      "octets": 1380,
+      "sha256": "1630d336f4935204f8956b2291361160f752c8c853e8cff506abdc9e3ff1283c",
+      "artefact_modifie_utc": "2026-10-01T23:49:26.520415+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0992"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/equipe-partagee-vide.png",
+      "octets": 280138,
+      "sha256": "4a81a0910dc3bcb3f277f8fbbdddd7d76054eb443b69dc91f7178f4145f20acc",
+      "artefact_modifie_utc": "2026-10-01T22:51:54.939842+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/erreur-tcg-simulee.png",
+      "octets": 214367,
+      "sha256": "f8096d0cde9b9685e43667ba590bae25f7ed6eeea74546440188132fed0e7104",
+      "artefact_modifie_utc": "2026-10-01T23:26:23.564836+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/etat-auth-apres-actions.json",
+      "octets": 7882,
+      "sha256": "e8652cfd983da43303079ec4ae369d8db5d91ece19679b2fa24ae811269e7966",
+      "artefact_modifie_utc": "2026-10-01T22:37:43.408393+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/ev-plafonds.json",
+      "octets": 3981,
+      "sha256": "c31398fea09880f6021280de1551eba604f8221780db6a6e355feb291c131af1",
+      "artefact_modifie_utc": "2026-10-01T22:55:31.248480+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0807",
+        "SCN-0808"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/ev-planificateur-charge.json",
+      "octets": 4591,
+      "sha256": "f3e927e816c4adc7946a506a9a630c3b1a14ad7e60dd2eb93df6dd9ddb5202d5",
+      "artefact_modifie_utc": "2026-10-01T22:54:52.974284+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/export-local.json",
+      "octets": 1555,
+      "sha256": "2149cc4e904e77898d877a7226f0b4f57dde9bf5abab022e585f9b7a18513898",
+      "artefact_modifie_utc": "2026-10-01T22:44:59.405407+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/faq-comparaison-execute.json",
+      "octets": 7325,
+      "sha256": "5eb854b262f078e36e7f7612927657779e70dad274dfa576e115533031ce98f1",
+      "artefact_modifie_utc": "2026-10-01T23:35:05.673321+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0800",
+        "SCN-0841",
+        "SCN-0842",
+        "SCN-0843"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/faq-comparaison-interactions.json",
+      "octets": 91,
+      "sha256": "8ebdec6f8d6472db4200218e018af3838592d8dca60890915c47ac82ddb46f6f",
+      "artefact_modifie_utc": "2026-10-01T23:33:17.037611+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/faq-comparaison-reprise.json",
+      "octets": 172,
+      "sha256": "448d3c7e18fde424a3e7ddfcf60ecc0f41abd87b9fa1d8a17754eb0e1c8dbb0d",
+      "artefact_modifie_utc": "2026-10-01T23:34:25.351753+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/fiche-pokemon-onglets.json",
+      "octets": 3778,
+      "sha256": "ea0358c8420a27a3d5365562b8ed99065a4a157051690e1cfefe1de80bd85ac3",
+      "artefact_modifie_utc": "2026-10-01T22:45:29.053639+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/fiche-pokemon-stabilisation.json",
+      "octets": 175,
+      "sha256": "93408a2c671c8327aa03054b1c6d1eec92c17a585a6bc16e10fd9fec74b090d0",
+      "artefact_modifie_utc": "2026-10-01T22:46:14.278270+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/filtres-legendaire-taille-verifies.json",
+      "octets": 2791,
+      "sha256": "4a5c662f53b3a9883d390fcb9dd3e640ed4332e7b398ed6e7edf502436987711",
+      "artefact_modifie_utc": "2026-10-01T23:54:50.092346+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0779",
+        "SCN-0892"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/gardes-carte-contact-auth.json",
+      "octets": 695,
+      "sha256": "682c209b3fe8e2c0953efae1f16ef3e24d374acd9be214e3f98d590a056a5aed",
+      "artefact_modifie_utc": "2026-10-01T23:17:15.276666+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/generer-manifeste.py",
+      "octets": 1738,
+      "sha256": "9f23d9167bd05936de90795183b25e4cb80144ab0a0e01b434bd18ee54ce6b5e",
+      "artefact_modifie_utc": "2026-10-02T00:48:39.992721+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/generer-matrice.py",
+      "octets": 44033,
+      "sha256": "0784d0e180b9280788c0a03c258452e4d2f8b39f953f6e8cca04106a11f30571",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.371998+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/huit-langues-navigation-reload.json",
+      "octets": 1494,
+      "sha256": "4b47836aa13c25b16009ce0781ac5adeee583dfa9d4973110651b8e48b495dfe",
+      "artefact_modifie_utc": "2026-10-01T23:43:42.653050+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0505",
+        "SCN-0506",
+        "SCN-0507",
+        "SCN-0508",
+        "SCN-0509",
+        "SCN-0510",
+        "SCN-0511",
+        "SCN-0512"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/hydration-carte-reproduction-dediee.json",
+      "octets": 4582,
+      "sha256": "9a0bf35c6f365f45d5cf261f876df7decd33834032feeefaf15ca6a71cb5a085",
+      "artefact_modifie_utc": "2026-10-01T23:46:29.880448+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0889"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/import-consequences.json",
+      "octets": 2555,
+      "sha256": "c758007cc0c5c87985ceb60c06bbf89bc95421ef7fd54102956a623dd66168dc",
+      "artefact_modifie_utc": "2026-10-01T22:48:44.335506+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0885"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/import-favoris-apres-rechargement.png",
+      "octets": 179902,
+      "sha256": "948e082d3c192677d2f3df27744863f4f5c5793b14d9e56d0c2b21848d2e79b9",
+      "artefact_modifie_utc": "2026-10-01T22:48:43.774814+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/imports-local-validation.json",
+      "octets": 5529,
+      "sha256": "b205de779387d2c33023823ba79839b0415a24ce49748a25a388c1537787a158",
+      "artefact_modifie_utc": "2026-10-01T22:48:01.277392+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0901",
+        "SCN-0902",
+        "SCN-0903"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/invalid-backup.json",
+      "octets": 8,
+      "sha256": "40b5cafe045b9c9e31a1c3fdcfbc89f934906ff06a6276b55c2a0e517be21655",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.508504+00:00",
+      "classification": "fixture JSON invalide intentionnelle",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/invalides-et-partage.json",
+      "octets": 17587,
+      "sha256": "b6f89b41cab7af672e0df96223b2d3a7aca05890f751a0d4a5bc95b9aa0c3251",
+      "artefact_modifie_utc": "2026-10-01T22:49:49.744359+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0870",
+        "SCN-0871",
+        "SCN-0872",
+        "SCN-0873",
+        "SCN-0874",
+        "SCN-0875",
+        "SCN-0876",
+        "SCN-0877",
+        "SCN-0878"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/inventaire-projet.json",
+      "octets": 104334,
+      "sha256": "d7fcd3f974707bb8360dbffe2ea33bcc32d974f253cb51b1c0dd5e5a57162e82",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.721143+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/iv-et-combat.json",
+      "octets": 168,
+      "sha256": "fac20a2b5ae13df34cfa0851da955bbc784cb35b83d62326f437bda59017637c",
+      "artefact_modifie_utc": "2026-10-01T22:53:38.697760+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/iv-normal-limites.json",
+      "octets": 1281,
+      "sha256": "9661499f06682f8a043c2b1006adb15d04c7e1ed91c51a660f9a8aba65be7d24",
+      "artefact_modifie_utc": "2026-10-01T22:54:14.549306+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0805",
+        "SCN-0806"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/liens-partages-et-identifiants-invalides.json",
+      "octets": 130,
+      "sha256": "55a36878c61273a4de879814b3e9f5134f69ae223383ef27ad49991e461ade24",
+      "artefact_modifie_utc": "2026-10-01T22:48:59.324761+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/limites-outillage.json",
+      "octets": 820,
+      "sha256": "12f350e469ccdba82156c0f21938644b9879c07678a9b80f9b9a10767b450347",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.583627+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0924",
+        "SCN-0925",
+        "SCN-0926",
+        "SCN-0927",
+        "SCN-0928",
+        "SCN-0929",
+        "SCN-0930",
+        "SCN-0931",
+        "SCN-0932",
+        "SCN-0933",
+        "SCN-0934",
+        "SCN-0935",
+        "SCN-0936",
+        "SCN-0937",
+        "SCN-0938",
+        "SCN-0939",
+        "SCN-0940",
+        "SCN-0941",
+        "SCN-0942",
+        "SCN-0943",
+        "SCN-0944",
+        "SCN-0945",
+        "SCN-0946",
+        "SCN-0947",
+        "SCN-0948",
+        "SCN-0949",
+        "SCN-0950",
+        "SCN-0951",
+        "SCN-0952",
+        "SCN-0953",
+        "SCN-0954",
+        "SCN-0955",
+        "SCN-0956",
+        "SCN-0957",
+        "SCN-0958",
+        "SCN-0959",
+        "SCN-0960",
+        "SCN-0961",
+        "SCN-0962",
+        "SCN-0963",
+        "SCN-0964",
+        "SCN-0965",
+        "SCN-0966",
+        "SCN-0967",
+        "SCN-0968",
+        "SCN-0969",
+        "SCN-0970",
+        "SCN-0971",
+        "SCN-0972",
+        "SCN-0973",
+        "SCN-0974",
+        "SCN-0975",
+        "SCN-0976",
+        "SCN-0977",
+        "SCN-0978",
+        "SCN-0979",
+        "SCN-0980",
+        "SCN-0981",
+        "SCN-0982",
+        "SCN-0983",
+        "SCN-0984",
+        "SCN-0989",
+        "SCN-0990",
+        "SCN-0991"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/lint-result.json",
+      "octets": 64,
+      "sha256": "72845766841a1f68d1ad000b7358086b222c8d271190f288b5ad6756fd631f9e",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.504067+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/lint.log",
+      "octets": 33,
+      "sha256": "ec4318abd00d8397aa91522396318b638009635b8fcf4a69789ddb0a41a6a07c",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.503560+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0994"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/locales-es-de-it-ja-ko-zh.json",
+      "octets": 4455,
+      "sha256": "fb1054b50b37403290eb06b09c080e0990a2609d8e3997f5390387288c73500e",
+      "artefact_modifie_utc": "2026-10-01T22:52:26.736662+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0487",
+        "SCN-0488",
+        "SCN-0489",
+        "SCN-0490",
+        "SCN-0491",
+        "SCN-0492",
+        "SCN-0493",
+        "SCN-0494",
+        "SCN-0495",
+        "SCN-0496",
+        "SCN-0497",
+        "SCN-0498",
+        "SCN-0499",
+        "SCN-0500",
+        "SCN-0501",
+        "SCN-0502",
+        "SCN-0503",
+        "SCN-0504"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/localisation-constats.json",
+      "octets": 1118,
+      "sha256": "cd81dcdb180aa9b537f00291dbf3fe05490302fb721392faccf4acb4bff61ee6",
+      "artefact_modifie_utc": "2026-10-02T00:37:52.264249+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0890"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/marche-filtres-et-carte-modale.json",
+      "octets": 7851,
+      "sha256": "3d6fa04706b105137b15d41bb6fba9b07b7498f3d85bedf16b7c5d399493e7ce",
+      "artefact_modifie_utc": "2026-10-01T23:16:48.487532+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0834",
+        "SCN-0836",
+        "SCN-0837",
+        "SCN-0838",
+        "SCN-0839"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/marche-scelles-initial.json",
+      "octets": 11981,
+      "sha256": "308efbad4cf77731992c398aac60d835a7f9dace9f00ebd1540b4dde74a7666c",
+      "artefact_modifie_utc": "2026-10-01T22:30:22.272416+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/maze-mouvement-reset-portail.json",
+      "octets": 6194,
+      "sha256": "29baf51a160665e5f8f9adb8eda84f342bdb12aa8de8695fd98295aecccfac51",
+      "artefact_modifie_utc": "2026-10-02T00:29:57.655669+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0913",
+        "SCN-0914",
+        "SCN-0915",
+        "SCN-0916"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/maze-parcours-complet.json",
+      "octets": 4770,
+      "sha256": "1b9e8e497095aabad279f3659e2b6330ea34a647ea4a48da4aee7d1ac1956948",
+      "artefact_modifie_utc": "2026-10-02T00:30:53.557259+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0917"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/nuzlocke-et-showdown-reprise.json",
+      "octets": 447,
+      "sha256": "5272a8a9f6922783955a28237ac8e824140112246e65ba42985c983c27be818b",
+      "artefact_modifie_utc": "2026-10-01T23:31:13.185580+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/nuzlocke-local-et-showdown.json",
+      "octets": 159,
+      "sha256": "6045c236aac0d6a86caa0cd49f3801b0b0487710adb6ea1c8494f7665b553085",
+      "artefact_modifie_utc": "2026-10-01T23:30:26.339897+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/nuzlocke-showdown-observes.json",
+      "octets": 1703,
+      "sha256": "4627eccf5f4e0bbbcd6820236a43f7680abb9c16a70b14a4adec9429a6a2c592",
+      "artefact_modifie_utc": "2026-10-01T23:31:34.553560+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0906"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/oeuf-invalide-et-recuperation-vide.json",
+      "octets": 164,
+      "sha256": "e00fa5ff997e754ac5a0a3c6b1f99642c85a6cad4e3b3eeaae4e0250385a2ef3",
+      "artefact_modifie_utc": "2026-10-02T00:32:56.068698+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/outils-secondaires-controles.json",
+      "octets": 12605,
+      "sha256": "f2e6ddeb4d9606718b226b2ee6c5660ed08c37e99df9ac9e42b4c9d9e74a0465",
+      "artefact_modifie_utc": "2026-10-01T23:29:44.767151+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0859",
+        "SCN-0860"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/panne-chunks-services-differes.json",
+      "octets": 187,
+      "sha256": "6af531c6b86c6fab5b2cc55dc7d72b814e8209ad441c2cbcb761adb5ffd32a0e",
+      "artefact_modifie_utc": "2026-10-02T00:02:33.261902+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/panne-tcg-locale-simulee.json",
+      "octets": 3725,
+      "sha256": "4f94aa0811090161abb35a88de5c1152418283e29cd69e8261cb3d98d42f87ea",
+      "artefact_modifie_utc": "2026-10-01T23:26:28.691011+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/panne-un-chunk-differe-isole.json",
+      "octets": 453,
+      "sha256": "2938aa83fa08745ea6f4f9b8d9dba3ffac7f7404555a1a851f888a0699216078",
+      "artefact_modifie_utc": "2026-10-02T00:04:23.927478+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0911"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/parametres-apres-devise.json",
+      "octets": 4248,
+      "sha256": "a18c10e9426947fa64b46f696b4cd76cea2f84c4a5f8ae277b6ea4d104df63da",
+      "artefact_modifie_utc": "2026-10-01T22:44:15.893248+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/parametres-liens-limites.json",
+      "octets": 6888,
+      "sha256": "df11fc12d8e98bbec524dc1ac53dc61adf6dedeb5984504f8fdedad2dd52b763",
+      "artefact_modifie_utc": "2026-10-01T23:45:18.457414+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0858"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/parametres-local-initial.json",
+      "octets": 2579,
+      "sha256": "bfe826af7fc43c7b727dcb5dc346b111102e80a5555be4f4dabbcddf6d3ace9d",
+      "artefact_modifie_utc": "2026-10-01T22:42:47.544178+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/parcours-pokedex.json",
+      "octets": 10995,
+      "sha256": "0599bcbf8e33e54a7b6be4ffa9c8edcd981eefa9b3127e846c773c9d77243f33",
+      "artefact_modifie_utc": "2026-10-01T22:36:17.300104+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0769",
+        "SCN-0770",
+        "SCN-0771",
+        "SCN-0772"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/performances-01.json",
+      "octets": 3883,
+      "sha256": "b257b44225a4d6fb676c2ddf7e378a72e4a3702cc1e0685fdf5b8babc3d4406b",
+      "artefact_modifie_utc": "2026-10-01T23:24:26.076224+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0733",
+        "SCN-0734",
+        "SCN-0735",
+        "SCN-0736",
+        "SCN-0737",
+        "SCN-0738",
+        "SCN-0739",
+        "SCN-0740",
+        "SCN-0741",
+        "SCN-0742",
+        "SCN-0743",
+        "SCN-0744"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/performances-02.json",
+      "octets": 3938,
+      "sha256": "202ed0867c89fcaac8684c7013ad5a639dfd347c8823dc11cda4309165bb1d69",
+      "artefact_modifie_utc": "2026-10-01T23:25:08.828687+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0745",
+        "SCN-0746",
+        "SCN-0747",
+        "SCN-0748",
+        "SCN-0749",
+        "SCN-0750",
+        "SCN-0751",
+        "SCN-0752",
+        "SCN-0753",
+        "SCN-0754",
+        "SCN-0755",
+        "SCN-0756"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/performances-03.json",
+      "octets": 3965,
+      "sha256": "ece4ef9405281ceb8611c292c287b0c017091e3a19945f69adc3be8b24be9af8",
+      "artefact_modifie_utc": "2026-10-01T23:25:54.090983+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0757",
+        "SCN-0758",
+        "SCN-0759",
+        "SCN-0760",
+        "SCN-0761",
+        "SCN-0762",
+        "SCN-0763",
+        "SCN-0764",
+        "SCN-0765",
+        "SCN-0766",
+        "SCN-0767",
+        "SCN-0768"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/performances-synthese.json",
+      "octets": 2206,
+      "sha256": "037ea1218e36aa4682e191ef18a078f430dacb7636ec2fca14e772b4e8f2827d",
+      "artefact_modifie_utc": "2026-10-02T00:49:03.722719+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-actions-coupees.png",
+      "octets": 245896,
+      "sha256": "bdb5e6f9f78a156970416dd13afd28f88638e8336c9e3d114c630e0a6cf29507",
+      "artefact_modifie_utc": "2026-10-01T23:03:44.121872+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-ajout-anonyme.png",
+      "octets": 477673,
+      "sha256": "ef9ff7e10b8ea5ef39b60333c46559c970fcae824cda6dac719bd3299ee1417c",
+      "artefact_modifie_utc": "2026-10-01T22:36:53.959840+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-filtres-combines.json",
+      "octets": 180,
+      "sha256": "7281a4b4bac93ba975bac2139e6b58335fe7624aec25f946dc8d6a13b2881c82",
+      "artefact_modifie_utc": "2026-10-01T23:11:42.989557+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-filtres-resultats.json",
+      "octets": 3295,
+      "sha256": "44bfba4809d3caaf8073a525a0cb9f1df0099df3c5a4b07cd92d73a3013e36ed",
+      "artefact_modifie_utc": "2026-10-01T23:12:14.259063+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0773",
+        "SCN-0774",
+        "SCN-0775"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-mobile-actions.json",
+      "octets": 1307,
+      "sha256": "738ef6a6b6ef369753a770b311d47e4df160fbaa6ef8d28f9de0d0a82e6cfbbc",
+      "artefact_modifie_utc": "2026-10-01T23:03:44.681853+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-mobile.png",
+      "octets": 173587,
+      "sha256": "9ad14bf0cc638b15ef8a4f9857d89d3bacdf25d830217688c70b6ef8b6683e30",
+      "artefact_modifie_utc": "2026-10-01T23:01:09.778696+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-toutes-familles-filtres.json",
+      "octets": 9325,
+      "sha256": "fd616861085fa9f7da71201725d986268b0f7e73249d5a71d9e9d79e125756c9",
+      "artefact_modifie_utc": "2026-10-01T23:54:04.383751+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0780",
+        "SCN-0781",
+        "SCN-0782",
+        "SCN-0783",
+        "SCN-0784",
+        "SCN-0785",
+        "SCN-0786"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokedex-tri-et-statut.json",
+      "octets": 1106,
+      "sha256": "87b73d70d681ac99d03757ded325cf39a7f9cab15bed34479435eb01acc8915e",
+      "artefact_modifie_utc": "2026-10-01T23:44:21.931024+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0777",
+        "SCN-0778"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pokemon-onglets-complets.json",
+      "octets": 20706,
+      "sha256": "57a7bff69d31838012505aefceef271fce9409521b284e36b9032d8d80cf7871",
+      "artefact_modifie_utc": "2026-10-01T22:47:21.848695+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0789",
+        "SCN-0790"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-persistance-export.json",
+      "octets": 205,
+      "sha256": "1e65f6672a5637eee3f0f9e13859fc1210fb5f909889b11f245e9d87b9e31ded",
+      "artefact_modifie_utc": "2026-10-01T22:43:48.252100+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-prod-apres-reload.json",
+      "octets": 2149,
+      "sha256": "59c41c717421ff0c0951f7e10d4a6ad93acab75976982b7c335deb11d619db9c",
+      "artefact_modifie_utc": "2026-10-01T23:41:51.591322+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-prod-consent-zoom.json",
+      "octets": 852,
+      "sha256": "320ea846724e402a97d479c53dc69828656e2ba78cb32e934c1ee820f2a0df4f",
+      "artefact_modifie_utc": "2026-10-01T23:41:33.803239+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0848",
+        "SCN-0850",
+        "SCN-0851"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-production-consent.json",
+      "octets": 168,
+      "sha256": "b386594d8653e6869fc317528129107d2ac1938f9168b56cb55fb4ce97414b86",
+      "artefact_modifie_utc": "2026-10-01T23:40:20.984033+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-production-reproduction.json",
+      "octets": 134,
+      "sha256": "8e9061a1d92e435f97c51ef9921f79972e068a890dd22ad1f76c245aed79aab7",
+      "artefact_modifie_utc": "2026-10-01T23:40:55.893134+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-production-resultat-stable.json",
+      "octets": 292,
+      "sha256": "f67ce0bcdb5fe640feefad7cc1b9a989fac3c08f75b2639553f178c62d6bb1fa",
+      "artefact_modifie_utc": "2026-10-01T23:42:06.703311+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0849",
+        "SCN-0888"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/preferences-verification.json",
+      "octets": 1371,
+      "sha256": "b02e13a3ecfdb5d9c3327825ad802c722cf6c0b4962229ae2d2ce65edba2b190",
+      "artefact_modifie_utc": "2026-10-01T22:45:03.334212+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0887",
+        "SCN-0900"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/previews-accessibilite.json",
+      "octets": 2007,
+      "sha256": "301a3c82fafec1c4c2bb7bb855b011f0640162415b08c1c75b9e96c49b6d8bc8",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.502408+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0985",
+        "SCN-0986",
+        "SCN-0987",
+        "SCN-0988"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/pwa-hors-ligne.json",
+      "octets": 3034,
+      "sha256": "7fdd069e5a9513225a698299f0465bbc84e15e8744b79fa907703bef2d43750e",
+      "artefact_modifie_utc": "2026-10-01T23:05:30.305007+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0910"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pwa-offline.png",
+      "octets": 482544,
+      "sha256": "2ef012da68d037565334a61ae4c1dfcb0497a58e594f0ac4cb4e72b19ab25197",
+      "artefact_modifie_utc": "2026-10-01T23:06:25.799062+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/pwa-revisite-cache.json",
+      "octets": 1978,
+      "sha256": "2b576ad891af0b5924758843a0b0086b4922a0edc6d1751e8ab09a2f00a0a0d9",
+      "artefact_modifie_utc": "2026-10-01T23:06:26.622489+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0909"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-marathon-parcours.json",
+      "octets": 3073,
+      "sha256": "98979a0c5a47e4b6a313cef7048f6476a2a355052e4e9eb54fbd667dba1b8b6e",
+      "artefact_modifie_utc": "2026-10-01T22:56:55.456287+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0813",
+        "SCN-0814"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-minuteur-fin.json",
+      "octets": 469,
+      "sha256": "e35f3632c835eddebf3d9cedd02bc698e61f0deb30b9ebc88f70ee371dfe18c3",
+      "artefact_modifie_utc": "2026-10-01T23:23:21.622974+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0816"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-neuf-combinaisons.json",
+      "octets": 2824,
+      "sha256": "aa2966d391e36c2bf74d196e68c2e335b7a8db4bc2b7ea9691c80dfb7f47e9d9",
+      "artefact_modifie_utc": "2026-10-01T22:57:08.681625+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0861",
+        "SCN-0862",
+        "SCN-0863"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-quotidien-anonyme-complet.json",
+      "octets": 657,
+      "sha256": "243e421a3e2bf14a144d8e2a84a25983368fe1fdad48dbeb6a7d8cd8c3b53452",
+      "artefact_modifie_utc": "2026-10-01T23:50:44.196607+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-six-combinaisons-reprise.json",
+      "octets": 2111,
+      "sha256": "c75a1c0f7c20b1aac39b6a3525f2f2d6ec2dcdc5e1cd5902859eff8ccff7f66d",
+      "artefact_modifie_utc": "2026-10-01T22:57:58.461020+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0864",
+        "SCN-0865",
+        "SCN-0866",
+        "SCN-0867",
+        "SCN-0868",
+        "SCN-0869"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-stats-attente.json",
+      "octets": 353,
+      "sha256": "2a695ef561b341b094ad961ff1f5210bb0c5163b0049ef08bb72f4ecda052025",
+      "artefact_modifie_utc": "2026-10-01T22:58:56.068709+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0817"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-stats.png",
+      "octets": 167993,
+      "sha256": "efb3e6da38b7f0705aa8aa56fd5bde7eefa24110ef28571d749bd757d89d8c2f",
+      "artefact_modifie_utc": "2026-10-01T22:58:55.499552+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-survie-complete.json",
+      "octets": 662,
+      "sha256": "5effebd0b167566698ae7cb3de2aabbedb5edf4f6db882f5cf37a6b097adf489",
+      "artefact_modifie_utc": "2026-10-01T23:22:35.344079+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0815"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/quiz-survie-fin-et-minuteur.json",
+      "octets": 450,
+      "sha256": "b84218e04e5aa2c290d94136eb5d06c34194ac285c96ae63554f574f605cbc32",
+      "artefact_modifie_utc": "2026-10-01T23:22:09.056304+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/recherche-echap.png",
+      "octets": 719376,
+      "sha256": "6de46a8c16ea6fff14c4bff5e4cbb88764da15459651af3bbea6e8b9dea2ed36",
+      "artefact_modifie_utc": "2026-10-01T23:21:36.917713+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/recuperation-email-vide-validee.json",
+      "octets": 1560,
+      "sha256": "2059bf1de47c75d993dc7d49ee9a7dbc3e2a4a93653c5916ba3bb49e89d2e8d7",
+      "artefact_modifie_utc": "2026-10-02T00:33:32.150739+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0856"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/references-catalogues-tronques.json",
+      "octets": 2665,
+      "sha256": "4f3e4d7f273c3ddf9ac3633fcf8eeade7e6a353d9ac7501bf252da3772c17095",
+      "artefact_modifie_utc": "2026-10-01T23:13:48.198225+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0879",
+        "SCN-0881"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/references-recherche-retour.json",
+      "octets": 5220,
+      "sha256": "f6a898dee3f7407e415e3bdf0eacf2b7031b5cdc2e27ef9a42c16dafeaff2c48",
+      "artefact_modifie_utc": "2026-10-01T23:12:46.524019+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0776",
+        "SCN-0795",
+        "SCN-0796",
+        "SCN-0797",
+        "SCN-0798"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/reproduction-configuration.json",
+      "octets": 4508,
+      "sha256": "829ab6f34548ec733c833f713c7afa5701d2570b2fbf6eb36c326520d18be3d5",
+      "artefact_modifie_utc": "2026-10-01T22:55:27.071994+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0811"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/reproduction-resultats-quiz.json",
+      "octets": 1612,
+      "sha256": "27dc6e47f9b4a7ede353d237e3c3ebde5bd14b2444894c5f013ff4ff4cf85369",
+      "artefact_modifie_utc": "2026-10-01T22:55:54.068432+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0812"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/responsive-01.json",
+      "octets": 30212,
+      "sha256": "7e4108f81aad89cf158174cb4a63c8cf52c1c90096b1b91f6566dbd7a745b873",
+      "artefact_modifie_utc": "2026-10-01T22:58:25.201480+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0163",
+        "SCN-0164",
+        "SCN-0165",
+        "SCN-0166",
+        "SCN-0167",
+        "SCN-0168",
+        "SCN-0169",
+        "SCN-0170",
+        "SCN-0171",
+        "SCN-0172",
+        "SCN-0173",
+        "SCN-0174",
+        "SCN-0175",
+        "SCN-0176",
+        "SCN-0177",
+        "SCN-0178",
+        "SCN-0179",
+        "SCN-0180",
+        "SCN-0181",
+        "SCN-0182",
+        "SCN-0183",
+        "SCN-0184",
+        "SCN-0185",
+        "SCN-0186",
+        "SCN-0187",
+        "SCN-0188",
+        "SCN-0189",
+        "SCN-0190",
+        "SCN-0191",
+        "SCN-0192",
+        "SCN-0193",
+        "SCN-0194",
+        "SCN-0195",
+        "SCN-0196",
+        "SCN-0197",
+        "SCN-0198",
+        "SCN-0199",
+        "SCN-0200",
+        "SCN-0201",
+        "SCN-0202",
+        "SCN-0203",
+        "SCN-0204",
+        "SCN-0205",
+        "SCN-0206",
+        "SCN-0207",
+        "SCN-0208",
+        "SCN-0209",
+        "SCN-0210",
+        "SCN-0211",
+        "SCN-0212",
+        "SCN-0213",
+        "SCN-0214",
+        "SCN-0215",
+        "SCN-0216",
+        "SCN-0217",
+        "SCN-0218",
+        "SCN-0219",
+        "SCN-0220",
+        "SCN-0221",
+        "SCN-0222",
+        "SCN-0223",
+        "SCN-0224",
+        "SCN-0225",
+        "SCN-0226",
+        "SCN-0227",
+        "SCN-0228",
+        "SCN-0229",
+        "SCN-0230",
+        "SCN-0231",
+        "SCN-0232",
+        "SCN-0233",
+        "SCN-0234"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/responsive-02.json",
+      "octets": 30419,
+      "sha256": "6e289718447cd07ffb87b201ccd6b503e64a66fcf6dbbd9e31a81428a2da3803",
+      "artefact_modifie_utc": "2026-10-01T22:59:24.284640+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0235",
+        "SCN-0236",
+        "SCN-0237",
+        "SCN-0238",
+        "SCN-0239",
+        "SCN-0240",
+        "SCN-0241",
+        "SCN-0242",
+        "SCN-0243",
+        "SCN-0244",
+        "SCN-0245",
+        "SCN-0246",
+        "SCN-0247",
+        "SCN-0248",
+        "SCN-0249",
+        "SCN-0250",
+        "SCN-0251",
+        "SCN-0252",
+        "SCN-0253",
+        "SCN-0254",
+        "SCN-0255",
+        "SCN-0256",
+        "SCN-0257",
+        "SCN-0258",
+        "SCN-0259",
+        "SCN-0260",
+        "SCN-0261",
+        "SCN-0262",
+        "SCN-0263",
+        "SCN-0264",
+        "SCN-0265",
+        "SCN-0266",
+        "SCN-0267",
+        "SCN-0268",
+        "SCN-0269",
+        "SCN-0270",
+        "SCN-0271",
+        "SCN-0272",
+        "SCN-0273",
+        "SCN-0274",
+        "SCN-0275",
+        "SCN-0276",
+        "SCN-0277",
+        "SCN-0278",
+        "SCN-0279",
+        "SCN-0280",
+        "SCN-0281",
+        "SCN-0282",
+        "SCN-0283",
+        "SCN-0284",
+        "SCN-0285",
+        "SCN-0286",
+        "SCN-0287",
+        "SCN-0288",
+        "SCN-0289",
+        "SCN-0290",
+        "SCN-0291",
+        "SCN-0292",
+        "SCN-0293",
+        "SCN-0294",
+        "SCN-0295",
+        "SCN-0296",
+        "SCN-0297",
+        "SCN-0298",
+        "SCN-0299",
+        "SCN-0300",
+        "SCN-0301",
+        "SCN-0302",
+        "SCN-0303",
+        "SCN-0304",
+        "SCN-0305",
+        "SCN-0306",
+        "SCN-0307",
+        "SCN-0308",
+        "SCN-0309",
+        "SCN-0310",
+        "SCN-0311",
+        "SCN-0312",
+        "SCN-0313",
+        "SCN-0314"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/responsive-03.json",
+      "octets": 31316,
+      "sha256": "43fd031f65b544d3b6ecf1720184232270505a30dd0fc31cd7f6d59e84bfb32c",
+      "artefact_modifie_utc": "2026-10-01T23:00:16.312184+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0315",
+        "SCN-0316",
+        "SCN-0317",
+        "SCN-0318",
+        "SCN-0319",
+        "SCN-0320",
+        "SCN-0321",
+        "SCN-0322",
+        "SCN-0323",
+        "SCN-0324",
+        "SCN-0325",
+        "SCN-0326",
+        "SCN-0327",
+        "SCN-0328",
+        "SCN-0329",
+        "SCN-0330",
+        "SCN-0331",
+        "SCN-0332",
+        "SCN-0333",
+        "SCN-0334",
+        "SCN-0335",
+        "SCN-0336",
+        "SCN-0337",
+        "SCN-0338",
+        "SCN-0339",
+        "SCN-0340",
+        "SCN-0341",
+        "SCN-0342",
+        "SCN-0343",
+        "SCN-0344",
+        "SCN-0345",
+        "SCN-0346",
+        "SCN-0347",
+        "SCN-0348",
+        "SCN-0349",
+        "SCN-0350",
+        "SCN-0351",
+        "SCN-0352",
+        "SCN-0353",
+        "SCN-0354",
+        "SCN-0355",
+        "SCN-0356",
+        "SCN-0357",
+        "SCN-0358",
+        "SCN-0359",
+        "SCN-0360",
+        "SCN-0361",
+        "SCN-0362",
+        "SCN-0363",
+        "SCN-0364",
+        "SCN-0365",
+        "SCN-0366",
+        "SCN-0367",
+        "SCN-0368",
+        "SCN-0369",
+        "SCN-0370",
+        "SCN-0371",
+        "SCN-0372",
+        "SCN-0373",
+        "SCN-0374",
+        "SCN-0375",
+        "SCN-0376",
+        "SCN-0377",
+        "SCN-0378",
+        "SCN-0379",
+        "SCN-0380",
+        "SCN-0381",
+        "SCN-0382",
+        "SCN-0383",
+        "SCN-0384",
+        "SCN-0385",
+        "SCN-0386",
+        "SCN-0387",
+        "SCN-0388",
+        "SCN-0389",
+        "SCN-0390",
+        "SCN-0391",
+        "SCN-0392",
+        "SCN-0393",
+        "SCN-0394"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/responsive-04.json",
+      "octets": 35583,
+      "sha256": "6ffac17e1cd82c3b68e6778d272abd9058e088dd3b45e3c0c86218b09aa05af5",
+      "artefact_modifie_utc": "2026-10-01T23:01:03.348616+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0395",
+        "SCN-0396",
+        "SCN-0397",
+        "SCN-0398",
+        "SCN-0399",
+        "SCN-0400",
+        "SCN-0401",
+        "SCN-0402",
+        "SCN-0403",
+        "SCN-0404",
+        "SCN-0405",
+        "SCN-0406",
+        "SCN-0407",
+        "SCN-0408",
+        "SCN-0409",
+        "SCN-0410",
+        "SCN-0411",
+        "SCN-0412",
+        "SCN-0413",
+        "SCN-0414",
+        "SCN-0415",
+        "SCN-0416",
+        "SCN-0417",
+        "SCN-0418",
+        "SCN-0419",
+        "SCN-0420",
+        "SCN-0421",
+        "SCN-0422",
+        "SCN-0423",
+        "SCN-0424",
+        "SCN-0425",
+        "SCN-0426",
+        "SCN-0427",
+        "SCN-0428",
+        "SCN-0429",
+        "SCN-0430",
+        "SCN-0431",
+        "SCN-0432",
+        "SCN-0433",
+        "SCN-0434",
+        "SCN-0435",
+        "SCN-0436",
+        "SCN-0437",
+        "SCN-0438",
+        "SCN-0439",
+        "SCN-0440",
+        "SCN-0441",
+        "SCN-0442",
+        "SCN-0443",
+        "SCN-0444",
+        "SCN-0445",
+        "SCN-0446",
+        "SCN-0447",
+        "SCN-0448",
+        "SCN-0449",
+        "SCN-0450",
+        "SCN-0451",
+        "SCN-0452",
+        "SCN-0453",
+        "SCN-0454",
+        "SCN-0455",
+        "SCN-0456",
+        "SCN-0457",
+        "SCN-0458",
+        "SCN-0459",
+        "SCN-0460",
+        "SCN-0461",
+        "SCN-0462",
+        "SCN-0463",
+        "SCN-0464",
+        "SCN-0465",
+        "SCN-0466",
+        "SCN-0467",
+        "SCN-0468",
+        "SCN-0469",
+        "SCN-0470",
+        "SCN-0471",
+        "SCN-0472",
+        "SCN-0473",
+        "SCN-0474",
+        "SCN-0475",
+        "SCN-0476",
+        "SCN-0477",
+        "SCN-0478",
+        "SCN-0479",
+        "SCN-0480",
+        "SCN-0481",
+        "SCN-0482",
+        "SCN-0483",
+        "SCN-0484",
+        "SCN-0485",
+        "SCN-0486"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/restrictions-anonymes.json",
+      "octets": 170,
+      "sha256": "1cdc65409d14d62782c98d8c89caf0cdeaf84b2a1e5bfcf435dcea3c531f3b36",
+      "artefact_modifie_utc": "2026-10-01T22:37:24.010888+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-en-01.json",
+      "octets": 88321,
+      "sha256": "340f94920df38220b4791f1782d3242c1e705579244f46f377627895dd18047f",
+      "artefact_modifie_utc": "2026-10-01T22:38:14.505547+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0001",
+        "SCN-0002",
+        "SCN-0003",
+        "SCN-0004",
+        "SCN-0005",
+        "SCN-0006",
+        "SCN-0007",
+        "SCN-0008",
+        "SCN-0009",
+        "SCN-0010",
+        "SCN-0011",
+        "SCN-0012",
+        "SCN-0013",
+        "SCN-0014",
+        "SCN-0015",
+        "SCN-0016",
+        "SCN-0017",
+        "SCN-0018"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-en-02.json",
+      "octets": 157203,
+      "sha256": "1b42b18c08739906d3b7051e718b3549b7c96c5cfe5bb2f4e290788527152235",
+      "artefact_modifie_utc": "2026-10-01T22:39:23.014234+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0019",
+        "SCN-0020",
+        "SCN-0021",
+        "SCN-0022",
+        "SCN-0023",
+        "SCN-0024",
+        "SCN-0025",
+        "SCN-0026",
+        "SCN-0027",
+        "SCN-0028",
+        "SCN-0029",
+        "SCN-0030",
+        "SCN-0031",
+        "SCN-0032",
+        "SCN-0033",
+        "SCN-0034",
+        "SCN-0035",
+        "SCN-0036"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-en-03.json",
+      "octets": 122155,
+      "sha256": "c2c9dfd2d1a3a9a292f4a68f086de7310e70a36386c68ff4a5b1a07e34c2fbf9",
+      "artefact_modifie_utc": "2026-10-01T22:40:45.016742+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0037",
+        "SCN-0038",
+        "SCN-0039",
+        "SCN-0040",
+        "SCN-0041",
+        "SCN-0042",
+        "SCN-0043",
+        "SCN-0044",
+        "SCN-0045",
+        "SCN-0046",
+        "SCN-0047",
+        "SCN-0048",
+        "SCN-0049",
+        "SCN-0050",
+        "SCN-0051",
+        "SCN-0052",
+        "SCN-0053",
+        "SCN-0054"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-en-04.json",
+      "octets": 163433,
+      "sha256": "5cc2f8002aa9222b480403d382be08ae79845bf00d04d75c4208f6341df454e2",
+      "artefact_modifie_utc": "2026-10-01T22:41:57.001130+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0055",
+        "SCN-0056",
+        "SCN-0057",
+        "SCN-0058",
+        "SCN-0059",
+        "SCN-0060",
+        "SCN-0061",
+        "SCN-0062",
+        "SCN-0063",
+        "SCN-0064",
+        "SCN-0065",
+        "SCN-0066",
+        "SCN-0067",
+        "SCN-0068",
+        "SCN-0069",
+        "SCN-0070"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-en-05.json",
+      "octets": 58309,
+      "sha256": "97e1128b093d221294e962d9eb524af8d449de7ef3aa169d64334d96dec6cfce",
+      "artefact_modifie_utc": "2026-10-01T22:42:40.754011+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0071",
+        "SCN-0072",
+        "SCN-0073",
+        "SCN-0074",
+        "SCN-0075",
+        "SCN-0076",
+        "SCN-0077",
+        "SCN-0078",
+        "SCN-0079",
+        "SCN-0080",
+        "SCN-0081"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-01.json",
+      "octets": 38244,
+      "sha256": "7b7cd8baedc2706efcc82380a3c954ca7364bcf942a2498ce9fc6f662f4c66a8",
+      "artefact_modifie_utc": "2026-10-01T22:31:50.951883+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0082",
+        "SCN-0083",
+        "SCN-0084",
+        "SCN-0085",
+        "SCN-0086",
+        "SCN-0087",
+        "SCN-0088",
+        "SCN-0089"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-02.json",
+      "octets": 47389,
+      "sha256": "a0ed1cb0138a2837121488acfe5cd41cb4afbd9f3d5540464d199a7025b33d91",
+      "artefact_modifie_utc": "2026-10-01T22:32:34.608222+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0090",
+        "SCN-0091",
+        "SCN-0092",
+        "SCN-0093",
+        "SCN-0094",
+        "SCN-0095",
+        "SCN-0096",
+        "SCN-0097",
+        "SCN-0098",
+        "SCN-0099"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-03.json",
+      "octets": 128364,
+      "sha256": "1fb96a8823aaaa0453c4983b9df7271bd38d72fa3ce492d851e249c2a792aada",
+      "artefact_modifie_utc": "2026-10-01T22:33:05.903619+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0100",
+        "SCN-0101",
+        "SCN-0102",
+        "SCN-0103",
+        "SCN-0104",
+        "SCN-0105",
+        "SCN-0106",
+        "SCN-0107",
+        "SCN-0108",
+        "SCN-0109",
+        "SCN-0110",
+        "SCN-0111"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-04.json",
+      "octets": 90403,
+      "sha256": "a3bc13cf6d8be8bf5673f2bf6dbc5c286a2905a365a7f5e7a5bfd9736b9b0c15",
+      "artefact_modifie_utc": "2026-10-01T22:33:40.503412+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0112",
+        "SCN-0113",
+        "SCN-0114",
+        "SCN-0115",
+        "SCN-0116",
+        "SCN-0117",
+        "SCN-0118",
+        "SCN-0119",
+        "SCN-0120",
+        "SCN-0121",
+        "SCN-0122",
+        "SCN-0123",
+        "SCN-0840"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-05.json",
+      "octets": 95919,
+      "sha256": "c2467b267deae01c6f8360ade8c9d8aebbe09793523478e8646bff8e87ef7a72",
+      "artefact_modifie_utc": "2026-10-01T22:34:23.992222+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0124",
+        "SCN-0125",
+        "SCN-0126",
+        "SCN-0127",
+        "SCN-0128",
+        "SCN-0129",
+        "SCN-0130",
+        "SCN-0131",
+        "SCN-0132",
+        "SCN-0133",
+        "SCN-0134",
+        "SCN-0135",
+        "SCN-0136",
+        "SCN-0137"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-06.json",
+      "octets": 169078,
+      "sha256": "531b287f81f5632fc122da4873329087265ee92daa0b487b5e292fcbdea092ab",
+      "artefact_modifie_utc": "2026-10-01T22:35:03.523984+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0138",
+        "SCN-0139",
+        "SCN-0140",
+        "SCN-0141",
+        "SCN-0142",
+        "SCN-0143",
+        "SCN-0144",
+        "SCN-0145",
+        "SCN-0146",
+        "SCN-0147",
+        "SCN-0148",
+        "SCN-0149",
+        "SCN-0150",
+        "SCN-0151"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/routes-fr-07.json",
+      "octets": 61348,
+      "sha256": "bb3738e4f88d8d6995fd74a0b1887be174e937c9d19ea43fab247eeb6ce4a94c",
+      "artefact_modifie_utc": "2026-10-01T22:35:39.721027+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0152",
+        "SCN-0153",
+        "SCN-0154",
+        "SCN-0155",
+        "SCN-0156",
+        "SCN-0157",
+        "SCN-0158",
+        "SCN-0159",
+        "SCN-0160",
+        "SCN-0161",
+        "SCN-0162"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/scelles-attente-interaction.json",
+      "octets": 867,
+      "sha256": "e3541ce19c0a0b7836e43ed32e265754d7eb40155b232586f34ceea867c0f4b8",
+      "artefact_modifie_utc": "2026-10-01T22:51:06.110710+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/scelles-chargement-anonyme.png",
+      "octets": 146066,
+      "sha256": "e39fb576fff5712000ea145b71994c338ead459b6816dd554d6ae7c26b82463b",
+      "artefact_modifie_utc": "2026-10-01T22:50:38.059436+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/seo-result.json",
+      "octets": 68,
+      "sha256": "83d6c53fcd718a377fa4bd1d9d43f65d254d28e3c7c350d2a08905e7ede0e146",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.505640+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/seo.log",
+      "octets": 157,
+      "sha256": "bf1713b3f3323938234fc88dd236654ad5c1d4e55579ce9febcf9d742c7b5c7f",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.505301+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0996"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/shiny-et-maze-initial.json",
+      "octets": 162,
+      "sha256": "5b6d7e510802fbc3781cc52a6a262a059da2bae37d4fc4f77bf94b4eb60c00cd",
+      "artefact_modifie_utc": "2026-10-02T00:28:00.959338+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/shiny-maze-etat-observe.json",
+      "octets": 131,
+      "sha256": "eb87b028605baa7e34dd58024c8c27c6869930c309015649afe1d0086202f9a5",
+      "artefact_modifie_utc": "2026-10-02T00:29:03.580160+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/shiny-maze-preuve-stable.json",
+      "octets": 3469,
+      "sha256": "1e3e7adf29d92fc4338188711b1b34d9e0cc9a7cb852d417e9dbc08abbcf0cb1",
+      "artefact_modifie_utc": "2026-10-02T00:29:16.823880+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0791"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/showdown-import-et-comparaison.json",
+      "octets": 3445,
+      "sha256": "2e0e359e3b748ee66536a4ce23fdcf75f8ef6f07a0c3b876533d61c6246ba130",
+      "artefact_modifie_utc": "2026-10-01T23:32:40.846754+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0886",
+        "SCN-0904",
+        "SCN-0905"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/showdown-validation-comparaison-lien.json",
+      "octets": 149,
+      "sha256": "3cf48f6de06beef1843edbd330dfcf115b29f664ef2f67ac7294e19a1c7ff351",
+      "artefact_modifie_utc": "2026-10-01T23:31:59.971364+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/sitemaps-01.json",
+      "octets": 5715,
+      "sha256": "062c703e634ca5084adbe252afa8ef247f46e4ef45eb603ddadf00369d0df629",
+      "artefact_modifie_utc": "2026-10-01T23:38:27.211301+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0637",
+        "SCN-0638",
+        "SCN-0639",
+        "SCN-0640",
+        "SCN-0641",
+        "SCN-0642",
+        "SCN-0643",
+        "SCN-0644",
+        "SCN-0645",
+        "SCN-0646",
+        "SCN-0647",
+        "SCN-0648",
+        "SCN-0649",
+        "SCN-0650",
+        "SCN-0651",
+        "SCN-0652",
+        "SCN-0653",
+        "SCN-0654",
+        "SCN-0655",
+        "SCN-0656",
+        "SCN-0657",
+        "SCN-0658",
+        "SCN-0659",
+        "SCN-0660",
+        "SCN-0661",
+        "SCN-0662",
+        "SCN-0663",
+        "SCN-0664",
+        "SCN-0665",
+        "SCN-0666",
+        "SCN-0667",
+        "SCN-0668"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/sitemaps-02.json",
+      "octets": 5941,
+      "sha256": "80e116339409145befb8585628092ee9549b3542b6b34acad6029e7d84bed6d9",
+      "artefact_modifie_utc": "2026-10-01T23:39:18.919064+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0669",
+        "SCN-0670",
+        "SCN-0671",
+        "SCN-0672",
+        "SCN-0673",
+        "SCN-0674",
+        "SCN-0675",
+        "SCN-0676",
+        "SCN-0677",
+        "SCN-0678",
+        "SCN-0679",
+        "SCN-0680",
+        "SCN-0681",
+        "SCN-0682",
+        "SCN-0683",
+        "SCN-0684",
+        "SCN-0685",
+        "SCN-0686",
+        "SCN-0687",
+        "SCN-0688",
+        "SCN-0689",
+        "SCN-0690",
+        "SCN-0691",
+        "SCN-0692",
+        "SCN-0693",
+        "SCN-0694",
+        "SCN-0695",
+        "SCN-0696",
+        "SCN-0697",
+        "SCN-0698",
+        "SCN-0699",
+        "SCN-0700"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/sitemaps-03.json",
+      "octets": 5831,
+      "sha256": "7e543452902e19701aa62a13e6a98bafadcb2903a96ebd70da00d6c8f3db6072",
+      "artefact_modifie_utc": "2026-10-01T23:39:46.274139+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0701",
+        "SCN-0702",
+        "SCN-0703",
+        "SCN-0704",
+        "SCN-0705",
+        "SCN-0706",
+        "SCN-0707",
+        "SCN-0708",
+        "SCN-0709",
+        "SCN-0710",
+        "SCN-0711",
+        "SCN-0712",
+        "SCN-0713",
+        "SCN-0714",
+        "SCN-0715",
+        "SCN-0716",
+        "SCN-0717",
+        "SCN-0718",
+        "SCN-0719",
+        "SCN-0720",
+        "SCN-0721",
+        "SCN-0722",
+        "SCN-0723",
+        "SCN-0724",
+        "SCN-0725",
+        "SCN-0726",
+        "SCN-0727",
+        "SCN-0728",
+        "SCN-0729",
+        "SCN-0730",
+        "SCN-0731",
+        "SCN-0732"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/systeme-et-api-lecture-production.json",
+      "octets": 17956,
+      "sha256": "04ff774a808844e5c03e72260f4ffabc0a125e7034a466c2cf29d38eb12797cf",
+      "artefact_modifie_utc": "2026-10-01T23:29:06.438101+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0617",
+        "SCN-0618",
+        "SCN-0619",
+        "SCN-0620",
+        "SCN-0621",
+        "SCN-0622",
+        "SCN-0623",
+        "SCN-0624",
+        "SCN-0625",
+        "SCN-0626",
+        "SCN-0627",
+        "SCN-0628",
+        "SCN-0629",
+        "SCN-0630",
+        "SCN-0631",
+        "SCN-0632",
+        "SCN-0633",
+        "SCN-0634",
+        "SCN-0635",
+        "SCN-0636"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-date-reset-et-matrice-clavier.json",
+      "octets": 1358,
+      "sha256": "c6c6fa3cf37e683d5062128149167a73221725fc72531a5f180622f795a4638d",
+      "artefact_modifie_utc": "2026-10-01T23:58:02.643297+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0804",
+        "SCN-0831"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-dresseur-illustrateur-prix.json",
+      "octets": 3761,
+      "sha256": "cd904bec8b0476f469998a4e346701e63722d0510411fac6102984a6ae398cab",
+      "artefact_modifie_utc": "2026-10-02T00:12:24.900312+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0827",
+        "SCN-0829",
+        "SCN-0830"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-extension-tri-langue.json",
+      "octets": 7572,
+      "sha256": "dabbcb96000768439ad1d47767519f7e5ba1af766d95b6e4b58ec0c98035adf8",
+      "artefact_modifie_utc": "2026-10-01T23:15:02.043896+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0820",
+        "SCN-0821",
+        "SCN-0822"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-langue-fr-et-fiche.json",
+      "octets": 3536,
+      "sha256": "72d3b47da816cfd4641b06215ce901c0cff63a53ac4d3d07df1ca65117ba7dd2",
+      "artefact_modifie_utc": "2026-10-01T23:15:36.580224+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0823"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-latence-simulation-validee.json",
+      "octets": 2445,
+      "sha256": "1123bd1ace0e30048667a97d3251a6bbf5f5b9dba8f15bd40b39247e6ef3603f",
+      "artefact_modifie_utc": "2026-10-02T00:35:51.338725+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0923"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-legalite-et-devise-verifiees.json",
+      "octets": 2425,
+      "sha256": "19cd7674e0ddc51f8f063642ab4579165f585d7606c1fd2553306d06e90f5a34",
+      "artefact_modifie_utc": "2026-10-02T00:13:47.118420+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0832",
+        "SCN-0833",
+        "SCN-0835"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-mobile.png",
+      "octets": 138104,
+      "sha256": "174d4cf1d8ba06635c2b4af3c1e2ad2bef1dd2dc14bf93705a0448a38851e1f9",
+      "artefact_modifie_utc": "2026-10-01T23:01:13.236069+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-modale-marche-parcours.json",
+      "octets": 176,
+      "sha256": "d0bcfe7d13a9e79e226ddba8560152321d30604d73df2c51dd798234bfc4d84b",
+      "artefact_modifie_utc": "2026-10-01T23:16:05.325767+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-nom-extension-retarde-reproduction.json",
+      "octets": 5196,
+      "sha256": "a6052cd97bc994e9ff67ad157b73d4fee3ad1b7ef523470a9667106c16566454",
+      "artefact_modifie_utc": "2026-10-02T00:37:13.504552+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0891"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-panne-lenteur-reprise.json",
+      "octets": 565,
+      "sha256": "06e5b1326667e8934b0e4a1fce1450051e74e319d8626738c05eb09225845560",
+      "artefact_modifie_utc": "2026-10-01T23:27:57.756747+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-panne-reprise-confirmee.json",
+      "octets": 1145,
+      "sha256": "ed251a32314e76ad82c5caaa65e7a7b4e9043b81ab18701bbf9978dd5c5ed18d",
+      "artefact_modifie_utc": "2026-10-01T23:28:35.875056+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0908"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-rarete-attente.json",
+      "octets": 898,
+      "sha256": "35ed665994f826448d10f872c4c590064ee5689e1979c0349f19dd457e8003db",
+      "artefact_modifie_utc": "2026-10-02T00:10:01.494224+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-rarete-dresseur-energie.json",
+      "octets": 4714,
+      "sha256": "626888cd682e88159787b84c5871a6141cffcfd10f8f6683605a14ae79bcc79c",
+      "artefact_modifie_utc": "2026-10-02T00:11:36.863219+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0826",
+        "SCN-0828"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-recherche-pagination-filtres.json",
+      "octets": 10742,
+      "sha256": "bd1b8960c80e046c04c4b3ef2ff4e2b8a063eb3eae9ca608435288a77b4ae5ed",
+      "artefact_modifie_utc": "2026-10-01T23:05:44.250257+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-recherches-stabilisees.json",
+      "octets": 9171,
+      "sha256": "c7248052cf78a79eb7526c7eb03d87321bc2836889d8878414223534f145ae2d",
+      "artefact_modifie_utc": "2026-10-01T23:06:41.585726+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0818",
+        "SCN-0819"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-reseau-inventaire.json",
+      "octets": 10601,
+      "sha256": "fa48f62f7a73236d5a8c2314bd4fdd256bbbd91b74836ff12585c61625beba49",
+      "artefact_modifie_utc": "2026-10-01T23:26:47.949772+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-stade-legalite.json",
+      "octets": 185,
+      "sha256": "1b0f81a34a78aca36c53720e78bd734a688bb2645e3c9a8da06410ac136789c5",
+      "artefact_modifie_utc": "2026-10-02T00:13:07.464687+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-types-pv-rarete.json",
+      "octets": 3609,
+      "sha256": "c64b5c783440c90b14e2e9621663ab7f0a8dad264d903bfadc6d788d0de427ae",
+      "artefact_modifie_utc": "2026-10-02T00:09:41.732996+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0825"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcg-vues-filtres-avances.json",
+      "octets": 6467,
+      "sha256": "ca21e21f62a0e6d76b18a9a4747dbe67a4a825ef304143843c0379e66550ffbb",
+      "artefact_modifie_utc": "2026-10-01T23:56:38.779627+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0824"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/tcgdex-503-simulation-reelle.json",
+      "octets": 2929,
+      "sha256": "1506c2614a0cddcc8c371d209928e131bbc97ae810f2984fc13dc09965cb8689",
+      "artefact_modifie_utc": "2026-10-01T23:27:15.885299+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0907"
+      ],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/types-clavier-mobile-quiz-reprise.json",
+      "octets": 1575,
+      "sha256": "94b18f1d2acb4c441ed7023ede401b3a1ba897e38ac2ea26b6948981bde72ffd",
+      "artefact_modifie_utc": "2026-10-01T23:19:56.705105+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/types-clavier-mobile-quiz.json",
+      "octets": 1184,
+      "sha256": "ee1c73ffd351968b780ce2fa45cd48d59aece6f80c14a189b59dfa4131d98223",
+      "artefact_modifie_utc": "2026-10-01T23:19:38.634414+00:00",
+      "classification": "tentative inconclusive ou bloquée ; aucune réussite fondée sur ce fichier",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/types-mobile.png",
+      "octets": 114747,
+      "sha256": "17d39edeea1745ac8224ff25dd2ec0737c93f9470ef30acba45cd6912e0f1c4d",
+      "artefact_modifie_utc": "2026-10-01T23:01:11.506368+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/types-result.json",
+      "octets": 68,
+      "sha256": "2b704006ab3551ef0293864386867049b24347b2f021e818abed99d037726dd0",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.504847+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/types.log",
+      "octets": 44,
+      "sha256": "b2db9400eb91556e1504c2669c1711ba291bfb16649c06f196bd6f040e34e143",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.504380+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0995"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/unsupported-backup.json",
+      "octets": 31,
+      "sha256": "4adaf53a923f10e4f0422d8ac2c488c6cf7f239d9a75cfdd7f38348b42567f72",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.508896+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/valid-backup.json",
+      "octets": 1268,
+      "sha256": "7387e1d8ae69c049c6cc434c447bdd916252fdc54ff88e3c19bcd8dea6e8f5fe",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.509820+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/verification-livrables.json",
+      "octets": 619,
+      "sha256": "9df21df08b4263ebe8899c4ffc2eb146dbd4cbb593f22cb275b8489c6ee822b2",
+      "artefact_modifie_utc": "2026-10-02T00:49:04.124039+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/vitest-result.json",
+      "octets": 57,
+      "sha256": "e50ff6f1965dec4b562d8f35ad2e2b8c6d15de248ae812439d8748d5962d1097",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.503234+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    },
+    {
+      "fichier": "2026-10-02-preuves/vitest.log",
+      "octets": 457,
+      "sha256": "54adf720f35fc9388446c5869ee41b351524a270b56fc7e2f0a2a6e8b010f8a3",
+      "artefact_modifie_utc": "2026-10-02T00:07:38.502899+00:00",
+      "classification": "preuve référencée",
+      "scenarios_matrice": [
+        "SCN-0993"
+      ],
+      "cite_dans_rapport": true
+    },
+    {
+      "fichier": "2026-10-02-preuves/zoom-css-200.png",
+      "octets": 774251,
+      "sha256": "a50660e91e3220af42b4f688b051b9cd2103667be39addd1080f257ac7036e2a",
+      "artefact_modifie_utc": "2026-10-01T23:41:33.243382+00:00",
+      "classification": "artefact secondaire non cité",
+      "scenarios_matrice": [],
+      "cite_dans_rapport": false
+    }
+  ]
+}

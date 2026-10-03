@@ -1,0 +1,138 @@
+[
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "type": "text/plain; charset=utf-8",
+    "excerpt": "User-Agent: *\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: ClaudeBot\nAllow: /\nAllow: /api/og/\nDisallow: /api/\nDisallow: /en/tcg/cards/\nDisallow: /fr/tcg/cards/\nDisallow: /es/tcg/cards/\nDisallow: /de/tcg/cards/\nDisallow: /it/tcg/cards/\nDisallow: /ja/tcg/cards/\nDisallow: /ko/tcg/cards/\nDisallow: /zh/tcg/cards/\n\nUser-Agent: GPTBot\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: ChatGPT-User\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: OAI-SearchBot\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: PerplexityBot\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: Perplexity-User\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: Claude-User\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: anthropic-ai\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: Claude-SearchBot\nAllow: /\nAllow: /api/og/\nDisallow: /api/\n\nUser-Agent: Google-Extended\nAllow: /\nAllow",
+    "bytes": 3008
+  },
+  {
+    "path": "/manifest.webmanifest",
+    "status": 200,
+    "type": "application/manifest+json; charset=utf-8",
+    "excerpt": "{\"name\":\"Lunidex — Pokémon TCG collection tracker\",\"short_name\":\"Lunidex\",\"description\":\"Track Pokémon TCG sets, owned and missing cards, and collection progress. Explore the Pokédex and build teams too.\",\"start_url\":\"/en\",\"scope\":\"/\",\"display\":\"standalone\",\"orientation\":\"portrait-primary\",\"background_color\":\"#07144F\",\"theme_color\":\"#5243B5\",\"lang\":\"en\",\"categories\":[\"games\",\"entertainment\",\"education\"],\"shortcuts\":[{\"name\":\"Team Builder\",\"short_name\":\"Team\",\"url\":\"/en/team\",\"description\":\"Build and analyze your Pokémon team\"},{\"name\":\"TCG Collection\",\"short_name\":\"Collection\",\"url\":\"/en/tcg/collection\",\"description\":\"Track cards and set completion\"},{\"name\":\"TCG Catalog\",\"short_name\":\"TCG\",\"url\":\"/en/tcg\",\"description\":\"Browse Pokémon cards and add them to your collection\"},{\"name\":\"Quiz\",\"short_name\":\"Quiz\",\"url\":\"/en/quiz\",\"description\":\"Who's that Pokémon?\"}],\"icons\":[{\"src\":\"/icon-1",
+    "bytes": 1442
+  },
+  {
+    "path": "/opensearch.xml",
+    "status": 200,
+    "type": "application/xml",
+    "excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">\n  <ShortName>Lunidex</ShortName>\n  <Description>Search the Lunidex Pokédex by Pokémon name or National Dex number.</Description>\n  <InputEncoding>UTF-8</InputEncoding>\n  <Url type=\"text/html\" template=\"https://lunidex.app/en/pokedex?q={searchTerms}\"/>\n  <Image height=\"64\" width=\"64\" type=\"image/png\">https://lunidex.app/icon-192.png</Image>\n  <Developer>Lunidex</Developer>\n  <Attribution>Search data via PokéAPI and TCGdex</Attribution>\n  <SyndicationRight>open</SyndicationRight>\n  <AdultContent>false</AdultContent>\n  <Language>en-US</Language>\n  <Language>fr-FR</Language>\n  <Language>de-DE</Language>\n  <Language>es-ES</Language>\n  <Language>it-IT</Language>\n  <Language>ja-JP</Language>\n  <Language>ko-KR</Language>\n  <Language>zh-CN</Language>\n</OpenSearchDescription>\n",
+    "bytes": 885
+  },
+  {
+    "path": "/llms.txt",
+    "status": 200,
+    "type": "text/plain; charset=utf-8",
+    "excerpt": "# Lunidex\n\n> Lunidex is an independent, open-source, free-to-use, unofficial Pokémon web application and Pokémon TCG workspace. It brings together a Pokédex, team-building tools, type and move references, a TCG catalog, and personal collection tracking.\n\nLunidex is the Pokémon reference and collection application at https://lunidex.app. It is a reference and collection workspace, not a card marketplace.\n\n## Identity and scope\n\n- **Public name**: Lunidex\n- **Canonical site**: https://lunidex.app\n- **Canonical route format**: every public page uses a locale prefix: `/en`, `/fr`, `/es`, `/de`, `/it`, `/ja`, `/ko`, or `/zh`\n- **Supported locales**: English, French, Spanish, German, Italian, Japanese, Korean, and Chinese\n- **Project status**: independent, non-official Pokémon fan project; not affiliated with Nintendo, Game Freak, Creatures Inc., or The Pokémon Company\n- **Application code**: ",
+    "bytes": 13674
+  },
+  {
+    "path": "/llms-full.txt",
+    "status": 200,
+    "type": "text/plain; charset=utf-8",
+    "excerpt": "# Lunidex — grounding snapshot\n# Reviewed against the application source: 2026-09-28\n# This file is a factual navigation and entity guide. Live catalog totals,\n# prices, upstream freshness, performance and indexation are intentionally not\n# asserted here.\n\n## 1. Entity and purpose\n\nLunidex is an independent, open-source, unofficial web application for Pokémon\nplayers and Pokémon Trading Card Game collectors. The product combines a localized\nPokédex, reference tools, team analysis, a TCG catalog, and personal collection\ntracking.\n\nLunidex is a reference and collection workspace, not a card marketplace. It is\nfree to use for public browsing and independent from the Pokémon rights holders.\n\nCanonical origin: https://lunidex.app\nSource repository: https://github.com/teefloo/Lunidex\nApplication license: MIT\nSupported locale prefixes: /en, /fr, /es, /de, /it, /ja, /ko, /zh\n\nLunidex is an indep",
+    "bytes": 19132
+  },
+  {
+    "path": "/ai.txt",
+    "status": 200,
+    "type": "text/plain; charset=utf-8",
+    "excerpt": "# AI discovery notes — Lunidex\n# https://lunidex.app/ai.txt\n# This informational file supplements robots.txt. It is not a replacement for\n# HTTP access controls, the site's terms, or the canonical pages.\n\n# Public informational pages are available to crawlers. robots.txt disallows\n# the /api/ namespace, which is not a public content source.\nUser-Agent: *\nAllow: /\n\nProject: Lunidex\nProject-URL: https://lunidex.app\nRepository: https://github.com/teefloo/Lunidex\nContact: https://github.com/teefloo/Lunidex/issues\nApplication-License: MIT\nEntity-Type: Independent, unofficial, free-to-use Pokémon web application and Pokémon TCG collection workspace\nDisambiguation: Independent, unofficial Pokémon reference and Pokémon TCG collection web application; not a card marketplace\n\n# Account boundary\n# Public reference pages are available without an account. In the current web\n# runtime, personal collec",
+    "bytes": 6173
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "type": "application/xml",
+    "excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <sitemap><loc>https://lunidex.app/sitemaps/static.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/static-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/guides-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/pokemon-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-sets-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-fr-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-fr-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-fr-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-fr-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-es-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-es-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-es-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-es-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-de-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-de-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-de-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-de-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-it-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-it-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-it-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-it-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ja-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ja-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ja-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ja-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ko-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ko-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ko-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-ko-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-zh-1.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-zh-2.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-zh-3.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/tcg-cards-zh-4.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/sealed-products-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/moves-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/abilities-zh.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-fr.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-es.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-de.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-it.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-ja.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-ko.xml</loc></sitemap>\n  <sitemap><loc>https://lunidex.app/sitemaps/items-zh.xml</loc></sitemap>\n</sitemapindex>",
+    "bytes": 7547
+  },
+  {
+    "path": "/go/audit-test",
+    "status": 308,
+    "type": "text/plain",
+    "location": "/fr/go/audit-test",
+    "excerpt": "Redirecting...\n",
+    "bytes": 15
+  },
+  {
+    "path": "/go/INVALID___",
+    "status": 308,
+    "type": "text/plain",
+    "location": "/fr/go/INVALID___",
+    "excerpt": "Redirecting...\n",
+    "bytes": 15
+  },
+  {
+    "path": "/pokedex",
+    "status": 308,
+    "type": "text/plain",
+    "location": "/fr/pokedex",
+    "excerpt": "Redirecting...\n",
+    "bytes": 15
+  },
+  {
+    "path": "/xx/pokedex",
+    "status": 308,
+    "type": "text/plain",
+    "location": "/fr/xx/pokedex",
+    "excerpt": "Redirecting...\n",
+    "bytes": 15
+  },
+  {
+    "path": "/fr/auth/reset-password?token=invalide",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "excerpt": "<!DOCTYPE html><html data-dpl-id=\"dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\" lang=\"fr\" class=\"font-body __variable_fb3440 __variable_eff0f4\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"/><link rel=\"stylesheet\" href=\"/_next/static/css/5250e9bf0b7b520c.css?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\" data-precedence=\"next\"/><link rel=\"stylesheet\" href=\"/_next/static/css/95aa70684ee6710d.css?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/webpack-0a891832489718c4.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\"/><script src=\"/_next/static/chunks/4bd1b696-6516d227d8870366.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\" async=\"\"></script><script src=\"/_next/static/chunks/8928-e8943e5e8a7c4848.js?dpl=dpl_55uPXcXdnhC3DbPYG36ocpV6tzon\" async=\"\"></script><script sr",
+    "bytes": 256937
+  },
+  {
+    "path": "/api/user-state",
+    "status": 401,
+    "excerpt": "{\"error\":\"Authentication required\"}",
+    "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+    "path": "/api/account/export",
+    "status": 401,
+    "excerpt": "{\"error\":\"Authentication required\"}",
+    "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+    "path": "/api/account/api-keys",
+    "status": 401,
+    "excerpt": "{\"error\":{\"code\":\"AUTHENTICATION_REQUIRED\",\"message\":\"Sign in to manage API keys.\"}}",
+    "cache": "private, no-store"
+  },
+  {
+    "path": "/api/friends",
+    "status": 401,
+    "excerpt": "{\"error\":\"Authentication required\"}",
+    "cache": "private, no-store"
+  },
+  {
+    "path": "/api/profile",
+    "status": 401,
+    "excerpt": "{\"error\":\"Authentication required\"}",
+    "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+    "path": "/api/v1/me",
+    "status": 401,
+    "excerpt": "{\"error\":{\"code\":\"INVALID_API_KEY\",\"message\":\"A valid Lunidex API key is required.\"}}",
+    "cache": "private, no-store"
+  },
+  {
+    "path": "/api/v1/cards",
+    "status": 401,
+    "excerpt": "{\"error\":{\"code\":\"INVALID_API_KEY\",\"message\":\"A valid Lunidex API key is required.\"}}",
+    "cache": "private, no-store"
+  },
+  {
+    "path": "/api/v1/openapi.json",
+    "status": 200,
+    "excerpt": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"Lunidex Public API\",\"version\":\"1.0.0\",\"description\":\"API for data synchronized to a Lunidex account. Local-only device data is not available.\\n\\nCard collection responses never contain card valuations. Sealed amounts are integer EUR cents.\\n\\nQuotas per account: 60 reads/minute, 10 writes/minute, 1,000 reads/day, 100 writes/day.\\n\\nCard detail and sealed calculations: 100 reads/day per account and 5,000 operations/day globally for each category.\\n\\nLists defau",
+    "cache": "public, max-age=3600"
+  }
+]

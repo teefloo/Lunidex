@@ -1,0 +1,32 @@
+[
+  {
+    "step": "historical-cry",
+    "media": [
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg",
+        "result": "native-play-resolved"
+      },
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/25.ogg",
+        "result": "native-play-resolved"
+      },
+      {
+        "src": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/25.ogg",
+        "result": "native-play-resolved"
+      }
+    ]
+  },
+  {
+    "step": "form-navigation",
+    "url": "https://lunidex.app/fr/pokemon/raichu-alola",
+    "h1": [
+      "Raichu Forme d’Alola"
+    ],
+    "types": "#10100\nRaichu Forme D’Alola\n\nExplorez Raichu Forme d’Alola : statistiques, types (Électrik, Psy), évolutions, attaques, talents et suggestions de movesets sur Lunidex.\n\nPOKÉMON SOURIS\n\nFORÊT\n\nJAUNE\nÉLECTRIK\nPSY\nCri actuel\nÀ PROPOS\nSTATISTIQUES\nÉVOLUTION\nCAPACITÉS\nCARTES\nPlus\nEntrée Lunidex\n\nIl se protège des décharges grâce à sa queue qui dissipe l’électricité dans le sol.\n\nPOIDS\n\n21 kg\n\nTAILLE\n\n0.7 m\n\nDONNÉES POKÉDEX\n\nORDRE\n\n#52\n\nFORME PAR DÉFAUT\n\nNon\n\nFORMES\n\n1\nRaichu Forme d'Alola\n\nINDICES DE JEU\n\n0 APPARITIONS EN JEU\n\nOBJETS TENUS\n\n0\nAucun objet tenu\nOBJETS TENUS RECOMMANDÉS\nCeinture Pro\nBooste la puissance des coups super efficaces de 20"
+  },
+  {
+    "step": "back",
+    "url": "https://lunidex.app/fr/pokemon/pikachu?tab=evolution",
+    "selected": "true"
+  }
+]

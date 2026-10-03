@@ -1,0 +1,206 @@
+[
+  {
+    "path": "/fr/compare",
+    "violations": [],
+    "passed": 27
+  },
+  {
+    "path": "/fr/types",
+    "violations": [
+      {
+        "id": "aria-required-parent",
+        "impact": "critical",
+        "count": 324,
+        "nodes": [
+          {
+            "target": [
+              "div[data-type-cell=\"normal-normal\"]"
+            ],
+            "html": "<div class=\"flex aspect-square w...\" role=\"gridcell\" tabindex=\"0\" aria-selected=\"false\" data-type-cell=\"normal-normal\" aria-label=\"Normal vs Normal: 1×\">",
+            "failure": "Fix any of the following:\n  Required ARIA parent role not present: row"
+          },
+          {
+            "target": [
+              "div[data-type-cell=\"normal-fire\"]"
+            ],
+            "html": "<div class=\"flex aspect-square w...\" role=\"gridcell\" tabindex=\"-1\" aria-selected=\"false\" data-type-cell=\"normal-fire\" aria-label=\"Normal vs Feu: 1×\">",
+            "failure": "Fix any of the following:\n  Required ARIA parent role not present: row"
+          },
+          {
+            "target": [
+              "div[data-type-cell=\"normal-water\"]"
+            ],
+            "html": "<div class=\"flex aspect-square w...\" role=\"gridcell\" tabindex=\"-1\" aria-selected=\"false\" data-type-cell=\"normal-water\" aria-label=\"Normal vs Eau: 1×\">",
+            "failure": "Fix any of the following:\n  Required ARIA parent role not present: row"
+          },
+          {
+            "target": [
+              "div[data-type-cell=\"normal-electric\"]"
+            ],
+            "html": "<div class=\"flex aspect-square w...\" role=\"gridcell\" tabindex=\"-1\" aria-selected=\"false\" data-type-cell=\"normal-electric\" aria-label=\"Normal vs Électrik: ...\">",
+            "failure": "Fix any of the following:\n  Required ARIA parent role not present: row"
+          },
+          {
+            "target": [
+              "div[data-type-cell=\"normal-grass\"]"
+            ],
+            "html": "<div class=\"flex aspect-square w...\" role=\"gridcell\" tabindex=\"-1\" aria-selected=\"false\" data-type-cell=\"normal-grass\" aria-label=\"Normal vs Plante: 1×\">",
+            "failure": "Fix any of the following:\n  Required ARIA parent role not present: row"
+          }
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 16,
+        "nodes": [
+          {
+            "target": [
+              ".space-y-3:nth-child(1) > .flex-wrap.gap-2.flex > .glass-tag.type-accent.py-1\\.5:nth-child(1)"
+            ],
+            "html": "<div class=\"glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]\" style=\"--type-color: #A6B91A; opacity: 1; transform: none;\">Insecte</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.04 (foreground color: #859c46, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3:nth-child(1) > .flex-wrap.gap-2.flex > .glass-tag.type-accent.py-1\\.5:nth-child(2)"
+            ],
+            "html": "<div class=\"glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]\" style=\"--type-color: #B7B7CE; opacity: 1; transform: none;\">Acier</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.78 (foreground color: #9399b7, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3:nth-child(1) > .flex-wrap.gap-2.flex > .glass-tag.type-accent.py-1\\.5:nth-child(3)"
+            ],
+            "html": "<div class=\"glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]\" style=\"--type-color: #7AC74C; opacity: 1; transform: none;\">Plante</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.92 (foreground color: #61a65c, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3:nth-child(1) > .flex-wrap.gap-2.flex > .glass-tag.type-accent.py-1\\.5:nth-child(4)"
+            ],
+            "html": "<div class=\"glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]\" style=\"--type-color: #96D9D6; opacity: 1; transform: none;\">Glace</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.31 (foreground color: #78b3be, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3:nth-child(2) > .flex-wrap.gap-2.flex > .glass-tag.type-accent.py-1\\.5:nth-child(1)"
+            ],
+            "html": "<div class=\"glass-tag type-accent px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.06em]\" style=\"--type-color: #A6B91A; opacity: 1; transform: none;\">Insecte</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.04 (foreground color: #859c46, background color: #fefeff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "passed": 28
+  },
+  {
+    "path": "/fr/quiz",
+    "violations": [],
+    "passed": 25
+  },
+  {
+    "path": "/fr/breeding",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 5,
+        "nodes": [
+          {
+            "target": [
+              ".max-w-lg"
+            ],
+            "html": "<p class=\"text-sm text-foreground/50 font-medium max-w-lg mx-auto\">Règles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.01 (foreground color: #838eae, background color: #f2f6ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:text-foreground\\/80"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow] text-foreground/50 hover:text-foreground/80\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.99 (foreground color: #828dae, background color: #eff4ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".text-xs"
+            ],
+            "html": "<p class=\"text-xs text-foreground/50 font-medium mt-0.5\">Choisissez les deux Pokémon que vous souhaitez reproduire</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #8a92ae, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-4:nth-child(1) > .flex-col.gap-2.flex > .tracking-\\[0\\.18em\\].text-foreground\\/50"
+            ],
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50\">Parent 1 (Pension)</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #8a92ae, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-4:nth-child(2) > .flex-col.gap-2.flex > .tracking-\\[0\\.18em\\].text-foreground\\/50"
+            ],
+            "html": "<p class=\"text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50\">Parent 2 (Pension)</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #8a92ae, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "passed": 27
+  },
+  {
+    "path": "/fr/contact",
+    "violations": [],
+    "passed": 29
+  },
+  {
+    "path": "/fr/tcg",
+    "violations": [],
+    "passed": 28
+  },
+  {
+    "path": "/fr/tcg/sets/sv03.5",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 4,
+        "nodes": [
+          {
+            "target": [
+              ".gap-x-5 > span:nth-child(1)"
+            ],
+            "html": "<span>207 cartes</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-x-5 > span:nth-child(2)"
+            ],
+            "html": "<span>22 sept. 2023</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-x-5 > span:nth-child(3)"
+            ],
+            "html": "<span>Série<!-- -->: <!-- -->Scarlet &amp; Violet</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "span:nth-child(4)"
+            ],
+            "html": "<span>Officiel<!-- -->: <!-- -->165</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.53 (foreground color: #7d87a6, background color: #fefeff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "passed": 26
+  },
+  {
+    "path": "/fr/tcg/sealed/market",
+    "violations": [],
+    "passed": 29
+  }
+]

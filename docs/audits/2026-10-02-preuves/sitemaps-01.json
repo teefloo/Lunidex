@@ -1,0 +1,226 @@
+[
+  {
+    "url": "https://lunidex.app/sitemaps/static.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 27,
+    "bytes": 23113
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 27,
+    "bytes": 23113
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/static-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 26,
+    "bytes": 22712
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 20,
+    "bytes": 12482
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 20,
+    "bytes": 12482
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/guides-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5,
+    "bytes": 5627
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/pokemon-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 1351,
+    "bytes": 1295975
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-sets-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 214,
+    "bytes": 196684
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "step": "firsttab",
+    "focused": {
+      "tag": "A",
+      "text": "Aller au contenu principal",
+      "href": "#home-main"
+    }
+  },
+  {
+    "step": "skip",
+    "focused": {
+      "tag": "MAIN",
+      "id": "home-main"
+    }
+  },
+  {
+    "step": "global-search-dialog",
+    "text": "Rechercher dans Lunidex\n\nRecherchez des pages et des Pokémon\n\nPages\nCollection\nCatalogue\nPokédex\nJouer",
+    "inputs": [
+      "Rechercher une page, un Pokémon ou un outil…"
+    ]
+  },
+  {
+    "step": "global-search-results",
+    "text": "Rechercher dans Lunidex\n\nRecherchez des pages et des Pokémon\n\nObjets\nLettre Végétale\nLoot\nBonbon Pikachu\nSpecies Candies\nCapacités\nPikachute Foudroyante\nELECTRIC\nPokémon\nPikachu\n#025\nPikachu Rock Star\n#10080\nPikachu Belle\n#10081\nPikachu Pop Star\n#10082\nPikachu Phd\n#10083\nPikachu Libre\n#10084\nPikachu Cosplay\n#10085\nPikachu Original Cap\n#10094",
+    "links": []
+  },
+  {
+    "step": "focus-trap",
+    "within": true
+  },
+  {
+    "step": "escape-restore",
+    "dialogs": 1,
+    "focus": null
+  },
+  {
+    "step": "types",
+    "text": "Maître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nTableau d'efficacité des types\n\nDécouvrez comment chaque type se compare à tous les autres\n\nHover or select a cell to see the multiplier\nSUPER EFFICACE (2×)\nNORMAL (1×)\nPAS TRÈS EFFICACE (½×)\nAUCUN EFFET (0×)\nATK\n╲\nDEF\n\t\nNORM\n\t\nFEU\n\t\nEAU\n\t\nÉLEC\n\t\nPLAN\n\t\nGLAC\n\t\nCOMB\n\t\nPOIS\n\t\nSOL\n\t\nVOL\n\t\nPSY\n\t\nINSE\n\t\nROCH\n\t\nSPEC\n\t\nDRAG\n\t\nTÉNÈ\n\t\nACIE\n\t\nFÉE\n\n\nNORMA\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n0\n\t\n\t\n\t\n½\n\t\n\n\nFEU\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n2\n\t\n\n\nEAU\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n\n\nÉLECT\n\t\n\t\n\t\n2\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n0\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\n\nPLANT\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n½\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n\n\nGLACE\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\n\nCOMBA\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n2\n\t\n0\n\t\n\t\n2\n\t\n2\n\t\n½\n\n\nPOISO\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n0\n\t\n2\n\n\nSOL\n\t\n\t\n2\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n0\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\n\nVOL\n\t\n\t\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n\n\nPSY\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n0\n\t\n½\n\t\n\n\nINSEC\n\t\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n½\n\n\nROCHE\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\n\nSPECT\n\t\n0\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\n\nDRAGO\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n0\n\n\nTÉNÈB\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n½\n\n\nACIER\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n½\n\t\n2\n\n\nFÉE\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n½\n\t\nFeu\n\nMAÎTRISE ÉLÉMENTAIRE\n\nFORT CONTRE\nINSECTE\nACIER\nPLANTE\nGLACE\nRÉSISTE À\nINSECTE\nACIER\nFEU\nPLANTE\nGLACE\nFÉE\nFAIBLE FACE À\nSOL\nROCHE\nEAU",
+    "buttons": [
+      "Normal",
+      "Feu",
+      "Eau",
+      "Électrik",
+      "Plante",
+      "Glace",
+      "Combat",
+      "Poison",
+      "Sol",
+      "Vol",
+      "Psy",
+      "Insecte",
+      "Roche",
+      "Spectre",
+      "Dragon",
+      "Ténèbres",
+      "Acier",
+      "Fée",
+      "",
+      "Norm",
+      "Feu",
+      "Eau",
+      "Élec",
+      "Plan"
+    ]
+  }
+]

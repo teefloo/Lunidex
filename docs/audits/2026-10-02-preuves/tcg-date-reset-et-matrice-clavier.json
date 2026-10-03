@@ -1,0 +1,21 @@
+[
+  {
+    "step": "future-date-empty",
+    "url": "https://lunidex.app/fr/tcg?set=30th&releaseStart=2035-01-01&sortBy=id&sortOrder=asc&view=scan&tcgLang=en",
+    "text": "ire\nSkyridge\nAquapolis\nBest of game\nExpedition Base Set\nSample\nLegendary Collection\nNeo Destiny\nNeo Revelation\nSouthern Islands\nNeo Discovery\nNeo Genesis\nGym Challenge\nGym Heroes\nTeam Rocket\nBase Set 2\nJumbo cards\nFossil\nW Promotional\nWizards Black Star Promos\nJungle\nBase Set\nMiscellaneous Promos\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nFILTRES\nExtension: 30th Celebration\nReleased after: 2035-01-01\nEffacer\nRésultats du catalogue\nCARTES TROUVÉES\n0 cartes dans 30th Celebration\nAUCUNE CARTE TROUVÉE\n\nEssaie sans filtre, ou pars d'une carte connue pour retrouver rapidement ce que tu cherches.\n\nRÉINITIALISER LES FILTRES\nDERNIÈRES CARTES\nCHERCHER PIKACHU"
+  },
+  {
+    "step": "latest-reset",
+    "url": "https://lunidex.app/fr/tcg?set=30th&sortBy=id&sortOrder=asc&view=scan&tcgLang=en",
+    "cards": 24
+  },
+  {
+    "step": "cell-keyboard",
+    "selected": "true",
+    "active": "Électrik vs Sol: 0×"
+  },
+  {
+    "step": "arrow",
+    "active": "Électrik vs Vol: 2×"
+  }
+]

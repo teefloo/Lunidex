@@ -1,0 +1,3 @@
+{
+  "raw": "### Error\nTimeoutError: locator.getAttribute: Timeout 5000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Chromatique', exact: true })\n"
+}

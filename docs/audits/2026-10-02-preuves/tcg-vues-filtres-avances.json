@@ -1,0 +1,199 @@
+[
+  {
+    "step": "list",
+    "cards": 24
+  },
+  {
+    "step": "grid2",
+    "checked": "true"
+  },
+  {
+    "step": "Niveau de rareté",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\n30TH\nNIVEAU DE RARETÉ\nPOKÉMON\nDRESSEUR\nÉNERGIE\nMARCHÉ & MÉTADONNÉES\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "aria": "Rechercher dans la base de cartes...",
+        "placeholder": "Rechercher dans la base de cartes...",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "step": "Pokémon",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\n30TH\nNIVEAU DE RARETÉ\nPOKÉMON\nINCOLORE\nFEU\nEAU\nÉLECTRIK\nPLANTE\nCOMBAT\nPSY\nOBSCURITÉ\nDRAGON\nFÉE\nMÉTAL\nHP MIN\nHP MAX\nBASE\nSTADE 1\nSTADE 2\nLEVEL X\nV\nVMAX\nVSTAR\nEX\nGX\nMEGA\nDRESSEUR\nÉNERGIE\nMARCHÉ & MÉTADONNÉES\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "aria": "Rechercher dans la base de cartes...",
+        "placeholder": "Rechercher dans la base de cartes...",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "0",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "340",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "step": "Dresseur",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\n30TH\nNIVEAU DE RARETÉ\nPOKÉMON\nINCOLORE\nFEU\nEAU\nÉLECTRIK\nPLANTE\nCOMBAT\nPSY\nOBSCURITÉ\nDRAGON\nFÉE\nMÉTAL\nHP MIN\nHP MAX\nBASE\nSTADE 1\nSTADE 2\nLEVEL X\nV\nVMAX\nVSTAR\nEX\nGX\nMEGA\nDRESSEUR\nSUPPORTER\nOBJET\nSTADE\nOUTIL\nACE SPEC\nMACHINE TECHNIQUE\nGOLDENROD GAME CORNER\nMACHINE SECRÈTE DE LA TEAM ROCKET\nÉNERGIE\nMARCHÉ & MÉTADONNÉES\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "aria": "Rechercher dans la base de cartes...",
+        "placeholder": "Rechercher dans la base de cartes...",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "0",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "340",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "step": "Énergie",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\n30TH\nNIVEAU DE RARETÉ\nPOKÉMON\nINCOLORE\nFEU\nEAU\nÉLECTRIK\nPLANTE\nCOMBAT\nPSY\nOBSCURITÉ\nDRAGON\nFÉE\nMÉTAL\nHP MIN\nHP MAX\nBASE\nSTADE 1\nSTADE 2\nLEVEL X\nV\nVMAX\nVSTAR\nEX\nGX\nMEGA\nDRESSEUR\nSUPPORTER\nOBJET\nSTADE\nOUTIL\nACE SPEC\nMACHINE TECHNIQUE\nGOLDENROD GAME CORNER\nMACHINE SECRÈTE DE LA TEAM ROCKET\nÉNERGIE\nDE BASE\nSPÉCIALE\nMARCHÉ & MÉTADONNÉES\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "aria": "Rechercher dans la base de cartes...",
+        "placeholder": "Rechercher dans la base de cartes...",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "0",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "340",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "step": "Marché & métadonnées",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\n30TH\nNIVEAU DE RARETÉ\nPOKÉMON\nDRESSEUR\nSUPPORTER\nOBJET\nSTADE\nOUTIL\nACE SPEC\nMACHINE TECHNIQUE\nGOLDENROD GAME CORNER\nMACHINE SECRÈTE DE LA TEAM ROCKET\nÉNERGIE\nDE BASE\nSPÉCIALE\nMARCHÉ & MÉTADONNÉES\nILLUSTRATEUR\nRÉGLEMENTATION\nPRIX MIN\nPRIX MAX\nSORTIE APRÈS\nSORTIE AVANT\nÉTAT DE COLLECTION\nToutes les cartes\nPossédées\nListe de souhaits\nManquantes\nLÉGALITÉS\nSTANDARD\nEXPANDED\nUNLIMITED\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "inputs": [
+      {
+        "tag": "INPUT",
+        "aria": "Rechercher dans la base de cartes...",
+        "placeholder": "Rechercher dans la base de cartes...",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "N'importe quel illustrateur",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "G, H, I…",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "0",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "999",
+        "type": "number",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "",
+        "type": "date",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "aria": null,
+        "placeholder": "",
+        "type": "date",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "SELECT",
+        "aria": null,
+        "type": "select-one",
+        "value": "all"
+      }
+    ]
+  }
+]

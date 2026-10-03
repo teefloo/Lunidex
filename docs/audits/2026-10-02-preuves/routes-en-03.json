@@ -1,0 +1,2463 @@
+[
+  {
+    "path": "/en/tcg/sealed/market/products/611877",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/market/products/611877",
+    "duration": 1991,
+    "title": "10th Movie Commemoration Set — Sealed product market | Lunidex",
+    "lang": "en",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "main": "Catalog\nSealed market\nTools\n← Back to market\n\nPOKÉMON BOX SET · UNREPORTED EXPANSION (ID 4310)\n\n10th Movie Commemoration Set\n\nCardmarket ID 611877\n\nLATEST TREND\n\n€521.94\n\nPrice guide date: Sep 30, 2026, 7:55 AM\n\n7-day change\n\n0%\n\n30-day change\n\n—\n\nRelease date: Source data unavailable\n\nMSRP: Source data unavailable\n\nCardmarket\nTips before buying\n\nThis opens a third-party site. Check the offer and seller before paying.\n\nPrice observations\nSep 30, 2026, 7:55 AM\n€521.94\nSep 28, 2026, 12:47 AM\n€521.94\nSep 27, 2026, 12:44 AM\n€521.94\nSep 25, 2026, 12:48 AM\n€521.94\nSep 22, 2026, 12:48 AM\n€521.94\nSep 20, 2026, 12:42 AM\n€521.94\nSep 17, 2026, 12:44 AM\n€521.94\nSep 14, 2026, 12:46 AM\n€521.94\nSep 10, 2026, 12:48 AM\n€521.94\nMethodology\n\nPrices are Cardmarket guide trend values in EUR, not sale offers or transaction prices. Category medians use each product’s latest positive trend quote from the last three days. Changes compare a current quote with an observation 7 or 30 days earlier, allowing up to three days of source delay. Missing or stale observations are omitted.\n\nCardmarket price guide · Cardmarket\n\nReport a data issue\n\nInclude the product ID and the incorrect field in your message.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Back to market",
+        "href": "/en/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Tips before buying",
+        "href": "/en/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Report a data issue",
+        "href": "/en/contact?topic=sealed-market&productId=611877"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/buy-safely",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/buy-safely",
+    "duration": 1313,
+    "title": "Buy cards and sealed products with care | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Buy cards and sealed products with care"
+    ],
+    "main": "Catalog\nSealed market\nTools\n\nFRENCH MARKET\n\nBuy cards and sealed products with care\n\nPractical checks before leaving Lunidex for a marketplace. This guide primarily covers purchases in France.\n\nBrowse the market\nSee releases\n\n01\n\nCheck the seller\n\nCheck their identity, contact details, legal notices, sales terms, and reviews from more than one source.\n\nSource checked on 2026-09-29\n\nRead source · DGCCRF\n\n02\n\nCompare the full offer\n\nCheck the exact product name, condition, stated contents, delivery charges, and timing. A photo alone is not enough.\n\nSource checked on 2026-09-29\n\nRead source · DGCCRF\n\n03\n\nProtect your payment\n\nCheck that the site uses HTTPS and choose a secure payment method. Keep your order confirmation and messages.\n\nSource checked on 2026-09-29\n\nRead source · DGCCRF\n\n04\n\nWatch for counterfeits\n\nCompare packaging and cards with official Pokémon images. An unusually low price calls for further checks.\n\nSource checked on 2026-09-29\n\nRead source · The Pokémon Company\nA problem after purchase?\n\nIf you have a problem with a business in France, SignalConso can pass on your report and explain your options.\n\nSource checked on 2026-09-29\n\nOpen SignalConso",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market"
+      },
+      {
+        "text": "See releases",
+        "href": "/en/tcg/sealed/releases"
+      },
+      {
+        "text": "Read source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Read source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Read source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://support.pokemon.com/hc/fr/articles/360002068953-Est-ce-que-j-ai-achet%C3%A9-des-cartes-contrefaites"
+      },
+      {
+        "text": "Open SignalConso",
+        "href": "https://signal.conso.gouv.fr/fr/achat-site"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/releases",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/releases",
+    "duration": 1469,
+    "title": "Sealed release calendar | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Sealed release calendar"
+    ],
+    "main": "Catalog\nSealed market\nTools\n\nFRENCH MARKET\n\nSealed release calendar\n\nAnnounced French-market dates checked against Pokémon or PokéCardex sources. Suggested prices appear when sourced; partial dates stay imprecise.\n\nBrowse the market\nTips before buying\n\nDates can change. Check the source before ordering or preordering.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Forces Temporelles\n\nQ1 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Destinées de Paldea\n\nJanuary 26, 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Mascarade Crépusculaire\n\nMay 24, 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Fable Nébuleuse\n\nAugust 2, 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Couronne Stellaire\n\nSeptember 13, 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Étincelles Déferlantes\n\nNovember 8, 2024\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Évolutions Prismatiques\n\nJanuary 17, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Aventures Ensemble\n\nMarch 28, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Rivalités Destinées\n\nMay 30, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Flamme Blanche\n\nJuly 18, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nÉcarlate et Violet – Foudre Noire\n\nJuly 18, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nMéga-Évolution\n\nOctober 10, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nMéga-Évolution – Flammes Fantasmagoriques\n\nNovember 14, 2025\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 2 boosters janvier 2026 – Duopack Raikou\n\nJanuary 2, 2026\n\nSuggested retail price: €11.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\nMéga-Évolution – Héros Transcendants\n\nJanuary 30, 2026\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 2 boosters Méga-Évolution – Héros Transcendants\n\nJanuary 30, 2026\n\nSuggested retail price: €12.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 3 boosters Méga-Évolution – Héros Transcendants\n\nJanuary 30, 2026\n\nSuggested retail price: €19.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack Collection Journée Pokémon 2026\n\nJanuary 30, 2026\n\nSuggested retail price: €19.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîte Méga-Dracaufeu\n\nFebruary 20, 2026\n\nSuggested retail price: €25.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nCoffret Dresseur d’élite Méga-Évolution – Héros Transcendants\n\nFebruary 20, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nMini-boîtes Méga-Évolution – Héros Transcendants\n\nFebruary 20, 2026\n\nSuggested retail price: €11.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 2 boosters mars 2026 – Duopack Mystherbe, Ortide et Rafflesia\n\nMarch 6, 2026\n\nSuggested retail price: €12.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîtier Stratégies et Combats – Équilibre Parfait\n\nMarch 14, 2026\n\nSuggested retail price: €30.00\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nCoffret Collection avec pin’s Deluxe Premiers Partenaires – Héros Transcendants\n\nMarch 20, 2026\n\nSuggested retail price: €32.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nCoffret Collection poster Premium – Héros Transcendants\n\nMarch 20, 2026\n\nSuggested retail price: €59.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nCoffret Dresseur d’élite Méga-Évolution – Équilibre Parfait\n\nMarch 27, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nLot de boosters Méga-Évolution – Équilibre Parfait\n\nMarch 27, 2026\n\nSuggested retail price: €35.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nEXPANSION\nMéga-Évolution – Équilibre Parfait\n\nMarch 27, 2026\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nCoffret Méga-Évolution – Héros Transcendants – Méga-Méganium-ex, Méga-Roitiflam-ex et Méga-Aligatueur-ex\n\nApril 24, 2026\n\nSuggested retail price: €25.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nLot de boosters Méga-Évolution – Héros Transcendants\n\nApril 24, 2026\n\nSuggested retail price: €35.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nCoffret Collection Premium Méga-Zygarde-ex\n\nMay 1, 2026\n\nSuggested retail price: €49.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîtier Stratégies et Combats – Chaos Ascendant\n\nMay 9, 2026\n\nSuggested retail price: €30.00\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nCoffret Dresseur d’élite Méga-Évolution – Chaos Ascendant\n\nMay 22, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nDeck Combat de Ligue Méga-Lucario-ex\n\nMay 22, 2026\n\nSuggested retail price: €34.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nLot de boosters Méga-Évolution – Chaos Ascendant\n\nMay 22, 2026\n\nSuggested retail price: €35.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nEXPANSION\nMéga-Évolution – Chaos Ascendant\n\nMay 22, 2026\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 3 boosters Méga-Évolution – Chaos Ascendant\n\nMay 22, 2026\n\nSuggested retail price: €17.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîte Méga Clair de Lune – Méga-Mélodelfe ou Méga-Ectoplasma\n\nJune 5, 2026\n\nSuggested retail price: €25.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nCoffret Collection Premium Méga-Amphinobi-ex\n\nJuly 3, 2026\n\nSuggested retail price: €49.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîtier Stratégies et Combats – Nuit Noire\n\nJuly 4, 2026\n\nSuggested retail price: €30.00\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : blister de 2 boosters 30ᵉ Anniversaire\n\nQ3 2026\n\nSource checked on 2026-09-29\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection K.O. 30ᵉ Anniversaire\n\nQ3 2026\n\nSource checked on 2026-09-29\n\nRead source · The Pokémon Company\nBrowse the market\nRELEASED\nSEALED PRODUCT\nCoffret Dresseur d’élite Méga-Évolution – Nuit Noire\n\nJuly 17, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nLot de boosters Méga-Évolution – Nuit Noire\n\nJuly 17, 2026\n\nSuggested retail price: €35.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nEXPANSION\nMéga-Évolution – Nuit Noire\n\nJuly 17, 2026\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 3 boosters Méga-Évolution – Nuit Noire\n\nJuly 17, 2026\n\nSuggested retail price: €17.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nCollection Illustration Premiers Partenaires – Série 3\n\nAugust 7, 2026\n\nSuggested retail price: €19.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nPack 2 boosters août 2026 – Duopack Zarude\n\nAugust 7, 2026\n\nSuggested retail price: €11.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nBoîte Méga Puissances – Méga-Zeraora, Méga-Darkrai ou Méga-Dracolosse\n\nAugust 28, 2026\n\nSuggested retail price: €25.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nEXPANSION\n30ᵉ Anniversaire\n\nSeptember 16, 2026\n\nSource checked on 2026-09-30\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nJCC Pokémon : Coffret 30ᵉ Anniversaire – Nymphali-ex et Coffret 30ᵉ Anniversaire – Amphinobi-ex\n\nSeptember 16, 2026\n\nSuggested retail price: €25.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nRELEASED\nSEALED PRODUCT\nJCC Pokémon : Coffret Dresseur d’élite 30ᵉ Anniversaire\n\nSeptember 16, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nRELEASED\nSEALED PRODUCT\nJCC Pokémon : Collection poster 30ᵉ Anniversaire\n\nSeptember 16, 2026\n\nSuggested retail price: €27.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : lot de boosters 30ᵉ Anniversaire du JCC Pokémon\n\nOctober 2, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Mini-boîtes 30ᵉ Anniversaire\n\nOctober 2, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nPack 2 boosters octobre 2026 – Duopack Mimiqui, Ectoplasma et Marshadow\n\nOctober 2, 2026\n\nSuggested retail price: €12.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection classeur 30ᵉ Anniversaire\n\nOctober 23, 2026\n\nSuggested retail price: €45.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nANNOUNCED\nSEALED PRODUCT\nBoîtier Stratégies et Combats – Règne Delta\n\nOctober 24, 2026\n\nSuggested retail price: €30.00\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Deck Combat 30ᵉ Anniversaire – Mentali-ex et Deck Combat 30ᵉ Anniversaire – Noctali-ex\n\nOctober 30, 2026\n\nSuggested retail price: €24.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nCoffret Dresseur d’élite Méga-Évolution – Règne Delta\n\nNovember 6, 2026\n\nSuggested retail price: €55.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection avec figurine 30ᵉ Anniversaire – Mew et Mewtwo\n\nNovember 6, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection Premium Métamorph 30ᵉ Anniversaire\n\nNovember 6, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\nBrowse the market\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection Ultra-Premium 30ᵉ Anniversaire – Journée et Soirée\n\nNovember 6, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nLot de boosters Méga-Évolution – Règne Delta\n\nNovember 6, 2026\n\nSuggested retail price: €35.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nEXPANSION\nMéga-Évolution – Règne Delta\n\nNovember 6, 2026\n\nSource checked on 2026-09-29\n\nRead source · The Pokémon Company\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nPack 3 boosters Méga-Évolution – Règne Delta\n\nNovember 6, 2026\n\nSuggested retail price: €17.99\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.\n\nANNOUNCED\nSEALED PRODUCT\nJCC Pokémon : Collection autocollant réajustable 30ᵉ Anniversaire\n\nNovember 13, 2026\n\nSource checked on 2026-09-30\n\nRead source · PokéCardex\n\nAn editor has not linked a Cardmarket product to this release.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Catalog",
+        "href": "/en/tcg?tcgLang=en"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "Pull rates",
+        "href": "/en/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "Booster value",
+        "href": "/en/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market"
+      },
+      {
+        "text": "Tips before buying",
+        "href": "/en/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/galerie-produits/coffret-dresseur-delite-ecarlate-et-violet-forces-temporelles"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actus-pokemon/les-pokemon-chromatiques-brillent-avec-mimiqui-gardevoir-ex-dracaufeu-ex-et-dautres-dans-ecarlate-et-violet-destinees-de-paldea"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/admirez-les-nouvelles-cartes-de-lextension-ecarlate-et-violet-mascarade-crepusculaire-du-jcc-pokemon"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/nouvel-apercu-des-cartes-de-lextension-ecarlate-et-violet-fable-nebuleuse"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/obtenez-le-boitier-strategies-et-combats-ecarlate-et-violet-couronne-stellaire-en-avance"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/decouvrez-de-nouvelles-cartes-de-lextension-ecarlate-et-violet-etincelles-deferlantes-du-jcc-pokemon"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/extensions-jeu-cartes-a-collectionner"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/860574"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/865397"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/864106"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/865406"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/865404"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/retablissez-lordre-dans-le-jcc-pokemon"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/860578"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/877282"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/877294"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/877284"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/obtenez-un-boitier-strategies-et-combats-mega-evolution-chaos-ascendant-du-jcc-pokemon-en-avant-premiere"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/885540"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895559"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/885542"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/885539"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/news/lextension-mega-evolution-nuit-noire-du-jcc-pokemon-est-a-present-disponible-dans-le-jcc-pokemon-live"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/lextension-30-anniversaire-du-jcc-pokemon-est-disponible"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895551"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895553"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895561"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895560"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Browse the market",
+        "href": "/en/tcg/sealed/market/895574"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/lextension-mega-evolution-regne-delta-du-jcc-pokemon-arrive-le-6-novembre-2026"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      },
+      {
+        "text": "Read source · PokéCardex",
+        "href": "https://www.pokecardex.com/forums/viewtopic.php?t=49894"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/collection",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/collection",
+    "duration": 1272,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Collection"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nCollection\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/journal",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/journal",
+    "duration": 1261,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Journal"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nJournal\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/sales",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/sales",
+    "duration": 1462,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Sales"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nSales\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/cashflow",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/cashflow",
+    "duration": 1456,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Cashflow"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nCashflow\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/analytics",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/analytics",
+    "duration": 1570,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Analytics"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nAnalytics\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/catalogue",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/catalogue",
+    "duration": 1273,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Catalogue"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nCatalogue\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/sources",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/sources",
+    "duration": 1463,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Sources"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nSources\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/tcg/sealed/products/1",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/tcg/sealed/products/1",
+    "duration": 1449,
+    "title": "Sealed portfolio | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Product"
+    ],
+    "main": "Dashboard\nCollection\nJournal\nReports\nTools\nSealed market\n\nPRIVATE TCG SPACE\n\nProduct\n\nTrack sealed Pokémon products, purchases, sales and performance in EUR.\n\nLoading sealed portfolio…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/en/tcg/sealed/journal"
+      },
+      {
+        "text": "Sales",
+        "href": "/en/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/en/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analytics",
+        "href": "/en/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/en/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/en/tcg/sealed/sources"
+      },
+      {
+        "text": "Sealed market",
+        "href": "/en/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/about",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/about",
+    "duration": 1904,
+    "title": "About Lunidex — Pokémon TCG collection tracker | Lunidex",
+    "lang": "en",
+    "h1": [
+      "About Lunidex"
+    ],
+    "main": "ABOUT\n\nAbout Lunidex\n\nAn independent Pokémon TCG collection tracker with a Pokédex and team tools.\n\nA Pokémon TCG collection tracker and workspace\nLunidex is an independent, unofficial Pokémon web application. It helps collectors track sets, owned and missing cards, and collection progress, then provides a Pokédex and team tools in the same workspace. Lunidex is not a card marketplace.\nOur Mission\nLunidex exists to make Pokémon data clear, useful, and accessible in multiple languages. It combines reference tools, team building, and Pokémon TCG collection features while respecting upstream data boundaries.\n\nLunidex is maintained as a small open-source fan project. Product availability, account services, and upstream data can change; public pages describe the current documented scope.\nData Sources & Attribution\nAll Pokémon data (stats, types, abilities, moves, evolutions, sprites, official artwork) is sourced from the open PokeAPI project (pokeapi.co), a free, community-driven database.\n\nTrading card data (cards, sets, rarities, prices) is sourced from TCGdex (tcgdex.net), an open Pokémon TCG database.\n\nPokémon, Pokémon character names, and related properties are trademarks of Nintendo, Game Freak, and Creatures Inc. Lunidex is a non-commercial fan project and is not affiliated with The Pokémon Company.\nWhat You Can Do\nBrowse Pokémon reference records with stats, types, evolutions, and moves. Compare stats side-by-side with radar charts. Plan a six-Pokémon team with type coverage analysis and weakness detection. Explore the interactive type-effectiveness matrix. Track collection progress by set, and try the six-mode Pokémon quiz. The interface is available in 8 languages, including Japanese, Korean, and Chinese.\nFree, local-first, and clear about limits\nPublic browsing is free, and Lunidex can be installed as a progressive web app (PWA). There is no subscription or purchase flow in the documented product scope. Reference and collection views remain local-first where possible; account-backed synchronization is optional and depends on the configured service. Lunidex does not claim a card scanner, marketplace checkout, App Store or Google Play publication, or guaranteed card valuation. It is Lunidex, distinct from the unrelated name Ludex.\nOpen source\nLunidex is licensed under the MIT License. The full source code is on GitHub. You can read it, audit it, fork it, or host it yourself. Code and translation contributions are welcome.\n\nWe chose MIT so others can inspect, adapt, and improve the project.\nGet in Touch\nFound a bug or have a feature request? Open an issue on GitHub or use our contact page. For security disclosures, please email us directly rather than opening a public issue.\n\nFor general questions, write to contact@lunidex.app. Code and translation contributions are welcome on GitHub.\nTCG Catalog\nPokédex\nTeam Builder\nFAQ\nPokémon card collection tracker guide\nHow to organize a Pokémon card collection\nPokémon card collection value guide\n\nGITHUB\n\nSource code, README, and changelog\n\nISSUES\n\nReport bugs, request features, track progress\n\nLunidex — Pokémon TCG collection tracker and Pokémon workspace\n\nReleased under the MIT License. Pokémon and related properties are © Nintendo, Game Freak, Creatures Inc.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "TCG Catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Team Builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "FAQ",
+        "href": "/en/faq"
+      },
+      {
+        "text": "Pokémon card collection tracker guide",
+        "href": "/en/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "How to organize a Pokémon card collection",
+        "href": "/en/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Pokémon card collection value guide",
+        "href": "/en/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "GitHubSource code, README, and changelog",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "IssuesReport bugs, request features, track progress",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/faq",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/faq",
+    "duration": 1467,
+    "title": "Lunidex FAQ — Questions and Answers | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Frequently Asked Questions"
+    ],
+    "main": "HELP CENTER\n\nFrequently Asked Questions\n\nClear answers about Lunidex data, tools, TCG workspace, account boundaries, and open-source scope.\n\nLAST UPDATED SEP 28, 2026 · 19 QUESTIONS ANSWERED\n\nSearch questions...\n\nFILTER QUESTIONS BY CATEGORY\n\n19\n\nAll questions\nGetting started\n4\nPokémon tools\n5\nPokémon TCG workspace\n6\nData and support\n4\n\n19 questions available\n\nGetting started\n\nThe product boundary, account requirements, supported languages, and installation options.\n\nWhat is Lunidex?\n\nLunidex is an independent, unofficial Pokémon web application and Pokémon TCG catalog. It combines Pokémon reference data, team tools, and a TCG collection workspace. It is not affiliated with Nintendo, Game Freak, or The Pokémon Company.\n\nABOUT LUNIDEX\nDo I need an account or a subscription?\n\nPublic reference and catalog pages work without an account. The current web app uses an account-backed session for personal changes such as collection, teams, favorites, and other synchronized progress. There is no subscription or purchase flow in the current product.\n\nDASHBOARD\nWhich interface languages are available?\n\nThe Lunidex interface is available in English, French, Spanish, German, Italian, Japanese, Korean, and Chinese. Card-data languages are selected separately and depend on what TCGdex provides.\n\nCan I install Lunidex on a phone?\n\nYes. Lunidex is an installable web app (PWA), so a supported browser can add it to a home screen. Lunidex currently ships as a web application; this FAQ makes no claim about an App Store or Google Play listing.\n\nLUNIDEX IS TEMPORARILY OFFLINE\nPokémon tools\n\nReference coverage and the tools for teams, comparisons, quizzes, and Nuzlocke runs.\n\nWhat Pokémon reference data does Lunidex cover?\n\nLunidex presents the Pokémon records currently available through PokéAPI, including stats, types, abilities, moves, evolutions, sprites, and artwork. The available scope can change as upstream data changes.\n\nPOKÉDEX\nHow does the Team Builder work?\n\nThe Team Builder accepts up to six Pokémon and calculates shared weaknesses, offensive and defensive type coverage, and team synergy. It can import Showdown text, export a team image, and create a public share link. Sign in to save and synchronize team changes.\n\nTEAM BUILDER\nCan I compare Pokémon and check type matchups?\n\nYes. Compare supports up to three Pokémon with stat and matchup summaries. The Type Chart covers all 18 types and shows offensive and defensive relationships, including weaknesses, resistances, and immunities.\n\nCOMPARE POKÉMON\nTYPES\nHow does the Pokémon quiz work?\n\nThe quiz combines three challenge types — Classic, Silhouette, and Stats — with three modes — Marathon, Survival, and Time Attack. The daily challenge uses a UTC date-based seed and contains ten questions. You can play publicly; sign in to save scores and synchronized progress.\n\nQUIZ\nWhat does the Nuzlocke tracker record?\n\nThe Nuzlocke workspace records runs, one encounter per route, and Pokémon statuses such as alive, dead, or boxed. You can manage multiple runs and review their statistics. Personal runs use the account-backed workspace.\n\nNUZLOCKE TRACKER\nPokémon TCG workspace\n\nWhat the TCG catalog can track, where its data comes from, and which limits matter.\n\nWhat is in the Pokémon TCG catalog?\n\nThe catalog and set pages use TCGdex for card and set data. Public browsing does not require an account. Card-data languages are independent of the interface language and are available only when TCGdex supplies them; images, rarities, and other fields can vary by source.\n\nTCG CATALOG\nHow do I track my TCG collection?\n\nChoose a set and record the cards you own in the account-backed collection workspace. Lunidex supports quantities and physical card variants where the current data model provides them, then shows set progress and missing cards. Wishlist state is kept separately from owned cards.\n\nPOKÉMON CARD COLLECTION TRACKER GUIDE\nCOLLECTION\nCan I manage wishlists and TCG decks?\n\nYes. The TCG workspace has a wishlist and a deck builder. Decks are built toward 60 cards, with a maximum of four copies of a non-basic-Energy card. Personal wishlist and deck state requires the synchronized account workspace.\n\nWISHLIST\nDECK BUILDER\nHow do TCG prices work?\n\nWhen upstream data is available, Lunidex can show price fields in EUR or USD, sourced from the values returned through TCGdex integrations. It does not invent exchange rates, and price coverage, freshness, and collection estimates are not guaranteed market valuations or price history.\n\nTCG CATALOG\nDoes Lunidex scan cards or operate a marketplace?\n\nNo card-scanner or marketplace workflow is documented in the current Lunidex product. The supported scope is catalog browsing, collection and wishlist state, set progress, decks, and Pokémon reference tools.\n\nABOUT LUNIDEX\nIs a Lunidex collection value an appraisal?\n\nNo. It is a source-backed estimate or portfolio calculation. It does not authenticate condition, guarantee a sale price, replace a professional appraisal, or promise that every card has current market data.\n\nPOKÉMON CARD COLLECTION VALUE GUIDE\nEDITORIAL.COMPETITORS.LUNIDEX_VS_CARDMARKET.NAV_LABEL\nData and support\n\nHow personal state is synchronized, what works offline, and where to get help.\n\nWhere is my personal data stored and synchronized?\n\nPublic pages remain usable without an account. Personal collection, teams, favorites, quiz progress, and related workspace state use the configured account-backed synchronization path through Neon when it is available. The browser keeps display preferences, session details, and cached public data; clearing browser data can remove local preferences or close a session.\n\nPRIVACY POLICY\nDASHBOARD\nWhat works offline?\n\nThe application shell and some previously cached pages or data may remain available offline. New Pokémon and card data require a network connection. Offline behavior depends on the browser, cache state, and route, so it is not a complete offline database guarantee.\n\nLUNIDEX IS TEMPORARILY OFFLINE\nCan I export or delete my account data?\n\nUse the dashboard and settings export controls to download your synchronized workspace as JSON, or use the account controls to request deletion. Public team links are separate from that backup file. The privacy page explains the current account and storage boundaries.\n\nDASHBOARD\nPRIVACY POLICY\nHow can I contact the project or contribute?\n\nUse the Lunidex contact form for questions and requests, or open a GitHub issue for a reproducible bug. Lunidex is an MIT-licensed open-source fan project; code and translation contributions are welcome. For a security report, contact the project directly rather than posting sensitive details publicly.\n\nCONTACT\nABOUT LUNIDEX\n✦\n\n19\n\nStill have questions?\n\nAsk the team directly, open a GitHub issue, or contribute a fix or translation. Lunidex is built by the community, for the community.\n\nCONTACT LUNIDEX\nREPORT AN ISSUE",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Search questions...",
+        "placeholder": "Search questions...",
+        "type": "search",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "All questions",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Getting started4",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pokémon tools5",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pokémon TCG workspace6",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Data and support4",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "What is Lunidex?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Do I need an account or a subscription?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Which interface languages are available?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Can I install Lunidex on a phone?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "What Pokémon reference data does Lunidex cover?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "How does the Team Builder work?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Can I compare Pokémon and check type matchups?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "How does the Pokémon quiz work?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "What does the Nuzlocke tracker record?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "What is in the Pokémon TCG catalog?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "How do I track my TCG collection?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Can I manage wishlists and TCG decks?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "How do TCG prices work?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Does Lunidex scan cards or operate a marketplace?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Is a Lunidex collection value an appraisal?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Where is my personal data stored and synchronized?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "What works offline?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Can I export or delete my account data?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "How can I contact the project or contribute?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "About Lunidex",
+        "href": "/en/about"
+      },
+      {
+        "text": "Dashboard",
+        "href": "/en/dashboard"
+      },
+      {
+        "text": "Lunidex is temporarily offline",
+        "href": "/en/offline"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Team Builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "Compare Pokémon",
+        "href": "/en/compare"
+      },
+      {
+        "text": "Types",
+        "href": "/en/types"
+      },
+      {
+        "text": "Quiz",
+        "href": "/en/quiz"
+      },
+      {
+        "text": "Nuzlocke Tracker",
+        "href": "/en/nuzlocke"
+      },
+      {
+        "text": "TCG Catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Pokémon card collection tracker guide",
+        "href": "/en/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/collection"
+      },
+      {
+        "text": "Wishlist",
+        "href": "/en/tcg/wishlist"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder"
+      },
+      {
+        "text": "TCG Catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "About Lunidex",
+        "href": "/en/about"
+      },
+      {
+        "text": "Pokémon card collection value guide",
+        "href": "/en/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "editorial.competitors.lunidex_vs_cardmarket.nav_label",
+        "href": "/en/compare/lunidex-vs-cardmarket"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "/en/privacy"
+      },
+      {
+        "text": "Dashboard",
+        "href": "/en/dashboard"
+      },
+      {
+        "text": "Lunidex is temporarily offline",
+        "href": "/en/offline"
+      },
+      {
+        "text": "Dashboard",
+        "href": "/en/dashboard"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "/en/privacy"
+      },
+      {
+        "text": "Contact",
+        "href": "/en/contact"
+      },
+      {
+        "text": "About Lunidex",
+        "href": "/en/about"
+      },
+      {
+        "text": "Contact Lunidex",
+        "href": "/en/contact"
+      },
+      {
+        "text": "Report an issue",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/contact",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/contact",
+    "duration": 1378,
+    "title": "Contact | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Contact"
+    ],
+    "main": "GET IN TOUCH\n\nContact\n\nHave a question, report, or suggestion? Write to the Lunidex team. Messages are sent securely through our transactional email provider.\n\nYou can also email us directly at\ncontact@lunidex.app\nSend a message\nWebsite\nName or username\nEmail address\nSubject\nMessage\nSend message\nEmail contact@lunidex.app\n\nWe use the details in this form only to answer your request. See our privacy policy.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Your name or username",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "you@example.com",
+        "type": "email",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "What can we help with?",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "TEXTAREA",
+        "text": "",
+        "label": null,
+        "placeholder": "Describe your request…",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Send message",
+        "label": null,
+        "placeholder": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "Email contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "privacy policy",
+        "href": "/en/privacy"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/en",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/en/docs",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/docs",
+    "duration": 1335,
+    "title": "Lunidex documentation — Pokémon tools and API",
+    "lang": "en",
+    "h1": [
+      "Lunidex documentation"
+    ],
+    "main": "DOCUMENTATION\n\nLunidex documentation\n\nChoose what you want to do: explore Pokémon, plan a team, manage a Pokémon TCG collection, review your progress, or connect through the public API.\n\nExplore Pokémon\n\nSUGGESTED PATH\n\nStart in the Pokédex: find a Pokémon and open its detail page, then use the type chart or move, ability, and item references for follow-up research.\n\nPokédex\nTypes\nMoves\nAbilities\nItems\nFEATURE GUIDES\nPokémon reference guide\nBuild teams and plan play\n\nSUGGESTED PATH\n\nBuild a team of up to six Pokémon, compare up to three, then refine it with EV/IV or breeding tools. Battle, quiz, and Nuzlocke offer separate play flows.\n\nPokémon Team Builder\nCompare\nEV/IV Calculator\nBreeding Calculator\nBattle Simulator\nWho's That Pokémon?\nNuzlocke Tracker\nFEATURE GUIDES\nTeam Builder guide\nQuiz guide\nNuzlocke guide\nTeam and game tools guide\nTrack a Pokémon TCG collection\n\nSUGGESTED PATH\n\nSearch the catalog or a set, then use the collection, wishlist, and deck tools. Sign in and wait for sync before changing personal data; sealed products have their own portfolio.\n\nTCG Catalog\nStart your collection\nCollection\nWishlist\nDeck Builder\nSealed portfolio\nFEATURE GUIDES\nCard collection tracker guide\nHow to organize a Pokémon card collection\nTCG workspace guide\nCollection value guide\nReview progress and account\n\nSUGGESTED PATH\n\nExplore public pages first. To carry personal progress across devices, sign in when account sync is available, then review the dashboard and choose what to save or share.\n\nDashboard\nFavorites\nFriends\nFEATURE GUIDES\nProgress and account guide\nBuild a developer integration\n\nSUGGESTED PATH\n\nCreate a key in the dashboard, keep it on a trusted server, and begin with GET /me. The API guide explains the next steps; OpenAPI provides the machine-readable contract.\n\nPublic API guide\nOpen the OpenAPI specification\nMORE RESOURCES\nFAQ\nBlog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Types",
+        "href": "/en/types"
+      },
+      {
+        "text": "Moves",
+        "href": "/en/moves"
+      },
+      {
+        "text": "Abilities",
+        "href": "/en/abilities"
+      },
+      {
+        "text": "Items",
+        "href": "/en/items"
+      },
+      {
+        "text": "Pokémon reference guide",
+        "href": "/en/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Pokémon Team Builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "Compare",
+        "href": "/en/compare"
+      },
+      {
+        "text": "EV/IV Calculator",
+        "href": "/en/ev-iv"
+      },
+      {
+        "text": "Breeding Calculator",
+        "href": "/en/breeding"
+      },
+      {
+        "text": "Battle Simulator",
+        "href": "/en/battle"
+      },
+      {
+        "text": "Who's That Pokémon?",
+        "href": "/en/quiz"
+      },
+      {
+        "text": "Nuzlocke Tracker",
+        "href": "/en/nuzlocke"
+      },
+      {
+        "text": "Team Builder guide",
+        "href": "/en/guides/team-builder-guide"
+      },
+      {
+        "text": "Quiz guide",
+        "href": "/en/guides/quiz-guide"
+      },
+      {
+        "text": "Nuzlocke guide",
+        "href": "/en/guides/nuzlocke-guide"
+      },
+      {
+        "text": "Team and game tools guide",
+        "href": "/en/guides/team-tools-guide"
+      },
+      {
+        "text": "TCG Catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Start your collection",
+        "href": "/en/tcg/start"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/collection"
+      },
+      {
+        "text": "Wishlist",
+        "href": "/en/tcg/wishlist"
+      },
+      {
+        "text": "Deck Builder",
+        "href": "/en/tcg/deck-builder"
+      },
+      {
+        "text": "Sealed portfolio",
+        "href": "/en/tcg/sealed"
+      },
+      {
+        "text": "Card collection tracker guide",
+        "href": "/en/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "How to organize a Pokémon card collection",
+        "href": "/en/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "TCG workspace guide",
+        "href": "/en/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Collection value guide",
+        "href": "/en/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "Dashboard",
+        "href": "/en/dashboard"
+      },
+      {
+        "text": "Favorites",
+        "href": "/en/favorites"
+      },
+      {
+        "text": "Friends",
+        "href": "/en/friends"
+      },
+      {
+        "text": "Progress and account guide",
+        "href": "/en/guides/progress-account-guide"
+      },
+      {
+        "text": "Public API guide",
+        "href": "/en/docs/api"
+      },
+      {
+        "text": "Open the OpenAPI specification",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "FAQ",
+        "href": "/en/faq"
+      },
+      {
+        "text": "Blog",
+        "href": "/en/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/docs/api",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/docs/api",
+    "duration": 1344,
+    "title": "Lunidex Public API v1 — Developer guide",
+    "lang": "en",
+    "h1": [
+      "Lunidex Public API v1"
+    ],
+    "main": "Back to documentation\nLunidex Public API v1\n\nConnect a server-side integration to the data already synced with a Lunidex account. Start with a key and one request, then explore cards, sealed products, pagination, and safe writes.\n\nBase URL\nhttps://lunidex.app/api/v1\nManage API keys\nOpen the OpenAPI specification\nON THIS PAGE\nQuick start\nAuthentication and permissions\nPagination and filters\nRoutes\nCards\nSealed products\nWrites, idempotency, and revisions\nErrors and response shape\nQuotas\nServer-side keys only\n\nNever put an API key in browser code, a mobile app, a public repository, a URL, a screenshot, or a shared log. Keep it in a server-side secret manager and send it only in the Authorization header.\n\nQuick start\n\nA working integration needs a key, a server-side secret, and an HTTPS request to the API base URL.\n\n1\nCreate a key\n\nOpen the API keys card in your Lunidex dashboard. Give the key a name and choose read-only or read-and-write access. The full secret is shown once; copy it before closing the message.\n\n2\nStore the secret on your server\n\nSave the key as LUNIDEX_API_KEY in your hosting provider’s secret manager. Do not commit it or send it to a browser.\n\n3\nMake the first request\n\nSend GET /me from your backend. Private endpoints require Authorization: Bearer followed by the key.\n\ncURL · run in a trusted server environment\nCopy code\ncurl --fail-with-body \\\n  -H \"Authorization: Bearer $LUNIDEX_API_KEY\" \\\n  https://lunidex.app/api/v1/me\nNode.js · server-side fetch\nCopy code\nconst API_BASE_URL = \"https://lunidex.app/api/v1\";\nconst apiKey = process.env.LUNIDEX_API_KEY;\n\nif (!apiKey) throw new Error(\"Missing LUNIDEX_API_KEY\");\n\nconst response = await fetch(API_BASE_URL + \"/me\", {\n  headers: { Authorization: \"Bearer \" + apiKey },\n});\nconst result = await response.json();\n\nif (!response.ok) {\n  throw new Error(result.error?.code ?? \"REQUEST_FAILED\");\n}\n\nconsole.log(result.data);\nAuthentication and permissions\n\nSend the key in the HTTP Authorization header for every private /api/v1 request. The API returns JSON in a data envelope; private responses use Cache-Control: private, no-store.\n\nRead\n\nCan call the GET endpoints. Use this permission when an integration only needs to display or export account data.\n\nRead and write\n\nCan call both GET endpoints and write endpoints. Use it only for a trusted server integration that must update the collection or sealed ledger.\n\nThe API sees only data synced to the Lunidex account in Neon. Data that exists only on a device is not available. Account identity omits the email address.\n\nPagination and filters\n\nList endpoints return data plus meta.nextCursor. Pass that cursor unchanged to request the next page, and stop when it is null.\n\nThe default page size is 25 and the maximum is 100. Catalogue search is fixed at 24 results per page.\nCards accept language and set filters. Sealed positions accept language and productId; transactions accept language, productId, type, includeVoided, and voided. Catalogue search accepts q and cursor.\nA cursor can become stale when the collection, journal, prices, or filters change. The API returns 409; start again without the cursor and use the latest state.\nFetch every card page from a server\nCopy code\nconst API_BASE_URL = \"https://lunidex.app/api/v1\";\nconst apiKey = process.env.LUNIDEX_API_KEY;\nlet cursor = null;\n\nif (!apiKey) throw new Error(\"Missing LUNIDEX_API_KEY\");\n\ndo {\n  const query = new URLSearchParams({ limit: \"100\" });\n  if (cursor) query.set(\"cursor\", cursor);\n\n  const response = await fetch(API_BASE_URL + \"/cards?\" + query, {\n    headers: { Authorization: \"Bearer \" + apiKey },\n  });\n  const result = await response.json();\n  if (!response.ok) throw new Error(result.error?.code ?? \"REQUEST_FAILED\");\n\n  console.log(result.data);\n  cursor = result.meta?.nextCursor ?? null;\n} while (cursor);\nRoutes\n\nPaths are relative to the API base URL. Each row shows required access and the parameters listed in the OpenAPI contract. Open the machine-readable specification for full schemas, request and response examples, and operation errors; the sections below provide the human-readable guide.\n\nAccount and contract\nGET\nPublic · no key\n/openapi.json\n\nPublic machine-readable contract; no API key required.\n\nParameters:\nNone\nGET\nRead key\n/me\n\nLimited account identity; the response has no email address.\n\nParameters:\nNone\nGET\nRead key\n/summary\n\nMain account statistics, physical and distinct card counts, and sealed totals in EUR cents.\n\nParameters:\nNone\nCard collection\nGET\nRead key\n/cards\n\nPaged card holdings, optionally filtered by language and set.\n\nParameters:\ncursor\n(query)\nlimit\n(query)\nlanguage\n(query)\nset\n(query)\nGET\nRead key\n/cards/{cardId}\n\nTCGdex metadata and this account’s holdings; no card valuations.\n\nParameters:\ncardId\n(path)\n· required\nlanguage\n(query)\nPUT\nRead/write key\n/cards/{cardId}\n\nSet an absolute quantity for one card language and variant.\n\nParameters:\ncardId\n(path)\n· required\nSealed products and transactions\nGET\nRead key\n/sealed/catalogue\n\nSearch the existing Cardmarket sealed-product catalogue.\n\nParameters:\nq\n(query)\ncursor\n(query)\nGET\nRead key\n/sealed/positions\n\nPaged current positions with cost and stored market value.\n\nParameters:\ncursor\n(query)\nlimit\n(query)\nlanguage\n(query)\nproductId\n(query)\nGET\nRead key\n/sealed/positions/{productId}\n\nCurrent language positions for one owned product.\n\nParameters:\nproductId\n(path)\n· required\nGET\nRead key\n/sealed/transactions\n\nPrivate, revisioned transaction journal with filters.\n\nParameters:\ncursor\n(query)\nlimit\n(query)\nlanguage\n(query)\nproductId\n(query)\ntype\n(query)\nincludeVoided\n(query)\nvoided\n(query)\nPOST\nRead/write key\n/sealed/transactions\n\nCreate a buy, sell, or exchange; idempotency key required.\n\nParameters:\nIdempotency-Key\n(header)\n· required\nGET\nRead key\n/sealed/transactions/{id}\n\nRead one transaction belonging to this account.\n\nParameters:\nid\n(path)\n· required\nPATCH\nRead/write key\n/sealed/transactions/{id}\n\nRevise a transaction with revision checks.\n\nParameters:\nid\n(path)\n· required\nPOST\nRead/write key\n/sealed/transactions/{id}/void\n\nVoid a transaction with revision checks.\n\nParameters:\nid\n(path)\n· required\nCards\n\nGET /cards lists owned variants without loading the full TCGdex catalogue. Each holding includes cardId, setId, language, variant, and quantity; the optional list filters are language and set.\n\nGET /cards/{cardId} returns useful TCGdex metadata and holdings for a card in this account. Add the language query parameter to narrow the holdings.\n\nPUT /cards/{cardId} takes language, variant (unspecified, normal, reverse, or holo), and an absolute quantity from 0 to 10,000. A quantity of 0 removes that variant.\n\nPUT /cards/{cardId} · application/json\nCopy code\n{\n  \"language\": \"en\",\n  \"variant\": \"reverse\",\n  \"quantity\": 2\n}\n\nOlder holdings without a language remain visible; their language can be null and they may be marked legacy.\n\nCard valuations are never returned by this API.\n\nSealed products\n\nSealed positions include quantities by language, cost, and current value from prices already stored in Lunidex. Amounts are integer EUR cents. A missing current price is null and is identified by missingPrice; the summary also reports missingPrices.\n\nIn GET /summary, the sealed value is null if any held product has no price; missingPrices gives the count.\n\nGET /sealed/catalogue\n\nSearch products already in the Cardmarket catalogue with q (up to 150 characters) and cursor. Each page contains at most 24 products; use its product ID in later requests.\n\nGET /sealed/positions\n\nGET /sealed/positions supports language and productId filters. GET /sealed/positions/{productId} returns the current position for one product. These endpoints expose current totals, not a full price-history series.\n\nGET /sealed/transactions\n\nThe private journal supports language, productId, type (buy, sell, exchange), includeVoided, and voided filters. It returns revisions so clients can make safe changes.\n\nWrites, idempotency, and revisions\nSet a card quantity\n\nPUT /cards/{cardId} sets the quantity, rather than adding a delta. Repeating the same request leaves the same quantity; send 0 to remove the variant. The API validates the card, set, language, and available variant before writing.\n\nCreate a sealed transaction\n\nPOST /sealed/transactions accepts buy, sell, and exchange movements. It requires an Idempotency-Key header (8–200 characters) and expectedRevision. Reuse the same key for a retry of the same request so the operation does not create a second movement. The first request creates the transaction; a replay returns the original result.\n\nExample buy body · replace the product ID and revision with current values\nCopy code\ncurl --request POST \"https://lunidex.app/api/v1/sealed/transactions\" \\\n  -H \"Authorization: Bearer $LUNIDEX_API_KEY\" \\\n  -H \"Idempotency-Key: lunidex-import-example-001\" \\\n  -H \"Content-Type: application/json\" \\\n  --data '{\n    \"expectedRevision\": 0,\n    \"kind\": \"buy\",\n    \"cardmarketProductId\": 12345,\n    \"language\": \"en\",\n    \"date\": \"2026-09-27\",\n    \"quantity\": 1,\n    \"unitPriceCents\": 2500\n  }'\n\nBefore a write, read the latest journal revision from GET /sealed/transactions metadata. Use it as expectedRevision. PATCH /sealed/transactions/{id} also requires that transaction’s revision. A stale revision returns 409; reload the latest transaction and journal before deciding whether to retry.\n\nPATCH /sealed/transactions/{id}\n\nPOST /sealed/transactions/{id}/void\nPOST /sealed/transactions/{id}/void requires revision and expectedRevision. Creation, revision, and voiding use the same transaction validation, allocations, and audit trail as Lunidex.\n\napplication/json\nCopy code\n{\n  \"revision\": 1,\n  \"expectedRevision\": 0\n}\nErrors and response shape\n\nSuccess responses use { \"data\": ..., \"meta\": ... } (meta is optional). Errors use { \"error\": { \"code\": ..., \"message\": ..., \"details\": ... } } (details is optional).\n\nCommon responses: 400 invalid transaction data; 401 invalid key; 403 insufficient permission; 404 missing or unowned resource; 409 stale cursor or revision; 410 account being deleted; 422 invalid query or request body; 429 quota; 500 unexpected server error; 502 card data unavailable; and 503 API unavailable.\n\nOn 409, fetch the latest resource or restart the list without its cursor. Do not blindly turn a conflict into a new transaction request.\n\nA 429 response includes Retry-After. Wait at least that many seconds before retrying.\n\nAll private API responses use Cache-Control: private, no-store. The public OpenAPI document is served separately at /api/v1/openapi.json.\n\nQuotas\n\nLimits are applied per Lunidex account and shared by its API keys.\n\nQuotas\nReads per minute\t60\nWrites per minute\t10\nReads per day\t1,000\nWrites per day\t100\nCard-detail reads per account per day\t100\nSealed-calculation reads per account per day\t100\nGlobal daily ceiling per costly category\t5,000\n\nCard details and sealed calculations also share separate global ceilings of 5,000 operations per day per category. A 429 response includes Retry-After.\n\nOpen the OpenAPI specification",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copy code",
+        "label": "Copy code",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Back to documentation",
+        "href": "/en/docs"
+      },
+      {
+        "text": "Manage API keys",
+        "href": "/en/dashboard"
+      },
+      {
+        "text": "Open the OpenAPI specification",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "Quick start",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentication and permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination and filters",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cards",
+        "href": "#cards"
+      },
+      {
+        "text": "Sealed products",
+        "href": "#sealed"
+      },
+      {
+        "text": "Writes, idempotency, and revisions",
+        "href": "#mutations"
+      },
+      {
+        "text": "Errors and response shape",
+        "href": "#errors"
+      },
+      {
+        "text": "Quotas",
+        "href": "#quotas"
+      },
+      {
+        "text": "Quick start",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentication and permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination and filters",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cards",
+        "href": "#cards"
+      },
+      {
+        "text": "Sealed products",
+        "href": "#sealed"
+      },
+      {
+        "text": "Writes, idempotency, and revisions",
+        "href": "#mutations"
+      },
+      {
+        "text": "Errors and response shape",
+        "href": "#errors"
+      },
+      {
+        "text": "Quotas",
+        "href": "#quotas"
+      },
+      {
+        "text": "Open the OpenAPI specification",
+        "href": "/api/v1/openapi.json"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/blog",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/blog",
+    "duration": 1459,
+    "title": "Lunidex Blog — Guides and comparisons | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Lunidex guides and comparisons"
+    ],
+    "main": "BLOG\n\nLunidex guides and comparisons\n\nPractical, source-based articles about Lunidex: usage guides for its Pokémon, team, TCG, progress, quiz, and Nuzlocke workflows, plus comparisons with other Pokémon tools.\n\nUPDATED SEP 28, 2026\n\nTCG EVENT\n\nPokémon TCG 30th Anniversary: Pikachu cards and products\n\nThe expansion launched worldwide on September 16, 2026. This page gathers official information, announced products, and a local tracker for the 30 Pikachu cards.\n\nOpen the tracker\n\nUSAGE GUIDES\n\nHow to use Lunidex\n\nStep-by-step guides based on the features and route families that actually exist in the product.\n\nPOKÉMON CARD COLLECTION TRACKER GUIDE\n\nFree Pokémon Card Collection Tracker | Lunidex\n\nLearn how to choose a Pokémon card collection app and tracker: Lunidex tracks owned and missing cards, set completion percentages, variants, languages, and conditional estimates.\n\nPUBLISHED AUG 8, 2026\nRead the guide\n\nTEAM BUILDER GUIDE\n\nTeam Builder Guide — Build balanced Pokémon teams | Lunidex\n\nUse the Lunidex team builder to add up to six Pokémon, review synergy and type coverage, and share your team.\n\nPUBLISHED AUG 9, 2026\nRead the guide\n\nQUIZ GUIDE\n\nPokémon Quiz Guide — Modes, challenges and badges | Lunidex\n\nHow the Lunidex Pokémon quiz works: classic, silhouette, and stats challenges; marathon, survival, and time-attack modes; the daily challenge; and the five badges.\n\nPUBLISHED AUG 10, 2026\nRead the guide\n\nNUZLOCKE TRACKER GUIDE\n\nNuzlocke Tracker — Track your challenge runs | Lunidex\n\nHow to use the Lunidex Nuzlocke tracker: create runs, record one encounter per route, follow each Pokémon status (alive, dead, boxed), and read the run statistics.\n\nPUBLISHED AUG 11, 2026\nRead the guide\n\nHOW TO ORGANIZE A POKÉMON CARD COLLECTION\n\nHow to Organize a Pokémon Card Collection\n\nA practical method to sort Pokémon cards by set and number, record language, finish and duplicates, and keep a missing-card checklist up to date.\n\nPUBLISHED SEP 28, 2026\nRead the guide\n\nPOKÉMON REFERENCE GUIDE\n\nFree Pokémon Pokédex & Online Reference Guide — PokéAPI | Lunidex\n\nUse Lunidex as a free-to-use online Pokémon Pokédex and reference surface backed by PokéAPI: search /pokedex, Pokémon details, types, moves, abilities, items, evolutions, encounters, and localized names.\n\nPUBLISHED AUG 19, 2026\nRead the guide\n\nTEAM AND BATTLE TOOLS GUIDE\n\nPokémon Team Planning Tools — Compare, EV/IV and Battle | Lunidex\n\nUse Lunidex tools around team planning: compare Pokémon, inspect type matchups, calculate EV/IV values, explore breeding, and review supported battle scenarios.\n\nPUBLISHED AUG 20, 2026\nRead the guide\n\nPOKÉMON TCG WORKSPACE GUIDE\n\nPokémon TCG Collection App & Workspace Guide — Cards, Wishlist and Decks | Lunidex\n\nLearn how the Lunidex Pokémon TCG collection app and workspace lets you browse a public online catalog, record owned and wanted cards, follow set progress, manage a wishlist, and plan decks.\n\nPUBLISHED AUG 21, 2026\nRead the guide\n\nPROGRESS AND ACCOUNT GUIDE\n\nLunidex Progress Guide — Dashboard, favorites, friends and sync\n\nLearn how Lunidex separates public browsing from personal progress: dashboard, favorites, saved teams, account sync, friends, and public profiles.\n\nPUBLISHED AUG 22, 2026\nRead the guide\n\nPOKÉMON CARD COLLECTION VALUE GUIDE\n\nPokémon Card Collection Value Guide — Estimates, sealed products and limits | Lunidex\n\nLearn how Lunidex presents conditional Pokémon card and sealed-product value data, Cardmarket sources, private portfolio tracking, price history, and valuation limits.\n\nPUBLISHED SEP 21, 2026\nRead the guide\n\nCOMPARISONS\n\nLunidex vs other tools\n\nSource-based comparisons that separate verified Lunidex features from claims on each competitor’s official pages.\n\nCOLLECTION TOOL COMPARISON\n\nLunidex vs PokéCardex vs ZebraDex — Pokémon collection comparison\n\nA source-based comparison of Lunidex, PokéCardex, and ZebraDex for Pokémon TCG collection tracking, scanners, prices, Pokémon references, and team tools.\n\nPUBLISHED AUG 12, 2026\nRead the comparison\n\nLUNIDEX VS POKÉMON DATABASE\n\nLunidex vs Pokémon Database — Pokémon reference comparison\n\nCompare Lunidex and Pokémon Database for Pokédex research, stats, moves, type tools, team building, and personal Pokémon workspaces.\n\nPUBLISHED AUG 13, 2026\nRead the comparison\n\nLUNIDEX VS BULBAPEDIA\n\nLunidex vs Bulbapedia — Pokémon encyclopedia alternative\n\nCompare Lunidex and Bulbapedia for Pokémon reference research, franchise context, team tools, localization, and TCG collection workflows.\n\nPUBLISHED AUG 14, 2026\nRead the comparison\n\nLUNIDEX VS POKÉMON SHOWDOWN\n\nLunidex vs Pokémon Showdown — Team builder comparison\n\nCompare Lunidex and Pokémon Showdown for team building, Showdown import, type analysis, battle simulation, and competitive play.\n\nPUBLISHED AUG 15, 2026\nRead the comparison\n\nLUNIDEX VS POKÉCARDEX\n\nLunidex vs PokéCardex — Pokémon TCG collection comparison\n\nCompare Lunidex and PokéCardex for Pokémon TCG cataloging, collection tracking, card scanning, prices, offline use, and Pokémon game tools.\n\nPUBLISHED AUG 16, 2026\nRead the comparison\n\nLUNIDEX VS ZEBRADEX\n\nLunidex vs ZebraDex — Pokémon TCG collection comparison\n\nCompare Lunidex and ZebraDex for Pokémon TCG collection tracking, scanners, French prices, binders, exchanges, and Pokémon reference tools.\n\nPUBLISHED AUG 17, 2026\nRead the comparison\n\nLUNIDEX VS COLLECTR\n\nLunidex vs Collectr — Pokémon card collection comparison\n\nCompare Lunidex and Collectr for Pokémon TCG collection tracking, portfolio prices, scanning, trading, team building, and reference tools.\n\nPUBLISHED AUG 18, 2026\nRead the comparison\n\nLUNIDEX VS POKÉLLECTOR\n\nLunidex vs Pokéllector — Pokémon TCG card index comparison\n\nCompare Lunidex and Pokéllector for Pokémon TCG card and set browsing, collection-tracking context, personal tools, and web access.\n\nPUBLISHED SEP 14, 2026\nRead the comparison\n\nLUNIDEX VS CARDZIA\n\nLunidex vs Cardzia — Pokémon TCG collection app comparison\n\nCompare Lunidex and Cardzia for Pokémon TCG collection tracking, card scanning, French market estimates, sealed items, set progress, and Pokémon tools.\n\nPUBLISHED SEP 14, 2026\nRead the comparison\n\nLUNIDEX VS CARDMARKET\n\nLunidex vs Cardmarket — Pokémon card collection comparison\n\nCompare Lunidex and Cardmarket for Pokémon card research, collection tracking, marketplace listings, price data, wishlists, and Pokémon tools.\n\nPUBLISHED SEP 21, 2026\nRead the comparison\nSources and update date\n\nThe articles on this page are checked against the Lunidex repository and public routes. Pokémon reference data comes through PokéAPI and Pokémon TCG card and set data comes through TCGdex. Upstream availability can change.\n\nLunidex source repository\nPokéAPI\nTCGdex\n\nCONTINUE EXPLORING\n\nExplore the Pokédex\nOpen the team builder\nPlay the quiz\nOpen the TCG catalog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Open the tracker",
+        "href": "/en/30e-anniversaire"
+      },
+      {
+        "text": "Pokémon card collection tracker guideFree Pokémon Card Collection Tracker | LunidexLearn how to choo",
+        "href": "/en/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Team builder guideTeam Builder Guide — Build balanced Pokémon teams | LunidexUse the Lunidex team bu",
+        "href": "/en/guides/team-builder-guide"
+      },
+      {
+        "text": "Quiz guidePokémon Quiz Guide — Modes, challenges and badges | LunidexHow the Lunidex Pokémon quiz wo",
+        "href": "/en/guides/quiz-guide"
+      },
+      {
+        "text": "Nuzlocke tracker guideNuzlocke Tracker — Track your challenge runs | LunidexHow to use the Lunidex N",
+        "href": "/en/guides/nuzlocke-guide"
+      },
+      {
+        "text": "How to organize a Pokémon card collectionHow to Organize a Pokémon Card CollectionA practical method",
+        "href": "/en/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Pokémon reference guideFree Pokémon Pokédex & Online Reference Guide — PokéAPI | LunidexUse Lunidex ",
+        "href": "/en/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Team and battle tools guidePokémon Team Planning Tools — Compare, EV/IV and Battle | LunidexUse Luni",
+        "href": "/en/guides/team-tools-guide"
+      },
+      {
+        "text": "Pokémon TCG workspace guidePokémon TCG Collection App & Workspace Guide — Cards, Wishlist and Decks ",
+        "href": "/en/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Progress and account guideLunidex Progress Guide — Dashboard, favorites, friends and syncLearn how L",
+        "href": "/en/guides/progress-account-guide"
+      },
+      {
+        "text": "Pokémon card collection value guidePokémon Card Collection Value Guide — Estimates, sealed products ",
+        "href": "/en/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "Collection tool comparisonLunidex vs PokéCardex vs ZebraDex — Pokémon collection comparisonA source-",
+        "href": "/en/compare/lunidex-vs-pokecardex-zebradex"
+      },
+      {
+        "text": "Lunidex vs Pokémon DatabaseLunidex vs Pokémon Database — Pokémon reference comparisonCompare Lunidex",
+        "href": "/en/compare/lunidex-vs-pokemon-database"
+      },
+      {
+        "text": "Lunidex vs BulbapediaLunidex vs Bulbapedia — Pokémon encyclopedia alternativeCompare Lunidex and Bul",
+        "href": "/en/compare/lunidex-vs-bulbapedia"
+      },
+      {
+        "text": "Lunidex vs Pokémon ShowdownLunidex vs Pokémon Showdown — Team builder comparisonCompare Lunidex and ",
+        "href": "/en/compare/lunidex-vs-pokemon-showdown"
+      },
+      {
+        "text": "Lunidex vs PokéCardexLunidex vs PokéCardex — Pokémon TCG collection comparisonCompare Lunidex and Po",
+        "href": "/en/compare/lunidex-vs-pokecardex"
+      },
+      {
+        "text": "Lunidex vs ZebraDexLunidex vs ZebraDex — Pokémon TCG collection comparisonCompare Lunidex and ZebraD",
+        "href": "/en/compare/lunidex-vs-zebradex"
+      },
+      {
+        "text": "Lunidex vs CollectrLunidex vs Collectr — Pokémon card collection comparisonCompare Lunidex and Colle",
+        "href": "/en/compare/lunidex-vs-collectr"
+      },
+      {
+        "text": "Lunidex vs PokéllectorLunidex vs Pokéllector — Pokémon TCG card index comparisonCompare Lunidex and ",
+        "href": "/en/compare/lunidex-vs-pokellector"
+      },
+      {
+        "text": "Lunidex vs CardziaLunidex vs Cardzia — Pokémon TCG collection app comparisonCompare Lunidex and Card",
+        "href": "/en/compare/lunidex-vs-cardzia"
+      },
+      {
+        "text": "Lunidex vs CardmarketLunidex vs Cardmarket — Pokémon card collection comparisonCompare Lunidex and C",
+        "href": "/en/compare/lunidex-vs-cardmarket"
+      },
+      {
+        "text": "Lunidex source repository",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net"
+      },
+      {
+        "text": "Explore the Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Open the team builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "Play the quiz",
+        "href": "/en/quiz"
+      },
+      {
+        "text": "Open the TCG catalog",
+        "href": "/en/tcg"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/en/privacy",
+    "status": 200,
+    "finalURL": "https://lunidex.app/en/privacy",
+    "duration": 1418,
+    "title": "Privacy Policy | Lunidex",
+    "lang": "en",
+    "h1": [
+      "Privacy Policy"
+    ],
+    "main": "Privacy Policy\n\nLast updated and effective: September 9, 2026\n\nThis page describes the data Lunidex processes according to the features actually enabled. It is not personalized legal advice.\n\nYou can browse the Pokédex and TCG catalog without an account. Features that save a personal workspace use an account session and Neon synchronization when configured.\n\nTABLE OF CONTENTS\n\n1. Account and personal data\n2. Purposes and legal bases\n3. Browser storage\n4. Measurement, logs and technical data\n5. Services, recipients and transfers\n6. Retention periods\n7. Your rights and contact\n1. Account and personal data\n\nData controller: Esteban Deloge, a non-professional publisher of Lunidex. For data questions, use contact@lunidex.app.\n\nCreating an account is optional for public pages. When an account is created, Neon Auth processes the email address, session identifiers and, if provided, a name or username. Google or GitHub sign-in may be available depending on the service configuration; the selected provider participates in that authentication flow.\n\nWhen signed in, your personal workspace may synchronize with Neon the data you choose to use: favorites, caught Pokémon, teams, comparisons, progress, quiz data, TCG collection and lists, saved searches, settings and related features. Public profiles, friends, price alerts, battle rooms and notifications are processed only if you use those features.\n\nIf you enable a public profile, your handle, display name, avatar, membership date and selected progress counters may appear in the public directory. Accepted friends can see only the collection or deck information enabled in your sharing settings.\n\nLunidex does not sell this data or use it for personalized advertising. Passwords are managed by the authentication service and are not stored in Lunidex code.\n\n2. Purposes and legal bases\nProcessing\tLegal basis\nAccount, authentication and synchronization\tPerformance of the requested service and pre-contractual steps when you create an account (GDPR Article 6(1)(b)).\nContact requests\tLegitimate interest in answering your request; legal obligation when you exercise a right (GDPR Article 6(1)(f) or 6(1)(c)).\nVercel audience measurement, Sentry performance, and Neon/PostHog product measurement\tSeparate prior consent for optional measurement, which can be withdrawn at any time (GDPR Article 6(1)(a)).\nSecurity, abuse prevention and availability\tLegitimate interest in securing and maintaining the service (GDPR Article 6(1)(f)).\nPush notifications\tConsent given when enabling the feature and permission from your browser or device.\n3. Browser storage\n\nYour browser keeps elements needed for the experience: the selected language (primedex-lang cookie), consent choices (primedex-consent-v2 localStorage and the PostHog consent gate cookie), measurement session markers, and a local cache of public PokéAPI/TCGdex responses. These caches are not your synchronized personal workspace.\n\nThe application shell also uses technical local storage. Syncable personal data is sourced from the account and the user-state API when you are signed in; it is not presented as a durable anonymous collection on this device.\n\n4. Measurement, logs and technical data\n\nVercel Web Analytics, Speed Insights and Sentry browser tracing or Session Replay load only after your separate audience and performance consent. Replay masks text and inputs, blocks marked areas, and excludes network headers and bodies. Neon and PostHog product measurement is also optional: when allowed, Lunidex sends Neon predefined TCG events for aggregated counters, and PostHog normalized pageviews, explicit product events, errors and performance data with limited properties. After authentication, PostHog may use the stable technical account identifier to connect the anonymous session to the account; email, name and secrets are not sent, and identity is reset at logout.\n\nLunidex also uses Sentry for error and availability monitoring. The SDK does not send personal data by default, and Lunidex removes URL query parameters, cookies, headers and request bodies before sending. You may also voluntarily send Sentry a message describing a problem from the footer and choose to attach a screenshot; this form asks for neither a name nor an email address, and a screenshot is never captured automatically. Infrastructure and abuse protection may process technical request information such as IP address, URL, timestamp and response code. The contact route validates, rate-limits and forwards messages through Resend but does not store or log message content in Lunidex.\n\n5. Services, recipients and transfers\n\nNeon provides authentication and application data when those variables are configured. Vercel hosts and distributes the application. Sentry receives technical error events and, with consent, performance and privacy-protected replay data. PostHog receives the consented product measurement described above. Resend receives the information required to send contact messages (email address, name, subject and content). PokéAPI, TCGdex and image hosts provide public data requested by the application. Each provider may process technical data under its own terms.\n\nResend, Sentry, PostHog and Vercel may process data in the United States or other countries according to their configuration. Transfers rely on the safeguards published by the providers, including applicable data processing agreements and transfer mechanisms. See https://resend.com/legal/dpa, https://sentry.io/legal/dpa/, https://posthog.com/privacy and https://vercel.com/legal/dpa.\n\nLunidex does not deploy advertising pixels, sell data or create advertising profiles. Authentication cookies are managed by Neon Auth; their name and lifetime may depend on the provider configuration.\n\n6. Retention periods\nCategory\tPeriod\nAccount, profile and synchronized workspace data\tUntil account deletion or the end of the relationship, followed by deletion of application data through the account procedure.\nNeon and PostHog product measurement\tNeon aggregated daily counters are retained for 90 days; PostHog data follows the retention configured in the PostHog project.\nContact messages\tNot stored in the Lunidex database; Resend may process and retain the message according to its terms and retention policy.\nTechnical and security logs\tAccording to the periods configured by Vercel, Neon and other infrastructure providers, limited to what is needed for security and operation.\n7. Your rights and contact\n\nYou may request access to your data, rectification, erasure, restriction of processing, portability where applicable, or object to processing based on legitimate interests. You may withdraw consent at any time, without affecting processing already carried out.\n\nYou can refuse or withdraw Vercel, Sentry, Neon and PostHog measurement separately through the consent banner or the Manage preferences button in the footer. Withdrawal prevents the affected integrations from capturing new data and clears the local measurement markers handled by the application.\n\nTo exercise a right, email contact@lunidex.app or use the account procedure provided by the application. A reasonable verification may be needed before changing or deleting account-linked data.\n\nYou may also lodge a complaint with the CNIL: https://www.cnil.fr/.\n\nMeasurement\n\nWith your choices, Vercel Web Analytics and Speed Insights measure audience and performance. Optional Neon and PostHog product measurement sends predefined TCG events, normalized page views, and limited error/performance context. An authenticated technical account ID may continue an anonymous PostHog session; email, names and secrets are excluded. Replay is consent-gated, sampled and masked. You can withdraw at any time.\n\nThis legal document is primarily drafted in French and English. The French version prevails in case of discrepancy, subject to the mandatory provisions of your country of residence.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Settings",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Search Lunidex⌘K",
+        "label": "Search Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Manage my preferences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Report a problem",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "1. Account and personal data",
+        "href": "#account-data"
+      },
+      {
+        "text": "2. Purposes and legal bases",
+        "href": "#bases"
+      },
+      {
+        "text": "3. Browser storage",
+        "href": "#local-storage"
+      },
+      {
+        "text": "4. Measurement, logs and technical data",
+        "href": "#measurement"
+      },
+      {
+        "text": "5. Services, recipients and transfers",
+        "href": "#recipients"
+      },
+      {
+        "text": "6. Retention periods",
+        "href": "#retention"
+      },
+      {
+        "text": "7. Your rights and contact",
+        "href": "#rights"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

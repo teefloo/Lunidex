@@ -1,0 +1,89 @@
+[
+  {
+    "step": "reset",
+    "url": "https://lunidex.app/fr/pokedex",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANT"
+  },
+  {
+    "step": "back",
+    "url": "https://lunidex.app/fr/pokedex?types=fire%2Cgrass%2Cwater&gen=1",
+    "empty": true
+  },
+  {
+    "step": "moves-initial",
+    "inputs": [
+      "Rechercher une capacité par nom..."
+    ],
+    "buttons": [
+      "Réinitialiser filtre",
+      "Nom",
+      "ID",
+      "Puissance",
+      "Normal",
+      "Feu",
+      "Eau",
+      "Électrik",
+      "Plante",
+      "Glace",
+      "Combat",
+      "Poison"
+    ]
+  },
+  {
+    "step": "moves-search",
+    "url": "https://lunidex.app/fr/moves",
+    "text": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n0 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n0 CAPACITÉS\n\n0\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\n0 CAPACITÉS\n1 ACTIFS\nTOUS LES TYPES\nAUCUNE CAPACITÉ TROUVÉE\n\nEssayez de modifier votre recherche ou vos filtres\n\nRÉINITIALISER FILTRE"
+  },
+  {
+    "step": "moves-empty",
+    "text": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n0 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n0 CAPACITÉS\n\n0\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\n0 CAPACITÉS\n1 ACTIFS\nTOUS LES TYPES\nAUCUNE CAPACITÉ TROUVÉE\n\nEssayez de modifier votre recherche ou vos filtres\n\nRÉINITIALISER FILTRE"
+  },
+  {
+    "step": "abilities-initial",
+    "inputs": [
+      "Rechercher un talent par nom ou effet..."
+    ],
+    "buttons": [
+      "Réinitialiser filtre",
+      "Nom",
+      "ID"
+    ]
+  },
+  {
+    "step": "abilities-search",
+    "url": "https://lunidex.app/fr/abilities",
+    "text": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTERS\nRÉINITIALISER FILTRE\nNOM\nID\n1 TALENTS\n\n#009\n\nSTATIK\n\nLe Pokémon charge son corps en électricité statique, et tout contact avec lui peut paralyser.\n\nGÉNÉRATION 3"
+  },
+  {
+    "step": "abilities-empty",
+    "text": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTERS\nRÉINITIALISER FILTRE\nNOM\nID\n0 TALENTS\nAUCUN TALENT TROUVÉ\nRÉINITIALISER FILTRE"
+  },
+  {
+    "step": "items-initial",
+    "inputs": [
+      "Search items..."
+    ],
+    "buttons": [
+      "Réinitialiser filtre",
+      "Name",
+      "ID",
+      "Cost",
+      "Healing",
+      "Pp Recovery",
+      "Revival",
+      "Special Balls",
+      "Standard Balls",
+      "Status Cures",
+      "Vitamins"
+    ]
+  },
+  {
+    "step": "items-search",
+    "url": "https://lunidex.app/fr/items",
+    "text": "OBJETS\n\nItems\n\nBrowse held items, berries, evolution stones, and more\n\n48 ITEMS\nFILTERS\nRÉINITIALISER FILTRE\nNAME\nID\nCOST\nCATEGORY\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n4 ITEMS\nHYPER POTION\n\nUn spray qui soigne les blessures. Restaure 200 PV à un Pokémon.\n\nHEALING\n₽1,500\nPOTION\n\nUn spray qui soigne les blessures. Restaure 20 PV à un Pokémon.\n\nHEALING\n₽200\nPOTION MAX\n\nUn spray qui soigne les blessures. Restaure tous les PV d’un Pokémon.\n\nHEALING\n₽2,500\nSUPER POTION\n\nUn spray qui soigne les blessures. Restaure 50 PV à un Pokémon.\n\nHEALING\n₽700"
+  },
+  {
+    "step": "items-empty",
+    "text": "OBJETS\n\nItems\n\nBrowse held items, berries, evolution stones, and more\n\n48 ITEMS\nFILTERS\nRÉINITIALISER FILTRE\nNAME\nID\nCOST\nCATEGORY\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n0 ITEMS\nNO ITEMS FOUND\nRÉINITIALISER FILTRE"
+  }
+]

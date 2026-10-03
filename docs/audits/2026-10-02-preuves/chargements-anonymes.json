@@ -1,0 +1,14 @@
+[
+  {
+    "route": "/fr/dashboard",
+    "text": "Tableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nEn bref\nProgression du Pokédex\n0%\n\n0 / 1302 capturés\n\nCartes TCG Possédées\n0\nBadges\n0 / 15\nProgression\nQuiz\nActivité\nCompte et données"
+  },
+  {
+    "route": "/fr/tcg/collection",
+    "text": "Collection\nListe de souhaits\nScellés\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nMA COLLECTION\n\nVOTRE COLLECTION JCC AU COMPLET EN UN COUP D'ŒIL.\n\nRavi de vous revoir\n\nConnectez-vous pour synchroniser vos collections et votre progression entre vos appareils.\n\nSE CONNECTER"
+  },
+  {
+    "route": "/fr/tcg/sealed",
+    "text": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nTableau de bord\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…"
+  }
+]

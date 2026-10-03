@@ -1,0 +1,3 @@
+{
+  "raw": "### Error\nError: locator.click: Error: strict mode violation: locator('summary').filter({ hasText: 'Personnaliser le défi' }) resolved to 2 elements:\n    1) <summary>…</summary> aka getByRole('group').filter({ hasText: 'Personnaliser le défiGéné' }).locator('summary')\n    2) <summary>…</summary> aka locator('summary').nth(5)\n\nCall log:\n  - waiting for locator('summary').filter({ hasText: 'Personnaliser le défi' })\n"
+}

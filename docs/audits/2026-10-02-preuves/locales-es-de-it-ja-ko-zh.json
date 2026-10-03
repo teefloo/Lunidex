@@ -1,0 +1,272 @@
+[
+  {
+    "path": "/es",
+    "status": 200,
+    "lang": "es",
+    "h1": [
+      "Explora las cartas Pokémon."
+    ],
+    "nav": [
+      "/es/tcg/start?source=home_cta",
+      "/es/tcg",
+      "/es/pokedex",
+      "/es/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/es/pokedex",
+    "status": 200,
+    "lang": "es",
+    "h1": [
+      "Pokédex"
+    ],
+    "nav": [
+      "/es/tcg/collection",
+      "/es/tcg",
+      "/es/pokedex",
+      "/es/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/es/tcg",
+    "status": 200,
+    "lang": "es",
+    "h1": [
+      "Catálogo TCG Pokémon"
+    ],
+    "nav": [
+      "/es/tcg/collection",
+      "/es/tcg",
+      "/es/pokedex",
+      "/es/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/de",
+    "status": 200,
+    "lang": "de",
+    "h1": [
+      "Entdecke Pokémon-Karten."
+    ],
+    "nav": [
+      "/de/tcg/start?source=home_cta",
+      "/de/tcg",
+      "/de/pokedex",
+      "/de/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/de/pokedex",
+    "status": 200,
+    "lang": "de",
+    "h1": [
+      "Pokédex"
+    ],
+    "nav": [
+      "/de/tcg/collection",
+      "/de/tcg",
+      "/de/pokedex",
+      "/de/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/de/tcg",
+    "status": 200,
+    "lang": "de",
+    "h1": [
+      "Pokémon TCG-Katalog"
+    ],
+    "nav": [
+      "/de/tcg/collection",
+      "/de/tcg",
+      "/de/pokedex",
+      "/de/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/it",
+    "status": 200,
+    "lang": "it",
+    "h1": [
+      "Esplora le carte Pokémon."
+    ],
+    "nav": [
+      "/it/tcg/start?source=home_cta",
+      "/it/tcg",
+      "/it/pokedex",
+      "/it/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/it/pokedex",
+    "status": 200,
+    "lang": "it",
+    "h1": [
+      "Pokédex"
+    ],
+    "nav": [
+      "/it/tcg/collection",
+      "/it/tcg",
+      "/it/pokedex",
+      "/it/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/it/tcg",
+    "status": 200,
+    "lang": "it",
+    "h1": [
+      "Catalogo TCG Pokémon"
+    ],
+    "nav": [
+      "/it/tcg/collection",
+      "/it/tcg",
+      "/it/pokedex",
+      "/it/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ja",
+    "status": 200,
+    "lang": "ja",
+    "h1": [
+      "ポケモンカードを探そう。"
+    ],
+    "nav": [
+      "/ja/tcg/start?source=home_cta",
+      "/ja/tcg",
+      "/ja/pokedex",
+      "/ja/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ja/pokedex",
+    "status": 200,
+    "lang": "ja",
+    "h1": [
+      "ポケモン図鑑"
+    ],
+    "nav": [
+      "/ja/tcg/collection",
+      "/ja/tcg",
+      "/ja/pokedex",
+      "/ja/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ja/tcg",
+    "status": 200,
+    "lang": "ja",
+    "h1": [
+      "ポケモンTCGカタログ"
+    ],
+    "nav": [
+      "/ja/tcg/collection",
+      "/ja/tcg",
+      "/ja/pokedex",
+      "/ja/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ko",
+    "status": 200,
+    "lang": "ko",
+    "h1": [
+      "포켓몬 카드를 둘러보세요."
+    ],
+    "nav": [
+      "/ko/tcg/start?source=home_cta",
+      "/ko/tcg",
+      "/ko/pokedex",
+      "/ko/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ko/pokedex",
+    "status": 200,
+    "lang": "ko",
+    "h1": [
+      "포켓몬 도감"
+    ],
+    "nav": [
+      "/ko/tcg/collection",
+      "/ko/tcg",
+      "/ko/pokedex",
+      "/ko/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/ko/tcg",
+    "status": 200,
+    "lang": "ko",
+    "h1": [
+      "포켓몬 TCG 카탈로그"
+    ],
+    "nav": [
+      "/ko/tcg/collection",
+      "/ko/tcg",
+      "/ko/pokedex",
+      "/ko/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/zh",
+    "status": 200,
+    "lang": "zh",
+    "h1": [
+      "探索宝可梦卡牌。"
+    ],
+    "nav": [
+      "/zh/tcg/start?source=home_cta",
+      "/zh/tcg",
+      "/zh/pokedex",
+      "/zh/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/zh/pokedex",
+    "status": 200,
+    "lang": "zh",
+    "h1": [
+      "宝可梦图鉴"
+    ],
+    "nav": [
+      "/zh/tcg/collection",
+      "/zh/tcg",
+      "/zh/pokedex",
+      "/zh/team"
+    ],
+    "overflow": false
+  },
+  {
+    "path": "/zh/tcg",
+    "status": 200,
+    "lang": "zh",
+    "h1": [
+      "宝可梦 TCG 卡牌目录"
+    ],
+    "nav": [
+      "/zh/tcg/collection",
+      "/zh/tcg",
+      "/zh/pokedex",
+      "/zh/team"
+    ],
+    "overflow": false
+  }
+]

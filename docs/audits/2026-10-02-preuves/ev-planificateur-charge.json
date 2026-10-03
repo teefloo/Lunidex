@@ -1,0 +1,186 @@
+[
+  {
+    "route": "ev-planner",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nIVS\n\nPV\n31\nATTAQUE\n31\nDÉFENSE\n31\nATQ. SPÉ.\n31\nDÉF. SPÉ.\n31\nVITESSE\n31\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nRÉINITIALISER\nVITESSE MAX",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Calculateur IV",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Planificateur EV",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "value": ""
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "garchomp",
+        "type": "text",
+        "min": "",
+        "max": "",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Search",
+        "placeholder": null,
+        "type": "button",
+        "value": ""
+      },
+      {
+        "tag": "SELECT",
+        "text": "HardyLonelyBraveAdamantNaughtyBoldDocileRelaxedImpishLaxTimidHastySeriousJollyNaiveModestMildQuietBashfulRashCalmGentleSassyCarefulQuirky",
+        "label": null,
+        "placeholder": null,
+        "type": "select-one",
+        "value": "hardy"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "PV",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attaque",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Défense",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Atq. Spé.",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Déf. Spé.",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Vitesse",
+        "placeholder": null,
+        "type": "number",
+        "min": "0",
+        "max": "31",
+        "value": "31"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "PV",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attaque",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Défense",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Atq. Spé.",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Déf. Spé.",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Vitesse",
+        "placeholder": null,
+        "type": "range",
+        "min": "0",
+        "max": "252",
+        "value": "0"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Réinitialiser",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Vitesse max",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "value": ""
+      }
+    ]
+  }
+]

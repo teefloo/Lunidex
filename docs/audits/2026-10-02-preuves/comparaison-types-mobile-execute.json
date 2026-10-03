@@ -1,0 +1,30 @@
+[
+  {
+    "step": "shared-compare-third-url-only",
+    "url": "https://lunidex.app/fr/compare?ids=25,6,133",
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nÉvoli Partenaire De Départ\n\n#10159\n\nÉvoli Gigamax\n\n#10205\n\nDracaufeuPikachuÉvoli\nPV\nATK\nDEF\nASp\nDSp\nVIT\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nPLANTE\nSévérité 1\nGLACE\nPOISO"
+  },
+  {
+    "step": "reload",
+    "url": "https://lunidex.app/fr/compare?ids=25,6,133",
+    "removers": 3
+  },
+  {
+    "step": "remove-url-only",
+    "url": "https://lunidex.app/fr/compare?ids=25,6"
+  },
+  {
+    "step": "electric-result",
+    "text": "ICACE (2×)\nNORMAL (1×)\nPAS TRÈS EFFICACE (½×)\nAUCUN EFFET (0×)\nATK\n╲\nDEF\n\t\nNORM\n\t\nFEU\n\t\nEAU\n\t\nÉLEC\n\t\nPLAN\n\t\nGLAC\n\t\nCOMB\n\t\nPOIS\n\t\nSOL\n\t\nVOL\n\t\nPSY\n\t\nINSE\n\t\nROCH\n\t\nSPEC\n\t\nDRAG\n\t\nTÉNÈ\n\t\nACIE\n\t\nFÉE\n\n\nNORMA\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n0\n\t\n\t\n\t\n½\n\t\n\n\nFEU\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n2\n\t\n\n\nEAU\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n\n\nÉLECT\n\t\n\t\n\t\n2\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n0\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\n\nPLANT\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n½\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n\n\nGLACE\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\n\nCOMBA\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n2\n\t\n0\n\t\n\t\n2\n\t\n2\n\t\n½\n\n\nPOISO\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n½\n\t\n\t\n\t\n0\n\t\n2\n\n\nSOL\n\t\n\t\n2\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n0\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\n\nVOL\n\t\n\t\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n½\n\t\n\n\nPSY\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n0\n\t\n½\n\t\n\n\nINSEC\n\t\n\t\n½\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n\t\n½\n\t\n\t\n2\n\t\n½\n\t\n½\n\n\nROCHE\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\n\nSPECT\n\t\n0\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\n\nDRAGO\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n0\n\n\nTÉNÈB\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n½\n\t\n½\n\n\nACIER\n\t\n\t\n½\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n½\n\t\n2\n\n\nFÉE\n\t\n\t\n½\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n2\n\t\n½\n\t\nÉlectrik\n\nMAÎTRISE ÉLÉMENTAIRE\n\nFORT CONTRE\nVOL\nEAU\nRÉSISTE À\nVOL\nACIER\nÉLECTRIK\nFAIBLE FACE À\nSOL\nPAS EFFICACE CONTRE\nPLANTE\nÉLECTRIK\nDRAGON\nPokémon emblématiques\nZekrom\n680\nMiraidon\n670\nMiraidon-Low-Power-Mode\n670\nMiraidon-Drive-Mode\n670\nMiraidon-Aquatic-Mode\n670\nMiraidon-Glide-Mode\n670\nConseils stratégiques pour le type Électrik\n\nAttention aux capacités de type Sol. Elles infligent des dégâts doublés à vos Pokémon Électrik.\n\nVos capacités Électrik ne sont pas très efficaces contre le type Plante, Électrik, Dragon. Essayez de changer ou d'utiliser des capacités de couverture !",
+    "cell": [
+      {
+        "label": "Électrik vs Sol: 0×",
+        "role": "gridcell"
+      }
+    ]
+  },
+  {
+    "step": "mobilemenu",
+    "text": "Aller au contenu principal\nLuni\ndex\nRechercher dans Lunidex\nLuni\ndex\nCOLLECTION\nListe de souhaits\nScellés\nCommencer ma collection\nCATALOGUE\nMarché des scellés\nConstructeur de deck\nFréquences de tirage\nValeur des boosters\nPOKÉDEX\nTypes\nCapacités\nTalents\nObjets\nJOUER\nQuiz\nSuivi Nuzlocke\nComparer\nCombat\nÉlevage\nCalc. EV/IV\nMON ESPACE\nFavoris\nTableau de bord\nAmis\nParamètres\nRESSOURCES\nBlog\nGuides\nDocumentation et API\nTracker du 30e anniversaire\nFAQ\nPrésentation de Lunidex\nContact\nComparatif des applis de collection\nCOMPTE\nSe connecter\nMaître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nTableau d'efficacité des types\n\nDécouvrez comment chaque type se compare à tous les autres\n\nTap a cell to see its multiplier\nSUPER EFFICACE (2×)\nNORMAL (1×)\nPAS TRÈS EFFICACE (½×)\nAUCUN EFFET (0×)\n\nSwipe horizontally to explore the full matrix\n\nATK\n╲\nDEF\n\t\nNORM\n\t\nFEU\n\t\nEAU\n\t\nÉLEC\n\t\nPLAN\n\t\nGLAC\n\t\nCOMB\n\t\nPOIS\n\t\nSOL\n\t\nVOL\n\t\nPSY\n\t\nINSE\n\t\nROCH\n\t\nSPEC\n\t\nDRAG\n\t\nTÉNÈ\n\t\nACIE\n\t\nFÉE\n\n\nNORMA\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n½\n\t\n0\n\t\n\t\n\t\n½\n\t\n\n\nFEU\n\t\n\t\n½\n\t\n½\n\t\n\t\n2\n\t\n2\n\t\n\t\n\t\n\t\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n2\n\t\n\n\nEAU\n\t\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n\t\n\t\n\t\n2\n\t\n\t\n\t\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n\n\nÉLECT\n\t\n\t\n\t\n2\n\t\n½\n\t\n½\n\t\n\t\n\t\n\t\n0\n\t\n2\n\t\n\t\n\t\n\t\n\t\n½\n\t\n\t\n\t\n\n\nPLANT\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n\t\n½\n\t\n2\n\t\n½\n\t\n\t\n½\n\t\n2\n\t\n\t\n½\n\t\n\t\n½\n\t\n\n\nGLA"
+  }
+]

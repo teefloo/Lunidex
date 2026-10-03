@@ -1,0 +1,131 @@
+[
+  {
+    "round": 1,
+    "options": [
+      "Morpeko Ventre Plein",
+      "Miraidon",
+      "Monthracite",
+      "Toxizap"
+    ],
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nERREURS\n0/5\nCORRECT\nMORPEKO VENTRE PLEIN\nMIRAIDON\nMONTHRACITE\nTOXIZAP",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 2,
+    "options": [
+      "Cornèbre",
+      "Lombre",
+      "Khélocrok",
+      "Deoxys Forme Attaque"
+    ],
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nERREURS\n1/5\nFAUX\nCORNÈBRE\nLOMBRE\nKHÉLOCROK\nDEOXYS FORME ATTAQUE",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 3,
+    "options": [
+      "Dinglu",
+      "Caninos",
+      "Bourrinos",
+      "Volcanion"
+    ],
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nERREURS\n2/5\nFAUX\nDINGLU\nCANINOS\nBOURRINOS\nVOLCANION",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 4,
+    "options": [
+      "Trousselin",
+      "Aquali",
+      "Lougaroc Forme Diurne",
+      "Regigigas"
+    ],
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nERREURS\n3/5\nFAUX\nTROUSSELIN\nAQUALI\nLOUGAROC FORME DIURNE\nREGIGIGAS",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 5,
+    "options": [
+      "Lilliterelle",
+      "Tokopiyon",
+      "Tournicoton",
+      "Ectoplasma Méga"
+    ],
+    "feedback": "SCORE ACTUEL\n2\nRECORD\n0\nERREURS\n3/5\nCORRECT\nLILLITERELLE\nTOKOPIYON\nTOURNICOTON\nECTOPLASMA MÉGA",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 6,
+    "options": [
+      "Ogerpon Cornerstone Mask",
+      "Dinglu",
+      "Couafarel",
+      "Pohmotte"
+    ],
+    "feedback": "SCORE ACTUEL\n2\nRECORD\n0\nERREURS\n4/5\nFAUX\nOGERPON CORNERSTONE MASK\nDINGLU\nCOUAFAREL\nPOHMOTTE",
+    "disabled": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "round": 7,
+    "options": [
+      "Skitty",
+      "Tokotoro",
+      "Colimucus Forme de Hisui",
+      "Farfuret Forme de Hisui"
+    ],
+    "feedback": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nPARTIE TERMINÉE !\n\nVOTRE SCORE FINAL :\n\n2\n\nLunidex\nQUEL EST CE POKÉMON ?\n2\n/7\n\nCORRECT\n\nCLASSIQUE\nMARATHON\n\nSÉRIE\n\n0\n\nVOS EXPLOITS\n\n0\nTWITTER\nIMAGE\nLIEN\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits",
+    "disabled": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  {
+    "action": "final",
+    "text": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nPARTIE TERMINÉE !\n\nVOTRE SCORE FINAL :\n\n2\n\nLunidex\nQUEL EST CE POKÉMON ?\n2\n/7\n\nCORRECT\n\nCLASSIQUE\nMARATHON\n\nSÉRIE\n\n0\n\nVOS EXPLOITS\n\n0\nTWITTER\nIMAGE\nLIEN\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits"
+  }
+]

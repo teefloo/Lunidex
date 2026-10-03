@@ -1,0 +1,112 @@
+{
+  "path": "https://lunidex.app/fr/tcg?sortBy=id&sortOrder=asc&view=scan&tcgLang=en",
+  "condition": "modale filtres TCG ouverte, thème sombre",
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "count": 12,
+      "nodes": [
+        {
+          "html": "<label for=\"tcg-illustrator\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Illustrateur</label>",
+          "target": [
+            "label[for=\"tcg-illustrator\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<label for=\"tcg-regulation-mark\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Réglementation</label>",
+          "target": [
+            "label[for=\"tcg-regulation-mark\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<label for=\"tcg-price-min\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Prix min</label>",
+          "target": [
+            "label[for=\"tcg-price-min\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<label for=\"tcg-price-max\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Prix max</label>",
+          "target": [
+            "label[for=\"tcg-price-max\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<label for=\"tcg-release-start\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Sortie après</label>",
+          "target": [
+            "label[for=\"tcg-release-start\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<label for=\"tcg-release-end\" class=\"ml-1 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/30\">Sortie avant</label>",
+          "target": [
+            "label[for=\"tcg-release-end\"]"
+          ],
+          "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.25 (foreground color: #5974a9, background color: #123b86, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "type": "text",
+      "placeholder": "Rechercher dans la base de cartes...",
+      "labelCount": 0,
+      "name": "Rechercher dans la base de cartes...",
+      "id": ""
+    },
+    {
+      "type": "text",
+      "placeholder": "N'importe quel illustrateur",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-illustrator"
+    },
+    {
+      "type": "text",
+      "placeholder": "G, H, I…",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-regulation-mark"
+    },
+    {
+      "type": "number",
+      "placeholder": "0",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-price-min"
+    },
+    {
+      "type": "number",
+      "placeholder": "999",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-price-max"
+    },
+    {
+      "type": "date",
+      "placeholder": "",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-release-start"
+    },
+    {
+      "type": "date",
+      "placeholder": "",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-release-end"
+    },
+    {
+      "type": "select-one",
+      "labelCount": 1,
+      "name": null,
+      "id": "tcg-owned-state"
+    }
+  ]
+}

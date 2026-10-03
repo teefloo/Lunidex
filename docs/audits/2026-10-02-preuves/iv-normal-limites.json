@@ -1,0 +1,16 @@
+[
+  {
+    "action": "IV-normal",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nBase stats loaded for Pikachu\n\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n110\nATTAQUE\n75\nDÉFENSE\n60\nATQ. SPÉ.\n70\nDÉF. SPÉ.\n70\nVITESSE\n110\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER\nPV\nIV : 30–31\nATTAQUE\nIV : 30–31\nDÉFENSE\nIV : 30–31\nATQ. SPÉ.\nIV : 30–31\nDÉF. SPÉ.\nIV : 30–31\nVITESSE\nIV : 30–31"
+  },
+  {
+    "action": "level-zero",
+    "value": "1",
+    "valid": true
+  },
+  {
+    "action": "EV-planner",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV",
+    "inputs": []
+  }
+]

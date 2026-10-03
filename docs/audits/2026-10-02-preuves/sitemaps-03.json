@@ -1,0 +1,226 @@
+[
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/sealed-products-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 4349,
+    "bytes": 4449179
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/moves-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 937,
+    "bytes": 891923
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/abilities-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 374,
+    "bytes": 366924
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-fr.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-es.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-de.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-it.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-ja.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-ko.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/items-zh.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 2000,
+    "bytes": 1935472
+  }
+]

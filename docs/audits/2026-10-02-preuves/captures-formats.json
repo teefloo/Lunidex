@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/fr/pokedex",
+    "w": 360,
+    "file": "pokedex-mobile.png"
+  },
+  {
+    "path": "/fr/types",
+    "w": 390,
+    "file": "types-mobile.png"
+  },
+  {
+    "path": "/fr/tcg",
+    "w": 390,
+    "file": "tcg-mobile.png"
+  },
+  {
+    "path": "/fr/battle",
+    "w": 768,
+    "file": "combat-tablette.png"
+  }
+]

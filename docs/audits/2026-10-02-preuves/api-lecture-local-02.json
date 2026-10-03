@@ -1,0 +1,198 @@
+[
+  {
+    "source": "src/app/api/tcg/sealed/guide/route.ts",
+    "path": "/api/tcg/sealed/guide",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed guide unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/market-catalogue/route.ts",
+    "path": "/api/tcg/sealed/market-catalogue",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/market-products/[id]/route.ts",
+    "path": "/api/tcg/sealed/market-products/1",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/overview/route.ts",
+    "path": "/api/tcg/sealed/overview",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/products/[id]/image/route.ts",
+    "path": "/api/tcg/sealed/products/1/image",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/products/[id]/route.ts",
+    "path": "/api/tcg/sealed/products/1",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/sources/route.ts",
+    "path": "/api/tcg/sealed/sources",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/transactions/route.ts",
+    "path": "/api/tcg/sealed/transactions",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/search/route.ts",
+    "path": "/api/tcg/search",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "cache": "public, s-maxage=300, stale-while-revalidate=3600",
+    "body": "{\"cards\":[{\"category\":\"Pokemon\",\"id\":\"30th-G\",\"illustrator\":\"YOSHIROTTEN\",\"image\":\"https://assets.tcgdex.net/en/me/30th/G\",\"localId\":\"G\",\"name\":\"Mew\",\"rarity\":\"RGB Rare\",\"set\":{\"cardCount\":{\"official\":128,\"total\":161},\"id\":\"30th\",\"name\":\"30th Celebration\"},\"variants\":{\"firstEdition\":false,\"holo\":true,\"normal\":false,\"reverse\":false,\"wPromo\":false},\"variants_detailed\":[{\"type\":\"holo\",\"size\":\"standard\",\"thirdParty\":{\"cardmarket\":909510,\"tcgplayer\":717608},\"variantId\":\"jr7oetx1mqug9\",\"pricing\":{\"cardmarket\":{\"updated\":\"2026-10-01T09:52:36.498Z\",\"unit\":\"EUR\",\"idProduct\":909510,\"avg\":null,\"low\":1999,\"trend\":2411.9,\"avg1\":null,\"avg7\":null,\"avg30\":null,\"avg-holo\":null,\"low-holo\":null,\"trend-holo\":0,\"avg1-holo\":null,\"avg7-holo\":null,\"avg30-holo\":null},\"tcgplayer\":null}}],\"dexId\":[151],\"hp\":60,\"types\":[\"Psychic\"],\"description\":\"So rare that it is still said to be a mirage by many experts. Only a few people have seen it worldwide.\",\"stage\":\"Basic\",\"attacks\":[{\"cost\":[\"Psychic\",\"Psychic\"],\"name\":\""
+  },
+  {
+    "source": "src/app/api/tcg/sets/route.ts",
+    "path": "/api/tcg/sets",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "cache": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "body": "{\"sets\":[{\"id\":\"30th-c\",\"name\":\"30th Classic Collection\",\"cardCount\":{\"total\":30,\"official\":30},\"totalCards\":30,\"releaseRank\":0,\"dataLanguage\":\"en\"},{\"id\":\"30th\",\"name\":\"30th Celebration\",\"cardCount\":{\"total\":161,\"official\":128},\"totalCards\":161,\"releaseRank\":1,\"dataLanguage\":\"en\"},{\"id\":\"me05\",\"name\":\"Pitch Black\",\"logo\":\"https://assets.tcgdex.net/en/me/me05/logo.png\",\"symbol\":\"https://assets.tcgdex.net/univ/me/me05/symbol.png\",\"cardCount\":{\"total\":120,\"official\":84},\"totalCards\":120,\"releaseRank\":2,\"dataLanguage\":\"en\"},{\"id\":\"me04\",\"name\":\"Chaos Rising\",\"logo\":\"https://assets.tcgdex.net/en/me/me04/logo.png\",\"symbol\":\"https://assets.tcgdex.net/univ/me/me04/symbol.png\",\"cardCount\":{\"total\":122,\"official\":86},\"totalCards\":122,\"releaseRank\":3,\"dataLanguage\":\"en\"},{\"id\":\"me03\",\"name\":\"Perfect Order\",\"logo\":\"https://assets.tcgdex.net/en/me/me03/logo.png\",\"symbol\":\"https://assets.tcgdex.net/univ/me/me03/symbol.png\",\"cardCount\":{\"total\":124,\"official\":88},\"totalCards\":124,\"releaseRank\":4,\"da"
+  },
+  {
+    "source": "src/app/api/tcg/user-cards/route.ts",
+    "path": "/api/tcg/user-cards",
+    "method": "GET",
+    "status": 410,
+    "contentType": "application/json",
+    "body": "{\"error\":\"This legacy endpoint is disabled. Sign in to use account-backed TCG state.\"}"
+  },
+  {
+    "source": "src/app/api/user-state/route.ts",
+    "path": "/api/user-state",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Application database unavailable\"}"
+  },
+  {
+    "source": "src/app/api/v1/cards/[cardId]/route.ts",
+    "path": "/api/v1/cards/sv03.5-199",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/cards/route.ts",
+    "path": "/api/v1/cards",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/me/route.ts",
+    "path": "/api/v1/me",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/openapi.json/route.ts",
+    "path": "/api/v1/openapi.json",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "cache": "public, max-age=3600",
+    "body": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"Lunidex Public API\",\"version\":\"1.0.0\",\"description\":\"API for data synchronized to a Lunidex account. Local-only device data is not available.\\n\\nCard collection responses never contain card valuations. Sealed amounts are integer EUR cents.\\n\\nQuotas per account: 60 reads/minute, 10 writes/minute, 1,000 reads/day, 100 writes/day.\\n\\nCard detail and sealed calculations: 100 reads/day per account and 5,000 operations/day globally for each category.\\n\\nLists default to 25 entries and accept up to 100, except catalogue search, fixed at 24.\\n\\nPrivate responses use Cache-Control: private, no-store. API keys are for server-side integrations.\"},\"servers\":[{\"url\":\"/api/v1\"}],\"security\":[{\"BearerApiKey\":[]}],\"paths\":{\"/openapi.json\":{\"get\":{\"summary\":\"OpenAPI document\",\"security\":[],\"responses\":{\"200\":{\"description\":\"This OpenAPI specification.\"}}}},\"/me\":{\"get\":{\"summary\":\"Current account identity\",\"security\":[{\"BearerApiKey\":[]}],\"responses\":{\"200\":{\"descrip"
+  },
+  {
+    "source": "src/app/api/v1/sealed/catalogue/route.ts",
+    "path": "/api/v1/sealed/catalogue",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/sealed/positions/[productId]/route.ts",
+    "path": "/api/v1/sealed/positions/1",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/sealed/positions/route.ts",
+    "path": "/api/v1/sealed/positions",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/sealed/transactions/[id]/route.ts",
+    "path": "/api/v1/sealed/transactions/1",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/sealed/transactions/route.ts",
+    "path": "/api/v1/sealed/transactions",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/v1/summary/route.ts",
+    "path": "/api/v1/summary",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The API is temporarily unavailable.\"}}"
+  }
+]

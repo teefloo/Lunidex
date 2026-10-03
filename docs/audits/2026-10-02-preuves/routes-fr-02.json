@@ -1,0 +1,1446 @@
+[
+  {
+    "path": "/fr/breeding",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/breeding",
+    "duration": 1561,
+    "title": "Calculateur d'Élevage | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Calculateur d'Élevage"
+    ],
+    "main": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPARENT 2 (PENSION)\n\nCONFIGURER",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Calculateur de CVs",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Explorateur Capacités Œuf",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "1Parents",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2Configuration",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3Résultats",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Rechercher un Pokémon…",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Configurer",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/ev-iv",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/ev-iv",
+    "duration": 1391,
+    "title": "Calculateur EV/IV — Outil de statistiques compétitives | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Calculateur EV/IV"
+    ],
+    "main": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Calculateur IV",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Planificateur EV",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "pikachu",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "label": "Search",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "SELECT",
+        "text": "HardyLonelyBraveAdamantNaughtyBoldDocileRelaxedImpishLaxTimidHastySeriousJollyNaiveModestMildQuietBashfulRashCalmGentleS",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "PV",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attaque",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Défense",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Atq. Spé.",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Déf. Spé.",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Vitesse",
+        "placeholder": null,
+        "type": "number",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "PV",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Attaque",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Défense",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Atq. Spé.",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Déf. Spé.",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Vitesse",
+        "placeholder": null,
+        "type": "range",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Calculer les IV",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": true
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Réinitialiser",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/nuzlocke",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/nuzlocke",
+    "duration": 1533,
+    "title": "Suivi Nuzlocke | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Suivi Nuzlocke"
+    ],
+    "main": "MODE CHALLENGE\n\nSuivi Nuzlocke\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\nGuide du suivi Nuzlocke\n↗\n\nCONTINUER L’EXPLORATION\n\nPokédex Pokémon en ligne\nConstructeur d’équipe Pokémon\nCatalogue JCC\nMES PARTIES\nCréer une partie\n\nAucune partie pour le moment.\n\nCréez ou sélectionnez une partie pour commencer à noter les rencontres.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Nom de la partie…",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Jeu (ex. Émeraude)…",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Créer une partie",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Guide du suivi Nuzlocke↗",
+        "href": "/fr/guides/nuzlocke-guide"
+      },
+      {
+        "text": "Pokédex Pokémon en ligne",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d’équipe Pokémon",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Catalogue JCC",
+        "href": "/fr/tcg"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/favorites",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/favorites",
+    "duration": 1478,
+    "title": "Mes Pokémon favoris — Gérer ma collection | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Mes Favoris"
+    ],
+    "main": "LUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (0)\n\nVotre collection est vide\n\nCommencez à ajouter vos Pokémon favoris en cliquant sur l'icône cœur !\n\nRETOUR AU LUNIDEX",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Retour au Lunidex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/dashboard",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/dashboard",
+    "duration": 1418,
+    "title": "Dashboard | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Tableau de Bord"
+    ],
+    "main": "Tableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nCompte et données",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/friends",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/friends",
+    "duration": 1380,
+    "title": "Amis | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Amis"
+    ],
+    "main": "COMMUNAUTÉ\n\nAmis\n\nGérez vos amis et explorez les collections JCC partagées.\n\nConnectez-vous pour gérer vos amis et vos collections partagées.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/friends/00000000-0000-0000-0000-000000000000",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/friends/00000000-0000-0000-0000-000000000000",
+    "duration": 1280,
+    "title": "Profil ami | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Profil ami"
+    ],
+    "main": "COMMUNAUTÉ\n\nProfil ami\n\nConsultez les données JCC partagées.\n\nConnectez-vous pour utiliser les amis.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/u/audit-inexistant",
+    "status": 404,
+    "finalURL": "https://lunidex.app/fr/u/audit-inexistant",
+    "duration": 1616,
+    "title": "Profil introuvable | Lunidex",
+    "lang": "fr",
+    "h1": [],
+    "main": "LUNIDEX\n\nProfil introuvable\n\nCe profil n'existe pas ou n'est pas public.\n\nACCUEIL",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Accueil",
+        "href": "/"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/fr/u/audit-inexistant",
+        "status": 404
+      },
+      {
+        "url": "https://lunidex.app/",
+        "status": 404
+      },
+      {
+        "url": "https://lunidex.app/fr",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/fr/moves",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/moves",
+    "duration": 1574,
+    "title": "Capacités | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Capacités"
+    ],
+    "main": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n48 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n48 CAPACITÉS\n\n48\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\n48 CAPACITÉS\nTOUS LES TYPES\n\n#036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne charge violente qui blesse aussi légèrement le lanceur.\n\nPUIS\n\n90\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#047\n\nBERCEUSE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nUne berceuse plonge l’ennemi dans un profond sommeil.\n\nPUIS\n\n—\n\nPRÉC\n\n55%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#033\n\nCHARGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur charge l’ennemi et le percute de tout son corps.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#029\n\nCOUP D’BOULE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur donne un coup de tête. Peut apeurer l’ennemi.\n\nPUIS\n\n70\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#015\n\nCOUPE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nCoupe l’ennemi avec des lames ou des griffes. Hors combat, permet de couper des arbres fins.\n\nPUIS\n\n50\n\nPRÉC\n\n95%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#013\n\nCOUPE-VENT\nNORMAL\nSPÉCIAL\nGÉNÉRATION 1\n\nAttaque en 2 tours. Des lames de vent frappent l’ennemi au 2è tour. Taux de critiques élevé.\n\nPUIS\n\n80\n\nPRÉC\n\n100%\n\nPP\n\n10\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#017\n\nCRU-AILES\nVOL\nPHYSIQUE\nGÉNÉRATION 1\n\nL’ennemi est frappé par de larges ailes déployées pour infliger des dégâts.\n\nPUIS\n\n60\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#018\n\nCYCLONE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nÉjecte le Pokémon ennemi et le remplace par un autre. Dans la nature, met fin au combat.\n\nPUIS\n\n—\n\nPRÉC\n\n—\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#038\n\nDAMOCLÈS\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne dangereuse charge. Inflige aussi des dégâts assez importants au lanceur.\n\nPUIS\n\n120\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#014\n\nDANSE LAMES\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nDanse frénétique qui exalte l’esprit combatif. Augmente beaucoup l’Attaque du lanceur.\n\nPUIS\n\n—\n\nPRÉC\n\n—\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#042\n\nDARD-NUÉE\nINSECTE\nPHYSIQUE\nGÉNÉRATION 1\n\nEnvoie une rafale de dards. Peut toucher de 2 à 5 fois.\n\nPUIS\n\n25\n\nPRÉC\n\n95%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#040\n\nDARD-VENIN\nPOISON\nPHYSIQUE\nGÉNÉRATION 1\n\nUn dard toxique qui transperce l’ennemi. Peut aussi l’empoisonner.\n\nPUIS\n\n15\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#041\n\nDOUBLE DARD\nINSECTE\nPHYSIQUE\nGÉNÉRATION 1\n\nUn double coup de dard qui transperce l’ennemi 2 fois d’affilée. Peut aussi l’empoisonner.\n\nPUIS\n\n25\n\nPRÉC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#024\n\nDOUBLE PIED\nCOMBAT\nPHYSIQUE\nGÉNÉRATION 1\n\nDeux coups de pied qui frappent l’ennemi deux fois d’affilée.\n\nPUIS\n\n30\n\nPRÉC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#001\n\nÉCRAS’FACE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nÉcrase l’ennemi avec les pattes avant, la queue, etc.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#023\n\nÉCRASEMENT\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nÉcrase l’ennemi avec un énorme pied. Peut aussi l’apeurer.\n\nPUIS\n\n65\n\nPRÉC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#032\n\nEMPAL’KORNE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUn coup de corne en vrille qui empale l’ennemi, le mettant K.O. sur le coup s’il est touché.\n\nPUIS\n\n—\n\nPRÉC\n\n30%\n\nPP\n\n5\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#020\n\nÉTREINTE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLigote l’ennemi avec les tentacules ou le corps pour l’écraser durant 4 à 5 tours.\n\nPUIS\n\n15\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#011\n\nFORCE POIGNE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nL’ennemi est attrapé et compressé par les côtés.\n\nPUIS\n\n55\n\nPRÉC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#022\n\nFOUET LIANES\nPLANTE\nPHYSIQUE\nGÉNÉRATION 1\n\nFouette l’ennemi avec de fines lianes pour infliger des dégâts.\n\nPUIS\n\n45\n\nPRÉC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#031\n\nFURIE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nFrappe l’ennemi 2 à 5 fois d’affilée avec un bec ou une corne.\n\nPUIS\n\n15\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#010\n\nGRIFFE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLacère l’ennemi avec des griffes acérées pour lui infliger des dégâts.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#043\n\nGROZ’YEUX\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nLe lanceur fait les gros yeux à l’ennemi pour l’intimider et baisser sa Défense.\n\nPUIS\n\n—\n\nPRÉC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#012\n\nGUILLOTINE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nDe méchantes pinces lacèrent l’ennemi, le mettant K.O. sur le coup s’il est touché.\n\nPUIS\n\n—\n\nPRÉC\n\n30%\n\nPP\n\n5\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#046\n\nHURLEMENT\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nEffraie le Pokémon ennemi et le remplace par un autre. Dans la nature, met fin au combat.\n\nPUIS\n\n—\n\nPRÉC\n\n—\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#006\n\nJACKPOT\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nDes pièces sont lancées sur l’ennemi. Permet d’obtenir de l’argent à la fin du combat.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#028\n\nJET DE SABLE\nSOL\nSTATUT\nGÉNÉRATION 1\n\nLance du sable au visage de l’ennemi pour baisser sa Précision.\n\nPUIS\n\n—\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#030\n\nKOUD’KORNE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nFrappe l’ennemi d’un coup de corne pointue pour infliger des dégâts.\n\nPUIS\n\n65\n\nPRÉC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#035\n\nLIGOTAGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur ligote l’ennemi avec des lianes ou son corps pour l’écraser durant 4 à 5 tours.\n\nPUIS\n\n15\n\nPRÉC\n\n90%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#037\n\nMANIA\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne attaque furieuse qui dure de 2 à 3 tours. Le lanceur devient confus.\n\nPUIS\n\n120\n\nPRÉC\n\n100%\n\nPP\n\n10\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#027\n\nMAWASHI GERI\nCOMBAT\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur effectue un coup de pied tournoyant et extrêmement rapide. Peut apeurer l’ennemi.\n\nPUIS\n\n60\n\nPRÉC\n\n85%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#039\n\nMIMI-QUEUE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nLe lanceur remue son adorable queue pour tromper la vigilance de l’ennemi et baisser sa Défense.\n\nPUIS\n\n—\n\nPRÉC\n\n100%\n\nPP\n\n30\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#044\n\nMORSURE\nTÉNÈBRES\nPHYSIQUE\nGÉNÉRATION 1\n\nL’ennemi est mordu par de tranchantes canines. Peut l’apeurer.\n\nPUIS\n\n60\n\nPRÉC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#026\n\nPIED SAUTÉ\nCOMBAT\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur s’envole pour décocher un coup de pied sauté. S’il échoue, le lanceur se blesse.\n\nPUIS\n\n100\n\nPRÉC\n\n95%\n\nPP\n\n10\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#034\n\nPLAQUAGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur se laisse tomber sur l’ennemi de tout son poids. Peut le paralyser.\n\nPUIS\n\n85\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#004\n\nPOING COMÈTE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne tornade de coups de poing qui frappe de 2 à 5 fois d’affilée.\n\nPUIS\n\n18\n\nPRÉC\n\n85%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#009\n\nPOING ÉCLAIR\nÉLECTRIK\nPHYSIQUE\nGÉNÉRATION 1\n\nUn coup de poing électrique vient frapper l’ennemi. Peut le paralyser.\n\nPUIS\n\n75\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#007\n\nPOING FEU\nFEU\nPHYSIQUE\nGÉNÉRATION 1\n\nUn coup de poing enflammé vient frapper l’ennemi. Peut le brûler.\n\nPUIS\n\n75\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#008\n\nPOING GLACE\nGLACE\nPHYSIQUE\nGÉNÉRATION 1\n\nUn coup de poing glacé vient frapper l’ennemi. Peut le geler.\n\nPUIS\n\n75\n\nPRÉC\n\n100%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#002\n\nPOING KARATÉ\nCOMBAT\nPHYSIQUE\nGÉNÉRATION 1\n\nL’ennemi est tranché violemment. Taux de critiques élevé.\n\nPUIS\n\n50\n\nPRÉC\n\n100%\n\nPP\n\n25\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#045\n\nRUGISSEMENT\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nLe lanceur pousse un cri tout mimi pour tromper la vigilance de l’ennemi et baisser son Attaque.\n\nPUIS\n\n—\n\nPRÉC\n\n100%\n\nPP\n\n40\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#021\n\nSOUPLESSE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nFouette l’ennemi avec la queue, une liane, etc. pour infliger des dégâts.\n\nPUIS\n\n80\n\nPRÉC\n\n75%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#003\n\nTORGNOLES\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nGifle rapidement l’ennemi de 2 à 5 fois d’affilée.\n\nPUIS\n\n15\n\nPRÉC\n\n85%\n\nPP\n\n10\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#016\n\nTORNADE\nVOL\nSPÉCIAL\nGÉNÉRATION 1\n\nLe lanceur bat des ailes pour générer une bourrasque qui blesse l’ennemi.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#005\n\nULTIMAPOING\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nL’ennemi reçoit un coup de poing d’une puissance incroyable.\n\nPUIS\n\n80\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#025\n\nULTIMAWASHI\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUn coup de pied superpuissant et intense qui frappe l’ennemi.\n\nPUIS\n\n120\n\nPRÉC\n\n75%\n\nPP\n\n5\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#048\n\nULTRASON\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nLe lanceur produit d’étranges ondes sonores qui rendent confus.\n\nPUIS\n\n—\n\nPRÉC\n\n55%\n\nPP\n\n20\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ\n\n#019\n\nVOL\nVOL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur s’envole au 1er tour et frappe au 2è. Permet aussi de voler jusqu’à une ville déjà visitée.\n\nPUIS\n\n90\n\nPRÉC\n\n95%\n\nPP\n\n15\n\nPREVIEW\nDÉTAILS DE LA CAPACITÉ",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Réinitialiser filtre",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Rechercher une capacité par nom...",
+        "type": "text",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Nom",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "ID",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Puissance",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Normal",
+        "label": "Normal",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Feu",
+        "label": "Feu",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Eau",
+        "label": "Eau",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Électrik",
+        "label": "Électrik",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Plante",
+        "label": "Plante",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Glace",
+        "label": "Glace",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Combat",
+        "label": "Combat",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Poison",
+        "label": "Poison",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Sol",
+        "label": "Sol",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Vol",
+        "label": "Vol",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Psy",
+        "label": "Psy",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Insecte",
+        "label": "Insecte",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Roche",
+        "label": "Roche",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Spectre",
+        "label": "Spectre",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Dragon",
+        "label": "Dragon",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Ténèbres",
+        "label": "Ténèbres",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Acier",
+        "label": "Acier",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Fée",
+        "label": "Fée",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Physique",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Spécial",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Statut",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/take-down"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/sing"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/tackle"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/headbutt"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/cut"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/razor-wind"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/wing-attack"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/whirlwind"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/double-edge"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/swords-dance"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/pin-missile"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/poison-sting"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/twineedle"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/double-kick"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/pound"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/stomp"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/horn-drill"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/bind"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/vice-grip"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/vine-whip"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/fury-attack"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/scratch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/leer"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/guillotine"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/roar"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/pay-day"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/sand-attack"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/horn-attack"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/wrap"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/thrash"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/rolling-kick"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/tail-whip"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/bite"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/jump-kick"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/body-slam"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/comet-punch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/thunder-punch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/fire-punch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/ice-punch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/karate-chop"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/growl"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/slam"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/double-slap"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/gust"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/mega-punch"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/mega-kick"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/supersonic"
+      },
+      {
+        "text": "Détails de la capacité",
+        "href": "/fr/moves/fly"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/moves/thunderbolt",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/moves/thunderbolt",
+    "duration": 2070,
+    "title": "Tonnerre — Move | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Tonnerre"
+    ],
+    "main": "RETOUR AUX CAPACITÉS\n\n#0085\n\nTONNERRE\nÉLECTRIK\nSPÉCIAL\nINTRODUIT EN GEN I\nPUISSANCE\n90\nPRÉCISION\n100%\nPP\n15\nPRIORITÉ\n0\nCHANCE D'EFFET\n10%\nEFFET COMPLET\n\nInflige des dégats réguliers. A une chance de paralyser la cible.\n\nENTRÉE POKÉDEX\n\n“Une grosse décharge électrique tombe sur l’ennemi. Peut aussi le paralyser.”\n\nPOKÉMON APPRENANT TONNERRE\n356\nRattata\nRaticate\nPikachu\nRaichu\nNidoran F\nNidorina\nNidoqueen\nNidoran M\nNidorino\nNidoking\nClefairy\nClefable\nJigglypuff\nWigglytuff\nMeowth\nPersian\nMankey\nPrimeape\nMagnemite\nMagneton\nGrimer\nMuk\nGastly\nHaunter\nGengar\nVoltorb\nElectrode\nLickitung\nKoffing\nWeezing\nRhyhorn\nRhydon\nChansey\nKangaskhan\nStaryu\nStarmie\nMr Mime\nElectabuzz\nTauros\nGyarados\nLapras\nJolteon\nPorygon\nSnorlax\nZapdos\nDratini\nDragonair\nDragonite\nMewtwo\nMew\nVOIR LES 356 POKÉMON\nMEILLEURS UTILISATEURS\n\nTop Pokémon par Attaque Spé.\n\n1\nMagneton\n120\n2\nClefable\n95\n3\nMagnemite\n95\n4\nRaichu\n90\n5\nNidoking\n85\n6\nWigglytuff\n85\nDÉTAILS DE LA CAPACITÉ\nCATÉGORIE\nSpécial\nPUISSANCE\n90\nPRÉCISION\n100%\nPP\n15\nPRIORITÉ\n0\nCHANCE D'EFFET\n10%\nGÉNÉRATION\nGen I\nSÉLECTIONNER UN TYPE\nÉlectrik\nCT/CS\nRED-BLUE\nYELLOW\nRUBY-SAPPHIRE\nEMERALD\nFIRERED-LEAFGREEN\nDIAMOND-PEARL",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Voir les 356 Pokémon",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Retour aux capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Rattata",
+        "href": "/fr/pokemon/rattata"
+      },
+      {
+        "text": "Raticate",
+        "href": "/fr/pokemon/raticate"
+      },
+      {
+        "text": "Pikachu",
+        "href": "/fr/pokemon/pikachu"
+      },
+      {
+        "text": "Raichu",
+        "href": "/fr/pokemon/raichu"
+      },
+      {
+        "text": "Nidoran F",
+        "href": "/fr/pokemon/nidoran-f"
+      },
+      {
+        "text": "Nidorina",
+        "href": "/fr/pokemon/nidorina"
+      },
+      {
+        "text": "Nidoqueen",
+        "href": "/fr/pokemon/nidoqueen"
+      },
+      {
+        "text": "Nidoran M",
+        "href": "/fr/pokemon/nidoran-m"
+      },
+      {
+        "text": "Nidorino",
+        "href": "/fr/pokemon/nidorino"
+      },
+      {
+        "text": "Nidoking",
+        "href": "/fr/pokemon/nidoking"
+      },
+      {
+        "text": "Clefairy",
+        "href": "/fr/pokemon/clefairy"
+      },
+      {
+        "text": "Clefable",
+        "href": "/fr/pokemon/clefable"
+      },
+      {
+        "text": "Jigglypuff",
+        "href": "/fr/pokemon/jigglypuff"
+      },
+      {
+        "text": "Wigglytuff",
+        "href": "/fr/pokemon/wigglytuff"
+      },
+      {
+        "text": "Meowth",
+        "href": "/fr/pokemon/meowth"
+      },
+      {
+        "text": "Persian",
+        "href": "/fr/pokemon/persian"
+      },
+      {
+        "text": "Mankey",
+        "href": "/fr/pokemon/mankey"
+      },
+      {
+        "text": "Primeape",
+        "href": "/fr/pokemon/primeape"
+      },
+      {
+        "text": "Magnemite",
+        "href": "/fr/pokemon/magnemite"
+      },
+      {
+        "text": "Magneton",
+        "href": "/fr/pokemon/magneton"
+      },
+      {
+        "text": "Grimer",
+        "href": "/fr/pokemon/grimer"
+      },
+      {
+        "text": "Muk",
+        "href": "/fr/pokemon/muk"
+      },
+      {
+        "text": "Gastly",
+        "href": "/fr/pokemon/gastly"
+      },
+      {
+        "text": "Haunter",
+        "href": "/fr/pokemon/haunter"
+      },
+      {
+        "text": "Gengar",
+        "href": "/fr/pokemon/gengar"
+      },
+      {
+        "text": "Voltorb",
+        "href": "/fr/pokemon/voltorb"
+      },
+      {
+        "text": "Electrode",
+        "href": "/fr/pokemon/electrode"
+      },
+      {
+        "text": "Lickitung",
+        "href": "/fr/pokemon/lickitung"
+      },
+      {
+        "text": "Koffing",
+        "href": "/fr/pokemon/koffing"
+      },
+      {
+        "text": "Weezing",
+        "href": "/fr/pokemon/weezing"
+      },
+      {
+        "text": "Rhyhorn",
+        "href": "/fr/pokemon/rhyhorn"
+      },
+      {
+        "text": "Rhydon",
+        "href": "/fr/pokemon/rhydon"
+      },
+      {
+        "text": "Chansey",
+        "href": "/fr/pokemon/chansey"
+      },
+      {
+        "text": "Kangaskhan",
+        "href": "/fr/pokemon/kangaskhan"
+      },
+      {
+        "text": "Staryu",
+        "href": "/fr/pokemon/staryu"
+      },
+      {
+        "text": "Starmie",
+        "href": "/fr/pokemon/starmie"
+      },
+      {
+        "text": "Mr Mime",
+        "href": "/fr/pokemon/mr-mime"
+      },
+      {
+        "text": "Electabuzz",
+        "href": "/fr/pokemon/electabuzz"
+      },
+      {
+        "text": "Tauros",
+        "href": "/fr/pokemon/tauros"
+      },
+      {
+        "text": "Gyarados",
+        "href": "/fr/pokemon/gyarados"
+      },
+      {
+        "text": "Lapras",
+        "href": "/fr/pokemon/lapras"
+      },
+      {
+        "text": "Jolteon",
+        "href": "/fr/pokemon/jolteon"
+      },
+      {
+        "text": "Porygon",
+        "href": "/fr/pokemon/porygon"
+      },
+      {
+        "text": "Snorlax",
+        "href": "/fr/pokemon/snorlax"
+      },
+      {
+        "text": "Zapdos",
+        "href": "/fr/pokemon/zapdos"
+      },
+      {
+        "text": "Dratini",
+        "href": "/fr/pokemon/dratini"
+      },
+      {
+        "text": "Dragonair",
+        "href": "/fr/pokemon/dragonair"
+      },
+      {
+        "text": "Dragonite",
+        "href": "/fr/pokemon/dragonite"
+      },
+      {
+        "text": "Mewtwo",
+        "href": "/fr/pokemon/mewtwo"
+      },
+      {
+        "text": "Mew",
+        "href": "/fr/pokemon/mew"
+      },
+      {
+        "text": "1Magneton120",
+        "href": "/fr/pokemon/magneton"
+      },
+      {
+        "text": "2Clefable95",
+        "href": "/fr/pokemon/clefable"
+      },
+      {
+        "text": "3Magnemite95",
+        "href": "/fr/pokemon/magnemite"
+      },
+      {
+        "text": "4Raichu90",
+        "href": "/fr/pokemon/raichu"
+      },
+      {
+        "text": "5Nidoking85",
+        "href": "/fr/pokemon/nidoking"
+      },
+      {
+        "text": "6Wigglytuff85",
+        "href": "/fr/pokemon/wigglytuff"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/fr",
+        "status": 404
+      }
+    ]
+  }
+]

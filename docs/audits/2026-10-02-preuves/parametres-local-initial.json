@@ -1,0 +1,114 @@
+{
+  "text": "Paramètres\n\nParamètres\n\nEffets sonores\nSprites animés\nUtiliser des GIFs animés sur les cartes Pokémon\nThème\nClair\nSombre\nSystème\nDevise TCG\nAfficher les prix TCGdex dans cette devise lorsqu’ils sont disponibles.\nEuro (EUR)\nDollar américain (USD)\nLangue\n🌐\nAUTO\n🇺🇸\nEN\n🇫🇷\nFR\n🇩🇪\nDE\n🇪🇸\nES\n🇮🇹\nIT\n🇯🇵\nJA\n🇰🇷\nKO\n🇨🇳\nZH\nExport & Import de données\n\nSauvegardez vos données ou restaurez une sauvegarde précédente.\n\nExporter\nImporter\n\nV1.0.0\n\nFermer",
+  "controls": [
+    {
+      "text": "",
+      "label": "Désactiver le son",
+      "type": "button"
+    },
+    {
+      "text": "",
+      "label": "Activer les sprites animés",
+      "type": "button"
+    },
+    {
+      "text": "Clair",
+      "label": null,
+      "type": "button"
+    },
+    {
+      "text": "Sombre",
+      "label": null,
+      "type": "button"
+    },
+    {
+      "text": "Système",
+      "label": null,
+      "type": "button"
+    },
+    {
+      "text": "Euro (EUR)",
+      "label": null,
+      "type": "button"
+    },
+    {
+      "text": "Dollar américain (USD)",
+      "label": null,
+      "type": "button"
+    },
+    {
+      "text": "🌐Auto",
+      "label": "Langue : Auto",
+      "type": "button"
+    },
+    {
+      "text": "🇺🇸en",
+      "label": "Langue : English",
+      "type": "button"
+    },
+    {
+      "text": "🇫🇷fr",
+      "label": "Langue : Français",
+      "type": "button"
+    },
+    {
+      "text": "🇩🇪de",
+      "label": "Langue : Deutsch",
+      "type": "button"
+    },
+    {
+      "text": "🇪🇸es",
+      "label": "Langue : Español",
+      "type": "button"
+    },
+    {
+      "text": "🇮🇹it",
+      "label": "Langue : Italiano",
+      "type": "button"
+    },
+    {
+      "text": "🇯🇵ja",
+      "label": "Langue : 日本語",
+      "type": "button"
+    },
+    {
+      "text": "🇰🇷ko",
+      "label": "Langue : 한국어",
+      "type": "button"
+    },
+    {
+      "text": "🇨🇳zh",
+      "label": "Langue : 中文",
+      "type": "button"
+    },
+    {
+      "text": "Exporter",
+      "label": "Exporter",
+      "type": "submit"
+    },
+    {
+      "text": "Importer",
+      "label": "Importer",
+      "type": "submit"
+    },
+    {
+      "text": "",
+      "label": null,
+      "type": "file"
+    },
+    {
+      "text": "Fermer",
+      "label": null,
+      "type": "button"
+    }
+  ],
+  "sw": {
+    "registrations": [
+      {
+        "scope": "http://localhost:3101/",
+        "active": "activated"
+      }
+    ],
+    "controller": true
+  }
+}

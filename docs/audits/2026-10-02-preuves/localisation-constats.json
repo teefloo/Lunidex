@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-02",
+  "nature": "Index secondaire des observations de langue ; les preuves originales restent la référence",
+  "sources": [
+    "routes-fr-01.json",
+    "routes-fr-02.json",
+    "routes-fr-03.json",
+    "routes-fr-04.json",
+    "routes-fr-05.json",
+    "quiz-minuteur-fin.json",
+    "comparaison-liens-invalides-reproduits.json",
+    "tcg-date-reset-et-matrice-clavier.json",
+    "nuzlocke-showdown-observes.json",
+    "shiny-maze-preuve-stable.json"
+  ],
+  "constats": [
+    "Items, commandes de recherche et tri anglaises sur /fr/items",
+    "Weather/Terrain et commandes anglaises dans le simulateur",
+    "Phrase base stats loaded dans EV/IV",
+    "Hover/Tap/Swipe dans les types",
+    "Import Showdown et confirmation Added en anglais",
+    "404 et mini-jeu entièrement anglais",
+    "Tokens STATS.OFFENSIVE, STATS.DEFENSIVE et QUIZ.TIME-ATTACK visibles",
+    "Libellés Released after, Min price, Illustrator dans filtres TCG"
+  ],
+  "exclusions": [
+    "Noms et attaques des cartes volontairement en anglais quand tcgLang=en",
+    "Messages natifs du navigateur configuré en-US"
+  ]
+}

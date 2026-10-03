@@ -1,0 +1,153 @@
+{
+  "text": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nConfiguration\n\nDéfinir les CVs, objets tenus et le caractère cible\n\nOBJETS TENUS\n\nPikachu\n\nAUCUN\nNŒUD CÂLIN\nPIERRE IMMOBILE\nCEINTURE PUISSANCE\nBRASSARD PUISSANCE\nCEINTURON PUISSANCE\nLENTILLE PUISSANCE\nBANDANA PUISSANCE\nCHEVILLÈRE PUISSANCE\n\nDitto\n\nAUCUN\nNŒUD CÂLIN\nPIERRE IMMOBILE\nCEINTURE PUISSANCE\nBRASSARD PUISSANCE\nCEINTURON PUISSANCE\nLENTILLE PUISSANCE\nBANDANA PUISSANCE\nCHEVILLÈRE PUISSANCE\n\nPIKACHU IVS\n\nHP\n31\nATK\n31\nDEF\n31\nSPA\n0\nSPD\n31\nSPE\n31\n\nMÉTAMORPH IVS\n\nHP\n31\nATK\n31\nDEF\n31\nSPA\n0\nSPD\n31\nSPE\n31\n\nCVS CIBLES (31 SOUHAITÉS)\n\nHP\nATK\nDEF\nSPA\nSPD\nSPE\n\nCARACTÈRE CIBLE\n\nhardy (neutral)\nlonely (+Atk/-Def)\nbrave (+Atk/-Spe)\nadamant (+Atk/-SpA)\nnaughty (+Atk/-SpD)\nbold (+Def/-Atk)\ndocile (neutral)\nrelaxed (+Def/-Spe)\nimpish (+Def/-SpA)\nlax (+Def/-SpD)\ntimid (+Spe/-Atk)\nhasty (+Spe/-Def)\nserious (neutral)\njolly (+Spe/-SpA)\nnaive (+Spe/-SpD)\nmodest (+SpA/-Atk)\nmild (+SpA/-Def)\nquiet (+SpA/-Spe)\nbashful (neutral)\nrash (+SpA/-SpD)\ncalm (+SpD/-Atk)\ngentle (+SpD/-Def)\nsassy (+SpD/-Spe)\ncareful (+SpD/-SpA)\nquirky (neutral)\nRETOUR\nVOIR LES RÉSULTATS",
+  "inputs": [
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "0",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "0",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "min": "0",
+      "max": "31",
+      "value": "31",
+      "label": null,
+      "text": ""
+    },
+    {
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "jolly",
+      "label": null,
+      "text": "hardy (neutral)lonely (+Atk/-Def)brave (+Atk/-Spe)adamant (+Atk/-SpA)naughty (+Atk/-SpD)bold (+Def/-Atk)docile (neutral)relaxed (+Def/-Spe)impish (+Def/-SpA)lax (+Def/-SpD)timid (+Spe/-Atk)hasty (+Spe/-Def)serious (neutral)jolly (+Spe/-SpA)naive (+Spe/-SpD)modest (+SpA/-Atk)mild (+SpA/-Def)quiet (+SpA/-Spe)bashful (neutral)rash (+SpA/-SpD)calm (+SpD/-Atk)gentle (+SpD/-Def)sassy (+SpD/-Spe)careful (+SpD/-SpA)quirky (neutral)"
+    }
+  ],
+  "buttons": [
+    "Calculateur de CVs",
+    "Explorateur Capacités Œuf",
+    "1Parents",
+    "2Configuration",
+    "3Résultats",
+    "Aucun",
+    "Nœud Câlin",
+    "Pierre Immobile",
+    "Ceinture Puissance",
+    "Brassard Puissance",
+    "Ceinturon Puissance",
+    "Lentille Puissance",
+    "Bandana Puissance",
+    "Chevillère Puissance",
+    "Aucun",
+    "Nœud Câlin",
+    "Pierre Immobile",
+    "Ceinture Puissance",
+    "Brassard Puissance",
+    "Ceinturon Puissance",
+    "Lentille Puissance",
+    "Bandana Puissance",
+    "Chevillère Puissance",
+    "HP",
+    "Atk",
+    "Def",
+    "SpA",
+    "SpD",
+    "Spe",
+    " Retour",
+    "Voir les Résultats "
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "auditDate": "2026-10-02",
+  "timezone": "Europe/Paris",
+  "localCommit": "575af4390efbe9b658d1b3d9b47f2a9932b1fc03",
+  "node": "22.22.3",
+  "next": "16.3.3",
+  "react": "19.2.3",
+  "browser": "Chromium 149.0.7827.3",
+  "isolation": "git archive HEAD, aucun .env copié, variables Neon/base/télémétrie retirées du processus",
+  "production": [
+    {
+      "id": "dpl_55uPXcXdnhC3DbPYG36ocpV6tzon",
+      "url": "lunidex-gnzr5paqk-teeflo.vercel.app",
+      "commit": "575af4390efbe9b658d1b3d9b47f2a9932b1fc03",
+      "branch": "master",
+      "created": 1790890970958
+    }
+  ],
+  "previews": [
+    {
+      "url": "lunidex-14vz9bgha-teeflo.vercel.app",
+      "commit": "3b84f1e32f5e21a9b530f9d44ec4314da0641f58",
+      "branch": "codex/docs-site-documentation",
+      "state": "READY"
+    },
+    {
+      "url": "lunidex-mjfgeu7s8-teeflo.vercel.app",
+      "commit": "4d9bcf10f0a80dd2b9121d0aee803d910c4b743c",
+      "branch": "codex/api-openapi-contract",
+      "state": "READY"
+    },
+    {
+      "url": "lunidex-c43j3vy62-teeflo.vercel.app",
+      "commit": "b7c45143f33ec2864a6cf2122c0e949ab5141237",
+      "branch": "codex/api-v1-review",
+      "state": "READY"
+    },
+    {
+      "url": "lunidex-rgrqysk0l-teeflo.vercel.app",
+      "commit": "db2d6cebcfd186a4efe7f0ba16a926fe7a4b45b9",
+      "branch": "codex/vercel-cost-reduction",
+      "state": "READY"
+    }
+  ]
+}

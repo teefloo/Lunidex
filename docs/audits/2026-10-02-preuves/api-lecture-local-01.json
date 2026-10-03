@@ -1,0 +1,154 @@
+[
+  {
+    "source": "src/app/api/account/api-keys/route.ts",
+    "path": "/api/account/api-keys",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":{\"code\":\"API_UNAVAILABLE\",\"message\":\"The account service is temporarily unavailable.\"}}"
+  },
+  {
+    "source": "src/app/api/account/export/route.ts",
+    "path": "/api/account/export",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Application database unavailable\"}"
+  },
+  {
+    "source": "src/app/api/agentation/health/route.ts",
+    "path": "/api/agentation/health",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "cache": "no-store",
+    "body": "{\"available\":false}"
+  },
+  {
+    "source": "src/app/api/auth/[[...path]]/route.ts",
+    "path": "/api/auth/get-session",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "no-store, no-cache, max-age=0, must-revalidate",
+    "body": "{\"error\":\"Neon Auth is not configured\"}"
+  },
+  {
+    "source": "src/app/api/battle/room/route.ts",
+    "path": "/api/battle/room",
+    "method": "GET",
+    "status": 400,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Missing room id\"}"
+  },
+  {
+    "source": "src/app/api/friends/route.ts",
+    "path": "/api/friends",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Application database unavailable\"}"
+  },
+  {
+    "source": "src/app/api/profile/route.ts",
+    "path": "/api/profile",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Application database unavailable\"}"
+  },
+  {
+    "source": "src/app/api/quiz/leaderboard/route.ts",
+    "path": "/api/quiz/leaderboard",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Leaderboard unavailable\"}"
+  },
+  {
+    "source": "src/app/api/smogon/[name]/route.ts",
+    "path": "/api/smogon/pikachu",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "cache": "public, max-age=60, s-maxage=300, stale-while-revalidate=86400",
+    "body": "null"
+  },
+  {
+    "source": "src/app/api/tcg/cards/[id]/route.ts",
+    "path": "/api/tcg/cards/1",
+    "method": "GET",
+    "status": 400,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Missing id\"}"
+  },
+  {
+    "source": "src/app/api/tcg/collection/set-cards/route.ts",
+    "path": "/api/tcg/collection/set-cards",
+    "method": "GET",
+    "status": 400,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Invalid setId\"}"
+  },
+  {
+    "source": "src/app/api/tcg/compare/route.ts",
+    "path": "/api/tcg/compare",
+    "method": "GET",
+    "status": 400,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Missing ids\"}"
+  },
+  {
+    "source": "src/app/api/tcg/price-alerts/route.ts",
+    "path": "/api/tcg/price-alerts",
+    "method": "GET",
+    "status": 410,
+    "contentType": "application/json",
+    "body": "{\"error\":\"Price alerts are temporarily unavailable\"}"
+  },
+  {
+    "source": "src/app/api/tcg/price-history/[cardId]/route.ts",
+    "path": "/api/tcg/price-history/sv03.5-199",
+    "method": "GET",
+    "status": 200,
+    "contentType": "application/json",
+    "body": "{\"history\":[]}"
+  },
+  {
+    "source": "src/app/api/tcg/saved-searches/route.ts",
+    "path": "/api/tcg/saved-searches",
+    "method": "GET",
+    "status": 410,
+    "contentType": "application/json",
+    "body": "{\"error\":\"This legacy endpoint is disabled. Sign in to use account-backed TCG state.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/aliases/[id]/route.ts",
+    "path": "/api/tcg/sealed/aliases/1",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/catalogue/route.ts",
+    "path": "/api/tcg/sealed/catalogue",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  },
+  {
+    "source": "src/app/api/tcg/sealed/export/route.ts",
+    "path": "/api/tcg/sealed/export",
+    "method": "GET",
+    "status": 503,
+    "contentType": "application/json",
+    "cache": "private, no-store",
+    "body": "{\"error\":\"Sealed portfolio is temporarily unavailable.\"}"
+  }
+]

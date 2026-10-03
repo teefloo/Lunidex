@@ -1,0 +1,194 @@
+[
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 359,
+    "metrics": {
+      "ttfb": 92.70000000298023,
+      "domContentLoaded": 344.09999999403954,
+      "load": 623,
+      "fcp": 428,
+      "lcp": 428,
+      "resources": 69
+    }
+  },
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 190,
+    "metrics": {
+      "ttfb": 28.5,
+      "domContentLoaded": 176.5,
+      "load": 245.20000000298023,
+      "fcp": 204,
+      "lcp": 204,
+      "resources": 66
+    }
+  },
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 331,
+    "metrics": {
+      "ttfb": 85.20000000298023,
+      "domContentLoaded": 328,
+      "load": 462.20000000298023,
+      "fcp": 376,
+      "lcp": 376,
+      "resources": 122
+    }
+  },
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 241,
+    "metrics": {
+      "ttfb": 27.099999994039536,
+      "domContentLoaded": 236.5,
+      "load": 287.90000000596046,
+      "fcp": 268,
+      "lcp": 268,
+      "resources": 102
+    }
+  },
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 335,
+    "metrics": {
+      "ttfb": 84.09999999403954,
+      "domContentLoaded": 330.19999998807907,
+      "load": 419.3999999910593,
+      "fcp": 324,
+      "lcp": 904,
+      "resources": 250
+    }
+  },
+  {
+    "run": 1,
+    "base": "https://lunidex.app",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 200,
+    "metrics": {
+      "ttfb": 29.599999994039536,
+      "domContentLoaded": 195.3999999910593,
+      "load": 282.70000000298023,
+      "fcp": 228,
+      "lcp": 692,
+      "resources": 90
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 186,
+    "metrics": {
+      "ttfb": 113.1000000089407,
+      "domContentLoaded": 183.5,
+      "load": 335.5,
+      "fcp": 300,
+      "lcp": 300,
+      "resources": 65
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 122,
+    "metrics": {
+      "ttfb": 34.5,
+      "domContentLoaded": 112,
+      "load": 147.09999999403954,
+      "fcp": 152,
+      "lcp": 152,
+      "resources": 62
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 717,
+    "metrics": {
+      "ttfb": 624.7999999970198,
+      "domContentLoaded": 714.7999999970198,
+      "load": 849.9000000059605,
+      "fcp": 836,
+      "lcp": 836,
+      "resources": 121
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr/pokedex",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 327,
+    "metrics": {
+      "ttfb": 178.3999999910593,
+      "domContentLoaded": 321.29999999701977,
+      "load": 350.8999999910593,
+      "fcp": 344,
+      "lcp": 344,
+      "resources": 121
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "cold",
+    "status": 200,
+    "domMs": 1140,
+    "metrics": {
+      "ttfb": 1092.6000000089407,
+      "domContentLoaded": 1137.1000000089407,
+      "load": 1280.7999999970198,
+      "fcp": 1208,
+      "lcp": 1540,
+      "resources": 250
+    }
+  },
+  {
+    "run": 1,
+    "base": "http://localhost:3101",
+    "path": "/fr/tcg",
+    "mode": "warm",
+    "status": 200,
+    "domMs": 156,
+    "metrics": {
+      "ttfb": 36.79999999701977,
+      "domContentLoaded": 149.3999999910593,
+      "load": 205.09999999403954,
+      "fcp": 204,
+      "lcp": 440,
+      "resources": 112
+    }
+  }
+]

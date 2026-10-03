@@ -1,0 +1,47 @@
+[
+  {
+    "path": "/fr/compare?ids=9999999",
+    "status": 200,
+    "url": "https://lunidex.app/fr/compare?ids=9999999",
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\n\nCHARGEMENT DU LUNIDEX...",
+    "errors": [
+      ""
+    ]
+  },
+  {
+    "path": "/fr/compare?ids=25,25,6,133",
+    "status": 200,
+    "url": "https://lunidex.app/fr/compare?ids=25,25,6,133",
+    "text": "LUNIDEX\n\nComparer les Pokémon\n\nComparaison en cours\n\nTOUT EFFACER\nCOPIER LE LIEN\nTOUT EFFACER\nPV\nATK\nDEF\nASp\nDSp\nVIT\nDracaufeuPikachuPikachu\nGagnants par stat\n\nMEILLEURES PERFORMANCES\n\nPV\nDracaufeu\n78\nATK\nDracaufeu\n84\nDEF\nDracaufeu\n78\nASP\nDracaufeu\n109\nDSP\nDracaufeu\n85\nVIT\nDracaufeu\n100\n\nCHAMPION GLOBAL\n\nDracaufeu\n\nSTATS TOTALES\n\n534\n\nRecommandations\n\nANALYSE DE TYPES & SUGGESTIONS DE PARTENAIRES\n\nMENACES\n\nTypes qui menacent votre sélection\n\nROCHE\nSévérité 2\nEAU\nPLANTE\nCOMBAT\nSOL\nACIER\nEAU\nSévérité 1\nPLANTE\nNORMAL\nSévérité 1\nCOMBAT\nPLANTE\nSévérité 1\nGLACE\nPOISON\nINSECTE\nGLACE\nSévérité 1\nCOMBAT\nROCHE\nACIER\nPARTENAIRES RECOMMANDÉS\n\nTypes qui couvrent les faiblesses ou comblent les lacunes\n\nPLANTE\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nCOMBAT\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nSOL\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nINSECTE\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nACIER\nCouvre la faiblesse + comble la lacune\nAJOUTER À LA COMPARAISON\nNORMAL\nComplète la couverture de types\nAJOUTER À LA COMPARAISON\nFAIBLESSES PARTAGÉES\n\nPlusieurs membres sont faibles face à ces types\n\nSOL\nROCHE\nDÉFICIENCES DE STATS\n\nVotre équipe pourrait bénéficier de Pokémon avec des stats plus élevées :\n\nSTATS.OFFENSIVE\nSTATS.DEFENSIVE\n#025\nPikachu\nÉLECTRIK\nTAILLE\n0.4 m\nPOIDS\n6 kg\nSTATS DE BASE\nTOTAL: 320\nPV\n35\nATK\n55\nDEF\n40\nASP\n50\nDSP\n50\nVIT\n90\nTALENTS\nStatic\nLightning RodCaché\n#025\nPikachu\nÉLECTRIK\nTAILLE\n0.4 m\nPOIDS\n6 kg\nSTATS DE BASE\nTOTAL: 320\nPV\n35\nATK\n55\nDEF\n40\nASP\n50\nDSP\n50\nVIT\n90\nTALENTS\nStatic\nLightning RodCaché\n#006\nDracaufeu\nFEU\nVOL\nTAILLE\n1.7 m\nPOIDS\n90.5 kg\nSTATS DE BASE\nTOTAL: 534 (MEILLEUR)\nPV\n78 (MEILLEUR)\nATK\n84 (MEILLEUR)\nDEF\n78 (MEILLEUR)\nASP\n109 (MEILLEUR)\nDSP\n85 (MEILLEUR)\nVIT\n100 (MEILLEUR)\nTALENTS\nBlaze\nSolar PowerCaché",
+    "errors": [
+      ""
+    ]
+  },
+  {
+    "path": "/fr/team/share?code=abc",
+    "status": 200,
+    "url": "https://lunidex.app/fr/team?code=&lang=en",
+    "text": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe",
+    "errors": [
+      ""
+    ]
+  },
+  {
+    "path": "/fr/pokedex?types=unknown&gen=999&sort=bogus",
+    "status": 200,
+    "url": "https://lunidex.app/fr/pokedex?types=unknown&gen=999&sort=bogus",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "errors": [
+      ""
+    ]
+  },
+  {
+    "path": "/fr/tcg?tcgLang=invalid&q=pikachu",
+    "status": 200,
+    "url": "https://lunidex.app/fr/tcg?tcgLang=invalid&q=pikachu",
+    "text": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nToutes les collections\n30th Classic Collection\n30th Celebration\nPitch Black\nChaos Rising\nPerfect Order\nPaldean Wonders\nAscended Heroes\nFantastical Parade\nCrimson Blaze\nPhantasmal Flames\nMega Rising\nMEP Black Star Promos\nMega Evolution\nMega Evolution Energy\nSecluded Springs\nWisdom of Sea and Sky\nWhite Flare\nBlack Bolt\nEevee Grove\nDestined Rivals\nExtradimensional Crisis\nCelestial Guardians\nJourney Together\nShining Revelry\nTriumphant Light\nSpace-Time Smackdown\nPrismatic Evolutions\nMythical Island\nMcDonald's Collection 2024\nSurging Sparks\nGenetic Apex\nPromos-A\nStellar Crown\nShrouded Fable\nTwilight Masquerade\nTemporal Forces\nPaldean Fates\nParadox Rift\nMy First Battle\n151\nObsidian Flames\nMcDonald's Collection 2023\nPaldea Evolved\nScarlet & Violet\nScarlet & Violet Energy\nSVP Black Star Promos\nCrown Zenith Galarian Gallery\nCrown Zenith\nSilver Tempest Trainer Gallery\nSilver Tempest\nLost Origin\nLost Origin Trainer Gallery\nMcDonald's Collection 2022\nPokémon GO\nAstral Radiance Trainer Gallery\nAstral Radiance\nBrilliant Stars Trainer Gallery\nBrilliant Stars\nFusion Strike\nCelebrations\nCelebrations Classic Collection\nEvolving Skies\nChilling Reign\nBattle Styles\nShining Fates Shiny Vault\nShining Fates\nMcDonald's Collection 2021\nVivid Voltage\nChampion's Path\nPokémon Futsal 2020\nDarkness Ablaze\nRebel Clash\nSword & Shield\nSWSH Black Star Promos\nCosmic Eclipse\nMcDonald's Collection 2019\nHidden Fates\nHidden Fates Shiny Vault\nUnified Minds\nUnbroken Bonds\nDetective Pikachu\nTeam Up\nLost Thunder\nMcDonald's Collection 2018\nDragon Majesty\nCelestial Storm\nForbidden Light\nUltra Prism\nCrimson Invasion\nShining Legends\nBurning Shadows\nMcDonald's Collection 2017\nGuardians Rising\nSM trainer Kit (Lycanroc)\nSM trainer Kit (Alolan Raichu)\nSM Black Star Promos\nSun & Moon\nEvolutions\nMcDonald's Collection 2016\nSteam Siege\nFates Collide\nXY trainer Kit (",
+    "errors": [
+      ""
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "name": "online",
+    "controller": true,
+    "cards": 22
+  },
+  {
+    "name": "offline-reload",
+    "status": 200,
+    "url": "http://localhost:3101/fr/pokedex",
+    "text": "Aller au contenu principal\n\nSIGNAL PERDU\n\nLNX / 00\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPe"
+  },
+  {
+    "name": "offline-uncached",
+    "status": 200,
+    "url": "http://localhost:3101/fr/guides/audit-never-cached",
+    "text": "Aller au contenu principal\n\nSIGNAL PERDU\n\nLNX / 00\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème"
+  }
+]

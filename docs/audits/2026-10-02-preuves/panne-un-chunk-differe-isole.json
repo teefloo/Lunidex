@@ -1,0 +1,14 @@
+{
+  "condition": "Un seul chunk facultatif renvoie404 dans le navigateur local isolé",
+  "blocked": [
+    "http://localhost:3101/_next/static/chunks/7255.5aa71a6dc072fda2.js"
+  ],
+  "errors": [],
+  "after9sec": [
+    "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+  ],
+  "after18sec": [
+    "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils."
+  ],
+  "dialogs": 0
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "step": "fire-hp-300",
+    "url": "https://lunidex.app/fr/tcg?q=charizard&set=sv03.5&types=Fire&minHp=300&sortBy=id&sortOrder=asc&tcgLang=en",
+    "text": "Black Star Promos\nHeartGold SoulSilver\nPokémon Rumble\nArceus\nSupreme Victors\nRising Rivals\nPOP Series 9\nPlatinum\nStormfront\nPOP Series 8\nLegends Awakened\nMajestic Dawn\nPOP Series 7\nGreat Encounters\nSecret Wonders\nDP trainer Kit (Lucario)\nDP trainer Kit (Manaphy)\nPOP Series 6\nMysterious Treasures\nDP Black Star Promos\nDiamond & Pearl\nPOP Series 5\nPower Keepers\nDragon Frontiers\nCrystal Guardians\nPOP Series 4\nHolon Phantoms\nPOP Series 3\nEX trainer Kit 2 (Plusle)\nEX trainer Kit 2 (Minun)\nLegend Maker\nDelta Species\nUnseen Forces Unown Collection\nUnseen Forces\nPOP Series 2\nEmerald\nDeoxys\nTeam Rocket Returns\nFireRed & LeafGreen\nPOP Series 1\nPoké Card Creator Pack\nEX trainer Kit (Latias)\nEX trainer Kit (Latios)\nHidden Legends\nTeam Magma vs Team Aqua\nDragon\nNintendo Black Star Promos\nSandstorm\nRuby & Sapphire\nSkyridge\nAquapolis\nBest of game\nExpedition Base Set\nSample\nLegendary Collection\nNeo Destiny\nNeo Revelation\nSouthern Islands\nNeo Discovery\nNeo Genesis\nGym Challenge\nGym Heroes\nTeam Rocket\nBase Set 2\nJumbo cards\nFossil\nW Promotional\nWizards Black Star Promos\nJungle\nBase Set\nMiscellaneous Promos\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nEFFACER\nFILTRES\nExtension: 151\nFire\nMin HP: 300\nEffacer\nRésultats du catalogue\nCARTES TROUVÉES\n3 cartes dans 151\nCHARIZARD EX\n\n151\n\nDOUBLE RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n8,54 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER\nCHARIZARD EX\n\n151\n\nULTRA RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n38,63 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER\nCHARIZARD EX\n\n151\n\nSPECIAL ILLUSTRATION RARE\nPOKÉMON\nHP 330\n\nPRIX MARCHÉ\n\n488,30 €\nCardmarket\n\nHorodatage source : 1 oct. 2026, 11:52\n\nAJOUTER",
+    "ids": [
+      "/fr/tcg/cards/sv03.5-006?tcgLang=en",
+      "/fr/tcg/cards/sv03.5-183?tcgLang=en",
+      "/fr/tcg/cards/sv03.5-199?tcgLang=en"
+    ]
+  },
+  {
+    "step": "rarity-options",
+    "text": "FILTRES\nDERNIÈRES CARTES\nAFFICHAGE\nVUE LISTE\nGRILLE · 2 CARTES\nGRILLE · 4 CARTES\nFILTRES AVANCÉS\nFILTRES ACTIFS\nRÉINITIALISER FILTRE\nEXTENSION\nSV03.5\nNIVEAU DE RARETÉ\nPOKÉMON\n1\nDRESSEUR\nÉNERGIE\nMARCHÉ & MÉTADONNÉES\nFILTREZ ET TROUVEZ DES CARTES RAPIDEMENT\nFermer",
+    "buttons": [
+      {
+        "text": "Dernières cartes",
+        "aria": null
+      },
+      {
+        "text": "Vue liste",
+        "aria": null
+      },
+      {
+        "text": "Grille · 2 cartes",
+        "aria": null
+      },
+      {
+        "text": "Grille · 4 cartes",
+        "aria": null
+      },
+      {
+        "text": "",
+        "aria": "Effacer la recherche"
+      },
+      {
+        "text": "Réinitialiser filtre",
+        "aria": null
+      },
+      {
+        "text": "ExtensionSV03.5",
+        "aria": null
+      },
+      {
+        "text": "Niveau de rareté",
+        "aria": null
+      },
+      {
+        "text": "Pokémon1",
+        "aria": null
+      },
+      {
+        "text": "Dresseur",
+        "aria": null
+      },
+      {
+        "text": "Énergie",
+        "aria": null
+      },
+      {
+        "text": "Marché & métadonnées",
+        "aria": null
+      },
+      {
+        "text": "Fermer",
+        "aria": "Fermer"
+      }
+    ]
+  }
+]

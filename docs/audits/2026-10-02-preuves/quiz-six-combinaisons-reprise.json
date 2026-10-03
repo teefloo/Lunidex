@@ -1,0 +1,38 @@
+[
+  {
+    "challenge": "Silhouette",
+    "mode": "Marathon",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nZARUDE\nCRESSELIA\nAMA-AMA\nLATIOS MÉGA",
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nERREURS\n0/5\nCORRECT\nZARUDE\nCRESSELIA\nAMA-AMA\nLATIOS MÉGA"
+  },
+  {
+    "challenge": "Silhouette",
+    "mode": "Survie",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nTRITOSOR\nAMPHINOBI\nROZBOUTON\nPOSIPI",
+    "feedback": "SCORE ACTUEL\n1\nRECORD\n0\nCORRECT\nTRITOSOR\nAMPHINOBI\nROZBOUTON\nPOSIPI"
+  },
+  {
+    "challenge": "Silhouette",
+    "mode": "Contre la montre",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n30s\nLATIAS\nSOVKIPOU\nPAPINOX\nPASSEROUGE",
+    "feedback": "SCORE ACTUEL\n10\nRECORD\n0\nMINUTEUR\n29s\nCORRECT\nLATIAS\nSOVKIPOU\nPAPINOX\nPASSEROUGE"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Marathon",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\n\nQUI A CES STATISTIQUES ?\n\nPV\n???\nATK\n???\nDEF\n???\nASP\n???\nDSP\n???\nVIT\n???\nTAG-TAG\nXATU\nDARUMACHO\nDARUMACHO ZEN",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n1/5\n\nQUI A CES STATISTIQUES ?\n\nPV\n105\nATK\n30\nDEF\n105\nASP\n140\nDSP\n105\nVIT\n55\nFAUX\nTAG-TAG\nXATU\nDARUMACHO\nDARUMACHO ZEN"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Survie",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\n\nQUI A CES STATISTIQUES ?\n\nPV\n???\nATK\n???\nDEF\n???\nASP\n???\nDSP\n???\nVIT\n???\nARKÉAPTI\nZAPÉTREL\nSHARPEDO MÉGA\nLANSSORIEN",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\n\nQUI A CES STATISTIQUES ?\n\nPV\n70\nATK\n140\nDEF\n70\nASP\n110\nDSP\n65\nVIT\n105\nFAUX\nARKÉAPTI\nZAPÉTREL\nSHARPEDO MÉGA\nLANSSORIEN"
+  },
+  {
+    "challenge": "Stats",
+    "mode": "Contre la montre",
+    "before": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n30s\n\nQUI A CES STATISTIQUES ?\n\nPV\n???\nATK\n???\nDEF\n???\nASP\n???\nDSP\n???\nVIT\n???\nVISKUSE\nBALBUTO\nTOUDOUDOU\nFRISSONILLE",
+    "feedback": "SCORE ACTUEL\n0\nRECORD\n0\nMINUTEUR\n30s\n\nQUI A CES STATISTIQUES ?\n\nPV\n30\nATK\n25\nDEF\n35\nASP\n45\nDSP\n30\nVIT\n20\nFAUX\nVISKUSE\nBALBUTO\nTOUDOUDOU\nFRISSONILLE"
+  }
+]

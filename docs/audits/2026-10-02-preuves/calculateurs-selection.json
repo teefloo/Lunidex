@@ -1,0 +1,104 @@
+[
+  {
+    "route": "battle",
+    "text": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nDAMAGE CALCULATOR\n\nATTACKER\n\nPikachu\n#025\nPikachu-Rock-Star\n#10080\nPikachu-Belle\n#10081\nPikachu-Pop-Star\n#10082\nPikachu-Phd\n#10083\nPikachu-Libre\n#10084\nPikachu-Cosplay\n#10085\nPikachu-Original-Cap\n#10094\n\nDEFENDER\n\nMOVE (FROM ATTACKER'S MOVESET)\n\nSelect an attacker first\n\nBATTLE CONDITIONS\n\nWEATHER\n\nNone\nSun\nRain\nSandstorm\nSnow\n\nTERRAIN\n\nNone\nElectric\nGrassy\nPsychic\nMisty\n\nMODIFIERS\n\nCritical\nAdaptability\nBurned\n\nAI DUEL MODE\n\nBoth Pokémon use their best moves each turn\n\nSIMULATE BATTLE",
+    "buttons": [
+      "Rechercher dans Lunidex⌘K",
+      "pikachu#025",
+      "pikachu-rock-star#10080",
+      "pikachu-belle#10081",
+      "pikachu-pop-star#10082",
+      "pikachu-phd#10083",
+      "pikachu-libre#10084",
+      "pikachu-cosplay#10085",
+      "pikachu-original-cap#10094",
+      "none",
+      "sun",
+      "rain",
+      "sandstorm",
+      "snow",
+      "none",
+      "electric",
+      "grassy",
+      "psychic",
+      "misty",
+      "Critical",
+      "Adaptability",
+      "Burned",
+      "Simulate Battle",
+      "Gérer mes préférences",
+      "Signaler un problème"
+    ]
+  },
+  {
+    "route": "breeding",
+    "text": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPikachu\n#025\nPikachu\n#10080\nPikachu\n#10081\nPikachu\n#10082\nPikachu\n#10083\nPikachu\n#10084\nPikachu\n#10085\nPikachu\n#10094\n\nPARENT 2 (PENSION)\n\nCONFIGURER",
+    "buttons": [
+      "Rechercher dans Lunidex⌘K",
+      "Calculateur de CVs",
+      "Explorateur Capacités Œuf",
+      "1Parents",
+      "2Configuration",
+      "3Résultats",
+      "Pikachu#025",
+      "Pikachu#10080",
+      "Pikachu#10081",
+      "Pikachu#10082",
+      "Pikachu#10083",
+      "Pikachu#10084",
+      "Pikachu#10085",
+      "Pikachu#10094",
+      "Configurer ",
+      "Gérer mes préférences",
+      "Signaler un problème"
+    ]
+  },
+  {
+    "route": "ev-iv",
+    "text": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\n\nBase stats loaded for Pikachu\n\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nEnter an in-game value for each stat before calculating IVs.\n\nCALCULER LES IV\nRÉINITIALISER",
+    "inputs": [
+      {
+        "value": "50",
+        "min": "1",
+        "max": "100",
+        "label": null
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "PV"
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "Attaque"
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "Défense"
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "Atq. Spé."
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "Déf. Spé."
+      },
+      {
+        "value": "0",
+        "min": "1",
+        "max": "999",
+        "label": "Vitesse"
+      }
+    ]
+  }
+]

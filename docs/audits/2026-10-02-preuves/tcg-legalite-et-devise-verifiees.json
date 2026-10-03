@@ -1,0 +1,27 @@
+[
+  {
+    "step": "stage2",
+    "url": "https://lunidex.app/fr/tcg?q=charizard&set=sv03.5&stage=Stage2&sortBy=id&sortOrder=asc&tcgLang=en",
+    "cards": 3
+  },
+  {
+    "step": "legality",
+    "url": "https://lunidex.app/fr/tcg?q=charizard&set=sv03.5&stage=Stage2&legal=standard&sortBy=id&sortOrder=asc&tcgLang=en",
+    "text": "sis\nGym Challenge\nGym Heroes\nTeam Rocket\nBase Set 2\nJumbo cards\nFossil\nW Promotional\nWizards Black Star Promos\nJungle\nBase Set\nMiscellaneous Promos\nNom A-Z\nNom Z-A\nNuméro croissant\nNuméro décroissant\nID croissant\nID décroissant\nPV décroissant\nPV croissant\nRareté croissante\nRareté décroissante\nPrix croissant\nPrix décroissant\nFILTRES\nEFFACER\nFILTRES\nExtension: 151\nPhase d'évolution: Stage2\nLegality: standard\nEffacer\nRésultats du catalogue\nCARTES TROUVÉES\n0 cartes dans 151\nAUCUNE CARTE TROUVÉE\n\nEssaie sans filtre, ou pars d'une carte connue pour retrouver rapidement ce que tu cherches.\n\nRÉINITIALISER LES FILTRES\nDERNIÈRES CARTES\nCHERCHER PIKACHU"
+  },
+  {
+    "step": "source-legality",
+    "legal": {
+      "standard": false,
+      "expanded": true
+    }
+  },
+  {
+    "step": "usd-price",
+    "text": "RETOUR\n\n151\n\nCharizard ex\n\nAucune description complémentaire disponible.\n\nPV\n330\nRareté\nSpecial illustration rare\nN° collector\n#199\nCatégorie\nPokémon\nIllustrateur\nmiki kudo\nTypes de Pokémon\nFire\n\nPRIX MARCHÉ\n\n351,69 $US\nTCGplayer\n\nHorodatage source : 1 oct. 2026, 00:55\n\nMéthode et limites du prix\nVOIR LES DÉTAILS DE CHARIZARD EX\nCAPACITÉS\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon."
+  },
+  {
+    "step": "usd-reload",
+    "text": "RETOUR\n\n151\n\nCharizard ex\n\nAucune description complémentaire disponible.\n\nPV\n330\nRareté\nSpecial illustration rare\nN° collector\n#199\nCatégorie\nPokémon\nIllustrateur\nmiki kudo\nTypes de Pokémon\nFire\n\nPRIX MARCHÉ\n\n351,69 $US\nTCGplayer\n\nHorodatage source : 1 oct. 2026, 00:55\n\nMéthode et limites du prix\nVOIR LES DÉTAILS DE CHARIZARD EX\nCAPACITÉS\nBrave Wing\n60+\n\nFIRE\n\nIf this Pokémon has any damage counters on it, this attack does 100 more damage.\n\nExplosive Vortex\n330\n\nFIRE · FIRE · FIRE · FIRE\n\nDiscard 3 Energy from this Pokémon."
+  }
+]

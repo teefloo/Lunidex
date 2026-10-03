@@ -1,0 +1,56 @@
+[
+  {
+    "filter": "Pokémon Légendaires",
+    "url": "https://lunidex.app/fr/pokedex?legendary=1",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 0
+  },
+  {
+    "filter": "Pokémon Fabuleux",
+    "url": "https://lunidex.app/fr/pokedex?mythical=1",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n034\nAffichage de 20 Pokémon sur 34.\nTOUT EFFACER\nFILTRES\nPokémon Fabuleux\nTout effacer\nCAT. NO.\n#151\nMew\nPSY\nCAT. NO.\n#251\nCelebi\nPSY\nPLANTE\nCAT. NO.\n#385\nJirachi\nACIER\nPSY\nCAT. NO.\n#386\nDeoxys Forme Normale\nPSY\nCAT. NO.\n#489\nPhione\nEAU\nCAT. NO.\n#490\nManaphy\nEAU\nCAT. NO.\n#491\nDarkrai\nTÉNÈBRES\nCAT. NO.\n#492\nShaymin Forme Terrestre\nPLANTE\nCAT. NO.\n#493\nArceus\nNORMAL\nCAT. NO.\n#494\nVictini\nPSY\nFEU\nCAT. NO.\n#647\nKeldeo\nEAU\nCOMBAT\nCAT. NO.\n#648\nMeloetta\nNORMAL\nPSY\nCAT. NO.\n#649\nGenesect\nINSECTE\nACIER\nCAT. NO.\n#719\nDiancie\nROCHE\nFÉE\nCAT. NO.\n#720\nHoopa\nPSY\nSPECTRE\nCAT. NO.\n#721\nVolcanion\nFEU\nEAU\nCAT. NO.\n#801\nMagearna\nACIER\nFÉE\nCAT. NO.\n#802\nMarshadow\nCOMBAT\nSPECTRE\nCAT. NO.\n#807\nZeraora\nÉLECTRIK\nCAT. NO.\n#808\nMeltan\nACIER\nVOIR PLUS\n(20 / 34)\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 20
+  },
+  {
+    "filter": "Monstre",
+    "url": "https://lunidex.app/fr/pokedex?eggs=monster",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n107\nAffichage de 20 Pokémon sur 107.\nTOUT EFFACER\nFILTRES\nGroupes d'œufs: Monster\nTout effacer\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#029\nNidoran♀\nPOISON\nCAT. NO.\n#032\nNidoran♂\nPOISON\nCAT. NO.\n#033\nNidorino\nPOISON\nCAT. NO.\n#034\nNidoking\nPOISON\nSOL\nCAT. NO.\n#079\nRamoloss\nEAU\nPSY\nCAT. NO.\n#080\nFlagadoss\nEAU\nPSY\nCAT. NO.\n#104\nOsselait\nSOL\nCAT. NO.\n#105\nOssatueur\nSOL\nCAT. NO.\n#108\nExcelangue\nNORMAL\nCAT. NO.\n#111\nRhinocorne\nSOL\nROCHE\nCAT. NO.\n#112\nRhinoféros\nSOL\nROCHE\nVOIR PLUS\n(20 / 107)\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 20
+  },
+  {
+    "filter": "Bleu",
+    "url": "https://lunidex.app/fr/pokedex?colors=blue",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n206\nAffichage de 20 Pokémon sur 206.\nTOUT EFFACER\nFILTRES\nColor: Blue\nTout effacer\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#029\nNidoran♀\nPOISON\nCAT. NO.\n#030\nNidorina\nPOISON\nCAT. NO.\n#031\nNidoqueen\nPOISON\nSOL\nCAT. NO.\n#043\nMystherbe\nPLANTE\nPOISON\nCAT. NO.\n#044\nOrtide\nPLANTE\nPOISON\nCAT. NO.\n#055\nAkwakwak\nEAU\nCAT. NO.\n#060\nPtitard\nEAU\nCAT. NO.\n#061\nTêtarte\nEAU\nCAT. NO.\n#062\nTartard\nEAU\nCOMBAT\nCAT. NO.\n#072\nTentacool\nEAU\nPOISON\nCAT. NO.\n#073\nTentacruel\nEAU\nPOISON\nCAT. NO.\n#114\nSaquedeneu\nPLANTE\nCAT. NO.\n#116\nHypotrempe\nEAU\nCAT. NO.\n#117\nHypocéan\nEAU\nCAT. NO.\n#130\nLéviator\nEAU\nVOL\nCAT. NO.\n#131\nLokhlass\nEAU\nGLACE\nCAT. NO.\n#134\nAquali\nEAU\nVOIR PLUS\n(20 / 206)\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 20
+  },
+  {
+    "filter": "Balle",
+    "url": "https://lunidex.app/fr/pokedex?shapes=ball",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n078\nAffichage de 20 Pokémon sur 78.\nTOUT EFFACER\nFILTRES\nShape: Ball\nTout effacer\nCAT. NO.\n#090\nKokiyas\nEAU\nCAT. NO.\n#091\nCrustabri\nEAU\nGLACE\nCAT. NO.\n#092\nFantominus\nSPECTRE\nPOISON\nCAT. NO.\n#100\nVoltorbe\nÉLECTRIK\nCAT. NO.\n#101\nÉlectrode\nÉLECTRIK\nCAT. NO.\n#109\nSmogo\nPOISON\nCAT. NO.\n#132\nMétamorph\nNORMAL\nCAT. NO.\n#191\nTournegrin\nPLANTE\nCAT. NO.\n#200\nFeuforêve\nSPECTRE\nCAT. NO.\n#201\nZarbi\nPSY\nCAT. NO.\n#204\nPomdepik\nINSECTE\nCAT. NO.\n#205\nForetress\nINSECTE\nACIER\nCAT. NO.\n#266\nArmulys\nINSECTE\nCAT. NO.\n#268\nBlindalys\nINSECTE\nCAT. NO.\n#337\nSéléroc\nROCHE\nPSY\nCAT. NO.\n#338\nSolaroc\nROCHE\nPSY\nCAT. NO.\n#351\nMorphéo\nNORMAL\nCAT. NO.\n#353\nPolichombr\nSPECTRE\nCAT. NO.\n#362\nOniglali\nGLACE\nCAT. NO.\n#366\nCoquiperl\nEAU\nVOIR PLUS\n(20 / 78)\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 20
+  },
+  {
+    "filter": "Statistiques de base min (BST)",
+    "url": "https://lunidex.app/fr/pokedex?bst=800",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n001\nAffichage de 1 Pokémon sur 1.\nTOUT EFFACER\nFILTRES\nStatistiques de base min (BST): 800\nTout effacer\nCAT. NO.\n#10190\nÉthernatos\nPOISON\nDRAGON\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 1
+  },
+  {
+    "filter": "PV",
+    "url": "https://lunidex.app/fr/pokedex?hp=255",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n002\nAffichage de 2 Pokémon sur 2.\nTOUT EFFACER\nFILTRES\nMin HP: 255\nTout effacer\nCAT. NO.\n#242\nLeuphorie\nNORMAL\nCAT. NO.\n#10190\nÉthernatos\nPOISON\nDRAGON\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 2
+  },
+  {
+    "filter": "Minimum Taille (m)",
+    "url": "https://lunidex.app/fr/pokedex?height=25-25",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n018\nAffichage de 18 Pokémon sur 18.\nTOUT EFFACER\nFILTRES\nTaille (m): 25–25\nTout effacer\nCAT. NO.\n#10190\nÉthernatos\nPOISON\nDRAGON\nCAT. NO.\n#10196\nDracaufeu Gigamax\nFEU\nVOL\nCAT. NO.\n#10197\nTortank Gigamax\nEAU\nCAT. NO.\n#10200\nMiaouss Gigamax\nNORMAL\nCAT. NO.\n#10201\nMackogneur Gigamax\nCOMBAT\nCAT. NO.\n#10206\nRonflex Gigamax\nNORMAL\nCAT. NO.\n#10208\nMelmetal Gigamax\nACIER\nCAT. NO.\n#10209\nGorythmic Gigamax\nPLANTE\nCAT. NO.\n#10210\nPyrobut Gigamax\nFEU\nCAT. NO.\n#10211\nLézargus Gigamax\nEAU\nCAT. NO.\n#10215\nMonthracite Gigamax\nROCHE\nFEU\nCAT. NO.\n#10220\nScolocendre Gigamax\nFEU\nINSECTE\nCAT. NO.\n#10221\nSorcilence Gigamax\nPSY\nFÉE\nCAT. NO.\n#10222\nAngoliath Gigamax\nTÉNÈBRES\nFÉE\nCAT. NO.\n#10223\nCharmilly Gigamax\nFÉE\nCAT. NO.\n#10225\nDuralugon Gigamax\nACIER\nDRAGON\nCAT. NO.\n#10226\nShifours Style Poing Final\nCOMBAT\nTÉNÈBRES\nCAT. NO.\n#10227\nShifours Style Mille Poings\nCOMBAT\nEAU\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 18
+  },
+  {
+    "filter": "Minimum Poids (kg)",
+    "url": "https://lunidex.app/fr/pokedex?weight=1200-1200",
+    "text": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n1\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nAUCUN POKÉMON TROUVÉ\nRÉINITIALISER FILTRE\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour",
+    "cards": 0
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "action": "import-confirm",
+    "text": "OL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nDonnées importées avec succès\nParamètres\n\nParamètres\n\nEffets sonores\nSprites animés\nUtiliser des GIFs animés sur les cartes Pokémon\nThème\nClair\nSombre\nSystème\nDevise TCG\nAfficher les prix TCGdex dans cette devise lorsqu’ils sont disponibles.\nEuro (EUR)\nDollar américain (USD)\nLangue\n🌐\nAUTO\n🇺🇸\nEN\n🇫🇷\nFR\n🇩🇪\nDE\n🇪🇸\nES\n🇮🇹\nIT\n🇯🇵\nJA\n🇰🇷\nKO\n🇨🇳\nZH\nExport & Import de données\n\nSauvegardez vos données ou restaurez une sauvegarde précédente.\n\nExporter\nImporter\n\nV1.0.0\n\nFermer",
+    "htmlClass": "font-body __variable_dd643d __variable_cd8e69"
+  },
+  {
+    "action": "favorites-client-navigation",
+    "url": "http://localhost:3101/fr/favorites",
+    "text": "LUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (1)"
+  },
+  {
+    "action": "favorites-reload",
+    "text": "LUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (0)\n\nVotre collection est vide\n\nCommencez à ajouter vos Pokémon favoris en cliquant sur l'icône cœur !\n\nRETOUR AU LUNIDEX"
+  }
+]

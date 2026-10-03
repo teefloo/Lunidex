@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-02",
+  "moteur_execute": "Chromium 149.0.7827.3",
+  "autres_moteurs": "Le cache ne contient que Chromium et Chromium headless shell ; le module Playwright nest pas installé dans le projet.",
+  "inventaire_cua": "Chrome et navigateur intégré exposés. Les applications natives sont inaccessibles car le Mac est verrouillé. Aucune session personnelle ouverte ni exploitée.",
+  "zoom": "Simulation CSS zoom=2 exécutée ; ce résultat ne valide pas le zoom natif du navigateur.",
+  "installation_PWA": "Worker et mode hors ligne testés localement ; installation native et notifications réelles non effectuées.",
+  "approbation_automatique": ["Balayage API avec méthodes de mutation refusé.", "Ajout dune carte en production refusé.", "Lancement du défi quotidien en production refusé."]
+}

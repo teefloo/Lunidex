@@ -1,0 +1,75 @@
+{
+  "url": "http://localhost:3101/fr/pokedex",
+  "dialogs": 1,
+  "text": "Aller au contenu principal\nLuni\ndex\nCollection\nCatalogue\nPokédex\nJouer\nPlus\nRechercher dans Lunidex\nPokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nParamètres\n\nParamètres\n\nEffets sonores\nSprites animés\nUtiliser des GIFs animés sur les cartes Pokémon\nThème\nClair\nSombre\nSystème\nDevise TCG\nAfficher les prix TCGdex dans cette devise lorsqu’ils sont disponibles.\nEuro (EUR)\nDollar américain (USD)\nLangue\n🌐\nAUTO\n🇺🇸\nEN\n🇫🇷\nFR\n🇩🇪\nDE\n🇪🇸\nES\n🇮🇹\nIT\n🇯🇵\nJA\n🇰🇷\nKO\n🇨🇳\nZH\nExport & Import de données\n\nSauvegardez vos données ou restaurez une sauvegarde précédente.\n\nExporter\nImporter\n\nV1.0.0\n\nFermer",
+  "buttons": [
+    {
+      "text": "Clair",
+      "aria": null
+    },
+    {
+      "text": "Sombre",
+      "aria": null
+    },
+    {
+      "text": "Système",
+      "aria": null
+    },
+    {
+      "text": "Euro (EUR)",
+      "aria": null
+    },
+    {
+      "text": "Dollar américain (USD)",
+      "aria": null
+    },
+    {
+      "text": "🌐Auto",
+      "aria": "Langue : Auto"
+    },
+    {
+      "text": "🇺🇸en",
+      "aria": "Langue : English"
+    },
+    {
+      "text": "🇫🇷fr",
+      "aria": "Langue : Français"
+    },
+    {
+      "text": "🇩🇪de",
+      "aria": "Langue : Deutsch"
+    },
+    {
+      "text": "🇪🇸es",
+      "aria": "Langue : Español"
+    },
+    {
+      "text": "🇮🇹it",
+      "aria": "Langue : Italiano"
+    },
+    {
+      "text": "🇯🇵ja",
+      "aria": "Langue : 日本語"
+    },
+    {
+      "text": "🇰🇷ko",
+      "aria": "Langue : 한국어"
+    },
+    {
+      "text": "🇨🇳zh",
+      "aria": "Langue : 中文"
+    },
+    {
+      "text": "Exporter",
+      "aria": "Exporter"
+    },
+    {
+      "text": "Importer",
+      "aria": "Importer"
+    },
+    {
+      "text": "Fermer",
+      "aria": null
+    }
+  ]
+}

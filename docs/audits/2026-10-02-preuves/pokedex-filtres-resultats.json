@@ -1,0 +1,17 @@
+[
+  {
+    "step": "gen1-feu",
+    "url": "https://lunidex.app/fr/pokedex?types=fire&gen=1",
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n2\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n020\nAffichage de 20 Pokémon sur 20.\nTOUT EFFACER\nFILTRES\nFeu\nKanto\nTout effacer\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#037\nGoupix\nFEU\nCAT. NO.\n#038\nFeunard\nFEU\nCAT. NO.\n#058\nCaninos\nFEU\nCAT. NO.\n#059\nArcanin\nFEU\nCAT. NO.\n#077\nPonyta\nFEU\nCAT. NO.\n#078\nGalopa\nFEU\nCAT. NO.\n#126\nMagmar\nFEU\nCAT. NO.\n#136\nPyroli\nFEU\nCAT. NO.\n#146\nSulfura\nFEU\nVOL\nCAT. NO.\n#10034\nDracaufeu Méga X\nFEU\nDRAGON\nCAT. NO.\n#10035\nDracaufeu Méga Y\nFEU\nVOL\nCAT. NO.\n#10115\nOssatueur Forme d'Alola\nFEU\nSPECTRE\nCAT. NO.\n#10149\nOssatueur Dominant\nFEU\nSPECTRE\nCAT. NO.\n#10196\nDracaufeu Gigamax\nFEU\nVOL\nCAT. NO.\n#10229\nCaninos Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10230\nArcanin Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10251\nTauros Forme de Paldea\nCOMBAT\nFEU\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  },
+  {
+    "step": "reload",
+    "url": "https://lunidex.app/fr/pokedex?types=fire&gen=1",
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n2\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nListe des Pokémon\nRÉSULTATS\n020\nAffichage de 20 Pokémon sur 20.\nTOUT EFFACER\nFILTRES\nFeu\nKanto\nTout effacer\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#037\nGoupix\nFEU\nCAT. NO.\n#038\nFeunard\nFEU\nCAT. NO.\n#058\nCaninos\nFEU\nCAT. NO.\n#059\nArcanin\nFEU\nCAT. NO.\n#077\nPonyta\nFEU\nCAT. NO.\n#078\nGalopa\nFEU\nCAT. NO.\n#126\nMagmar\nFEU\nCAT. NO.\n#136\nPyroli\nFEU\nCAT. NO.\n#146\nSulfura\nFEU\nVOL\nCAT. NO.\n#10034\nDracaufeu Méga X\nFEU\nDRAGON\nCAT. NO.\n#10035\nDracaufeu Méga Y\nFEU\nVOL\nCAT. NO.\n#10115\nOssatueur Forme d'Alola\nFEU\nSPECTRE\nCAT. NO.\n#10149\nOssatueur Dominant\nFEU\nSPECTRE\nCAT. NO.\n#10196\nDracaufeu Gigamax\nFEU\nVOL\nCAT. NO.\n#10229\nCaninos Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10230\nArcanin Forme de Hisui\nFEU\nROCHE\nCAT. NO.\n#10251\nTauros Forme de Paldea\nCOMBAT\nFEU\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  },
+  {
+    "step": "3-types",
+    "url": "https://lunidex.app/fr/pokedex?types=fire%2Cgrass%2Cwater&gen=1",
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\n2\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nAUCUN POKÉMON TROUVÉ\nRÉINITIALISER FILTRE\n\nPOKÉMON DU JOUR\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour"
+  }
+]

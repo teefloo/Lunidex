@@ -1,0 +1,50 @@
+[
+  {
+    "step": "consent-refuse",
+    "cookieBanner": 0
+  },
+  {
+    "step": "initial",
+    "switches": [
+      {
+        "aria": "Désactiver le son",
+        "checked": "true"
+      },
+      {
+        "aria": "Activer les sprites animés",
+        "checked": "false"
+      }
+    ]
+  },
+  {
+    "step": "changed",
+    "switches": [
+      {
+        "aria": "Activer le son",
+        "checked": "false"
+      },
+      {
+        "aria": "Désactiver les sprites animés",
+        "checked": "true"
+      }
+    ]
+  },
+  {
+    "step": "reload",
+    "switches": [],
+    "dark": "font-body __variable_fb3440 __variable_eff0f4 dark",
+    "cookieBanner": 0
+  },
+  {
+    "step": "reduced-motion",
+    "matches": true
+  },
+  {
+    "step": "CSS-zoom-200-simulation",
+    "overflow": {
+      "width": 1440,
+      "scroll": 1424,
+      "client": 1424
+    }
+  }
+]

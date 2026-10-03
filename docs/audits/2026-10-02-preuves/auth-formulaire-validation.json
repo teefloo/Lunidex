@@ -1,0 +1,40 @@
+[
+  {
+    "action": "open-auth",
+    "text": "Ravi de vous revoir\n\nConnectez-vous pour synchroniser vos collections et votre progression entre vos appareils.\n\nE-MAIL\nMOT DE PASSE\nMot de passe oublié ?\nSe connecter\n\nVous n’avez pas de compte ? Créer un compte\n\nFermer",
+    "inputs": [
+      {
+        "type": "email",
+        "required": true,
+        "minLength": -1,
+        "id": "base-ui-_r_5_"
+      },
+      {
+        "type": "password",
+        "required": true,
+        "minLength": 6,
+        "id": "base-ui-_r_6_"
+      }
+    ]
+  },
+  {
+    "action": "empty-submit",
+    "validity": [
+      {
+        "type": "email",
+        "valid": false,
+        "message": "Please fill in this field."
+      },
+      {
+        "type": "password",
+        "valid": false,
+        "message": "Please fill in this field."
+      }
+    ]
+  },
+  {
+    "action": "add-after-auth-modal",
+    "dialogs": 0,
+    "tail": "R\n\nTENGALICE\nPLANTE\nTÉNÈBRES\nJouer au quiz du jour\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nVotre collection est encore en cours de synchronisation. Réessayez dans un instant."
+  }
+]

@@ -1,0 +1,1735 @@
+[
+  {
+    "path": "/fr/tcg/sealed/cashflow",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/cashflow",
+    "duration": 1407,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Cashflow"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nCashflow\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/analytics",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/analytics",
+    "duration": 1376,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Analyses"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nAnalyses\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/catalogue",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/catalogue",
+    "duration": 1448,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Catalogue"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nCatalogue\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/sources",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/sources",
+    "duration": 1411,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Sources"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nSources\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/tcg/sealed/products/1",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/tcg/sealed/products/1",
+    "duration": 1995,
+    "title": "Portefeuille scellés | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Produit"
+    ],
+    "main": "Tableau de bord\nCollection\nJournal\nRapports\nOutils\nMarché des scellés\n\nESPACE TCG PRIVÉ\n\nProduit\n\nSuivez vos produits Pokémon scellés, achats, ventes et performances en EUR.\n\nChargement du portefeuille scellés…",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/sealed/collection"
+      },
+      {
+        "text": "Journal",
+        "href": "/fr/tcg/sealed/journal"
+      },
+      {
+        "text": "Ventes",
+        "href": "/fr/tcg/sealed/sales"
+      },
+      {
+        "text": "Cashflow",
+        "href": "/fr/tcg/sealed/cashflow"
+      },
+      {
+        "text": "Analyses",
+        "href": "/fr/tcg/sealed/analytics"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg/sealed/catalogue"
+      },
+      {
+        "text": "Sources",
+        "href": "/fr/tcg/sealed/sources"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/about",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/about",
+    "duration": 1417,
+    "title": "À propos de Lunidex — Suivi de collection Pokémon TCG | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "À propos de Lunidex"
+    ],
+    "main": "À PROPOS\n\nÀ propos de Lunidex\n\nUn outil indépendant de suivi de collection Pokémon TCG, avec Pokédex et outils d’équipe.\n\nUn suivi de collection Pokémon TCG et un espace de travail\nLunidex est une application web Pokémon indépendante et non officielle. Elle aide les collectionneurs à suivre leurs extensions, leurs cartes possédées et manquantes et leur progression, puis réunit un Pokédex et des outils d’équipe au même endroit. Lunidex n’est pas une marketplace de cartes.\nNotre mission\nLunidex existe pour rendre les données Pokémon claires, utiles et accessibles dans plusieurs langues. Le projet réunit des outils de référence, la construction d’équipes et des fonctions de collection Pokémon TCG, en respectant les limites des données amont.\n\nLunidex est maintenu comme un petit projet de fans open source. La disponibilité du produit, des comptes et des sources amont peut évoluer ; les pages publiques décrivent le périmètre actuellement documenté.\nSources de données et attribution\nToutes les données Pokémon (stats, types, talents, capacités, évolutions, sprites, artwork officiel) proviennent du projet open source PokeAPI (pokeapi.co), une base de données communautaire et gratuite.\n\nLes données de cartes à jouer (cartes, sets, raretés, prix) proviennent de TCGdex (tcgdex.net), une base de données Pokémon TCG ouverte.\n\nPokémon, les noms de personnages Pokémon et les propriétés associées sont des marques déposées de Nintendo, Game Freak et Creatures Inc. Lunidex est un projet de fans non commercial et n'est pas affilié à The Pokémon Company.\nCe que vous pouvez faire\nParcourez les fiches de référence Pokémon avec statistiques, types, évolutions et capacités. Comparez les statistiques côte à côte avec des graphiques radar. Préparez une équipe de six Pokémon avec analyse de couverture de types et détection de faiblesses. Explorez la matrice interactive d'efficacité des types. Suivez la progression de votre collection par set et essayez le quiz Pokémon en six modes. L'interface est disponible en 8 langues, dont le japonais, le coréen et le chinois.\nGratuit, local-first et clair sur ses limites\nLa consultation publique est gratuite et Lunidex peut être installé comme application web progressive (PWA). Le périmètre documenté ne comprend ni abonnement ni parcours d’achat. Les références et la progression restent local-first lorsque c’est possible ; la synchronisation liée au compte est facultative et dépend du service configuré. Lunidex ne revendique ni scanner de cartes, ni checkout de marketplace, ni publication App Store ou Google Play, ni valorisation garantie. Lunidex est distinct du nom sans lien Ludex.\nOpen source\nLunidex est distribué sous licence MIT. Le code source complet est disponible sur GitHub. Vous pouvez le lire, l'auditer, le forker ou l'héberger vous-même. Les contributions de code et de traduction sont les bienvenues.\n\nNous avons choisi la licence MIT pour que chacun puisse consulter, adapter et améliorer le projet.\nNous contacter\nVous avez trouvé un bug ou une idée de fonctionnalité ? Vous pouvez ouvrir un ticket sur GitHub ou utiliser notre page de contact. Pour les divulgations de sécurité, veuillez nous écrire directement plutôt que d'ouvrir un ticket public.\n\nVous pouvez nous joindre à contact@lunidex.app pour les demandes générales ; les contributions de code et de traduction restent les bienvenues sur GitHub.\nTCG\nPokédex\nConstructeur d'équipe\nFAQ\nGuide du suivi de collection Pokémon\nComment organiser une collection de cartes Pokémon\nGuide de la valeur d’une collection de cartes Pokémon\n\nGITHUB\n\nCode source, README et changelog\n\nISSUES\n\nSignaler des bugs, demander des fonctionnalités, suivre l'avancement\n\nLunidex — Pokémon TCG collection tracker and Pokémon workspace\n\nPublié sous licence MIT. Pokémon et les propriétés associées sont © Nintendo, Game Freak, Creatures Inc.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment organiser une collection de cartes Pokémon",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Guide de la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "GitHubCode source, README et changelog",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "IssuesSignaler des bugs, demander des fonctionnalités, suivre l'avancement",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/faq",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/faq",
+    "duration": 1586,
+    "title": "FAQ Lunidex — Questions et réponses | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Questions fréquentes"
+    ],
+    "main": "CENTRE D'AIDE\n\nQuestions fréquentes\n\nDes réponses claires sur les données, les outils, l’espace JCC, les comptes et le périmètre open source de Lunidex.\n\nDERNIÈRE MISE À JOUR LE 28 SEPT. 2026 · 19 QUESTIONS RÉPONDUES\n\nRechercher des questions...\n\nFILTRER LES QUESTIONS PAR CATÉGORIE\n\n19\n\nToutes les questions\nBien démarrer\n4\nOutils Pokémon\n5\nEspace Pokémon JCC\n6\nDonnées et assistance\n4\n\n19 questions disponibles\n\nBien démarrer\n\nLe périmètre du produit, les comptes, les langues disponibles et les options d’installation.\n\nQu'est-ce que Lunidex ?\n\nLunidex est une application web Pokémon indépendante et non officielle ainsi qu’un catalogue Pokémon JCC. Elle réunit les données de référence Pokémon, les outils d’équipe et un espace de collection JCC. Elle n’est affiliée ni à Nintendo, ni à Game Freak, ni à The Pokémon Company.\n\nÀ PROPOS DE LUNIDEX\nFaut-il un compte ou un abonnement ?\n\nLes pages de référence et de catalogue publiques sont accessibles sans compte. L’application web utilise une session associée à un compte pour les changements personnels comme la collection, les équipes, les favoris et les autres progrès synchronisés. Le produit actuel ne comporte aucun abonnement ni parcours d’achat.\n\nTABLEAU DE BORD\nQuelles langues sont disponibles dans l’interface ?\n\nL’interface Lunidex est disponible en anglais, français, espagnol, allemand, italien, japonais, coréen et chinois. Les langues des données de cartes sont sélectionnées séparément et dépendent de ce que TCGdex fournit.\n\nPuis-je installer Lunidex sur un téléphone ?\n\nOui. Lunidex est une application web installable (PWA) qu’un navigateur compatible peut ajouter à l’écran d’accueil. Lunidex est actuellement proposé comme application web ; cette FAQ ne revendique aucune fiche App Store ou Google Play.\n\nLUNIDEX EST MOMENTANÉMENT HORS LIGNE\nOutils Pokémon\n\nLa couverture de référence et les outils pour les équipes, les comparaisons, les quiz et les runs Nuzlocke.\n\nQuelles données de référence Pokémon Lunidex propose-t-il ?\n\nLunidex présente les fiches Pokémon actuellement disponibles via PokéAPI, avec statistiques, types, talents, capacités, évolutions, sprites et illustrations. Le périmètre peut évoluer avec les données amont.\n\nPOKÉDEX\nComment fonctionne le constructeur d’équipe ?\n\nLe constructeur d’équipe accepte jusqu’à six Pokémon et calcule les faiblesses partagées, la couverture offensive et défensive des types ainsi que la synergie. Il peut importer du texte Showdown, exporter une image d’équipe et créer un lien de partage public. Connectez-vous pour enregistrer et synchroniser les changements.\n\nCONSTRUCTEUR D'ÉQUIPE\nPuis-je comparer des Pokémon et vérifier leurs matchups de types ?\n\nOui. Comparer accepte jusqu’à trois Pokémon avec des résumés de statistiques et de matchups. Le tableau des types couvre les 18 types et affiche les relations offensives et défensives, notamment les faiblesses, résistances et immunités.\n\nCOMPARER LES POKÉMON\nTYPES\nComment fonctionne le quiz Pokémon ?\n\nLe quiz réunit trois types de défis — Classique, Silhouette et Statistiques — et trois modes — Marathon, Survie et Contre-la-montre. Le défi quotidien utilise une graine basée sur la date UTC et contient dix questions. Vous pouvez jouer publiquement ; connectez-vous pour enregistrer vos scores et votre progression synchronisée.\n\nQUIZ\nQue suit le gestionnaire Nuzlocke ?\n\nL’espace Nuzlocke enregistre les runs, une rencontre par route et des statuts comme vivant, mort ou dans une boîte. Vous pouvez gérer plusieurs runs et consulter leurs statistiques. Les runs personnels utilisent l’espace associé au compte.\n\nSUIVI NUZLOCKE\nEspace Pokémon JCC\n\nCe que le catalogue JCC peut suivre, l’origine de ses données et les limites à connaître.\n\nQue contient le catalogue Pokémon JCC ?\n\nLe catalogue et les pages de sets utilisent TCGdex pour les données de cartes et de sets. La consultation publique ne nécessite pas de compte. Les langues des données de cartes sont indépendantes de la langue de l’interface et ne sont disponibles que lorsque TCGdex les fournit ; les images, raretés et autres champs peuvent varier selon la source.\n\nTCG\nComment suivre ma collection JCC ?\n\nChoisissez un set et enregistrez les cartes possédées dans l’espace de collection associé au compte. Lunidex prend en charge les quantités et les variantes physiques lorsque le modèle de données actuel les fournit, puis affiche la progression du set et les cartes manquantes. La wishlist est séparée des cartes possédées.\n\nGUIDE DU SUIVI DE COLLECTION POKÉMON\nCOLLECTION\nPuis-je gérer une wishlist et des decks JCC ?\n\nOui. L’espace JCC comprend une wishlist et un constructeur de decks. Les decks visent 60 cartes, avec un maximum de quatre exemplaires d’une carte qui n’est pas une Énergie de base. Les wishlists et decks personnels nécessitent l’espace synchronisé du compte.\n\nLISTE DE SOUHAITS\nCONSTRUCTEUR DE DECK\nComment fonctionnent les prix JCC ?\n\nLorsque les données amont sont disponibles, Lunidex peut afficher des champs de prix en EUR ou en USD, issus des valeurs renvoyées par les intégrations TCGdex. Il n’invente pas de taux de change ; la couverture, la fraîcheur et les estimations de collection ne constituent ni une valorisation de marché ni un historique de prix garanti.\n\nTCG\nLunidex scanne-t-il les cartes ou gère-t-il une marketplace ?\n\nAucun scanner de cartes ni parcours de marketplace n’est documenté dans le produit Lunidex actuel. Le périmètre pris en charge est la consultation du catalogue, les états de collection et de wishlist, la progression des sets, les decks et les outils de référence Pokémon.\n\nÀ PROPOS DE LUNIDEX\nLa valeur affichée par Lunidex est-elle une expertise ?\n\nNon. Il s’agit d’une estimation sourcée ou d’un calcul de portfolio. Elle n’authentifie pas l’état, ne garantit pas le prix de vente, ne remplace pas une expertise professionnelle et ne promet pas une donnée actuelle pour chaque carte.\n\nGUIDE DE LA VALEUR D’UNE COLLECTION DE CARTES POKÉMON\nEDITORIAL.COMPETITORS.LUNIDEX_VS_CARDMARKET.NAV_LABEL\nDonnées et assistance\n\nLa synchronisation de l’espace personnel, le fonctionnement hors ligne et les moyens d’obtenir de l’aide.\n\nOù mes données personnelles sont-elles stockées et synchronisées ?\n\nLes pages publiques restent utilisables sans compte. Les collections, équipes, favoris, progrès du quiz et autres données de l’espace personnel utilisent la synchronisation associée au compte via Neon lorsque celle-ci est disponible. Le navigateur conserve les préférences d’affichage, les détails de session et le cache des données publiques ; effacer ses données peut supprimer des préférences locales ou fermer une session.\n\nPOLITIQUE DE CONFIDENTIALITÉ\nTABLEAU DE BORD\nQue fonctionne-t-il hors ligne ?\n\nLe shell de l’application et certaines pages ou données déjà mises en cache peuvent rester disponibles hors ligne. Les nouvelles données Pokémon et cartes nécessitent une connexion. Le comportement dépend du navigateur, de l’état du cache et de la route : il ne s’agit pas d’une garantie de base de données totalement hors ligne.\n\nLUNIDEX EST MOMENTANÉMENT HORS LIGNE\nPuis-je exporter ou supprimer les données de mon compte ?\n\nUtilisez les contrôles d’export du tableau de bord et des paramètres pour télécharger votre espace synchronisé au format JSON, ou les contrôles du compte pour demander sa suppression. Les liens publics d’équipe sont distincts de ce fichier de sauvegarde. La page Confidentialité détaille les limites actuelles du compte et du stockage.\n\nTABLEAU DE BORD\nPOLITIQUE DE CONFIDENTIALITÉ\nComment contacter le projet ou y contribuer ?\n\nUtilisez le formulaire de contact Lunidex pour une question ou une demande, ou ouvrez une issue GitHub pour un bug reproductible. Lunidex est un projet de fans open source sous licence MIT ; les contributions de code et de traduction sont bienvenues. Pour un signalement de sécurité, contactez directement le projet au lieu de publier des informations sensibles.\n\nCONTACT\nÀ PROPOS DE LUNIDEX\n✦\n\n19\n\nD'autres questions ?\n\nContactez directement l’équipe, ouvrez une issue GitHub ou contribuez avec une correction ou une traduction. Lunidex est construit par la communauté, pour la communauté.\n\nCONTACTER LUNIDEX\nSIGNALER UN PROBLÈME",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": "Rechercher des questions...",
+        "placeholder": "Rechercher des questions...",
+        "type": "search",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Toutes les questions",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bien démarrer4",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Outils Pokémon5",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Espace Pokémon JCC6",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Données et assistance4",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Qu'est-ce que Lunidex ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Faut-il un compte ou un abonnement ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Quelles langues sont disponibles dans l’interface ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Puis-je installer Lunidex sur un téléphone ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Quelles données de référence Pokémon Lunidex propose-t-il ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comment fonctionne le constructeur d’équipe ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Puis-je comparer des Pokémon et vérifier leurs matchups de types ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comment fonctionne le quiz Pokémon ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Que suit le gestionnaire Nuzlocke ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Que contient le catalogue Pokémon JCC ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comment suivre ma collection JCC ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Puis-je gérer une wishlist et des decks JCC ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comment fonctionnent les prix JCC ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Lunidex scanne-t-il les cartes ou gère-t-il une marketplace ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "La valeur affichée par Lunidex est-elle une expertise ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Où mes données personnelles sont-elles stockées et synchronisées ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Que fonctionne-t-il hors ligne ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Puis-je exporter ou supprimer les données de mon compte ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comment contacter le projet ou y contribuer ?",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Lunidex est momentanément hors ligne",
+        "href": "/fr/offline"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer les Pokémon",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Guide de la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "editorial.competitors.lunidex_vs_cardmarket.nav_label",
+        "href": "/fr/compare/lunidex-vs-cardmarket"
+      },
+      {
+        "text": "Politique de confidentialité",
+        "href": "/fr/privacy"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Lunidex est momentanément hors ligne",
+        "href": "/fr/offline"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Politique de confidentialité",
+        "href": "/fr/privacy"
+      },
+      {
+        "text": "Contact",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Contacter Lunidex",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "Signaler un problème",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/contact",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/contact",
+    "duration": 1348,
+    "title": "Contact | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Contact"
+    ],
+    "main": "NOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": null,
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Votre nom ou pseudo",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "vous@exemple.com",
+        "type": "email",
+        "disabled": false
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null,
+        "placeholder": "Pourquoi nous écrivez-vous ?",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "TEXTAREA",
+        "text": "",
+        "label": null,
+        "placeholder": "Décrivez votre demande…",
+        "type": null,
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Envoyer le message",
+        "label": null,
+        "placeholder": null,
+        "type": "submit",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "Écrire à contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "politique de confidentialité",
+        "href": "/fr/privacy"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": [
+      {
+        "url": "https://lunidex.app/fr",
+        "status": 404
+      }
+    ]
+  },
+  {
+    "path": "/fr/docs",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/docs",
+    "duration": 1350,
+    "title": "Documentation Lunidex — outils Pokémon et API",
+    "lang": "fr",
+    "h1": [
+      "Documentation Lunidex"
+    ],
+    "main": "DOCUMENTATION\n\nDocumentation Lunidex\n\nChoisissez votre objectif : explorer les Pokémon, préparer une équipe, gérer une collection Pokémon TCG, consulter votre progression ou utiliser l’API publique.\n\nExplorer les Pokémon\n\nPARCOURS CONSEILLÉ\n\nCommencez dans le Pokédex : cherchez un Pokémon et ouvrez sa fiche, puis utilisez le tableau des types ou les pages de capacités, talents et objets pour approfondir.\n\nPokédex\nTypes\nCapacités\nTalents\nObjets\nGUIDES DES FONCTIONNALITÉS\nGuide de référence Pokémon\nPréparer une équipe et une partie\n\nPARCOURS CONSEILLÉ\n\nComposez une équipe de six Pokémon maximum, comparez-en jusqu’à trois, puis affinez-la avec les outils EV/IV ou de reproduction. Combat, quiz et Nuzlocke proposent des parcours distincts.\n\nConstructeur d’équipe Pokémon\nComparer\nCalculateur EV/IV\nCalculateur d'Élevage\nSimulateur de combat\nQuel est ce Pokémon ?\nSuivi Nuzlocke\nGUIDES DES FONCTIONNALITÉS\nGuide de création d’équipe\nGuide du quiz\nGuide du Nuzlocke\nGuide des outils d’équipe et de jeu\nSuivre une collection Pokémon TCG\n\nPARCOURS CONSEILLÉ\n\nCherchez une carte ou une série, puis utilisez la collection, la liste de souhaits et les decks. Connectez-vous et attendez la synchronisation avant de modifier vos données ; les produits scellés ont leur propre portefeuille.\n\nJCC\nCommencez votre collection\nCollection\nListe de souhaits\nConstructeur de deck\nPortefeuille scellés\nGUIDES DES FONCTIONNALITÉS\nGuide du suivi de collection\nComment organiser une collection de cartes Pokémon\nGuide de l’espace Pokémon TCG\nGuide de la valeur d’une collection\nConsulter sa progression et son compte\n\nPARCOURS CONSEILLÉ\n\nExplorez d’abord les pages publiques. Pour retrouver votre progression sur plusieurs appareils, connectez-vous lorsque la synchronisation du compte est disponible, puis consultez le tableau de bord et choisissez ce que vous enregistrez ou partagez.\n\nTableau de Bord\nFavoris\nAmis\nGUIDES DES FONCTIONNALITÉS\nGuide de la progression et du compte\nCréer une intégration développeur\n\nPARCOURS CONSEILLÉ\n\nCréez une clé dans le tableau de bord, conservez-la sur un serveur de confiance et commencez par GET /me. Le guide de l’API détaille la suite ; OpenAPI fournit le contrat lisible par machine.\n\nGuide de l’API publique\nOuvrir la spécification OpenAPI\nAUTRES RESSOURCES\nFAQ\nBlog",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Guide de référence Pokémon",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Constructeur d’équipe Pokémon",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Calculateur EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Calculateur d'Élevage",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Simulateur de combat",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Quel est ce Pokémon ?",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Guide de création d’équipe",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "Guide du quiz",
+        "href": "/fr/guides/quiz-guide"
+      },
+      {
+        "text": "Guide du Nuzlocke",
+        "href": "/fr/guides/nuzlocke-guide"
+      },
+      {
+        "text": "Guide des outils d’équipe et de jeu",
+        "href": "/fr/guides/team-tools-guide"
+      },
+      {
+        "text": "JCC",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Commencez votre collection",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "Portefeuille scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Guide du suivi de collection",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment organiser une collection de cartes Pokémon",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Guide de l’espace Pokémon TCG",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Guide de la valeur d’une collection",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "Tableau de Bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Favoris",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "Guide de la progression et du compte",
+        "href": "/fr/guides/progress-account-guide"
+      },
+      {
+        "text": "Guide de l’API publique",
+        "href": "/fr/docs/api"
+      },
+      {
+        "text": "Ouvrir la spécification OpenAPI",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/docs/api",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/docs/api",
+    "duration": 1496,
+    "title": "API publique Lunidex v1 — Guide développeur",
+    "lang": "fr",
+    "h1": [
+      "API publique Lunidex v1"
+    ],
+    "main": "Retour à la documentation\nAPI publique Lunidex v1\n\nConnectez un service serveur aux données déjà synchronisées avec un compte Lunidex. Créez une clé et envoyez une première requête, puis explorez les cartes, les produits scellés, la pagination et les écritures.\n\nURL de base\nhttps://lunidex.app/api/v1\nGérer les clés API\nOuvrir la spécification OpenAPI\nSUR CETTE PAGE\nDémarrage rapide\nAuthentification et permissions\nPagination et filtres\nRoutes\nCartes\nProduits scellés\nÉcritures, idempotence et révisions\nErreurs et format des réponses\nQuotas\nClés réservées aux serveurs\n\nNe placez jamais une clé API dans le code d’un navigateur, une application mobile, un dépôt public, une URL, une capture d’écran ou un journal partagé. Gardez-la dans un gestionnaire de secrets côté serveur et transmettez-la uniquement dans l’en-tête Authorization.\n\nDémarrage rapide\n\nUne intégration a besoin d’une clé, d’un secret stocké côté serveur et d’une requête HTTPS vers l’URL de base de l’API.\n\n1\nCréer une clé\n\nOuvrez la carte des clés API dans le tableau de bord Lunidex. Nommez la clé et choisissez lecture seule ou lecture et écriture. Le secret complet n’apparaît qu’une fois : copiez-le avant de fermer le message.\n\n2\nStocker le secret sur votre serveur\n\nEnregistrez la clé sous LUNIDEX_API_KEY dans le gestionnaire de secrets de votre hébergeur. Ne la commitez pas et ne l’envoyez pas au navigateur.\n\n3\nEnvoyer la première requête\n\nAppelez GET /me depuis votre serveur. Les routes privées exigent l’en-tête Authorization: Bearer suivi de la clé.\n\ncURL · à exécuter dans un environnement serveur de confiance\nCopier le code\ncurl --fail-with-body \\\n  -H \"Authorization: Bearer $LUNIDEX_API_KEY\" \\\n  https://lunidex.app/api/v1/me\nNode.js · fetch côté serveur\nCopier le code\nconst API_BASE_URL = \"https://lunidex.app/api/v1\";\nconst apiKey = process.env.LUNIDEX_API_KEY;\n\nif (!apiKey) throw new Error(\"Missing LUNIDEX_API_KEY\");\n\nconst response = await fetch(API_BASE_URL + \"/me\", {\n  headers: { Authorization: \"Bearer \" + apiKey },\n});\nconst result = await response.json();\n\nif (!response.ok) {\n  throw new Error(result.error?.code ?? \"REQUEST_FAILED\");\n}\n\nconsole.log(result.data);\nAuthentification et permissions\n\nEnvoyez la clé dans l’en-tête HTTP Authorization pour chaque requête privée /api/v1. L’API renvoie du JSON dans une enveloppe data ; les réponses privées utilisent Cache-Control: private, no-store.\n\nLecture\n\nAutorise les routes GET. Choisissez cette permission si l’intégration doit seulement afficher ou exporter les données du compte.\n\nLecture et écriture\n\nAutorise les routes GET et les routes d’écriture. Réservez-la à une intégration serveur de confiance qui doit modifier la collection ou le journal des scellés.\n\nL’API ne voit que les données synchronisées avec le compte Lunidex dans Neon. Les données présentes uniquement sur un appareil ne sont pas accessibles. L’identité du compte ne contient pas l’adresse e-mail.\n\nPagination et filtres\n\nLes listes renvoient data et meta.nextCursor. Transmettez ce curseur sans le modifier pour obtenir la page suivante, puis arrêtez-vous quand il vaut null.\n\nLa taille par défaut est de 25 éléments et le maximum de 100. Le catalogue est limité à 24 résultats par page.\nLes cartes acceptent les filtres language et set. Les positions scellées acceptent language et productId ; les transactions acceptent language, productId, type, includeVoided et voided. Le catalogue accepte q et cursor.\nUn curseur peut devenir obsolète si la collection, le journal, les prix ou les filtres changent. L’API renvoie 409 ; recommencez sans curseur avec les données à jour.\nLire toutes les pages de cartes depuis un serveur\nCopier le code\nconst API_BASE_URL = \"https://lunidex.app/api/v1\";\nconst apiKey = process.env.LUNIDEX_API_KEY;\nlet cursor = null;\n\nif (!apiKey) throw new Error(\"Missing LUNIDEX_API_KEY\");\n\ndo {\n  const query = new URLSearchParams({ limit: \"100\" });\n  if (cursor) query.set(\"cursor\", cursor);\n\n  const response = await fetch(API_BASE_URL + \"/cards?\" + query, {\n    headers: { Authorization: \"Bearer \" + apiKey },\n  });\n  const result = await response.json();\n  if (!response.ok) throw new Error(result.error?.code ?? \"REQUEST_FAILED\");\n\n  console.log(result.data);\n  cursor = result.meta?.nextCursor ?? null;\n} while (cursor);\nRoutes\n\nLes chemins sont relatifs à l’URL de base de l’API. Chaque ligne indique le niveau d’accès et les paramètres du contrat OpenAPI. La spécification lisible par machine contient les schémas complets, des exemples de requête et de réponse, ainsi que les erreurs par opération ; les sections ci-dessous expliquent les principaux usages.\n\nCompte et contrat\nGET\nPublique · sans clé\n/openapi.json\n\nContrat lisible par machine, public et sans clé API.\n\nParamètres:\nAucun\nGET\nClé lecture seule\n/me\n\nIdentité limitée du compte, sans adresse e-mail.\n\nParamètres:\nAucun\nGET\nClé lecture seule\n/summary\n\nStatistiques principales, nombre physique et distinct de cartes, et totaux des scellés en centimes EUR.\n\nParamètres:\nAucun\nCollection de cartes\nGET\nClé lecture seule\n/cards\n\nPossessions paginées, avec filtres facultatifs de langue et de set.\n\nParamètres:\ncursor\n(requête)\nlimit\n(requête)\nlanguage\n(requête)\nset\n(requête)\nGET\nClé lecture seule\n/cards/{cardId}\n\nMétadonnées TCGdex et possessions du compte, sans valorisation des cartes.\n\nParamètres:\ncardId\n(chemin)\n· obligatoire\nlanguage\n(requête)\nPUT\nClé lecture-écriture\n/cards/{cardId}\n\nDéfinit la quantité absolue pour une langue et une variante.\n\nParamètres:\ncardId\n(chemin)\n· obligatoire\nProduits scellés et transactions\nGET\nClé lecture seule\n/sealed/catalogue\n\nRecherche dans le catalogue existant de produits scellés Cardmarket.\n\nParamètres:\nq\n(requête)\ncursor\n(requête)\nGET\nClé lecture seule\n/sealed/positions\n\nPositions actuelles paginées, coût et valeur de marché stockée.\n\nParamètres:\ncursor\n(requête)\nlimit\n(requête)\nlanguage\n(requête)\nproductId\n(requête)\nGET\nClé lecture seule\n/sealed/positions/{productId}\n\nPositions par langue pour un produit possédé.\n\nParamètres:\nproductId\n(chemin)\n· obligatoire\nGET\nClé lecture seule\n/sealed/transactions\n\nJournal privé avec révisions et filtres.\n\nParamètres:\ncursor\n(requête)\nlimit\n(requête)\nlanguage\n(requête)\nproductId\n(requête)\ntype\n(requête)\nincludeVoided\n(requête)\nvoided\n(requête)\nPOST\nClé lecture-écriture\n/sealed/transactions\n\nCrée un achat, une vente ou un échange ; clé d’idempotence requise.\n\nParamètres:\nIdempotency-Key\n(en-tête)\n· obligatoire\nGET\nClé lecture seule\n/sealed/transactions/{id}\n\nLit une transaction appartenant à ce compte.\n\nParamètres:\nid\n(chemin)\n· obligatoire\nPATCH\nClé lecture-écriture\n/sealed/transactions/{id}\n\nModifie une transaction avec contrôle de révision.\n\nParamètres:\nid\n(chemin)\n· obligatoire\nPOST\nClé lecture-écriture\n/sealed/transactions/{id}/void\n\nAnnule une transaction avec contrôle de révision.\n\nParamètres:\nid\n(chemin)\n· obligatoire\nCartes\n\nGET /cards liste les variantes possédées sans charger tout le catalogue TCGdex. Chaque possession contient cardId, setId, language, variant et quantity ; les filtres facultatifs sont language et set.\n\nGET /cards/{cardId} renvoie les métadonnées TCGdex utiles et les possessions de cette carte dans le compte. Ajoutez le paramètre language pour limiter les possessions.\n\nPUT /cards/{cardId} reçoit language, variant (unspecified, normal, reverse ou holo) et une quantité absolue comprise entre 0 et 10 000. La valeur 0 retire cette variante.\n\nPUT /cards/{cardId} · application/json\nCopier le code\n{\n  \"language\": \"en\",\n  \"variant\": \"reverse\",\n  \"quantity\": 2\n}\n\nLes anciennes possessions sans langue restent visibles ; leur langue peut valoir null et elles peuvent être marquées legacy.\n\nCette API ne renvoie jamais la valeur des cartes.\n\nProduits scellés\n\nLes positions indiquent les quantités par langue, le coût et la valeur actuelle calculée à partir des prix déjà stockés dans Lunidex. Les montants sont des centimes entiers d’EUR. Si un prix manque, valueCents vaut null et missingPrice l’indique ; le résumé compte aussi missingPrices.\n\nDans GET /summary, la valeur des scellés vaut null si le prix manque pour au moins un produit possédé ; missingPrices donne le nombre de prix manquants.\n\nGET /sealed/catalogue\n\nRecherchez les produits déjà présents au catalogue Cardmarket avec q (150 caractères maximum) et cursor. Chaque page contient au plus 24 produits ; utilisez leur ID dans les requêtes suivantes.\n\nGET /sealed/positions\n\nGET /sealed/positions accepte language et productId. GET /sealed/positions/{productId} renvoie la position actuelle d’un produit. Ces routes exposent les totaux actuels, sans série complète d’historique des prix.\n\nGET /sealed/transactions\n\nLe journal privé accepte les filtres language, productId, type (buy, sell, exchange), includeVoided et voided. Il renvoie des révisions pour permettre des modifications sûres.\n\nÉcritures, idempotence et révisions\nDéfinir une quantité de cartes\n\nPUT /cards/{cardId} définit une quantité au lieu d’ajouter un delta. Répéter la même requête conserve la même quantité ; envoyez 0 pour retirer la variante. Avant l’écriture, l’API vérifie la carte, le set, la langue et la variante disponible.\n\nCréer une transaction scellée\n\nPOST /sealed/transactions accepte les mouvements buy, sell et exchange. Il exige l’en-tête Idempotency-Key (8 à 200 caractères) et expectedRevision. Réutilisez la même clé pour réessayer la même requête afin de ne pas créer un second mouvement. La première requête crée la transaction ; une répétition renvoie le résultat d’origine.\n\nExemple de corps pour un achat · remplacez l’ID produit et la révision par leurs valeurs actuelles\nCopier le code\ncurl --request POST \"https://lunidex.app/api/v1/sealed/transactions\" \\\n  -H \"Authorization: Bearer $LUNIDEX_API_KEY\" \\\n  -H \"Idempotency-Key: lunidex-import-example-001\" \\\n  -H \"Content-Type: application/json\" \\\n  --data '{\n    \"expectedRevision\": 0,\n    \"kind\": \"buy\",\n    \"cardmarketProductId\": 12345,\n    \"language\": \"en\",\n    \"date\": \"2026-09-27\",\n    \"quantity\": 1,\n    \"unitPriceCents\": 2500\n  }'\n\nAvant une écriture, lisez la dernière révision du journal dans les métadonnées de GET /sealed/transactions et utilisez-la comme expectedRevision. PATCH /sealed/transactions/{id} exige aussi la revision de cette transaction. Une révision obsolète renvoie 409 ; rechargez la transaction et le journal avant de décider de réessayer.\n\nPATCH /sealed/transactions/{id}\n\nPOST /sealed/transactions/{id}/void\nPOST /sealed/transactions/{id}/void exige revision et expectedRevision. Création, modification et annulation réutilisent les validations, allocations et l’audit des transactions Lunidex.\n\napplication/json\nCopier le code\n{\n  \"revision\": 1,\n  \"expectedRevision\": 0\n}\nErreurs et format des réponses\n\nUne réponse réussie utilise { \"data\": ..., \"meta\": ... } (meta est facultatif). Une erreur utilise { \"error\": { \"code\": ..., \"message\": ..., \"details\": ... } } (details est facultatif).\n\nRéponses courantes : 400 données de transaction invalides ; 401 clé invalide ; 403 permission insuffisante ; 404 ressource absente ou non détenue ; 409 curseur ou révision obsolète ; 410 compte en cours de suppression ; 422 paramètre de requête ou corps invalide ; 429 quota atteint ; 500 erreur serveur inattendue ; 502 données de carte indisponibles ; 503 API indisponible.\n\nAprès un 409, récupérez la ressource à jour ou recommencez la liste sans curseur. Ne transformez pas aveuglément un conflit en nouvelle transaction.\n\nUne réponse 429 inclut Retry-After. Attendez au moins le nombre de secondes indiqué avant de réessayer.\n\nToutes les réponses privées utilisent Cache-Control: private, no-store. La spécification OpenAPI publique est disponible séparément sur /api/v1/openapi.json.\n\nQuotas\n\nLes limites s’appliquent par compte Lunidex et sont partagées entre ses clés API.\n\nQuotas\nLectures par minute\t60\nÉcritures par minute\t10\nLectures par jour\t1 000\nÉcritures par jour\t100\nDétails de cartes par compte et par jour\t100\nCalculs de scellés par compte et par jour\t100\nPlafond global quotidien par catégorie coûteuse\t5 000\n\nLes détails de cartes et les calculs de scellés ont aussi chacun un plafond global distinct de 5 000 opérations par jour. Une réponse 429 inclut Retry-After.\n\nOuvrir la spécification OpenAPI",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Copier le code",
+        "label": "Copier le code",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Retour à la documentation",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Gérer les clés API",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Ouvrir la spécification OpenAPI",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "Démarrage rapide",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentification et permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination et filtres",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cartes",
+        "href": "#cards"
+      },
+      {
+        "text": "Produits scellés",
+        "href": "#sealed"
+      },
+      {
+        "text": "Écritures, idempotence et révisions",
+        "href": "#mutations"
+      },
+      {
+        "text": "Erreurs et format des réponses",
+        "href": "#errors"
+      },
+      {
+        "text": "Quotas",
+        "href": "#quotas"
+      },
+      {
+        "text": "Démarrage rapide",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentification et permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination et filtres",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cartes",
+        "href": "#cards"
+      },
+      {
+        "text": "Produits scellés",
+        "href": "#sealed"
+      },
+      {
+        "text": "Écritures, idempotence et révisions",
+        "href": "#mutations"
+      },
+      {
+        "text": "Erreurs et format des réponses",
+        "href": "#errors"
+      },
+      {
+        "text": "Quotas",
+        "href": "#quotas"
+      },
+      {
+        "text": "Ouvrir la spécification OpenAPI",
+        "href": "/api/v1/openapi.json"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/blog",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/blog",
+    "duration": 1303,
+    "title": "Blog Lunidex — Guides et comparatifs | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Guides et comparatifs Lunidex"
+    ],
+    "main": "BLOG\n\nGuides et comparatifs Lunidex\n\nDes articles pratiques et sourcés sur Lunidex : guides des parcours Pokémon, équipe, TCG, progression, quiz et Nuzlocke, ainsi que des comparatifs avec d’autres outils Pokémon.\n\nMIS À JOUR LE 28 SEPT. 2026\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nOuvrir le tracker\n\nGUIDES D’UTILISATION\n\nComment utiliser Lunidex\n\nDes guides pas à pas fondés sur les fonctions et familles de routes réellement présentes dans le produit.\n\nGUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide\n\nGUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLire le guide\n\nGUIDE DU QUIZ\n\nGuide du quiz Pokémon — Modes, défis et badges | Lunidex\n\nComment fonctionne le quiz Pokémon Lunidex : défis classique, silhouette et stats ; modes marathon, survie et contre-la-montre ; le défi quotidien et les cinq badges.\n\nPUBLIÉ LE 10 AOÛT 2026\nLire le guide\n\nGUIDE DU SUIVI NUZLOCKE\n\nSuivi Nuzlocke — Suivre vos parties challenge | Lunidex\n\nComment utiliser le suivi Nuzlocke Lunidex : créer des parties, noter une rencontre par route, suivre le statut de chaque Pokémon (vivant, mort, boîte) et lire les statistiques de la partie.\n\nPUBLIÉ LE 11 AOÛT 2026\nLire le guide\n\nCOMMENT ORGANISER UNE COLLECTION DE CARTES POKÉMON\n\nComment organiser une collection de cartes Pokémon\n\nUne méthode concrète pour trier les cartes Pokémon par set et numéro, noter langue, finition et doubles, puis tenir à jour la liste des cartes manquantes.\n\nPUBLIÉ LE 28 SEPT. 2026\nLire le guide\n\nGUIDE DES RÉFÉRENCES POKÉMON\n\nPokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex\n\nUtilisez Lunidex comme Pokédex Pokémon en ligne gratuit et espace de référence alimenté par PokéAPI : recherchez /pokedex, les fiches Pokémon, les types, attaques, capacités, objets, évolutions et rencontres.\n\nPUBLIÉ LE 19 AOÛT 2026\nLire le guide\n\nGUIDE DES OUTILS D’ÉQUIPE ET DE COMBAT\n\nOutils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex\n\nUtilisez les outils Lunidex autour de la préparation d’équipe : comparer des Pokémon, lire les matchups, calculer les EV/IV, explorer l’élevage et vérifier les scénarios de combat pris en charge.\n\nPUBLIÉ LE 20 AOÛT 2026\nLire le guide\n\nGUIDE DE L’ESPACE POKÉMON TCG\n\nApplication et espace de collection Pokémon TCG — Cartes, wishlist et decks | Lunidex\n\nDécouvrez comment l’application et l’espace Pokémon TCG de Lunidex permettent de parcourir un catalogue public en ligne, enregistrer les cartes possédées et souhaitées, suivre la progression par set, gérer une wishlist et préparer des decks.\n\nPUBLIÉ LE 21 AOÛT 2026\nLire le guide\n\nGUIDE DE LA PROGRESSION ET DU COMPTE\n\nGuide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation\n\nDécouvrez comment Lunidex sépare la consultation publique de la progression personnelle : tableau de bord, favoris, équipes, synchronisation, amis et profils publics.\n\nPUBLIÉ LE 22 AOÛT 2026\nLire le guide\n\nGUIDE DE LA VALEUR D’UNE COLLECTION DE CARTES POKÉMON\n\nGuide de la valeur d’une collection Pokémon — Estimations, scellé et limites | Lunidex\n\nDécouvrez comment Lunidex présente les données conditionnelles de valeur des cartes et produits scellés, les sources Cardmarket, le suivi privé, l’historique et les limites d’une estimation.\n\nPUBLIÉ LE 21 SEPT. 2026\nLire le guide\n\nCOMPARATIFS\n\nLunidex face à d’autres outils\n\nDes comparatifs sourcés qui distinguent les fonctions Lunidex vérifiées des informations publiées par chaque concurrent.\n\nCOMPARATIF DES OUTILS DE COLLECTION\n\nLunidex vs PokéCardex vs ZebraDex — Comparatif de collection Pokémon\n\nComparatif sourcé de Lunidex, PokéCardex et ZebraDex pour suivre une collection Pokémon TCG, scanner des cartes, consulter les prix et utiliser des outils Pokémon.\n\nPUBLIÉ LE 12 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À POKÉMON DATABASE\n\nLunidex ou Pokémon Database — Comparatif des références Pokémon\n\nComparez Lunidex et Pokémon Database pour le Pokédex, les statistiques, les capacités, les types, la construction d’équipe et les espaces personnels Pokémon.\n\nPUBLIÉ LE 13 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À BULBAPEDIA\n\nLunidex ou Bulbapedia — Alternative à l’encyclopédie Pokémon\n\nComparez Lunidex et Bulbapedia pour la recherche Pokémon, le contexte de la franchise, les outils d’équipe, la localisation et la collection TCG.\n\nPUBLIÉ LE 14 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À POKÉMON SHOWDOWN\n\nLunidex ou Pokémon Showdown — Comparatif des team builders\n\nComparez Lunidex et Pokémon Showdown pour les équipes, l’import Showdown, la couverture de types, la simulation et le jeu compétitif.\n\nPUBLIÉ LE 15 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À POKÉCARDEX\n\nLunidex ou PokéCardex — Comparatif de collection Pokémon TCG\n\nComparez Lunidex et PokéCardex pour le catalogue Pokémon TCG, la collection, le scan, les prix, le hors-ligne et les outils de jeu Pokémon.\n\nPUBLIÉ LE 16 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À ZEBRADEX\n\nLunidex ou ZebraDex — Comparatif de collection Pokémon TCG\n\nComparez Lunidex et ZebraDex pour la collection TCG, le scan, les prix français, les classeurs, les échanges et les outils de référence Pokémon.\n\nPUBLIÉ LE 17 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À COLLECTR\n\nLunidex ou Collectr — Comparatif de collection de cartes Pokémon\n\nComparez Lunidex et Collectr pour la collection Pokémon TCG, les portfolios, les prix, le scan, les échanges, les équipes et les références.\n\nPUBLIÉ LE 18 AOÛT 2026\nLire le comparatif\n\nLUNIDEX FACE À POKÉLLECTOR\n\nLunidex ou Pokéllector — Comparatif d’index de cartes Pokémon TCG\n\nComparez Lunidex et Pokéllector pour parcourir les cartes et sets Pokémon TCG, comprendre le suivi de collection, utiliser des outils personnels et accéder au web.\n\nPUBLIÉ LE 14 SEPT. 2026\nLire le comparatif\n\nLUNIDEX FACE À CARDZIA\n\nLunidex ou Cardzia — Comparatif d’application de collection Pokémon TCG\n\nComparez Lunidex et Cardzia pour le suivi de collection Pokémon TCG, le scan, les estimations du marché français, les produits scellés, la progression par set et les outils Pokémon.\n\nPUBLIÉ LE 14 SEPT. 2026\nLire le comparatif\n\nLUNIDEX FACE À CARDMARKET\n\nLunidex ou Cardmarket — Comparatif de collection de cartes Pokémon\n\nComparez Lunidex et Cardmarket pour la recherche de cartes Pokémon, le suivi de collection, les annonces marketplace, les prix, les wishlists et les outils Pokémon.\n\nPUBLIÉ LE 21 SEPT. 2026\nLire le comparatif\nSources et date de mise à jour\n\nLes articles de cette page sont vérifiés à partir du dépôt Lunidex et des routes publiques. Les données de référence Pokémon proviennent de PokéAPI et les données de cartes et de sets Pokémon TCG de TCGdex. La disponibilité des sources amont peut évoluer.\n\nDépôt source Lunidex\nPokéAPI\nTCGdex\n\nCONTINUER L’EXPLORATION\n\nExplorer le Pokédex\nOuvrir le créateur d’équipe\nJouer au quiz\nOuvrir le catalogue TCG",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "Guide du suivi de collection PokémonSuivi gratuit de collection de cartes Pokémon | LunidexDécouvrez",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Guide du créateur d’équipeGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lu",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "Guide du quizGuide du quiz Pokémon — Modes, défis et badges | LunidexComment fonctionne le quiz Poké",
+        "href": "/fr/guides/quiz-guide"
+      },
+      {
+        "text": "Guide du suivi NuzlockeSuivi Nuzlocke — Suivre vos parties challenge | LunidexComment utiliser le su",
+        "href": "/fr/guides/nuzlocke-guide"
+      },
+      {
+        "text": "Comment organiser une collection de cartes PokémonComment organiser une collection de cartes Pokémon",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Guide des références PokémonPokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | LunidexU",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Guide des outils d’équipe et de combatOutils de préparation d’équipe Pokémon — Comparaison, EV/IV et",
+        "href": "/fr/guides/team-tools-guide"
+      },
+      {
+        "text": "Guide de l’espace Pokémon TCGApplication et espace de collection Pokémon TCG — Cartes, wishlist et d",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "Guide de la progression et du compteGuide de progression Lunidex — Tableau de bord, favoris, amis et",
+        "href": "/fr/guides/progress-account-guide"
+      },
+      {
+        "text": "Guide de la valeur d’une collection de cartes PokémonGuide de la valeur d’une collection Pokémon — E",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "Comparatif des outils de collectionLunidex vs PokéCardex vs ZebraDex — Comparatif de collection Poké",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      },
+      {
+        "text": "Lunidex face à Pokémon DatabaseLunidex ou Pokémon Database — Comparatif des références PokémonCompar",
+        "href": "/fr/compare/lunidex-vs-pokemon-database"
+      },
+      {
+        "text": "Lunidex face à BulbapediaLunidex ou Bulbapedia — Alternative à l’encyclopédie PokémonComparez Lunide",
+        "href": "/fr/compare/lunidex-vs-bulbapedia"
+      },
+      {
+        "text": "Lunidex face à Pokémon ShowdownLunidex ou Pokémon Showdown — Comparatif des team buildersComparez Lu",
+        "href": "/fr/compare/lunidex-vs-pokemon-showdown"
+      },
+      {
+        "text": "Lunidex face à PokéCardexLunidex ou PokéCardex — Comparatif de collection Pokémon TCGComparez Lunide",
+        "href": "/fr/compare/lunidex-vs-pokecardex"
+      },
+      {
+        "text": "Lunidex face à ZebraDexLunidex ou ZebraDex — Comparatif de collection Pokémon TCGComparez Lunidex et",
+        "href": "/fr/compare/lunidex-vs-zebradex"
+      },
+      {
+        "text": "Lunidex face à CollectrLunidex ou Collectr — Comparatif de collection de cartes PokémonComparez Luni",
+        "href": "/fr/compare/lunidex-vs-collectr"
+      },
+      {
+        "text": "Lunidex face à PokéllectorLunidex ou Pokéllector — Comparatif d’index de cartes Pokémon TCGComparez ",
+        "href": "/fr/compare/lunidex-vs-pokellector"
+      },
+      {
+        "text": "Lunidex face à CardziaLunidex ou Cardzia — Comparatif d’application de collection Pokémon TCGCompare",
+        "href": "/fr/compare/lunidex-vs-cardzia"
+      },
+      {
+        "text": "Lunidex face à CardmarketLunidex ou Cardmarket — Comparatif de collection de cartes PokémonComparez ",
+        "href": "/fr/compare/lunidex-vs-cardmarket"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net"
+      },
+      {
+        "text": "Explorer le Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ouvrir le créateur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Jouer au quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/privacy",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/privacy",
+    "duration": 1414,
+    "title": "Politique de confidentialité | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Politique de confidentialité"
+    ],
+    "main": "Politique de confidentialité\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les données traitées par Lunidex selon les fonctionnalités réellement activées. Elle ne constitue pas un avis juridique personnalisé.\n\nLa consultation du Pokédex et du catalogue TCG reste possible sans compte. Les fonctions qui enregistrent un espace personnel utilisent une session de compte et la synchronisation Neon lorsqu’elle est configurée.\n\nSOMMAIRE\n\n1. Compte et données personnelles\n2. Finalités et bases légales\n3. Stockage dans le navigateur\n4. Mesure, logs et données techniques\n5. Services, destinataires et transferts\n6. Durées de conservation\n7. Vos droits et contact\n1. Compte et données personnelles\n\nResponsable du traitement : Esteban Deloge, éditeur non professionnel de Lunidex. Pour toute question relative aux données personnelles, utilisez contact@lunidex.app.\n\nLa création d’un compte est facultative pour consulter les pages publiques. Lorsqu’un compte est créé, Neon Auth traite l’adresse e-mail, les identifiants de session et, si vous le fournissez, le nom ou pseudo. La connexion par Google ou GitHub peut être proposée selon la configuration du service ; le fournisseur choisi participe alors au parcours d’authentification.\n\nUne fois connecté, votre espace personnel peut synchroniser avec Neon les données que vous choisissez d’utiliser : favoris, Pokémon capturés, équipes, comparaisons, progression, quiz, collection et listes TCG, recherches sauvegardées, réglages et autres fonctions associées. Les profils publics, amis, alertes de prix, salons de combat et notifications ne sont traités que si vous utilisez ces fonctions.\n\nSi vous activez un profil public, votre pseudo, nom affiché, avatar, date d’inscription et statistiques de progression sélectionnées peuvent apparaître dans l’annuaire public. Les amis acceptés peuvent voir uniquement les éléments de collection ou de decks que vous autorisez dans vos réglages de partage.\n\nLunidex ne vend pas ces données et ne les utilise pas pour de la publicité personnalisée. Les mots de passe sont gérés par le service d’authentification et ne sont pas enregistrés dans le code de Lunidex.\n\n2. Finalités et bases légales\nTraitement\tBase légale\nCompte, authentification et synchronisation\tExécution du service demandé et mesures précontractuelles lorsque vous créez un compte (article 6.1.b du RGPD).\nRéponse aux messages de contact\tIntérêt légitime à répondre à votre demande ; obligation légale lorsque vous exercez un droit (article 6.1.f ou 6.1.c du RGPD).\nMesure d’audience, performance Sentry et mesures produit Neon/PostHog\tConsentement préalable et distinct pour les mesures facultatives, retirable à tout moment (article 6.1.a du RGPD).\nSécurité, anti-abus et disponibilité\tIntérêt légitime à sécuriser et maintenir le service (article 6.1.f du RGPD).\nNotifications push\tConsentement donné lors de l’activation de la fonctionnalité et permission du navigateur ou de l’appareil.\n3. Stockage dans le navigateur\n\nLe navigateur conserve des éléments nécessaires à l’expérience : la langue choisie (cookie primedex-lang), le choix de consentement (localStorage primedex-consent-v2 et cookie technique de consentement PostHog), des marqueurs de session de mesure et un cache local de réponses publiques PokéAPI/TCGdex. Ces caches ne constituent pas votre espace personnel synchronisé.\n\nLe shell de l’application utilise aussi un stockage local technique. Les données personnelles synchronisables ont pour source le compte et l’API user-state lorsque vous êtes connecté ; elles ne sont pas présentées comme une collection anonyme durable sur cet appareil.\n\n4. Mesure, logs et données techniques\n\nVercel Web Analytics, Speed Insights et le tracing navigateur ou Session Replay Sentry ne sont activés qu’après votre consentement distinct « audience et performance ». Le replay masque les textes et champs de saisie, bloque les zones marquées et n’enregistre ni les en-têtes ni les corps réseau. La mesure produit Neon et PostHog est également facultative : si vous l’autorisez, Lunidex envoie à Neon uniquement des événements TCG prédéfinis pour des compteurs agrégés, et à PostHog des vues de page normalisées, des événements métier explicites, des erreurs et des métriques de performance avec des propriétés limitées. Après authentification, PostHog peut utiliser l’identifiant technique stable du compte pour relier la session anonyme au compte ; l’e-mail, le nom et les secrets ne sont pas envoyés, et l’identité est réinitialisée à la déconnexion.\n\nLunidex utilise aussi Sentry pour la surveillance des erreurs et de la disponibilité. Le SDK n’envoie pas les données personnelles par défaut et Lunidex supprime les paramètres d’URL, cookies, en-têtes et corps de requête avant l’envoi. Vous pouvez aussi envoyer volontairement à Sentry un message décrivant un problème depuis le pied de page et choisir d’y joindre une capture d’écran ; ce formulaire ne demande ni nom ni adresse e-mail et la capture n’est jamais prise automatiquement. L’infrastructure et les protections anti-abus peuvent traiter des informations techniques de requête, comme l’adresse IP, l’URL, l’horodatage et le code de réponse. Le code de la route de contact valide et limite les requêtes mais ne stocke ni ne journalise le contenu du message.\n\n5. Services, destinataires et transferts\n\nNeon fournit l’authentification et les données applicatives lorsque ces variables sont configurées. Vercel héberge et distribue l’application. Sentry reçoit les événements techniques d’erreur et, avec consentement, les données de performance et de replay protégées par les réglages de confidentialité ci-dessus. PostHog reçoit, avec consentement, les données de mesure produit décrites ci-dessus. Resend reçoit les informations nécessaires à l’envoi des messages du formulaire (adresse e-mail, nom, sujet et contenu). PokéAPI, TCGdex et les hébergeurs d’images fournissent des données publiques demandées par l’application. Chaque fournisseur peut traiter des données techniques selon ses propres conditions.\n\nResend, Sentry, PostHog et Vercel peuvent traiter des données aux États-Unis ou dans d’autres pays selon leur configuration. Les transferts sont encadrés par les garanties publiées par les prestataires, notamment leurs accords de traitement et mécanismes de transfert applicables. Consultez leurs politiques et accords : https://resend.com/legal/dpa, https://sentry.io/legal/dpa/, https://posthog.com/privacy et https://vercel.com/legal/dpa.\n\nLunidex ne met en place aucun pixel publicitaire, aucune revente de données et aucun profilage publicitaire. Les cookies d’authentification sont gérés par Neon Auth ; leur nom et leur durée peuvent dépendre de la configuration du fournisseur.\n\n6. Durées de conservation\nCatégorie\tDurée\nDonnées de compte, profil et espace synchronisé\tJusqu’à la suppression du compte ou à la fin de la relation, puis suppression des données applicatives dans le cadre de la procédure de compte.\nMesure produit Neon et PostHog\tCompteurs Neon journaliers agrégés conservés pendant 90 jours ; les données PostHog suivent la conservation configurée dans le projet PostHog.\nMessages de contact\tNon conservés dans la base Lunidex ; Resend peut traiter et conserver le message selon ses conditions et sa politique de conservation.\nJournaux techniques et sécurité\tSelon les durées configurées par Vercel, Neon et les autres prestataires d’infrastructure, limitées à ce qui est nécessaire à la sécurité et au fonctionnement.\n7. Vos droits et contact\n\nVous pouvez demander l’accès à vos données, leur rectification, leur effacement, la limitation du traitement, la portabilité lorsque celle-ci est applicable, ou vous opposer à un traitement fondé sur l’intérêt légitime. Vous pouvez retirer votre consentement à tout moment, sans effet rétroactif sur les traitements déjà réalisés.\n\nVous pouvez refuser ou retirer séparément les mesures Vercel, Sentry, Neon et PostHog depuis le bandeau de consentement ou le bouton « Gérer mes préférences » du pied de page. Le retrait empêche les intégrations concernées de capturer de nouvelles données et supprime les marqueurs de mesure locaux prévus par l’application.\n\nPour exercer un droit, écrivez à contact@lunidex.app ou utilisez la procédure de compte prévue par l’application. Une vérification raisonnable peut être nécessaire avant de modifier ou supprimer des données liées à un compte.\n\nVous pouvez également introduire une réclamation auprès de la CNIL : https://www.cnil.fr/.\n\nMesure\n\nSelon vos choix, Vercel Web Analytics et Speed Insights mesurent audience et performance. La mesure produit Neon et PostHog, facultative, envoie des événements TCG prédéfinis, des vues normalisées et un contexte limité d’erreur/performance. Un identifiant technique de compte peut prolonger une session PostHog anonyme ; e-mail, noms et secrets sont exclus. Le replay est soumis au consentement, échantillonné et masqué. Vous pouvez retirer votre choix à tout moment.\n\nCe document juridique est principalement rédigé en français et en anglais. La version française fait foi en cas de divergence, sous réserve des dispositions impératives de votre pays de résidence.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "1. Compte et données personnelles",
+        "href": "#account-data"
+      },
+      {
+        "text": "2. Finalités et bases légales",
+        "href": "#bases"
+      },
+      {
+        "text": "3. Stockage dans le navigateur",
+        "href": "#local-storage"
+      },
+      {
+        "text": "4. Mesure, logs et données techniques",
+        "href": "#measurement"
+      },
+      {
+        "text": "5. Services, destinataires et transferts",
+        "href": "#recipients"
+      },
+      {
+        "text": "6. Durées de conservation",
+        "href": "#retention"
+      },
+      {
+        "text": "7. Vos droits et contact",
+        "href": "#rights"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/cookies",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/cookies",
+    "duration": 1478,
+    "title": "Politique de cookies | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Politique de cookies et de stockage local"
+    ],
+    "main": "Politique de cookies et de stockage local\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les cookies, stockages locaux et intégrations de mesure réellement utilisés par Lunidex.\n\nLes intégrations de mesure facultative sont initialisées avec la collecte désactivée et ne capturent aucune donnée avant votre choix. Vous pouvez modifier ou retirer ce choix à tout moment.\n\nSOMMAIRE\n\n1. Éléments nécessaires et facultatifs\n2. Stockage local\n3. Mesure facultative\n4. Gérer vos choix\n5. Contact\n1. Éléments nécessaires et facultatifs\nÉlément\tFinalité\tDurée indicative\nprimedex-lang\tMémoriser la langue choisie\t1 an\nprimedex-consent-v2\tMémoriser les choix de mesure\tJusqu’à modification ou suppression\nprimedex-product-measurement-consent\tPermettre au serveur de respecter le choix PostHog\t1 an ou jusqu’au retrait\nCookies Neon Auth\tMaintenir la session de compte\tSelon la configuration Neon Auth\nSentry error monitoring\tSurveillance technique des erreurs et de la disponibilité\tSelon la configuration de conservation Sentry\nVercel Web Analytics, Speed Insights et Sentry performance/replay\tMesure d’audience et de performance après consentement\tAprès consentement, selon la configuration des fournisseurs\nMesure produit Neon et PostHog\tCompteurs TCG, vues de page, événements explicites, erreurs et performances après consentement\tSelon les configurations des fournisseurs\n2. Stockage local\n\nlocalStorage et sessionStorage servent notamment au consentement, aux marqueurs de session et à l’état technique de l’application. IndexedDB peut contenir un cache de réponses publiques Pokémon et TCG. Le stockage local n’est pas décrit comme le lieu de conservation durable de votre espace personnel synchronisé.\n\n3. Mesure facultative\n\nVercel Web Analytics, Speed Insights et le tracing ou replay navigateur Sentry sont chargés uniquement si vous accordez le choix « audience et performance ». Neon reçoit une mesure produit TCG limitée et agrégée, et PostHog reçoit des vues de page normalisées, des événements explicites, des erreurs et des performances limitées si vous accordez le choix distinct « mesure produit ». PostHog utilise alors une identité technique persistante nécessaire à la continuité anonyme → compte ; elle ne contient pas l’e-mail ou le nom, est réinitialisée à la déconnexion et est supprimée de la collecte lorsque le consentement est retiré. Le replay est échantillonné, masque les champs et textes sensibles, bloque les zones marquées et exclut les corps et en-têtes réseau. Aucun de ces choix n’est nécessaire pour consulter les pages publiques.\n\n4. Gérer vos choix\n\nUtilisez le bouton « Gérer mes préférences » dans le pied de page, ou effacez les données du site dans votre navigateur. Effacer le stockage peut supprimer des préférences locales et fermer votre session ; les données synchronisées restent rattachées au compte selon la configuration du service.\n\n5. Contact\n\nPour toute question concernant cette politique, écrivez à contact@lunidex.app.\n\nMesure\n\nSelon vos choix, Vercel Web Analytics et Speed Insights mesurent audience et performance. La mesure produit Neon et PostHog, facultative, envoie des événements TCG prédéfinis, des vues normalisées et un contexte limité d’erreur/performance. Un identifiant technique de compte peut prolonger une session PostHog anonyme ; e-mail, noms et secrets sont exclus. Le replay est soumis au consentement, échantillonné et masqué. Vous pouvez retirer votre choix à tout moment.\n\nCe document juridique est principalement rédigé en français et en anglais. La version française fait foi en cas de divergence, sous réserve des dispositions impératives de votre pays de résidence.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "1. Éléments nécessaires et facultatifs",
+        "href": "#inventory"
+      },
+      {
+        "text": "2. Stockage local",
+        "href": "#local"
+      },
+      {
+        "text": "3. Mesure facultative",
+        "href": "#measurement"
+      },
+      {
+        "text": "4. Gérer vos choix",
+        "href": "#manage"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  },
+  {
+    "path": "/fr/terms",
+    "status": 200,
+    "finalURL": "https://lunidex.app/fr/terms",
+    "duration": 3291,
+    "title": "Conditions générales d'utilisation | Lunidex",
+    "lang": "fr",
+    "h1": [
+      "Conditions générales d’utilisation"
+    ],
+    "main": "Conditions générales d’utilisation\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes conditions encadrent l’utilisation de Lunidex, un projet indépendant et non affilié aux titulaires des marques Pokémon.\n\nLa consultation des contenus publics est gratuite. Certaines fonctions personnelles nécessitent un compte et dépendent de la disponibilité de l’authentification et de la synchronisation.\n\nSOMMAIRE\n\n1. Service\n2. Compte et espace personnel\n3. Sources et propriété intellectuelle\n4. Disponibilité\n5. Contact\n1. Service\n\nLunidex propose un Pokédex, des outils d’équipe, un quiz et un catalogue Pokémon TCG à titre informatif et ludique. Les données provenant de PokéAPI, TCGdex et d’autres sources peuvent changer, être incomplètes ou devenir indisponibles.\n\nAucun achat, abonnement ou paiement n’est proposé par le code actuel du site.\n\n2. Compte et espace personnel\n\nVous pouvez parcourir le site sans compte. La sauvegarde et la synchronisation de votre espace personnel nécessitent une session authentifiée lorsque le service Neon est disponible. Vous êtes responsable de l’adresse e-mail utilisée et de la confidentialité de votre session.\n\nN’utilisez pas le service pour tenter d’accéder aux données d’un autre utilisateur, contourner les limites anti-abus, automatiser un scraping massif ou publier un contenu illicite.\n\n3. Sources et propriété intellectuelle\n\nLunidex est un projet de fans indépendant. Pokémon et les éléments associés restent la propriété de Nintendo, Game Freak, Creatures Inc. et The Pokémon Company. Le code source original de Lunidex est publié sous licence MIT dans le dépôt ; la licence MIT s'applique uniquement au code original et aux éléments du projet pour lesquels le titulaire des droits peut accorder une licence, et ne couvre pas les marques Pokémon, illustrations, images, données de jeu ni les autres contenus tiers.\n\n4. Disponibilité\n\nLe service est fourni selon disponibilité. Une API tierce, l’authentification, la synchronisation, une route ou une fonctionnalité peuvent être temporairement indisponibles. Nous ne promettons pas de conservation permanente des données ni une disponibilité ininterrompue.\n\n5. Contact\n\nPour toute question relative à ces conditions, contactez-nous à contact@lunidex.app.\n\nCe document juridique est principalement rédigé en français et en anglais. La version française fait foi en cas de divergence, sous réserve des dispositions impératives de votre pays de résidence.",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Paramètres",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechercher dans Lunidex⌘K",
+        "label": "Rechercher dans Lunidex",
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Gérer mes préférences",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Signaler un problème",
+        "label": null,
+        "placeholder": null,
+        "type": "button",
+        "disabled": false
+      }
+    ],
+    "links": [
+      {
+        "text": "1. Service",
+        "href": "#service"
+      },
+      {
+        "text": "2. Compte et espace personnel",
+        "href": "#account"
+      },
+      {
+        "text": "3. Sources et propriété intellectuelle",
+        "href": "#property"
+      },
+      {
+        "text": "4. Disponibilité",
+        "href": "#availability"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ],
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "network": []
+  }
+]

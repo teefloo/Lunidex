@@ -1,0 +1,324 @@
+[
+  {
+    "path": "/fr",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 101
+      }
+    ],
+    "passed": 28
+  },
+  {
+    "path": "/fr/pokedex",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 114
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passed": 29
+  },
+  {
+    "path": "/fr/battle",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "count": 5,
+        "nodes": [
+          {
+            "target": [
+              ".text-muted-foreground\\/60"
+            ],
+            "html": "<p class=\"font-mono text-[11px] text-muted-foreground/60\">Select an attacker first</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #98a3bb, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-1\\.5.flex-col.flex:nth-child(1) > .tracking-widest.text-muted-foreground\\/70.uppercase"
+            ],
+            "html": "<p class=\"font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70\">Weather</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8793b0, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-1\\.5.flex-col.flex:nth-child(2) > .tracking-widest.text-muted-foreground\\/70.uppercase"
+            ],
+            "html": "<p class=\"font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70\">Terrain</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8793b0, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-1\\.5.flex-col.flex:nth-child(3) > .tracking-widest.text-muted-foreground\\/70.uppercase"
+            ],
+            "html": "<p class=\"font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70\">Modifiers</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8793b0, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".mt-0\\.5"
+            ],
+            "html": "<p class=\"mt-0.5 text-xs text-muted-foreground/70\">Both Pokémon use their best moves each turn</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #8793b0, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 3
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passed": 27
+  },
+  {
+    "path": "/fr/items",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "count": 153,
+        "nodes": [
+          {
+            "target": [
+              ".page-surface.p-4.h-full > .mb-4.gap-3.justify-between > .text-foreground\\/35.tracking-\\[0\\.18em\\].gap-2"
+            ],
+            "html": "<div class=\"flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.09 (foreground color: #adb3c6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".group\\/button"
+            ],
+            "html": "<button type=\"button\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-...\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #727d9e, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-4 > .flex-wrap.gap-2.flex > .hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(2)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-4 > .flex-wrap.gap-2.flex > .hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(3)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(1)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".max-h-64 > .hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(2)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".max-h-64 > .hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(3)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:border-border\\/90.hover\\:bg-card\\/65.tracking-\\[0\\.16em\\]:nth-child(4)"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target inline-...\" aria-pressed=\"false\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.52 (foreground color: #7e88a6, background color: #ffffff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 4
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passed": 28
+  },
+  {
+    "path": "/fr/ev-iv",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "count": 20,
+        "nodes": [
+          {
+            "target": [
+              ".max-w-md"
+            ],
+            "html": "<p class=\"text-sm text-foreground/50 font-medium max-w-md mx-auto\">Calculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.01 (foreground color: #838eae, background color: #f2f6ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:bg-card\\/50"
+            ],
+            "html": "<button type=\"button\" class=\"touch-target flex min-h-11 flex-1 items-center justify-center text-[11px] font-black uppercase tracking-widest rounded-[2px] transition-[color,background-color,box-shadow] duration-200 text-foreground/50 hover:text-foreground hover:bg-card/50\">Planificateur EV</button>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 2.99 (foreground color: #828dae, background color: #eff4ff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-6 > .space-y-1\\.5 > label"
+            ],
+            "html": "<label class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/50\">Pokémon</label>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.03 (foreground color: #8690ae, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".gap-4 > .space-y-1\\.5:nth-child(1) > label"
+            ],
+            "html": "<label class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/50\">Niveau</label>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.03 (foreground color: #8690ae, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".text-foreground\\/60"
+            ],
+            "html": "<label class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/60\">Nature</label>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.01 (foreground color: #6f7b9e, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3:nth-child(3) > p"
+            ],
+            "html": "<p class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/50\">Stats en jeu</p>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.03 (foreground color: #8690ae, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".grid-cols-2 > .space-y-1:nth-child(1) > .justify-between.flex.items-center > .text-foreground\\/50.text-\\[11px\\].font-bold"
+            ],
+            "html": "<span class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/50\">PV</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.03 (foreground color: #8690ae, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".grid-cols-2 > .space-y-1:nth-child(2) > .justify-between.flex.items-center > .text-foreground\\/50.text-\\[11px\\].font-bold"
+            ],
+            "html": "<span class=\"text-[11px] font-bold uppercase tracking-widest text-foreground/50\">Attaque</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.03 (foreground color: #8690ae, background color: #f7faff, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "label",
+        "impact": "critical",
+        "description": "Ensure every form element has a label",
+        "help": "Form elements must have labels",
+        "count": 1,
+        "nodes": [
+          {
+            "target": [
+              "input[max=\"100\"]"
+            ],
+            "html": "<input inputmode=\"numeric\" min=\"1\" max=\"100\" class=\"touch-target w-full ...\" type=\"number\" value=\"50\" name=\"level\">",
+            "failure": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          }
+        ]
+      },
+      {
+        "id": "select-name",
+        "impact": "critical",
+        "description": "Ensure select element has an accessible name",
+        "help": "Select element must have an accessible name",
+        "count": 1,
+        "nodes": [
+          {
+            "target": [
+              "select"
+            ],
+            "html": "<select name=\"nature\" class=\"touch-target w-full rounded-sm bg-card/50 border border-border/60 px-3 text-sm font-medium text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[border-color,box-shadow]\">",
+            "failure": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          }
+        ]
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passed": 28
+  },
+  {
+    "path": "/fr/tcg/cards/sv03.5-199",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "count": 3,
+        "nodes": [
+          {
+            "target": [
+              ".min-w-0.flex.items-center:nth-child(1) > .min-h-9.px-1.outline-none"
+            ],
+            "html": "<a class=\"inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40\" href=\"/fr\">",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.01 (foreground color: #838eae, background color: #f2f6ff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".min-w-0.flex.items-center:nth-child(2) > .min-h-9.px-1.outline-none"
+            ],
+            "html": "<a class=\"inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40\" href=\"/fr/tcg\">Catalogue JCC</a>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.01 (foreground color: #838eae, background color: #f2f6ff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "a[href=\"/fr/tcg/sets/sv03.5\"]"
+            ],
+            "html": "<a class=\"inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40\" href=\"/fr/tcg/sets/sv03.5\">151</a>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.01 (foreground color: #838eae, background color: #f2f6ff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 21
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passed": 27
+  }
+]

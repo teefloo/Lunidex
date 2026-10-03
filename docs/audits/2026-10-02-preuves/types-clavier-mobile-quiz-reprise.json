@@ -1,0 +1,51 @@
+[
+  {
+    "step": "electric",
+    "text": "Maître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE"
+  },
+  {
+    "step": "escape-stabilized",
+    "dialogs": 1,
+    "focus": "<input data-slot=\"command-input\" class=\"w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50\" placeholder=\"Rechercher une page, un Pokémon ou un outil…\" cmdk-input=\"\" autocomplete=\"off\" autocorrect=\"off\" spellcheck=\"false\" aria-autocomplete=\"list\" role=\"combobox\" aria-expanded=\"true\" aria-controls=\"radix-_r_b_\" aria-labelledby=\"radix-_r_c_\" id=\"radix-_r_d_\" type=\"text\" value=\"\">"
+  },
+  {
+    "step": "mobileheader",
+    "buttons": [
+      {
+        "text": "Paramètres",
+        "aria": null
+      },
+      {
+        "text": "Rechercher dans Lunidex⌘K",
+        "aria": "Rechercher dans Lunidex"
+      },
+      {
+        "text": "Se connecter",
+        "aria": "Se connecter"
+      },
+      {
+        "text": "",
+        "aria": "Plus"
+      }
+    ]
+  },
+  {
+    "step": "quiz-buttons",
+    "buttons": [
+      "Classique",
+      "Défi Quotidien",
+      "Toutes les Générations▼",
+      "Tous les Types▼",
+      "ClassiqueAfficher l'image",
+      "SilhouetteC'est qui ?",
+      "StatsStats de base",
+      "Marathon",
+      "Survie(3 Vies)",
+      "Contre la montre(30s)",
+      "Commencer",
+      "Jour",
+      "Semaine",
+      "Général"
+    ]
+  }
+]

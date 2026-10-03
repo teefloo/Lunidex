@@ -1,0 +1,83 @@
+[
+  {
+    "path": "/api/tcg/cards/sv03.5-199?tcgLang=en",
+    "status": 200,
+    "cache": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "keys": [
+      "card"
+    ],
+    "id": "sv03.5-199",
+    "sample": "{\"card\":{\"category\":\"Pokemon\",\"id\":\"sv03.5-199\",\"illustrator\":\"miki kudo\",\"image\":\"https://assets.tcgdex.net/en/sv/sv03.5/199\",\"localId\":\"199\",\"name\":\"Charizard ex\",\"rarity\":\"Special illustration rare"
+  },
+  {
+    "path": "/api/tcg/compare?ids=sv03.5-199,sv03.5-200&tcgLang=en",
+    "status": 200,
+    "cache": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "keys": [
+      "cards"
+    ],
+    "count": 2,
+    "sample": "{\"cards\":[{\"category\":\"Pokemon\",\"id\":\"sv03.5-199\",\"illustrator\":\"miki kudo\",\"image\":\"https://assets.tcgdex.net/en/sv/sv03.5/199\",\"localId\":\"199\",\"name\":\"Charizard ex\",\"rarity\":\"Special illustration ra"
+  },
+  {
+    "path": "/api/tcg/compare?ids=a,b,c,d,e",
+    "status": 400,
+    "keys": [
+      "error"
+    ],
+    "sample": "{\"error\":\"Invalid ids (max 4)\"}"
+  },
+  {
+    "path": "/api/tcg/collection/set-cards?setId=sv03.5&tcgLang=en&limit=2",
+    "status": 200,
+    "cache": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "keys": [
+      "setId",
+      "cards"
+    ],
+    "count": 2,
+    "sample": "{\"setId\":\"sv03.5\",\"cards\":[{\"id\":\"sv03.5-001\",\"localId\":\"001\",\"name\":\"Bulbasaur\",\"setId\":\"sv03.5\",\"image\":\"https://assets.tcgdex.net/en/sv/sv03.5/001\",\"rarity\":\"Common\",\"variants\":{\"firstEdition\":fals"
+  },
+  {
+    "path": "/api/tcg/collection/set-cards?setId=..%2Fbad",
+    "status": 400,
+    "keys": [
+      "error"
+    ],
+    "sample": "{\"error\":\"Invalid setId\"}"
+  },
+  {
+    "path": "/api/tcg/search?q=zzqa987&tcgLang=en",
+    "status": 200,
+    "cache": "public, s-maxage=300, stale-while-revalidate=3600",
+    "keys": [
+      "cards",
+      "hasMore",
+      "facets",
+      "insights",
+      "options",
+      "filters",
+      "viewMode",
+      "compare"
+    ],
+    "count": 0,
+    "sample": "{\"cards\":[],\"hasMore\":false,\"facets\":{\"cards\":0,\"sets\":[],\"rarities\":[],\"types\":[],\"stages\":[],\"trainers\":[],\"energies\":[]},\"insights\":{\"totalResults\":0,\"totalSets\":0,\"activeSet\":null,\"topRarities\":[]"
+  },
+  {
+    "path": "/api/tcg/sets?tcgLang=fr",
+    "status": 200,
+    "cache": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "keys": [
+      "sets"
+    ],
+    "sample": "{\"sets\":[{\"id\":\"30th-c\",\"name\":\"Collection Classique30ᵉ Anniversaire\",\"cardCount\":{\"total\":30,\"official\":30},\"totalCards\":30,\"releaseRank\":0,\"dataLanguage\":\"fr\"},{\"id\":\"30th\",\"name\":\"30ᵉ Anniversaire\""
+  },
+  {
+    "path": "/api/battle/room?id=invalid",
+    "status": 400,
+    "keys": [
+      "error"
+    ],
+    "sample": "{\"error\":\"Invalid room id\"}"
+  }
+]

@@ -1,0 +1,226 @@
+[
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-fr-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-fr-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-fr-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-fr-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-es-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-es-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-es-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-es-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-de-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-de-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-de-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-de-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-it-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-it-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-it-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-it-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ja-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ja-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ja-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ja-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ko-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ko-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ko-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-ko-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-zh-1.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5639224
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-zh-2.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5666424
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-zh-3.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5934,
+    "bytes": 5714174
+  },
+  {
+    "url": "https://lunidex.app/sitemaps/tcg-cards-zh-4.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "urlCount": 5932,
+    "bytes": 5770548
+  }
+]
