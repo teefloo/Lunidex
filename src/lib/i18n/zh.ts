@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.zh,
+    items_page: mobileToolsTranslations.zh.items_page,
     command_palette: {"title":"搜索 Lunidex","description":"搜索页面和宝可梦","placeholder":"搜索页面、宝可梦和工具…","no_results":"没有结果。","pages":"页面","items":"道具","moves":"招式","abilities":"特性","pokemon":"宝可梦"},
     booster_guides: boosterGuidesTranslations.zh,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: '你之前打开过的页面可能仍可离线访问。',
     },
     types_page: {
+      ...mobileToolsTranslations.zh.types_page,
       title: '属性大师',
       subtitle: '掌握属性，征服每场对战',
       select_type: '选择属性',
@@ -99,6 +104,7 @@ export default {
       no_data: '暂无竞技数据',
     },
     battle: {
+      ...mobileToolsTranslations.zh.battle,
       meta_title: '对战模拟器',
       meta_description: '使用第9世代伤害公式模拟宝可梦对战，计算伤害和击倒概率，并进行完整的 AI 对决。',
     },
@@ -821,6 +827,7 @@ export default {
       cta_blog: "阅读博客",
     },
     settings: {
+      ...mobileToolsTranslations.zh.settings,
       title: '设置',
       sound: '音效',
       theme: '主题',
@@ -1150,6 +1157,7 @@ team: '队伍',
       caught: '已捕获',
     },
     team: {
+      ...mobileToolsTranslations.zh.team,
       title: '宝可梦队伍搭建器',
       subtitle: '分析属性覆盖与弱点，构建平衡的宝可梦队伍',
       disband: '解散队伍',
@@ -1162,6 +1170,7 @@ team: '队伍',
       defensive_strengths: '防御优势',
       no_strengths: '没有抵抗成员。',
       type_coverage: '属性覆盖',
+      move_coverage: '招式覆盖',
       types_present: '拥有属性',
       no_pokemon: '队伍中没有宝可梦',
       missing_types: '缺失属性',
@@ -1204,6 +1213,7 @@ team: '队伍',
       generation_label: '世代',
     },
     compare: {
+      ...mobileToolsTranslations.zh.compare,
       eyebrow: 'Lunidex',
       title: '宝可梦比较',
       subtitle: '能力值分析',
@@ -1560,6 +1570,7 @@ team: '队伍',
       },
     },
     types: {
+      ...mobileToolsTranslations.zh.types,
       select_type: '选择属性',
       normal: '一般',
       fire: '火',
@@ -1590,6 +1601,7 @@ team: '队伍',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.zh.moves_page,
       title: '招式',
       subtitle: '搜索所有宝可梦招式，查看效果、属性、威力、命中率以及可以学习该招式的宝可梦。',
       search_placeholder: '按名称搜索招式...',
@@ -2785,6 +2797,7 @@ team: '队伍',
       title: '好友', subtitle: 'Manage friends and explore shared TCG collections.', eyebrow: 'Community', profile_title: 'Friend profile', profile_subtitle: 'View shared Pokémon TCG data.', loading: 'Loading friend profile...', back: 'Back to friends', back_dashboard: 'Back to dashboard', no_handle: 'No public handle', auth: { required: 'Sign in to use friends.', signin: 'Sign in to manage your friends and shared collections.' }, add: { title: 'Add a friend', placeholder: 'Enter a handle...', button: 'Send request' }, sections: { incoming: 'Incoming requests', outgoing: 'Sent requests', friends: 'My friends' }, empty: { incoming: 'No incoming requests.', outgoing: 'No pending sent requests.', friends: 'Your accepted friends will appear here.' }, actions: { accept: 'Accept', decline: 'Decline', cancel: 'Cancel', view: 'View', remove: 'Remove' }, tabs: { collection: 'Collection', decks: 'Decks' }, visibility: { collection_private: 'This friend is not sharing their collection.', decks_private: 'This friend is not sharing their decks.' }, collection: { cards: 'Owned cards', empty: 'This collection is empty.', load_more: 'Load more cards' }, decks: { empty: 'This friend has no saved decks.', read_only: 'Read only' }, stats: { owned: 'Cards owned', completion: 'Collection completion', loaded: 'Cards loaded', rarity: 'Rarity overview', analysis_progress: 'Analysis in progress', rarity_loading: 'Rarity data will appear as cards load.' }, settings: { title: 'Friend privacy', subtitle: 'Choose what accepted friends can see.', requests: 'Allow friend requests', requests_desc: 'People can find your handle and send a request.', collection: 'Share my collection', collection_desc: 'Accepted friends can view owned cards and progress.', decks: 'Share my decks', decks_desc: 'Accepted friends can view your saved TCG decks.', requests_disabled: 'New friend requests are currently disabled.', saved: 'Friend privacy settings saved.' }, errors: { load: 'Could not load your friendships.', action: 'Could not update friendship.', send: 'Could not send friend request.', not_friend: 'This friend profile is not available.', load_settings: 'Could not load friend settings.', save_settings: 'Could not save friend settings.' }, success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.zh.ev_iv,
       title: 'EV/IV计算器',
       meta_title: 'EV/IV 计算器 — 对战属性工具',
       meta_description: '根据游戏内属性计算任意宝可梦的精确 IV 范围，并在 50 或 100 级规划理想的 EV 分配。',

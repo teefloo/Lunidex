@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.es,
+    items_page: mobileToolsTranslations.es.items_page,
     command_palette: {"title":"Buscar en Lunidex","description":"Busca páginas y Pokémon","placeholder":"Buscar páginas, Pokémon y herramientas…","no_results":"No se encontraron resultados.","pages":"Páginas","items":"Objetos","moves":"Movimientos","abilities":"Habilidades","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.es,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: 'Las páginas que ya has visitado pueden seguir disponibles sin conexión.',
     },
     types_page: {
+      ...mobileToolsTranslations.es.types_page,
       title: 'Maestro de Tipos',
       subtitle: 'Domina los elementos y conquista cada batalla',
       select_type: 'Seleccionar Tipo',
@@ -99,6 +104,7 @@ export default {
       no_data: 'No hay datos competitivos disponibles',
     },
     battle: {
+      ...mobileToolsTranslations.es.battle,
       meta_title: 'Simulador de combate',
       meta_description: 'Simula combates Pokémon con la fórmula de daño de la Gen 9, calcula el daño y las probabilidades de K.O., y juega duelos completos contra la IA.',
     },
@@ -828,6 +834,7 @@ export default {
       cta_blog: "Leer el blog",
     },
     settings: {
+      ...mobileToolsTranslations.es.settings,
       title: 'Ajustes',
       sound: 'Efectos de sonido',
       theme: 'Tema',
@@ -1157,6 +1164,7 @@ team: 'Equipo',
       caught: 'Capturado',
     },
     team: {
+      ...mobileToolsTranslations.es.team,
       title: 'Constructor de equipos Pokémon',
       subtitle: 'Crea un equipo Pokémon equilibrado con cobertura de tipos y análisis de debilidades',
       disband: 'Disolver Equipo',
@@ -1169,6 +1177,7 @@ team: 'Equipo',
       defensive_strengths: 'Fortalezas defensivas',
       no_strengths: 'Ningún tipo es resistido por más de 3 miembros.',
       type_coverage: 'Cobertura de tipos',
+      move_coverage: 'Cobertura de movimientos',
       types_present: 'Tipos presentes',
       no_pokemon: 'Sin Pokémon en el equipo',
       missing_types: 'Tipos faltantes',
@@ -1211,6 +1220,7 @@ team: 'Equipo',
       generation_label: 'Generación',
     },
     compare: {
+      ...mobileToolsTranslations.es.compare,
       eyebrow: 'Lunidex',
       title: 'Comparar Pokémon',
       subtitle: 'Análisis lado a lado',
@@ -1567,6 +1577,7 @@ team: 'Equipo',
       },
     },
     types: {
+      ...mobileToolsTranslations.es.types,
       select_type: 'Seleccionar tipo',
       normal: 'Normal',
       fire: 'Fuego',
@@ -1597,6 +1608,7 @@ team: 'Equipo',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.es.moves_page,
       title: 'Movimientos',
       subtitle: 'Explora cada movimiento Pokémon: efectos, tipo, potencia, precisión y la lista de Pokémon que pueden aprenderlo.',
       search_placeholder: 'Buscar movimientos por nombre...',
@@ -2792,6 +2804,7 @@ team: 'Equipo',
       auth: { required: 'Sign in to use friends.', signin: 'Sign in to manage your friends and shared collections.' }, add: { title: 'Add a friend', placeholder: 'Enter a handle...', button: 'Send request' }, sections: { incoming: 'Incoming requests', outgoing: 'Sent requests', friends: 'My friends' }, empty: { incoming: 'No incoming requests.', outgoing: 'No pending sent requests.', friends: 'Your accepted friends will appear here.' }, actions: { accept: 'Accept', decline: 'Decline', cancel: 'Cancel', view: 'View', remove: 'Remove' }, tabs: { collection: 'Collection', decks: 'Decks' }, visibility: { collection_private: 'This friend is not sharing their collection.', decks_private: 'This friend is not sharing their decks.' }, collection: { cards: 'Owned cards', empty: 'This collection is empty.', load_more: 'Load more cards' }, decks: { empty: 'This friend has no saved decks.', read_only: 'Read only' }, stats: { owned: 'Cards owned', completion: 'Collection completion', loaded: 'Cards loaded', rarity: 'Rarity overview', analysis_progress: 'Analysis in progress', rarity_loading: 'Rarity data will appear as cards load.' }, settings: { title: 'Friend privacy', subtitle: 'Choose what accepted friends can see.', requests: 'Allow friend requests', requests_desc: 'People can find your handle and send a request.', collection: 'Share my collection', collection_desc: 'Accepted friends can view owned cards and progress.', decks: 'Share my decks', decks_desc: 'Accepted friends can view your saved TCG decks.', requests_disabled: 'New friend requests are currently disabled.', saved: 'Friend privacy settings saved.' }, errors: { load: 'Could not load your friendships.', action: 'Could not update friendship.', send: 'Could not send friend request.', not_friend: 'This friend profile is not available.', load_settings: 'Could not load friend settings.', save_settings: 'Could not save friend settings.' }, success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.es.ev_iv,
       title: 'Calculadora EV/IV',
       meta_title: 'Calculadora EV/IV — Herramienta de estadísticas competitivas',
       meta_description: 'Calcula el rango exacto de IV de cualquier Pokémon a partir de sus estadísticas en el juego y planifica la distribución perfecta de EV al nivel 50 o 100.',

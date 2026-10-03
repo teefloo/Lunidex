@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.ko,
+    items_page: mobileToolsTranslations.ko.items_page,
     command_palette: {"title":"Lunidex 검색","description":"페이지와 포켓몬 검색","placeholder":"페이지, 포켓몬, 도구 검색…","no_results":"검색 결과가 없습니다.","pages":"페이지","items":"도구","moves":"기술","abilities":"특성","pokemon":"포켓몬"},
     booster_guides: boosterGuidesTranslations.ko,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: '이미 열어 본 페이지는 오프라인에서도 이용할 수 있습니다.',
     },
     types_page: {
+      ...mobileToolsTranslations.ko.types_page,
       title: '타입 마스터',
       subtitle: '속성을 마스터하고 모든 배틀에서 승리하세요',
       select_type: '타입 선택',
@@ -99,6 +104,7 @@ export default {
       no_data: '경쟁전 데이터가 없습니다',
     },
     battle: {
+      ...mobileToolsTranslations.ko.battle,
       meta_title: '배틀 시뮬레이터',
       meta_description: '9세대 데미지 공식으로 포켓몬 배틀을 시뮬레이션하고 피해량과 KO 확률을 계산하며 AI와의 전체 듀얼을 즐겨보세요.',
     },
@@ -821,6 +827,7 @@ export default {
       cta_blog: "블로그 읽기",
     },
     settings: {
+      ...mobileToolsTranslations.ko.settings,
       title: '설정',
       sound: '효과음',
       theme: '테마',
@@ -1150,6 +1157,7 @@ team: '팀',
       caught: '포획됨',
     },
     team: {
+      ...mobileToolsTranslations.ko.team,
       title: '포켓몬 팀 빌더',
       subtitle: '타입 상성과 약점을 분석해 균형 잡힌 포켓몬 팀을 구성하세요',
       disband: '팀 해체',
@@ -1162,6 +1170,7 @@ team: '팀',
       defensive_strengths: '방어 강점',
       no_strengths: '저항하는 멤버 없음.',
       type_coverage: '타입 상성',
+      move_coverage: '기술 범위',
       types_present: ' 보유 타입',
       no_pokemon: '팀에 포켓몬 없음',
       missing_types: '결여 타입',
@@ -1204,6 +1213,7 @@ team: '팀',
       generation_label: '세대',
     },
     compare: {
+      ...mobileToolsTranslations.ko.compare,
       eyebrow: 'Lunidex',
       title: '포켓몬 비교',
       subtitle: '스탯 분석',
@@ -1560,6 +1570,7 @@ team: '팀',
       },
     },
     types: {
+      ...mobileToolsTranslations.ko.types,
       select_type: '타입 선택',
       normal: '노말',
       fire: '불꽃',
@@ -1590,6 +1601,7 @@ team: '팀',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.ko.moves_page,
       title: '기술',
       subtitle: '모든 포켓몬 기술을 검색하고 효과, 타입, 위력, 명중률과 배울 수 있는 포켓몬을 확인하세요.',
       search_placeholder: '기술 이름으로 검색...',
@@ -2784,6 +2796,7 @@ team: '팀',
       title: '친구', subtitle: 'Manage friends and explore shared TCG collections.', eyebrow: 'Community', profile_title: 'Friend profile', profile_subtitle: 'View shared Pokémon TCG data.', loading: 'Loading friend profile...', back: 'Back to friends', back_dashboard: 'Back to dashboard', no_handle: 'No public handle', auth: { required: 'Sign in to use friends.', signin: 'Sign in to manage your friends and shared collections.' }, add: { title: 'Add a friend', placeholder: 'Enter a handle...', button: 'Send request' }, sections: { incoming: 'Incoming requests', outgoing: 'Sent requests', friends: 'My friends' }, empty: { incoming: 'No incoming requests.', outgoing: 'No pending sent requests.', friends: 'Your accepted friends will appear here.' }, actions: { accept: 'Accept', decline: 'Decline', cancel: 'Cancel', view: 'View', remove: 'Remove' }, tabs: { collection: 'Collection', decks: 'Decks' }, visibility: { collection_private: 'This friend is not sharing their collection.', decks_private: 'This friend is not sharing their decks.' }, collection: { cards: 'Owned cards', empty: 'This collection is empty.', load_more: 'Load more cards' }, decks: { empty: 'This friend has no saved decks.', read_only: 'Read only' }, stats: { owned: 'Cards owned', completion: 'Collection completion', loaded: 'Cards loaded', rarity: 'Rarity overview', analysis_progress: 'Analysis in progress', rarity_loading: 'Rarity data will appear as cards load.' }, settings: { title: 'Friend privacy', subtitle: 'Choose what accepted friends can see.', requests: 'Allow friend requests', requests_desc: 'People can find your handle and send a request.', collection: 'Share my collection', collection_desc: 'Accepted friends can view owned cards and progress.', decks: 'Share my decks', decks_desc: 'Accepted friends can view your saved TCG decks.', requests_disabled: 'New friend requests are currently disabled.', saved: 'Friend privacy settings saved.' }, errors: { load: 'Could not load your friendships.', action: 'Could not update friendship.', send: 'Could not send friend request.', not_friend: 'This friend profile is not available.', load_settings: 'Could not load friend settings.', save_settings: 'Could not save friend settings.' }, success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.ko.ev_iv,
       title: 'EV/IV 계산기',
       meta_title: 'EV/IV 계산기 — 대전 스탯 도구',
       meta_description: '게임 내 스탯으로 포켓몬의 정확한 IV 범위를 계산하고 레벨 50 또는 100에서 완벽한 EV 분배를 계획하세요.',

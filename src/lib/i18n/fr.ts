@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.fr,
+    items_page: mobileToolsTranslations.fr.items_page,
     command_palette: {"title":"Rechercher dans Lunidex","description":"Recherchez des pages et des Pokémon","placeholder":"Rechercher une page, un Pokémon ou un outil…","no_results":"Aucun résultat.","pages":"Pages","items":"Objets","moves":"Capacités","abilities":"Talents","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.fr,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: 'Les pages déjà consultées peuvent rester accessibles hors connexion.',
     },
     types_page: {
+      ...mobileToolsTranslations.fr.types_page,
       title: 'Maître des Types',
       subtitle: 'Maîtrisez les éléments et conquérez chaque combat',
       select_type: 'Sélectionner un type',
@@ -99,6 +104,7 @@ export default {
       no_data: 'Aucune donnée compétitive disponible',
     },
     battle: {
+      ...mobileToolsTranslations.fr.battle,
       meta_title: 'Simulateur de combat',
       meta_description: 'Simulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.',
     },
@@ -1476,6 +1482,7 @@ export default {
       },
     },
     settings: {
+      ...mobileToolsTranslations.fr.settings,
       title: 'Paramètres',
       sound: 'Effets sonores',
       theme: 'Thème',
@@ -1805,6 +1812,7 @@ team: 'Équipe',
       caught: 'Capturé',
     },
     compare: {
+      ...mobileToolsTranslations.fr.compare,
       eyebrow: 'Lunidex',
       title: 'Comparer les Pokémon',
       subtitle: 'Analyse côte à côte',
@@ -2079,6 +2087,7 @@ team: 'Équipe',
       },
     },
     types: {
+      ...mobileToolsTranslations.fr.types,
       select_type: 'Sélectionner un type',
       normal: 'Normal',
       fire: 'Feu',
@@ -2183,6 +2192,7 @@ team: 'Équipe',
       unknown: 'Inconnu',
     },
     team: {
+      ...mobileToolsTranslations.fr.team,
       title: 'Constructeur d’équipe Pokémon',
       subtitle: 'Constructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9',
       disband: 'Dissoudre l\'équipe',
@@ -2195,6 +2205,7 @@ team: 'Équipe',
       defensive_strengths: 'Forces défensives',
       no_strengths: 'Aucune force majeure.',
       type_coverage: 'Couverture de types',
+      move_coverage: 'Couverture des attaques',
       types_present: 'Types présents',
       no_pokemon: 'Aucun Pokémon',
       missing_types: 'Types manquants',
@@ -2246,6 +2257,7 @@ team: 'Équipe',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.fr.moves_page,
       title: 'Capacités',
       subtitle: 'Explorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.',
       search_placeholder: 'Rechercher une capacité par nom...',
@@ -3455,6 +3467,7 @@ team: 'Équipe',
       success: { sent: 'Demande d’ami envoyée.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.fr.ev_iv,
       title: 'Calculateur EV/IV',
       meta_title: 'Calculateur EV/IV — Outil de statistiques compétitives',
       meta_description: 'Calculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.',

@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.ja,
+    items_page: mobileToolsTranslations.ja.items_page,
     command_palette: {"title":"Lunidexを検索","description":"ページとポケモンを検索","placeholder":"ページ、ポケモン、ツールを検索…","no_results":"結果がありません。","pages":"ページ","items":"道具","moves":"技","abilities":"特性","pokemon":"ポケモン"},
     booster_guides: boosterGuidesTranslations.ja,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: 'すでに開いたページはオフラインでも利用できる場合があります。',
     },
     types_page: {
+      ...mobileToolsTranslations.ja.types_page,
       title: 'タイプマスター',
       subtitle: '属性を極めてバトルを制そう',
       select_type: 'タイプを選択',
@@ -99,6 +104,7 @@ export default {
       no_data: '対戦データがありません',
     },
     battle: {
+      ...mobileToolsTranslations.ja.battle,
       meta_title: 'バトルシミュレーター',
       meta_description: '第9世代のダメージ計算式でポケモンバトルをシミュレートし、ダメージとKO率を計算して、AIとの本格的なデュエルを楽しめます。',
     },
@@ -821,6 +827,7 @@ export default {
       cta_blog: "ブログを読む",
     },
     settings: {
+      ...mobileToolsTranslations.ja.settings,
       title: '設定',
       sound: '効果音',
       theme: 'テーマ',
@@ -1150,6 +1157,7 @@ team: 'チーム',
       caught: '捕獲済み',
     },
     team: {
+      ...mobileToolsTranslations.ja.team,
       title: 'ポケモンチームビルダー',
       subtitle: 'タイプ相性と弱点を分析して、バランスの良いポケモンチームを作成',
       disband: 'チーム解散',
@@ -1162,6 +1170,7 @@ team: 'チーム',
       defensive_strengths: '防御面',
       no_strengths: '耐えるメンバーがいません。',
       type_coverage: 'タイプ相性',
+      move_coverage: 'わざの範囲',
       types_present: '所属タイプ',
       no_pokemon: 'チームにポケモンなし',
       missing_types: '不足タイプ',
@@ -1204,6 +1213,7 @@ team: 'チーム',
       generation_label: '世代',
     },
     compare: {
+      ...mobileToolsTranslations.ja.compare,
       eyebrow: 'Lunidex',
       title: '比較',
       subtitle: '横並びで比較',
@@ -1560,6 +1570,7 @@ team: 'チーム',
       },
     },
     types: {
+      ...mobileToolsTranslations.ja.types,
       select_type: 'タイプを選択',
       normal: 'ノーマル',
       fire: 'ほのお',
@@ -1590,6 +1601,7 @@ team: 'チーム',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.ja.moves_page,
       title: 'わざ',
       subtitle: 'ポケモンのすべてのわざを検索。効果、タイプ、威力、命中率と覚えられるポケモンを確認できます。',
       search_placeholder: 'わざの名前で検索...',
@@ -2784,6 +2796,7 @@ team: 'チーム',
       title: '友達', subtitle: 'Manage friends and explore shared TCG collections.', eyebrow: 'Community', profile_title: 'Friend profile', profile_subtitle: 'View shared Pokémon TCG data.', loading: 'Loading friend profile...', back: 'Back to friends', back_dashboard: 'Back to dashboard', no_handle: 'No public handle', auth: { required: 'Sign in to use friends.', signin: 'Sign in to manage your friends and shared collections.' }, add: { title: 'Add a friend', placeholder: 'Enter a handle...', button: 'Send request' }, sections: { incoming: 'Incoming requests', outgoing: 'Sent requests', friends: 'My friends' }, empty: { incoming: 'No incoming requests.', outgoing: 'No pending sent requests.', friends: 'Your accepted friends will appear here.' }, actions: { accept: 'Accept', decline: 'Decline', cancel: 'Cancel', view: 'View', remove: 'Remove' }, tabs: { collection: 'Collection', decks: 'Decks' }, visibility: { collection_private: 'This friend is not sharing their collection.', decks_private: 'This friend is not sharing their decks.' }, collection: { cards: 'Owned cards', empty: 'This collection is empty.', load_more: 'Load more cards' }, decks: { empty: 'This friend has no saved decks.', read_only: 'Read only' }, stats: { owned: 'Cards owned', completion: 'Collection completion', loaded: 'Cards loaded', rarity: 'Rarity overview', analysis_progress: 'Analysis in progress', rarity_loading: 'Rarity data will appear as cards load.' }, settings: { title: 'Friend privacy', subtitle: 'Choose what accepted friends can see.', requests: 'Allow friend requests', requests_desc: 'People can find your handle and send a request.', collection: 'Share my collection', collection_desc: 'Accepted friends can view owned cards and progress.', decks: 'Share my decks', decks_desc: 'Accepted friends can view your saved TCG decks.', requests_disabled: 'New friend requests are currently disabled.', saved: 'Friend privacy settings saved.' }, errors: { load: 'Could not load your friendships.', action: 'Could not update friendship.', send: 'Could not send friend request.', not_friend: 'This friend profile is not available.', load_settings: 'Could not load friend settings.', save_settings: 'Could not save friend settings.' }, success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.ja.ev_iv,
       title: 'EV/IV計算機',
       meta_title: 'EV/IV計算機 — 対戦用ステータスツール',
       meta_description: 'ゲーム内のステータスからポケモンの正確なIV範囲を計算し、レベル50または100で理想的なEV配分を計画できます。',

@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.en,
+    items_page: mobileToolsTranslations.en.items_page,
     command_palette: {"title":"Search Lunidex","description":"Search pages and Pokémon","placeholder":"Search pages, Pokémon, and tools…","no_results":"No results found.","pages":"Pages","items":"Items","moves":"Moves","abilities":"Abilities","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.en,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: 'Pages you have already opened may still be available offline.',
     },
     types_page: {
+      ...mobileToolsTranslations.en.types_page,
       title: 'Type Master',
       subtitle: 'Master the elements and conquer every battle',
       select_type: 'Select Type',
@@ -99,6 +104,7 @@ export default {
       no_data: 'No competitive data available',
     },
     battle: {
+      ...mobileToolsTranslations.en.battle,
       meta_title: 'Battle Simulator',
       meta_description: 'Simulate Pokémon battles with the Gen 9 damage formula, calculate damage and KO chances, and run full AI duels.',
     },
@@ -1457,6 +1463,7 @@ export default {
       },
     },
     settings: {
+      ...mobileToolsTranslations.en.settings,
       title: 'Settings',
       sound: 'Sound Effects',
       theme: 'Theme',
@@ -1786,6 +1793,7 @@ export default {
       caught: 'Caught',
     },
     team: {
+      ...mobileToolsTranslations.en.team,
       title: 'Pokémon Team Builder',
       subtitle: 'Free Pokémon Team Builder with type coverage, shared weakness analysis, synergy scoring, and a Gen 9 generation filter',
       disband: 'Disband Team',
@@ -1798,6 +1806,7 @@ export default {
       defensive_strengths: 'Defensive Strengths',
       no_strengths: 'No type is resisted by more than 3 members.',
       type_coverage: 'Type Coverage',
+      move_coverage: 'Move coverage',
       types_present: 'Types Present',
       no_pokemon: 'No Pokémon in team',
       missing_types: 'Missing Types',
@@ -1840,6 +1849,7 @@ export default {
       generation_label: 'Generation',
     },
     compare: {
+      ...mobileToolsTranslations.en.compare,
       eyebrow: 'Lunidex',
       title: 'Compare Pokémon',
       subtitle: 'Side-by-side Analysis',
@@ -2196,6 +2206,7 @@ export default {
       },
     },
     types: {
+      ...mobileToolsTranslations.en.types,
       select_type: 'Select Type',
       normal: 'Normal',
       fire: 'Fire',
@@ -2226,6 +2237,7 @@ export default {
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.en.moves_page,
       title: 'Moves',
       subtitle: 'Explore every Pokémon move, with effects, types, power, accuracy, and the Pokémon that can learn it.',
       search_placeholder: 'Search moves by name...',
@@ -3433,6 +3445,7 @@ export default {
       success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.en.ev_iv,
       title: 'EV/IV Calculator',
       meta_title: 'EV/IV Calculator — Competitive Stat Tool',
       meta_description: 'Calculate the exact IV range for any Pokémon from in-game stats, and plan the perfect EV spread at level 50 or 100.',

@@ -1,3 +1,5 @@
+import { mobileToolsTranslations } from './mobile-tools';
+import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
 import { apiDocsTranslations } from './api-docs';
 import { docsTranslations } from './docs';
@@ -5,6 +7,8 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    not_found_page: notFoundPageTranslations.de,
+    items_page: mobileToolsTranslations.de.items_page,
     command_palette: {"title":"Lunidex durchsuchen","description":"Seiten und Pokémon durchsuchen","placeholder":"Seiten, Pokémon und Werkzeuge suchen…","no_results":"Keine Ergebnisse gefunden.","pages":"Seiten","items":"Items","moves":"Attacken","abilities":"Fähigkeiten","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.de,
     pokedex_page: {
@@ -44,6 +48,7 @@ export default {
       local_note: 'Bereits geöffnete Seiten sind möglicherweise weiterhin offline verfügbar.',
     },
     types_page: {
+      ...mobileToolsTranslations.de.types_page,
       title: 'Typen-Meister',
       subtitle: 'Meistere die Elemente und besiege jeden Gegner',
       select_type: 'Typ auswählen',
@@ -99,6 +104,7 @@ export default {
       no_data: 'Keine Wettkampfdaten verfügbar',
     },
     battle: {
+      ...mobileToolsTranslations.de.battle,
       meta_title: 'Kampf-Simulator',
       meta_description: 'Simuliere Pokémon-Kämpfe mit der Schadensformel der 9. Generation, berechne Schaden und K.-o.-Chancen und spiele vollständige KI-Duelle.',
     },
@@ -821,6 +827,7 @@ export default {
       cta_blog: "Blog lesen",
     },
     settings: {
+      ...mobileToolsTranslations.de.settings,
       title: 'Einstellungen',
       sound: 'Soundeffekte',
       theme: 'Thema',
@@ -1150,6 +1157,7 @@ team: 'Team',
       caught: 'Gefangen',
     },
     team: {
+      ...mobileToolsTranslations.de.team,
       title: 'Pokémon-Team-Builder',
       subtitle: 'Baue ein ausgewogenes Pokémon-Team mit Typenabdeckung und Schwächenanalyse',
       disband: 'Team auflösen',
@@ -1162,6 +1170,7 @@ team: 'Team',
       defensive_strengths: 'Defensive Stärken',
       no_strengths: 'Keine Typen werden von mehr als 3 Mitgliedern resistiert.',
       type_coverage: 'Typ-Abdeckung',
+      move_coverage: 'Attackenabdeckung',
       types_present: 'Vorhandene Typen',
       no_pokemon: 'Keine Pokémon im Team',
       missing_types: 'Fehlende Typen',
@@ -1204,6 +1213,7 @@ team: 'Team',
       generation_label: 'Generation',
     },
     compare: {
+      ...mobileToolsTranslations.de.compare,
       eyebrow: 'Lunidex',
       title: 'Pokémon vergleichen',
       subtitle: 'Statistiken im Vergleich',
@@ -1560,6 +1570,7 @@ team: 'Team',
       },
     },
     types: {
+      ...mobileToolsTranslations.de.types,
       select_type: 'Typ auswählen',
       normal: 'Normal',
       fire: 'Feuer',
@@ -1590,6 +1601,7 @@ team: 'Team',
       },
     },
     moves_page: {
+      ...mobileToolsTranslations.de.moves_page,
       title: 'Attacken',
       subtitle: 'Entdecke jede Pokémon-Attacke mit Effekt, Typ, Stärke, Genauigkeit und allen Pokémon, die sie erlernen können.',
       search_placeholder: 'Attacken nach Namen suchen...',
@@ -2780,6 +2792,7 @@ team: 'Team',
       title: 'Freunde', subtitle: 'Manage friends and explore shared TCG collections.', eyebrow: 'Community', profile_title: 'Friend profile', profile_subtitle: 'View shared Pokémon TCG data.', loading: 'Loading friend profile...', back: 'Back to friends', back_dashboard: 'Back to dashboard', no_handle: 'No public handle', auth: { required: 'Sign in to use friends.', signin: 'Sign in to manage your friends and shared collections.' }, add: { title: 'Add a friend', placeholder: 'Enter a handle...', button: 'Send request' }, sections: { incoming: 'Incoming requests', outgoing: 'Sent requests', friends: 'My friends' }, empty: { incoming: 'No incoming requests.', outgoing: 'No pending sent requests.', friends: 'Your accepted friends will appear here.' }, actions: { accept: 'Accept', decline: 'Decline', cancel: 'Cancel', view: 'View', remove: 'Remove' }, tabs: { collection: 'Collection', decks: 'Decks' }, visibility: { collection_private: 'This friend is not sharing their collection.', decks_private: 'This friend is not sharing their decks.' }, collection: { cards: 'Owned cards', empty: 'This collection is empty.', load_more: 'Load more cards' }, decks: { empty: 'This friend has no saved decks.', read_only: 'Read only' }, stats: { owned: 'Cards owned', completion: 'Collection completion', loaded: 'Cards loaded', rarity: 'Rarity overview', analysis_progress: 'Analysis in progress', rarity_loading: 'Rarity data will appear as cards load.' }, settings: { title: 'Friend privacy', subtitle: 'Choose what accepted friends can see.', requests: 'Allow friend requests', requests_desc: 'People can find your handle and send a request.', collection: 'Share my collection', collection_desc: 'Accepted friends can view owned cards and progress.', decks: 'Share my decks', decks_desc: 'Accepted friends can view your saved TCG decks.', requests_disabled: 'New friend requests are currently disabled.', saved: 'Friend privacy settings saved.' }, errors: { load: 'Could not load your friendships.', action: 'Could not update friendship.', send: 'Could not send friend request.', not_friend: 'This friend profile is not available.', load_settings: 'Could not load friend settings.', save_settings: 'Could not save friend settings.' }, success: { sent: 'Friend request sent.' },
     },
     ev_iv: {
+      ...mobileToolsTranslations.de.ev_iv,
       title: 'EV/IV-Rechner',
       meta_title: 'EV/IV-Rechner — Tool für kompetitive Werte',
       meta_description: 'Berechne die genaue IV-Spanne für jedes Pokémon anhand seiner Ingame-Werte und plane die perfekte EV-Verteilung auf Level 50 oder 100.',
