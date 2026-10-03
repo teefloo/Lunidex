@@ -71,12 +71,12 @@ const STAT_LABELS: Record<IVStat, string> = {
 };
 
 const STAT_COLORS: Record<IVStat, string> = {
-  hp: 'text-red-400',
-  atk: 'text-orange-400',
-  def: 'text-yellow-400',
-  spa: 'text-blue-400',
-  spd: 'text-green-400',
-  spe: 'text-pink-400',
+  hp: 'text-red-800 dark:text-red-300',
+  atk: 'text-orange-800 dark:text-orange-300',
+  def: 'text-yellow-800 dark:text-yellow-300',
+  spa: 'text-blue-800 dark:text-blue-300',
+  spd: 'text-green-800 dark:text-green-300',
+  spe: 'text-pink-800 dark:text-pink-300',
 };
 
 // ---------------------------------------------------------------------------
@@ -86,7 +86,7 @@ const STAT_COLORS: Record<IVStat, string> = {
 interface PokemonPickerProps {
   label: string;
   selected: BreederPokemon | null;
-  onSelect: (p: BreederPokemon) => void;
+  onSelect: (p: BreederPokemon | null) => void;
 }
 
 function PokemonPicker({ label, selected, onSelect }: PokemonPickerProps) {
@@ -161,15 +161,13 @@ const results = useMemo(() => {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{label}</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{label}</p>
 
 {selected ? (
          <div className="flex items-center gap-3 p-3 rounded-sm bg-secondary/30 border border-border/40 group">
            <div className="relative h-14 w-14 flex-shrink-0 bg-background/50 rounded-sm border border-border/40 flex items-center justify-center overflow-hidden">
              <Image
-               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                 ''
-               }${selected.name}.png`}
+               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${allPokemon?.find(pokemon => pokemon.name === selected.name)?.id ?? 0}.png`}
                alt={getLocalizedPokemonName(selected.name, allPokemon, currentLanguage) || selected.name}
                width={56}
                height={56}
@@ -180,33 +178,35 @@ const results = useMemo(() => {
            </div>
            <div className="flex-1 min-w-0">
              <p className="font-black text-sm capitalize text-foreground/90">{getLocalizedPokemonName(selected.name, allPokemon, currentLanguage) || selected.name}</p>
-             <p className="text-[11px] text-foreground/50 font-semibold uppercase tracking-wider mt-0.5">
+             <p className="text-[11px] text-foreground font-semibold uppercase tracking-wider mt-0.5">
                {selected.eggGroups.join(' · ') || t('breeding.unknown_groups')}
              </p>
-             <p className="text-[11px] text-foreground/40 font-semibold uppercase mt-0.5">
+             <p className="text-[11px] text-foreground font-semibold uppercase mt-0.5">
                {selected.isLegendary ? t('breeding.legendary') : selected.isMythical ? t('breeding.mythical') : selected.isDitto ? t('breeding.ditto') : selected.gender}
             </p>
           </div>
           <button
             type="button"
-            onClick={() => setQuery('')}
+            onClick={() => { onSelect(null); setQuery(''); }}
             className="text-[11px] font-black uppercase tracking-wider text-primary/60 hover:text-primary transition-colors px-2 py-1 rounded-sm border border-transparent hover:border-primary/20"
           >
             {t('breeding.change')}
           </button>
         </div>
       ) : (
-        <div className="relative">
+        <div className="relative" onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+        }}>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground" />
             <input
               type="text"
+              aria-label={label}
               value={query}
               onChange={e => { setQuery(e.target.value); setOpen(true); }}
               onFocus={() => setOpen(true)}
-              onBlur={() => setTimeout(() => setOpen(false), 200)}
               placeholder={t('breeding.search_placeholder')}
-              className="w-full pl-9 pr-3 h-11 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+              className="w-full pl-9 pr-3 h-11 rounded-sm border border-border/60 bg-background/50 text-sm font-semibold placeholder:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
             />
           </div>
 {open && results.length > 0 && (
@@ -221,7 +221,7 @@ const results = useMemo(() => {
                    <button
                      key={p.id}
                      type="button"
-                     onMouseDown={() => handleSelect(p.name)}
+                     onClick={() => handleSelect(p.name)}
                      className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-muted/60 transition-colors text-left"
                    >
                      <Image
@@ -233,7 +233,7 @@ const results = useMemo(() => {
                        unoptimized
                      />
                      <span className="font-semibold text-sm capitalize text-foreground/85">{displayName}</span>
-                     <span className="ml-auto font-mono text-[11px] text-foreground/40">#{String(p.id).padStart(3, '0')}</span>
+                     <span className="ml-auto font-mono text-[11px] text-foreground">#{String(p.id).padStart(3, '0')}</span>
                    </button>
                  );
                })}
@@ -258,7 +258,7 @@ interface IvEditorProps {
 function IvEditor({ label, ivs, onChange }: IvEditorProps) {
   return (
     <div className="space-y-3">
-      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{label} IVs</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{label} IVs</p>
       {IV_STATS.map(stat => (
         <div key={stat} className="flex items-center gap-3">
           <span className={cn('w-8 text-[11px] font-black uppercase tracking-wider', STAT_COLORS[stat])}>
@@ -271,10 +271,11 @@ function IvEditor({ label, ivs, onChange }: IvEditorProps) {
               step={1}
               value={[ivs[stat]]}
               onValueChange={(val) => onChange({ ...ivs, [stat]: Array.isArray(val) ? val[0] : (val as number) })}
+              getAriaLabel={() => `${label} ${STAT_LABELS[stat]}`}
               className="w-full"
             />
           </div>
-          <span className="w-7 text-right font-mono text-[11px] font-black text-foreground/80 tabular-nums">
+          <span className="w-7 text-right font-mono text-[11px] font-black text-foreground tabular-nums">
             {ivs[stat]}
           </span>
         </div>
@@ -371,15 +372,17 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
   const canProceed = step === 0 ? (!!parent1 && !!parent2) : true;
 
-  const handleParent1Select = (p: BreederPokemon) => {
+  const handleParent1Select = (p: BreederPokemon | null) => {
     setParent1(p);
+    if (!p) return;
     setP1IVs(p.ivs);
     setP1Nature(p.nature as Nature);
     setP1Gender(p.gender === 'genderless' ? 'genderless' : 'female');
   };
 
-  const handleParent2Select = (p: BreederPokemon) => {
+  const handleParent2Select = (p: BreederPokemon | null) => {
     setParent2(p);
+    if (!p) return;
     setP2IVs(p.ivs);
     setP2Nature(p.nature as Nature);
     setP2Gender(p.gender === 'genderless' ? 'genderless' : 'male');
@@ -432,8 +435,8 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               className={cn(
                 'touch-target flex min-h-11 min-w-0 items-center gap-2 rounded-sm px-3 py-2 text-center text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow] min-[400px]:px-4',
                 i === step && 'bg-primary text-primary-foreground',
-                i < step && 'text-primary/70 hover:text-primary cursor-pointer',
-                i > step && 'text-foreground/30 cursor-default',
+                i < step && 'text-foreground hover:text-primary cursor-pointer',
+                i > step && 'text-foreground cursor-default',
               )}
             >
               <span className={cn(
@@ -458,7 +461,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             </div>
             <div>
               <h2 className="font-black text-lg text-foreground/90">{t('breeding.select_parents_title')}</h2>
-              <p className="text-xs text-foreground/50 font-medium mt-0.5">{t('breeding.select_parents_desc')}</p>
+              <p className="text-xs text-foreground font-medium mt-0.5">{t('breeding.select_parents_desc')}</p>
             </div>
           </div>
 
@@ -476,7 +479,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                         'flex-1 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider border transition-all',
                         p1Gender === g
                           ? 'bg-primary/15 border-primary/30 text-primary'
-                          : 'border-border/40 text-foreground/50 hover:border-border/70',
+                          : 'border-border/40 text-foreground hover:border-border/70',
                       )}
                     >
                       {g === 'female' ? t('breeding.female') : t('breeding.male')}
@@ -498,7 +501,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                         'flex-1 py-2 rounded-sm text-[11px] font-black uppercase tracking-wider border transition-all',
                         p2Gender === g
                           ? 'bg-primary/15 border-primary/30 text-primary'
-                          : 'border-border/40 text-foreground/50 hover:border-border/70',
+                          : 'border-border/40 text-foreground hover:border-border/70',
                       )}
                     >
                       {g === 'female' ? t('breeding.female') : t('breeding.male')}
@@ -518,22 +521,22 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                 : 'bg-red-500/10 border-red-500/20',
             )}>
               {compatibility.compatibility.compatible ? (
-                <CheckCircle2 className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="h-4 w-4 text-green-800 dark:text-green-300 flex-shrink-0 mt-0.5" />
               ) : (
-                <XCircle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                <XCircle className="h-4 w-4 text-red-800 dark:text-red-300 flex-shrink-0 mt-0.5" />
               )}
               <div>
                 <p className={cn(
                   'text-xs font-black uppercase tracking-wider',
-                  compatibility.compatibility.compatible ? 'text-green-400' : 'text-red-400',
+                  compatibility.compatibility.compatible ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300',
                 )}>
                   {compatibility.compatibility.compatible ? t('breeding.compatible') : t('breeding.incompatible')}
                 </p>
                 {compatibility.compatibility.reason && (
-                  <p className="text-xs text-foreground/60 mt-1">{compatibility.compatibility.reason}</p>
+                  <p className="text-xs text-foreground mt-1">{compatibility.compatibility.reason}</p>
                 )}
                 {compatibility.compatibility.compatible && (
-                  <p className="text-xs text-foreground/60 mt-1">
+                  <p className="text-xs text-foreground mt-1">
                     {t('breeding.egg_species')}: <span className="font-black capitalize">{compatibility.compatibility.eggSpecies}</span>
                     {compatibility.compatibility.sharedGroups.length > 0 && (
                       <> · {t('breeding.shared_groups')}: <span className="font-black">{compatibility.compatibility.sharedGroups.join(', ')}</span></>
@@ -553,7 +556,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                 'touch-target flex min-h-11 items-center gap-2 rounded-sm px-6 text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
                 canProceed
                   ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  : 'bg-muted text-foreground/30 cursor-not-allowed',
+                  : 'bg-muted text-foreground cursor-not-allowed',
               )}
             >
               {t('breeding.btn_configure')} <ChevronRight className="h-3.5 w-3.5" />
@@ -567,20 +570,20 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
         <div className="glass-panel p-6 md:p-8 rounded-sm space-y-8">
           <div className="flex items-center gap-3 pb-4 border-b border-border/60">
             <div className="p-2 bg-blue-500/10 rounded-sm">
-              <Dna className="h-5 w-5 text-blue-400" />
+              <Dna className="h-5 w-5 text-blue-800 dark:text-blue-300" />
             </div>
             <div>
               <h2 className="font-black text-lg text-foreground/90">{t('breeding.config_title')}</h2>
-              <p className="text-xs text-foreground/50 font-medium mt-0.5">{t('breeding.config_desc')}</p>
+              <p className="text-xs text-foreground font-medium mt-0.5">{t('breeding.config_desc')}</p>
             </div>
           </div>
 
           {/* Held Items */}
           <div className="space-y-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.held_items')}</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{t('breeding.held_items')}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="text-xs font-bold text-foreground/60 mb-2 capitalize">{parent1?.name ?? t('breeding.parent_1')}</p>
+                <p className="text-xs font-bold text-foreground mb-2 capitalize">{parent1?.name ?? t('breeding.parent_1')}</p>
                 <div className="flex flex-wrap gap-2">
                   {HELD_ITEMS.map(item => (
                     <button
@@ -592,7 +595,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                         'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p1Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
-                          : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
+                          : 'border-border/40 text-foreground hover:border-border/70 hover:text-foreground',
                       )}
                     >
                       {item.label}
@@ -601,7 +604,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                 </div>
               </div>
               <div>
-                <p className="text-xs font-bold text-foreground/60 mb-2 capitalize">{parent2?.name ?? t('breeding.parent_2')}</p>
+                <p className="text-xs font-bold text-foreground mb-2 capitalize">{parent2?.name ?? t('breeding.parent_2')}</p>
                 <div className="flex flex-wrap gap-2">
                   {HELD_ITEMS.map(item => (
                     <button
@@ -613,7 +616,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                         'touch-target min-h-11 rounded-sm border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                         p2Item === item.value
                           ? 'bg-primary/15 border-primary/30 text-primary'
-                          : 'border-border/40 text-foreground/50 hover:border-border/70 hover:text-foreground/80',
+                          : 'border-border/40 text-foreground hover:border-border/70 hover:text-foreground',
                       )}
                     >
                       {item.label}
@@ -632,18 +635,19 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
           {/* Target IVs */}
           <div className="space-y-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_ivs')}</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{t('breeding.target_ivs')}</p>
             <div className="flex flex-wrap gap-2">
               {IV_STATS.map(stat => (
                 <button
                   key={stat}
                   type="button"
+                  aria-pressed={targetIVs[stat]}
                   onClick={() => setTargetIVs(prev => ({ ...prev, [stat]: !prev[stat] }))}
                   className={cn(
                     'touch-target min-h-11 rounded-sm border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-[color,background-color,border-color]',
                     targetIVs[stat]
                       ? 'bg-primary/15 border-primary/30 text-primary'
-                      : 'border-border/40 text-foreground/50 hover:border-border/70',
+                      : 'border-border/40 text-foreground hover:border-border/70',
                   )}
                 >
                   {STAT_LABELS[stat]}
@@ -655,14 +659,15 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
           {/* Target Nature */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.target_nature')}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{t('breeding.target_nature')}</p>
               {(p1Item === 'everstone' || p2Item === 'everstone') && (
-                <Badge variant="outline" className="text-[11px] font-black border-green-500/30 text-green-400 bg-green-500/10">
+                <Badge variant="outline" className="text-[11px] font-black border-green-500/30 text-green-800 dark:text-green-300 bg-green-500/10">
                   {t('breeding.nature_guaranteed')}
                 </Badge>
               )}
             </div>
             <select
+              aria-label={t('breeding.target_nature')}
               value={targetNature}
               onChange={e => setTargetNature(e.target.value as Nature)}
               className="touch-target w-full max-w-xs rounded-sm border border-border/60 bg-background/50 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary capitalize"
@@ -679,7 +684,7 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             <button
               type="button"
               onClick={() => setStep(0)}
-              className="touch-target flex min-h-11 items-center gap-2 rounded-sm border border-border/60 px-4 text-[11px] font-black uppercase tracking-[0.15em] text-foreground/65 hover:border-border/80 hover:text-foreground/80 transition-[color,border-color]"
+              className="touch-target flex min-h-11 items-center gap-2 rounded-sm border border-border/60 px-4 text-[11px] font-black uppercase tracking-[0.15em] text-foreground hover:border-border/80 hover:text-foreground transition-[color,border-color]"
             >
               <ChevronLeft className="h-3.5 w-3.5" /> {t('breeding.btn_back')}
             </button>
@@ -699,20 +704,20 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
         <div className="glass-panel p-6 md:p-8 rounded-sm space-y-8">
           <div className="flex items-center gap-3 pb-4 border-b border-border/60">
             <div className="p-2 bg-emerald-500/10 rounded-sm">
-              <FlaskConical className="h-5 w-5 text-emerald-400" />
+              <FlaskConical className="h-5 w-5 text-emerald-800 dark:text-emerald-300" />
             </div>
             <div>
               <h2 className="font-black text-lg text-foreground/90">{t('breeding.results_title')}</h2>
-              <p className="text-xs text-foreground/50 font-medium mt-0.5">{t('breeding.results_desc')}</p>
+              <p className="text-xs text-foreground font-medium mt-0.5">{t('breeding.results_desc')}</p>
             </div>
           </div>
 
           {!compatibility.compatibility.compatible ? (
             <div className="flex items-start gap-3 p-5 rounded-sm bg-red-500/10 border border-red-500/20">
-              <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="h-5 w-5 text-red-800 dark:text-red-300 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-black text-sm text-red-400 uppercase tracking-wider">{t('breeding.incompatible_parents')}</p>
-                <p className="text-xs text-foreground/60 mt-1">{compatibility.compatibility.reason}</p>
+                <p className="font-black text-sm text-red-800 dark:text-red-300 uppercase tracking-wider">{t('breeding.incompatible_parents')}</p>
+                <p className="text-xs text-foreground mt-1">{compatibility.compatibility.reason}</p>
               </div>
             </div>
           ) : (
@@ -720,20 +725,20 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
               {/* Main stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.probability')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground mb-2">{t('breeding.probability')}</p>
                   <p className="text-2xl font-black text-primary tabular-nums">
                     {(compatibility.targetIvProbability * 100).toFixed(2)}%
                   </p>
                 </div>
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.expected_eggs')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground mb-2">{t('breeding.expected_eggs')}</p>
                   <p className="text-2xl font-black text-foreground/90 tabular-nums">
                     {compatibility.expectedEggs === Infinity ? '∞' : `~${compatibility.expectedEggs}`}
                   </p>
                 </div>
                 <div className="bg-secondary/30 border border-border/40 rounded-sm p-4 text-center">
-                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.iv_slots')}</p>
-                  <p className="text-2xl font-black text-blue-400 tabular-nums">{compatibility.ivSlotsInherited}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground mb-2">{t('breeding.iv_slots')}</p>
+                  <p className="text-2xl font-black text-blue-800 dark:text-blue-300 tabular-nums">{compatibility.ivSlotsInherited}</p>
                 </div>
                 <div className={cn(
                   'border rounded-sm p-4 text-center',
@@ -741,10 +746,10 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                     ? 'bg-green-500/10 border-green-500/20'
                     : 'bg-secondary/30 border-border/40',
                 )}>
-                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40 mb-2">{t('breeding.nature')}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground mb-2">{t('breeding.nature')}</p>
                   <p className={cn(
                     'text-sm font-black capitalize',
-                    compatibility.natureGuaranteed ? 'text-green-400' : 'text-foreground/60',
+                    compatibility.natureGuaranteed ? 'text-green-800 dark:text-green-300' : 'text-foreground',
                   )}>
                     {compatibility.natureGuaranteed ? `${targetNature} ✓` : t('breeding.nature_random')}
                   </p>
@@ -753,16 +758,16 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
               {/* IV Breakdown table */}
               <div className="space-y-2">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground/50">{t('breeding.iv_breakdown')}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">{t('breeding.iv_breakdown')}</p>
                 <div className="rounded-sm border border-border/40 overflow-hidden">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-secondary/30 border-b border-border/40">
-                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_stat')}</th>
-                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_best_source')}</th>
-                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p1_iv')}</th>
-                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_p2_iv')}</th>
-                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground/40">{t('breeding.col_target')}</th>
+                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground">{t('breeding.col_stat')}</th>
+                        <th className="px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-[0.15em] text-foreground">{t('breeding.col_best_source')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground">{t('breeding.col_p1_iv')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground">{t('breeding.col_p2_iv')}</th>
+                        <th className="px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-[0.15em] text-foreground">{t('breeding.col_target')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/20">
@@ -774,20 +779,20 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                             <td className={cn('px-4 py-2.5 font-black', STAT_COLORS[stat])}>
                               {STAT_LABELS[stat]}
                             </td>
-                            <td className="px-4 py-2.5 text-foreground/70 font-semibold capitalize">
+                            <td className="px-4 py-2.5 text-foreground font-semibold capitalize">
                               {slot ? (slot.guaranteed ? `${slot.source} (${t('breeding.guaranteed')})` : slot.source) : '-'}
                             </td>
-                            <td className={cn('px-4 py-2.5 text-center font-black tabular-nums', p1IVs[stat] === 31 ? 'text-green-400' : 'text-foreground/70')}>
+                            <td className={cn('px-4 py-2.5 text-center font-black tabular-nums', p1IVs[stat] === 31 ? 'text-green-800 dark:text-green-300' : 'text-foreground')}>
                               {p1IVs[stat]}
                             </td>
-                            <td className={cn('px-4 py-2.5 text-center font-black tabular-nums', p2IVs[stat] === 31 ? 'text-green-400' : 'text-foreground/70')}>
+                            <td className={cn('px-4 py-2.5 text-center font-black tabular-nums', p2IVs[stat] === 31 ? 'text-green-800 dark:text-green-300' : 'text-foreground')}>
                               {p2IVs[stat]}
                             </td>
                             <td className="px-4 py-2.5 text-center">
                               {isTarget ? (
                                 <span className="text-primary font-black text-[11px]">31 ✓</span>
                               ) : (
-                                <span className="text-foreground/30 text-[11px]">—</span>
+                                <span className="text-foreground text-[11px]">—</span>
                               )}
                             </td>
                           </tr>
@@ -800,8 +805,8 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
 
               {/* Tips */}
               <div className="flex items-start gap-3 p-4 rounded-sm bg-blue-500/10 border border-blue-500/20">
-                <Info className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                <div className="space-y-1 text-xs text-foreground/60">
+                <Info className="h-4 w-4 text-blue-800 dark:text-blue-300 flex-shrink-0 mt-0.5" />
+                <div className="space-y-1 text-xs text-foreground">
                   {!compatibility.ivSlotsInherited || compatibility.ivSlotsInherited < 5 ? (
                     <p>{t('breeding.tip_destiny_knot')}</p>
                   ) : null}
@@ -816,8 +821,8 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
                {parent1 && (
                  <div className="flex items-center justify-between p-4 rounded-sm bg-secondary/20 border border-border/40">
                    <div>
-                     <p className="text-xs font-black uppercase tracking-wider text-foreground/60">{t('breeding.egg_move_link_title')}</p>
-                     <p className="text-[11px] text-foreground/40 mt-0.5">{t('breeding.egg_move_link_desc', { name: getLocalizedPokemonName(parent1.name, allPokemon, currentLanguage) || parent1.name })}</p>
+                     <p className="text-xs font-black uppercase tracking-wider text-foreground">{t('breeding.egg_move_link_title')}</p>
+                     <p className="text-[11px] text-foreground mt-0.5">{t('breeding.egg_move_link_desc', { name: getLocalizedPokemonName(parent1.name, allPokemon, currentLanguage) || parent1.name })}</p>
                    </div>
                    <Link
                      href={localeHref(`/breeding?pokemon=${parent1.name}&tab=egg-moves`)}
@@ -834,14 +839,14 @@ export function BreedingCalculator({ initialPokemon }: BreedingCalculatorProps) 
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] border border-border/60 text-foreground/60 hover:border-border/80 hover:text-foreground/80 transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] border border-border/60 text-foreground hover:border-border/80 hover:text-foreground transition-all"
             >
               <ChevronLeft className="h-3.5 w-3.5" /> {t('breeding.btn_back')}
             </button>
             <button
               type="button"
               onClick={() => { setStep(0); setParent1(null); setParent2(null); }}
-              className="flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] border border-border/60 text-foreground/60 hover:border-border/80 hover:text-foreground/80 transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] border border-border/60 text-foreground hover:border-border/80 hover:text-foreground transition-all"
             >
               <Shuffle className="h-3.5 w-3.5" /> {t('breeding.btn_new_pair')}
             </button>

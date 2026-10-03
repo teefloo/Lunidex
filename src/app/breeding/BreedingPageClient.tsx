@@ -76,7 +76,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground/90">
           {t('breeding.title')}
         </h1>
-        <p className="text-sm text-foreground/50 font-medium max-w-lg mx-auto">
+        <p className="text-sm text-foreground/80 font-medium max-w-lg mx-auto">
           {t('breeding.subtitle')}
         </p>
       </div>
@@ -94,7 +94,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                 'touch-target flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm text-[11px] font-black uppercase tracking-[0.15em] transition-[color,background-color,box-shadow]',
                 activeTab === tab.id
                   ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-foreground/50 hover:text-foreground/80',
+                  : 'text-foreground/80 hover:text-foreground/80',
               )}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -116,7 +116,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
             <div className="flex flex-col items-center gap-5 py-8">
               <Egg className="h-12 w-12 text-foreground/15" />
               <div className="w-full max-w-sm space-y-3 text-center">
-                <p className="text-sm font-bold text-foreground/50">{t('breeding.egg_move_prompt')}</p>
+                <p className="text-sm font-bold text-foreground/80">{t('breeding.egg_move_prompt')}</p>
                 <div className="relative flex gap-2">
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />

@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { Swords, Zap, CloudRain, Sun, CloudSnow, Wind, ChevronDown, RotateCcw, Play, Shield, Flame, Droplets } from 'lucide-react';
+import { getReadableTextColor } from '@/lib/color-contrast';
 import { PokemonDetail, TYPE_COLORS } from '@/types/pokemon';
 import {
   calcDamage,
@@ -15,6 +16,7 @@ import {
 import { getAllPokemonNames, getMoveDetail, getPokemonDetail } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { getPokemonDisplayName } from '@/lib/form-names';
+import { useTranslation } from '@/lib/i18n';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -38,6 +40,7 @@ function PokemonSelector({
   value: PokemonWithMoves | null;
   onChange: (p: PokemonWithMoves | null) => void;
 }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<{ name: string; id: number }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -128,14 +131,16 @@ function PokemonSelector({
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
 
       {/* Search input */}
-      <div className="relative">
+      <div className="relative" onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}>
         <input
           type="text"
           value={query}
           onChange={e => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 200)}
-          placeholder="Search Pokémon..."
+          aria-label={label}
+          placeholder={t('battle.search_pokemon')}
           className="h-10 w-full rounded-sm border border-border/70 bg-background/50 px-3 font-mono text-[11px] placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
         <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50" />
@@ -146,7 +151,7 @@ function PokemonSelector({
               <button
                 key={s.name}
                 type="button"
-                onMouseDown={() => selectPokemon(s.name)}
+                onClick={() => selectPokemon(s.name)}
                 className="flex w-full items-center gap-2 px-3 py-2 text-left text-[11px] font-medium capitalize hover:bg-muted/60"
               >
 <Image
@@ -158,7 +163,7 @@ function PokemonSelector({
                    unoptimized
                  />
                 <span>{s.name}</span>
-                <span className="ml-auto font-mono text-[11px] text-muted-foreground/60">
+                <span className="ml-auto font-mono text-[11px] text-muted-foreground">
                   #{s.id.toString().padStart(3, '0')}
                 </span>
               </button>
@@ -188,13 +193,13 @@ function PokemonSelector({
                 {valueDisplayName}
               </p>
               <div className="mt-1 flex flex-wrap gap-1">
-                {types.map(t => (
+                {types.map(typeItem => (
                   <span
-                    key={t.type.name}
+                    key={typeItem.type.name}
                     className="rounded px-1.5 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide text-white"
-                    style={{ background: TYPE_COLORS[t.type.name] }}
+                    style={{ background: TYPE_COLORS[typeItem.type.name], color: getReadableTextColor(TYPE_COLORS[typeItem.type.name]) }}
                   >
-                    {t.type.name}
+                    {t(`types.${typeItem.type.name}`)}
                   </span>
                 ))}
               </div>
@@ -217,7 +222,7 @@ function PokemonSelector({
           {value.moves.length > 0 && (
             <div className="border-t border-border/40 px-3 py-2">
               <p className="font-mono text-[11px] text-muted-foreground">
-                {value.moves.length} offensive moves loaded
+                {t('battle.offensive_moves_loaded', { count: value.moves.length })}
               </p>
             </div>
           )}
@@ -225,7 +230,7 @@ function PokemonSelector({
       )}
 
       {loading && (
-        <p className="font-mono text-[11px] text-muted-foreground animate-pulse">Loading...</p>
+        <p className="font-mono text-[11px] text-muted-foreground animate-pulse">{t('battle.loading')}</p>
       )}
     </div>
   );
@@ -244,8 +249,9 @@ function MoveSelector({
   selected: BattleMove | null;
   onSelect: (m: BattleMove) => void;
 }) {
+  const { t } = useTranslation();
   if (moves.length === 0) {
-    return <p className="font-mono text-[11px] text-muted-foreground/60">Select an attacker first</p>;
+    return <p className="font-mono text-[11px] text-muted-foreground">{t('battle.select_attacker_first')}</p>;
   }
 
   return (
@@ -278,13 +284,14 @@ function MoveSelector({
 // ---------------------------------------------------------------------------
 
 function DamageBar({ result }: { result: DamageResult }) {
+  const { t } = useTranslation();
   const verdict =
     result.ohkoChance >= 0.9375 ? 'OHKO'
     : result.ohkoChance > 0 ? `OHKO ${Math.round(result.ohkoChance * 100)}%`
     : result.twoHkoChance >= 1 ? '2HKO'
     : result.twoHkoChance > 0 ? `2HKO ${Math.round(result.twoHkoChance * 100)}%`
     : result.maxPercent >= 50 ? '3HKO est.'
-    : 'No KO';
+    : t('battle.no_ko');
 
   const verdictColor =
     result.ohkoChance > 0 ? 'text-red-500'
@@ -296,7 +303,7 @@ function DamageBar({ result }: { result: DamageResult }) {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <span className="font-mono text-[11px] text-muted-foreground">
-          {result.minPercent}% – {result.maxPercent}% of max HP
+          {t('battle.hp_percent_range', { min: result.minPercent, max: result.maxPercent })}
         </span>
         <span className={cn('font-mono text-xs font-bold', verdictColor)}>{verdict}</span>
       </div>
@@ -313,10 +320,10 @@ function DamageBar({ result }: { result: DamageResult }) {
         {/* 100% marker */}
         <div className="absolute inset-y-0 left-[calc(100%-1px)] w-px bg-red-500/60" />
       </div>
-      <div className="flex justify-between font-mono text-[11px] text-muted-foreground/60">
-        <span>Min: {result.min}</span>
-        <span>Avg: {result.average}</span>
-        <span>Max: {result.max}</span>
+      <div className="flex justify-between font-mono text-[11px] text-muted-foreground">
+        <span>{t('battle.minimum')}: {result.min}</span>
+        <span>{t('battle.average')}: {result.average}</span>
+        <span>{t('battle.maximum')}: {result.max}</span>
       </div>
     </div>
   );
@@ -327,10 +334,11 @@ function DamageBar({ result }: { result: DamageResult }) {
 // ---------------------------------------------------------------------------
 
 function BattleLog({ log }: { log: BattleLogEntry[] }) {
+  const { t } = useTranslation();
   const effectivenessLabel = (e: BattleLogEntry['effectiveness']) => {
-    if (e === 'super') return 'It\'s super effective!';
-    if (e === 'resist') return 'Not very effective...';
-    if (e === 'immune') return 'It had no effect!';
+    if (e === 'super') return t('battle.effectiveness_super');
+    if (e === 'resist') return t('battle.effectiveness_resist');
+    if (e === 'immune') return t('battle.effectiveness_immune');
     return '';
   };
 
@@ -343,26 +351,25 @@ function BattleLog({ log }: { log: BattleLogEntry[] }) {
         >
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              Turn {entry.turn}
+              {t('battle.turn', { turn: entry.turn })}
             </span>
             <span className={cn(
               'font-mono text-[11px] font-semibold uppercase tracking-wide',
               entry.effectiveness === 'super' ? 'text-red-400'
-              : entry.effectiveness === 'immune' ? 'text-muted-foreground/40'
+              : entry.effectiveness === 'immune' ? 'text-muted-foreground'
               : entry.effectiveness === 'resist' ? 'text-blue-400'
-              : 'text-muted-foreground/60'
+              : 'text-muted-foreground'
             )}>
               {effectivenessLabel(entry.effectiveness)}
             </span>
           </div>
           <p className="mt-0.5 text-xs text-foreground/85">
-            <span className="font-semibold capitalize">{entry.attacker}</span>
-            {' used '}
-            <span className="italic capitalize">{entry.moveName}</span>
-            {' → '}
-            <span className="font-mono font-bold text-primary">{entry.damagePercent}%</span>
-            {' dmg on '}
-            <span className="font-semibold capitalize">{entry.defender}</span>
+            {t('battle.turn_summary', {
+              attacker: entry.attacker,
+              move: entry.moveName,
+              percent: entry.damagePercent,
+              defender: entry.defender,
+            })}
           </p>
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted/50">
             <div
@@ -370,8 +377,12 @@ function BattleLog({ log }: { log: BattleLogEntry[] }) {
               style={{ width: `${Math.max(0, entry.defenderRemainingPercent)}%` }}
             />
           </div>
-          <p className="mt-0.5 font-mono text-[11px] text-muted-foreground/60">
-            {entry.defender} HP: {entry.defenderRemainingHp} ({entry.defenderRemainingPercent}%)
+          <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+            {t('battle.remaining_hp', {
+              name: entry.defender,
+              hp: entry.defenderRemainingHp,
+              percent: entry.defenderRemainingPercent,
+            })}
           </p>
         </div>
       ))}
@@ -384,6 +395,7 @@ function BattleLog({ log }: { log: BattleLogEntry[] }) {
 // ---------------------------------------------------------------------------
 
 export default function BattleSimulator() {
+  const { t } = useTranslation();
   const [attacker, setAttacker] = useState<PokemonWithMoves | null>(null);
   const [defender, setDefender] = useState<PokemonWithMoves | null>(null);
   const [selectedMove, setSelectedMove] = useState<BattleMove | null>(null);
@@ -435,7 +447,7 @@ export default function BattleSimulator() {
       {/* Top: Pokémon selectors + move/options */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto_1fr]">
         {/* Attacker */}
-        <PokemonSelector label="Attacker" value={attacker} onChange={p => { setAttacker(p); setSelectedMove(null); }} />
+        <PokemonSelector label={t('battle.attacker')} value={attacker} onChange={p => { setAttacker(p); setSelectedMove(null); }} />
 
         {/* VS */}
         <div className="flex items-center justify-center">
@@ -445,13 +457,13 @@ export default function BattleSimulator() {
         </div>
 
         {/* Defender */}
-        <PokemonSelector label="Defender" value={defender} onChange={setDefender} />
+        <PokemonSelector label={t('battle.defender')} value={defender} onChange={setDefender} />
       </div>
 
       {/* Move selector */}
       <div className="rounded-sm border border-border/60 bg-card p-4">
         <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-          Move (from attacker&apos;s moveset)
+          {t('battle.move_selection')}
         </p>
         <MoveSelector
           moves={attacker?.moves ?? []}
@@ -463,27 +475,29 @@ export default function BattleSimulator() {
       {/* Options */}
       <div className="rounded-sm border border-border/60 bg-card p-4">
         <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-          Battle conditions
+          {t('battle.conditions')}
         </p>
         <div className="flex flex-wrap gap-4">
           {/* Weather */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Weather</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{t('battle.weather')}</p>
             <div className="flex gap-1">
               {weatherOptions.map(w => (
                 <button
                   key={w}
                   type="button"
+                  aria-label={t(`battle.weather_${w}`)}
+                  aria-pressed={options.weather === w}
                   onClick={() => setOptions(o => ({ ...o, weather: w }))}
                   className={cn(
-                    'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
+                    'touch-target flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
                     options.weather === w
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
                   )}
                 >
                   {weatherIcons[w]}
-                  <span className="hidden sm:inline">{w}</span>
+                  <span className={w === 'none' ? '' : 'hidden sm:inline'}>{t(`battle.weather_${w}`)}</span>
                 </button>
               ))}
             </div>
@@ -491,21 +505,22 @@ export default function BattleSimulator() {
 
           {/* Terrain */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Terrain</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{t('battle.terrain')}</p>
             <div className="flex flex-wrap gap-1">
-              {terrainOptions.map(t => (
+              {terrainOptions.map(terrain => (
                 <button
-                  key={t}
+                  key={terrain}
                   type="button"
-                  onClick={() => setOptions(o => ({ ...o, terrain: t }))}
+                  aria-pressed={options.terrain === terrain}
+                  onClick={() => setOptions(o => ({ ...o, terrain }))}
                   className={cn(
-                    'rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
-                    options.terrain === t
+                    'touch-target min-h-11 rounded-sm border px-2 py-1 font-mono text-[11px] capitalize transition-all',
+                    options.terrain === terrain
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
                   )}
                 >
-                  {t}
+                  {t(`battle.terrain_${terrain}`)}
                 </button>
               ))}
             </div>
@@ -513,12 +528,12 @@ export default function BattleSimulator() {
 
           {/* Toggles */}
           <div className="flex flex-col gap-1.5">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">Modifiers</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{t('battle.modifiers')}</p>
             <div className="flex flex-wrap gap-1">
               {[
-                { key: 'isCritical', label: 'Critical', icon: <Zap className="h-3 w-3" /> },
-                { key: 'isAdaptability', label: 'Adaptability', icon: <Shield className="h-3 w-3" /> },
-                { key: 'attackerStatus', label: 'Burned', icon: <Flame className="h-3 w-3" />, isStatus: true },
+                { key: 'isCritical', label: t('battle.critical'), icon: <Zap className="h-3 w-3" /> },
+                { key: 'isAdaptability', label: t('battle.adaptability'), icon: <Shield className="h-3 w-3" /> },
+                { key: 'attackerStatus', label: t('battle.burned'), icon: <Flame className="h-3 w-3" />, isStatus: true },
               ].map(opt => {
                 const isActive = opt.isStatus
                   ? options.attackerStatus === 'burned'
@@ -536,7 +551,7 @@ export default function BattleSimulator() {
                       }))
                     }
                     className={cn(
-                      'flex items-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] transition-all',
+                      'touch-target flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-sm border px-2 py-1 font-mono text-[11px] transition-all',
                       isActive
                         ? 'border-primary bg-primary/10 text-primary'
                         : 'border-border/40 bg-muted/20 text-muted-foreground hover:border-border'
@@ -556,7 +571,7 @@ export default function BattleSimulator() {
       {damageResult && selectedMove && (
         <div className="rounded-sm border border-primary/30 bg-card p-4">
           <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-            Damage Result — {selectedMove.name}
+            {t('battle.damage_result', { move: selectedMove.name })}
           </p>
           <DamageBar result={damageResult} />
         </div>
@@ -567,10 +582,10 @@ export default function BattleSimulator() {
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-              AI Duel Mode
+              {t('battle.ai_duel_mode')}
             </p>
-            <p className="mt-0.5 text-xs text-muted-foreground/70">
-              Both Pokémon use their best moves each turn
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t('battle.duel_description')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -580,7 +595,7 @@ export default function BattleSimulator() {
                 onClick={() => { setBattleLog(null); setBattleWinner(null); }}
                 className="flex items-center gap-1.5 rounded-sm border border-border/60 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:border-border hover:bg-muted/40"
               >
-                <RotateCcw className="h-3 w-3" /> Reset
+                <RotateCcw className="h-3 w-3" /> {t('battle.reset')}
               </button>
             )}
             <button
@@ -594,7 +609,7 @@ export default function BattleSimulator() {
               ) : (
                 <Play className="h-3 w-3" />
               )}
-              {simulating ? 'Simulating...' : 'Simulate Battle'}
+              {simulating ? t('battle.simulating') : t('battle.simulate')}
             </button>
           </div>
         </div>
@@ -602,15 +617,15 @@ export default function BattleSimulator() {
         {battleWinner && (
           <div className="mt-4 rounded-sm bg-primary/10 px-4 py-3">
             <p className="font-mono text-sm font-bold capitalize text-primary">
-              Winner: {battleWinner}
+              {t('battle.winner', { name: battleWinner })}
             </p>
           </div>
         )}
 
         {battleLog && battleLog.length > 0 && (
           <div className="mt-4">
-            <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground/60">
-              Battle Log
+            <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              {t('battle.battle_log')}
             </p>
             <BattleLog log={battleLog} />
           </div>
