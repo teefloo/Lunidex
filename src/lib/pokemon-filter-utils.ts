@@ -1,3 +1,15 @@
+import type { PokemonFilters } from '@/types/pokemon';
+
+/** Measurements and their sorts are already present in the summary query. */
+export function needsDetailedPokemonData(filters: PokemonFilters): boolean {
+  return filters.isLegendary != null || filters.isMythical != null
+    || (filters.selectedEggGroups?.length ?? 0) > 0
+    || (filters.selectedColors?.length ?? 0) > 0
+    || (filters.selectedShapes?.length ?? 0) > 0
+    || [filters.minBaseStats, filters.minAttack, filters.minDefense, filters.minSpeed, filters.minHp]
+      .some((minimum) => (minimum ?? 0) > 0);
+}
+
 export function normalizeSearchText(value: string): string {
   return value
     .normalize('NFD')

@@ -18,6 +18,7 @@ import {
   getExactNumericPokemonId,
   isHeightWithinRange,
   normalizeSearchText,
+  needsDetailedPokemonData,
   shouldShowInitialPokemonListError,
   shouldUseCompletePokemonSummary,
 } from '@/lib/pokemon-filter-utils';
@@ -134,28 +135,10 @@ export default function PokemonList() {
   const isBasicMode = !_hasHydrated ? true : !useCompleteSummary;
 
   // Whether stat-based advanced filters need the heavy allDetailed query
-  const needsDetailedData = isLegendary !== null || isMythical !== null ||
-    selectedEggGroups.length > 0 || selectedColors.length > 0 ||
-    selectedShapes.length > 0 || minBaseStats > 0 || minAttack > 0 ||
-    minDefense > 0 || minSpeed > 0 || minHp > 0;
-
-  // Whether ANY advanced filter is active (including height/weight/sort)
-  const isAdvancedFilterActive = isLegendary !== null || 
-    isMythical !== null || 
-    selectedEggGroups.length > 0 || 
-    selectedColors.length > 0 || 
-    selectedShapes.length > 0 || 
-    minBaseStats > 0 || 
-    minAttack > 0 || 
-    minDefense > 0 || 
-    minSpeed > 0 || 
-    minHp > 0 || 
-    heightRange[0] > 0 || 
-    heightRange[1] < 25 || 
-    weightRange[0] > 0 || 
-    weightRange[1] < 1200 ||
-    sortBy.includes('height') ||
-    sortBy.includes('weight');
+  const needsDetailedData = needsDetailedPokemonData({
+    isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes,
+    minBaseStats, minAttack, minDefense, minSpeed, minHp,
+  });
 
   // 1. Summary Data : Loaded on demand (Search or Filters)
   const { data: allSummary, isLoading: isLoadingSummary, error: summaryError } = useQuery({
@@ -182,7 +165,7 @@ export default function PokemonList() {
   const { data: allDetailed, isLoading: isLoadingDetailed, error: detailedError } = useQuery({
     queryKey: pokemonKeys.allDetailed(),
     queryFn: () => getAllPokemonDetailed(),
-    enabled: isAdvancedFilterActive,
+    enabled: needsDetailedData,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000,
     retry: 2,

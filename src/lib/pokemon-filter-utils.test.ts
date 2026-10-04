@@ -5,12 +5,28 @@ import {
   getExactNumericPokemonId,
   isHeightWithinRange,
   normalizeSearchText,
+  needsDetailedPokemonData,
   shouldCommitPokemonSearch,
   shouldShowInitialPokemonListError,
   shouldUseCompletePokemonSummary,
 } from './pokemon-filter-utils';
 
 describe('pokemon filter utilities', () => {
+  it('uses summaries for measurement filters, sorts, search and collection views', () => {
+    expect(needsDetailedPokemonData({})).toBe(false);
+    expect(needsDetailedPokemonData({ heightRange: [1, 25], weightRange: [10, 100], sortBy: 'height-asc' })).toBe(false);
+    expect(needsDetailedPokemonData({ sortBy: 'weight-desc', searchTerm: '#025', showFavoritesOnly: true })).toBe(false);
+  });
+
+  it('requires details for species attributes and every stat threshold', () => {
+    for (const filters of [
+      { isLegendary: false }, { isMythical: true }, { selectedEggGroups: ['monster'] },
+      { selectedColors: ['red'] }, { selectedShapes: ['ball'] }, { minBaseStats: 1 },
+      { minAttack: 1 }, { minDefense: 1 }, { minSpeed: 1 }, { minHp: 1 },
+    ]) expect(needsDetailedPokemonData(filters)).toBe(true);
+    expect(needsDetailedPokemonData({ isLegendary: null, isMythical: null, minAttack: 0 })).toBe(false);
+  });
+
   it('normalizes case and diacritics for user-facing searches', () => {
     expect(normalizeSearchText(' ÉQUILIBRE ')).toBe('equilibre');
     expect(normalizeSearchText('Salamèche')).toBe('salameche');
