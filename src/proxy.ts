@@ -31,6 +31,19 @@ const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'
 // directive on the proxy response instead; browser caching remains private.
 const PUBLIC_PAGE_VERCEL_CACHE_CONTROL =
   'public, s-maxage=3600, stale-while-revalidate=86400';
+const PUBLIC_STABLE_PAGE_VERCEL_CACHE_CONTROL =
+  'public, s-maxage=86400, stale-while-revalidate=604800';
+const PUBLIC_STABLE_SINGLE_SEGMENT_ROUTES = new Set([
+  'about',
+  'blog',
+  'contact',
+  'cookies',
+  'docs',
+  'faq',
+  'legal',
+  'privacy',
+  'terms',
+]);
 const PUBLIC_SINGLE_SEGMENT_ROUTES = new Set([
   'pokedex',
   'moves',
@@ -184,12 +197,27 @@ function isPublicLocalizedRoute(segments: string[]): boolean {
     return true;
   }
 
-  return segments[1] === 'tcg'
-    && (
-      segments.length === 2
-      || (segments.length === 3 && segments[2] === 'deck-builder')
-      || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))
-    );
+  if (segments.length === 3 && segments[1] === 'docs' && segments[2] === 'api') {
+    return true;
+  }
+
+  if (segments[1] !== 'tcg') return false;
+
+  return segments.length === 2
+    || (segments.length === 3 && segments[2] === 'deck-builder')
+    || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))
+    || (segments.length === 4 && segments[2] === 'sealed' && ['market', 'releases', 'buy-safely'].includes(segments[3] ?? ''))
+    || (segments.length === 5 && segments[2] === 'sealed' && segments[3] === 'market' && /^\d+$/.test(segments[4] ?? ''))
+    || (segments.length === 6 && segments[2] === 'sealed' && segments[3] === 'market'
+      && segments[4] === 'products' && /^\d+$/.test(segments[5] ?? ''));
+}
+
+function isStablePublicLocalizedRoute(segments: string[]): boolean {
+  return (segments.length === 2 && PUBLIC_STABLE_SINGLE_SEGMENT_ROUTES.has(segments[1] ?? ''))
+    || (segments.length === 3 && segments[1] === 'guides')
+    || (segments.length === 3 && segments[1] === 'docs' && segments[2] === 'api')
+    || (segments.length === 4 && segments[1] === 'tcg' && segments[2] === 'sealed'
+      && ['releases', 'buy-safely'].includes(segments[3] ?? ''));
 }
 
 function getResourceProbe(pathname: string, locale: string): ResourceProbe | null {
@@ -574,8 +602,11 @@ export async function proxy(request: NextRequest) {
       request: { headers: forwardedHeaders },
     });
     if (isPublicPage && isDocumentRequest) {
-      response.headers.set('Vercel-CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
-      response.headers.set('CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+      const cacheControl = isStablePublicLocalizedRoute(segments)
+        ? PUBLIC_STABLE_PAGE_VERCEL_CACHE_CONTROL
+        : PUBLIC_PAGE_VERCEL_CACHE_CONTROL;
+      response.headers.set('Vercel-CDN-Cache-Control', cacheControl);
+      response.headers.set('CDN-Cache-Control', cacheControl);
     }
     if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicPage) {
       response.cookies.set(COOKIE_NAME, urlLocale, {

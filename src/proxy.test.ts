@@ -36,6 +36,62 @@ describe('public localized proxy responses', () => {
     expect(response.headers.get('Cache-Control')).toBeNull();
   });
 
+  it('gives stable public content a one-day CDN lifetime', async () => {
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/cookies', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+    const apiGuideResponse = await proxy(new NextRequest('https://lunidex.test/fr/docs/api', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=86400, stale-while-revalidate=604800',
+    );
+    expect(response.headers.get('CDN-Cache-Control')).toBe(
+      'public, s-maxage=86400, stale-while-revalidate=604800',
+    );
+    expect(response.headers.get('Cache-Control')).toBeNull();
+    expect(apiGuideResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=86400, stale-while-revalidate=604800',
+    );
+  });
+
+  it('caches only the public sealed market listing, not the portfolio route', async () => {
+    const marketResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market?q=booster', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+    const portfolioResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/collection', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(marketResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=3600, stale-while-revalidate=86400',
+    );
+    expect(portfolioResponse.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
+  });
+
+  it('uses longer CDN caching for sealed editorial pages and hourly caching for product prices', async () => {
+    const editorialResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/buy-safely', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+    const productResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market/123', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+    const productAliasResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market/products/123', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(editorialResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=86400, stale-while-revalidate=604800',
+    );
+    expect(productResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=3600, stale-while-revalidate=86400',
+    );
+    expect(productAliasResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=3600, stale-while-revalidate=86400',
+    );
+  });
+
   it('does not mark Flight navigations as cacheable documents', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
       headers: { accept: 'text/x-component', 'user-agent': 'Mozilla/5.0' },
