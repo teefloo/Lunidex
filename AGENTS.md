@@ -102,11 +102,6 @@ Vitest tests live beside the code they cover in `src/` and `packages/core/src/`.
 
 - Do not push, merge, force-push, deploy, apply a production migration, or invoke another consequential external action without explicit confirmation.
 - Keep commits focused. Pull request titles use `[component] Brief description`, for example `[pokemon] Add shiny toggle to card`.
-- AI-authored commits must include:
-
-  ```text
-  Co-authored-by: Gemini CLI <agent@gemini.google.com>
-  ```
 
 <!-- BEGIN:nextjs-agent-rules -->
 
