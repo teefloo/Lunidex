@@ -7,6 +7,8 @@ import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { toast } from '@/lib/toast';
+import '@/styles/pokemon-cards-css.css';
+import '@/styles/tcg-card-overrides.css';
 import {
   X,
   Zap,
@@ -97,11 +99,6 @@ export function TCGCardDetailModal({
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
-
-  useEffect(() => {
-    void import('../../styles/pokemon-cards-css.css');
-    void import('../../styles/tcg-card-overrides.css');
-  }, []);
 
   useEffect(() => {
     if (!isOpen) return;

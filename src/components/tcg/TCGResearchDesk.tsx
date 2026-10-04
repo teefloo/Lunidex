@@ -37,6 +37,8 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
+import '@/styles/pokemon-cards-css.css';
+import '@/styles/tcg-card-overrides.css';
 
 const TCGCardDetailModal = dynamic(
   () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
@@ -107,12 +109,6 @@ export function TCGResearchDesk({
     if (!mounted || !hasHydrated || !parsedState.tcgLang || parsedState.tcgLang === tcgBrowseLanguage) return;
     setTCGBrowseLanguage(parsedState.tcgLang);
   }, [hasHydrated, mounted, parsedState.tcgLang, setTCGBrowseLanguage, tcgBrowseLanguage]);
-
-  useEffect(() => {
-    // Load the bundled card rules once for the catalog instead of once per card.
-    void import('../../styles/pokemon-cards-css.css');
-    void import('../../styles/tcg-card-overrides.css');
-  }, []);
 
   const [filters, setFilters] = useState<TCGCardFilters>(() => normalizeFilters({
     ...DEFAULT_TCG_CARD_FILTERS,
