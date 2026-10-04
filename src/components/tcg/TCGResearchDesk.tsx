@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   ChevronDown,
@@ -140,9 +140,11 @@ export function TCGResearchDesk({
     || (parsedState.filters.ownedState && parsedState.filters.ownedState !== 'all')
   ));
 
-  useEffect(() => {
+  const [previousUrlView, setPreviousUrlView] = useState(parsedState.viewMode);
+  if (previousUrlView !== parsedState.viewMode) {
+    setPreviousUrlView(parsedState.viewMode);
     setViewMode(parsedState.viewMode);
-  }, [parsedState.viewMode]);
+  }
 
   const normalizedFilters = useMemo(() => normalizeFilters(filters), [filters]);
 
@@ -193,24 +195,20 @@ export function TCGResearchDesk({
       ? null
       : latestSetFallbackName;
 
-  useEffect(() => {
-    setSearchTermDraft(effectiveFilters.searchTerm ?? '');
-  }, [effectiveFilters.searchTerm]);
+  const effectiveSearchTerm = effectiveFilters.searchTerm ?? '';
+  const [previousSearchTerm, setPreviousSearchTerm] = useState(effectiveSearchTerm);
+  if (previousSearchTerm !== effectiveSearchTerm) {
+    setPreviousSearchTerm(effectiveSearchTerm);
+    setSearchTermDraft(effectiveSearchTerm);
+  }
 
-  useEffect(() => {
-    // A set id is only meaningful inside the language-specific TCGdex catalog.
-    // If the user changes language and that catalog does not contain the
-    // previously selected set, clear the stale URL/filter value instead of
-    // querying an unrelated fallback set with zero results.
-    if (!mounted || !hasHydrated || !filterOptions || setOptions.length === 0 || !filters.selectedSet) return;
-    if (setOptions.some((set) => set.id === filters.selectedSet)) return;
-
-    setFilters((current) => {
-      if (current.selectedSet !== filters.selectedSet) return current;
-      return normalizeFilters({ ...current, selectedSet: null });
-    });
+  // Reset a set missing from the newly resolved language before committing
+  // the catalog query, so the stale selection cannot start another request.
+  if (mounted && hasHydrated && filterOptions && setOptions.length > 0 && filters.selectedSet
+    && !setOptions.some((set) => set.id === filters.selectedSet)) {
+    setFilters(normalizeFilters({ ...filters, selectedSet: null }));
     setHasUserEditedFilters(true);
-  }, [filterOptions, filters.selectedSet, hasHydrated, mounted, setOptions]);
+  }
 
   useEffect(() => {
     if (!mounted || !hasHydrated) return;
@@ -293,7 +291,9 @@ export function TCGResearchDesk({
   // fresh upstream request and a router.replace. Coalesce edits for 300 ms.
   const searchTermTimerRef = useRef<number | null>(null);
   const effectiveFiltersRef = useRef(effectiveFilters);
-  effectiveFiltersRef.current = effectiveFilters;
+  useLayoutEffect(() => {
+    effectiveFiltersRef.current = effectiveFilters;
+  }, [effectiveFilters]);
   const cancelPendingSearch = useCallback(() => {
     if (searchTermTimerRef.current !== null) {
       window.clearTimeout(searchTermTimerRef.current);
