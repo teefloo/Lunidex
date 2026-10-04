@@ -159,8 +159,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   await connection();
   const requestHeaders = await headers();
@@ -246,6 +248,7 @@ export default async function RootLayout({
              <SiteFooter compact={isHomeRoute} />
              <ClientCookieBanner />
            </AppContent>
+           {modal}
          </Providers>
         <script
           id="primedex-jsonld"
