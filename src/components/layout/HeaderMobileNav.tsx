@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { createPortal } from 'react-dom';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from '@/lib/i18n';
@@ -101,7 +102,7 @@ export function HeaderMobileNav() {
         <Menu aria-hidden="true" className="h-4 w-4" />
       </button>
 
-      {isOpen && (
+      {isOpen && createPortal(
         <>
           <button
             type="button"
@@ -152,7 +153,8 @@ export function HeaderMobileNav() {
               </section>
             </div>
           </div>
-        </>
+        </>,
+        document.body,
       )}
       {authOpen && (
         <AuthModalBoundary onClose={() => handleAuthOpenChange(false)}>

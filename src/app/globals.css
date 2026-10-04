@@ -981,7 +981,7 @@ h1 { letter-spacing: 0; }
 .site-header-more-menu {
   position: absolute;
   top: calc(100% + 0.5rem);
-  right: 0;
+  left: 0;
   z-index: 55;
   width: min(43rem, calc(100vw - 2rem));
   max-height: min(76vh, 42rem);
@@ -7942,6 +7942,10 @@ body:has(.lunidex-home) .site-footer {
   border: 0;
   background: color-mix(in oklab, var(--foreground) 25%, transparent);
   cursor: default;
+}
+
+body:has(.header-mobile-sheet) .site-header-bar > .site-header-brand {
+  visibility: hidden;
 }
 
 .header-mobile-sheet {
