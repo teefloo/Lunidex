@@ -30,8 +30,10 @@ export function withObservedRouteHandler<F extends (...args: never[]) => Respons
           operation: 'route-handler',
           request,
         });
-        await flushSentryEvents();
       }
+      // Optional upstream failures can intentionally return 200. Their queued
+      // reports still need a bounded delivery opportunity before the response.
+      await flushSentryEvents();
       return response as Awaited<ReturnType<F>>;
     } catch (error) {
       reportSentryException(error, {

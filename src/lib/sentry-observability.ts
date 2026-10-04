@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/nextjs';
+import type { SeverityLevel } from '@sentry/nextjs';
 import type { AxiosInstance } from 'axios';
 
 export interface ObservabilityContext {
@@ -33,6 +33,19 @@ const MAX_DEDUPLICATION_KEYS = 256;
 const MAX_VALUE_LENGTH = 80;
 const deduplicationKeys = new Set<string>();
 const instrumentedAxiosClients = new WeakSet<AxiosInstance>();
+type SentryModule = typeof import('@sentry/nextjs');
+let sentryPromise: Promise<SentryModule> | undefined;
+const pendingReports = new Set<Promise<void>>();
+let reportVersion = 0;
+let flushedVersion = 0;
+
+function loadSentry(): Promise<SentryModule> {
+  sentryPromise ??= import('@sentry/nextjs').catch((error: unknown) => {
+    sentryPromise = undefined;
+    throw error;
+  });
+  return sentryPromise;
+}
 
 const SENSITIVE_KEYS = new Set([
   'authorization',
@@ -189,18 +202,23 @@ function isDuplicate(key: string): boolean {
   return false;
 }
 
-function withObservabilityScope(context: SanitizedContext, callback: () => void): void {
-  try {
-    Sentry.withScope((scope) => {
+function withObservabilityScope(context: SanitizedContext, callback: (sentry: SentryModule) => void): void {
+  // API helpers and persistence are on the critical client path. The SDK is
+  // needed only when a report occurs or the configured consent bridge loads.
+  const report = loadSentry().then((sentry) => {
+    sentry.withScope((scope) => {
       if (context.feature) scope.setTag('feature', context.feature);
       if (context.route) scope.setTag('route', context.route);
       if (context.status !== undefined) scope.setTag('status', String(context.status));
       scope.setContext('observability', context);
-      callback();
+      callback(sentry);
     });
-  } catch {
+  }).catch(() => {
     // Reporting must never change application behavior.
-  }
+  });
+  pendingReports.add(report);
+  reportVersion++;
+  void report.then(() => pendingReports.delete(report));
 }
 
 function createSafeException(error: unknown): Error {
@@ -224,23 +242,23 @@ export function reportSentryException(error: unknown, context: ObservabilityCont
   const key = getDeduplicationKey(`exception:${safeError.name}`, safeError.message, sanitizedContext);
   if (isDuplicate(key)) return;
 
-  withObservabilityScope(sanitizedContext, () => {
-    Sentry.captureException(safeError);
+  withObservabilityScope(sanitizedContext, (sentry) => {
+    sentry.captureException(safeError);
   });
 }
 
 export function reportSentryMessage(
   message: string,
   context: ObservabilityContext,
-  level: Sentry.SeverityLevel = 'error',
+  level: SeverityLevel = 'error',
 ): void {
   const sanitizedContext = sanitizeSentryContext(context);
   const sanitizedMessage = clampValue(message);
   const key = getDeduplicationKey(`message:${level}`, sanitizedMessage, sanitizedContext);
   if (isDuplicate(key)) return;
 
-  withObservabilityScope(sanitizedContext, () => {
-    Sentry.captureMessage(sanitizedMessage, level);
+  withObservabilityScope(sanitizedContext, (sentry) => {
+    sentry.captureMessage(sanitizedMessage, level);
   });
 }
 
@@ -281,11 +299,25 @@ export function reportFallback(kind: FallbackKind, context: ObservabilityContext
  * their transport stays alive independently of the request lifecycle.
  */
 export async function flushSentryEvents(timeout = 1500): Promise<void> {
+  if (!sentryPromise || reportVersion === flushedVersion) return;
+  const version = reportVersion;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const started = Date.now();
   try {
-    if (!Sentry.getClient()) return;
-    await Sentry.flush(timeout);
+    await Promise.race([
+      (async () => {
+        await Promise.all([...pendingReports]);
+        const sentry = await loadSentry();
+        const remaining = Math.max(0, timeout - (Date.now() - started));
+        if (remaining > 0 && sentry.getClient()) await sentry.flush(remaining);
+        flushedVersion = Math.max(flushedVersion, version);
+      })(),
+      new Promise<void>((resolve) => { timer = setTimeout(resolve, timeout); }),
+    ]);
   } catch {
     // Reporting must never change application behavior.
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
   }
 }
 

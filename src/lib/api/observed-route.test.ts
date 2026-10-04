@@ -34,7 +34,10 @@ describe('observed route handlers', () => {
 
     expect(response.status).toBe(503);
     expect(Sentry.captureException).toHaveBeenCalledTimes(1);
-    expect(Sentry.flush).toHaveBeenCalledWith(1500);
+    expect(Sentry.flush).toHaveBeenCalledWith(expect.any(Number));
+    const timeout = vi.mocked(Sentry.flush).mock.calls[0][0];
+    expect(timeout).toBeGreaterThan(0);
+    expect(timeout).toBeLessThanOrEqual(1500);
     expect(JSON.stringify(vi.mocked(Sentry.captureException).mock.calls)).not.toContain('user@example.com');
   });
 
@@ -47,7 +50,9 @@ describe('observed route handlers', () => {
 
     await expect(handler(new Request('https://lunidex.app/api/tcg/cards/secret'))).rejects.toBe(error);
     expect(Sentry.captureException).toHaveBeenCalledTimes(1);
-    expect(Sentry.flush).toHaveBeenCalledWith(1500);
+    expect(Sentry.flush).toHaveBeenCalledWith(expect.any(Number));
+    expect(vi.mocked(Sentry.flush).mock.calls[0][0]).toBeGreaterThan(0);
+    expect(vi.mocked(Sentry.flush).mock.calls[0][0]).toBeLessThanOrEqual(1500);
   });
 
   it('ignores expected client error responses', async () => {

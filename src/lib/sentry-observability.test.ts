@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs';
 import * as idbKeyval from 'idb-keyval';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchAppApi } from './app-api';
 import { getCachedData } from './api/cache';
@@ -8,6 +8,7 @@ import { graphqlClient } from './api/client';
 import { getPokemonSummarySlice } from './api/graphql';
 import {
   attachAxiosSentryInstrumentation,
+  flushSentryEvents,
   normalizeSentryRoute,
   reportSentryException,
   reportSentryMessage,
@@ -19,6 +20,8 @@ import {
 vi.mock('@sentry/nextjs', () => ({
   captureException: vi.fn(),
   captureMessage: vi.fn(),
+  getClient: vi.fn(),
+  flush: vi.fn().mockResolvedValue(true),
   withScope: vi.fn((callback: (scope: { setTag: () => void; setContext: () => void }) => void) => {
     callback({ setTag: vi.fn(), setContext: vi.fn() });
   }),
@@ -39,7 +42,11 @@ describe('sentry observability', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetSentryDeduplicationForTests();
+    vi.mocked(Sentry.getClient).mockReturnValue(undefined);
+    vi.mocked(Sentry.flush).mockResolvedValue(true);
   });
+
+  afterEach(() => { vi.useRealTimers(); });
 
   it('ignores expected HTTP statuses, rate limits, cancellations, and empty searches', () => {
     expect(shouldIgnoreHttpFailure({ status: 404 })).toBe(true);
@@ -70,20 +77,22 @@ describe('sentry observability', () => {
     });
   });
 
-  it('deduplicates the same report while keeping different features distinct', () => {
+  it('deduplicates the same report while keeping different features distinct', async () => {
     reportSentryMessage('API failure', { feature: 'pokemon', route: '/pokemon/:name', status: 503 });
     reportSentryMessage('API failure', { feature: 'pokemon', route: '/pokemon/:name', status: 503 });
     reportSentryMessage('API failure', { feature: 'tcg', route: '/tcg/cards/:id', status: 503 });
 
+    await flushSentryEvents();
     expect(Sentry.captureMessage).toHaveBeenCalledTimes(2);
   });
 
-  it('sanitizes direct exceptions before handing them to Sentry', () => {
+  it('sanitizes direct exceptions before handing them to Sentry', async () => {
     reportSentryException(
       new Error('Request failed for user@example.com with token=private'),
       { feature: 'profile', route: '/api/profile' },
     );
 
+    await flushSentryEvents();
     const [captured] = vi.mocked(Sentry.captureException).mock.calls[0] ?? [];
     expect(captured).toBeInstanceOf(Error);
     expect(String(captured)).not.toContain('user@example.com');
@@ -98,6 +107,7 @@ describe('sentry observability', () => {
 
     expect(response.status).toBe(503);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    await flushSentryEvents();
     expect(Sentry.captureException).toHaveBeenCalledTimes(1);
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
   });
@@ -108,6 +118,8 @@ describe('sentry observability', () => {
 
     await expect(fetchAppApi('/api/user-state', { method: 'GET' }, { feature: 'sync' }))
       .rejects.toThrow('Failed to fetch');
+
+    await flushSentryEvents();
 
     expect(Sentry.captureException).not.toHaveBeenCalled();
     expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex upstream failure: TypeError', 'warning');
@@ -142,6 +154,7 @@ describe('sentry observability', () => {
     });
 
     await expect(rejectionHandlers[0]?.(error)).rejects.toBe(error);
+    await flushSentryEvents();
     expect(Sentry.captureException).not.toHaveBeenCalled();
     expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex upstream failure: Error', 'warning');
   });
@@ -154,6 +167,7 @@ describe('sentry observability', () => {
     });
 
     await expect(getCachedData('tcg-card-secret', true)).resolves.toEqual({ secret: 'private payload' });
+    await flushSentryEvents();
 
     expect(Sentry.captureMessage).toHaveBeenCalledTimes(1);
     expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex fallback: stale-cache', 'warning');
@@ -166,8 +180,31 @@ describe('sentry observability', () => {
     } as never);
 
     await expect(getPokemonSummarySlice()).rejects.toThrow('Invalid GraphQL response');
+    await flushSentryEvents();
 
     expect(Sentry.captureMessage).toHaveBeenCalledWith('Lunidex fallback: invalid-response', 'warning');
     expect(JSON.stringify(vi.mocked(Sentry.captureMessage).mock.calls)).not.toContain('private payload');
+  });
+
+  it('waits for queued captures before flushing a server response', async () => {
+    vi.mocked(Sentry.getClient).mockReturnValue({} as ReturnType<typeof Sentry.getClient>);
+    reportSentryMessage('Queued server failure', { feature: 'sync' });
+    await flushSentryEvents();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith('Queued server failure', 'error');
+    expect(Sentry.flush).toHaveBeenCalled();
+    expect(vi.mocked(Sentry.captureMessage).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(Sentry.flush).mock.invocationCallOrder[0]);
+    await flushSentryEvents();
+    expect(Sentry.flush).toHaveBeenCalledTimes(1);
+    vi.mocked(Sentry.getClient).mockReturnValue(undefined);
+  });
+
+  it('bounds a stalled telemetry transport without failing the caller', async () => {
+    vi.useFakeTimers();
+    vi.mocked(Sentry.getClient).mockReturnValue({} as ReturnType<typeof Sentry.getClient>);
+    vi.mocked(Sentry.flush).mockImplementation(() => new Promise<boolean>(() => undefined));
+    reportSentryMessage('Stalled transport', { feature: 'sync' });
+    const flushing = flushSentryEvents(25);
+    await vi.advanceTimersByTimeAsync(26);
+    await expect(flushing).resolves.toBeUndefined();
   });
 });
