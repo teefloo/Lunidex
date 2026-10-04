@@ -1,10 +1,13 @@
 export function onRouterTransitionStart(url: string, navigationType: string): void {
-  void Promise.all([
-    import('@sentry/nextjs').then((Sentry) => Sentry.captureRouterTransitionStart(url, navigationType)),
-    import('./src/lib/posthog-client').then(({ capturePostHogNavigationStart }) => {
+  const captures: Promise<unknown>[] = [];
+  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    captures.push(import('@sentry/nextjs').then((Sentry) => Sentry.captureRouterTransitionStart(url, navigationType)));
+  }
+  if (process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true' && process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
+    captures.push(import('./src/lib/posthog-client').then(({ capturePostHogNavigationStart }) => {
       capturePostHogNavigationStart(url, navigationType);
-    }),
-  ]).catch(() => {
-    // Optional navigation telemetry must never affect routing.
-  });
+    }));
+  }
+  // A failed optional SDK must not prevent the other service from observing.
+  void Promise.allSettled(captures);
 }

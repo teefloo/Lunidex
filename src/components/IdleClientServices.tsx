@@ -5,13 +5,17 @@ import { useEffect, useState, type ComponentType } from 'react';
 import { scheduleIdleTask } from '@/lib/idle-scheduler';
 
 type DeferredComponents = {
-  NeonSyncBridge: ComponentType;
-  RegisterPWA: ComponentType;
-  SentryConsentBridge: ComponentType;
-  PostHogConsentBridge: ComponentType;
-  PostHogIdentityBridge: ComponentType;
-  VercelInsights: ComponentType;
+  NeonSyncBridge: ComponentType | null;
+  RegisterPWA: ComponentType | null;
+  SentryConsentBridge: ComponentType | null;
+  PostHogConsentBridge: ComponentType | null;
+  PostHogIdentityBridge: ComponentType | null;
+  VercelInsights: ComponentType | null;
 };
+
+function fulfilled<T>(result: PromiseSettledResult<T>): T | null {
+  return result.status === 'fulfilled' ? result.value : null;
+}
 
 const OPTIONAL_SERVICES_MIN_DELAY_MS = 6_000;
 
@@ -26,22 +30,24 @@ export function IdleClientServices() {
   useEffect(() => {
     let active = true;
     const cancel = scheduleIdleTask(() => {
-      void Promise.all([
-        import('@/components/NeonSyncBridge'),
+      const hasPostHog = process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true'
+        && Boolean(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
+      void Promise.allSettled([
+        process.env.NEXT_PUBLIC_NEON_AUTH_URL ? import('@/components/NeonSyncBridge') : Promise.resolve(null),
         import('@/components/pwa/RegisterPWA'),
-        import('@/components/analytics/SentryConsentBridge'),
-        import('@/components/analytics/PostHogConsentBridge'),
-        import('@/components/analytics/PostHogIdentityBridge'),
+        process.env.NEXT_PUBLIC_SENTRY_DSN ? import('@/components/analytics/SentryConsentBridge') : Promise.resolve(null),
+        hasPostHog ? import('@/components/analytics/PostHogConsentBridge') : Promise.resolve(null),
+        hasPostHog ? import('@/components/analytics/PostHogIdentityBridge') : Promise.resolve(null),
         import('@/components/analytics/VercelInsights'),
       ]).then(([sync, pwa, sentry, posthogConsent, posthogIdentity, vercel]) => {
         if (!active) return;
         setComponents({
-          NeonSyncBridge: sync.NeonSyncBridge,
-          RegisterPWA: pwa.RegisterPWA,
-          SentryConsentBridge: sentry.SentryConsentBridge,
-          PostHogConsentBridge: posthogConsent.PostHogConsentBridge,
-          PostHogIdentityBridge: posthogIdentity.PostHogIdentityBridge,
-          VercelInsights: vercel.VercelInsights,
+          NeonSyncBridge: fulfilled(sync)?.NeonSyncBridge ?? null,
+          RegisterPWA: fulfilled(pwa)?.RegisterPWA ?? null,
+          SentryConsentBridge: fulfilled(sentry)?.SentryConsentBridge ?? null,
+          PostHogConsentBridge: fulfilled(posthogConsent)?.PostHogConsentBridge ?? null,
+          PostHogIdentityBridge: fulfilled(posthogIdentity)?.PostHogIdentityBridge ?? null,
+          VercelInsights: fulfilled(vercel)?.VercelInsights ?? null,
         });
       }).catch(() => {
         // Optional bridges must never block or destabilize the application.
@@ -67,12 +73,12 @@ export function IdleClientServices() {
 
   return (
     <>
-      <NeonSyncBridge />
-      <RegisterPWA />
-      <SentryConsentBridge />
-      <PostHogConsentBridge />
-      <PostHogIdentityBridge />
-      <VercelInsights />
+      {NeonSyncBridge && <NeonSyncBridge />}
+      {RegisterPWA && <RegisterPWA />}
+      {SentryConsentBridge && <SentryConsentBridge />}
+      {PostHogConsentBridge && <PostHogConsentBridge />}
+      {PostHogIdentityBridge && <PostHogIdentityBridge />}
+      {VercelInsights && <VercelInsights />}
     </>
   );
 }
