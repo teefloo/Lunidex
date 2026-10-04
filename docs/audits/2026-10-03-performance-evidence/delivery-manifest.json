@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "report": {
+    "path": "docs/audits/2026-10-03-performance-lunidex.md",
+    "sha256": "a27528c9614e85d790f8028bdaf8ef957063b1a8e24c5b8d0ce69c44b85f4777"
+  },
+  "tools": {
+    "scripts/performance-audit.mjs": "2c95a958ad650e25c03f98cce3e920b73d825740a8bbb4376dacbd48848cb093",
+    "scripts/performance-cache-benchmark.mjs": "e4b3c5ee785b4fabf5c6c04191540ed76f1fef83e4ef1291f9915cd368116452",
+    "scripts/performance-inventory.mjs": "3c2a93a63cb1dea8af50022d586f98f083757e54f27400fa916bd0161358df50",
+    "scripts/performance-journey-summary.mjs": "605d358a5a079fd05656333728db87567c33793c77140ff33de3d64b9a879065",
+    "scripts/performance-journeys.mjs": "73e59d86cc1e1b8474cfa26c35e777b61802b805323d001a4ca9c0765dcdeac8",
+    "scripts/performance-scroll.mjs": "c93e8268572777ec78399e01f772320381ce751db9b4896b4710380cd6177a0c",
+    "scripts/performance-summary.mjs": "e37348b970366ced6b84bb57bbfa4561b43c7bb3d63877e22d535ea18422d94e",
+    "scripts/performance-validation.mjs": "005efc9f90c73573c5afe2068bbe38ff6739115002a4f20e1295f173cc7f8bc4"
+  },
+  "measuredSourceManifest": "sources-final.json",
+  "deliverySourceManifest": "sources-delivery-build.json",
+  "differences": "snapshot-differences.json",
+  "note": "Source snapshots include uncommitted and concurrent work. Performance samples use the frozen measured sources; the delivery build also includes the later /docs/api cache policy.",
+  "createdAt": "2026-10-04T10:30:19.123Z"
+}

@@ -1,0 +1,101 @@
+{
+  "tool": "pagespeed_analyze_page",
+  "result": {
+    "url": "https://lunidex.app/fr",
+    "strategy": "both",
+    "timestamp": "2026-10-03T21:34:23.539Z",
+    "performance": {
+      "score": 78,
+      "metrics": {
+        "firstContentfulPaint": "1.8 s",
+        "largestContentfulPaint": "5.6 s",
+        "cumulativeLayoutShift": "0",
+        "speedIndex": "2.6 s",
+        "totalBlockingTime": "60 ms",
+        "firstInputDelay": "110 ms"
+      }
+    },
+    "opportunities": [
+      {
+        "id": "unminified-css",
+        "title": "Minify CSS",
+        "description": "Minifying CSS files can reduce network payload sizes. [Learn how to minify CSS](https://developer.chrome.com/docs/lighthouse/performance/unminified-css/).",
+        "score": 1
+      },
+      {
+        "id": "unminified-javascript",
+        "title": "Minify JavaScript",
+        "description": "Minifying JavaScript files can reduce payload sizes and script parse time. [Learn how to minify JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unminified-javascript/).",
+        "score": 1
+      },
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "description": "Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. [Learn how to reduce unused CSS](https://developer.chrome.com/docs/lighthouse/performance/unused-css-rules/).",
+        "score": 1
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+        "score": 0,
+        "displayValue": "Est savings of 46 KiB"
+      },
+      {
+        "id": "redirects",
+        "title": "Avoid multiple page redirects",
+        "description": "Redirects introduce additional delays before the page can be loaded. [Learn how to avoid page redirects](https://developer.chrome.com/docs/lighthouse/performance/redirects/).",
+        "score": 1
+      }
+    ],
+    "desktop": {
+      "url": "https://lunidex.app/fr",
+      "strategy": "desktop",
+      "timestamp": "2026-10-03T21:34:40.792Z",
+      "performance": {
+        "score": 90,
+        "metrics": {
+          "firstContentfulPaint": "0.4 s",
+          "largestContentfulPaint": "1.0 s",
+          "cumulativeLayoutShift": "0",
+          "speedIndex": "0.8 s",
+          "totalBlockingTime": "230 ms",
+          "firstInputDelay": "220 ms"
+        }
+      },
+      "opportunities": [
+        {
+          "id": "unminified-css",
+          "title": "Minify CSS",
+          "description": "Minifying CSS files can reduce network payload sizes. [Learn how to minify CSS](https://developer.chrome.com/docs/lighthouse/performance/unminified-css/).",
+          "score": 1
+        },
+        {
+          "id": "unminified-javascript",
+          "title": "Minify JavaScript",
+          "description": "Minifying JavaScript files can reduce payload sizes and script parse time. [Learn how to minify JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unminified-javascript/).",
+          "score": 1
+        },
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "description": "Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. [Learn how to reduce unused CSS](https://developer.chrome.com/docs/lighthouse/performance/unused-css-rules/).",
+          "score": 1
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+          "score": 0,
+          "displayValue": "Est savings of 46 KiB"
+        },
+        {
+          "id": "redirects",
+          "title": "Avoid multiple page redirects",
+          "description": "Redirects introduce additional delays before the page can be loaded. [Learn how to avoid page redirects](https://developer.chrome.com/docs/lighthouse/performance/redirects/).",
+          "score": 1
+        }
+      ]
+    }
+  }
+}

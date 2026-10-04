@@ -1,0 +1,27 @@
+{
+  "base": "http://localhost:3107",
+  "browser": "149.0.7827.55",
+  "runs": 5,
+  "durationMs": 15000,
+  "viewport": {
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ]
+  },
+  "mobile": {
+    "cpu": 4,
+    "latencyMs": 150,
+    "downBytesPerSecond": 200000,
+    "upBytesPerSecond": 93750
+  },
+  "input": "mouse.wheel at start, 5 s and 10 s",
+  "metric": "rAF frame gaps and long tasks during a fixed 15 s scroll window; no INP",
+  "serviceWorkers": "blocked",
+  "startedAt": "2026-10-04T00:34:01.133Z",
+  "finishedAt": "2026-10-04T00:37:17.862Z"
+}

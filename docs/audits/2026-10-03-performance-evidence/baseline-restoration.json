@@ -1,0 +1,26 @@
+{
+  "files": [
+    "instrumentation-client.ts",
+    "next.config.ts",
+    "src/app/globals.css",
+    "src/app/providers.tsx",
+    "src/app/quiz/page.tsx",
+    "src/components/IdleClientServices.tsx",
+    "src/components/pokemon/PokemonList.tsx",
+    "src/components/tcg/TCGCardDetailModal.tsx",
+    "src/components/tcg/TCGResearchDesk.tsx",
+    "src/lib/api/cache.test.ts",
+    "src/lib/api/cache.ts",
+    "src/lib/api/graphql.ts",
+    "src/lib/api/observed-route.test.ts",
+    "src/lib/api/observed-route.ts",
+    "src/lib/pokemon-filter-utils.test.ts",
+    "src/lib/pokemon-filter-utils.ts",
+    "src/lib/sentry-observability.test.ts",
+    "src/lib/sentry-observability.ts",
+    "src/proxy.test.ts",
+    "src/proxy.ts",
+    "tsconfig.json"
+  ],
+  "note": "Overlay onto final sources to restore the measured baseline; remove new tests if replaying baseline tests. Includes preserved concurrent work differences."
+}

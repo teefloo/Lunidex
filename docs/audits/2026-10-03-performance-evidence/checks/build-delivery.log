@@ -1,0 +1,179 @@
+
+> primedex@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.3 (webpack)
+✓ Running next.config.ts took 1092ms
+- Experiments (use with caution):
+  · clientTraceMetadata
+  ✓ optimizeCss
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+⚠ The Edge Runtime is deprecated. You can use the "nodejs" runtime instead. Learn more: https://nextjs.org/docs/messages/edge-runtime-deprecated
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for client (static)...
+ ○ (pwa) Service worker won't be automatically registered as per the config, please call the following code in componentDidMount or useEffect:
+ ○ (pwa)   window.workbox.register()
+ ○ (pwa) You may also want to add @ducanh2912/next-pwa/workbox to compilerOptions.types in your tsconfig.json/jsconfig.json.
+ ○ (pwa) Service worker: /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex/tmp/performance-audit-20261003/final/public/sw.js
+ ○ (pwa)   URL: /sw.js
+ ○ (pwa)   Scope: /
+ ○ (pwa) This app will fallback to these precached routes when fetching from the cache and the network fails:
+ ○ (pwa)   Documents (pages): /offline
+ ○ (pwa) Custom runtimeCaching array found, using it instead of the default one.
+✓ Compiled successfully in 39.1s
+  Running TypeScript ...
+  Finished TypeScript in 5.9s ...
+  Collecting page data using 9 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 9 workers (0/307) ...
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+  Generating static pages using 9 workers (76/307) 
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+  Generating static pages using 9 workers (153/307) 
+  Generating static pages using 9 workers (230/307) 
+✓ Generating static pages using 9 workers (307/307) in 3.8s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)                                  Revalidate  Expire
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /30e-anniversaire
+├ ƒ /abilities
+├ ƒ /abilities/[name]
+├ ƒ /about
+├ ƒ /api/account
+├ ƒ /api/account/api-keys
+├ ƒ /api/account/api-keys/[id]
+├ ƒ /api/account/export
+├ ƒ /api/agentation/health
+├ ƒ /api/analytics/product
+├ ƒ /api/auth/[[...path]]
+├ ƒ /api/battle/room
+├ ƒ /api/contact
+├ ƒ /api/cron/metrics-retention
+├ ƒ /api/cron/tcg-sealed-sync
+├ ƒ /api/friends
+├ ƒ /api/og/pokemon
+├ ƒ /api/og/profile
+├ ƒ /api/og/quiz-result
+├ ƒ /api/og/tcg-card
+├ ƒ /api/og/tcg-set
+├ ƒ /api/og/team
+├ ƒ /api/profile
+├ ƒ /api/push/send
+├ ƒ /api/push/subscription
+├ ƒ /api/quiz/attempt
+├ ƒ /api/quiz/leaderboard
+├ ƒ /api/smogon/[name]
+├ ƒ /api/tcg/cards/[id]
+├ ƒ /api/tcg/collection/set-cards
+├ ƒ /api/tcg/compare
+├ ƒ /api/tcg/price-alerts
+├ ƒ /api/tcg/price-history/[cardId]
+├ ƒ /api/tcg/saved-searches
+├ ƒ /api/tcg/sealed/aliases/[id]
+├ ƒ /api/tcg/sealed/catalogue
+├ ƒ /api/tcg/sealed/export
+├ ƒ /api/tcg/sealed/guide
+├ ƒ /api/tcg/sealed/market-catalogue
+├ ƒ /api/tcg/sealed/market-products/[id]
+├ ƒ /api/tcg/sealed/overview
+├ ƒ /api/tcg/sealed/products/[id]
+├ ƒ /api/tcg/sealed/products/[id]/image
+├ ƒ /api/tcg/sealed/sources
+├ ƒ /api/tcg/sealed/transactions
+├ ƒ /api/tcg/sealed/transactions/[id]
+├ ƒ /api/tcg/sealed/transactions/[id]/void
+├ ƒ /api/tcg/search
+├ ƒ /api/tcg/sets
+├ ƒ /api/tcg/user-cards
+├ ƒ /api/user-state
+├ ƒ /api/v1/cards
+├ ƒ /api/v1/cards/[cardId]
+├ ƒ /api/v1/me
+├ ƒ /api/v1/openapi.json
+├ ƒ /api/v1/sealed/catalogue
+├ ƒ /api/v1/sealed/positions
+├ ƒ /api/v1/sealed/positions/[productId]
+├ ƒ /api/v1/sealed/transactions
+├ ƒ /api/v1/sealed/transactions/[id]
+├ ƒ /api/v1/sealed/transactions/[id]/void
+├ ƒ /api/v1/summary
+├ ƒ /auth/reset-password
+├ ƒ /battle
+├ ƒ /blog
+├ ƒ /breeding
+├ ƒ /compare
+├ ƒ /compare/[slug]
+├ ƒ /compare/lunidex-vs-pokecardex-zebradex
+├ ƒ /contact
+├ ƒ /cookies
+├ ƒ /dashboard
+├ ƒ /docs
+├ ƒ /docs/api
+├ ƒ /ev-iv
+├ ƒ /faq
+├ ƒ /favorites
+├ ƒ /friends
+├ ƒ /friends/[friendId]
+├ ƒ /go/[campaign]
+├ ƒ /guides/[slug]
+├ ƒ /guides/nuzlocke-guide
+├ ƒ /guides/pokemon-card-collection-tracker
+├ ƒ /guides/quiz-guide
+├ ƒ /guides/team-builder-guide
+├ ƒ /items
+├ ƒ /items/[name]
+├ ƒ /legal
+├ ○ /manifest.webmanifest
+├ ƒ /moves
+├ ƒ /moves/[name]
+├ ƒ /nuzlocke
+├ ƒ /offline
+├ ƒ /pokedex
+├ ƒ /pokemon/[name]
+├ ƒ /pokemon/[name]/opengraph-image
+├ ƒ /privacy
+├ ƒ /quiz
+├ ○ /robots.txt
+├ ○ /sitemap.xml                                     6h      1y
+├ ƒ /sitemaps/[name]
+├ ƒ /tcg
+├ ƒ /tcg/booster-value
+├ ƒ /tcg/cards/[id]
+├ ƒ /tcg/collection
+├ ƒ /tcg/collection/[language]
+├ ƒ /tcg/collection/[language]/[setId]
+├ ƒ /tcg/deck-builder
+├ ƒ /tcg/pull-rates
+├ ƒ /tcg/sealed/[[...view]]
+├ ƒ /tcg/sealed/buy-safely
+├ ƒ /tcg/sealed/market/[id]
+├ ƒ /tcg/sealed/market/products/[id]
+├ ƒ /tcg/sealed/releases
+├ ƒ /tcg/sets/[setId]
+├ ƒ /tcg/start
+├ ƒ /tcg/wishlist
+├ ƒ /team
+├ ƒ /team/share
+├ ƒ /terms
+├ ƒ /types
+└ ƒ /u/[handle]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

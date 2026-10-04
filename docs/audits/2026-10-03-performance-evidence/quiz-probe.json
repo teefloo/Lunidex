@@ -1,0 +1,68 @@
+{
+  "first": {
+    "main": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits",
+    "body": "Aller au contenu principal\nLuni\ndex\nCollection\nCatalogue\nPokédex\nJouer\nPlus\nRechercher dans Lunidex\n\nLUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits\nLuni\ndex\n\nSuivez votre collection Pokémon TCG, puis explorez le Pokédex et composez une équipe.\n\nCollection\n\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\n\nCommencer ma collection\nGitHub\nEXPLORER\nPokédex\nTypes\nConstructeur d'équipe\nTCG\nDocumentation\nGuide de l’API publique\nTableau de bord\nQuiz\nFavoris\nGUIDES\nÀ PROPOS & AIDE\nFAQ\nÀ propos de Lunidex\nContact\n\nAvertissement Pokémon et les noms des personnages Pokémon sont des marques déposées de Nintendo. Ce site n'est pas affilié à Nintendo, Game Freak ou The Pokémon Company.\n\nRESSOURCES\nPokéAPI\nTCGdex\n\n© 2026 Lunidex. Tous droits réservés.\n\nLÉGAL\nMentions légales\nPolitique de confidentialité\nConditions d'utilisation\nPolitique de cookies\nGérer mes préférences\nSignaler un problème\nCookies sur Lunidex\n\nChoisissez séparément d'activer la mesure d'audience et de performance Vercel et la mesure produit Neon et PostHog. Elles restent désactivées sans votre consentement.\n\nVotre choix est stocké localement dans votre navigateur. Vous pouvez le modifier à tout moment. Politique cookies\n\nTout refuser\nPersonnaliser\nTout accepter\nPas assez de Pokémon dans cette catégorie !",
+    "buttons": [
+      {
+        "text": "Classique",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center justify-center gap-2 whitespace-nowrap bg-clip-padding duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none h-11 px-4 w-full min-h-14 rounded-sm font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-colors hover:bg-primary",
+        "disabled": false
+      },
+      {
+        "text": "Défi Quotidien",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center justify-center gap-2 whitespace-nowrap border bg-clip-padding transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-card text-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:border-input dark:bg-input/20 h-11 px-4 w-full min-h-12 rounded-sm font-bold uppercase tracking-[0.12em] text-xs md:text-sm border-border/60 hover:border-primary/30 hover:bg-primary/5",
+        "disabled": false
+      },
+      {
+        "text": "Toutes les Générations▼",
+        "cls": "glass-control flex items-center justify-between gap-2 py-2.5 whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-11 data-[size=sm]:h-9 data-[size=sm]:rounded-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium",
+        "disabled": false
+      },
+      {
+        "text": "Tous les Types▼",
+        "cls": "glass-control flex items-center justify-between gap-2 py-2.5 whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-11 data-[size=sm]:h-9 data-[size=sm]:rounded-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 w-full h-11 rounded-sm bg-card/50 dark:bg-card/35 border border-border/60 dark:border-border/40 px-4 text-sm font-semibold focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all hover:bg-card/60 [&>span]:text-foreground/70 [&>span]:font-medium",
+        "disabled": false
+      },
+      {
+        "text": "ClassiqueAfficher l'image",
+        "cls": "min-h-20 rounded-sm flex flex-col items-center justify-center gap-2 group border transition-colors relative overflow-hidden px-3 py-3 text-center border-primary/40 bg-primary/10 text-primary",
+        "disabled": false
+      },
+      {
+        "text": "SilhouetteC'est qui ?",
+        "cls": "min-h-20 rounded-sm flex flex-col items-center justify-center gap-2 group border transition-colors relative overflow-hidden px-3 py-3 text-center border-border/50 bg-card/50 text-foreground/70 hover:border-primary/30 hover:bg-primary/5",
+        "disabled": false
+      },
+      {
+        "text": "StatsStats de base",
+        "cls": "min-h-20 rounded-sm flex flex-col items-center justify-center gap-2 group border transition-colors relative overflow-hidden px-3 py-3 text-center border-border/50 bg-card/50 text-foreground/70 hover:border-primary/30 hover:bg-primary/5",
+        "disabled": false
+      },
+      {
+        "text": "Marathon",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center whitespace-nowrap border bg-clip-padding transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:border-primary hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:border-input dark:bg-input/20 h-11 px-4 min-h-12 justify-center gap-2 rounded-sm text-xs font-bold uppercase tracking-[0.08em] border-primary/40 bg-primary/10 text-primary",
+        "disabled": false
+      },
+      {
+        "text": "Survie(3 Vies)",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center whitespace-nowrap border bg-clip-padding transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-border bg-card text-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:border-primary hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:border-input dark:bg-input/20 h-11 px-4 min-h-12 justify-center gap-2 rounded-sm text-xs font-bold uppercase tracking-[0.08em]",
+        "disabled": false
+      },
+      {
+        "text": "Contre la montre(30s)",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center whitespace-nowrap border bg-clip-padding transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-border bg-card text-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:border-primary hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:border-input dark:bg-input/20 h-11 px-4 min-h-12 justify-center gap-2 rounded-sm text-xs font-bold uppercase tracking-[0.08em]",
+        "disabled": false
+      },
+      {
+        "text": "Commencer",
+        "cls": "group/button inline-flex shrink-0 touch-target items-center justify-center gap-2 whitespace-nowrap border bg-clip-padding text-sm transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-primary bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none h-11 px-4 min-h-12 w-full rounded-sm font-black uppercase tracking-[0.12em]",
+        "disabled": false
+      }
+    ],
+    "indexCached": true
+  },
+  "second": {
+    "main": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nCELEBI\nRUBOMBELLE\nTADMORV FORME D'ALOLA\nLATIAS MÉGA",
+    "answers": 4
+  }
+}

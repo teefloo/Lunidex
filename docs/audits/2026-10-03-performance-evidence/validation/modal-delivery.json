@@ -1,0 +1,20 @@
+{
+  "source": "sources-delivery-build.json",
+  "purpose": "Visual and keyboard verification, not a timed performance comparison",
+  "results": [
+    {
+      "profile": "desktop",
+      "focused": "Fermer",
+      "restored": true,
+      "errors": [],
+      "ok": true
+    },
+    {
+      "profile": "mobile",
+      "focused": "Fermer",
+      "restored": true,
+      "errors": [],
+      "ok": true
+    }
+  ]
+}

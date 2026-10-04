@@ -1,0 +1,42 @@
+{
+  "dimensions": [
+    {
+      "url": "https://assets.tcgdex.net/en/sv/sv03.5/199/low.webp",
+      "width": 245,
+      "height": 337,
+      "renderedWidth": 300
+    },
+    {
+      "url": "https://assets.tcgdex.net/en/sv/sv03.5/199/high.webp",
+      "width": 600,
+      "height": 825,
+      "renderedWidth": 300
+    },
+    {
+      "url": "https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us/2M6P_Classic_EN_1-2x.png",
+      "width": 660,
+      "height": 920,
+      "renderedWidth": 300
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://assets.tcgdex.net/en/sv/sv03.5/199/low.webp",
+      "start": 4333.211117,
+      "bytes": 17149,
+      "durationMs": 263.1229999997231
+    },
+    {
+      "url": "https://assets.tcgdex.net/en/sv/sv03.5/199/high.webp",
+      "start": 4333.215055,
+      "bytes": 57875,
+      "durationMs": 259.58100000025297
+    },
+    {
+      "url": "https://dz3we2x72f7ol.cloudfront.net/expansions/30th-celebration/en-us/2M6P_Classic_EN_1-2x.png",
+      "start": 4333.215149,
+      "bytes": 1048920,
+      "durationMs": 313.3430000007138
+    }
+  ]
+}

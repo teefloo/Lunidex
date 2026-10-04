@@ -1,0 +1,159 @@
+{
+  "note": "Distributions across five 15-second runs per profile. Frame gaps are diagnostic, not physical FPS or INP. Catalog uses sv03.5 for repeatability.",
+  "groups": [
+    {
+      "profile": "desktop",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "errors": [],
+        "longTasks": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "longTaskDurationMs": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "frameGapP95Ms": {
+          "n": 5,
+          "median": 18.099999999999454,
+          "q1": 18,
+          "q3": 18.240000000000144,
+          "min": 18,
+          "max": 18.5
+        },
+        "frameGapsOver50ms": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 1,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "errors": [],
+        "longTasks": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "longTaskDurationMs": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "frameGapP95Ms": {
+          "n": 5,
+          "median": 18.199999999999818,
+          "q1": 18.19999999999891,
+          "q3": 18.20000000000018,
+          "min": 18,
+          "max": 18.200000000000728
+        },
+        "frameGapsOver50ms": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 1,
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "profile": "mobile",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "errors": [],
+        "longTasks": {
+          "n": 5,
+          "median": 4,
+          "q1": 4,
+          "q3": 4,
+          "min": 3,
+          "max": 4
+        },
+        "longTaskDurationMs": {
+          "n": 5,
+          "median": 242,
+          "q1": 239,
+          "q3": 242,
+          "min": 188,
+          "max": 242
+        },
+        "frameGapP95Ms": {
+          "n": 5,
+          "median": 18.5,
+          "q1": 18.5,
+          "q3": 18.5,
+          "min": 18.400000000000727,
+          "max": 18.5
+        },
+        "frameGapsOver50ms": {
+          "n": 5,
+          "median": 3,
+          "q1": 2,
+          "q3": 3,
+          "min": 2,
+          "max": 3
+        }
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "errors": [],
+        "longTasks": {
+          "n": 5,
+          "median": 3,
+          "q1": 3,
+          "q3": 3,
+          "min": 3,
+          "max": 3
+        },
+        "longTaskDurationMs": {
+          "n": 5,
+          "median": 161,
+          "q1": 161,
+          "q3": 162,
+          "min": 160,
+          "max": 162
+        },
+        "frameGapP95Ms": {
+          "n": 5,
+          "median": 18.5,
+          "q1": 18.5,
+          "q3": 18.5,
+          "min": 18.400000000001455,
+          "max": 18.5
+        },
+        "frameGapsOver50ms": {
+          "n": 5,
+          "median": 2,
+          "q1": 2,
+          "q3": 2,
+          "min": 1,
+          "max": 3
+        }
+      }
+    }
+  ]
+}

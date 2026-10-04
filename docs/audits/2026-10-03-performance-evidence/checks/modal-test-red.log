@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+ ❯ src/components/tcg/TCGCardDetailModal.test.ts (1 test | 1 failed) 159ms
+     × focuses the close button after hydration and restores the launcher when closing 158ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/tcg/TCGCardDetailModal.test.ts > TCG modal first client mount > focuses the close button after hydration and restores the launcher when closing
+AssertionError: expected null to be 'common.close' // Object.is equality
+
+- Expected:
+"common.close"
+
++ Received:
+null
+
+ ❯ src/components/tcg/TCGCardDetailModal.test.ts:32:66
+     30|       });
+     31|       await act(async () => { await new Promise(resolve => setTimeout(…
+     32|       expect(document.activeElement?.getAttribute('aria-label')).toBe(…
+       |                                                                  ^
+     33|       expect(document.body.style.overflow).toBe('hidden');
+     34|       await act(async () => { root.render(createElement(TCGCardDetailM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  02:01:05
+   Duration  1.97s (transform 427ms, setup 0ms, import 903ms, tests 159ms, environment 629ms)
+

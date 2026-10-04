@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+ ❯ src/app/quiz/page.test.ts (3 tests | 2 failed) 186ms
+     × prevents an early start until the index arrives, then starts without a false empty-pool error 108ms
+     × offers a retry after an initial failure instead of starting with an empty pool 51ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/quiz/page.test.ts > quiz initial data readiness > prevents an early start until the index arrives, then starts without a false empty-pool error
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/quiz/page.test.ts:47:32
+     45|     mocks.index.mockReturnValue(new Promise<GraphQLPokemonSearchIndex[…
+     46|     await render();
+     47|     expect(classic().disabled).toBe(true);
+       |                                ^
+     48|     act(() => classic().click());
+     49|     expect(mocks.detail).not.toHaveBeenCalled(); expect(mocks.toast).n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/app/quiz/page.test.ts > quiz initial data readiness > offers a retry after an initial failure instead of starting with an empty pool
+AssertionError: expected null not to be null
+ ❯ src/app/quiz/page.test.ts:60:59
+     58|     await render();
+     59|     await act(async () => { await new Promise(resolve => setTimeout(re…
+     60|     expect(container.querySelector('[role="alert"]')).not.toBeNull(); …
+       |                                                           ^
+     61|     const retry = [...container.querySelectorAll('button')].find(butto…
+     62|     await act(async () => { retry.click(); await new Promise(resolve =…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  01:48:17
+   Duration  1.53s (transform 190ms, setup 0ms, import 513ms, tests 186ms, environment 622ms)
+

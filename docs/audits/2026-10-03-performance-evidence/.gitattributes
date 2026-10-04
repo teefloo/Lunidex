@@ -1,0 +1,2 @@
+# Preserve raw build/test output, including terminal carriage returns.
+checks/*.log -text -diff

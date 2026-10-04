@@ -1,0 +1,7 @@
+{
+  "origin": "https://lunidex.app",
+  "formFactor": "PHONE",
+  "status": "unavailable",
+  "reason": "HTTP 403: Chrome UX Report API disabled for the connector project",
+  "interpretation": "No field comparison is possible. This does not establish insufficient traffic."
+}

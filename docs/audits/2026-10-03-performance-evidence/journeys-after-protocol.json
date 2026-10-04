@@ -1,0 +1,17 @@
+{
+  "base": "http://localhost:3107",
+  "runs": 5,
+  "profiles": [
+    "desktop",
+    "mobile"
+  ],
+  "browser": "149.0.7827.55",
+  "visualMetric": "trusted input/click event to two requestAnimationFrame callbacks; proxy, separate from INP",
+  "resultsMetric": "action start to requested DOM condition; includes debounce/network/render",
+  "inpMetric": "web-vitals INP for the current document, cumulative across its interactions; not the network result delay",
+  "serviceWorkers": "blocked",
+  "storage": "fresh context each repetition",
+  "telemetry": "blocked through CDP",
+  "startedAt": "2026-10-04T00:23:57.800Z",
+  "finishedAt": "2026-10-04T00:30:42.367Z"
+}

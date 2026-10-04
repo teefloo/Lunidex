@@ -1,0 +1,167 @@
+{
+  "beforeToMeasuredFinal": [
+    {
+      "file": "instrumentation-client.ts",
+      "before": "054f85fc324dd7597aea5bcb154370b3bfda74193a4d32ed27ca8a9c64d83859",
+      "after": "48c75954474b0c1c184bd79b200c152937dcdf0acf86bdf9f6fc899f013de9f9"
+    },
+    {
+      "file": "next.config.ts",
+      "before": "1ed935c78448d1d28e6b6b9e386b08f249301773681ea609a9ce3079a3f1fabb",
+      "after": "1713188dd63a62a6b4c9f04ea9900dfba6e1adeebbf2430fcc093d1203622986"
+    },
+    {
+      "file": "src/app/globals.css",
+      "before": "2fd531f007f2779879111d50e699ec90f4c6f7a1c405e4e213590520277ba4f9",
+      "after": "930800b4e3a742db6894f2fd4c2673479b486c672ed2d5878cdf1ea464824aa7"
+    },
+    {
+      "file": "src/app/providers.tsx",
+      "before": "82dae0997aac5a839722e19800470b58de956731a095c720e9079ef6d8199ca8",
+      "after": "453c018b0d70d6bb7e81d85c8848769eec18afd166016375b060d73e94dead2f"
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "before": "25d98e1bee7e989b3203129e3729432c015fac22b7afd0dcbc58b032b9766656",
+      "after": "fa0156f87c62da5af2d948026090970d19a2166cf8504b4d74282b8281ea34e9"
+    },
+    {
+      "file": "src/components/IdleClientServices.tsx",
+      "before": "242c108e65bccb2f87b6dab5b22fa3a3b28f6a8fa03a92377463cf6a017c44a5",
+      "after": "fc8dfce9b40ba827c1f1ddbe5ede144080bb246c3da92162415008c05ba9bff9"
+    },
+    {
+      "file": "src/components/pokemon/PokemonList.tsx",
+      "before": "5e281169473494f0f264c6f3ab390b7ea8fafae392eaa585b337f9ea9d08eaef",
+      "after": "ccabe5253cc1d09502e6f202be9c4d1542c83e7de1aa4d1eebbccd37a9649066"
+    },
+    {
+      "file": "src/components/tcg/TCGCardDetailModal.tsx",
+      "before": "ecd3be0e13fc3f00c5ca4b459e3b6c078a2ca9157ef780518548776217ca65b3",
+      "after": "770fbab58186c1126635d4417ebf61f04682b986e2abf58e1cd7958779b346e7"
+    },
+    {
+      "file": "src/components/tcg/TCGResearchDesk.tsx",
+      "before": "cf13416bf82df8be21bd83cbe1e282176842a8515f5dd9b76186826e5de3462c",
+      "after": "892332b3f44249f28856e255076b589f243753510bfbfd6a198e5ad6a50969d2"
+    },
+    {
+      "file": "src/lib/api/cache.test.ts",
+      "before": "3f49b128a3a99d589fbf68173eb25a046d0fc9f25ea338790912f47993bffaa1",
+      "after": "cac822db5922ee322da8b76579d962e1c3ceb66fa6b5263df8d64eee47bcf372"
+    },
+    {
+      "file": "src/lib/api/cache.ts",
+      "before": "697c0608d9fadc4ed9086d387e603373e7e65b1bdcd621cb654b44b1b686d612",
+      "after": "50dede9181c6f187a30a0ab29434e567548991322facb2d3b87832bd239848e4"
+    },
+    {
+      "file": "src/lib/api/graphql.ts",
+      "before": "e0c08f344265cc6bd90337d5161d67a1a9339e2cf90bb61eadd9acb9c604ba0e",
+      "after": "2f5ae3f91ae4d72b3cda439196dbf7d44b2357364856e0db978838dd753da223"
+    },
+    {
+      "file": "src/lib/api/observed-route.test.ts",
+      "before": "dc310b6c83ab3edf1fa63d0cb8515ab1f58471d03602951df25d17bd992d5e47",
+      "after": "eb8837ebdc4a4cc98fa812b6840da87fc6dd1aef173145efd23d6dfd2b31e8bf"
+    },
+    {
+      "file": "src/lib/api/observed-route.ts",
+      "before": "20a70eee0b32e02a08bb943c67884e116d793c71e422656efbc9267ad966b206",
+      "after": "383f2cf74ae8fa98f3057fd68148809c7f3880c1d8dbcbd926201fcd2cef0c33"
+    },
+    {
+      "file": "src/lib/pokemon-filter-utils.test.ts",
+      "before": "26d5abaa664658b109bf8d49f87c355a63877351f3d45c75d4ba261a0cfa1cc0",
+      "after": "a426ba3fa33921ae5105c1df440aea9f05841b6db7b0d5980db7c5f98e9b8277"
+    },
+    {
+      "file": "src/lib/pokemon-filter-utils.ts",
+      "before": "8c01629aa98278adf4faff64872a0a40b79656758fc3704372786afa92aeeb97",
+      "after": "430a038c176aeaf4c239a561a79a1639d53b6bce98ddf493247dd35c796eb30a"
+    },
+    {
+      "file": "src/lib/sentry-observability.test.ts",
+      "before": "11d81315fbd9fde93ca915f6bf4cd97c669e6418b0d9780c0b11b9bede201060",
+      "after": "2c5d7beede6c389329440be1037a323d0d4c35b9c4e9b8c19561ee4856d15a71"
+    },
+    {
+      "file": "src/lib/sentry-observability.ts",
+      "before": "2d70944ab235482a1147f656328bf736ae7f4559ddb3705e7098f7fb7bf2d6bf",
+      "after": "da036023ebdf0e1c4a5ca6b5d9a6cadac648d6bc943ec7c1b094912ecf226b0b"
+    },
+    {
+      "file": "src/proxy.test.ts",
+      "before": "98c56cbaef070e612dc27d96231bee74ab31feeda1733b41acd116b305dea414",
+      "after": "e98685f028c2171aa1cecb1c00d8df2277bbe9e7acb5df344c71fba161071feb"
+    },
+    {
+      "file": "src/proxy.ts",
+      "before": "2d597c8c292eb0a8c2e0a1d908706d4dbf2a74c007fc6e530d2d80d319d41af2",
+      "after": "2266c4cc730fe4bca934f64b1386b46052248806978f682cbef3390029d42300"
+    },
+    {
+      "file": "tsconfig.json",
+      "before": "b0adfe0aaaa7117e2c0b070785f949c26390d6c8118a3792cd97d740859235a2",
+      "after": "b02c5d7b6cc52c5af436f4f1ece52cf92b27d8a090ed6569042cc572e476ff0c"
+    },
+    {
+      "file": "src/app/api/user-state/route.test.ts",
+      "before": null,
+      "after": "bba7bc94d0ec1afa07b2114df0ffd4133bcd431d6f4a0f184df2690012dd93b4"
+    },
+    {
+      "file": "src/app/providers.test.ts",
+      "before": null,
+      "after": "5c9413beec6596785d22d5268d8ad22014db74f255299e05d3373f686573df21"
+    },
+    {
+      "file": "src/app/quiz/page.test.ts",
+      "before": null,
+      "after": "c331e7ee9779f63aad32e7f03f30e6ff5de8bd9e73e30671e6afa2517982113f"
+    },
+    {
+      "file": "src/components/IdleClientServices.test.ts",
+      "before": null,
+      "after": "2f96aa486e013497ddc8df929621f1af272f99369f4b9697096ca3e5f15ca445"
+    },
+    {
+      "file": "src/components/pokemon/PokemonList.test.ts",
+      "before": null,
+      "after": "1b7c910524429dddb43a57cb316a5222b882c3590dfcd8ed6b6c20afbe0bf7d7"
+    },
+    {
+      "file": "src/components/tcg/TCGCardDetailModal.test.ts",
+      "before": null,
+      "after": "28ab143c2a59fef03cea503f0f891f275396f08b7d3d26617e595fc8d3064b8d"
+    },
+    {
+      "file": "src/lib/api/graphql.test.ts",
+      "before": null,
+      "after": "4b8d7aed168bfaa0784fee3855e23048daa4bd6c8caed47d63a89207c46c628a"
+    },
+    {
+      "file": "src/lib/api/tcg-concurrency.test.ts",
+      "before": null,
+      "after": "3946a987415a5a8983eb9b73a1a36cb4f273ac2de0981c3bea1c27fd005fd1e5"
+    }
+  ],
+  "measuredFinalToDelivery": [
+    {
+      "file": "next.config.ts",
+      "before": "1713188dd63a62a6b4c9f04ea9900dfba6e1adeebbf2430fcc093d1203622986",
+      "after": "497ff20dc759fc5b620e7ffc400905f5638ba9b0ca1b43e46a66e3040dea3b6b"
+    },
+    {
+      "file": "src/proxy.test.ts",
+      "before": "e98685f028c2171aa1cecb1c00d8df2277bbe9e7acb5df344c71fba161071feb",
+      "after": "60be1fa7208a12c2ef5e9923ac5d76013aea2416408697d4c8e193b97fe96934"
+    },
+    {
+      "file": "src/proxy.ts",
+      "before": "2266c4cc730fe4bca934f64b1386b46052248806978f682cbef3390029d42300",
+      "after": "310441224064aa058d5cd470d1bfe6cf064bf5f0ebdd0ccfcda7c558deff1d28"
+    }
+  ],
+  "note": "Concurrent files and new tests are included. No attribution of every difference to this performance campaign."
+}

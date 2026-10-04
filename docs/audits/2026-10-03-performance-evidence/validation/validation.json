@@ -1,0 +1,1757 @@
+{
+  "base": "http://localhost:3107",
+  "startedAt": "2026-10-04T00:22:44.490Z",
+  "http": [
+    {
+      "path": "/fr/about",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 301252,
+      "title": "À propos de Lunidex — Suivi de collection Pokémon TCG | Lunidex",
+      "canonical": "https://lunidex.app/fr/about",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/abilities",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 407537,
+      "title": "Talents | Lunidex",
+      "canonical": "https://lunidex.app/fr/abilities",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/auth/reset-password",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 259895,
+      "title": "Modifier votre mot de passe | Lunidex",
+      "canonical": "https://lunidex.app/fr",
+      "languageAlternates": 9,
+      "cacheControl": "no-store, no-cache, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/30e-anniversaire",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 1285019,
+      "title": "30e anniversaire du JCC Pokémon | cartes Pikachu | Lunidex",
+      "canonical": "https://lunidex.app/fr/30e-anniversaire",
+      "languageAlternates": 3,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/battle",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 287562,
+      "title": "Simulateur de combat | Lunidex",
+      "canonical": "https://lunidex.app/fr/battle",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/abilities/blaze",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 332175,
+      "title": "Brasier — Ability | Lunidex",
+      "canonical": "https://lunidex.app/fr/abilities/blaze",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/blog",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 341620,
+      "title": "Blog Lunidex — Guides et comparatifs | Lunidex",
+      "canonical": "https://lunidex.app/fr/blog",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/breeding",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 290510,
+      "title": "Calculateur d&#x27;Élevage | Lunidex",
+      "canonical": "https://lunidex.app/fr/breeding",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/compare/lunidex-vs-bulbapedia",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 133789,
+      "title": "Lunidex ou Bulbapedia — Alternative à l’encyclopédie Pokémon",
+      "canonical": "https://lunidex.app/fr/compare/lunidex-vs-bulbapedia",
+      "languageAlternates": 3,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/compare/lunidex-vs-pokecardex-zebradex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 152124,
+      "title": "Lunidex vs PokéCardex vs ZebraDex — Comparatif de collection Pokémon",
+      "canonical": "https://lunidex.app/fr/compare/lunidex-vs-pokecardex-zebradex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/compare",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 291842,
+      "title": "Comparer les Pokémon — Stats, types et talents | Lunidex",
+      "canonical": "https://lunidex.app/fr/compare",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/contact",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 298301,
+      "title": "Contact | Lunidex",
+      "canonical": "https://lunidex.app/fr/contact",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/cookies",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 301307,
+      "title": "Politique de cookies | Lunidex",
+      "canonical": "https://lunidex.app/fr/cookies",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 285829,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/fr/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/docs/api",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 417399,
+      "title": "API publique Lunidex v1 — Guide développeur",
+      "canonical": "https://lunidex.app/fr/docs/api",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/docs",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 375550,
+      "title": "Documentation Lunidex — outils Pokémon et API",
+      "canonical": "https://lunidex.app/fr/docs",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/faq",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 377001,
+      "title": "FAQ Lunidex — Questions et réponses | Lunidex",
+      "canonical": "https://lunidex.app/fr/faq",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/ev-iv",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 284745,
+      "title": "Calculateur EV/IV — Outil de statistiques compétitives | Lunidex",
+      "canonical": "https://lunidex.app/fr/ev-iv",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/favorites",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 283479,
+      "title": "Mes Pokémon favoris — Gérer ma collection | Lunidex",
+      "canonical": "https://lunidex.app/fr/favorites",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/friends",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 286169,
+      "title": "Amis | Lunidex",
+      "canonical": "https://lunidex.app/fr/friends",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/friends/00000000-0000-4000-8000-000000000001",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200,
+        404,
+        503
+      ],
+      "bytes": 287456,
+      "title": "Profil ami | Lunidex",
+      "canonical": "https://lunidex.app/fr/friends",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/guides/pokemon-reference-guide",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 135239,
+      "title": "Pokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex",
+      "canonical": "https://lunidex.app/fr/guides/pokemon-reference-guide",
+      "languageAlternates": 3,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/guides/nuzlocke-guide",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 136998,
+      "title": "Suivi Nuzlocke — Suivre vos parties challenge | Lunidex",
+      "canonical": "https://lunidex.app/fr/guides/nuzlocke-guide",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/guides/quiz-guide",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 138271,
+      "title": "Guide du quiz Pokémon — Modes, défis et badges | Lunidex",
+      "canonical": "https://lunidex.app/fr/guides/quiz-guide",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/guides/team-builder-guide",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 148260,
+      "title": "Guide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex",
+      "canonical": "https://lunidex.app/fr/guides/team-builder-guide",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/guides/pokemon-card-collection-tracker",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 180249,
+      "title": "Suivi gratuit de collection de cartes Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/fr/guides/pokemon-card-collection-tracker",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/legal",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 293996,
+      "title": "Mentions légales | Lunidex",
+      "canonical": "https://lunidex.app/fr/legal",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/items",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 424457,
+      "title": "Objets | Lunidex",
+      "canonical": "https://lunidex.app/fr/items",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/items/potion",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 300566,
+      "title": "Potion — Objet | Lunidex",
+      "canonical": "https://lunidex.app/fr/items/potion",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/moves",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 319536,
+      "title": "Capacités | Lunidex",
+      "canonical": "https://lunidex.app/fr/moves",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/nuzlocke",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 289541,
+      "title": "Suivi Nuzlocke | Lunidex",
+      "canonical": "https://lunidex.app/fr/nuzlocke",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/offline",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 291212,
+      "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+      "canonical": "https://lunidex.app/fr",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/moves/thunderbolt",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 424398,
+      "title": "Tonnerre — Move | Lunidex",
+      "canonical": "https://lunidex.app/fr/moves/thunderbolt",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 305956,
+      "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+      "canonical": "https://lunidex.app/fr",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/privacy",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 317339,
+      "title": "Politique de confidentialité | Lunidex",
+      "canonical": "https://lunidex.app/fr/privacy",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 313658,
+      "title": "Quiz Pokémon — Testez vos connaissances | Lunidex",
+      "canonical": "https://lunidex.app/fr/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/booster-value",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 289320,
+      "title": "Valeur attendue d’un booster Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/booster-value",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 885618,
+      "title": "Pikachu — Stats, évolutions, attaques et suggestions | Lunidex",
+      "canonical": "https://lunidex.app/fr/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/collection/en/sv03.5",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 285290,
+      "title": "sv03.5 — Ma Collection",
+      "canonical": "https://lunidex.app/fr/tcg/collection/en/sv03.5",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 298324,
+      "title": "Charizard ex — carte JCC Pokémon de 151 | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/collection/en",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 261046,
+      "title": "en — Ma Collection",
+      "canonical": "https://lunidex.app/fr/tcg/collection/en/en",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/collection",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 285953,
+      "title": "Ma Collection | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/collection",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/deck-builder",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 291835,
+      "title": "Constructeur de deck | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/deck-builder",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/pull-rates",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 428350,
+      "title": "Fréquences de tirage des boosters Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/pull-rates",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sealed",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 287459,
+      "title": "Portefeuille scellés | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/sealed",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 355385,
+      "title": "Catalogue JCC Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sealed/buy-safely",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 302096,
+      "title": "Acheter des cartes et produits scellés avec prudence | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/sealed/buy-safely",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sealed/market/audit-unconfigured",
+      "status": 404,
+      "ok": true,
+      "expected": [
+        200,
+        404,
+        503
+      ],
+      "bytes": 232979,
+      "title": "Page introuvable | Lunidex",
+      "languageAlternates": 0,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sealed/market/products/1",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200,
+        404,
+        503
+      ],
+      "bytes": 289884,
+      "title": "Marché des produits scellés | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/sealed/market/1",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 577393,
+      "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+      "canonical": "https://lunidex.app/fr/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sealed/releases",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 484305,
+      "title": "Calendrier des sorties scellées | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/sealed/releases",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/start",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 282147,
+      "title": "Commencez votre collection | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/start",
+      "languageAlternates": 0,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/wishlist",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 286381,
+      "title": "Liste de souhaits | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/wishlist",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 295107,
+      "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+      "canonical": "https://lunidex.app/fr/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/team/share",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 258027,
+      "title": "Pokémon Team Builder — Coverage &amp; Sharing",
+      "canonical": "https://lunidex.app/team/share?code=&amp;lang=en",
+      "languageAlternates": 0,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/terms",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 292664,
+      "title": "Conditions générales d&#x27;utilisation | Lunidex",
+      "canonical": "https://lunidex.app/fr/terms",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/types",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 341633,
+      "title": "Tableau des types Pokémon — Forces, faiblesses et matchups | Lunidex",
+      "canonical": "https://lunidex.app/fr/types",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/tcg/sets/sv03.5",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 725199,
+      "title": "151 : liste des cartes et checklist JCC Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/fr/tcg/sets/sv03.5",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/fr/u/audit-unconfigured",
+      "status": 404,
+      "ok": true,
+      "expected": [
+        200,
+        404,
+        503
+      ],
+      "bytes": 235196,
+      "title": "Profil introuvable | Lunidex",
+      "canonical": "https://lunidex.app/fr",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 284317,
+      "title": "Lunidex — Pokémon TCG Card Catalog &amp; Collection Tracker",
+      "canonical": "https://lunidex.app/en",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 865432,
+      "title": "Pikachu — Stats, Evolutions, Moves &amp; Suggested Sets | Lunidex",
+      "canonical": "https://lunidex.app/en/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 336046,
+      "title": "Pokémon TCG Catalog | Lunidex",
+      "canonical": "https://lunidex.app/en/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 274508,
+      "title": "Pokémon Team Builder — Coverage &amp; Sharing | Lunidex",
+      "canonical": "https://lunidex.app/en/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 293891,
+      "title": "Who&#x27;s That Pokémon? — Pokémon Quiz &amp; Trivia Game | Lunidex",
+      "canonical": "https://lunidex.app/en/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 556396,
+      "title": "Online Pokémon Pokédex — Stats, Moves &amp; Forms | Lunidex",
+      "canonical": "https://lunidex.app/en/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 265835,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/en/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/en/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 278067,
+      "title": "Charizard ex — Pokémon TCG card from 151 | Lunidex",
+      "canonical": "https://lunidex.app/en/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 297291,
+      "title": "Lunidex — Catálogo de cartas Pokémon TCG y colección",
+      "canonical": "https://lunidex.app/es",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 343358,
+      "title": "Catálogo TCG Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/es/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 285551,
+      "title": "Charizard ex — carta TCG Pokémon de 151 | Lunidex",
+      "canonical": "https://lunidex.app/es/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 873236,
+      "title": "Pikachu — Estadísticas, evoluciones, movimientos y sugerencias | Lunidex",
+      "canonical": "https://lunidex.app/es/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 282052,
+      "title": "Creador de equipos Pokémon — Cobertura y uso compartido | Lunidex",
+      "canonical": "https://lunidex.app/es/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 300940,
+      "title": "Quiz Pokémon — Pon a prueba tus conocimientos | Lunidex",
+      "canonical": "https://lunidex.app/es/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 273141,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/es/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 294993,
+      "title": "Lunidex — Pokémon-TCG-Kartenkatalog und Sammlungs-Tracker",
+      "canonical": "https://lunidex.app/de",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/es/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 563278,
+      "title": "Pokédex — Explora Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/es/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 341557,
+      "title": "Pokémon TCG-Katalog | Lunidex",
+      "canonical": "https://lunidex.app/de/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 871246,
+      "title": "Pikachu — Werte, Entwicklungen, Attacken und Vorschläge | Lunidex",
+      "canonical": "https://lunidex.app/de/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 283697,
+      "title": "Charizard ex — Pokémon-TCG-Karte aus 151 | Lunidex",
+      "canonical": "https://lunidex.app/de/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 280085,
+      "title": "Pokémon-Team-Builder — Abdeckung und Teilen | Lunidex",
+      "canonical": "https://lunidex.app/de/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 299137,
+      "title": "Pokémon-Quiz — Teste dein Wissen | Lunidex",
+      "canonical": "https://lunidex.app/de/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 561654,
+      "title": "Pokédex — Pokémon entdecken | Lunidex",
+      "canonical": "https://lunidex.app/de/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/de/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 271394,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/de/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 294466,
+      "title": "Lunidex — Catalogo carte Pokémon TCG e collezione",
+      "canonical": "https://lunidex.app/it",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 340737,
+      "title": "Catalogo TCG Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/it/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 870435,
+      "title": "Pikachu — Statistiche, evoluzioni, mosse e suggerimenti | Lunidex",
+      "canonical": "https://lunidex.app/it/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 282968,
+      "title": "Charizard ex — carta Pokémon TCG di 151 | Lunidex",
+      "canonical": "https://lunidex.app/it/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 279446,
+      "title": "Team builder Pokémon — Copertura e condivisione | Lunidex",
+      "canonical": "https://lunidex.app/it/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 560894,
+      "title": "Pokédex — Esplora i Pokémon | Lunidex",
+      "canonical": "https://lunidex.app/it/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 298364,
+      "title": "Quiz Pokémon — Metti alla prova le tue conoscenze | Lunidex",
+      "canonical": "https://lunidex.app/it/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/it/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 270701,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/it/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 317890,
+      "title": "Lunidex — ポケモンカードカタログとコレクション管理",
+      "canonical": "https://lunidex.app/ja",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 362723,
+      "title": "ポケモンTCGカタログ | Lunidex",
+      "canonical": "https://lunidex.app/ja/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 304519,
+      "title": "151のCharizard ex — ポケモンTCGカード | Lunidex",
+      "canonical": "https://lunidex.app/ja/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 892441,
+      "title": "ピカチュウ — 能力値、進化、技、提案セット | Lunidex",
+      "canonical": "https://lunidex.app/ja/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 300852,
+      "title": "ポケモンチームビルダー — 相性と共有 | Lunidex",
+      "canonical": "https://lunidex.app/ja/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 319502,
+      "title": "ポケモンクイズ — 知識に挑戦 | Lunidex",
+      "canonical": "https://lunidex.app/ja/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 583340,
+      "title": "ポケモン図鑑 — ポケモンを探す | Lunidex",
+      "canonical": "https://lunidex.app/ja/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 301419,
+      "title": "Lunidex — 포켓몬 TCG 카드 카탈로그 및 컬렉션 추적",
+      "canonical": "https://lunidex.app/ko",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ja/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 292019,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/ja/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 876550,
+      "title": "피카츄 — 능력치, 진화, 기술, 추천 세트 | Lunidex",
+      "canonical": "https://lunidex.app/ko/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 289320,
+      "title": "151 Charizard ex — 포켓몬 TCG 카드 | Lunidex",
+      "canonical": "https://lunidex.app/ko/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 347624,
+      "title": "포켓몬 TCG 카탈로그 | Lunidex",
+      "canonical": "https://lunidex.app/ko/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 276884,
+      "title": "대시보드 | Lunidex",
+      "canonical": "https://lunidex.app/ko/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 285643,
+      "title": "포켓몬 팀 빌더 — 커버리지와 공유 | Lunidex",
+      "canonical": "https://lunidex.app/ko/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 304209,
+      "title": "포켓몬 퀴즈 — 지식 테스트 | Lunidex",
+      "canonical": "https://lunidex.app/ko/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/ko/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 567375,
+      "title": "포켓몬 도감 — 포켓몬 탐색 | Lunidex",
+      "canonical": "https://lunidex.app/ko/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 275867,
+      "title": "Lunidex — 宝可梦 TCG 卡牌目录与收藏追踪",
+      "canonical": "https://lunidex.app/zh",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/tcg",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 323610,
+      "title": "宝可梦 TCG 卡牌目录 | Lunidex",
+      "canonical": "https://lunidex.app/zh/tcg",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/pokemon/pikachu",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 852780,
+      "title": "Pikachu — 能力值、进化、招式与建议配置 | Lunidex",
+      "canonical": "https://lunidex.app/zh/pokemon/pikachu",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/tcg/cards/sv03.5-199",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 265762,
+      "title": "151的Charizard ex — 宝可梦 TCG 卡牌 | Lunidex",
+      "canonical": "https://lunidex.app/zh/tcg/cards/sv03.5-199",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/team",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 261847,
+      "title": "宝可梦队伍构建器 — 覆盖与分享 | Lunidex",
+      "canonical": "https://lunidex.app/zh/team",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/api/user-state",
+      "status": 503,
+      "ok": true,
+      "expected": [
+        503,
+        401
+      ],
+      "bytes": 44,
+      "languageAlternates": 0,
+      "cacheControl": null
+    },
+    {
+      "path": "/api/auth/get-session",
+      "status": 503,
+      "ok": true,
+      "expected": [
+        503,
+        401
+      ],
+      "bytes": 39,
+      "languageAlternates": 0,
+      "cacheControl": "no-store, no-cache, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/quiz",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 280758,
+      "title": "宝可梦问答 — 测试你的知识 | Lunidex",
+      "canonical": "https://lunidex.app/zh/quiz",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/zh/dashboard",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 253566,
+      "title": "Dashboard | Lunidex",
+      "canonical": "https://lunidex.app/zh/dashboard",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/api/tcg/sealed/catalogue",
+      "status": 503,
+      "ok": true,
+      "expected": [
+        503,
+        401
+      ],
+      "bytes": 56,
+      "languageAlternates": 0,
+      "cacheControl": "private, no-store"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 6878,
+      "languageAlternates": 0,
+      "cacheControl": "public, s-maxage=21600, max-age=0, stale-while-revalidate=86400"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 3008,
+      "languageAlternates": 0,
+      "cacheControl": "public, s-maxage=86400, max-age=86400, stale-while-revalidate=604800"
+    },
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 13835,
+      "languageAlternates": 0,
+      "cacheControl": "public, s-maxage=86400, max-age=86400, stale-while-revalidate=604800"
+    },
+    {
+      "path": "/zh/pokedex",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 543326,
+      "title": "宝可梦图鉴 — 探索宝可梦 | Lunidex",
+      "canonical": "https://lunidex.app/zh/pokedex",
+      "languageAlternates": 9,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+    },
+    {
+      "path": "/opensearch.xml",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 888,
+      "languageAlternates": 0,
+      "cacheControl": "public, max-age=0"
+    },
+    {
+      "path": "/ai.txt",
+      "status": 200,
+      "ok": true,
+      "expected": [
+        200
+      ],
+      "bytes": 6195,
+      "languageAlternates": 0,
+      "cacheControl": "public, s-maxage=86400, max-age=86400, stale-while-revalidate=604800"
+    }
+  ],
+  "browser": [
+    {
+      "locale": "en",
+      "width": 320,
+      "expectedDark": false,
+      "lang": "en",
+      "dark": false,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "Online Pokémon Pokédex",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "fr",
+      "width": 390,
+      "expectedDark": true,
+      "lang": "fr",
+      "dark": true,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "Pokédex Pokémon en ligne",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "es",
+      "width": 1440,
+      "expectedDark": false,
+      "lang": "es",
+      "dark": false,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "Pokédex",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "de",
+      "width": 320,
+      "expectedDark": true,
+      "lang": "de",
+      "dark": true,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "Pokédex",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "it",
+      "width": 390,
+      "expectedDark": false,
+      "lang": "it",
+      "dark": false,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "Pokédex",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "ja",
+      "width": 1440,
+      "expectedDark": true,
+      "lang": "ja",
+      "dark": true,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "ポケモン図鑑",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "ko",
+      "width": 320,
+      "expectedDark": false,
+      "lang": "ko",
+      "dark": false,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "포켓몬 도감",
+      "errors": [],
+      "ok": true
+    },
+    {
+      "locale": "zh",
+      "width": 390,
+      "expectedDark": true,
+      "lang": "zh",
+      "dark": true,
+      "overflow": false,
+      "reducedMotion": true,
+      "heading": "宝可梦图鉴",
+      "errors": [],
+      "ok": true
+    }
+  ],
+  "simulations": [
+    {
+      "name": "storage-unavailable",
+      "ok": true,
+      "detail": {
+        "heading": "Pokédex Pokémon en ligne"
+      },
+      "errors": []
+    },
+    {
+      "name": "out-of-order-tcg-language",
+      "ok": true,
+      "detail": {
+        "selectedLanguage": "fr",
+        "options": "Toutes les collectionsFR fixture"
+      },
+      "errors": []
+    },
+    {
+      "name": "pwa-offline",
+      "ok": true,
+      "detail": {
+        "controlled": true,
+        "visitedTitle": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+        "fallbackTitle": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+        "fallbackText": "SIGNAL PERDU\n\nLNX / 00\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST"
+      },
+      "errors": []
+    },
+    {
+      "name": "tcg-keyboard-and-state",
+      "ok": true,
+      "detail": {
+        "focusInside": true,
+        "focusRestored": true,
+        "viewAfterReload": "table"
+      },
+      "errors": []
+    },
+    {
+      "name": "navigate-before-loading-completes",
+      "ok": true,
+      "detail": {
+        "finalRoute": "/fr/pokedex",
+        "search": "#025"
+      },
+      "errors": []
+    },
+    {
+      "name": "quiz-complete-local-game",
+      "ok": true,
+      "detail": {
+        "completed": true,
+        "rounds": 8,
+        "authenticated": false
+      },
+      "errors": []
+    }
+  ],
+  "finishedAt": "2026-10-04T00:23:57.434Z"
+}

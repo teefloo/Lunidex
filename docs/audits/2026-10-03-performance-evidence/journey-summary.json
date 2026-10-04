@@ -1,0 +1,2152 @@
+{
+  "note": "Result latency excludes failed actions; failures are separate. INP is cumulative for the current document, not the per-action result time. Two-rAF visual samples are proxies. Compare the first 20 named catalog results, excluding ancillary links.",
+  "groups": [
+    {
+      "key": "desktop pokemon-pagination",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 478,
+          "q1": 370,
+          "q3": 496,
+          "min": 325,
+          "max": 509
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 136,
+          "q1": 120,
+          "q3": 152,
+          "min": 96,
+          "max": 208
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 69.90000000037253,
+          "q1": 67,
+          "q3": 84.90000000037253,
+          "min": 53.299999999813735,
+          "max": 134.20000000018626
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 282,
+          "q1": 276,
+          "q3": 310,
+          "min": 256,
+          "max": 311
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 96,
+          "min": 88,
+          "max": 128
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 52.700000000186265,
+          "q1": 49.39999999944121,
+          "q3": 59.5,
+          "min": 48.299999999813735,
+          "max": 68.40000000037253
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop pokemon-search",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1890,
+          "q1": 1848,
+          "q3": 2007,
+          "min": 1718,
+          "max": 2472
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 136,
+          "q1": 120,
+          "q3": 152,
+          "min": 96,
+          "max": 208
+        },
+        "visualFramesMs": {
+          "n": 40,
+          "median": 23.799999999813735,
+          "q1": 19.800000000512227,
+          "q3": 30.62499999976717,
+          "min": 17.200000000186265,
+          "max": 68.6000000005588
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1736,
+          "q1": 1574,
+          "q3": 1904,
+          "min": 1144,
+          "max": 1909
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 112,
+          "min": 88,
+          "max": 128
+        },
+        "visualFramesMs": {
+          "n": 40,
+          "median": 30.200000000651926,
+          "q1": 20.550000000512227,
+          "q3": 32.50000000023283,
+          "min": 10.200000000186265,
+          "max": 59.89999999944121
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop pokemon-detail-navigation",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 233,
+          "q1": 192,
+          "q3": 244,
+          "min": 174,
+          "max": 394
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 136,
+          "q1": 120,
+          "q3": 152,
+          "min": 96,
+          "max": 208
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 32,
+          "q1": 31.600000000558794,
+          "q3": 32,
+          "min": 30.700000000186265,
+          "max": 33.59999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 166,
+          "q1": 165,
+          "q3": 173,
+          "min": 157,
+          "max": 175
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 112,
+          "min": 88,
+          "max": 128
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 32.200000000186265,
+          "q1": 31.800000000745058,
+          "q3": 32.90000000037253,
+          "min": 31.699999999254942,
+          "max": 33.80000000074506
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop pokemon-back",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 37,
+          "q1": 34,
+          "q3": 42,
+          "min": 31,
+          "max": 52
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 136,
+          "q1": 120,
+          "q3": 152,
+          "min": 96,
+          "max": 208
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 33,
+          "q1": 32,
+          "q3": 33,
+          "min": 28,
+          "max": 34
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 112,
+          "min": 88,
+          "max": 128
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop pokemon-height-sort",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 600,
+          "q1": 598,
+          "q3": 621,
+          "min": 462,
+          "max": 635
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 5,
+          "median": 8,
+          "q1": 7,
+          "q3": 8,
+          "min": 7,
+          "max": 8
+        },
+        "detailedBytes": {
+          "n": 5,
+          "median": 143651,
+          "q1": 143646,
+          "q3": 143665,
+          "min": 143640,
+          "max": 144347
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 418,
+          "q1": 414,
+          "q3": 436,
+          "min": 373,
+          "max": 464
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "detailedBytes": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop pokemon-weight-sort-results",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-modal-open",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 822,
+          "q1": 469,
+          "q3": 837,
+          "min": 408,
+          "max": 855
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 56,
+          "q1": 40,
+          "q3": 56,
+          "min": 40,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 36.90000000037253,
+          "q1": 28.5,
+          "q3": 37.700000000186265,
+          "min": 23.5,
+          "max": 45.90000000037253
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 839,
+          "q1": 832,
+          "q3": 840,
+          "min": 810,
+          "max": 840
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 32,
+          "q1": 24,
+          "q3": 32,
+          "min": 24,
+          "max": 64
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 29.799999999813735,
+          "q1": 29.700000000186265,
+          "q3": 32.59999999962747,
+          "min": 28.299999999813735,
+          "max": 34.09999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-modal-close-keyboard",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 32,
+          "q1": 28,
+          "q3": 43,
+          "min": 25,
+          "max": 57
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 72,
+          "q1": 64,
+          "q3": 104,
+          "min": 56,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 30.200000000186265,
+          "q1": 26.899999999441206,
+          "q3": 56.299999999813735,
+          "min": 23.5,
+          "max": 69.30000000074506
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 44,
+          "q1": 34,
+          "q3": 45,
+          "min": 34,
+          "max": 45
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 56,
+          "q1": 56,
+          "q3": 56,
+          "min": 56,
+          "max": 64
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 27.59999999962747,
+          "q1": 27.59999999962747,
+          "q3": 32.10000000055879,
+          "min": 27.40000000037253,
+          "max": 34.10000000055879
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-search",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 866,
+          "q1": 729,
+          "q3": 870,
+          "min": 694,
+          "max": 1173
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 120,
+          "q1": 104,
+          "q3": 128,
+          "min": 64,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 90,
+          "median": 33.8000000002794,
+          "q1": 22.600000000093132,
+          "q3": 49.799999999813735,
+          "min": 4.900000000372529,
+          "max": 89.29999999981374
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 684,
+          "q1": 679,
+          "q3": 778,
+          "min": 648,
+          "max": 948
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 64,
+          "q1": 64,
+          "q3": 72,
+          "min": 56,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 90,
+          "median": 28.24999999953434,
+          "q1": 22.700000000186265,
+          "q3": 34.87500000023283,
+          "min": 7.5,
+          "max": 51.09999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-language",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 38,
+          "q1": 33,
+          "q3": 63,
+          "min": 22,
+          "max": 392
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 120,
+          "q1": 104,
+          "q3": 128,
+          "min": 64,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 32.39999999944121,
+          "q1": 24.899999999441206,
+          "q3": 34,
+          "min": 14.299999999813735,
+          "max": 38.59999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 22,
+          "q1": 21,
+          "q3": 24,
+          "min": 20,
+          "max": 26
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 64,
+          "q1": 64,
+          "q3": 72,
+          "min": 56,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 23.200000000186265,
+          "q1": 23,
+          "q3": 25,
+          "min": 14.400000000372529,
+          "max": 28.90000000037253
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-set",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 873,
+          "q1": 812,
+          "q3": 1377,
+          "min": 805,
+          "max": 1467
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 120,
+          "q1": 104,
+          "q3": 128,
+          "min": 64,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 24,
+          "q1": 22.59999999962747,
+          "q3": 29,
+          "min": 16,
+          "max": 30.90000000037253
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 810,
+          "q1": 809,
+          "q3": 813,
+          "min": 808,
+          "max": 820
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 64,
+          "q1": 64,
+          "q3": 72,
+          "min": 56,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 28.299999999813735,
+          "q1": 28.200000000186265,
+          "q3": 28.399999999441206,
+          "min": 25.40000000037253,
+          "max": 28.59999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop tcg-view",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 194,
+          "q1": 128,
+          "q3": 204,
+          "min": 103,
+          "max": 276
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 184,
+          "q1": 168,
+          "q3": 192,
+          "min": 96,
+          "max": 200
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 68.40000000037253,
+          "q1": 55.60000000055879,
+          "q3": 111.90000000037253,
+          "min": 41.799999999813735,
+          "max": 156.29999999981374
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 85,
+          "q1": 85,
+          "q3": 87,
+          "min": 85,
+          "max": 87
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 104,
+          "q1": 104,
+          "q3": 104,
+          "min": 96,
+          "max": 112
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 47.5,
+          "q1": 47.09999999962747,
+          "q3": 48.700000000186265,
+          "min": 38.200000000186265,
+          "max": 48.799999999813735
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop team-share-load",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 153,
+          "q1": 145,
+          "q3": 220,
+          "min": 81,
+          "max": 341
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 67,
+          "q1": 63,
+          "q3": 80,
+          "min": 46,
+          "max": 89
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop quiz-start",
+      "before": {
+        "samples": 5,
+        "failures": 3,
+        "resultMs": {
+          "n": 2,
+          "median": 1014,
+          "q1": 993.5,
+          "q3": 1034.5,
+          "min": 973,
+          "max": 1055
+        },
+        "documentInpMs": {
+          "n": 2,
+          "median": 64,
+          "q1": 60,
+          "q3": 68,
+          "min": 56,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 2,
+          "median": 35.0500000002794,
+          "q1": 33.825000000419095,
+          "q3": 36.2750000001397,
+          "min": 32.60000000055879,
+          "max": 37.5
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1542,
+          "q1": 1541,
+          "q3": 1552,
+          "min": 1534,
+          "max": 1961
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 56,
+          "q1": 56,
+          "q3": 56,
+          "min": 48,
+          "max": 56
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 28.09999999962747,
+          "q1": 28,
+          "q3": 28.40000000037253,
+          "min": 27.59999999962747,
+          "max": 33.39999999944121
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "desktop quiz-answer",
+      "before": {
+        "samples": 5,
+        "failures": 3,
+        "resultMs": {
+          "n": 2,
+          "median": 608,
+          "q1": 553.5,
+          "q3": 662.5,
+          "min": 499,
+          "max": 717
+        },
+        "documentInpMs": {
+          "n": 2,
+          "median": 72,
+          "q1": 72,
+          "q3": 72,
+          "min": 72,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 2,
+          "median": 29.5,
+          "q1": 26.949999999720603,
+          "q3": 32.0500000002794,
+          "min": 24.399999999441206,
+          "max": 34.60000000055879
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 413,
+          "q1": 404,
+          "q3": 427,
+          "min": 401,
+          "max": 429
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 64,
+          "q1": 56,
+          "q3": 64,
+          "min": 56,
+          "max": 64
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 30.899999999441206,
+          "q1": 30.899999999441206,
+          "q3": 31.200000000186265,
+          "min": 27,
+          "max": 38.299999999813735
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-pagination",
+      "before": {
+        "samples": 5,
+        "failures": 5,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 4209,
+          "q1": 4193,
+          "q3": 4239,
+          "min": 4182,
+          "max": 4300
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 128,
+          "q1": 120,
+          "q3": 128,
+          "min": 120,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 131.09999999962747,
+          "q1": 123.90000000037253,
+          "q3": 134.29999999981374,
+          "min": 107.29999999981374,
+          "max": 137.89999999850988
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-search",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 2878,
+          "q1": 2877,
+          "q3": 3030,
+          "min": 2711,
+          "max": 3119
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 96,
+          "q3": 128,
+          "min": 96,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 40,
+          "median": 24.549999999813735,
+          "q1": 17.7249999998603,
+          "q3": 40.55000000051223,
+          "min": 11.299999999813735,
+          "max": 116
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 2893,
+          "q1": 2699,
+          "q3": 3037,
+          "min": 2549,
+          "max": 3065
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 128,
+          "q1": 120,
+          "q3": 128,
+          "min": 120,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 40,
+          "median": 27.800000000279397,
+          "q1": 22.674999999813735,
+          "q3": 46,
+          "min": 16.699999999254942,
+          "max": 89
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-detail-navigation",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1748,
+          "q1": 1729,
+          "q3": 1850,
+          "min": 1720,
+          "max": 1873
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 96,
+          "q3": 128,
+          "min": 96,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 34.700000000186265,
+          "q1": 33.200000000186265,
+          "q3": 40.59999999962747,
+          "min": 30,
+          "max": 72.1000000005588
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1710,
+          "q1": 1680,
+          "q3": 1715,
+          "min": 1680,
+          "max": 1716
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 128,
+          "q1": 120,
+          "q3": 128,
+          "min": 120,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 32.5,
+          "q1": 32.40000000037253,
+          "q3": 35.19999999925494,
+          "min": 32,
+          "max": 38.09999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-back",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 152,
+          "q1": 139,
+          "q3": 194,
+          "min": 136,
+          "max": 230
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 96,
+          "q3": 128,
+          "min": 96,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 122,
+          "q1": 112,
+          "q3": 130,
+          "min": 110,
+          "max": 137
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 128,
+          "q1": 120,
+          "q3": 128,
+          "min": 120,
+          "max": 136
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-height-sort",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1574,
+          "q1": 1535,
+          "q3": 2238,
+          "min": 1526,
+          "max": 2291
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 5,
+          "median": 8,
+          "q1": 8,
+          "q3": 8,
+          "min": 8,
+          "max": 8
+        },
+        "detailedBytes": {
+          "n": 5,
+          "median": 143671,
+          "q1": 143658,
+          "q3": 144373,
+          "min": 143640,
+          "max": 144379
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1314,
+          "q1": 1302,
+          "q3": 1326,
+          "min": 1261,
+          "max": 1364
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "detailedBytes": {
+          "n": 5,
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "min": 0,
+          "max": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile pokemon-weight-sort-results",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-modal-open",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1493,
+          "q1": 1439,
+          "q3": 1514,
+          "min": 1437,
+          "max": 1550
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 56,
+          "q1": 40,
+          "q3": 56,
+          "min": 40,
+          "max": 72
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 48.5,
+          "q1": 34.5,
+          "q3": 49,
+          "min": 32.5,
+          "max": 62.799999999813735
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1440,
+          "q1": 1438,
+          "q3": 1443,
+          "min": 1024,
+          "max": 1455
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 40,
+          "q1": 40,
+          "q3": 40,
+          "min": 40,
+          "max": 40
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 36,
+          "q1": 33.30000000074506,
+          "q3": 36.39999999944121,
+          "min": 33.30000000074506,
+          "max": 37.40000000037253
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-modal-close-keyboard",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 120,
+          "q1": 100,
+          "q3": 125,
+          "min": 93,
+          "max": 133
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 112,
+          "q1": 96,
+          "q3": 112,
+          "min": 88,
+          "max": 112
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 98.20000000018626,
+          "q1": 95.80000000074506,
+          "q3": 98.79999999981374,
+          "min": 91.8999999994412,
+          "max": 99.59999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 102,
+          "q1": 95,
+          "q3": 106,
+          "min": 93,
+          "max": 112
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 104,
+          "min": 88,
+          "max": 104
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 88.5,
+          "q1": 79.29999999981374,
+          "q3": 96.90000000037253,
+          "min": 79.09999999962747,
+          "max": 104.60000000149012
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-search",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1484,
+          "q1": 1424,
+          "q3": 1553,
+          "min": 1355,
+          "max": 1653
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 112,
+          "q1": 96,
+          "q3": 120,
+          "min": 88,
+          "max": 144
+        },
+        "visualFramesMs": {
+          "n": 90,
+          "median": 24.949999999720603,
+          "q1": 22.09999999962747,
+          "q3": 29.37500000046566,
+          "min": 13.700000000186265,
+          "max": 114.09999999962747
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1386,
+          "q1": 1375,
+          "q3": 1388,
+          "min": 1218,
+          "max": 1651
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 104,
+          "min": 88,
+          "max": 104
+        },
+        "visualFramesMs": {
+          "n": 90,
+          "median": 25.850000000093132,
+          "q1": 21.74999999953434,
+          "q3": 31.075000000651926,
+          "min": 14,
+          "max": 80.29999999888241
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-language",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 826,
+          "q1": 815,
+          "q3": 899,
+          "min": 719,
+          "max": 1045
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 112,
+          "q1": 96,
+          "q3": 120,
+          "min": 88,
+          "max": 144
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 39.40000000037253,
+          "q1": 33.10000000055879,
+          "q3": 42.200000000186265,
+          "min": 32.200000000186265,
+          "max": 43
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1070,
+          "q1": 869,
+          "q3": 1118,
+          "min": 347,
+          "max": 1137
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 104,
+          "min": 88,
+          "max": 104
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 26.40000000037253,
+          "q1": 25.799999998882413,
+          "q3": 37.5,
+          "min": 25.59999999962747,
+          "max": 47.200000000186265
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-set",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 2135,
+          "q1": 2092,
+          "q3": 2201,
+          "min": 2050,
+          "max": 2220
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 112,
+          "q1": 96,
+          "q3": 120,
+          "min": 88,
+          "max": 144
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 37.5,
+          "q1": 35.89999999944121,
+          "q3": 45.700000000186265,
+          "min": 34.5,
+          "max": 51.200000000186265
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 2026,
+          "q1": 2021,
+          "q3": 2088,
+          "min": 2004,
+          "max": 2136
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 88,
+          "q3": 104,
+          "min": 88,
+          "max": 104
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 33.69999999925494,
+          "q1": 32.90000000037253,
+          "q3": 34.79999999888241,
+          "min": 32.59999999962747,
+          "max": 35.10000000055879
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile tcg-view",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1235,
+          "q1": 1234,
+          "q3": 1257,
+          "min": 940,
+          "max": 1291
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 360,
+          "q1": 304,
+          "q3": 376,
+          "min": 288,
+          "max": 408
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 102.1000000005588,
+          "q1": 74.70000000018626,
+          "q3": 105.70000000018626,
+          "min": 70.90000000037253,
+          "max": 117.1000000005588
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1233,
+          "q1": 1229,
+          "q3": 1236,
+          "min": 1222,
+          "max": 1369
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 280,
+          "q1": 248,
+          "q3": 320,
+          "min": 240,
+          "max": 320
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 71.5,
+          "q1": 71.20000000111759,
+          "q3": 71.5,
+          "min": 71,
+          "max": 71.80000000074506
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile team-share-load",
+      "before": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1434,
+          "q1": 1400,
+          "q3": 1614,
+          "min": 1338,
+          "max": 1640
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1354,
+          "q1": 1331,
+          "q3": 1355,
+          "min": 1285,
+          "max": 1375
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile quiz-start",
+      "before": {
+        "samples": 5,
+        "failures": 5,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 1842,
+          "q1": 1808,
+          "q3": 3365,
+          "min": 1779,
+          "max": 3376
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 96,
+          "q3": 104,
+          "min": 80,
+          "max": 112
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 80.09999999962747,
+          "q1": 77.3999999994412,
+          "q3": 94.5,
+          "min": 74.09999999962747,
+          "max": 97.10000000149012
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    },
+    {
+      "key": "mobile quiz-answer",
+      "before": {
+        "samples": 5,
+        "failures": 5,
+        "resultMs": {
+          "n": 0
+        },
+        "documentInpMs": {
+          "n": 0
+        },
+        "visualFramesMs": {
+          "n": 0
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      },
+      "after": {
+        "samples": 5,
+        "failures": 0,
+        "resultMs": {
+          "n": 5,
+          "median": 476,
+          "q1": 459,
+          "q3": 476,
+          "min": 440,
+          "max": 477
+        },
+        "documentInpMs": {
+          "n": 5,
+          "median": 96,
+          "q1": 96,
+          "q3": 104,
+          "min": 80,
+          "max": 112
+        },
+        "visualFramesMs": {
+          "n": 5,
+          "median": 55.09999999962747,
+          "q1": 54.90000000037253,
+          "q3": 55.399999998509884,
+          "min": 53.69999999925494,
+          "max": 61.30000000074506
+        },
+        "detailedRequests": {
+          "n": 0
+        },
+        "detailedBytes": {
+          "n": 0
+        },
+        "errors": []
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "profile": "desktop",
+      "run": 1,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 1,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 2,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 2,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 3,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 3,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 4,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 4,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 5,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "desktop",
+      "run": 5,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 1,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 1,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 2,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 2,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 3,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 3,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 4,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 4,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 5,
+      "name": "pokemon-height-sort",
+      "equal": true
+    },
+    {
+      "profile": "mobile",
+      "run": 5,
+      "name": "pokemon-weight-sort-results",
+      "equal": true
+    }
+  ]
+}

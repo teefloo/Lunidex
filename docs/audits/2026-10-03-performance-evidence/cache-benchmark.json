@@ -1,0 +1,192 @@
+[
+  {
+    "version": "before",
+    "saturated": false,
+    "run": 1,
+    "durationMs": 39.5,
+    "transactions": 200,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": false,
+    "run": 1,
+    "durationMs": 44.40000000037253,
+    "transactions": 2,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": false,
+    "run": 2,
+    "durationMs": 74.79999999981374,
+    "transactions": 200,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": false,
+    "run": 2,
+    "durationMs": 31.90000000037253,
+    "transactions": 2,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": false,
+    "run": 3,
+    "durationMs": 70.29999999981374,
+    "transactions": 200,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": false,
+    "run": 3,
+    "durationMs": 9.700000000186265,
+    "transactions": 2,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": false,
+    "run": 4,
+    "durationMs": 23.5,
+    "transactions": 200,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": false,
+    "run": 4,
+    "durationMs": 22.700000000186265,
+    "transactions": 2,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": false,
+    "run": 5,
+    "durationMs": 48.40000000037253,
+    "transactions": 200,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": false,
+    "run": 5,
+    "durationMs": 31.5,
+    "transactions": 2,
+    "cacheEntries": 100,
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": true,
+    "run": 1,
+    "durationMs": 3454,
+    "transactions": 60100,
+    "cacheEntries": 400,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": true,
+    "run": 1,
+    "durationMs": 34.200000000186265,
+    "transactions": 4,
+    "cacheEntries": 500,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": true,
+    "run": 2,
+    "durationMs": 3440.199999999255,
+    "transactions": 60100,
+    "cacheEntries": 400,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": true,
+    "run": 2,
+    "durationMs": 23.200000000186265,
+    "transactions": 4,
+    "cacheEntries": 500,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": true,
+    "run": 3,
+    "durationMs": 3417,
+    "transactions": 60100,
+    "cacheEntries": 400,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": true,
+    "run": 3,
+    "durationMs": 22.100000000558794,
+    "transactions": 4,
+    "cacheEntries": 500,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": true,
+    "run": 4,
+    "durationMs": 3221.899999999441,
+    "transactions": 60100,
+    "cacheEntries": 400,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": true,
+    "run": 4,
+    "durationMs": 45.90000000037253,
+    "transactions": 4,
+    "cacheEntries": 500,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "before",
+    "saturated": true,
+    "run": 5,
+    "durationMs": 3598,
+    "transactions": 60100,
+    "cacheEntries": 400,
+    "userData": "preserve",
+    "mirrors": 101
+  },
+  {
+    "version": "after",
+    "saturated": true,
+    "run": 5,
+    "durationMs": 40.90000000037253,
+    "transactions": 4,
+    "cacheEntries": 500,
+    "userData": "preserve",
+    "mirrors": 101
+  }
+]

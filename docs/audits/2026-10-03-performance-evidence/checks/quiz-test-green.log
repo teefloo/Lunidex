@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  01:55:48
+   Duration  2.27s (transform 320ms, setup 0ms, import 749ms, tests 358ms, environment 961ms)
+

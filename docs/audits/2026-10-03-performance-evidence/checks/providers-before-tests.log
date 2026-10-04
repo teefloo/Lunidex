@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+stdout | src/app/providers.test.ts > shared provider lifetime > preserves mounted children when entering and leaving a motion route
+🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
+
+ ❯ src/app/providers.test.ts (1 test | 1 failed) 64ms
+     × preserves mounted children when entering and leaving a motion route 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/providers.test.ts > shared provider lifetime > preserves mounted children when entering and leaving a motion route
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/app/providers.test.ts:51:23
+     49|       state.pathname = '/fr/team';
+     50|       await act(async () => { root.render(tree()); await new Promise(r…
+     51|       expect(mounted).toHaveBeenCalledTimes(1);
+       |                       ^
+     52|       expect(container.querySelector('output')?.dataset.reducedMotion)…
+     53|       state.pathname = '/fr/pokedex';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:37:36
+   Duration  3.54s (transform 100ms, setup 0ms, import 525ms, tests 64ms, environment 2.32s)
+

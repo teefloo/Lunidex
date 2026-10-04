@@ -1,0 +1,13 @@
+
+> primedex@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+
+ Test Files  111 passed (111)
+      Tests  535 passed (535)
+   Start at  12:21:42
+   Duration  9.95s (transform 9.08s, setup 0ms, import 26.36s, tests 8.20s, environment 17.77s)
+

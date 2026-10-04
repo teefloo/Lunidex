@@ -1,0 +1,36 @@
+{
+  "startedAt": "2026-10-03T21:36:01.882Z",
+  "node": "v22.22.3",
+  "base": "http://localhost:3105",
+  "routes": [
+    "/fr",
+    "/fr/pokedex",
+    "/fr/pokemon/pikachu",
+    "/fr/tcg",
+    "/fr/tcg/cards/sv03.5-199",
+    "/fr/team",
+    "/fr/quiz",
+    "/fr/dashboard"
+  ],
+  "runs": 5,
+  "concurrency": 2,
+  "observationMs": 15000,
+  "readinessTimeoutMs": 45000,
+  "serviceWorkers": "blocked",
+  "serverCache": "not purged; routes warmed before timed runs",
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "cpu": 4,
+    "latencyMs": 150,
+    "downloadBytesPerSecond": 200000,
+    "uploadBytesPerSecond": 93750
+  },
+  "desktop": {
+    "width": 1440,
+    "height": 900,
+    "cpu": 1,
+    "network": "unthrottled"
+  },
+  "finishedAt": "2026-10-03T22:00:32.747Z"
+}

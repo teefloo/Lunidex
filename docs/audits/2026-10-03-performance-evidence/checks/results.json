@@ -1,0 +1,65 @@
+{
+  "node": "v22.22.3",
+  "results": [
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T10:20:46.557Z",
+      "finishedAt": "2026-10-04T10:21:36.441Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-04T10:21:36.443Z",
+      "finishedAt": "2026-10-04T10:21:41.966Z",
+      "exitCode": 0
+    },
+    {
+      "name": "seo",
+      "command": "npm run seo:check",
+      "startedAt": "2026-10-04T10:21:41.966Z",
+      "finishedAt": "2026-10-04T10:21:42.225Z",
+      "exitCode": 0
+    },
+    {
+      "name": "vitest",
+      "command": "npm test",
+      "startedAt": "2026-10-04T10:21:42.225Z",
+      "finishedAt": "2026-10-04T10:21:52.916Z",
+      "exitCode": 0
+    },
+    {
+      "name": "core-typecheck",
+      "command": "npx tsc --project packages/core/tsconfig.json --noEmit",
+      "startedAt": "2026-10-04T10:21:52.917Z",
+      "finishedAt": "2026-10-04T10:21:55.220Z",
+      "exitCode": 0
+    },
+    {
+      "name": "diff-check",
+      "command": "git diff --check",
+      "startedAt": "2026-10-04T10:21:55.221Z",
+      "finishedAt": "2026-10-04T10:21:55.258Z",
+      "exitCode": 0
+    },
+    {
+      "name": "inventory-lint",
+      "command": "npx eslint scripts/performance-inventory.mjs",
+      "exitCode": 0,
+      "finishedAt": "2026-10-04T10:26:48.208Z"
+    },
+    {
+      "name": "production-build",
+      "command": "npm run build (isolated delivery copy, Node 22, webpack)",
+      "exitCode": 0,
+      "finishedAt": "2026-10-04T10:26:48.211Z"
+    },
+    {
+      "name": "delivery-modal-browser",
+      "command": "Chromium keyboard and screenshots, 1440x900 and 390x844, reduced motion",
+      "exitCode": 0,
+      "finishedAt": "2026-10-04T10:30:19.125Z"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+
+ RUN  v4.1.11 /Users/estebandeloge/Documents/GitHub/Site Web/Lunidex
+
+ ❯ src/components/pokemon/PokemonList.test.ts (2 tests | 2 failed) 59ms
+     × does not expose an enabled server-rendered load-more control before handlers are ready 25ms
+     × enables pagination after hydration and preserves the additional cards on rerender 34ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/pokemon/PokemonList.test.ts > PokemonList pagination hydration > does not expose an enabled server-rendered load-more control before handlers are ready
+AssertionError: expected '<div class="pokedex-list-shell space-…' to match /<button[^>]*disabled=""[^>]*aria-labe…/
+
+- Expected:
+/<button[^>]*disabled=""[^>]*aria-label="list.load_more"/
+
++ Received:
+"<div class=\"pokedex-list-shell space-y-6 pb-20\"><div class=\"pokedex-list-heading mx-auto w-full max-w-6xl px-4 sm:px-2 pt-6\"><h2 class=\"sr-only\">list.title</h2><div class=\"rule-line\" aria-hidden=\"true\"></div></div><div class=\"mx-auto w-full max-w-6xl px-2 sm:px-2\"><div class=\"pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2\"><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-1\">pokemon-1</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-2\">pokemon-2</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-3\">pokemon-3</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-4\">pokemon-4</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-5\">pokemon-5</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-6\">pokemon-6</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-7\">pokemon-7</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-8\">pokemon-8</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-9\">pokemon-9</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-10\">pokemon-10</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-11\">pokemon-11</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-12\">pokemon-12</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-13\">pokemon-13</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-14\">pokemon-14</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-15\">pokemon-15</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-16\">pokemon-16</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-17\">pokemon-17</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-18\">pokemon-18</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-19\">pokemon-19</a></div><div class=\"pokemon-grid-item\"><a href=\"/pokemon/pokemon-20\">pokemon-20</a></div></div></div><div class=\"pokedex-load-more flex justify-center p-8\"><button type=\"button\" tabindex=\"0\" data-slot=\"button\" aria-label=\"list.load_more\" class=\"group/button inline-flex shrink-0 touch-target items-center justify-center whitespace-nowrap border bg-clip-padding transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 bg-card text-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:border-primary hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:border-input dark:bg-input/20 rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2\">list.load_more</button></div></div>"
+
+ ❯ src/components/pokemon/PokemonList.test.ts:29:20
+     27|     fixture.state._hasHydrated = false;
+     28|     const markup = renderToStaticMarkup(createElement(PokemonList));
+     29|     expect(markup).toMatch(/<button[^>]*disabled=""[^>]*aria-label="li…
+       |                    ^
+     30|   });
+     31|   it('enables pagination after hydration and preserves the additional …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/pokemon/PokemonList.test.ts > PokemonList pagination hydration > enables pagination after hydration and preserves the additional cards on rerender
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/pokemon/PokemonList.test.ts:38:33
+     36|       act(() => { root.render(createElement(PokemonList)); });
+     37|       const button = () => container.querySelector<HTMLButtonElement>(…
+     38|       expect(button().disabled).toBe(true);
+       |                                 ^
+     39|       act(() => button().click()); expect(fixture.fetchNextPage).not.t…
+     40|       fixture.state._hasHydrated = true;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  02:19:14
+   Duration  1.35s (transform 341ms, setup 0ms, import 653ms, tests 59ms, environment 514ms)
+
