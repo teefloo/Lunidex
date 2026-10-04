@@ -171,11 +171,14 @@ function QuizPageContent() {
     };
   }, []);
 
-  const { data: allNames } = useQuery({
+  const { data: allNames, isPending: isIndexPending, isError: isIndexError, refetch: refetchIndex } = useQuery({
     queryKey: pokemonKeys.allSearchIndex(),
     queryFn: getAllPokemonSearchIndex,
     staleTime: 30 * 60 * 1000,
   });
+  // The menu renders before the cold index query resolves. Starting during
+  // that interval incorrectly reports an empty pool and discards the click.
+  const isIndexUnavailable = !allNames && (isIndexPending || isIndexError);
 
   const getLocalizedName = useCallback((internalName: string) => {
     if (!allNames) return internalName;
@@ -573,6 +576,12 @@ function QuizPageContent() {
         ) : null}
 
         <div className="max-w-3xl mx-auto pt-4 relative">
+          {isIndexError && !allNames && (
+            <div role="alert" className="mb-4 rounded-sm border border-border/60 bg-card/50 p-4">
+              <p className="mb-3 text-sm text-muted-foreground">{t('quiz.fetch_failed')}</p>
+              <Button variant="outline" onClick={() => void refetchIndex()}>{t('common.retry')}</Button>
+            </div>
+          )}
           {gameState === 'idle' || gameState === 'finished' ? (
             <div className="space-y-8">
               <motion.div 
@@ -618,14 +627,18 @@ function QuizPageContent() {
                 <div className="relative z-10 space-y-5">
                   <Button
                     onClick={() => startGame('classic', 'marathon')}
+                    disabled={isIndexUnavailable}
+                    aria-busy={isIndexPending}
                     className="w-full min-h-14 rounded-sm font-black uppercase tracking-[0.15em] text-sm md:text-base border border-primary/25 bg-primary/90 text-primary-foreground shadow-sm transition-colors hover:bg-primary"
                   >
-                    <Gamepad2 className="w-5 h-5 mr-2" />
+                    {isIndexPending ? <Loader2 aria-hidden="true" className="w-5 h-5 mr-2 animate-spin" /> : <Gamepad2 aria-hidden="true" className="w-5 h-5 mr-2" />}
                     {t('quiz.classic')}
                   </Button>
 
                   <Button
                     onClick={() => startGame('classic', 'marathon', true)}
+                    disabled={isIndexUnavailable}
+                    aria-busy={isIndexPending}
                     variant="outline"
                     className="w-full min-h-12 rounded-sm font-bold uppercase tracking-[0.12em] text-xs md:text-sm border-border/60 hover:border-primary/30 hover:bg-primary/5"
                   >
@@ -734,7 +747,7 @@ function QuizPageContent() {
                     ))}
                   </div>
 
-                  <Button onClick={() => startGame(quizChallenge, gameMode)} className="min-h-12 w-full rounded-sm font-black uppercase tracking-[0.12em]">
+                  <Button onClick={() => startGame(quizChallenge, gameMode)} disabled={isIndexUnavailable} aria-busy={isIndexPending} className="min-h-12 w-full rounded-sm font-black uppercase tracking-[0.12em]">
                     <Gamepad2 aria-hidden="true" className="mr-2 h-4 w-4" />
                     {t('quiz.start')}
                   </Button>
