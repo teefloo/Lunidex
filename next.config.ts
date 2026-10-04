@@ -199,6 +199,11 @@ const publicPageCacheHeader = {
   value: 'public, s-maxage=3600, stale-while-revalidate=86400',
 };
 
+const stablePublicPageCacheHeader = {
+  key: 'Vercel-CDN-Cache-Control',
+  value: 'public, s-maxage=86400, stale-while-revalidate=604800',
+};
+
 const publicPageCacheRoutes = [
   '/:locale(en|fr|es|de|it|ja|ko|zh)/pokemon/:name',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/pokedex',
@@ -206,6 +211,9 @@ const publicPageCacheRoutes = [
   '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sets/:setId',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/deck-builder',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sealed/market',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sealed/market/:id',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sealed/market/products/:id',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/moves',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/moves/:name',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/abilities',
@@ -215,21 +223,28 @@ const publicPageCacheRoutes = [
   '/:locale(en|fr|es|de|it|ja|ko|zh)/types',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/compare',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/compare/:slug',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/guides/:slug',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/blog',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/about',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/faq',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/contact',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/30e-anniversaire',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/nuzlocke',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/breeding',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/ev-iv',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/quiz',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/u/:handle',
+];
+
+const stablePublicPageCacheRoutes = [
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/guides/:slug',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/blog',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/about',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/faq',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/contact',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/docs',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/docs/api',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sealed/releases',
+  '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/sealed/buy-safely',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/cookies',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/privacy',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/terms',
   '/:locale(en|fr|es|de|it|ja|ko|zh)/legal',
-  '/:locale(en|fr|es|de|it|ja|ko|zh)/u/:handle',
 ];
 
 const nextConfig: NextConfig = {
@@ -456,6 +471,10 @@ const nextConfig: NextConfig = {
       ...publicPageCacheRoutes.map((source) => ({
         source,
         headers: [publicPageCacheHeader],
+      })),
+      ...stablePublicPageCacheRoutes.map((source) => ({
+        source,
+        headers: [stablePublicPageCacheHeader],
       })),
     ];
   },

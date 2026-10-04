@@ -1,6 +1,8 @@
-﻿import { graphqlClient } from './client';
+import axios from 'axios';
+import apiClient, { graphqlClient } from './client';
 import { getCachedData, setCachedData } from './cache';
 import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData, GraphQLItemData } from '@/types/pokemon';
+import { getPokemonApiLanguageCode, languageToPokemonLanguageId, supportedLanguages } from '@/lib/languages';
 import { reportFallback } from '@/lib/sentry-observability';
 
 const BATCH_SIZE = 200;
@@ -710,6 +712,42 @@ const EXCLUDED_ITEM_CATEGORIES = [
   'all-machines',
 ];
 
+interface PokemonApiLocalizedItemEntry {
+  language: { name: string };
+}
+
+interface PokemonApiItemResource {
+  id: number;
+  name: string;
+  cost: number;
+  category: { name: string } | null;
+  names: Array<PokemonApiLocalizedItemEntry & { name: string }>;
+  effect_entries: Array<PokemonApiLocalizedItemEntry & { effect: string; short_effect: string }>;
+  flavor_text_entries: Array<PokemonApiLocalizedItemEntry & { text: string }>;
+}
+
+function mapPokemonApiItem(item: PokemonApiItemResource, languageId: number): GraphQLItemData {
+  const language = supportedLanguages.find((candidate) => languageToPokemonLanguageId[candidate] === languageId);
+  const languageCode = language ? getPokemonApiLanguageCode(language) : undefined;
+  const localized = <T extends PokemonApiLocalizedItemEntry>(entries: T[]): T[] =>
+    languageCode ? entries.filter((entry) => entry.language.name === languageCode) : [];
+
+  return {
+    id: item.id,
+    name: item.name,
+    cost: item.cost,
+    pokemon_v2_itemcategory: item.category,
+    pokemon_v2_itemnames: localized(item.names).map(({ name }) => ({ name })),
+    pokemon_v2_itemeffecttexts: localized(item.effect_entries).map(({ effect, short_effect }) => ({
+      effect,
+      short_effect,
+    })),
+    pokemon_v2_itemflavortexts: localized(item.flavor_text_entries)
+      .slice(0, 1)
+      .map(({ text }) => ({ flavor_text: text })),
+  };
+}
+
 export const getAllItems = async (languageId: number, maxResults = 2000): Promise<GraphQLItemData[]> => {
   const resultLimit = Math.max(1, Math.min(Math.floor(maxResults), 2000));
   const cacheKey = `all-items-v3-${languageId}-${resultLimit}`;
@@ -798,6 +836,9 @@ export const getItemDetail = async (name: string, languageId: number): Promise<G
     const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
       query,
       variables: { name, languageId },
+    }, {
+      timeout: 10000,
+      'axios-retry': { retries: 0 },
     });
 
     const result = data?.data?.pokemon_v2_item?.[0];
@@ -805,9 +846,17 @@ export const getItemDetail = async (name: string, languageId: number): Promise<G
 
     await setCachedData(cacheKey, result);
     return result;
-  } catch (error) {
-    const cached = await getCachedData<GraphQLItemData>(cacheKey, true);
-    if (cached) return cached;
-    throw error;
+  } catch {
+    try {
+      const { data: item } = await apiClient.get<PokemonApiItemResource>(`/item/${encodeURIComponent(name)}`);
+      const result = mapPokemonApiItem(item, languageId);
+      await setCachedData(cacheKey, result);
+      return result;
+    } catch (fallbackError) {
+      const cached = await getCachedData<GraphQLItemData>(cacheKey, true);
+      if (cached) return cached;
+      if (axios.isAxiosError(fallbackError) && fallbackError.response?.status === 404) return null;
+      throw fallbackError;
+    }
   }
 };
