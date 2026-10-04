@@ -575,7 +575,8 @@ export default function PokemonList() {
           <Button
             variant="outline"
             onClick={handleLoadMore}
-            disabled={isFetchingNextPage || (!hasNextPage && !hasMoreFiltered)}
+            disabled={!_hasHydrated || isFetchingNextPage || (!hasNextPage && !hasMoreFiltered)}
+            aria-busy={!_hasHydrated || isFetchingNextPage}
             className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2"
             aria-label={isFetchingNextPage ? t('list.loading_more') : t('list.load_more')}
           >
