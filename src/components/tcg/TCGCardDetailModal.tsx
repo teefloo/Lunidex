@@ -99,9 +99,16 @@ export function TCGCardDetailModal({
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
+  const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
+  // Reset before committing a closed modal, including closure by its parent.
+  // An effect would first commit the stale nested-dialog state and render again.
+  if (previousIsOpen !== isOpen) {
+    setPreviousIsOpen(isOpen);
+    if (!isOpen) setIsVariantSheetOpen(false);
+  }
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !mounted) return;
 
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
@@ -112,7 +119,7 @@ export function TCGCardDetailModal({
       document.body.style.overflow = previousOverflow;
       if (previousFocus?.isConnected) previousFocus.focus();
     };
-  }, [isOpen]);
+  }, [isOpen, mounted]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -149,10 +156,6 @@ export function TCGCardDetailModal({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, isVariantSheetOpen, onClose]);
-
-  useEffect(() => {
-    if (!isOpen) setIsVariantSheetOpen(false);
-  }, [isOpen]);
 
   const { data: hydratedCard, isFetching } = useQuery({
     queryKey: card ? tcgKeys.card(card.id, resolvedLang) : tcgKeys.card('missing', resolvedLang),
