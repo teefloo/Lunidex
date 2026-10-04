@@ -6854,6 +6854,8 @@ html.dark .lunidex-home::before {
 }
 
 .lunidex-home .home-header-more-menu {
+  right: 0;
+  left: auto;
   border-color: var(--home-line);
   background: var(--home-panel);
 }
