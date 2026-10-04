@@ -1,4 +1,4 @@
-import { get, set, keys, del } from 'idb-keyval';
+import { get, getMany, setMany, keys, delMany } from 'idb-keyval';
 import { featureFromCacheKey, reportFallback } from '@/lib/sentry-observability';
 
 const CACHE_PREFIX = 'poke-cache-v3-';
@@ -13,6 +13,15 @@ interface CacheItem<T> {
   data: T;
   timestamp: number;
 }
+
+interface PendingCacheWrite {
+  key: string;
+  item: CacheItem<unknown>;
+  resolve: () => void;
+}
+
+const pendingWrites: PendingCacheWrite[] = [];
+let flushingWrites = false;
 
 function getCacheKey(key: string): string {
   return `${CACHE_PREFIX}${key}`;
@@ -87,26 +96,55 @@ async function runIndexedDbOperation<T>(operation: () => Promise<T>): Promise<T>
   }
 }
 
-async function evictOldestIfNeeded(): Promise<void> {
+async function writeCacheBatch(batch: PendingCacheWrite[]): Promise<void> {
   const allKeys = await runIndexedDbOperation(() => keys());
   const cacheKeys = allKeys.filter((k) =>
     typeof k === 'string' && k.startsWith(CACHE_PREFIX)
   ) as string[];
 
-  if (cacheKeys.length < MAX_CACHE_ITEMS) return;
+  const existingKeys = new Set(cacheKeys);
+  const incomingKeys = new Set(batch.map(({ key }) => key));
+  const newCount = [...incomingKeys].filter((key) => !existingKeys.has(key)).length;
+  const overflow = cacheKeys.length + newCount - MAX_CACHE_ITEMS;
 
-  const itemsWithTs = await Promise.all(
-    cacheKeys.map(async (k) => {
-      const item = await runIndexedDbOperation(() => get<CacheItem<unknown>>(k));
-      return { key: k, timestamp: item?.timestamp ?? 0 };
-    })
-  );
+  if (overflow > 0) {
+    const items = await runIndexedDbOperation(() => getMany<CacheItem<unknown>>(cacheKeys));
+    const oldest = cacheKeys
+      .map((key, index) => ({ key, timestamp: items[index]?.timestamp ?? 0 }))
+      .filter(({ key }) => !incomingKeys.has(key))
+      .sort((left, right) => left.timestamp - right.timestamp);
+    const evictionCount = Math.max(overflow, Math.ceil(MAX_CACHE_ITEMS * 0.2));
+    await runIndexedDbOperation(() => delMany(oldest.slice(0, evictionCount).map(({ key }) => key)));
+  }
 
-  // Sort oldest first and remove the oldest 20%
-  itemsWithTs.sort((a, b) => a.timestamp - b.timestamp);
-  const toDelete = itemsWithTs.slice(0, Math.ceil(MAX_CACHE_ITEMS * 0.2));
+  await runIndexedDbOperation(() => setMany(batch.map(({ key, item }) => [key, item])));
+}
 
-  await runIndexedDbOperation(() => Promise.all(toDelete.map((i) => del(i.key))).then(() => undefined));
+async function flushCacheWrites(): Promise<void> {
+  // Serialize eviction and writes. Parallel responses share transactions,
+  // and each batch rechecks the database so writes in other tabs are visible.
+  while (pendingWrites.length > 0) {
+    const batch = pendingWrites.splice(0, 100);
+    try {
+      if (!indexedDbUnavailable) await writeCacheBatch(batch);
+    } catch {
+      // The bounded operation disables IndexedDB; callers still mirror locally.
+    } finally {
+      for (const write of batch) write.resolve();
+    }
+  }
+  flushingWrites = false;
+}
+
+function enqueueCacheWrite(key: string, item: CacheItem<unknown>): Promise<void> {
+  return new Promise((resolve) => {
+    pendingWrites.push({ key, item, resolve });
+    if (!flushingWrites) {
+      flushingWrites = true;
+      // Coalesce writes from the same response burst without adding a timer.
+      queueMicrotask(() => { void flushCacheWrites(); });
+    }
+  });
 }
 
 export async function getCachedData<T>(key: string, allowExpired = false): Promise<T | null> {
@@ -127,20 +165,7 @@ export async function setCachedData<T>(key: string, data: T): Promise<void> {
   const item: CacheItem<T> = { data, timestamp: Date.now() };
 
   if (!indexedDbUnavailable && isIndexedDbAvailable()) {
-    try {
-      await evictOldestIfNeeded();
-    } catch {
-      // Eviction is best effort. A failing IndexedDB is disabled below and
-      // the local fallback still receives the response.
-    }
-
-    if (!indexedDbUnavailable) {
-      try {
-        await runIndexedDbOperation(() => set(getCacheKey(key), item));
-      } catch {
-        // Continue with the synchronous localStorage mirror.
-      }
-    }
+    await enqueueCacheWrite(getCacheKey(key), item);
   }
 
   try {
