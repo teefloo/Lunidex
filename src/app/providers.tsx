@@ -1,8 +1,8 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, useEffect, useLayoutEffect, useRef, type ComponentType, type ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect, useLayoutEffect, useRef, useContext, useMemo, type ReactNode } from 'react';
+import { MotionConfigContext } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
 import { I18nextProvider } from 'react-i18next';
 import type { ResourceLanguage } from 'i18next';
@@ -26,39 +26,12 @@ import { scheduleIdleTask } from '@/lib/idle-scheduler';
 const SettingsModal = dynamic(() => import('@/components/layout/SettingsModal'), { ssr: false });
 const CommandPalette = dynamic(() => import('@/components/command/CommandPalette').then(m => ({ default: m.CommandPalette })), { ssr: false });
 
-type MotionConfigProps = {
-  children: ReactNode;
-  reducedMotion?: 'always' | 'never' | 'user';
-};
-
-function routeNeedsMotionConfig(pathname: string): boolean {
-  const pathWithoutLocale = pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '') || '/';
-  return /^\/(?:abilities|compare|favorites|items|moves|pokemon|quiz|team|types)(?:\/|$)/.test(pathWithoutLocale)
-    || pathWithoutLocale.startsWith('/u/')
-    || pathWithoutLocale.startsWith('/tcg/wishlist');
-}
-
 function MotionConfigBoundary({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const shouldLoad = routeNeedsMotionConfig(pathname);
-  const [MotionConfig, setMotionConfig] = useState<ComponentType<MotionConfigProps> | null>(null);
-
-  useEffect(() => {
-    if (!shouldLoad || MotionConfig) return;
-
-    let active = true;
-    void import('framer-motion').then((module) => {
-      if (!active) return;
-      setMotionConfig(() => module.MotionConfig as ComponentType<MotionConfigProps>);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [MotionConfig, shouldLoad]);
-
-  if (!shouldLoad || !MotionConfig) return <>{children}</>;
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  const parentConfig = useContext(MotionConfigContext);
+  const config = useMemo(() => ({ ...parentConfig, reducedMotion: 'user' as const }), [parentConfig]);
+  // This public context is small and tree-shakable. Keep its boundary stable:
+  // adding a dynamically loaded wrapper remounts auth, routes and local state.
+  return <MotionConfigContext.Provider value={config}>{children}</MotionConfigContext.Provider>;
 }
 
 function DeferredOverlays() {
