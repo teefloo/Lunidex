@@ -5,7 +5,7 @@
 This file applies to the repository unless a closer `AGENTS.md` adds more specific rules. Before editing a subtree, check for the nearest guide with:
 
 ```bash
-rg --files -g 'AGENTS.md' -g 'AGENT.md' -g 'GEMINI.md'
+rg --files -g 'AGENTS.md' -g 'AGENT.md'
 ```
 
 The nearest applicable guide supplements this one; it should describe only the local constraints that differ. User instructions take precedence. Preserve unrelated work already present in the working tree.
