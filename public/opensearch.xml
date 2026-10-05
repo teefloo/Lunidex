@@ -4,7 +4,7 @@
   <Description>Search the Lunidex Pokédex by Pokémon name or National Dex number.</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Url type="text/html" template="https://lunidex.app/en/pokedex?q={searchTerms}"/>
-  <Image height="64" width="64" type="image/png">https://lunidex.app/icon-192.png</Image>
+  <Image height="64" width="64" type="image/png">https://lunidex.app/icon-192.png?v=3</Image>
   <Developer>Lunidex</Developer>
   <Attribution>Search data via PokéAPI and TCGdex</Attribution>
   <SyndicationRight>open</SyndicationRight>

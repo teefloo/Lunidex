@@ -32,8 +32,8 @@ self.addEventListener('push', (event) => {
   const title = payload.title || 'Lunidex';
   const options = {
     body: payload.body || '',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/icon-192.png?v=3',
+    badge: '/icon-192.png?v=3',
     data: { url: payload.url || '/' },
   };
 
