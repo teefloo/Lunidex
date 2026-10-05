@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isSupportedLanguage } from '@/lib/languages';
+import { DEFAULT_TCG_CARD_LANGUAGE, normalizeTCGCardLanguage } from '@/lib/tcg-language';
 
 const COOKIE_NAME = 'primedex-lang';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 const TCGDEX_BASE_URL = 'https://api.tcgdex.net/v2';
 const RESOURCE_PROBE_TIMEOUT_MS = 1500;
-const RESOURCE_PROBE_CACHE_TTL_MS = 60 * 60 * 1000;
-const RESOURCE_PROBE_FAILURE_TTL_MS = RESOURCE_PROBE_CACHE_TTL_MS;
+// Resource existence is stable; keep positive checks warm across daily crawls.
+const RESOURCE_PROBE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+// Negative and failed checks stay short so new data and upstream recovery show quickly.
+const RESOURCE_PROBE_FAILURE_TTL_MS = 60 * 60 * 1000;
 const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 8192;
 // Empty Japanese/Korean set payloads contain only metadata and are currently
 // smaller than 400 bytes. Confirm those compact responses with a GET only when
@@ -75,6 +78,7 @@ const PUBLIC_DETAIL_ROUTE_PREFIXES = new Set([
   'guides',
   'u',
 ]);
+const STABLE_PUBLIC_DETAIL_ROUTE_PREFIXES = new Set(['pokemon', 'moves', 'abilities', 'items']);
 const LEGACY_HOSTS = new Set([
   'www.lunidex.app',
   'primedex.vercel.app',
@@ -214,6 +218,7 @@ function isPublicLocalizedRoute(segments: string[]): boolean {
 
 function isStablePublicLocalizedRoute(segments: string[]): boolean {
   return (segments.length === 2 && PUBLIC_STABLE_SINGLE_SEGMENT_ROUTES.has(segments[1] ?? ''))
+    || (segments.length === 3 && STABLE_PUBLIC_DETAIL_ROUTE_PREFIXES.has(segments[1] ?? ''))
     || (segments.length === 3 && segments[1] === 'guides')
     || (segments.length === 3 && segments[1] === 'docs' && segments[2] === 'api')
     || (segments.length === 4 && segments[1] === 'tcg' && segments[2] === 'sealed'
@@ -250,7 +255,11 @@ function getResourceProbe(pathname: string, locale: string): ResourceProbe | nul
   }
 }
 
-function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | null {
+function getTcgResourceProbe(
+  pathname: string,
+  locale: string,
+  requestedTcgLanguage: string | null,
+): ResourceProbe | null {
   const segments = pathname.split('/').filter(Boolean);
   if (segments[0] !== locale || segments.length !== 4 || segments[1] !== 'tcg') return null;
 
@@ -263,10 +272,13 @@ function getTcgResourceProbe(pathname: string, locale: string): ResourceProbe | 
   if (!identifier) return null;
 
   const encodedIdentifier = encodeURIComponent(identifier);
-  // Probe the requested catalog first. Japanese and Korean contain regional
-  // set IDs that do not exist in English, while Chinese uses the established
-  // English data fallback.
-  const probeLocale = locale === 'zh' ? 'en' : locale;
+  // TCG data language is independent from the interface locale. The detail
+  // pages default to English and read this same query parameter; probing the
+  // UI locale first creates avoidable 404 + English fallback requests.
+  const probeLocale = normalizeTCGCardLanguage(
+    requestedTcgLanguage,
+    DEFAULT_TCG_CARD_LANGUAGE,
+  ) ?? DEFAULT_TCG_CARD_LANGUAGE;
   const fallbackLocale = probeLocale === 'en' ? null : 'en';
   if (segments[2] === 'cards') {
     return {
@@ -361,7 +373,7 @@ function setCachedResourceProbe(key: string, result: boolean | null): void {
   }
   resourceProbeCache.set(key, {
     result,
-    expiresAt: Date.now() + (result === null ? RESOURCE_PROBE_FAILURE_TTL_MS : RESOURCE_PROBE_CACHE_TTL_MS),
+    expiresAt: Date.now() + (result === true ? RESOURCE_PROBE_CACHE_TTL_MS : RESOURCE_PROBE_FAILURE_TTL_MS),
   });
 }
 
@@ -579,7 +591,9 @@ export async function proxy(request: NextRequest) {
         && segments[1] === 'tcg'
         && segments[2] === 'collection';
       const probe = getResourceProbe(pathname, urlLocale)
-        ?? (isPrivateCollectionAlbum ? null : getTcgResourceProbe(pathname, urlLocale));
+        ?? (isPrivateCollectionAlbum
+          ? null
+          : getTcgResourceProbe(pathname, urlLocale, request.nextUrl.searchParams.get('tcgLang')));
       if (probe && (await probeResource(probe)) === false) {
         return hardNotFoundResponse(request, urlLocale);
       }

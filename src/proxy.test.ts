@@ -56,6 +56,25 @@ describe('public localized proxy responses', () => {
     );
   });
 
+  it('gives stable Pokémon data detail pages a one-day CDN lifetime', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const paths = [
+      '/fr/pokemon/pikachu-cost-cache-check',
+      '/fr/moves/thunderbolt-cost-cache-check',
+      '/fr/abilities/static-cost-cache-check',
+      '/fr/items/potion-cost-cache-check',
+    ];
+    const responses = await Promise.all(paths.map((path) => proxy(new NextRequest(`https://lunidex.test${path}`, {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }))));
+
+    expect(responses.map((response) => response.status)).toEqual([200, 200, 200, 200]);
+    expect(responses.map((response) => response.headers.get('Vercel-CDN-Cache-Control'))).toEqual(
+      paths.map(() => 'public, s-maxage=86400, stale-while-revalidate=604800'),
+    );
+  });
+
   it('caches only the public sealed market listing, not the portfolio route', async () => {
     const marketResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market?q=booster', {
       headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
@@ -224,6 +243,40 @@ describe('public localized proxy responses', () => {
     expect(fetchMock.mock.calls[0]?.[0]).toBe(`https://api.tcgdex.net/v2/en/cards/${cardId}`);
   });
 
+  it('probes TCG cards and sets in the requested data language, independent of the UI locale', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const cardId = 'cost-audit-ja-card-001';
+    const setId = 'cost-audit-ja-set-001';
+
+    const cardResponse = await proxy(new NextRequest(
+      `https://lunidex.test/es/tcg/cards/${cardId}?tcgLang=ja`,
+      { headers: { accept: 'text/html' } },
+    ));
+    const setResponse = await proxy(new NextRequest(
+      `https://lunidex.test/fr/tcg/sets/${setId}?tcgLang=ja`,
+      { headers: { accept: 'text/html' } },
+    ));
+
+    expect([cardResponse.status, setResponse.status]).toEqual([200, 200]);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      `https://api.tcgdex.net/v2/ja/cards/${cardId}`,
+      `https://api.tcgdex.net/v2/ja/sets/${setId}`,
+    ]);
+  });
+
+  it('defaults invalid TCG data-language queries to English', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const cardId = 'cost-audit-invalid-language-001';
+
+    await proxy(new NextRequest(
+      `https://lunidex.test/fr/tcg/cards/${cardId}?tcgLang=fr-FR`,
+      { headers: { accept: 'text/html' } },
+    ));
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(`https://api.tcgdex.net/v2/en/cards/${cardId}`);
+  });
+
   it('learns an English fallback without concealing a regional-only Japanese card', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce(new Response(null, { status: 404 }))
@@ -233,7 +286,7 @@ describe('public localized proxy responses', () => {
     const fallbackId = 'cost-audit-fallback-001';
     const regionalId = 'cost-audit-regional-001';
 
-    const french = await proxy(new NextRequest(`https://lunidex.test/fr/tcg/cards/${fallbackId}`, {
+    const french = await proxy(new NextRequest(`https://lunidex.test/fr/tcg/cards/${fallbackId}?tcgLang=fr`, {
       headers: { accept: 'text/html' },
     }));
     const german = await proxy(new NextRequest(`https://lunidex.test/de/tcg/cards/${fallbackId}`, {
@@ -242,7 +295,7 @@ describe('public localized proxy responses', () => {
     const englishMissing = await proxy(new NextRequest(`https://lunidex.test/en/tcg/cards/${regionalId}`, {
       headers: { accept: 'text/html' },
     }));
-    const japanese = await proxy(new NextRequest(`https://lunidex.test/ja/tcg/cards/${regionalId}`, {
+    const japanese = await proxy(new NextRequest(`https://lunidex.test/ja/tcg/cards/${regionalId}?tcgLang=ja`, {
       headers: { accept: 'text/html' },
     }));
 
@@ -259,7 +312,7 @@ describe('public localized proxy responses', () => {
     await proxy(new NextRequest(`https://lunidex.test/en/tcg/cards/${cardId}`, {
       headers: { accept: 'text/html' },
     }));
-    const japanese = await proxy(new NextRequest(`https://lunidex.test/ja/tcg/cards/${cardId}`, {
+    const japanese = await proxy(new NextRequest(`https://lunidex.test/ja/tcg/cards/${cardId}?tcgLang=ja`, {
       headers: { accept: 'text/html' },
     }));
 
@@ -268,7 +321,7 @@ describe('public localized proxy responses', () => {
     expect(fetchMock.mock.calls[1]?.[0]).toBe(`https://api.tcgdex.net/v2/ja/cards/${cardId}`);
   });
 
-  it('rechecks English availability after the existing one-hour probe TTL', async () => {
+  it('keeps confirmed resources for 24 hours and rechecks them after that TTL', async () => {
     let now = 1_000_000;
     vi.spyOn(Date, 'now').mockImplementation(() => now);
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
@@ -282,7 +335,7 @@ describe('public localized proxy responses', () => {
     }));
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
-    now += 60 * 60 * 1000 + 1;
+    now += 24 * 60 * 60 * 1000 + 1;
     await proxy(new NextRequest(`https://lunidex.test/fr/tcg/sets/${setId}`, {
       headers: { accept: 'text/html' },
     }));
