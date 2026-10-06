@@ -12,6 +12,7 @@ import {
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { isEditorialIndexable } from '@/lib/editorial';
+import { FAQ_LINK_DEFINITIONS } from '@/lib/faq-navigation';
 import { HelpCircle, Mail, MessageCircleQuestion } from 'lucide-react';
 
 type FaqLink = { href: string; label: string };
@@ -73,8 +74,9 @@ export default async function FaqPage() {
     wishlist: routeLink('/tcg/wishlist', 'tcg.nav_wishlist'),
     deckBuilder: routeLink('/tcg/deck-builder', 'tcg.nav_deck_builder'),
     valueGuide: routeLink('/guides/pokemon-card-collection-value', 'editorial.guides.pokemon_card_collection_value.nav_label'),
-    cardmarket: routeLink('/compare/lunidex-vs-cardmarket', 'editorial.competitors.lunidex_vs_cardmarket.nav_label'),
-    offline: routeLink('/offline', 'offline.title'),
+    cardmarket: routeLink(FAQ_LINK_DEFINITIONS.cardmarket.path, FAQ_LINK_DEFINITIONS.cardmarket.labelKey),
+    installation: routeLink(FAQ_LINK_DEFINITIONS.installation.path, FAQ_LINK_DEFINITIONS.installation.labelKey),
+    offline: routeLink(FAQ_LINK_DEFINITIONS.offline.path, FAQ_LINK_DEFINITIONS.offline.labelKey),
     dashboard: routeLink('/dashboard', 'footer.navigation.dashboard'),
     privacy: routeLink('/privacy', 'footer.legal.privacy'),
     contact: routeLink('/contact', 'contact.title'),
@@ -86,7 +88,7 @@ export default async function FaqPage() {
     { id: 'what-is-lunidex', q: t('faq.q1'), a: answer('faq.a1'), links: [links.about] },
     { id: 'account-and-payment', q: t('faq.q2'), a: answer('faq.a2'), links: [links.dashboard] },
     { id: 'interface-languages', q: t('faq.q3'), a: answer('faq.a3') },
-    { id: 'install-on-mobile', q: t('faq.q4'), a: answer('faq.a4'), links: [links.offline] },
+    { id: 'install-on-mobile', q: t('faq.q4'), a: answer('faq.a4'), links: [links.installation] },
   ];
   const tools: FaqEntry[] = [
     { id: 'pokemon-coverage', q: t('faq.q5'), a: answer('faq.a5'), links: [links.pokedex] },
