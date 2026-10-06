@@ -1410,7 +1410,10 @@ h1 { letter-spacing: 0; }
   }
 
   body:has(.cookie-consent-banner) .pokemon-mobile-fixed-actions {
-    bottom: calc(var(--app-bottom-nav-height, 0px) + 10rem + 0.75rem);
+    bottom: calc(
+      var(--app-bottom-nav-height, 0px) +
+      max(10rem + 0.75rem, var(--cookie-consent-banner-height, 0px) + 1rem)
+    );
   }
 
   .primary-bottom-nav {

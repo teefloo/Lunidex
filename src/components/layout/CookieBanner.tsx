@@ -73,8 +73,33 @@ export default function CookieBanner() {
   const [productMeasurement, setProductMeasurement] = useState(false);
   const openerRef = useRef<HTMLElement | null>(null);
   const firstPreferenceRef = useRef<HTMLInputElement | null>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
   const initialVisible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const visible = initialVisible;
+
+  useEffect(() => {
+    const banner = bannerRef.current;
+    const root = document.documentElement;
+    if (!visible || !banner) {
+      root.style.removeProperty('--cookie-consent-banner-height');
+      return;
+    }
+
+    const updateHeight = () => {
+      root.style.setProperty('--cookie-consent-banner-height', `${banner.getBoundingClientRect().height}px`);
+    };
+
+    updateHeight();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateHeight);
+    observer?.observe(banner);
+    if (!observer) window.addEventListener('resize', updateHeight);
+
+    return () => {
+      observer?.disconnect();
+      if (!observer) window.removeEventListener('resize', updateHeight);
+      root.style.removeProperty('--cookie-consent-banner-height');
+    };
+  }, [customizing, visible]);
 
   useEffect(() => {
     const openPreferences = (event: Event) => {
@@ -115,6 +140,7 @@ export default function CookieBanner() {
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description cookie-consent-disclaimer"
       className="cookie-consent-banner pointer-events-none fixed inset-x-2 z-50 sm:inset-x-6"
+      ref={bannerRef}
     >
       <div className="glass-panel pointer-events-none mx-auto w-full max-w-xl p-3 sm:p-5">
         <div className="flex items-start gap-2 sm:gap-3">
