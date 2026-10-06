@@ -32,7 +32,7 @@
 
 Lunidex è un monorepo npm-workspaces indipendente e open source che riunisce un Pokédex, strumenti di riferimento Pokémon, strumenti per creare squadre, un catalogo Pokémon TCG e uno spazio personale associato a un account.
 
-L’app web include **1.025 Pokémon di nove generazioni** e supporta otto lingue dell’interfaccia: inglese, francese, spagnolo, tedesco, italiano, giapponese, coreano e cinese semplificato. Il portoghese è disponibile come README tradotto, ma non è una lingua dell’interfaccia web.
+L’app web mostra i record Pokémon forniti dalla fonte PokéAPI configurata e supporta otto lingue dell’interfaccia: inglese, francese, spagnolo, tedesco, italiano, giapponese, coreano e cinese semplificato. Il portoghese è disponibile come README tradotto, ma non è una lingua dell’interfaccia web.
 
 Le pagine di riferimento pubbliche funzionano senza account. Lo spazio personale — preferiti, Pokémon catturati, squadre, progressi del quiz, collezioni TCG, wishlist, ricerche salvate, note, mazzi e funzioni correlate — usa Neon Auth e Neon PostgreSQL quando sono configurati e sincronizzati. Le preferenze di visualizzazione web usano IndexedDB.
 
@@ -47,7 +47,7 @@ Le pagine di riferimento pubbliche funzionano senza account. Lo spazio personale
 
 | Area | Cosa puoi fare |
 | --- | --- |
-| **Pokédex e riferimento** | Consultare e filtrare tutti i 1.025 Pokémon; vedere statistiche, tipi, abilità, mosse, evoluzioni, forme, incontri, sprite e dati localizzati sulle specie. Cercare mosse, abilità e strumenti. |
+| **Pokédex e riferimento** | Consultare e filtrare i record Pokémon disponibili nella fonte dati configurata; vedere statistiche, tipi, abilità, mosse, evoluzioni, forme, incontri, sprite e dati localizzati sulle specie. Cercare mosse, abilità e strumenti. |
 | **Laboratorio squadre e lotte** | Creare squadre fino a sei Pokémon, analizzare la copertura di tipi e mosse, controllare sinergie e ruoli, confrontare fino a tre Pokémon, usare la tabella dei 18 tipi, pianificare EV/IV, calcolare l’allevamento ed eseguire un simulatore di lotte di generazione 9. |
 | **Progressi e gioco** | Tenere traccia di preferiti, Pokémon catturati, Living Dex, attività, medaglie e statistiche del quiz. Giocare con tre sfide e tre modalità, incluse le sessioni giornaliere, e seguire una partita Nuzlocke. |
 | **Condivisione e funzioni social** | Importare ed esportare squadre Showdown, condividere link di squadre in sola lettura, creare profili pubblici, gestire amici, consultare le classifiche del quiz e usare stanze di lotta associate all’account. |

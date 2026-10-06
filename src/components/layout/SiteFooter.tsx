@@ -181,6 +181,7 @@ export default async function SiteFooter({ compact = false }: SiteFooterProps) {
     { href: '/tcg', label: t('footer.navigation.tcg') },
     { href: '/pokedex', label: t('footer.navigation.pokedex') },
     { href: '/team', label: t('footer.navigation.team_builder') },
+    { href: '/blog', label: t('nav.blog') },
     { href: '/faq', label: t('nav.faq', { defaultValue: 'FAQ' }) },
     { href: '/about', label: t('about.heading') },
   ];

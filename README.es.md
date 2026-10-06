@@ -32,7 +32,7 @@
 
 Lunidex es un monorepo independiente y de código abierto basado en npm workspaces que combina una Pokédex, herramientas de referencia Pokémon, utilidades para crear equipos, un catálogo Pokémon TCG y un espacio personal vinculado a una cuenta.
 
-La aplicación web cubre **1.025 Pokémon de nueve generaciones** y admite ocho idiomas de interfaz: inglés, francés, español, alemán, italiano, japonés, coreano y chino simplificado. El portugués está disponible como traducción del README, pero no es un idioma de la interfaz web.
+La aplicación web muestra las fichas Pokémon que ofrece su fuente PokéAPI configurada y admite ocho idiomas de interfaz: inglés, francés, español, alemán, italiano, japonés, coreano y chino simplificado. El portugués está disponible como traducción del README, pero no es un idioma de la interfaz web.
 
 Las páginas públicas de referencia funcionan sin cuenta. El espacio personal —favoritos, Pokémon capturados, equipos, progreso del quiz, colecciones TCG, listas de deseos, búsquedas guardadas, notas, mazos y funciones relacionadas— usa Neon Auth y Neon PostgreSQL cuando están configurados y sincronizados. Las preferencias visuales web usan IndexedDB.
 
@@ -47,7 +47,7 @@ Las páginas públicas de referencia funcionan sin cuenta. El espacio personal �
 
 | Área | Qué puedes hacer |
 | --- | --- |
-| **Pokédex y referencia** | Explorar y filtrar los 1.025 Pokémon; consultar estadísticas, tipos, habilidades, movimientos, evoluciones, formas, encuentros, sprites y datos de especie localizados. Buscar movimientos, habilidades y objetos. |
+| **Pokédex y referencia** | Explorar y filtrar las fichas Pokémon disponibles en la fuente de datos configurada; consultar estadísticas, tipos, habilidades, movimientos, evoluciones, formas, encuentros, sprites y datos de especie localizados. Buscar movimientos, habilidades y objetos. |
 | **Laboratorio de equipos y combates** | Crear equipos de hasta seis Pokémon, analizar la cobertura de tipos y movimientos, revisar sinergia y roles, comparar hasta tres Pokémon, usar la tabla de los 18 tipos, planificar EV/IV, calcular la crianza y ejecutar un simulador de combates de la generación 9. |
 | **Progreso y juego** | Seguir favoritos, Pokémon capturados, Living Dex, actividad, medallas y estadísticas del quiz. Jugar con tres desafíos y tres modos de juego, incluidas partidas diarias, y seguir una partida Nuzlocke. |
 | **Compartir y funciones sociales** | Importar y exportar equipos de Showdown, compartir enlaces de equipos de solo lectura, crear perfiles públicos, gestionar amistades, consultar clasificaciones del quiz y usar salas de combate vinculadas a la cuenta. |

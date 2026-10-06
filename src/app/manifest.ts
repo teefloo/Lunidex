@@ -40,21 +40,23 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "Who's that Pokémon?",
       },
     ],
+    // A new URL bypasses previously cached transparent icons, including the
+    // CacheFirst image cache of an already installed service worker.
     icons: [
       {
-        src: '/icon-192.png',
+        src: '/icon-192.png?v=3',
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon-512.png',
+        src: '/icon-512.png?v=3',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon-512-maskable.png',
+        src: '/icon-512-maskable.png?v=3',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',

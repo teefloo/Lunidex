@@ -212,6 +212,19 @@ export default function EditorialGuidePage({
               </section>
             ) : null}
 
+            {guide.hasPwaInstallInstructions ? (
+              <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-install-title">
+                <h2 id="editorial-guide-install-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">{text('install_title')}</h2>
+                <p className="mt-4 leading-7 text-foreground/75">{text('install_intro')}</p>
+                <ol className="mt-5 list-decimal space-y-3 pl-6 leading-7 text-foreground/75">
+                  {(['ios', 'android', 'desktop'] as const).map((platform) => (
+                    <li key={platform}>{text(`install_${platform}`)}</li>
+                  ))}
+                </ol>
+                <p className="mt-4 text-sm leading-7 text-foreground/65">{text('install_note')}</p>
+              </section>
+            ) : null}
+
             {checklistItems.length > 0 ? (
               <section className="editorial-below-fold mx-auto mt-10 max-w-4xl section-frame p-6 md:p-8" aria-labelledby="editorial-guide-checklist-title">
                 <h2 id="editorial-guide-checklist-title" className="text-2xl font-extrabold tracking-tight md:text-3xl">{text('checklist_title')}</h2>

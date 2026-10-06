@@ -29,18 +29,18 @@ import {
   FEATURE_LIST,
 } from "@/lib/site";
 
-const displayFont = Pixelify_Sans({
+const displayFont = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
+  weight: "variable",
+  variable: "--font-nunito",
   display: "optional",
   preload: false,
 });
 
-const bodyFont = Nunito({
+const brandPixelFont = Pixelify_Sans({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-body",
+  weight: ["400", "700"],
+  variable: "--font-pixel",
   display: "optional",
   preload: false,
 });
@@ -132,13 +132,13 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: {
       icon: [
-        { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-        { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/icon-512.png?v=3", sizes: "512x512", type: "image/png" },
+        { url: "/icon-192.png?v=3", sizes: "192x192", type: "image/png" },
+        { url: "/favicon-32x32.png?v=3", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
       ],
       apple: [
-        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+        { url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" },
       ],
     },
     appLinks: {
@@ -159,8 +159,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   await connection();
   const requestHeaders = await headers();
@@ -220,7 +222,7 @@ export default async function RootLayout({
   ];
 
   return (
-      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
+      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, brandPixelFont.variable)}>
       <head>
         {/* Autodiscovery for the OpenSearch description shipped at this path. */}
         <link
@@ -246,6 +248,7 @@ export default async function RootLayout({
              <SiteFooter compact={isHomeRoute} />
              <ClientCookieBanner />
            </AppContent>
+           {modal}
          </Providers>
         <script
           id="primedex-jsonld"

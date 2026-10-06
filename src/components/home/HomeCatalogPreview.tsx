@@ -11,6 +11,7 @@ import { localeHref } from '@/lib/seo';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import {
   getHomeCatalogCandidates,
+  getHomeCatalogPreviewImageSrcSet,
   getInitialHomeCatalogSelection,
   getNextHomeCatalogSelection,
   type HomeCatalogPreviewCard,
@@ -29,7 +30,6 @@ interface HomeCatalogPreviewProps {
 
 interface CatalogCardImageProps {
   card: HomeCatalogPreviewCard;
-  preload: boolean;
   onLoad: (cardId: string) => void;
   onError: (cardId: string) => void;
 }
@@ -37,6 +37,7 @@ interface CatalogCardImageProps {
 const SLOT_COUNT = 3;
 const ROTATION_INTERVAL_MS = 60_000;
 const IMAGE_TIMEOUT_MS = 8_000;
+const CATALOG_IMAGE_SIZES = '(max-width: 767px) 27vw, (max-width: 1023px) 20vw, 12rem';
 const RARITY_TRANSLATION_KEYS: Record<string, string> = {
   hyperrare: 'lunidex_home.rarity_hyperrare',
   secretrare: 'lunidex_home.rarity_secretrare',
@@ -50,23 +51,23 @@ function getRarityLabel(card: HomeCatalogPreviewCard, t: ReturnType<typeof useTr
   return translationKey ? t(translationKey, { defaultValue: rawLabel }) : rawLabel;
 }
 
-function CatalogCardImage({ card, preload, onLoad, onError }: CatalogCardImageProps) {
+function CatalogCardImage({ card, onLoad, onError }: CatalogCardImageProps) {
   const imageCandidates = getTCGCardImageCandidates(card);
   const [imageIndex, setImageIndex] = useState(0);
   const source = imageCandidates[imageIndex] ?? TCG_CARD_PLACEHOLDER;
   const isPlaceholder = source === TCG_CARD_PLACEHOLDER;
+  const responsiveSrcSet = getHomeCatalogPreviewImageSrcSet(source);
 
-  return (
+  const image = (
     <Image
       key={card.id}
       src={source}
       alt={card.name}
       fill
-      sizes="(max-width: 767px) 27vw, (max-width: 1023px) 20vw, 12rem"
+      sizes={CATALOG_IMAGE_SIZES}
       className="object-contain"
       unoptimized
-      preload={preload || undefined}
-      loading={preload ? undefined : 'eager'}
+      loading="eager"
       onLoad={() => {
         if (!isPlaceholder) onLoad(card.id);
       }}
@@ -77,6 +78,13 @@ function CatalogCardImage({ card, preload, onLoad, onError }: CatalogCardImagePr
       }}
     />
   );
+
+  return responsiveSrcSet ? (
+    <picture>
+      <source srcSet={responsiveSrcSet} sizes={CATALOG_IMAGE_SIZES} type="image/webp" />
+      {image}
+    </picture>
+  ) : image;
 }
 
 function getCardSlots(cards: readonly HomeCatalogPreviewCard[]): (HomeCatalogPreviewCard | null)[] {
@@ -236,8 +244,6 @@ export default function HomeCatalogPreview({ cards, language }: HomeCatalogPrevi
 
   const visibleSlots = getCardSlots(visibleCards);
   const pendingSlots = pendingCards ? getCardSlots(pendingCards) : null;
-  const visiblePreloadIds = new Set(initialSelection.slice(0, SLOT_COUNT).map(({ id }) => id));
-
   function renderCards(
     slots: readonly (HomeCatalogPreviewCard | null)[],
     keyPrefix: 'visible' | 'pending',
@@ -267,7 +273,6 @@ export default function HomeCatalogPreview({ cards, language }: HomeCatalogPrevi
             <span className="home-catalog-preview-image">
               <CatalogCardImage
                 card={card}
-                preload={keyPrefix === 'visible' && visiblePreloadIds.has(card.id)}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />

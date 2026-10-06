@@ -91,7 +91,7 @@ export default function QuizResultCard({
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="px-3 py-1 bg-primary text-primary-foreground border border-primary/50 font-pixel text-sm tracking-wider">
+          <div className="px-3 py-1 bg-primary text-primary-foreground border border-primary/50 font-brand-pixel text-sm tracking-wider">
             Lunidex
           </div>
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/50">
@@ -102,10 +102,10 @@ export default function QuizResultCard({
         {/* Score */}
         <div className="text-center mb-6">
           <div className="flex items-baseline justify-center gap-2">
-            <span className="font-pixel text-6xl md:text-7xl text-foreground drop-shadow-lg">
+            <span className="font-display tabular-nums text-6xl md:text-7xl text-foreground drop-shadow-lg">
               {score}
             </span>
-            <span className="font-pixel text-3xl text-foreground/40">/{total}</span>
+            <span className="font-display tabular-nums text-3xl text-foreground/40">/{total}</span>
           </div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-foreground/50 mt-2">
             {t('quiz.correct')}
@@ -135,7 +135,7 @@ export default function QuizResultCard({
             </p>
             <div className="flex items-baseline gap-1">
               <Flame className={cn('w-5 h-5', streak > 0 ? 'text-amber-800 dark:text-amber-300' : 'text-foreground/20')} />
-              <span className={cn('font-pixel text-3xl', streak > 0 ? 'text-amber-800 dark:text-amber-300' : 'text-foreground/30')}>
+              <span className={cn('font-display tabular-nums text-3xl', streak > 0 ? 'text-amber-800 dark:text-amber-300' : 'text-foreground/30')}>
                 {streak}
               </span>
             </div>
@@ -145,7 +145,7 @@ export default function QuizResultCard({
               {t('quiz.achievements')}
             </p>
             <div className="flex items-baseline gap-1">
-              <span className={cn('font-pixel text-3xl', badgesEarned > 0 ? 'text-primary' : 'text-foreground/30')}>
+              <span className={cn('font-display tabular-nums text-3xl', badgesEarned > 0 ? 'text-primary' : 'text-foreground/30')}>
                 {badgesEarned}
               </span>
               <Trophy className={cn('w-5 h-5', badgesEarned > 0 ? 'text-primary' : 'text-foreground/20')} />

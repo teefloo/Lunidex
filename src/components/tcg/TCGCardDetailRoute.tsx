@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import type { TCGCard } from '@/types/tcg';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
@@ -31,7 +30,6 @@ export function TCGCardDetailRoute({
   const router = useRouter();
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const imageCandidates = card ? getTCGCardImageCandidates(card, 'high') : [];
 
   if (!card) {
@@ -108,14 +106,6 @@ export function TCGCardDetailRoute({
             <div className="mt-6 max-w-sm">
               <TCGMarketSummary card={card} interfaceLanguage={interfaceLanguage} />
             </div>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-sm border border-primary/35 bg-primary/10 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground transition-colors hover:border-primary/60 hover:bg-primary/20"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              {t('tcg.open_card_detail', { name: card.name })}
-            </button>
           </div>
         </article>
 
@@ -153,14 +143,12 @@ export function TCGCardDetailRoute({
           )}
         </div>
 
-        {isModalOpen && (
-          <TCGCardDetailModal
-            card={card}
-            tcgLanguage={tcgLanguage}
-            isOpen
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
+        <TCGCardDetailModal
+          card={card}
+          tcgLanguage={tcgLanguage}
+          isOpen
+          onClose={() => router.back()}
+        />
       </main>
     </div>
   );

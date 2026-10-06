@@ -133,7 +133,7 @@ export async function GET(request: NextRequest): Promise<Response> {
             <div
               style={{
                 display: 'flex',
-                fontFamily: 'Pixelify Sans',
+                fontFamily: 'Nunito',
                 fontSize: '64px',
                 lineHeight: 1.05,
                 color: OG_THEME.text,

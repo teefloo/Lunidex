@@ -305,6 +305,12 @@ export default function TeamPage() {
           )}
         />
 
+        <nav className="mx-auto mb-5 max-w-7xl px-5 md:px-8" aria-label={t('team_guide.nav_label')}>
+          <Link href={localeHref('/guides/team-builder-guide')} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+            {t('team_guide.nav_label')} <span aria-hidden="true" className="ml-1">↗</span>
+          </Link>
+        </nav>
+
         <div className="space-y-8">
           {isSharedTeam && (
             <div role="status" className="rounded-sm border border-primary/25 bg-primary/5 px-4 py-3 text-sm font-medium text-foreground">

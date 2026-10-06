@@ -28,8 +28,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-display: var(--font-display), 'Pixelify Sans Fallback', ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-body), 'Nunito Fallback', "Hiragino Sans", "Noto Sans CJK JP", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-nunito), 'Nunito Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-nunito), 'Nunito Fallback', "Hiragino Sans", "Noto Sans CJK JP", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand-pixel: var(--font-pixel), 'Pixelify Sans Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 
   --color-background: var(--background);
@@ -256,11 +257,15 @@ h1 { letter-spacing: 0; }
   font-family: var(--font-display);
 }
 
+.font-brand-pixel {
+  font-family: var(--font-brand-pixel);
+}
+
 .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Pixel italic helper — for non-CJK labels using display font */
+/* Editorial italic helper — for non-CJK labels using the display font */
 .editorial-italic {
   font-family: var(--font-display);
   font-style: italic;
@@ -6854,6 +6859,8 @@ html.dark .lunidex-home::before {
 }
 
 .lunidex-home .home-header-more-menu {
+  right: 0;
+  left: auto;
   border-color: var(--home-line);
   background: var(--home-panel);
 }

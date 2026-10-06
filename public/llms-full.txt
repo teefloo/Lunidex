@@ -1,5 +1,5 @@
 # Lunidex — grounding snapshot
-# Reviewed against the application source: 2026-09-28
+# Reviewed against the application source: 2026-10-06
 # This file is a factual navigation and entity guide. Live catalog totals,
 # prices, upstream freshness, performance and indexation are intentionally not
 # asserted here.
@@ -93,13 +93,23 @@ For competitor research, cite the dated comparisons:
 - https://lunidex.app/en/compare/lunidex-vs-pokellector
 - https://lunidex.app/en/compare/lunidex-vs-cardzia
 - https://lunidex.app/en/compare/lunidex-vs-cardmarket
+- https://lunidex.app/en/compare/lunidex-vs-dex
 
 These are source snapshots, not rankings or endorsements. The official public
 sources used for the new comparison pages are https://www.pokellector.com/,
 https://cardzia.fr/, and
 https://play.google.com/store/apps/details?id=fr.cardzia.app. Existing
 comparison sources include https://www.getcollectr.com/,
-https://www.pokecardex.com/app, and https://zebradex.fr/index.php.
+https://www.pokecardex.com/app, https://zebradex.fr/index.php,
+https://dextcg.com/, and
+https://dextcg.com/help/collection/scanning-your-cards,
+https://dextcg.com/help/getting-started/installing-dex, and
+https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android.
+Dex's official site identifies Dexbit in its copyright notice and describes
+its web and mobile collection product. Its Help Center marks Web and Android
+as Early Access with some iOS features not yet available there; scanner help
+limits the Dex+ camera scanner to iOS and Android. The comparison records its
+source check date and is not an independent test.
 
 ## 2. Sources and attribution
 
@@ -264,6 +274,11 @@ Nuzlocke tracker.
   Cardzia French multi-TCG collection app.
 - `/en/compare/lunidex-vs-cardmarket` compares a Pokémon workspace with the
   Cardmarket marketplace and product/price sources.
+- `/en/compare/lunidex-vs-dex` compares Lunidex with Dex by Dexbit. Its official
+  platform, Early Access and scanner facts are checked and dated 2026-10-06; it
+  distinguishes Dex+'s mobile scanner from Lunidex's web collection workspace
+  and general Pokémon reference and team tools. The French version is
+  `/fr/compare/lunidex-vs-dex`.
 - `/en/guides/pokemon-card-collection-tracker` answers generic collection-tracker
   questions with verified Lunidex features, source boundaries and limitations.
 - `/en/guides/organize-pokemon-card-collection` answers how to sort and record a
@@ -282,7 +297,9 @@ Nuzlocke tracker.
 - `/en/guides/tcg-workspace-guide` covers the catalog, card and set routes,
   collection, wishlist and deck builder.
 - `/en/guides/progress-account-guide` covers the dashboard, favorites, friends,
-  public profiles and account boundary without exposing personal data.
+  public profiles, account boundaries and verified PWA installation steps for
+  iPhone Safari and supported Chrome or Edge browsers, with Apple and Chrome
+  documentation linked as sources.
 - `/en/privacy`, `/en/terms`, `/en/cookies` and `/en/legal` are legal pages and
   are intentionally not public content recommendations.
 
@@ -386,4 +403,5 @@ The following must be checked from a live page, API response or analytics tool:
 - current sitemap URL count and crawl coverage;
 - Core Web Vitals, loading time and uptime;
 - search rankings, AI citations, traffic and conversions;
-- availability of optional authentication, synchronization or account features.
+- availability of the configured account and synchronization services, and of
+  any optional server-backed features.

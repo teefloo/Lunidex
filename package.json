@@ -2,6 +2,9 @@
   "name": "primedex",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "license": "MIT",
   "sideEffects": [
     "*.css"

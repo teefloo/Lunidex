@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   HOME_CATALOG_PREVIEW_CARDS,
   getHomeCatalogCandidates,
+  getHomeCatalogPreviewImageSrcSet,
   getInitialHomeCatalogSelection,
   getNextHomeCatalogSelection,
   type HomeCatalogPreviewCard,
@@ -27,6 +28,27 @@ describe('home catalog preview selection', () => {
     expect(initial.map(({ id }) => id)).toEqual(['sv03-228', 'swsh7-215', 'sv06-214']);
     expect(new Set(HOME_CATALOG_PREVIEW_CARDS.map(({ id }) => id)).size).toBe(12);
     expect(HOME_CATALOG_PREVIEW_CARDS.every(({ image }) => existsSync(join(process.cwd(), 'public', image.slice(1))))).toBe(true);
+  });
+
+  it('serves responsive local variants for showcase images and ignores fallbacks', () => {
+    expect(getHomeCatalogPreviewImageSrcSet('/tcg-showcase/sv03-228.webp')).toBe(
+      '/tcg-showcase/responsive/sv03-228-160.webp 160w, '
+      + '/tcg-showcase/responsive/sv03-228-256.webp 256w, '
+      + '/tcg-showcase/sv03-228.webp 384w',
+    );
+    expect(getHomeCatalogPreviewImageSrcSet('/images/pokemon-card-back.webp')).toBeUndefined();
+    expect(getHomeCatalogPreviewImageSrcSet('https://assets.tcgdex.net/en/swsh7/ss7/215')).toBeUndefined();
+  });
+
+  it('has each responsive variant available for all home showcase cards', () => {
+    for (const card of HOME_CATALOG_PREVIEW_CARDS) {
+      const srcSet = getHomeCatalogPreviewImageSrcSet(card.image);
+      expect(srcSet).toBeDefined();
+
+      for (const path of srcSet?.matchAll(/([^ ,]+\.webp) \d+w/g) ?? []) {
+        expect(existsSync(join(process.cwd(), 'public', path[1].slice(1)))).toBe(true);
+      }
+    }
   });
 
   it('rejects duplicate IDs, missing images, failed images, and common rarities', () => {

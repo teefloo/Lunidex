@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
 import { TCGResearchDesk } from '@/components/tcg/TCGResearchDesk';
@@ -7,7 +8,7 @@ import { TCGCompareTrigger } from '@/components/tcg/TCGCompareTrigger';
 import { getInitialTcgCatalogCached } from '@/lib/api/server-cache';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { Loader2 } from 'lucide-react';
-import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildInLanguage, buildSubpathLanguages, DEFAULT_OG_IMAGE, localeHref } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
@@ -85,6 +86,14 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
             <TCGPageTabs initialLabels={initialTabLabels} />
           </Suspense>
+          <nav className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-6 gap-y-2 px-4 py-4 text-sm" aria-label={t('lunidex_home.guides_title')}>
+            <Link href={localeHref('/guides/pokemon-card-collection-tracker', lang)} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+              {t('collection_guide.nav_label')}
+            </Link>
+            <Link href={localeHref('/guides/pokemon-card-collection-value', lang)} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+              {t('lunidex_home.guide_value_label')}
+            </Link>
+          </nav>
           <Suspense fallback={<div className="h-96 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>}>
             <TCGResearchDesk
               initialLatestSet={initialCatalog?.latestSet ?? null}
