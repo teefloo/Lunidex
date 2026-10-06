@@ -1,0 +1,50 @@
+{
+  "profile": "desktop",
+  "scenario": "préchargements autorisés build local contexte neuf",
+  "requests": 92,
+  "prefetch": 7,
+  "homeRequests": 0,
+  "counts": [
+    [
+      "http://127.0.0.1:3017/fr/tcg/collection/en/30th",
+      3
+    ],
+    [
+      "http://127.0.0.1:3017/favicon-32x32.png",
+      2
+    ],
+    [
+      "http://127.0.0.1:3017/fr/cookies",
+      2
+    ],
+    [
+      "http://127.0.0.1:3017/fr/pokemon/102",
+      2
+    ],
+    [
+      "http://127.0.0.1:3017/fr/tcg/sets/30th",
+      1
+    ],
+    [
+      "http://127.0.0.1:3017/_next/static/css/b82a189f0b1d6584.css",
+      1
+    ],
+    [
+      "http://127.0.0.1:3017/_next/static/css/74194f1de9733779.css",
+      1
+    ],
+    [
+      "http://127.0.0.1:3017/_next/static/css/20893a747f707829.css",
+      1
+    ],
+    [
+      "http://127.0.0.1:3017/_next/static/chunks/webpack-76221b237eee49a6.js",
+      1
+    ],
+    [
+      "http://127.0.0.1:3017/_next/static/chunks/fbb240dd-655c0fe6a2f90120.js",
+      1
+    ]
+  ],
+  "pageErrors": []
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "nom accessible recherche globale, Échap focus, recherche Types",
+    "snapshot": "- dialog \"Rechercher dans Lunidex\":\n  - heading \"Rechercher dans Lunidex\" [level=2]\n  - paragraph: Recherchez des pages et des Pokémon\n  - text: Rechercher dans Lunidex\n  - group:\n    - combobox \"Rechercher dans Lunidex\" [expanded]\n    - group\n  - listbox \"Suggestions\":\n    - group \"Pages\":\n      - option \"Collection\" [selected]\n      - option \"Catalogue\"\n      - option \"Pokédex\"\n      - option \"Équipe\"",
+    "focusRestored": true,
+    "destination": "http://127.0.0.1:3017/fr/types",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "nom accessible recherche globale, Échap focus, recherche Types",
+    "snapshot": "- dialog \"Rechercher dans Lunidex\":\n  - heading \"Rechercher dans Lunidex\" [level=2]\n  - paragraph: Recherchez des pages et des Pokémon\n  - text: Rechercher dans Lunidex\n  - group:\n    - combobox \"Rechercher dans Lunidex\" [expanded]\n    - group\n  - listbox \"Suggestions\":\n    - group \"Pages\":\n      - option \"Collection\" [selected]\n      - option \"Catalogue\"\n      - option \"Pokédex\"\n      - option \"Équipe\"",
+    "focusRestored": true,
+    "destination": "http://127.0.0.1:3017/fr/types",
+    "pass": true
+  }
+]

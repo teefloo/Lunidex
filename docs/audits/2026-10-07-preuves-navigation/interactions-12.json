@@ -1,0 +1,20 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "catalogue recherche tri modale pagination production",
+    "before": "https://lunidex.app/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+    "after": "https://lunidex.app/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+    "countBefore": 24,
+    "countAfter": 48,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "catalogue recherche tri modale pagination production",
+    "before": "https://lunidex.app/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+    "after": "https://lunidex.app/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+    "countBefore": 24,
+    "countAfter": 48,
+    "pass": true
+  }
+]

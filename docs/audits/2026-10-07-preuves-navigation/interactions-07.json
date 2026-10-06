@@ -1,0 +1,60 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "fermeture carte preview",
+    "background": "Exeggcute",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "h1": "Exeggcute",
+    "focusTag": "BODY",
+    "focusHref": null,
+    "scrollY": 0,
+    "pass": false
+  },
+  {
+    "profile": "desktop",
+    "scenario": "fermeture carte checklist",
+    "background": "Exeggcute",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "h1": "Exeggcute",
+    "focusTag": "BODY",
+    "focusHref": null,
+    "scrollY": 0,
+    "pass": false
+  },
+  {
+    "profile": "desktop",
+    "scenario": "lien direct carte",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "dialogs": 1,
+    "pass": false
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fermeture carte preview",
+    "background": "Exeggcute",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "h1": "Exeggcute",
+    "focusTag": "BODY",
+    "focusHref": null,
+    "scrollY": 0,
+    "pass": false
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fermeture carte checklist",
+    "background": "Exeggcute",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "h1": "Exeggcute",
+    "focusTag": "BODY",
+    "focusHref": null,
+    "scrollY": 0,
+    "pass": false
+  },
+  {
+    "profile": "mobile",
+    "scenario": "lien direct carte",
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "dialogs": 1,
+    "pass": false
+  }
+]

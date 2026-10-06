@@ -34,6 +34,7 @@ export function Breadcrumbs({ items, homeLabel = 'Home', className }: Breadcrumb
               ) : (
                 <Link
                   href={item.href!}
+                  prefetch={false}
                   className="inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40"
                 >
                   {index === 0 && <Home aria-hidden="true" className="mr-1.5 h-3.5 w-3.5" />}

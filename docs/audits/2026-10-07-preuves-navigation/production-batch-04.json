@@ -1,0 +1,696 @@
+[
+  {
+    "profile": "mobile",
+    "route": "/favorites",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/favorites",
+    "title": "Mes Pokémon favoris — Gérer ma collection | Lunidex",
+    "h1": [
+      "Mes Favoris"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "LUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (0)\n\nVotre collection est vide\n\nCommencez à ajouter vos Pokémon favoris en cliquant sur l'icône cœur !\n\nRETOUR AU LUNIDEX",
+    "links": [
+      {
+        "text": "RETOUR AU LUNIDEX",
+        "href": "/fr/pokedex"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/favorites",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/favorites",
+    "title": "Mes Pokémon favoris — Gérer ma collection | Lunidex",
+    "h1": [
+      "Mes Favoris"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Favoris",
+        "href": "/fr/favorites"
+      }
+    ],
+    "main": "LUNIDEX\n\nMes Favoris\n\nVotre collection personnelle (0)\n\nVotre collection est vide\n\nCommencez à ajouter vos Pokémon favoris en cliquant sur l'icône cœur !\n\nRETOUR AU LUNIDEX",
+    "links": [
+      {
+        "text": "RETOUR AU LUNIDEX",
+        "href": "/fr/pokedex"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/dashboard",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/dashboard",
+    "title": "Dashboard | Lunidex",
+    "h1": [
+      "Tableau de Bord"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      }
+    ],
+    "main": "Tableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nCompte et données",
+    "links": [
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/dashboard",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/dashboard",
+    "title": "Dashboard | Lunidex",
+    "h1": [
+      "Tableau de Bord"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Tableau de Bord\n\nVotre parcours Pokémon en un coup d'œil\n\nAmis\nParamètres\nCompte et données",
+    "links": [
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/friends",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/friends",
+    "title": "Amis | Lunidex",
+    "h1": [
+      "Amis"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      }
+    ],
+    "main": "COMMUNAUTÉ\n\nAmis\n\nGérez vos amis et explorez les collections JCC partagées.\n\nConnectez-vous pour gérer vos amis et vos collections partagées.",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/friends",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/friends",
+    "title": "Amis | Lunidex",
+    "h1": [
+      "Amis"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "COMMUNAUTÉ\n\nAmis\n\nGérez vos amis et explorez les collections JCC partagées.\n\nConnectez-vous pour gérer vos amis et vos collections partagées.",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/blog",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/blog",
+    "title": "Blog Lunidex — Guides et comparatifs | Lunidex",
+    "h1": [
+      "Guides et comparatifs Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Blog",
+        "href": "/fr/blog"
+      }
+    ],
+    "main": "BLOG\n\nGuides et comparatifs Lunidex\n\nDes articles pratiques et sourcés sur Lunidex : guides des parcours Pokémon, équipe, TCG, progression, quiz et Nuzlocke, ainsi que des comparatifs avec d’autres outils Pokémon.\n\nMIS À JOUR LE 28 SEPT. 2026\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nOuvrir le tracker\n\nGUIDES D’UTILISATION\n\nComment utiliser Lunidex\n\nDes guides pas à pas fondés sur les fonctions et familles de routes réellement présentes dans le produit.\n\nGUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide\n\nGUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLir",
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "GUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "GUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "GUIDE DU QUIZ\n\nGuide du quiz Pokémon — Modes, défis et badges | Lunidex\n\nComment fonctionne le quiz Pokémon Lunidex : défis classique, silhouette et stats ; modes marathon, survie et contre-la-montre ; le défi quotidien et les cinq badges.\n\nPUBLIÉ LE 10 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/quiz-guide"
+      },
+      {
+        "text": "GUIDE DU SUIVI NUZLOCKE\n\nSuivi Nuzlocke — Suivre vos parties challenge | Lunidex\n\nComment utiliser le suivi Nuzlocke Lunidex : créer des parties, noter une rencontre par route, suivre le statut de chaque Pokémon (vivant, mort, boîte) et lire les statistiques de la partie.\n\nPUBLIÉ LE 11 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/nuzlocke-guide"
+      },
+      {
+        "text": "COMMENT ORGANISER UNE COLLECTION DE CARTES POKÉMON\n\nComment organiser une collection de cartes Pokémon\n\nUne méthode concrète pour trier les cartes Pokémon par set et numéro, noter langue, finition et doubles, puis tenir à jour la liste des cartes manquantes.\n\nPUBLIÉ LE 28 SEPT. 2026\nLire le guide",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "GUIDE DES RÉFÉRENCES POKÉMON\n\nPokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex\n\nUtilisez Lunidex comme Pokédex Pokémon en ligne gratuit et espace de référence alimenté par PokéAPI : recherchez /pokedex, les fiches Pokémon, les types, attaques, capacités, objets, évolutions et rencontres.\n\nPUBLIÉ LE 19 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "GUIDE DES OUTILS D’ÉQUIPE ET DE COMBAT\n\nOutils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex\n\nUtilisez les outils Lunidex autour de la préparation d’équipe : comparer des Pokémon, lire les matchups, calculer les EV/IV, explorer l’élevage et vérifier les scénarios de combat pris en charge.\n\nPUBLIÉ LE 20 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/team-tools-guide"
+      },
+      {
+        "text": "GUIDE DE L’ESPACE POKÉMON TCG\n\nApplication et espace de collection Pokémon TCG — Cartes, wishlist et decks | Lunidex\n\nDécouvrez comment l’application et l’espace Pokémon TCG de Lunidex permettent de parcourir un catalogue public en ligne, enregistrer les cartes possédées et souhaitées, suivre la progression par set, gérer une wishlist et préparer des decks.\n\nPUBLIÉ LE 21 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "GUIDE DE LA PROGRESSION ET DU COMPTE\n\nGuide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation\n\nDécouvrez comment Lunidex sépare la consultation publique de la progression personnelle : tableau de bord, favoris, équipes, synchronisation, amis et profils publics.\n\nPUBLIÉ LE 22 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/progress-account-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/blog",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/blog",
+    "title": "Blog Lunidex — Guides et comparatifs | Lunidex",
+    "h1": [
+      "Guides et comparatifs Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "BLOG\n\nGuides et comparatifs Lunidex\n\nDes articles pratiques et sourcés sur Lunidex : guides des parcours Pokémon, équipe, TCG, progression, quiz et Nuzlocke, ainsi que des comparatifs avec d’autres outils Pokémon.\n\nMIS À JOUR LE 28 SEPT. 2026\n\nÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nOuvrir le tracker\n\nGUIDES D’UTILISATION\n\nComment utiliser Lunidex\n\nDes guides pas à pas fondés sur les fonctions et familles de routes réellement présentes dans le produit.\n\nGUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide\n\nGUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLir",
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "GUIDE DU SUIVI DE COLLECTION POKÉMON\n\nSuivi gratuit de collection de cartes Pokémon | Lunidex\n\nDécouvrez comment choisir une application de collection de cartes Pokémon : Lunidex suit les cartes possédées et manquantes, la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "GUIDE DU CRÉATEUR D’ÉQUIPE\n\nGuide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex\n\nUtilisez le créateur d’équipe Lunidex pour ajouter six Pokémon, lire la synergie et la couverture des types, puis partager votre équipe.\n\nPUBLIÉ LE 9 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "GUIDE DU QUIZ\n\nGuide du quiz Pokémon — Modes, défis et badges | Lunidex\n\nComment fonctionne le quiz Pokémon Lunidex : défis classique, silhouette et stats ; modes marathon, survie et contre-la-montre ; le défi quotidien et les cinq badges.\n\nPUBLIÉ LE 10 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/quiz-guide"
+      },
+      {
+        "text": "GUIDE DU SUIVI NUZLOCKE\n\nSuivi Nuzlocke — Suivre vos parties challenge | Lunidex\n\nComment utiliser le suivi Nuzlocke Lunidex : créer des parties, noter une rencontre par route, suivre le statut de chaque Pokémon (vivant, mort, boîte) et lire les statistiques de la partie.\n\nPUBLIÉ LE 11 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/nuzlocke-guide"
+      },
+      {
+        "text": "COMMENT ORGANISER UNE COLLECTION DE CARTES POKÉMON\n\nComment organiser une collection de cartes Pokémon\n\nUne méthode concrète pour trier les cartes Pokémon par set et numéro, noter langue, finition et doubles, puis tenir à jour la liste des cartes manquantes.\n\nPUBLIÉ LE 28 SEPT. 2026\nLire le guide",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "GUIDE DES RÉFÉRENCES POKÉMON\n\nPokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex\n\nUtilisez Lunidex comme Pokédex Pokémon en ligne gratuit et espace de référence alimenté par PokéAPI : recherchez /pokedex, les fiches Pokémon, les types, attaques, capacités, objets, évolutions et rencontres.\n\nPUBLIÉ LE 19 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "GUIDE DES OUTILS D’ÉQUIPE ET DE COMBAT\n\nOutils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex\n\nUtilisez les outils Lunidex autour de la préparation d’équipe : comparer des Pokémon, lire les matchups, calculer les EV/IV, explorer l’élevage et vérifier les scénarios de combat pris en charge.\n\nPUBLIÉ LE 20 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/team-tools-guide"
+      },
+      {
+        "text": "GUIDE DE L’ESPACE POKÉMON TCG\n\nApplication et espace de collection Pokémon TCG — Cartes, wishlist et decks | Lunidex\n\nDécouvrez comment l’application et l’espace Pokémon TCG de Lunidex permettent de parcourir un catalogue public en ligne, enregistrer les cartes possédées et souhaitées, suivre la progression par set, gérer une wishlist et préparer des decks.\n\nPUBLIÉ LE 21 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/tcg-workspace-guide"
+      },
+      {
+        "text": "GUIDE DE LA PROGRESSION ET DU COMPTE\n\nGuide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation\n\nDécouvrez comment Lunidex sépare la consultation publique de la progression personnelle : tableau de bord, favoris, équipes, synchronisation, amis et profils publics.\n\nPUBLIÉ LE 22 AOÛT 2026\nLire le guide",
+        "href": "/fr/guides/progress-account-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/docs",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/docs",
+    "title": "Documentation Lunidex — outils Pokémon et API",
+    "h1": [
+      "Documentation Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Documentation et API",
+        "href": "/fr/docs"
+      }
+    ],
+    "main": "DOCUMENTATION\n\nDocumentation Lunidex\n\nChoisissez votre objectif : explorer les Pokémon, préparer une équipe, gérer une collection Pokémon TCG, consulter votre progression ou utiliser l’API publique.\n\nExplorer les Pokémon\n\nPARCOURS CONSEILLÉ\n\nCommencez dans le Pokédex : cherchez un Pokémon et ouvrez sa fiche, puis utilisez le tableau des types ou les pages de capacités, talents et objets pour approfondir.\n\nPokédex\nTypes\nCapacités\nTalents\nObjets\nGUIDES DES FONCTIONNALITÉS\nGuide de référence Pokémon\nPréparer une équipe et une partie\n\nPARCOURS CONSEILLÉ\n\nComposez une équipe de six Pokémon maximum, comparez-en jusqu’à trois, puis affinez-la avec les outils EV/IV ou de reproduction. Combat, quiz et Nuzlocke proposent des parcours distincts.\n\nConstructeur d’équipe Pokémon\nComparer\nCalculateur EV/IV\nCalculateur d'Élevage\nSimulateur de combat\nQuel est ce Pokémon ?\nSuivi Nuzlocke\nGUIDES DES FONCTIONNALITÉS\nGuide de création d’équipe\nGuide du quiz\nGuide du Nuzlocke\nGuide des outils d’équipe et de jeu\nSuivre une collection Pokémon TCG\n\nPARCOURS CONSEILLÉ\n\nCherchez une carte ou une série, puis utilisez la collection, la liste de souhaits et les decks. Connectez-vous et attendez la synchronisation avant de modifier vos données ; les produits scellés ont leur propre portefeuille.\n\nJCC\nCommencez",
+    "links": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Guide de référence Pokémon",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Constructeur d’équipe Pokémon",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Calculateur EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Calculateur d'Élevage",
+        "href": "/fr/breeding"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/docs",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/docs",
+    "title": "Documentation Lunidex — outils Pokémon et API",
+    "h1": [
+      "Documentation Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "DOCUMENTATION\n\nDocumentation Lunidex\n\nChoisissez votre objectif : explorer les Pokémon, préparer une équipe, gérer une collection Pokémon TCG, consulter votre progression ou utiliser l’API publique.\n\nExplorer les Pokémon\n\nPARCOURS CONSEILLÉ\n\nCommencez dans le Pokédex : cherchez un Pokémon et ouvrez sa fiche, puis utilisez le tableau des types ou les pages de capacités, talents et objets pour approfondir.\n\nPokédex\nTypes\nCapacités\nTalents\nObjets\nGUIDES DES FONCTIONNALITÉS\nGuide de référence Pokémon\nPréparer une équipe et une partie\n\nPARCOURS CONSEILLÉ\n\nComposez une équipe de six Pokémon maximum, comparez-en jusqu’à trois, puis affinez-la avec les outils EV/IV ou de reproduction. Combat, quiz et Nuzlocke proposent des parcours distincts.\n\nConstructeur d’équipe Pokémon\nComparer\nCalculateur EV/IV\nCalculateur d'Élevage\nSimulateur de combat\nQuel est ce Pokémon ?\nSuivi Nuzlocke\nGUIDES DES FONCTIONNALITÉS\nGuide de création d’équipe\nGuide du quiz\nGuide du Nuzlocke\nGuide des outils d’équipe et de jeu\nSuivre une collection Pokémon TCG\n\nPARCOURS CONSEILLÉ\n\nCherchez une carte ou une série, puis utilisez la collection, la liste de souhaits et les decks. Connectez-vous et attendez la synchronisation avant de modifier vos données ; les produits scellés ont leur propre portefeuille.\n\nJCC\nCommencez",
+    "links": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Guide de référence Pokémon",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "Constructeur d’équipe Pokémon",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Calculateur EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Calculateur d'Élevage",
+        "href": "/fr/breeding"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/docs/api",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/docs/api",
+    "title": "API publique Lunidex v1 — Guide développeur",
+    "h1": [
+      "API publique Lunidex v1"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Retour à la documentation\nAPI publique Lunidex v1\n\nConnectez un service serveur aux données déjà synchronisées avec un compte Lunidex. Créez une clé et envoyez une première requête, puis explorez les cartes, les produits scellés, la pagination et les écritures.\n\nURL de base\nhttps://lunidex.app/api/v1\nGérer les clés API\nOuvrir la spécification OpenAPI\nSur cette page\nClés réservées aux serveurs\n\nNe placez jamais une clé API dans le code d’un navigateur, une application mobile, un dépôt public, une URL, une capture d’écran ou un journal partagé. Gardez-la dans un gestionnaire de secrets côté serveur et transmettez-la uniquement dans l’en-tête Authorization.\n\nDémarrage rapide\n\nUne intégration a besoin d’une clé, d’un secret stocké côté serveur et d’une requête HTTPS vers l’URL de base de l’API.\n\n1\nCréer une clé\n\nOuvrez la carte des clés API dans le tableau de bord Lunidex. Nommez la clé et choisissez lecture seule ou lecture et écriture. Le secret complet n’apparaît qu’une fois : copiez-le avant de fermer le message.\n\n2\nStocker le secret sur votre serveur\n\nEnregistrez la clé sous LUNIDEX_API_KEY dans le gestionnaire de secrets de votre hébergeur. Ne la commitez pas et ne l’envoyez pas au navigateur.\n\n3\nEnvoyer la première requête\n\nAppelez GET /me depuis votre serveur. Les routes priv",
+    "links": [
+      {
+        "text": "Retour à la documentation",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Gérer les clés API",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Ouvrir la spécification OpenAPI",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "Démarrage rapide",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentification et permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination et filtres",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cartes",
+        "href": "#cards"
+      },
+      {
+        "text": "Produits scellés",
+        "href": "#sealed"
+      },
+      {
+        "text": "Écritures, idempotence et révisions",
+        "href": "#mutations"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/docs/api",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/docs/api",
+    "title": "API publique Lunidex v1 — Guide développeur",
+    "h1": [
+      "API publique Lunidex v1"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Documentation et API",
+        "href": "/fr/docs"
+      }
+    ],
+    "main": "Retour à la documentation\nAPI publique Lunidex v1\n\nConnectez un service serveur aux données déjà synchronisées avec un compte Lunidex. Créez une clé et envoyez une première requête, puis explorez les cartes, les produits scellés, la pagination et les écritures.\n\nURL de base\nhttps://lunidex.app/api/v1\nGérer les clés API\nOuvrir la spécification OpenAPI\nSUR CETTE PAGE\nDémarrage rapide\nAuthentification et permissions\nPagination et filtres\nRoutes\nCartes\nProduits scellés\nÉcritures, idempotence et révisions\nErreurs et format des réponses\nQuotas\nClés réservées aux serveurs\n\nNe placez jamais une clé API dans le code d’un navigateur, une application mobile, un dépôt public, une URL, une capture d’écran ou un journal partagé. Gardez-la dans un gestionnaire de secrets côté serveur et transmettez-la uniquement dans l’en-tête Authorization.\n\nDémarrage rapide\n\nUne intégration a besoin d’une clé, d’un secret stocké côté serveur et d’une requête HTTPS vers l’URL de base de l’API.\n\n1\nCréer une clé\n\nOuvrez la carte des clés API dans le tableau de bord Lunidex. Nommez la clé et choisissez lecture seule ou lecture et écriture. Le secret complet n’apparaît qu’une fois : copiez-le avant de fermer le message.\n\n2\nStocker le secret sur votre serveur\n\nEnregistrez la clé sous LUNIDEX_API_KEY dans le gestion",
+    "links": [
+      {
+        "text": "Retour à la documentation",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Gérer les clés API",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Ouvrir la spécification OpenAPI",
+        "href": "/api/v1/openapi.json"
+      },
+      {
+        "text": "Démarrage rapide",
+        "href": "#quickstart"
+      },
+      {
+        "text": "Authentification et permissions",
+        "href": "#auth"
+      },
+      {
+        "text": "Pagination et filtres",
+        "href": "#pagination"
+      },
+      {
+        "text": "Routes",
+        "href": "#routes"
+      },
+      {
+        "text": "Cartes",
+        "href": "#cards"
+      },
+      {
+        "text": "Produits scellés",
+        "href": "#sealed"
+      },
+      {
+        "text": "Écritures, idempotence et révisions",
+        "href": "#mutations"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/about",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/about",
+    "title": "À propos de Lunidex — Suivi de collection Pokémon TCG | Lunidex",
+    "h1": [
+      "À propos de Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "À PROPOS\n\nÀ propos de Lunidex\n\nUn outil indépendant de suivi de collection Pokémon TCG, avec Pokédex et outils d’équipe.\n\nUn suivi de collection Pokémon TCG et un espace de travail\nLunidex est une application web Pokémon indépendante et non officielle. Elle aide les collectionneurs à suivre leurs extensions, leurs cartes possédées et manquantes et leur progression, puis réunit un Pokédex et des outils d’équipe au même endroit. Lunidex n’est pas une marketplace de cartes.\nNotre mission\nLunidex existe pour rendre les données Pokémon claires, utiles et accessibles dans plusieurs langues. Le projet réunit des outils de référence, la construction d’équipes et des fonctions de collection Pokémon TCG, en respectant les limites des données amont.\n\nLunidex est maintenu comme un petit projet de fans open source. La disponibilité du produit, des comptes et des sources amont peut évoluer ; les pages publiques décrivent le périmètre actuellement documenté.\nSources de données et attribution\nToutes les données Pokémon (stats, types, talents, capacités, évolutions, sprites, artwork officiel) proviennent du projet open source PokeAPI (pokeapi.co), une base de données communautaire et gratuite.\n\nLes données de cartes à jouer (cartes, sets, raretés, prix) proviennent de TCGdex (tcgdex.net), une bas",
+    "links": [
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment organiser une collection de cartes Pokémon",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Guide de la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "GITHUB\n\nCode source, README et changelog",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "ISSUES\n\nSignaler des bugs, demander des fonctionnalités, suivre l'avancement",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/about",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/about",
+    "title": "À propos de Lunidex — Suivi de collection Pokémon TCG | Lunidex",
+    "h1": [
+      "À propos de Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Présentation de Lunidex",
+        "href": "/fr/about"
+      }
+    ],
+    "main": "À PROPOS\n\nÀ propos de Lunidex\n\nUn outil indépendant de suivi de collection Pokémon TCG, avec Pokédex et outils d’équipe.\n\nUn suivi de collection Pokémon TCG et un espace de travail\nLunidex est une application web Pokémon indépendante et non officielle. Elle aide les collectionneurs à suivre leurs extensions, leurs cartes possédées et manquantes et leur progression, puis réunit un Pokédex et des outils d’équipe au même endroit. Lunidex n’est pas une marketplace de cartes.\nNotre mission\nLunidex existe pour rendre les données Pokémon claires, utiles et accessibles dans plusieurs langues. Le projet réunit des outils de référence, la construction d’équipes et des fonctions de collection Pokémon TCG, en respectant les limites des données amont.\n\nLunidex est maintenu comme un petit projet de fans open source. La disponibilité du produit, des comptes et des sources amont peut évoluer ; les pages publiques décrivent le périmètre actuellement documenté.\nSources de données et attribution\nToutes les données Pokémon (stats, types, talents, capacités, évolutions, sprites, artwork officiel) proviennent du projet open source PokeAPI (pokeapi.co), une base de données communautaire et gratuite.\n\nLes données de cartes à jouer (cartes, sets, raretés, prix) proviennent de TCGdex (tcgdex.net), une bas",
+    "links": [
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment organiser une collection de cartes Pokémon",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      },
+      {
+        "text": "Guide de la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "GITHUB\n\nCode source, README et changelog",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "ISSUES\n\nSignaler des bugs, demander des fonctionnalités, suivre l'avancement",
+        "href": "https://github.com/teefloo/Lunidex/issues"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/contact",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/contact",
+    "title": "Contact | Lunidex",
+    "h1": [
+      "Contact"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "NOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.",
+    "links": [
+      {
+        "text": "contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "Écrire à contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "politique de confidentialité",
+        "href": "/fr/privacy"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/contact",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/contact",
+    "title": "Contact | Lunidex",
+    "h1": [
+      "Contact"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Contact",
+        "href": "/fr/contact"
+      }
+    ],
+    "main": "NOUS CONTACTER\n\nContact\n\nUne question, un signalement ou une suggestion ? Écrivez à l’équipe Lunidex. Les messages sont envoyés de manière sécurisée par notre fournisseur d’e-mails transactionnels.\n\nVous pouvez aussi écrire directement à\ncontact@lunidex.app\nEnvoyer un message\nWebsite\nNom ou pseudo\nAdresse e-mail\nSujet\nMessage\nEnvoyer le message\nÉcrire à contact@lunidex.app\n\nLes informations de ce formulaire servent uniquement à répondre à votre demande. Consultez notre politique de confidentialité.",
+    "links": [
+      {
+        "text": "contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "Écrire à contact@lunidex.app",
+        "href": "mailto:contact@lunidex.app"
+      },
+      {
+        "text": "politique de confidentialité",
+        "href": "/fr/privacy"
+      }
+    ]
+  }
+]

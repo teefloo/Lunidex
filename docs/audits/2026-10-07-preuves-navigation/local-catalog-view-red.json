@@ -1,0 +1,7 @@
+{
+  "scenario": "catalogue vue liste regression",
+  "before": "http://127.0.0.1:3017/fr/tcg?tcgLang=en&set=30th&view=list",
+  "modalUrl": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?set=30th&sortBy=id&sortOrder=asc&tcgLang=en",
+  "after": "http://127.0.0.1:3017/fr/tcg?tcgLang=en&set=30th&view=list",
+  "pass": true
+}

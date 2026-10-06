@@ -1,0 +1,28 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "recherche globale et nom accessible",
+    "input": {
+      "ariaLabel": null,
+      "labelledBy": "radix-_r_9_",
+      "labelText": ""
+    },
+    "snapshot": "- dialog \"Rechercher dans Lunidex\":\n  - heading \"Rechercher dans Lunidex\" [level=2]\n  - paragraph: Recherchez des pages et des Pokémon\n  - group:\n    - combobox [expanded]\n    - group\n  - listbox \"Suggestions\":\n    - group \"Pages\":\n      - option \"Collection\" [selected]\n      - option \"Catalogue\"\n      - option \"Pokédex\"\n      - option \"Équipe\"",
+    "destination": "https://lunidex.app/fr/types",
+    "passNavigation": true,
+    "missingName": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "recherche globale et nom accessible",
+    "input": {
+      "ariaLabel": null,
+      "labelledBy": "radix-_r_9_",
+      "labelText": ""
+    },
+    "snapshot": "- dialog \"Rechercher dans Lunidex\":\n  - heading \"Rechercher dans Lunidex\" [level=2]\n  - paragraph: Recherchez des pages et des Pokémon\n  - group:\n    - combobox [expanded]\n    - group\n  - listbox \"Suggestions\":\n    - group \"Pages\":\n      - option \"Collection\" [selected]\n      - option \"Catalogue\"\n      - option \"Pokédex\"\n      - option \"Équipe\"",
+    "destination": "https://lunidex.app/fr/types",
+    "passNavigation": true,
+    "missingName": true
+  }
+]

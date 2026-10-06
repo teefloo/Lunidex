@@ -114,13 +114,13 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
       <Breadcrumbs
         items={[
           { label: t('common.home', { defaultValue: 'Home' }), href: `/${currentLang}` },
-          { label: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), href: `/${currentLang}/tcg` },
-          ...(setId ? [{ label: setName, href: `/${currentLang}/tcg/sets/${setId}` }] : []),
+          { label: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), href: `/${currentLang}/tcg?tcgLang=${encodeURIComponent(tcgLanguage)}` },
+          ...(setId ? [{ label: setName, href: `/${currentLang}/tcg/sets/${encodeURIComponent(setId)}?tcgLang=${encodeURIComponent(tcgLanguage)}` }] : []),
           { label: card.name },
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
-      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} interfaceLanguage={canonicalLanguage} />
+      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} />
     </>
   );
 }

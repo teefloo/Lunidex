@@ -1,0 +1,6 @@
+{
+  "scenario": "catalogue vue table pendant interception",
+  "url": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?set=30th&sortBy=id&sortOrder=asc&tcgLang=en",
+  "radios": [],
+  "after": "http://127.0.0.1:3017/fr/tcg?tcgLang=en&set=30th&view=table"
+}

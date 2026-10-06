@@ -1,0 +1,54 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "TCGdex contexte neuf lectures seules",
+    "responses": [
+      {
+        "url": "https://assets.tcgdex.net/fr/sv/sv03/228/high.webp",
+        "status": 200
+      },
+      {
+        "url": "https://assets.tcgdex.net/fr/sv/sv03/228/high.webp",
+        "status": 200
+      },
+      {
+        "url": "https://api.tcgdex.net/v2/fr/cards/sv03-228",
+        "status": 200
+      }
+    ],
+    "failures": [],
+    "pageErrors": [],
+    "h1": [
+      "Dracaufeu-ex"
+    ]
+  },
+  {
+    "profile": "mobile",
+    "scenario": "TCGdex contexte neuf lectures seules",
+    "responses": [
+      {
+        "url": "https://assets.tcgdex.net/fr/sv/sv03/228/high.webp",
+        "status": 200
+      },
+      {
+        "url": "https://assets.tcgdex.net/fr/sv/sv03/228/high.webp",
+        "status": 200
+      },
+      {
+        "url": "https://api.tcgdex.net/v2/fr/cards/sv03-228",
+        "status": 200
+      }
+    ],
+    "failures": [
+      {
+        "url": "https://lunidex.app/fr/tcg/sets/sv03?tcgLang=fr&",
+        "prefetch": true,
+        "error": "net::ERR_ABORTED"
+      }
+    ],
+    "pageErrors": [],
+    "h1": [
+      "Dracaufeu-ex"
+    ]
+  }
+]

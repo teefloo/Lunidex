@@ -1,0 +1,78 @@
+{
+  "scenario": "préchargements autorisés, contexte neuf",
+  "profile": "desktop",
+  "requests": 160,
+  "prefetch": 62,
+  "counts": [
+    [
+      "https://lunidex.app/fr",
+      40
+    ],
+    [
+      "https://lunidex.app/fr/tcg/sets/30th",
+      4
+    ],
+    [
+      "https://lunidex.app/_next/image",
+      3
+    ],
+    [
+      "https://lunidex.app/fr/tcg/cards/30th-001",
+      3
+    ],
+    [
+      "https://lunidex.app/favicon-32x32.png",
+      3
+    ],
+    [
+      "https://assets.tcgdex.net/en/me/30th/001/high.webp",
+      2
+    ],
+    [
+      "https://lunidex.app/fr/tcg",
+      2
+    ],
+    [
+      "https://lunidex.app/fr/pokemon/102",
+      2
+    ],
+    [
+      "https://lunidex.app/_next/static/css/db27c61fdb1558fc.css",
+      1
+    ],
+    [
+      "https://lunidex.app/_next/static/css/e9a8689dbc21678d.css",
+      1
+    ]
+  ],
+  "failures": [
+    {
+      "url": "https://lunidex.app/fr/cookies?_rsc=PeaR1I4Okp3yfSQk",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr/tcg/cards/30th-006?tcgLang=en&_rsc=PeaR1I4Okp3yfSQk",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr?_rsc=nfCSxfvnuoCRVYD7",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr?_rsc=nfCSxfvnuoCRVYD7",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr/pokemon/102?_rsc=nfCSxfvnuoCRVYD7",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr?_rsc=nfCSxfvnuoCRVYD7",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://lunidex.app/fr?_rsc=nfCSxfvnuoCRVYD7",
+      "error": "net::ERR_ABORTED"
+    }
+  ]
+}

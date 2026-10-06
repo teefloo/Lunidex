@@ -1,0 +1,853 @@
+[
+  {
+    "profile": "desktop",
+    "route": "/faq",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/faq",
+    "title": "FAQ Lunidex — Questions et réponses | Lunidex",
+    "h1": [
+      "Questions fréquentes"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      }
+    ],
+    "main": "CENTRE D'AIDE\n\nQuestions fréquentes\n\nDes réponses claires sur les données, les outils, l’espace JCC, les comptes et le périmètre open source de Lunidex.\n\nDERNIÈRE MISE À JOUR LE 28 SEPT. 2026 · 19 QUESTIONS RÉPONDUES\n\nRechercher des questions...\n\nFILTRER LES QUESTIONS PAR CATÉGORIE\n\n19\n\nToutes les questions\nBien démarrer\n4\nOutils Pokémon\n5\nEspace Pokémon JCC\n6\nDonnées et assistance\n4\n\n19 questions disponibles\n\nBien démarrer\n\nLe périmètre du produit, les comptes, les langues disponibles et les options d’installation.\n\nQu'est-ce que Lunidex ?\n\nLunidex est une application web Pokémon indépendante et non officielle ainsi qu’un catalogue Pokémon JCC. Elle réunit les données de référence Pokémon, les outils d’équipe et un espace de collection JCC. Elle n’est affiliée ni à Nintendo, ni à Game Freak, ni à The Pokémon Company.\n\nÀ PROPOS DE LUNIDEX\nFaut-il un compte ou un abonnement ?\n\nLes pages de référence et de catalogue publiques sont accessibles sans compte. L’application web utilise une session associée à un compte pour les changements personnels comme la collection, les équipes, les favoris et les autres progrès synchronisés. Le produit actuel ne comporte aucun abonnement ni parcours d’achat.\n\nTABLEAU DE BORD\nQuelles langues sont disponibles dans l’interface ?\n\nL’interface Lunidex e",
+    "links": [
+      {
+        "text": "À PROPOS DE LUNIDEX",
+        "href": "/fr/about"
+      },
+      {
+        "text": "TABLEAU DE BORD",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "INSTALLER LUNIDEX",
+        "href": "/fr/guides/progress-account-guide"
+      },
+      {
+        "text": "POKÉDEX",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "CONSTRUCTEUR D'ÉQUIPE",
+        "href": "/fr/team"
+      },
+      {
+        "text": "COMPARER LES POKÉMON",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "TYPES",
+        "href": "/fr/types"
+      },
+      {
+        "text": "QUIZ",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "SUIVI NUZLOCKE",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/faq",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/faq",
+    "title": "FAQ Lunidex — Questions et réponses | Lunidex",
+    "h1": [
+      "Questions fréquentes"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "CENTRE D'AIDE\n\nQuestions fréquentes\n\nDes réponses claires sur les données, les outils, l’espace JCC, les comptes et le périmètre open source de Lunidex.\n\nRechercher des questions...\n\nFILTRER LES QUESTIONS PAR CATÉGORIE\n\n19\n\nToutes les questions\nBien démarrer\n4\nOutils Pokémon\n5\nEspace Pokémon JCC\n6\nDonnées et assistance\n4\n\n19 questions disponibles\n\nBien démarrer\n\nLe périmètre du produit, les comptes, les langues disponibles et les options d’installation.\n\nQu'est-ce que Lunidex ?\n\nLunidex est une application web Pokémon indépendante et non officielle ainsi qu’un catalogue Pokémon JCC. Elle réunit les données de référence Pokémon, les outils d’équipe et un espace de collection JCC. Elle n’est affiliée ni à Nintendo, ni à Game Freak, ni à The Pokémon Company.\n\nÀ PROPOS DE LUNIDEX\nFaut-il un compte ou un abonnement ?\n\nLes pages de référence et de catalogue publiques sont accessibles sans compte. L’application web utilise une session associée à un compte pour les changements personnels comme la collection, les équipes, les favoris et les autres progrès synchronisés. Le produit actuel ne comporte aucun abonnement ni parcours d’achat.\n\nTABLEAU DE BORD\nQuelles langues sont disponibles dans l’interface ?\n\nL’interface Lunidex est disponible en anglais, français, espagnol, allemand, italien,",
+    "links": [
+      {
+        "text": "À PROPOS DE LUNIDEX",
+        "href": "/fr/about"
+      },
+      {
+        "text": "TABLEAU DE BORD",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "INSTALLER LUNIDEX",
+        "href": "/fr/guides/progress-account-guide"
+      },
+      {
+        "text": "POKÉDEX",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "CONSTRUCTEUR D'ÉQUIPE",
+        "href": "/fr/team"
+      },
+      {
+        "text": "COMPARER LES POKÉMON",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "TYPES",
+        "href": "/fr/types"
+      },
+      {
+        "text": "QUIZ",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "SUIVI NUZLOCKE",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "TCG",
+        "href": "/fr/tcg"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/30e-anniversaire",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/30e-anniversaire",
+    "title": "30e anniversaire du JCC Pokémon | cartes Pikachu | Lunidex",
+    "h1": [
+      "30e anniversaire du JCC Pokémon : cartes Pikachu et produits"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Tracker du 30e anniversaire",
+        "href": "/fr/30e-anniversaire"
+      }
+    ],
+    "main": "ÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nRédaction Lunidex\n\nOuvrir le tracker\nOuvrir le catalogue TCG\nSortie mondiale\n16 septembre 2026\n\nSTATUT DE SORTIE\n\nDisponible dans le monde entier\n\nVISUEL OFFICIEL POKÉMON\nOUVRIR LA SOURCE OFFICIELLE\n\nSUR CETTE PAGE\n\nEn bref\nCartes Pikachu\nChecklist complète\nCartes remarquables\nRareté Futuriste\nCollection Classique\nProduits annoncés\nQuestions fréquentes\nSources officielles\nCe qui est confirmé\n\nL’extension 30e Anniversaire du JCC Pokémon est sortie dans le monde entier le 16 septembre 2026. Chaque booster contient l’une des 30 cartes Pikachu et l’extension comprend des cartes brillantes, notamment des cartes Énergie de base. Cette page conserve la checklist complète même lorsqu’une fiche ou une image amont est temporairement indisponible.\n\nSORTIE MONDIALE\n16 septembre 2026\nCARTES PIKACHU CONFIRMÉES\n30 illustrations uniques\nDANS CHAQUE BOOSTER\nUne carte Pikachu\nFICHES DE CHECKLIST\n213 fiches\n\nINFORMATIONS CONFIRMÉES SUR L'EXTENSION\n\nInformations confirmées sur l'extension\nSortie mondiale\n\nL'extension 30e Anniversaire du JC",
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "#tracker"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "OUVRIR LA SOURCE OFFICIELLE",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "En bref",
+        "href": "#summary"
+      },
+      {
+        "text": "Cartes Pikachu",
+        "href": "#pikachu"
+      },
+      {
+        "text": "Checklist complète",
+        "href": "#checklist"
+      },
+      {
+        "text": "Cartes remarquables",
+        "href": "#highlights"
+      },
+      {
+        "text": "Rareté Futuriste",
+        "href": "#futuristic"
+      },
+      {
+        "text": "Collection Classique",
+        "href": "#classic"
+      },
+      {
+        "text": "Produits annoncés",
+        "href": "#products"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/30e-anniversaire",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/30e-anniversaire",
+    "title": "30e anniversaire du JCC Pokémon | cartes Pikachu | Lunidex",
+    "h1": [
+      "30e anniversaire du JCC Pokémon : cartes Pikachu et produits"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "ÉVÉNEMENT JCC\n\n30e anniversaire du JCC Pokémon : cartes Pikachu et produits\n\nL’extension est sortie dans le monde entier le 16 septembre 2026. Cette page rassemble les informations officielles, les produits annoncés et un tracker local pour les 30 cartes Pikachu.\n\nRédaction Lunidex\n\nOuvrir le tracker\nOuvrir le catalogue TCG\nSortie mondiale\n16 septembre 2026\n\nSTATUT DE SORTIE\n\nDisponible dans le monde entier\n\nVISUEL OFFICIEL POKÉMON\nOUVRIR LA SOURCE OFFICIELLE\n\nSUR CETTE PAGE\n\nEn bref\nCartes Pikachu\nChecklist complète\nCartes remarquables\nRareté Futuriste\nCollection Classique\nProduits annoncés\nQuestions fréquentes\nSources officielles\nCe qui est confirmé\n\nL’extension 30e Anniversaire du JCC Pokémon est sortie dans le monde entier le 16 septembre 2026. Chaque booster contient l’une des 30 cartes Pikachu et l’extension comprend des cartes brillantes, notamment des cartes Énergie de base. Cette page conserve la checklist complète même lorsqu’une fiche ou une image amont est temporairement indisponible.\n\nSORTIE MONDIALE\n16 septembre 2026\nCARTES PIKACHU CONFIRMÉES\n30 illustrations uniques\nDANS CHAQUE BOOSTER\nUne carte Pikachu\nFICHES DE CHECKLIST\n213 fiches\n\nINFORMATIONS CONFIRMÉES SUR L'EXTENSION\n\nInformations confirmées sur l'extension\nSortie mondiale\n\nL'extension 30e Anniversaire du JC",
+    "links": [
+      {
+        "text": "Ouvrir le tracker",
+        "href": "#tracker"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "OUVRIR LA SOURCE OFFICIELLE",
+        "href": "https://www.pokemon.com/uk/news/pokemon-tcg-30th-celebration-product-showcase"
+      },
+      {
+        "text": "En bref",
+        "href": "#summary"
+      },
+      {
+        "text": "Cartes Pikachu",
+        "href": "#pikachu"
+      },
+      {
+        "text": "Checklist complète",
+        "href": "#checklist"
+      },
+      {
+        "text": "Cartes remarquables",
+        "href": "#highlights"
+      },
+      {
+        "text": "Rareté Futuriste",
+        "href": "#futuristic"
+      },
+      {
+        "text": "Collection Classique",
+        "href": "#classic"
+      },
+      {
+        "text": "Produits annoncés",
+        "href": "#products"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/legal",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/legal",
+    "title": "Mentions légales | Lunidex",
+    "h1": [
+      "Mentions légales"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "Mentions légales\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes informations identifient l’éditeur du projet et ses principaux prestataires techniques. Elles sont présentées sous réserve des informations contractuelles et administratives à jour.\n\nLunidex est un projet personnel, indépendant et non commercial.\n\nSOMMAIRE\n\n1. Éditeur\n2. Hébergement et services\n3. Activité\n4. Contact\n5. Non-affiliation\n1. Éditeur\nChamp\tValeur\nNom du projet\tLunidex\nÉditeur / responsable de la publication\tEsteban Deloge (particulier non professionnel)\nStatut\tProjet personnel indépendant et non commercial\nContact\tcontact@lunidex.app\n2. Hébergement et services\n\nL’application est déployée avec Vercel. Hébergeur : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — privacy@vercel.com. L’authentification et la base applicative peuvent être fournies par Neon lorsque la configuration de production les active. Resend peut être utilisé pour acheminer les messages de contact. Les données Pokémon et TCG sont demandées à des services tiers identifiés dans la politique de confidentialité.\n\n3. Activité\n\nLunidex est un Pokédex, un espace d’outils Pokémon et un catalogue TCG gratuits, sans publicité et sans transaction commerciale dans le code actuel. Les fonctions de compte et de syn",
+    "links": [
+      {
+        "text": "1. Éditeur",
+        "href": "#editor"
+      },
+      {
+        "text": "2. Hébergement et services",
+        "href": "#host"
+      },
+      {
+        "text": "3. Activité",
+        "href": "#activity"
+      },
+      {
+        "text": "4. Contact",
+        "href": "#contact"
+      },
+      {
+        "text": "5. Non-affiliation",
+        "href": "#affiliation"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/legal",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/legal",
+    "title": "Mentions légales | Lunidex",
+    "h1": [
+      "Mentions légales"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Mentions légales\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes informations identifient l’éditeur du projet et ses principaux prestataires techniques. Elles sont présentées sous réserve des informations contractuelles et administratives à jour.\n\nLunidex est un projet personnel, indépendant et non commercial.\n\nSOMMAIRE\n\n1. Éditeur\n2. Hébergement et services\n3. Activité\n4. Contact\n5. Non-affiliation\n1. Éditeur\nChamp\tValeur\nNom du projet\tLunidex\nÉditeur / responsable de la publication\tEsteban Deloge (particulier non professionnel)\nStatut\tProjet personnel indépendant et non commercial\nContact\tcontact@lunidex.app\n2. Hébergement et services\n\nL’application est déployée avec Vercel. Hébergeur : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — privacy@vercel.com. L’authentification et la base applicative peuvent être fournies par Neon lorsque la configuration de production les active. Resend peut être utilisé pour acheminer les messages de contact. Les données Pokémon et TCG sont demandées à des services tiers identifiés dans la politique de confidentialité.\n\n3. Activité\n\nLunidex est un Pokédex, un espace d’outils Pokémon et un catalogue TCG gratuits, sans publicité et sans transaction commerciale dans le code actuel. Les fonctions de compte et de syn",
+    "links": [
+      {
+        "text": "1. Éditeur",
+        "href": "#editor"
+      },
+      {
+        "text": "2. Hébergement et services",
+        "href": "#host"
+      },
+      {
+        "text": "3. Activité",
+        "href": "#activity"
+      },
+      {
+        "text": "4. Contact",
+        "href": "#contact"
+      },
+      {
+        "text": "5. Non-affiliation",
+        "href": "#affiliation"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/privacy",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/privacy",
+    "title": "Politique de confidentialité | Lunidex",
+    "h1": [
+      "Politique de confidentialité"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "Politique de confidentialité\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les données traitées par Lunidex selon les fonctionnalités réellement activées. Elle ne constitue pas un avis juridique personnalisé.\n\nLa consultation du Pokédex et du catalogue TCG reste possible sans compte. Les fonctions qui enregistrent un espace personnel utilisent une session de compte et la synchronisation Neon lorsqu’elle est configurée.\n\nSOMMAIRE\n\n1. Compte et données personnelles\n2. Finalités et bases légales\n3. Stockage dans le navigateur\n4. Mesure, logs et données techniques\n5. Services, destinataires et transferts\n6. Durées de conservation\n7. Vos droits et contact\n1. Compte et données personnelles\n\nResponsable du traitement : Esteban Deloge, éditeur non professionnel de Lunidex. Pour toute question relative aux données personnelles, utilisez contact@lunidex.app.\n\nLa création d’un compte est facultative pour consulter les pages publiques. Lorsqu’un compte est créé, Neon Auth traite l’adresse e-mail, les identifiants de session et, si vous le fournissez, le nom ou pseudo. La connexion par Google ou GitHub peut être proposée selon la configuration du service ; le fournisseur choisi participe alors au parcours d’authentification.\n\nUne fois connecté, votre espace personn",
+    "links": [
+      {
+        "text": "1. Compte et données personnelles",
+        "href": "#account-data"
+      },
+      {
+        "text": "2. Finalités et bases légales",
+        "href": "#bases"
+      },
+      {
+        "text": "3. Stockage dans le navigateur",
+        "href": "#local-storage"
+      },
+      {
+        "text": "4. Mesure, logs et données techniques",
+        "href": "#measurement"
+      },
+      {
+        "text": "5. Services, destinataires et transferts",
+        "href": "#recipients"
+      },
+      {
+        "text": "6. Durées de conservation",
+        "href": "#retention"
+      },
+      {
+        "text": "7. Vos droits et contact",
+        "href": "#rights"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/privacy",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/privacy",
+    "title": "Politique de confidentialité | Lunidex",
+    "h1": [
+      "Politique de confidentialité"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Politique de confidentialité\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les données traitées par Lunidex selon les fonctionnalités réellement activées. Elle ne constitue pas un avis juridique personnalisé.\n\nLa consultation du Pokédex et du catalogue TCG reste possible sans compte. Les fonctions qui enregistrent un espace personnel utilisent une session de compte et la synchronisation Neon lorsqu’elle est configurée.\n\nSOMMAIRE\n\n1. Compte et données personnelles\n2. Finalités et bases légales\n3. Stockage dans le navigateur\n4. Mesure, logs et données techniques\n5. Services, destinataires et transferts\n6. Durées de conservation\n7. Vos droits et contact\n1. Compte et données personnelles\n\nResponsable du traitement : Esteban Deloge, éditeur non professionnel de Lunidex. Pour toute question relative aux données personnelles, utilisez contact@lunidex.app.\n\nLa création d’un compte est facultative pour consulter les pages publiques. Lorsqu’un compte est créé, Neon Auth traite l’adresse e-mail, les identifiants de session et, si vous le fournissez, le nom ou pseudo. La connexion par Google ou GitHub peut être proposée selon la configuration du service ; le fournisseur choisi participe alors au parcours d’authentification.\n\nUne fois connecté, votre espace personn",
+    "links": [
+      {
+        "text": "1. Compte et données personnelles",
+        "href": "#account-data"
+      },
+      {
+        "text": "2. Finalités et bases légales",
+        "href": "#bases"
+      },
+      {
+        "text": "3. Stockage dans le navigateur",
+        "href": "#local-storage"
+      },
+      {
+        "text": "4. Mesure, logs et données techniques",
+        "href": "#measurement"
+      },
+      {
+        "text": "5. Services, destinataires et transferts",
+        "href": "#recipients"
+      },
+      {
+        "text": "6. Durées de conservation",
+        "href": "#retention"
+      },
+      {
+        "text": "7. Vos droits et contact",
+        "href": "#rights"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/terms",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/terms",
+    "title": "Conditions générales d'utilisation | Lunidex",
+    "h1": [
+      "Conditions générales d’utilisation"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "Conditions générales d’utilisation\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes conditions encadrent l’utilisation de Lunidex, un projet indépendant et non affilié aux titulaires des marques Pokémon.\n\nLa consultation des contenus publics est gratuite. Certaines fonctions personnelles nécessitent un compte et dépendent de la disponibilité de l’authentification et de la synchronisation.\n\nSOMMAIRE\n\n1. Service\n2. Compte et espace personnel\n3. Sources et propriété intellectuelle\n4. Disponibilité\n5. Contact\n1. Service\n\nLunidex propose un Pokédex, des outils d’équipe, un quiz et un catalogue Pokémon TCG à titre informatif et ludique. Les données provenant de PokéAPI, TCGdex et d’autres sources peuvent changer, être incomplètes ou devenir indisponibles.\n\nAucun achat, abonnement ou paiement n’est proposé par le code actuel du site.\n\n2. Compte et espace personnel\n\nVous pouvez parcourir le site sans compte. La sauvegarde et la synchronisation de votre espace personnel nécessitent une session authentifiée lorsque le service Neon est disponible. Vous êtes responsable de l’adresse e-mail utilisée et de la confidentialité de votre session.\n\nN’utilisez pas le service pour tenter d’accéder aux données d’un autre utilisateur, contourner les limites anti-abus, automatiser un scraping",
+    "links": [
+      {
+        "text": "1. Service",
+        "href": "#service"
+      },
+      {
+        "text": "2. Compte et espace personnel",
+        "href": "#account"
+      },
+      {
+        "text": "3. Sources et propriété intellectuelle",
+        "href": "#property"
+      },
+      {
+        "text": "4. Disponibilité",
+        "href": "#availability"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/terms",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/terms",
+    "title": "Conditions générales d'utilisation | Lunidex",
+    "h1": [
+      "Conditions générales d’utilisation"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Conditions générales d’utilisation\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCes conditions encadrent l’utilisation de Lunidex, un projet indépendant et non affilié aux titulaires des marques Pokémon.\n\nLa consultation des contenus publics est gratuite. Certaines fonctions personnelles nécessitent un compte et dépendent de la disponibilité de l’authentification et de la synchronisation.\n\nSOMMAIRE\n\n1. Service\n2. Compte et espace personnel\n3. Sources et propriété intellectuelle\n4. Disponibilité\n5. Contact\n1. Service\n\nLunidex propose un Pokédex, des outils d’équipe, un quiz et un catalogue Pokémon TCG à titre informatif et ludique. Les données provenant de PokéAPI, TCGdex et d’autres sources peuvent changer, être incomplètes ou devenir indisponibles.\n\nAucun achat, abonnement ou paiement n’est proposé par le code actuel du site.\n\n2. Compte et espace personnel\n\nVous pouvez parcourir le site sans compte. La sauvegarde et la synchronisation de votre espace personnel nécessitent une session authentifiée lorsque le service Neon est disponible. Vous êtes responsable de l’adresse e-mail utilisée et de la confidentialité de votre session.\n\nN’utilisez pas le service pour tenter d’accéder aux données d’un autre utilisateur, contourner les limites anti-abus, automatiser un scraping",
+    "links": [
+      {
+        "text": "1. Service",
+        "href": "#service"
+      },
+      {
+        "text": "2. Compte et espace personnel",
+        "href": "#account"
+      },
+      {
+        "text": "3. Sources et propriété intellectuelle",
+        "href": "#property"
+      },
+      {
+        "text": "4. Disponibilité",
+        "href": "#availability"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/cookies",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/cookies",
+    "title": "Politique de cookies | Lunidex",
+    "h1": [
+      "Politique de cookies et de stockage local"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "Politique de cookies et de stockage local\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les cookies, stockages locaux et intégrations de mesure réellement utilisés par Lunidex.\n\nLes intégrations de mesure facultative sont initialisées avec la collecte désactivée et ne capturent aucune donnée avant votre choix. Vous pouvez modifier ou retirer ce choix à tout moment.\n\nSOMMAIRE\n\n1. Éléments nécessaires et facultatifs\n2. Stockage local\n3. Mesure facultative\n4. Gérer vos choix\n5. Contact\n1. Éléments nécessaires et facultatifs\nÉlément\tFinalité\tDurée indicative\nprimedex-lang\tMémoriser la langue choisie\t1 an\nprimedex-consent-v2\tMémoriser les choix de mesure\tJusqu’à modification ou suppression\nprimedex-product-measurement-consent\tPermettre au serveur de respecter le choix PostHog\t1 an ou jusqu’au retrait\nCookies Neon Auth\tMaintenir la session de compte\tSelon la configuration Neon Auth\nSentry error monitoring\tSurveillance technique des erreurs et de la disponibilité\tSelon la configuration de conservation Sentry\nVercel Web Analytics, Speed Insights et Sentry performance/replay\tMesure d’audience et de performance après consentement\tAprès consentement, selon la configuration des fournisseurs\nMesure produit Neon et PostHog\tCompteurs TCG, vues de page, événements exp",
+    "links": [
+      {
+        "text": "1. Éléments nécessaires et facultatifs",
+        "href": "#inventory"
+      },
+      {
+        "text": "2. Stockage local",
+        "href": "#local"
+      },
+      {
+        "text": "3. Mesure facultative",
+        "href": "#measurement"
+      },
+      {
+        "text": "4. Gérer vos choix",
+        "href": "#manage"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/cookies",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/cookies",
+    "title": "Politique de cookies | Lunidex",
+    "h1": [
+      "Politique de cookies et de stockage local"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "Politique de cookies et de stockage local\n\nDernière mise à jour et en vigueur : 9 septembre 2026\n\nCette page décrit les cookies, stockages locaux et intégrations de mesure réellement utilisés par Lunidex.\n\nLes intégrations de mesure facultative sont initialisées avec la collecte désactivée et ne capturent aucune donnée avant votre choix. Vous pouvez modifier ou retirer ce choix à tout moment.\n\nSOMMAIRE\n\n1. Éléments nécessaires et facultatifs\n2. Stockage local\n3. Mesure facultative\n4. Gérer vos choix\n5. Contact\n1. Éléments nécessaires et facultatifs\nÉlément\tFinalité\tDurée indicative\nprimedex-lang\tMémoriser la langue choisie\t1 an\nprimedex-consent-v2\tMémoriser les choix de mesure\tJusqu’à modification ou suppression\nprimedex-product-measurement-consent\tPermettre au serveur de respecter le choix PostHog\t1 an ou jusqu’au retrait\nCookies Neon Auth\tMaintenir la session de compte\tSelon la configuration Neon Auth\nSentry error monitoring\tSurveillance technique des erreurs et de la disponibilité\tSelon la configuration de conservation Sentry\nVercel Web Analytics, Speed Insights et Sentry performance/replay\tMesure d’audience et de performance après consentement\tAprès consentement, selon la configuration des fournisseurs\nMesure produit Neon et PostHog\tCompteurs TCG, vues de page, événements exp",
+    "links": [
+      {
+        "text": "1. Éléments nécessaires et facultatifs",
+        "href": "#inventory"
+      },
+      {
+        "text": "2. Stockage local",
+        "href": "#local"
+      },
+      {
+        "text": "3. Mesure facultative",
+        "href": "#measurement"
+      },
+      {
+        "text": "4. Gérer vos choix",
+        "href": "#manage"
+      },
+      {
+        "text": "5. Contact",
+        "href": "#contact"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/offline",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/offline",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Lunidex est momentanément hors ligne"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "SIGNAL PERDU\n\nLNX / 00\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST",
+    "links": [
+      {
+        "text": "Retour à l’accueil",
+        "href": "/fr"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/offline",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/offline",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Lunidex est momentanément hors ligne"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "SIGNAL PERDU\n\nLUNIDEX\n\nLunidex est momentanément hors ligne\n\nUne connexion est nécessaire pour charger cette page. Vérifiez votre réseau, puis réessayez.\n\nRéessayer\nRetour à l’accueil\n\nLes pages déjà consultées peuvent rester accessibles hors connexion.\n\nLUNIDEX\n•\nLOCAL-FIRST",
+    "links": [
+      {
+        "text": "Retour à l’accueil",
+        "href": "/fr"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-pokecardex-zebradex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "title": "Lunidex vs PokéCardex vs ZebraDex — Comparatif de collection Pokémon",
+    "h1": [
+      "Lunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE DU COLLECTIONNEUR\n\nLunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?\n\nCe guide compare trois produits Pokémon dont les périmètres sont différents. Il sépare les fonctionnalités vérifiées dans le code de Lunidex de celles décrites par chaque concurrent sur ses propres pages publiques.\n\nPUBLIÉ LE 12 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES PAGES PUBLIQUES DES CONCURRENTS LE 19 AOÛT 2026.\n\nRédaction Lunidex\n\nCe que montre le comparatif\n\nLunidex est un outil d’un autre type : il réunit un Pokédex, des références Pokémon et des outils d’équipe avec un catalogue TCG et un espace de collection. Il ne faut pas le choisir pour un scanner de cartes ou un portefeuille de marché dédié tant que ces fonctions ne sont pas explicitement ajoutées et documentées. PokéCardex ou ZebraDex sont plus adaptés lorsque le scan, les variantes de cartes, la valeur du portefeuille ou les échanges sont le besoin principal.\n\nComment lire ce comparatif\n\nLes informations sur Lunidex sont vérifiées dans le dépôt et les routes publiques actuels. Les informations sur PokéCardex et ZebraDex renvoient à leurs pages officielles. « Non établi » signifie que les sources Lunidex citées ne documentent pas la fonctionnalité ; cela ne prétend pas qu’une future version ne pourrai",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Page officielle de l’application PokéCardex",
+        "href": "https://www.pokecardex.com/app"
+      },
+      {
+        "text": "Site officiel et fiche d’application ZebraDex",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "FAQ Lunidex",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir le constructeur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le guide de collection",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-pokecardex-zebradex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-pokecardex-zebradex",
+    "title": "Lunidex vs PokéCardex vs ZebraDex — Comparatif de collection Pokémon",
+    "h1": [
+      "Lunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Comparatif des applis de collection",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      }
+    ],
+    "main": "GUIDE DU COLLECTIONNEUR\n\nLunidex vs PokéCardex vs ZebraDex : quel outil de collection Pokémon choisir ?\n\nCe guide compare trois produits Pokémon dont les périmètres sont différents. Il sépare les fonctionnalités vérifiées dans le code de Lunidex de celles décrites par chaque concurrent sur ses propres pages publiques.\n\nPUBLIÉ LE 12 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES PAGES PUBLIQUES DES CONCURRENTS LE 19 AOÛT 2026.\n\nRédaction Lunidex\n\nCe que montre le comparatif\n\nLunidex est un outil d’un autre type : il réunit un Pokédex, des références Pokémon et des outils d’équipe avec un catalogue TCG et un espace de collection. Il ne faut pas le choisir pour un scanner de cartes ou un portefeuille de marché dédié tant que ces fonctions ne sont pas explicitement ajoutées et documentées. PokéCardex ou ZebraDex sont plus adaptés lorsque le scan, les variantes de cartes, la valeur du portefeuille ou les échanges sont le besoin principal.\n\nComment lire ce comparatif\n\nLes informations sur Lunidex sont vérifiées dans le dépôt et les routes publiques actuels. Les informations sur PokéCardex et ZebraDex renvoient à leurs pages officielles. « Non établi » signifie que les sources Lunidex citées ne documentent pas la fonctionnalité ; cela ne prétend pas qu’une future version ne pourrai",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Page officielle de l’application PokéCardex",
+        "href": "https://www.pokecardex.com/app"
+      },
+      {
+        "text": "Site officiel et fiche d’application ZebraDex",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "À propos de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "FAQ Lunidex",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Ouvrir le constructeur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le guide de collection",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-cardmarket",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-cardmarket",
+    "title": "Lunidex ou Cardmarket — Comparatif de collection de cartes Pokémon",
+    "h1": [
+      "Lunidex ou Cardmarket : espace Pokémon ou marketplace ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardmarket : espace Pokémon ou marketplace ?\n\nUn comparatif sourcé entre un espace de travail Pokémon et la marketplace et les sources de produits de Cardmarket.\n\nPUBLIÉ LE 21 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardmarket est une marketplace où l’on peut rechercher des produits, acheter ou vendre des cartes et des produits scellés selon ses règles actuelles. Lunidex est un espace web gratuit à utiliser pour rechercher des cartes Pokémon TCG, suivre un état de collection personnel, consulter un Pokédex et préparer des équipes. Lunidex ne remplace pas un parcours de transaction marketplace.\n\nÀ quoi sert Cardmarket\n\nLes pages Cardmarket et les fichiers publics de produits vérifiés établissent des informations de marketplace, de catalogue et de prix. Ils n’établissent ni Pokédex, ni constructeur d’équipe Pokémon, ni code open source, ni espace personnel tout-en-un comparable à Lunidex.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDMARKET\nPlateforme\tApplication web avec une expérience PWA installable.\tSite marketplace et pages publiques de produits et de données de prix.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, a",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.cardmarket.com/en/Pokemon"
+      },
+      {
+        "text": "",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json"
+      },
+      {
+        "text": "",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-cardmarket",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-cardmarket",
+    "title": "Lunidex ou Cardmarket — Comparatif de collection de cartes Pokémon",
+    "h1": [
+      "Lunidex ou Cardmarket : espace Pokémon ou marketplace ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardmarket : espace Pokémon ou marketplace ?\n\nUn comparatif sourcé entre un espace de travail Pokémon et la marketplace et les sources de produits de Cardmarket.\n\nPUBLIÉ LE 21 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardmarket est une marketplace où l’on peut rechercher des produits, acheter ou vendre des cartes et des produits scellés selon ses règles actuelles. Lunidex est un espace web gratuit à utiliser pour rechercher des cartes Pokémon TCG, suivre un état de collection personnel, consulter un Pokédex et préparer des équipes. Lunidex ne remplace pas un parcours de transaction marketplace.\n\nÀ quoi sert Cardmarket\n\nLes pages Cardmarket et les fichiers publics de produits vérifiés établissent des informations de marketplace, de catalogue et de prix. Ils n’établissent ni Pokédex, ni constructeur d’équipe Pokémon, ni code open source, ni espace personnel tout-en-un comparable à Lunidex.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDMARKET\nPlateforme\tApplication web avec une expérience PWA installable.\tSite marketplace et pages publiques de produits et de données de prix.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, a",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.cardmarket.com/en/Pokemon"
+      },
+      {
+        "text": "",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/productList/products_nonsingles_6.json"
+      },
+      {
+        "text": "",
+        "href": "https://downloads.s3.cardmarket.com/productCatalog/priceGuide/price_guide_6.json"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  }
+]

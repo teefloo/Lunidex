@@ -1,0 +1,36 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "breadcrumb clic réel après remise en vue",
+    "hit": {
+      "clickable": true,
+      "rect": {
+        "x": 249.71875,
+        "y": 96,
+        "w": 129.0234375,
+        "h": 36
+      },
+      "hitClass": "inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40"
+    },
+    "heading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/sv03?tcgLang=fr",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "breadcrumb clic réel après remise en vue",
+    "hit": {
+      "clickable": true,
+      "rect": {
+        "x": 237.71875,
+        "y": 96,
+        "w": 129.0234375,
+        "h": 36
+      },
+      "hitClass": "inline-flex min-h-9 items-center rounded-sm px-1 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40"
+    },
+    "heading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/sv03?tcgLang=fr",
+    "pass": true
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "catalogue filtres tri ouverture Échap retour avance",
+    "before": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+      "input": "Exeggcute"
+    },
+    "modalUrl": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+    "after": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+      "input": "Exeggcute",
+      "focusTag": "BUTTON"
+    },
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "catalogue filtres tri ouverture Échap retour avance",
+    "before": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+      "input": "Exeggcute"
+    },
+    "modalUrl": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+    "after": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&tcgLang=en",
+      "input": "Exeggcute",
+      "focusTag": "BUTTON"
+    },
+    "pass": true
+  }
+]

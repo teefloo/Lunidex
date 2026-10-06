@@ -1,0 +1,52 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "catalogue table recherche tri Échap retour avance reload nouvel onglet",
+    "before": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&view=table&tcgLang=en",
+      "scrollY": 0,
+      "input": "Exeggcute",
+      "cardClass": "flex h-full flex-col gap-3 sm:flex-row sm:items-start"
+    },
+    "open": {
+      "url": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+      "cardClass": "flex h-full flex-col gap-3 sm:flex-row sm:items-start"
+    },
+    "after": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&view=table&tcgLang=en",
+      "scrollY": 0,
+      "input": "Exeggcute",
+      "focus": "Voir les détails de Exeggcute"
+    },
+    "forwardDialog": 1,
+    "reloadedDialogs": 0,
+    "newTabDialogs": 0,
+    "pageErrors": [],
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "catalogue table recherche tri Échap retour avance reload nouvel onglet",
+    "before": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&view=table&tcgLang=en",
+      "scrollY": 738,
+      "input": "Exeggcute",
+      "cardClass": "flex h-full flex-col gap-3 sm:flex-row sm:items-start"
+    },
+    "open": {
+      "url": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+      "cardClass": "flex h-full flex-col gap-3 sm:flex-row sm:items-start"
+    },
+    "after": {
+      "url": "http://127.0.0.1:3017/fr/tcg?q=Exeggcute&set=30th&sortBy=name&sortOrder=desc&view=table&tcgLang=en",
+      "scrollY": 738,
+      "input": "Exeggcute",
+      "focus": "Voir les détails de Exeggcute"
+    },
+    "forwardDialog": 1,
+    "reloadedDialogs": 0,
+    "newTabDialogs": 0,
+    "pageErrors": [],
+    "pass": true
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "fiche autonome actions anonymes partage breadcrumb",
+    "shared": "http://127.0.0.1:3017/fr/tcg/cards/sv03-228?tcgLang=fr",
+    "breadcrumbHit": true,
+    "heading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "accessMessage": "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils.",
+    "pageErrors": [],
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fiche autonome actions anonymes partage breadcrumb",
+    "shared": "http://127.0.0.1:3017/fr/tcg/cards/sv03-228?tcgLang=fr",
+    "breadcrumbHit": true,
+    "heading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "accessMessage": "Connectez-vous pour synchroniser vos collections et votre progression entre vos appareils.",
+    "pageErrors": [],
+    "pass": true
+  }
+]

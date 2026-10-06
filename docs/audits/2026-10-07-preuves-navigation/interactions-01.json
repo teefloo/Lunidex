@@ -1,0 +1,510 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "menu /",
+    "links": [
+      {
+        "text": "LISTE DE SOUHAITS",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "SCELLÉS",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "COMMENCER MA COLLECTION",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "MARCHÉ DES SCELLÉS",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "CONSTRUCTEUR DE DECK",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "FRÉQUENCES DE TIRAGE",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "VALEUR DES BOOSTERS",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "text": "TYPES",
+        "href": "/fr/types"
+      },
+      {
+        "text": "CAPACITÉS",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "TALENTS",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "OBJETS",
+        "href": "/fr/items"
+      },
+      {
+        "text": "QUIZ",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "SUIVI NUZLOCKE",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "COMPARER",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "COMBAT",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "ÉLEVAGE",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "CALC. EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "FAVORIS",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "TABLEAU DE BORD",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "AMIS",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "BLOG",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "GUIDES",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "DOCUMENTATION ET API",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "TRACKER DU 30E ANNIVERSAIRE",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "PRÉSENTATION DE LUNIDEX",
+        "href": "/fr/about"
+      },
+      {
+        "text": "CONTACT",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "COMPARATIF DES APPLIS DE COLLECTION",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      }
+    ],
+    "tabInside": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu /pokedex",
+    "links": [
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Commencer ma collection",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Combat",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Élevage",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Calc. EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Favoris",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "Blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Guides",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Documentation et API",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Tracker du 30e anniversaire",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Présentation de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Contact",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "Comparatif des applis de collection",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      }
+    ],
+    "tabInside": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "FAQ installation et Cardmarket",
+    "installationLabel": "INSTALLER LUNIDEX",
+    "destination": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+    "cardmarketLabel": "LUNIDEX FACE À CARDMARKET",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu /",
+    "links": [
+      {
+        "text": "COLLECTION",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Commencer ma collection",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Combat",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Élevage",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Calc. EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Favoris",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "Blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Guides",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Documentation et API",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Tracker du 30e anniversaire",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Présentation de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Contact",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "Comparatif des applis de collection",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      }
+    ],
+    "tabInside": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu /pokedex",
+    "links": [
+      {
+        "text": "Luni\ndex",
+        "href": "/fr"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "Scellés",
+        "href": "/fr/tcg/sealed"
+      },
+      {
+        "text": "Commencer ma collection",
+        "href": "/fr/tcg/start"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Constructeur de deck",
+        "href": "/fr/tcg/deck-builder"
+      },
+      {
+        "text": "Fréquences de tirage",
+        "href": "/fr/tcg/pull-rates"
+      },
+      {
+        "text": "Valeur des boosters",
+        "href": "/fr/tcg/booster-value"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Combat",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Élevage",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Calc. EV/IV",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Favoris",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "Tableau de bord",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "Amis",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "Blog",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "Guides",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Documentation et API",
+        "href": "/fr/docs"
+      },
+      {
+        "text": "Tracker du 30e anniversaire",
+        "href": "/fr/30e-anniversaire"
+      },
+      {
+        "text": "FAQ",
+        "href": "/fr/faq"
+      },
+      {
+        "text": "Présentation de Lunidex",
+        "href": "/fr/about"
+      },
+      {
+        "text": "Contact",
+        "href": "/fr/contact"
+      },
+      {
+        "text": "Comparatif des applis de collection",
+        "href": "/fr/compare/lunidex-vs-pokecardex-zebradex"
+      }
+    ],
+    "tabInside": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "FAQ installation et Cardmarket",
+    "installationLabel": "INSTALLER LUNIDEX",
+    "destination": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+    "cardmarketLabel": "LUNIDEX FACE À CARDMARKET",
+    "pass": true
+  }
+]

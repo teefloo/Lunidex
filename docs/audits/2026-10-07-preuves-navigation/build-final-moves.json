@@ -1,0 +1,42 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "sélection de type hydratée",
+    "heading": "Eau",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "capacités recherche aperçu filtres combinés tri reset",
+    "detailAriaLabel": "Détails de la capacité: Bélier",
+    "dialog": "- dialog \"Bélier\":\n  - heading \"Bélier\" [level=2]\n  - paragraph: Effet Une charge violente qui blesse aussi légèrement le lanceur.\n  - text: Normal Physique Génération 1 PUIS 90 PRÉC 85% PP 20 Priorité 0\n  - heading \"Effet\" [level=3]\n  - paragraph: Une charge violente qui blesse aussi légèrement le lanceur.\n  - heading \"Pokémon pouvant apprendre cette capacité\" [level=3]\n  - complementary:\n    - heading \"Génération\" [level=3]\n    - paragraph: Génération 1\n  - button \"Fermer\"",
+    "filteredCount": 25,
+    "filteredExcerpt": [
+      "#697Symphonie des OndinesEauSpécialGénération 7Oratoria utilise la Force Z pour rassembler une grande quantité d’eau et la projeter sur la cible à pleine puissance.PUIS195PRÉC—PP1AperçuDétails de la capacité",
+      "#323GiclédoEauSpécialGénération 3Le lanceur attaque avec un jet d’eau. Moins il a de PV et moins l’attaque est puissante.PUIS150PRÉC100%PP5AperçuDétails de la capacité",
+      "#308HydroblastEauSpécialGénération 3Une trombe d’eau heurte l’ennemi. Le lanceur doit se reposer au tour suivant.PUIS150PRÉC90%PP5AperçuDétails de la capacité"
+    ],
+    "resetCount": 48,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "sélection de type hydratée",
+    "heading": "Eau",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "capacités recherche aperçu filtres combinés tri reset",
+    "detailAriaLabel": "Détails de la capacité: Bélier",
+    "dialog": "- dialog \"Bélier\":\n  - heading \"Bélier\" [level=2]\n  - paragraph: Effet Une charge violente qui blesse aussi légèrement le lanceur.\n  - text: Normal Physique Génération 1 PUIS 90 PRÉC 85% PP 20 Priorité 0\n  - heading \"Effet\" [level=3]\n  - paragraph: Une charge violente qui blesse aussi légèrement le lanceur.\n  - heading \"Pokémon pouvant apprendre cette capacité\" [level=3]\n  - complementary:\n    - heading \"Génération\" [level=3]\n    - paragraph: Génération 1\n  - button \"Fermer\"",
+    "filteredCount": 25,
+    "filteredExcerpt": [
+      "#697Symphonie des OndinesEauSpécialGénération 7Oratoria utilise la Force Z pour rassembler une grande quantité d’eau et la projeter sur la cible à pleine puissance.PUIS195PRÉC—PP1AperçuDétails de la capacité",
+      "#323GiclédoEauSpécialGénération 3Le lanceur attaque avec un jet d’eau. Moins il a de PV et moins l’attaque est puissante.PUIS150PRÉC100%PP5AperçuDétails de la capacité",
+      "#308HydroblastEauSpécialGénération 3Une trombe d’eau heurte l’ennemi. Le lanceur doit se reposer au tour suivant.PUIS150PRÉC90%PP5AperçuDétails de la capacité"
+    ],
+    "resetCount": 48,
+    "pass": true
+  }
+]

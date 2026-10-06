@@ -497,7 +497,7 @@ export function MoveCard({
         <Link
           href={localeHref(`/moves/${move.name}`)}
           className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
-          aria-label={`View details for ${move.localizedName}`}
+          aria-label={`${t('moves_page.detail_title')}: ${move.localizedName}`}
         >
           <ExternalLink className="h-2.5 w-2.5" />
           {t('moves_page.detail_title')}

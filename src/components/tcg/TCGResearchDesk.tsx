@@ -17,6 +17,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { normalizeNavigationPath } from '@/lib/navigation-registry';
 import { useTranslation } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getFilterOptions, isTcgLangLimited, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
@@ -39,11 +41,6 @@ import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 import '@/styles/pokemon-cards-css.css';
 import '@/styles/tcg-card-overrides.css';
-
-const TCGCardDetailModal = dynamic(
-  () => import('./TCGCardDetailModal').then((module) => ({ default: module.TCGCardDetailModal })),
-  { ssr: false },
-);
 
 // Start the next page while the user still has several rows of cards left to
 // browse. TCGdex may need to hydrate card metadata before returning a page, so
@@ -78,7 +75,9 @@ export function TCGResearchDesk({
   const { t } = useTranslation();
   const mounted = useMounted();
   const router = useRouter();
+  const localeHref = useLocaleHref();
   const pathname = usePathname();
+  const isCatalogRoute = normalizeNavigationPath(pathname) === '/tcg';
   const searchParams = useSearchParams();
   const {
     tcgOwnedCards,
@@ -116,8 +115,6 @@ export function TCGResearchDesk({
   }));
   const [searchTermDraft, setSearchTermDraft] = useState(parsedState.filters.searchTerm ?? '');
   const [viewMode, setViewMode] = useState<TCGCardViewMode>(() => parsedState.viewMode);
-  const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const didSyncUrlRef = useRef(false);
   const [hasUserEditedFilters, setHasUserEditedFilters] = useState(Boolean(
@@ -141,7 +138,7 @@ export function TCGResearchDesk({
   ));
 
   const [previousUrlView, setPreviousUrlView] = useState(parsedState.viewMode);
-  if (previousUrlView !== parsedState.viewMode) {
+  if (isCatalogRoute && previousUrlView !== parsedState.viewMode) {
     setPreviousUrlView(parsedState.viewMode);
     setViewMode(parsedState.viewMode);
   }
@@ -211,7 +208,9 @@ export function TCGResearchDesk({
   }
 
   useEffect(() => {
-    if (!mounted || !hasHydrated) return;
+    // The catalog remains mounted behind an intercepted card. Its state must
+    // not replace the card URL or reset the background view while it is open.
+    if (!isCatalogRoute || !mounted || !hasHydrated) return;
     // The parsed URL already represents the initial state. Avoid replacing it
     // on first hydration with serialized defaults (sort/order/tcgLang), which
     // causes a same-route navigation and can duplicate head metadata in the
@@ -229,7 +228,7 @@ export function TCGResearchDesk({
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [hasHydrated, mounted, pathname, resolvedLang, router, searchParams, urlFilters, viewMode]);
+  }, [hasHydrated, isCatalogRoute, mounted, pathname, resolvedLang, router, searchParams, urlFilters, viewMode]);
 
   const ownershipQueryKey = effectiveFilters.ownedState && effectiveFilters.ownedState !== 'all'
     ? { owned: tcgOwnedCards, wishlist: tcgWishlistCards }
@@ -332,9 +331,8 @@ export function TCGResearchDesk({
   }, [pathname, router, searchParams, setTCGBrowseLanguage]);
 
   const openCard = useCallback((card: TCGCard) => {
-    setSelectedCard(card);
-    setIsModalOpen(true);
-  }, []);
+    router.push(localeHref(`/tcg/cards/${encodeURIComponent(card.id)}?tcgLang=${encodeURIComponent(resolvedLang)}`), { scroll: false });
+  }, [localeHref, resolvedLang, router]);
 
   const openFilters = useCallback(() => {
     setIsFiltersOpen(true);
@@ -558,15 +556,6 @@ export function TCGResearchDesk({
           </div>
         </SheetContent>
       </Sheet>
-
-      {isModalOpen && (
-        <TCGCardDetailModal
-          card={selectedCard}
-          isOpen
-          onClose={() => setIsModalOpen(false)}
-          tcgLanguage={resolvedLang}
-        />
-      )}
     </div>
   );
 }

@@ -1,0 +1,735 @@
+[
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-zebradex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-zebradex",
+    "title": "Lunidex ou ZebraDex — Comparatif de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?\n\nUn comparatif clair pour les collectionneurs qui regardent une application TCG française à côté d’un espace web Pokémon plus large.\n\nPUBLIÉ LE 17 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nZebraDex se concentre sur la collection Pokémon TCG et décrit publiquement le scan, les prix français, la valeur de collection, les classeurs, les wishlists, les échanges et les produits scellés. Lunidex associe catalogue et collection TCG à un Pokédex localisé, des outils d’équipe et la progression Pokémon.\n\nÀ quoi sert ZebraDex\n\nLe site public de ZebraDex présente une expérience centrée sur la collection avec prix français, scan, valeur de portefeuille, progression master set, classeurs, wishlist, échanges et outil de centrage. Ces éléments viennent de la page produit officielle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tZEBRADEX\nPlateforme\tApplication web avec une expérience PWA installable.\tService de collection web/mobile orienté France, selon le site officiel.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tCollection Pokémon TCG, c",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-zebradex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-zebradex",
+    "title": "Lunidex ou ZebraDex — Comparatif de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou ZebraDex : espace Pokémon généraliste ou spécialiste TCG français ?\n\nUn comparatif clair pour les collectionneurs qui regardent une application TCG française à côté d’un espace web Pokémon plus large.\n\nPUBLIÉ LE 17 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nZebraDex se concentre sur la collection Pokémon TCG et décrit publiquement le scan, les prix français, la valeur de collection, les classeurs, les wishlists, les échanges et les produits scellés. Lunidex associe catalogue et collection TCG à un Pokédex localisé, des outils d’équipe et la progression Pokémon.\n\nÀ quoi sert ZebraDex\n\nLe site public de ZebraDex présente une expérience centrée sur la collection avec prix français, scan, valeur de portefeuille, progression master set, classeurs, wishlist, échanges et outil de centrage. Ces éléments viennent de la page produit officielle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tZEBRADEX\nPlateforme\tApplication web avec une expérience PWA installable.\tService de collection web/mobile orienté France, selon le site officiel.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tCollection Pokémon TCG, c",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://zebradex.fr/index.php"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-collectr",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-collectr",
+    "title": "Lunidex ou Collectr — Comparatif de collection de cartes Pokémon",
+    "h1": [
+      "Lunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace centré sur Pokémon et un portfolio multi-TCG.\n\nPUBLIÉ LE 18 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCollectr se présente comme un tracker de portfolios pour jeux de cartes à collectionner, avec valeurs de marché, scan, historique de prix, analyse d’échanges et fonctions communautaires. Lunidex est un espace centré sur Pokémon qui réunit catalogue TCG, Pokédex, analyse d’équipe, quiz et progression.\n\nÀ quoi sert Collectr\n\nLe site public de Collectr décrit des portfolios groupés par TCG, une valeur de collection actualisée, le scan, un guide de prix, l’analyse d’échanges et la découverte sociale. Il s’adresse aux collectionneurs qui veulent du contexte de marché sur plusieurs jeux.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCOLLECTR\nPlateforme\tApplication web avec une expérience PWA installable.\tProduit de portfolio de cartes avec présence web et liens vers les applications mobiles.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tPortfolios multi-TCG, valeur de colle",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.getcollectr.com/"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-collectr",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-collectr",
+    "title": "Lunidex ou Collectr — Comparatif de collection de cartes Pokémon",
+    "h1": [
+      "Lunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Collectr : espace Pokémon ou portfolio multi-TCG ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace centré sur Pokémon et un portfolio multi-TCG.\n\nPUBLIÉ LE 18 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCollectr se présente comme un tracker de portfolios pour jeux de cartes à collectionner, avec valeurs de marché, scan, historique de prix, analyse d’échanges et fonctions communautaires. Lunidex est un espace centré sur Pokémon qui réunit catalogue TCG, Pokédex, analyse d’équipe, quiz et progression.\n\nÀ quoi sert Collectr\n\nLe site public de Collectr décrit des portfolios groupés par TCG, une valeur de collection actualisée, le scan, un guide de prix, l’analyse d’échanges et la découverte sociale. Il s’adresse aux collectionneurs qui veulent du contexte de marché sur plusieurs jeux.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCOLLECTR\nPlateforme\tApplication web avec une expérience PWA installable.\tProduit de portfolio de cartes avec présence web et liens vers les applications mobiles.\nPérimètre principal\tCatalogue et état de collection Pokémon TCG, avec Pokédex et outils d’équipe.\tPortfolios multi-TCG, valeur de colle",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.getcollectr.com/"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-pokellector",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-pokellector",
+    "title": "Lunidex ou Pokéllector — Comparatif d’index de cartes Pokémon TCG",
+    "h1": [
+      "Lunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace Pokémon plus large et un index web de cartes Pokémon TCG.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokéllector est un index web de cartes Pokémon TCG dont la page d’accueil indique vouloir indexer les cartes Pokémon et aider les collectionneurs à suivre leur collection ou à retrouver une carte pour un deck. Lunidex associe la recherche publique dans un catalogue TCG à un état de collection lié au compte, à la progression par set, au Pokédex et aux outils d’équipe.\n\nÀ quoi sert Pokéllector\n\nLa source Pokéllector vérifiée présente Browse Sets, des pages de cartes et de sets, une recherche, une navigation anglaise et japonaise ainsi que des liens de connexion et d’inscription. La source consultée n’établit ni scanner, ni historique de prix, ni parcours hors ligne, ni détails de synchronisation personnelle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tPOKÉLLECTOR\nPlateforme\tApplication web avec une expérience PWA installable.\tIndex de cartes web ; le site mentionne des applications mobiles, mais leurs d",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.pokellector.com/"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-pokellector",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-pokellector",
+    "title": "Lunidex ou Pokéllector — Comparatif d’index de cartes Pokémon TCG",
+    "h1": [
+      "Lunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Pokéllector : espace Pokémon TCG ou index de cartes ?\n\nUn comparatif sourcé pour les collectionneurs qui hésitent entre un espace Pokémon plus large et un index web de cartes Pokémon TCG.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nPokéllector est un index web de cartes Pokémon TCG dont la page d’accueil indique vouloir indexer les cartes Pokémon et aider les collectionneurs à suivre leur collection ou à retrouver une carte pour un deck. Lunidex associe la recherche publique dans un catalogue TCG à un état de collection lié au compte, à la progression par set, au Pokédex et aux outils d’équipe.\n\nÀ quoi sert Pokéllector\n\nLa source Pokéllector vérifiée présente Browse Sets, des pages de cartes et de sets, une recherche, une navigation anglaise et japonaise ainsi que des liens de connexion et d’inscription. La source consultée n’établit ni scanner, ni historique de prix, ni parcours hors ligne, ni détails de synchronisation personnelle.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tPOKÉLLECTOR\nPlateforme\tApplication web avec une expérience PWA installable.\tIndex de cartes web ; le site mentionne des applications mobiles, mais leurs d",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://www.pokellector.com/"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-cardzia",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-cardzia",
+    "title": "Lunidex ou Cardzia — Comparatif d’application de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?\n\nUn comparatif sourcé entre un espace web centré sur Pokémon et l’application française multi-TCG Cardzia.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardzia se présente comme une application française multi-TCG pour scanner des cartes, estimer leur valeur à partir de données du marché français, suivre une collection et sa complétion, gérer des produits scellés et configurer des alertes de prix. Lunidex est un espace web centré sur Pokémon pour la recherche TCG publique, l’état personnel lié au compte, la référence Pokédex et les outils d’équipe.\n\nÀ quoi sert Cardzia\n\nLe site Cardzia et sa fiche Google Play vérifiés décrivent le scan, les estimations du marché français, les états possédé et manquant, la progression par série, la valeur de collection, les produits scellés, les alertes de prix et plusieurs TCG. Les sources vérifiées n’établissent pas le comportement de synchronisation hors ligne de Cardzia.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDZIA\nPlateforme\tApplication web avec une expérience PWA installable.\tSite web et fiche Android sur Google Play ; le s",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "",
+        "href": "https://play.google.com/store/apps/details?id=fr.cardzia.app"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-cardzia",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-cardzia",
+    "title": "Lunidex ou Cardzia — Comparatif d’application de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Cardzia : espace Pokémon ou application multi-TCG française ?\n\nUn comparatif sourcé entre un espace web centré sur Pokémon et l’application française multi-TCG Cardzia.\n\nPUBLIÉ LE 14 SEPT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 14 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nCardzia se présente comme une application française multi-TCG pour scanner des cartes, estimer leur valeur à partir de données du marché français, suivre une collection et sa complétion, gérer des produits scellés et configurer des alertes de prix. Lunidex est un espace web centré sur Pokémon pour la recherche TCG publique, l’état personnel lié au compte, la référence Pokédex et les outils d’équipe.\n\nÀ quoi sert Cardzia\n\nLe site Cardzia et sa fiche Google Play vérifiés décrivent le scan, les estimations du marché français, les états possédé et manquant, la progression par série, la valeur de collection, les produits scellés, les alertes de prix et plusieurs TCG. Les sources vérifiées n’établissent pas le comportement de synchronisation hors ligne de Cardzia.\n\nMatrice factuelle des fonctionnalités\nCRITÈRE\tLUNIDEX\tCARDZIA\nPlateforme\tApplication web avec une expérience PWA installable.\tSite web et fiche Android sur Google Play ; le s",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "",
+        "href": "https://play.google.com/store/apps/details?id=fr.cardzia.app"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare/lunidex-vs-dex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-dex",
+    "title": "Lunidex ou Dex de Dexbit — Comparatif de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou Dex : comparatif des outils de collection Pokémon TCG"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Dex : comparatif des outils de collection Pokémon TCG\n\nUn comparatif daté entre Lunidex et Dex, le service de collection Pokémon TCG dont le site officiel affiche une mention de copyright Dexbit. Les faits ci-dessous ont été vérifiés le 6 octobre 2026 sur le site, le guide des plateformes, le guide d’accès anticipé Web/Android et l’aide scanner officiels de Dex.\n\nPUBLIÉ LE 5 OCT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 6 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nDex de Dexbit propose une application web et des applications iOS et Android. Son centre d’aide indique que les versions Web et Android sont en accès anticipé et qu’il leur manque encore certaines fonctions iOS. Le scanner photo est une fonction Dex+ disponible uniquement sur iOS et Android, pas sur le Web. Le site officiel de Dex présente une formule gratuite et Dex+ à 3,99 $ par mois. Lunidex est une application web qui associe un catalogue TCG public et une collection personnelle liée au compte à un Pokédex Pokémon général et des outils d’équipe. Aucun scanner de cartes n’est documenté pour Lunidex.\n\nÀ quoi sert Dex de Dexbit\n\nCette page compare les pages produit et la documentation publique, sans test indépendant des applications. Le site",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/getting-started/installing-dex"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare/lunidex-vs-dex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare/lunidex-vs-dex",
+    "title": "Lunidex ou Dex de Dexbit — Comparatif de collection Pokémon TCG",
+    "h1": [
+      "Lunidex ou Dex : comparatif des outils de collection Pokémon TCG"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "ANALYSE CONCURRENTIELLE\n\nLunidex ou Dex : comparatif des outils de collection Pokémon TCG\n\nUn comparatif daté entre Lunidex et Dex, le service de collection Pokémon TCG dont le site officiel affiche une mention de copyright Dexbit. Les faits ci-dessous ont été vérifiés le 6 octobre 2026 sur le site, le guide des plateformes, le guide d’accès anticipé Web/Android et l’aide scanner officiels de Dex.\n\nPUBLIÉ LE 5 OCT. 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES PAGES PUBLIQUES CONCURRENTES LE 6 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nDex de Dexbit propose une application web et des applications iOS et Android. Son centre d’aide indique que les versions Web et Android sont en accès anticipé et qu’il leur manque encore certaines fonctions iOS. Le scanner photo est une fonction Dex+ disponible uniquement sur iOS et Android, pas sur le Web. Le site officiel de Dex présente une formule gratuite et Dex+ à 3,99 $ par mois. Lunidex est une application web qui associe un catalogue TCG public et une collection personnelle liée au compte à un Pokédex Pokémon général et des outils d’équipe. Aucun scanner de cartes n’est documenté pour Lunidex.\n\nÀ quoi sert Dex de Dexbit\n\nCette page compare les pages produit et la documentation publique, sans test indépendant des applications. Le site",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/getting-started/installing-dex"
+      },
+      {
+        "text": "",
+        "href": "https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/tcg-workspace-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/pokemon",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokedex",
+    "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+    "h1": [
+      "Pokédex Pokémon en ligne"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nGuide de référence Pokémon\n↗\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTARSAL\nPSY\nFÉE\nJouer au quiz du jour",
+    "links": [
+      {
+        "text": "Guide de référence Pokémon\n↗",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charizard?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/squirtle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/wartortle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/blastoise?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/pokemon",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokedex",
+    "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+    "h1": [
+      "Pokédex Pokémon en ligne"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nGuide de référence Pokémon\n↗\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTARSAL\nPSY\nFÉE\nJouer au quiz du jour",
+    "links": [
+      {
+        "text": "Guide de référence Pokémon\n↗",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charizard?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/squirtle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/wartortle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/blastoise?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/navigation-audit-nonexistent",
+    "status": 404,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/navigation-audit-nonexistent",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Page introuvable"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/navigation-audit-nonexistent",
+    "status": 404,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/navigation-audit-nonexistent",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Page introuvable"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/pokemon/navigation-audit-nonexistent",
+    "status": 404,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokemon/navigation-audit-nonexistent",
+    "title": "Page introuvable | Lunidex",
+    "h1": [
+      "Page introuvable"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/pokemon/navigation-audit-nonexistent",
+    "status": 404,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokemon/navigation-audit-nonexistent",
+    "title": "Page introuvable | Lunidex",
+    "h1": [
+      "Page introuvable"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "links": []
+  }
+]

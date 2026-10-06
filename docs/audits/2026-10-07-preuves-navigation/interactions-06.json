@@ -1,0 +1,50 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "moves",
+    "back": "https://lunidex.app/fr/moves",
+    "forward": "https://lunidex.app/fr/moves/take-down",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "abilities",
+    "back": "https://lunidex.app/fr/abilities",
+    "forward": "https://lunidex.app/fr/abilities/water-absorb",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "items",
+    "back": "https://lunidex.app/fr/items",
+    "forward": "https://lunidex.app/fr/items/burn-heal",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "moves",
+    "back": "https://lunidex.app/fr/moves",
+    "forward": "https://lunidex.app/fr/moves/take-down",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "abilities",
+    "back": "https://lunidex.app/fr/abilities",
+    "forward": "https://lunidex.app/fr/abilities/water-absorb",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "historique après hydratation vérifiée",
+    "list": "items",
+    "back": "https://lunidex.app/fr/items",
+    "forward": "https://lunidex.app/fr/items/burn-heal",
+    "pass": true
+  }
+]

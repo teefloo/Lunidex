@@ -1,0 +1,82 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "moves",
+    "detail": "take-down",
+    "h1": "BÉLIER",
+    "back": "https://lunidex.app/fr/moves/take-down",
+    "forward": "https://lunidex.app/fr/moves/take-down",
+    "pass": false
+  },
+  {
+    "profile": "desktop",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "abilities",
+    "detail": "water-absorb",
+    "h1": "ABSORBE-EAU",
+    "back": "https://lunidex.app/fr/abilities/water-absorb",
+    "forward": "https://lunidex.app/fr/abilities/water-absorb",
+    "pass": false
+  },
+  {
+    "profile": "desktop",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "items",
+    "detail": "burn-heal",
+    "h1": "ANTI-BRÛLE",
+    "back": "https://lunidex.app/fr/items/burn-heal",
+    "forward": "https://lunidex.app/fr/items/burn-heal",
+    "pass": false
+  },
+  {
+    "profile": "desktop",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "tcg/sealed/market",
+    "detail": "611877",
+    "h1": "10th Movie Commemoration Set",
+    "back": "https://lunidex.app/fr/tcg/sealed/market",
+    "forward": "https://lunidex.app/fr/tcg/sealed/market/611877",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "moves",
+    "detail": "take-down",
+    "h1": "BÉLIER",
+    "back": "https://lunidex.app/fr/moves",
+    "forward": "https://lunidex.app/fr/moves/take-down",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "abilities",
+    "detail": "water-absorb",
+    "h1": "ABSORBE-EAU",
+    "back": "https://lunidex.app/fr/abilities",
+    "forward": "https://lunidex.app/fr/abilities/water-absorb",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "items",
+    "detail": "burn-heal",
+    "h1": "ANTI-BRÛLE",
+    "back": "https://lunidex.app/fr/items",
+    "forward": "https://lunidex.app/fr/items/burn-heal",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "liste/détail/reload/retour/avance",
+    "list": "tcg/sealed/market",
+    "detail": "611877",
+    "h1": "10th Movie Commemoration Set",
+    "back": "https://lunidex.app/fr/tcg/sealed/market",
+    "forward": "https://lunidex.app/fr/tcg/sealed/market/611877",
+    "pass": true
+  }
+]

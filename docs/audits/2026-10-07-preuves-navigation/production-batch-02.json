@@ -1,0 +1,648 @@
+[
+  {
+    "profile": "desktop",
+    "route": "/types",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/types",
+    "title": "Tableau des types Pokémon — Forces, faiblesses et matchups | Lunidex",
+    "h1": [
+      "Maître des Types"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Types",
+        "href": "/fr/types"
+      }
+    ],
+    "main": "Maître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/types",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/types",
+    "title": "Tableau des types Pokémon — Forces, faiblesses et matchups | Lunidex",
+    "h1": [
+      "Maître des Types"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "Maître des Types\n\nMaîtrisez les éléments et conquérez chaque combat\n\nSÉLECTIONNER UN TYPE\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/moves",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/moves",
+    "title": "Capacités | Lunidex",
+    "h1": [
+      "Capacités"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n48 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n48 CAPACITÉS\n\n48\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nCHARGEMENT DES CAPACITÉS...\nTOUS LES TYPES\n\n#036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne charge violente qui blesse aussi légèrement le lanceur.\n\nPUIS\n\n90\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#047\n\nBERCEUSE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nUne berceuse plonge l’ennemi dans un profond sommeil.\n\nPUIS\n\n—\n\nPRÉC\n\n55%\n\nPP\n\n15\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#033\n\nCHARGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur charge l’ennemi et le percute de tout son corps.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#029\n\nCOUP D’BOULE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur donne un coup de tête. Peut apeurer l’ennemi.\n\nPUIS\n\n70\n\n",
+    "links": [
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/take-down"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/sing"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/tackle"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/headbutt"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/cut"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/razor-wind"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/wing-attack"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/whirlwind"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/double-edge"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/swords-dance"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/moves",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/moves",
+    "title": "Capacités | Lunidex",
+    "h1": [
+      "Capacités"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      }
+    ],
+    "main": "CAPACITÉS\n\nCapacités\n\nExplorez chaque capacité Pokémon : effets, type, puissance, précision et liste des Pokémon qui peuvent l’apprendre.\n\n48 CAPACITÉS\nFILTRES DU CATALOGUE\nRÉINITIALISER FILTRE\nTRIER PAR\nNOM\nNOM\nID\nPUISSANCE\nFILTRER PAR TYPE\nTOUS LES TYPES\nNORMAL\nFEU\nEAU\nÉLECTRIK\nPLANTE\nGLACE\nCOMBAT\nPOISON\nSOL\nVOL\nPSY\nINSECTE\nROCHE\nSPECTRE\nDRAGON\nTÉNÈBRES\nACIER\nFÉE\nCATÉGORIE\nTOUTES LES CATÉGORIES\nPHYSIQUE\nSPÉCIAL\nSTATUT\n\nLA RECHERCHE SE MET À JOUR INSTANTANÉMENT. LES FILTRES DE TYPE ET DE CATÉGORIE PEUVENT ÊTRE COMBINÉS SANS RISQUE.\n\n48 capacités\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nSTATUT\n\n9\n\n48 CAPACITÉS\n\n48\n\n48 CAPACITÉS\n\n48\n\nPHYSIQUE\n\n37\n\nSPÉCIAL\n\n2\n\nCHARGEMENT DES CAPACITÉS...\nTOUS LES TYPES\n\n#036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nUne charge violente qui blesse aussi légèrement le lanceur.\n\nPUIS\n\n90\n\nPRÉC\n\n85%\n\nPP\n\n20\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#047\n\nBERCEUSE\nNORMAL\nSTATUT\nGÉNÉRATION 1\n\nUne berceuse plonge l’ennemi dans un profond sommeil.\n\nPUIS\n\n—\n\nPRÉC\n\n55%\n\nPP\n\n15\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#033\n\nCHARGE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur charge l’ennemi et le percute de tout son corps.\n\nPUIS\n\n40\n\nPRÉC\n\n100%\n\nPP\n\n35\n\nAPERÇU\nDÉTAILS DE LA CAPACITÉ\n\n#029\n\nCOUP D’BOULE\nNORMAL\nPHYSIQUE\nGÉNÉRATION 1\n\nLe lanceur donne un coup de tête. Peut apeurer l’ennemi.\n\nPUIS\n\n70\n\n",
+    "links": [
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/take-down"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/sing"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/tackle"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/headbutt"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/cut"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/razor-wind"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/wing-attack"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/whirlwind"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/double-edge"
+      },
+      {
+        "text": "DÉTAILS DE LA CAPACITÉ",
+        "href": "/fr/moves/swords-dance"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/abilities",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/abilities",
+    "title": "Talents | Lunidex",
+    "h1": [
+      "Talents"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\n48 TALENTS\n\n#011\n\nABSORBE-EAU\n\nSi le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#010\n\nABSORBE-VOLT\n\nSi le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#043\n\nANTI-BRUIT\n\nProtège le Pokémon de toutes les capacités sonores.\n\nGÉNÉRATION 3\n\n#040\n\nARMUMAGMA\n\nLe magma qui recouvre le corps du Pokémon le protège\\ncontre le gel.\n\nGÉNÉRATION 3\n\n#004\n\nARMURBASTON\n\nLe Pokémon est protégé des coups critiques\\npar une solide carapace.\n\nGÉNÉRATION 3\n\n#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3\n\n#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3\n\n#036\n\nCALQUE\n\nLorsque le Pokémon entre au combat, il calque le talent d'un ennemi pour remplacer le sien.\n\nGÉNÉRATION 3\n\n#034\n\nCHLOROPHYLLE\n\nAugmente la Vitesse du Pokémon s'il y a du soleil.\n\nGÉNÉRATION 3\n\n#013\n\nCIEL GRI",
+    "links": [
+      {
+        "text": "#011\n\nABSORBE-EAU\n\nSi le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/water-absorb"
+      },
+      {
+        "text": "#010\n\nABSORBE-VOLT\n\nSi le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/volt-absorb"
+      },
+      {
+        "text": "#043\n\nANTI-BRUIT\n\nProtège le Pokémon de toutes les capacités sonores.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/soundproof"
+      },
+      {
+        "text": "#040\n\nARMUMAGMA\n\nLe magma qui recouvre le corps du Pokémon le protège\\ncontre le gel.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/magma-armor"
+      },
+      {
+        "text": "#004\n\nARMURBASTON\n\nLe Pokémon est protégé des coups critiques\\npar une solide carapace.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/battle-armor"
+      },
+      {
+        "text": "#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/inner-focus"
+      },
+      {
+        "text": "#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/oblivious"
+      },
+      {
+        "text": "#036\n\nCALQUE\n\nLorsque le Pokémon entre au combat, il calque le talent d'un ennemi pour remplacer le sien.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/trace"
+      },
+      {
+        "text": "#034\n\nCHLOROPHYLLE\n\nAugmente la Vitesse du Pokémon s'il y a du soleil.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/chlorophyll"
+      },
+      {
+        "text": "#013\n\nCIEL GRIS\n\nAnnule tous les effets liés à la météo.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/cloud-nine"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/abilities",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/abilities",
+    "title": "Talents | Lunidex",
+    "h1": [
+      "Talents"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      }
+    ],
+    "main": "TALENTS\n\nTalents\n\nExplorez chaque talent Pokémon, ses effets et ses stratégies, ainsi que la liste complète des Pokémon qui peuvent le posséder.\n\n48 TALENTS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\n48 TALENTS\n\n#011\n\nABSORBE-EAU\n\nSi le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#010\n\nABSORBE-VOLT\n\nSi le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3\n\n#043\n\nANTI-BRUIT\n\nProtège le Pokémon de toutes les capacités sonores.\n\nGÉNÉRATION 3\n\n#040\n\nARMUMAGMA\n\nLe magma qui recouvre le corps du Pokémon le protège\\ncontre le gel.\n\nGÉNÉRATION 3\n\n#004\n\nARMURBASTON\n\nLe Pokémon est protégé des coups critiques\\npar une solide carapace.\n\nGÉNÉRATION 3\n\n#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3\n\n#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3\n\n#036\n\nCALQUE\n\nLorsque le Pokémon entre au combat, il calque le talent d'un ennemi pour remplacer le sien.\n\nGÉNÉRATION 3\n\n#034\n\nCHLOROPHYLLE\n\nAugmente la Vitesse du Pokémon s'il y a du soleil.\n\nGÉNÉRATION 3\n\n#013\n\nCIEL GRI",
+    "links": [
+      {
+        "text": "#011\n\nABSORBE-EAU\n\nSi le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/water-absorb"
+      },
+      {
+        "text": "#010\n\nABSORBE-VOLT\n\nSi le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/volt-absorb"
+      },
+      {
+        "text": "#043\n\nANTI-BRUIT\n\nProtège le Pokémon de toutes les capacités sonores.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/soundproof"
+      },
+      {
+        "text": "#040\n\nARMUMAGMA\n\nLe magma qui recouvre le corps du Pokémon le protège\\ncontre le gel.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/magma-armor"
+      },
+      {
+        "text": "#004\n\nARMURBASTON\n\nLe Pokémon est protégé des coups critiques\\npar une solide carapace.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/battle-armor"
+      },
+      {
+        "text": "#039\n\nATTENTION\n\nLe Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/inner-focus"
+      },
+      {
+        "text": "#012\n\nBENÊT\n\nLe Pokémon est un grand benêt, ce qui l'immunise contre l'attraction, la provocation ou l'intimidation.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/oblivious"
+      },
+      {
+        "text": "#036\n\nCALQUE\n\nLorsque le Pokémon entre au combat, il calque le talent d'un ennemi pour remplacer le sien.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/trace"
+      },
+      {
+        "text": "#034\n\nCHLOROPHYLLE\n\nAugmente la Vitesse du Pokémon s'il y a du soleil.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/chlorophyll"
+      },
+      {
+        "text": "#013\n\nCIEL GRIS\n\nAnnule tous les effets liés à la météo.\n\nGÉNÉRATION 3",
+        "href": "/fr/abilities/cloud-nine"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/items",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/items",
+    "title": "Objets | Lunidex",
+    "h1": [
+      "Objets"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "OBJETS\n\nObjets\n\nConsultez les objets tenus, les baies, les pierres d’évolution et autres objets\n\n48 OBJETS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\nPRIX\nCATÉGORIE\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n48 OBJETS\nANTI-BRÛLE\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nSTATUS CURES\n₽200\nANTI-PARA\n\nUn médicament sous forme de spray. Soigne un Pokémon de la paralysie.\n\nSTATUS CURES\n₽200\nANTIDOTE\n\nUn médicament sous forme de spray. Guérit un Pokémon empoisonné.\n\nSTATUS CURES\n₽200\nANTIGEL\n\nUn médicament sous forme de spray. Réchauffe un Pokémon gelé.\n\nSTATUS CURES\n₽200\nBIS BALL\n\nUne Poké Ball un peu spéciale qui fonctionne particulièrement bien sur les espèces de Pokémon déjà capturées.\n\nSPECIAL BALLS\n₽1 000\nCARBONE\n\nUne boisson très nutritive qui monte la Vitesse de base d’un Pokémon.\n\nVITAMINS\n₽10 000\nCENDRE SACRÉE\n\nRanime tous les Pokémon K.O. et restaure tous leurs PV.\n\nREVIVAL\n₽50 000\nCHRONO BALL\n\nUne Poké Ball un peu spéciale qui fonctionne de mieux en mieux à mesure que le combat s’éternise.\n\nSPECIAL BALLS\n₽1 000\nEAU FRAÎCHE\n\nUne eau riche en minéraux. Restaure 50 PV à un Pokémon.\n\nHEALING\n₽200\nÉLIXIR\n\nRestaure 10 PP de toutes les capacités d’un Pokémon.\n\nPP RECOVERY\n₽3 000\nÉLIXIR MAX\n\nRestaure tous les PP de toutes le",
+    "links": [
+      {
+        "text": "ANTI-BRÛLE\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/burn-heal"
+      },
+      {
+        "text": "ANTI-PARA\n\nUn médicament sous forme de spray. Soigne un Pokémon de la paralysie.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/paralyze-heal"
+      },
+      {
+        "text": "ANTIDOTE\n\nUn médicament sous forme de spray. Guérit un Pokémon empoisonné.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/antidote"
+      },
+      {
+        "text": "ANTIGEL\n\nUn médicament sous forme de spray. Réchauffe un Pokémon gelé.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/ice-heal"
+      },
+      {
+        "text": "BIS BALL\n\nUne Poké Ball un peu spéciale qui fonctionne particulièrement bien sur les espèces de Pokémon déjà capturées.\n\nSPECIAL BALLS\n₽1 000",
+        "href": "/fr/items/repeat-ball"
+      },
+      {
+        "text": "CARBONE\n\nUne boisson très nutritive qui monte la Vitesse de base d’un Pokémon.\n\nVITAMINS\n₽10 000",
+        "href": "/fr/items/carbos"
+      },
+      {
+        "text": "CENDRE SACRÉE\n\nRanime tous les Pokémon K.O. et restaure tous leurs PV.\n\nREVIVAL\n₽50 000",
+        "href": "/fr/items/sacred-ash"
+      },
+      {
+        "text": "CHRONO BALL\n\nUne Poké Ball un peu spéciale qui fonctionne de mieux en mieux à mesure que le combat s’éternise.\n\nSPECIAL BALLS\n₽1 000",
+        "href": "/fr/items/timer-ball"
+      },
+      {
+        "text": "EAU FRAÎCHE\n\nUne eau riche en minéraux. Restaure 50 PV à un Pokémon.\n\nHEALING\n₽200",
+        "href": "/fr/items/fresh-water"
+      },
+      {
+        "text": "ÉLIXIR\n\nRestaure 10 PP de toutes les capacités d’un Pokémon.\n\nPP RECOVERY\n₽3 000",
+        "href": "/fr/items/elixir"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/items",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/items",
+    "title": "Objets | Lunidex",
+    "h1": [
+      "Objets"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      }
+    ],
+    "main": "OBJETS\n\nObjets\n\nConsultez les objets tenus, les baies, les pierres d’évolution et autres objets\n\n48 OBJETS\nFILTRES\nRÉINITIALISER FILTRE\nNOM\nID\nPRIX\nCATÉGORIE\nHEALING\nPP RECOVERY\nREVIVAL\nSPECIAL BALLS\nSTANDARD BALLS\nSTATUS CURES\nVITAMINS\n48 OBJETS\nANTI-BRÛLE\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nSTATUS CURES\n₽200\nANTI-PARA\n\nUn médicament sous forme de spray. Soigne un Pokémon de la paralysie.\n\nSTATUS CURES\n₽200\nANTIDOTE\n\nUn médicament sous forme de spray. Guérit un Pokémon empoisonné.\n\nSTATUS CURES\n₽200\nANTIGEL\n\nUn médicament sous forme de spray. Réchauffe un Pokémon gelé.\n\nSTATUS CURES\n₽200\nBIS BALL\n\nUne Poké Ball un peu spéciale qui fonctionne particulièrement bien sur les espèces de Pokémon déjà capturées.\n\nSPECIAL BALLS\n₽1 000\nCARBONE\n\nUne boisson très nutritive qui monte la Vitesse de base d’un Pokémon.\n\nVITAMINS\n₽10 000\nCENDRE SACRÉE\n\nRanime tous les Pokémon K.O. et restaure tous leurs PV.\n\nREVIVAL\n₽50 000\nCHRONO BALL\n\nUne Poké Ball un peu spéciale qui fonctionne de mieux en mieux à mesure que le combat s’éternise.\n\nSPECIAL BALLS\n₽1 000\nEAU FRAÎCHE\n\nUne eau riche en minéraux. Restaure 50 PV à un Pokémon.\n\nHEALING\n₽200\nÉLIXIR\n\nRestaure 10 PP de toutes les capacités d’un Pokémon.\n\nPP RECOVERY\n₽3 000\nÉLIXIR MAX\n\nRestaure tous les PP de toutes le",
+    "links": [
+      {
+        "text": "ANTI-BRÛLE\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/burn-heal"
+      },
+      {
+        "text": "ANTI-PARA\n\nUn médicament sous forme de spray. Soigne un Pokémon de la paralysie.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/paralyze-heal"
+      },
+      {
+        "text": "ANTIDOTE\n\nUn médicament sous forme de spray. Guérit un Pokémon empoisonné.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/antidote"
+      },
+      {
+        "text": "ANTIGEL\n\nUn médicament sous forme de spray. Réchauffe un Pokémon gelé.\n\nSTATUS CURES\n₽200",
+        "href": "/fr/items/ice-heal"
+      },
+      {
+        "text": "BIS BALL\n\nUne Poké Ball un peu spéciale qui fonctionne particulièrement bien sur les espèces de Pokémon déjà capturées.\n\nSPECIAL BALLS\n₽1 000",
+        "href": "/fr/items/repeat-ball"
+      },
+      {
+        "text": "CARBONE\n\nUne boisson très nutritive qui monte la Vitesse de base d’un Pokémon.\n\nVITAMINS\n₽10 000",
+        "href": "/fr/items/carbos"
+      },
+      {
+        "text": "CENDRE SACRÉE\n\nRanime tous les Pokémon K.O. et restaure tous leurs PV.\n\nREVIVAL\n₽50 000",
+        "href": "/fr/items/sacred-ash"
+      },
+      {
+        "text": "CHRONO BALL\n\nUne Poké Ball un peu spéciale qui fonctionne de mieux en mieux à mesure que le combat s’éternise.\n\nSPECIAL BALLS\n₽1 000",
+        "href": "/fr/items/timer-ball"
+      },
+      {
+        "text": "EAU FRAÎCHE\n\nUne eau riche en minéraux. Restaure 50 PV à un Pokémon.\n\nHEALING\n₽200",
+        "href": "/fr/items/fresh-water"
+      },
+      {
+        "text": "ÉLIXIR\n\nRestaure 10 PP de toutes les capacités d’un Pokémon.\n\nPP RECOVERY\n₽3 000",
+        "href": "/fr/items/elixir"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/compare",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare",
+    "title": "Comparer les Pokémon — Stats, types et talents | Lunidex",
+    "h1": [
+      "Comparer les Pokémon"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "LUNIDEX\n\nComparer les Pokémon\nCOPIER LE LIEN\nAucun Pokémon à comparer\n\nAjoutez au moins deux Pokémon pour les comparer\n\nPARCOURIR LE LUNIDEX",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/compare",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/compare",
+    "title": "Comparer les Pokémon — Stats, types et talents | Lunidex",
+    "h1": [
+      "Comparer les Pokémon"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Comparer",
+        "href": "/fr/compare"
+      }
+    ],
+    "main": "LUNIDEX\n\nComparer les Pokémon\nCOPIER LE LIEN\nAucun Pokémon à comparer\n\nAjoutez au moins deux Pokémon pour les comparer\n\nPARCOURIR LE LUNIDEX",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/battle",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/battle",
+    "title": "Simulateur de combat | Lunidex",
+    "h1": [
+      "Simulateur de combat"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nCALCULATEUR DE DÉGÂTS\n\nATTAQUANT\n\nDÉFENSEUR\n\nCHOIX DE LA CAPACITÉ\n\nSélectionnez d’abord un attaquant\n\nCONDITIONS\n\nMÉTÉO\n\nAucune\n\nTERRAIN\n\nAucun\nÉlectrik\nHerbu\nPsychique\nBrumeux\n\nMODIFICATEURS\n\nCoup critique\nAdaptabilité\nBrûlé\n\nDUEL AUTOMATIQUE\n\nLes deux Pokémon utilisent leurs meilleures capacités à chaque tour\n\nSIMULER LE COMBAT",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/battle",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/battle",
+    "title": "Simulateur de combat | Lunidex",
+    "h1": [
+      "Simulateur de combat"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Combat",
+        "href": "/fr/battle"
+      }
+    ],
+    "main": "LUNIDEX\n\nSimulateur de combat\n\nSimulez des combats Pokémon avec la formule de dégâts de la Gen 9, calculez les dégâts et les chances de K.O., et lancez des duels IA complets.\n\nCALCULATEUR DE DÉGÂTS\n\nATTAQUANT\n\nDÉFENSEUR\n\nCHOIX DE LA CAPACITÉ\n\nSélectionnez d’abord un attaquant\n\nCONDITIONS\n\nMÉTÉO\n\nAucune\nSoleil\nPluie\nTempête De Sable\nNeige\n\nTERRAIN\n\nAucun\nÉlectrik\nHerbu\nPsychique\nBrumeux\n\nMODIFICATEURS\n\nCoup critique\nAdaptabilité\nBrûlé\n\nDUEL AUTOMATIQUE\n\nLes deux Pokémon utilisent leurs meilleures capacités à chaque tour\n\nSIMULER LE COMBAT",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/breeding",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/breeding",
+    "title": "Calculateur d'Élevage | Lunidex",
+    "h1": [
+      "Calculateur d'Élevage"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Élevage",
+        "href": "/fr/breeding"
+      }
+    ],
+    "main": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPARENT 2 (PENSION)\n\nCONFIGURER",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/breeding",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/breeding",
+    "title": "Calculateur d'Élevage | Lunidex",
+    "h1": [
+      "Calculateur d'Élevage"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "Calculateur d'Élevage\n\nRègles Gen 6+ — Nœud Câlin, Pierre Immobile, Objets Puissance. Compatible avec l'Élevage Pique-Nique Gen 9.\n\nCALCULATEUR DE CVS\nEXPLORATEUR CAPACITÉS ŒUF\n1\nPARENTS\n2\nCONFIGURATION\n3\nRÉSULTATS\nChoisir les Parents\n\nChoisissez les deux Pokémon que vous souhaitez reproduire\n\nPARENT 1 (PENSION)\n\nPARENT 2 (PENSION)\n\nCONFIGURER",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/ev-iv",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/ev-iv",
+    "title": "Calculateur EV/IV — Outil de statistiques compétitives | Lunidex",
+    "h1": [
+      "Calculateur EV/IV"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/ev-iv",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/ev-iv",
+    "title": "Calculateur EV/IV — Outil de statistiques compétitives | Lunidex",
+    "h1": [
+      "Calculateur EV/IV"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Calc. EV/IV",
+        "href": "/fr/ev-iv"
+      }
+    ],
+    "main": "Calculateur EV/IV\n\nCalculez la plage exacte d’IV de n’importe quel Pokémon à partir de ses statistiques en jeu et planifiez la répartition parfaite des EV aux niveaux 50 ou 100.\n\nCALCULATEUR IV\nPLANIFICATEUR EV\nPOKÉMON\nNIVEAU\nNATURE\nHardy\nLonely\nBrave\nAdamant\nNaughty\nBold\nDocile\nRelaxed\nImpish\nLax\nTimid\nHasty\nSerious\nJolly\nNaive\nModest\nMild\nQuiet\nBashful\nRash\nCalm\nGentle\nSassy\nCareful\nQuirky\n\nSTATS EN JEU\n\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\n\nRÉPARTITION DES EV\n\nTotal EV: 0/510\nPV\n0\nATTAQUE\n0\nDÉFENSE\n0\nATQ. SPÉ.\n0\nDÉF. SPÉ.\n0\nVITESSE\n0\nCALCULER LES IV\nRÉINITIALISER",
+    "links": []
+  }
+]

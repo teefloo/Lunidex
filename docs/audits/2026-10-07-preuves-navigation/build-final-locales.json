@@ -1,0 +1,130 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "en",
+    "url": "http://127.0.0.1:3017/en/types",
+    "lang": "en",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "fr",
+    "url": "http://127.0.0.1:3017/fr/types",
+    "lang": "fr",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "es",
+    "url": "http://127.0.0.1:3017/es/types",
+    "lang": "es",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "de",
+    "url": "http://127.0.0.1:3017/de/types",
+    "lang": "de",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "it",
+    "url": "http://127.0.0.1:3017/it/types",
+    "lang": "it",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "ja",
+    "url": "http://127.0.0.1:3017/ja/types",
+    "lang": "ja",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "ko",
+    "url": "http://127.0.0.1:3017/ko/types",
+    "lang": "ko",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "menu langue et reload build",
+    "locale": "zh",
+    "url": "http://127.0.0.1:3017/zh/types",
+    "lang": "zh",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "en",
+    "url": "http://127.0.0.1:3017/en/types",
+    "lang": "en",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "fr",
+    "url": "http://127.0.0.1:3017/fr/types",
+    "lang": "fr",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "es",
+    "url": "http://127.0.0.1:3017/es/types",
+    "lang": "es",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "de",
+    "url": "http://127.0.0.1:3017/de/types",
+    "lang": "de",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "it",
+    "url": "http://127.0.0.1:3017/it/types",
+    "lang": "it",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "ja",
+    "url": "http://127.0.0.1:3017/ja/types",
+    "lang": "ja",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "ko",
+    "url": "http://127.0.0.1:3017/ko/types",
+    "lang": "ko",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "menu langue et reload build",
+    "locale": "zh",
+    "url": "http://127.0.0.1:3017/zh/types",
+    "lang": "zh",
+    "pass": true
+  }
+]

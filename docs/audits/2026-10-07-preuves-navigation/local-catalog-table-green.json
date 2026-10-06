@@ -1,0 +1,20 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "catalogue vue table et URL interception",
+    "modalUrl": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+    "after": "http://127.0.0.1:3017/fr/tcg?tcgLang=en&set=30th&view=table",
+    "beforeView": "flex h-full flex-col gap-3 sm:flex-row sm:items-start",
+    "duringView": "flex h-full flex-col gap-3 sm:flex-row sm:items-start",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "catalogue vue table et URL interception",
+    "modalUrl": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+    "after": "http://127.0.0.1:3017/fr/tcg?tcgLang=en&set=30th&view=table",
+    "beforeView": "flex h-full flex-col gap-3 sm:flex-row sm:items-start",
+    "duringView": "flex h-full flex-col gap-3 sm:flex-row sm:items-start",
+    "pass": true
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 320,
+    "height": 568,
+    "panel": {
+      "x": 4,
+      "right": 300,
+      "width": 296,
+      "height": 472,
+      "scrollWidth": 286
+    },
+    "client": 312,
+    "documentWidth": 312,
+    "smallTargets": [],
+    "closed": false,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 320,
+    "height": 568,
+    "panel": {
+      "x": 16,
+      "right": 320,
+      "width": 304,
+      "height": 568,
+      "scrollWidth": 304
+    },
+    "client": 320,
+    "documentWidth": 320,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 390,
+    "height": 844,
+    "panel": {
+      "x": 18,
+      "right": 370,
+      "width": 352,
+      "height": 748,
+      "scrollWidth": 342
+    },
+    "client": 382,
+    "documentWidth": 382,
+    "smallTargets": [],
+    "closed": false,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 390,
+    "height": 844,
+    "panel": {
+      "x": 16,
+      "right": 390,
+      "width": 374,
+      "height": 844,
+      "scrollWidth": 374
+    },
+    "client": 390,
+    "documentWidth": 390,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 768,
+    "height": 1024,
+    "panel": {
+      "x": 396,
+      "right": 748,
+      "width": 352,
+      "height": 928,
+      "scrollWidth": 342
+    },
+    "client": 760,
+    "documentWidth": 760,
+    "smallTargets": [],
+    "closed": false,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 768,
+    "height": 1024,
+    "panel": {
+      "x": 384,
+      "right": 768,
+      "width": 384,
+      "height": 1024,
+      "scrollWidth": 384
+    },
+    "client": 768,
+    "documentWidth": 768,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 1023,
+    "height": 768,
+    "panel": {
+      "x": 651,
+      "right": 1003,
+      "width": 352,
+      "height": 672,
+      "scrollWidth": 342
+    },
+    "client": 1015,
+    "documentWidth": 1015,
+    "smallTargets": [],
+    "closed": false,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 1023,
+    "height": 768,
+    "panel": {
+      "x": 639,
+      "right": 1023,
+      "width": 384,
+      "height": 768,
+      "scrollWidth": 384
+    },
+    "client": 1023,
+    "documentWidth": 1023,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 1024,
+    "height": 768,
+    "panel": {
+      "x": 221.5703125,
+      "right": 909.5703125,
+      "width": 688,
+      "height": 583.6796875,
+      "scrollWidth": 678
+    },
+    "client": 1016,
+    "documentWidth": 1016,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 1024,
+    "height": 768,
+    "panel": {
+      "x": -143.0703125,
+      "right": 544.9296875,
+      "width": 688,
+      "height": 583.6796875,
+      "scrollWidth": 678
+    },
+    "client": 1016,
+    "documentWidth": 1016,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr",
+    "width": 844,
+    "height": 390,
+    "panel": {
+      "x": 472,
+      "right": 824,
+      "width": 352,
+      "height": 294,
+      "scrollWidth": 342
+    },
+    "client": 836,
+    "documentWidth": 836,
+    "smallTargets": [],
+    "closed": false,
+    "focusRestored": true,
+    "pass": false
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie flyout et fermeture",
+    "route": "/fr/pokedex",
+    "width": 844,
+    "height": 390,
+    "panel": {
+      "x": 460,
+      "right": 844,
+      "width": 384,
+      "height": 390,
+      "scrollWidth": 384
+    },
+    "client": 844,
+    "documentWidth": 844,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  }
+]

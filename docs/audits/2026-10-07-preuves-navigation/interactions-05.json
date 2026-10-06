@@ -1,0 +1,40 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "moves",
+    "error": "page.waitForURL: Timeout 6000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/fr/moves\" until \"load\"\n============================================================"
+  },
+  {
+    "profile": "desktop",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "abilities",
+    "error": "page.waitForURL: Timeout 6000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/fr/abilities\" until \"load\"\n============================================================"
+  },
+  {
+    "profile": "desktop",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "items",
+    "error": "page.waitForURL: Timeout 6000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/fr/items\" until \"load\"\n============================================================"
+  },
+  {
+    "profile": "mobile",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "moves",
+    "error": "page.waitForURL: Timeout 6000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/fr/moves\" until \"load\"\n============================================================"
+  },
+  {
+    "profile": "mobile",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "abilities",
+    "back": "https://lunidex.app/fr/abilities",
+    "forward": "https://lunidex.app/fr/abilities/water-absorb",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "retour/avance avec attente explicite",
+    "list": "items",
+    "error": "page.waitForURL: Timeout 6000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/fr/items\" until \"load\"\n============================================================"
+  }
+]

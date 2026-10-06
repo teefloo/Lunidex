@@ -1,0 +1,16 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "extension breadcrumb catalogue langue JCC",
+    "href": "/fr/tcg",
+    "url": "https://lunidex.app/fr/tcg",
+    "cardLanguage": "en"
+  },
+  {
+    "profile": "mobile",
+    "scenario": "extension breadcrumb catalogue langue JCC",
+    "href": "/fr/tcg",
+    "url": "https://lunidex.app/fr/tcg",
+    "cardLanguage": "en"
+  }
+]

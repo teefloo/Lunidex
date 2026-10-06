@@ -1,0 +1,724 @@
+[
+  {
+    "profile": "desktop",
+    "route": "/pokemon/bulbasaur",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokemon/bulbasaur",
+    "title": "Bulbizarre — Stats, évolutions, attaques et suggestions | Lunidex",
+    "h1": [
+      "Bulbizarre"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "#001\nBulbizarre\n\nExplorez Bulbizarre : statistiques, types (Plante, Poison), évolutions, attaques, talents et suggestions de movesets sur Lunidex.\n\nPOKÉMON GRAINE\n\nPLAINE\n\nVERT\nPLANTE\nPOISON\nCri actuel\nCri historique\nÀ PROPOS\nSTATISTIQUES\nÉVOLUTION\nCAPACITÉS\nCARTES\nPlus\nEntrée Lunidex\n\nAu matin de sa vie, la graine sur son dos lui fournit les éléments dont il a besoin pour grandir.\n\nPOIDS\n\n6.9 kg\n\nTAILLE\n\n0.7 m\n\nDONNÉES POKÉDEX\n\nORDRE\n\n#1\n\nFORME PAR DÉFAUT\n\nOui\n\nFORMES\n\n1\nBulbizarre\n\nINDICES DE JEU\n\n46 APPARITIONS EN JEU\nRed · #153\nBlue · #153\nYellow · #153\nGold · #1\nSilver · #1\nCrystal · #1\nRuby · #1\nSapphire · #1\nEmerald · #1\nFirered · #1\nLeafgreen · #1\nDiamond · #1\nPearl · #1\nPlatinum · #1\nHeartgold · #1\nSoulsilver · #1\nBlack · #1\nWhite · #1\nBlack 2 · #1\nWhite 2 · #1\nX · #1\nY · #1\nOmega Ruby · #1\nAlpha Sapphire · #1\nSun · #1\nMoon · #1\nUltra Sun · #1\nUltra Moon · #1\nLets Go Pikachu · #1\nLets Go Eevee · #1\nSword · #1\nShield · #1\nThe Isle Of Armor Sword · #1\nThe Crown Tundra Sword · #1\nBrilliant Diamond · #1\nShining Pearl · #1\nLegends Arceus · #1\nScarlet · #1\nViolet · #1\nThe Teal Mask Scarlet · #1\nThe Indigo Disk Scarlet · #1\nRed Japan · #153\nGreen Japan · #153\nBlue Japan · #153\nLegends Za · #1\nMega Dimension · #1\n\nOBJETS TENUS\n\n0\nAucun objet tenu\nOBJETS TENUS RECOMMANDÉS\nBaie Si",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/pokemon/bulbasaur",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokemon/bulbasaur",
+    "title": "Bulbizarre — Stats, évolutions, attaques et suggestions | Lunidex",
+    "h1": [
+      "Bulbizarre"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "#001\nBulbizarre\n\nExplorez Bulbizarre : statistiques, types (Plante, Poison), évolutions, attaques, talents et suggestions de movesets sur Lunidex.\n\nPOKÉMON GRAINE\n\nPLAINE\n\nVERT\nPLANTE\nPOISON\nCri actuel\nCri historique\nÀ PROPOS\nSTATISTIQUES\nÉVOLUTION\nCAPACITÉS\nCARTES\nPlus\nEntrée Lunidex\n\nAu matin de sa vie, la graine sur son dos lui fournit les éléments dont il a besoin pour grandir.\n\nPOIDS\n\n6.9 kg\n\nTAILLE\n\n0.7 m\n\nDONNÉES POKÉDEX\n\nORDRE\n\n#1\n\nFORME PAR DÉFAUT\n\nOui\n\nFORMES\n\n1\nBulbizarre\n\nINDICES DE JEU\n\n46 APPARITIONS EN JEU\nRed · #153\nBlue · #153\nYellow · #153\nGold · #1\nSilver · #1\nCrystal · #1\nRuby · #1\nSapphire · #1\nEmerald · #1\nFirered · #1\nLeafgreen · #1\nDiamond · #1\nPearl · #1\nPlatinum · #1\nHeartgold · #1\nSoulsilver · #1\nBlack · #1\nWhite · #1\nBlack 2 · #1\nWhite 2 · #1\nX · #1\nY · #1\nOmega Ruby · #1\nAlpha Sapphire · #1\nSun · #1\nMoon · #1\nUltra Sun · #1\nUltra Moon · #1\nLets Go Pikachu · #1\nLets Go Eevee · #1\nSword · #1\nShield · #1\nThe Isle Of Armor Sword · #1\nThe Crown Tundra Sword · #1\nBrilliant Diamond · #1\nShining Pearl · #1\nLegends Arceus · #1\nScarlet · #1\nViolet · #1\nThe Teal Mask Scarlet · #1\nThe Indigo Disk Scarlet · #1\nRed Japan · #153\nGreen Japan · #153\nBlue Japan · #153\nLegends Za · #1\nMega Dimension · #1\n\nOBJETS TENUS\n\n0\nAucun objet tenu\nOBJETS TENUS RECOMMANDÉS\nBaie Si",
+    "links": []
+  },
+  {
+    "profile": "mobile",
+    "route": "/moves/take-down",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/moves/take-down",
+    "title": "Bélier | Lunidex",
+    "h1": [
+      "Bélier"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "RETOUR AUX CAPACITÉS\n\n#0036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nINTRODUIT EN GEN I\nPUISSANCE\n90\nPRÉCISION\n85%\nPP\n20\nPRIORITÉ\n0\nEFFET COMPLET\n\nInflige des dégâts réguliers. Le lanceur subit 1/4 des dégâts qu'il inflige en contrecoup.\n\nENTRÉE POKÉDEX\n\n“Une charge violente qui blesse aussi légèrement le lanceur.”\n\nPOKÉMON APPRENANT BÉLIER\n848\nBulbasaur\nIvysaur\nVenusaur\nCharmander\nCharmeleon\nCharizard\nSquirtle\nWartortle\nBlastoise\nButterfree\nBeedrill\nPidgey\nPidgeotto\nPidgeot\nRattata\nRaticate\nSpearow\nFearow\nEkans\nArbok\nPikachu\nRaichu\nSandshrew\nSandslash\nNidoran F\nNidorina\nNidoqueen\nNidoran M\nNidorino\nNidoking\nClefairy\nClefable\nVulpix\nNinetales\nJigglypuff\nWigglytuff\nZubat\nGolbat\nOddish\nGloom\nVileplume\nParas\nParasect\nVenonat\nVenomoth\nDiglett\nDugtrio\nMeowth\nPersian\nPsyduck\nVOIR LES 848 POKÉMON\nMEILLEURS UTILISATEURS\n\nTop Pokémon par Attaque\n\n1\nArbok\n95\n2\nBeedrill\n90\n3\nFearow\n90\n4\nCharizard\n84\n5\nBlastoise\n83\n6\nVenusaur\n82\nDÉTAILS DE LA CAPACITÉ\nCATÉGORIE\nPhysique\nPUISSANCE\n90\nPRÉCISION\n85%\nPP\n20\nPRIORITÉ\n0\nGÉNÉRATION\nGen I\nSÉLECTIONNER UN TYPE\nNormal\nCT/CS\nRED-BLUE\nYELLOW\nRED-GREEN-JAPAN\nBLUE-JAPAN\nSCARLET-VIOLET",
+    "links": [
+      {
+        "text": "RETOUR AUX CAPACITÉS",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Bulbasaur",
+        "href": "/fr/pokemon/bulbasaur"
+      },
+      {
+        "text": "Ivysaur",
+        "href": "/fr/pokemon/ivysaur"
+      },
+      {
+        "text": "Venusaur",
+        "href": "/fr/pokemon/venusaur"
+      },
+      {
+        "text": "Charmander",
+        "href": "/fr/pokemon/charmander"
+      },
+      {
+        "text": "Charmeleon",
+        "href": "/fr/pokemon/charmeleon"
+      },
+      {
+        "text": "Charizard",
+        "href": "/fr/pokemon/charizard"
+      },
+      {
+        "text": "Squirtle",
+        "href": "/fr/pokemon/squirtle"
+      },
+      {
+        "text": "Wartortle",
+        "href": "/fr/pokemon/wartortle"
+      },
+      {
+        "text": "Blastoise",
+        "href": "/fr/pokemon/blastoise"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/moves/take-down",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/moves/take-down",
+    "title": "Bélier | Lunidex",
+    "h1": [
+      "Bélier"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Capacités",
+        "href": "/fr/moves"
+      }
+    ],
+    "main": "RETOUR AUX CAPACITÉS\n\n#0036\n\nBÉLIER\nNORMAL\nPHYSIQUE\nINTRODUIT EN GEN I\nPUISSANCE\n90\nPRÉCISION\n85%\nPP\n20\nPRIORITÉ\n0\nEFFET COMPLET\n\nInflige des dégâts réguliers. Le lanceur subit 1/4 des dégâts qu'il inflige en contrecoup.\n\nENTRÉE POKÉDEX\n\n“Une charge violente qui blesse aussi légèrement le lanceur.”\n\nPOKÉMON APPRENANT BÉLIER\n848\nBulbasaur\nIvysaur\nVenusaur\nCharmander\nCharmeleon\nCharizard\nSquirtle\nWartortle\nBlastoise\nButterfree\nBeedrill\nPidgey\nPidgeotto\nPidgeot\nRattata\nRaticate\nSpearow\nFearow\nEkans\nArbok\nPikachu\nRaichu\nSandshrew\nSandslash\nNidoran F\nNidorina\nNidoqueen\nNidoran M\nNidorino\nNidoking\nClefairy\nClefable\nVulpix\nNinetales\nJigglypuff\nWigglytuff\nZubat\nGolbat\nOddish\nGloom\nVileplume\nParas\nParasect\nVenonat\nVenomoth\nDiglett\nDugtrio\nMeowth\nPersian\nPsyduck\nVOIR LES 848 POKÉMON\nMEILLEURS UTILISATEURS\n\nTop Pokémon par Attaque\n\n1\nArbok\n95\n2\nBeedrill\n90\n3\nFearow\n90\n4\nCharizard\n84\n5\nBlastoise\n83\n6\nVenusaur\n82\nDÉTAILS DE LA CAPACITÉ\nCATÉGORIE\nPhysique\nPUISSANCE\n90\nPRÉCISION\n85%\nPP\n20\nPRIORITÉ\n0\nGÉNÉRATION\nGen I\nSÉLECTIONNER UN TYPE\nNormal\nCT/CS\nRED-BLUE\nYELLOW\nRED-GREEN-JAPAN\nBLUE-JAPAN\nSCARLET-VIOLET",
+    "links": [
+      {
+        "text": "RETOUR AUX CAPACITÉS",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Bulbasaur",
+        "href": "/fr/pokemon/bulbasaur"
+      },
+      {
+        "text": "Ivysaur",
+        "href": "/fr/pokemon/ivysaur"
+      },
+      {
+        "text": "Venusaur",
+        "href": "/fr/pokemon/venusaur"
+      },
+      {
+        "text": "Charmander",
+        "href": "/fr/pokemon/charmander"
+      },
+      {
+        "text": "Charmeleon",
+        "href": "/fr/pokemon/charmeleon"
+      },
+      {
+        "text": "Charizard",
+        "href": "/fr/pokemon/charizard"
+      },
+      {
+        "text": "Squirtle",
+        "href": "/fr/pokemon/squirtle"
+      },
+      {
+        "text": "Wartortle",
+        "href": "/fr/pokemon/wartortle"
+      },
+      {
+        "text": "Blastoise",
+        "href": "/fr/pokemon/blastoise"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/abilities/water-absorb",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/abilities/water-absorb",
+    "title": "Absorbe-Eau — Ability | Lunidex",
+    "h1": [
+      "Absorbe-Eau"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "BACK TO ABILITIES\n\n#011\n\nABSORBE-EAU\nSÉRIE PRINCIPALE\nEFFET\n\nLorsqu'une capacité de type Eau touche ce Pokémon, elle lui soigne 1/4 de ses PV max, annulant tous les autres effets. Les capacités Eau ignorent le Clonage de ce Pokémon.\n\nENTRÉE POKÉDEX\n\n“Change l'eau en PV.”\n\nPOKÉMON AVEC CE TALENT (30)\nPtitard\nTêtarte\nTartard\nLokhlass\nAquali\nLoupio\nH\nLanturn\nH\nTarpaud\nAxoloto\nMaraiste\nDémanta\nCacnea\nH\nCacturne\nH\nBabimanta\nTritonde\nH\nBatracné\nH\nCrapustule\nH\nMaracachi\nViskuse\nMoyade\nVolcanion\nAraqua\nH\nTarenbulle\nH\nHydragon\nHydragla\nTerraiste\nTarenbulle\nH\nLokhlass\nAxoloto\nOgerpon\nPOKÉMON AVEC CE TALENT\nPOKÉMON\n30",
+    "links": [
+      {
+        "text": "BACK TO ABILITIES",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Ptitard",
+        "href": "/fr/pokemon/poliwag"
+      },
+      {
+        "text": "Têtarte",
+        "href": "/fr/pokemon/poliwhirl"
+      },
+      {
+        "text": "Tartard",
+        "href": "/fr/pokemon/poliwrath"
+      },
+      {
+        "text": "Lokhlass",
+        "href": "/fr/pokemon/lapras"
+      },
+      {
+        "text": "Aquali",
+        "href": "/fr/pokemon/vaporeon"
+      },
+      {
+        "text": "Loupio\nH",
+        "href": "/fr/pokemon/chinchou"
+      },
+      {
+        "text": "Lanturn\nH",
+        "href": "/fr/pokemon/lanturn"
+      },
+      {
+        "text": "Tarpaud",
+        "href": "/fr/pokemon/politoed"
+      },
+      {
+        "text": "Axoloto",
+        "href": "/fr/pokemon/wooper"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/abilities/water-absorb",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/abilities/water-absorb",
+    "title": "Absorbe-Eau — Ability | Lunidex",
+    "h1": [
+      "Absorbe-Eau"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Talents",
+        "href": "/fr/abilities"
+      }
+    ],
+    "main": "BACK TO ABILITIES\n\n#011\n\nABSORBE-EAU\nSÉRIE PRINCIPALE\nEFFET\n\nLorsqu'une capacité de type Eau touche ce Pokémon, elle lui soigne 1/4 de ses PV max, annulant tous les autres effets. Les capacités Eau ignorent le Clonage de ce Pokémon.\n\nENTRÉE POKÉDEX\n\n“Change l'eau en PV.”\n\nPOKÉMON AVEC CE TALENT (30)\nPtitard\nTêtarte\nTartard\nLokhlass\nAquali\nLoupio\nH\nLanturn\nH\nTarpaud\nAxoloto\nMaraiste\nDémanta\nCacnea\nH\nCacturne\nH\nBabimanta\nTritonde\nH\nBatracné\nH\nCrapustule\nH\nMaracachi\nViskuse\nMoyade\nVolcanion\nAraqua\nH\nTarenbulle\nH\nHydragon\nHydragla\nTerraiste\nTarenbulle\nH\nLokhlass\nAxoloto\nOgerpon\nPOKÉMON AVEC CE TALENT\nPOKÉMON\n30",
+    "links": [
+      {
+        "text": "BACK TO ABILITIES",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Ptitard",
+        "href": "/fr/pokemon/poliwag"
+      },
+      {
+        "text": "Têtarte",
+        "href": "/fr/pokemon/poliwhirl"
+      },
+      {
+        "text": "Tartard",
+        "href": "/fr/pokemon/poliwrath"
+      },
+      {
+        "text": "Lokhlass",
+        "href": "/fr/pokemon/lapras"
+      },
+      {
+        "text": "Aquali",
+        "href": "/fr/pokemon/vaporeon"
+      },
+      {
+        "text": "Loupio\nH",
+        "href": "/fr/pokemon/chinchou"
+      },
+      {
+        "text": "Lanturn\nH",
+        "href": "/fr/pokemon/lanturn"
+      },
+      {
+        "text": "Tarpaud",
+        "href": "/fr/pokemon/politoed"
+      },
+      {
+        "text": "Axoloto",
+        "href": "/fr/pokemon/wooper"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/items/burn-heal",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/items/burn-heal",
+    "title": "Anti-Brûle — Objet | Lunidex",
+    "h1": [
+      "Anti-Brûle"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "RETOUR AUX OBJETS\n\n#0019\n\nANTI-BRÛLE\nSTATUS CURES\n₽200\nEFFET\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nINFORMATIONS SUR L’OBJET\nCATÉGORIE\nStatus Cures\nPRIX\n₽200",
+    "links": [
+      {
+        "text": "RETOUR AUX OBJETS",
+        "href": "/fr/items"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/items/burn-heal",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/items/burn-heal",
+    "title": "Anti-Brûle — Objet | Lunidex",
+    "h1": [
+      "Anti-Brûle"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Objets",
+        "href": "/fr/items"
+      }
+    ],
+    "main": "RETOUR AUX OBJETS\n\n#0019\n\nANTI-BRÛLE\nSTATUS CURES\n₽200\nEFFET\n\nUn médicament sous forme de spray. Soigne les brûlures d’un Pokémon.\n\nINFORMATIONS SUR L’OBJET\nCATÉGORIE\nStatus Cures\nPRIX\n₽200",
+    "links": [
+      {
+        "text": "RETOUR AUX OBJETS",
+        "href": "/fr/items"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/sets/30th?tcgLang=en",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sets/30th?tcgLang=en",
+    "title": "30th Celebration : liste des cartes et checklist JCC Pokémon | Lunidex",
+    "h1": [
+      "30th Celebration — Liste des cartes et checklist"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "LISTE DES CARTES ET CHECKLIST\n\n30th Celebration — Liste des cartes et checklist\n\nConsultez la liste complète des cartes de 30th Celebration, utilisez la checklist et suivez votre progression JCC Pokémon sur Lunidex.\n\n158 cartes\n16 sept. 2026\nSérie: Mega Evolution\nOfficiel: 128\nChoisir cette extension\nPartager\n\nJCC POKÉMON\n\nListe des cartes et checklist\n158 cartes\nExeggcute\n001\nAlolan Exeggutor\n002\nVolbeat\n003\nIllumise\n004\nTropius\n005\nCherubi\n006\nCherrim\n007\nVivillon\n008\nVulpix\n009\nNinetales\n010\nMoltres\n011\nHo-Oh\n012\nVictini\n013\nReshiram\n014\nFuecoco ex\n015\nSlowpoke\n016\nLapras\n017\nArticuno\n018\nKyogre\n019\nPalkia\n020\nGreninja ex\n021\nWishiwashi\n022\nPikachu\n023\nPikachu\n024\nPikachu\n025\nPikachu\n026\nPikachu\n027\nPikachu\n028\nPikachu\n029\nPikachu\n030\nPikachu\n031\nPikachu\n032\nPikachu\n033\nPikachu\n034\nPikachu\n035\nPikachu\n036\n\n36 CARTES AFFICHÉES SUR 158.\n\nChecklist complète des cartes\n158 cartes\n001\nExeggcute\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n002\nAlolan Exeggutor\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n003\nVolbeat\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n004\nIllumise\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n005\nTropius\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n006\nCherubi\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n007\nCherrim\nOUVREZ LA CARTE POUR VOIR TOUS LES DÉTAILS.\n008\n",
+    "links": [
+      {
+        "text": "Choisir cette extension",
+        "href": "/fr/tcg/collection/en/30th?activation=1"
+      },
+      {
+        "text": "Exeggcute\n001",
+        "href": "/fr/tcg/cards/30th-001?tcgLang=en"
+      },
+      {
+        "text": "Alolan Exeggutor\n002",
+        "href": "/fr/tcg/cards/30th-002?tcgLang=en"
+      },
+      {
+        "text": "Volbeat\n003",
+        "href": "/fr/tcg/cards/30th-003?tcgLang=en"
+      },
+      {
+        "text": "Illumise\n004",
+        "href": "/fr/tcg/cards/30th-004?tcgLang=en"
+      },
+      {
+        "text": "Tropius\n005",
+        "href": "/fr/tcg/cards/30th-005?tcgLang=en"
+      },
+      {
+        "text": "Cherubi\n006",
+        "href": "/fr/tcg/cards/30th-006?tcgLang=en"
+      },
+      {
+        "text": "Cherrim\n007",
+        "href": "/fr/tcg/cards/30th-007?tcgLang=en"
+      },
+      {
+        "text": "Vivillon\n008",
+        "href": "/fr/tcg/cards/30th-008?tcgLang=en"
+      },
+      {
+        "text": "Vulpix\n009",
+        "href": "/fr/tcg/cards/30th-009?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/sets/30th?tcgLang=en",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sets/30th?tcgLang=en",
+    "title": "30th Celebration : liste des cartes et checklist JCC Pokémon | Lunidex",
+    "h1": [
+      "30th Celebration — Liste des cartes et checklist"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "LISTE DES CARTES ET CHECKLIST\n\n30th Celebration — Liste des cartes et checklist\n\nConsultez la liste complète des cartes de 30th Celebration, utilisez la checklist et suivez votre progression JCC Pokémon sur Lunidex.\n\n158 cartes\n16 sept. 2026\nSérie: Mega Evolution\nOfficiel: 128\nChoisir cette extension\nPartager\n\nJCC POKÉMON\n\nListe des cartes et checklist\n158 cartes\nExeggcute\n001\nAlolan Exeggutor\n002\nVolbeat\n003\nIllumise\n004\nTropius\n005\nCherubi\n006\nCherrim\n007\nVivillon\n008\nVulpix\n009\nNinetales\n010\nMoltres\n011\nHo-Oh\n012\nVictini\n013\nReshiram\n014\nFuecoco ex\n015\nSlowpoke\n016\nLapras\n017\nArticuno\n018\nKyogre\n019\nPalkia\n020\nGreninja ex\n021\nWishiwashi\n022\nPikachu\n023\nPikachu\n024\nPikachu\n025\nPikachu\n026\nPikachu\n027\nPikachu\n028\nPikachu\n029\nPikachu\n030\nPikachu\n031\nPikachu\n032\nPikachu\n033\nPikachu\n034\nPikachu\n035\nPikachu\n036\n\n36 CARTES AFFICHÉES SUR 158.\n\nChecklist complète des cartes\n158 cartes\n001\nExeggcute\n002\nAlolan Exeggutor\n003\nVolbeat\n004\nIllumise\n005\nTropius\n006\nCherubi\n007\nCherrim\n008\nVivillon\n009\nVulpix\n010\nNinetales\n011\nMoltres\n012\nHo-Oh\n013\nVictini\n014\nReshiram\n015\nFuecoco ex\n016\nSlowpoke\n017\nLapras\n018\nArticuno\n019\nKyogre\n020\nPalkia\n021\nGreninja ex\n022\nWishiwashi\n023\nPikachu\n024\nPikachu\n025\nPikachu\n026\nPikachu\n027\nPikachu\n028\nPikachu\n029\nPikachu\n030\nPikachu\n031\nPikachu\n032\nPikachu\n03",
+    "links": [
+      {
+        "text": "Choisir cette extension",
+        "href": "/fr/tcg/collection/en/30th?activation=1"
+      },
+      {
+        "text": "Exeggcute\n001",
+        "href": "/fr/tcg/cards/30th-001?tcgLang=en"
+      },
+      {
+        "text": "Alolan Exeggutor\n002",
+        "href": "/fr/tcg/cards/30th-002?tcgLang=en"
+      },
+      {
+        "text": "Volbeat\n003",
+        "href": "/fr/tcg/cards/30th-003?tcgLang=en"
+      },
+      {
+        "text": "Illumise\n004",
+        "href": "/fr/tcg/cards/30th-004?tcgLang=en"
+      },
+      {
+        "text": "Tropius\n005",
+        "href": "/fr/tcg/cards/30th-005?tcgLang=en"
+      },
+      {
+        "text": "Cherubi\n006",
+        "href": "/fr/tcg/cards/30th-006?tcgLang=en"
+      },
+      {
+        "text": "Cherrim\n007",
+        "href": "/fr/tcg/cards/30th-007?tcgLang=en"
+      },
+      {
+        "text": "Vivillon\n008",
+        "href": "/fr/tcg/cards/30th-008?tcgLang=en"
+      },
+      {
+        "text": "Vulpix\n009",
+        "href": "/fr/tcg/cards/30th-009?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/cards/30th-001?tcgLang=en",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "title": "Exeggcute — carte JCC Pokémon de 30th Celebration | Lunidex",
+    "h1": [
+      "Exeggcute"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "RETOUR\n\n30TH CELEBRATION\n\nExeggcute\n\nAucune description complémentaire disponible.\n\nPV\n60\nRareté\nCommun\nN° collector\n#001\nCatégorie\nPokémon\nIllustrateur\nNelnal\nTypes de Pokémon\nGrass\n\nPRIX MARCHÉ\n\nAucun prix disponible\nCAPACITÉS\nHypnosis\n\nCOLORLESS\n\nYour opponent's Active Pokémon is now Asleep.",
+    "links": [
+      {
+        "text": "RETOUR",
+        "href": "/fr/tcg/sets/30th?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/cards/30th-001?tcgLang=en",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/cards/30th-001?tcgLang=en",
+    "title": "Exeggcute — carte JCC Pokémon de 30th Celebration | Lunidex",
+    "h1": [
+      "Exeggcute"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "RETOUR\n\n30TH CELEBRATION\n\nExeggcute\n\nAucune description complémentaire disponible.\n\nPV\n60\nRareté\nCommun\nN° collector\n#001\nCatégorie\nPokémon\nIllustrateur\nNelnal\nTypes de Pokémon\nGrass\n\nPRIX MARCHÉ\n\nAucun prix disponible\nCAPACITÉS\nHypnosis\n\nCOLORLESS\n\nYour opponent's Active Pokémon is now Asleep.",
+    "links": [
+      {
+        "text": "RETOUR",
+        "href": "/fr/tcg/sets/30th?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/sealed/market/611877",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/market/611877",
+    "title": "10th Movie Commemoration Set — Marché des produits scellés | Lunidex",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n← Retour au marché\n\nPOKÉMON BOX SET · INCONNU\n\n10th Movie Commemoration Set\n\nID Cardmarket 611877\n\nDERNIÈRE TENDANCE\n\n521,94 €\n\nDate du guide de prix: 4 oct. 2026, 00:40\n\nVariation sur 7 jours\n\n0%\n\nVariation sur 30 jours\n\n—\n\nDate de sortie: Donnée source indisponible\n\nPrix public conseillé: Donnée source indisponible\n\nCardmarket\nConseils avant achat\n\nLe lien ouvre un site tiers. Vérifiez l’offre et le vendeur avant de payer.\n\nHistorique des prix\n4 oct. 2026, 00:40\n521,94 €\n30 sept. 2026, 07:55\n521,94 €\n28 sept. 2026, 00:47\n521,94 €\n27 sept. 2026, 00:44\n521,94 €\n25 sept. 2026, 00:48\n521,94 €\n22 sept. 2026, 00:48\n521,94 €\n20 sept. 2026, 00:42\n521,94 €\n17 sept. 2026, 00:44\n521,94 €\n14 sept. 2026, 00:46\n521,94 €\nMéthodologie\n\nLes prix sont les tendances du guide Cardmarket en EUR, et non des offres de vente ou des transactions. Les médianes utilisent le dernier prix positif de chaque produit sur trois jours. Les variations comparent une donnée récente à une observation datant de 7 ou 30 jours, avec trois jours de délai tolérés. Les données manquantes ou anciennes sont omises.\n\nGuide des prix Cardmarket · Cardmarket\n\nSignaler une erreur\n\nIndiquez l’ID du produit et le champ incorrect dans votre message.",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Retour au marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Signaler une erreur",
+        "href": "/fr/contact?topic=sealed-market&productId=611877"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/sealed/market/611877",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/market/611877",
+    "title": "10th Movie Commemoration Set — Marché des produits scellés | Lunidex",
+    "h1": [
+      "10th Movie Commemoration Set"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n← Retour au marché\n\nPOKÉMON BOX SET · INCONNU\n\n10th Movie Commemoration Set\n\nID Cardmarket 611877\n\nDERNIÈRE TENDANCE\n\n521,94 €\n\nDate du guide de prix: 4 oct. 2026, 00:40\n\nVariation sur 7 jours\n\n0%\n\nVariation sur 30 jours\n\n—\n\nDate de sortie: Donnée source indisponible\n\nPrix public conseillé: Donnée source indisponible\n\nCardmarket\nConseils avant achat\n\nLe lien ouvre un site tiers. Vérifiez l’offre et le vendeur avant de payer.\n\nHistorique des prix\n4 oct. 2026, 00:40\n521,94 €\n30 sept. 2026, 07:55\n521,94 €\n28 sept. 2026, 00:47\n521,94 €\n27 sept. 2026, 00:44\n521,94 €\n25 sept. 2026, 00:48\n521,94 €\n22 sept. 2026, 00:48\n521,94 €\n20 sept. 2026, 00:42\n521,94 €\n17 sept. 2026, 00:44\n521,94 €\n14 sept. 2026, 00:46\n521,94 €\nMéthodologie\n\nLes prix sont les tendances du guide Cardmarket en EUR, et non des offres de vente ou des transactions. Les médianes utilisent le dernier prix positif de chaque produit sur trois jours. Les variations comparent une donnée récente à une observation datant de 7 ou 30 jours, avec trois jours de délai tolérés. Les données manquantes ou anciennes sont omises.\n\nGuide des prix Cardmarket · Cardmarket\n\nSignaler une erreur\n\nIndiquez l’ID du produit et le champ incorrect dans votre message.",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "← Retour au marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Cardmarket",
+        "href": "https://www.cardmarket.com/fr/Pokemon/Products?idProduct=611877"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Signaler une erreur",
+        "href": "/fr/contact?topic=sealed-market&productId=611877"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/auth/reset-password",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/auth/reset-password",
+    "title": "Modifier votre mot de passe | Lunidex",
+    "h1": [
+      "Modifier votre mot de passe"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "LUNIDEX\n\nModifier votre mot de passe\n\nCe lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.\n\nBack home",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/auth/reset-password",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/auth/reset-password",
+    "title": "Modifier votre mot de passe | Lunidex",
+    "h1": [
+      "Modifier votre mot de passe"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "LUNIDEX\n\nModifier votre mot de passe\n\nCe lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau.\n\nBack home",
+    "links": []
+  }
+]

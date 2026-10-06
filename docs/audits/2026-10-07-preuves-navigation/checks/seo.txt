@@ -1,0 +1,5 @@
+
+> primedex@0.1.0 seo:check
+> node scripts/seo-check.mjs
+
+SEO source checks passed. Set SEO_BASE_URL to validate the deployed sitemap index and child files.

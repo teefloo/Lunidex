@@ -1,0 +1,46 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "Pokédex recherche et onglets",
+    "search": "https://lunidex.app/fr/pokedex?q=Pikachu",
+    "stats": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=stats",
+    "evolution": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=evolution",
+    "restored": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=evolution",
+    "pass": true,
+    "note": "Les onglets remplacent l’entrée courante ; retour revient à la recherche et avance restaure le dernier onglet."
+  },
+  {
+    "profile": "desktop",
+    "scenario": "suggestion attaquant",
+    "selected": "Pikachu",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "quiz classique chargé",
+    "body": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nPITROUILLE SMALL\nVOSTOURNO\nGLAIVODO\nMEWTWO MÉGA X",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "Pokédex recherche et onglets",
+    "search": "https://lunidex.app/fr/pokedex?q=Pikachu",
+    "stats": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=stats",
+    "evolution": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=evolution",
+    "restored": "https://lunidex.app/fr/pokemon/pikachu?from=%2Ffr%2Fpokedex%3Fq%3DPikachu&tab=evolution",
+    "pass": true,
+    "note": "Les onglets remplacent l’entrée courante ; retour revient à la recherche et avance restaure le dernier onglet."
+  },
+  {
+    "profile": "mobile",
+    "scenario": "suggestion attaquant",
+    "selected": "Pikachu",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "quiz classique chargé",
+    "body": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nRATTATAC FORME D'ALOLA\nPIKACHU SINNOH CAP\nPYRONILLE\nMANTERNEL",
+    "pass": true
+  }
+]

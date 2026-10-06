@@ -1,0 +1,28 @@
+{
+  "productionDestinations": 73,
+  "productionDirectLoads": 146,
+  "directPerProfile": {
+    "desktop": 73,
+    "mobile": 73
+  },
+  "registryRoutes": 37,
+  "guideRoutes": 10,
+  "comparisonRoutes": 11,
+  "expected404Loads": 4,
+  "directPageErrors": 0,
+  "issues": {
+    "critique": 0,
+    "élevée": 1,
+    "moyenne": 4,
+    "faible": 2
+  },
+  "tests": {
+    "files": 113,
+    "passed": 549
+  },
+  "referenceCommit": "95e615cc",
+  "production": "https://lunidex.app",
+  "build": "local webpack, copie temporaire sans configuration cloud",
+  "correctedLocally": 7,
+  "localRecordedPasses": 50
+}

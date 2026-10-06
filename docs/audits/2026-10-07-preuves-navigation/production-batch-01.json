@@ -1,0 +1,626 @@
+[
+  {
+    "profile": "mobile",
+    "route": "/",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Explorez les cartes Pokémon."
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "CATALOGUE POKÉMON TCG\n\nExplorez les cartes Pokémon.\n\nParcourez les cartes et les extensions sans compte. Le suivi d’une collection nécessite un compte et un service de synchronisation disponible.\n\nEXPLORER LES CARTES\n↗\nCOMMENCER MA COLLECTION\n\nÀ DÉCOUVRIR DANS LE CATALOGUE\n\nCartes rares à découvrir\nEXPLORER LES CARTES\n↗\nCharizard ex\n228\nRare hyper\nObsidian Flames\nUmbreon VMAX\n215\nRare secrète\nEvolving Skies\nGreninja ex\n214\nRare illustration spéciale\nTwilight Masquerade\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\nChoisissez une extension\n\nPartez de n’importe quelle extension du catalogue.\n\nMarquez vos cartes\n\nIndiquez les cartes que vous possédez dans cette extension.\n\nSuivez votre progression\n\nVoyez ce que vous avez et ce qu’il vous reste à trouver.\n\nD’AUTRES OUTILS POKÉMON\n\nUn Pokédex et un outil d’équipe, aussi.\n\nConsultez les fiches Pokémon et préparez une équipe depuis le même espace que le catalogue de cartes.\n\nExplorer le Pokédex\nEXPLORER LE POKÉDEX\nPOKÉDEX POKÉMON EN LIGNE\nPikachu\nÉLECTRIK\nSTATISTIQUES\nPV\n35\nATTAQUE\n55\nDÉFENSE\n40\nATTAQUE SPÉ.\n50\nDÉFENSE SPÉ.\n50\nVITESSE\n90\nÉVOLUTION\nPichu\n→\nPikachu\n→\nRaichu\nEXPLORER LE POKÉDEX\n↗\nConstruire une équipe\nCONSTRUCTEUR D’ÉQUIPE\nCOMPOSEZ VOTRE ÉQUIPE.\nCharizard\nFEU\nVOL\nBlastoise\nEAU\nGengar\nSPECTRE\nPO",
+    "links": [
+      {
+        "text": "EXPLORER LES CARTES\n↗",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "COMMENCER MA COLLECTION",
+        "href": "/fr/tcg/start?source=home_cta"
+      },
+      {
+        "text": "EXPLORER LES CARTES\n↗",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Charizard ex\n228\nRare hyper\nObsidian Flames",
+        "href": "/fr/tcg/cards/sv03-228"
+      },
+      {
+        "text": "Umbreon VMAX\n215\nRare secrète\nEvolving Skies",
+        "href": "/fr/tcg/cards/swsh7-215"
+      },
+      {
+        "text": "Greninja ex\n214\nRare illustration spéciale\nTwilight Masquerade",
+        "href": "/fr/tcg/cards/sv06-214"
+      },
+      {
+        "text": "EXPLORER LE POKÉDEX\n↗",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "COMPOSEZ VOTRE ÉQUIPE.\n↗",
+        "href": "/fr/team"
+      },
+      {
+        "text": "GUIDE DU SUIVI DE COLLECTION POKÉMON\n↗",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "COMMENT ORGANISER UNE COLLECTION DE CARTES POKÉMON\n↗",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr",
+    "title": "Lunidex — Catalogue Pokémon TCG et suivi de collection",
+    "h1": [
+      "Explorez les cartes Pokémon."
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "CATALOGUE POKÉMON TCG\n\nExplorez les cartes Pokémon.\n\nParcourez les cartes et les extensions sans compte. Le suivi d’une collection nécessite un compte et un service de synchronisation disponible.\n\nEXPLORER LES CARTES\n↗\nCOMMENCER MA COLLECTION\n\nÀ DÉCOUVRIR DANS LE CATALOGUE\n\nCartes rares à découvrir\nEXPLORER LES CARTES\n↗\nCharizard ex\n228\nRare hyper\nObsidian Flames\nUmbreon VMAX\n215\nRare secrète\nEvolving Skies\nGreninja ex\n214\nRare illustration spéciale\nTwilight Masquerade\nChoisissez une extension. Marquez vos cartes. Repérez celles qui manquent.\nChoisissez une extension\n\nPartez de n’importe quelle extension du catalogue.\n\nMarquez vos cartes\n\nIndiquez les cartes que vous possédez dans cette extension.\n\nSuivez votre progression\n\nVoyez ce que vous avez et ce qu’il vous reste à trouver.\n\nD’AUTRES OUTILS POKÉMON\n\nUn Pokédex et un outil d’équipe, aussi.\n\nConsultez les fiches Pokémon et préparez une équipe depuis le même espace que le catalogue de cartes.\n\nExplorer le Pokédex\nEXPLORER LE POKÉDEX\nPOKÉDEX POKÉMON EN LIGNE\nPikachu\nÉLECTRIK\nSTATISTIQUES\nPV\n35\nATTAQUE\n55\nDÉFENSE\n40\nATTAQUE SPÉ.\n50\nDÉFENSE SPÉ.\n50\nVITESSE\n90\nÉVOLUTION\nPichu\n→\nPikachu\n→\nRaichu\nEXPLORER LE POKÉDEX\n↗\nConstruire une équipe\nCONSTRUCTEUR D’ÉQUIPE\nCOMPOSEZ VOTRE ÉQUIPE.\nCharizard\nFEU\nVOL\nBlastoise\nEAU\nGengar\nSPECTRE\nPO",
+    "links": [
+      {
+        "text": "EXPLORER LES CARTES\n↗",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "COMMENCER MA COLLECTION",
+        "href": "/fr/tcg/start?source=home_cta"
+      },
+      {
+        "text": "EXPLORER LES CARTES\n↗",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Charizard ex\n228\nRare hyper\nObsidian Flames",
+        "href": "/fr/tcg/cards/sv03-228"
+      },
+      {
+        "text": "Umbreon VMAX\n215\nRare secrète\nEvolving Skies",
+        "href": "/fr/tcg/cards/swsh7-215"
+      },
+      {
+        "text": "Greninja ex\n214\nRare illustration spéciale\nTwilight Masquerade",
+        "href": "/fr/tcg/cards/sv06-214"
+      },
+      {
+        "text": "EXPLORER LE POKÉDEX\n↗",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "COMPOSEZ VOTRE ÉQUIPE.\n↗",
+        "href": "/fr/team"
+      },
+      {
+        "text": "GUIDE DU SUIVI DE COLLECTION POKÉMON\n↗",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "COMMENT ORGANISER UNE COLLECTION DE CARTES POKÉMON\n↗",
+        "href": "/fr/guides/organize-pokemon-card-collection"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg",
+    "title": "Catalogue JCC Pokémon | Lunidex",
+    "h1": [
+      "Catalogue JCC Pokémon"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nGuide du suivi de collection Pokémon\nComment estimer la valeur d’une collection de cartes Pokémon\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nToutes les collections\n30th Classic Collection\n30th Celebration\nPitch Black\nChaos Rising\nPerfect Order\nPaldean Wonders\nAscended Heroes\nFantastical Parade\nCrimson Blaze\nPhantasmal Flames\nMega Rising\nMEP Black Star Promos\nMega Evolution\nMega Evolution Energy\nSecluded Springs\nWisdom of Sea and Sky\nWhite Flare\nBlack Bolt\nEevee Grove\nDestined Rivals\nExtradimensional Crisis\nCelestial Guardians\nJourney Together\nShining Revelry\nTriumphant Light\nSpace-Time Smackdown\nPrismatic Evolutions\nMythical Island\nMcDonald's Collection 2024\nSurging Sparks\nGenetic Apex\nPromos-A\nStellar Crown\nShrouded Fable\nTwilight Masquerade\nTemporal Forces\nPaldean Fates\nParadox Rift\nMy First Battle\n151\nObsidian Flames\nMcDonald's Collection 2023\nPaldea Evolved\nScarlet & Violet\nScarlet & Violet Energy\nSVP Black Star Promos\nCrown Zenith Galarian Gallery\nCrown Zenith\nSilv",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment estimer la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "EXEGGCUTE",
+        "href": "/fr/tcg/cards/30th-001?tcgLang=en"
+      },
+      {
+        "text": "30TH CELEBRATION",
+        "href": "/fr/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "ALOLAN EXEGGUTOR",
+        "href": "/fr/tcg/cards/30th-002?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg",
+    "title": "Catalogue JCC Pokémon | Lunidex",
+    "h1": [
+      "Catalogue JCC Pokémon"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nGuide du suivi de collection Pokémon\nComment estimer la valeur d’une collection de cartes Pokémon\nCatalogue JCC Pokémon\n\nCherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.\n\nToutes les collections\n30th Classic Collection\n30th Celebration\nPitch Black\nChaos Rising\nPerfect Order\nPaldean Wonders\nAscended Heroes\nFantastical Parade\nCrimson Blaze\nPhantasmal Flames\nMega Rising\nMEP Black Star Promos\nMega Evolution\nMega Evolution Energy\nSecluded Springs\nWisdom of Sea and Sky\nWhite Flare\nBlack Bolt\nEevee Grove\nDestined Rivals\nExtradimensional Crisis\nCelestial Guardians\nJourney Together\nShining Revelry\nTriumphant Light\nSpace-Time Smackdown\nPrismatic Evolutions\nMythical Island\nMcDonald's Collection 2024\nSurging Sparks\nGenetic Apex\nPromos-A\nStellar Crown\nShrouded Fable\nTwilight Masquerade\nTemporal Forces\nPaldean Fates\nParadox Rift\nMy First Battle\n151\nObsidian Flames\nMcDonald's Collection 2023\nPaldea Evolved\nScarlet & Violet\nScarlet & Violet Energy\nSVP Black Star Promos\nCrown Zenith Galarian Gallery\nCrown Zenith\nSilv",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Guide du suivi de collection Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      },
+      {
+        "text": "Comment estimer la valeur d’une collection de cartes Pokémon",
+        "href": "/fr/guides/pokemon-card-collection-value"
+      },
+      {
+        "text": "EXEGGCUTE",
+        "href": "/fr/tcg/cards/30th-001?tcgLang=en"
+      },
+      {
+        "text": "30TH CELEBRATION",
+        "href": "/fr/tcg/sets/30th?tcgLang=en"
+      },
+      {
+        "text": "ALOLAN EXEGGUTOR",
+        "href": "/fr/tcg/cards/30th-002?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/collection",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/collection",
+    "title": "Ma Collection | Lunidex",
+    "h1": [
+      "Ma Collection"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection?tcgLang=en"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection"
+      }
+    ],
+    "main": "Collection\nListe de souhaits\nScellés\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nMA COLLECTION\n\nVOTRE COLLECTION JCC AU COMPLET EN UN COUP D'ŒIL.\n\nRavi de vous revoir\n\nConnectez-vous pour synchroniser vos collections et votre progression entre vos appareils.\n\nSE CONNECTER",
+    "links": [
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection?tcgLang=en"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist?tcgLang=en"
+      },
+      {
+        "text": "Scellés",
+        "href": "/fr/tcg/sealed?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/collection",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/collection",
+    "title": "Ma Collection | Lunidex",
+    "h1": [
+      "Ma Collection"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection?tcgLang=en"
+      }
+    ],
+    "main": "Collection\nListe de souhaits\nScellés\nLANGUE DES CARTES\nCARTES\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\nMA COLLECTION\n\nVOTRE COLLECTION JCC AU COMPLET EN UN COUP D'ŒIL.\n\nRavi de vous revoir\n\nConnectez-vous pour synchroniser vos collections et votre progression entre vos appareils.\n\nSE CONNECTER",
+    "links": [
+      {
+        "text": "Collection",
+        "href": "/fr/tcg/collection?tcgLang=en"
+      },
+      {
+        "text": "Liste de souhaits",
+        "href": "/fr/tcg/wishlist?tcgLang=en"
+      },
+      {
+        "text": "Scellés",
+        "href": "/fr/tcg/sealed?tcgLang=en"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/pokedex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokedex",
+    "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+    "h1": [
+      "Pokédex Pokémon en ligne"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nGuide de référence Pokémon\n↗\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTARSAL\nPSY\nFÉE\nJouer au quiz du jour",
+    "links": [
+      {
+        "text": "Guide de référence Pokémon\n↗",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charizard?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/squirtle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/wartortle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/blastoise?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/team",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/team",
+    "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+    "h1": [
+      "Constructeur d’équipe Pokémon"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nGuide du créateur d’équipe\n↗\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe",
+    "links": [
+      {
+        "text": "Guide du créateur d’équipe\n↗",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/team-builder-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/pokedex",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/pokedex",
+    "title": "Pokédex Pokémon en ligne — Stats, capacités et formes | Lunidex",
+    "h1": [
+      "Pokédex Pokémon en ligne"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Pokédex",
+        "href": "/fr/pokedex"
+      }
+    ],
+    "main": "Pokédex Pokémon en ligne\nFAVORIS (0)\nFILTRES\nTOUS\nCAPTURÉS\nMANQUANTS\nTRIER PAR\nID (CROISSANT)\n\nParcourez les statistiques, types, capacités, talents, évolutions, formes, générations et lieux des Pokémon avec le Pokédex en ligne de Lunidex, alimenté par PokéAPI.\n\nGuide de référence Pokémon\n↗\nListe des Pokémon\nCAT. NO.\n#001\nBulbizarre\nPLANTE\nPOISON\nCAT. NO.\n#002\nHerbizarre\nPLANTE\nPOISON\nCAT. NO.\n#003\nFlorizarre\nPLANTE\nPOISON\nCAT. NO.\n#004\nSalamèche\nFEU\nCAT. NO.\n#005\nReptincel\nFEU\nCAT. NO.\n#006\nDracaufeu\nFEU\nVOL\nCAT. NO.\n#007\nCarapuce\nEAU\nCAT. NO.\n#008\nCarabaffe\nEAU\nCAT. NO.\n#009\nTortank\nEAU\nCAT. NO.\n#010\nChenipan\nINSECTE\nCAT. NO.\n#011\nChrysacier\nINSECTE\nCAT. NO.\n#012\nPapilusion\nINSECTE\nVOL\nCAT. NO.\n#013\nAspicot\nINSECTE\nPOISON\nCAT. NO.\n#014\nCoconfort\nINSECTE\nPOISON\nCAT. NO.\n#015\nDardargnan\nINSECTE\nPOISON\nCAT. NO.\n#016\nRoucool\nNORMAL\nVOL\nCAT. NO.\n#017\nRoucoups\nNORMAL\nVOL\nCAT. NO.\n#018\nRoucarnage\nNORMAL\nVOL\nCAT. NO.\n#019\nRattata\nNORMAL\nCAT. NO.\n#020\nRattatac\nNORMAL\nVOIR PLUS\n\nPOKÉMON DU JOUR\n\nTARSAL\nPSY\nFÉE\nJouer au quiz du jour",
+    "links": [
+      {
+        "text": "Guide de référence Pokémon\n↗",
+        "href": "/fr/guides/pokemon-reference-guide"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charizard?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/squirtle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/wartortle?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/blastoise?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/quiz",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/quiz",
+    "title": "Quiz Pokémon — Testez vos connaissances | Lunidex",
+    "h1": [
+      "Quel est ce Pokémon ?"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits",
+    "links": []
+  },
+  {
+    "profile": "desktop",
+    "route": "/team",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/team",
+    "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+    "h1": [
+      "Constructeur d’équipe Pokémon"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      }
+    ],
+    "main": "LUNIDEX\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPlus\nGuide du créateur d’équipe\n↗\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nAJOUTER\nGuide du créateur d’équipe",
+    "links": [
+      {
+        "text": "Guide du créateur d’équipe\n↗",
+        "href": "/fr/guides/team-builder-guide"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "AJOUTER",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/guides/team-builder-guide"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/quiz",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/quiz",
+    "title": "Quiz Pokémon — Testez vos connaissances | Lunidex",
+    "h1": [
+      "Quel est ce Pokémon ?"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Quiz",
+        "href": "/fr/quiz"
+      }
+    ],
+    "main": "LUNIDEX\n\nQuel est ce Pokémon ?\n\nTestez vos connaissances et battez votre record\n\nCLASSIQUE\nDÉFI QUOTIDIEN\nPersonnaliser le défi\nScores et exploits",
+    "links": []
+  }
+]

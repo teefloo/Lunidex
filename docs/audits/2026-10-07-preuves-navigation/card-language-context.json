@@ -1,0 +1,22 @@
+{
+  "profile": "desktop",
+  "scenario": "breadcrumb et partage langue JCC",
+  "heading": "Dracaufeu-ex",
+  "shared": "https://lunidex.app/tcg/cards/sv03-228?tcgLang=fr",
+  "crumbHref": "/fr/tcg/sets/sv03",
+  "hit": {
+    "rect": {
+      "x": 250.46875,
+      "y": 96,
+      "w": 129.7734375,
+      "h": 36
+    },
+    "hitTag": "DIV",
+    "hitClass": "fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(227,53,13,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(12,194,181,0.12),transparent_34%)]",
+    "clickable": false
+  },
+  "after": {
+    "url": "https://lunidex.app/fr/tcg/sets/sv03",
+    "heading": "Obsidian Flames — Liste des cartes et checklist"
+  }
+}

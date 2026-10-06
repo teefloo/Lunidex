@@ -1,0 +1,34 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "extension vers catalogue garde langue JCC",
+    "url": "http://127.0.0.1:3017/fr/tcg?tcgLang=fr",
+    "cardLanguage": "fr",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "modale clavier focus trap et Échap",
+    "inside": true,
+    "wrapped": true,
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "focus": true,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "extension vers catalogue garde langue JCC",
+    "url": "http://127.0.0.1:3017/fr/tcg?tcgLang=fr",
+    "cardLanguage": "fr",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "modale clavier focus trap et Échap",
+    "inside": true,
+    "wrapped": true,
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "focus": true,
+    "pass": true
+  }
+]

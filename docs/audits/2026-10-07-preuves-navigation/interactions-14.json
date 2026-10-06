@@ -1,0 +1,94 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "recherche tri reset /abilities",
+    "search": "Absorbe-Eau",
+    "searched": [
+      "Absorbe-Eau"
+    ],
+    "sort": "ID",
+    "filteredCount": 48,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "recherche tri reset /items",
+    "search": "Anti-Brûle",
+    "searched": [
+      "Anti-Brûle"
+    ],
+    "sort": "Prix",
+    "filteredCount": 62,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "paramètres ouverture lecture Échap",
+    "controls": [
+      "Clair",
+      "Sombre",
+      "Système",
+      "Euro (EUR)",
+      "Dollar américain (USD)",
+      "🌐Auto",
+      "🇺🇸en",
+      "🇫🇷fr",
+      "🇩🇪de",
+      "🇪🇸es",
+      "🇮🇹it",
+      "🇯🇵ja",
+      "🇰🇷ko",
+      "🇨🇳zh",
+      "Exporter",
+      "Importer",
+      "Fermer"
+    ],
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "recherche tri reset /abilities",
+    "search": "Absorbe-Eau",
+    "searched": [
+      "Absorbe-Eau"
+    ],
+    "sort": "ID",
+    "filteredCount": 48,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "recherche tri reset /items",
+    "search": "Anti-Brûle",
+    "searched": [
+      "Anti-Brûle"
+    ],
+    "sort": "Prix",
+    "filteredCount": 62,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "paramètres ouverture lecture Échap",
+    "controls": [
+      "Clair",
+      "Sombre",
+      "Système",
+      "Euro (EUR)",
+      "Dollar américain (USD)",
+      "🌐Auto",
+      "🇺🇸en",
+      "🇫🇷fr",
+      "🇩🇪de",
+      "🇪🇸es",
+      "🇮🇹it",
+      "🇯🇵ja",
+      "🇰🇷ko",
+      "🇨🇳zh",
+      "Exporter",
+      "Importer",
+      "Fermer"
+    ],
+    "pass": true
+  }
+]

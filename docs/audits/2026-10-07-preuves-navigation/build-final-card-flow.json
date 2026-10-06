@@ -1,0 +1,60 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "fermeture carte preview",
+    "background": "30th Celebration — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "h1": "30th Celebration — Liste des cartes et checklist",
+    "focusTag": "A",
+    "focusHref": "/fr/tcg/cards/30th-001?tcgLang=en",
+    "scrollY": 59,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "fermeture carte checklist",
+    "background": "30th Celebration — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "h1": "30th Celebration — Liste des cartes et checklist",
+    "focusTag": "A",
+    "focusHref": "/fr/tcg/cards/30th-001?tcgLang=en",
+    "scrollY": 2443,
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "lien direct carte",
+    "url": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+    "dialogs": 0,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fermeture carte preview",
+    "background": "30th Celebration — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "h1": "30th Celebration — Liste des cartes et checklist",
+    "focusTag": "A",
+    "focusHref": "/fr/tcg/cards/30th-001?tcgLang=en",
+    "scrollY": 264,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fermeture carte checklist",
+    "background": "30th Celebration — Liste des cartes et checklist",
+    "url": "http://127.0.0.1:3017/fr/tcg/sets/30th?tcgLang=en",
+    "h1": "30th Celebration — Liste des cartes et checklist",
+    "focusTag": "A",
+    "focusHref": "/fr/tcg/cards/30th-001?tcgLang=en",
+    "scrollY": 5829,
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "lien direct carte",
+    "url": "http://127.0.0.1:3017/fr/tcg/cards/30th-001?tcgLang=en",
+    "dialogs": 0,
+    "pass": true
+  }
+]

@@ -177,7 +177,7 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
       title={t('command_palette.title', { defaultValue: 'Command Palette' })}
       description={t('command_palette.description', { defaultValue: 'Search pages and Pokémon' })}
     >
-      <Command shouldFilter={false}>
+      <Command shouldFilter={false} label={t('command_palette.title', { defaultValue: 'Command Palette' })}>
         <CommandInput
           value={search}
           onValueChange={setSearch}

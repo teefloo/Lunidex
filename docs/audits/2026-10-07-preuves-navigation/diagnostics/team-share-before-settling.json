@@ -1,0 +1,34 @@
+[
+  {
+    "profile": "desktop",
+    "route": "/team/share",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/team?code=&lang=en",
+    "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+    "h1": [
+      "Constructeur d’équipe Pokémon"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "main": "Lunidex\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPartager\nGuide du créateur d’équipe ↗\n\nCe lien ne contient pas d’équipe valide.\n\nGuide du créateur d’équipe"
+  },
+  {
+    "profile": "mobile",
+    "route": "/team/share",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/team?code=&lang=en",
+    "title": "Créateur d’équipe Pokémon — Couverture et partage | Lunidex",
+    "h1": [
+      "Constructeur d’équipe Pokémon"
+    ],
+    "lang": "fr",
+    "width": 520,
+    "scrollWidth": 520,
+    "main": "Lunidex\n\nConstructeur d’équipe Pokémon\n\nConstructeur d’équipe Pokémon gratuit avec couverture des types, analyse des faiblesses partagées et filtre de génération 9 (0/6)\n\nPartager\nGuide du créateur d’équipe ↗\n\nCe lien ne contient pas d’équipe valide.\n\nGuide du créateur d’équipe"
+  }
+]

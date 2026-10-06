@@ -1,0 +1,929 @@
+[
+  {
+    "profile": "mobile",
+    "route": "/guides/pokemon-card-collection-tracker",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/pokemon-card-collection-tracker",
+    "title": "Suivi gratuit de collection de cartes Pokémon | Lunidex",
+    "h1": [
+      "Suivi gratuit de collection de cartes Pokémon : organisez votre collection TCG"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE DE COLLECTION\n\nSuivi gratuit de collection de cartes Pokémon : organisez votre collection TCG\n\nUn guide pratique et sourcé pour utiliser Lunidex comme suivi de collection de cartes Pokémon : parcourez les cartes, marquez les cartes possédées et manquantes, puis consultez la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 5 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application web open source et gratuite à utiliser pour consulter un catalogue Pokémon TCG et suivre une collection personnelle. Dans l’espace associé à un compte, vous pouvez marquer les cartes possédées, voir les cartes manquantes et le pourcentage de complétion des sets, suivre les finitions et les langues de cartes prises en charge, rechercher et filtrer le catalogue et consulter une estimation de la valeur de la collection lorsque TCGdex fournit les champs de prix. Les pages de catalogue public sont consultables sans compte ; l’état personnel de collection dépend du service de compte configuré. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent pas de scanner de cartes.\n\nUne méthode simple pour suivre sa collection à la main\n\nUn tableur ou une chec",
+    "links": [
+      {
+        "text": "Détails du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Détails du produit Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire#tracker"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net"
+      },
+      {
+        "text": "Documentation du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Site officiel Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex Pokémon en ligne",
+        "href": "/fr/pokedex"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/pokemon-card-collection-tracker",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/pokemon-card-collection-tracker",
+    "title": "Suivi gratuit de collection de cartes Pokémon | Lunidex",
+    "h1": [
+      "Suivi gratuit de collection de cartes Pokémon : organisez votre collection TCG"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Guides",
+        "href": "/fr/guides/pokemon-card-collection-tracker"
+      }
+    ],
+    "main": "GUIDE DE COLLECTION\n\nSuivi gratuit de collection de cartes Pokémon : organisez votre collection TCG\n\nUn guide pratique et sourcé pour utiliser Lunidex comme suivi de collection de cartes Pokémon : parcourez les cartes, marquez les cartes possédées et manquantes, puis consultez la complétion des sets, les variantes, les langues et les estimations conditionnelles.\n\nPUBLIÉ LE 8 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 5 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est une application web open source et gratuite à utiliser pour consulter un catalogue Pokémon TCG et suivre une collection personnelle. Dans l’espace associé à un compte, vous pouvez marquer les cartes possédées, voir les cartes manquantes et le pourcentage de complétion des sets, suivre les finitions et les langues de cartes prises en charge, rechercher et filtrer le catalogue et consulter une estimation de la valeur de la collection lorsque TCGdex fournit les champs de prix. Les pages de catalogue public sont consultables sans compte ; l’état personnel de collection dépend du service de compte configuré. Lunidex n’est pas une marketplace et les sources vérifiées n’établissent pas de scanner de cartes.\n\nUne méthode simple pour suivre sa collection à la main\n\nUn tableur ou une chec",
+    "links": [
+      {
+        "text": "Détails du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Détails du produit Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le tracker",
+        "href": "/fr/30e-anniversaire#tracker"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "TCGdex",
+        "href": "https://www.tcgdex.net"
+      },
+      {
+        "text": "Documentation du scanner Dex",
+        "href": "https://dextcg.com/help/collection/scanning-your-cards"
+      },
+      {
+        "text": "Site officiel Cardzia",
+        "href": "https://cardzia.fr/"
+      },
+      {
+        "text": "Ouvrir le catalogue TCG",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Pokédex Pokémon en ligne",
+        "href": "/fr/pokedex"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/pokemon-reference-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/pokemon-reference-guide",
+    "title": "Pokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex",
+    "h1": [
+      "Pokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nPokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions\n\nUn guide route par route des références Pokémon publiques de Lunidex, du Pokédex consultable aux pages d’attaques, capacités, objets et espèces.\n\nPUBLIÉ LE 19 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est un Pokédex Pokémon public et gratuit à utiliser en ligne, alimenté par PokéAPI. Commencez par /pokedex, ouvrez /pokemon/{name}, puis utilisez /types, /moves, /abilities ou /items pour une recherche ciblée. Les statistiques, types, capacités, évolutions, attaques, rencontres, formes et noms localisés dépendent des données amont disponibles pour la langue choisie.\n\nCe que couvre ce guide\n\nCe guide couvre /pokedex, /pokemon/{name}, /types, /moves, /abilities et /items. Ce sont des références publiques ; elles n’exposent pas l’espace personnel d’un autre utilisateur.\n\nComment utiliser ces fonctions\n01\n\nOuvrez le Pokédex et recherchez par nom, numéro, type, génération, région ou filtre disponible dans l’interface actuelle.\n\n02\n\nOuvrez une fiche comme /pokemon/pikachu pour lire le nom localisé, les types, statistiques, capacités, évolutions, attaques, rencontres et liens TCG disponibles.\n\n03\n\nUtilisez l",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/types"
+      },
+      {
+        "text": "",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "",
+        "href": "/fr/items"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/pokemon-reference-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/pokemon-reference-guide",
+    "title": "Pokédex Pokémon gratuit en ligne — Guide de référence PokéAPI | Lunidex",
+    "h1": [
+      "Pokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nPokédex Pokémon gratuit en ligne : rechercher stats, types et évolutions\n\nUn guide route par route des références Pokémon publiques de Lunidex, du Pokédex consultable aux pages d’attaques, capacités, objets et espèces.\n\nPUBLIÉ LE 19 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLunidex est un Pokédex Pokémon public et gratuit à utiliser en ligne, alimenté par PokéAPI. Commencez par /pokedex, ouvrez /pokemon/{name}, puis utilisez /types, /moves, /abilities ou /items pour une recherche ciblée. Les statistiques, types, capacités, évolutions, attaques, rencontres, formes et noms localisés dépendent des données amont disponibles pour la langue choisie.\n\nCe que couvre ce guide\n\nCe guide couvre /pokedex, /pokemon/{name}, /types, /moves, /abilities et /items. Ce sont des références publiques ; elles n’exposent pas l’espace personnel d’un autre utilisateur.\n\nComment utiliser ces fonctions\n01\n\nOuvrez le Pokédex et recherchez par nom, numéro, type, génération, région ou filtre disponible dans l’interface actuelle.\n\n02\n\nOuvrez une fiche comme /pokemon/pikachu pour lire le nom localisé, les types, statistiques, capacités, évolutions, attaques, rencontres et liens TCG disponibles.\n\n03\n\nUtilisez l",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Ouvrir la fonction: Types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Ouvrir la fonction: Moves",
+        "href": "/fr/moves"
+      },
+      {
+        "text": "Ouvrir la fonction: Abilities",
+        "href": "/fr/abilities"
+      },
+      {
+        "text": "Ouvrir la fonction: Items",
+        "href": "/fr/items"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/team-builder-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/team-builder-guide",
+    "title": "Guide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex",
+    "h1": [
+      "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE D’ÉQUIPE\n\nComposer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex\n\nUn guide pratique du créateur d’équipe : six emplacements, analyse de synergie, couverture de types, auto-complétion et partage — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 9 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe créateur d’équipe calcule localement dans le navigateur la synergie, les faiblesses défensives et la couverture des types. Connectez-vous pour enregistrer et synchroniser votre équipe dans l’espace personnel.\n\nCe que renvoie l’analyse\n\nChaque ligne correspond à un résultat visible du créateur d’équipe actuel. C’est une aide à la préparation, pas un simulateur de combat ni un moteur de légalité des formats.\n\nENTRÉE OU INDICATEUR\tRÉSULTAT VISIBLE\nÉquipe de six\tAjoutez jusqu’à six Pokémon ; les membres présents servent d’entrée à chaque calcul.\nFaiblesses partagées\tAffiche les multiplicateurs défensifs et met en évidence les recouvrements pour repérer les faiblesses répétées.\nCouverture des types\tRésume les types offensifs couverts et signale les trous où les attaques actuelles n’ont pas de coup super efficace.\nStatistiques\tPrésente l’équilibre des statistiques de base dan",
+    "links": [
+      {
+        "text": "Ouvrir le tableau des types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Parcourir le Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le créateur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/team-builder-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/team-builder-guide",
+    "title": "Guide du créateur d’équipe — Composer des équipes Pokémon équilibrées | Lunidex",
+    "h1": [
+      "Composer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE D’ÉQUIPE\n\nComposer une équipe Pokémon équilibrée avec le créateur d’équipe Lunidex\n\nUn guide pratique du créateur d’équipe : six emplacements, analyse de synergie, couverture de types, auto-complétion et partage — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 9 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 28 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe créateur d’équipe calcule localement dans le navigateur la synergie, les faiblesses défensives et la couverture des types. Connectez-vous pour enregistrer et synchroniser votre équipe dans l’espace personnel.\n\nCe que renvoie l’analyse\n\nChaque ligne correspond à un résultat visible du créateur d’équipe actuel. C’est une aide à la préparation, pas un simulateur de combat ni un moteur de légalité des formats.\n\nENTRÉE OU INDICATEUR\tRÉSULTAT VISIBLE\nÉquipe de six\tAjoutez jusqu’à six Pokémon ; les membres présents servent d’entrée à chaque calcul.\nFaiblesses partagées\tAffiche les multiplicateurs défensifs et met en évidence les recouvrements pour repérer les faiblesses répétées.\nCouverture des types\tRésume les types offensifs couverts et signale les trous où les attaques actuelles n’ont pas de coup super efficace.\nStatistiques\tPrésente l’équilibre des statistiques de base dan",
+    "links": [
+      {
+        "text": "Ouvrir le tableau des types",
+        "href": "/fr/types"
+      },
+      {
+        "text": "Parcourir le Pokédex",
+        "href": "/fr/pokedex"
+      },
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le créateur d’équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/quiz-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/quiz-guide",
+    "title": "Guide du quiz Pokémon — Modes, défis et badges | Lunidex",
+    "h1": [
+      "Jouer au quiz Pokémon Lunidex : modes, défis et badges"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE DU QUIZ\n\nJouer au quiz Pokémon Lunidex : modes, défis et badges\n\nUn guide pratique du quiz : trois types de défis, trois modes de jeu, le défi quotidien et les badges à débloquer — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 10 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe quiz permet de reconnaître des Pokémon à partir de l’illustration officielle, d’une silhouette ou des statistiques de base. Vous choisissez un type de défi (classique, silhouette, stats), puis un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies et le contre-la-montre 30 secondes. Un défi quotidien et cinq badges complètent l’expérience.\n\nComment jouer\n\nLa page du quiz fonctionne en quatre étapes : défi, mode, filtres, puis réponse.\n\n01\n\nChoisissez un type de défi : le classique montre l’illustration officielle, la silhouette montre le sprite en noir, les stats montrent des barres de statistiques de base avec les valeurs masquées.\n\n02\n\nChoisissez un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies, le contre-la-montre donne 30 secondes et récompense les réponses correctes rapides avec plus de points.\n\n03\n\nRéduisez le vivier avec l",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Jouer au quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/quiz-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/quiz-guide",
+    "title": "Guide du quiz Pokémon — Modes, défis et badges | Lunidex",
+    "h1": [
+      "Jouer au quiz Pokémon Lunidex : modes, défis et badges"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE DU QUIZ\n\nJouer au quiz Pokémon Lunidex : modes, défis et badges\n\nUn guide pratique du quiz : trois types de défis, trois modes de jeu, le défi quotidien et les badges à débloquer — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 10 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe quiz permet de reconnaître des Pokémon à partir de l’illustration officielle, d’une silhouette ou des statistiques de base. Vous choisissez un type de défi (classique, silhouette, stats), puis un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies et le contre-la-montre 30 secondes. Un défi quotidien et cinq badges complètent l’expérience.\n\nComment jouer\n\nLa page du quiz fonctionne en quatre étapes : défi, mode, filtres, puis réponse.\n\n01\n\nChoisissez un type de défi : le classique montre l’illustration officielle, la silhouette montre le sprite en noir, les stats montrent des barres de statistiques de base avec les valeurs masquées.\n\n02\n\nChoisissez un mode : le marathon s’arrête après cinq mauvaises réponses, la survie donne trois vies, le contre-la-montre donne 30 secondes et récompense les réponses correctes rapides avec plus de points.\n\n03\n\nRéduisez le vivier avec l",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Jouer au quiz",
+        "href": "/fr/quiz"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/nuzlocke-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/nuzlocke-guide",
+    "title": "Suivi Nuzlocke — Suivre vos parties challenge | Lunidex",
+    "h1": [
+      "Suivre une partie Nuzlocke avec Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE NUZLOCKE\n\nSuivre une partie Nuzlocke avec Lunidex\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 11 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nComment suivre une partie\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\n01\n\nCréez une partie et donnez-lui un nom ou une mention de jeu.\n\n02\n\nAjoutez une rencontre : saisissez le nom de la route ou du lieu et choisissez le Pokémon trouvé.\n\n03\n\nMettez à jour le statut de chaque rencontre au fil de la partie : vivant, mort ou en boîte.\n\n04\n\nLisez le bandeau de statistiques — total, vivants, morts, boîte — et démarrez une nouvelle partie quand un challenge se t",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/nuzlocke-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/nuzlocke-guide",
+    "title": "Suivi Nuzlocke — Suivre vos parties challenge | Lunidex",
+    "h1": [
+      "Suivre une partie Nuzlocke avec Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE NUZLOCKE\n\nSuivre une partie Nuzlocke avec Lunidex\n\nUn guide pratique du suivi Nuzlocke : parties, rencontres, une capture par route et suivi des statuts — fondé sur les fonctions réellement présentes dans Lunidex.\n\nPUBLIÉ LE 11 AOÛT 2026 · VÉRIFIÉ À PARTIR DU CODE LUNIDEX ET DES ROUTES PUBLIQUES LE 24 AOÛT 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe suivi Nuzlocke enregistre vos parties challenge : créez une partie, ajoutez une rencontre par route avec le Pokémon trouvé, puis suivez le statut de chaque Pokémon — vivant, mort ou en boîte. Un bandeau de statistiques résume la partie. Dans le runtime web actuel, les données utilisent l’espace associé au compte ; connectez-vous pour les enregistrer et les synchroniser.\n\nComment suivre une partie\n\nLa page Nuzlocke fonctionne en quatre étapes : créer une partie, ajouter les rencontres, mettre à jour les statuts, puis consulter les statistiques.\n\n01\n\nCréez une partie et donnez-lui un nom ou une mention de jeu.\n\n02\n\nAjoutez une rencontre : saisissez le nom de la route ou du lieu et choisissez le Pokémon trouvé.\n\n03\n\nMettez à jour le statut de chaque rencontre au fil de la partie : vivant, mort ou en boîte.\n\n04\n\nLisez le bandeau de statistiques — total, vivants, morts, boîte — et démarrez une nouvelle partie quand un challenge se t",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "PokéAPI",
+        "href": "https://pokeapi.co"
+      },
+      {
+        "text": "Ouvrir le suivi Nuzlocke",
+        "href": "/fr/nuzlocke"
+      },
+      {
+        "text": "Lire le blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/team-tools-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/team-tools-guide",
+    "title": "Outils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex",
+    "h1": [
+      "Outils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nOutils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts\n\nUn guide pratique des outils complémentaires qui transforment les données Pokémon en parcours de préparation après le créateur d’équipe.\n\nPUBLIÉ LE 20 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe constructeur d’équipe Pokémon Lunidex accepte jusqu’à six Pokémon et fournit des repères d’équilibre comme la couverture de types, les faiblesses communes, la synergie, les suggestions et l’équilibre des statistiques. Compare peut examiner jusqu’à trois Pokémon ; le parcours peut importer du texte Showdown, créer des liens de partage et exporter une image avant de passer à EV/IV, Reproduction ou Combat. Ces outils ne garantissent pas la légalité en tournoi et ne remplacent pas un simulateur propre à un format.\n\nCe que couvre ce guide\n\nCe guide couvre /team, /compare, /types, /ev-iv, /breeding et /battle. Il explique aussi l’import Showdown et les liens de partage documentés par le Team Builder.\n\nComment utiliser ces fonctions\n01\n\nAjoutez jusqu’à six Pokémon dans /team et lisez les faiblesses défensives, résistances, couverture offensive, score de synergie, suggestions et équilibre des statistiques.\n\n02\n\nOuv",
+    "links": [
+      {
+        "text": "Dépôt source Lunidex",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "Ouvrir la fonction: Constructeur d'équipe",
+        "href": "/fr/team"
+      },
+      {
+        "text": "Ouvrir la fonction: compare",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "Ouvrir la fonction: ev-iv",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "Ouvrir la fonction: breeding",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "Ouvrir la fonction: battle",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "Retour au blog",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/team-tools-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/team-tools-guide",
+    "title": "Outils de préparation d’équipe Pokémon — Comparaison, EV/IV et combat | Lunidex",
+    "h1": [
+      "Outils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nOutils de préparation de combat Pokémon : comparaison, EV/IV, élevage et dégâts\n\nUn guide pratique des outils complémentaires qui transforment les données Pokémon en parcours de préparation après le créateur d’équipe.\n\nPUBLIÉ LE 20 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 21 SEPT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nLe constructeur d’équipe Pokémon Lunidex accepte jusqu’à six Pokémon et fournit des repères d’équilibre comme la couverture de types, les faiblesses communes, la synergie, les suggestions et l’équilibre des statistiques. Compare peut examiner jusqu’à trois Pokémon ; le parcours peut importer du texte Showdown, créer des liens de partage et exporter une image avant de passer à EV/IV, Reproduction ou Combat. Ces outils ne garantissent pas la légalité en tournoi et ne remplacent pas un simulateur propre à un format.\n\nCe que couvre ce guide\n\nCe guide couvre /team, /compare, /types, /ev-iv, /breeding et /battle. Il explique aussi l’import Showdown et les liens de partage documentés par le Team Builder.\n\nComment utiliser ces fonctions\n01\n\nAjoutez jusqu’à six Pokémon dans /team et lisez les faiblesses défensives, résistances, couverture offensive, score de synergie, suggestions et équilibre des statistiques.\n\n02\n\nOuv",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "/fr/team"
+      },
+      {
+        "text": "",
+        "href": "/fr/compare"
+      },
+      {
+        "text": "",
+        "href": "/fr/ev-iv"
+      },
+      {
+        "text": "",
+        "href": "/fr/breeding"
+      },
+      {
+        "text": "",
+        "href": "/fr/battle"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/guides/progress-account-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/progress-account-guide",
+    "title": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+    "h1": [
+      "Comment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nComment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex\n\nUn guide respectueux de la confidentialité sur la consultation publique, les fonctions personnelles associées au compte, l’installation dans le navigateur et les limites des profils publics.\n\nPUBLIÉ LE 22 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 5 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nParcourez les routes publiques sans compte. La gestion d’une collection personnelle et les autres fonctions liées au compte nécessitent une session active et un service configuré disponible. Les profils publics restent distincts des données privées du compte.\n\nCe que couvre ce guide\n\nCe guide couvre /dashboard, /favorites, /friends, /u/{handle}, les flux d’authentification et de réinitialisation, ainsi que les actions de progression proposées par le Pokédex, le Team Builder, le quiz et l’espace TCG.\n\nComment utiliser ces fonctions\n01\n\nCommencez par parcourir les pages publiques. Le Pokédex, les outils d’équipe, le quiz et le catalogue ne donnent pas accès aux données d’un autre utilisateur.\n\n02\n\nCréez un compte ou connectez-vous pour gérer les données d’une collection personnelle. Le service de synchronisation configuré doit être disponible ; sinon, ces",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://support.apple.com/en-lamr/guide/iphone/iphea86e5236/ios"
+      },
+      {
+        "text": "",
+        "href": "https://web.dev/learn/pwa/installation?hl=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/guides/progress-account-guide",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/guides/progress-account-guide",
+    "title": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+    "h1": [
+      "Comment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [],
+    "main": "GUIDE D’UTILISATION\n\nComment utiliser la progression, les favoris, le tableau de bord et le compte Lunidex\n\nUn guide respectueux de la confidentialité sur la consultation publique, les fonctions personnelles associées au compte, l’installation dans le navigateur et les limites des profils publics.\n\nPUBLIÉ LE 22 AOÛT 2026 · VÉRIFIÉ À PARTIR DU DÉPÔT LUNIDEX ET DES ROUTES PUBLIQUES LE 5 OCT. 2026.\n\nRédaction Lunidex\n\nRéponse courte\n\nParcourez les routes publiques sans compte. La gestion d’une collection personnelle et les autres fonctions liées au compte nécessitent une session active et un service configuré disponible. Les profils publics restent distincts des données privées du compte.\n\nCe que couvre ce guide\n\nCe guide couvre /dashboard, /favorites, /friends, /u/{handle}, les flux d’authentification et de réinitialisation, ainsi que les actions de progression proposées par le Pokédex, le Team Builder, le quiz et l’espace TCG.\n\nComment utiliser ces fonctions\n01\n\nCommencez par parcourir les pages publiques. Le Pokédex, les outils d’équipe, le quiz et le catalogue ne donnent pas accès aux données d’un autre utilisateur.\n\n02\n\nCréez un compte ou connectez-vous pour gérer les données d’une collection personnelle. Le service de synchronisation configuré doit être disponible ; sinon, ces",
+    "links": [
+      {
+        "text": "",
+        "href": "https://github.com/teefloo/Lunidex"
+      },
+      {
+        "text": "",
+        "href": "https://support.apple.com/en-lamr/guide/iphone/iphea86e5236/ios"
+      },
+      {
+        "text": "",
+        "href": "https://web.dev/learn/pwa/installation?hl=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/dashboard"
+      },
+      {
+        "text": "",
+        "href": "/fr/favorites"
+      },
+      {
+        "text": "",
+        "href": "/fr/friends"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/collection"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/wishlist"
+      },
+      {
+        "text": "",
+        "href": "/fr/blog"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/sealed/releases",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/releases",
+    "title": "Calendrier des sorties scellées | Lunidex",
+    "h1": [
+      "Calendrier des sorties scellées"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nCalendrier des sorties scellées\n\nDates annoncées pour le marché français, vérifiées auprès de Pokémon ou de PokéCardex. Les prix conseillés sont indiqués lorsqu’ils sont sourcés ; une date partielle reste volontairement imprécise.\n\nVoir le marché\nConseils avant achat\n\nLes dates peuvent changer. Consultez la source avant de commander ou précommander.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Forces Temporelles\n\n1e trimestre 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Destinées de Paldea\n\n26 janvier 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Mascarade Crépusculaire\n\n24 mai 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Fable Nébuleuse\n\n2 août 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Cou",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/galerie-produits/coffret-dresseur-delite-ecarlate-et-violet-forces-temporelles"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actus-pokemon/les-pokemon-chromatiques-brillent-avec-mimiqui-gardevoir-ex-dracaufeu-ex-et-dautres-dans-ecarlate-et-violet-destinees-de-paldea"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/admirez-les-nouvelles-cartes-de-lextension-ecarlate-et-violet-mascarade-crepusculaire-du-jcc-pokemon"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/sealed/releases",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/releases",
+    "title": "Calendrier des sorties scellées | Lunidex",
+    "h1": [
+      "Calendrier des sorties scellées"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nCalendrier des sorties scellées\n\nDates annoncées pour le marché français, vérifiées auprès de Pokémon ou de PokéCardex. Les prix conseillés sont indiqués lorsqu’ils sont sourcés ; une date partielle reste volontairement imprécise.\n\nVoir le marché\nConseils avant achat\n\nLes dates peuvent changer. Consultez la source avant de commander ou précommander.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Forces Temporelles\n\n1e trimestre 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Destinées de Paldea\n\n26 janvier 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Mascarade Crépusculaire\n\n24 mai 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Fable Nébuleuse\n\n2 août 2024\n\nSource vérifiée le 2026-09-30\n\nLire la source · The Pokémon Company\n\nAucun produit Cardmarket n’a été relié à cette sortie par un éditeur.\n\nSORTI\nEXTENSION\nÉcarlate et Violet – Cou",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Conseils avant achat",
+        "href": "/fr/tcg/sealed/buy-safely"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/jcc-pokemon/galerie-produits/coffret-dresseur-delite-ecarlate-et-violet-forces-temporelles"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actus-pokemon/les-pokemon-chromatiques-brillent-avec-mimiqui-gardevoir-ex-dracaufeu-ex-et-dautres-dans-ecarlate-et-violet-destinees-de-paldea"
+      },
+      {
+        "text": "Lire la source · The Pokémon Company",
+        "href": "https://www.pokemon.com/fr/actualites/admirez-les-nouvelles-cartes-de-lextension-ecarlate-et-violet-mascarade-crepusculaire-du-jcc-pokemon"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "route": "/tcg/sealed/buy-safely",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/buy-safely",
+    "title": "Acheter des cartes et produits scellés avec prudence | Lunidex",
+    "h1": [
+      "Acheter des cartes et produits scellés avec prudence"
+    ],
+    "lang": "fr",
+    "width": 390,
+    "scrollWidth": 390,
+    "active": [
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nAcheter des cartes et produits scellés avec prudence\n\nQuelques vérifications concrètes avant de quitter Lunidex pour une place de marché. Ce guide concerne surtout les achats en France.\n\nVoir le marché\nVoir les sorties\n\n01\n\nVérifier le vendeur\n\nConsultez son identité, ses coordonnées, les mentions légales, les conditions de vente et des avis provenant de plusieurs sources.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n02\n\nComparer l’offre complète\n\nVérifiez le nom exact du produit, son état, le contenu annoncé, les frais de livraison et les délais. Une photo seule ne suffit pas.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n03\n\nProtéger le paiement\n\nVérifiez que le site utilise HTTPS et privilégiez un moyen de paiement sécurisé. Gardez la confirmation de commande et les échanges.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n04\n\nSe méfier des contrefaçons\n\nComparez l’emballage et les cartes avec les images officielles Pokémon. Un prix anormalement bas doit vous inciter à vérifier davantage.\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\nUn problème après l’achat ?\n\nSi vous rencontrez un problème avec un professionnel en France, SignalConso peut transmettre votre signalemen",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Voir les sorties",
+        "href": "/fr/tcg/sealed/releases"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "route": "/tcg/sealed/buy-safely",
+    "status": 200,
+    "kind": "direct",
+    "pageErrors": [],
+    "url": "https://lunidex.app/fr/tcg/sealed/buy-safely",
+    "title": "Acheter des cartes et produits scellés avec prudence | Lunidex",
+    "h1": [
+      "Acheter des cartes et produits scellés avec prudence"
+    ],
+    "lang": "fr",
+    "width": 1440,
+    "scrollWidth": 1432,
+    "active": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      }
+    ],
+    "main": "Catalogue\nMarché des scellés\nOutils\n\nMARCHÉ FRANÇAIS\n\nAcheter des cartes et produits scellés avec prudence\n\nQuelques vérifications concrètes avant de quitter Lunidex pour une place de marché. Ce guide concerne surtout les achats en France.\n\nVoir le marché\nVoir les sorties\n\n01\n\nVérifier le vendeur\n\nConsultez son identité, ses coordonnées, les mentions légales, les conditions de vente et des avis provenant de plusieurs sources.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n02\n\nComparer l’offre complète\n\nVérifiez le nom exact du produit, son état, le contenu annoncé, les frais de livraison et les délais. Une photo seule ne suffit pas.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n03\n\nProtéger le paiement\n\nVérifiez que le site utilise HTTPS et privilégiez un moyen de paiement sécurisé. Gardez la confirmation de commande et les échanges.\n\nSource vérifiée le 2026-09-29\n\nLire la source · DGCCRF\n\n04\n\nSe méfier des contrefaçons\n\nComparez l’emballage et les cartes avec les images officielles Pokémon. Un prix anormalement bas doit vous inciter à vérifier davantage.\n\nSource vérifiée le 2026-09-29\n\nLire la source · The Pokémon Company\nUn problème après l’achat ?\n\nSi vous rencontrez un problème avec un professionnel en France, SignalConso peut transmettre votre signalemen",
+    "links": [
+      {
+        "text": "Catalogue",
+        "href": "/fr/tcg?tcgLang=en"
+      },
+      {
+        "text": "Marché des scellés",
+        "href": "/fr/tcg/sealed/market?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/deck-builder?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/pull-rates?tcgLang=en"
+      },
+      {
+        "text": "",
+        "href": "/fr/tcg/booster-value?tcgLang=en"
+      },
+      {
+        "text": "Voir le marché",
+        "href": "/fr/tcg/sealed/market"
+      },
+      {
+        "text": "Voir les sorties",
+        "href": "/fr/tcg/sealed/releases"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      },
+      {
+        "text": "Lire la source · DGCCRF",
+        "href": "https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/comment-realiser-des-achats-sur-internet-de-facon-securisee"
+      }
+    ]
+  }
+]

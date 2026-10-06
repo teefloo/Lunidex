@@ -1,0 +1,68 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "recherche Pokédex après correction du filtre réseau",
+    "input": "",
+    "visibleLinks": [
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "scenario": "démarrage quiz retest",
+    "body": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nCHARGEMENT...",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "recherche Pokédex après correction du filtre réseau",
+    "input": "",
+    "visibleLinks": [
+      {
+        "text": "",
+        "href": "/fr/pokemon/bulbasaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/ivysaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/venusaur?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmander?from=%2Ffr%2Fpokedex"
+      },
+      {
+        "text": "",
+        "href": "/fr/pokemon/charmeleon?from=%2Ffr%2Fpokedex"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "scenario": "démarrage quiz retest",
+    "body": "SCORE ACTUEL\n0\nRECORD\n0\nERREURS\n0/5\nCHARGEMENT...",
+    "pass": true
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "recontrôle TCGdex lecture",
+    "route": "/fr/tcg/sets/30th?tcgLang=en",
+    "responses": [],
+    "failures": [],
+    "pageErrors": [],
+    "h1": [
+      "30th Celebration — Liste des cartes et checklist"
+    ]
+  },
+  {
+    "profile": "desktop",
+    "scenario": "recontrôle TCGdex lecture",
+    "route": "/fr/tcg/cards/30th-001?tcgLang=en",
+    "responses": [],
+    "failures": [],
+    "pageErrors": [],
+    "h1": [
+      "Exeggcute"
+    ]
+  },
+  {
+    "profile": "desktop",
+    "scenario": "recontrôle TCGdex lecture",
+    "route": "/fr/tcg/cards/sv03-228?tcgLang=fr",
+    "responses": [],
+    "failures": [],
+    "pageErrors": [],
+    "h1": [
+      "Dracaufeu-ex"
+    ]
+  }
+]

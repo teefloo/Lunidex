@@ -1,0 +1,79 @@
+destination_sans_locale,origine,direct_desktop,direct_mobile,interaction_reellement_exercee,preuve_directe,preuve_interaction,limite
+/,footer,200,200,"menu accueil, Tab, Échap, focus",production-batch-01.json,interactions-01.json;interactions-15-responsive.json,
+/tcg,registre / menus / recherche + footer,200,200,"recherche Exeggcute, tri Z-A, carte/fermeture, effacement, chargement 24→48",production-batch-01.json,interactions-12.json,
+/tcg/collection,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-01.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/pokedex,registre / menus / recherche + footer,200,200,"recherche Pikachu, stats/évolution, reload, retour/avance; menu; paramètres",production-batch-01.json,interactions-11.json;interactions-14.json,
+/team,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-01.json,,
+/quiz,registre / menus / recherche + footer,200,200,"démarrage classique, quatre réponses chargées; aucune réponse soumise",production-batch-01.json,interactions-11.json,
+/types,registre / menus / recherche + footer,200,200,menu et reload dans les huit locales; sélection Eau,production-batch-02.json,interactions-02.json;interactions-13.json,
+/moves,registre / menus / recherche,200,200,"recherche Bélier, aperçu, Échap, Eau/Spécial, puissance, reset; lien détail/historique",production-batch-02.json,interactions-13.json;interactions-06.json,
+/abilities,registre / menus / recherche,200,200,"recherche Absorbe-Eau, tri ID, reset; détail/reload/retour/avance",production-batch-02.json,interactions-14.json;interactions-06.json,
+/items,registre / menus / recherche,200,200,"recherche Anti-Brûle, tri Prix, catégorie Healing, reset; détail/reload/historique",production-batch-02.json,interactions-14.json;interactions-06.json,
+/compare,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-02.json,,
+/battle,registre / menus / recherche,200,200,suggestion attaquant Pikachu,production-batch-02.json,interactions-11.json,
+/breeding,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-02.json,,
+/ev-iv,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-02.json,,
+/tcg/wishlist,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/tcg/sealed,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/tcg/start,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/tcg/sealed/market,registre / menus / recherche,200,200,"produit 611877, reload, retour/avance",production-batch-03.json,interactions-04.json,
+/tcg/deck-builder,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/tcg/pull-rates,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,
+/tcg/booster-value,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,
+/nuzlocke,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-03.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/favorites,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/dashboard,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/friends,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,accès anonyme seulement; contenu personnel et mutations non vérifiables
+/blog,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,
+/docs,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,
+/docs/api,footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,
+/about,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,
+/contact,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-04.json,,
+/faq,registre / menus / recherche + footer,200,200,"accordéons installation et expertise, lien guide installation; lien Cardmarket lu",production-batch-05.json,interactions-01.json,
+/30e-anniversaire,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/legal,footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/privacy,footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/terms,footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/cookies,footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/offline,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/compare/lunidex-vs-pokecardex-zebradex,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/compare/lunidex-vs-cardmarket,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-05.json,,
+/guides/pokemon-card-collection-tracker,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/pokemon-reference-guide,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/team-builder-guide,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/quiz-guide,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/nuzlocke-guide,registre / menus / recherche + footer,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/team-tools-guide,registre / menus / recherche,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/guides/progress-account-guide,route / lien contextuel / contrôle erreur,200,200,lien FAQ activé,production-batch-06.json,interactions-01.json,
+/tcg/sealed/releases,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/tcg/sealed/buy-safely,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-06.json,,
+/pokemon/bulbasaur,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-07.json,,
+/moves/take-down,route / lien contextuel / contrôle erreur,200,200,"lien liste, reload, retour/avance",production-batch-07.json,interactions-06.json,
+/abilities/water-absorb,route / lien contextuel / contrôle erreur,200,200,"lien liste, reload, retour/avance",production-batch-07.json,interactions-06.json,
+/items/burn-heal,route / lien contextuel / contrôle erreur,200,200,"lien liste, reload, retour/avance",production-batch-07.json,interactions-06.json,
+/tcg/sets/30th?tcgLang=en,route / lien contextuel / contrôle erreur,200,200,"aperçu et checklist, carte puis fermer",production-batch-07.json,interactions-07.json,
+/tcg/cards/30th-001?tcgLang=en,route / lien contextuel / contrôle erreur,200,200,"carte depuis extension, fermer; lien direct",production-batch-07.json,interactions-07.json,
+/tcg/sealed/market/611877,route / lien contextuel / contrôle erreur,200,200,"lien liste, reload, retour/avance",production-batch-07.json,interactions-04.json,
+/auth/reset-password,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-07.json,,
+/guides/organize-pokemon-card-collection,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/guides/tcg-workspace-guide,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/guides/pokemon-card-collection-value,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/compare/lunidex-vs-pokemon-database,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/compare/lunidex-vs-bulbapedia,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/compare/lunidex-vs-pokemon-showdown,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/compare/lunidex-vs-pokecardex,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-08.json,,
+/compare/lunidex-vs-zebradex,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/compare/lunidex-vs-collectr,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/compare/lunidex-vs-pokellector,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/compare/lunidex-vs-cardzia,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/compare/lunidex-vs-dex,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/pokemon,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/navigation-audit-nonexistent,route / lien contextuel / contrôle erreur,404,404,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/pokemon/navigation-audit-nonexistent,route / lien contextuel / contrôle erreur,404,404,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-09.json,,
+/team/share,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-11.json,,
+/tcg/sealed/market/products/611877,route / lien contextuel / contrôle erreur,200,200,lecture écran; aucune interaction fonctionnelle certifiée,production-batch-11.json,,
+/u/[handle],famille de routes personnelles,non vérifié,non vérifié,écran général d’accès contrôlé; aucun identifiant personnel inventé,,,aucune session autorisée ni données personnelles présentes
+/friends/[friendId],famille de routes personnelles,non vérifié,non vérifié,écran général d’accès contrôlé; aucun identifiant personnel inventé,,,aucune session autorisée ni données personnelles présentes
+/tcg/collection/[language],famille de routes personnelles,non vérifié,non vérifié,écran général d’accès contrôlé; aucun identifiant personnel inventé,,,aucune session autorisée ni données personnelles présentes
+/tcg/collection/[language]/[setId],famille de routes personnelles,non vérifié,non vérifié,écran général d’accès contrôlé; aucun identifiant personnel inventé,,,aucune session autorisée ni données personnelles présentes
+/tcg/sealed/[view],famille de routes personnelles,non vérifié,non vérifié,écran général d’accès contrôlé; aucun identifiant personnel inventé,,,aucune session autorisée ni données personnelles présentes

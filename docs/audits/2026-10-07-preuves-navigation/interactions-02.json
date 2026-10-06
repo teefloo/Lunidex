@@ -1,0 +1,146 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "en",
+    "url": "https://lunidex.app/en/types",
+    "lang": "en",
+    "h1": "Type Master",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "en",
+    "url": "https://lunidex.app/en/types",
+    "lang": "en",
+    "h1": "Type Master",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "fr",
+    "url": "https://lunidex.app/fr/types",
+    "lang": "fr",
+    "h1": "Maître des Types",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "fr",
+    "url": "https://lunidex.app/fr/types",
+    "lang": "fr",
+    "h1": "Maître des Types",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "es",
+    "url": "https://lunidex.app/es/types",
+    "lang": "es",
+    "h1": "Maestro de Tipos",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "es",
+    "url": "https://lunidex.app/es/types",
+    "lang": "es",
+    "h1": "Maestro de Tipos",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "de",
+    "url": "https://lunidex.app/de/types",
+    "lang": "de",
+    "h1": "Typen-Meister",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "de",
+    "url": "https://lunidex.app/de/types",
+    "lang": "de",
+    "h1": "Typen-Meister",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "it",
+    "url": "https://lunidex.app/it/types",
+    "lang": "it",
+    "h1": "Maestro dei Tipi",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "it",
+    "url": "https://lunidex.app/it/types",
+    "lang": "it",
+    "h1": "Maestro dei Tipi",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "ja",
+    "url": "https://lunidex.app/ja/types",
+    "lang": "ja",
+    "h1": "タイプマスター",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "ja",
+    "url": "https://lunidex.app/ja/types",
+    "lang": "ja",
+    "h1": "タイプマスター",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "ko",
+    "url": "https://lunidex.app/ko/types",
+    "lang": "ko",
+    "h1": "타입 마스터",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "ko",
+    "url": "https://lunidex.app/ko/types",
+    "lang": "ko",
+    "h1": "타입 마스터",
+    "pass": true
+  },
+  {
+    "profile": "desktop",
+    "scenario": "navigation langue",
+    "locale": "zh",
+    "url": "https://lunidex.app/zh/types",
+    "lang": "zh",
+    "h1": "属性大师",
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "navigation langue",
+    "locale": "zh",
+    "url": "https://lunidex.app/zh/types",
+    "lang": "zh",
+    "h1": "属性大师",
+    "pass": true
+  }
+]

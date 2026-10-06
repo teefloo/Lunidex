@@ -1,0 +1,38 @@
+[
+  {
+    "profile": "desktop",
+    "scenario": "fiche autonome partage breadcrumb reload",
+    "shared": "http://127.0.0.1:3017/fr/tcg/cards/sv03-228?tcgLang=fr",
+    "href": "/fr/tcg/sets/sv03?tcgLang=fr",
+    "hit": true,
+    "setHeading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "standalone": {
+      "dialogs": 0,
+      "h1": "DRACAUFEU-EX",
+      "width": {
+        "viewport": 1440,
+        "document": 1432
+      }
+    },
+    "pageErrors": [],
+    "pass": true
+  },
+  {
+    "profile": "mobile",
+    "scenario": "fiche autonome partage breadcrumb reload",
+    "shared": "http://127.0.0.1:3017/fr/tcg/cards/sv03-228?tcgLang=fr",
+    "href": "/fr/tcg/sets/sv03?tcgLang=fr",
+    "hit": false,
+    "setHeading": "Flammes Obsidiennes — Liste des cartes et checklist",
+    "standalone": {
+      "dialogs": 0,
+      "h1": "DRACAUFEU-EX",
+      "width": {
+        "viewport": 390,
+        "document": 390
+      }
+    },
+    "pageErrors": [],
+    "pass": false
+  }
+]

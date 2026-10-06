@@ -1,0 +1,268 @@
+[
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 320,
+    "height": 568,
+    "panel": {
+      "x": 4,
+      "right": 300,
+      "width": 296,
+      "height": 472,
+      "scrollWidth": 286
+    },
+    "documentWidth": 312,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 320,
+    "height": 568,
+    "panel": {
+      "x": 16,
+      "right": 320,
+      "width": 304,
+      "height": 568,
+      "scrollWidth": 304
+    },
+    "documentWidth": 320,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 390,
+    "height": 844,
+    "panel": {
+      "x": 18,
+      "right": 370,
+      "width": 352,
+      "height": 748,
+      "scrollWidth": 342
+    },
+    "documentWidth": 382,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 390,
+    "height": 844,
+    "panel": {
+      "x": 16,
+      "right": 390,
+      "width": 374,
+      "height": 844,
+      "scrollWidth": 374
+    },
+    "documentWidth": 390,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 768,
+    "height": 1024,
+    "panel": {
+      "x": 396,
+      "right": 748,
+      "width": 352,
+      "height": 928,
+      "scrollWidth": 342
+    },
+    "documentWidth": 760,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 768,
+    "height": 1024,
+    "panel": {
+      "x": 384,
+      "right": 768,
+      "width": 384,
+      "height": 1024,
+      "scrollWidth": 384
+    },
+    "documentWidth": 768,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 1023,
+    "height": 768,
+    "panel": {
+      "x": 651,
+      "right": 1003,
+      "width": 352,
+      "height": 672,
+      "scrollWidth": 342
+    },
+    "documentWidth": 1015,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 1023,
+    "height": 768,
+    "panel": {
+      "x": 639,
+      "right": 1023,
+      "width": 384,
+      "height": 768,
+      "scrollWidth": 384
+    },
+    "documentWidth": 1023,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 1024,
+    "height": 768,
+    "panel": {
+      "x": 221.5703125,
+      "right": 909.5703125,
+      "width": 688,
+      "height": 583.6796875,
+      "scrollWidth": 678
+    },
+    "documentWidth": 1016,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 1024,
+    "height": 768,
+    "panel": {
+      "x": 169.0390625,
+      "right": 857.0390625,
+      "width": 688,
+      "height": 583.6796875,
+      "scrollWidth": 678
+    },
+    "documentWidth": 1016,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 844,
+    "height": 390,
+    "panel": {
+      "x": 472,
+      "right": 824,
+      "width": 352,
+      "height": 294,
+      "scrollWidth": 342
+    },
+    "documentWidth": 836,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 844,
+    "height": 390,
+    "panel": {
+      "x": 460,
+      "right": 844,
+      "width": 384,
+      "height": 390,
+      "scrollWidth": 384
+    },
+    "documentWidth": 844,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr",
+    "width": 1440,
+    "height": 900,
+    "panel": {
+      "x": 623,
+      "right": 1311,
+      "width": 688,
+      "height": 672,
+      "scrollWidth": 678
+    },
+    "documentWidth": 1432,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  },
+  {
+    "profile": "responsive",
+    "scenario": "menu géométrie panneau et Échap après transition",
+    "route": "/fr/pokedex",
+    "width": 1440,
+    "height": 900,
+    "panel": {
+      "x": 179.0234375,
+      "right": 867.0234375,
+      "width": 688,
+      "height": 672,
+      "scrollWidth": 678
+    },
+    "documentWidth": 1432,
+    "smallTargets": [],
+    "closed": true,
+    "focusRestored": true,
+    "pass": true
+  }
+]
