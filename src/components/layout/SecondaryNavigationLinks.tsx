@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useId } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { LanguageSelect } from '@/components/layout/LanguageSelect';
 import {
   NAVIGATION_DESTINATIONS,
   NAVIGATION_GROUPS,
@@ -27,6 +29,7 @@ interface SecondaryNavigationLinksProps {
 
 export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLinksProps) {
   const pathname = usePathname();
+  const languageHeadingId = useId();
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
   const toggleSettings = usePrimeDexStore((state) => state.toggleSettings);
@@ -38,6 +41,15 @@ export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLink
 
   return (
     <div className="secondary-navigation-groups">
+      <section className="secondary-navigation-language" aria-labelledby={languageHeadingId}>
+        <h2 id={languageHeadingId} className="secondary-navigation-heading">
+          {label('settings.language', 'Language')}
+        </h2>
+        <LanguageSelect
+          className="secondary-navigation-language-field"
+          onLanguageChange={onNavigate}
+        />
+      </section>
       {SECONDARY_GROUP_ORDER.map((group) => {
         const entries = NAVIGATION_DESTINATIONS.filter((item) => item.group === group && !item.primary && !item.paletteOnly);
         if (entries.length === 0) return null;

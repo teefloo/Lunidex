@@ -114,7 +114,7 @@ export default function CookieBanner() {
       aria-label="Cookie consent"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description cookie-consent-disclaimer"
-      className="pointer-events-none fixed inset-x-2 bottom-2 z-50 sm:inset-x-6 sm:bottom-6"
+      className="cookie-consent-banner pointer-events-none fixed inset-x-2 z-50 sm:inset-x-6"
     >
       <div className="glass-panel pointer-events-none mx-auto w-full max-w-xl p-3 sm:p-5">
         <div className="flex items-start gap-2 sm:gap-3">

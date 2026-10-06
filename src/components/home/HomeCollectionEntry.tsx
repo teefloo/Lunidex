@@ -15,6 +15,7 @@ interface HomeCollectionEntryProps {
   resumeLabel: string;
   unavailableLabel?: string;
   navLabel?: string;
+  hrefOverride?: string;
   className?: string;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
   initialSignedIn?: boolean;
@@ -24,6 +25,7 @@ interface HomeCollectionEntryProps {
 
 export function HomeCollectionEntry({
   className,
+  hrefOverride,
   initialSignedIn,
   locale,
   startLabel,
@@ -46,7 +48,7 @@ export function HomeCollectionEntry({
   });
   // During hydration the client session is unknown, so the server-provided
   // first-paint auth state keeps the entry from flashing a wrong CTA.
-  const href = `/${locale}${entry.path}`;
+  const href = `/${locale}${hrefOverride ?? entry.path}`;
   const label = navLabel ?? (
     entry.mode === 'unavailable'
       ? unavailableLabel

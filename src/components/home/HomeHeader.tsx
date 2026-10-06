@@ -17,7 +17,7 @@ export default async function HomeHeader({ initialSignedIn = false, serviceAvail
   const links = [
     { href: '/tcg', label: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }) },
     { href: '/pokedex', label: t('nav.pokedex') },
-    { href: '/team', label: t('nav.play', { defaultValue: 'Play' }) },
+    { href: '/team', label: t('nav.team', { defaultValue: 'Team Builder' }) },
   ];
   const menuLabel = t('header.open_menu');
   const closeLabel = t('common.close', { defaultValue: 'Close' });
@@ -44,6 +44,7 @@ export default async function HomeHeader({ initialSignedIn = false, serviceAvail
             resumeLabel={t('lunidex_home.cta_resume')}
             unavailableLabel={t('lunidex_home.cta_collection_info')}
             navLabel={t('tcg.nav_collection')}
+            hrefOverride="/tcg/collection"
             className="field-header-nav-collection"
             initialSignedIn={initialSignedIn}
             serviceAvailable={serviceAvailable}
