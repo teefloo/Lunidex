@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Copy, Trash2, Sparkles, ListOrdered, AlertCircle } from 'lucide-react';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { cn } from '@/lib/utils';
 import {
@@ -30,6 +32,7 @@ type WishlistSort = 'rarity' | 'set' | 'name';
 
 export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentProps) {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const store = usePrimeDexStore();
   const tcgWishlistCards = store.tcgWishlistCards;
@@ -200,6 +203,12 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
             <p className="mt-1 text-xs text-foreground/25">
               {t('tcg.wishlist_empty_desc')}
             </p>
+            <Link
+              href={localeHref('/tcg')}
+              className="mt-4 inline-flex min-h-11 items-center justify-center rounded-sm border border-primary/40 px-4 text-xs font-black uppercase tracking-[0.08em] text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {t('tcg.nav_catalog')}
+            </Link>
           </div>
         ) : (
           <div className="divide-y divide-border/20 rounded-sm border border-border/30 bg-card/40">
