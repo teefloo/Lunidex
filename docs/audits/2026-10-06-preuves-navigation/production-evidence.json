@@ -1,0 +1,241 @@
+{
+  "date": "2026-10-06",
+  "target": "https://lunidex.app",
+  "observedDeploymentFingerprint": "dpl_AK9AFfwKcg6xExjNn16KhZemuUQM",
+  "browser": "Chromium via Playwright; contextes neufs et anonymes",
+  "profiles": {
+    "desktop": {
+      "viewport": "1440x900",
+      "touch": false
+    },
+    "mobile": {
+      "viewport": "390x844",
+      "touch": true,
+      "coarsePointer": true
+    },
+    "responsiveAdditional": [
+      "320x568",
+      "768x1024",
+      "1023x768",
+      "844x390",
+      "1024x768"
+    ]
+  },
+  "directNavigation": {
+    "primaryAndFooterPathCount": 34,
+    "primaryAndFooterLoads": 68,
+    "paths": [
+      "/fr/tcg/collection",
+      "/fr/tcg",
+      "/fr/pokedex",
+      "/fr/team",
+      "/fr/quiz",
+      "/fr/types",
+      "/fr/dashboard",
+      "/fr/faq",
+      "/fr/tcg/wishlist",
+      "/fr/tcg/sealed",
+      "/fr/tcg/start",
+      "/fr/tcg/sealed/market",
+      "/fr/tcg/deck-builder",
+      "/fr/tcg/pull-rates",
+      "/fr/tcg/booster-value",
+      "/fr/moves",
+      "/fr/abilities",
+      "/fr/items",
+      "/fr/nuzlocke",
+      "/fr/battle",
+      "/fr/ev-iv",
+      "/fr/favorites",
+      "/fr/friends",
+      "/fr/blog",
+      "/fr/guides/pokemon-card-collection-tracker",
+      "/fr/docs",
+      "/fr/30e-anniversaire",
+      "/fr/about",
+      "/fr/contact",
+      "/fr/compare/lunidex-vs-pokecardex-zebradex",
+      "/fr/legal",
+      "/fr/privacy",
+      "/fr/terms",
+      "/fr/cookies"
+    ],
+    "additionalRoutes": [
+      "/fr/guides/pokemon-reference-guide",
+      "/fr/guides/team-builder-guide",
+      "/fr/guides/quiz-guide",
+      "/fr/guides/nuzlocke-guide",
+      "/fr/guides/team-tools-guide",
+      "/fr/compare/lunidex-vs-cardmarket",
+      "/fr/tcg/sealed/buy-safely",
+      "/fr/tcg/sealed/releases",
+      "/fr/docs/api",
+      "/fr/team/share?code=1-25&lang=fr",
+      "/fr/tcg/collection/fr",
+      "/fr/compare"
+    ],
+    "result": "Les pages principales testées répondaient en 200; les deux anomalies confirmées figurent dans findings."
+  },
+  "localeSmoke": {
+    "languages": [
+      "en",
+      "fr",
+      "es",
+      "de",
+      "it",
+      "ja",
+      "ko",
+      "zh"
+    ],
+    "profiles": [
+      "desktop",
+      "mobile"
+    ],
+    "journey": "Pokédex → menu secondaire → Types → reload",
+    "result": "8/8 langues sur les deux profils; test ko mobile repris avec attente de disponibilité du tiroir."
+  },
+  "dynamicJourneys": {
+    "pokemon": "Bulbizarre: onglets À propos/Statistiques/Évolution, URL tab et navigation back/forward.",
+    "referenceDetails": [
+      {
+        "list": "/fr/moves",
+        "detail": "/fr/moves/take-down"
+      },
+      {
+        "list": "/fr/abilities",
+        "detail": "/fr/abilities/water-absorb"
+      },
+      {
+        "list": "/fr/items",
+        "detail": "/fr/items/burn-heal"
+      }
+    ],
+    "referenceResult": "Sur desktop et mobile, clic, reload, back et forward ont restauré la destination attendue.",
+    "tcg": "Catalogue → extension 30th Celebration → carte Exeggcute; dialogue, fermeture, fiche pleine page et lien retour vers l’extension testés sur deux profils.",
+    "sharedTeam": "https://lunidex.app/fr/team/share?code=1-25&lang=fr redirige vers /fr/team?code=1-25&lang=fr; Bulbizarre et Pikachu visibles."
+  },
+  "findings": [
+    {
+      "id": "NAV-01",
+      "priority": "P2",
+      "category": "mauvaise destination / installation",
+      "platforms": [
+        "desktop",
+        "mobile"
+      ],
+      "trigger": "FAQ FR, question Puis-je installer Lunidex sur un téléphone ?, activer le lien de réponse.",
+      "observed": {
+        "href": "/fr/offline",
+        "label": "Lunidex est momentanément hors ligne",
+        "destinationHeading": "Lunidex est momentanément hors ligne"
+      },
+      "expected": {
+        "href": "/fr/guides/progress-account-guide",
+        "labelKey": "pwa.install_title",
+        "labelFr": "Installer Lunidex"
+      },
+      "impact": "Le parcours d’installation envoie vers une page qui exige une connexion, sans instructions d’installation.",
+      "screenshots": [
+        "faq-install-desktop.png",
+        "faq-install-mobile.png"
+      ],
+      "statusBeforeLocalFix": "reproduit; correction à faire"
+    },
+    {
+      "id": "NAV-02",
+      "priority": "P3",
+      "category": "libellé i18n brut",
+      "platforms": [
+        "desktop",
+        "mobile"
+      ],
+      "trigger": "FAQ FR, question sur l’expertise de la valeur JCC, lire le lien Cardmarket.",
+      "observed": {
+        "href": "/fr/compare/lunidex-vs-cardmarket",
+        "label": "EDITORIAL.COMPETITORS.LUNIDEX_VS_CARDMARKET.NAV_LABEL"
+      },
+      "expected": {
+        "labelKey": "editorial.competitors.cardmarket.nav_label",
+        "labelFr": "Lunidex face à Cardmarket"
+      },
+      "impact": "Le lien fonctionne, mais expose une clé technique comme libellé visible et accessible.",
+      "screenshots": [
+        "faq-cardmarket-desktop.png",
+        "faq-cardmarket-mobile.png"
+      ],
+      "statusBeforeLocalFix": "reproduit; correction à faire"
+    }
+  ],
+  "productDecision": {
+    "id": "PROD-01",
+    "countedAsBug": false,
+    "platforms": [
+      "desktop",
+      "mobile"
+    ],
+    "observation": "Le clic carte charge la route pleine; le dialogue se ferme et révèle la fiche à la même URL. Le lien Retour de la fiche restaure /fr/tcg/sets/30th?tcgLang=en.",
+    "sourceCause": "Les lignes de checklist de l’extension sont générées en ancres HTML dans src/app/tcg/sets/[setId]/page.tsx; la route de carte fournit aussi une fiche pleine page avec dialogue superposé.",
+    "screenshots": [
+      "tcg-modal-desktop-open.png",
+      "tcg-modal-desktop-closed.png",
+      "tcg-modal-mobile-open.png",
+      "tcg-modal-mobile-closed.png"
+    ],
+    "decision": "Ne pas changer sans arbitrage sur le comportement de fermeture attendu."
+  },
+  "consoleAndNetwork": {
+    "pageErrors": "Aucune erreur JavaScript de page observée dans les parcours reproduits.",
+    "abortedRequests": "Des préchargements RSC annulés pendant des navigations rapides ont renvoyé net::ERR_ABORTED; ils n’ont pas été comptés comme défaillances.",
+    "mutations": "Aucune mutation distante, soumission de formulaire, action de compte, push ou déploiement."
+  },
+  "notVerified": [
+    "Actions personnelles qui demandent un compte ou une synchronisation: collection, wishlist, decks, amis, favoris enregistrés, données du tableau de bord et enregistrements Nuzlocke.",
+    "/fr/tcg/collection/fr sans session et sans extension précise: statut 200, données de collection non vérifiées.",
+    "Balayage exhaustif des 81 destinations et parcours sur appareil physique/Safari iOS."
+  ],
+  "limitations": [
+    "Deux balayages automatisés larges ont expiré sans résultat exploitable; seules les vérifications groupées listées dans couverture.csv sont comptées.",
+    "Une première recherche de lien ko mobile a précédé l’hydratation; retest réussi après attente du tiroir.",
+    "Un premier clic sur les onglets de types avait ciblé le contenu de chargement; retest après chargement réussi."
+  ],
+  "localValidation": {
+    "reportCreatedBeforeSourceFixes": true,
+    "build": {
+    "command": "npm run build (script invokes next build --webpack)",
+      "directory": "/private/tmp/lunidex-navigation-audit-2026-10-06",
+      "environmentFilesCopied": false,
+      "result": "Build completed; 308 static pages generated and .next/BUILD_ID present."
+    },
+    "tests": {
+      "focused": "npx vitest run src/lib/faq-navigation.test.ts — 3 passed.",
+      "fullSuite": "npm test — 112 files, 547 tests passed.",
+      "lint": "npm run lint — passed.",
+      "typecheck": "npm run typecheck — passed.",
+      "seo": "npm run seo:check — passed.",
+      "core": "npx tsc --project packages/core/tsconfig.json --noEmit — passed."
+    },
+    "faqBrowserRetest": {
+      "profiles": [
+        "desktop",
+        "mobile"
+      ],
+      "installation": {
+        "href": "/fr/guides/progress-account-guide",
+        "label": "INSTALLER LUNIDEX",
+        "title": "Guide de progression Lunidex — Tableau de bord, favoris, amis et synchronisation",
+        "reloadPreservesTitleAndFrench": true
+      },
+      "offlineFaq": {
+        "href": "/fr/offline",
+        "stillDistinct": true
+      },
+      "cardmarket": {
+        "href": "/fr/compare/lunidex-vs-cardmarket",
+        "label": "LUNIDEX FACE À CARDMARKET"
+      },
+      "pageErrors": 0,
+      "horizontalOverflow": false
+    },
+    "productionChanged": false
+  }
+}
