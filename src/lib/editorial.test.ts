@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   COMPETITOR_ARTICLES,
   COMPARISON_ROW_KEYS,
+  EDITORIAL_ROUTES,
   FEATURE_GUIDES,
   GUIDE_EVIDENCE_ROW_KEYS,
   buildEditorialLanguages,
@@ -30,6 +31,19 @@ const localizedCollectionGuides: Array<Record<string, string>> = [
   ko.translation.collection_guide,
   zh.translation.collection_guide,
 ];
+
+const localizedAccountBoundaries = [
+  { about: en.translation.about, collection: en.translation.collection_guide, terms: ['personal collection', 'account', 'sync'] },
+  { about: fr.translation.about, collection: fr.translation.collection_guide, terms: ['collection personnelle', 'compte', 'synchronisation'] },
+  { about: es.translation.about, collection: es.translation.collection_guide, terms: ['colección personal', 'cuenta', 'sincronización'] },
+  { about: de.translation.about, collection: de.translation.collection_guide, terms: ['persönlich', 'konto', 'synchron'] },
+  { about: itLocale.translation.about, collection: itLocale.translation.collection_guide, terms: ['collezione personale', 'account', 'sincronizzazione'] },
+  { about: ja.translation.about, collection: ja.translation.collection_guide, terms: ['個人コレクション', 'アカウント', '同期'] },
+  { about: ko.translation.about, collection: ko.translation.collection_guide, terms: ['개인 컬렉션', '계정', '동기화'] },
+  { about: zh.translation.about, collection: zh.translation.collection_guide, terms: ['个人收藏', '账户', '同步'] },
+];
+
+const optionalCollectionWording = /local[- ]first|optional|optionnel|facultati(?:f|ve|va)|opcional|opzionale|任意|선택.?사항|可选/i;
 
 const collectionGuideMatrixKeys = [
   'matrix_title',
@@ -153,12 +167,42 @@ describe('editorial SEO registry', () => {
   });
 
   it('registers the new source-backed competitor pages', () => {
-    for (const slug of ['pokellector', 'cardzia']) {
+    for (const slug of ['pokellector', 'cardzia', 'dex']) {
       const article = getCompetitorArticle(slug);
       expect(article).toBeDefined();
       expect(article?.sources.length).toBeGreaterThan(0);
       expect(article?.sources.every((source) => source.url.startsWith('https://'))).toBe(true);
       expect(article?.comparisonRows).toEqual([...COMPARISON_ROW_KEYS]);
+    }
+  });
+
+  it('dates and links the Dex comparison to its official product and scanner sources', () => {
+    const article = getCompetitorArticle('dex');
+
+    expect(article).toMatchObject({
+      path: '/compare/lunidex-vs-dex',
+      productPath: '/tcg',
+      comparisonRows: [...COMPARISON_ROW_KEYS],
+      relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
+    });
+    expect(EDITORIAL_ROUTES).toContain('/compare/lunidex-vs-dex');
+    expect(article?.sources).toEqual(expect.arrayContaining([
+      { label: 'Dex official site (Dexbit)', url: 'https://dextcg.com/' },
+      { label: 'Dex official card scanner help', url: 'https://dextcg.com/help/collection/scanning-your-cards' },
+      { label: 'Dex official app availability', url: 'https://dextcg.com/help/getting-started/installing-dex' },
+      { label: 'Dex Web and Android Early Access', url: 'https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android' },
+    ]));
+    expect(article?.sources.every(({ url }) => url.startsWith('https://'))).toBe(true);
+    expect(getEditorialDates('/compare/lunidex-vs-dex')).toEqual({
+      publishedAt: '2026-10-05',
+      updatedAt: '2026-10-06',
+    });
+
+    for (const copy of [en.translation.editorial.competitors.dex, fr.translation.editorial.competitors.dex]) {
+      expect(copy.intro).toMatch(/October 6|6 octobre 2026/);
+      expect(copy.matrix.platform.competitor).toMatch(/Early Access|accès anticipé/i);
+      expect(copy.matrix.platform.competitor).toMatch(/not yet available|pas encore disponibles/i);
+      expect(copy.matrix.limits.competitor).toMatch(/scanner|scanner/i);
     }
   });
 
@@ -175,7 +219,11 @@ describe('editorial SEO registry', () => {
     });
     expect(getEditorialDates('/guides/pokemon-card-collection-value')).toEqual({
       publishedAt: '2026-09-21',
-      updatedAt: '2026-09-28',
+      updatedAt: '2026-10-05',
+    });
+    expect(getEditorialDates('/guides/progress-account-guide')).toEqual({
+      publishedAt: '2026-08-22',
+      updatedAt: '2026-10-05',
     });
     expect(getEditorialDates('/compare/lunidex-vs-cardmarket')).toEqual({
       publishedAt: '2026-09-21',
@@ -221,7 +269,46 @@ describe('editorial SEO registry', () => {
       }
     }
 
-    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-09-28');
+    expect(getEditorialDates('/guides/pokemon-card-collection-tracker').updatedAt).toBe('2026-10-05');
+  });
+
+  it('states in all eight locales that personal collection use needs an account and available sync', () => {
+    for (const locale of localizedAccountBoundaries) {
+      const collectionCopy = `${locale.collection.fact_sync_title} ${locale.collection.fact_sync_body}`;
+      expect(collectionCopy).not.toMatch(optionalCollectionWording);
+      expect(locale.about.boundaries_title).not.toMatch(optionalCollectionWording);
+      expect(locale.about.boundaries_body).not.toMatch(optionalCollectionWording);
+      expect(locale.about.boundaries_body).toContain('lunidex.app');
+      expect(locale.about.boundaries_body).toContain('Ludex');
+
+      for (const term of locale.terms) {
+        expect(collectionCopy.toLocaleLowerCase()).toContain(term.toLocaleLowerCase());
+      }
+    }
+  });
+
+  it('adds installation steps and a reproducible example to the account and value guides', () => {
+    const accountGuide = getFeatureGuide('progress-account-guide');
+    const valueGuide = getFeatureGuide('pokemon-card-collection-value');
+
+    expect(accountGuide?.hasPwaInstallInstructions).toBe(true);
+    expect(accountGuide?.sources?.map(({ url }) => url)).toEqual([
+      'https://support.apple.com/en-lamr/guide/iphone/iphea86e5236/ios',
+      'https://web.dev/learn/pwa/installation?hl=en',
+    ]);
+    expect(valueGuide?.hasExample).toBe(true);
+
+    for (const locale of [en.translation, fr.translation]) {
+      const accountCopy = locale.editorial.guides.progress_account;
+      const valueCopy = locale.editorial.guides.pokemon_card_collection_value;
+      for (const field of ['install_title', 'install_intro', 'install_ios', 'install_android', 'install_desktop', 'install_note']) {
+        expect(accountCopy[field as keyof typeof accountCopy]).toBeTruthy();
+      }
+      expect(valueCopy.example_title).toBeTruthy();
+      expect(valueCopy.example).toBeTruthy();
+      expect(valueCopy.example).toMatch(/1\.50|1,50/);
+      expect(valueCopy.example).toMatch(/3\.00|3,00/);
+    }
   });
 
   it('dates the generic intent guides and links the TCG guide to the collection hub', () => {

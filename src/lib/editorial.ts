@@ -65,6 +65,7 @@ export type FeatureGuideDefinition = {
   faqCount?: 2 | 4;
   checklistCount?: number;
   hasExample?: boolean;
+  hasPwaInstallInstructions?: boolean;
 };
 
 /**
@@ -73,7 +74,7 @@ export type FeatureGuideDefinition = {
  * apart when an article is updated.
  */
 export const EDITORIAL_ARTICLE_DATES = {
-  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-09-28' },
+  '/guides/pokemon-card-collection-tracker': { publishedAt: '2026-08-08', updatedAt: '2026-10-05' },
   '/guides/team-builder-guide': { publishedAt: '2026-08-09', updatedAt: '2026-09-28' },
   '/guides/quiz-guide': { publishedAt: '2026-08-10', updatedAt: '2026-08-24' },
   '/guides/nuzlocke-guide': { publishedAt: '2026-08-11', updatedAt: '2026-08-24' },
@@ -87,11 +88,12 @@ export const EDITORIAL_ARTICLE_DATES = {
   '/compare/lunidex-vs-pokellector': { publishedAt: '2026-09-14', updatedAt: '2026-09-14' },
   '/compare/lunidex-vs-cardzia': { publishedAt: '2026-09-14', updatedAt: '2026-09-14' },
   '/compare/lunidex-vs-cardmarket': { publishedAt: '2026-09-21', updatedAt: '2026-09-21' },
+  '/compare/lunidex-vs-dex': { publishedAt: '2026-10-05', updatedAt: '2026-10-06' },
   '/guides/pokemon-reference-guide': { publishedAt: '2026-08-19', updatedAt: '2026-09-21' },
   '/guides/team-tools-guide': { publishedAt: '2026-08-20', updatedAt: '2026-09-21' },
   '/guides/tcg-workspace-guide': { publishedAt: '2026-08-21', updatedAt: '2026-09-14' },
-  '/guides/progress-account-guide': { publishedAt: '2026-08-22', updatedAt: '2026-08-22' },
-  '/guides/pokemon-card-collection-value': { publishedAt: '2026-09-21', updatedAt: '2026-09-28' },
+  '/guides/progress-account-guide': { publishedAt: '2026-08-22', updatedAt: '2026-10-05' },
+  '/guides/pokemon-card-collection-value': { publishedAt: '2026-09-21', updatedAt: '2026-10-05' },
   '/guides/organize-pokemon-card-collection': { publishedAt: '2026-09-28', updatedAt: '2026-09-28' },
 } as const satisfies Record<string, EditorialDateDefinition>;
 
@@ -176,6 +178,19 @@ export const COMPETITOR_ARTICLES: CompetitorArticleDefinition[] = [
       '/guides/tcg-workspace-guide',
     ],
   },
+  {
+    slug: 'dex',
+    path: '/compare/lunidex-vs-dex',
+    sources: [
+      { label: 'Dex official site (Dexbit)', url: 'https://dextcg.com/' },
+      { label: 'Dex official card scanner help', url: 'https://dextcg.com/help/collection/scanning-your-cards' },
+      { label: 'Dex official app availability', url: 'https://dextcg.com/help/getting-started/installing-dex' },
+      { label: 'Dex Web and Android Early Access', url: 'https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android' },
+    ],
+    productPath: '/tcg',
+    comparisonRows: COMPARISON_ROW_KEYS,
+    relatedPaths: ['/guides/pokemon-card-collection-tracker', '/guides/tcg-workspace-guide'],
+  },
 ];
 
 export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
@@ -208,6 +223,11 @@ export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
     slug: 'progress-account-guide',
     path: '/guides/progress-account-guide',
     productPaths: ['/dashboard', '/favorites', '/friends', '/tcg/collection', '/tcg/wishlist'],
+    sources: [
+      { label: 'Apple iPhone User Guide: add a website to the Home Screen', url: 'https://support.apple.com/en-lamr/guide/iphone/iphea86e5236/ios' },
+      { label: 'Chrome for Developers: PWA installation', url: 'https://web.dev/learn/pwa/installation?hl=en' },
+    ],
+    hasPwaInstallInstructions: true,
   },
   {
     slug: 'pokemon-card-collection-value',
@@ -225,6 +245,7 @@ export const FEATURE_GUIDES: FeatureGuideDefinition[] = [
     ],
     evidenceRows: GUIDE_EVIDENCE_ROW_KEYS,
     faqCount: 4,
+    hasExample: true,
   },
 ];
 

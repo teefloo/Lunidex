@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { supportedLanguages } from './languages';
-import { getPublicClientTranslations, getServerTranslations, isEditorialClientRoute } from './server-i18n';
+import {
+  getEditorialClientTranslations,
+  getPublicClientTranslations,
+  getServerTranslations,
+  isEditorialClientRoute,
+} from './server-i18n';
 
 const serverOnlyNamespaces = ['editorial', 'anniversary_30', 'faq', 'about', 'quiz_guide'] as const;
 
@@ -48,5 +53,18 @@ describe('isEditorialClientRoute', () => {
     expect(isEditorialClientRoute('/fr/compare/lunidex-vs-pokecardex-zebradex')).toBe(true);
     expect(isEditorialClientRoute('/fr/guides/quiz-guide')).toBe(true);
     expect(isEditorialClientRoute('/fr/tcg')).toBe(false);
+  });
+});
+
+describe('getEditorialClientTranslations', () => {
+  it('includes the catalog navigation label in every locale', () => {
+    for (const language of supportedLanguages) {
+      const editorialTranslations = getEditorialClientTranslations(language) as unknown as Record<string, unknown>;
+      const serverTranslations = getServerTranslations(language) as unknown as Record<string, unknown>;
+      const serverTcg = serverTranslations.tcg as Record<string, unknown>;
+
+      expect(serverTcg.nav_catalog).toEqual(expect.any(String));
+      expect(editorialTranslations).toHaveProperty('tcg.nav_catalog', serverTcg.nav_catalog);
+    }
   });
 });

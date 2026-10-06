@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import PokemonList from '@/components/pokemon/PokemonList';
 import ClientRecentlyViewed from '@/components/pokemon/ClientRecentlyViewed';
@@ -9,7 +10,7 @@ import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/se
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
-import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd } from '@/lib/seo';
+import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { FEATURED_POKEMON } from '@/lib/pokemon-featured';
@@ -106,6 +107,11 @@ export default async function PokedexPage() {
         <Header />
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
           <PokedexHero />
+          <nav className="mx-auto mt-4 max-w-7xl px-5 md:px-8" aria-label={t('lunidex_home.guide_reference_label')}>
+            <Link href={localeHref('/guides/pokemon-reference-guide', lang)} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+              {t('lunidex_home.guide_reference_label')} <span aria-hidden="true" className="ml-1">↗</span>
+            </Link>
+          </nav>
           <PokemonList />
           <PokemonOfTheDay />
           <ClientRecentlyViewed />

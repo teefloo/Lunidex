@@ -34,7 +34,7 @@ Lunidex is an independent, open-source npm-workspaces monorepo centered on Poké
 
 Lunidex is open-source software distributed under the MIT License. See [`LICENSE`](./LICENSE) for the complete license text.
 
-The web app covers **1,025 Pokémon across nine generations** and supports eight interface locales: English, French, Spanish, German, Italian, Japanese, Korean, and Simplified Chinese. Portuguese is available as a translated repository README, but is not a web UI locale.
+The web app exposes Pokémon records from its configured PokéAPI data source and supports eight interface locales: English, French, Spanish, German, Italian, Japanese, Korean, and Simplified Chinese. Portuguese is available as a translated repository README, but is not a web UI locale.
 
 Public reference pages work without an account. The personal workspace—favorites, caught Pokémon, teams, quiz progress, TCG collections, wishlists, saved searches, notes, decks, and related features—uses Neon Auth and Neon PostgreSQL when configured and synchronized. Web display preferences use IndexedDB.
 
@@ -49,7 +49,7 @@ Public reference pages work without an account. The personal workspace—favorit
 
 | Area | What you can do |
 | --- | --- |
-| **Pokédex and reference** | Browse and filter all 1,025 Pokémon; inspect stats, types, abilities, moves, evolutions, forms, encounters, sprites, and localized species data. Search moves, abilities, and items. |
+| **Pokédex and reference** | Browse and filter Pokémon records exposed by the configured data source; inspect stats, types, abilities, moves, evolutions, forms, encounters, sprites, and localized species data. Search moves, abilities, and items. |
 | **Team and battle lab** | Build teams of up to six, analyze type and move coverage, review synergy and roles, compare up to three Pokémon, use the 18-type chart, plan EVs and IVs, calculate breeding outcomes, and run a Gen 9 battle simulator. |
 | **Progress and play** | Track favorites, caught Pokémon, Living Dex progress, activity, badges, and quiz statistics. Play three quiz challenges across three game modes, including daily runs, and track a Nuzlocke run. |
 | **Sharing and social tools** | Import and export Showdown teams, share read-only team links, create public profiles, manage friends, view quiz leaderboards, and use account-backed battle rooms. |

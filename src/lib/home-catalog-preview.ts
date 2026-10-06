@@ -6,8 +6,21 @@ export type HomeCatalogPreviewCard = Pick<TCGCard, 'id' | 'localId' | 'name' | '
   set: Pick<NonNullable<TCGCard['set']>, 'id' | 'name'>;
 };
 
+const HOME_CATALOG_PREVIEW_RESPONSIVE_WIDTHS = [160, 256] as const;
+
+export function getHomeCatalogPreviewImageSrcSet(src: string): string | undefined {
+  const filename = /^\/tcg-showcase\/([^/]+)\.webp$/.exec(src)?.[1];
+  if (!filename) return undefined;
+
+  const variants = HOME_CATALOG_PREVIEW_RESPONSIVE_WIDTHS
+    .map((width) => `/tcg-showcase/responsive/${filename}-${width}.webp ${width}w`);
+  variants.push(`${src} 384w`);
+  return variants.join(', ');
+}
+
 // Card facts come from the public TCGdex detail records. The image paths point
-// to local copies of those records' high-quality WebP artwork.
+// to local 384px WebP preview copies. Smaller responsive variants reduce mobile
+// transfers while the 384px source covers a 192px CSS display at 2x density.
 export const HOME_CATALOG_PREVIEW_CARDS: readonly HomeCatalogPreviewCard[] = [
   { id: 'sv03-228', localId: '228', name: 'Charizard ex', rarity: 'Hyper rare', image: '/tcg-showcase/sv03-228.webp', set: { id: 'sv03', name: 'Obsidian Flames' } },
   { id: 'swsh7-215', localId: '215', name: 'Umbreon VMAX', rarity: 'Secret Rare', image: '/tcg-showcase/swsh7-215.webp', set: { id: 'swsh7', name: 'Evolving Skies' } },

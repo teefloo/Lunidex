@@ -79,6 +79,33 @@ export async function HomeArchiveExperience() {
           </div>
         </section>
 
+        <section id="guides" className="home-tools-section" aria-labelledby="home-guides-title">
+          <div className="home-section-heading">
+            <div>
+              <p className="home-section-kicker">{t('lunidex_home.guides_eyebrow')}</p>
+              <h2 id="home-guides-title">{t('lunidex_home.guides_title')}</h2>
+            </div>
+            <p>{t('lunidex_home.guides_body')}</p>
+          </div>
+          <nav aria-label={t('lunidex_home.guides_title')}>
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                { href: '/guides/pokemon-card-collection-tracker', label: t('collection_guide.nav_label') },
+                { href: '/guides/organize-pokemon-card-collection', label: t('lunidex_home.guide_organize_label') },
+                { href: '/guides/pokemon-card-collection-value', label: t('lunidex_home.guide_value_label') },
+                { href: '/guides/team-builder-guide', label: t('team_guide.nav_label') },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={localeHref(href, language)} className="home-secondary-cta w-full justify-between text-left normal-case tracking-normal">
+                    <span>{label}</span>
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </section>
+
         <section id="collection-access" className="home-local-first" aria-labelledby="home-local-first-title">
           <div className="home-local-first-copy">
             <p className="home-section-kicker">{t('lunidex_home.access_eyebrow')}</p>

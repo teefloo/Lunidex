@@ -17,6 +17,11 @@ const pokemonClientSource = await readFile(join(projectRoot, 'src/app/pokemon/[n
 const compareLayoutSource = await readFile(join(projectRoot, 'src/app/compare/layout.tsx'), 'utf8');
 const editorialGuideRouteSource = await readFile(join(projectRoot, 'src/app/guides/[slug]/page.tsx'), 'utf8');
 const editorialCompareRouteSource = await readFile(join(projectRoot, 'src/app/compare/[slug]/page.tsx'), 'utf8');
+const homeArchiveSource = await readFile(join(projectRoot, 'src/components/home/HomeArchiveExperience.tsx'), 'utf8');
+const footerSource = await readFile(join(projectRoot, 'src/components/layout/SiteFooter.tsx'), 'utf8');
+const tcgPageSource = await readFile(join(projectRoot, 'src/app/tcg/page.tsx'), 'utf8');
+const pokedexPageSource = await readFile(join(projectRoot, 'src/app/pokedex/page.tsx'), 'utf8');
+const teamPageSource = await readFile(join(projectRoot, 'src/app/team/page.tsx'), 'utf8');
 const layoutSource = await readFile(join(projectRoot, 'src/app/layout.tsx'), 'utf8');
 const editorialSource = await readFile(join(projectRoot, 'src/lib/editorial.ts'), 'utf8');
 const seoSource = await readFile(join(projectRoot, 'src/lib/seo.ts'), 'utf8');
@@ -66,6 +71,7 @@ check(editorialSource.includes('sources: readonly EditorialSource[]'), 'Editoria
 check(editorialSource.includes("slug: 'pokellector'") && editorialSource.includes('https://www.pokellector.com/'), 'Editorial registry omits the Pokéllector source-backed entry');
 check(editorialSource.includes("slug: 'cardzia'") && editorialSource.includes('https://cardzia.fr/') && editorialSource.includes('play.google.com/store/apps/details?id=fr.cardzia.app'), 'Editorial registry omits the Cardzia source-backed entry');
 check(editorialSource.includes("slug: 'cardmarket'") && editorialSource.includes('/compare/lunidex-vs-cardmarket'), 'Editorial registry omits the Cardmarket comparison');
+check(editorialSource.includes("slug: 'dex'") && editorialSource.includes('https://dextcg.com/help/collection/scanning-your-cards'), 'Editorial registry omits the source-backed Dex comparison');
 check(editorialSource.includes("slug: 'pokemon-card-collection-value'") && editorialSource.includes('/guides/pokemon-card-collection-value'), 'Editorial registry omits the collection value guide');
 check(seoSource.includes('CREATOR_PERSON_ID') && layoutSource.includes('buildCreatorJsonLd'), 'Root entity graph is missing the verified creator node');
 check(!compareLayoutSource.includes('buildBreadcrumbJsonLd'), 'Comparison layout must not emit a duplicate breadcrumb');
@@ -100,10 +106,28 @@ const genericIntentPaths = [
   '/en/compare/lunidex-vs-pokellector',
   '/en/compare/lunidex-vs-cardzia',
   '/en/compare/lunidex-vs-cardmarket',
+  '/en/compare/lunidex-vs-dex',
+  '/fr/compare/lunidex-vs-dex',
 ];
 for (const path of genericIntentPaths) {
   check(llmsSource.includes(path), `AI asset omits the canonical intent route: ${path}`);
 }
+
+for (const path of [
+  '/guides/pokemon-card-collection-tracker',
+  '/guides/organize-pokemon-card-collection',
+  '/guides/pokemon-card-collection-value',
+  '/guides/team-builder-guide',
+]) {
+  check(homeArchiveSource.includes(path), `Home page is missing a direct editorial link: ${path}`);
+}
+
+check(tcgPageSource.includes('/guides/pokemon-card-collection-tracker') && tcgPageSource.includes('/guides/pokemon-card-collection-value'), 'TCG catalog is missing direct collection guide links');
+check(pokedexPageSource.includes('/guides/pokemon-reference-guide'), 'Pokédex is missing a direct Pokémon reference guide link');
+check(teamPageSource.includes("href={localeHref('/guides/team-builder-guide')}") && teamPageSource.indexOf("href={localeHref('/guides/team-builder-guide')}") < teamPageSource.indexOf('<details className="team-builder-help">'), 'Team Builder guide link must be directly visible outside the collapsed help menu');
+
+const compactFooterLinks = footerSource.match(/const compactLinks: FooterLinkData\[\] = \[([\s\S]*?)\n  \];/)?.[1] ?? '';
+check(compactFooterLinks.includes("href: '/blog'"), 'Compact footer is missing the blog link');
 
 const forbiddenAiPatterns = [
   /(?:most complete|ultimate)\s+(?:online\s+)?pok[eé]dex/i,
@@ -250,12 +274,17 @@ if (process.env.SEO_CHECK_HTTP === '1') {
     { path: '/de/guides/pokemon-card-collection-tracker', indexable: true },
     { path: '/en/guides/pokemon-card-collection-value', indexable: true },
     { path: '/fr/guides/pokemon-card-collection-value', indexable: true },
+    { path: '/en/guides/progress-account-guide', indexable: true },
+    { path: '/fr/guides/progress-account-guide', indexable: true },
+    { path: '/en/compare/lunidex-vs-dex', indexable: true },
+    { path: '/fr/compare/lunidex-vs-dex', indexable: true },
     { path: '/en/guides/team-builder-guide', indexable: true },
     { path: '/fr/guides/team-builder-guide', indexable: true },
     { path: '/en/team', indexable: true },
     { path: '/en/pokedex', indexable: true },
     { path: '/en/faq', indexable: true },
     { path: '/de/guides/pokemon-card-collection-value', indexable: false },
+    { path: '/de/compare/lunidex-vs-dex', indexable: false },
   ];
   for (const { path, indexable } of pages) {
     const url = new URL(path, runtimeOrigin).href;
@@ -275,7 +304,10 @@ if (process.env.SEO_CHECK_HTTP === '1') {
     check(canonicalLinks.length === 1, `${url} must render exactly one canonical link (found ${canonicalLinks.length})`);
     const canonicalHref = canonicalLinks[0]?.[0].match(/\bhref=["']([^"']+)["']/i)?.[1];
     if (indexable) check(canonicalHref === canonicalUrl, `${url} canonical does not point to the requested localized URL`);
-    else check(canonicalHref === new URL('/en/guides/pokemon-card-collection-value', canonicalOrigin).href, `${url} fallback canonical does not point to English`);
+    else {
+      const englishFallbackPath = path.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '/en');
+      check(canonicalHref === new URL(englishFallbackPath, canonicalOrigin).href, `${url} fallback canonical does not point to English`);
+    }
     const alternateLinks = [...html.matchAll(/<link\b[^>]*rel=["']alternate["'][^>]*>/gi)];
     check(indexable ? alternateLinks.length >= 3 : alternateLinks.length === 0, `${url} has unexpected locale links (found ${alternateLinks.length})`);
     for (const match of alternateLinks) {
@@ -301,6 +333,26 @@ if (process.env.SEO_CHECK_HTTP === '1') {
       } catch {
         check(false, `${url} contains invalid JSON-LD`);
       }
+    }
+
+    if (path.endsWith('/compare/lunidex-vs-dex')) {
+      const matrixRows = html.match(/<tbody>([\s\S]*?)<\/tbody>/)?.[1].match(/<tr\b/g)?.length ?? 0;
+      check(matrixRows === 12, `${url} must render all 12 Dex comparison criteria (found ${matrixRows})`);
+      check(
+        html.includes('https://dextcg.com/')
+          && html.includes('https://dextcg.com/help/collection/scanning-your-cards')
+          && html.includes('https://dextcg.com/help/getting-started/installing-dex')
+          && html.includes('https://dextcg.com/help/getting-started/dex-early-access-for-web-and-android'),
+        `${url} is missing the dated official Dex product, platform, or scanner sources`,
+      );
+      check(html.includes('2026-10-06'), `${url} is missing its publication or source-check date`);
+      const alternateLocales = [...html.matchAll(/<link\b[^>]*rel=["']alternate["'][^>]*hreflang=["']([^"']+)["']/gi)].map((match) => match[1]).sort();
+      if (indexable) check(alternateLocales.join(',') === 'en,fr,x-default', `${url} must expose only en/fr/x-default hreflang links`);
+    }
+
+    if (path.endsWith('/guides/progress-account-guide') && indexable) {
+      check(html.includes('installer Lunidex depuis le navigateur') || html.includes('Install Lunidex from your browser'), `${url} is missing the browser installation instructions`);
+      check(html.includes('https://support.apple.com/en-lamr/guide/iphone/iphea86e5236/ios') && html.includes('https://web.dev/learn/pwa/installation?hl=en'), `${url} is missing the official PWA installation sources`);
     }
   }
 }

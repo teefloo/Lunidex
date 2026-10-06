@@ -112,6 +112,7 @@ export function getPublicClientTranslations(lang: SupportedLanguage): ResourceLa
 const EDITORIAL_CLIENT_TRANSLATION_PATHS = [
   'common',
   'nav',
+  'tcg.nav_catalog',
   'tcg.nav_collection',
   'header',
   'languages',
