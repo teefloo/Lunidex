@@ -618,6 +618,7 @@ function DiscoveryHero({
             value={searchTerm}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder={t('tcg.search_placeholder')}
+            aria-label={t('tcg.search_placeholder')}
             className="h-14 w-full rounded-[1.25rem] border border-border/55 bg-card/55 pl-14 pr-4 text-sm font-semibold text-foreground placeholder:text-foreground/30 transition-all focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
           />
         </div>
@@ -693,7 +694,7 @@ function DiscoveryHero({
               onClick={onClearSearch}
               className="inline-flex h-11 items-center gap-2 rounded-sm border border-border/50 bg-card/50 px-4 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/45 transition-colors hover:text-[var(--action-favorite)]"
             >
-              {t('tcg.clear')}
+              {t('tcg.clear_search')}
             </button>
           )}
         </div>

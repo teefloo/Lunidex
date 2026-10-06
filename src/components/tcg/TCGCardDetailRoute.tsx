@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import type { TCGCard } from '@/types/tcg';
@@ -30,6 +32,7 @@ export function TCGCardDetailRoute({
   const router = useRouter();
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const imageCandidates = card ? getTCGCardImageCandidates(card, 'high') : [];
 
   if (!card) {
@@ -58,19 +61,21 @@ export function TCGCardDetailRoute({
 
   const effectText = card.effect || card.description || card.flavorText || '';
   const hasEffectSections = Boolean(card.attacks?.length || getAbilities(card).length);
+  const returnHref = card.set?.id
+    ? localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}?tcgLang=${encodeURIComponent(tcgLanguage)}`)
+    : localeHref(`/tcg?tcgLang=${encodeURIComponent(tcgLanguage)}`);
 
   return (
     <div className="app-page">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(227,53,13,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(12,194,181,0.12),transparent_34%)]" />
       <main className="page-shell py-20">
-        <button
-          type="button"
-          onClick={() => router.back()}
+        <Link
+          href={returnHref}
           className="glass-control mb-6 inline-flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-[0.2em]"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('common.back')}
-        </button>
+        </Link>
         <article className="mb-8 grid gap-8 rounded-sm border border-border/70 bg-card/50 p-6 md:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] md:p-8">
           <div className="flex items-center justify-center rounded-sm border border-border/50 bg-background/50 p-4">
             <TCGImageWithFallback
@@ -146,8 +151,8 @@ export function TCGCardDetailRoute({
         <TCGCardDetailModal
           card={card}
           tcgLanguage={tcgLanguage}
-          isOpen
-          onClose={() => router.back()}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
         />
       </main>
     </div>

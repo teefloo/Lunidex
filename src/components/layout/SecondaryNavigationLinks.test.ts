@@ -32,7 +32,11 @@ vi.mock('next/link', async () => {
     },
   };
 });
-vi.mock('@/hooks/useLocaleHref', () => ({ useLocaleHref: () => (path: string) => `/fr${path}` }));
+vi.mock('@/hooks/useLocaleHref', () => ({
+  useLocaleHref: () => (path: string) => `/fr${path}`,
+  useLanguageSelection: () => 'fr',
+}));
+vi.mock('@/hooks/useChangeLanguage', () => ({ useChangeLanguage: () => vi.fn() }));
 vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({ t: (_key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? _key }),
 }));
@@ -66,6 +70,7 @@ describe('SecondaryNavigationLinks', () => {
 
     const quizLink = container.querySelector<HTMLAnchorElement>('a[href="/fr/quiz"]');
     expect(quizLink).not.toBeNull();
+    expect(container.querySelector('select[aria-label="settings.language"]')).not.toBeNull();
     act(() => quizLink?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })));
 
     expect(mocks.events).toEqual(['navigation-accepted:/fr/quiz', 'close-menu']);

@@ -986,7 +986,8 @@ h1 { letter-spacing: 0; }
 .site-header-more-menu {
   position: absolute;
   top: calc(100% + 0.5rem);
-  left: 0;
+  right: 0;
+  left: auto;
   z-index: 55;
   width: min(43rem, calc(100vw - 2rem));
   max-height: min(76vh, 42rem);
@@ -1003,6 +1004,29 @@ h1 { letter-spacing: 0; }
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem 1.25rem;
   padding: 1rem;
+}
+
+.secondary-navigation-language {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 0.45rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+  padding-bottom: 0.8rem;
+}
+
+.secondary-navigation-language-field {
+  display: block;
+  min-width: 0;
+}
+
+.secondary-navigation-language-field .field-language-select {
+  width: min(100%, 18rem);
+  border-color: color-mix(in oklab, var(--foreground) 18%, transparent);
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .secondary-navigation-group {
@@ -1357,6 +1381,11 @@ h1 { letter-spacing: 0; }
   padding: 0;
 }
 
+.header-mobile-sheet .secondary-navigation-language .field-language-select {
+  width: 100%;
+  max-width: none;
+}
+
 .header-mobile-sheet .secondary-navigation-group + .secondary-navigation-group {
   border-top: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
   padding-top: 0.8rem;
@@ -1370,6 +1399,18 @@ h1 { letter-spacing: 0; }
   body:has(.primary-bottom-nav) {
     --app-bottom-nav-height: calc(4rem + env(safe-area-inset-bottom, 0px));
     padding-bottom: calc(4.15rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cookie-consent-banner {
+    bottom: calc(var(--app-bottom-nav-height, 0px) + 0.5rem);
+  }
+
+  .pokemon-mobile-fixed-actions {
+    bottom: calc(var(--app-bottom-nav-height, 0px) + 1rem);
+  }
+
+  body:has(.cookie-consent-banner) .pokemon-mobile-fixed-actions {
+    bottom: calc(var(--app-bottom-nav-height, 0px) + 10rem + 0.75rem);
   }
 
   .primary-bottom-nav {
@@ -1448,6 +1489,12 @@ h1 { letter-spacing: 0; }
 
   body:has(.compare-bar-overlay):has(.pwa-install-prompt) [data-sonner-toaster][data-y-position='bottom'] {
     bottom: calc(var(--app-bottom-nav-height, 4rem) + 14rem) !important;
+  }
+}
+
+@media (min-width: 64rem) {
+  .cookie-consent-banner {
+    bottom: 1.5rem;
   }
 }
 

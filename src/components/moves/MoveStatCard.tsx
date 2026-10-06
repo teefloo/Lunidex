@@ -46,7 +46,7 @@ export default function MoveStatCard({ move, labels }: MoveStatCardProps) {
     {
       icon: Zap,
       label: labels.pp,
-      value: String(move.pp),
+      value: move.pp !== null ? String(move.pp) : '—',
     },
     {
       icon: Gauge,

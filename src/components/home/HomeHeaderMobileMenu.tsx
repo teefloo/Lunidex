@@ -95,6 +95,7 @@ export default function HomeHeaderMobileMenu({
               resumeLabel={collectionResumeLabel}
               unavailableLabel={collectionInfoLabel}
               navLabel={collectionLabel}
+              hrefOverride="/tcg/collection"
               className="field-mobile-menu-link"
               onClick={closeMenu}
               initialSignedIn={initialSignedIn}

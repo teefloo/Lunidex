@@ -456,7 +456,7 @@ export function PokemonDetailClient({
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">
         <button
           onClick={handleBackToPokedex}
-          className="fixed top-[calc(6rem+env(safe-area-inset-top))] left-4 md:left-12 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55  rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
+          className="fixed top-[calc(6rem+env(safe-area-inset-top))] right-4 md:left-12 md:right-auto p-3 min-w-[44px] min-h-[44px] flex items-center justify-center bg-card/55 rounded-full border border-border/50 z-50 text-foreground/50 hover:text-foreground hover:bg-card/75 hover:border-border/70 hover:scale-105 transition-all duration-300 shadow-lg"
           aria-label={t('common.back') || 'Go back'}
         >
           <ArrowLeft className="w-6 h-6" />
@@ -1174,7 +1174,7 @@ export function PokemonDetailClient({
         </motion.div>
       </div>
       {/* Mobile Fixed Bottom Action Bar */}
-      <div className="md:hidden fixed bottom-6 left-4 right-4 z-[100] animate-in fade-in slide-in-from-bottom-10 duration-700">
+      <div className="pokemon-mobile-fixed-actions md:hidden fixed left-4 right-4 z-[100] animate-in fade-in slide-in-from-bottom-10 duration-700">
         <div className="glass-toolbar p-2 flex items-center justify-between gap-1.5">
           {/* Catch Toggle */}
           <Button

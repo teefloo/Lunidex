@@ -258,7 +258,7 @@ export default function ComparePage() {
         <PageHeader
           icon={Scale}
           title={t('compare.title')}
-          subtitle={t('compare.comparing', { count: activeCompareIds.length })}
+          subtitle={activeCompareIds.length > 0 ? t('compare.comparing', { count: activeCompareIds.length }) : undefined}
           eyebrow={t('compare.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
           badge={(
@@ -266,19 +266,11 @@ export default function ComparePage() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => router.back()}
+                onClick={() => router.replace(localeHref('/pokedex'))}
                 className="rounded-sm bg-background/80 border border-border/70"
                 aria-label={t('common.back')}
               >
                 <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleClearCompare}
-                className="rounded-sm font-black uppercase tracking-widest gap-2 dark:text-foreground"
-              >
-                <Trash2 className="w-4 h-4" />
-                {t('compare.clear')}
               </Button>
             </div>
           )}
@@ -310,15 +302,16 @@ export default function ComparePage() {
                 <Copy className="h-4 w-4" />
                 {t('share_menu.copy_link')}
               </Button>
-              <Button
-                variant="outline"
-                onClick={handleClearCompare}
-                disabled={activeCompareIds.length === 0}
-                className="rounded-sm font-black uppercase tracking-widest gap-2"
-              >
-                <Trash2 className="h-4 w-4" />
-                {t('compare.clear')}
-              </Button>
+              {activeCompareIds.length > 0 ? (
+                <Button
+                  variant="outline"
+                  onClick={handleClearCompare}
+                  className="rounded-sm font-black uppercase tracking-widest gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  {t('compare.clear')}
+                </Button>
+              ) : null}
             </div>
           </div>
 
