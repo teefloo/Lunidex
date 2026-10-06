@@ -2647,6 +2647,7 @@ export default {
         collection_not_started: 'No collections started yet',
         collection_attribute: 'Attribute',
         search_placeholder: 'Search card names...',
+        clear_search: 'Clear card search',
       cards: 'cards',
       grid_view: 'Grid view',
       list_view: 'List view',
