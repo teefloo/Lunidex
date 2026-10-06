@@ -176,7 +176,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
               <div
                 style={{
                   display: 'flex',
-                  fontFamily: 'Pixelify Sans',
+                  fontFamily: 'Nunito',
                   fontSize: '32px',
                   color: typeColor,
                   marginTop: '20px',
@@ -191,7 +191,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
             <div
               style={{
                 display: 'flex',
-                fontFamily: 'Pixelify Sans',
+                fontFamily: 'Nunito',
                 fontSize: '64px',
                 lineHeight: 1.05,
                 color: OG_THEME.text,
@@ -265,7 +265,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
                   <div
                     style={{
                       display: 'flex',
-                      fontFamily: 'Pixelify Sans',
+                      fontFamily: 'Nunito',
                       fontSize: '72px',
                       lineHeight: 1,
                       color: OG_THEME.accent,
@@ -276,7 +276,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse | NextRes
                   <div
                     style={{
                       display: 'flex',
-                      fontFamily: 'Pixelify Sans',
+                      fontFamily: 'Nunito',
                       fontSize: '28px',
                       color: OG_THEME.textDim,
                     }}

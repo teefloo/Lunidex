@@ -105,7 +105,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
             <div
               style={{
                 display: 'flex',
-                fontFamily: 'Pixelify Sans',
+                fontFamily: 'Nunito',
                 fontSize: '40px',
                 color: OG_THEME.text,
                 textTransform: 'uppercase',
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
               <div
                 style={{
                   display: 'flex',
-                  fontFamily: 'Pixelify Sans',
+                  fontFamily: 'Nunito',
                   fontSize: '120px',
                   lineHeight: 1,
                   color: challengeColor,
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
               <div
                 style={{
                   display: 'flex',
-                  fontFamily: 'Pixelify Sans',
+                  fontFamily: 'Nunito',
                   fontSize: '56px',
                   color: OG_THEME.textDim,
                 }}
@@ -267,7 +267,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 <div
                   style={{
                     display: 'flex',
-                    fontFamily: 'Pixelify Sans',
+                    fontFamily: 'Nunito',
                     fontSize: '72px',
                     lineHeight: 1,
                     color: streak > 0 ? '#F59E0B' : OG_THEME.textDim,
@@ -296,7 +296,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 <div
                   style={{
                     display: 'flex',
-                    fontFamily: 'Pixelify Sans',
+                    fontFamily: 'Nunito',
                     fontSize: '72px',
                     lineHeight: 1,
                     color: badgesEarned > 0 ? OG_THEME.primary : OG_THEME.textDim,

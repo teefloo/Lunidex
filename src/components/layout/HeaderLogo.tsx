@@ -15,8 +15,8 @@ export function HeaderLogo() {
         </div>
         <div className="site-header-brand-copy flex min-w-0 flex-col items-start">
           <div className="flex items-baseline leading-none tracking-tight">
-            <span translate="no" className="site-header-brand-luni font-display text-[1.05rem] font-extrabold sm:text-base">Luni</span>
-            <span translate="no" className="font-display text-[1.05rem] font-medium italic editorial-italic text-foreground sm:text-base">dex</span>
+            <span translate="no" className="site-header-brand-luni font-brand-pixel text-[1.05rem] font-extrabold sm:text-base">Luni</span>
+            <span translate="no" className="font-brand-pixel text-[1.05rem] font-medium italic tracking-[0.02em] text-foreground sm:text-base">dex</span>
           </div>
         </div>
       </Link>

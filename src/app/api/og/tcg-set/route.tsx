@@ -94,7 +94,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
             >
               Lunidex
             </div>
-            <div style={{ display: 'flex', marginTop: '26px', fontFamily: 'Pixelify Sans', fontSize: '58px', lineHeight: 1.05, color: OG_THEME.text }}>
+            <div style={{ display: 'flex', marginTop: '26px', fontFamily: 'Nunito', fontSize: '58px', lineHeight: 1.05, color: OG_THEME.text }}>
               {name}
             </div>
             <div style={{ display: 'flex', marginTop: '24px', fontSize: '25px', fontWeight: 800, color: OG_THEME.textMuted }}>

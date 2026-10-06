@@ -329,7 +329,7 @@ const OFFLINE_PAGE_STYLES = `
     max-width: 12ch;
     margin: 0 auto;
     color: var(--offline-fg);
-    font-family: var(--font-display, 'Pixelify Sans', ui-sans-serif, system-ui, sans-serif);
+    font-family: var(--font-display, 'Nunito', ui-sans-serif, system-ui, sans-serif);
     font-size: clamp(2rem, 7vw, 3.35rem);
     font-weight: 700;
     letter-spacing: -0.035em;

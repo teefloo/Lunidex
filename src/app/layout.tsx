@@ -29,18 +29,18 @@ import {
   FEATURE_LIST,
 } from "@/lib/site";
 
-const displayFont = Pixelify_Sans({
+const displayFont = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
+  weight: "variable",
+  variable: "--font-nunito",
   display: "optional",
   preload: false,
 });
 
-const bodyFont = Nunito({
+const brandPixelFont = Pixelify_Sans({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-body",
+  weight: ["400", "700"],
+  variable: "--font-pixel",
   display: "optional",
   preload: false,
 });
@@ -222,7 +222,7 @@ export default async function RootLayout({
   ];
 
   return (
-      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, bodyFont.variable)}>
+      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, brandPixelFont.variable)}>
       <head>
         {/* Autodiscovery for the OpenSearch description shipped at this path. */}
         <link
