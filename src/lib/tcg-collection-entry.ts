@@ -4,14 +4,15 @@ export interface CollectionEntry {
 }
 
 interface ResolveCollectionEntryInput {
+  allowDemo?: boolean;
   serviceAvailable: boolean;
   isSignedIn: boolean;
   hasHydrated: boolean;
   ownedCount: number;
 }
 
-export function resolveCollectionEntry({ serviceAvailable, isSignedIn, hasHydrated, ownedCount }: ResolveCollectionEntryInput): CollectionEntry {
-  if (!serviceAvailable) {
+export function resolveCollectionEntry({ allowDemo = false, serviceAvailable, isSignedIn, hasHydrated, ownedCount }: ResolveCollectionEntryInput): CollectionEntry {
+  if (!serviceAvailable && !(allowDemo && !isSignedIn)) {
     return { mode: 'unavailable', path: '#collection-access' };
   }
 

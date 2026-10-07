@@ -1,0 +1,287 @@
+[
+  {
+    "locale": "fr",
+    "width": 1440,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "title": "Suivez vos cartes Pokémon.Repérez les manquantes. Complétez vos extensions.",
+    "ctas": [
+      {
+        "label": "Tester le suivi de cartes",
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalogue↗",
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "progress": 2,
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "fr",
+    "width": 768,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "title": "Suivez vos cartes Pokémon.Repérez les manquantes. Complétez vos extensions.",
+    "ctas": [
+      {
+        "label": "Tester le suivi de cartes",
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalogue↗",
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "progress": 2,
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "fr",
+    "width": 375,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "title": "Suivez vos cartes Pokémon.Repérez les manquantes. Complétez vos extensions.",
+    "ctas": [
+      {
+        "label": "Tester le suivi de cartes",
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalogue↗",
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "progress": 2,
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "fr",
+    "width": 1440,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "fr",
+    "width": 768,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "fr",
+    "width": 375,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/fr/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/fr/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "title": "Track your Pokémon cards.See what’s missing. Complete your sets.",
+    "ctas": [
+      {
+        "label": "Try tracking my cards",
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalog↗",
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 768,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "title": "Track your Pokémon cards.See what’s missing. Complete your sets.",
+    "ctas": [
+      {
+        "label": "Try tracking my cards",
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalog↗",
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 375,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "title": "Track your Pokémon cards.See what’s missing. Complete your sets.",
+    "ctas": [
+      {
+        "label": "Try tracking my cards",
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "label": "Catalog↗",
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 768,
+    "dark": false,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 375,
+    "dark": true,
+    "overflow": false,
+    "cls": 0,
+    "ctas": [
+      {
+        "href": "/en/tcg/start?source=home_cta",
+        "height": 48
+      },
+      {
+        "href": "/en/tcg",
+        "height": 48
+      }
+    ],
+    "images": [
+      true,
+      true,
+      true
+    ]
+  }
+]

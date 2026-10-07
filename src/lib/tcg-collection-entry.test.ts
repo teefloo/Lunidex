@@ -4,6 +4,15 @@ import en from './i18n/en';
 import { resolveCollectionEntry } from './tcg-collection-entry';
 
 describe('homepage collection entry', () => {
+  it('opens the temporary guest demo even when account services are unavailable', () => {
+    expect(resolveCollectionEntry({ allowDemo: true, serviceAvailable: false, isSignedIn: false, hasHydrated: false, ownedCount: 0 }))
+      .toEqual({ mode: 'start', path: '/tcg/start?source=home_cta' });
+  });
+
+  it('keeps the access explanation for a signed-in account without sync', () => {
+    expect(resolveCollectionEntry({ allowDemo: true, serviceAvailable: false, isSignedIn: true, hasHydrated: true, ownedCount: 3 }))
+      .toEqual({ mode: 'unavailable', path: '#collection-access' });
+  });
   it('starts a guest collection even when the browser has local cards', () => {
     expect(resolveCollectionEntry({
       serviceAvailable: true,

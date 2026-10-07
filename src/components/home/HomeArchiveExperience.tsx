@@ -8,6 +8,7 @@ import { GITHUB_REPO_URL } from '@/lib/site';
 import { HOME_CATALOG_PREVIEW_CARDS } from '@/lib/home-catalog-preview';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
 import HomeCatalogPreview from './HomeCatalogPreview';
+import { HomeCollectionPreview } from './HomeCollectionPreview';
 import HomeCollectionSteps from './HomeCollectionSteps';
 import HomeHeader from './HomeHeader';
 import HomePokedexPreview from './HomePokedexPreview';
@@ -36,28 +37,39 @@ export async function HomeArchiveExperience() {
             <p className="home-section-kicker">{t('lunidex_home.hero_eyebrow')}</p>
             <h1 id="home-hero-title" className="home-landing-hero-title">
               {t('lunidex_home.hero_title')}
+              <span className="home-landing-hero-outcome">{t('lunidex_home.hero_outcome')}</span>
             </h1>
             <p className="home-landing-hero-body">{t('lunidex_home.hero_body')}</p>
             <div className="home-landing-hero-actions">
-              <Link href={localeHref('/tcg', language)} className="home-primary-cta">
-                {t('lunidex_home.cta_explore_cards')}
-                <span aria-hidden="true">↗</span>
-              </Link>
               <HomeCollectionEntry
+                allowDemo
                 locale={language}
-                startLabel={t('lunidex_home.cta_start')}
+                startLabel={t(initialSignedIn ? 'lunidex_home.cta_start' : 'lunidex_home.cta_try_tracking')}
                 resumeLabel={t('lunidex_home.cta_resume')}
                 unavailableLabel={t('lunidex_home.cta_collection_info')}
-                className="home-secondary-cta"
+                className="home-primary-cta"
                 initialSignedIn={initialSignedIn}
                 serviceAvailable={collectionServiceAvailable}
               />
+              <Link href={localeHref('/tcg', language)} className="home-secondary-cta">
+                {t('tcg.nav_catalog')}
+                <span aria-hidden="true">↗</span>
+              </Link>
             </div>
+            <p className="home-landing-hero-note">{t('lunidex_home.demo_note')}</p>
+            <nav className="home-landing-hero-tools" aria-label={t('lunidex_home.tools_eyebrow')}>
+              <Link href={localeHref('/pokedex', language)}>{t('nav.pokedex')}</Link>
+              <Link href={localeHref('/team', language)}>{t('nav.team')}</Link>
+              <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">{t('about.opensource_title')}</a>
+            </nav>
           </div>
-          <HomeCatalogPreview cards={HOME_CATALOG_PREVIEW_CARDS} language={language} />
+          <HomeCollectionPreview />
         </section>
 
         <HomeCollectionSteps />
+        <div className="home-catalog-section">
+          <HomeCatalogPreview cards={HOME_CATALOG_PREVIEW_CARDS} language={language} />
+        </div>
 
         <section id="tools" className="home-tools-section" aria-labelledby="home-tools-title">
           <div className="home-section-heading">
@@ -148,20 +160,22 @@ export async function HomeArchiveExperience() {
             <h2 id="home-final-cta-title">{t('lunidex_home.final_title')}</h2>
             <p>{t('lunidex_home.final_body')}</p>
             <div className="home-landing-hero-actions">
-              <Link href={localeHref('/tcg', language)} className="home-primary-cta">
-                {t('lunidex_home.cta_explore_cards')}
-                <span aria-hidden="true">↗</span>
-              </Link>
               <HomeCollectionEntry
+                allowDemo
                 locale={language}
-                startLabel={t('lunidex_home.cta_start')}
+                startLabel={t(initialSignedIn ? 'lunidex_home.cta_start' : 'lunidex_home.cta_try_tracking')}
                 resumeLabel={t('lunidex_home.cta_resume')}
                 unavailableLabel={t('lunidex_home.cta_collection_info')}
-                className="home-secondary-cta"
+                className="home-primary-cta"
                 initialSignedIn={initialSignedIn}
                 serviceAvailable={collectionServiceAvailable}
               />
+              <Link href={localeHref('/tcg', language)} className="home-secondary-cta">
+                {t('tcg.nav_catalog')}
+                <span aria-hidden="true">↗</span>
+              </Link>
             </div>
+            <p className="home-landing-hero-note">{t('lunidex_home.demo_note')}</p>
           </div>
         </section>
       </main>

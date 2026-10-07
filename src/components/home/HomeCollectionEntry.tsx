@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 
 interface HomeCollectionEntryProps {
+  allowDemo?: boolean;
   locale: string;
   startLabel: string;
   resumeLabel: string;
@@ -24,6 +25,7 @@ interface HomeCollectionEntryProps {
 }
 
 export function HomeCollectionEntry({
+  allowDemo = false,
   className,
   hrefOverride,
   initialSignedIn,
@@ -41,6 +43,7 @@ export function HomeCollectionEntry({
   const ownedCount = usePrimeDexStore((state) => countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards));
   const { user, loading } = useAuth();
   const entry = resolveCollectionEntry({
+    allowDemo,
     serviceAvailable,
     isSignedIn: Boolean(user) || (loading && (initialSignedIn ?? false)),
     hasHydrated: mounted && hasHydrated,
