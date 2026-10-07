@@ -1,4 +1,12 @@
 import type { TCGCard, TCGSet } from '@/types/tcg';
+import { DEFAULT_TCG_CARD_LANGUAGE, type TCGCardLanguage } from '@/lib/tcg-language';
+
+// Only English has a query-free public URL. Regional identifiers may not
+// exist in English, so dropping their data language creates a missing canonical.
+export function buildTCGDetailPath(kind: 'cards' | 'sets', id: string, language: TCGCardLanguage): string {
+  const path = `/tcg/${kind}/${encodeURIComponent(id)}`;
+  return language === DEFAULT_TCG_CARD_LANGUAGE ? path : `${path}?tcgLang=${language}`;
+}
 
 export const TCG_SET_IMAGE_PREVIEW_LIMIT = 36;
 

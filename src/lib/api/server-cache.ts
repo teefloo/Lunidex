@@ -159,23 +159,21 @@ const getInitialTcgCatalogPersistent = unstable_cache(
 
 const getTCGCardPersistent = unstable_cache(
   (cardId: string, language: string) => getTCGCard(cardId, language),
-  // v4 invalidates server snapshots created before marked special printings
-  // were excluded from generic normal/reverse/holo price resolution.
-  ['lunidex:tcg-card:v4'],
+  // v5 discards missing snapshots produced by temporary upstream failures.
+  ['lunidex:tcg-card:v5'],
   { revalidate: 3600 },
 );
 
 const getTCGSetPersistent = unstable_cache(
   (setId: string, language: string) => getSetById(setId, language),
-  ['lunidex:tcg-set:v2'],
+  ['lunidex:tcg-set:v3'],
   { revalidate: 3600 },
 );
 
 const getTCGSetCardsPersistent = unstable_cache(
   (setId: string, language: string) => getCardsBySet(setId, language),
-  // v2 invalidates previously cached partial set responses used by the public
-  // checklist route.
-  ['lunidex:tcg-set-cards:v2'],
+  // v3 discards empty snapshots produced by temporary upstream failures.
+  ['lunidex:tcg-set-cards:v3'],
   { revalidate: 3600 },
 );
 

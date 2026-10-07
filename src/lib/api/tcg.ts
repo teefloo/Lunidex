@@ -118,11 +118,12 @@ const tcgSetCardsMemoryCache = createMemoryCache<TCGCard[]>({ maxEntries: 128, t
 // A short cooldown prevents a transient TCGdex outage or a hot invalid URL
 // from multiplying into retries on every concurrent server render. Successful
 // data still wins immediately through the normal caches once this expires.
-const tcgCardFailureCache = createMemoryCache<boolean>({ maxEntries: 1024, ttlMs: TCG_FAILURE_CACHE_TTL_MS });
-const tcgSetFailureCache = createMemoryCache<boolean>({ maxEntries: 256, ttlMs: TCG_FAILURE_CACHE_TTL_MS });
+type TcgResourceFailure = { error?: unknown };
+const tcgCardFailureCache = createMemoryCache<TcgResourceFailure>({ maxEntries: 1024, ttlMs: TCG_FAILURE_CACHE_TTL_MS });
+const tcgSetFailureCache = createMemoryCache<TcgResourceFailure>({ maxEntries: 256, ttlMs: TCG_FAILURE_CACHE_TTL_MS });
 // Avoid retry storms during a short upstream outage while preserving normal
 // retryability as soon as the provider has had time to recover.
-const tcgSetCardsFailureCache = createMemoryCache<boolean>({ maxEntries: 128, ttlMs: TCG_SET_FAILURE_CACHE_TTL_MS });
+const tcgSetCardsFailureCache = createMemoryCache<TcgResourceFailure>({ maxEntries: 128, ttlMs: TCG_SET_FAILURE_CACHE_TTL_MS });
 const tcgAlbumMemoryCache = createMemoryCache<TCGSetAlbumData>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgCollectionCatalogMemoryCache = createMemoryCache<TCGCollectionSetSummary[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgAllSetsMemoryCache = createMemoryCache<TCGSet[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
@@ -693,13 +694,15 @@ async function getTCGCardUncached(
       return cached;
     }
 
-    if (tcgCardFailureCache.get(failureCacheKey)) {
+    const failure = tcgCardFailureCache.get(failureCacheKey);
+    if (failure) {
       throwIfAborted(signal);
       const staleCard = await getCachedData<TCGCard>(cacheKey, true);
       if (staleCard && (!options.requirePricing || hasMarketPrice(staleCard))) {
         tcgCardMemoryCache.set(cacheKey, staleCard);
         return staleCard;
       }
+      if ('error' in failure) throw failure.error;
       if (allowEnglishFallback && tcgLang !== 'en') {
         return getTCGCard(cardId, 'en', signal, options);
       }
@@ -734,7 +737,7 @@ async function getTCGCardUncached(
     // fresh price before they can satisfy the caller.
     const staleCard = await getCachedData<TCGCard>(cacheKey, true);
     if (staleCard && (!options.requirePricing || hasMarketPrice(staleCard))) {
-      tcgCardFailureCache.set(failureCacheKey, true);
+      tcgCardFailureCache.set(failureCacheKey, {});
       tcgCardMemoryCache.set(cacheKey, staleCard);
       return staleCard;
     }
@@ -746,7 +749,7 @@ async function getTCGCardUncached(
     if (allowEnglishFallback && tcgLang !== 'en') {
       const fallbackCard = await getTCGCard(cardId, 'en', signal, options);
       if (fallbackCard) {
-        tcgCardFailureCache.set(failureCacheKey, true);
+        tcgCardFailureCache.set(failureCacheKey, {});
         tcgCardMemoryCache.set(cacheKey, fallbackCard);
         await setCachedData(cacheKey, fallbackCard);
         reportFallback('incomplete-response', {
@@ -759,7 +762,7 @@ async function getTCGCardUncached(
     }
 
     if (!allowEnglishFallback) {
-      tcgCardFailureCache.set(failureCacheKey, true);
+      tcgCardFailureCache.set(failureCacheKey, {});
       if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
       return staleCard;
     }
@@ -777,7 +780,7 @@ async function getTCGCardUncached(
         const summaryCards = await getCardsBySet(setId, tcgLang, signal);
         const summaryCard = summaryCards.find((candidate) => candidate.id.toLowerCase() === cardId.toLowerCase());
         if (summaryCard) {
-          tcgCardFailureCache.set(failureCacheKey, true);
+          tcgCardFailureCache.set(failureCacheKey, {});
           tcgCardMemoryCache.set(cacheKey, summaryCard);
           await setCachedData(cacheKey, summaryCard);
           reportFallback('incomplete-response', {
@@ -792,10 +795,12 @@ async function getTCGCardUncached(
       }
     }
 
-    if (!confirmedNotFound) {
+    if (!confirmedNotFound && !staleCard) {
+      tcgCardFailureCache.set(failureCacheKey, { error });
       logTcgUpstreamFailure(`card:${failureCacheKey}`, `Error fetching card ${cardId}`, error);
+      throw error;
     }
-    tcgCardFailureCache.set(failureCacheKey, true);
+    tcgCardFailureCache.set(failureCacheKey, {});
     if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
     return staleCard;
   }
@@ -1277,13 +1282,15 @@ async function getCardsBySetUncached(
   // v6 invalidates earlier partial-set caches so public checklist pages can
   // safely hydrate the complete set response before becoming indexable.
   const cacheKey = getTcgSetCardsCacheKey(setId, tcgLang);
-  if (tcgSetCardsFailureCache.get(cacheKey)) {
+  const failure = tcgSetCardsFailureCache.get(cacheKey);
+  if (failure) {
     throwIfAborted(signal);
     const staleCards = await getCachedData<TCGCard[]>(cacheKey, true);
     if (staleCards?.length) {
       tcgSetCardsMemoryCache.set(cacheKey, staleCards);
       return staleCards;
     }
+    if ('error' in failure) throw failure.error;
     return [];
   }
   const memoryCached = tcgSetCardsMemoryCache.get(cacheKey);
@@ -1332,7 +1339,7 @@ async function getCardsBySetUncached(
     if (tcgLang !== 'en') {
       const fallbackCards = await getCardsBySet(setId, 'en', signal);
       if (fallbackCards.length > 0) {
-        tcgSetCardsFailureCache.set(cacheKey, true);
+        tcgSetCardsFailureCache.set(cacheKey, {});
         tcgSetCardsMemoryCache.set(cacheKey, fallbackCards);
         await setCachedData(cacheKey, fallbackCards);
         return fallbackCards;
@@ -1344,7 +1351,11 @@ async function getCardsBySetUncached(
     }
     const staleCards = await getCachedData<TCGCard[]>(cacheKey, true);
     if (staleCards?.length) tcgSetCardsMemoryCache.set(cacheKey, staleCards);
-    tcgSetCardsFailureCache.set(cacheKey, true);
+    if (!staleCards?.length && !isNotFoundResponse(error)) {
+      tcgSetCardsFailureCache.set(cacheKey, { error });
+      throw error;
+    }
+    tcgSetCardsFailureCache.set(cacheKey, {});
     return staleCards || [];
   }
 }
@@ -1871,12 +1882,14 @@ async function getSetByIdUncached(setId: string, lang = 'en'): Promise<TCGSet | 
       return cached;
     }
 
-    if (tcgSetFailureCache.get(cacheKey)) {
+    const failure = tcgSetFailureCache.get(cacheKey);
+    if (failure) {
       const staleSet = await getCachedData<TCGSet>(cacheKey, true);
       if (staleSet) {
         tcgSetMemoryCache.set(cacheKey, staleSet);
         return staleSet;
       }
+      if ('error' in failure) throw failure.error;
       if (tcgLang !== 'en') return getSetById(setId, 'en');
       return null;
     }
@@ -1893,7 +1906,7 @@ async function getSetByIdUncached(setId: string, lang = 'en'): Promise<TCGSet | 
   } catch (error) {
     const staleSet = await getCachedData<TCGSet>(cacheKey, true);
     if (staleSet) {
-      tcgSetFailureCache.set(cacheKey, true);
+      tcgSetFailureCache.set(cacheKey, {});
       tcgSetMemoryCache.set(cacheKey, staleSet);
       return staleSet;
     }
@@ -1909,20 +1922,20 @@ async function getSetByIdUncached(setId: string, lang = 'en'): Promise<TCGSet | 
       } catch (fallbackError) {
         // A network or upstream failure is temporary. Throwing keeps Next's
         // persistent cache from storing it as a missing set for an hour.
-        tcgSetFailureCache.set(cacheKey, true);
+        tcgSetFailureCache.set(cacheKey, { error: fallbackError });
         logTcgUpstreamFailure(`set:${cacheKey}:fallback`, `Error fetching fallback set ${setId}`, fallbackError);
         throw fallbackError;
       }
     }
 
     if (isNotFoundResponse(error)) {
-      tcgSetFailureCache.set(cacheKey, true);
+      tcgSetFailureCache.set(cacheKey, {});
       return null;
     }
 
     // Only a confirmed 404 means the identifier is absent. Other failures
     // must remain retryable instead of being cached as a route-level 404.
-    tcgSetFailureCache.set(cacheKey, true);
+    tcgSetFailureCache.set(cacheKey, { error });
     logTcgUpstreamFailure(`set:${cacheKey}`, `Error fetching set ${setId}`, error);
     throw error;
   }

@@ -12,7 +12,7 @@ import { buildInLanguage, localeHref } from '@/lib/seo';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages, type SupportedLanguage } from '@/lib/languages';
 import { getTCGCardImageCandidates, getTCGSetImageCandidates } from '@/lib/tcg-images';
-import { getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
+import { buildTCGDetailPath, getTCGSetCardCount, getTCGSetPreviewCards, isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
@@ -25,13 +25,14 @@ interface PageProps {
   searchParams: Promise<{ tcgLang?: string | string[] | undefined }>;
 }
 
-function buildSetLanguages(setId: string): Record<string, string> {
+function buildSetLanguages(setId: string, tcgLanguage: TCGCardLanguage): Record<string, string> {
+  const path = buildTCGDetailPath('sets', setId, tcgLanguage);
   const languages = supportedLanguages.reduce<Record<string, string>>((result, language) => {
-      result[language] = `/${language}/tcg/sets/${encodeURIComponent(setId)}`;
+      result[language] = `/${language}${path}`;
       return result;
     }, {});
 
-  return { ...languages, 'x-default': `/en/tcg/sets/${encodeURIComponent(setId)}` };
+  return { ...languages, 'x-default': `/en${path}` };
 }
 
 function formatReleaseDate(value: string | undefined, language: SupportedLanguage): string {
@@ -93,10 +94,10 @@ function buildChecklist(
 }
 
 async function getSetPageData(setId: string, language: TCGCardLanguage) {
-  const set = await getTCGSetCached(setId, language).catch(() => null);
+  const set = await getTCGSetCached(setId, language);
   if (!set) return null;
 
-  const cards = await getTCGSetCardsCached(setId, language).catch(() => []);
+  const cards = await getTCGSetCardsCached(setId, language);
   return { set, cards, isIndexable: isIndexableTCGSetCardList(set, cards) };
 }
 
@@ -115,6 +116,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const title = t('tcg.set_meta_title', { name: data.set.name, releaseDate });
   const description = t('tcg.set_meta_description', { name: data.set.name, releaseDate });
   const canonicalLanguage = language;
+  const canonicalPath = buildTCGDetailPath('sets', setId, tcgLanguage);
   const ogImage = `${SITE_URL}/api/og/tcg-set?set=${encodeURIComponent(setId)}&lang=${tcgLanguage}`;
 
   return {
@@ -124,13 +126,13 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       ? { index: true, follow: true }
       : { index: false, follow: true },
     alternates: {
-      canonical: `/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}`,
-      languages: buildSetLanguages(setId),
+      canonical: `/${canonicalLanguage}${canonicalPath}`,
+      languages: buildSetLanguages(setId, tcgLanguage),
     },
     openGraph: {
       title,
       description,
-      url: `/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}`,
+      url: `/${canonicalLanguage}${canonicalPath}`,
       type: 'website',
       images: [{ url: ogImage, width: 1200, height: 630, alt: data.set.name }],
     },
@@ -155,7 +157,7 @@ export default async function TCGSetPage({ params, searchParams }: PageProps) {
   const total = declaredTotal || cards.length;
   const itemListTotal = isIndexable ? total : cards.length;
   const previewCards = getTCGSetPreviewCards(cards);
-  const path = `/tcg/sets/${encodeURIComponent(setId)}`;
+  const path = buildTCGDetailPath('sets', setId, tcgLanguage);
   const pageTitle = t('tcg.set_meta_title', { name: set.name, releaseDate });
   const pageDescription = t('tcg.set_meta_description', { name: set.name, releaseDate });
   const setUrl = `${SITE_URL}${localeHref(path, language)}`;

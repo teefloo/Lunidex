@@ -10,7 +10,7 @@ import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
-import { getTCGCardMetaDescriptionKey, PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
+import { buildTCGDetailPath, getTCGCardMetaDescriptionKey, PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -48,10 +48,11 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   );
   // Dynamic Soft Pixel OG image (card art + name + rarity), localized via ?lang=.
   const encodedCardId = encodeURIComponent(id);
+  const canonicalPath = buildTCGDetailPath('cards', id, tcgLanguage);
   const ogImage = `${SITE_URL}/api/og/tcg-card?id=${encodedCardId}&lang=${tcgLanguage}`;
   const indexableLanguages = supportedLanguages;
   const languages = Object.fromEntries(
-    indexableLanguages.map((language) => [language, `/${language}/tcg/cards/${encodedCardId}`]),
+    indexableLanguages.map((language) => [language, `/${language}${canonicalPath}`]),
   );
 
   return {
@@ -61,13 +62,13 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     description,
     robots: PUBLIC_TCG_CARD_ROBOTS,
     alternates: {
-      canonical: `/${canonicalLanguage}/tcg/cards/${encodedCardId}`,
-      languages: { ...languages, 'x-default': `/en/tcg/cards/${encodedCardId}` },
+      canonical: `/${canonicalLanguage}${canonicalPath}`,
+      languages: { ...languages, 'x-default': `/en${canonicalPath}` },
     },
     openGraph: {
       title,
       description,
-      url: `/${canonicalLanguage}/tcg/cards/${encodedCardId}`,
+      url: `/${canonicalLanguage}${canonicalPath}`,
       type: 'website',
       images: [{ url: ogImage, width: 1200, height: 630, alt: card.name }],
     },
@@ -99,8 +100,8 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: t('common.home', { defaultValue: 'Lunidex' }), item: `${SITE_URL}/${currentLang}` },
       { '@type': 'ListItem', position: 2, name: t('tcg.page_heading', { defaultValue: 'TCG Catalog' }), item: `${SITE_URL}/${currentLang}/tcg` },
-      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${canonicalLanguage}/tcg/sets/${encodeURIComponent(setId)}` }] : []),
-      { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${canonicalLanguage}/tcg/cards/${encodeURIComponent(card.id)}` },
+      ...(setId ? [{ '@type': 'ListItem', position: 3, name: setName, item: `${SITE_URL}/${canonicalLanguage}${buildTCGDetailPath('sets', setId, tcgLanguage)}` }] : []),
+      { '@type': 'ListItem', position: setId ? 4 : 3, name: card.name, item: `${SITE_URL}/${canonicalLanguage}${buildTCGDetailPath('cards', card.id, tcgLanguage)}` },
     ],
   };
 

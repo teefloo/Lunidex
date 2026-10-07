@@ -54,4 +54,32 @@ describe('TCG cancellation and shared requests', () => {
     await expect(searchCards({}, 'en')).resolves.toBe(stale);
     expect(mocks.setCachedData).not.toHaveBeenCalled();
   });
+
+  it.each(['getSetById', 'getTCGCard', 'getCardsBySet'] as const)(
+    '%s never turns an upstream outage into cached missing data', async method => {
+      const failure = Object.assign(new Error('Upstream unavailable'), { response: { status: 503 } });
+      mocks.get.mockRejectedValue(failure);
+      const api = await import('./tcg');
+      const id = method === 'getTCGCard' ? 'base1-4' : 'base1';
+      await expect(api[method](id, 'en')).rejects.toBe(failure);
+      await expect(api[method](id, 'en')).rejects.toBe(failure);
+      expect(mocks.setCachedData).not.toHaveBeenCalled();
+    },
+  );
+
+  it('does not report a localized set missing when its English fallback is unavailable', async () => {
+    const missing = Object.assign(new Error('Missing translation'), { response: { status: 404 } });
+    const unavailable = Object.assign(new Error('English unavailable'), { response: { status: 503 } });
+    mocks.get.mockImplementation((path: string) => Promise.reject(path.startsWith('/fr/') ? missing : unavailable));
+    const { getSetById } = await import('./tcg');
+    await expect(getSetById('base1', 'fr')).rejects.toBe(unavailable);
+    await expect(getSetById('base1', 'fr')).rejects.toBe(unavailable);
+  });
+
+  it('still returns null for a confirmed missing set', async () => {
+    mocks.get.mockRejectedValue(Object.assign(new Error('Missing'), { response: { status: 404 } }));
+    const { getSetById } = await import('./tcg');
+    await expect(getSetById('missing-set', 'en')).resolves.toBeNull();
+    await expect(getSetById('missing-set', 'en')).resolves.toBeNull();
+  });
 });
