@@ -14,6 +14,7 @@ import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { useTranslation } from '@/lib/i18n';
 import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
+import { trackProductEvent } from '@/lib/product-measurement';
 import { getTCGAlbumCardPrimaryAction } from '@/lib/tcg-album-card-actions';
 
 interface TCGAlbumCardProps {
@@ -44,6 +45,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   onManage,
   onOwnershipChange,
   collectionKey,
+  language,
   priority = false,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
@@ -54,6 +56,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   const primaryAction = getTCGAlbumCardPrimaryAction(owned);
 
   const handleAdd = () => {
+    void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: language, interaction: 'add' });
     if (!hasSyncAccess()) {
       requestSyncAccess();
       return;

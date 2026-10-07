@@ -12,7 +12,7 @@ const URL_PROPERTIES = new Set([
   '$initial_referrer',
   '$session_entry_url',
 ]);
-const ROUTE_PROPERTIES = new Set(['$pathname', 'route', 'from_path', 'to_path']);
+const ROUTE_PROPERTIES = new Set(['$pathname', 'route', 'from_path', 'to_path', 'entry_path']);
 const SENSITIVE_KEYS = new Set([
   'authorization',
   'body',

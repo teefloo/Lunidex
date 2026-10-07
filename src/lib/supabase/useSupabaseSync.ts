@@ -7,6 +7,9 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { fetchAppApi } from '@/lib/app-api';
 import { isLikelyNetworkError, reportFallback } from '@/lib/sentry-observability';
+import { getFirstPersistedTcgValue, getPersistedTcgAddition } from '@/lib/tcg-persistence-measurement';
+import { setProductTrackingIdentity, trackTcgPersistedValue, trackReturnAfterActivation } from '@/lib/product-measurement';
+import { capturePostHogEvent } from '@/lib/posthog-client';
 import { retryAsync } from '@/lib/retry';
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import {
@@ -136,6 +139,7 @@ export function useNeonSync(): void {
   useEffect(() => {
     if (!hasHydrated) return;
 
+    if (!loading) setProductTrackingIdentity(userId);
     let cancelled = false;
     let unsubscribe: (() => void) | undefined;
     const initialState = getInitialSyncState();
@@ -238,6 +242,33 @@ export function useNeonSync(): void {
             data: payload,
             updatedAt: remoteUpdatedAtRef.current,
           };
+          try {
+            const confirmed = reconcileRemoteState(savedRemote.data as Partial<Snapshot>, extractSyncMetadata(savedRemote.data), deviceId).state;
+            const previousAccepted = acceptedSnapshotRef.current;
+            const removed = getPersistedTcgAddition(confirmed.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? []);
+            if (removed && getPersistedTcgAddition(local.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? [])) {
+              capturePostHogEvent('tcg_card_ownership_toggled', { ...removed, state: 'removed', persistence: 'neon', authenticated: true });
+              void trackReturnAfterActivation('owned_remove');
+            }
+            for (const state of ['added', 'removed'] as const) {
+              const before = new Set(previousAccepted?.tcgWishlistCards ?? []);
+              const after = new Set(confirmed.tcgWishlistCards);
+              const requested = new Set(local.tcgWishlistCards);
+              const changed = state === 'added'
+                ? [...after].some((id) => !before.has(id) && requested.has(id))
+                : [...before].some((id) => !after.has(id) && !requested.has(id));
+              if (changed) capturePostHogEvent('tcg_wishlist_toggled', { state, persistence: 'neon', authenticated: true });
+            }
+            const addition = getPersistedTcgAddition(acceptedSnapshotRef.current?.tcgCollectionCards ?? [], confirmed.tcgCollectionCards, local.tcgCollectionCards);
+            if (addition) {
+              capturePostHogEvent('tcg_card_ownership_toggled', { ...addition, state: 'added', persistence: 'neon', authenticated: true });
+              const firstValue = previousAccepted && getFirstPersistedTcgValue(previousAccepted, confirmed.tcgCollectionCards, local.tcgCollectionCards);
+              if (firstValue) void trackTcgPersistedValue(firstValue, userId);
+              trackReturnAfterActivation('owned_add');
+            }
+          } catch {
+            // Optional telemetry must never interrupt applying the accepted save.
+          }
           remoteSnapshotRef.current = savedRemote.data;
           remoteUpdatedAtRef.current = savedRemote.updatedAt;
           // Keep a newer in-memory edit made while the request was in flight;

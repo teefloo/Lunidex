@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from 'react';
 
+import { usePathname } from 'next/navigation';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import {
@@ -12,8 +13,9 @@ import {
 import { syncPostHogIdentity } from '@/lib/posthog-client';
 
 export function PostHogIdentityBridge() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const locale = useClientLanguage();
+  const pathname = usePathname();
   const consent = useSyncExternalStore(
     subscribeProductConsent,
     getProductConsent,
@@ -21,9 +23,9 @@ export function PostHogIdentityBridge() {
   );
 
   useEffect(() => {
-    if (consent.productMeasurement !== 'granted') return;
+    if (loading || consent.productMeasurement !== 'granted') return;
     syncPostHogIdentity(user?.id ?? null, { locale });
-  }, [consent.productMeasurement, locale, user?.id]);
+  }, [consent.productMeasurement, loading, locale, pathname, user?.id]);
 
   return null;
 }

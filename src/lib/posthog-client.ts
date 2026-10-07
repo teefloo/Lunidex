@@ -2,7 +2,7 @@
 
 import posthog from 'posthog-js';
 
-import type { ProductConsent } from '@/lib/product-measurement';
+import { consumeProductOauth, getProductConsent, getTcgTrackingContext, setProductTrackingIdentity, touchProductMeasurementSession, type ProductConsent } from '@/lib/product-measurement';
 import {
   POSTHOG_EVENTS,
   type PostHogEventName,
@@ -220,7 +220,9 @@ export function syncPostHogIdentity(
   userId: string | null,
   properties: { locale?: string } = {},
 ): void {
+  setProductTrackingIdentity(userId);
   if (!initialized || !posthog.has_opted_in_capturing()) return;
+  if (typeof window !== 'undefined' && isExcludedPath(window.location.pathname)) return;
 
   if (!userId) {
     if (!lastIdentifiedUserId) return;
@@ -243,24 +245,33 @@ export function syncPostHogIdentity(
       app_locale: properties.locale || currentLocale(),
     }));
     lastIdentifiedUserId = userId;
+    const oauthMethod = consumeProductOauth();
+    if (oauthMethod) capturePostHogEvent(POSTHOG_EVENTS.authSignIn, { method: oauthMethod, result: 'success', authenticated: true });
   }
 }
 
 export function capturePostHogEvent(
   event: PostHogEventName,
   properties: PostHogProperties = {},
-): void {
-  if (typeof window === 'undefined' || !initialized || !posthog.has_opted_in_capturing()) return;
-  if (isExcludedPath(window.location.pathname)) return;
+): boolean {
+  if (typeof window === 'undefined' || getProductConsent().productMeasurement !== 'granted') return false;
+  if (!initialized) { initializePostHog(); syncPostHogConsent(getProductConsent()); }
+  if (!initialized || !posthog.has_opted_in_capturing()) return false;
+  if (isExcludedPath(window.location.pathname)) return false;
+  touchProductMeasurementSession();
+  const funnelEvent = event.startsWith('tcg_') || event.startsWith('auth_');
+  const eventProperties = funnelEvent ? { ...getTcgTrackingContext(properties), ...properties } : properties;
+  if (event.startsWith('tcg_')) delete eventProperties.card_id;
 
-  const safeProperties = sanitizePostHogProperties(contextProperties(properties));
+  const safeProperties = sanitizePostHogProperties(contextProperties(eventProperties));
   const key = eventKey(event, safeProperties);
-  if (isDuplicateEvent(key)) return;
+  if (isDuplicateEvent(key)) return false;
   posthog.capture(event, safeProperties);
+  return true;
 }
 
 export function capturePostHogPageview(pathname: string): void {
-  if (typeof window === 'undefined' || !initialized || !posthog.has_opted_in_capturing()) return;
+  if (typeof window === 'undefined' || getProductConsent().productMeasurement !== 'granted' || !initialized || !posthog.has_opted_in_capturing()) return;
   if (isExcludedPath(pathname)) return;
 
   const normalizedPath = normalizePostHogRoute(pathname || '/');
@@ -268,6 +279,7 @@ export function capturePostHogPageview(pathname: string): void {
   posthog.capture('$pageview', sanitizePostHogProperties(contextProperties({
     $current_url: currentUrl,
     $pathname: normalizedPath,
+    ...getTcgTrackingContext(),
   })));
 }
 
@@ -287,7 +299,7 @@ export function capturePostHogException(
   error: unknown,
   properties: PostHogProperties = {},
 ): void {
-  if (typeof window === 'undefined' || !initialized || !posthog.has_opted_in_capturing()) return;
+  if (typeof window === 'undefined' || getProductConsent().productMeasurement !== 'granted' || !initialized || !posthog.has_opted_in_capturing()) return;
   if (isExcludedPath(window.location.pathname)) return;
 
   const candidate = error instanceof Error ? error : new Error('Observed exception');

@@ -4,12 +4,13 @@ import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit, trustedClientIp } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
 import { normalizeCampaignSlug } from '@/lib/campaigns';
+import { getProductMeasurementConsentFromCookie } from '@/lib/posthog-consent';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const allowed = {
   tcg_start_opened: [['home_cta', 'catalog', 'direct', 'seo', 'campaign']], tcg_set_search_used: [['length_1_3', 'length_4_8', 'length_9_plus']],
-  tcg_set_selected: [['search', 'latest_list']], tcg_album_opened: [['activation', 'collection']],
-  tcg_first_value_reached: [], tcg_activation_completed: [['second_owned_card', 'wishlist']],
+  tcg_set_selected: [['search', 'latest_list', 'album_entry']], tcg_album_opened: [['activation', 'collection']],
+  tcg_first_value_reached: [], tcg_activation_completed: [['first_persisted_card']],
   tcg_sync_prompt_shown: [], tcg_sync_prompt_actioned: [['create_account', 'continue_local', 'dismiss']],
   tcg_returned_after_activation: [['day_0_7', 'day_8_30', 'day_31_90', 'day_91_plus'], ['owned_add', 'owned_remove', 'album_open', 'wishlist_open']],
   tcg_activation_error: [['start_load', 'set_load', 'album_load', 'collection_mutation', 'progress_render', 'wishlist_mutation'], ['network', 'upstream_5xx', 'client_validation', 'unknown']],
@@ -36,6 +37,7 @@ function ephemeralClientKey(request: NextRequest): string {
 
 async function postProductAnalytics(request: NextRequest): Promise<NextResponse> {
   const headers = { 'Cache-Control': 'no-store' };
+  if (getProductMeasurementConsentFromCookie(request.headers.get('cookie') ?? undefined) !== 'granted') return new NextResponse(null, { status: 403, headers });
   if (request.headers.get('content-type') !== 'application/json' || forbidden(request)) return new NextResponse(null, { status: 403, headers });
   const length = Number(request.headers.get('content-length') ?? 0);
   if (length > 512) return new NextResponse(null, { status: 413, headers });

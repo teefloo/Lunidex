@@ -12,9 +12,14 @@ import {
 import { isSupportedLanguage } from '@/lib/languages';
 import { normalizeDisplayName } from '@/lib/json-ld';
 import { getNeonAuthClient, isNeonAuthConfigured, loadNeonAuthClient } from './client';
+import { rememberProductOauth } from '@/lib/product-measurement';
 import { POSTHOG_EVENTS, type PostHogEventName, type PostHogProperties } from '@/lib/posthog-events';
 
 function captureAuthPostHogEvent(event: PostHogEventName, properties: PostHogProperties): void {
+  if (event === POSTHOG_EVENTS.authOauthStarted && typeof properties.method === 'string') {
+    if (properties.result === 'started') rememberProductOauth(properties.method, true);
+    else if (properties.result === 'error') rememberProductOauth(properties.method, false);
+  }
   void import('@/lib/posthog-client')
     .then(({ capturePostHogEvent }) => capturePostHogEvent(event, properties))
     .catch(() => {
@@ -395,6 +400,7 @@ function DeferredAuthProvider({
       session,
       user,
       signUp: async (email, password, name) => {
+        rememberProductOauth('password', false);
         const normalizedEmail = normalizeAuthEmail(email);
         const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
         if (!normalizedName) {
@@ -421,6 +427,7 @@ function DeferredAuthProvider({
         }
       },
       signIn: async (email, password) => {
+        rememberProductOauth('password', false);
         const normalizedEmail = normalizeAuthEmail(email);
         if (!normalizedEmail) {
           return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
@@ -445,7 +452,7 @@ function DeferredAuthProvider({
         try {
           const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
           const error = normalizeError(result.error);
-          captureAuthPostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'success', ...(error ? { error_type: error.name } : {}) });
+          captureAuthPostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'redirect_started', ...(error ? { error_type: error.name } : {}) });
           return { error };
         } catch (error) {
           const normalized = normalizeError(error);
@@ -593,6 +600,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
     session,
     user,
     signUp: async (email, password, name) => {
+        rememberProductOauth('password', false);
       const normalizedEmail = normalizeAuthEmail(email);
       const normalizedName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
       if (!normalizedName) {
@@ -617,6 +625,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       }
     },
     signIn: async (email, password) => {
+        rememberProductOauth('password', false);
       const normalizedEmail = normalizeAuthEmail(email);
       if (!normalizedEmail) {
         return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
@@ -634,7 +643,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
       try {
         const result = await socialSignInWithFallback(client, { provider, callbackURL: redirectTo });
         const error = normalizeError(result.error);
-        captureAuthPostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'success', ...(error ? { error_type: error.name } : {}) });
+        captureAuthPostHogEvent(POSTHOG_EVENTS.authOauthStarted, { method: provider, result: error ? 'error' : 'redirect_started', ...(error ? { error_type: error.name } : {}) });
         return { error };
       } catch (error) {
         const normalized = normalizeError(error);

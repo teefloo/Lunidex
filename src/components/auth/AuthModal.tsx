@@ -77,7 +77,7 @@ export default function AuthModal({
           toast.error(message);
           return;
         }
-        capturePostHogEvent(authEvent, { method: 'password', result: 'success' });
+        capturePostHogEvent(authEvent, { method: 'password', result: 'success', authenticated: Boolean(user) });
         toast.success(tt('auth.check_email', 'Account created — check your inbox to confirm your email.'));
         onOpenChange(false);
       } else {
@@ -89,7 +89,7 @@ export default function AuthModal({
           toast.error(message);
           return;
         }
-        capturePostHogEvent(authEvent, { method: 'password', result: 'success' });
+        capturePostHogEvent(authEvent, { method: 'password', result: 'success', authenticated: true });
         toast.success(tt('auth.signed_in', 'Signed in. Syncing your collection…'));
         onOpenChange(false);
       }

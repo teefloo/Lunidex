@@ -44,6 +44,7 @@ import {
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
+import { trackProductEvent } from '@/lib/product-measurement';
 import { getFocusTrapTarget } from '@/lib/focus-management';
 import {
   getTCGCardDetailCollectionPresentation,
@@ -103,6 +104,9 @@ export function TCGCardDetailContent({
   // Card data follows the independent TCG language, never the interface
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
+  useEffect(() => {
+    if (mounted && isOpen && card) void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: resolvedLang, interaction: 'view' });
+  }, [card, isOpen, mounted, resolvedLang]);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
   // Reset before committing a closed modal, including closure by its parent.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import {
   getSetCompletion,
@@ -23,7 +24,7 @@ import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
-import { markProductActivation, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
+import { getProductConsent, getServerProductConsent, subscribeProductConsent, setProductTrackingIdentity, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
@@ -57,6 +58,8 @@ export function TCGAlbumPage({
   headerAction,
 }: TCGAlbumPageProps) {
   const { t } = useTranslation();
+  const { user, loading: authLoading } = useAuth();
+  const consent = useSyncExternalStore(subscribeProductConsent, getProductConsent, getServerProductConsent);
   const interfaceLanguage = useClientLanguage();
   const router = useRouter();
   const localeHref = useLocaleHref();
@@ -90,8 +93,6 @@ export function TCGAlbumPage({
   const [managedCard, setManagedCard] = useState<TCGCard | null>(null);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [firstValueReached, setFirstValueReached] = useState(false);
-  const [activationComplete, setActivationComplete] = useState(false);
-  const [activationMethod, setActivationMethod] = useState<'second_owned_card' | 'wishlist' | null>(null);
   const historyReturnTargetRef = useRef<string | null>(null);
   const historyReturnScrollPositionRef = useRef<TCGCollectionScrollPosition | null>(null);
   const firstValueReachedRef = useRef(false);
@@ -108,7 +109,14 @@ export function TCGAlbumPage({
     }
   }, []);
 
-  useEffect(() => { if (activation) trackProductEvent('tcg_album_opened', 'activation'); else trackReturnAfterActivation('album_open'); }, [activation]);
+  useEffect(() => {
+    if (!mounted || authLoading || consent.productMeasurement !== 'granted') return;
+    setProductTrackingIdentity(user?.id ?? null);
+    const context = { set_id: set.id, tcg_language: selectedLanguage };
+    void trackProductEvent('tcg_set_selected', 'album_entry', undefined, context);
+    void trackProductEvent('tcg_album_opened', activation ? 'activation' : 'collection', undefined, context);
+    trackReturnAfterActivation('album_open');
+  }, [activation, mounted, selectedLanguage, set.id, authLoading, user?.id, consent.productMeasurement]);
   useEffect(() => {
     let storedTarget: string | null = null;
     let storedScrollPosition: TCGCollectionScrollPosition | null = null;
@@ -137,8 +145,6 @@ export function TCGAlbumPage({
       historyReturnScrollPositionRef.current = null;
     }
   }, [activation, language, rememberCollectionScrollRestore, returnQuery, set.id]);
-  useEffect(() => { if (firstValueReached) trackProductEvent('tcg_first_value_reached'); }, [firstValueReached]);
-  useEffect(() => { if (activationComplete && activationMethod) { trackProductEvent('tcg_activation_completed', activationMethod); markProductActivation(); } }, [activationComplete, activationMethod]);
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
@@ -188,8 +194,7 @@ export function TCGAlbumPage({
       return;
     }
     trackReturnAfterActivation('owned_add');
-    setActivationMethod('second_owned_card');
-    setActivationComplete(true);
+
   }, []);
 
   if (!mounted) return null;
@@ -385,7 +390,7 @@ export function TCGAlbumPage({
         </details>
       ) : null}
 
-      {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange} onWishlistAdded={() => { if (firstValueReached) { setActivationMethod('wishlist'); setActivationComplete(true); } }} />}
+      {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange}  />}
       {managedCard && resolvedCollectionKey && (
         <TCGCollectionVariantSheet
           card={managedCard}

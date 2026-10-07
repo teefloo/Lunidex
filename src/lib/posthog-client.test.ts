@@ -63,7 +63,8 @@ describe('PostHog client consent ordering', () => {
     Object.defineProperty(globalThis, 'window', {
       configurable: true,
       value: {
-        location: { hostname: 'lunidex.app', pathname: '/en/pokedex' },
+        location: { hostname: 'lunidex.app', pathname: '/en/pokedex', search: '' },
+        localStorage: { getItem: (key: string) => key === 'primedex-consent-v2' ? JSON.stringify({ audiencePerformance: 'denied', chosenAt: '2026-09-19T00:00:00.000Z', policyVersion: '2026-09-19', productMeasurement: 'granted', version: 3 }) : null, setItem: vi.fn(), removeItem: vi.fn() },
       },
     });
     Object.defineProperty(globalThis, 'document', {

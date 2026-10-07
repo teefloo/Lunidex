@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGSet } from '@/types/tcg';
-import { getTcgStartAttribution, trackProductEvent } from '@/lib/product-measurement';
+import { getProductConsent, getServerProductConsent, subscribeProductConsent, setProductTrackingIdentity, trackTcgStartOpened, trackProductEvent } from '@/lib/product-measurement';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
@@ -49,6 +49,7 @@ export function TCGStartPage() {
   const localeHref = useLocaleHref();
   const { enabled, loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
+  const consent = useSyncExternalStore(subscribeProductConsent, getProductConsent, getServerProductConsent);
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const [query, setQuery] = useState('');
@@ -58,10 +59,7 @@ export function TCGStartPage() {
   const resolvedLanguage: TCGCardLanguage = mounted && hasHydrated
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
-  const attribution = useMemo(
-    () => getTcgStartAttribution(searchParams.toString()),
-    [searchParams],
-  );
+
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
@@ -101,9 +99,10 @@ export function TCGStartPage() {
   }, [pathname, router, searchParams, setBrowseLanguage]);
 
   useEffect(() => {
-    if (!mounted || !hasHydrated) return;
-    if (attribution) trackProductEvent('tcg_start_opened', attribution.source, attribution.campaign);
-  }, [attribution, hasHydrated, mounted]);
+    if (!mounted || !hasHydrated || authLoading || consent.productMeasurement !== 'granted') return;
+    setProductTrackingIdentity(user?.id ?? null);
+    void trackTcgStartOpened({ tcg_language: resolvedLanguage, authenticated: Boolean(user) });
+  }, [hasHydrated, mounted, resolvedLanguage, user, authLoading, consent.productMeasurement]);
 
   if (!mounted || !hasHydrated || authLoading) {
     return (
@@ -232,7 +231,7 @@ export function TCGStartPage() {
                       key={set.id}
                       href={`${localeHref(`/tcg/collection/${resolvedLanguage}/${encodeURIComponent(set.id)}`)}?activation=1`}
                       onClick={() => {
-                        trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list');
+                        void trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list', undefined, { set_id: set.id, tcg_language: resolvedLanguage, authenticated: Boolean(user) });
                       }}
                       className="group flex min-h-20 items-center gap-4 rounded-sm border border-border/30 bg-card/40 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                     >

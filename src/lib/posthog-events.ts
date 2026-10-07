@@ -19,6 +19,8 @@ export const POSTHOG_EVENTS = {
   tcgDeckCardAdded: 'tcg_deck_card_added',
   tcgDeckCardRemoved: 'tcg_deck_card_removed',
   tcgStartOpened: 'tcg_start_opened',
+  tcgCampaignLanded: 'tcg_campaign_landed',
+  tcgFirstCardInteracted: 'tcg_first_card_interacted',
   tcgSetSearchUsed: 'tcg_set_search_used',
   tcgSetSelected: 'tcg_set_selected',
   tcgAlbumOpened: 'tcg_album_opened',
