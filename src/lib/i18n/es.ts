@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -1961,6 +1962,7 @@ team: 'Equipo',
       page_subheading: 'Explora un catálogo público del Juego de Cartas Coleccionables Pokémon',
       discover_title: 'Descubrir',
       discover_subtitle: 'Busca cartas, explora las últimas expansiones y abre detalles con un solo toque.',
+      demo: tcgDemoTranslations.es,
       activation: {
         start_title: 'Empieza tu colección', start_description: 'Elige una expansión y marca las cartas que tienes para seguir tu progreso.', search_sets: 'Buscar una expansión', search_sets_placeholder: 'Nombre de la expansión', search_results: 'Resultados de búsqueda', latest_sets: 'Últimas expansiones', sets_load_error: 'No se pueden cargar las expansiones ahora mismo.', no_sets_found: 'Ninguna expansión coincide con esta búsqueda.', show_latest_sets: 'Ver las últimas expansiones', card_total: '{{count}} cartas', choose_set: 'Elegir esta expansión', search_cards_instead: 'Prefiero buscar una carta', album_title: 'Añade tu primera carta', album_description: 'Toca la propia carta para añadirla o quitarla de tu colección.', add_card_aria: 'Añadir {{name}} a mi colección', remove_card_aria: 'Eliminar {{name}} de mi colección', owned_action: 'Tengo esta carta', remove_owned: 'Eliminar de mi colección', confirm_remove: 'Confirmar eliminación', view_card: 'Ver la carta', first_card_added: 'Carta añadida · {{owned}} / {{total}} cartas en esta expansión', continue_adding: 'Seguir añadiendo', sync_title: 'Lleva tu colección contigo', sync_description: 'Inicia sesión para encontrar tu colección en tus otros dispositivos.', create_account: 'Crear una cuenta',
       },

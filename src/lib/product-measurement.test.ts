@@ -17,6 +17,31 @@ describe('consented TCG milestones', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })));
   });
   afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+  it('keeps demo events consented, deduplicated and separate from saved activation', async () => {
+    const m = await import('./product-measurement');
+    const context = { set_id: 'base1', tcg_language: 'en' };
+    for (const event of ['tcg_demo_opened', 'tcg_demo_first_interaction', 'tcg_demo_signup_clicked'] as const) {
+      expect(await m.trackProductEvent(event, undefined, undefined, context)).toBe(false);
+    }
+    expect(client.capturePostHogEvent).not.toHaveBeenCalled();
+    expect(window.sessionStorage.length).toBe(0);
+    m.setProductConsent(consent);
+    await Promise.all([
+      m.trackProductEvent('tcg_demo_opened', undefined, undefined, context),
+      m.trackProductEvent('tcg_demo_opened', undefined, undefined, context),
+    ]);
+    await m.trackProductEvent('tcg_demo_first_interaction', undefined, undefined, context);
+    await m.trackProductEvent('tcg_demo_first_interaction', undefined, undefined, context);
+    await m.trackProductEvent('tcg_demo_signup_clicked', undefined, undefined, context);
+    expect(client.capturePostHogEvent.mock.calls.map(([event]) => event)).toEqual([
+      'tcg_demo_opened', 'tcg_demo_first_interaction', 'tcg_demo_signup_clicked',
+    ]);
+    expect(client.capturePostHogEvent).toHaveBeenCalledWith('tcg_demo_opened', expect.objectContaining({ authenticated: false, ...context }));
+    expect(fetch).not.toHaveBeenCalled();
+    expect(window.localStorage.getItem('primedex-product-measurement-activated-at')).toBeNull();
+    await m.trackProductEvent('tcg_demo_opened', undefined, undefined, { ...context, set_id: 'base2' });
+    expect(client.capturePostHogEvent).toHaveBeenCalledTimes(4);
+  });
   it('does not track or persist attribution before consent', async () => {
     const m = await import('./product-measurement');
     expect(m.getTcgTrackingContext()).toEqual({});

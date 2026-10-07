@@ -25,6 +25,7 @@ import {
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
+import type { TCGDemoOwnership } from '@/hooks/useTCGDemoOwnership';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
@@ -67,6 +68,7 @@ export interface TCGCardDetailContentProps {
   tcgLanguage?: TCGCardLanguage;
   collectionKey?: string;
   onOwnershipChange?: (owned: boolean) => void;
+  demoOwnership?: TCGDemoOwnership;
 }
 
 export function TCGCardDetailContent({
@@ -79,6 +81,7 @@ export function TCGCardDetailContent({
   tcgLanguage,
   collectionKey,
   onOwnershipChange,
+  demoOwnership,
 }: TCGCardDetailContentProps) {
   const isModal = presentation === 'modal';
   const Heading = isModal ? 'h2' : 'h1';
@@ -105,8 +108,8 @@ export function TCGCardDetailContent({
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
   useEffect(() => {
-    if (mounted && isOpen && card) void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: resolvedLang, interaction: 'view' });
-  }, [card, isOpen, mounted, resolvedLang]);
+    if (mounted && isOpen && card && !demoOwnership) void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: resolvedLang, interaction: 'view' });
+  }, [card, isOpen, mounted, resolvedLang, demoOwnership]);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
   // Reset before committing a closed modal, including closure by its parent.
@@ -201,12 +204,12 @@ export function TCGCardDetailContent({
   // has not started that language/set collection yet. An explicit album key,
   // or a known collection in the store, opts into language-scoped ownership;
   // otherwise the action remains a historical (language-less) possession.
-  const resolvedCollectionKey = collectionKey
+  const resolvedCollectionKey = demoOwnership ? null : collectionKey
     ?? (candidateCollectionKey && tcgCollections.includes(candidateCollectionKey)
       ? candidateCollectionKey
       : null);
   const compared = mounted && isTCGCompared(displayCard.id);
-  const owned = mounted && (resolvedCollectionKey
+  const owned = mounted && (demoOwnership ? demoOwnership.ownedIds.has(displayCard.id) : resolvedCollectionKey
     ? isTCGCollectionCardOwned(resolvedCollectionKey, displayCard.id, store.tcgCollectionCards)
     : isTCGOwned(displayCard.id));
   const collectionOwnerships = mounted && resolvedCollectionKey
@@ -258,6 +261,10 @@ export function TCGCardDetailContent({
   };
 
   const handleOwnedToggle = () => {
+    if (demoOwnership) {
+      demoOwnership.toggleOwned(displayCard.id);
+      return;
+    }
     if (!hasSyncAccess()) {
       requestSyncAccess();
       return;
@@ -394,12 +401,12 @@ export function TCGCardDetailContent({
                   </p>
 
                   <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-                    <ActionPill
+                    {!demoOwnership && <ActionPill
                       active={compared}
                       onClick={() => (compared ? removeTCGCompare(displayCard.id) : addTCGCompare(displayCard.id))}
                       label={compared ? t('tcg.remove_from_compare') : t('tcg.add_to_compare')}
                       badge={compared ? tcgCompareList.length : undefined}
-                    />
+                    />}
                     {collectionPresentation ? (
                       <ActionPill
                         active={collectionPresentation.pressed}
@@ -431,13 +438,14 @@ export function TCGCardDetailContent({
                         active={ownershipPresentation.pressed}
                         onClick={handleOwnedToggle}
                         label={t(ownershipPresentation.labelKey)}
-                        ariaLabel={t(ownershipPresentation.ariaLabelKey, { name: displayCard.name })}
+                        ariaLabel={t(demoOwnership ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : ownershipPresentation.ariaLabelKey, { name: displayCard.name })}
                         ariaPressed={ownershipPresentation.pressed}
                       />
                     )}
-                    <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />
+                    {!demoOwnership && <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />}
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
                   </div>
+                  {demoOwnership && <p className="text-sm leading-6 text-muted-foreground">{t('tcg.demo.notice')}</p>}
                 </header>
 
                 {/* ── Market price ─────────────────────────────────── */}

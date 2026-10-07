@@ -81,4 +81,9 @@ describe('AuthModal', () => {
 
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+  it('opens the existing form in signup mode when requested by the demo', async () => {
+    await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
+    expect(container.textContent).toContain('Create your account');
+    expect(container.textContent).toContain('Name');
+  });
 });

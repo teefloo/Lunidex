@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -1958,6 +1959,7 @@ team: 'Squadra',
       page_subheading: 'Esplora un catalogo pubblico del Gioco di Carte Pokémon',
       discover_title: 'Scopri',
       discover_subtitle: 'Cerca carte, sfoglia le ultime espansioni e apri i dettagli con un tocco.',
+      demo: tcgDemoTranslations.it,
       activation: {
         start_title: 'Inizia la tua collezione', start_description: 'Scegli un set e segna le carte che possiedi per seguire i tuoi progressi.', search_sets: 'Cerca un set', search_sets_placeholder: 'Nome del set', search_results: 'Risultati della ricerca', latest_sets: 'Ultimi set', sets_load_error: 'Impossibile caricare i set al momento.', no_sets_found: 'Nessun set corrisponde alla ricerca.', show_latest_sets: 'Mostra gli ultimi set', card_total: '{{count}} carte', choose_set: 'Scegli questo set', search_cards_instead: 'Preferisco cercare una carta', album_title: 'Aggiungi la tua prima carta', album_description: 'Tocca la carta stessa per aggiungerla o rimuoverla dalla tua collezione.', add_card_aria: 'Aggiungi {{name}} alla mia collezione', remove_card_aria: 'Rimuovi {{name}} dalla mia collezione', owned_action: 'Possiedo questa carta', remove_owned: 'Rimuovi dalla collezione', confirm_remove: 'Conferma rimozione', view_card: 'Vedi la carta', first_card_added: 'Carta aggiunta · {{owned}} / {{total}} carte in questo set', continue_adding: 'Continua ad aggiungere', sync_title: 'Porta con te la tua collezione', sync_description: 'Accedi per ritrovare la tua collezione sugli altri dispositivi.', create_account: 'Crea un account',
       },

@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -2525,6 +2526,7 @@ export default {
         page_subheading: 'Search Pokémon, Trainer, and Energy cards in a public archive.',
         discover_title: 'Discover',
         discover_subtitle: 'Search cards, browse the latest expansions, and open details in one tap.',
+        demo: tcgDemoTranslations.en,
         activation: {
           start_title: 'Start your collection', start_description: 'Choose a set and mark the cards you own to track your progress.', search_sets: 'Search for a set', search_sets_placeholder: 'Set name', search_results: 'Search results', latest_sets: 'Latest sets', sets_load_error: 'Unable to load sets right now.', no_sets_found: 'No set matches this search.', show_latest_sets: 'Show latest sets', card_total: '{{count}} cards', choose_set: 'Choose this set', search_cards_instead: 'I’d rather search for a card', album_title: 'Add your first card', album_description: 'Tap the card itself to add or remove it from your collection.', add_card_aria: 'Add {{name}} to my collection', remove_card_aria: 'Remove {{name}} from my collection', owned_action: 'I own this card', remove_owned: 'Remove from my collection', confirm_remove: 'Confirm removal', view_card: 'View card', first_card_added: 'Card added · {{owned}} / {{total}} cards in this set', continue_adding: 'Keep adding', sync_title: 'Take your collection with you', sync_description: 'Sign in to find your collection on your other devices.', create_account: 'Create an account',
           continue_without_account: 'Browse without an account',

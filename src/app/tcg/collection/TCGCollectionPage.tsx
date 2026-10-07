@@ -1,6 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { useMounted } from '@/hooks/useMounted';
@@ -21,6 +23,7 @@ import { buildTCGCollectionOverviewEntries } from '@/lib/tcg-collection-overview
 export function TCGCollectionPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const localeHref = useLocaleHref();
   const searchParams = useSearchParams();
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
@@ -66,7 +69,15 @@ export function TCGCollectionPage() {
             <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
         ) : !user || syncStatus === 'unauthenticated' ? (
-          <SyncRequiredPanel headingLevel={2} />
+          <>
+            {!user && <Link
+              href={localeHref(`/tcg/start?tcgLang=${collectionLanguage}`)}
+              className="mb-6 inline-flex min-h-12 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-bold text-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              {t('tcg.demo.try_checklist')}
+            </Link>}
+            <SyncRequiredPanel headingLevel={2} />
+          </>
         ) : syncStatus !== 'ready' ? (
           <SyncStatusPanel status={syncStatus} headingLevel={2} />
         ) : (

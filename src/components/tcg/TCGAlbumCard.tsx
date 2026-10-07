@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type {
   TCGCard,
@@ -28,6 +28,7 @@ interface TCGAlbumCardProps {
   collectionKey?: string;
   language?: TCGCardLanguage;
   priority?: boolean;
+  onToggleOwned?: (cardId: string) => void;
 }
 
 const VARIANT_LABELS: Record<TCGPhysicalVariant, string> = {
@@ -47,6 +48,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   collectionKey,
   language,
   priority = false,
+  onToggleOwned,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
   const [actionFeedback, setActionFeedback] = useState('');
@@ -89,9 +91,10 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
     )} style={{ contentVisibility: 'auto', containIntrinsicSize: '280px' }}>
       <button
         type="button"
-        onClick={primaryAction === 'add' ? handleAdd : () => onView?.(card)}
+        onClick={onToggleOwned ? () => onToggleOwned(card.id) : primaryAction === 'add' ? handleAdd : () => onView?.(card)}
         className="group/card relative aspect-[2.15/3] cursor-pointer touch-manipulation overflow-hidden rounded-sm text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        aria-label={t(primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: card.name })}
+        aria-label={t(onToggleOwned ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: card.name })}
+        aria-pressed={onToggleOwned ? owned : undefined}
       >
         <TCGCardImage
           card={card}
@@ -103,10 +106,10 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
           <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">{card.name}</p>
           <p className="text-[11px] text-white/60">#{card.localId}</p>
         </div>
-        {primaryAction === 'add' && (
+        {(primaryAction === 'add' || onToggleOwned) && (
           <span aria-hidden="true" className="absolute left-1 top-1 inline-flex min-h-7 items-center gap-1 rounded-sm border border-emerald-300/35 bg-black/75 px-2 text-[10px] font-black uppercase tracking-[0.05em] text-emerald-100">
-            <Plus className="h-3 w-3" />
-            {t('tcg.collection_add_card')}
+            {onToggleOwned && owned ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+            {t(onToggleOwned && owned ? 'tcg.owned_short' : 'tcg.collection_add_card')}
           </span>
         )}
         <div className="absolute right-1 top-1"><TCGRarityBadge rarity={card.rarity} /></div>
@@ -146,8 +149,8 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
 
       <button
         type="button"
-        onClick={owned ? () => onManage?.(card) : () => onView?.(card)}
-        aria-label={t(owned ? 'tcg.collection_manage_card_aria' : 'detail.view_card_aria', { name: card.name, count: totalOwnedQuantity, defaultValue: owned ? `Manage ${card.name}` : `View ${card.name} card` })}
+        onClick={owned && !onToggleOwned ? () => onManage?.(card) : () => onView?.(card)}
+        aria-label={t(owned && !onToggleOwned ? 'tcg.collection_manage_card_aria' : 'detail.view_card_aria', { name: card.name, count: totalOwnedQuantity, defaultValue: owned && !onToggleOwned ? `Manage ${card.name}` : `View ${card.name} card` })}
         className={cn(
           'min-h-11 w-full rounded-sm border px-2 text-[11px] font-black uppercase tracking-[0.05em] transition-[border-color,background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
           owned
@@ -155,7 +158,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
             : 'border-border/40 bg-card/50 text-foreground/70 hover:border-primary/35 hover:text-primary',
         )}
       >
-        {owned
+        {owned && !onToggleOwned
           ? t('tcg.collection_owned_manage', { count: totalOwnedQuantity, defaultValue: `Owned ×${totalOwnedQuantity} · Manage` })
           : t('tcg.activation.view_card')}
       </button>
@@ -179,6 +182,7 @@ function areTCGAlbumCardPropsEqual(previous: TCGAlbumCardProps, next: TCGAlbumCa
     && previous.collectionKey === next.collectionKey
     && previous.language === next.language
     && previous.priority === next.priority
+    && previous.onToggleOwned === next.onToggleOwned
     && sameOwnerships(previous.ownerships ?? [], next.ownerships ?? []);
 }
 

@@ -29,6 +29,9 @@ export type ProductEvent =
   | typeof EVENTS.tcgSetSearchUsed
   | typeof EVENTS.tcgSetSelected
   | typeof EVENTS.tcgAlbumOpened
+  | typeof EVENTS.tcgDemoOpened
+  | typeof EVENTS.tcgDemoFirstInteraction
+  | typeof EVENTS.tcgDemoSignupClicked
   | typeof EVENTS.tcgFirstValueReached
   | typeof EVENTS.tcgActivationCompleted
   | typeof EVENTS.tcgSyncPromptShown
@@ -179,6 +182,12 @@ const milestoneEvents = new Set<ProductEvent>([
   EVENTS.tcgSetSelected, EVENTS.tcgAlbumOpened, EVENTS.tcgFirstCardInteracted,
   EVENTS.tcgFirstValueReached, EVENTS.tcgActivationCompleted, EVENTS.tcgSyncPromptShown,
   EVENTS.tcgReturnedAfterActivation,
+  EVENTS.tcgDemoOpened, EVENTS.tcgDemoFirstInteraction,
+]);
+// Demo telemetry never writes progression or extends the legacy aggregate schema.
+const postHogOnlyEvents = new Set<ProductEvent>([
+  EVENTS.tcgCampaignLanded, EVENTS.tcgFirstCardInteracted,
+  EVENTS.tcgDemoOpened, EVENTS.tcgDemoFirstInteraction, EVENTS.tcgDemoSignupClicked,
 ]);
 function semanticProperties(event: ProductEvent, a?: string, b?: string): PostHogProperties {
   switch (event) {
@@ -199,9 +208,9 @@ export async function trackProductEvent(event: ProductEvent, propertyA?: string,
   const epoch = measurementEpoch;
   const context = getTcgTrackingContext(properties);
   const attributionKey = `${context.source}:${context.campaign}:${context.entry_path}`;
-  const key = event === EVENTS.tcgCampaignLanded || event === EVENTS.tcgStartOpened || event === EVENTS.tcgFirstCardInteracted
+  const key = event === EVENTS.tcgCampaignLanded || event === EVENTS.tcgStartOpened || event === EVENTS.tcgFirstCardInteracted || event === EVENTS.tcgDemoFirstInteraction
     ? `${event}:${attributionKey}`
-    : event === EVENTS.tcgSetSelected || event === EVENTS.tcgAlbumOpened
+    : event === EVENTS.tcgSetSelected || event === EVENTS.tcgAlbumOpened || event === EVENTS.tcgDemoOpened
       ? `${event}:${attributionKey}:${context.tcg_language}:${context.set_id}` : event;
   if (milestoneEvents.has(event) && (currentSession().emitted.includes(key) || pendingEvents.has(`${epoch}:${key}`))) return false;
   const reservation = `${epoch}:${key}`;
@@ -221,7 +230,7 @@ export async function trackProductEvent(event: ProductEvent, propertyA?: string,
     const session = currentSession();
     if (captured && milestoneEvents.has(event)) session.emitted.push(key);
     const aggregateKey = `aggregate:${key}`;
-    if (event !== EVENTS.tcgCampaignLanded && event !== EVENTS.tcgFirstCardInteracted
+    if (!postHogOnlyEvents.has(event)
       && (!milestoneEvents.has(event) || !session.emitted.includes(aggregateKey))) {
       const a = event === EVENTS.tcgStartOpened ? String(context.source) : propertyA;
       const b = event === EVENTS.tcgStartOpened && typeof context.campaign === 'string' ? context.campaign : propertyB;

@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
@@ -74,6 +76,7 @@ export function TCGResearchDesk({
 }: TCGResearchDeskProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const localeHref = useLocaleHref();
   const pathname = usePathname();
@@ -456,6 +459,17 @@ export function TCGResearchDesk({
           </button>
         </div>
       ) : null}
+
+      {mounted && !authLoading && !user && (
+        <Link
+          href={localeHref(effectiveFilters.selectedSet
+            ? `/tcg/collection/${resolvedLang}/${encodeURIComponent(effectiveFilters.selectedSet)}?activation=1`
+            : `/tcg/start?tcgLang=${resolvedLang}`)}
+          className="inline-flex min-h-12 items-center rounded-sm border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-bold text-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('tcg.demo.try_checklist')}
+        </Link>
+      )}
 
       <div className="space-y-4">
         <section className="min-w-0 space-y-4" aria-labelledby="tcg-results-title">

@@ -47,7 +47,7 @@ export function TCGStartPage() {
   const router = useRouter();
   const interfaceLanguage = useClientLanguage();
   const localeHref = useLocaleHref();
-  const { enabled, loading: authLoading, user } = useAuth();
+  const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
   const consent = useSyncExternalStore(subscribeProductConsent, getProductConsent, getServerProductConsent);
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
@@ -65,7 +65,7 @@ export function TCGStartPage() {
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
     queryFn: () => getAllSets(resolvedLanguage),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && hasHydrated && !authLoading && Boolean(user),
+    enabled: mounted && hasHydrated && !authLoading && (!user || syncStatus === 'ready'),
   });
 
   const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
@@ -76,8 +76,9 @@ export function TCGStartPage() {
   }, [normalizedQuery, resolvedLanguage, sets]);
   const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(sets ?? []), [sets]);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
-  const startTitle = t('tcg.activation.start_title', { defaultValue: 'Add a collection' });
-  const startDescription = t('auth.signup_subtitle', { defaultValue: 'Save your collection, team and progress to the cloud.' });
+  const isDemo = mounted && !authLoading && !user;
+  const startTitle = t(isDemo ? 'tcg.demo.start_title' : 'tcg.activation.start_title', { defaultValue: 'Add a collection' });
+  const startDescription = t(isDemo ? 'tcg.demo.start_description' : 'auth.signup_subtitle');
   const startContext = (
     <div className="mb-6">
       <Link
@@ -118,7 +119,7 @@ export function TCGStartPage() {
     );
   }
 
-  if (!enabled || !user) {
+  if (user && syncStatus === 'unauthenticated') {
     return (
       <div className="app-page">
         <Header />
@@ -130,19 +131,7 @@ export function TCGStartPage() {
     );
   }
 
-  if (syncStatus === 'unauthenticated') {
-    return (
-      <div className="app-page">
-        <Header />
-        <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
-          {startContext}
-          <SyncRequiredPanel headingLevel={2} />
-        </main>
-      </div>
-    );
-  }
-
-  if (syncStatus !== 'ready') {
+  if (user && syncStatus !== 'ready' && syncStatus !== 'unauthenticated') {
     return (
       <div className="app-page">
         <Header />
@@ -159,10 +148,10 @@ export function TCGStartPage() {
       <Header />
       <main className="page-shell page-shell--header-offset pb-24" aria-labelledby="tcg-start-title">
         <Link
-          href={localeHref('/tcg/collection')}
+          href={localeHref(isDemo ? '/tcg' : '/tcg/collection')}
           className="mb-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
         >
-          ← {t('tcg.collection_title')}
+          ← {t(isDemo ? 'tcg.back_to_catalog' : 'tcg.collection_title')}
         </Link>
         <section className="mx-auto max-w-3xl">
           <div className="page-surface px-5 py-7 sm:px-8 sm:py-9">

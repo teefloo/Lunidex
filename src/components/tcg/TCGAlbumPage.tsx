@@ -5,6 +5,7 @@ import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMounted } from '@/hooks/useMounted';
+import type { TCGDemoOwnership } from '@/hooks/useTCGDemoOwnership';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
@@ -19,6 +20,7 @@ import {
   getRarityColor,
 } from '@/lib/tcg-collection';
 import { TCGAlbumCard } from './TCGAlbumCard';
+import { TCGDemoNotice } from './TCGDemoNotice';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
@@ -46,6 +48,8 @@ interface TCGAlbumPageProps {
   collectionKey?: string;
   returnQuery?: string;
   headerAction?: ReactNode;
+  demoOwnership?: TCGDemoOwnership;
+  onDemoInteraction?: () => void;
 }
 
 export function TCGAlbumPage({
@@ -56,6 +60,8 @@ export function TCGAlbumPage({
   collectionKey,
   returnQuery,
   headerAction,
+  demoOwnership,
+  onDemoInteraction,
 }: TCGAlbumPageProps) {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
@@ -69,13 +75,15 @@ export function TCGAlbumPage({
   const browseLanguage = usePrimeDexStore((s) => s.tcgBrowseLanguage);
   const selectedLanguage = language ?? browseLanguage;
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(selectedLanguage, set.id) ?? undefined;
-  const ownedIds = useMemo(() => new Set(
+  const persistentOwnedIds = useMemo(() => new Set(
     resolvedCollectionKey
       ? getTCGCollectionCardIds(resolvedCollectionKey, collectionCards)
       : ownedList,
   ), [collectionCards, ownedList, resolvedCollectionKey]);
+  const demoOwnedIds = demoOwnership?.ownedIds;
+  const ownedIds = useMemo(() => demoOwnedIds ? new Set(demoOwnedIds) : persistentOwnedIds, [demoOwnedIds, persistentOwnedIds]);
   const ownershipByCard = useMemo(() => {
-    if (!resolvedCollectionKey) return new Map<string, ReturnType<typeof getTCGCollectionCardOwnerships>>();
+    if (demoOwnership || !resolvedCollectionKey) return new Map<string, ReturnType<typeof getTCGCollectionCardOwnerships>>();
     const byCard = new Map<string, ReturnType<typeof getTCGCollectionCardOwnerships>>();
     for (const ownership of getTCGCollectionCardOwnerships(resolvedCollectionKey, collectionCards)) {
       const current = byCard.get(ownership.cardId) ?? [];
@@ -83,7 +91,7 @@ export function TCGAlbumPage({
       byCard.set(ownership.cardId, current);
     }
     return byCard;
-  }, [collectionCards, resolvedCollectionKey]);
+  }, [collectionCards, resolvedCollectionKey, demoOwnership]);
 
   const [search, setSearch] = useState('');
   const [rarityFilter, setRarityFilter] = useState<string | null>(null);
@@ -113,10 +121,14 @@ export function TCGAlbumPage({
     if (!mounted || authLoading || consent.productMeasurement !== 'granted') return;
     setProductTrackingIdentity(user?.id ?? null);
     const context = { set_id: set.id, tcg_language: selectedLanguage };
+    if (demoOwnership) {
+      void trackProductEvent('tcg_demo_opened', undefined, undefined, context);
+      return;
+    }
     void trackProductEvent('tcg_set_selected', 'album_entry', undefined, context);
     void trackProductEvent('tcg_album_opened', activation ? 'activation' : 'collection', undefined, context);
     trackReturnAfterActivation('album_open');
-  }, [activation, mounted, selectedLanguage, set.id, authLoading, user?.id, consent.productMeasurement]);
+  }, [activation, mounted, selectedLanguage, set.id, authLoading, user?.id, consent.productMeasurement, demoOwnership]);
   useEffect(() => {
     let storedTarget: string | null = null;
     let storedScrollPosition: TCGCollectionScrollPosition | null = null;
@@ -151,7 +163,7 @@ export function TCGAlbumPage({
   const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
   const completionEstimate = useMemo(() => estimateMissingCardsValue(missingCards), [missingCards]);
-  const backHref = activation
+  const backHref = activation || demoOwnership
     ? `/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`
     : returnQuery
       ? `/tcg/collection?${returnQuery}`
@@ -187,6 +199,14 @@ export function TCGAlbumPage({
   }, [openCard, resolvedCollectionKey]);
 
   const handleOwnershipChange = useCallback((nowOwned: boolean) => {
+    if (demoOwnership) {
+      if (!firstValueReachedRef.current) {
+        firstValueReachedRef.current = true;
+        onDemoInteraction?.();
+        void trackProductEvent('tcg_demo_first_interaction', undefined, undefined, { set_id: set.id, tcg_language: selectedLanguage });
+      }
+      return;
+    }
     if (!nowOwned) return;
     if (!firstValueReachedRef.current) {
       firstValueReachedRef.current = true;
@@ -195,7 +215,13 @@ export function TCGAlbumPage({
     }
     trackReturnAfterActivation('owned_add');
 
-  }, []);
+  }, [demoOwnership, onDemoInteraction, selectedLanguage, set.id]);
+
+  const toggleDemoOwned = useCallback((cardId: string) => {
+    if (!demoOwnership) return;
+    demoOwnership.toggleOwned(cardId);
+    handleOwnershipChange(!demoOwnership.ownedIds.has(cardId));
+  }, [demoOwnership, handleOwnershipChange]);
 
   if (!mounted) return null;
 
@@ -231,17 +257,17 @@ export function TCGAlbumPage({
           )}
           <div className="min-w-0">
             <h1 className="text-lg font-black uppercase tracking-tight sm:text-xl">
-              {activation && !firstValueReached ? t('tcg.activation.album_title') : set.name}
+              {activation && !demoOwnership && !firstValueReached ? t('tcg.activation.album_title') : set.name}
             </h1>
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/40">
-              {activation && !firstValueReached ? t('tcg.activation.album_description') : <><span>{t('tcg.collection_owned')} — </span><span className="tabular-nums">{completion.owned}/{completion.total}</span></>}
+              {activation && !demoOwnership && !firstValueReached ? t('tcg.activation.album_description') : <><span>{t('tcg.collection_owned')} — </span><span className="tabular-nums">{completion.owned}/{completion.total}</span></>}
             </p>
           </div>
         </div>
         {headerAction && <div className="ml-auto shrink-0">{headerAction}</div>}
       </div>
 
-      {activation && (
+      {(activation || demoOwnership) && (
         <div className="flex justify-end">
           <Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
             {t('tcg.activation.change_set', { defaultValue: 'Change set' })}
@@ -251,8 +277,13 @@ export function TCGAlbumPage({
 
       {/* Progress */}
       <section aria-label={t('tcg.collection_overall_progress')} className="rounded-sm border border-primary/20 bg-primary/5 p-4">
+        {demoOwnership && <p className="mb-3 text-sm font-bold text-primary">{t('tcg.demo.title')}</p>}
         <TCGProgressBar owned={completion.owned} total={completion.total} size="lg" className="max-w-md" />
-        {activation && firstValueReached && (
+        {demoOwnership && <>
+          <p role="status" aria-live="polite" aria-atomic="true" className="mt-2 text-sm font-semibold tabular-nums">{t('tcg.demo.progress', { owned: completion.owned, total: completion.total, percent: completion.percentage })}</p>
+          <TCGDemoNotice setId={set.id} language={selectedLanguage} />
+        </>}
+        {activation && !demoOwnership && firstValueReached && (
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-emerald-500/35 bg-emerald-500/10 p-3" role="status" aria-live="polite">
             <p className="text-sm font-bold text-emerald-300">{t('tcg.activation.first_card_added', { owned: completion.owned, total: completion.total })}</p>
             <button type="button" onClick={() => document.getElementById('album-card-grid')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })} className="min-h-11 rounded-sm border border-emerald-500/40 px-4 text-sm font-bold text-emerald-200 hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
@@ -324,6 +355,7 @@ export function TCGAlbumPage({
               language={selectedLanguage}
               ownerships={ownershipByCard.get(card.id) ?? []}
               onOwnershipChange={handleOwnershipChange}
+              onToggleOwned={demoOwnership ? toggleDemoOwned : undefined}
             />
           ))}
         </div>
@@ -390,8 +422,8 @@ export function TCGAlbumPage({
         </details>
       ) : null}
 
-      {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange}  />}
-      {managedCard && resolvedCollectionKey && (
+      {selectedCard && <TCGCardDetailModal card={selectedCard} tcgLanguage={selectedLanguage} collectionKey={resolvedCollectionKey} isOpen={isDetailOpen} onClose={() => setIsDetailOpen(false)} onOwnershipChange={handleOwnershipChange} demoOwnership={demoOwnership ? { ownedIds, toggleOwned: toggleDemoOwned } : undefined} />}
+      {!demoOwnership && managedCard && resolvedCollectionKey && (
         <TCGCollectionVariantSheet
           card={managedCard}
           collectionKey={resolvedCollectionKey}

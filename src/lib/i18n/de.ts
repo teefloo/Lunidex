@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -1957,6 +1958,7 @@ team: 'Team',
       page_subheading: 'Durchsuche einen öffentlichen Pokémon-Sammelkartenspiel-Katalog',
       discover_title: 'Entdecken',
       discover_subtitle: 'Suche Karten, durchstöbere die neuesten Erweiterungen und öffne Details mit einem Tipp.',
+      demo: tcgDemoTranslations.de,
       activation: {
         start_title: 'Starte deine Sammlung', start_description: 'Wähle ein Set und markiere deine Karten, um deinen Fortschritt zu verfolgen.', search_sets: 'Set suchen', search_sets_placeholder: 'Setname', search_results: 'Suchergebnisse', latest_sets: 'Neueste Sets', sets_load_error: 'Sets können derzeit nicht geladen werden.', no_sets_found: 'Kein Set passt zu dieser Suche.', show_latest_sets: 'Neueste Sets anzeigen', card_total: '{{count}} Karten', choose_set: 'Dieses Set wählen', search_cards_instead: 'Ich möchte lieber eine Karte suchen', album_title: 'Füge deine erste Karte hinzu', album_description: 'Tippe auf die Karte selbst, um sie zu deiner Sammlung hinzuzufügen oder daraus zu entfernen.', add_card_aria: '{{name}} zu meiner Sammlung hinzufügen', remove_card_aria: '{{name}} aus meiner Sammlung entfernen', owned_action: 'Ich habe diese Karte', remove_owned: 'Aus meiner Sammlung entfernen', confirm_remove: 'Entfernen bestätigen', view_card: 'Karte ansehen', first_card_added: 'Karte hinzugefügt · {{owned}} / {{total}} Karten in diesem Set', continue_adding: 'Weiter hinzufügen', sync_title: 'Nimm deine Sammlung mit', sync_description: 'Melde dich an, um deine Sammlung auf anderen Geräten wiederzufinden.', create_account: 'Konto erstellen',
       },

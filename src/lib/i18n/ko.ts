@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -2010,6 +2011,7 @@ team: '팀',
       page_subheading: '공개 포켓몬 트레이딩 카드 게임 카탈로그를 검색하세요',
       discover_title: '발견',
       discover_subtitle: '카드를 검색하고, 최신 확장팩을 둘러보고, 한 번의 탭으로 세부 정보를 확인하세요.',
+      demo: tcgDemoTranslations.ko,
       activation: {
         start_title: '컬렉션 시작하기', start_description: '확장팩을 선택하고 보유한 카드를 표시해 진행 상황을 확인하세요.', search_sets: '확장팩 검색', search_sets_placeholder: '확장팩 이름', search_results: '검색 결과', latest_sets: '최신 확장팩', sets_load_error: '지금은 확장팩을 불러올 수 없습니다.', no_sets_found: '검색과 일치하는 확장팩이 없습니다.', show_latest_sets: '최신 확장팩 보기', card_total: '{{count}}장', choose_set: '이 확장팩 선택', search_cards_instead: '카드를 검색하고 싶어요', album_title: '첫 카드 추가', album_description: '카드 자체를 눌러 컬렉션에 추가하거나 삭제하세요.', add_card_aria: '{{name}} 컬렉션에 추가', remove_card_aria: '{{name}} 컬렉션에서 제거', owned_action: '이 카드를 가지고 있어요', remove_owned: '컬렉션에서 제거', confirm_remove: '제거 확인', view_card: '카드 보기', first_card_added: '카드 추가됨 · 이 확장팩 {{owned}} / {{total}}장', continue_adding: '계속 추가하기', sync_title: '어디서나 컬렉션 보기', sync_description: '로그인하면 다른 기기에서도 컬렉션을 확인할 수 있습니다.', create_account: '계정 만들기',
       },

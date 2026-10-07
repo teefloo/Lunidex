@@ -3,7 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { useTCGDemoOwnership } from '@/hooks/useTCGDemoOwnership';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
@@ -47,6 +48,9 @@ export function TCGSetAlbumPage({
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
   const collectionCards = usePrimeDexStore((state) => state.tcgCollectionCards);
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(resolvedLang, setId) ?? undefined;
+  const isDemo = !authLoading && !user;
+  const demoOwnership = useTCGDemoOwnership(isDemo ? resolvedCollectionKey ?? `${resolvedLang}:${setId}` : null);
+  const [demoInteracted, setDemoInteracted] = useState(false);
   const hasCollectionCards = useMemo(() => Boolean(
     resolvedCollectionKey && getTCGCollectionCardOwnerships(resolvedCollectionKey, collectionCards).length > 0,
   ), [collectionCards, resolvedCollectionKey]);
@@ -62,6 +66,11 @@ export function TCGSetAlbumPage({
     router.replace(getAlbumHref('en'));
   };
   const changeCollectionLanguage = (nextLanguage: TCGCardLanguage): boolean => {
+    if (isDemo) {
+      setBrowseLanguage(nextLanguage);
+      router.push(getAlbumHref(nextLanguage));
+      return true;
+    }
     const nextKey = encodeTCGCollectionKey(nextLanguage, setId);
     if (!nextKey) return false;
     const transferred = resolvedCollectionKey === nextKey
@@ -77,17 +86,17 @@ export function TCGSetAlbumPage({
     queryKey: ['tcg', 'collection-set-album-v2', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !authLoading && Boolean(user) && syncStatus === 'ready',
+    enabled: mounted && !authLoading && (isDemo || syncStatus === 'ready'),
   });
 
   return (
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative pb-40">
-        {authLoading || !user || syncStatus !== 'ready' || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
+        {authLoading || (!isDemo && syncStatus !== 'ready') || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
           <div className="mb-6">
             <Link
-              href={localeHref('/tcg/collection')}
+              href={localeHref(isDemo ? `/tcg/start?tcgLang=${resolvedLang}` : '/tcg/collection')}
               className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
             >
               ← {t('tcg.collection_title')}
@@ -100,13 +109,13 @@ export function TCGSetAlbumPage({
             </p>
           </div>
         ) : null}
-        {authLoading ? (
+        {authLoading || !mounted ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
-        ) : !user || syncStatus === 'unauthenticated' ? (
+        ) : !isDemo && syncStatus === 'unauthenticated' ? (
           <SyncRequiredPanel headingLevel={2} />
-        ) : syncStatus !== 'ready' ? (
+        ) : !isDemo && syncStatus !== 'ready' && syncStatus !== 'unauthenticated' ? (
           <SyncStatusPanel status={syncStatus} headingLevel={2} />
         ) : albumQuery.isPending ? (
           <div className="flex items-center justify-center py-20" aria-busy="true">
@@ -129,18 +138,22 @@ export function TCGSetAlbumPage({
         ) : albumQuery.data ? (
           <>
             <TCGDataLangBanner resolvedLang={resolvedLang} dataLanguage={albumQuery.data.dataLanguage} onTryEnglish={tryEnglish} />
+            {!isDemo && demoInteracted && <p role="status" className="mb-4 rounded-sm border border-primary/20 bg-primary/5 p-4 text-sm leading-6">{t('tcg.demo.account_transition')}</p>}
             <TCGAlbumPage
+              key={`${isDemo ? 'demo' : user?.id}:${resolvedCollectionKey}`}
               set={albumQuery.data.set}
               cards={albumQuery.data.cards}
               activation={activation}
               language={resolvedLang}
               collectionKey={resolvedCollectionKey}
               returnQuery={returnQuery}
+              demoOwnership={demoOwnership}
+              onDemoInteraction={() => setDemoInteracted(true)}
               headerAction={(
                 <TCGCollectionLanguageDialog
                   currentLanguage={resolvedLang}
                   setName={albumQuery.data.set.name}
-                  hasCards={hasCollectionCards}
+                  hasCards={!isDemo && hasCollectionCards}
                   onConfirm={changeCollectionLanguage}
                   compact
                 />

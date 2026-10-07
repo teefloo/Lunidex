@@ -1,3 +1,4 @@
+import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
 import { boosterGuidesTranslations } from './booster-guides';
@@ -2658,6 +2659,7 @@ team: 'Équipe',
       page_subheading: 'Recherchez les cartes Pokémon, Dresseur et Énergie dans un catalogue public.',
       discover_title: 'Découvrir',
       discover_subtitle: 'Cherchez des cartes, parcourez les dernières extensions et ouvrez les détails en un clic.',
+      demo: tcgDemoTranslations.fr,
       activation: {
         start_title: 'Commencez votre collection', start_description: 'Choisissez une extension et marquez les cartes que vous possédez pour suivre votre progression.', search_sets: 'Rechercher une extension', search_sets_placeholder: 'Nom de l’extension', search_results: 'Résultats de recherche', latest_sets: 'Dernières extensions', sets_load_error: 'Impossible de charger les extensions pour le moment.', no_sets_found: 'Aucune extension ne correspond à cette recherche.', show_latest_sets: 'Voir les dernières extensions', card_total: '{{count}} cartes', choose_set: 'Choisir cette extension', search_cards_instead: 'Je préfère rechercher une carte', album_title: 'Ajoutez votre première carte', album_description: 'Touchez la carte elle-même pour l’ajouter ou la retirer de votre collection.', add_card_aria: 'Ajouter {{name}} à ma collection', remove_card_aria: 'Retirer {{name}} de ma collection', owned_action: 'J’ai cette carte', remove_owned: 'Retirer de ma collection', confirm_remove: 'Confirmer le retrait', view_card: 'Voir la carte', first_card_added: 'Carte ajoutée · {{owned}} / {{total}} cartes dans cette extension', continue_adding: 'Continuer à ajouter', sync_title: 'Retrouvez votre collection partout', sync_description: 'Connectez-vous pour retrouver votre collection sur vos autres appareils.', create_account: 'Créer un compte',
         continue_without_account: 'Parcourir sans compte',
