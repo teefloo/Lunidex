@@ -56,6 +56,14 @@ export function TCGStartPage() {
   const searchTracked = useRef(false);
   const requestedLanguage = searchParams.get('tcgLang');
   const queryLanguage: TCGCardLanguage | null = resolveRequestedTCGCardLanguage(requestedLanguage);
+  const attributionParams = new URLSearchParams();
+  for (const key of ['source', 'campaign'] as const) {
+    const value = searchParams.get(key);
+    if (value !== null) attributionParams.set(key, value);
+  }
+  const attributionQuery = attributionParams.toString();
+  const attributedCatalogHref = localeHref(`/tcg${attributionQuery ? `?${attributionQuery}` : ''}`);
+  const attributedCollectionHref = localeHref(`/tcg/collection${attributionQuery ? `?${attributionQuery}` : ''}`);
   const resolvedLanguage: TCGCardLanguage = mounted && hasHydrated
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
@@ -65,7 +73,9 @@ export function TCGStartPage() {
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
     queryFn: () => getAllSets(resolvedLanguage),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && hasHydrated && !authLoading && (!user || syncStatus === 'ready'),
+    // Public set data and the in-memory demo stay available while session
+    // verification retries. A known account still waits for sync readiness.
+    enabled: mounted && hasHydrated && (!user || (!authLoading && syncStatus === 'ready')),
   });
 
   const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
@@ -76,13 +86,13 @@ export function TCGStartPage() {
   }, [normalizedQuery, resolvedLanguage, sets]);
   const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(sets ?? []), [sets]);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
-  const isDemo = mounted && !authLoading && !user;
+  const isDemo = mounted && !user;
   const startTitle = t(isDemo ? 'tcg.demo.start_title' : 'tcg.activation.start_title', { defaultValue: 'Add a collection' });
   const startDescription = t(isDemo ? 'tcg.demo.start_description' : 'auth.signup_subtitle');
   const startContext = (
     <div className="mb-6">
       <Link
-        href={localeHref('/tcg/collection')}
+        href={attributedCollectionHref}
         className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
       >
         ← {t('tcg.collection_title')}
@@ -105,7 +115,7 @@ export function TCGStartPage() {
     void trackTcgStartOpened({ tcg_language: resolvedLanguage, authenticated: Boolean(user) });
   }, [hasHydrated, mounted, resolvedLanguage, user, authLoading, consent.productMeasurement]);
 
-  if (!mounted || !hasHydrated || authLoading) {
+  if (!mounted || !hasHydrated || (user && authLoading)) {
     return (
       <div className="app-page">
         <Header />
@@ -148,7 +158,7 @@ export function TCGStartPage() {
       <Header />
       <main className="page-shell page-shell--header-offset pb-24" aria-labelledby="tcg-start-title">
         <Link
-          href={localeHref(isDemo ? '/tcg' : '/tcg/collection')}
+          href={isDemo ? attributedCatalogHref : attributedCollectionHref}
           className="mb-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
         >
           ← {t(isDemo ? 'tcg.back_to_catalog' : 'tcg.collection_title')}
@@ -215,10 +225,12 @@ export function TCGStartPage() {
                 {visibleSets.map((set) => {
                   const releaseDate = formatReleaseDate(set.releaseDate, interfaceLanguage);
                   const total = set.cardCount?.total ?? set.totalCards;
+                  const activationParams = new URLSearchParams(attributionParams);
+                  activationParams.set('activation', '1');
                   return (
                     <Link
                       key={set.id}
-                      href={`${localeHref(`/tcg/collection/${resolvedLanguage}/${encodeURIComponent(set.id)}`)}?activation=1`}
+                      href={`${localeHref(`/tcg/collection/${resolvedLanguage}/${encodeURIComponent(set.id)}`)}?${activationParams.toString()}`}
                       onClick={() => {
                         void trackProductEvent('tcg_set_selected', normalizedQuery ? 'search' : 'latest_list', undefined, { set_id: set.id, tcg_language: resolvedLanguage, authenticated: Boolean(user) });
                       }}

@@ -50,6 +50,7 @@ interface TCGAlbumPageProps {
   headerAction?: ReactNode;
   demoOwnership?: TCGDemoOwnership;
   onDemoInteraction?: () => void;
+  startQuery?: string;
 }
 
 export function TCGAlbumPage({
@@ -62,6 +63,7 @@ export function TCGAlbumPage({
   headerAction,
   demoOwnership,
   onDemoInteraction,
+  startQuery,
 }: TCGAlbumPageProps) {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
@@ -163,8 +165,9 @@ export function TCGAlbumPage({
   const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
   const completionEstimate = useMemo(() => estimateMissingCardsValue(missingCards), [missingCards]);
+  const startHref = `/tcg/start?${startQuery ?? `tcgLang=${encodeURIComponent(selectedLanguage)}`}`;
   const backHref = activation || demoOwnership
-    ? `/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`
+    ? startHref
     : returnQuery
       ? `/tcg/collection?${returnQuery}`
       : `/tcg/collection?tcgLang=${encodeURIComponent(selectedLanguage)}`;
@@ -269,7 +272,7 @@ export function TCGAlbumPage({
 
       {(activation || demoOwnership) && (
         <div className="flex justify-end">
-          <Link href={localeHref(`/tcg/start?tcgLang=${encodeURIComponent(selectedLanguage)}`)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+          <Link href={localeHref(startHref)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
             {t('tcg.activation.change_set', { defaultValue: 'Change set' })}
           </Link>
         </div>

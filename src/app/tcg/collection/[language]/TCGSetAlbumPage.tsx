@@ -28,6 +28,8 @@ interface TCGSetAlbumPageProps {
   activation?: boolean;
   collectionKey?: string;
   returnQuery?: string;
+  source?: string;
+  campaign?: string;
 }
 
 export function TCGSetAlbumPage({
@@ -36,6 +38,8 @@ export function TCGSetAlbumPage({
   activation = false,
   collectionKey,
   returnQuery,
+  source,
+  campaign,
 }: TCGSetAlbumPageProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -48,14 +52,26 @@ export function TCGSetAlbumPage({
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
   const collectionCards = usePrimeDexStore((state) => state.tcgCollectionCards);
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(resolvedLang, setId) ?? undefined;
-  const isDemo = !authLoading && !user;
+  // Public album data and its temporary checklist do not depend on the
+  // session endpoint resolving. A known account still takes the sync gate.
+  const isDemo = !user;
   const demoOwnership = useTCGDemoOwnership(isDemo ? resolvedCollectionKey ?? `${resolvedLang}:${setId}` : null);
   const [demoInteracted, setDemoInteracted] = useState(false);
+  const startParams = new URLSearchParams({ tcgLang: resolvedLang });
+  if (source !== undefined) startParams.set('source', source);
+  if (campaign !== undefined) startParams.set('campaign', campaign);
+  const startQuery = startParams.toString();
+  const attributionParams = new URLSearchParams();
+  if (source !== undefined) attributionParams.set('source', source);
+  if (campaign !== undefined) attributionParams.set('campaign', campaign);
+  const attributionQuery = attributionParams.toString();
+  const collectionHref = localeHref(`/tcg/collection${attributionQuery ? `?${attributionQuery}` : ''}`);
   const hasCollectionCards = useMemo(() => Boolean(
     resolvedCollectionKey && getTCGCollectionCardOwnerships(resolvedCollectionKey, collectionCards).length > 0,
   ), [collectionCards, resolvedCollectionKey]);
   const getAlbumHref = (nextLanguage: TCGCardLanguage) => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(startParams);
+    params.set('tcgLang', nextLanguage);
     if (activation) params.set('activation', '1');
     if (returnQuery) params.set('return', returnQuery);
     const query = params.toString();
@@ -86,17 +102,18 @@ export function TCGSetAlbumPage({
     queryKey: ['tcg', 'collection-set-album-v2', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && !authLoading && (isDemo || syncStatus === 'ready'),
+    retry: false,
+    enabled: mounted && (isDemo || (!authLoading && syncStatus === 'ready')),
   });
 
   return (
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative pb-40">
-        {authLoading || (!isDemo && syncStatus !== 'ready') || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
+        {(user && authLoading) || (!isDemo && syncStatus !== 'ready') || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
           <div className="mb-6">
             <Link
-              href={localeHref(isDemo ? `/tcg/start?tcgLang=${resolvedLang}` : '/tcg/collection')}
+              href={isDemo ? localeHref(`/tcg/start?${startQuery}`) : collectionHref}
               className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
             >
               ← {t('tcg.collection_title')}
@@ -109,7 +126,7 @@ export function TCGSetAlbumPage({
             </p>
           </div>
         ) : null}
-        {authLoading || !mounted ? (
+        {!mounted || (user && authLoading) ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
             <div role="status" aria-label={t('tcg.collection_loading')} className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
           </div>
@@ -147,6 +164,7 @@ export function TCGSetAlbumPage({
               language={resolvedLang}
               collectionKey={resolvedCollectionKey}
               returnQuery={returnQuery}
+              startQuery={startQuery}
               demoOwnership={demoOwnership}
               onDemoInteraction={() => setDemoInteracted(true)}
               headerAction={(

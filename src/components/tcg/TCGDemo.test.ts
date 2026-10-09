@@ -9,19 +9,25 @@ const mocks = vi.hoisted(() => ({
   auth: { enabled: true, loading: false, user: null as null | { id: string } },
   track: vi.fn().mockResolvedValue(true),
   queryEnabled: [] as boolean[],
+  queryRetry: [] as (boolean | undefined)[],
+  queryError: false,
   album: null as TCGSetAlbumData | null,
   consent: { productMeasurement: 'granted' },
+  search: '',
 }));
 
 vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => mocks.auth }));
 vi.mock('@/hooks/useMounted', () => ({ useMounted: () => true }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en', useLocaleHref: () => (path: string) => `/en${path}` }));
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }), usePathname: () => '/en/tcg/start', useSearchParams: () => new URLSearchParams() }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }), usePathname: () => '/en/tcg/start', useSearchParams: () => new URLSearchParams(mocks.search) }));
 vi.mock('next/link', () => ({ default: ({ children, href, className }: AnchorHTMLAttributes<HTMLAnchorElement>) => createElement('a', { href, className }, children) }));
 vi.mock('next/dynamic', () => ({ default: () => ({ initialMode, onOpenChange }: { initialMode?: string; onOpenChange?: (open: boolean) => void }) => initialMode ? createElement('div', { role: 'dialog', 'data-mode': initialMode }, createElement('button', { onClick: () => onOpenChange?.(false) }, 'Close signup')) : null }));
-vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: string[]; enabled?: boolean }) => {
+vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: string[]; enabled?: boolean; retry?: boolean }) => {
   mocks.queryEnabled.push(Boolean(options.enabled));
-  return { data: options.queryKey.includes('collection-set-album-v2') ? mocks.album : options.queryKey.includes('activation-sets') ? [mocks.album?.set] : null, isPending: false, isLoading: false, isError: false, isFetching: false };
+  mocks.queryRetry.push(options.retry);
+  const isAlbumQuery = options.queryKey.includes('collection-set-album-v2');
+  const isError = isAlbumQuery && mocks.queryError;
+  return { data: isError ? null : isAlbumQuery ? mocks.album : options.queryKey.includes('activation-sets') ? [mocks.album?.set] : null, isPending: false, isLoading: false, isError, isFetching: false };
 } }));
 vi.mock('@/lib/i18n', async () => {
   const { createInstance } = await import('i18next');
@@ -64,7 +70,7 @@ function album(setId = 'base1'): TCGSetAlbumData {
 describe('TCG demo and account boundaries', () => {
   let container: HTMLDivElement;
   let root: Root;
-  const render = async (setId = 'base1', language = 'en') => act(async () => root.render(createElement(TCGSetAlbumPage, { setId, language, activation: true })));
+  const render = async (setId = 'base1', language = 'en', attribution?: { source?: string; campaign?: string }) => act(async () => root.render(createElement(TCGSetAlbumPage, { setId, language, activation: true, ...attribution })));
   const click = async (button: Element | null | undefined) => {
     expect(button).toBeInstanceOf(HTMLButtonElement);
     await act(async () => (button as HTMLButtonElement).click());
@@ -76,7 +82,7 @@ describe('TCG demo and account boundaries', () => {
     vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     vi.clearAllMocks(); mocks.auth.user = null; mocks.auth.loading = false; mocks.auth.enabled = true;
-    mocks.queryEnabled = []; mocks.album = album();
+    mocks.queryEnabled = []; mocks.queryRetry = []; mocks.queryError = false; mocks.album = album(); mocks.search = '';
     usePrimeDexStore.setState({ _hasHydrated: true, tcgBrowseLanguage: 'en', tcgCollections: [], tcgCollectionCards: [], tcgActiveCollections: [], tcgLegacyOwnedCards: [], tcgOwnedCards: [] });
     setSyncAccessStatus('unauthenticated');
     container = document.createElement('div'); document.body.append(container); root = createRoot(container);
@@ -161,9 +167,77 @@ describe('TCG demo and account boundaries', () => {
     expect(mocks.queryEnabled.at(-1)).toBe(false);
   });
 
-  it('waits for authentication resolution before exposing demo controls', async () => {
-    mocks.auth.loading = true; await render();
-    expect(cardButton('Alakazam')).toBeNull(); expect(mocks.queryEnabled.at(-1)).toBe(false);
+  it('keeps the cold anonymous demo interactive while session verification is pending', async () => {
+    mocks.auth.loading = true;
+    setSyncAccessStatus('ready');
+    const collectionKey = encodeTCGCollectionKey('en', 'base1')!;
+    usePrimeDexStore.getState().setTCGCollectionVariantQuantity(collectionKey, 'base1-1', 'reverse', 3);
+    const storedBefore = [...usePrimeDexStore.getState().tcgCollectionCards];
+    setSyncAccessStatus('checking');
+    const storeWrite = vi.fn();
+    const unsubscribe = usePrimeDexStore.subscribe(storeWrite);
+    try {
+      await render();
+      expect(cardButton('Alakazam')).not.toBeNull();
+      expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
+      expect(mocks.queryEnabled.at(-1)).toBe(true);
+      await click(cardButton('Alakazam'));
+      expect(progress()).toBe('Owned 1 / 2 · Progress 50%');
+      expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(storedBefore);
+      expect(storeWrite).not.toHaveBeenCalled();
+      expect(mocks.auth.loading).toBe(true);
+
+      mocks.auth.user = { id: 'account-a' };
+      mocks.auth.loading = false;
+      setSyncAccessStatus('ready');
+      await render();
+      expect(cardButton('Alakazam')).toBeNull();
+      expect(container.querySelector('[aria-atomic="true"]')).toBeNull();
+      expect(usePrimeDexStore.getState().isTCGCollectionCardOwned(collectionKey, 'base1-1')).toBe(true);
+      expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(storedBefore);
+    } finally { unsubscribe(); }
+  });
+
+  it('keeps campaign attribution when a visitor selects a set and returns from its album', async () => {
+    const campaign = 'reddit-spd-20261011-lunidex';
+    mocks.search = `source=campaign&campaign=${campaign}`;
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    const setLink = container.querySelector<HTMLAnchorElement>('a[href*="/tcg/collection/en/base1"]');
+    expect(setLink).not.toBeNull();
+    const albumUrl = new URL(setLink!.href, 'https://lunidex.app');
+    expect(albumUrl.searchParams.get('source')).toBe('campaign');
+    expect(albumUrl.searchParams.get('campaign')).toBe(campaign);
+
+    mocks.search = albumUrl.searchParams.toString();
+    await render('base1', 'en', { source: 'campaign', campaign });
+    const startLinks = [...container.querySelectorAll<HTMLAnchorElement>('a[href*="/tcg/start?"]')];
+    expect(startLinks.length).toBeGreaterThan(0);
+    for (const link of startLinks) {
+      const startUrl = new URL(link.href, 'https://lunidex.app');
+      expect(startUrl.searchParams.get('source')).toBe('campaign');
+      expect(startUrl.searchParams.get('campaign')).toBe(campaign);
+    }
+  });
+
+  it('does not expose the demo when an authenticated account is being verified', async () => {
+    mocks.auth.user = { id: 'account-a' };
+    mocks.auth.loading = true;
+    setSyncAccessStatus('loading');
+    await render();
+
+    expect(cardButton('Alakazam')).toBeNull();
+    expect(container.textContent).not.toContain('Demo checklist');
+    expect(mocks.queryEnabled.at(-1)).toBe(false);
+  });
+
+  it('shows a retryable album error instead of leaving an API failure on a loader', async () => {
+    mocks.queryError = true;
+    await render();
+
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+    expect(mocks.queryRetry.at(-1)).toBe(false);
   });
 
   it('allows the public set selector and demo when account creation is not configured', async () => {

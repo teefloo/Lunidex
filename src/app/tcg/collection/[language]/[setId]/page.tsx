@@ -8,7 +8,12 @@ import { TCGSetAlbumPage } from '../TCGSetAlbumPage';
 
 interface PageProps {
   params: Promise<{ language: string; setId: string }>;
-  searchParams: Promise<{ activation?: string | string[] | undefined; return?: string | string[] | undefined }>;
+  searchParams: Promise<{
+    activation?: string | string[] | undefined;
+    return?: string | string[] | undefined;
+    source?: string | string[] | undefined;
+    campaign?: string | string[] | undefined;
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -43,7 +48,9 @@ export default async function LocalizedSetAlbumPage({ params, searchParams }: Pa
   const query = await searchParams;
   const activation = (Array.isArray(query.activation) ? query.activation[0] : query.activation) === '1';
   const rawReturn = Array.isArray(query.return) ? query.return[0] : query.return;
+  const source = Array.isArray(query.source) ? query.source[0] : query.source;
+  const campaign = Array.isArray(query.campaign) ? query.campaign[0] : query.campaign;
   const normalizedReturnQuery = normalizeTCGCollectionReturnQuery(rawReturn);
   const returnQuery = normalizedReturnQuery || undefined;
-  return <TCGSetAlbumPage setId={setId} language={language} activation={activation} returnQuery={returnQuery} />;
+  return <TCGSetAlbumPage setId={setId} language={language} activation={activation} returnQuery={returnQuery} source={source} campaign={campaign} />;
 }
