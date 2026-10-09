@@ -156,8 +156,13 @@ export default function AuthModal({
     }
   };
 
+  // Autofill UIs can route selection clicks through the backdrop.
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+    <Dialog
+      open={open}
+      disablePointerDismissal
+      onOpenChange={handleDialogOpenChange}
+    >
       <DialogContent className="sm:max-w-md" data-ph-no-capture>
         <DialogHeader>
           <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />

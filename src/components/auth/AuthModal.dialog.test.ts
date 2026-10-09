@@ -61,7 +61,7 @@ describe('AuthModal with the real dialog primitive', () => {
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
   });
 
-  it('still closes on an intentional backdrop click', async () => {
+  it('stays open when an autofill interaction is delivered as an outside press', async () => {
     const onOpenChange = vi.fn();
     await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
 
@@ -71,6 +71,47 @@ describe('AuthModal with the real dialog primitive', () => {
       backdrop?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
     });
 
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+
+  it('still closes from its explicit close button', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const closeButton = document.querySelector('[data-slot="dialog-close"]');
+    expect(closeButton).not.toBeNull();
+    await act(async () => {
+      closeButton?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+    });
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('still closes on an unhandled Escape key', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const password = document.querySelector<HTMLInputElement>('[role="dialog"] input[type="password"]');
+    expect(password).not.toBeNull();
+    await act(async () => {
+      password?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    });
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('closes normally after a successful sign-in', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const form = document.querySelector('[role="dialog"] form');
+    expect(form).not.toBeNull();
+    await act(async () => {
+      form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+
+    expect(auth.signIn).toHaveBeenCalled();
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 });
