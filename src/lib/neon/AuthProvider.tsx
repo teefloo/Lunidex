@@ -348,31 +348,22 @@ function DisabledAuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-function DeferredAuthProvider({
-  children,
-  onLoaded,
-}: {
-  children: ReactNode;
-  onLoaded: (client: ConnectedAuthClient) => void;
-}) {
+function DeferredAuthProvider({ children }: { children: ReactNode }) {
   const authState = useClientSession();
   const [sdkLoading, setSdkLoading] = useState(false);
   const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
     const cachedClient = getNeonAuthClient();
     if (cachedClient) {
-      onLoaded(cachedClient);
       return cachedClient;
     }
 
     setSdkLoading(true);
     try {
-      const loadedClient = await loadNeonAuthClient();
-      if (loadedClient) onLoaded(loadedClient);
-      return loadedClient;
+      return await loadNeonAuthClient();
     } finally {
       setSdkLoading(false);
     }
-  }, [onLoaded]);
+  }, []);
 
   const sessionData = authState.data;
   const { session, user } = useMemo(() => {
@@ -684,9 +675,11 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [client, setClient] = useState<ConnectedAuthClient | null>(() => getNeonAuthClient());
+  // Keep the initial provider type stable: switching it after lazy SDK loading
+  // remounts every child and discards open dialogs and their form state.
+  const [client] = useState<ConnectedAuthClient | null>(() => getNeonAuthClient());
   if (!isNeonAuthConfigured) return <DisabledAuthProvider>{children}</DisabledAuthProvider>;
-  if (!client) return <DeferredAuthProvider onLoaded={setClient}>{children}</DeferredAuthProvider>;
+  if (!client) return <DeferredAuthProvider>{children}</DeferredAuthProvider>;
   return <ConnectedAuthProvider client={client}>{children}</ConnectedAuthProvider>;
 }
 
