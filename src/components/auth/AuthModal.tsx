@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type ComponentProps, type FormEvent } from 'react';
 import { toast } from '@/lib/toast';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
 import {
@@ -19,6 +19,7 @@ import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 
 type Mode = 'signin' | 'signup';
+type DialogOpenChangeDetails = Parameters<NonNullable<ComponentProps<typeof Dialog>['onOpenChange']>>[1];
 
 export default function AuthModal({
   open,
@@ -56,6 +57,16 @@ export default function AuthModal({
       ? error.message
       : tt('auth.request_failed', 'Unable to complete the request. Please try again.')
   );
+
+  const handleDialogOpenChange = (nextOpen: boolean, eventDetails: DialogOpenChangeDetails) => {
+    const isDismissal = eventDetails.reason === 'escape-key' || eventDetails.reason === 'outside-press';
+    if (!nextOpen && isDismissal && eventDetails.event.defaultPrevented) {
+      // Autofill suggestions can consume Escape while still letting it bubble to the dialog.
+      eventDetails.cancel();
+      return;
+    }
+    onOpenChange(nextOpen);
+  };
 
   useEffect(() => {
     if (open && user) onOpenChange(false);
@@ -146,7 +157,7 @@ export default function AuthModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="sm:max-w-md" data-ph-no-capture>
         <DialogHeader>
           <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />

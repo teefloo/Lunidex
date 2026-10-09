@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { act, createElement, type ReactNode } from 'react';
+import { act, createElement, type ComponentProps, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -25,9 +25,22 @@ vi.mock('@/components/ui/dialog', async () => {
   const { createElement } = await import('react');
   const container = ({ children }: { children?: ReactNode }) => createElement('div', null, children);
   return {
-    Dialog: ({ open, children }: { open: boolean; children?: ReactNode }) => (
-      open ? createElement('div', { role: 'dialog' }, children) : null
-    ),
+    Dialog: ({
+      open,
+      onOpenChange,
+      children,
+    }: {
+      open: boolean;
+      onOpenChange?: (nextOpen: boolean, eventDetails: { reason: string; event: Event; cancel: () => void }) => void;
+      children?: ReactNode;
+    }) => open ? createElement('div', {
+      role: 'dialog',
+      onKeyDown: (event: ReactKeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Escape') {
+          onOpenChange?.(false, { reason: 'escape-key', event: event.nativeEvent, cancel: vi.fn() });
+        }
+      },
+    }, children) : null,
     DialogContent: container,
     DialogDescription: container,
     DialogHeader: container,
@@ -42,7 +55,7 @@ vi.mock('@/components/ui/button', async () => {
 
 vi.mock('@/components/ui/input', async () => {
   const { createElement } = await import('react');
-  return { Input: () => createElement('input') };
+  return { Input: (props: ComponentProps<'input'>) => createElement('input', props) };
 });
 
 import AuthModal from './AuthModal';
@@ -85,5 +98,54 @@ describe('AuthModal', () => {
     await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
     expect(container.textContent).toContain('Create your account');
     expect(container.textContent).toContain('Name');
+  });
+
+  it('keeps the modal open when a password suggestion consumes Escape', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const password = container.querySelector<HTMLInputElement>('input[type="password"]');
+    expect(password).not.toBeNull();
+    password?.addEventListener('keydown', (event) => event.preventDefault(), { once: true });
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+
+    await act(async () => {
+      password?.dispatchEvent(escape);
+    });
+
+    expect(escape.defaultPrevented).toBe(true);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+
+  it('still closes on an unhandled Escape key', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const password = container.querySelector<HTMLInputElement>('input[type="password"]');
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    await act(async () => {
+      password?.dispatchEvent(escape);
+    });
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('keeps the modal open when the browser autofills the form fields', async () => {
+    const onOpenChange = vi.fn();
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange })));
+
+    const email = container.querySelector<HTMLInputElement>('input[type="email"]');
+    const password = container.querySelector<HTMLInputElement>('input[type="password"]');
+    const setInputValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+    await act(async () => {
+      setInputValue?.call(email, 'qa@lunidex.invalid');
+      email?.dispatchEvent(new Event('input', { bubbles: true }));
+      setInputValue?.call(password, 'synthetic-only-password');
+      password?.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
   });
 });
