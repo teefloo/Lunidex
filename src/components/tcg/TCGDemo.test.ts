@@ -10,8 +10,14 @@ const mocks = vi.hoisted(() => ({
   track: vi.fn().mockResolvedValue(true),
   queryEnabled: [] as boolean[],
   queryRetry: [] as (boolean | undefined)[],
+  queryOptions: [] as Array<{ queryKey: readonly unknown[]; queryFn?: (context?: { signal?: AbortSignal }) => Promise<unknown>; enabled?: boolean; retry?: boolean }>,
   queryError: false,
   album: null as TCGSetAlbumData | null,
+  activationSets: [] as Array<{ id: string; name: string; totalCards: number; releaseRank: number; dataLanguage: string }>,
+  getAllSets: vi.fn().mockResolvedValue([]),
+  fetchCollectionSetCatalog: vi.fn().mockImplementation(async () => mocks.activationSets),
+  getSetById: vi.fn().mockResolvedValue(null),
+  setDetailLoading: false,
   consent: { productMeasurement: 'granted' },
   search: '',
 }));
@@ -22,13 +28,25 @@ vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en', useLoca
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }), usePathname: () => '/en/tcg/start', useSearchParams: () => new URLSearchParams(mocks.search) }));
 vi.mock('next/link', () => ({ default: ({ children, href, className }: AnchorHTMLAttributes<HTMLAnchorElement>) => createElement('a', { href, className }, children) }));
 vi.mock('next/dynamic', () => ({ default: () => ({ initialMode, onOpenChange }: { initialMode?: string; onOpenChange?: (open: boolean) => void }) => initialMode ? createElement('div', { role: 'dialog', 'data-mode': initialMode }, createElement('button', { onClick: () => onOpenChange?.(false) }, 'Close signup')) : null }));
-vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: string[]; enabled?: boolean; retry?: boolean }) => {
+vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: readonly unknown[]; queryFn?: (context?: { signal?: AbortSignal }) => Promise<unknown>; enabled?: boolean; retry?: boolean }) => {
+  mocks.queryOptions.push(options);
   mocks.queryEnabled.push(Boolean(options.enabled));
   mocks.queryRetry.push(options.retry);
   const isAlbumQuery = options.queryKey.includes('collection-set-album-v2');
+  const isActivationQuery = options.queryKey.includes('activation-sets');
+  const isSetDetailQuery = options.queryKey.includes('activation-set-details');
   const isError = isAlbumQuery && mocks.queryError;
-  return { data: isError ? null : isAlbumQuery ? mocks.album : options.queryKey.includes('activation-sets') ? [mocks.album?.set] : null, isPending: false, isLoading: false, isError, isFetching: false };
+  return { data: isError ? null : isAlbumQuery ? mocks.album : isActivationQuery ? mocks.activationSets : null, isPending: false, isLoading: isSetDetailQuery && mocks.setDetailLoading, isError, isFetching: false };
 } }));
+vi.mock('@/lib/api/tcg', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/api/tcg')>();
+  return {
+    ...actual,
+    getAllSets: mocks.getAllSets,
+    fetchCollectionSetCatalog: mocks.fetchCollectionSetCatalog,
+    getSetById: mocks.getSetById,
+  };
+});
 vi.mock('@/lib/i18n', async () => {
   const { createInstance } = await import('i18next');
   const { default: en } = await import('@/lib/i18n/en');
@@ -81,7 +99,9 @@ describe('TCG demo and account boundaries', () => {
     vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     vi.clearAllMocks(); mocks.auth.user = null; mocks.auth.loading = false; mocks.auth.enabled = true;
-    mocks.queryEnabled = []; mocks.queryRetry = []; mocks.queryError = false; mocks.album = album(); mocks.search = '';
+    mocks.queryEnabled = []; mocks.queryRetry = []; mocks.queryOptions = []; mocks.queryError = false; mocks.album = album(); mocks.search = '';
+    mocks.activationSets = [{ id: 'base1', name: 'Base Set', totalCards: 102, releaseRank: 0, dataLanguage: 'en' }];
+    mocks.setDetailLoading = false;
     usePrimeDexStore.setState({ _hasHydrated: true, tcgBrowseLanguage: 'en', tcgCollections: [], tcgCollectionCards: [], tcgActiveCollections: [], tcgLegacyOwnedCards: [], tcgOwnedCards: [] });
     setSyncAccessStatus('unauthenticated');
     container = document.createElement('div'); document.body.append(container); root = createRoot(container);
@@ -242,6 +262,28 @@ describe('TCG demo and account boundaries', () => {
       expect(startUrl.searchParams.get('source')).toBe('campaign');
       expect(startUrl.searchParams.get('campaign')).toBe(campaign);
     }
+  });
+
+  it('loads activation sets from the compact catalog and shows links while detail metadata is loading', async () => {
+    mocks.activationSets = [
+      { id: 'base1', name: 'Base Set', totalCards: 102, releaseRank: 1, dataLanguage: 'en' },
+      { id: 'sv01', name: 'Scarlet & Violet', totalCards: 258, releaseRank: 0, dataLanguage: 'en' },
+    ];
+    mocks.setDetailLoading = true;
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    const catalogQuery = mocks.queryOptions.find((options) => options.queryKey.includes('activation-sets'));
+    expect(catalogQuery?.queryFn).toBeDefined();
+    await expect(catalogQuery?.queryFn?.({ signal: new AbortController().signal })).resolves.toEqual(mocks.activationSets);
+    expect(mocks.fetchCollectionSetCatalog).toHaveBeenCalledWith('en', expect.any(AbortSignal));
+    expect(mocks.getAllSets).not.toHaveBeenCalled();
+    const detailQuery = mocks.queryOptions.find((options) => options.queryKey.includes('activation-set-details'));
+    expect(detailQuery?.queryKey.at(-1)).toEqual(['sv01', 'base1']);
+    const setLinks = [...container.querySelectorAll<HTMLAnchorElement>('a[href*="/tcg/collection/en/"]')];
+    expect(setLinks.map((link) => link.href)).toEqual([
+      expect.stringContaining('/tcg/collection/en/sv01'),
+      expect.stringContaining('/tcg/collection/en/base1'),
+    ]);
   });
 
   it('does not expose the demo when an authenticated account is being verified', async () => {

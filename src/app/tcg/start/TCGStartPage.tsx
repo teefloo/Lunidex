@@ -7,13 +7,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { TCGImageWithFallback } from '@/components/tcg/TCGImageWithFallback';
-import { getAllSets } from '@/lib/api/tcg';
+import { fetchCollectionSetCatalog, getSetById } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
-import type { TCGSet } from '@/types/tcg';
+import type { TCGCollectionSetSummary, TCGSet } from '@/types/tcg';
 import { getProductConsent, getServerProductConsent, subscribeProductConsent, setProductTrackingIdentity, trackTcgStartOpened, trackProductEvent } from '@/lib/product-measurement';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
@@ -26,11 +26,9 @@ import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 
 const LATEST_SET_LIMIT = 12;
 
-function sortByReleaseDate(sets: TCGSet[]): TCGSet[] {
+function sortByReleaseRank(sets: TCGCollectionSetSummary[]): TCGCollectionSetSummary[] {
   return [...sets].sort((left, right) => {
-    const leftDate = left.releaseDate ? Date.parse(left.releaseDate) : Number.NEGATIVE_INFINITY;
-    const rightDate = right.releaseDate ? Date.parse(right.releaseDate) : Number.NEGATIVE_INFINITY;
-    return rightDate - leftDate || left.name.localeCompare(right.name);
+    return left.releaseRank - right.releaseRank || left.name.localeCompare(right.name);
   });
 }
 
@@ -67,23 +65,48 @@ export function TCGStartPage() {
   const resolvedLanguage: TCGCardLanguage = mounted && hasHydrated
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
-
+  const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
+  const catalogEnabled = mounted && hasHydrated && (!user || (!authLoading && syncStatus === 'ready'));
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
-    queryFn: () => getAllSets(resolvedLanguage),
+    queryFn: ({ signal }) => fetchCollectionSetCatalog(resolvedLanguage, signal),
     staleTime: 60 * 60 * 1000,
     // Public set data and the in-memory demo stay available while session
     // verification retries. A known account still waits for sync readiness.
-    enabled: mounted && hasHydrated && (!user || (!authLoading && syncStatus === 'ready')),
+    enabled: catalogEnabled,
   });
 
-  const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
-  const visibleSets = useMemo(() => {
-    const sorted = sortByReleaseDate(sets ?? []);
+  const candidateSets = useMemo(() => {
+    const sorted = sortByReleaseRank(sets ?? []);
     if (!normalizedQuery) return sorted.slice(0, LATEST_SET_LIMIT);
     return sorted.filter((set) => set.name.toLocaleLowerCase(resolvedLanguage).includes(normalizedQuery));
   }, [normalizedQuery, resolvedLanguage, sets]);
+  const setDetailIds = useMemo(() => candidateSets.slice(0, LATEST_SET_LIMIT).map((set) => set.id), [candidateSets]);
+  const { data: setDetails } = useQuery({
+    queryKey: ['tcg', 'activation-set-details', resolvedLanguage, setDetailIds],
+    queryFn: async () => (await Promise.all(setDetailIds.map(async (setId) => {
+      try {
+        return await getSetById(setId, resolvedLanguage);
+      } catch {
+        return null;
+      }
+    })))
+      .filter((set): set is TCGSet => set !== null),
+    enabled: catalogEnabled && setDetailIds.length > 0,
+    staleTime: 60 * 60 * 1000,
+  });
+  const visibleSets = useMemo(() => {
+    const detailsById = new Map(setDetails?.map((set) => [set.id, set]));
+    return candidateSets.map((set) => {
+      const detail = detailsById.get(set.id);
+      return detail ? {
+        ...set,
+        releaseDate: detail.releaseDate ?? set.releaseDate,
+        totalCards: detail.totalCards ?? set.totalCards,
+      } : set;
+    });
+  }, [candidateSets, setDetails]);
   const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(sets ?? []), [sets]);
   const setBrowseLanguage = usePrimeDexStore((state) => state.setTCGBrowseLanguage);
   const isDemo = mounted && !user;

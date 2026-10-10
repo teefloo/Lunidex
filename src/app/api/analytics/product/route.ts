@@ -56,6 +56,7 @@ async function postProductAnalytics(request: NextRequest): Promise<NextResponse>
   } else if (values.some((value, index) => value !== undefined && !allowed[event][index]?.includes(value as never))) {
     return new NextResponse(null, { status: 400, headers });
   }
+  // This route stores the bounded Neon aggregate only; the consented browser SDK captures PostHog events separately.
   const sql = getNeonClient();
   if (!sql) return new NextResponse(null, { status: 503, headers });
   try {
