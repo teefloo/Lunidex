@@ -44,7 +44,6 @@ vi.mock('@/lib/product-measurement', () => ({
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn() } }));
 vi.mock('@/components/layout/Header', () => ({ default: () => null }));
 vi.mock('@/components/auth/SyncRequiredPanel', () => ({ SyncRequiredPanel: () => createElement('p', null, 'Account required') }));
-vi.mock('@/components/auth/SyncStatusPanel', () => ({ SyncStatusPanel: ({ status }: { status: string }) => createElement('p', null, `Sync ${status}`) }));
 vi.mock('./TCGCardImage', () => ({ TCGCardImage: () => null }));
 vi.mock('./TCGImageWithFallback', () => ({ TCGImageWithFallback: () => null }));
 vi.mock('./TCGHolographicCard', () => ({ TCGHolographicCard: () => null }));
@@ -57,7 +56,7 @@ import { TCGSetAlbumPage } from '@/app/tcg/collection/[language]/TCGSetAlbumPage
 import { TCGStartPage } from '@/app/tcg/start/TCGStartPage';
 import { TCGCollectionPage } from '@/app/tcg/collection/TCGCollectionPage';
 import { usePrimeDexStore } from '@/store/primedex';
-import { onSyncAccessRequired, setSyncAccessStatus } from '@/store/sync-access';
+import { onSyncAccessRequired, onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
 
 function album(setId = 'base1'): TCGSetAlbumData {
@@ -148,7 +147,7 @@ describe('TCG demo and account boundaries', () => {
     setSyncAccessStatus('unauthenticated');
     await render(); expect(progress()).toContain('Owned 0 / 2'); await click(cardButton('Bulbasaur'));
     mocks.auth.user = { id: 'account-a' }; setSyncAccessStatus('loading'); await render();
-    expect(container.textContent).toContain('Sync loading'); expect(container.textContent).not.toContain('Demo checklist');
+    expect(container.textContent).toContain('Your collection is still syncing'); expect(container.textContent).not.toContain('Demo checklist');
     setSyncAccessStatus('ready'); await render();
     expect(container.textContent).toContain('Demo changes were discarded');
     expect(container.textContent).toContain('1/2');
@@ -162,9 +161,34 @@ describe('TCG demo and account boundaries', () => {
   });
 
   it('retains the authenticated unavailable state instead of showing a demo', async () => {
-    mocks.auth.user = { id: 'account-a' }; setSyncAccessStatus('unavailable'); await render();
-    expect(container.textContent).toContain('Sync unavailable'); expect(progress()).toBeUndefined();
+    mocks.auth.user = { id: 'account-a' };
+    setSyncAccessStatus('unavailable');
+    const retry = vi.fn();
+    const unsubscribe = onSyncAccessRetry(retry);
+    try {
+      await render();
+      expect(container.textContent).toContain('saved data is temporarily unavailable');
+      expect(progress()).toBeUndefined();
+      await click(Array.from(container.querySelectorAll('button')).find((button) => button.textContent === 'Retry synchronization'));
+      expect(retry).toHaveBeenCalledOnce();
+    } finally {
+      unsubscribe();
+    }
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
     expect(mocks.queryEnabled.at(-1)).toBe(false);
+  });
+
+  it('loads the public album while auth and local persistence hydration are unresolved', async () => {
+    mocks.auth.loading = true;
+    usePrimeDexStore.setState({ _hasHydrated: false });
+    setSyncAccessStatus('checking');
+
+    await render();
+
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
+    expect(container.textContent).toContain('Missing');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
   });
 
   it('keeps the cold anonymous demo interactive while session verification is pending', async () => {
@@ -238,6 +262,19 @@ describe('TCG demo and account boundaries', () => {
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load');
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
     expect(mocks.queryRetry.at(-1)).toBe(false);
+  });
+
+  it('shows a retryable album error for an authenticated account after sync is ready', async () => {
+    mocks.auth.user = { id: 'account-a' };
+    setSyncAccessStatus('ready');
+    mocks.queryError = true;
+
+    await render();
+
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+    expect(container.querySelector('button')?.textContent).toContain('Retry');
   });
 
   it('allows the public set selector and demo when account creation is not configured', async () => {
