@@ -66,7 +66,7 @@ export function TCGStartPage() {
     ? (queryLanguage ?? browseLanguage)
     : (queryLanguage ?? 'en');
   const normalizedQuery = query.trim().toLocaleLowerCase(resolvedLanguage);
-  const catalogEnabled = mounted && hasHydrated && (!user || (!authLoading && syncStatus === 'ready'));
+  const catalogEnabled = mounted && (!user || (hasHydrated && !authLoading && syncStatus === 'ready'));
 
   const { data: sets, isLoading, isError, refetch } = useQuery({
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
@@ -138,7 +138,7 @@ export function TCGStartPage() {
     void trackTcgStartOpened({ tcg_language: resolvedLanguage, authenticated: Boolean(user) });
   }, [hasHydrated, mounted, resolvedLanguage, user, authLoading, consent.productMeasurement]);
 
-  if (!mounted || !hasHydrated || (user && authLoading)) {
+  if (!mounted || (user && (!hasHydrated || authLoading))) {
     return (
       <div className="app-page">
         <Header />

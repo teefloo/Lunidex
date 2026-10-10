@@ -22,7 +22,8 @@
     "typecheck": "tsc --noEmit",
     "db:neon:export": "bash scripts/neon/export-supabase.sh",
     "db:neon:import": "bash scripts/neon/import-to-neon.sh",
-    "db:neon:verify": "bash scripts/neon/verify-migration.sh"
+    "db:neon:verify": "bash scripts/neon/verify-migration.sh",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
@@ -59,6 +60,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^20",
