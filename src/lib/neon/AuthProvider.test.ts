@@ -15,11 +15,15 @@ vi.mock('./client', () => ({
 import { AuthProvider, useAuth } from './AuthProvider';
 
 function AuthProbe() {
-  const { loading, user } = useAuth();
-  return createElement('output', {
-    'data-loading': String(loading),
-    'data-user': user?.id ?? '',
-  });
+  const { loading, user, sessionStatus, retrySession } = useAuth();
+  return createElement('div', null,
+    createElement('output', {
+      'data-loading': String(loading),
+      'data-session-status': sessionStatus,
+      'data-user': user?.id ?? '',
+    }),
+    createElement('button', { onClick: retrySession }, 'Retry session'),
+  );
 }
 
 function response(status: number, payload: unknown): Response {
@@ -80,13 +84,26 @@ describe('AuthProvider session refresh', () => {
     expect(container.querySelector('output')?.dataset.loading).toBe('false');
   });
 
-  it('keeps session state pending when the first lookup is unavailable', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('fetch failed')));
+  it('shows an unavailable session after a failed lookup and retries from an explicit action', async () => {
+    const fetchMock = vi.fn()
+      .mockRejectedValueOnce(new TypeError('fetch failed'))
+      .mockResolvedValueOnce(signedInResponse());
+    vi.stubGlobal('fetch', fetchMock);
 
     await renderProvider();
 
     expect(container.querySelector('output')?.dataset.user).toBe('');
-    expect(container.querySelector('output')?.dataset.loading).toBe('true');
+    expect(container.querySelector('output')?.dataset.loading).toBe('false');
+    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('unavailable');
+
+    await act(async () => {
+      container.querySelector('button')?.click();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(container.querySelector('output')?.dataset.user).toBe('test-user');
+    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
   });
 
   it('clears a session after a successful response confirms there is no user', async () => {

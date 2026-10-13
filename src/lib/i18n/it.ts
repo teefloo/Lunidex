@@ -902,6 +902,7 @@ export default {
       check_email: 'Account creato — controlla la posta in arrivo per confermare il tuo indirizzo e-mail.',
       signed_in: 'Accesso effettuato. Sincronizzazione della tua collezione…',
       session_unavailable: 'Impossibile confermare l’accesso. Riprova.',
+      session_unavailable_title: 'Verifica della sessione non disponibile',
       session_checking: 'Verifica della sessione…', sync_unavailable: 'Il tuo account è connesso, ma i dati salvati non sono temporaneamente disponibili. Riprova tra poco.',
       sync_checking: 'La tua collezione è ancora in fase di sincronizzazione. Riprova tra poco.',
       sync_title: 'Sincronizzazione della collezione',

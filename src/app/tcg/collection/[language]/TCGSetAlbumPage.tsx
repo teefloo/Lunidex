@@ -103,7 +103,7 @@ export function TCGSetAlbumPage({
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
     retry: false,
-    enabled: mounted && (isDemo || (!authLoading && syncStatus === 'ready')),
+    enabled: mounted,
   });
 
   return (

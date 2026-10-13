@@ -1596,6 +1596,7 @@ export default {
       check_email: 'Compte créé — consultez votre boîte mail pour confirmer votre adresse.',
       signed_in: 'Connexion réussie. Synchronisation de votre collection…',
       session_unavailable: 'La connexion n’a pas pu être confirmée. Réessayez.',
+      session_unavailable_title: 'Vérification de la session indisponible',
       session_checking: 'Vérification de la session…', sync_unavailable: 'Votre compte est bien connecté, mais vos données enregistrées sont temporairement indisponibles. Réessayez dans un instant.',
       sync_checking: 'Votre collection est encore en cours de synchronisation. Réessayez dans un instant.',
       sync_title: 'Synchronisation de la collection',

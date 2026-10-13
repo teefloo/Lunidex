@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TCGCard } from '@/types/tcg';
 const mocks = vi.hoisted(() => ({ get: vi.fn(), getCachedData: vi.fn(), setCachedData: vi.fn() }));
 vi.mock('axios', () => ({ default: { create: vi.fn(() => ({ get: mocks.get })) } }));
@@ -12,6 +12,41 @@ describe('TCG cancellation and shared requests', () => {
     mocks.getCachedData.mockResolvedValue(null);
     mocks.setCachedData.mockResolvedValue(undefined);
   });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('bounds the complete set catalog route and direct fallback sequence', async () => {
+    vi.useFakeTimers();
+    vi.spyOn(AbortSignal, 'timeout').mockImplementation((milliseconds) => {
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(new DOMException('Request timed out', 'TimeoutError')), milliseconds);
+      return controller.signal;
+    });
+    vi.stubGlobal('fetch', vi.fn((_input: RequestInfo | URL, init?: RequestInit) => new Promise<Response>((_resolve, reject) => {
+      const requestSignal = init?.signal;
+      requestSignal?.addEventListener('abort', () => reject(requestSignal.reason), { once: true });
+    })));
+    mocks.get.mockImplementation((_path: string, options?: { signal?: AbortSignal }) => new Promise((_resolve, reject) => {
+      const requestSignal = options?.signal;
+      requestSignal?.addEventListener('abort', () => reject(requestSignal.reason), { once: true });
+    }));
+
+    const { fetchCollectionSetCatalog } = await import('./tcg');
+    const pendingCatalog = fetchCollectionSetCatalog('en');
+    const catalogRejection = expect(pendingCatalog).rejects.toMatchObject({ name: 'TimeoutError' });
+    expect(mocks.get).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(8_000);
+    expect(mocks.get).toHaveBeenCalledOnce();
+
+    await vi.advanceTimersByTimeAsync(4_000);
+    await catalogRejection;
+    expect(mocks.get).toHaveBeenCalledOnce();
+  });
+
   it('keeps a shared request alive when an independent subscriber cancels', async () => {
     let finishShared!: (response: { data: TCGCard }) => void;
     mocks.get.mockImplementation((_path: string, options?: { signal?: AbortSignal }) => options?.signal

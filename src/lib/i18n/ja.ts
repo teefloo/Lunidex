@@ -902,6 +902,7 @@ export default {
       check_email: 'アカウントを作成しました — 受信トレイを確認してメールアドレスを認証してください。',
       signed_in: 'ログインしました。コレクションを同期しています…',
       session_unavailable: 'ログインを確認できませんでした。もう一度お試しください。',
+      session_unavailable_title: 'セッションを確認できません',
       session_checking: 'セッションを確認中…', sync_unavailable: 'アカウントにはログインしていますが、保存データを一時的に利用できません。しばらくしてからもう一度お試しください。',
       sync_checking: 'コレクションをまだ同期中です。しばらくしてからもう一度お試しください。',
       sync_title: 'コレクションの同期',

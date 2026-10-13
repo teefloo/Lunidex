@@ -902,6 +902,7 @@ export default {
       check_email: '账户已创建 — 请检查收件箱以确认邮箱。',
       signed_in: '已登录。正在同步你的收藏…',
       session_unavailable: '无法确认登录状态。请重试。',
+      session_unavailable_title: '无法验证会话',
       session_checking: '正在验证会话…', sync_unavailable: '你的账户已登录，但保存的数据暂时不可用。请稍后重试。',
       sync_checking: '你的收藏仍在同步中。请稍后重试。',
       sync_title: '收藏同步',

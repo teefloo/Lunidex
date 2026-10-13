@@ -72,8 +72,9 @@ export function TCGStartPage() {
     queryKey: ['tcg', 'activation-sets', resolvedLanguage],
     queryFn: ({ signal }) => fetchCollectionSetCatalog(resolvedLanguage, signal),
     staleTime: 60 * 60 * 1000,
-    // Public set data and the in-memory demo stay available while session
-    // verification retries. A known account still waits for sync readiness.
+    retry: false,
+    // Anonymous visitors can use the public catalogue before local preferences
+    // finish hydrating. A known account still waits for its persisted state and sync.
     enabled: catalogEnabled,
   });
 
@@ -94,6 +95,7 @@ export function TCGStartPage() {
     })))
       .filter((set): set is TCGSet => set !== null),
     enabled: catalogEnabled && setDetailIds.length > 0,
+    retry: false,
     staleTime: 60 * 60 * 1000,
   });
   const visibleSets = useMemo(() => {
@@ -230,7 +232,7 @@ export function TCGStartPage() {
                 {Array.from({ length: 5 }, (_, index) => <div key={index} className="h-20 animate-pulse rounded-sm border border-border/20 bg-card/35" />)}
               </div>
             ) : isError ? (
-              <div className="mt-4 rounded-sm border border-destructive/30 bg-destructive/10 p-5">
+              <div className="mt-4 rounded-sm border border-destructive/30 bg-destructive/10 p-5" role="alert">
                 <p className="text-sm text-foreground/75">{t('tcg.activation.sets_load_error')}</p>
                 <button type="button" onClick={() => void refetch()} className="mt-4 min-h-11 rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
                   {t('common.retry', { defaultValue: 'Retry' })}

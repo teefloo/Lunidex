@@ -52,6 +52,8 @@ type AuthResult = { error: AuthErrorLike | null };
 interface AuthContextValue {
   enabled: boolean;
   loading: boolean;
+  sessionStatus: 'checking' | 'resolved' | 'unavailable';
+  retrySession: () => void;
   session: AppSession | null;
   user: AppUser | null;
   signUp: (email: string, password: string, name?: string) => Promise<AuthResult>;
@@ -334,6 +336,8 @@ function DisabledAuthProvider({ children }: { children: ReactNode }) {
     return {
       enabled: false,
       loading: false,
+      sessionStatus: 'resolved',
+      retrySession: () => {},
       session: null,
       user: null,
       signUp: noop,
@@ -350,6 +354,7 @@ function DisabledAuthProvider({ children }: { children: ReactNode }) {
 
 function DeferredAuthProvider({ children }: { children: ReactNode }) {
   const authState = useClientSession();
+  const retrySession = useCallback(() => notifyAuthStateChanged(), []);
   const [sdkLoading, setSdkLoading] = useState(false);
   const loadClient = useCallback(async (): Promise<ConnectedAuthClient | null> => {
     const cachedClient = getNeonAuthClient();
@@ -388,6 +393,8 @@ function DeferredAuthProvider({ children }: { children: ReactNode }) {
     return {
       enabled: true,
       loading,
+      sessionStatus: authState.status,
+      retrySession,
       session,
       user,
       signUp: async (email, password, name) => {
@@ -484,18 +491,19 @@ function DeferredAuthProvider({ children }: { children: ReactNode }) {
         }
       },
     };
-  }, [loading, loadClient, redirectTo, resetRedirectTo, session, user]);
+  }, [authState.status, loading, loadClient, redirectTo, resetRedirectTo, retrySession, session, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-function useClientSession(): { data: SessionData; isPending: boolean } {
+function useClientSession(): { data: SessionData; isPending: boolean; status: 'checking' | 'resolved' | 'unavailable' } {
   // Read through the first-party route proxy instead of calling an SDK method
   // whose shape differs between Neon Auth browser bundles. This keeps the
   // session cookie on the Lunidex origin and works across those bundles.
-  const [state, setState] = useState<{ data: SessionData; isPending: boolean }>({
+  const [state, setState] = useState<{ data: SessionData; isPending: boolean; status: 'checking' | 'resolved' | 'unavailable' }>({
     data: null,
     isPending: true,
+    status: 'checking',
   });
 
   useEffect(() => {
@@ -504,17 +512,17 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
     let retryTimer: number | null = null;
     let retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
 
-    const refresh = (): Promise<void> => {
-      if (refreshPromise) return refreshPromise;
-      setState((current) => current.data === null && !current.isPending
-        ? { data: null, isPending: true }
+    const refresh = (showPending = false): Promise<void> => {
+      if (showPending) setState((current) => current.data === null
+        ? { ...current, isPending: true, status: 'checking' }
         : current);
+      if (refreshPromise) return refreshPromise;
 
       refreshPromise = (async () => {
         try {
           const result = await requestAuthSession();
           if (active) {
-            setState({ data: result.data, isPending: false });
+            setState({ data: result.data, isPending: false, status: 'resolved' });
             retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
             if (retryTimer !== null) {
               window.clearTimeout(retryTimer);
@@ -524,8 +532,8 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
         } catch {
           if (active) {
             setState((current) => current.data === null
-              ? { data: null, isPending: true }
-              : { data: current.data, isPending: false });
+              ? { data: null, isPending: false, status: 'unavailable' }
+              : { data: current.data, isPending: false, status: 'resolved' });
             scheduleRetry();
           }
         } finally {
@@ -550,7 +558,7 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
     const refreshWhenVisible = () => {
       if (document.visibilityState === 'visible') void refresh();
     };
-    const refreshOnAuthChange = () => void refresh();
+    const refreshOnAuthChange = () => void refresh(true);
     window.addEventListener('focus', refreshWhenVisible);
     document.addEventListener('visibilitychange', refreshWhenVisible);
     window.addEventListener('primedex:auth-changed', refreshOnAuthChange);
@@ -570,6 +578,7 @@ function useClientSession(): { data: SessionData; isPending: boolean } {
 
 function ConnectedAuthProvider({ children, client }: { children: ReactNode; client: ConnectedAuthClient }) {
   const authState = useClientSession();
+  const retrySession = useCallback(() => notifyAuthStateChanged(), []);
   const sessionData = authState.data;
   const { session, user } = useMemo(() => {
     const mappedUser = sessionData?.user ? mapUser(sessionData.user) : null;
@@ -588,6 +597,8 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
   const value = useMemo<AuthContextValue>(() => ({
     enabled: true,
     loading: authState.isPending,
+    sessionStatus: authState.status,
+    retrySession,
     session,
     user,
     signUp: async (email, password, name) => {
@@ -669,7 +680,7 @@ function ConnectedAuthProvider({ children, client }: { children: ReactNode; clie
         return { error: normalizeError(error) };
       }
     },
-  }), [authState.isPending, client, redirectTo, resetRedirectTo, session, user]);
+  }), [authState.isPending, authState.status, client, redirectTo, resetRedirectTo, retrySession, session, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

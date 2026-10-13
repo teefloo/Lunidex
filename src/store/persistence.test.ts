@@ -23,6 +23,20 @@ const persistedState = JSON.stringify({
 });
 
 describe('createResilientStorage', () => {
+  it('treats empty IndexedDB and localStorage as a completed empty hydration', async () => {
+    const storage = createResilientStorage({
+      getLocalStorage: () => createMemoryStorage(),
+      idbAvailable: () => true,
+      idb: {
+        get: async () => undefined,
+        set: async () => undefined,
+        del: async () => undefined,
+      },
+    });
+
+    await expect(storage.getItem('session')).resolves.toBeNull();
+  });
+
   it('falls back to localStorage when IndexedDB never settles', async () => {
     const localStorage = createMemoryStorage({ session: persistedState });
     const storage = createResilientStorage({

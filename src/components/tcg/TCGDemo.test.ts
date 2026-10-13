@@ -12,11 +12,17 @@ const mocks = vi.hoisted(() => ({
   queryRetry: [] as (boolean | undefined)[],
   queryOptions: [] as Array<{ queryKey: readonly unknown[]; queryFn?: (context?: { signal?: AbortSignal }) => Promise<unknown>; enabled?: boolean; retry?: boolean }>,
   queryError: false,
+  catalogLoading: false,
+  albumLoading: false,
   album: null as TCGSetAlbumData | null,
+  catalogError: false,
   activationSets: [] as Array<{ id: string; name: string; totalCards: number; releaseRank: number; dataLanguage: string }>,
   getAllSets: vi.fn().mockResolvedValue([]),
   fetchCollectionSetCatalog: vi.fn().mockImplementation(async () => mocks.activationSets),
   getSetById: vi.fn().mockResolvedValue(null),
+  queryRefetch: vi.fn().mockResolvedValue(undefined),
+  trackStart: vi.fn(),
+  setTrackingIdentity: vi.fn(),
   setDetailLoading: false,
   consent: { productMeasurement: 'granted' },
   search: '',
@@ -34,9 +40,11 @@ vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: readon
   mocks.queryRetry.push(options.retry);
   const isAlbumQuery = options.queryKey.includes('collection-set-album-v2');
   const isActivationQuery = options.queryKey.includes('activation-sets');
+  const isCollectionCatalogQuery = options.queryKey.includes('collection-sets');
   const isSetDetailQuery = options.queryKey.includes('activation-set-details');
-  const isError = isAlbumQuery && mocks.queryError;
-  return { data: isError ? null : isAlbumQuery ? mocks.album : isActivationQuery ? mocks.activationSets : null, isPending: false, isLoading: isSetDetailQuery && mocks.setDetailLoading, isError, isFetching: false };
+  const isError = (isAlbumQuery && mocks.queryError) || ((isActivationQuery || isCollectionCatalogQuery) && mocks.catalogError);
+  const isPending = (isAlbumQuery && mocks.albumLoading) || ((isActivationQuery || isCollectionCatalogQuery) && mocks.catalogLoading);
+  return { data: isError || isPending ? null : isAlbumQuery ? mocks.album : isActivationQuery || isCollectionCatalogQuery ? mocks.activationSets : null, isPending, isLoading: isPending || (isSetDetailQuery && mocks.setDetailLoading), isError, isFetching: false, refetch: mocks.queryRefetch };
 } }));
 vi.mock('@/lib/api/tcg', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/api/tcg')>();
@@ -56,8 +64,9 @@ vi.mock('@/lib/i18n', async () => {
 });
 vi.mock('@/lib/product-measurement', () => ({
   getProductConsent: () => mocks.consent, getServerProductConsent: () => mocks.consent,
-  subscribeProductConsent: () => () => {}, setProductTrackingIdentity: vi.fn(),
-  trackProductEvent: mocks.track, trackReturnAfterActivation: vi.fn(), trackTcgStartOpened: vi.fn(),
+  subscribeProductConsent: () => () => {},
+  trackProductEvent: mocks.track, trackReturnAfterActivation: vi.fn(), trackTcgStartOpened: mocks.trackStart,
+  setProductTrackingIdentity: mocks.setTrackingIdentity,
 }));
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn() } }));
 vi.mock('@/components/layout/Header', () => ({ default: () => null }));
@@ -99,7 +108,8 @@ describe('TCG demo and account boundaries', () => {
     vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     vi.clearAllMocks(); mocks.auth.user = null; mocks.auth.loading = false; mocks.auth.enabled = true;
-    mocks.queryEnabled = []; mocks.queryRetry = []; mocks.queryOptions = []; mocks.queryError = false; mocks.album = album(); mocks.search = '';
+    mocks.queryEnabled = []; mocks.queryRetry = []; mocks.queryOptions = []; mocks.queryError = false; mocks.catalogError = false; mocks.catalogLoading = false; mocks.albumLoading = false; mocks.queryRefetch.mockClear(); mocks.trackStart.mockClear(); mocks.setTrackingIdentity.mockClear(); mocks.album = album(); mocks.search = '';
+    mocks.consent = { productMeasurement: 'granted' };
     mocks.activationSets = [{ id: 'base1', name: 'Base Set', totalCards: 102, releaseRank: 0, dataLanguage: 'en' }];
     mocks.setDetailLoading = false;
     usePrimeDexStore.setState({ _hasHydrated: true, tcgBrowseLanguage: 'en', tcgCollections: [], tcgCollectionCards: [], tcgActiveCollections: [], tcgLegacyOwnedCards: [], tcgOwnedCards: [] });
@@ -195,7 +205,7 @@ describe('TCG demo and account boundaries', () => {
       unsubscribe();
     }
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
-    expect(mocks.queryEnabled.at(-1)).toBe(false);
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
   });
 
   it('loads the public album while auth and local persistence hydration are unresolved', async () => {
@@ -209,6 +219,95 @@ describe('TCG demo and account boundaries', () => {
     expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
     expect(container.textContent).toContain('Missing');
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
+
+  it('starts the anonymous activation catalog while local preferences are still hydrating', async () => {
+    mocks.auth.loading = true;
+    mocks.consent = { productMeasurement: 'denied' };
+    usePrimeDexStore.setState({ _hasHydrated: false, tcgBrowseLanguage: 'fr' });
+    setSyncAccessStatus('checking');
+
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    const query = mocks.queryOptions.find((option) => option.queryKey.includes('activation-sets'));
+    expect(query?.enabled).toBe(true);
+    expect(query?.retry).toBe(false);
+    expect(container.textContent).toContain('Try a real set checklist');
+    expect(container.querySelector('#set-search')).not.toBeNull();
+    expect(container.querySelector('a[href*="/tcg/collection/en/base1"]')).not.toBeNull();
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.trackStart).not.toHaveBeenCalled();
+    expect(mocks.setTrackingIdentity).not.toHaveBeenCalled();
+  });
+
+  it('keeps the catalog loading state distinct and renders sets when the slow request resolves', async () => {
+    mocks.catalogLoading = true;
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
+    expect(container.textContent).not.toContain('Base Set');
+    expect(mocks.queryOptions.find((option) => option.queryKey.includes('activation-sets'))?.retry).toBe(false);
+
+    mocks.catalogLoading = false;
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    expect(container.textContent).toContain('Base Set');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
+
+  it('starts a signed-in set catalog without waiting for persistence or sync', async () => {
+    mocks.auth.user = { id: 'account-a' };
+    usePrimeDexStore.setState({ _hasHydrated: false });
+    setSyncAccessStatus('checking');
+
+    await act(async () => root.render(createElement(TCGCollectionPage)));
+
+    const query = mocks.queryOptions.find((option) => option.queryKey.includes('collection-sets'));
+    expect(query?.enabled).toBe(true);
+    expect(query?.retry).toBe(false);
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
+    expect(container.textContent).not.toContain('0 / 0');
+  });
+
+  it('loads public album data while an authenticated collection is syncing', async () => {
+    mocks.auth.user = { id: 'account-a' };
+    mocks.consent = { productMeasurement: 'denied' };
+    usePrimeDexStore.setState({ _hasHydrated: false });
+    setSyncAccessStatus('loading');
+
+    await render();
+
+    const query = mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v2')).at(-1);
+    expect(query?.enabled).toBe(true);
+    expect(container.textContent).toContain('Your collection is still syncing');
+    expect(container.textContent).not.toContain('Demo checklist');
+    expect(container.querySelector('[aria-label="Add Alakazam to my collection"]')).toBeNull();
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('keeps album loading distinct and renders the checklist after the slow request resolves', async () => {
+    mocks.albumLoading = true;
+    await render();
+
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
+    expect(progress()).toBeUndefined();
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v2')).at(-1)?.retry).toBe(false);
+
+    mocks.albumLoading = false;
+    await render();
+
+    expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
+
+  it('offers an actionable catalog retry after the startup catalog fails', async () => {
+    mocks.catalogError = true;
+    await act(async () => root.render(createElement(TCGStartPage)));
+
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load sets right now.');
+    await click(container.querySelector('button'));
+    expect(mocks.queryRefetch).toHaveBeenCalledOnce();
   });
 
   it('keeps the cold anonymous demo interactive while session verification is pending', async () => {
@@ -294,7 +393,7 @@ describe('TCG demo and account boundaries', () => {
 
     expect(cardButton('Alakazam')).toBeNull();
     expect(container.textContent).not.toContain('Demo checklist');
-    expect(mocks.queryEnabled.at(-1)).toBe(false);
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
   });
 
   it('shows a retryable album error instead of leaving an API failure on a loader', async () => {
@@ -334,6 +433,6 @@ describe('TCG demo and account boundaries', () => {
     await act(async () => root.render(createElement(TCGCollectionPage)));
     expect(container.textContent).toContain('Account required');
     expect(container.querySelector('a[href="/en/tcg/start?tcgLang=en"]')).not.toBeNull();
-    expect(mocks.queryEnabled.at(-1)).toBe(false);
+    expect(mocks.queryEnabled.at(-1)).toBe(true);
   });
 });

@@ -38,7 +38,8 @@ export function TCGCollectionPage() {
     queryKey: ['tcg', 'collection-sets', collectionLanguage],
     queryFn: ({ signal }) => fetchCollectionSetCatalog(collectionLanguage, signal),
     staleTime: 60 * 60 * 1000,
-    enabled: mounted && hasHydrated && !authLoading && Boolean(user) && syncStatus === 'ready',
+    retry: false,
+    enabled: mounted,
   });
   const sets = useMemo(
     () => buildTCGCollectionOverviewEntries(catalogQuery.data ?? [], collectionLanguage),

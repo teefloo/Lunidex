@@ -1577,6 +1577,7 @@ export default {
       check_email: 'Account created — check your inbox to confirm your email.',
       signed_in: 'Signed in. Syncing your collection…',
       session_unavailable: 'Sign-in could not be confirmed. Please try again.',
+      session_unavailable_title: 'Session check unavailable',
       session_checking: 'Checking session…', sync_unavailable: 'Your account is signed in, but your saved data is temporarily unavailable. Please try again in a moment.',
       sync_checking: 'Your collection is still syncing. Please try again in a moment.',
       sync_title: 'Collection synchronization',

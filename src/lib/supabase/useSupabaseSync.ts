@@ -30,6 +30,7 @@ import {
 // Give a card click a short coalescing window, then send one write. The
 // remote version is cached between writes so the normal path is one PUT.
 const SYNC_DEBOUNCE_MS = 100;
+const REMOTE_STATE_REQUEST_TIMEOUT_MS = 5_000;
 
 type Snapshot = ReturnType<typeof pickSyncState>;
 
@@ -42,6 +43,13 @@ class RemoteStateError extends Error {
   constructor(public readonly status: number) {
     super(`User state unavailable (${status})`);
     this.name = 'RemoteStateError';
+  }
+}
+
+class InvalidRemoteStateError extends Error {
+  constructor() {
+    super('The saved account state response was invalid.');
+    this.name = 'InvalidRemoteStateError';
   }
 }
 
@@ -66,22 +74,55 @@ function getDeviceId(): string {
 
 async function loadRemoteState(): Promise<RemoteState> {
   return retryAsync(async () => {
-    const response = await fetchAppApi('/api/user-state', { cache: 'no-store' });
-    if (!response.ok) throw new RemoteStateError(response.status);
-    const payload = (await response.json()) as unknown;
-    const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
-      ? payload as { data?: unknown; updatedAt?: unknown }
-      : {};
-    return {
-      data: candidate.data ?? {},
-      updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : null,
+    const controller = new AbortController();
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const request = async (): Promise<RemoteState> => {
+      const response = await fetchAppApi('/api/user-state', {
+        cache: 'no-store',
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new RemoteStateError(response.status);
+      const payload = (await response.json()) as unknown;
+      if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+        throw new InvalidRemoteStateError();
+      }
+      const candidate = payload as { data?: unknown; updatedAt?: unknown };
+      if (
+        typeof candidate.data !== 'object'
+        || candidate.data === null
+        || Array.isArray(candidate.data)
+        || !(candidate.updatedAt === null || typeof candidate.updatedAt === 'string')
+      ) {
+        throw new InvalidRemoteStateError();
+      }
+      return { data: candidate.data, updatedAt: candidate.updatedAt };
     };
+
+    try {
+      return await Promise.race([
+        request(),
+        new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => {
+            controller.abort();
+            const error = new Error('Saved account state request timed out.');
+            error.name = 'TimeoutError';
+            reject(error);
+          }, REMOTE_STATE_REQUEST_TIMEOUT_MS);
+        }),
+      ]);
+    } finally {
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    }
   }, {
-    attempts: 3,
+    attempts: 2,
     delayMs: (attempt) => (attempt + 1) * 250,
-    shouldRetry: (error) => error instanceof RemoteStateError
-      ? error.status >= 500
-      : isLikelyNetworkError(error),
+    shouldRetry: (error) => {
+      if (error instanceof InvalidRemoteStateError) return false;
+      if (error instanceof RemoteStateError) return error.status >= 500;
+      return error instanceof Error && error.name === 'TimeoutError'
+        ? true
+        : isLikelyNetworkError(error);
+    },
   });
 }
 
@@ -336,12 +377,56 @@ export function useNeonSync(): void {
     };
 
     const init = async (): Promise<void> => {
-      let remoteRow: RemoteState;
       try {
-        remoteRow = await loadRemoteState();
+        const remoteRow = await loadRemoteState();
+        if (cancelled) return;
+
+        const remoteSnapshot = remoteRow.data;
+        remoteSnapshotRef.current = remoteSnapshot;
+        remoteUpdatedAtRef.current = remoteRow.updatedAt;
+        const reconciled = reconcileRemoteState(
+          remoteSnapshot as Partial<Snapshot>,
+          extractSyncMetadata(remoteSnapshot),
+          deviceId,
+        );
+        applyAcceptedState(reconciled.state, reconciled.metadata);
+        setSyncAccessStatus('ready');
+
+        unsubscribe = usePrimeDexStore.subscribe(() => {
+          const next = pickSyncState();
+          const previous = previousSnapshotRef.current;
+          if (applyingRemoteRef.current || !previous || JSON.stringify(previous) === JSON.stringify(next)) {
+            previousSnapshotRef.current = next;
+            return;
+          }
+
+          const metadata = advanceSyncMetadata(
+            metadataRef.current ?? normalizeSyncMetadata(undefined, previous),
+            previous,
+            next,
+            deviceId,
+          );
+          metadataRef.current = metadata;
+          previousSnapshotRef.current = next;
+          schedulePush();
+        });
+
+        // Remove preferences from the retired generation-theme feature without
+        // touching any collection or account data. A conflict simply defers the
+        // cleanup to the next normal sync write.
+        if (hasRemovedSyncKeys(remoteSnapshot)) {
+          const cleanupPayload = buildSyncPayload(remoteSnapshot, reconciled.state, reconciled.metadata);
+          void saveRemoteState(cleanupPayload, remoteRow.updatedAt).then((result) => {
+            if (!result.saved || !result.remote || cancelled) return;
+            remoteSnapshotRef.current = result.remote.data;
+            remoteUpdatedAtRef.current = result.remote.updatedAt;
+          }).catch(() => {
+            // The authenticated session remains usable; cleanup is best effort.
+          });
+        }
       } catch (error) {
         if (cancelled) return;
-        const status = error instanceof RemoteStateError && error.status === 401
+        const status = error instanceof RemoteStateError && (error.status === 401 || error.status === 403)
           ? 'unauthenticated'
           : 'unavailable';
         resetSession(status);
@@ -351,51 +436,6 @@ export function useNeonSync(): void {
           }));
         }
         return;
-      }
-      if (cancelled) return;
-
-      const remoteSnapshot = remoteRow.data ?? {};
-      remoteSnapshotRef.current = remoteSnapshot;
-      remoteUpdatedAtRef.current = remoteRow.updatedAt;
-      const reconciled = reconcileRemoteState(
-        remoteSnapshot as Partial<Snapshot>,
-        extractSyncMetadata(remoteSnapshot),
-        deviceId,
-      );
-      applyAcceptedState(reconciled.state, reconciled.metadata);
-      setSyncAccessStatus('ready');
-
-      unsubscribe = usePrimeDexStore.subscribe(() => {
-        const next = pickSyncState();
-        const previous = previousSnapshotRef.current;
-        if (applyingRemoteRef.current || !previous || JSON.stringify(previous) === JSON.stringify(next)) {
-          previousSnapshotRef.current = next;
-          return;
-        }
-
-        const metadata = advanceSyncMetadata(
-          metadataRef.current ?? normalizeSyncMetadata(undefined, previous),
-          previous,
-          next,
-          deviceId,
-        );
-        metadataRef.current = metadata;
-        previousSnapshotRef.current = next;
-        schedulePush();
-      });
-
-      // Remove preferences from the retired generation-theme feature without
-      // touching any collection or account data. A conflict simply defers the
-      // cleanup to the next normal sync write.
-      if (hasRemovedSyncKeys(remoteSnapshot)) {
-        const cleanupPayload = buildSyncPayload(remoteSnapshot, reconciled.state, reconciled.metadata);
-        void saveRemoteState(cleanupPayload, remoteRow.updatedAt).then((result) => {
-          if (!result.saved || !result.remote || cancelled) return;
-          remoteSnapshotRef.current = result.remote.data;
-          remoteUpdatedAtRef.current = result.remote.updatedAt;
-        }).catch(() => {
-          // The authenticated session remains usable; cleanup is best effort.
-        });
       }
     };
 

@@ -101,6 +101,7 @@ const VISUAL_METADATA_CONCURRENCY = 8;
 const POKEMON_CARD_PAGE_SIZE = 100;
 const COLLECTION_CATALOG_TIMEOUT_MS = 10_000;
 const COLLECTION_CATALOG_CLIENT_TIMEOUT_MS = 8_000;
+const COLLECTION_CATALOG_TOTAL_CLIENT_TIMEOUT_MS = 12_000;
 const COLLECTION_SET_CARDS_CLIENT_TIMEOUT_MS = 8_000;
 const COLLECTION_SET_CARDS_FALLBACK_TIMEOUT_MS = 15_000;
 const COLLECTION_ALBUM_TIMEOUT_MS = 15_000;
@@ -1640,12 +1641,14 @@ export const fetchCollectionSetCatalog = async (
     throwIfAborted(signal);
     return memoryCached;
   }
+  const requestSignal = createCollectionRequestSignal(signal, COLLECTION_CATALOG_TOTAL_CLIENT_TIMEOUT_MS);
+  throwIfAborted(requestSignal);
   const params = new URLSearchParams({ tcgLang: lang });
   let status: number | undefined;
   try {
     const response = await fetch(
       `/api/tcg/sets?${params.toString()}`,
-      { signal: createCollectionRequestSignal(signal, COLLECTION_CATALOG_CLIENT_TIMEOUT_MS) },
+      { signal: createCollectionRequestSignal(requestSignal, COLLECTION_CATALOG_CLIENT_TIMEOUT_MS) },
     );
     status = response.status;
     if (!response.ok) {
@@ -1677,7 +1680,7 @@ export const fetchCollectionSetCatalog = async (
     void setCachedData(cacheKey, sets);
     return sets;
   } catch (error) {
-    if (signal?.aborted) throw error;
+    if (requestSignal.aborted) throw error;
     if (status === undefined || status >= 500) {
       reportHttpFailure(error, {
         feature: 'tcg',
@@ -1690,8 +1693,9 @@ export const fetchCollectionSetCatalog = async (
   }
 
   // The browser can still reach TCGdex when the server function is cold,
-  // blocked, or stale. This also returns the local IndexedDB snapshot first.
-  return getCollectionSetCatalog(lang, signal);
+  // blocked, or stale. This also returns the local IndexedDB snapshot first;
+  // keep the route and direct fallback inside one end-to-end request budget.
+  return getCollectionSetCatalog(lang, requestSignal);
 };
 
 /** Upper bound on how many cards a single collection-insight request will hydrate. */

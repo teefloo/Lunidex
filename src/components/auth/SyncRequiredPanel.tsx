@@ -13,14 +13,24 @@ interface SyncRequiredPanelProps {
 }
 
 export function SyncRequiredPanel({ headingLevel = 1 }: SyncRequiredPanelProps) {
-  const { enabled } = useAuth();
+  const { enabled, sessionStatus, retrySession } = useAuth();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const sessionUnresolved = enabled && sessionStatus !== 'resolved';
+  const sessionUnavailable = sessionStatus === 'unavailable';
 
-  const title = enabled
+  const title = sessionUnavailable
+    ? t('auth.session_unavailable_title', { defaultValue: 'Session check unavailable' })
+    : sessionStatus === 'checking' && enabled
+      ? t('auth.session_checking', { defaultValue: 'Checking session…' })
+      : enabled
     ? t('auth.signin_title', { defaultValue: 'Sign in to continue' })
     : t('auth.session_unavailable', { defaultValue: 'Accounts are currently unavailable.' });
-  const description = enabled
+  const description = sessionUnavailable
+    ? t('auth.session_unavailable', { defaultValue: 'Sign-in could not be confirmed. Please try again.' })
+    : sessionStatus === 'checking' && enabled
+      ? t('auth.session_checking', { defaultValue: 'Checking session…' })
+      : enabled
     ? t('auth.signin_subtitle', { defaultValue: 'Sign in to save and sync your collection.' })
     : t('auth.session_unavailable', { defaultValue: 'Accounts are currently unavailable.' });
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
@@ -33,7 +43,16 @@ export function SyncRequiredPanel({ headingLevel = 1 }: SyncRequiredPanelProps) 
       <p className="mt-3 text-base leading-7 text-foreground/65">
         {description}
       </p>
-      {enabled && (
+      {sessionUnavailable && (
+        <button
+          type="button"
+          onClick={retrySession}
+          className="mt-6 inline-flex min-h-11 items-center rounded-sm border border-primary/45 bg-primary/10 px-5 text-sm font-black uppercase tracking-[0.1em] text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        >
+          {t('common.retry', { defaultValue: 'Retry' })}
+        </button>
+      )}
+      {enabled && !sessionUnresolved && (
         <button
           type="button"
           onClick={() => setOpen(true)}

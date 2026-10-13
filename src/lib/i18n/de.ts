@@ -902,6 +902,7 @@ export default {
       check_email: 'Konto erstellt — prüfe deinen Posteingang, um deine E-Mail-Adresse zu bestätigen.',
       signed_in: 'Angemeldet. Deine Sammlung wird synchronisiert…',
       session_unavailable: 'Die Anmeldung konnte nicht bestätigt werden. Bitte versuche es erneut.',
+      session_unavailable_title: 'Sitzung konnte nicht überprüft werden',
       session_checking: 'Sitzung wird geprüft…', sync_unavailable: 'Dein Konto ist verbunden, aber deine gespeicherten Daten sind vorübergehend nicht verfügbar. Bitte versuche es gleich noch einmal.',
       sync_checking: 'Deine Sammlung wird noch synchronisiert. Bitte versuche es gleich noch einmal.',
       sync_title: 'Sammlung synchronisieren',
