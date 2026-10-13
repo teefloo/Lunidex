@@ -110,7 +110,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_URL` | Web / public | Canonical site and API base URL. Defaults to `https://lunidex.app`. |
 | `NEXT_PUBLIC_NEON_AUTH_URL` | Web / public | Neon Auth endpoint used by the browser client. |
 | `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | Server-only | Neon Auth proxy and JWT verification endpoints. |
-| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Server-only | Auth cookie protection and JWT validation constraints. |
+| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Server-only | Auth cookie protection; set both exact JWT claims from Neon Auth whenever `NEON_AUTH_JWKS_URL` is configured, or bearer-token verification fails closed. |
 | `NEON_DATABASE_URL` / `DATABASE_URL` | Server-only | Neon PostgreSQL connection. Vercel's Neon integration supplies `DATABASE_URL`; local tooling can use `NEON_DATABASE_URL`. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / public | Optional Google Search Console verification value. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Development | Enables the Agentation UI-review overlay when set to `true`. |

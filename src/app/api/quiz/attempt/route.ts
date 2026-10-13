@@ -174,6 +174,7 @@ async function postQuizAttempt(request: NextRequest): Promise<NextResponse> {
         and started_at >= now() - (${QUIZ_ATTEMPT_MAX_AGE_MINUTES} * interval '1 minute')
         and answer_index = ${questionIndex}
         and answer_index < cardinality(question_ids)
+        and wrong_answers < ${DAILY_MARATHON_MAX_WRONG}
       returning
         id as attempt_id,
         answer_index,

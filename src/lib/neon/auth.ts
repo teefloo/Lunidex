@@ -143,17 +143,17 @@ export async function getNeonUserFromRequest(request: Request): Promise<NeonRequ
   const cookieUser = await getNeonUserFromSession(request);
   if (cookieUser) return cookieUser;
 
-  if (!remoteJwks) return null;
+  // Bearer-token verification must bind the signature to this deployment's
+  // Neon Auth issuer and audience. Cookie sessions are still revalidated
+  // upstream above when these optional bearer settings are not configured.
+  if (!remoteJwks || !expectedIssuer || !expectedAudience) return null;
   const token = bearerToken(request.headers.get('authorization'));
   if (!token) return null;
 
   try {
-    // Copy the exact claims from the Neon Auth configuration in production.
-    // Conditional options preserve local setups until those values are known,
-    // while enforcing the issuer/audience contract once configured.
     const { payload } = await jwtVerify(token, remoteJwks, {
-      ...(expectedIssuer ? { issuer: expectedIssuer } : {}),
-      ...(expectedAudience ? { audience: expectedAudience } : {}),
+      issuer: expectedIssuer,
+      audience: expectedAudience,
     });
     const id = typeof payload.sub === 'string'
       ? payload.sub

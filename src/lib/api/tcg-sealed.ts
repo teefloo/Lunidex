@@ -219,10 +219,6 @@ export function fetchSealedSources(signal?: AbortSignal): Promise<SealedSourcesR
   return requestJson('/api/tcg/sealed/sources', { cache: 'no-store', signal });
 }
 
-export function syncSealedSources(): Promise<{ sync: Record<string, unknown> }> {
-  return requestJson('/api/tcg/sealed/sources', jsonInit('POST', {}));
-}
-
 export function fetchSealedAlias(productId: number, signal?: AbortSignal): Promise<{ productId: number; alias: string | null }> {
   return requestJson(`/api/tcg/sealed/aliases/${productId}`, { cache: 'no-store', signal });
 }
