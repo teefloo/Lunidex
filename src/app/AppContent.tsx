@@ -24,46 +24,10 @@ function ToastBoundary() {
 
 export function AppContent({ children }: { children: ReactNode }) {
   const shouldRenderAgentation = process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_ENABLE_AGENTATION === "true";
-  const [agentationAvailable, setAgentationAvailable] = useState(false);
   const [Agentation, setAgentation] = useState<ComponentType<{ endpoint: string }> | null>(null);
 
   useEffect(() => {
     if (!shouldRenderAgentation) return;
-
-    let active = true;
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 1_500);
-
-    void fetch('/api/agentation/health', {
-      method: "GET",
-      cache: "no-store",
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          if (active) setAgentationAvailable(false);
-          return;
-        }
-        const result = await response.json().catch(() => null) as { available?: unknown } | null;
-        if (active) setAgentationAvailable(result?.available === true);
-      })
-      .catch(() => {
-        // Agentation is an optional development tool. Its absence must not
-        // add console noise or place an interaction-blocking overlay above
-        // the application.
-        if (active) setAgentationAvailable(false);
-      })
-      .finally(() => window.clearTimeout(timeoutId));
-
-    return () => {
-      active = false;
-      controller.abort();
-      window.clearTimeout(timeoutId);
-    };
-  }, [shouldRenderAgentation]);
-
-  useEffect(() => {
-    if (!shouldRenderAgentation || !agentationAvailable) return;
 
     let cancelled = false;
 
@@ -79,7 +43,7 @@ export function AppContent({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [agentationAvailable, shouldRenderAgentation]);
+  }, [shouldRenderAgentation]);
   
   return (
     <>
@@ -88,7 +52,7 @@ export function AppContent({ children }: { children: ReactNode }) {
       <CompareBarSlot />
       <ToastBoundary />
       <InstallPrompt />
-      {shouldRenderAgentation && agentationAvailable && Agentation && (
+      {shouldRenderAgentation && Agentation && (
         <Agentation endpoint={AGENTATION_ENDPOINT} />
       )}
     </>
