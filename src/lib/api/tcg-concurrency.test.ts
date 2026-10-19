@@ -117,4 +117,23 @@ describe('TCG cancellation and shared requests', () => {
     await expect(getSetById('missing-set', 'en')).resolves.toBeNull();
     await expect(getSetById('missing-set', 'en')).resolves.toBeNull();
   });
+
+  it('keeps an unavailable catalog card as a removable custom collection placeholder', async () => {
+    mocks.get.mockRejectedValue(Object.assign(new Error('Missing'), { response: { status: 404 } }));
+    const { getTCGCustomCollectionCardDetails } = await import('./tcg');
+    const ref = {
+      collectionId: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+      cardId: 'base1-4',
+      language: 'en' as const,
+      cardName: 'Charizard',
+      addedAt: '2026-10-19T10:00:00.000Z',
+    };
+
+    await expect(getTCGCustomCollectionCardDetails([ref])).resolves.toEqual([{
+      ref,
+      card: { id: 'base1-4', localId: '4', name: 'Charizard' },
+      unavailable: true,
+    }]);
+    expect(mocks.get).toHaveBeenCalledOnce();
+  });
 });

@@ -21,6 +21,12 @@ import {
   TCG_COLLECTION_MODEL_VERSION,
 } from '@/lib/tcg-collections';
 import {
+  addTCGCustomCollectionCard as addCustomCollectionCard,
+  createTCGCustomCollection as createCustomCollection,
+  editTCGCustomCollection as editCustomCollection,
+  removeTCGCustomCollectionCard as removeCustomCollectionCard,
+} from '@primedex/core/lib/tcg-custom-collections';
+import {
   DEFAULT_TCG_CARD_LANGUAGE,
   normalizeTCGCardLanguage,
   type TCGCardLanguage,
@@ -31,6 +37,7 @@ import {
   type TCGDisplayCurrency,
 } from '@/lib/tcg-currency';
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
+import type { TCGCustomCollection, TCGCustomCollectionCard } from '@primedex/core/lib/tcg-custom-collections';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import { hasSyncAccess, requestSyncAccess, type SyncAccessRequest } from './sync-access';
@@ -154,6 +161,13 @@ export interface PrimeDexStore {
   tcgActiveCollections: string[];
   tcgLegacyOwnedCards: string[];
   tcgCollectionModelVersion: 1 | 2 | typeof TCG_COLLECTION_MODEL_VERSION;
+  tcgCustomCollections: TCGCustomCollection[];
+  tcgCustomCollectionCards: TCGCustomCollectionCard[];
+  createTCGCustomCollection: (name: string, description?: string) => string;
+  editTCGCustomCollection: (collectionId: string, name: string, description?: string) => boolean;
+  deleteTCGCustomCollection: (collectionId: string) => boolean;
+  addTCGCustomCollectionCard: (collectionId: string, card: Pick<TCGCustomCollectionCard, 'cardId' | 'language' | 'cardName'>) => boolean;
+  removeTCGCustomCollectionCard: (collectionId: string, cardId: string, language: TCGCustomCollectionCard['language']) => boolean;
   setTCGBrowseLanguage: (language: TCGCardLanguage) => void;
   createTCGCollection: (setId: string, language?: TCGCardLanguage) => string;
   addTCGCollectionCard: (collectionKey: string, cardId: string) => void;
@@ -310,6 +324,8 @@ export const SYNCED_KEYS = [
   'tcgActiveCollections',
   'tcgLegacyOwnedCards',
   'tcgCollectionModelVersion',
+  'tcgCustomCollections',
+  'tcgCustomCollectionCards',
   'tcgWishlistCards',
   'tcgActiveSets',
   'tcgSavedSearches',
@@ -530,6 +546,72 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgActiveCollections: [],
       tcgLegacyOwnedCards: [],
       tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+      tcgCustomCollections: [],
+      tcgCustomCollectionCards: [],
+      createTCGCustomCollection: (name, description = '') => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return '';
+        }
+        const now = new Date().toISOString();
+        const collection = createCustomCollection(crypto.randomUUID(), name, description, now);
+        if (!collection) return '';
+        set((state) => ({ tcgCustomCollections: [...state.tcgCustomCollections, collection] }));
+        return collection.id;
+      },
+      editTCGCustomCollection: (collectionId, name, description = '') => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        const collections = editCustomCollection(
+          collectionId,
+          { name, description },
+          new Date().toISOString(),
+          get().tcgCustomCollections,
+        );
+        if (!collections) return false;
+        set({ tcgCustomCollections: collections });
+        return true;
+      },
+      deleteTCGCustomCollection: (collectionId) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        if (!get().tcgCustomCollections.some((collection) => collection.id === collectionId)) return false;
+        set((state) => ({
+          tcgCustomCollections: state.tcgCustomCollections.filter((collection) => collection.id !== collectionId),
+          tcgCustomCollectionCards: state.tcgCustomCollectionCards.filter((card) => card.collectionId !== collectionId),
+        }));
+        return true;
+      },
+      addTCGCustomCollectionCard: (collectionId, card) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        const state = get();
+        const cards = addCustomCollectionCard(state.tcgCustomCollections, state.tcgCustomCollectionCards, {
+          ...card,
+          collectionId,
+          addedAt: new Date().toISOString(),
+        });
+        if (cards.length === state.tcgCustomCollectionCards.length) return false;
+        set({ tcgCustomCollectionCards: cards });
+        return true;
+      },
+      removeTCGCustomCollectionCard: (collectionId, cardId, language) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        const state = get();
+        const cards = removeCustomCollectionCard(collectionId, cardId, language, state.tcgCustomCollectionCards);
+        if (cards.length === state.tcgCustomCollectionCards.length) return false;
+        set({ tcgCustomCollectionCards: cards });
+        return true;
+      },
       setTCGBrowseLanguage: (language) => {
         const normalized = normalizeTCGCardLanguage(language);
         // Browsing language is a display preference and must stay usable on

@@ -8,6 +8,20 @@ vi.mock('@/lib/api/server-cache', () => ({ getTCGCardCached }));
 
 const userId = '00000000-0000-4000-8000-000000000001';
 const collectionKey = encodeTCGCollectionKey('en', 'base1')!;
+const customCollectionId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
+const customCollection = {
+  id: customCollectionId,
+  name: 'Private binder',
+  createdAt: '2026-10-19T10:00:00.000Z',
+  updatedAt: '2026-10-19T10:00:00.000Z',
+};
+const customCollectionCard = {
+  collectionId: customCollectionId,
+  cardId: 'base1-001',
+  language: 'en',
+  cardName: 'Example',
+  addedAt: '2026-10-19T10:00:00.000Z',
+};
 
 function makeState(quantity: number) {
   return {
@@ -17,6 +31,8 @@ function makeState(quantity: number) {
     tcgCollectionCards: [encodeTCGCollectionCardKey(collectionKey, 'base1-001', 'normal', quantity)!],
     tcgActiveCollections: [collectionKey],
     tcgCollectionModelVersion: 3,
+    tcgCustomCollections: [customCollection],
+    tcgCustomCollectionCards: [customCollectionCard],
     favorites: [25],
     __sync: {
       version: 3,
@@ -80,6 +96,14 @@ describe('public API card holdings', () => {
     }));
   });
 
+  it('projects only physical holdings and never returns private binder data', () => {
+    const holdings = listCardHoldings(makeState(1));
+    expect(holdings).toEqual([expect.objectContaining({ cardId: 'base1-001', quantity: 1, variant: 'normal' })]);
+    expect(JSON.stringify(holdings)).not.toContain('Private binder');
+    expect(holdings[0]).not.toHaveProperty('collectionId');
+    expect(holdings[0]).not.toHaveProperty('cardName');
+  });
+
   it('removes a legacy holding when an absolute API write sets its quantity to zero', async () => {
     getTCGCardCached.mockResolvedValue(null);
     const legacyState = {
@@ -110,6 +134,8 @@ describe('public API card holdings', () => {
     expect(result.holding.quantity).toBe(3);
     const state = db.state as ReturnType<typeof makeState>;
     expect(state.tcgCollectionCards).toEqual([encodeTCGCollectionCardKey(collectionKey, 'base1-001', 'normal', 3)]);
+    expect(state.tcgCustomCollections).toEqual([customCollection]);
+    expect(state.tcgCustomCollectionCards).toEqual([customCollectionCard]);
     expect(state.__sync.clock).toBeGreaterThan(50);
     expect(state.__sync.collections.favorites['25']).toEqual({ clock: 22, deviceId: 'mobile', present: true });
     expect(db.query.mock.calls[0].slice(1)).toContain(userId);

@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 const externalBaseUrl = process.env.E2E_BASE_URL;
+const customCollectionsE2E = process.env.E2E_CUSTOM_COLLECTIONS === '1';
 
 export default defineConfig({
   testDir: './e2e',
@@ -23,7 +24,10 @@ export default defineConfig({
       url: 'http://127.0.0.1:3000',
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
-      env: { NEXT_TELEMETRY_DISABLED: '1' },
+      env: {
+        NEXT_TELEMETRY_DISABLED: '1',
+        ...(customCollectionsE2E ? { NEXT_PUBLIC_NEON_AUTH_URL: 'http://127.0.0.1:3000/api/auth' } : {}),
+      },
     },
   }),
 });

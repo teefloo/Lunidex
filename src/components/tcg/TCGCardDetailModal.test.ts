@@ -7,7 +7,14 @@ vi.mock('next/dynamic', () => ({ default: () => () => null }));
 vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({ data: null, isFetching: false }) }));
 vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useLocaleHref: () => (path: string) => path, useClientLanguage: () => 'en' }));
-vi.mock('@/store/primedex', () => ({ usePrimeDexStore: () => ({ tcgCollections: [], tcgCompareList: [], tcgCollectionCards: {}, tcgBrowseLanguage: 'en', tcgDisplayCurrency: 'EUR' }) }));
+vi.mock('@/store/primedex', () => {
+  const state = {
+    tcgCollections: [], tcgCompareList: [], tcgCollectionCards: {}, tcgBrowseLanguage: 'en', tcgDisplayCurrency: 'EUR',
+    tcgCustomCollections: [], tcgCustomCollectionCards: [], tcgOwnedCards: [],
+    addTCGCustomCollectionCard: () => false, removeTCGCustomCollectionCard: () => false,
+  };
+  return { usePrimeDexStore: (selector?: (store: typeof state) => unknown) => selector ? selector(state) : state };
+});
 vi.mock('./TCGHolographicCard', () => ({ TCGHolographicCard: () => null }));
 vi.mock('./TCGCollectionVariantSheet', () => ({ TCGCollectionVariantSheet: () => null }));
 import { TCGCardDetailModal } from './TCGCardDetailModal';

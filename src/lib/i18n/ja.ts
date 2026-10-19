@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1980,6 +1981,7 @@ team: 'チーム',
       nav_wishlist: 'ウィッシュリスト',
       page_eyebrow: 'ポケモンカードゲーム',
       collection_title: 'あなたのコレクション',
+      custom_collections: tcgCustomCollectionsTranslations.ja,
       collection_subtitle: 'カードコレクションを管理・整理する',
       collection_loading: 'コレクションを読み込み中…',
       collection_search_sets: '拡張パックを検索…',

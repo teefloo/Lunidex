@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1976,6 +1977,7 @@ team: '队伍',
       nav_wishlist: '愿望清单',
       page_eyebrow: '宝可梦卡牌',
       collection_title: '你的收藏',
+      custom_collections: tcgCustomCollectionsTranslations.zh,
       collection_subtitle: '管理和整理你的卡牌收藏',
       collection_loading: '正在加载收藏…',
       collection_search_sets: '搜索扩充包…',

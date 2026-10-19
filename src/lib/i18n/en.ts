@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -2547,6 +2548,7 @@ export default {
         },
         back_to_catalog: 'Back to catalog',
         collection_title: 'My Collection',
+        custom_collections: tcgCustomCollectionsTranslations.en,
         collection_subtitle: 'Your complete Pokémon TCG collection at a glance.',
         collection_loading: 'Loading collection...',
         collection_search_sets: 'Search sets...',

@@ -18,6 +18,11 @@ export type {
   TCGCollectionVariant,
   TCGPhysicalVariant,
 } from '@primedex/core/lib/tcg-collections';
+export type {
+  TCGCustomCollection,
+  TCGCustomCollectionCard,
+  TCGCustomCollectionCardPage,
+} from '@primedex/core/lib/tcg-custom-collections';
 export type { TCGDisplayCurrency } from '@primedex/core/lib/tcg-currency';
 
 export type TCGLegalState = 'standard' | 'expanded' | 'unlimited';

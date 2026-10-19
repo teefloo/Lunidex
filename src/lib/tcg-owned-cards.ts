@@ -13,6 +13,10 @@ import {
   isTCGDisplayCurrency,
   normalizeTCGDisplayCurrency,
 } from '@primedex/core/lib/tcg-currency';
+import {
+  normalizeTCGCustomCollectionCards,
+  normalizeTCGCustomCollections,
+} from '@primedex/core/lib/tcg-custom-collections';
 
 /** The distinct compatibility index cannot exceed the global physical cap. */
 export const MAX_TCG_OWNED_CARDS = MAX_TCG_COLLECTION_PHYSICAL_CARDS;
@@ -62,6 +66,8 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     'tcgBrowseLanguage',
     'tcgDisplayCurrency',
     'tcgCollectionModelVersion',
+    'tcgCustomCollections',
+    'tcgCustomCollectionCards',
   ];
   const hasTcgField = tcgKeys.some((key) => Object.prototype.hasOwnProperty.call(data, key));
   if (!hasTcgField) return data;
@@ -116,6 +122,15 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     : [];
   if (!collections || !collectionCards || !activeCollections) return null;
 
+  const customCollections = Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollections')
+    ? normalizeTCGCustomCollections(data.tcgCustomCollections)
+    : [];
+  if (!customCollections) return null;
+  const customCollectionCards = Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollectionCards')
+    ? normalizeTCGCustomCollectionCards(data.tcgCustomCollectionCards, customCollections.map((entry) => entry.id))
+    : [];
+  if (!customCollectionCards) return null;
+
   const collectionSet = new Set(collections);
   if (activeCollections.some((key) => !collectionSet.has(key))) return null;
   if (collectionCards.some((entry) => {
@@ -146,5 +161,7 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     tcgBrowseLanguage: browseLanguage,
     tcgDisplayCurrency: normalizeTCGDisplayCurrency(displayCurrency),
     tcgCollectionModelVersion: 3,
+    tcgCustomCollections: customCollections,
+    tcgCustomCollectionCards: customCollectionCards,
   };
 }

@@ -3,6 +3,22 @@ import { encodeTCGCollectionCardKey, encodeTCGCollectionKey } from '@primedex/co
 import { normalizeUserStateData } from './tcg-owned-cards';
 
 describe('user state TCG v1/v2/v3 normalization', () => {
+  it('adds empty custom binder arrays to older TCG snapshots without changing possessions', () => {
+    const normalized = normalizeUserStateData({ tcgOwnedCards: ['base1-001'] });
+    expect(normalized?.tcgCustomCollections).toEqual([]);
+    expect(normalized?.tcgCustomCollectionCards).toEqual([]);
+    expect(normalized?.tcgOwnedCards).toEqual(['base1-001']);
+  });
+
+  it('validates custom binders and rejects orphaned or malformed card references', () => {
+    const collectionId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
+    const binder = { id: collectionId, name: '1025', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const card = { collectionId, cardId: 'sv03.5-199', language: 'fr', cardName: 'Dracaufeu', addedAt: '2026-10-19T10:00:00.000Z' };
+    expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [card] })?.tcgCustomCollectionCards).toEqual([card]);
+    expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [{ ...card, collectionId: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d' }] })).toBeNull();
+    expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [{ ...card, language: 'zz' }] })).toBeNull();
+  });
+
   it('migrates an old payload to legacy ownership without inferring a language', () => {
     const normalized = normalizeUserStateData({ tcgOwnedCards: ['base1-001', 'base1-002'] });
     expect(normalized).toMatchObject({ tcgOwnedCards: ['base1-001', 'base1-002'], tcgLegacyOwnedCards: ['base1-001', 'base1-002'], tcgCollections: [], tcgCollectionCards: [], tcgActiveCollections: [], tcgBrowseLanguage: 'en', tcgDisplayCurrency: 'EUR', tcgCollectionModelVersion: 3 });

@@ -9,6 +9,12 @@ import {
 import { DEFAULT_TCG_CARD_LANGUAGE, normalizeTCGCardLanguage } from '@/lib/tcg-language';
 import { DEFAULT_TCG_DISPLAY_CURRENCY, normalizeTCGDisplayCurrency } from '@/lib/tcg-currency';
 import {
+  getTCGCustomCollectionCardIdentity,
+  normalizeTCGCustomCollectionCards,
+  normalizeTCGCustomCollections,
+} from '@primedex/core/lib/tcg-custom-collections';
+import type { TCGCardLanguage } from '@primedex/core/lib/tcg-language';
+import {
   copyTCGLegacyOwnedCards,
   decodeTCGCollectionCardKey,
   deriveTCGOwnedCardIds,
@@ -25,7 +31,8 @@ const COLLECTION_KEYS = [
   'favorites', 'caughtPokemon', 'badges', 'compareList', 'tcgCompareList', 'tcgOwnedCards',
   'tcgWishlistCards', 'tcgActiveSets', 'tcgCollections', 'tcgCollectionCards',
   'tcgActiveCollections', 'tcgLegacyOwnedCards', 'selectedTypes', 'selectedEggGroups',
-  'selectedColors', 'selectedShapes', 'viewedTypes',
+  'selectedColors', 'selectedShapes', 'viewedTypes', 'tcgCustomCollections',
+  'tcgCustomCollectionCards',
 ] as const satisfies readonly SyncedKey[];
 type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
@@ -46,6 +53,20 @@ const toClock = (value: unknown): number => typeof value === 'number' && Number.
 const sameValue = (left: unknown, right: unknown): boolean => JSON.stringify(left) === JSON.stringify(right);
 const collectionValues = (state: Partial<PersistedState>, key: CollectionKey): unknown[] => Array.isArray(state[key]) ? state[key] as unknown[] : [];
 const collectionEntryId = (key: CollectionKey, value: unknown): string => {
+  if (key === 'tcgCustomCollections') {
+    return value && typeof value === 'object' && 'id' in value
+      ? String((value as { id: unknown }).id)
+      : String(value);
+  }
+  if (key === 'tcgCustomCollectionCards') {
+    if (value && typeof value === 'object') {
+      const card = value as { collectionId?: unknown; cardId?: unknown; language?: unknown };
+      if (typeof card.collectionId === 'string' && typeof card.cardId === 'string' && typeof card.language === 'string') {
+        return getTCGCustomCollectionCardIdentity(card.collectionId, card.cardId, card.language as TCGCardLanguage);
+      }
+    }
+    return String(value);
+  }
   if (key === 'tcgCollectionCards') {
     const decoded = decodeTCGCollectionCardKey(value);
     return decoded
@@ -109,6 +130,13 @@ function normalizeTcgSnapshot<T extends Partial<PersistedState>>(snapshot: T): T
   next.tcgDisplayCurrency = normalizeTCGDisplayCurrency(next.tcgDisplayCurrency, DEFAULT_TCG_DISPLAY_CURRENCY);
   next.tcgOwnedCards = deriveTCGOwnedCardIds(collectionCards, legacy);
   next.tcgCollectionModelVersion = 3;
+  const customCollections = normalizeTCGCustomCollections(next.tcgCustomCollections ?? []) ?? [];
+  const customCollectionIds = new Set(customCollections.map((collection) => collection.id));
+  next.tcgCustomCollections = customCollections;
+  next.tcgCustomCollectionCards = (normalizeTCGCustomCollectionCards(
+    next.tcgCustomCollectionCards ?? [],
+    customCollectionIds,
+  ) ?? []).filter((card) => customCollectionIds.has(card.collectionId));
   return next;
 }
 
@@ -199,9 +227,16 @@ export function advanceSyncMetadata(metadata: SyncMetadata, previous: PersistedS
   return updated;
 }
 
-function chooseEntry(local: SyncEntry | undefined, remote: SyncEntry | undefined): SyncEntry | undefined {
+function chooseEntry(
+  key: CollectionKey,
+  local: SyncEntry | undefined,
+  remote: SyncEntry | undefined,
+): SyncEntry | undefined {
   if (!local) return remote;
   if (!remote) return local;
+  if (key === 'tcgCustomCollections' && local.present !== remote.present) {
+    return local.present ? remote : local;
+  }
   const comparison = compareStamps(local, remote);
   if (comparison > 0) return local;
   if (comparison < 0) return remote;
@@ -269,7 +304,7 @@ export function reconcileSyncState(
       const remoteEntries = remoteMeta.collections[key] ?? {};
       const entries: Record<string, SyncEntry> = {};
       for (const id of new Set([...Object.keys(localEntries), ...Object.keys(remoteEntries)])) {
-        const entry = chooseEntry(localEntries[id], remoteEntries[id]);
+        const entry = chooseEntry(key, localEntries[id], remoteEntries[id]);
         if (entry) entries[id] = entry;
       }
       metadata.collections[key] = entries;

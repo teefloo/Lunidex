@@ -26,4 +26,23 @@ describe('user backup validation', () => {
     expect(result).toMatchObject({ valid: true, data: { team: [25, 6], favorites: [133], soundEnabled: false } });
     if (result.valid) expect(result.data).not.toHaveProperty('caughtPokemon');
   });
+
+  it('upgrades older TCG backups with empty custom collection lists and preserves physical inventory', () => {
+    const result = validateImportPayload({ version: '3.0', data: { tcgOwnedCards: ['base1-001'] } });
+    expect(result.valid).toBe(true);
+    if (!result.valid) return;
+    expect(result.data.tcgCustomCollections).toEqual([]);
+    expect(result.data.tcgCustomCollectionCards).toEqual([]);
+    expect(result.data.tcgOwnedCards).toEqual(['base1-001']);
+  });
+
+  it('round-trips custom binders and rejects orphaned memberships in backups', () => {
+    const collectionId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
+    const createdAt = '2026-10-19T10:00:00.000Z';
+    const collection = { id: collectionId, name: 'Artwork', description: 'Favorites', createdAt, updatedAt: createdAt };
+    const card = { collectionId, cardId: 'sv03.5-199', language: 'fr', cardName: 'Dracaufeu', addedAt: createdAt };
+    const result = validateImportPayload({ version: '3.0', data: { tcgCustomCollections: [collection], tcgCustomCollectionCards: [card] } });
+    expect(result).toMatchObject({ valid: true, data: { tcgCustomCollections: [collection], tcgCustomCollectionCards: [card] } });
+    expect(validateImportPayload({ version: '3.0', data: { tcgCustomCollections: [collection], tcgCustomCollectionCards: [{ ...card, collectionId: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d' }] } }).valid).toBe(false);
+  });
 });

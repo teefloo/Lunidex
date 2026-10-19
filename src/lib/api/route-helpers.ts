@@ -9,20 +9,25 @@ const DEFAULT_MAX_JSON_BYTES = 64 * 1024;
  * a length header. Endpoints with larger, explicit payload contracts can opt
  * into a higher limit with `maxBytes`.
  */
-export async function readJsonBody<T>(
+export type JsonBodyReadResult<T> =
+  | { kind: 'ok'; value: T }
+  | { kind: 'too-large' }
+  | { kind: 'invalid' };
+
+export async function readJsonBodyResult<T>(
   request: NextRequest,
   options: { maxBytes?: number } = {},
-): Promise<T | null> {
+): Promise<JsonBodyReadResult<T>> {
   const maxBytes = options.maxBytes ?? DEFAULT_MAX_JSON_BYTES;
   try {
     let bodyText: string;
     const declaredLength = Number(request.headers.get('content-length'));
-    if (Number.isFinite(declaredLength) && declaredLength > maxBytes) return null;
+    if (Number.isFinite(declaredLength) && declaredLength > maxBytes) return { kind: 'too-large' };
 
     const reader = request.body?.getReader();
     if (!reader) {
       bodyText = await request.text();
-      if (new TextEncoder().encode(bodyText).byteLength > maxBytes) return null;
+      if (new TextEncoder().encode(bodyText).byteLength > maxBytes) return { kind: 'too-large' };
     } else {
       const chunks: Uint8Array[] = [];
       let totalBytes = 0;
@@ -33,7 +38,7 @@ export async function readJsonBody<T>(
         totalBytes += value.byteLength;
         if (totalBytes > maxBytes) {
           await reader.cancel();
-          return null;
+          return { kind: 'too-large' };
         }
         chunks.push(value);
       }
@@ -48,10 +53,20 @@ export async function readJsonBody<T>(
     }
 
     const payload: unknown = JSON.parse(bodyText);
-    return payload && typeof payload === 'object' ? (payload as T) : null;
+    return payload && typeof payload === 'object'
+      ? { kind: 'ok', value: payload as T }
+      : { kind: 'invalid' };
   } catch {
-    return null;
+    return { kind: 'invalid' };
   }
+}
+
+export async function readJsonBody<T>(
+  request: NextRequest,
+  options: { maxBytes?: number } = {},
+): Promise<T | null> {
+  const result = await readJsonBodyResult<T>(request, options);
+  return result.kind === 'ok' ? result.value : null;
 }
 
 /**

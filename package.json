@@ -23,7 +23,8 @@
     "db:neon:export": "bash scripts/neon/export-supabase.sh",
     "db:neon:import": "bash scripts/neon/import-to-neon.sh",
     "db:neon:verify": "bash scripts/neon/verify-migration.sh",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:tcg-custom": "E2E_CUSTOM_COLLECTIONS=1 playwright test e2e/tcg-custom-collections.spec.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

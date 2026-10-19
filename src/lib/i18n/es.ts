@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1983,6 +1984,7 @@ team: 'Equipo',
       nav_wishlist: 'Lista de deseos',
       page_eyebrow: 'Pokémon TCG',
       collection_title: 'Tu colección',
+      custom_collections: tcgCustomCollectionsTranslations.es,
       collection_subtitle: 'Gestiona y organiza tu colección de cartas',
       collection_loading: 'Cargando la colección…',
       collection_search_sets: 'Buscar sets…',

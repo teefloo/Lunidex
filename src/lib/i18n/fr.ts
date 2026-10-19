@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -2680,6 +2681,7 @@ team: 'Équipe',
       },
       back_to_catalog: 'Retour au catalogue',
       collection_title: 'Ma Collection',
+      custom_collections: tcgCustomCollectionsTranslations.fr,
       collection_subtitle: 'Votre collection JCC au complet en un coup d\'œil.',
       collection_loading: 'Chargement de la collection…',
       collection_search_sets: 'Rechercher une extension…',

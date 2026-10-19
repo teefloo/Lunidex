@@ -9,6 +9,7 @@ export * from './types/sealed';
 export * from './types/dashboard';
 export * from './lib/tcg-language';
 export * from './lib/tcg-collections';
+export * from './lib/tcg-custom-collections';
 export * from './lib/tcg-currency';
 export * from './lib/sealed-ledger';
 export * from './lib/sealed-catalogue';

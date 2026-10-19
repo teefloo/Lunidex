@@ -20,6 +20,7 @@ import type {
   TCGSetAlbumData,
   TCGSet,
   TCGFilterOptions,
+  TCGCustomCollectionCard,
 } from '@/types/tcg';
 import { getCanonicalTcgRarity } from '@/lib/tcg-rarity';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
@@ -827,6 +828,31 @@ export const getTCGCard = async (
   return dedupeTcgRequest(pendingTcgCardRequests, requestKey, () =>
     getTCGCardUncached(cardId, lang, undefined, options));
 };
+
+export interface TCGCustomCollectionCardDetail {
+  ref: TCGCustomCollectionCard;
+  card: TCGCard;
+  unavailable: boolean;
+}
+
+/** Hydrate only the visible binder page, with a bounded number of requests. */
+export async function getTCGCustomCollectionCardDetails(
+  refs: TCGCustomCollectionCard[],
+  signal?: AbortSignal,
+): Promise<TCGCustomCollectionCardDetail[]> {
+  return mapWithConcurrency(refs, 6, async (ref) => {
+    throwIfAborted(signal);
+    const card = await getTCGCard(ref.cardId, ref.language, signal, { allowEnglishFallback: false });
+    throwIfAborted(signal);
+    if (card) return { ref, card, unavailable: false };
+    const localId = ref.cardId.slice(ref.cardId.lastIndexOf('-') + 1) || ref.cardId;
+    return {
+      ref,
+      card: { id: ref.cardId, localId, name: ref.cardName },
+      unavailable: true,
+    };
+  });
+}
 
 async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, signal?: AbortSignal): Promise<TCGCard[]> {
   return mapWithConcurrency(cards, VISUAL_METADATA_CONCURRENCY, async (card) => {

@@ -4,7 +4,7 @@ import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ fetchAppApi: vi.fn(), i18n: { t: () => '' } }));
+const mocks = vi.hoisted(() => ({ fetchAppApi: vi.fn(), i18n: { t: (key: string) => key } }));
 
 vi.mock('@/lib/app-api', () => ({ fetchAppApi: mocks.fetchAppApi }));
 vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ i18n: mocks.i18n }) }));
@@ -123,5 +123,38 @@ describe('account sync initialization', () => {
     });
 
     expect(container.querySelector('output')?.textContent).toBe('ready');
+  });
+
+  it('rolls back a custom collection rejected by the 2 MB account limit with a specific message', async () => {
+    mocks.fetchAppApi
+      .mockResolvedValueOnce(response(200, { data: {}, updatedAt: '2026-10-19T10:00:00.000Z' }))
+      .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }));
+
+    await renderSync();
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(container.querySelector('output')?.textContent).toBe('ready');
+
+    await act(async () => {
+      usePrimeDexStore.setState({
+        tcgCustomCollections: [{
+          id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+          name: 'Oversized binder',
+          createdAt: '2026-10-19T10:00:00.000Z',
+          updatedAt: '2026-10-19T10:00:00.000Z',
+        }],
+      });
+      await vi.advanceTimersByTimeAsync(100);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([]);
+    expect(container.querySelector('output')?.textContent).toBe('ready');
+    const { toast } = await import('@/lib/toast');
+    expect(toast.error).toHaveBeenCalledWith('tcg.custom_collections.document_too_large');
   });
 });

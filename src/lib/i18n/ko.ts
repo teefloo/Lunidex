@@ -1,3 +1,4 @@
+import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -2032,6 +2033,7 @@ team: '팀',
       nav_wishlist: '위시리스트',
       page_eyebrow: '포켓몬 카드 게임',
       collection_title: '내 컬렉션',
+      custom_collections: tcgCustomCollectionsTranslations.ko,
       collection_subtitle: '카드 컬렉션을 관리하고 정리하세요',
       collection_loading: '컬렉션을 불러오는 중…',
       collection_search_sets: '확장팩 검색…',

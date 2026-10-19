@@ -15,10 +15,38 @@ function resetCollectionState(legacyCards: string[] = []): void {
     tcgLegacyOwnedCards: legacyCards,
     tcgOwnedCards: legacyCards,
     tcgCollectionModelVersion: 3,
+    tcgCustomCollections: [],
+    tcgCustomCollectionCards: [],
   });
 }
 
 describe('web TCG collection store', () => {
+  it('creates, edits, and removes binders without changing global card ownership', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState(['base1-001']);
+    const store = usePrimeDexStore.getState();
+    const firstId = store.createTCGCustomCollection('1025', 'Every first-generation Pokémon');
+    const secondId = usePrimeDexStore.getState().createTCGCustomCollection('Artwork', '');
+    const card = { cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam' };
+    usePrimeDexStore.getState().addTCGCustomCollectionCard(firstId, card);
+    usePrimeDexStore.getState().addTCGCustomCollectionCard(secondId, card);
+
+    const ownedBefore = usePrimeDexStore.getState().tcgOwnedCards;
+    const physicalCountBefore = usePrimeDexStore.getState().getTCGPhysicalCardCount();
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toHaveLength(2);
+    expect(usePrimeDexStore.getState().editTCGCustomCollection(firstId, '  My 1025  ', '  Binder goal  ')).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollections.find((entry) => entry.id === firstId)).toMatchObject({ name: 'My 1025', description: 'Binder goal' });
+
+    usePrimeDexStore.getState().removeTCGCustomCollectionCard(firstId, card.cardId, card.language);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toHaveLength(1);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards[0].collectionId).toBe(secondId);
+    usePrimeDexStore.getState().deleteTCGCustomCollection(firstId);
+    expect(usePrimeDexStore.getState().tcgCustomCollections.map((entry) => entry.id)).toEqual([secondId]);
+    expect(usePrimeDexStore.getState().tcgOwnedCards).toEqual(ownedBefore);
+    expect(usePrimeDexStore.getState().getTCGPhysicalCardCount()).toBe(physicalCountBefore);
+    setSyncAccessStatus('checking');
+  });
+
   it('starts a collection only after its first card is added', () => {
     setSyncAccessStatus('ready');
     const collection = encodeTCGCollectionKey('en', 'sv10')!;

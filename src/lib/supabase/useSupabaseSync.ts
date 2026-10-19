@@ -57,6 +57,7 @@ interface SaveResult {
   saved: boolean;
   conflict: boolean;
   unauthenticated: boolean;
+  tooLarge: boolean;
   remote: RemoteState | null;
 }
 
@@ -143,6 +144,7 @@ async function saveRemoteState(
     saved: response.ok,
     conflict: response.status === 409,
     unauthenticated: response.status === 401 || response.status === 403,
+    tooLarge: response.status === 413,
     remote: (response.ok || response.status === 409) && candidate
       ? {
         data: candidate.data ?? data,
@@ -218,6 +220,7 @@ export function useNeonSync(): void {
     const rollbackPendingChange = (
       status: 'unauthenticated' | 'unavailable',
       preserveCollectionPage = false,
+      failureMessage?: string,
     ): void => {
       const acceptedState = acceptedSnapshotRef.current ?? initialState;
       const acceptedMetadata = acceptedMetadataRef.current
@@ -225,7 +228,7 @@ export function useNeonSync(): void {
       applyAcceptedState(acceptedState, acceptedMetadata);
       if (status === 'unavailable' && preserveCollectionPage && window.navigator.onLine) {
         reportFallback('sync-unavailable', { feature: 'sync', operation: 'write-rollback' });
-        toast.error(i18n.t('auth.sync_unavailable', {
+        toast.error(failureMessage ?? i18n.t('auth.sync_unavailable', {
           defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
         }));
         setSyncAccessStatus('ready');
@@ -330,7 +333,13 @@ export function useNeonSync(): void {
         }
 
         if (!result.conflict) {
-          rollbackPendingChange('unavailable', true);
+          rollbackPendingChange(
+            'unavailable',
+            true,
+            result.tooLarge
+              ? i18n.t('tcg.custom_collections.document_too_large')
+              : undefined,
+          );
           return;
         }
 

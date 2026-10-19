@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { useMounted } from '@/hooks/useMounted';
 import { fetchCollectionSetCatalog } from '@/lib/api/tcg';
@@ -19,12 +19,16 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { RefreshCw } from 'lucide-react';
 import { resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGCollectionOverviewEntries } from '@/lib/tcg-collection-overview';
+import { TCGCustomCollectionOverview } from '@/components/tcg/TCGCustomCollectionOverview';
 
 export function TCGCollectionPage() {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const activeView = searchParams.get('view') === 'custom' ? 'custom' : 'series';
   const { loading: authLoading, user } = useAuth();
   const syncStatus = useSyncAccessStatus();
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
@@ -39,7 +43,7 @@ export function TCGCollectionPage() {
     queryFn: ({ signal }) => fetchCollectionSetCatalog(collectionLanguage, signal),
     staleTime: 60 * 60 * 1000,
     retry: false,
-    enabled: mounted,
+    enabled: mounted && activeView === 'series',
   });
   const sets = useMemo(
     () => buildTCGCollectionOverviewEntries(catalogQuery.data ?? [], collectionLanguage),
@@ -48,6 +52,13 @@ export function TCGCollectionPage() {
   const setsLoading = catalogQuery.isPending;
   const setsError = catalogQuery.isError;
   const refetchSets = () => catalogQuery.refetch();
+  const changeView = (view: 'series' | 'custom') => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (view === 'custom') params.set('view', 'custom');
+    else params.delete('view');
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
 
   return (
     <div className="app-page">
@@ -83,7 +94,25 @@ export function TCGCollectionPage() {
           <SyncStatusPanel status={syncStatus} headingLevel={2} />
         ) : (
           <>
-            {setsError && sets.length === 0 ? (
+            <div className="mb-6 inline-flex rounded-sm border border-border/60 bg-card/50 p-1" role="group" aria-label={t('tcg.custom_collections.title')}>
+              <button
+                type="button"
+                onClick={() => changeView('series')}
+                aria-pressed={activeView === 'series'}
+                className={`min-h-11 rounded-sm px-4 text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeView === 'series' ? 'bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]' : 'text-foreground/65 hover:bg-muted/60 hover:text-foreground'}`}
+              >
+                {t('tcg.custom_collections.tab_series')}
+              </button>
+              <button
+                type="button"
+                onClick={() => changeView('custom')}
+                aria-pressed={activeView === 'custom'}
+                className={`min-h-11 rounded-sm px-4 text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeView === 'custom' ? 'bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)]' : 'text-foreground/65 hover:bg-muted/60 hover:text-foreground'}`}
+              >
+                {t('tcg.custom_collections.tab_custom')}
+              </button>
+            </div>
+            {activeView === 'custom' ? <TCGCustomCollectionOverview /> : setsError && sets.length === 0 ? (
               <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-5" role="alert">
                 <p className="text-sm text-foreground/75">
                   {t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}

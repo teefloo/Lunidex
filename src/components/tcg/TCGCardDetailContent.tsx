@@ -21,6 +21,7 @@ import {
   Shield,
   ScrollText,
   BadgeDollarSign,
+  FolderPlus,
 } from 'lucide-react';
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -45,6 +46,7 @@ import {
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
+import { TCGCustomCollectionPicker } from './TCGCustomCollectionPicker';
 import { trackProductEvent } from '@/lib/product-measurement';
 import { getFocusTrapTarget } from '@/lib/focus-management';
 import {
@@ -111,6 +113,7 @@ export function TCGCardDetailContent({
     if (mounted && isOpen && card && !demoOwnership) void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: resolvedLang, interaction: 'view' });
   }, [card, isOpen, mounted, resolvedLang, demoOwnership]);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
+  const [isCustomCollectionsOpen, setIsCustomCollectionsOpen] = useState(false);
   const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
   // Reset before committing a closed modal, including closure by its parent.
   // An effect would first commit the stale nested-dialog state and render again.
@@ -444,6 +447,16 @@ export function TCGCardDetailContent({
                     )}
                     {!demoOwnership && <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />}
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
+                    {!demoOwnership && (
+                      <button
+                        type="button"
+                        onClick={() => setIsCustomCollectionsOpen(true)}
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/35 bg-primary/5 px-3 text-center text-[10px] font-black uppercase tracking-[0.1em] text-primary transition hover:border-primary/70 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      >
+                        <FolderPlus className="h-4 w-4" aria-hidden="true" />
+                        {t('tcg.custom_collections.organize')}
+                      </button>
+                    )}
                   </div>
                   {demoOwnership && <p className="text-sm leading-6 text-muted-foreground">{t('tcg.demo.notice')}</p>}
                 </header>
@@ -607,6 +620,14 @@ export function TCGCardDetailContent({
           open={isVariantSheetOpen}
           onOpenChange={setIsVariantSheetOpen}
           onOwnershipChange={onOwnershipChange}
+        />
+      )}
+      {!demoOwnership && (
+        <TCGCustomCollectionPicker
+          open={isCustomCollectionsOpen}
+          onOpenChange={setIsCustomCollectionsOpen}
+          card={displayCard}
+          language={resolvedLang}
         />
       )}
     </>

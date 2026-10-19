@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
+import { readJsonBodyResult, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { getNeonClient, type NeonSql } from '@/lib/neon/server';
@@ -95,7 +95,11 @@ async function putUserState(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-  const payload = await readJsonBody<UserStatePayload>(request, { maxBytes: MAX_STATE_BYTES });
+  const body = await readJsonBodyResult<UserStatePayload>(request, { maxBytes: MAX_STATE_BYTES });
+  if (body.kind === 'too-large') {
+    return NextResponse.json({ error: 'State payload is too large' }, { status: 413 });
+  }
+  const payload = body.kind === 'ok' ? body.value : null;
   if (!payload || !isJsonObject(payload.data)) {
     return NextResponse.json({ error: 'Invalid state payload' }, { status: 400 });
   }

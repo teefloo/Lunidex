@@ -7,6 +7,41 @@ import { advanceTcgApiSyncMetadata, attachTcgApiSyncMetadata } from '@/lib/tcg-a
 function withTcg(state: PersistedState, patch: Partial<PersistedState>): PersistedState { return { ...state, ...patch }; }
 
 describe('language-aware sync merge', () => {
+  it('merges independent binder additions and keeps one card reference per binder', () => {
+    const initial = getInitialSyncState();
+    const collectionA = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: '1025', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const collectionB = { id: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d', name: 'Artwork', createdAt: '2026-10-19T10:01:00.000Z', updatedAt: '2026-10-19T10:01:00.000Z' };
+    const cardA = { collectionId: collectionA.id, cardId: 'sv03.5-199', language: 'fr' as const, cardName: 'Dracaufeu', addedAt: collectionA.createdAt };
+    const cardB = { ...cardA, collectionId: collectionB.id, addedAt: collectionB.createdAt };
+    const local = withTcg(initial, { tcgCustomCollections: [collectionA], tcgCustomCollectionCards: [cardA] });
+    const remote = withTcg(initial, { tcgCustomCollections: [collectionB], tcgCustomCollectionCards: [cardB] });
+    const localMeta = advanceSyncMetadata(normalizeSyncMetadata(undefined, initial), initial, local, 'device-a');
+    const remoteMeta = advanceSyncMetadata(normalizeSyncMetadata(undefined, initial), initial, remote, 'device-b');
+    const merged = reconcileSyncState(local, remote, localMeta, remoteMeta, { deviceId: 'device-a' });
+
+    expect(merged.state.tcgCustomCollections).toHaveLength(2);
+    expect(merged.state.tcgCustomCollectionCards).toHaveLength(2);
+    expect(new Set(merged.state.tcgCustomCollectionCards.map((entry) => entry.collectionId)).size).toBe(2);
+  });
+
+  it('keeps a deleted binder deleted when another device edits its stale copy', () => {
+    const initial = getInitialSyncState();
+    const collection = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: '1025', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const card = { collectionId: collection.id, cardId: 'sv03.5-199', language: 'fr' as const, cardName: 'Dracaufeu', addedAt: collection.createdAt };
+    const base = withTcg(initial, { tcgCustomCollections: [collection], tcgCustomCollectionCards: [card] });
+    const baseMetadata = advanceSyncMetadata(normalizeSyncMetadata(undefined, initial), initial, base, 'device-base');
+    const deleted = withTcg(base, { tcgCustomCollections: [], tcgCustomCollectionCards: [] });
+    const edited = withTcg(base, {
+      tcgCustomCollections: [{ ...collection, name: 'Renamed', updatedAt: '2026-10-21T10:00:00.000Z' }],
+    });
+    const deletedMetadata = advanceSyncMetadata(baseMetadata, base, deleted, 'device-a');
+    const editedMetadata = advanceSyncMetadata(baseMetadata, base, edited, 'device-b');
+    const merged = reconcileSyncState(deleted, edited, deletedMetadata, editedMetadata, { deviceId: 'device-a' });
+
+    expect(merged.state.tcgCustomCollections).toEqual([]);
+    expect(merged.state.tcgCustomCollectionCards).toEqual([]);
+  });
+
   it('preserves local browsing preferences when resetting a sync session', () => {
     const initial = getInitialSyncState();
     const local = withTcg(initial, {
