@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -11,12 +10,13 @@ import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
 import { DEFAULT_TCG_CARD_FILTERS, getTCGCard, searchCards } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
-import { TCG_CARD_PLACEHOLDER } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import type { TCGCard } from '@/types/tcg';
 import type { TCGCardFilters } from '@/types/tcg';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { TCGFilters } from './TCGFilters';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 
 const PAGE_SIZE = 48;
 
@@ -117,7 +117,7 @@ export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, 
                       <Link href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(language)}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                         <div className="relative aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30">
                           {/* TCGdex cards can be absent while their compact references remain searchable. */}
-                          <Image src={card.image || card.imageUrl || TCG_CARD_PLACEHOLDER} alt={card.name} fill sizes="(min-width: 640px) 180px, 45vw" unoptimized className="object-contain" />
+                          <TCGImageWithFallback candidates={getTCGCardImageCandidates(card)} alt={card.name} fill sizes="(min-width: 640px) 180px, 45vw" className="object-contain" />
                         </div>
                         <span className="mt-2 block min-h-10 line-clamp-2 break-words text-xs font-black group-hover:text-primary">{card.name}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">{card.id}</span>

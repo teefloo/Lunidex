@@ -385,6 +385,30 @@ function normaliseCardCategory(category: TCGCard['category']): TCGCard['category
   return category;
 }
 
+const TCG_SEARCH_ACCENT_VARIANTS: Readonly<Record<string, readonly string[]>> = {
+  a: ['à', 'á', 'â', 'ã', 'ä', 'å'],
+  c: ['ç'],
+  e: ['è', 'é', 'ê', 'ë'],
+  i: ['ì', 'í', 'î', 'ï'],
+  n: ['ñ'],
+  o: ['ò', 'ó', 'ô', 'õ', 'ö'],
+  u: ['ù', 'ú', 'û', 'ü'],
+  y: ['ý', 'ÿ'],
+};
+const MAX_TCG_SEARCH_VARIANTS = 128;
+
+function getAccentInsensitiveSearchTerms(value: string): string[] {
+  const normalized = value.normalize('NFKD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
+  let terms = [''];
+
+  for (const character of normalized) {
+    const variants = [character, ...(TCG_SEARCH_ACCENT_VARIANTS[character] ?? [])];
+    terms = [...new Set(terms.flatMap((term) => variants.map((variant) => `${term}${variant}`)))].slice(0, MAX_TCG_SEARCH_VARIANTS);
+  }
+
+  return terms;
+}
+
 function buildCardQueryParams(filters: TCGCardFilters, page: number, limit: number) {
   const safePage = normalizeTcgPositiveInteger(page, 1);
   const safeLimit = normalizeTcgPositiveInteger(limit, 48);
@@ -402,7 +426,7 @@ function buildCardQueryParams(filters: TCGCardFilters, page: number, limit: numb
   params.set('sort:order', sortOrder.toUpperCase());
 
   if (searchTerm) {
-    params.set('name', `like:${searchTerm}`);
+    params.set('name', `like:${getAccentInsensitiveSearchTerms(searchTerm).join('|')}`);
   }
 
   if (selectedCategory !== 'all') {
