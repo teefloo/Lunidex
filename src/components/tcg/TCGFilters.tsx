@@ -167,7 +167,7 @@ export function TCGFilters({
     onChange({
       ...DEFAULT_TCG_CARD_FILTERS,
       searchTerm: undefined,
-      selectedSet: latestSetId,
+      selectedSet: autoApplyInitialSet ? latestSetId : null,
       selectedRarity: null,
       selectedTypes: [],
       selectedPhase: null,
@@ -186,7 +186,7 @@ export function TCGFilters({
     });
     didApplyInitialSetRef.current = true;
     setActiveSection('set');
-  }, [clearSearchTimeout, latestSetId, onChange]);
+  }, [autoApplyInitialSet, clearSearchTimeout, latestSetId, onChange]);
 
   const buildUniqueRarityOptions = useCallback((values: string[]) => {
     const seen = new Set<string>();
@@ -512,8 +512,7 @@ export function TCGFilters({
     >
       <div className="glass-surface rounded-sm p-4">
         <CatalogSearchInput
-          key={filters.searchTerm ?? '__empty__'}
-          initialValue={filters.searchTerm || ''}
+          searchTerm={filters.searchTerm || ''}
           onChange={scheduleSearchTerm}
           onClear={clearSearchTerm}
           placeholder={t('tcg.search_placeholder')}
@@ -1061,15 +1060,21 @@ function FilterSection({ icon: Icon, title, isOpen, onToggle, children, badge }:
 }
 
 interface CatalogSearchInputProps {
-  initialValue: string;
+  searchTerm: string;
   onChange: (value: string) => void;
   onClear: () => void;
   placeholder: string;
   clearLabel: string;
 }
 
-function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clearLabel }: CatalogSearchInputProps) {
-  const [value, setValue] = useState(initialValue);
+function CatalogSearchInput({ searchTerm, onChange, onClear, placeholder, clearLabel }: CatalogSearchInputProps) {
+  const [inputState, setInputState] = useState({ searchTerm, value: searchTerm });
+
+  if (searchTerm !== inputState.searchTerm) {
+    setInputState({ searchTerm, value: searchTerm });
+  }
+
+  const value = inputState.value;
 
   return (
     <div className="relative group">
@@ -1082,7 +1087,7 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
         value={value}
         onChange={(event) => {
           const nextValue = event.target.value;
-          setValue(nextValue);
+          setInputState((current) => ({ ...current, value: nextValue }));
           onChange(nextValue);
         }}
         aria-label={placeholder}
@@ -1092,7 +1097,7 @@ function CatalogSearchInput({ initialValue, onChange, onClear, placeholder, clea
         <button
           type="button"
           onClick={() => {
-            setValue('');
+            setInputState((current) => ({ ...current, value: '' }));
             onClear();
           }}
           className={cn(

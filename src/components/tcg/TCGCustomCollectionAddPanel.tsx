@@ -84,7 +84,7 @@ export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, 
           <p className="text-sm leading-6 text-muted-foreground">{t('tcg.custom_collections.description')}</p>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4 sm:p-6">
-          <TCGFilters filters={filters} onChange={setFilters} mode="advanced" language={language} />
+          <TCGFilters filters={filters} onChange={setFilters} mode="advanced" autoApplyInitialSet={false} language={language} />
           {addError && <p role="alert" className="text-sm font-semibold text-destructive">{addError}</p>}
 
           {!query ? (
