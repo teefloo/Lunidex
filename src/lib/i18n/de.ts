@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1726,6 +1727,7 @@ team: 'Team',
       no_pokemon: 'Keine Pokémon für diese Fähigkeit gefunden.',
     },
     tcg: {
+      ...tcgIllustratorTranslations.de,
       nav_deck_builder: 'Deck-Builder',
       nav_sealed: 'Versiegelt',
       nav_sealed_market: 'Markt für versiegelte Produkte',

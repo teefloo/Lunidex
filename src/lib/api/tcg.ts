@@ -45,6 +45,7 @@ import {
 import type { TCGDisplayCurrency } from '@/lib/tcg-currency';
 import { MAX_TCG_COLLECTION_PHYSICAL_CARDS } from '@primedex/core/lib/tcg-collections';
 import { reportFallback, reportHttpFailure } from '@/lib/sentry-observability';
+import { isTCGIllustratorCredit, normalizeTCGIllustratorIdentity } from '@/lib/tcg-illustrators';
 
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
@@ -129,10 +130,15 @@ const tcgSetCardsFailureCache = createMemoryCache<TcgResourceFailure>({ maxEntri
 const tcgAlbumMemoryCache = createMemoryCache<TCGSetAlbumData>({ maxEntries: 128, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgCollectionCatalogMemoryCache = createMemoryCache<TCGCollectionSetSummary[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgAllSetsMemoryCache = createMemoryCache<TCGSet[]>({ maxEntries: 16, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
+const TCG_ILLUSTRATOR_INDEX_TTL_MS = 24 * 60 * 60 * 1000;
+const tcgIllustratorIndexMemoryCache = createMemoryCache<string[]>({ maxEntries: 32, ttlMs: TCG_ILLUSTRATOR_INDEX_TTL_MS });
+const tcgIllustratorCardsMemoryCache = createMemoryCache<TCGCard[]>({ maxEntries: 64, ttlMs: TCG_MEMORY_CACHE_TTL_MS });
 const tcgFailureLogCache = createMemoryCache<boolean>({ maxEntries: 512, ttlMs: TCG_FAILURE_CACHE_TTL_MS });
 const pendingTcgCardRequests = new Map<string, Promise<TCGCard | null>>();
 const pendingTcgSetCardsRequests = new Map<string, Promise<TCGCard[]>>();
 const pendingTcgSetRequests = new Map<string, Promise<TCGSet | null>>();
+const pendingTcgIllustratorIndexRequests = new Map<string, Promise<string[]>>();
+const pendingTcgIllustratorCardsRequests = new Map<string, Promise<TCGCard[]>>();
 export const TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS = 600;
 
 export const DEFAULT_TCG_CARD_FILTERS: TCGCardFilters = {
@@ -199,8 +205,9 @@ function dedupeTcgRequest<T>(
   return pending;
 }
 
-function getTcgCardCacheKey(cardId: string, lang: string): string {
-  return `tcg-card-v14-${cardId}-${resolveTcgLang(lang)}`;
+function getTcgCardCacheKey(cardId: string, lang: string, localizedOnly = false): string {
+  const languageKey = `tcg-card-v14-${cardId}-${resolveTcgLang(lang)}`;
+  return localizedOnly ? `${languageKey}-localized-only` : languageKey;
 }
 
 function getTcgSetCardsCacheKey(setId: string, lang: string): string {
@@ -252,6 +259,10 @@ function isNotFoundResponse(error: unknown): boolean {
       && 'status' in response
       && response.status === 404,
   );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function fixTcgdexImageUrl(url: string | undefined | null): string | undefined {
@@ -680,8 +691,11 @@ async function getTCGCardUncached(
   const tcgLang = resolveTcgLang(lang);
   // v14 invalidates cards cached before marked special printings were kept
   // out of the generic normal/reverse/holo price resolver.
-  const cacheKey = getTcgCardCacheKey(cardId, tcgLang);
   const allowEnglishFallback = options.allowEnglishFallback !== false;
+  // A regular card lookup may persist English fallback data under a localized
+  // key. Strict localized callers need an isolated key so they never mistake
+  // that fallback for a card actually published in the selected language.
+  const cacheKey = getTcgCardCacheKey(cardId, tcgLang, !allowEnglishFallback);
   const failureCacheKey = getTcgCardFailureCacheKey(cacheKey, options);
   const memoryCached = tcgCardMemoryCache.get(cacheKey);
   if (memoryCached && (!options.requirePricing || hasMarketPrice(memoryCached))) {
@@ -764,9 +778,13 @@ async function getTCGCardUncached(
     }
 
     if (!allowEnglishFallback) {
-      tcgCardFailureCache.set(failureCacheKey, {});
-      if (staleCard) tcgCardMemoryCache.set(cacheKey, staleCard);
-      return staleCard;
+      if (staleCard) {
+        tcgCardMemoryCache.set(cacheKey, staleCard);
+        return staleCard;
+      }
+      if (confirmedNotFound) return null;
+      logTcgUpstreamFailure(`card:${failureCacheKey}`, `Error fetching localized card ${cardId}`, error);
+      throw error;
     }
 
     // The card-detail endpoint can time out while the set endpoint remains
@@ -1894,6 +1912,86 @@ export const getAllSets = async (lang = 'en'): Promise<TCGSet[]> => {
     if (fallbackSets?.length) tcgAllSetsMemoryCache.set(cacheKey, fallbackSets);
     return fallbackSets ?? [];
   }
+};
+
+/** Fetch the language-specific list of illustrator credits from TCGdex. */
+export const getTCGIllustrators = async (lang = 'en', signal?: AbortSignal): Promise<string[]> => {
+  const tcgLang = resolveTcgLang(lang);
+  const cacheKey = `tcg-illustrators-${tcgLang}`;
+  const cached = tcgIllustratorIndexMemoryCache.get(cacheKey);
+  if (cached) return cached;
+
+  const fetchIndex = async () => {
+    const inFlightCached = tcgIllustratorIndexMemoryCache.get(cacheKey);
+    if (inFlightCached) return inFlightCached;
+
+    const { data } = await getWithOptionalSignal<unknown>(`/${tcgLang}/illustrators`, signal);
+    if (!Array.isArray(data) || data.some((name) => typeof name !== 'string')) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'illustrator-index' });
+      throw new Error('Invalid TCGdex illustrator index response');
+    }
+
+    const names = [...new Set(data.filter(isTCGIllustratorCredit))];
+    tcgIllustratorIndexMemoryCache.set(cacheKey, names);
+    return names;
+  };
+
+  return signal ? fetchIndex() : dedupeTcgRequest(pendingTcgIllustratorIndexRequests, cacheKey, fetchIndex);
+};
+
+/** Fetch card summaries carrying the exact illustrator credit requested. */
+export const getTCGIllustratorCards = async (
+  illustrator: string,
+  lang = 'en',
+  signal?: AbortSignal,
+): Promise<TCGCard[]> => {
+  if (!isTCGIllustratorCredit(illustrator)) return [];
+
+  const tcgLang = resolveTcgLang(lang);
+  const identity = normalizeTCGIllustratorIdentity(illustrator);
+  const exactCredit = illustrator.trim();
+  const cacheKey = `tcg-illustrator-cards-${tcgLang}-${encodeURIComponent(exactCredit)}`;
+  const cached = tcgIllustratorCardsMemoryCache.get(cacheKey);
+  if (cached) return cached;
+
+  const fetchCards = async () => {
+    const inFlightCached = tcgIllustratorCardsMemoryCache.get(cacheKey);
+    if (inFlightCached) return inFlightCached;
+
+    const { data } = await getWithOptionalSignal<unknown>(
+      `/${tcgLang}/illustrators/${encodeURIComponent(exactCredit)}`,
+      signal,
+    );
+    if (!isRecord(data) || typeof data.name !== 'string'
+      || normalizeTCGIllustratorIdentity(data.name) !== identity || !Array.isArray(data.cards)) {
+      reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'illustrator-cards' });
+      throw new Error('Invalid TCGdex illustrator cards response');
+    }
+
+    const cards: TCGCard[] = [];
+    for (const item of data.cards) {
+      if (!isRecord(item) || typeof item.id !== 'string' || !isValidTcgCardId(item.id)
+        || typeof item.name !== 'string' || !item.name.trim()
+        || (item.localId != null && typeof item.localId !== 'string')
+        || (item.image != null && typeof item.image !== 'string')) {
+        reportFallback('invalid-response', { feature: 'tcg', service: 'tcgdex', operation: 'illustrator-card-summary' });
+        throw new Error('Invalid TCGdex illustrator card summary');
+      }
+
+      cards.push(normaliseCard({
+        id: item.id,
+        name: item.name,
+        illustrator: illustrator.trim(),
+        localId: (typeof item.localId === 'string' && item.localId) || item.id.slice(item.id.lastIndexOf('-') + 1),
+        image: typeof item.image === 'string' ? item.image : undefined,
+      }, tcgLang));
+    }
+
+    tcgIllustratorCardsMemoryCache.set(cacheKey, cards);
+    return cards;
+  };
+
+  return signal ? fetchCards() : dedupeTcgRequest(pendingTcgIllustratorCardsRequests, cacheKey, fetchCards);
 };
 
 /**

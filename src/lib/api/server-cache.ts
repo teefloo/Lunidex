@@ -7,6 +7,8 @@ import {
   getAllSets,
   getCardsBySet,
   getTCGCard,
+  getTCGIllustratorCards,
+  getTCGIllustrators,
   getSetById,
   isTcgLangLimited,
   searchCards,
@@ -164,6 +166,30 @@ const getTCGCardPersistent = unstable_cache(
   { revalidate: 3600 },
 );
 
+const getTCGIllustratorIndexPersistent = unstable_cache(
+  (language: string) => getTCGIllustrators(language),
+  ['lunidex:tcg-illustrator-index:v1'],
+  { revalidate: 86400 },
+);
+
+const getTCGIllustratorCardsPersistent = unstable_cache(
+  (illustrator: string, language: string) => getTCGIllustratorCards(illustrator, language),
+  ['lunidex:tcg-illustrator-cards:v1'],
+  { revalidate: 3600 },
+);
+
+const getTCGCardLocalizedPersistent = unstable_cache(
+  async (cardId: string, language: string) => {
+    const card = await getTCGCard(cardId, language, undefined, { allowEnglishFallback: false });
+    // Do not persist a missing detail for an hour: the gallery keeps the
+    // illustrator-index summary and lets the visitor retry when TCGdex recovers.
+    if (!card) throw new Error(`Localized TCG card details are unavailable for ${cardId}`);
+    return card;
+  },
+  ['lunidex:tcg-card-localized:v1'],
+  { revalidate: 3600 },
+);
+
 const getTCGSetPersistent = unstable_cache(
   (setId: string, language: string) => getSetById(setId, language),
   ['lunidex:tcg-set:v3'],
@@ -246,6 +272,9 @@ export const getInitialAbilitiesCached = cache(getInitialAbilitiesPersistent);
 export const getInitialItemsCached = cache(getInitialItemsPersistent);
 export const getInitialTcgCatalogCached = cache(getInitialTcgCatalogPersistent);
 export const getTCGCardCached = cache(getTCGCardPersistent);
+export const getTCGIllustratorsCached = cache(getTCGIllustratorIndexPersistent);
+export const getTCGIllustratorCardsCached = cache(getTCGIllustratorCardsPersistent);
+export const getTCGCardLocalizedCached = cache(getTCGCardLocalizedPersistent);
 export const getTCGSetCached = cache(getTCGSetPersistent);
 export const getTCGSetCardsCached = cache(getTCGSetCardsPersistent);
 export const getAllSetsCached = cache(getAllSetsPersistent);

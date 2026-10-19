@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -2401,6 +2402,7 @@ export default {
       no_pokemon: 'No Pokémon found for this ability.',
     },
       tcg: {
+        ...tcgIllustratorTranslations.en,
         nav_catalog: 'Catalog',
         nav_collection: 'Collection',
         nav_wishlist: 'Wishlist',

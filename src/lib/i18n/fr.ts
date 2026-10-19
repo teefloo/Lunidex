@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -2421,6 +2422,7 @@ team: 'Équipe',
       no_pokemon: 'Aucun Pokémon trouvé pour ce talent.',
     },
     tcg: {
+      ...tcgIllustratorTranslations.fr,
       nav_catalog: 'Catalogue',
       nav_collection: 'Collection',
       nav_wishlist: 'Liste de souhaits',

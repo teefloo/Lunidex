@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1726,6 +1727,7 @@ team: 'チーム',
       no_pokemon: 'この特性を持つポケモンはいません。',
     },
     tcg: {
+      ...tcgIllustratorTranslations.ja,
       nav_deck_builder: 'デッキビルダー',
       nav_sealed: 'シールド',
       nav_sealed_market: '未開封商品の市場',

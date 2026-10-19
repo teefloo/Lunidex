@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1733,6 +1734,7 @@ team: 'Equipo',
       no_pokemon: 'No se encontraron Pokémon para esta habilidad.',
     },
     tcg: {
+      ...tcgIllustratorTranslations.es,
       nav_deck_builder: 'Constructor de mazos',
       nav_sealed: 'Sellado',
       nav_sealed_market: 'Mercado de sellado',

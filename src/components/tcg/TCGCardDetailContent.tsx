@@ -49,6 +49,8 @@ import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
 import { TCGCustomCollectionPicker } from './TCGCustomCollectionPicker';
 import { trackProductEvent } from '@/lib/product-measurement';
 import { getFocusTrapTarget } from '@/lib/focus-management';
+import { isTCGIllustratorCredit } from '@/lib/tcg-illustrators';
+import { TCGIllustratorLink } from './TCGIllustratorLink';
 import {
   getTCGCardDetailCollectionPresentation,
   getTCGCardOwnershipTogglePresentation,
@@ -503,7 +505,13 @@ export function TCGCardDetailContent({
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     <InfoItem icon={Box} label={t('tcg.expansion')} value={displayCard.set?.name || t('tcg.unknown')} />
                     <InfoItem icon={Info} label={t('tcg.collector_no')} value={`#${displayCard.localId}${totalCards ? ` / ${totalCards}` : ''}`} />
-                    <InfoItem icon={Brush} label={t('tcg.illustrator')} value={displayCard.illustrator || t('tcg.unknown')} />
+                    <InfoItem
+                      icon={Brush}
+                      label={t('tcg.illustrator')}
+                      value={isTCGIllustratorCredit(displayCard.illustrator)
+                        ? <TCGIllustratorLink artist={displayCard.illustrator} tcgLanguage={resolvedLang} />
+                        : t('tcg.unknown')}
+                    />
                     <InfoItem icon={Activity} label={t('tcg.regulation')} value={displayCard.regulationMark || t('tcg.none')} />
                     {pokemonPageHref && (
                       <InfoItem

@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1726,6 +1727,7 @@ team: '队伍',
       no_pokemon: '未找到拥有该特性的宝可梦。',
     },
     tcg: {
+      ...tcgIllustratorTranslations.zh,
       nav_deck_builder: '套牌构筑器',
       nav_sealed: '密封产品',
       nav_sealed_market: '密封产品市场',

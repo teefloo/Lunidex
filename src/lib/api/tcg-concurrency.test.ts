@@ -72,6 +72,39 @@ describe('TCG cancellation and shared requests', () => {
     await expect(getTCGCard('base1-4', 'fr', controller.signal)).rejects.toMatchObject({ name: 'AbortError' });
     expect(mocks.get).not.toHaveBeenCalled();
   });
+  it('keeps English fallback data out of strict localized card lookups', async () => {
+    let frenchRequests = 0;
+    mocks.get.mockImplementation((path: string) => {
+      if (path.startsWith('/fr/')) {
+        frenchRequests += 1;
+        if (frenchRequests === 1) {
+          return Promise.reject(Object.assign(new Error('Missing translation'), { response: { status: 404 } }));
+        }
+        return Promise.resolve({ data: { id: 'base1-4', localId: '4', name: 'Dracaufeu', image: 'https://assets.tcgdex.net/fr/base/base1/4' } });
+      }
+      return Promise.resolve({ data: { id: 'base1-4', localId: '4', name: 'Charizard', image: 'https://assets.tcgdex.net/en/base/base1/4' } });
+    });
+
+    const { getTCGCard } = await import('./tcg');
+    await expect(getTCGCard('base1-4', 'fr')).resolves.toMatchObject({ name: 'Charizard' });
+    await expect(getTCGCard('base1-4', 'fr', undefined, { allowEnglishFallback: false }))
+      .resolves.toMatchObject({ name: 'Dracaufeu' });
+    expect(mocks.get.mock.calls.map(([path]) => path)).toEqual([
+      '/fr/cards/base1-4',
+      '/en/cards/base1-4',
+      '/fr/cards/base1-4',
+    ]);
+  });
+  it('keeps localized detail failures retryable instead of caching a missing card', async () => {
+    const unavailable = Object.assign(new Error('Upstream unavailable'), { response: { status: 503 } });
+    mocks.get.mockRejectedValue(unavailable);
+
+    const { getTCGCard } = await import('./tcg');
+    await expect(getTCGCard('base1-5', 'fr', undefined, { allowEnglishFallback: false })).rejects.toBe(unavailable);
+    await expect(getTCGCard('base1-5', 'fr', undefined, { allowEnglishFallback: false })).rejects.toBe(unavailable);
+    expect(mocks.get).toHaveBeenCalledTimes(2);
+    expect(mocks.setCachedData).not.toHaveBeenCalled();
+  });
   it.each([429, 503])('keeps a %i search failure retryable without persisting an empty result', async status => {
     const failure = Object.assign(new Error('Upstream unavailable'), { response: { status } });
     mocks.get.mockRejectedValueOnce(failure).mockResolvedValue({ data: [] });

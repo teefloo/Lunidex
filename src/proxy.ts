@@ -209,7 +209,7 @@ function isPublicLocalizedRoute(segments: string[]): boolean {
 
   return segments.length === 2
     || (segments.length === 3 && segments[2] === 'deck-builder')
-    || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets'))
+    || (segments.length === 4 && (segments[2] === 'cards' || segments[2] === 'sets' || segments[2] === 'illustrators'))
     || (segments.length === 4 && segments[2] === 'sealed' && ['market', 'releases', 'buy-safely'].includes(segments[3] ?? ''))
     || (segments.length === 5 && segments[2] === 'sealed' && segments[3] === 'market' && /^\d+$/.test(segments[4] ?? ''))
     || (segments.length === 6 && segments[2] === 'sealed' && segments[3] === 'market'

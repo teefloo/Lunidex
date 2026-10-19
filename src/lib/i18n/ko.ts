@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1726,6 +1727,7 @@ team: '팀',
       no_pokemon: '이 특성을 가진 포켓몬이 없습니다.',
     },
     tcg: {
+      ...tcgIllustratorTranslations.ko,
       nav_deck_builder: '덱 빌더',
       nav_sealed: '미개봉',
       nav_sealed_market: '미개봉 상품 시장',

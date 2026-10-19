@@ -1,4 +1,5 @@
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
+import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
 import { mobileToolsTranslations } from './mobile-tools';
 import { notFoundPageTranslations } from './not-found-page';
@@ -1726,6 +1727,7 @@ team: 'Squadra',
       no_pokemon: 'Nessun Pokémon trovato per questa abilità.',
     },
     tcg: {
+      ...tcgIllustratorTranslations.it,
       nav_deck_builder: 'Costruttore di mazzi',
       nav_sealed: 'Sigillati',
       nav_sealed_market: 'Mercato dei prodotti sigillati',

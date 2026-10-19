@@ -36,6 +36,19 @@ describe('public localized proxy responses', () => {
     expect(response.headers.get('Cache-Control')).toBeNull();
   });
 
+  it('treats illustrator galleries as cacheable public TCG pages without resource probes', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg/illustrators/shinji%20kanda?page=2', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
+      'public, s-maxage=3600, stale-while-revalidate=86400',
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('gives stable public content a one-day CDN lifetime', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/cookies', {
       headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
