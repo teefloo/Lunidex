@@ -28,10 +28,7 @@ export function AppContent({ children }: { children: ReactNode }) {
   const [Agentation, setAgentation] = useState<ComponentType<{ endpoint: string }> | null>(null);
 
   useEffect(() => {
-    if (!shouldRenderAgentation) {
-      setAgentationAvailable(false);
-      return;
-    }
+    if (!shouldRenderAgentation) return;
 
     let active = true;
     const controller = new AbortController();

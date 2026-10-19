@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-19",
+  "profile": "local production build, anonymous French sessions",
+  "counts": {
+    "consoleErrors": 25,
+    "failedRequests": 20,
+    "pageErrors": 0,
+    "reactMountWarnings": 0,
+    "expected404Responses": 4
+  },
+  "observations": [
+    {
+      "category": "données distantes indisponibles",
+      "origin": "beta.pokeapi.co/graphql/v1beta",
+      "routeExamples": ["/fr/quiz", "/fr/types", "/fr/abilities", "/fr/items", "/fr/moves", "/fr/compare", "/fr/breeding", "/fr/dashboard"],
+      "effect": "La route s’est affichée, mais le contenu ou les actions dépendant de ces données ne peuvent pas être certifiés dans cet essai."
+    },
+    {
+      "category": "réponse d’authentification anonyme",
+      "route": "/fr/quiz",
+      "requestPath": "/api/auth/token",
+      "status": 401,
+      "effect": "Aucune session authentifiée n’était présente dans le contexte de balayage."
+    },
+    {
+      "category": "contrôle attendu de routes inexistantes",
+      "routes": ["/fr/navigation-audit-nonexistent", "/fr/pokemon/navigation-audit-nonexistent"],
+      "responses": "HTTP 404 at both tested viewport profiles",
+      "effect": "Comportement attendu de la page d’erreur ; pas une régression de l’application."
+    },
+    {
+      "category": "erreur injectée par une fixture",
+      "test": "custom binder search failure state",
+      "response": "HTTP 503 from a local test fixture",
+      "effect": "Vérifie le message de reprise ; ce n’est pas une panne de l’API de production."
+    }
+  ],
+  "interpretation": "Le total agrégé des requêtes échouées reste dans route-smoke.json. Ce fichier décrit les erreurs identifiées lors du diagnostic complémentaire ; il n’attribue pas chaque requête échouée à une cause unique."
+}

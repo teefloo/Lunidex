@@ -252,7 +252,6 @@ export default function PokemonList() {
   useEffect(() => {
     if (prevFilterKeyRef.current !== filterKey) {
       prevFilterKeyRef.current = filterKey;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset pagination when filters change
       setDisplayLimit(20);
     }
   }, [filterKey]);

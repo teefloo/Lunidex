@@ -25,7 +25,6 @@ export default function SearchBar() {
 
   useEffect(() => {
     if (pendingUserSearchRef.current !== null) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync the input with URL-driven store changes.
     setLocalSearch(searchTerm);
   }, [searchTerm]);
 

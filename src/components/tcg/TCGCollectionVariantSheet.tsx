@@ -271,14 +271,15 @@ function VariantQuantityRow({
   onAdjust: (delta: number) => boolean;
 }) {
   const { t } = useTranslation();
-  const [draft, setDraft] = useState(String(quantity));
+  const [draftState, setDraftState] = useState(() => ({ quantity, value: String(quantity) }));
+  if (draftState.quantity !== quantity) {
+    setDraftState({ quantity, value: String(quantity) });
+  }
+  const draft = draftState.value;
+  const setDraft = (value: string) => setDraftState({ quantity, value });
   const maxQuantity = MAX_TCG_COLLECTION_PHYSICAL_CARDS;
   const unitPrice = value ? formatPrice(value.amount, value.currency) : t('tcg.collection_value_unavailable');
   const subtotal = value ? formatPrice(value.amount * quantity, value.currency) : t('tcg.collection_value_unavailable');
-
-  useEffect(() => {
-    setDraft(String(quantity));
-  }, [quantity]);
 
   const commitDraft = () => {
     const normalized = draft.trim();

@@ -174,7 +174,6 @@ export function PokemonDetailClient({
     competitive: t('competitive.title'),
   };
   const activeSecondaryLabel = secondaryTabLabels[activeTab];
-  const [isMoreTabsOpen, setIsMoreTabsOpen] = useState(false);
   const [showShiny, setShowShiny] = useState(false);
   const [playingCry, setPlayingCry] = useState<'latest' | 'legacy' | null>(null);
   // Fine-grained slice: this page re-renders on every store keystroke if it
@@ -205,26 +204,19 @@ export function PokemonDetailClient({
   const routeLanguage = useClientLanguage();
   const moreTabsRef = useRef<HTMLDetailsElement>(null);
 
-  useEffect(() => {
-    if (moreTabsRef.current?.open) moreTabsRef.current.open = false;
-    setIsMoreTabsOpen(false);
-  }, [activeSecondaryLabel]);
-
   const closeMoreTabs = () => {
     if (moreTabsRef.current) moreTabsRef.current.open = false;
-    setIsMoreTabsOpen(false);
   };
 
   useEffect(() => {
-    if (!isMoreTabsOpen) return;
     const closeOnOutsidePointer = (event: PointerEvent) => {
-      if (!(event.target instanceof Node) || moreTabsRef.current?.contains(event.target)) return;
-      if (moreTabsRef.current) moreTabsRef.current.open = false;
-      setIsMoreTabsOpen(false);
+      const details = moreTabsRef.current;
+      if (!details?.open || !(event.target instanceof Node) || details.contains(event.target)) return;
+      details.open = false;
     };
     document.addEventListener('pointerdown', closeOnOutsidePointer);
     return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
-  }, [isMoreTabsOpen]);
+  }, []);
 
   const [abilityDescs, setAbilityDescs] = useState<Record<string, AbilityBattleDesc> | null>(null);
   useEffect(() => {
@@ -712,9 +704,9 @@ export function PokemonDetailClient({
                 </TabsTrigger>
               </TabsList>
                 <details
+                  key={activeTab}
                   ref={moreTabsRef}
                   className="pokemon-detail-more"
-                  onToggle={(event) => setIsMoreTabsOpen(event.currentTarget.open)}
                   onKeyDown={(event) => {
                     if (event.key !== 'Escape' || !moreTabsRef.current?.open) return;
                     event.preventDefault();

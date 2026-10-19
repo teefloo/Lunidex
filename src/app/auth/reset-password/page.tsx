@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, useSyncExternalStore, type FormEvent } from 'react';
 import { Loader2 } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,38 @@ import LunidexLogo from '@/components/ui/LunidexLogo';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
+function createResetTokenStore() {
+  let captured = false;
+  let resetToken: string | null = null;
+  const listeners = new Set<() => void>();
+
+  return {
+    subscribe(listener: () => void) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    getSnapshot() {
+      return captured ? resetToken : undefined;
+    },
+    getServerSnapshot() {
+      return undefined;
+    },
+    captureFromLocation() {
+      if (captured) return;
+
+      const url = new URL(window.location.href);
+      resetToken = url.searchParams.get('token');
+      if (url.searchParams.has('token')) {
+        url.searchParams.delete('token');
+        window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+      }
+
+      captured = true;
+      listeners.forEach((listener) => listener());
+    },
+  };
+}
+
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
   const { loading, updatePassword } = useAuth();
@@ -21,27 +53,23 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
-  const [resetToken, setResetToken] = useState<string | null>(null);
-  const [hasResetToken, setHasResetToken] = useState(false);
-  const [hasCheckedResetToken, setHasCheckedResetToken] = useState(false);
+  const [resetTokenStore] = useState(createResetTokenStore);
+  const resetTokenSnapshot = useSyncExternalStore(
+    resetTokenStore.subscribe,
+    resetTokenStore.getSnapshot,
+    resetTokenStore.getServerSnapshot,
+  );
+  const resetToken = typeof resetTokenSnapshot === 'string' && resetTokenSnapshot.length > 0
+    ? resetTokenSnapshot
+    : null;
+  const hasResetToken = resetToken !== null;
+  const hasCheckedResetToken = resetTokenSnapshot !== undefined;
 
   useEffect(() => {
-    const url = new URL(window.location.href);
-    const token = url.searchParams.get('token');
-    const hadTokenParameter = url.searchParams.has('token');
-
-    // Keep the one-time credential only in memory. Removing it before the
-    // page renders prevents it from being copied into history, referrers, or
-    // service-worker caches while still allowing retries after a failed reset.
-    if (hadTokenParameter) {
-      url.searchParams.delete('token');
-      window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
-    }
-
-    setResetToken(token);
-    setHasResetToken(Boolean(token));
-    setHasCheckedResetToken(true);
-  }, []);
+    // Keep the one-time credential only in memory. Scrub it before exposing
+    // the form so it is not retained in the URL while retries remain possible.
+    resetTokenStore.captureFromLocation();
+  }, [resetTokenStore]);
 
   const tt = (key: string, fallback: string) => {
     const value = t(key, { defaultValue: fallback });
