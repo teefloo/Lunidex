@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -18,11 +17,12 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
-import { TCG_CARD_PLACEHOLDER } from '@/lib/tcg-images';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { filterTCGCustomCollectionCards, TCG_CUSTOM_COLLECTION_PAGE_SIZE } from '@primedex/core/lib/tcg-custom-collections';
 import { usePrimeDexStore } from '@/store/primedex';
 import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
 import { TCGCustomCollectionAddPanel } from './TCGCustomCollectionAddPanel';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 
 interface TCGCustomCollectionDetailProps {
   collectionId: string;
@@ -169,15 +169,16 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                   {cardResults.map(({ ref, card, unavailable }) => {
                     const cardHref = `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(ref.language)}`;
                     const owned = ownedCardIds.includes(card.id);
+                    const imageCandidates = getTCGCardImageCandidates(card);
                     return (
                       <li key={`${ref.collectionId}:${ref.language}:${ref.cardId}`} className="flex min-w-0 flex-col rounded-sm border border-border/50 bg-card/50 p-2 shadow-[var(--shadow-pixel-sm)]">
                         {unavailable ? (
                           <div className="relative aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30">
-                            <Image src={TCG_CARD_PLACEHOLDER} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" className="object-contain" />
+                            <TCGImageWithFallback candidates={imageCandidates} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" className="object-contain" />
                           </div>
                         ) : (
                           <Link href={cardHref} className="relative block aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={card.name}>
-                            <Image src={card.image || card.imageUrl || TCG_CARD_PLACEHOLDER} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" unoptimized className="object-contain transition-transform duration-200 hover:scale-[1.02]" />
+                            <TCGImageWithFallback candidates={imageCandidates} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" className="object-contain transition-transform duration-200 hover:scale-[1.02]" />
                           </Link>
                         )}
                         <div className="mt-2 min-w-0 flex-1">
