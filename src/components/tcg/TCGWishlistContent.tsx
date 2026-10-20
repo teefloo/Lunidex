@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Copy, Trash2, Sparkles, ListOrdered, AlertCircle } from 'lucide-react';
+import { Copy, Plus, Trash2, Sparkles, ListOrdered, AlertCircle } from 'lucide-react';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
@@ -145,10 +145,11 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                       toggleTCGWishlist(card.id);
                       void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, interaction: 'wishlist' });
                     }}
-                    aria-label={t('tcg.compare_remove_card')}
-                    className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-rose-500/80 text-white opacity-0 transition-opacity hover:bg-rose-500 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
+                    aria-label={t('tcg.add_to_wishlist_aria', { name: card.name })}
+                    title={t('tcg.add_to_wishlist_aria', { name: card.name })}
+                    className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-primary/85 text-primary-foreground transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <Trash2 className="h-2.5 w-2.5" />
+                    <Plus aria-hidden="true" className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </motion.div>
@@ -247,7 +248,8 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
                     toggleTCGWishlist(card.id);
                     void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, interaction: 'wishlist' });
                   }}
-                  aria-label={t('tcg.compare_remove_card')}
+                  aria-label={t('tcg.remove_from_wishlist_aria', { name: card.name })}
+                  title={t('tcg.remove_from_wishlist_aria', { name: card.name })}
                   className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground/30 transition-colors hover:bg-rose-500/15 hover:text-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3.5 w-3.5" />

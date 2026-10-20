@@ -272,12 +272,17 @@ export default function DeckBuilderClient() {
                               });
                             }}
                             disabled={totalCount >= MAX_DECK_SIZE}
+                            aria-label={t('tcg.deck_builder.add_card_aria', {
+                              name: card.name,
+                              set: card.set?.name ?? card.id,
+                              number: card.localId,
+                            })}
                             className="group relative rounded-sm border border-border/60 bg-card/40 p-1.5 text-left transition-all hover:border-primary/40 disabled:opacity-40"
                           >
                             {(card.image || card.imageUrl) && (
                               <Image
                                 src={`${card.image || card.imageUrl}/low.webp`}
-                                alt={card.name}
+                                alt=""
                                 width={120}
                                 height={168}
                                 className="w-full rounded-sm object-contain"
@@ -286,6 +291,9 @@ export default function DeckBuilderClient() {
                             )}
                             <p className="mt-1 truncate text-[11px] font-bold text-foreground/70 group-hover:text-primary">
                               {card.name}
+                            </p>
+                            <p className="truncate text-[10px] text-foreground/45">
+                              {card.set?.name ?? card.id} · #{card.localId}
                             </p>
                             <div className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100">
                               <Plus className="h-3 w-3" />

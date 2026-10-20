@@ -39,6 +39,7 @@ import { getCanonicalTcgRarity, isSameTcgRarity } from '@/lib/tcg-rarity';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { TCG_POKEMON_TYPE_TRANSLATION_KEYS } from '@/lib/tcg-type-labels';
 
 interface TCGFiltersProps {
   filters: TCGCardFilters;
@@ -298,21 +299,8 @@ export function TCGFilters({
 
   const getPokemonTypeLabel = useCallback(
     (type: string) => {
-      const labelKey: Record<string, string> = {
-        Colorless: 'tcg.pokemon_type_colorless',
-        Fire: 'tcg.pokemon_type_fire',
-        Water: 'tcg.pokemon_type_water',
-        Lightning: 'tcg.pokemon_type_lightning',
-        Grass: 'tcg.pokemon_type_grass',
-        Fighting: 'tcg.pokemon_type_fighting',
-        Psychic: 'tcg.pokemon_type_psychic',
-        Darkness: 'tcg.pokemon_type_darkness',
-        Dragon: 'tcg.pokemon_type_dragon',
-        Fairy: 'tcg.pokemon_type_fairy',
-        Metal: 'tcg.pokemon_type_metal',
-      };
-
-      return labelKey[type] ? t(labelKey[type]) : type;
+      const labelKey = TCG_POKEMON_TYPE_TRANSLATION_KEYS[type];
+      return labelKey ? t(labelKey) : type;
     },
     [t],
   );

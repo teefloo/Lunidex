@@ -80,7 +80,7 @@ export function TCGLegacySetAlbumResolver({ setId, activation = false }: TCGLega
     <ResolverStatus>
       <section className="w-full max-w-2xl page-surface p-6 sm:p-8" aria-labelledby="legacy-collection-title">
         <h1 id="legacy-collection-title" className="text-2xl font-black tracking-tight">
-          {t('tcg.collection_choose_language', { defaultValue: 'Choose a collection language' })}
+          {t('tcg.collection_choose_language', { defaultValue: 'Choose a language for this collection' })}
         </h1>
         {legacyCount > 0 ? (
           <>

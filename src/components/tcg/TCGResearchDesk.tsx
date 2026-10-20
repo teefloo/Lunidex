@@ -41,6 +41,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
+import { TCG_POKEMON_TYPE_TRANSLATION_KEYS } from '@/lib/tcg-type-labels';
 import '@/styles/pokemon-cards-css.css';
 import '@/styles/tcg-card-overrides.css';
 
@@ -390,7 +391,14 @@ export function TCGResearchDesk({
   if (effectiveFilters.selectedSet) addFilterChip('set', `${t('tcg.filter_set')}: ${activeSetName ?? effectiveFilters.selectedSet}`, { ...effectiveFilters, selectedSet: null });
   if (effectiveFilters.selectedCategory && effectiveFilters.selectedCategory !== 'all') addFilterChip('category', `${t('tcg.filter_category', { defaultValue: 'Category' })}: ${effectiveFilters.selectedCategory}`, { ...effectiveFilters, selectedCategory: 'all' });
   if (effectiveFilters.selectedRarity) addFilterChip('rarity', `${t('tcg.filter_rarity')}: ${effectiveFilters.selectedRarity}`, { ...effectiveFilters, selectedRarity: null });
-  for (const type of effectiveFilters.selectedTypes ?? []) addFilterChip(`type-${type}`, `${t(`types.${type}`, { defaultValue: type })}`, { ...effectiveFilters, selectedTypes: (effectiveFilters.selectedTypes ?? []).filter((value) => value !== type) });
+  for (const type of effectiveFilters.selectedTypes ?? []) {
+    const translationKey = TCG_POKEMON_TYPE_TRANSLATION_KEYS[type];
+    addFilterChip(
+      `type-${type}`,
+      translationKey ? t(translationKey) : type,
+      { ...effectiveFilters, selectedTypes: (effectiveFilters.selectedTypes ?? []).filter((value) => value !== type) },
+    );
+  }
   if (effectiveFilters.selectedPhase) addFilterChip('phase', `${t('tcg.filter_phase', { defaultValue: 'Stage' })}: ${effectiveFilters.selectedPhase}`, { ...effectiveFilters, selectedPhase: null });
   for (const type of effectiveFilters.selectedTrainerTypes ?? []) addFilterChip(`trainer-${type}`, `${t('tcg.filter_trainer_type', { defaultValue: 'Trainer' })}: ${type}`, { ...effectiveFilters, selectedTrainerTypes: (effectiveFilters.selectedTrainerTypes ?? []).filter((value) => value !== type) });
   for (const type of effectiveFilters.selectedEnergyTypes ?? []) addFilterChip(`energy-${type}`, `${t('tcg.filter_energy_type', { defaultValue: 'Energy' })}: ${type}`, { ...effectiveFilters, selectedEnergyTypes: (effectiveFilters.selectedEnergyTypes ?? []).filter((value) => value !== type) });

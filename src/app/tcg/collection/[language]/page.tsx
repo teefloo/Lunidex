@@ -15,10 +15,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const currentLang = await getServerLanguage();
   const t = await getServerT();
   const collectionTitle = t('tcg.collection_title', { defaultValue: 'My Collection' });
+  const languageSelectionTitle = t('tcg.collection_choose_language', {
+    defaultValue: 'Choose a language for this collection',
+  });
   const description = t('tcg.collection_subtitle', {
     defaultValue: 'Track your Pokémon TCG collection by set.',
   });
-  const title = `${setId} — ${collectionTitle}`;
+  const title = `${languageSelectionTitle} — ${collectionTitle}`;
   const canonicalPath = `/tcg/collection/en/${encodeURIComponent(setId)}`;
   return {
     title: { absolute: title },
@@ -44,10 +47,13 @@ export default async function SetAlbumPage({ params, searchParams }: PageProps) 
   const lang = await getServerLanguage();
   const t = await getServerT();
   const collectionTitle = t('tcg.collection_title', { defaultValue: 'My Collection' });
+  const languageSelectionTitle = t('tcg.collection_choose_language', {
+    defaultValue: 'Choose a language for this collection',
+  });
   const collectionDescription = t('tcg.collection_subtitle', {
     defaultValue: 'Track your Pokémon TCG collection by set.',
   });
-  const title = `${setId} — ${collectionTitle}`;
+  const title = `${languageSelectionTitle} — ${collectionTitle}`;
   const canonicalPath = `/tcg/collection/en/${encodeURIComponent(setId)}`;
   const activationValue = Array.isArray(query.activation) ? query.activation[0] : query.activation;
   const breadcrumb = buildBreadcrumbJsonLd([

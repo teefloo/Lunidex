@@ -27,7 +27,7 @@ export function TCGCompareTrigger() {
         type="button"
         onClick={() => setPanelOpen(true)}
         className={cn(
-          'fixed bottom-6 right-6 z-[305] flex h-12 w-12 items-center justify-center rounded-full',
+          'tcg-compare-trigger fixed bottom-6 right-6 z-[305] flex h-12 w-12 items-center justify-center rounded-full',
           'border border-primary/40 bg-primary text-primary-foreground shadow-[var(--shadow-pixel)]',
           'transition-all hover:scale-105 hover:shadow-[var(--shadow-pixel-lg)] active:scale-95',
         )}

@@ -1409,7 +1409,18 @@ h1 { letter-spacing: 0; }
     bottom: calc(var(--app-bottom-nav-height, 0px) + 1rem);
   }
 
+  .tcg-compare-trigger {
+    bottom: calc(var(--app-bottom-nav-height, 0px) + 1rem);
+  }
+
   body:has(.cookie-consent-banner) .pokemon-mobile-fixed-actions {
+    bottom: calc(
+      var(--app-bottom-nav-height, 0px) +
+      max(10rem + 0.75rem, var(--cookie-consent-banner-height, 0px) + 1rem)
+    );
+  }
+
+  body:has(.cookie-consent-banner) .tcg-compare-trigger {
     bottom: calc(
       var(--app-bottom-nav-height, 0px) +
       max(10rem + 0.75rem, var(--cookie-consent-banner-height, 0px) + 1rem)
@@ -1510,6 +1521,24 @@ h1 { letter-spacing: 0; }
 }
 
 @media (max-width: 40rem) {
+  .tcg-local-navigation-links {
+    overscroll-behavior-inline: contain;
+    padding-bottom: 0.2rem;
+    scrollbar-color: color-mix(in oklab, var(--primary) 70%, var(--foreground)) transparent;
+    scrollbar-width: thin;
+    scroll-padding-inline: 0.75rem;
+  }
+
+  .tcg-local-navigation-links::-webkit-scrollbar {
+    display: block;
+    height: 0.2rem;
+  }
+
+  .tcg-local-navigation-links::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--primary) 70%, var(--foreground));
+  }
+
   .tcg-local-navigation {
     align-items: flex-start;
     flex-direction: column;

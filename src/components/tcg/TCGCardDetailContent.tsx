@@ -464,7 +464,17 @@ export function TCGCardDetailContent({
                         ariaPressed={ownershipPresentation.pressed}
                       />
                     )}
-                    {!demoOwnership && <ActionPill active={wishlisted} onClick={handleWishlist} label={t('tcg.mark_wishlist')} />}
+                    {!demoOwnership && (
+                      <ActionPill
+                        active={wishlisted}
+                        onClick={handleWishlist}
+                        label={t('tcg.mark_wishlist')}
+                        ariaLabel={t(wishlisted ? 'tcg.remove_from_wishlist_aria' : 'tcg.add_to_wishlist_aria', {
+                          name: displayCard.name,
+                        })}
+                        ariaPressed={wishlisted}
+                      />
+                    )}
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
                     {!demoOwnership && (
                       <button
