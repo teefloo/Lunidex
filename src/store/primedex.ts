@@ -42,6 +42,7 @@ import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import { hasSyncAccess, requestSyncAccess, type SyncAccessRequest } from './sync-access';
 import { createResilientStorage } from './persistence';
+import { MAX_TCG_INVESTMENTS, normalizeTCGInvestment, type TCGInvestment } from '@primedex/core/lib/tcg-investments';
 
 const isIndexedDbAvailable = (): boolean =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
@@ -163,6 +164,9 @@ export interface PrimeDexStore {
   tcgCollectionModelVersion: 1 | 2 | typeof TCG_COLLECTION_MODEL_VERSION;
   tcgCustomCollections: TCGCustomCollection[];
   tcgCustomCollectionCards: TCGCustomCollectionCard[];
+  tcgInvestments: TCGInvestment[];
+  saveTCGInvestment: (input: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'>, id?: string) => string | null;
+  deleteTCGInvestment: (id: string) => boolean;
   createTCGCustomCollection: (name: string, description?: string) => string;
   editTCGCustomCollection: (collectionId: string, name: string, description?: string) => boolean;
   deleteTCGCustomCollection: (collectionId: string) => boolean;
@@ -326,6 +330,7 @@ export const SYNCED_KEYS = [
   'tcgCollectionModelVersion',
   'tcgCustomCollections',
   'tcgCustomCollectionCards',
+  'tcgInvestments',
   'tcgWishlistCards',
   'tcgActiveSets',
   'tcgSavedSearches',
@@ -548,6 +553,25 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
       tcgCustomCollections: [],
       tcgCustomCollectionCards: [],
+      tcgInvestments: [],
+      saveTCGInvestment: (input, id) => {
+        if (!hasSyncAccess()) { requestSyncAccess(); return null; }
+        const lots = get().tcgInvestments;
+        const previous = id ? lots.find((entry) => entry.id === id) : undefined;
+        if ((id && !previous) || (!id && lots.length >= MAX_TCG_INVESTMENTS)) return null;
+        const now = new Date().toISOString();
+        const lot = normalizeTCGInvestment({ ...input, id: previous?.id ?? crypto.randomUUID(), createdAt: previous?.createdAt ?? now, updatedAt: now });
+        if (!lot) return null;
+        set({ tcgInvestments: previous ? lots.map((entry) => entry.id === lot.id ? lot : entry) : [...lots, lot] });
+        return lot.id;
+      },
+      deleteTCGInvestment: (id) => {
+        if (!hasSyncAccess()) { requestSyncAccess(); return false; }
+        const lots = get().tcgInvestments;
+        if (!lots.some((entry) => entry.id === id)) return false;
+        set({ tcgInvestments: lots.filter((entry) => entry.id !== id) });
+        return true;
+      },
       createTCGCustomCollection: (name, description = '') => {
         if (!hasSyncAccess()) {
           requestSyncAccess();

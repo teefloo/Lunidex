@@ -248,6 +248,9 @@ const stablePublicPageCacheRoutes = [
 ];
 
 const nextConfig: NextConfig = {
+  // Keep fixture authentication and build output separate from an open dev session.
+  distDir: process.env.E2E_INVESTMENTS === '1' ? '.next/investments-e2e' : '.next',
+  devIndicators: process.env.E2E_INVESTMENTS === '1' ? false : undefined,
   compress: true,
   // Shared domain logic lives in the @primedex/core workspace package.
   transpilePackages: ['@primedex/core'],

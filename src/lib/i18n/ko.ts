@@ -1,3 +1,4 @@
+import { tcgInvestmentsTranslations } from './tcg-investments';
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
@@ -10,6 +11,7 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    investments: tcgInvestmentsTranslations.ko,
     not_found_page: notFoundPageTranslations.ko,
     items_page: mobileToolsTranslations.ko.items_page,
     command_palette: {"title":"Lunidex 검색","description":"페이지와 포켓몬 검색","placeholder":"페이지, 포켓몬, 도구 검색…","no_results":"검색 결과가 없습니다.","pages":"페이지","items":"도구","moves":"기술","abilities":"특성","pokemon":"포켓몬"},

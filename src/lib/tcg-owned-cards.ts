@@ -17,6 +17,7 @@ import {
   normalizeTCGCustomCollectionCards,
   normalizeTCGCustomCollections,
 } from '@primedex/core/lib/tcg-custom-collections';
+import { normalizeTCGInvestments } from '@primedex/core/lib/tcg-investments';
 
 /** The distinct compatibility index cannot exceed the global physical cap. */
 export const MAX_TCG_OWNED_CARDS = MAX_TCG_COLLECTION_PHYSICAL_CARDS;
@@ -68,6 +69,7 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     'tcgCollectionModelVersion',
     'tcgCustomCollections',
     'tcgCustomCollectionCards',
+    'tcgInvestments',
   ];
   const hasTcgField = tcgKeys.some((key) => Object.prototype.hasOwnProperty.call(data, key));
   if (!hasTcgField) return data;
@@ -130,6 +132,8 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     ? normalizeTCGCustomCollectionCards(data.tcgCustomCollectionCards, customCollections.map((entry) => entry.id))
     : [];
   if (!customCollectionCards) return null;
+  const investments = normalizeTCGInvestments(Object.prototype.hasOwnProperty.call(data, 'tcgInvestments') ? data.tcgInvestments : []);
+  if (!investments) return null;
 
   const collectionSet = new Set(collections);
   if (activeCollections.some((key) => !collectionSet.has(key))) return null;
@@ -163,5 +167,6 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     tcgCollectionModelVersion: 3,
     tcgCustomCollections: customCollections,
     tcgCustomCollectionCards: customCollectionCards,
+    tcgInvestments: investments,
   };
 }

@@ -114,6 +114,7 @@ const EDITORIAL_CLIENT_TRANSLATION_PATHS = [
   'nav',
   'tcg.nav_catalog',
   'tcg.nav_collection',
+  'investments.title',
   'header',
   'languages',
   'settings',

@@ -1,3 +1,4 @@
+import { tcgInvestmentsTranslations } from './tcg-investments';
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
@@ -10,6 +11,7 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    investments: tcgInvestmentsTranslations.zh,
     not_found_page: notFoundPageTranslations.zh,
     items_page: mobileToolsTranslations.zh.items_page,
     command_palette: {"title":"搜索 Lunidex","description":"搜索页面和宝可梦","placeholder":"搜索页面、宝可梦和工具…","no_results":"没有结果。","pages":"页面","items":"道具","moves":"招式","abilities":"特性","pokemon":"宝可梦"},

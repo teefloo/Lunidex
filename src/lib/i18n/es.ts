@@ -1,3 +1,4 @@
+import { tcgInvestmentsTranslations } from './tcg-investments';
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
@@ -10,6 +11,7 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    investments: tcgInvestmentsTranslations.es,
     not_found_page: notFoundPageTranslations.es,
     items_page: mobileToolsTranslations.es.items_page,
     command_palette: {"title":"Buscar en Lunidex","description":"Busca páginas y Pokémon","placeholder":"Buscar páginas, Pokémon y herramientas…","no_results":"No se encontraron resultados.","pages":"Páginas","items":"Objetos","moves":"Movimientos","abilities":"Habilidades","pokemon":"Pokémon"},

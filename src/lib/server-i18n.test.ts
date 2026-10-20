@@ -65,6 +65,7 @@ describe('getEditorialClientTranslations', () => {
 
       expect(serverTcg.nav_catalog).toEqual(expect.any(String));
       expect(editorialTranslations).toHaveProperty('tcg.nav_catalog', serverTcg.nav_catalog);
+      expect(editorialTranslations).toHaveProperty('investments.title', (serverTranslations.investments as { title: string }).title);
     }
   });
 });

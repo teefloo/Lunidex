@@ -34,7 +34,7 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
   const destination = resolveNavigationDestination(pathname);
   const isPersonalCollection = destination?.group === 'collection';
   const visibleTabs = isPersonalCollection
-    ? NAVIGATION_DESTINATIONS.filter((item) => ['collection', 'wishlist', 'sealed-portfolio'].includes(item.id) && item.path !== null)
+    ? NAVIGATION_DESTINATIONS.filter((item) => ['collection', 'wishlist', 'investments', 'sealed-portfolio'].includes(item.id) && item.path !== null)
     : NAVIGATION_DESTINATIONS.filter((item) => (item.id === 'catalog' || item.id === 'sealed-market') && item.path !== null);
   const toolItems = NAVIGATION_DESTINATIONS.filter((item) => item.group === 'catalog' && !['catalog', 'sealed-market'].includes(item.id) && item.path !== null);
   const selectedTool = toolItems.find((item) => item.id === destination?.id);

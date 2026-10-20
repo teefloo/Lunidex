@@ -13,6 +13,7 @@ import {
   normalizeTCGCustomCollectionCards,
   normalizeTCGCustomCollections,
 } from '@primedex/core/lib/tcg-custom-collections';
+import { normalizeTCGInvestments } from '@primedex/core/lib/tcg-investments';
 import type { TCGCardLanguage } from '@primedex/core/lib/tcg-language';
 import {
   copyTCGLegacyOwnedCards,
@@ -32,7 +33,7 @@ const COLLECTION_KEYS = [
   'tcgWishlistCards', 'tcgActiveSets', 'tcgCollections', 'tcgCollectionCards',
   'tcgActiveCollections', 'tcgLegacyOwnedCards', 'selectedTypes', 'selectedEggGroups',
   'selectedColors', 'selectedShapes', 'viewedTypes', 'tcgCustomCollections',
-  'tcgCustomCollectionCards',
+  'tcgCustomCollectionCards', 'tcgInvestments',
 ] as const satisfies readonly SyncedKey[];
 type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
@@ -53,7 +54,7 @@ const toClock = (value: unknown): number => typeof value === 'number' && Number.
 const sameValue = (left: unknown, right: unknown): boolean => JSON.stringify(left) === JSON.stringify(right);
 const collectionValues = (state: Partial<PersistedState>, key: CollectionKey): unknown[] => Array.isArray(state[key]) ? state[key] as unknown[] : [];
 const collectionEntryId = (key: CollectionKey, value: unknown): string => {
-  if (key === 'tcgCustomCollections') {
+  if (key === 'tcgCustomCollections' || key === 'tcgInvestments') {
     return value && typeof value === 'object' && 'id' in value
       ? String((value as { id: unknown }).id)
       : String(value);
@@ -133,6 +134,9 @@ function normalizeTcgSnapshot<T extends Partial<PersistedState>>(snapshot: T): T
   const customCollections = normalizeTCGCustomCollections(next.tcgCustomCollections ?? []) ?? [];
   const customCollectionIds = new Set(customCollections.map((collection) => collection.id));
   next.tcgCustomCollections = customCollections;
+  // A concurrent merge may temporarily exceed the write limit. Keep all lots
+  // so the server can reject/roll back the write, rather than emptying the ledger.
+  next.tcgInvestments = normalizeTCGInvestments(next.tcgInvestments ?? [], Infinity) ?? [];
   next.tcgCustomCollectionCards = (normalizeTCGCustomCollectionCards(
     next.tcgCustomCollectionCards ?? [],
     customCollectionIds,

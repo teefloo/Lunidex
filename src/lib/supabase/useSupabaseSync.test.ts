@@ -157,4 +157,27 @@ describe('account sync initialization', () => {
     const { toast } = await import('@/lib/toast');
     expect(toast.error).toHaveBeenCalledWith('tcg.custom_collections.document_too_large');
   });
+
+  it('clears investment records when the authenticated account changes or signs out', async () => {
+    const lot = {
+      id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', cardId: 'base1-1', cardName: 'Alakazam', setId: 'base1',
+      language: 'en', variant: 'normal', printing: '', condition: 'unknown', quantity: 1, unitCostCents: 2000,
+      feesCents: 0, acquiredOn: null, valuation: null, createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z',
+    };
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: { tcgInvestments: [lot] }, updatedAt: null }));
+    await renderSync();
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
+    await act(async () => {
+      root.render(createElement(AuthContext.Provider, { value: { enabled: true, loading: false, user: { id: 'account-b' } } as never }, createElement(SyncProbe)));
+      await Promise.resolve();
+    });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    await act(async () => {
+      root.render(createElement(AuthContext.Provider, { value: { enabled: true, loading: false, user: null } as never }, createElement(SyncProbe)));
+      await Promise.resolve();
+    });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(container.querySelector('output')?.textContent).toBe('unauthenticated');
+  });
 });

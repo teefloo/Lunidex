@@ -15,6 +15,7 @@ import {
   Sparkles,
   Swords,
   Trophy,
+  TrendingUp,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -58,6 +59,7 @@ export const NAVIGATION_DESTINATIONS: readonly NavigationDestination[] = [
   { id: 'play', path: '/team', labelKey: 'nav.team', fallback: 'Team Builder', icon: Users, group: 'play', primary: 'play', aliases: { en: ['team builder', 'team'], fr: ['jouer', 'équipe', 'team'], es: ['jugar', 'equipo'], de: ['spielen', 'team'], it: ['gioca', 'squadra'], ja: ['プレイ', 'チーム'], ko: ['플레이', '팀'], zh: ['游玩', '队伍'] } },
 
   { id: 'wishlist', path: '/tcg/wishlist', labelKey: 'tcg.nav_wishlist', fallback: 'Wishlist', icon: Heart, group: 'collection' },
+  { id: 'investments', path: '/tcg/investments', labelKey: 'investments.title', fallback: 'Investments', icon: TrendingUp, group: 'collection', aliases: { fr: ['investissements', 'achats', 'portefeuille'], en: ['purchases', 'portfolio', 'investments'] } },
   { id: 'sealed-portfolio', path: '/tcg/sealed', labelKey: 'tcg.nav_sealed', fallback: 'Sealed portfolio', icon: Package, group: 'collection' },
   { id: 'collection-start', path: '/tcg/start', labelKey: 'lunidex_home.cta_start', fallback: 'Start or resume your collection', icon: Package, group: 'collection' },
 

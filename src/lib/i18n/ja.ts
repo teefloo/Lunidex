@@ -1,3 +1,4 @@
+import { tcgInvestmentsTranslations } from './tcg-investments';
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
@@ -10,6 +11,7 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    investments: tcgInvestmentsTranslations.ja,
     not_found_page: notFoundPageTranslations.ja,
     items_page: mobileToolsTranslations.ja.items_page,
     command_palette: {"title":"Lunidexを検索","description":"ページとポケモンを検索","placeholder":"ページ、ポケモン、ツールを検索…","no_results":"結果がありません。","pages":"ページ","items":"道具","moves":"技","abilities":"特性","pokemon":"ポケモン"},

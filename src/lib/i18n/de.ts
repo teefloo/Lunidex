@@ -1,3 +1,4 @@
+import { tcgInvestmentsTranslations } from './tcg-investments';
 import { tcgCustomCollectionsTranslations } from './tcg-custom-collections';
 import { tcgIllustratorTranslations } from './tcg-illustrators';
 import { tcgDemoTranslations } from './tcg-demo';
@@ -10,6 +11,7 @@ import { docsTranslations } from './docs';
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
+    investments: tcgInvestmentsTranslations.de,
     not_found_page: notFoundPageTranslations.de,
     items_page: mobileToolsTranslations.de.items_page,
     command_palette: {"title":"Lunidex durchsuchen","description":"Seiten und Pokémon durchsuchen","placeholder":"Seiten, Pokémon und Werkzeuge suchen…","no_results":"Keine Ergebnisse gefunden.","pages":"Seiten","items":"Items","moves":"Attacken","abilities":"Fähigkeiten","pokemon":"Pokémon"},
