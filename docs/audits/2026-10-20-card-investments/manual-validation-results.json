@@ -1,0 +1,35 @@
+[
+  {
+    "test": "invalid amount 3 decimals",
+    "alert": "Vérifiez la carte, les montants, la quantité, les dates et la confirmation de valorisation.",
+    "focus": "<button type=\"submit\" tabindex=\"0\" data-slot=\"button\" class=\"group/button inline-flex shrink-0 touch-target items-center justify-center gap-2 whitespace-nowrap rounded-sm border bg-clip-padding text-sm font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-100 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/30 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-primary bg-primary text-primary-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[3px_3px_0_var(--pixel-shadow)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none h-11 px-4\">Enregistrer</button>",
+    "invalidFields": 0
+  },
+  {
+    "test": "unconfirmed manual valuation",
+    "dialogStillOpen": true,
+    "alert": "Vérifiez la carte, les montants, la quantité, les dates et la confirmation de valorisation."
+  },
+  {
+    "test": "mobile form layout",
+    "dimensions": {
+      "clientHeight": 844,
+      "scrollHeight": 1724,
+      "width": 373,
+      "scrollWidth": 373
+    },
+    "saveVisibleBeforeScroll": true
+  },
+  {
+    "test": "explicit zero valuation",
+    "text": "Dracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 1 · Date inconnue · 40,00 € × 1 + 0,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n40,00 €\nEstimation manuelle\n0,00 €\nPlus-value / moins-value latente\n-40,00 €\nRendement des achats valorisés\n-100 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes"
+  },
+  {
+    "test": "Escape discards dirty form",
+    "dialogCount": 0
+  },
+  {
+    "test": "reopened dirty form",
+    "unitCost": "40.00"
+  }
+]

@@ -165,7 +165,7 @@ export interface PrimeDexStore {
   tcgCustomCollections: TCGCustomCollection[];
   tcgCustomCollectionCards: TCGCustomCollectionCard[];
   tcgInvestments: TCGInvestment[];
-  saveTCGInvestment: (input: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'>, id?: string) => string | null;
+  saveTCGInvestment: (input: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'>, id?: string, creationId?: string) => string | null;
   deleteTCGInvestment: (id: string) => boolean;
   createTCGCustomCollection: (name: string, description?: string) => string;
   editTCGCustomCollection: (collectionId: string, name: string, description?: string) => boolean;
@@ -555,13 +555,13 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgCustomCollections: [],
       tcgCustomCollectionCards: [],
       tcgInvestments: [],
-      saveTCGInvestment: (input, id) => {
+      saveTCGInvestment: (input, id, creationId) => {
         if (!hasSyncAccess()) { requestSyncAccess(); return null; }
         const lots = get().tcgInvestments;
-        const previous = id ? lots.find((entry) => entry.id === id) : undefined;
-        if ((id && !previous) || (!id && lots.length >= MAX_TCG_INVESTMENTS)) return null;
+        const previous = lots.find((entry) => entry.id === (id ?? creationId));
+        if ((id && !previous) || (!previous && lots.length >= MAX_TCG_INVESTMENTS)) return null;
         const now = new Date().toISOString();
-        const lot = normalizeTCGInvestment({ ...input, id: previous?.id ?? crypto.randomUUID(), createdAt: previous?.createdAt ?? now, updatedAt: now });
+        const lot = normalizeTCGInvestment({ ...input, id: previous?.id ?? creationId ?? crypto.randomUUID(), createdAt: previous?.createdAt ?? now, updatedAt: now });
         if (!lot) return null;
         set({ tcgInvestments: previous ? lots.map((entry) => entry.id === lot.id ? lot : entry) : [...lots, lot] });
         return lot.id;

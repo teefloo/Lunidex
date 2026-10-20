@@ -1,0 +1,34 @@
+[
+  {
+    "test": "persistence local fixture reload",
+    "text": "Dracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 2 · Date inconnue · 20,25 € × 2 + 5,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n45,50 €\nEstimation manuelle\n70,00 €\nPlus-value / moins-value latente\n+24,50 €\nRendement des achats valorisés\n+53,85 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes"
+  },
+  {
+    "test": "edit quantity 3",
+    "text": "Dracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 3 · Date inconnue · 20,25 € × 3 + 5,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n65,75 €\nEstimation manuelle\n105,00 €\nPlus-value / moins-value latente\n+39,25 €\nRendement des achats valorisés\n+59,7 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes"
+  },
+  {
+    "test": "default other validation",
+    "invalid": [
+      {
+        "label": "Précisions sur l’édition, le tampon ou la certification",
+        "required": true,
+        "validation": "Please fill in this field."
+      }
+    ],
+    "reference": "Enregistrer un achat\nLangue des cartes\nanglais\nfrançais\nespagnol\nitalien\nportugais\nportugais brésilien\nportugais européen\nallemand\nnéerlandais\npolonais\nrusse\njaponais\ncoréen\nchinois (Taïwan)\nindonésien\nthaï\nchinois (Chine)\n\nDracaufeu\n\nbase1-4 · Set de Base\n\nRechercher des cartes\nÉdition / finition\nHolo\nPremière édition\nAutre édition (à préciser ci-dessous)\nÉtat\nProche du neuf\nExcellent\nBon\nLégèrement joué\nJoué\nMauvais\nCertifiée\nInconnu\nPrécisions sur l’édition, le tampon ou la certification\nHolo · 4ffrmhcfiaejakhepqdkx7o\nHolo · mtltux8qtgdu4exu903oasum21juxbvx6lx · 1re Édition\nHolo · 3takscxpcqoqcfnxk1ivs2y6\nHolo · zqq5g2u9n0st0gren5bssktmac2ywqaw\nQuantité\nPrix d’achat par carte (€)\nFrais d’acquisition totaux (€)\nDate d’acquisition (facultative)\n\nLes prix sont unitaires. Les frais concernent tout l’achat. Laissez l’estimation vide si elle est inconnue.\n\nRéférence indicative Cardmarket\n\nAucune référence exploitable en euros pour cette édition.\n\nLes prix TCGdex ne certifient ni la langue, ni l’état, ni l’édition. Vérifiez votre exemplaire avant de saisir une estimation manuelle. Ces références sont exclues des totaux.\n\nActualiser la référence\nEstimation actuelle par carte (€, facultative)\nDate de valorisation (facultative)\nEnregistrer\nAnnuler\nFermer"
+  },
+  {
+    "test": "repeat purchase missing valuation",
+    "text": "Collection\nListe de souhaits\nInvestissements\nScellés\nINVESTISSEMENTS\n\nSuivez vos achats de cartes et la valeur de votre portefeuille en euros.\n\nLes achats utilisent les mêmes identifiants de carte que votre collection. Enregistrer un achat ne modifie pas les quantités de l’inventaire.\n\nEnregistrer un achat\nMontant total investi\n105,75 €\nValeur connue du portefeuille\n105,00 €\nPlus-value / moins-value latente\n+39,25 €\nRendement des achats valorisés\n+59,7 %\n\n1 cartes non valorisées · 40,00 € investis exclus du rendement.\n\nAchat enregistré dans cette session. Le compte synchronise les modifications automatiquement.\n\nTous les achats\nAchats non valorisés\nAcquisition la plus récente\nPlus-value la plus élevée\nInvestissement le plus élevé\nDracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 1 · Date inconnue · 40,00 € × 1 + 0,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n40,00 €\nNon valorisé\n—\nPlus-value / moins-value latente\n—\nRendement des achats valorisés\n—\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes\nDracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 3 · Date inconnue · 20,25 € × 3 + 5,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n65,75 €\nEstimation manuelle\n105,00 €\nPlus-value / moins-value latente\n+39,25 €\nRendement des achats valorisés\n+59,7 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes"
+  },
+  {
+    "test": "filter missing",
+    "count": 1
+  },
+  {
+    "test": "search no results",
+    "count": 0,
+    "text": "Collection\nListe de souhaits\nInvestissements\nScellés\nINVESTISSEMENTS\n\nSuivez vos achats de cartes et la valeur de votre portefeuille en euros.\n\nLes achats utilisent les mêmes identifiants de carte que votre collection. Enregistrer un achat ne modifie pas les quantités de l’inventaire.\n\nEnregistrer un achat\nMontant total investi\n105,75 €\nValeur connue du portefeuille\n105,00 €\nPlus-value / moins-value latente\n+39,25 €\nRendement des achats valorisés\n+59,7 %\n\n1 cartes non valorisées · 40,00 € investis exclus du rendement.\n\nAchat enregistré dans cette session. Le compte synchronise les modifications automatiquement.\n\nTous les achats\nAchats non valorisés\nAcquisition la plus récente\nPlus-value la plus élevée\nInvestissement le plus élevé\n\nAucun classeur ou carte correspondant."
+  }
+]

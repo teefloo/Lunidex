@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "lots": [
+    {
+      "id": "cef91238-6b17-42b5-985c-ce2684159296",
+      "cardId": "base1-4",
+      "cardName": "Dracaufeu",
+      "setId": "base1",
+      "language": "fr",
+      "variant": "holo",
+      "printing": "",
+      "condition": "unknown",
+      "quantity": 2,
+      "unitCostCents": 2025,
+      "feesCents": 500,
+      "acquiredOn": null,
+      "valuation": {
+        "unitPriceCents": 3500,
+        "valuedOn": null
+      },
+      "createdAt": "2026-10-20T08:39:45.129Z",
+      "updatedAt": "2026-10-20T08:39:45.129Z"
+    }
+  ]
+}

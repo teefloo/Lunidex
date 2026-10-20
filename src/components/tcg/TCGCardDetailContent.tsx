@@ -22,6 +22,7 @@ import {
   ScrollText,
   BadgeDollarSign,
   FolderPlus,
+  ShoppingBag,
 } from 'lucide-react';
 import type { TCGCard, TCGCardAbility, TCGCardAttack, TCGCardCategory } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
@@ -62,6 +63,11 @@ const PriceChart = dynamic(
   { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-xl bg-foreground/5" /> },
 );
 
+const TCGInvestmentForm = dynamic(
+  () => import('./TCGInvestmentForm').then((module) => module.TCGInvestmentForm),
+  { ssr: false },
+);
+
 export interface TCGCardDetailContentProps {
   presentation: 'modal' | 'page';
   card: TCGCard | null;
@@ -94,6 +100,7 @@ export function TCGCardDetailContent({
   const localeHref = useLocaleHref();
   const interfaceLanguage = useClientLanguage();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const purchaseButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const store = usePrimeDexStore();
   const addTCGCompare = store.addTCGCompare ?? (() => undefined);
@@ -116,12 +123,17 @@ export function TCGCardDetailContent({
   }, [card, isOpen, mounted, resolvedLang, demoOwnership]);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [isCustomCollectionsOpen, setIsCustomCollectionsOpen] = useState(false);
+  const [isPurchaseFormOpen, setIsPurchaseFormOpen] = useState(false);
   const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
   // Reset before committing a closed modal, including closure by its parent.
   // An effect would first commit the stale nested-dialog state and render again.
   if (previousIsOpen !== isOpen) {
     setPreviousIsOpen(isOpen);
-    if (!isOpen) setIsVariantSheetOpen(false);
+    if (!isOpen) {
+      setIsVariantSheetOpen(false);
+      setIsCustomCollectionsOpen(false);
+      setIsPurchaseFormOpen(false);
+    }
   }
 
   useEffect(() => {
@@ -139,14 +151,14 @@ export function TCGCardDetailContent({
   }, [isModal, isOpen, mounted]);
 
   useEffect(() => {
-    if (!isModal || !isOpen) return;
+    if (!isModal || !isOpen || isVariantSheetOpen || isCustomCollectionsOpen || isPurchaseFormOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        if (!isVariantSheetOpen) onClose?.();
+        onClose?.();
         return;
       }
-      if (event.key !== 'Tab' || isVariantSheetOpen) return;
+      if (event.key !== 'Tab') return;
 
       const dialog = dialogRef.current;
       if (!dialog) return;
@@ -172,7 +184,7 @@ export function TCGCardDetailContent({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isModal, isOpen, isVariantSheetOpen, onClose]);
+  }, [isModal, isOpen, isVariantSheetOpen, isCustomCollectionsOpen, isPurchaseFormOpen, onClose]);
 
   const { data: hydratedCard, isFetching } = useQuery({
     queryKey: card ? tcgKeys.card(card.id, resolvedLang) : tcgKeys.card('missing', resolvedLang),
@@ -263,6 +275,11 @@ export function TCGCardDetailContent({
     }
     toggleTCGWishlist(displayCard.id);
     if (!wishlisted && !owned) onWishlistAdded?.();
+  };
+
+  const closePurchaseForm = () => {
+    setIsPurchaseFormOpen(false);
+    requestAnimationFrame(() => purchaseButtonRef.current?.focus());
   };
 
   const handleOwnedToggle = () => {
@@ -451,6 +468,25 @@ export function TCGCardDetailContent({
                     <ActionPill active={false} onClick={handleShareCard} label={t('detail.share')} />
                     {!demoOwnership && (
                       <button
+                        ref={purchaseButtonRef}
+                        type="button"
+                        onClick={() => {
+                          if (!hasSyncAccess()) {
+                            requestSyncAccess();
+                            return;
+                          }
+                          setIsPurchaseFormOpen(true);
+                        }}
+                        aria-haspopup="dialog"
+                        aria-expanded={isPurchaseFormOpen}
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/35 bg-primary/5 px-3 text-center text-[10px] font-black uppercase tracking-[0.1em] text-primary transition hover:border-primary/70 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      >
+                        <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                        {t('investments.add')}
+                      </button>
+                    )}
+                    {!demoOwnership && (
+                      <button
                         type="button"
                         onClick={() => setIsCustomCollectionsOpen(true)}
                         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/35 bg-primary/5 px-3 text-center text-[10px] font-black uppercase tracking-[0.1em] text-primary transition hover:border-primary/70 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
@@ -636,6 +672,14 @@ export function TCGCardDetailContent({
           onOpenChange={setIsCustomCollectionsOpen}
           card={displayCard}
           language={resolvedLang}
+        />
+      )}
+      {!demoOwnership && isPurchaseFormOpen && (
+        <TCGInvestmentForm
+          initialCard={displayCard}
+          language={resolvedLang}
+          onClose={closePurchaseForm}
+          onSaved={() => { closePurchaseForm(); toast.success(t('investments.saved')); }}
         />
       )}
     </>

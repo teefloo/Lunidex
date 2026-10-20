@@ -1,6 +1,6 @@
 # Investissements en cartes
 
-La route privée `/[locale]/tcg/investments` appartient à l'espace Collection. Elle enregistre des lots d'acquisition indépendants. Un deuxième achat de la même carte crée un nouveau lot. Modifier un lot corrige son achat et sa dernière estimation, sans conserver un journal de ces corrections.
+La route privée `/[locale]/tcg/investments` appartient à l'espace Collection. Elle enregistre des lots d'acquisition indépendants. Un deuxième achat de la même carte crée un nouveau lot. Modifier un lot corrige son achat et sa dernière estimation, sans conserver un journal de ces corrections. Une fiche de carte permet aussi d’ouvrir directement un achat prérempli, sans refaire la recherche.
 
 ## Données et accès
 
@@ -8,7 +8,7 @@ Les achats sont des petits enregistrements `tcgInvestments` du store web et du d
 
 Le runtime actuel des collections est connecté au compte : les préférences utilisent IndexedDB, mais les données personnelles viennent du compte Neon. Les investissements suivent ce comportement existant. Ils ne sont pas enregistrés dans un second stockage anonyme. Sans session ou avec le service indisponible, les panneaux d'accès existants s'affichent. Les données sont retirées de la session au changement de compte ou à la déconnexion.
 
-`/api/user-state` détermine le propriétaire à partir de la session, filtre ses lectures et écritures par `user_id`, interdit le cache public et valide les lots. La synchronisation fusionne les achats par UUID et conserve les horloges de modification/suppression. Une écriture refusée reprend le dernier état accepté. Les sauvegardes JSON existantes incluent aussi ce champ.
+`/api/user-state` détermine le propriétaire à partir de la session, filtre ses lectures et écritures par `user_id`, interdit le cache public et valide les lots. La synchronisation fusionne les achats par UUID et conserve les horloges de modification/suppression. Une écriture refusée reprend le dernier état accepté. Le formulaire attend la confirmation du compte avant de se fermer et conserve la saisie en cas d’échec. Les nouvelles tentatives réutilisent le même UUID, y compris après un délai réseau ambigu. Les formulaires sont retirés lorsque l’identité du compte change. Les sauvegardes JSON existantes incluent aussi ce champ.
 
 Aucune migration SQL n'est nécessaire : le champ est ajouté au document JSON déjà utilisé. Aucune base distante n'a été modifiée. Pour mettre cette version en service, le validateur serveur et le client doivent être livrés ensemble. Une ancienne version cliente ne sait pas afficher ou exporter les achats, même si la synchronisation préserve les champs inconnus.
 
@@ -25,9 +25,9 @@ Une estimation absente reste `null`, distincte d'une estimation explicite à zé
 
 ## Valorisation et limites vérifiées
 
-Le catalogue et les détails utilisent l'API TCGdex existante. Le détail exige la langue demandée sans repli anglais. Les variantes proposées viennent du détail de carte ; une édition particulière peut être décrite avec la finition « Autre ». Les exemplaires certifiés exigent des précisions sur la certification.
+Le catalogue et les détails utilisent l'API TCGdex existante. Le détail exige la langue demandée sans repli anglais. Une finition standard unique est présélectionnée. Plusieurs finitions demandent un choix explicite. Une carte identifiée dans le catalogue peut être enregistrée même si son détail est temporairement indisponible, sans inventer de finition ou de prix. Les variantes proposées viennent des métadonnées connues de la carte ; une édition particulière peut être décrite avec la finition « Autre ». Les exemplaires certifiés exigent des précisions sur la certification.
 
-Le formulaire réutilise le résolveur de prix existant pour afficher une **référence Cardmarket en EUR**, datée si le fournisseur la date. Il ne convertit pas les prix USD et ne remplace pas une reverse par une holo. Les références ne sont jamais ajoutées aux calculs. Elles ne sont pas proposées pour une édition spéciale décrite dans le formulaire. Le bouton actualise la requête via les caches existants, ce qui ne garantit pas une nouvelle cotation du fournisseur.
+Le formulaire réutilise le résolveur de prix existant pour afficher une **référence Cardmarket en EUR**, datée si le fournisseur la date. Il ne convertit pas les prix USD et ne remplace pas une reverse par une holo. Les références ne sont jamais ajoutées aux calculs. Elles ne sont pas proposées pour une édition spéciale décrite dans le formulaire. Le bouton d’actualisation contourne les caches applicatifs et interroge TCGdex. Une erreur d’actualisation est signalée, et une référence déjà affichée conserve sa date. Cela ne garantit pas une nouvelle cotation du fournisseur. Les résultats de recherche montrent les références disponibles par finition. Une référence peut être reprise comme base d’estimation, mais exige toujours une confirmation avant d’entrer dans les calculs.
 
 Les prix TCGdex ne certifient pas la langue, l'état physique ou la certification d'un exemplaire. La [FAQ officielle TCGdex](https://tcgdex.dev/fr/faq) documente aussi des correspondances de prix incorrectes entre certaines éditions. Aucun prix automatique n'est donc présenté comme la valeur exacte de l'achat. L'utilisateur saisit une estimation manuelle et confirme qu'elle correspond à son exemplaire. Il peut la modifier ou la retirer. Le libellé « Estimation manuelle » et sa date restent visibles.
 
@@ -50,3 +50,7 @@ Vérifications effectuées le 19 octobre 2026 :
 - Parcours existants de création de collection, ajout et rechargement : réussis sur ordinateur et mobile.
 - Lint, contrôles TypeScript web et core, contrôle SEO et build de production : réussis. Le build conserve `--webpack` et la route privée `/tcg/investments`.
 - Revue indépendante : aucune correction restante signalée après les ajustements du formulaire et du lien vers l'inventaire.
+
+## Corrections du 20 octobre 2026
+
+Les parcours d’achat direct, de reprise après erreur, de validation et de retour navigateur ont été corrigés. Vérification finale : 759 tests unitaires, 12 scénarios navigateur et un contrôle complémentaire de navigation réussis ; lint, TypeScript web/core, SEO des sources et build de production réussis. Un essai du build utilise le vrai TCGdex et un compte simulé. Les écritures Neon réelles et une collecte historique qualifiée ne sont pas validées par ces essais.

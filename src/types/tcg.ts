@@ -123,6 +123,7 @@ export interface TCGCardThirdParty {
 /** TCGdex pricing attached to one concrete physical card variant. */
 export interface TCGCardVariantDetailed {
   type: string;
+  subtype?: string;
   size?: string;
   variantId?: string;
   stamp?: string | string[] | null;

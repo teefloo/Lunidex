@@ -12,6 +12,7 @@ import { setProductTrackingIdentity, trackTcgPersistedValue, trackReturnAfterAct
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { retryAsync } from '@/lib/retry';
 import { AuthContext } from '@/lib/neon/AuthProvider';
+import { confirmTCGInvestmentSaves, rejectPendingTCGInvestmentSaves, type TCGInvestmentSaveFailure } from '@/lib/tcg-investment-save';
 import {
   advanceSyncMetadata,
   applySyncState,
@@ -131,27 +132,56 @@ async function saveRemoteState(
   data: object,
   expectedUpdatedAt: string | null,
 ): Promise<SaveResult> {
-  const response = await fetchAppApi('/api/user-state', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ data, expectedUpdatedAt }),
-  });
-  const payload = await response.json().catch(() => null) as unknown;
-  const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
-    ? payload as { data?: unknown; updatedAt?: unknown }
-    : null;
-  return {
-    saved: response.ok,
-    conflict: response.status === 409,
-    unauthenticated: response.status === 401 || response.status === 403,
-    tooLarge: response.status === 413,
-    remote: (response.ok || response.status === 409) && candidate
-      ? {
-        data: candidate.data ?? data,
-        updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : expectedUpdatedAt,
-      }
-      : null,
+  const controller = new AbortController();
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const request = async (): Promise<SaveResult> => {
+    const response = await fetchAppApi('/api/user-state', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, expectedUpdatedAt }),
+      signal: controller.signal,
+    });
+    const payload = await response.json().catch(() => null) as unknown;
+    const candidate = typeof payload === 'object' && payload !== null && !Array.isArray(payload)
+      ? payload as { data?: unknown; updatedAt?: unknown }
+      : null;
+    if (response.ok && (
+      !candidate
+      || typeof candidate.data !== 'object'
+      || candidate.data === null
+      || Array.isArray(candidate.data)
+      || !(candidate.updatedAt === null || typeof candidate.updatedAt === 'string')
+    )) {
+      throw new InvalidRemoteStateError();
+    }
+    return {
+      saved: response.ok,
+      conflict: response.status === 409,
+      unauthenticated: response.status === 401 || response.status === 403,
+      tooLarge: response.status === 413,
+      remote: (response.ok || response.status === 409) && candidate
+        ? {
+          data: candidate.data ?? data,
+          updatedAt: typeof candidate.updatedAt === 'string' ? candidate.updatedAt : expectedUpdatedAt,
+        }
+        : null,
+    };
   };
+  try {
+    return await Promise.race([
+      request(),
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          controller.abort();
+          const error = new Error('Saved account state write timed out.');
+          error.name = 'TimeoutError';
+          reject(error);
+        }, REMOTE_STATE_REQUEST_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeoutId !== undefined) clearTimeout(timeoutId);
+  }
 }
 
 /**
@@ -198,6 +228,7 @@ export function useNeonSync(): void {
     };
 
     const resetSession = (status: 'checking' | 'unauthenticated' | 'unavailable'): void => {
+      rejectPendingTCGInvestmentSaves(status === 'unavailable' ? 'unavailable' : 'session-changed');
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = null;
       const resetState = preserveLocalPreferences(initialState, pickSyncState());
@@ -221,7 +252,9 @@ export function useNeonSync(): void {
       status: 'unauthenticated' | 'unavailable',
       preserveCollectionPage = false,
       failureMessage?: string,
+      reason: TCGInvestmentSaveFailure = status === 'unauthenticated' ? 'session-changed' : 'unavailable',
     ): void => {
+      rejectPendingTCGInvestmentSaves(reason);
       const acceptedState = acceptedSnapshotRef.current ?? initialState;
       const acceptedMetadata = acceptedMetadataRef.current
         ?? normalizeSyncMetadata(undefined, acceptedState);
@@ -275,8 +308,8 @@ export function useNeonSync(): void {
         let result: SaveResult;
         try {
           result = await saveRemoteState(payload, remoteUpdatedAtRef.current);
-        } catch {
-          if (!cancelled) rollbackPendingChange('unavailable', true);
+        } catch (error) {
+          if (!cancelled) rollbackPendingChange('unavailable', true, undefined, error instanceof InvalidRemoteStateError ? 'invalid' : 'unavailable');
           return;
         }
         if (cancelled) return;
@@ -286,8 +319,9 @@ export function useNeonSync(): void {
             data: payload,
             updatedAt: remoteUpdatedAtRef.current,
           };
+          const accepted = reconcileRemoteState(savedRemote.data as Partial<Snapshot>, extractSyncMetadata(savedRemote.data), deviceId);
+          const confirmed = accepted.state;
           try {
-            const confirmed = reconcileRemoteState(savedRemote.data as Partial<Snapshot>, extractSyncMetadata(savedRemote.data), deviceId).state;
             const previousAccepted = acceptedSnapshotRef.current;
             const removed = getPersistedTcgAddition(confirmed.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? []);
             if (removed && getPersistedTcgAddition(local.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? [])) {
@@ -319,11 +353,12 @@ export function useNeonSync(): void {
           // it will be sent by the next scheduled push.
           const current = pickSyncState();
           if (JSON.stringify(current) === JSON.stringify(local)) {
-            applyAcceptedState(reconciled.state, reconciled.metadata);
+            applyAcceptedState(confirmed, accepted.metadata);
           } else {
-            acceptedSnapshotRef.current = reconciled.state;
-            acceptedMetadataRef.current = reconciled.metadata;
+            acceptedSnapshotRef.current = confirmed;
+            acceptedMetadataRef.current = accepted.metadata;
           }
+          confirmTCGInvestmentSaves(local.tcgInvestments, confirmed.tcgInvestments);
           return;
         }
 
@@ -339,6 +374,7 @@ export function useNeonSync(): void {
             result.tooLarge
               ? i18n.t('tcg.custom_collections.document_too_large')
               : undefined,
+            result.tooLarge ? 'too-large' : 'unavailable',
           );
           return;
         }
@@ -359,7 +395,7 @@ export function useNeonSync(): void {
         }
       }
 
-      if (!cancelled) rollbackPendingChange('unavailable', true);
+      if (!cancelled) rollbackPendingChange('unavailable', true, undefined, 'conflict');
     };
 
     const startPush = (): void => {
@@ -452,13 +488,15 @@ export function useNeonSync(): void {
     else resetSession('unavailable');
     const onOnline = (): void => setOnlineVersion((version) => version + 1);
     const onOffline = (): void => {
+      cancelled = true;
       reportFallback('sync-unavailable', { feature: 'sync', operation: 'offline' });
-      setSyncAccessStatus('unavailable');
+      rollbackPendingChange('unavailable');
     };
     window.addEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
     return () => {
       cancelled = true;
+      rejectPendingTCGInvestmentSaves('session-changed');
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
       if (debounceRef.current) clearTimeout(debounceRef.current);

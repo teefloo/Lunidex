@@ -1,0 +1,25 @@
+{
+  "context": "Observed in Playwright on localhost:3000 using real TCGdex, 2026-10-20",
+  "firstDracaufeuSearch": {
+    "debounceMsFromSource": 300,
+    "catalogRequestDurationMs": 1365,
+    "catalogRequests": 1,
+    "detailRequestsBeforeSelection": 12,
+    "setRequestsBeforeSelection": 4,
+    "detailDurationRangeMs": [30, 126],
+    "displayedResults": 12,
+    "displayedPricesInPicker": 0
+  },
+  "refreshReference": {
+    "cardId": "base1-4",
+    "language": "fr",
+    "finish": "holo",
+    "amountEURBefore": 123.63,
+    "amountEURAfter": 123.63,
+    "providerUpdatedAt": "2026-10-19T13:13:24.137Z",
+    "observationWindowMs": 1200,
+    "newTCGdexRequests": 0,
+    "sourceExplanation": "detail.refetch reaches getTCGCard, which accepts memory and persistent price caches"
+  },
+  "warning": "Single session measurements. These are not a cold-cache benchmark or mobile network simulation."
+}

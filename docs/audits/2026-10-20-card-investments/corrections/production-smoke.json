@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "url": "http://127.0.0.1:3002/fr/tcg/investments?tcgLang=fr",
+  "proposedFinish": "holo",
+  "confirmedLots": 1,
+  "account": "isolated fixture, no remote writes",
+  "catalog": "real TCGdex",
+  "lot": "Dracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 1 · Date inconnue · 20,25 € × 1 + 0,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n20,25 €\nNon valorisé\n—\nPlus-value / moins-value latente\n—\nRendement des achats valorisés\n—\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes",
+  "pageErrors": []
+}

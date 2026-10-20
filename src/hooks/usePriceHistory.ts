@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { getSafePriceHistoryResponse, type PriceHistoryStatus } from '@/lib/tcg-price-history';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -31,14 +32,14 @@ export interface PriceTrend {
 async function fetchPriceHistory(
   cardId: string,
   days: 7 | 30 | 90,
-): Promise<PriceHistoryEntry[]> {
-  const params = new URLSearchParams({ days: String(days) });
+): Promise<{ history: PriceHistoryEntry[]; status: PriceHistoryStatus }> {
+  // A new contract key also avoids publicly cached legacy responses.
+  const params = new URLSearchParams({ days: String(days), qualification: 'required' });
   const res = await fetch(`/api/tcg/price-history/${encodeURIComponent(cardId)}?${params}`);
   if (!res.ok) {
     throw new Error(`Failed to fetch price history for ${cardId}: ${res.status}`);
   }
-  const data = (await res.json()) as { history?: PriceHistoryEntry[] };
-  return Array.isArray(data.history) ? data.history : [];
+  return getSafePriceHistoryResponse(await res.json());
 }
 
 // ---------------------------------------------------------------------------
@@ -47,15 +48,16 @@ async function fetchPriceHistory(
 
 /**
  * Fetches price history for a TCG card over the last N days.
- * staleTime is 30 min — data is polled server-side every 6h anyway.
+ * Legacy snapshots are withheld until a qualified series writer is available.
  */
 export function usePriceHistory(cardId: string, days: 7 | 30 | 90 = 30) {
-  return useQuery({
-    queryKey: ['tcg-price-history', cardId, days],
+  const query = useQuery({
+    queryKey: ['tcg-price-history', 'qualified-v2', cardId, days],
     queryFn: () => fetchPriceHistory(cardId, days),
     staleTime: 30 * 60 * 1000, // 30 min
     enabled: Boolean(cardId),
   });
+  return { ...query, data: query.data?.history, historyStatus: query.data?.status };
 }
 
 // ---------------------------------------------------------------------------

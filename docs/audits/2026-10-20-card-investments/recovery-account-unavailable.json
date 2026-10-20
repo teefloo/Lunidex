@@ -1,0 +1,6 @@
+{
+  "test": "account unavailable response 503",
+  "message": "Collection\nListe de souhaits\nInvestissements\nScellés\nINVESTISSEMENTS\n\nSuivez vos achats de cartes et la valeur de votre portefeuille en euros.\n\nSynchronisation de la collection\n\nVotre compte est bien connecté, mais vos données enregistrées sont temporairement indisponibles. Réessayez dans un instant.\n\nRÉESSAYER LA SYNCHRONISATION",
+  "purchaseButtonCount": 0,
+  "retryRecovered": true
+}

@@ -1,0 +1,384 @@
+[
+  {
+    "language": "fr",
+    "id": "base1-4",
+    "name": "Dracaufeu",
+    "catalogEUR": {
+      "amount": 123.63,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T15:00:51.926Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 123.63,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.926Z"
+        },
+        "investment": {
+          "amount": 123.63,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.926Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": 499.99,
+      "tcgplayer_mid": 587.98,
+      "tcgplayer_high": 3499.1,
+      "cardmarket_avg": 458.1,
+      "cardmarket_low": 95,
+      "cardmarket_trend": 0.02
+    }
+  },
+  {
+    "language": "en",
+    "id": "base1-4",
+    "name": "Charizard",
+    "catalogEUR": {
+      "amount": 123.63,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:24.118Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 123.63,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        },
+        "investment": {
+          "amount": 123.63,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 458.1,
+      "cardmarket_low": 95,
+      "cardmarket_trend": 0.02
+    }
+  },
+  {
+    "language": "fr",
+    "id": "swsh3-136",
+    "name": "Fouinar",
+    "catalogEUR": {
+      "amount": 0.05,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T15:00:51.903Z"
+    },
+    "standardFinishes": {
+      "normal": {
+        "collection": {
+          "amount": 0.05,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.903Z"
+        },
+        "investment": {
+          "amount": 0.05,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.903Z"
+        }
+      },
+      "reverse": {
+        "collection": {
+          "amount": 0.24,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.903Z"
+        },
+        "investment": null
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": 0.02,
+      "tcgplayer_mid": 0.25,
+      "tcgplayer_high": 25.27,
+      "cardmarket_avg": 0.07,
+      "cardmarket_low": 0.02,
+      "cardmarket_trend": 0.05
+    }
+  },
+  {
+    "language": "en",
+    "id": "swsh3-136",
+    "name": "Furret",
+    "catalogEUR": {
+      "amount": 0.05,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:24.124Z"
+    },
+    "standardFinishes": {
+      "normal": {
+        "collection": {
+          "amount": 0.05,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.124Z"
+        },
+        "investment": {
+          "amount": 0.05,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.124Z"
+        }
+      },
+      "reverse": {
+        "collection": {
+          "amount": 0.24,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.124Z"
+        },
+        "investment": null
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 0.07,
+      "cardmarket_low": 0.02,
+      "cardmarket_trend": 0.05
+    }
+  },
+  {
+    "language": "fr",
+    "id": "sv03.5-151",
+    "name": "Mew-ex",
+    "catalogEUR": {
+      "amount": 7.15,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:26.315Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 7.15,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:26.315Z"
+        },
+        "investment": {
+          "amount": 7.15,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:26.315Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 7.39,
+      "cardmarket_low": 3.98,
+      "cardmarket_trend": 7.15
+    }
+  },
+  {
+    "language": "en",
+    "id": "sv03.5-151",
+    "name": "Mew ex",
+    "catalogEUR": {
+      "amount": 7.15,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T15:00:51.926Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 7.15,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.926Z"
+        },
+        "investment": {
+          "amount": 7.15,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T15:00:51.926Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": 4.44,
+      "tcgplayer_mid": 8,
+      "tcgplayer_high": 110.54,
+      "cardmarket_avg": 7.39,
+      "cardmarket_low": 3.98,
+      "cardmarket_trend": 7.15
+    }
+  },
+  {
+    "language": "fr",
+    "id": "swsh10.5-010",
+    "name": "Dracaufeu",
+    "catalogEUR": {
+      "amount": 3.62,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:24.118Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 3.62,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        },
+        "investment": {
+          "amount": 3.62,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        }
+      },
+      "reverse": {
+        "collection": {
+          "amount": 3.62,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        },
+        "investment": null
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 3.04,
+      "cardmarket_low": 0.8,
+      "cardmarket_trend": 2.65
+    }
+  },
+  {
+    "language": "fr",
+    "id": "bw10-99",
+    "name": "Dialga EX",
+    "catalogEUR": null,
+    "standardFinishes": {
+      "normal": {
+        "collection": null,
+        "investment": null
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": null,
+      "cardmarket_low": null,
+      "cardmarket_trend": null
+    }
+  },
+  {
+    "language": "fr",
+    "id": "30th-c-001",
+    "name": "Dracaufeu",
+    "catalogEUR": {
+      "amount": 174.16,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:24.124Z"
+    },
+    "standardFinishes": {
+      "holo": {
+        "collection": {
+          "amount": 174.16,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.124Z"
+        },
+        "investment": {
+          "amount": 174.16,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.124Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 173.76,
+      "cardmarket_low": 128.5,
+      "cardmarket_trend": 174.16
+    }
+  },
+  {
+    "language": "fr",
+    "id": "xy12-11",
+    "name": "Dracaufeu",
+    "catalogEUR": {
+      "amount": 73.75,
+      "currency": "EUR",
+      "provider": "cardmarket",
+      "updatedAt": "2026-10-19T13:13:24.118Z"
+    },
+    "standardFinishes": {
+      "normal": {
+        "collection": {
+          "amount": 73.75,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        },
+        "investment": {
+          "amount": 73.75,
+          "currency": "EUR",
+          "provider": "cardmarket",
+          "updatedAt": "2026-10-19T13:13:24.118Z"
+        }
+      }
+    },
+    "withPrintingDescription": null,
+    "firstEdition": null,
+    "historyExtractor": {
+      "tcgplayer_low": null,
+      "tcgplayer_mid": null,
+      "tcgplayer_high": null,
+      "cardmarket_avg": 88.62,
+      "cardmarket_low": 20,
+      "cardmarket_trend": 73.75
+    }
+  }
+]

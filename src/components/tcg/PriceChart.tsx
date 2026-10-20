@@ -149,9 +149,17 @@ export function PriceChart({ cardId }: PriceChartProps) {
   const { t } = useTranslation();
   const interfaceLanguage = useClientLanguage();
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
-  const { data: history, isPending, isError } = usePriceHistory(cardId, days);
+  const { data: history, historyStatus, isPending, isError } = usePriceHistory(cardId, days);
 
   if (isPending) return <PriceChartSkeleton />;
+
+  if (!isError && historyStatus === 'unqualified-history') {
+    return (
+      <div className="rounded-2xl border border-border/55 bg-background/20 px-5 py-6 text-center text-xs text-muted-foreground">
+        {t('tcg.price_history_unqualified')}
+      </div>
+    );
+  }
 
   if (isError || !history || history.length === 0) {
     return (

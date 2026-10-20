@@ -1,0 +1,85 @@
+- dialog [active] [ref=f1e287]:
+  - heading "Enregistrer un achat" [level=2] [ref=f1e289]
+  - generic [ref=f1e290]:
+    - generic [ref=f1e291]:
+      - text: Langue des cartes
+      - combobox "Langue des cartes" [ref=f1e292]:
+        - option "anglais"
+        - option "français" [selected]
+        - option "espagnol"
+        - option "italien"
+        - option "portugais"
+        - option "portugais brésilien"
+        - option "portugais européen"
+        - option "allemand"
+        - option "néerlandais"
+        - option "polonais"
+        - option "russe"
+        - option "japonais"
+        - option "coréen"
+        - option "chinois (Taïwan)"
+        - option "indonésien"
+        - option "thaï"
+        - option "chinois (Chine)"
+    - generic [ref=f1e385]:
+      - paragraph [ref=f1e386]: Dracaufeu
+      - paragraph [ref=f1e387]: base1-4 · Set de Base
+      - button "Rechercher des cartes" [ref=f1e388]
+    - generic [ref=f1e389]:
+      - generic [ref=f1e390]:
+        - generic [ref=f1e391]:
+          - text: Édition / finition
+          - combobox "Édition / finition" [ref=f1e392]:
+            - option "Holo" [selected]
+            - option "Première édition"
+            - option "Autre édition (à préciser ci-dessous)"
+        - generic [ref=f1e393]:
+          - text: État
+          - combobox "État" [ref=f1e394]:
+            - option "Proche du neuf"
+            - option "Excellent"
+            - option "Bon"
+            - option "Légèrement joué"
+            - option "Joué"
+            - option "Mauvais"
+            - option "Certifiée"
+            - option "Inconnu" [selected]
+      - generic [ref=f1e395]:
+        - text: Précisions sur l’édition, le tampon ou la certification
+        - textbox "Précisions sur l’édition, le tampon ou la certification" [ref=f1e396]
+      - list [ref=f1e397]:
+        - listitem [ref=f1e398]: Holo · 4ffrmhcfiaejakhepqdkx7o
+        - listitem [ref=f1e399]: Holo · mtltux8qtgdu4exu903oasum21juxbvx6lx · 1re Édition
+        - listitem [ref=f1e400]: Holo · 3takscxpcqoqcfnxk1ivs2y6
+        - listitem [ref=f1e401]: Holo · zqq5g2u9n0st0gren5bssktmac2ywqaw
+      - generic [ref=f1e402]:
+        - generic [ref=f1e403]:
+          - text: Quantité
+          - spinbutton "Quantité" [ref=f1e404]: "1"
+        - generic [ref=f1e405]:
+          - text: Prix d’achat par carte (€)
+          - textbox "Prix d’achat par carte (€)" [ref=f1e406]
+        - generic [ref=f1e407]:
+          - text: Frais d’acquisition totaux (€)
+          - textbox "Frais d’acquisition totaux (€)" [ref=f1e408]: "0"
+        - generic [ref=f1e409]:
+          - text: Date d’acquisition (facultative)
+          - textbox "Date d’acquisition (facultative)" [ref=f1e410]
+      - paragraph [ref=f1e411]: Les prix sont unitaires. Les frais concernent tout l’achat. Laissez l’estimation vide si elle est inconnue.
+      - generic [ref=f1e412]:
+        - paragraph [ref=f1e413]: Référence indicative Cardmarket
+        - paragraph [ref=f1e414]: 123,63 €
+        - paragraph [ref=f1e425]: "Date de valorisation (facultative): 2026-10-19T13:13:24.137Z"
+        - paragraph [ref=f1e415]: Les prix TCGdex ne certifient ni la langue, ni l’état, ni l’édition. Vérifiez votre exemplaire avant de saisir une estimation manuelle. Ces références sont exclues des totaux.
+        - button "Actualiser la référence" [ref=f1e416]
+      - generic [ref=f1e417]:
+        - generic [ref=f1e418]:
+          - text: Estimation actuelle par carte (€, facultative)
+          - textbox "Estimation actuelle par carte (€, facultative)" [ref=f1e419]
+        - generic [ref=f1e420]:
+          - text: Date de valorisation (facultative)
+          - textbox "Date de valorisation (facultative)" [ref=f1e421]
+      - generic [ref=f1e422]:
+        - button "Enregistrer" [ref=f1e423]
+        - button "Annuler" [ref=f1e424]
+  - button "Fermer" [ref=f1e296]

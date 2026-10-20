@@ -1,0 +1,100 @@
+- dialog [ref=f5e733]:
+  - button "Fermer" [active] [ref=f5e734]
+  - generic [ref=f5e738]:
+    - complementary [ref=f5e739]:
+      - generic [ref=f5e740]:
+        - button "Voir les détails de Dracaufeu" [ref=f5e741] [cursor=pointer]:
+          - generic:
+            - img "Dracaufeu"
+        - generic [ref=f5e742]:
+          - generic [ref=f5e743]: Collection Classique30ᵉ Anniversaire
+          - generic [ref=f5e744]: "#001"
+    - generic [ref=f5e746]:
+      - banner [ref=f5e747]:
+        - generic [ref=f5e748]:
+          - generic [ref=f5e749]: Pokémon
+          - generic [ref=f5e750]: Sans Rareté
+          - generic [ref=f5e751]: Niveau 2
+        - generic [ref=f5e752]:
+          - heading "Dracaufeu" [level=2] [ref=f5e753]
+          - generic [ref=f5e754]:
+            - generic [ref=f5e755]: PV
+            - generic [ref=f5e756]: "120"
+        - paragraph [ref=f5e757]: Aucune description complémentaire disponible.
+        - generic [ref=f5e758]:
+          - button "Comparer" [ref=f5e759]
+          - button "Ajouter Dracaufeu à ma collection" [ref=f5e760]: Ajouter
+          - button "Liste de souhaits" [ref=f5e761]
+          - button "Partager" [ref=f5e762]
+          - button "Organiser dans mes collections" [ref=f5e763]
+      - generic [ref=f5e767]:
+        - generic [ref=f5e768]:
+          - paragraph [ref=f5e773]: Prix marché
+          - generic [ref=f5e774]:
+            - paragraph [ref=f5e775]: 174,16 €
+            - paragraph [ref=f5e776]: via Cardmarket
+        - link "Voir sur Cardmarket" [ref=f5e777] [cursor=pointer]:
+          - /url: https://www.cardmarket.com/fr/Pokemon/Products?idProduct=907940
+      - generic [ref=f5e782]:
+        - generic [ref=f5e783]: Extension
+        - generic [ref=f5e786]:
+          - generic [ref=f5e787]:
+            - generic [ref=f5e788]: Extension
+            - generic [ref=f5e793]: Collection Classique30ᵉ Anniversaire
+          - generic [ref=f5e794]:
+            - generic [ref=f5e795]: N° collector
+            - generic [ref=f5e799]: "#001 / 30"
+          - generic [ref=f5e800]:
+            - generic [ref=f5e801]: Illustrateur
+            - link "Voir les cartes illustrées par Mitsuhiro Arita" [ref=f5e808] [cursor=pointer]:
+              - /url: /fr/tcg/illustrators/mitsuhiro%20arita?tcgLang=fr
+              - text: Mitsuhiro Arita
+          - generic [ref=f5e809]:
+            - generic [ref=f5e810]: Réglementation
+            - generic [ref=f5e814]: Aucun
+          - generic [ref=f5e815]:
+            - generic [ref=f5e816]: Page du Pokémon
+            - link "Ouvrir la page du Pokémon" [ref=f5e823] [cursor=pointer]:
+              - /url: /fr/pokemon/6
+      - generic [ref=f5e824]:
+        - generic [ref=f5e825]: Pokémon
+        - generic [ref=f5e828]:
+          - generic [ref=f5e829]:
+            - generic [ref=f5e830]: Types de Pokémon
+            - generic [ref=f5e834]: Feu
+          - generic [ref=f5e835]:
+            - generic [ref=f5e836]: Stade
+            - generic [ref=f5e840]: Niveau 2
+          - generic [ref=f5e841]:
+            - generic [ref=f5e842]: Évolue de
+            - generic [ref=f5e847]: Aucun
+        - generic [ref=f5e848]:
+          - generic [ref=f5e849]:
+            - generic [ref=f5e850]: Faiblesses
+            - generic [ref=f5e854]: Eau ×2
+          - generic [ref=f5e855]:
+            - generic [ref=f5e856]: Résistances
+            - generic [ref=f5e860]: Combat -30
+          - generic [ref=f5e861]:
+            - generic [ref=f5e862]: Coût de retraite
+            - generic [ref=f5e866]: ● ● ●
+        - generic [ref=f5e867]:
+          - generic [ref=f5e868]: Talents
+          - generic [ref=f5e872]:
+            - heading "Combustion d'Énergie" [level=3] [ref=f5e877]
+            - paragraph [ref=f5e878]: Aussi souvent que vous le souhaitez pendant votre tour (avant votre attaque), vous pouvez transformer toutes les Énergies attachées à Dracaufeu en Énergies Fire jusqu'à la fin du tour. Ce pouvoir ne peut être utilisé si Dracaufeu est Endormi, Confus ou Paralysé.
+        - generic [ref=f5e879]:
+          - generic [ref=f5e880]: Capacités
+          - generic [ref=f5e884]:
+            - generic [ref=f5e885]:
+              - generic [ref=f5e886]:
+                - generic [ref=f5e887]:
+                  - generic [ref=f5e888]: Feu
+                  - generic [ref=f5e889]: Feu
+                  - generic [ref=f5e890]: Feu
+                  - generic [ref=f5e891]: Feu
+                - heading "Danseflamme" [level=4] [ref=f5e892]
+              - generic [ref=f5e893]: "100"
+            - paragraph [ref=f5e894]: Défaussez 2 cartes Énergies attachées à Dracaufeu pour pouvoir utiliser cette attaque.
+      - link "Ouvrir les données brutes" [ref=f5e899] [cursor=pointer]:
+        - /url: https://api.tcgdex.net/v2/fr/cards/30th-c-001

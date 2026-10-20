@@ -1,0 +1,48 @@
+{
+  "commit": "b606d9209ce995325b82fed2b3a6fa776b7c1a83",
+  "date": "2026-10-20",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "filesPassed": 139,
+      "testsPassed": 725
+    },
+    {
+      "command": "E2E_INVESTMENTS=1 ./node_modules/.bin/playwright test e2e/tcg-investments.spec.ts",
+      "exitCode": 0,
+      "testsPassed": 5,
+      "accountAndCatalog": "mocked"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "note": "Repeated after restoring Next-generated configuration changes"
+    },
+    {
+      "command": "npx --no-install tsc --project packages/core/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run seo:check",
+      "exitCode": 0,
+      "scope": "source checks only"
+    },
+    {
+      "command": "node docs/audits/2026-10-20-card-investments/price-probe.mjs",
+      "exitCode": 0,
+      "networkAndDatabase": false
+    },
+    {
+      "command": "git diff --exit-code -- src packages next-env.d.ts tsconfig.json graphify-out/cache/last_query_stamp",
+      "exitCode": 0
+    }
+  ],
+  "applicationCodeModified": false,
+  "investmentWritesToRealAccount": false,
+  "newProductionBuildRun": false
+}

@@ -94,6 +94,48 @@ describe('TCG cancellation and shared requests', () => {
     await expect(getTCGCard('base1-4', 'fr', controller.signal)).rejects.toMatchObject({ name: 'AbortError' });
     expect(mocks.get).not.toHaveBeenCalled();
   });
+  it('explicit refresh replaces both memory and persistent cached prices', async () => {
+    const cached: TCGCard = { id: 'base1-4', localId: '4', name: 'Cached Charizard', image: 'https://assets.tcgdex.net/en/base/base1/4' };
+    mocks.getCachedData.mockResolvedValue(cached);
+    mocks.get.mockResolvedValue({ data: { ...cached, name: 'Fresh Charizard' } });
+    const { getTCGCard } = await import('./tcg');
+
+    await expect(getTCGCard('base1-4', 'en')).resolves.toMatchObject({ name: 'Cached Charizard' });
+    await expect(getTCGCard('base1-4', 'en', undefined, { forceRefresh: true }))
+      .resolves.toMatchObject({ name: 'Fresh Charizard' });
+    expect(mocks.get).toHaveBeenCalledOnce();
+    expect(mocks.setCachedData).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ name: 'Fresh Charizard' }));
+  });
+  it('explicit refresh bypasses a cached missing card failure', async () => {
+    mocks.get.mockRejectedValueOnce(Object.assign(new Error('Missing'), { response: { status: 404 } }));
+    const { getTCGCard } = await import('./tcg');
+    await expect(getTCGCard('base1-4', 'en')).resolves.toBeNull();
+    mocks.get.mockResolvedValue({ data: { id: 'base1-4', localId: '4', name: 'Charizard', image: 'https://assets.tcgdex.net/en/base/base1/4' } });
+
+    await expect(getTCGCard('base1-4', 'en', undefined, { forceRefresh: true }))
+      .resolves.toMatchObject({ name: 'Charizard' });
+    expect(mocks.get).toHaveBeenCalledTimes(2);
+  });
+  it('explicit refresh reports an upstream failure instead of returning stale pricing', async () => {
+    const failure = Object.assign(new Error('Upstream unavailable'), { response: { status: 503 } });
+    mocks.getCachedData.mockResolvedValue({ id: 'base1-4', localId: '4', name: 'Stale Charizard' });
+    mocks.get.mockRejectedValue(failure);
+    const { getTCGCard } = await import('./tcg');
+
+    await expect(getTCGCard('base1-4', 'fr', undefined, { forceRefresh: true })).rejects.toBe(failure);
+    expect(mocks.get.mock.calls.map(([path]) => path)).toEqual(['/fr/cards/base1-4']);
+    expect(mocks.setCachedData).not.toHaveBeenCalled();
+  });
+  it('retains searchable card summaries when optional visual metadata is unavailable', async () => {
+    mocks.get.mockImplementation((path: string) => {
+      if (path.startsWith('/fr/cards?')) return Promise.resolve({ data: [{ id: 'base1-4', localId: '4', name: 'Dracaufeu' }] });
+      return Promise.reject(Object.assign(new Error('Unavailable detail'), { response: { status: 503 } }));
+    });
+    const { searchCards, DEFAULT_TCG_CARD_FILTERS } = await import('./tcg');
+
+    await expect(searchCards({ ...DEFAULT_TCG_CARD_FILTERS, searchTerm: 'Dracaufeu', sortBy: 'name' }, 'fr', 1, 48, undefined, undefined, undefined, false, { allowEnglishFallback: false }))
+      .resolves.toMatchObject({ cards: [{ id: 'base1-4', name: 'Dracaufeu' }] });
+  });
   it('keeps English fallback data out of strict localized card lookups', async () => {
     let frenchRequests = 0;
     mocks.get.mockImplementation((path: string) => {

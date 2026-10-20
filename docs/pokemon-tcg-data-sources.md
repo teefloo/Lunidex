@@ -28,7 +28,7 @@ Lunidex uses the TCGdex v2 API:
 ```ts
 const tcgClient = axios.create({
   baseURL: 'https://api.tcgdex.net/v2',
-  timeout: 30_000,
+  timeout: 10_000,
 });
 ```
 
@@ -36,7 +36,7 @@ The client retries network/idempotent failures and HTTP `429` responses with exp
 
 ```ts
 axiosRetry(tcgClient, {
-  retries: 3,
+  retries: 1,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) =>
     axiosRetry.isNetworkOrIdempotentRequestError(error) ||

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, TrendingUp } from 'lucide-react';
 import { summarizeTCGInvestments, valueTCGInvestment, type TCGInvestment } from '@primedex/core/lib/tcg-investments';
@@ -15,7 +16,8 @@ import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { encodeTCGCollectionKey, getTCGCollectionCardQuantity } from '@/lib/tcg-collections';
-import { getTCGCardLanguageName } from '@/lib/tcg-language';
+import { getTCGCardLanguageName, resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
+import type { SyncAccessStatus } from '@/store/sync-access';
 import { cn } from '@/lib/utils';
 import { TCGPageTabs } from './TCGPageTabs';
 import { investmentSelectClass, TCGInvestmentForm } from './TCGInvestmentForm';
@@ -23,19 +25,16 @@ import { investmentSelectClass, TCGInvestmentForm } from './TCGInvestmentForm';
 const PAGE_SIZE = 20;
 const performanceClass = (gain: number | null) => gain === null || gain === 0 ? 'text-foreground' : gain > 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300';
 
-function InvestmentPortfolio() {
+function InvestmentPortfolio({ onEdit, notice, setNotice }: { onEdit: (lot: TCGInvestment | 'new') => void; notice: string; setNotice: (notice: string) => void }) {
   const { t, i18n } = useTranslation();
   const localeHref = useLocaleHref();
   const lots = usePrimeDexStore((state) => state.tcgInvestments);
   const collectionCards = usePrimeDexStore((state) => state.tcgCollectionCards);
-  const language = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const remove = usePrimeDexStore((state) => state.deleteTCGInvestment);
-  const [form, setForm] = useState<TCGInvestment | 'new' | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(0);
-  const [notice, setNotice] = useState('');
   const summary = summarizeTCGInvestments(lots);
   const money = (cents: number | null) => cents === null ? '—' : new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(cents / 100);
   const signedMoney = (cents: number | null) => cents === null ? '—' : `${cents > 0 ? '+' : ''}${money(cents)}`;
@@ -58,13 +57,13 @@ function InvestmentPortfolio() {
   return <>
     <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
       <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('investments.inventory_note')}</p>
-      <Button onClick={() => { setNotice(''); setForm('new'); }}><Plus aria-hidden="true" />{t('investments.add')}</Button>
+      <Button onClick={() => { setNotice(''); onEdit('new'); }}><Plus aria-hidden="true" />{t('investments.add')}</Button>
     </div>
     <dl className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {metrics.map((metric) => <div key={metric.label} className="page-surface min-w-0 p-5"><dt className="text-sm text-muted-foreground">{metric.label}</dt><dd className={cn('mt-3 break-words text-2xl font-black tabular-nums sm:text-3xl', performanceClass(metric.gain ?? null))}>{metric.value}</dd></div>)}
     </dl>
     <p className={cn('my-4 rounded-sm border p-4 text-sm', summary.unvaluedQuantity ? 'border-amber-500/40 bg-amber-500/5' : 'border-border/60 text-muted-foreground')}>
-      {summary.unvaluedQuantity ? t('investments.partial', { count: summary.unvaluedQuantity, amount: money(summary.unvaluedCostCents) }) : lots.length ? t('investments.complete') : t('investments.empty_hint')}
+      {summary.unvaluedQuantity ? t(summary.unvaluedQuantity === 1 ? 'investments.partial_one' : 'investments.partial', { count: summary.unvaluedQuantity, amount: money(summary.unvaluedCostCents) }) : lots.length ? t('investments.complete') : t('investments.empty_hint')}
     </p>
     <p role="status" className="mb-4 text-sm text-muted-foreground">{notice}</p>
     {lots.length === 0 ? <div className="page-surface py-14 text-center"><TrendingUp aria-hidden="true" className="mx-auto mb-4 size-8 text-muted-foreground" /><h2 className="text-xl font-bold">{t('investments.empty')}</h2><p className="mx-auto mt-2 max-w-lg px-4 text-sm text-muted-foreground">{t('investments.empty_hint')}</p></div> : <>
@@ -73,7 +72,7 @@ function InvestmentPortfolio() {
         <select aria-label={t('investments.filter')} className={cn(investmentSelectClass, 'mt-0')} value={filter} onChange={(event) => { setFilter(event.target.value); setPage(0); }}><option value="all">{t('investments.all')}</option><option value="missing">{t('investments.missing')}</option></select>
         <select aria-label={t('investments.sort')} className={cn(investmentSelectClass, 'mt-0')} value={sort} onChange={(event) => { setSort(event.target.value); setPage(0); }}><option value="newest">{t('investments.newest')}</option><option value="best">{t('investments.best')}</option><option value="cost">{t('investments.cost')}</option></select>
       </div>
-      {filtered.length === 0 && <p role="status" className="py-10 text-center text-muted-foreground">{t('tcg.custom_collections.no_results')}</p>}
+      {filtered.length === 0 && <p role="status" className="py-10 text-center text-muted-foreground">{t('investments.no_purchases')}</p>}
       <ul className="space-y-4">
         {filtered.slice(activePage * PAGE_SIZE, (activePage + 1) * PAGE_SIZE).map((lot) => {
           const value = valueTCGInvestment(lot);
@@ -88,7 +87,7 @@ function InvestmentPortfolio() {
                 <p className="mt-2 text-xs text-muted-foreground">{t('investments.quantity')}: {lot.quantity} · {date(lot.acquiredOn)} · {money(lot.unitCostCents)} × {lot.quantity} + {money(lot.feesCents)}</p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" onClick={() => setForm(lot)}>{t('investments.edit')}</Button>
+                <Button variant="outline" onClick={() => onEdit(lot)}>{t('investments.edit')}</Button>
                 <Button variant="ghost" onClick={() => { if (window.confirm(t('investments.delete_confirm')) && !remove(lot.id)) setNotice(t('tcg.custom_collections.delete_error')); }}>{t('tcg.custom_collections.delete')}</Button>
               </div>
             </div>
@@ -107,11 +106,23 @@ function InvestmentPortfolio() {
       </ul>
       {lastPage > 0 && <div className="mt-5 flex items-center justify-center gap-4"><Button variant="outline" disabled={activePage === 0} onClick={() => setPage(activePage - 1)}>{t('tcg.custom_collections.previous')}</Button><span className="text-sm tabular-nums">{activePage + 1} / {lastPage + 1}</span><Button variant="outline" disabled={activePage === lastPage} onClick={() => setPage(activePage + 1)}>{t('tcg.custom_collections.next')}</Button></div>}
     </>}
+  </>;
+}
+
+function InvestmentWorkspace({ status }: { status: SyncAccessStatus }) {
+  const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
+  const language = resolveRequestedTCGCardLanguage(searchParams.get('tcgLang')) ?? browseLanguage;
+  const [form, setForm] = useState<TCGInvestment | 'new' | null>(null);
+  const [notice, setNotice] = useState('');
+  return <>
+    {status === 'ready' ? <InvestmentPortfolio onEdit={(lot) => { setNotice(''); setForm(lot); }} notice={notice} setNotice={setNotice} /> : status === 'unauthenticated' ? <SyncRequiredPanel headingLevel={2} /> : <SyncStatusPanel status={status} headingLevel={2} />}
     {form && <TCGInvestmentForm key={typeof form === 'string' ? form : form.id} lot={typeof form === 'string' ? undefined : form} language={language} onClose={() => setForm(null)} onSaved={() => { setForm(null); setNotice(t('investments.saved')); }} />}
   </>;
 }
 
-export function TCGInvestmentsPage() {
+function TCGInvestmentsPageContent() {
   const { t } = useTranslation();
   const { user, loading } = useAuth();
   const status = useSyncAccessStatus();
@@ -119,6 +130,10 @@ export function TCGInvestmentsPage() {
   return <div className="app-page"><Header /><main className="page-shell page-shell--header-offset pb-40" aria-labelledby="investments-title">
     <TCGPageTabs />
     <div className="mb-6"><h1 id="investments-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">{t('investments.title')}</h1><p className="mt-2 text-sm text-muted-foreground">{t('investments.subtitle')}</p></div>
-    {loading || !hydrated ? <p role="status">{t('tcg.custom_collections.loading')}</p> : !user || status === 'unauthenticated' ? <SyncRequiredPanel headingLevel={2} /> : status !== 'ready' ? <SyncStatusPanel status={status} headingLevel={2} /> : <InvestmentPortfolio key={user.id} />}
+    {loading || !hydrated ? <p role="status">{t('tcg.custom_collections.loading')}</p> : !user ? <SyncRequiredPanel headingLevel={2} /> : <InvestmentWorkspace key={user.id} status={status} />}
   </main></div>;
+}
+
+export function TCGInvestmentsPage() {
+  return <Suspense><TCGInvestmentsPageContent /></Suspense>;
 }

@@ -1,0 +1,9 @@
+{
+  "test": "413 rejected new acquisition",
+  "lots": 2,
+  "dialogCount": 0,
+  "main": "Collection\nListe de souhaits\nInvestissements\nScellés\nINVESTISSEMENTS\n\nSuivez vos achats de cartes et la valeur de votre portefeuille en euros.\n\nLes achats utilisent les mêmes identifiants de carte que votre collection. Enregistrer un achat ne modifie pas les quantités de l’inventaire.\n\nEnregistrer un achat\nMontant total investi\n105,75 €\nValeur connue du portefeuille\n105,00 €\nPlus-value / moins-value latente\n-0,75 €\nRendement des achats valorisés\n-0,71 %\n\nTous les achats sont valorisés. Le rendement inclut les frais.\n\nAchat enregistré dans cette session. Le compte synchronise les modifications automatiquement.\n\nTous les achats\nAchats non valorisés\nAcquisition la plus récente\nPlus-value la plus élevée\nInvestissement le plus élevé\nDracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 1 · Date inconnue · 40,00 € × 1 + 0,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n40,00 €\nEstimation manuelle\n0,00 €\nPlus-value / moins-value latente\n-40,00 €\nRendement des achats valorisés\n-100 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes\nDracaufeu\n\nbase1-4 · français · Holo · Inconnu\n\nQuantité: 3 · Date inconnue · 20,25 € × 3 + 5,00 €\n\nModifier l’achat\nSupprimer\nMontant total investi\n65,75 €\nEstimation manuelle\n105,00 €\nPlus-value / moins-value latente\n+39,25 €\nRendement des achats valorisés\n+59,7 %\nDate de valorisation (facultative): Date inconnue\nInventaire correspondant : 0 cartes",
+  "banners": [
+    "Investissements | Lunidex"
+  ]
+}

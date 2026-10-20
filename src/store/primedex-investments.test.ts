@@ -40,6 +40,16 @@ describe('private card investments', () => {
     expect(usePrimeDexStore.getState().deleteTCGInvestment(lot.id)).toBe(false);
     expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
   });
+  it('reuses a creation UUID on retry and preserves an existing purchase creation time', () => {
+    usePrimeDexStore.setState({ tcgInvestments: [lot] });
+    expect(usePrimeDexStore.getState().saveTCGInvestment({ ...input, quantity: 3 }, undefined, lot.id)).toBe(lot.id);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
+    expect(usePrimeDexStore.getState().tcgInvestments[0]).toMatchObject({ id: lot.id, quantity: 3, createdAt: '2026-10-19T10:00:00.000Z' });
+  });
+  it('rejects an invalid creation UUID without inserting a different purchase', () => {
+    expect(usePrimeDexStore.getState().saveTCGInvestment(input, undefined, 'invalid')).toBeNull();
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+  });
   it('validates remote and backup data and reads older snapshots as an empty portfolio', () => {
     expect(normalizeUserStateData({ tcgInvestments: [lot] })?.tcgInvestments).toEqual([lot]);
     expect(normalizeUserStateData({ tcgInvestments: [{ ...lot, feesCents: -1 }] })).toBeNull();

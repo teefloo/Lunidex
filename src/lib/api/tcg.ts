@@ -706,11 +706,13 @@ function shouldHydrateForLocalFilters(card: TCGCard, filters: TCGCardFilters): b
 /**
  * Fetch a single card by ID with full details.
  */
-interface GetTCGCardOptions {
+export interface GetTCGCardOptions {
   /** Keep a localized response localized instead of replacing it with English data. */
   allowEnglishFallback?: boolean;
   /** Bypass cached card summaries until a market price is available. */
   requirePricing?: boolean;
+  /** Revalidate with TCGdex, bypassing caches and stale/summary fallbacks. */
+  forceRefresh?: boolean;
 }
 
 async function getTCGCardUncached(
@@ -732,20 +734,20 @@ async function getTCGCardUncached(
   // that fallback for a card actually published in the selected language.
   const cacheKey = getTcgCardCacheKey(cardId, tcgLang, !allowEnglishFallback);
   const failureCacheKey = getTcgCardFailureCacheKey(cacheKey, options);
-  const memoryCached = tcgCardMemoryCache.get(cacheKey);
+  const memoryCached = options.forceRefresh ? undefined : tcgCardMemoryCache.get(cacheKey);
   if (memoryCached && (!options.requirePricing || hasMarketPrice(memoryCached))) {
     throwIfAborted(signal);
     return memoryCached;
   }
 
   try {
-    const cached = await getCachedData<TCGCard>(cacheKey);
+    const cached = options.forceRefresh ? null : await getCachedData<TCGCard>(cacheKey);
     if (cached && (!options.requirePricing || hasMarketPrice(cached))) {
       tcgCardMemoryCache.set(cacheKey, cached);
       return cached;
     }
 
-    const failure = tcgCardFailureCache.get(failureCacheKey);
+    const failure = options.forceRefresh ? undefined : tcgCardFailureCache.get(failureCacheKey);
     if (failure) {
       throwIfAborted(signal);
       const staleCard = await getCachedData<TCGCard>(cacheKey, true);
@@ -781,6 +783,9 @@ async function getTCGCardUncached(
     return null;
   } catch (error) {
     if (signal?.aborted) throw error;
+    // An explicit refresh must report its actual outcome. Returning a stale
+    // price or another language's card would misrepresent it as revalidated.
+    if (options.forceRefresh) throw error;
 
     // A stale localized card is already a better result than triggering an
     // English detail request and a set-summary request. Keep the existing
@@ -876,6 +881,7 @@ export const getTCGCard = async (
     cacheKey,
     options.allowEnglishFallback === false ? 'localized-only' : 'english-fallback',
     options.requirePricing ? 'pricing-required' : 'standard',
+    options.forceRefresh ? 'refresh' : 'cached',
   ].join(':');
 
   return dedupeTcgRequest(pendingTcgCardRequests, requestKey, () =>
@@ -913,8 +919,14 @@ async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, sign
 
     if (!needsVisualMetadata(card)) return card;
 
-    const fullCard = await getTCGCard(card.id, lang, signal, options);
-    return fullCard ?? card;
+    try {
+      const fullCard = await getTCGCard(card.id, lang, signal, options);
+      return fullCard ?? card;
+    } catch {
+      throwIfAborted(signal);
+      // Optional visual enrichment must not discard a valid catalog result.
+      return card;
+    }
   });
 }
 

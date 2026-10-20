@@ -35,6 +35,13 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { usePrimeDexStore } from '@/store/primedex';
 import { retrySyncAccess, setSyncAccessStatus } from '@/store/sync-access';
 import { useNeonSync } from './useSupabaseSync';
+import { saveTCGInvestmentConfirmed } from '@/lib/tcg-investment-save';
+import type { TCGInvestment } from '@primedex/core/lib/tcg-investments';
+
+const investmentInput: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'> = {
+  cardId: 'base1-1', cardName: 'Alakazam', setId: 'base1', language: 'en', variant: 'normal', printing: '',
+  condition: 'unknown', quantity: 1, unitCostCents: 2000, feesCents: 0, acquiredOn: null, valuation: null,
+};
 
 function response(status: number, payload: unknown): Response {
   return {
@@ -179,5 +186,215 @@ describe('account sync initialization', () => {
     });
     expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
     expect(container.querySelector('output')?.textContent).toBe('unauthenticated');
+  });
+
+  it('keeps an investment save pending until its PUT succeeds', async () => {
+    let accept: (value: Response) => void = () => undefined;
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce(() => new Promise<Response>((resolve) => { accept = resolve; }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    let settled = false;
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    void save.then(() => { settled = true; });
+    const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    expect(settled).toBe(false);
+
+    await act(async () => {
+      accept(response(200, { data: { tcgInvestments: [lot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+    });
+    expect(settled).toBe(true);
+    await expect(save).resolves.toEqual({ ok: true, id: lot.id });
+  });
+
+  it('reports an oversized investment write as failed and restores the accepted lots', async () => {
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await expect(save).resolves.toEqual({ ok: false, reason: 'too-large' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(container.querySelector('output')?.textContent).toBe('ready');
+  });
+
+  it('does not acknowledge a later concurrent edit with the earlier PUT response', async () => {
+    const accept: Array<(value: Response) => void> = [];
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementation(() => new Promise<Response>((resolve) => { accept.push(resolve); }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const first = saveTCGInvestmentConfirmed(investmentInput);
+    const initialLot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    let secondSettled = false;
+    const second = saveTCGInvestmentConfirmed({ ...investmentInput, quantity: 2 }, initialLot.id);
+    void second.then(() => { secondSettled = true; });
+    const laterLot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => {
+      accept[0](response(200, { data: { tcgInvestments: [initialLot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+    });
+    await expect(first).resolves.toEqual({ ok: true, id: initialLot.id });
+    expect(secondSettled).toBe(false);
+    expect(usePrimeDexStore.getState().tcgInvestments[0].quantity).toBe(2);
+    await act(async () => {
+      accept[1](response(200, { data: { tcgInvestments: [laterLot] }, updatedAt: '2026-10-20T10:00:01.000Z' }));
+    });
+    await expect(second).resolves.toEqual({ ok: true, id: laterLot.id });
+  });
+
+  it('bounds a hung PUT and ignores a late acceptance after rolling back', async () => {
+    let accept: (value: Response) => void = () => undefined;
+    let signal: AbortSignal | undefined;
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce((_url, options: RequestInit) => {
+        signal = options.signal ?? undefined;
+        return new Promise<Response>((resolve) => { accept = resolve; });
+      });
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => vi.advanceTimersByTimeAsync(5100));
+    await expect(save).resolves.toEqual({ ok: false, reason: 'unavailable' });
+    expect(signal?.aborted).toBe(true);
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    await act(async () => {
+      accept(response(200, { data: { tcgInvestments: [lot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+    });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+  });
+
+  it('rejects a pending save when the account changes', async () => {
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    await act(async () => {
+      root.render(createElement(AuthContext.Provider, { value: { enabled: true, loading: false, user: { id: 'account-b' } } as never }, createElement(SyncProbe)));
+    });
+    await expect(save).resolves.toEqual({ ok: false, reason: 'session-changed' });
+  });
+
+  it('does not report success when the accepted snapshot omits the requested lot', async () => {
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockResolvedValueOnce(response(200, { data: { tcgInvestments: [] }, updatedAt: '2026-10-20T10:00:00.000Z' }))
+      .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await expect(save).resolves.toEqual({ ok: false, reason: 'conflict' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+
+    // A later rejected mutation must roll back to the server's accepted state,
+    // without resurrecting the investment excluded from the earlier response.
+    await act(async () => {
+      usePrimeDexStore.setState({ tcgWishlistCards: ['base1-2'] });
+      await vi.advanceTimersByTimeAsync(100);
+    });
+    expect(usePrimeDexStore.getState().tcgWishlistCards).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+  });
+
+  it('preserves a newer in-flight edit but rolls its failure back to the actual accepted snapshot', async () => {
+    const respond: Array<(value: Response) => void> = [];
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementation(() => new Promise<Response>((resolve) => { respond.push(resolve); }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const first = saveTCGInvestmentConfirmed(investmentInput);
+    const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    const newer = saveTCGInvestmentConfirmed({ ...investmentInput, quantity: 2 }, lot.id);
+    await act(async () => {
+      respond[0](response(200, { data: { tcgInvestments: [] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+    });
+    await expect(first).resolves.toEqual({ ok: false, reason: 'conflict' });
+    expect(usePrimeDexStore.getState().tcgInvestments[0].quantity).toBe(2);
+
+    await act(async () => { respond[1](response(413, { error: 'State payload is too large' })); });
+    await expect(newer).resolves.toEqual({ ok: false, reason: 'too-large' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+  });
+
+  it('rejects an invalid successful write response instead of assuming the request was accepted', async () => {
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockResolvedValueOnce(response(200, { updatedAt: '2026-10-20T10:00:00.000Z' }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await expect(save).resolves.toEqual({ ok: false, reason: 'invalid' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+  });
+
+  it('rejects an in-flight save when offline and ignores its later completion', async () => {
+    let accept: (value: Response) => void = () => undefined;
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce(() => new Promise<Response>((resolve) => { accept = resolve; }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await act(async () => { window.dispatchEvent(new Event('offline')); });
+    await expect(save).resolves.toEqual({ ok: false, reason: 'unavailable' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    await act(async () => {
+      accept(response(200, { data: { tcgInvestments: [lot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+    });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(container.querySelector('output')?.textContent).toBe('unavailable');
+  });
+
+  it('retries an ambiguous timed-out creation with the same UUID after the server committed it', async () => {
+    const creationId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
+    let committed: { data: object; expectedUpdatedAt: string | null } | undefined;
+    const acceptedWrites: Array<{ tcgInvestments: TCGInvestment[] }> = [];
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce((_url, options: RequestInit) => {
+        committed = JSON.parse(options.body as string) as typeof committed;
+        return new Promise<Response>(() => undefined);
+      })
+      .mockImplementationOnce(() => Promise.resolve(response(409, { data: committed?.data, updatedAt: '2026-10-20T10:00:00.000Z' })))
+      .mockImplementationOnce((_url, options: RequestInit) => {
+        const payload = JSON.parse(options.body as string) as { data: { tcgInvestments: TCGInvestment[] } };
+        acceptedWrites.push(payload.data);
+        return Promise.resolve(response(200, { data: payload.data, updatedAt: '2026-10-20T10:00:01.000Z' }));
+      });
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const first = saveTCGInvestmentConfirmed(investmentInput, undefined, creationId);
+    expect(usePrimeDexStore.getState().tcgInvestments[0].id).toBe(creationId);
+    await act(async () => vi.advanceTimersByTimeAsync(5100));
+    await expect(first).resolves.toEqual({ ok: false, reason: 'unavailable' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    const retry = saveTCGInvestmentConfirmed(investmentInput, undefined, creationId);
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    await expect(retry).resolves.toEqual({ ok: true, id: creationId });
+    expect(acceptedWrites).toHaveLength(1);
+    expect(acceptedWrites[0].tcgInvestments.map((lot) => lot.id)).toEqual([creationId]);
+    expect(usePrimeDexStore.getState().tcgInvestments.map((lot) => lot.id)).toEqual([creationId]);
+  });
+
+  it('reports a superseded draft as a conflict instead of acknowledging a different edit', async () => {
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce((_url, options: RequestInit) => {
+        const payload = JSON.parse(options.body as string) as { data: object };
+        return Promise.resolve(response(200, { data: payload.data, updatedAt: '2026-10-20T10:00:00.000Z' }));
+      });
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    const save = saveTCGInvestmentConfirmed(investmentInput);
+    const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    usePrimeDexStore.getState().saveTCGInvestment({ ...investmentInput, quantity: 2 }, lot.id);
+    await act(async () => vi.advanceTimersByTimeAsync(30_000));
+    await expect(save).resolves.toEqual({ ok: false, reason: 'conflict' });
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
+    expect(usePrimeDexStore.getState().tcgInvestments[0].quantity).toBe(2);
   });
 });

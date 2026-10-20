@@ -1,0 +1,949 @@
+[
+  {
+    "language": "fr",
+    "id": "base1-4",
+    "url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+    "status": 200,
+    "durationMs": 65,
+    "name": "Dracaufeu",
+    "variants": {
+      "firstEdition": true,
+      "holo": true,
+      "normal": false,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T15:00:51.926Z",
+        "unit": "EUR",
+        "idProduct": 273699,
+        "avg": 458.1,
+        "low": 95,
+        "trend": 0.02,
+        "avg1": 261.67,
+        "avg7": 265.94,
+        "avg30": 682.59,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 123.63,
+        "avg1-holo": 207.4,
+        "avg7-holo": 129.55,
+        "avg30-holo": 202.71
+      },
+      "tcgplayer": {
+        "unit": "USD",
+        "updated": "2026-10-15T15:00:52.955Z",
+        "holofoil": {
+          "productId": 42382,
+          "lowPrice": 499.99,
+          "midPrice": 587.98,
+          "highPrice": 3499.1,
+          "marketPrice": 954.65,
+          "directLowPrice": null
+        }
+      }
+    },
+    "variants_detailed": [
+      {
+        "type": "Holo",
+        "subtype": "illimité",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 273699,
+          "tcgplayer": 42382
+        },
+        "variantId": "4ffrmhcfiaejakhepqdkx7o",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.926Z",
+            "unit": "EUR",
+            "idProduct": 273699,
+            "avg": 458.1,
+            "low": 95,
+            "trend": 0.02,
+            "avg1": 261.67,
+            "avg7": 265.94,
+            "avg30": 682.59,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 123.63,
+            "avg1-holo": 207.4,
+            "avg7-holo": 129.55,
+            "avg30-holo": 202.71
+          },
+          "tcgplayer": {
+            "unit": "USD",
+            "updated": "2026-10-15T15:00:52.955Z",
+            "holofoil": {
+              "productId": 42382,
+              "lowPrice": 499.99,
+              "midPrice": 587.98,
+              "highPrice": 3499.1,
+              "marketPrice": 954.65,
+              "directLowPrice": null
+            }
+          }
+        }
+      },
+      {
+        "type": "Holo",
+        "subtype": "sans ombre",
+        "size": "Standard",
+        "stamp": [
+          "1re Édition"
+        ],
+        "thirdParty": {
+          "tcgplayer": 106999,
+          "cardmarket": 660224
+        },
+        "variantId": "mtltux8qtgdu4exu903oasum21juxbvx6lx",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.926Z",
+            "unit": "EUR",
+            "idProduct": 660224,
+            "avg": 3400,
+            "low": 980,
+            "trend": 3330.71,
+            "avg1": 950,
+            "avg7": 1821.3,
+            "avg30": 2478.82,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "Holo",
+        "subtype": "sans ombre",
+        "size": "Standard",
+        "thirdParty": {
+          "tcgplayer": 106999,
+          "cardmarket": 660224
+        },
+        "variantId": "3takscxpcqoqcfnxk1ivs2y6",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.926Z",
+            "unit": "EUR",
+            "idProduct": 660224,
+            "avg": 3400,
+            "low": 980,
+            "trend": 3330.71,
+            "avg1": 950,
+            "avg7": 1821.3,
+            "avg30": 2478.82,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "Holo",
+        "subtype": "Copyright 1999-2000",
+        "size": "Standard",
+        "variantId": "zqq5g2u9n0st0gren5bssktmac2ywqaw"
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "id": "base1-4",
+    "url": "https://api.tcgdex.net/v2/en/cards/base1-4",
+    "status": 200,
+    "durationMs": 64,
+    "name": "Charizard",
+    "variants": {
+      "firstEdition": true,
+      "holo": true,
+      "normal": false,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:24.118Z",
+        "unit": "EUR",
+        "idProduct": 273699,
+        "avg": 458.1,
+        "low": 95,
+        "trend": 0.02,
+        "avg1": 261.67,
+        "avg7": 265.94,
+        "avg30": 682.59,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 123.63,
+        "avg1-holo": 207.4,
+        "avg7-holo": 129.55,
+        "avg30-holo": 202.71
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "holo",
+        "subtype": "unlimited",
+        "size": "standard",
+        "thirdParty": {
+          "cardmarket": 273699,
+          "tcgplayer": 42382
+        },
+        "variantId": "4ffrmhcfiaejakhepqdkx7o",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.118Z",
+            "unit": "EUR",
+            "idProduct": 273699,
+            "avg": 458.1,
+            "low": 95,
+            "trend": 0.02,
+            "avg1": 261.67,
+            "avg7": 265.94,
+            "avg30": 682.59,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 123.63,
+            "avg1-holo": 207.4,
+            "avg7-holo": 129.55,
+            "avg30-holo": 202.71
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "holo",
+        "subtype": "shadowless",
+        "size": "standard",
+        "stamp": [
+          "1st-edition"
+        ],
+        "thirdParty": {
+          "tcgplayer": 106999,
+          "cardmarket": 660224
+        },
+        "variantId": "mtltux8qtgdu4exu903oasum21juxbvx6lx",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.118Z",
+            "unit": "EUR",
+            "idProduct": 660224,
+            "avg": 3400,
+            "low": 980,
+            "trend": 3330.71,
+            "avg1": 950,
+            "avg7": 1821.3,
+            "avg30": 2478.82,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "holo",
+        "subtype": "shadowless",
+        "size": "standard",
+        "thirdParty": {
+          "tcgplayer": 106999,
+          "cardmarket": 660224
+        },
+        "variantId": "3takscxpcqoqcfnxk1ivs2y6",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.118Z",
+            "unit": "EUR",
+            "idProduct": 660224,
+            "avg": 3400,
+            "low": 980,
+            "trend": 3330.71,
+            "avg1": 950,
+            "avg7": 1821.3,
+            "avg30": 2478.82,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "holo",
+        "subtype": "1999-2000-copyright",
+        "size": "standard",
+        "variantId": "zqq5g2u9n0st0gren5bssktmac2ywqaw"
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "swsh3-136",
+    "url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136",
+    "status": 200,
+    "durationMs": 73,
+    "name": "Fouinar",
+    "variants": {
+      "firstEdition": false,
+      "holo": false,
+      "normal": true,
+      "reverse": true,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T15:00:51.903Z",
+        "unit": "EUR",
+        "idProduct": 483559,
+        "avg": 0.07,
+        "low": 0.02,
+        "trend": 0.05,
+        "avg1": 0.05,
+        "avg7": 0.06,
+        "avg30": 0.06,
+        "avg-holo": 0.28,
+        "low-holo": 0.08,
+        "trend-holo": 0.24,
+        "avg1-holo": 0.14,
+        "avg7-holo": 0.19,
+        "avg30-holo": 0.26
+      },
+      "tcgplayer": {
+        "unit": "USD",
+        "updated": "2026-10-15T15:01:17.636Z",
+        "normal": {
+          "productId": 219333,
+          "lowPrice": 0.02,
+          "midPrice": 0.25,
+          "highPrice": 25.27,
+          "marketPrice": 0.27,
+          "directLowPrice": null
+        },
+        "reverse-holofoil": {
+          "productId": 219333,
+          "lowPrice": 0.17,
+          "midPrice": 0.43,
+          "highPrice": 19.8,
+          "marketPrice": 0.44,
+          "directLowPrice": 0.37
+        }
+      }
+    },
+    "variants_detailed": [
+      {
+        "type": "Normal",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 483559,
+          "tcgplayer": 219333
+        },
+        "variantId": "endfynwn4n10gzq",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.903Z",
+            "unit": "EUR",
+            "idProduct": 483559,
+            "avg": 0.07,
+            "low": 0.02,
+            "trend": 0.05,
+            "avg1": 0.05,
+            "avg7": 0.06,
+            "avg30": 0.06,
+            "avg-holo": 0.28,
+            "low-holo": 0.08,
+            "trend-holo": 0.24,
+            "avg1-holo": 0.14,
+            "avg7-holo": 0.19,
+            "avg30-holo": 0.26
+          },
+          "tcgplayer": {
+            "unit": "USD",
+            "updated": "2026-10-15T15:01:17.636Z",
+            "normal": {
+              "productId": 219333,
+              "lowPrice": 0.02,
+              "midPrice": 0.25,
+              "highPrice": 25.27,
+              "marketPrice": 0.27,
+              "directLowPrice": null
+            },
+            "reverse-holofoil": {
+              "productId": 219333,
+              "lowPrice": 0.17,
+              "midPrice": 0.43,
+              "highPrice": 19.8,
+              "marketPrice": 0.44,
+              "directLowPrice": 0.37
+            }
+          }
+        }
+      },
+      {
+        "type": "Reverse",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 483559,
+          "tcgplayer": 219333
+        },
+        "variantId": "cm4kqul3x1bwlz1f",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.903Z",
+            "unit": "EUR",
+            "idProduct": 483559,
+            "avg": 0.07,
+            "low": 0.02,
+            "trend": 0.05,
+            "avg1": 0.05,
+            "avg7": 0.06,
+            "avg30": 0.06,
+            "avg-holo": 0.28,
+            "low-holo": 0.08,
+            "trend-holo": 0.24,
+            "avg1-holo": 0.14,
+            "avg7-holo": 0.19,
+            "avg30-holo": 0.26
+          },
+          "tcgplayer": {
+            "unit": "USD",
+            "updated": "2026-10-15T15:01:17.636Z",
+            "normal": {
+              "productId": 219333,
+              "lowPrice": 0.02,
+              "midPrice": 0.25,
+              "highPrice": 25.27,
+              "marketPrice": 0.27,
+              "directLowPrice": null
+            },
+            "reverse-holofoil": {
+              "productId": 219333,
+              "lowPrice": 0.17,
+              "midPrice": 0.43,
+              "highPrice": 19.8,
+              "marketPrice": 0.44,
+              "directLowPrice": 0.37
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "id": "swsh3-136",
+    "url": "https://api.tcgdex.net/v2/en/cards/swsh3-136",
+    "status": 200,
+    "durationMs": 64,
+    "name": "Furret",
+    "variants": {
+      "firstEdition": false,
+      "holo": false,
+      "normal": true,
+      "reverse": true,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:24.124Z",
+        "unit": "EUR",
+        "idProduct": 483559,
+        "avg": 0.07,
+        "low": 0.02,
+        "trend": 0.05,
+        "avg1": 0.05,
+        "avg7": 0.06,
+        "avg30": 0.06,
+        "avg-holo": 0.28,
+        "low-holo": 0.08,
+        "trend-holo": 0.24,
+        "avg1-holo": 0.14,
+        "avg7-holo": 0.19,
+        "avg30-holo": 0.26
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "normal",
+        "size": "standard",
+        "thirdParty": {
+          "cardmarket": 483559,
+          "tcgplayer": 219333
+        },
+        "variantId": "endfynwn4n10gzq",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.124Z",
+            "unit": "EUR",
+            "idProduct": 483559,
+            "avg": 0.07,
+            "low": 0.02,
+            "trend": 0.05,
+            "avg1": 0.05,
+            "avg7": 0.06,
+            "avg30": 0.06,
+            "avg-holo": 0.28,
+            "low-holo": 0.08,
+            "trend-holo": 0.24,
+            "avg1-holo": 0.14,
+            "avg7-holo": 0.19,
+            "avg30-holo": 0.26
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "reverse",
+        "size": "standard",
+        "thirdParty": {
+          "cardmarket": 483559,
+          "tcgplayer": 219333
+        },
+        "variantId": "cm4kqul3x1bwlz1f",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.124Z",
+            "unit": "EUR",
+            "idProduct": 483559,
+            "avg": 0.07,
+            "low": 0.02,
+            "trend": 0.05,
+            "avg1": 0.05,
+            "avg7": 0.06,
+            "avg30": 0.06,
+            "avg-holo": 0.28,
+            "low-holo": 0.08,
+            "trend-holo": 0.24,
+            "avg1-holo": 0.14,
+            "avg7-holo": 0.19,
+            "avg30-holo": 0.26
+          },
+          "tcgplayer": null
+        }
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "sv03.5-151",
+    "url": "https://api.tcgdex.net/v2/fr/cards/sv03.5-151",
+    "status": 200,
+    "durationMs": 63,
+    "name": "Mew-ex",
+    "variants": {
+      "firstEdition": false,
+      "holo": true,
+      "normal": false,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:26.315Z",
+        "unit": "EUR",
+        "idProduct": 733746,
+        "avg": 7.39,
+        "low": 3.98,
+        "trend": 7.15,
+        "avg1": 7.94,
+        "avg7": 6.82,
+        "avg30": 7.23,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 0,
+        "avg1-holo": null,
+        "avg7-holo": null,
+        "avg30-holo": null
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "Holo",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 733746,
+          "tcgplayer": 516566,
+          "cardtrader": 258695
+        },
+        "variantId": "jr7oetx1mqug9",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:26.315Z",
+            "unit": "EUR",
+            "idProduct": 733746,
+            "avg": 7.39,
+            "low": 3.98,
+            "trend": 7.15,
+            "avg1": 7.94,
+            "avg7": 6.82,
+            "avg30": 7.23,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "id": "sv03.5-151",
+    "url": "https://api.tcgdex.net/v2/en/cards/sv03.5-151",
+    "status": 200,
+    "durationMs": 63,
+    "name": "Mew ex",
+    "variants": {
+      "firstEdition": false,
+      "holo": true,
+      "normal": false,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T15:00:51.926Z",
+        "unit": "EUR",
+        "idProduct": 733746,
+        "avg": 7.39,
+        "low": 3.98,
+        "trend": 7.15,
+        "avg1": 7.94,
+        "avg7": 6.82,
+        "avg30": 7.23,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 0,
+        "avg1-holo": null,
+        "avg7-holo": null,
+        "avg30-holo": null
+      },
+      "tcgplayer": {
+        "unit": "USD",
+        "updated": "2026-10-15T15:01:21.027Z",
+        "holofoil": {
+          "productId": 516566,
+          "lowPrice": 4.44,
+          "midPrice": 8,
+          "highPrice": 110.54,
+          "marketPrice": 6.53,
+          "directLowPrice": 6.47
+        }
+      }
+    },
+    "variants_detailed": [
+      {
+        "type": "holo",
+        "size": "standard",
+        "thirdParty": {
+          "cardmarket": 733746,
+          "tcgplayer": 516566,
+          "cardtrader": 258695
+        },
+        "variantId": "jr7oetx1mqug9",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T15:00:51.926Z",
+            "unit": "EUR",
+            "idProduct": 733746,
+            "avg": 7.39,
+            "low": 3.98,
+            "trend": 7.15,
+            "avg1": 7.94,
+            "avg7": 6.82,
+            "avg30": 7.23,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": {
+            "unit": "USD",
+            "updated": "2026-10-15T15:01:21.027Z",
+            "holofoil": {
+              "productId": 516566,
+              "lowPrice": 4.44,
+              "midPrice": 8,
+              "highPrice": 110.54,
+              "marketPrice": 6.53,
+              "directLowPrice": 6.47
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "swsh10.5-010",
+    "url": "https://api.tcgdex.net/v2/fr/cards/swsh10.5-010",
+    "status": 200,
+    "durationMs": 63,
+    "name": "Dracaufeu",
+    "variants": {
+      "firstEdition": false,
+      "holo": true,
+      "normal": false,
+      "reverse": true,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:24.118Z",
+        "unit": "EUR",
+        "idProduct": 665244,
+        "avg": 3.04,
+        "low": 0.8,
+        "trend": 2.65,
+        "avg1": 3.3,
+        "avg7": 2.54,
+        "avg30": 3.08,
+        "avg-holo": 3.83,
+        "low-holo": 1,
+        "trend-holo": 3.62,
+        "avg1-holo": 3.93,
+        "avg7-holo": 4.31,
+        "avg30-holo": 3.82
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "Holo",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 665244,
+          "tcgplayer": 274439
+        },
+        "variantId": "jr7oetx1mqug9",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.118Z",
+            "unit": "EUR",
+            "idProduct": 665244,
+            "avg": 3.04,
+            "low": 0.8,
+            "trend": 2.65,
+            "avg1": 3.3,
+            "avg7": 2.54,
+            "avg30": 3.08,
+            "avg-holo": 3.83,
+            "low-holo": 1,
+            "trend-holo": 3.62,
+            "avg1-holo": 3.93,
+            "avg7-holo": 4.31,
+            "avg30-holo": 3.82
+          },
+          "tcgplayer": null
+        }
+      },
+      {
+        "type": "Reverse",
+        "size": "Standard",
+        "thirdParty": {
+          "cardmarket": 665244,
+          "tcgplayer": 274439
+        },
+        "variantId": "cm4kqul3x1bwlz1f",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.118Z",
+            "unit": "EUR",
+            "idProduct": 665244,
+            "avg": 3.04,
+            "low": 0.8,
+            "trend": 2.65,
+            "avg1": 3.3,
+            "avg7": 2.54,
+            "avg30": 3.08,
+            "avg-holo": 3.83,
+            "low-holo": 1,
+            "trend-holo": 3.62,
+            "avg1-holo": 3.93,
+            "avg7-holo": 4.31,
+            "avg30-holo": 3.82
+          },
+          "tcgplayer": null
+        }
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "bw10-99",
+    "url": "https://api.tcgdex.net/v2/fr/cards/bw10-99",
+    "status": 200,
+    "durationMs": 73,
+    "name": "Dialga EX",
+    "variants": {
+      "firstEdition": false,
+      "holo": false,
+      "normal": true,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": null,
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "normal",
+        "size": "Standard",
+        "variantId": "generated"
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "30th-c-001",
+    "url": "https://api.tcgdex.net/v2/fr/cards/30th-c-001",
+    "status": 200,
+    "durationMs": 63,
+    "name": "Dracaufeu",
+    "variants": {
+      "firstEdition": false,
+      "holo": true,
+      "normal": false,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:24.124Z",
+        "unit": "EUR",
+        "idProduct": 907940,
+        "avg": 173.76,
+        "low": 128.5,
+        "trend": 174.16,
+        "avg1": 151.9,
+        "avg7": 168.52,
+        "avg30": 170.84,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 0,
+        "avg1-holo": null,
+        "avg7-holo": null,
+        "avg30-holo": null
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "Holo",
+        "size": "Standard",
+        "stamp": [
+          "30th-anniversary"
+        ],
+        "thirdParty": {
+          "cardmarket": 907940,
+          "tcgplayer": 714372
+        },
+        "variantId": "1jz5lzkp5cg8gmrsxmftf0fur0t08j",
+        "pricing": {
+          "cardmarket": {
+            "updated": "2026-10-19T13:13:24.124Z",
+            "unit": "EUR",
+            "idProduct": 907940,
+            "avg": 173.76,
+            "low": 128.5,
+            "trend": 174.16,
+            "avg1": 151.9,
+            "avg7": 168.52,
+            "avg30": 170.84,
+            "avg-holo": null,
+            "low-holo": null,
+            "trend-holo": 0,
+            "avg1-holo": null,
+            "avg7-holo": null,
+            "avg30-holo": null
+          },
+          "tcgplayer": null
+        }
+      }
+    ]
+  },
+  {
+    "language": "fr",
+    "id": "xy12-11",
+    "url": "https://api.tcgdex.net/v2/fr/cards/xy12-11",
+    "status": 200,
+    "durationMs": 62,
+    "name": "Dracaufeu",
+    "variants": {
+      "firstEdition": false,
+      "holo": false,
+      "normal": true,
+      "reverse": false,
+      "wPromo": false
+    },
+    "pricing": {
+      "cardmarket": {
+        "updated": "2026-10-19T13:13:24.118Z",
+        "unit": "EUR",
+        "idProduct": 293368,
+        "avg": 88.62,
+        "low": 20,
+        "trend": 73.75,
+        "avg1": 87.5,
+        "avg7": 63.96,
+        "avg30": 83.27,
+        "avg-holo": 81.39,
+        "low-holo": 20,
+        "trend-holo": 96.22,
+        "avg1-holo": 50,
+        "avg7-holo": 99.27,
+        "avg30-holo": 81.3
+      },
+      "tcgplayer": null
+    },
+    "variants_detailed": [
+      {
+        "type": "normal",
+        "size": "Standard",
+        "variantId": "generated"
+      }
+    ]
+  },
+  {
+    "language": "ja",
+    "id": "base1-4",
+    "url": "https://api.tcgdex.net/v2/ja/cards/base1-4",
+    "status": 404,
+    "durationMs": 72,
+    "pricing": null,
+    "variants_detailed": null
+  },
+  {
+    "language": "zh-cn",
+    "id": "base1-4",
+    "url": "https://api.tcgdex.net/v2/zh-cn/cards/base1-4",
+    "status": 404,
+    "durationMs": 63,
+    "pricing": null,
+    "variants_detailed": null
+  }
+]
