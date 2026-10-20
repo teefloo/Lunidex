@@ -171,6 +171,7 @@ export interface PrimeDexStore {
   editTCGCustomCollection: (collectionId: string, name: string, description?: string) => boolean;
   deleteTCGCustomCollection: (collectionId: string) => boolean;
   addTCGCustomCollectionCard: (collectionId: string, card: Pick<TCGCustomCollectionCard, 'cardId' | 'language' | 'cardName'>) => boolean;
+  setTCGCustomCollectionCardQuantity: (collectionId: string, cardId: string, language: TCGCustomCollectionCard['language'], quantity: number) => boolean;
   removeTCGCustomCollectionCard: (collectionId: string, cardId: string, language: TCGCustomCollectionCard['language']) => boolean;
   setTCGBrowseLanguage: (language: TCGCardLanguage) => void;
   createTCGCollection: (setId: string, language?: TCGCardLanguage) => string;
@@ -623,6 +624,18 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         });
         if (cards.length === state.tcgCustomCollectionCards.length) return false;
         set({ tcgCustomCollectionCards: cards });
+        return true;
+      },
+      setTCGCustomCollectionCardQuantity: (collectionId, cardId, language, quantity) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        if (!Number.isSafeInteger(quantity) || quantity < 0 || quantity > 9_999) return false;
+        const cards = get().tcgCustomCollectionCards;
+        const current = cards.find((entry) => entry.collectionId === collectionId && entry.cardId === cardId && entry.language === language);
+        if (!current) return false;
+        set({ tcgCustomCollectionCards: cards.map((entry) => entry === current ? { ...entry, quantity } : entry) });
         return true;
       },
       removeTCGCustomCollectionCard: (collectionId, cardId, language) => {

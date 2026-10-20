@@ -20,6 +20,8 @@ export interface TCGCustomCollectionCard {
   language: TCGCardLanguage;
   cardName: string;
   addedAt: string;
+  /** Missing in legacy snapshots; interpreted as one binder copy. Zero keeps a wanted card. */
+  quantity?: number;
 }
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -123,6 +125,8 @@ export function normalizeTCGCustomCollectionCard(value: unknown): TCGCustomColle
   if (typeof candidate.cardName !== 'string') return null;
   const cardName = candidate.cardName.normalize('NFKC').trim();
   if (!cardName || cardName.length > TCG_CUSTOM_COLLECTION_CARD_NAME_MAX_LENGTH) return null;
+  const quantity = candidate.quantity === undefined ? 1 : candidate.quantity;
+  if (typeof quantity !== 'number' || !Number.isSafeInteger(quantity) || quantity < 0 || quantity > 9_999) return null;
   const addedAt = normalizeTimestamp(candidate.addedAt);
   if (!addedAt) return null;
   return {
@@ -131,6 +135,7 @@ export function normalizeTCGCustomCollectionCard(value: unknown): TCGCustomColle
     language: candidate.language,
     cardName,
     addedAt,
+    quantity,
   };
 }
 
@@ -202,7 +207,7 @@ export function filterTCGCustomCollectionCards(
 ): TCGCustomCollectionCardPage {
   const normalizedQuery = searchText(searchTerm.trim());
   const matches = normalizedQuery
-    ? cards.filter((card) => searchText(`${card.cardName} ${card.cardId}`).includes(normalizedQuery))
+    ? cards.filter((card) => searchText(`${card.cardName} ${card.cardId} ${card.language}`).includes(normalizedQuery))
     : [...cards];
   const safePageSize = Number.isSafeInteger(pageSize) ? Math.max(1, pageSize) : TCG_CUSTOM_COLLECTION_PAGE_SIZE;
   const safePage = Number.isSafeInteger(page) ? Math.max(1, page) : 1;

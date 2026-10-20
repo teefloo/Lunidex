@@ -123,7 +123,9 @@ export function getTCGCardPngImage(card: TCGCard): string | undefined {
 export function getTCGCardImageCandidates(
   card: TCGImageCard,
   quality: 'low' | 'high' = 'high',
+  options: { allowLanguageFallback?: boolean } = {},
 ): string[] {
+  const allowLanguageFallback = options.allowLanguageFallback !== false;
   const setId = card.set?.id;
   const localId = card.localId || card.number;
   const hasSetArtwork = Boolean(card.set?.logo || card.set?.symbol);
@@ -134,7 +136,7 @@ export function getTCGCardImageCandidates(
       ]
     : [];
   const cardBaseGroups = [card.image, card.imageUrl]
-    .map(addTcgDexLanguageVariants)
+    .map((base) => allowLanguageFallback ? addTcgDexLanguageVariants(base) : base ? [base] : [])
     .filter((group) => group.length > 0);
   const cardBases = cardBaseGroups.flat();
   const hasTcgDexSource = cardBases.some(isTcgDexAsset);
@@ -147,8 +149,8 @@ export function getTCGCardImageCandidates(
           )
         : group
     )),
-    ...(anniversary30ClassicImage ? [anniversary30ClassicImage] : []),
-    ...(hasTcgDexSource ? [] : pokemonTcgFallbacks),
+    ...(allowLanguageFallback && anniversary30ClassicImage ? [anniversary30ClassicImage] : []),
+    ...(!allowLanguageFallback || hasTcgDexSource ? [] : pokemonTcgFallbacks),
     TCG_CARD_PLACEHOLDER,
   ];
 

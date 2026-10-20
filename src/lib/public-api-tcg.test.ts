@@ -135,7 +135,7 @@ describe('public API card holdings', () => {
     const state = db.state as ReturnType<typeof makeState>;
     expect(state.tcgCollectionCards).toEqual([encodeTCGCollectionCardKey(collectionKey, 'base1-001', 'normal', 3)]);
     expect(state.tcgCustomCollections).toEqual([customCollection]);
-    expect(state.tcgCustomCollectionCards).toEqual([customCollectionCard]);
+    expect(state.tcgCustomCollectionCards).toEqual([{ ...customCollectionCard, quantity: 1 }]);
     expect(state.__sync.clock).toBeGreaterThan(50);
     expect(state.__sync.collections.favorites['25']).toEqual({ clock: 22, deviceId: 'mobile', present: true });
     expect(db.query.mock.calls[0].slice(1)).toContain(userId);

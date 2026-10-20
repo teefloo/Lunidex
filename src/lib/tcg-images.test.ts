@@ -16,6 +16,16 @@ describe('hasTCGCardImage', () => {
 });
 
 describe('getTCGCardImageCandidates', () => {
+  it('keeps all image fallbacks in the selected printing language for binders', () => {
+    const candidates = getTCGCardImageCandidates({ id: 'base1-4', image: 'https://assets.tcgdex.net/fr/base/base1/4' }, 'high', { allowLanguageFallback: false });
+    expect(candidates).toEqual([
+      'https://assets.tcgdex.net/fr/base/base1/4/high.webp',
+      'https://assets.tcgdex.net/fr/base/base1/4/high.png',
+      'https://assets.tcgdex.net/fr/base/base1/4/high.jpg',
+      '/images/pokemon-card-back.webp',
+    ]);
+  });
+
   it('ends with the authentic Pokémon card-back asset as the terminal fallback', () => {
     const candidates = getTCGCardImageCandidates({ id: 'missing-card' });
 

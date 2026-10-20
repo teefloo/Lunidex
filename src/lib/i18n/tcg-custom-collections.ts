@@ -1,4 +1,8 @@
 const english = {
+  quantity: 'Binder quantity',
+  binder_ownership: 'In this binder',
+  all_languages: 'All languages',
+  language_unavailable: 'The catalog is unavailable in this language. Choose another card language.',
   tab_series: 'By set',
   tab_custom: 'Custom',
   title: 'Custom collections',
@@ -65,6 +69,11 @@ function localized(values: Record<TranslationKey, string>) {
 export const tcgCustomCollectionsTranslations = {
   en: english,
   fr: localized({
+    quantity: 'Quantité dans le classeur',
+    binder_ownership: 'Dans ce classeur',
+    all_languages: 'Toutes les langues',
+    language_unavailable: 'Le catalogue est indisponible dans cette langue. Choisissez une autre langue de carte.',
+
     tab_series: 'Par série', tab_custom: 'Personnalisées', title: 'Collections personnalisées',
     description: 'Créez des classeurs pour organiser les cartes que vous souhaitez, possédées ou non.',
     create: 'Créer un classeur', create_title: 'Nouveau classeur', edit_title: 'Modifier le classeur',
@@ -90,6 +99,11 @@ export const tcgCustomCollectionsTranslations = {
     create_success: 'Classeur créé.', add_success: 'Carte ajoutée au classeur.', ownership: 'Inventaire', previous: 'Précédent', next: 'Suivant', load_more: 'Charger plus', document_too_large: 'Cette modification dépasse la limite de stockage de 2 Mo et a été annulée. Supprimez des données enregistrées puis réessayez.',
   }),
   es: localized({
+    quantity: 'Cantidad en el álbum',
+    binder_ownership: 'En este álbum',
+    all_languages: 'Todos los idiomas',
+    language_unavailable: 'El catálogo no está disponible en este idioma. Elige otro idioma de carta.',
+
     tab_series: 'Por expansión', tab_custom: 'Personalizadas', title: 'Colecciones personalizadas',
     description: 'Crea álbumes para organizar las cartas que quieras, las tengas o no.',
     create: 'Crear colección', create_title: 'Nueva colección', edit_title: 'Editar colección', name: 'Nombre',
@@ -113,6 +127,11 @@ export const tcgCustomCollectionsTranslations = {
     create_success: 'Colección creada.', add_success: 'Carta añadida a la colección.', ownership: 'Inventario', previous: 'Anterior', next: 'Siguiente', load_more: 'Cargar más', document_too_large: 'Este cambio supera el límite de almacenamiento de 2 MB y se ha revertido. Elimina algunos datos guardados e inténtalo de nuevo.',
   }),
   de: localized({
+    quantity: 'Anzahl im Ordner',
+    binder_ownership: 'In diesem Ordner',
+    all_languages: 'Alle Sprachen',
+    language_unavailable: 'Der Katalog ist in dieser Sprache nicht verfügbar. Wähle eine andere Kartensprache.',
+
     tab_series: 'Nach Erweiterung', tab_custom: 'Eigene', title: 'Eigene Sammlungen',
     description: 'Erstelle Ordner für Karten, die du organisieren möchtest, unabhängig davon, ob du sie besitzt.',
     create: 'Sammlung erstellen', create_title: 'Neue Sammlung', edit_title: 'Sammlung bearbeiten', name: 'Name',
@@ -136,6 +155,11 @@ export const tcgCustomCollectionsTranslations = {
     create_success: 'Sammlung erstellt.', add_success: 'Karte zur Sammlung hinzugefügt.', ownership: 'Bestand', previous: 'Zurück', next: 'Weiter', load_more: 'Mehr laden', document_too_large: 'Diese Änderung überschreitet das Kontospeicherlimit von 2 MB und wurde zurückgesetzt. Lösche gespeicherte Daten und versuche es erneut.',
   }),
   it: localized({
+    quantity: 'Quantità nel raccoglitore',
+    binder_ownership: 'In questo raccoglitore',
+    all_languages: 'Tutte le lingue',
+    language_unavailable: 'Il catalogo non è disponibile in questa lingua. Scegli un’altra lingua delle carte.',
+
     tab_series: 'Per espansione', tab_custom: 'Personalizzate', title: 'Collezioni personalizzate',
     description: 'Crea raccoglitori per organizzare le carte che vuoi, che tu le possieda o meno.',
     create: 'Crea collezione', create_title: 'Nuova collezione', edit_title: 'Modifica collezione', name: 'Nome',
@@ -157,6 +181,11 @@ export const tcgCustomCollectionsTranslations = {
     add_success: 'Carta aggiunta alla collezione.', ownership: 'Inventario', previous: 'Precedente', next: 'Successiva', load_more: 'Carica altro', document_too_large: 'Questa modifica supera il limite di archiviazione dell’account di 2 MB ed è stata annullata. Rimuovi alcuni dati salvati e riprova.',
   }),
   ja: localized({
+    quantity: 'このコレクションの枚数',
+    binder_ownership: 'このコレクションの所持状況',
+    all_languages: 'すべての言語',
+    language_unavailable: 'この言語のカタログは利用できません。別のカード言語を選んでください。',
+
     tab_series: 'シリーズ別', tab_custom: 'カスタム', title: 'カスタムコレクション',
     description: '所有の有無にかかわらず、整理したいカードを自由にまとめられます。',
     create: 'コレクションを作成', create_title: '新しいコレクション', edit_title: 'コレクションを編集', name: '名前',
@@ -178,6 +207,11 @@ export const tcgCustomCollectionsTranslations = {
     add_success: 'カードをコレクションに追加しました。', ownership: '所持状況', previous: '前へ', next: '次へ', load_more: 'さらに読み込む', document_too_large: 'この変更はアカウントの2 MB保存上限を超えたため、取り消されました。保存データを減らして再試行してください。',
   }),
   ko: localized({
+    quantity: '이 바인더의 수량',
+    binder_ownership: '이 바인더의 보유 상태',
+    all_languages: '모든 언어',
+    language_unavailable: '이 언어의 카탈로그를 사용할 수 없습니다. 다른 카드 언어를 선택하세요.',
+
     tab_series: '세트별', tab_custom: '사용자 지정', title: '사용자 지정 컬렉션',
     description: '보유 여부와 관계없이 원하는 카드를 자유롭게 정리하는 바인더를 만드세요.',
     create: '컬렉션 만들기', create_title: '새 컬렉션', edit_title: '컬렉션 수정', name: '이름',
@@ -199,6 +233,11 @@ export const tcgCustomCollectionsTranslations = {
     add_success: '카드를 컬렉션에 추가했습니다.', ownership: '보유 현황', previous: '이전', next: '다음', load_more: '더 불러오기', document_too_large: '이 변경은 계정 저장 용량 2MB를 초과해 되돌렸습니다. 저장된 데이터를 줄인 뒤 다시 시도하세요.',
   }),
   zh: localized({
+    quantity: '此卡册中的数量',
+    binder_ownership: '此卡册中的拥有状态',
+    all_languages: '所有语言',
+    language_unavailable: '此语言的目录不可用。请选择其他卡牌语言。',
+
     tab_series: '按系列', tab_custom: '自定义', title: '自定义收藏夹',
     description: '自由创建卡册，整理你想归类的卡牌，无论是否拥有。',
     create: '创建收藏夹', create_title: '新建收藏夹', edit_title: '编辑收藏夹', name: '名称',

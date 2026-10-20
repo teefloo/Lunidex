@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 import { FolderPlus, Search } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { getTCGCardLanguageName } from '@/lib/tcg-language';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard } from '@/types/tcg';
@@ -25,7 +27,7 @@ export function TCGCustomCollectionPicker({ open, onOpenChange, card, language }
   const { t } = useTranslation();
   const collections = usePrimeDexStore((state) => state.tcgCustomCollections);
   const memberships = usePrimeDexStore((state) => state.tcgCustomCollectionCards);
-  const owned = usePrimeDexStore((state) => state.tcgOwnedCards.includes(card.id));
+  const interfaceLanguage = useClientLanguage();
   const addCard = usePrimeDexStore((state) => state.addTCGCustomCollectionCard);
   const removeCard = usePrimeDexStore((state) => state.removeTCGCustomCollectionCard);
   const [query, setQuery] = useState('');
@@ -64,12 +66,7 @@ export function TCGCustomCollectionPicker({ open, onOpenChange, card, language }
           <div className="rounded-sm border border-border/50 bg-muted/20 p-3">
             <p className="break-words text-sm font-black">{card.name}</p>
             <p className="mt-1 font-mono text-xs text-muted-foreground">{card.id}</p>
-            <p className="mt-2 text-xs font-bold">
-              <span className="text-muted-foreground">{t('tcg.custom_collections.ownership')}: </span>
-              <span className={owned ? 'text-emerald-700 dark:text-emerald-300' : 'text-muted-foreground'}>
-                {t(owned ? 'tcg.custom_collections.possession_owned' : 'tcg.custom_collections.possession_not_owned')}
-              </span>
-            </p>
+            <p className="mt-2 text-xs font-bold">{getTCGCardLanguageName(language, interfaceLanguage)} · {language.toUpperCase()}</p>
           </div>
           {collections.length > 0 && (
             <label className="relative block" htmlFor="custom-collection-picker-search">

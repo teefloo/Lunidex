@@ -25,19 +25,19 @@ function makeState(collections: unknown[] = [], cards: unknown[] = []): E2EState
   };
 }
 
-function cardPayload(cardId: string) {
+function cardPayload(cardId: string, language = 'en') {
   const suffix = cardId.slice(cardId.lastIndexOf('-') + 1);
   const numeric = Number.parseInt(suffix, 10);
   return {
     id: cardId,
     localId: suffix,
-    name: Number.isFinite(numeric) ? `Card ${numeric}` : 'Alakazam',
-    image: 'https://assets.tcgdex.net/en/base/base1/1',
+    name: cardId === 'base1-4' ? ({ fr: 'Dracaufeu', ja: 'リザードン', en: 'Charizard' }[language] ?? 'Charizard') : Number.isFinite(numeric) ? `Card ${numeric}` : 'Alakazam',
+    image: `https://assets.tcgdex.net/${language}/base/base1/${suffix}`,
     rarity: 'Rare',
     category: 'Pokemon',
     stage: 'Basic',
     types: ['Psychic'],
-    set: { id: 'base1', name: 'Base Set', cardCount: { total: 102, official: 102 } },
+    set: { id: 'base1', name: language === 'fr' ? 'Set de Base' : language === 'ja' ? '第1弾' : 'Base Set', cardCount: { total: 102, official: 102 } },
     variants: { normal: true },
   };
 }
@@ -79,13 +79,14 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
 
   await context.route('https://api.tcgdex.net/v2/**', async (route: Route) => {
     const url = new URL(route.request().url());
+    const language = url.pathname.split('/')[2];
     const cardPath = url.pathname.match(/\/cards\/([^/]+)$/);
     if (cardPath) {
       activeCardRequests += 1;
       maximumActiveCardRequests = Math.max(maximumActiveCardRequests, activeCardRequests);
       await new Promise((resolve) => setTimeout(resolve, cardRequestDelayMs));
       activeCardRequests -= 1;
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(cardPayload(decodeURIComponent(cardPath[1]))) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(cardPayload(decodeURIComponent(cardPath[1]), language)) });
       return;
     }
     if (url.pathname.endsWith('/cards')) {
@@ -96,8 +97,12 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify([{ ...cardPayload('base1-001'), name: 'Alakazam', localId: '001', stage: 'Stage2' }]),
+        body: JSON.stringify((url.searchParams.get('name') ?? '').toLowerCase().includes('alakazam') ? [{ ...cardPayload('base1-001', language), name: 'Alakazam', localId: '001', stage: 'Stage2' }] : [cardPayload('base1-4', language)]),
       });
+      return;
+    }
+    if (url.pathname.endsWith('/sets/base1')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'base1', name: 'Base Set', cardCount: { total: 1, official: 1 }, cards: [cardPayload('base1-4', language)] }) });
       return;
     }
     if (url.pathname.endsWith('/sets')) {
@@ -115,6 +120,10 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
     await route.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 3"><rect width="2" height="3" fill="#222"/></svg>' });
   });
 
+  await context.route('**/api/tcg/sets?**', async (route) => {
+    await route.fulfill({ json: { sets: [{ id: 'base1', name: 'Base Set', totalCards: 102, releaseRank: 1, dataLanguage: 'fr', releaseDate: '1999-01-09', serie: { id: 'base', name: 'Base' } }] } });
+  });
+
   return {
     getState: () => state,
     getMaximumActiveCardRequests: () => maximumActiveCardRequests,
@@ -125,6 +134,8 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
 async function createBinderAndOpen(page: Page, name: string) {
   await page.goto('/en/tcg/collection?view=custom');
   await expect(page.getByRole('heading', { name: 'Custom collections', exact: true })).toBeVisible({ timeout: 15_000 });
+  const rejectCookies = page.getByRole('button', { name: 'Reject all', exact: true });
+  if (await rejectCookies.isVisible()) await rejectCookies.click();
   await page.getByRole('button', { name: 'Create collection' }).first().click();
   const nameInput = page.getByLabel('Name');
   await expect(nameInput).toBeFocused();
@@ -160,6 +171,9 @@ for (const viewport of [
     const cardResult = page.getByRole('list', { name: 'Search cards' }).getByText('Alakazam');
     await expect(cardResult).toBeVisible();
     await expect(search).toBeFocused();
+    // The development issues badge can cover mobile app controls. Collapse the badge through its UI.
+    const collapseIssues = page.getByRole('button', { name: 'Collapse issues badge', exact: true });
+    if (await collapseIssues.isVisible()) await collapseIssues.click();
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Already added' })).toBeVisible();
     app.setCatalogFailure(true);
@@ -174,7 +188,7 @@ for (const viewport of [
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Favorites', level: 1 })).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText('Card 1')).toBeVisible();
-    await expect(page.getByText('Not owned')).toBeVisible();
+    await expect(page.getByText('Owned', { exact: true })).toBeVisible();
     await expect(page.locator('main')).toContainText('1 cards');
 
     await page.getByRole('button', { name: 'Delete: Favorites' }).click();
@@ -185,7 +199,7 @@ for (const viewport of [
   });
 }
 
-test('a missing binder card becomes owned and colorful after tapping it on mobile', async ({ browser }) => {
+test('a missing binder card becomes owned without changing series after tapping it on mobile', async ({ browser }) => {
   test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
   const binder = { id: collectionId, name: 'Ownership check', createdAt: updatedAt, updatedAt };
   const reference = {
@@ -194,6 +208,7 @@ test('a missing binder card becomes owned and colorful after tapping it on mobil
     language: 'en',
     cardName: 'Card 1',
     addedAt: updatedAt,
+    quantity: 0,
   };
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -214,8 +229,9 @@ test('a missing binder card becomes owned and colorful after tapping it on mobil
   await expect(card.getByText('Owned', { exact: true })).toBeVisible();
   await expect(card.locator('img')).not.toHaveClass(/grayscale/);
   await expect(card.getByRole('button', { name: 'Add Card 1 to my collection' })).toHaveCount(0);
-  await expect.poll(() => (app.getState().tcgOwnedCards as string[] | undefined)?.includes('base1-001')).toBe(true);
-  await expect.poll(() => (app.getState().tcgCollectionCards as unknown[] | undefined)?.length).toBe(1);
+  await expect.poll(() => (app.getState().tcgCustomCollectionCards as { quantity: number }[])[0]?.quantity).toBe(1);
+  expect(app.getState().tcgOwnedCards).toEqual([]);
+  await expect.poll(() => (app.getState().tcgCollectionCards as unknown[] | undefined)?.length).toBe(0);
 
   await context.close();
 });
@@ -244,5 +260,97 @@ test('large binders render 48 ordered cards with at most six detail requests at 
   await page.getByRole('button', { name: 'Next', exact: true }).click();
   await expect(page.getByRole('list', { name: 'Long list' }).getByRole('link', { name: 'Card 49' }).first()).toBeVisible();
   await expect(page.getByText('2 / 50')).toBeVisible();
+  await context.close();
+});
+
+
+test('multilingual binder quantities, filters, removal and series ownership stay independent across reloads', async ({ browser }, testInfo) => {
+  test.skip(!customE2EEnabled, 'Requires the isolated local session.');
+  test.setTimeout(120_000);
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const initial = makeState();
+  // A real serialized v3 series record, deliberately already owned before adding to a binder.
+  initial.tcgCollections = ['tcg2:fr:base1'];
+  initial.tcgActiveCollections = ['tcg2:fr:base1'];
+  initial.tcgCollectionCards = ['tcg2:fr:base1|base1-4|normal|3'];
+  initial.tcgOwnedCards = ['base1-4'];
+  const app = await mockAuthenticatedApp(context, initial);
+  const page = await context.newPage();
+  const errors: string[] = [];
+  const consoleErrors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+  page.on('pageerror', (error) => { errors.push(error.stack ?? error.message); console.error(error.stack ?? error.message); });
+  await createBinderAndOpen(page, 'Multilingual binder');
+  const binderUrl = page.url();
+  const seriesBefore = app.getState().tcgCollectionCards;
+  await page.getByRole('button', { name: 'Add cards', exact: true }).first().click();
+  const panel = page.getByRole('dialog');
+  await panel.getByRole('combobox', { name: 'Card language' }).selectOption('fr');
+  await panel.getByRole('textbox').fill('Dracaufeu');
+  await expect(panel.getByText('Dracaufeu', { exact: true })).toBeVisible();
+  await panel.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Already added' })).toBeVisible();
+  await panel.getByRole('combobox', { name: 'Card language' }).selectOption('ja');
+  await panel.getByRole('textbox').fill('リザードン');
+  await expect(panel.getByText('リザードン', { exact: true })).toBeVisible();
+  await panel.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Already added' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  const list = page.getByRole('list', { name: 'Multilingual binder', exact: true });
+  await expect(list.getByRole('listitem')).toHaveCount(2);
+  await expect(list.getByText('Set de Base', { exact: true })).toBeVisible();
+  await expect(list.getByText('第1弾', { exact: true })).toBeVisible();
+  await expect(list.locator('img').first()).toHaveAttribute('src', /\/fr\//);
+  await expect(list.locator('img').last()).toHaveAttribute('src', /\/ja\//);
+  const frQuantity = list.getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu (fr)', exact: true });
+  await frQuantity.focus();
+  await frQuantity.press('End');
+  await frQuantity.press('Backspace');
+  await expect(frQuantity).toHaveValue('');
+  await frQuantity.press('4');
+  await frQuantity.blur();
+  await expect.poll(() => (app.getState().tcgCustomCollectionCards as { language: string; quantity: number }[]).find((card) => card.language === 'fr')?.quantity).toBe(4);
+  expect(app.getState().tcgCollectionCards).toEqual(seriesBefore);
+  await page.screenshot({ path: testInfo.outputPath('multilingual-binder-desktop.png'), fullPage: true });
+  await page.getByRole('combobox', { name: 'Card language', exact: true }).selectOption('ja');
+  await expect(list.getByRole('listitem')).toHaveCount(1);
+  await expect(list.getByText('リザードン', { exact: true })).toHaveCount(1);
+  await page.getByRole('combobox', { name: 'Card language', exact: true }).selectOption('');
+  await page.getByRole('searchbox', { name: 'Search cards', exact: true }).fill('Drac');
+  await expect(list.getByRole('listitem')).toHaveCount(1);
+  await page.getByRole('searchbox', { name: 'Search cards', exact: true }).fill('');
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Multilingual binder', exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(frQuantity).toHaveValue('4');
+  await expect(list.getByRole('spinbutton', { name: 'Binder quantity: リザードン (ja)', exact: true })).toHaveValue('1');
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('multilingual-binder-mobile.png'), fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  const binderBefore = app.getState().tcgCustomCollectionCards;
+  // Change the series through its existing UI, then return to the binder.
+  await page.goto('/en/tcg/collection/fr/base1');
+  await page.getByRole('button', { name: /Manage Dracaufeu/ }).click();
+  await page.getByRole('spinbutton', { name: /Normal quantity/i }).fill('2');
+  await page.getByRole('spinbutton', { name: /Normal quantity/i }).blur();
+  await expect.poll(() => app.getState().tcgCollectionCards).not.toEqual(seriesBefore);
+  expect(app.getState().tcgCustomCollectionCards).toEqual(binderBefore);
+  const seriesAfter = app.getState().tcgCollectionCards;
+  await page.goto(binderUrl);
+  await expect(page.getByRole('heading', { name: 'Multilingual binder', exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(frQuantity).toHaveValue('4');
+  await list.getByRole('button', { name: 'Remove from this collection: Dracaufeu', exact: true }).click();
+  await expect(list.getByRole('listitem')).toHaveCount(1);
+  await expect.poll(() => (app.getState().tcgCustomCollectionCards as unknown[]).length).toBe(1);
+  expect(app.getState().tcgCollectionCards).toEqual(seriesAfter);
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Multilingual binder', exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(list.getByRole('listitem')).toHaveCount(1);
+  await expect(list.getByText('リザードン', { exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('multilingual-binder-mobile-after-removal.png'), fullPage: true });
+  expect(consoleErrors).toEqual([]);
+  expect(errors).toEqual([]);
   await context.close();
 });

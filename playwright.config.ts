@@ -28,7 +28,7 @@ export default defineConfig({
       timeout: 180_000,
       env: {
         NEXT_TELEMETRY_DISABLED: '1',
-        ...(investmentsE2E ? { NEXT_PUBLIC_ENABLE_AGENTATION: 'false' } : {}),
+        ...(investmentsE2E || customCollectionsE2E ? { NEXT_PUBLIC_ENABLE_AGENTATION: 'false' } : {}),
         ...(customCollectionsE2E || investmentsE2E ? { NEXT_PUBLIC_NEON_AUTH_URL: `http://127.0.0.1:${localPort}/api/auth` } : {}),
       },
     },

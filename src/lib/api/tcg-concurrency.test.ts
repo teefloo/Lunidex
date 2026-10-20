@@ -18,6 +18,28 @@ describe('TCG cancellation and shared requests', () => {
     vi.restoreAllMocks();
   });
 
+  it('filters exact ID results independently from sorting and name search', async () => {
+    const { matchesTCGCardSearchFilters } = await import('./tcg');
+    const card: TCGCard = { id: 'base1-4', localId: '4', name: 'Dracaufeu', category: 'Pokemon', types: ['Fire'], hp: 120, set: { id: 'base1', name: 'Set de Base' } };
+    expect(matchesTCGCardSearchFilters(card, { searchTerm: 'base1-4', sortOrder: 'desc', selectedSet: 'base1' })).toBe(true);
+    expect(matchesTCGCardSearchFilters(card, { selectedSet: 'base2' })).toBe(false);
+    expect(matchesTCGCardSearchFilters(card, { selectedCategory: 'Trainer' })).toBe(false);
+    expect(matchesTCGCardSearchFilters(card, { selectedTypes: ['Water'] })).toBe(false);
+    expect(matchesTCGCardSearchFilters(card, { minHp: 121 })).toBe(false);
+    expect(matchesTCGCardSearchFilters(card, { ownedState: 'owned' }, { ownedIds: new Set() })).toBe(false);
+  });
+
+  it('does not substitute an English edition while hydrating binder search results', async () => {
+    mocks.get.mockImplementation((path: string) => {
+      if (path.startsWith('/fr/cards?')) return Promise.resolve({ data: [{ id: 'base1-4', localId: '4', name: 'Dracaufeu' }] });
+      if (path.startsWith('/fr/cards/')) return Promise.reject(Object.assign(new Error('Missing detail'), { response: { status: 404 } }));
+      return Promise.resolve({ data: { id: 'base1-4', localId: '4', name: 'Charizard', image: 'https://assets.tcgdex.net/en/base/base1/4' } });
+    });
+    const { searchCards, DEFAULT_TCG_CARD_FILTERS } = await import('./tcg');
+    const result = await searchCards({ ...DEFAULT_TCG_CARD_FILTERS, searchTerm: 'Dracaufeu', sortBy: 'name' }, 'fr', 1, 48, undefined, undefined, undefined, false, { allowEnglishFallback: false });
+    expect(result.cards).toMatchObject([{ name: 'Dracaufeu' }]);
+  });
+
   it('bounds the complete set catalog route and direct fallback sequence', async () => {
     vi.useFakeTimers();
     vi.spyOn(AbortSignal, 'timeout').mockImplementation((milliseconds) => {

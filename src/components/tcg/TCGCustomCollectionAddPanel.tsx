@@ -8,13 +8,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useMounted } from '@/hooks/useMounted';
 import { useTranslation } from '@/lib/i18n';
-import { DEFAULT_TCG_CARD_FILTERS, getTCGCard, searchCards } from '@/lib/api/tcg';
+import { DEFAULT_TCG_CARD_FILTERS, getTCGCard, searchCards, isTcgLangSupported, matchesTCGCardSearchFilters } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import type { TCGCard } from '@/types/tcg';
 import type { TCGCardFilters } from '@/types/tcg';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
+import { TCGLanguageSelector } from './TCGLanguageSelector';
 import { TCGFilters } from './TCGFilters';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
 
@@ -24,31 +25,34 @@ interface TCGCustomCollectionAddPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   collectionId: string;
-  language: TCGCardLanguage;
+  initialLanguage: TCGCardLanguage;
 }
 
-export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, language }: TCGCustomCollectionAddPanelProps) {
+export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, initialLanguage }: TCGCustomCollectionAddPanelProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
   const addCard = usePrimeDexStore((state) => state.addTCGCustomCollectionCard);
   const memberships = usePrimeDexStore((state) => state.tcgCustomCollectionCards);
-  const ownedCardIds = usePrimeDexStore((state) => state.tcgOwnedCards);
+  const [language, setLanguage] = useState(initialLanguage);
   const [filters, setFilters] = useState<TCGCardFilters>(DEFAULT_TCG_CARD_FILTERS);
   const [addError, setAddError] = useState('');
   const query = filters.searchTerm?.trim() ?? '';
+  const languageSupported = isTcgLangSupported(language);
+  const ownedIds = useMemo(() => new Set(memberships.filter((entry) => entry.collectionId === collectionId && entry.language === language && (entry.quantity ?? 1) > 0).map((entry) => entry.cardId)), [memberships, collectionId, language]);
+  const wantedIds = useMemo(() => new Set(memberships.filter((entry) => entry.collectionId === collectionId && entry.language === language && entry.quantity === 0).map((entry) => entry.cardId)), [memberships, collectionId, language]);
   const catalogQuery = useInfiniteQuery({
-    queryKey: tcgKeys.catalog(filters, language, PAGE_SIZE),
-    queryFn: ({ pageParam, signal }) => searchCards(filters, language, pageParam, PAGE_SIZE, signal),
+    queryKey: [...tcgKeys.catalog(filters, language, PAGE_SIZE), 'binder-localized', collectionId, [...ownedIds], [...wantedIds]],
+    queryFn: ({ pageParam, signal }) => searchCards(filters, language, pageParam, PAGE_SIZE, signal, ownedIds, wantedIds, false, { allowEnglishFallback: false }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length + 1 : undefined,
-    enabled: mounted && open && query.length > 0,
+    enabled: mounted && open && languageSupported && query.length > 0,
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
   const cardIdCandidate = /^[a-z0-9][a-z0-9._:-]*-[a-z0-9][a-z0-9._:-]*$/i.test(query) ? query : '';
   const exactCardQuery = useQuery({
-    queryKey: tcgKeys.card(cardIdCandidate, language),
+    queryKey: [...tcgKeys.card(cardIdCandidate, language), 'binder-localized'],
     queryFn: async ({ signal }) => {
       try {
         return cardIdCandidate ? await getTCGCard(cardIdCandidate, language, signal, { allowEnglishFallback: false }) : null;
@@ -56,17 +60,17 @@ export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, 
         return null;
       }
     },
-    enabled: mounted && open && Boolean(cardIdCandidate),
+    enabled: mounted && open && languageSupported && Boolean(cardIdCandidate),
     staleTime: 30 * 60 * 1000,
     retry: false,
   });
 
   const cards = useMemo(() => {
     const byId = new Map<string, TCGCard>();
-    if (exactCardQuery.data) byId.set(exactCardQuery.data.id, exactCardQuery.data);
+    if (exactCardQuery.data && matchesTCGCardSearchFilters(exactCardQuery.data, filters, { ownedIds, wishlistIds: wantedIds })) byId.set(exactCardQuery.data.id, exactCardQuery.data);
     for (const card of catalogQuery.data?.pages.flatMap((page) => page.cards) ?? []) byId.set(card.id, card);
     return [...byId.values()];
-  }, [catalogQuery.data, exactCardQuery.data]);
+  }, [catalogQuery.data, exactCardQuery.data, filters, ownedIds, wantedIds]);
 
   const add = (card: TCGCard) => {
     setAddError('');
@@ -84,10 +88,13 @@ export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, 
           <p className="text-sm leading-6 text-muted-foreground">{t('tcg.custom_collections.description')}</p>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4 sm:p-6">
-          <TCGFilters filters={filters} onChange={setFilters} mode="advanced" autoApplyInitialSet={false} language={language} />
+          <TCGLanguageSelector value={language} onChange={(next) => { setLanguage(next); setFilters((current) => ({ ...DEFAULT_TCG_CARD_FILTERS, searchTerm: current.searchTerm })); setAddError(''); }} />
+          <TCGFilters key={language} filters={filters} onChange={setFilters} mode="advanced" autoApplyInitialSet={false} language={language} />
           {addError && <p role="alert" className="text-sm font-semibold text-destructive">{addError}</p>}
 
-          {!query ? (
+          {!languageSupported ? (
+            <p role="status" className="text-sm text-muted-foreground">{t('tcg.custom_collections.language_unavailable')}</p>
+          ) : !query ? (
             <p className="rounded-sm border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
               {t('tcg.custom_collections.search_cards_placeholder')}
             </p>
@@ -111,20 +118,17 @@ export function TCGCustomCollectionAddPanel({ open, onOpenChange, collectionId, 
               <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3" aria-label={t('tcg.custom_collections.search_cards')}>
                 {cards.map((card) => {
                   const alreadyAdded = memberships.some((entry) => entry.collectionId === collectionId && entry.cardId === card.id && entry.language === language);
-                  const owned = ownedCardIds.includes(card.id);
                   return (
                     <li key={card.id} className="flex min-w-0 flex-col rounded-sm border border-border/50 bg-card/50 p-2">
                       <Link href={`${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(language)}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                         <div className="relative aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30">
                           {/* TCGdex cards can be absent while their compact references remain searchable. */}
-                          <TCGImageWithFallback candidates={getTCGCardImageCandidates(card)} alt={card.name} fill sizes="(min-width: 640px) 180px, 45vw" className="object-contain" />
+                          <TCGImageWithFallback candidates={getTCGCardImageCandidates(card, 'high', { allowLanguageFallback: false })} alt={card.name} fill sizes="(min-width: 640px) 180px, 45vw" className="object-contain" />
                         </div>
                         <span className="mt-2 block min-h-10 line-clamp-2 break-words text-xs font-black group-hover:text-primary">{card.name}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">{card.id}</span>
                       </Link>
-                      <span className={`mt-2 inline-flex min-h-6 items-center self-start rounded-sm border px-2 text-[10px] font-black uppercase tracking-wide ${owned ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'border-border/60 bg-background/50 text-muted-foreground'}`}>
-                        {t(owned ? 'tcg.custom_collections.possession_owned' : 'tcg.custom_collections.possession_not_owned')}
-                      </span>
+                      <span className="my-2 text-xs font-bold uppercase">{language}</span>
                       <button
                         type="button"
                         onClick={() => add(card)}

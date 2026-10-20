@@ -4,6 +4,7 @@ import {
   createTCGCustomCollection,
   filterTCGCustomCollectionCards,
   normalizeTCGCustomCollectionCards,
+  normalizeTCGCustomCollectionCard,
   normalizeTCGCustomCollections,
   removeTCGCustomCollectionCard,
 } from './tcg-custom-collections';
@@ -13,6 +14,25 @@ const secondId = '36e431a6-c3c1-46d4-804d-f5fa08f1af9d';
 const createdAt = '2026-10-19T10:00:00.000Z';
 
 describe('custom TCG collections', () => {
+  it('upgrades legacy binder references to one independent copy and validates quantities', () => {
+    const legacy = { collectionId: firstId, cardId: 'base1-4', language: 'fr', cardName: 'Dracaufeu', addedAt: createdAt };
+    expect(normalizeTCGCustomCollectionCard(legacy)).toMatchObject({ quantity: 1 });
+    expect(normalizeTCGCustomCollectionCard({ ...legacy, quantity: 7 })).toMatchObject({ quantity: 7 });
+    expect(normalizeTCGCustomCollectionCard({ ...legacy, quantity: 0 })).toMatchObject({ quantity: 0 });
+    for (const quantity of [-1, 1.5, '2', 10000, null]) {
+      expect(normalizeTCGCustomCollectionCard({ ...legacy, quantity })).toBeNull();
+    }
+  });
+
+  it('searches languages without mixing editions with the same catalog ID', () => {
+    const cards = normalizeTCGCustomCollectionCards(['fr', 'ja'].map((language) => ({
+      collectionId: firstId, cardId: 'base1-4', language, cardName: language === 'fr' ? 'Dracaufeu' : 'リザードン', addedAt: createdAt,
+    })), [firstId])!;
+    expect(filterTCGCustomCollectionCards(cards, 'ja', 1).items).toHaveLength(1);
+    expect(filterTCGCustomCollectionCards(cards, 'ja', 1).items[0].language).toBe('ja');
+    expect(filterTCGCustomCollectionCards(cards, 'リザードン', 1).total).toBe(1);
+  });
+
   it('normalizes names and descriptions while preserving duplicate names', () => {
     const collection = createTCGCustomCollection(firstId, '  1025  ', '  Every Pokémon  ', createdAt);
 

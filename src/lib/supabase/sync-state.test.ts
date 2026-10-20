@@ -7,6 +7,19 @@ import { advanceTcgApiSyncMetadata, attachTcgApiSyncMetadata } from '@/lib/tcg-a
 function withTcg(state: PersistedState, patch: Partial<PersistedState>): PersistedState { return { ...state, ...patch }; }
 
 describe('language-aware sync merge', () => {
+  it('persists independent multilingual quantities through validation and sync reconciliation', () => {
+    const initial = getInitialSyncState();
+    const binder = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: 'Mixed', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const card = { collectionId: binder.id, cardId: 'base1-4', language: 'fr' as const, cardName: 'Dracaufeu', addedAt: binder.createdAt, quantity: 4 };
+    const base = withTcg(initial, { tcgCustomCollections: [binder], tcgCustomCollectionCards: [card, { ...card, language: 'ja', quantity: 2 }] });
+    const metadata = normalizeSyncMetadata(null, base);
+    const changed = withTcg(base, { tcgCustomCollectionCards: [{ ...card, quantity: 7 }, { ...card, language: 'ja', quantity: 2 }] });
+    const merged = reconcileSyncState(changed, base, advanceSyncMetadata(metadata, base, changed, 'device-a'), metadata, { deviceId: 'device-a' });
+    expect(merged.state.tcgCustomCollectionCards.map((entry) => [entry.language, entry.quantity])).toEqual([['fr', 7], ['ja', 2]]);
+    expect(merged.state.tcgOwnedCards).toEqual([]);
+    expect(merged.state.tcgCollectionCards).toEqual([]);
+  });
+
   it('merges independent binder additions and keeps one card reference per binder', () => {
     const initial = getInitialSyncState();
     const collectionA = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: '1025', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };

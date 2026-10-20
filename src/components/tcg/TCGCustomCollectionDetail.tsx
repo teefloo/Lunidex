@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import Header from '@/components/layout/Header';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
-import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { useMounted } from '@/hooks/useMounted';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useAuth } from '@/lib/neon/AuthProvider';
@@ -18,9 +18,8 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
-import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
-import { trackProductEvent } from '@/lib/product-measurement';
 import { cn } from '@/lib/utils';
+import { getTCGCardLanguageName, isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { filterTCGCustomCollectionCards, TCG_CUSTOM_COLLECTION_PAGE_SIZE } from '@primedex/core/lib/tcg-custom-collections';
 import { usePrimeDexStore } from '@/store/primedex';
 import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
@@ -35,20 +34,21 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const { t } = useTranslation();
   const mounted = useMounted();
   const localeHref = useLocaleHref();
+  const interfaceLanguage = useClientLanguage();
   const { user, loading: authLoading } = useAuth();
   const syncStatus = useSyncAccessStatus();
   const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const collection = usePrimeDexStore((state) => state.tcgCustomCollections.find((entry) => entry.id === collectionId));
   const allReferences = usePrimeDexStore((state) => state.tcgCustomCollectionCards);
   const references = useMemo(() => allReferences.filter((entry) => entry.collectionId === collectionId), [allReferences, collectionId]);
-  const ownedCardIds = usePrimeDexStore((state) => state.tcgOwnedCards);
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
-  const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
-  const toggleTCGOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
+  const setQuantity = usePrimeDexStore((state) => state.setTCGCustomCollectionCardQuantity);
   const removeCard = usePrimeDexStore((state) => state.removeTCGCustomCollectionCard);
   const deleteCollection = usePrimeDexStore((state) => state.deleteTCGCustomCollection);
   const router = useRouter();
   const [search, setSearch] = useState('');
+  const [languageFilter, setLanguageFilter] = useState<TCGCardLanguage | ''>('');
+  const filteredReferences = useMemo(() => languageFilter ? references.filter((ref) => ref.language === languageFilter) : references, [references, languageFilter]);
   const [page, setPage] = useState(1);
   const [formOpen, setFormOpen] = useState(false);
   const [addPanelOpen, setAddPanelOpen] = useState(false);
@@ -56,12 +56,12 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const [error, setError] = useState('');
   const returnHref = localeHref('/tcg/collection?view=custom');
   const pageData = useMemo(() => {
-    const firstPage = filterTCGCustomCollectionCards(references, search, 1, TCG_CUSTOM_COLLECTION_PAGE_SIZE);
+    const firstPage = filterTCGCustomCollectionCards(filteredReferences, search, 1, TCG_CUSTOM_COLLECTION_PAGE_SIZE);
     const lastPage = Math.max(1, Math.ceil(firstPage.total / TCG_CUSTOM_COLLECTION_PAGE_SIZE));
     return page > lastPage
-      ? filterTCGCustomCollectionCards(references, search, lastPage, TCG_CUSTOM_COLLECTION_PAGE_SIZE)
-      : filterTCGCustomCollectionCards(references, search, page, TCG_CUSTOM_COLLECTION_PAGE_SIZE);
-  }, [page, references, search]);
+      ? filterTCGCustomCollectionCards(filteredReferences, search, lastPage, TCG_CUSTOM_COLLECTION_PAGE_SIZE)
+      : filterTCGCustomCollectionCards(filteredReferences, search, page, TCG_CUSTOM_COLLECTION_PAGE_SIZE);
+  }, [page, filteredReferences, search]);
   const detailQuery = useQuery({
     queryKey: [
       ...tcgKeys.all(), 'custom-collection-page', collectionId,
@@ -78,17 +78,6 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     if (!removeCard(collectionId, cardId, language)) setError(t('tcg.custom_collections.remove_error'));
   };
 
-  const markOwned = (cardId: string, language: (typeof references)[number]['language'], setId?: string) => {
-    void trackProductEvent('tcg_first_card_interacted', undefined, undefined, {
-      set_id: setId,
-      tcg_language: language,
-      interaction: 'add',
-    });
-    const collectionKey = setId ? encodeTCGCollectionKey(language, setId) : null;
-    if (collectionKey) addCollectionCard(collectionKey, cardId);
-    else toggleTCGOwned(cardId);
-  };
-
   const confirmDelete = () => {
     if (!deleteCollection(collectionId)) {
       setError(t('tcg.custom_collections.delete_error'));
@@ -98,7 +87,9 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     router.push(returnHref);
   };
 
-  const cardResults = detailQuery.data ?? [];
+  // Query data contains catalogue details. Always read quantities from the current store.
+  const currentReferences = new Map(pageData.items.map((ref) => [`${ref.language}:${ref.cardId}`, ref]));
+  const cardResults = (detailQuery.data ?? []).map((result) => ({ ...result, ref: currentReferences.get(`${result.ref.language}:${result.ref.cardId}`) ?? result.ref }));
   const loading = authLoading || !mounted || !hasHydrated || syncStatus === 'checking';
 
   return (
@@ -156,6 +147,13 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                   placeholder={t('tcg.custom_collections.search_cards_placeholder')}
                 />
               </label>
+              <label className="space-y-2 text-sm font-bold">
+                <span>{t('tcg.card_language')}</span>
+                <select aria-label={t('tcg.card_language')} value={languageFilter} onChange={(event) => { const value = event.target.value; if (value === '' || isTCGCardLanguage(value)) { setLanguageFilter(value); setPage(1); } }} className="block min-h-11 rounded-sm border border-border bg-background px-3 focus-visible:ring-2 focus-visible:ring-primary">
+                  <option value="">{t('tcg.custom_collections.all_languages')}</option>
+                  {[...new Set(references.map((ref) => ref.language))].sort().map((language) => <option key={language} value={language}>{getTCGCardLanguageName(language, interfaceLanguage)}</option>)}
+                </select>
+              </label>
               <p className="shrink-0 text-sm text-muted-foreground" aria-live="polite">
                 {t('tcg.custom_collections.cards_count', { count: pageData.total })}
               </p>
@@ -184,8 +182,9 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                 <ul className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6" aria-label={collection.name}>
                   {cardResults.map(({ ref, card, unavailable }) => {
                     const cardHref = `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(ref.language)}`;
-                    const owned = ownedCardIds.includes(card.id);
-                    const imageCandidates = getTCGCardImageCandidates(card);
+                    const quantity = ref.quantity ?? 1;
+                    const owned = quantity > 0;
+                    const imageCandidates = getTCGCardImageCandidates(card, 'high', { allowLanguageFallback: false });
                     const imageContent = (
                       <>
                         <TCGImageWithFallback
@@ -212,7 +211,7 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                         {!owned ? (
                           <button
                             type="button"
-                            onClick={() => markOwned(card.id, ref.language, card.set?.id)}
+                            onClick={() => { if (!setQuantity(collectionId, ref.cardId, ref.language, 1)) setError(t('tcg.custom_collections.save_error')); }}
                             className={cn(imageFrameClassName, 'group/card cursor-pointer touch-manipulation text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 motion-reduce:transition-none')}
                             aria-label={t('tcg.activation.add_card_aria', { name: card.name })}
                           >
@@ -228,8 +227,18 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                         <div className="mt-2 min-w-0 flex-1">
                           {unavailable ? <h2 className="line-clamp-2 min-h-10 break-words text-xs font-black">{card.name}</h2> : <Link href={cardHref} className="line-clamp-2 min-h-10 break-words text-xs font-black hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{card.name}</Link>}
                           <p className="mt-1 truncate font-mono text-[10px] text-muted-foreground">{ref.cardId}</p>
+                          <p className="mt-1 text-xs font-bold">{getTCGCardLanguageName(ref.language, interfaceLanguage)} · {ref.language.toUpperCase()}</p>
+                          {card.set?.name && <p className="mt-1 text-xs text-muted-foreground">{card.set.name}</p>}
+                          <label className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                            <span>{t('tcg.custom_collections.quantity')}</span>
+                            <BinderQuantityInput quantity={quantity} ariaLabel={`${t('tcg.custom_collections.quantity')}: ${card.name} (${ref.language})`} onCommit={(next) => {
+                              const saved = setQuantity(collectionId, ref.cardId, ref.language, next);
+                              setError(saved ? '' : t('tcg.custom_collections.save_error'));
+                              return saved;
+                            }} />
+                          </label>
                           <p aria-live="polite" className="mt-2 text-[10px] font-black uppercase tracking-wide text-muted-foreground">
-                            <span>{t('tcg.custom_collections.ownership')}: </span>
+                            <span>{t('tcg.custom_collections.binder_ownership')}: </span>
                             <span className={owned ? 'text-emerald-700 dark:text-emerald-300' : ''}>{t(owned ? 'tcg.custom_collections.possession_owned' : 'tcg.custom_collections.possession_not_owned')}</span>
                           </p>
                           {unavailable && <p className="mt-1 line-clamp-2 text-[10px] leading-4 text-amber-700 dark:text-amber-300">{t('tcg.custom_collections.unavailable')}</p>}
@@ -242,11 +251,11 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                   })}
                 </ul>
                 <nav className="flex items-center justify-between gap-3 border-t border-border/50 pt-4" aria-label={t('tcg.custom_collections.title')}>
-                  <button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page <= 1} className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border px-4 font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <button type="button" onClick={() => setPage(Math.max(1, pageData.page - 1))} disabled={pageData.page <= 1} className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border px-4 font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />{t('tcg.custom_collections.previous')}
                   </button>
-                  <span className="text-center text-xs font-bold text-muted-foreground">{page} / {Math.max(1, Math.ceil(pageData.total / TCG_CUSTOM_COLLECTION_PAGE_SIZE))}</span>
-                  <button type="button" onClick={() => setPage((current) => current + 1)} disabled={!pageData.hasNextPage} className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border px-4 font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <span className="text-center text-xs font-bold text-muted-foreground">{pageData.page} / {Math.max(1, Math.ceil(pageData.total / TCG_CUSTOM_COLLECTION_PAGE_SIZE))}</span>
+                  <button type="button" onClick={() => setPage(pageData.page + 1)} disabled={!pageData.hasNextPage} className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border px-4 font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     {t('tcg.custom_collections.next')}<ChevronRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </nav>
@@ -258,7 +267,7 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
         {collection && (
           <>
             {formOpen && <TCGCustomCollectionFormDialog open={formOpen} onOpenChange={setFormOpen} collection={collection} />}
-            <TCGCustomCollectionAddPanel open={addPanelOpen} onOpenChange={setAddPanelOpen} collectionId={collection.id} language={browseLanguage} />
+            <TCGCustomCollectionAddPanel open={addPanelOpen} onOpenChange={setAddPanelOpen} collectionId={collection.id} initialLanguage={browseLanguage} />
             <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
               <DialogContent>
                 <DialogHeader>
@@ -276,4 +285,28 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
       </main>
     </div>
   );
+}
+
+
+function BinderQuantityInput({ quantity, ariaLabel, onCommit }: {
+  quantity: number;
+  ariaLabel: string;
+  onCommit: (quantity: number) => boolean;
+}) {
+  const [draft, setDraft] = useState({ quantity, value: String(quantity) });
+  if (draft.quantity !== quantity) setDraft({ quantity, value: String(quantity) });
+  const reset = () => setDraft({ quantity, value: String(quantity) });
+  const commit = () => {
+    const value = draft.value.trim();
+    const next = value ? Number(value) : NaN;
+    if (!Number.isSafeInteger(next) || next < 0 || next > 9_999 || (next !== quantity && !onCommit(next))) reset();
+    else setDraft({ quantity: next, value: String(next) });
+  };
+  return <Input type="number" min={0} max={9999} step={1} value={draft.value} aria-label={ariaLabel} className="h-11 w-20"
+    onChange={(event) => setDraft({ quantity, value: event.target.value })}
+    onBlur={commit}
+    onKeyDown={(event) => {
+      if (event.key === 'Enter') { event.preventDefault(); event.currentTarget.blur(); }
+      if (event.key === 'Escape') { event.preventDefault(); reset(); }
+    }} />;
 }

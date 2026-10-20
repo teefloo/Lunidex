@@ -47,6 +47,33 @@ describe('web TCG collection store', () => {
     setSyncAccessStatus('checking');
   });
 
+  it('keeps binder quantities independent from series, other binders and language editions', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const store = usePrimeDexStore.getState();
+    const series = encodeTCGCollectionKey('fr', 'base1')!;
+    store.setTCGCollectionVariantQuantity(series, 'base1-4', 'holo', 3);
+    const binder = store.createTCGCustomCollection('Mixed');
+    const other = store.createTCGCustomCollection('Other');
+    const card = { cardId: 'base1-4', language: 'fr' as const, cardName: 'Dracaufeu' };
+    expect(store.addTCGCustomCollectionCard(binder, card)).toBe(true);
+    store.addTCGCustomCollectionCard(binder, { ...card, language: 'ja', cardName: 'リザードン' });
+    store.addTCGCustomCollectionCard(other, card);
+    expect(store.setTCGCustomCollectionCardQuantity(binder, 'base1-4', 'fr', 5)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards.map((entry) => entry.quantity).sort()).toEqual([1, 1, 5]);
+    expect(store.getTCGPhysicalCardCount()).toBe(3);
+    store.setTCGCollectionVariantQuantity(series, 'base1-4', 'holo', 0);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards.map((entry) => entry.quantity).sort()).toEqual([1, 1, 5]);
+    expect(usePrimeDexStore.getState().tcgOwnedCards).toEqual([]);
+    store.setTCGCollectionVariantQuantity(series, 'base1-4', 'normal', 2);
+    expect(store.setTCGCustomCollectionCardQuantity(binder, 'base1-4', 'fr', 0)).toBe(true);
+    expect(store.setTCGCustomCollectionCardQuantity(binder, 'base1-4', 'ja', -1)).toBe(false);
+    store.removeTCGCustomCollectionCard(binder, 'base1-4', 'fr');
+    expect(store.getTCGPhysicalCardCount()).toBe(2);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toHaveLength(2);
+    setSyncAccessStatus('checking');
+  });
+
   it('starts a collection only after its first card is added', () => {
     setSyncAccessStatus('ready');
     const collection = encodeTCGCollectionKey('en', 'sv10')!;

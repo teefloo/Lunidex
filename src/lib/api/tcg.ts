@@ -641,6 +641,17 @@ function cardMatchesLocalFilters(card: TCGCard, filters: TCGCardFilters, ctx?: L
   return true;
 }
 
+/** Evaluate an exact ID match against catalog criteria; text and sorting do not filter it. */
+export function matchesTCGCardSearchFilters(card: TCGCard, filters: TCGCardFilters, context?: LocalFilterContext): boolean {
+  if (filters.selectedCategory && filters.selectedCategory !== 'all' && card.category !== filters.selectedCategory) return false;
+  if (filters.selectedSet && card.set?.id !== filters.selectedSet) return false;
+  if (filters.selectedTypes?.length && !filters.selectedTypes.some((type) => card.types?.includes(type))) return false;
+  if (filters.selectedPhase && card.stage !== filters.selectedPhase) return false;
+  if (filters.minHp !== undefined && (card.hp === undefined || card.hp < filters.minHp)) return false;
+  if (filters.maxHp !== undefined && (card.hp === undefined || card.hp > filters.maxHp)) return false;
+  return cardMatchesLocalFilters(card, filters, context);
+}
+
 function stripLocalOnlyFilters(filters: TCGCardFilters): TCGCardFilters {
   return {
     ...filters,
@@ -896,13 +907,13 @@ export async function getTCGCustomCollectionCardDetails(
   });
 }
 
-async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, signal?: AbortSignal): Promise<TCGCard[]> {
+async function hydrateCardsForVisualEffects(cards: TCGCard[], lang: string, signal?: AbortSignal, options: { allowEnglishFallback?: boolean } = {}): Promise<TCGCard[]> {
   return mapWithConcurrency(cards, VISUAL_METADATA_CONCURRENCY, async (card) => {
     throwIfAborted(signal);
 
     if (!needsVisualMetadata(card)) return card;
 
-    const fullCard = await getTCGCard(card.id, lang, signal);
+    const fullCard = await getTCGCard(card.id, lang, signal, options);
     return fullCard ?? card;
   });
 }
@@ -2112,6 +2123,7 @@ export const searchCards = async (
   ownedIds?: Set<string>,
   wishlistIds?: Set<string>,
   fetchAll = false,
+  options: { allowEnglishFallback?: boolean } = {},
 ): Promise<TCGCatalogPageResult> => {
   const tcgLang = resolveTcgLang(lang);
   const safePage = normalizeTcgPositiveInteger(page, 1);
@@ -2143,9 +2155,11 @@ export const searchCards = async (
     ? `tcg-catalog-all-v14-${tcgLang}-${query}-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`
     : `tcg-catalog-v14-${tcgLang}-${query}-p${safePage}-l${safeLimit}-local-${serializeLocalOnlyFilters(filters)}-${sortBy}-${sortOrder}`;
 
+  const searchCacheKey = options.allowEnglishFallback === false ? `${cacheKey}-localized-only` : cacheKey;
+
   try {
     if (!dependsOnLocalOwnership) {
-      const cached = await getCachedData<TCGCatalogPageResult>(cacheKey);
+      const cached = await getCachedData<TCGCatalogPageResult>(searchCacheKey);
       if (cached) return cached;
     }
 
@@ -2171,10 +2185,10 @@ export const searchCards = async (
         }
 
         const sorted = [...allCards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
-        const pageCards = await hydrateCardsForVisualEffects(sorted, tcgLang, signal);
+        const pageCards = await hydrateCardsForVisualEffects(sorted, tcgLang, signal, options);
         const result = { cards: pageCards, hasMore: false };
 
-        if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
+        if (!dependsOnLocalOwnership) await setCachedData(searchCacheKey, result);
         return result;
       }
 
@@ -2186,13 +2200,13 @@ export const searchCards = async (
       }
       const normalized = Array.isArray(data) ? data.map((card) => normaliseCard(card, tcgLang)) : [];
       const sorted = [...normalized].sort((a, b) => compareCards(a, b, filters.sortBy ?? 'name', filters.sortOrder ?? 'asc'));
-      const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, safeLimit), tcgLang, signal);
+      const pageCards = await hydrateCardsForVisualEffects(sorted.slice(0, safeLimit), tcgLang, signal, options);
       const result = {
         cards: pageCards,
         hasMore: Array.isArray(data) ? data.length > safeLimit : false,
       };
 
-      if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
+      if (!dependsOnLocalOwnership) await setCachedData(searchCacheKey, result);
       return result;
     }
 
@@ -2217,7 +2231,7 @@ export const searchCards = async (
                 return card;
               }
 
-              const fullCard = await getTCGCard(card.id, tcgLang, signal);
+              const fullCard = await getTCGCard(card.id, tcgLang, signal, options);
               return fullCard ?? card;
             })
         : normalized;
@@ -2230,21 +2244,21 @@ export const searchCards = async (
 
     const sortedCards = [...cards].sort((a, b) => compareCards(a, b, sortBy, sortOrder));
     const pageCards = fetchAll
-      ? await hydrateCardsForVisualEffects(sortedCards, tcgLang, signal)
-      : await hydrateCardsForVisualEffects(sortedCards.slice((page - 1) * limit, (page - 1) * limit + safeLimit), tcgLang, signal);
+      ? await hydrateCardsForVisualEffects(sortedCards, tcgLang, signal, options)
+      : await hydrateCardsForVisualEffects(sortedCards.slice((page - 1) * limit, (page - 1) * limit + safeLimit), tcgLang, signal, options);
     const result = {
       cards: pageCards,
       hasMore: fetchAll ? false : hasMoreRemote || sortedCards.length > (page - 1) * limit + safeLimit,
     };
 
-    if (!dependsOnLocalOwnership) await setCachedData(cacheKey, result);
+    if (!dependsOnLocalOwnership) await setCachedData(searchCacheKey, result);
     return result;
   } catch (error) {
     if (signal?.aborted) throw error;
     logTcgUpstreamFailure(`search:${cacheKey}`, 'Error in searchCards', error);
     const staleCached = dependsOnLocalOwnership
       ? null
-      : await getCachedData<TCGCatalogPageResult>(cacheKey, true);
+      : await getCachedData<TCGCatalogPageResult>(searchCacheKey, true);
     if (staleCached) return staleCached;
     throw error;
   }
