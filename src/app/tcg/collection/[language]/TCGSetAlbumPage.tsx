@@ -99,7 +99,7 @@ export function TCGSetAlbumPage({
   };
 
   const albumQuery = useQuery({
-    queryKey: ['tcg', 'collection-set-album-v2', setId, resolvedLang],
+    queryKey: ['tcg', 'collection-set-album-v3', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
     staleTime: 60 * 60 * 1000,
     retry: false,

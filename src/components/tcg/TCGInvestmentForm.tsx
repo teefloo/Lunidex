@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { getTCGCard } from '@/lib/api/tcg';
 import { TCG_CARD_LANGUAGES, getTCGCardLanguageName, type TCGCardLanguage } from '@/lib/tcg-language';
-import { getInvestmentReferenceQuote } from '@/lib/tcg-investments';
+import { getInvestmentMarketReference } from '@/lib/tcg-investments';
 import { createInvestmentDraft, getDefaultInvestmentVariant, validateInvestmentDraft, type InvestmentDraft, type InvestmentErrors, type InvestmentField } from '@/lib/tcg-investment-form';
 import { saveTCGInvestmentConfirmed } from '@/lib/tcg-investment-save';
 import { useAuth } from '@/lib/neon/AuthProvider';
@@ -54,7 +54,8 @@ export function TCGInvestmentForm({ lot, initialCard, language, onClose, onSaved
   const card = detail.data?.id === selected?.id ? detail.data : selected;
   const variant = draft.variant || getDefaultInvestmentVariant(card);
   const variants = INVESTMENT_VARIANTS.filter((item) => item === 'other' || item === lot?.variant || card?.variants?.[item]);
-  const reference = card && variant ? getInvestmentReferenceQuote(card, variant, draft.printing) : null;
+  const marketReference = card && variant ? getInvestmentMarketReference(card, variant, draft.printing) : null;
+  const reference = marketReference?.quote ?? null;
   const needsPrinting = variant === 'other' || draft.condition === 'graded';
   const variantLabel = (item: InvestmentVariant) => t(['normal', 'holo', 'reverse'].includes(item) ? `tcg.collection_variant_${item}` : `investments.${item}`);
   const fieldId = (field: InvestmentField) => `${id}-${field}`;
@@ -213,11 +214,12 @@ export function TCGInvestmentForm({ lot, initialCard, language, onClose, onSaved
                 <p className="text-sm font-bold">{t('investments.reference')}{reference ? ` · ${reference.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer'}` : ''}</p>
                 <p role="status" className="text-base font-semibold tabular-nums">{reference ? new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(reference.amount) : t(`investments.${referenceState}`)}</p>
                 {formattedDate && <p className="text-xs text-muted-foreground">{t('investments.reference_date')}: {formattedDate}</p>}
+                {marketReference && !marketReference.matchesFinish && <p className="text-xs text-muted-foreground">{t('tcg.collection_variant_' + marketReference.variant)} · {t('investments.reference_special')}</p>}
                 <details className="text-xs text-muted-foreground"><summary className="min-h-11 cursor-pointer content-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('investments.reference_limits')}</summary><p className="pb-2 leading-relaxed">{t('investments.reference_note')}</p></details>
                 {refreshError && <p role="alert" className="text-sm text-destructive">{t('investments.reference_error')}</p>}
                 <div className="flex flex-wrap gap-2">
                   <Button type="button" variant="outline" disabled={refreshing || detail.isFetching} onClick={() => void refresh()}>{t(refreshing ? 'investments.reference_loading' : 'investments.refresh')}</Button>
-                  {reference && <Button type="button" variant="outline" onClick={() => change('estimate', reference.amount.toFixed(2), true)}>{t('investments.use_reference')}</Button>}
+                  {reference && marketReference?.matchesFinish && <Button type="button" variant="outline" onClick={() => change('estimate', reference.amount.toFixed(2), true)}>{t('investments.use_reference')}</Button>}
                 </div>
               </section>
               <p className="text-sm text-muted-foreground">{t('investments.price_note')}</p>

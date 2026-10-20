@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, TrendingUp } from 'lucide-react';
@@ -17,6 +18,8 @@ import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { encodeTCGCollectionKey, getTCGCollectionCardQuantity } from '@/lib/tcg-collections';
 import { getTCGCardLanguageName, resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
+import { getTCGCard } from '@/lib/api/tcg';
+import { getInvestmentMarketReference } from '@/lib/tcg-investments';
 import type { SyncAccessStatus } from '@/store/sync-access';
 import { cn } from '@/lib/utils';
 import { TCGPageTabs } from './TCGPageTabs';
@@ -65,6 +68,7 @@ function InvestmentPortfolio({ onEdit, notice, setNotice }: { onEdit: (lot: TCGI
     <p className={cn('my-4 rounded-sm border p-4 text-sm', summary.unvaluedQuantity ? 'border-amber-500/40 bg-amber-500/5' : 'border-border/60 text-muted-foreground')}>
       {summary.unvaluedQuantity ? t(summary.unvaluedQuantity === 1 ? 'investments.partial_one' : 'investments.partial', { count: summary.unvaluedQuantity, amount: money(summary.unvaluedCostCents) }) : lots.length ? t('investments.complete') : t('investments.empty_hint')}
     </p>
+    {lots.length > 0 && <p className="-mt-2 mb-4 text-xs leading-relaxed text-muted-foreground">{t('investments.reference_note')}</p>}
     <p role="status" className="mb-4 text-sm text-muted-foreground">{notice}</p>
     {lots.length === 0 ? <div className="page-surface py-14 text-center"><TrendingUp aria-hidden="true" className="mx-auto mb-4 size-8 text-muted-foreground" /><h2 className="text-xl font-bold">{t('investments.empty')}</h2><p className="mx-auto mt-2 max-w-lg px-4 text-sm text-muted-foreground">{t('investments.empty_hint')}</p></div> : <>
       <div className="mb-5 grid gap-3 md:grid-cols-[2fr_1fr_1fr]">
@@ -97,6 +101,7 @@ function InvestmentPortfolio({ onEdit, notice, setNotice }: { onEdit: (lot: TCGI
               <div><dt className="text-xs text-muted-foreground">{t('investments.gain')}</dt><dd className={cn('mt-1 font-bold tabular-nums', performanceClass(value.gainCents))}>{signedMoney(value.gainCents)}</dd></div>
               <div><dt className="text-xs text-muted-foreground">{t('investments.yield')}</dt><dd className={cn('mt-1 font-bold tabular-nums', performanceClass(value.gainCents))}>{percent(value.returnPercent)}</dd></div>
             </dl>
+            <InvestmentMarketReference lot={lot} locale={i18n.language} />
             <div className="mt-4 flex flex-wrap justify-between gap-3 text-xs text-muted-foreground">
               <span>{t('investments.valuation_date')}: {date(lot.valuation?.valuedOn ?? null)}</span>
               <Link className="inline-flex min-h-11 items-center underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" href={localeHref(`/tcg/collection/${lot.language}/${encodeURIComponent(lot.setId)}`)}>{inventoryQuantity === null ? t('tcg.collection_open_in_language') : t('investments.inventory', { count: inventoryQuantity })}</Link>
@@ -107,6 +112,33 @@ function InvestmentPortfolio({ onEdit, notice, setNotice }: { onEdit: (lot: TCGI
       {lastPage > 0 && <div className="mt-5 flex items-center justify-center gap-4"><Button variant="outline" disabled={activePage === 0} onClick={() => setPage(activePage - 1)}>{t('tcg.custom_collections.previous')}</Button><span className="text-sm tabular-nums">{activePage + 1} / {lastPage + 1}</span><Button variant="outline" disabled={activePage === lastPage} onClick={() => setPage(activePage + 1)}>{t('tcg.custom_collections.next')}</Button></div>}
     </>}
   </>;
+}
+
+function InvestmentMarketReference({ lot, locale }: { lot: TCGInvestment; locale: string }) {
+  const { t } = useTranslation();
+  const query = useQuery({
+    queryKey: ['tcg', 'investment-market-reference', lot.language, lot.cardId],
+    queryFn: ({ signal }) => getTCGCard(lot.cardId, lot.language, signal, { allowEnglishFallback: false, requirePricing: true }),
+    retry: false,
+  });
+  if (!query.data) return null;
+
+  const reference = getInvestmentMarketReference(query.data, lot.variant, lot.printing);
+  if (!reference) return null;
+
+  const money = new Intl.NumberFormat(locale, { style: 'currency', currency: reference.quote.currency }).format(reference.quote.amount);
+  const updatedAt = reference.quote.updatedAt ? new Date(reference.quote.updatedAt) : null;
+  const updatedLabel = updatedAt && Number.isFinite(updatedAt.getTime())
+    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(updatedAt)
+    : null;
+
+  return (
+    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      <span className="font-semibold">{t('investments.reference')} · {t(`tcg.collection_variant_${reference.variant}`)}: {money} · {reference.quote.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer'}</span>
+      {!reference.matchesFinish && <span> · {t('investments.reference_special')}</span>}
+      {updatedLabel && <span> · {t('investments.reference_date')}: {updatedLabel}</span>}
+    </p>
+  );
 }
 
 function InvestmentWorkspace({ status }: { status: SyncAccessStatus }) {

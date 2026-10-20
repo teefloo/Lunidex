@@ -1,4 +1,4 @@
-import type { TCGCard, TCGSet } from '@/types/tcg';
+import type { TCGCard, TCGCardThirdParty, TCGCardVariantDetailed, TCGSet } from '@/types/tcg';
 import { getTrustedOgImageUrl } from '@/lib/og/assets';
 import { getAnniversary30OfficialCardImage } from '@/lib/anniversary-30-images';
 
@@ -8,7 +8,9 @@ interface TCGImageCard {
   number?: string;
   image?: string;
   imageUrl?: string;
-  set?: Pick<TCGSet, 'id' | 'logo' | 'symbol'>;
+  set?: Pick<TCGSet, 'id' | 'name' | 'logo' | 'symbol' | 'serie'>;
+  thirdParty?: Pick<TCGCardThirdParty, 'tcgplayer'>;
+  variants_detailed?: Array<Pick<TCGCardVariantDetailed, 'type' | 'stamp' | 'foil' | 'thirdParty'>>;
 }
 
 export const TCG_CARD_PLACEHOLDER = '/images/pokemon-card-back.webp';
@@ -18,6 +20,7 @@ const OPTIMIZABLE_TCG_HOSTS = new Set([
   'images.tcgdex.net',
   'images.scrydex.com',
   'images.pokemontcg.io',
+  'tcgplayer-cdn.tcgplayer.com',
 ]);
 
 export function hasTCGCardImage(card: Pick<TCGCard, 'image' | 'imageUrl'>): boolean {
@@ -123,23 +126,40 @@ export function getTCGCardPngImage(card: TCGCard): string | undefined {
 export function getTCGCardImageCandidates(
   card: TCGImageCard,
   quality: 'low' | 'high' = 'high',
-  options: { allowLanguageFallback?: boolean } = {},
+  options: { allowLanguageFallback?: boolean; language?: string } = {},
 ): string[] {
   const allowLanguageFallback = options.allowLanguageFallback !== false;
   const setId = card.set?.id;
   const localId = card.localId || card.number;
   const hasSetArtwork = Boolean(card.set?.logo || card.set?.symbol);
+  const requestedLanguage = options.language ?? 'en';
+  const imageLanguage = /^[a-z]{2}(?:-[a-z]{2})?$/.test(requestedLanguage) ? requestedLanguage : 'en';
+  const synthesizedTcgDexImage = !card.image && !card.imageUrl && setId && localId && card.set?.serie?.id
+    ? `https://assets.tcgdex.net/${imageLanguage}/${encodeURIComponent(card.set.serie.id)}/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}`
+    : undefined;
   const pokemonTcgFallbacks = setId && localId && hasSetArtwork
     ? [
         `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}_hires.png`,
         `https://images.pokemontcg.io/${encodeURIComponent(setId)}/${encodeURIComponent(localId)}.png`,
       ]
     : [];
-  const cardBaseGroups = [card.image, card.imageUrl]
+  const cardBaseGroups = [card.image, card.imageUrl, synthesizedTcgDexImage]
     .map((base) => allowLanguageFallback ? addTcgDexLanguageVariants(base) : base ? [base] : [])
     .filter((group) => group.length > 0);
   const cardBases = cardBaseGroups.flat();
   const hasTcgDexSource = cardBases.some(isTcgDexAsset);
+  const detailedVariants = card.variants_detailed ?? [];
+  const unmarkedProductIds = detailedVariants
+    .filter((variant) => !variant.stamp && !variant.foil)
+    .map((variant) => variant.thirdParty?.tcgplayer);
+  const markedProductIds = detailedVariants
+    .filter((variant) => Boolean(variant.stamp || variant.foil))
+    .map((variant) => variant.thirdParty?.tcgplayer);
+  const tcgPlayerProductIds = [card.thirdParty?.tcgplayer, ...unmarkedProductIds, ...markedProductIds]
+    .filter((productId): productId is number => typeof productId === 'number' && Number.isSafeInteger(productId) && productId > 0);
+  const tcgPlayerFallbacks = allowLanguageFallback
+    ? [...new Set(tcgPlayerProductIds)].map((productId) => `https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`)
+    : [];
   const anniversary30ClassicImage = getAnniversary30ClassicImage(card);
   const candidates = [
     ...cardBaseGroups.flatMap((group) => (
@@ -151,6 +171,7 @@ export function getTCGCardImageCandidates(
     )),
     ...(allowLanguageFallback && anniversary30ClassicImage ? [anniversary30ClassicImage] : []),
     ...(!allowLanguageFallback || hasTcgDexSource ? [] : pokemonTcgFallbacks),
+    ...tcgPlayerFallbacks,
     TCG_CARD_PLACEHOLDER,
   ];
 

@@ -40,6 +40,26 @@ describe('TCG cancellation and shared requests', () => {
     expect(result.cards).toMatchObject([{ name: 'Dracaufeu' }]);
   });
 
+  it('keeps parent set and series metadata on collection card summaries without images', async () => {
+    mocks.get.mockResolvedValue({
+      data: {
+        id: 'mep',
+        name: 'MEP Black Star Promos',
+        serie: { id: 'me', name: 'Mega Evolution' },
+        cards: [{ id: 'mep-001', localId: '001', name: 'Méganium' }],
+      },
+    });
+    const { getCollectionSetAlbum } = await import('./tcg');
+
+    const album = await getCollectionSetAlbum('mep', 'fr');
+
+    expect(album?.cards[0].set).toMatchObject({ id: 'mep', serie: { id: 'me' } });
+    expect(mocks.setCachedData).toHaveBeenCalledWith(
+      expect.stringContaining('tcg-collection-set-album-v3-mep-fr'),
+      expect.objectContaining({ cards: expect.any(Array) }),
+    );
+  });
+
   it('bounds the complete set catalog route and direct fallback sequence', async () => {
     vi.useFakeTimers();
     vi.spyOn(AbortSignal, 'timeout').mockImplementation((milliseconds) => {

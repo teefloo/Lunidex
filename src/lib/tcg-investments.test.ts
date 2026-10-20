@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getInvestmentReferenceQuote, parseEuroCents } from './tcg-investments';
+import { getInvestmentMarketReference, getInvestmentReferenceQuote, parseEuroCents } from './tcg-investments';
 import type { TCGCard } from '@/types/tcg';
 
 const card: TCGCard = { id: 'base1-1', localId: '1', name: 'Alakazam', variants: { normal: true, holo: true, reverse: true }, pricing: { cardmarket: { unit: 'EUR', trend: 20, 'trend-holo': 35 } } };
@@ -16,8 +16,36 @@ describe('investment reference quotes', () => {
     expect(getInvestmentReferenceQuote(card, 'firstEdition', '')).toBeNull();
     expect(getInvestmentReferenceQuote(card, 'holo', 'PSA 10')).toBeNull();
   });
+  it('marks a quote for the recorded standard finish as matching', () => {
+    expect(getInvestmentMarketReference(card, 'holo', '')).toEqual({
+      variant: 'holo',
+      quote: { amount: 35, currency: 'EUR', provider: 'cardmarket' },
+      matchesFinish: true,
+    });
+  });
   it('never substitutes USD, zero sentinels, or another finish for EUR', () => {
     expect(getInvestmentReferenceQuote({ ...card, pricing: { tcgplayer: { unit: 'USD', normal: { marketPrice: 5 } } } }, 'normal', '')).toBeNull();
     expect(getInvestmentReferenceQuote({ ...card, pricing: { cardmarket: { trend: 0 } } }, 'normal', '')).toBeNull();
+  });
+
+  it('shows a standard finish market reference for a custom printing without valuing the purchase', () => {
+    const cardWithDetailedPricing: TCGCard = {
+      id: 'mep-031',
+      localId: '031',
+      name: 'Zekrom de N',
+      variants: { normal: false, holo: true, reverse: false },
+      variants_detailed: [{
+        type: 'Holo',
+        thirdParty: { cardmarket: 873702, tcgplayer: 680480 },
+        pricing: { cardmarket: { unit: 'EUR', trend: 7.31, 'trend-holo': 0 } },
+      }],
+    };
+
+    expect(getInvestmentReferenceQuote(cardWithDetailedPricing, 'other', 'Sceller')).toBeNull();
+    expect(getInvestmentMarketReference(cardWithDetailedPricing, 'other', 'Sceller')).toEqual({
+      variant: 'holo',
+      quote: { amount: 7.31, currency: 'EUR', provider: 'cardmarket' },
+      matchesFinish: false,
+    });
   });
 });

@@ -98,6 +98,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
       >
         <TCGCardImage
           card={card}
+          language={language}
           priority={priority}
           sizes="(min-width: 1280px) 16vw, (min-width: 768px) 25vw, 45vw"
           className={cn('object-contain p-1 transition-transform duration-100 group-hover/card:scale-105 motion-reduce:transition-none', !owned && 'grayscale opacity-70 group-hover/card:grayscale-0 group-hover/card:opacity-100')}

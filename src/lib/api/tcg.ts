@@ -1498,7 +1498,22 @@ function normaliseCollectionSetAlbum(
     throw new Error('Invalid TCGdex card response');
   }
 
-  const cards = raw.cards.map((card) => normaliseCard({ ...card, source: 'TCGames' }, language));
+  const set = normaliseSet(raw, language);
+  const cards = raw.cards.map((card) => {
+    const normalizedCard = normaliseCard({ ...card, source: 'TCGames' }, language);
+    return {
+      ...normalizedCard,
+      set: normalizedCard.set
+        ? {
+            ...set,
+            ...normalizedCard.set,
+            serie: set.serie ?? normalizedCard.set.serie,
+            logo: set.logo ?? normalizedCard.set.logo,
+            symbol: set.symbol ?? normalizedCard.set.symbol,
+          }
+        : set,
+    };
+  });
   if (cards.length === 0) {
     reportFallback('empty-required-list', { feature: 'tcg', service: 'tcgdex', operation: 'collection-set-cards' });
     return null;
@@ -1506,7 +1521,7 @@ function normaliseCollectionSetAlbum(
 
   return {
     set: {
-      ...normaliseSet(raw, language),
+      ...set,
       // The collection must count cards that can actually be displayed in the
       // selected language, not a declared count for an unavailable locale.
       totalCards: cards.length,
@@ -1537,7 +1552,7 @@ export const getCollectionSetAlbum = async (
   signal?: AbortSignal,
 ): Promise<TCGSetAlbumData | null> => {
   const tcgLang = resolveTcgLang(lang);
-  const cacheKey = `tcg-collection-set-album-v2-${setId}-${tcgLang}`;
+  const cacheKey = `tcg-collection-set-album-v3-${setId}-${tcgLang}`;
   const memoryCached = tcgAlbumMemoryCache.get(cacheKey);
   if (memoryCached?.cards.length) {
     throwIfAborted(signal);
