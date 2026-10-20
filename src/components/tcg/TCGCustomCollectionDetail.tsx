@@ -18,6 +18,9 @@ import { useTranslation } from '@/lib/i18n';
 import { getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
+import { encodeTCGCollectionKey } from '@/lib/tcg-collections';
+import { trackProductEvent } from '@/lib/product-measurement';
+import { cn } from '@/lib/utils';
 import { filterTCGCustomCollectionCards, TCG_CUSTOM_COLLECTION_PAGE_SIZE } from '@primedex/core/lib/tcg-custom-collections';
 import { usePrimeDexStore } from '@/store/primedex';
 import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
@@ -40,6 +43,8 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const references = useMemo(() => allReferences.filter((entry) => entry.collectionId === collectionId), [allReferences, collectionId]);
   const ownedCardIds = usePrimeDexStore((state) => state.tcgOwnedCards);
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
+  const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
+  const toggleTCGOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
   const removeCard = usePrimeDexStore((state) => state.removeTCGCustomCollectionCard);
   const deleteCollection = usePrimeDexStore((state) => state.deleteTCGCustomCollection);
   const router = useRouter();
@@ -71,6 +76,17 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const remove = (cardId: string, language: (typeof references)[number]['language']) => {
     setError('');
     if (!removeCard(collectionId, cardId, language)) setError(t('tcg.custom_collections.remove_error'));
+  };
+
+  const markOwned = (cardId: string, language: (typeof references)[number]['language'], setId?: string) => {
+    void trackProductEvent('tcg_first_card_interacted', undefined, undefined, {
+      set_id: setId,
+      tcg_language: language,
+      interaction: 'add',
+    });
+    const collectionKey = setId ? encodeTCGCollectionKey(language, setId) : null;
+    if (collectionKey) addCollectionCard(collectionKey, cardId);
+    else toggleTCGOwned(cardId);
   };
 
   const confirmDelete = () => {
@@ -170,21 +186,49 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                     const cardHref = `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(ref.language)}`;
                     const owned = ownedCardIds.includes(card.id);
                     const imageCandidates = getTCGCardImageCandidates(card);
+                    const imageContent = (
+                      <>
+                        <TCGImageWithFallback
+                          candidates={imageCandidates}
+                          alt={card.name}
+                          fill
+                          sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw"
+                          className={cn(
+                            'object-contain p-1 transition-[filter,opacity,transform] duration-150 motion-reduce:transition-none',
+                            !owned && 'grayscale opacity-70 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-[1.02]',
+                            owned && 'group-hover/card:scale-[1.02]',
+                          )}
+                        />
+                        {!owned && (
+                          <span aria-hidden="true" className="absolute left-1 top-1 inline-flex min-h-7 items-center gap-1 rounded-sm border border-emerald-300/35 bg-black/75 px-2 text-[10px] font-black uppercase tracking-[0.05em] text-emerald-100">
+                            <Plus className="h-3 w-3" />{t('tcg.collection_add_card')}
+                          </span>
+                        )}
+                      </>
+                    );
+                    const imageFrameClassName = 'relative block aspect-[2.5/3.5] w-full overflow-hidden rounded-sm bg-muted/30';
                     return (
                       <li key={`${ref.collectionId}:${ref.language}:${ref.cardId}`} className="flex min-w-0 flex-col rounded-sm border border-border/50 bg-card/50 p-2 shadow-[var(--shadow-pixel-sm)]">
-                        {unavailable ? (
-                          <div className="relative aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30">
-                            <TCGImageWithFallback candidates={imageCandidates} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" className="object-contain" />
-                          </div>
+                        {!owned ? (
+                          <button
+                            type="button"
+                            onClick={() => markOwned(card.id, ref.language, card.set?.id)}
+                            className={cn(imageFrameClassName, 'group/card cursor-pointer touch-manipulation text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 motion-reduce:transition-none')}
+                            aria-label={t('tcg.activation.add_card_aria', { name: card.name })}
+                          >
+                            {imageContent}
+                          </button>
+                        ) : unavailable ? (
+                          <div className={imageFrameClassName}>{imageContent}</div>
                         ) : (
-                          <Link href={cardHref} className="relative block aspect-[2.5/3.5] overflow-hidden rounded-sm bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={card.name}>
-                            <TCGImageWithFallback candidates={imageCandidates} alt={card.name} fill sizes="(min-width: 1280px) 160px, (min-width: 640px) 25vw, 45vw" className="object-contain transition-transform duration-200 hover:scale-[1.02]" />
+                          <Link href={cardHref} className={cn(imageFrameClassName, 'group/card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary')} aria-label={card.name}>
+                            {imageContent}
                           </Link>
                         )}
                         <div className="mt-2 min-w-0 flex-1">
                           {unavailable ? <h2 className="line-clamp-2 min-h-10 break-words text-xs font-black">{card.name}</h2> : <Link href={cardHref} className="line-clamp-2 min-h-10 break-words text-xs font-black hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{card.name}</Link>}
                           <p className="mt-1 truncate font-mono text-[10px] text-muted-foreground">{ref.cardId}</p>
-                          <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-muted-foreground">
+                          <p aria-live="polite" className="mt-2 text-[10px] font-black uppercase tracking-wide text-muted-foreground">
                             <span>{t('tcg.custom_collections.ownership')}: </span>
                             <span className={owned ? 'text-emerald-700 dark:text-emerald-300' : ''}>{t(owned ? 'tcg.custom_collections.possession_owned' : 'tcg.custom_collections.possession_not_owned')}</span>
                           </p>

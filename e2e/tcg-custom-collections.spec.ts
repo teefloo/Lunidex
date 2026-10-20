@@ -3,7 +3,9 @@ import { expect, test, type BrowserContext, type Page, type Route } from '@playw
 const userId = '00000000-0000-4000-8000-000000000001';
 const updatedAt = '2026-10-19T10:00:00.000Z';
 const collectionId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
-const customE2EEnabled = process.env.E2E_CUSTOM_COLLECTIONS === '1' && !process.env.E2E_BASE_URL;
+const e2eBaseUrl = process.env.E2E_BASE_URL;
+const localMockBaseUrl = !e2eBaseUrl || /^http:\/\/(localhost|127\.0\.0\.1):3000$/.test(e2eBaseUrl);
+const customE2EEnabled = process.env.E2E_CUSTOM_COLLECTIONS === '1' && localMockBaseUrl;
 
 type E2EState = Record<string, unknown>;
 
@@ -157,6 +159,7 @@ for (const viewport of [
     await search.fill('Alakazam');
     const cardResult = page.getByRole('list', { name: 'Search cards' }).getByText('Alakazam');
     await expect(cardResult).toBeVisible();
+    await expect(search).toBeFocused();
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Already added' })).toBeVisible();
     app.setCatalogFailure(true);
@@ -181,6 +184,41 @@ for (const viewport of [
     await context.close();
   });
 }
+
+test('a missing binder card becomes owned and colorful after tapping it on mobile', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const binder = { id: collectionId, name: 'Ownership check', createdAt: updatedAt, updatedAt };
+  const reference = {
+    collectionId,
+    cardId: 'base1-001',
+    language: 'en',
+    cardName: 'Card 1',
+    addedAt: updatedAt,
+  };
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const app = await mockAuthenticatedApp(context, makeState([binder], [reference]));
+  const page = await context.newPage();
+
+  await page.goto(`/en/tcg/collection/custom/${collectionId}`);
+  await expect(page.getByRole('heading', { name: 'Ownership check', level: 1 })).toBeVisible({ timeout: 15_000 });
+
+  const card = page.getByRole('list', { name: 'Ownership check' }).getByRole('listitem').first();
+  const addCardButton = card.getByRole('button', { name: 'Add Card 1 to my collection' });
+  await expect(addCardButton.locator('img')).toHaveClass(/grayscale/);
+  await addCardButton.click();
+
+  await expect(card.getByText('Owned', { exact: true })).toBeVisible();
+  await expect(card.locator('img')).not.toHaveClass(/grayscale/);
+  await expect(card.getByRole('button', { name: 'Add Card 1 to my collection' })).toHaveCount(0);
+  await expect.poll(() => (app.getState().tcgOwnedCards as string[] | undefined)?.includes('base1-001')).toBe(true);
+  await expect.poll(() => (app.getState().tcgCollectionCards as unknown[] | undefined)?.length).toBe(1);
+
+  await context.close();
+});
 
 test('large binders render 48 ordered cards with at most six detail requests at once', async ({ browser }) => {
   test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
