@@ -44,7 +44,9 @@ export default function PublicProfileCard({ profile }: PublicProfileCardProps) {
       setCopied(true);
       toast.success(t('profile.link_copied', { defaultValue: 'Profile link copied!' }));
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* clipboard not available */ }
+    } catch {
+      toast.error(t('common.copy_failed'));
+    }
   };
 
   return (

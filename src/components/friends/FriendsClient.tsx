@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check, Clock3, Search, UserMinus, UserPlus, X } from 'lucide-react';
+import { Check, Clock3, Loader2, Search, UserMinus, UserPlus, X } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/neon/AuthProvider';
@@ -16,6 +16,7 @@ import {
   sendFriendRequest,
 } from '@/lib/friends';
 import type { FriendRelation } from '@/types/friends';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 const FRIENDS_QUERY_KEY = ['friends', 'relations'];
 const EMPTY_RELATIONS: FriendRelation[] = [];
@@ -26,6 +27,7 @@ function RelationRow({ relation, userId }: { relation: FriendRelation; userId: s
   const queryClient = useQueryClient();
   const otherUser = relation.otherUser;
   const isIncoming = relation.addresseeId === userId;
+  const actionGuard = useRef(false);
   const actionMutation = useMutation({
     mutationKey: ['friends'],
     mutationFn: async (action: 'accept' | 'decline' | 'delete') => {
@@ -35,8 +37,13 @@ function RelationRow({ relation, userId }: { relation: FriendRelation; userId: s
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: FRIENDS_QUERY_KEY });
     },
-    onError: () => toast.error(t('friends.errors.action', { defaultValue: 'Could not update friendship.' })),
+    onSettled: () => { actionGuard.current = false; },
   });
+  const runAction = (action: 'accept' | 'decline' | 'delete') => {
+    if (actionGuard.current) return;
+    actionGuard.current = true;
+    actionMutation.mutate(action);
+  };
 
   if (!otherUser) return null;
 
@@ -52,17 +59,17 @@ function RelationRow({ relation, userId }: { relation: FriendRelation; userId: s
       <div className="flex flex-wrap items-center gap-2">
         {relation.status === 'pending' && isIncoming ? (
           <>
-            <Button size="sm" onClick={() => actionMutation.mutate('accept')} disabled={actionMutation.isPending}>
-              <Check className="h-3.5 w-3.5" />
+            <Button size="sm" onClick={() => runAction('accept')} disabled={actionMutation.isPending} aria-busy={actionMutation.isPending}>
+              {actionMutation.isPending ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <Check className="h-3.5 w-3.5" />}
               {t('friends.actions.accept', { defaultValue: 'Accept' })}
             </Button>
-            <Button size="sm" variant="outline" onClick={() => actionMutation.mutate('decline')} disabled={actionMutation.isPending}>
+            <Button size="sm" variant="outline" onClick={() => runAction('decline')} disabled={actionMutation.isPending} aria-busy={actionMutation.isPending}>
               <X className="h-3.5 w-3.5" />
               {t('friends.actions.decline', { defaultValue: 'Decline' })}
             </Button>
           </>
         ) : relation.status === 'pending' ? (
-          <Button size="sm" variant="outline" onClick={() => actionMutation.mutate('delete')} disabled={actionMutation.isPending}>
+          <Button size="sm" variant="outline" onClick={() => runAction('delete')} disabled={actionMutation.isPending} aria-busy={actionMutation.isPending}>
             <X className="h-3.5 w-3.5" />
             {t('friends.actions.cancel', { defaultValue: 'Cancel' })}
           </Button>
@@ -71,13 +78,25 @@ function RelationRow({ relation, userId }: { relation: FriendRelation; userId: s
             <Link href={localeHref(`/friends/${otherUser.userId}`)} className="inline-flex h-10 items-center justify-center rounded-sm border border-border bg-card px-3.5 text-sm font-semibold text-foreground shadow-[var(--shadow-pixel-sm)] hover:-translate-x-px hover:-translate-y-px hover:border-primary">
               {t('friends.actions.view', { defaultValue: 'View' })}
             </Link>
-            <Button size="sm" variant="destructive" onClick={() => actionMutation.mutate('delete')} disabled={actionMutation.isPending}>
+            <Button size="sm" variant="destructive" onClick={() => runAction('delete')} disabled={actionMutation.isPending} aria-busy={actionMutation.isPending}>
               <UserMinus className="h-3.5 w-3.5" />
               {t('friends.actions.remove', { defaultValue: 'Remove' })}
             </Button>
           </>
         ) : null}
       </div>
+      {actionMutation.isError ? (
+        <RecoverableError
+          title={t('friends.errors.action', { defaultValue: 'Could not update friendship.' })}
+          description={t('common.error_unknown', { defaultValue: 'Something went wrong. Please try again.' })}
+          error={actionMutation.error}
+          onRetry={() => actionMutation.variables && runAction(actionMutation.variables)}
+          retrying={actionMutation.isPending}
+          retryLabel={t('common.retry')}
+          retryingLabel={t('common.loading')}
+          compact
+        />
+      ) : null}
     </div>
   );
 }
@@ -88,6 +107,7 @@ export default function FriendsClient() {
   const localeHref = useLocaleHref();
   const queryClient = useQueryClient();
   const [handle, setHandle] = useState('');
+  const sendGuard = useRef(false);
   const relationsQuery = useQuery({
     queryKey: FRIENDS_QUERY_KEY,
     queryFn: () => getFriendRelations(user!.id),
@@ -102,8 +122,13 @@ export default function FriendsClient() {
       void queryClient.invalidateQueries({ queryKey: FRIENDS_QUERY_KEY });
       toast.success(t('friends.success.sent', { defaultValue: 'Friend request sent.' }));
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : t('friends.errors.send', { defaultValue: 'Could not send friend request.' })),
+    onSettled: () => { sendGuard.current = false; },
   });
+  const sendRequest = () => {
+    if (sendGuard.current || !handle.trim()) return;
+    sendGuard.current = true;
+    sendMutation.mutate();
+  };
 
   const relations = relationsQuery.data ?? EMPTY_RELATIONS;
   const incoming = useMemo(() => relations.filter((relation) => relation.status === 'pending' && relation.addresseeId === user?.id), [relations, user?.id]);
@@ -120,7 +145,7 @@ export default function FriendsClient() {
 
   return (
     <div className="space-y-8">
-      <section className="page-surface p-5 md:p-6">
+      <section className="page-surface space-y-4 p-5 md:p-6">
         <div className="mb-4 flex items-center gap-2">
           <UserPlus className="h-4 w-4 text-primary" />
           <h2 className="text-xs font-black uppercase tracking-[0.16em] text-foreground/65">
@@ -131,7 +156,7 @@ export default function FriendsClient() {
           className="flex flex-col gap-2 sm:flex-row"
           onSubmit={(event) => {
             event.preventDefault();
-            if (handle.trim()) sendMutation.mutate();
+            sendRequest();
           }}
         >
           <div className="flex min-h-11 flex-1 items-center gap-2 rounded-sm border border-border/40 bg-card/40 px-3 focus-within:border-primary/40">
@@ -145,12 +170,24 @@ export default function FriendsClient() {
             />
           </div>
           <Button type="submit" disabled={sendMutation.isPending || !handle.trim()}>
-            <UserPlus className="h-4 w-4" />
-            {t('friends.add.button', { defaultValue: 'Send request' })}
+            {sendMutation.isPending ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <UserPlus className="h-4 w-4" />}
+            {sendMutation.isPending ? t('common.loading') : t('friends.add.button', { defaultValue: 'Send request' })}
           </Button>
         </form>
+        {sendMutation.isError ? <RecoverableError title={t('friends.errors.send', { defaultValue: 'Could not send friend request.' })} description={t('common.error_unknown', { defaultValue: 'Something went wrong. Please try again.' })} error={sendMutation.error} onRetry={sendRequest} retrying={sendMutation.isPending} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact /> : null}
       </section>
 
+      {relationsQuery.isError && !relationsQuery.data ? (
+        <RecoverableError
+          title={t('friends.errors.load', { defaultValue: 'Could not load your friendships.' })}
+          description={t('common.load_failed')}
+          error={relationsQuery.error}
+          onRetry={() => void relationsQuery.refetch()}
+          retrying={relationsQuery.isFetching}
+          retryLabel={t('common.retry')}
+          retryingLabel={t('common.loading')}
+        />
+      ) : <>
       <RelationSection title={t('friends.sections.incoming', { defaultValue: 'Incoming requests' })} icon={<Clock3 className="h-4 w-4 text-primary" />} empty={t('friends.empty.incoming', { defaultValue: 'No incoming requests.' })}>
         {relationsQuery.isLoading ? <LoadingRows /> : incoming.map((relation) => <RelationRow key={relation.id} relation={relation} userId={user.id} />)}
       </RelationSection>
@@ -161,9 +198,8 @@ export default function FriendsClient() {
         {relationsQuery.isLoading ? <LoadingRows /> : friends.map((relation) => <RelationRow key={relation.id} relation={relation} userId={user.id} />)}
       </RelationSection>
 
-      {relationsQuery.isError && (
-        <p className="text-sm font-bold text-destructive">{t('friends.errors.load', { defaultValue: 'Could not load your friendships.' })}</p>
-      )}
+      {relationsQuery.isError ? <RecoverableError title={t('friends.errors.load', { defaultValue: 'Could not refresh your friendships.' })} description={t('common.load_failed')} error={relationsQuery.error} onRetry={() => void relationsQuery.refetch()} retrying={relationsQuery.isFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact /> : null}
+      </>}
 
       <Link href={localeHref('/dashboard')} className="inline-flex text-xs font-black uppercase tracking-[0.12em] text-primary hover:underline">
         {t('friends.back_dashboard', { defaultValue: 'Back to dashboard' })}
@@ -186,7 +222,7 @@ function RelationSection({ title, icon, empty, children }: { title: string; icon
 }
 
 function LoadingRows() {
-  return <div className="h-16 animate-pulse rounded-sm border border-border/20 bg-card/25" aria-busy="true" />;
+  return <div className="h-16 motion-safe:animate-pulse rounded-sm border border-border/20 bg-card/25" aria-busy="true" />;
 }
 
 function EmptyPanel({ title }: { title: string }) {

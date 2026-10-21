@@ -148,7 +148,9 @@ export default function AccountCard() {
       setCopied(true);
       toast.success(tt('profile.link_copied', 'Profile link copied!'));
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* clipboard not available */ }
+    } catch {
+      toast.error(tt('common.copy_failed', 'Could not copy this text.'));
+    }
   };
 
   if (!enabled) return null;

@@ -24,6 +24,7 @@ export function ContactForm({ privacyHref, initialSubject = '', initialMessage =
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'unavailable' | 'error' | 'success'>('idle');
+  const submitGuard = useRef(false);
   const fieldRefs = useRef<Record<FieldName, HTMLInputElement | HTMLTextAreaElement | null>>({ name: null, email: null, subject: null, message: null });
 
   const validate = (): FieldErrors => {
@@ -53,6 +54,8 @@ export function ContactForm({ privacyHref, initialSubject = '', initialMessage =
       return;
     }
 
+    if (submitGuard.current) return;
+    submitGuard.current = true;
     setIsSubmitting(true);
     setStatus('idle');
     try {
@@ -72,6 +75,7 @@ export function ContactForm({ privacyHref, initialSubject = '', initialMessage =
     } catch {
       setStatus('error');
     } finally {
+      submitGuard.current = false;
       setIsSubmitting(false);
     }
   };
@@ -93,27 +97,27 @@ export function ContactForm({ privacyHref, initialSubject = '', initialMessage =
       <div className="grid gap-5 sm:grid-cols-2">
         {field('name', <div>
           <label htmlFor="contact-name" className="mb-2 block text-sm font-semibold">{t('contact.name_label')}</label>
-          <Input id="contact-name" name="name" ref={(element) => { fieldRefs.current.name = element; }} value={values.name} onChange={(event) => updateField('name', event.target.value)} maxLength={lengths.name} autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} placeholder={t('contact.name_placeholder')} />
+          <Input id="contact-name" name="name" ref={(element) => { fieldRefs.current.name = element; }} value={values.name} onChange={(event) => updateField('name', event.target.value)} maxLength={lengths.name} autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} placeholder={t('contact.name_placeholder')} disabled={isSubmitting} />
         </div>)}
         {field('email', <div>
           <label htmlFor="contact-email" className="mb-2 block text-sm font-semibold">{t('contact.email_label')}</label>
-          <Input id="contact-email" name="email" ref={(element) => { fieldRefs.current.email = element; }} type="email" inputMode="email" value={values.email} onChange={(event) => updateField('email', event.target.value)} maxLength={lengths.email} autoComplete="email" spellCheck={false} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} placeholder={t('contact.email_placeholder')} />
+          <Input id="contact-email" name="email" ref={(element) => { fieldRefs.current.email = element; }} type="email" inputMode="email" value={values.email} onChange={(event) => updateField('email', event.target.value)} maxLength={lengths.email} autoComplete="email" spellCheck={false} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} placeholder={t('contact.email_placeholder')} disabled={isSubmitting} />
         </div>)}
       </div>
 
       {field('subject', <div>
         <label htmlFor="contact-subject" className="mb-2 block text-sm font-semibold">{t('contact.subject_label')}</label>
-        <Input id="contact-subject" name="subject" ref={(element) => { fieldRefs.current.subject = element; }} value={values.subject} onChange={(event) => updateField('subject', event.target.value)} maxLength={lengths.subject} autoComplete="off" aria-invalid={Boolean(errors.subject)} aria-describedby={errors.subject ? 'subject-error' : undefined} placeholder={t('contact.subject_placeholder')} />
+        <Input id="contact-subject" name="subject" ref={(element) => { fieldRefs.current.subject = element; }} value={values.subject} onChange={(event) => updateField('subject', event.target.value)} maxLength={lengths.subject} autoComplete="off" aria-invalid={Boolean(errors.subject)} aria-describedby={errors.subject ? 'subject-error' : undefined} placeholder={t('contact.subject_placeholder')} disabled={isSubmitting} />
       </div>)}
 
       {field('message', <div>
         <label htmlFor="contact-message" className="mb-2 block text-sm font-semibold">{t('contact.message_label')}</label>
-        <Textarea id="contact-message" name="message" ref={(element) => { fieldRefs.current.message = element; }} value={values.message} onChange={(event) => updateField('message', event.target.value)} maxLength={lengths.message} rows={8} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'message-error' : undefined} placeholder={t('contact.message_placeholder')} />
+        <Textarea id="contact-message" name="message" ref={(element) => { fieldRefs.current.message = element; }} value={values.message} onChange={(event) => updateField('message', event.target.value)} maxLength={lengths.message} rows={8} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'message-error' : undefined} placeholder={t('contact.message_placeholder')} disabled={isSubmitting} />
       </div>)}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Button type="submit" disabled={isSubmitting} className="min-h-11">
-          {isSubmitting ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <Send aria-hidden="true" className="h-4 w-4" />}
+        <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting} className="min-h-11">
+          {isSubmitting ? <Loader2 aria-hidden="true" className="h-4 w-4 motion-safe:animate-spin" /> : <Send aria-hidden="true" className="h-4 w-4" />}
           {isSubmitting ? t('contact.submitting') : t('contact.submit')}
         </Button>
         <a href="mailto:contact@lunidex.app" className="text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">

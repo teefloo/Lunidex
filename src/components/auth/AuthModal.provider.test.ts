@@ -105,7 +105,7 @@ describe('AuthModal during lazy SDK loading', () => {
     expect(document.querySelector('[role="dialog"]')).toBe(dialog);
     expect(email?.value).toBe('qa@lunidex.invalid');
     expect(password?.value).toBe('synthetic-only-password');
-    expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('Synthetic test rejection');
+    expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('Something went wrong. Please try again.');
     expect(authAction).toHaveBeenCalledWith(expect.objectContaining({
       email: 'qa@lunidex.invalid', password: 'synthetic-only-password',
     }));
@@ -165,6 +165,6 @@ describe('AuthModal during lazy SDK loading', () => {
       dialog?.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
     expect(document.querySelector('[role="dialog"]')).toBe(dialog);
-    expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('Authentication is temporarily unavailable.');
+    expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('The service is temporarily unavailable. Please try again.');
   });
 });

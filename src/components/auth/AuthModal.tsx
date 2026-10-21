@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ComponentProps, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
 import { toast } from '@/lib/toast';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
 import {
@@ -17,6 +17,7 @@ import { useTranslation } from '@/lib/i18n';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { capturePostHogEvent } from '@/lib/posthog-client';
+import { classifyRecoverableError } from '@/lib/error-feedback';
 
 type Mode = 'signin' | 'signup';
 type DialogOpenChangeDetails = Parameters<NonNullable<ComponentProps<typeof Dialog>['onOpenChange']>>[1];
@@ -38,27 +39,33 @@ export default function AuthModal({
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const actionGuard = useRef(false);
 
   const tt = (key: string, fallback: string) => {
     const value = t(key, { defaultValue: fallback });
     return value === key ? fallback : value;
   };
 
-  const authErrorMessage = (error: { name: string; message: string }) => (
-    error.name === 'AuthSessionUnavailable'
-      ? tt('auth.session_unavailable', 'Sign-in could not be confirmed. Please try again.')
-      : error.name === 'AuthTimeout'
-        ? tt('auth.timeout', 'Authentication is taking too long. Please try again.')
-      : error.message
-  );
+  const authErrorMessage = (error: { name: string; message: string }) => {
+    if (error.name === 'AuthSessionUnavailable') return tt('auth.session_unavailable', 'Sign-in could not be confirmed. Please try again.');
+    if (error.name === 'AuthUnavailable') return tt('common.error_server', 'The service is temporarily unavailable. Please try again.');
+    if (error.name === 'InvalidToken') return tt('auth.reset_invalid', 'This reset link is invalid or has expired. Please request a new one.');
+    if (error.name === 'AuthTimeout') return tt('common.error_timeout', 'The request timed out. Please try again.');
+    const category = classifyRecoverableError(error);
+    return category === null
+      ? tt('common.error_unknown', 'Something went wrong. Please try again.')
+      : tt(`common.error_${category}`, 'Unable to complete the request. Please try again.');
+  };
 
-  const unexpectedAuthErrorMessage = (error: unknown) => (
-    error instanceof Error && error.message
-      ? error.message
-      : tt('auth.request_failed', 'Unable to complete the request. Please try again.')
+  const unexpectedAuthErrorMessage = (error: unknown) => authErrorMessage(
+    error instanceof Error ? error : { name: 'AuthError', message: '' },
   );
 
   const handleDialogOpenChange = (nextOpen: boolean, eventDetails: DialogOpenChangeDetails) => {
+    if (!nextOpen && busy) {
+      eventDetails.cancel();
+      return;
+    }
     const isDismissal = eventDetails.reason === 'escape-key' || eventDetails.reason === 'outside-press';
     if (!nextOpen && isDismissal && eventDetails.event.defaultPrevented) {
       // Autofill suggestions can consume Escape while still letting it bubble to the dialog.
@@ -74,7 +81,8 @@ export default function AuthModal({
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (busy) return;
+    if (actionGuard.current) return;
+    actionGuard.current = true;
     setBusy(true);
     setErrorMessage(null);
     const authEvent = mode === 'signup' ? POSTHOG_EVENTS.authSignUp : POSTHOG_EVENTS.authSignIn;
@@ -87,7 +95,6 @@ export default function AuthModal({
           capturePostHogEvent(authEvent, { method: 'password', result: 'error', error_type: error.name });
           const message = authErrorMessage(error);
           setErrorMessage(message);
-          toast.error(message);
           return;
         }
         capturePostHogEvent(authEvent, { method: 'password', result: 'success', authenticated: Boolean(user) });
@@ -99,7 +106,6 @@ export default function AuthModal({
           capturePostHogEvent(authEvent, { method: 'password', result: 'error', error_type: error.name });
           const message = authErrorMessage(error);
           setErrorMessage(message);
-          toast.error(message);
           return;
         }
         capturePostHogEvent(authEvent, { method: 'password', result: 'success', authenticated: true });
@@ -114,8 +120,8 @@ export default function AuthModal({
       });
       const message = unexpectedAuthErrorMessage(error);
       setErrorMessage(message);
-      toast.error(message);
     } finally {
+      actionGuard.current = false;
       setBusy(false);
     }
   };
@@ -123,11 +129,12 @@ export default function AuthModal({
   const handleReset = async () => {
     const normalizedEmail = email.trim();
     if (!normalizedEmail) {
-      toast.error(tt('auth.enter_email', 'Enter your email first.'));
+      setErrorMessage(tt('auth.enter_email', 'Enter your email first.'));
       return;
     }
-    if (busy) return;
+    if (actionGuard.current) return;
 
+    actionGuard.current = true;
     setBusy(true);
     setErrorMessage(null);
     capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'started' });
@@ -137,7 +144,6 @@ export default function AuthModal({
         capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'error', error_type: error.name });
         const message = authErrorMessage(error);
         setErrorMessage(message);
-        toast.error(message);
         return;
       }
       capturePostHogEvent(POSTHOG_EVENTS.authPasswordResetRequested, { method: 'email', result: 'success' });
@@ -150,8 +156,8 @@ export default function AuthModal({
       });
       const message = unexpectedAuthErrorMessage(error);
       setErrorMessage(message);
-      toast.error(message);
     } finally {
+      actionGuard.current = false;
       setBusy(false);
     }
   };
@@ -163,7 +169,7 @@ export default function AuthModal({
       disablePointerDismissal
       onOpenChange={handleDialogOpenChange}
     >
-      <DialogContent className="sm:max-w-md" data-ph-no-capture>
+      <DialogContent className="sm:max-w-md" data-ph-no-capture aria-busy={busy}>
         <DialogHeader>
           <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />
           <DialogTitle className="text-xl font-black tracking-tight">
@@ -191,7 +197,8 @@ export default function AuthModal({
                   required
                   autoComplete="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setErrorMessage(null); }}
+                  disabled={busy}
                   placeholder="Sacha"
                   className="pl-9"
                 />
@@ -210,7 +217,8 @@ export default function AuthModal({
                 required
                 autoComplete="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); setErrorMessage(null); }}
+                disabled={busy}
                 placeholder="ash@pallet.town"
                 className="pl-9"
               />
@@ -229,7 +237,8 @@ export default function AuthModal({
                 minLength={6}
                 autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setErrorMessage(null); }}
+                disabled={busy}
                 placeholder="••••••••"
                 className="pl-9"
               />
@@ -247,9 +256,9 @@ export default function AuthModal({
             </button>
           )}
 
-          <Button type="submit" disabled={busy} className="mt-1 w-full">
-            {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === 'signin'
+          <Button type="submit" disabled={busy} aria-busy={busy} className="mt-1 w-full">
+            {busy && <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />}
+            {busy ? tt('common.loading', 'Loading…') : mode === 'signin'
               ? tt('auth.signin_cta', 'Sign in')
               : tt('auth.signup_cta', 'Create account')}
           </Button>
@@ -267,6 +276,7 @@ export default function AuthModal({
             : tt('auth.have_account', 'Already have an account?')}{' '}
           <button
             type="button"
+            disabled={busy}
             onClick={() => {
               setMode(mode === 'signin' ? 'signup' : 'signin');
               setErrorMessage(null);

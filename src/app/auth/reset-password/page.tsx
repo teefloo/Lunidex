@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useSyncExternalStore, type FormEvent } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
 import { Loader2 } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
+import { classifyRecoverableError } from '@/lib/error-feedback';
 
 function createResetTokenStore() {
   let captured = false;
@@ -53,6 +54,8 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const submitGuard = useRef(false);
   const [resetTokenStore] = useState(createResetTokenStore);
   const resetTokenSnapshot = useSyncExternalStore(
     resetTokenStore.subscribe,
@@ -76,35 +79,48 @@ export default function ResetPasswordPage() {
     return value === key ? fallback : value;
   };
 
+  const safeErrorMessage = (error: unknown) => {
+    const category = classifyRecoverableError(error);
+    return category === null
+      ? tt('common.error_unknown', 'Something went wrong. Please try again.')
+      : tt(`common.error_${category}`, 'Unable to complete the request. Please try again.');
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (busy) return;
+    if (submitGuard.current) return;
 
     if (password.length < 6) {
-      toast.error(tt('auth.password_min_length', 'Your password must contain at least 6 characters.'));
+      setErrorMessage(tt('auth.password_min_length', 'Your password must contain at least 6 characters.'));
       return;
     }
     if (password !== confirmation) {
-      toast.error(tt('auth.password_mismatch', 'The passwords do not match.'));
+      setErrorMessage(tt('auth.password_mismatch', 'The passwords do not match.'));
       return;
     }
     if (!resetToken) {
-      toast.error(tt('auth.reset_invalid', 'This reset link is invalid or has expired. Please request a new one.'));
+      setErrorMessage(tt('auth.reset_invalid', 'This reset link is invalid or has expired. Please request a new one.'));
       return;
     }
 
+    submitGuard.current = true;
     setBusy(true);
+    setErrorMessage(null);
     try {
       const { error } = await updatePassword(password, resetToken);
       if (error) {
         capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'error', error_type: error.name });
-        toast.error(error.message);
+        setErrorMessage(safeErrorMessage(error));
         return;
       }
       capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'success' });
       toast.success(tt('auth.password_updated', 'Your password has been updated.'));
       router.replace(localeHref('/dashboard'));
+    } catch (error) {
+      capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'error', error_type: error instanceof Error ? error.name : 'Error' });
+      setErrorMessage(safeErrorMessage(error));
     } finally {
+      submitGuard.current = false;
       setBusy(false);
     }
   };
@@ -130,7 +146,7 @@ export default function ResetPasswordPage() {
             {tt('auth.reset_loading', 'Verifying your reset link…')}
           </div>
         ) : hasResetToken ? (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-ph-no-capture>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-ph-no-capture aria-busy={busy}>
             <p className="text-sm leading-6 text-foreground/60">
               {tt('auth.reset_subtitle', 'Choose a new password for your Lunidex account.')}
             </p>
@@ -144,7 +160,8 @@ export default function ResetPasswordPage() {
                 minLength={6}
                 autoComplete="new-password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => { setPassword(event.target.value); setErrorMessage(null); }}
+                disabled={busy}
                 className="h-11"
               />
             </label>
@@ -158,13 +175,15 @@ export default function ResetPasswordPage() {
                 minLength={6}
                 autoComplete="new-password"
                 value={confirmation}
-                onChange={(event) => setConfirmation(event.target.value)}
+                onChange={(event) => { setConfirmation(event.target.value); setErrorMessage(null); }}
+                disabled={busy}
                 className="h-11"
               />
             </label>
-            <Button type="submit" disabled={busy} className="mt-2 w-full">
-              {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {tt('auth.update_password', 'Update password')}
+            {errorMessage ? <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">{errorMessage}</p> : null}
+            <Button type="submit" disabled={busy} aria-busy={busy} className="mt-2 w-full">
+              {busy && <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />}
+              {busy ? tt('common.loading', 'Loading…') : tt('auth.update_password', 'Update password')}
             </Button>
           </form>
         ) : (
