@@ -41,7 +41,7 @@ import type { TCGCustomCollection, TCGCustomCollectionCard } from '@primedex/cor
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import { hasSyncAccess, requestSyncAccess, type SyncAccessRequest } from './sync-access';
-import { createResilientStorage } from './persistence';
+import { createResilientStorage, PERSISTENCE_ERROR_EVENT } from './persistence';
 import { MAX_TCG_INVESTMENTS, normalizeTCGInvestment, type TCGInvestment } from '@primedex/core/lib/tcg-investments';
 
 const isIndexedDbAvailable = (): boolean =>
@@ -63,6 +63,9 @@ const storage = createResilientStorage({
     get: idbGet,
     set: idbSet,
     del: idbDel,
+  },
+  onPersistenceError: () => {
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event(PERSISTENCE_ERROR_EVENT));
   },
 });
 

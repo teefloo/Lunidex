@@ -36,6 +36,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { retrySyncAccess, setSyncAccessStatus } from '@/store/sync-access';
 import { useNeonSync } from './useSupabaseSync';
 import { saveTCGInvestmentConfirmed } from '@/lib/tcg-investment-save';
+import { getSyncWriteStatus, resetSyncWriteStatus } from '@/store/sync-write-status';
 import type { TCGInvestment } from '@primedex/core/lib/tcg-investments';
 
 const investmentInput: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'> = {
@@ -64,6 +65,7 @@ describe('account sync initialization', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
+    resetSyncWriteStatus();
     mocks.fetchAppApi.mockImplementation(() => new Promise<Response>(() => undefined));
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     usePrimeDexStore.setState({ _hasHydrated: true });
@@ -77,6 +79,7 @@ describe('account sync initialization', () => {
     act(() => root.unmount());
     container.remove();
     setSyncAccessStatus('checking');
+    resetSyncWriteStatus();
     vi.useRealTimers();
   });
 
@@ -161,6 +164,7 @@ describe('account sync initialization', () => {
 
     expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([]);
     expect(container.querySelector('output')?.textContent).toBe('ready');
+    expect(getSyncWriteStatus()).toEqual({ state: 'error', reason: 'too-large' });
     const { toast } = await import('@/lib/toast');
     expect(toast.error).toHaveBeenCalledWith('tcg.custom_collections.document_too_large');
   });
@@ -199,14 +203,52 @@ describe('account sync initialization', () => {
     const save = saveTCGInvestmentConfirmed(investmentInput);
     void save.then(() => { settled = true; });
     const lot = usePrimeDexStore.getState().tcgInvestments[0];
+    expect(getSyncWriteStatus()).toEqual({ state: 'queued' });
     await act(async () => vi.advanceTimersByTimeAsync(100));
     expect(settled).toBe(false);
+    expect(getSyncWriteStatus()).toEqual({ state: 'saving' });
 
     await act(async () => {
       accept(response(200, { data: { tcgInvestments: [lot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
     });
     expect(settled).toBe(true);
     await expect(save).resolves.toEqual({ ok: true, id: lot.id });
+    expect(getSyncWriteStatus()).toEqual({ state: 'saved' });
+  });
+
+  it('does not confirm a newer edit when an earlier batched PUT finishes', async () => {
+    let acceptFirst: (value: Response) => void = () => undefined;
+    let acceptSecond: (value: Response) => void = () => undefined;
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
+      .mockImplementationOnce(() => new Promise<Response>((resolve) => { acceptFirst = resolve; }))
+      .mockImplementationOnce(() => new Promise<Response>((resolve) => { acceptSecond = resolve; }));
+    await renderSync();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    await act(async () => {
+      usePrimeDexStore.setState({ favorites: [1] });
+      await vi.advanceTimersByTimeAsync(100);
+    });
+    expect(getSyncWriteStatus()).toEqual({ state: 'saving' });
+
+    await act(async () => {
+      usePrimeDexStore.setState({ favorites: [1, 2] });
+      expect(getSyncWriteStatus()).toEqual({ state: 'queued' });
+      acceptFirst(response(200, { data: { favorites: [1] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(mocks.fetchAppApi).toHaveBeenCalledTimes(3);
+    expect(getSyncWriteStatus()).toEqual({ state: 'saving' });
+    await act(async () => {
+      acceptSecond(response(200, { data: { favorites: [1, 2] }, updatedAt: '2026-10-20T10:00:01.000Z' }));
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(getSyncWriteStatus()).toEqual({ state: 'saved' });
   });
 
   it('reports an oversized investment write as failed and restores the accepted lots', async () => {

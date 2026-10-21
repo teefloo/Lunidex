@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createResilientStorage } from './persistence';
 
@@ -103,5 +103,39 @@ describe('createResilientStorage', () => {
 
     await storage.removeItem('session');
     expect(localStorage.getItem('session')).toBeNull();
+  });
+
+  it('reports persistence failure once until a later write succeeds', async () => {
+    let fail = true;
+    const onPersistenceError = vi.fn();
+    const localStorage = {
+      setItem: () => {
+        if (fail) throw new Error('Storage is full');
+      },
+      getItem: () => null,
+      removeItem: () => undefined,
+    } as unknown as Storage;
+    const storage = createResilientStorage({
+      getLocalStorage: () => localStorage,
+      idbAvailable: () => true,
+      idb: {
+        get: async () => undefined,
+        set: async () => {
+          if (fail) throw new Error('IndexedDB is unavailable');
+        },
+        del: async () => undefined,
+      },
+      onPersistenceError,
+    });
+
+    await storage.setItem('session', persistedState);
+    await storage.setItem('session', persistedState);
+    expect(onPersistenceError).toHaveBeenCalledOnce();
+
+    fail = false;
+    await storage.setItem('session', persistedState);
+    fail = true;
+    await storage.setItem('session', persistedState);
+    expect(onPersistenceError).toHaveBeenCalledTimes(2);
   });
 });

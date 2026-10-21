@@ -5,19 +5,30 @@ import CompareBarSlot from "@/components/pokemon/CompareBarSlot";
 import { PrimaryBottomNav } from '@/components/layout/PrimaryBottomNav';
 import dynamic from 'next/dynamic';
 import { TOAST_REQUEST_EVENT } from '@/lib/toast';
+import { toast } from '@/lib/toast';
+import { useTranslation } from '@/lib/i18n';
+import { PERSISTENCE_ERROR_EVENT } from '@/store/persistence';
 
 const InstallPrompt = dynamic(() => import("@/components/layout/InstallPrompt").then(m => m.InstallPrompt), { ssr: false });
 const DeferredToaster = dynamic(() => import("@/components/ui/sonner").then(m => m.Toaster), { ssr: false });
 const AGENTATION_ENDPOINT = "http://localhost:4747";
 
 function ToastBoundary() {
+  const { t } = useTranslation();
   const [requested, setRequested] = useState(false);
 
   useEffect(() => {
     const handleToastRequest = () => setRequested(true);
+    const handlePersistenceError = () => {
+      toast.warning(t('common.local_save_failed'));
+    };
     window.addEventListener(TOAST_REQUEST_EVENT, handleToastRequest);
-    return () => window.removeEventListener(TOAST_REQUEST_EVENT, handleToastRequest);
-  }, []);
+    window.addEventListener(PERSISTENCE_ERROR_EVENT, handlePersistenceError);
+    return () => {
+      window.removeEventListener(TOAST_REQUEST_EVENT, handleToastRequest);
+      window.removeEventListener(PERSISTENCE_ERROR_EVENT, handlePersistenceError);
+    };
+  }, [t]);
 
   return requested ? <DeferredToaster /> : null;
 }

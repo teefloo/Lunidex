@@ -14,6 +14,19 @@ import { retryAsync } from '@/lib/retry';
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import { confirmTCGInvestmentSaves, rejectPendingTCGInvestmentSaves, type TCGInvestmentSaveFailure } from '@/lib/tcg-investment-save';
 import {
+  confirmPendingSyncChanges,
+  rejectPendingSyncChanges,
+  rejectSupersededSyncChanges,
+} from '@/lib/sync-confirmation';
+import {
+  getSyncWriteStatus,
+  queueSyncWrite,
+  reportSyncWriteError,
+  reportSyncWriteSaved,
+  reportSyncWriteSaving,
+  resetSyncWriteStatus,
+} from '@/store/sync-write-status';
+import {
   advanceSyncMetadata,
   applySyncState,
   buildSyncPayload,
@@ -208,6 +221,7 @@ export function useNeonSync(): void {
   const pushInFlightRef = useRef<Promise<void> | null>(null);
   const pushRequestedRef = useRef(false);
   const applyingRemoteRef = useRef(false);
+  const syncWriteVersionRef = useRef(0);
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -228,6 +242,8 @@ export function useNeonSync(): void {
     };
 
     const resetSession = (status: 'checking' | 'unauthenticated' | 'unavailable'): void => {
+      resetSyncWriteStatus();
+      rejectPendingSyncChanges(status === 'unauthenticated' ? 'session' : 'unavailable');
       rejectPendingTCGInvestmentSaves(status === 'unavailable' ? 'unavailable' : 'session-changed');
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = null;
@@ -254,7 +270,24 @@ export function useNeonSync(): void {
       failureMessage?: string,
       reason: TCGInvestmentSaveFailure = status === 'unauthenticated' ? 'session-changed' : 'unavailable',
     ): void => {
+      rejectPendingSyncChanges(reason === 'too-large'
+        ? 'too-large'
+        : reason === 'conflict'
+          ? 'conflict'
+          : status === 'unauthenticated'
+            ? 'session'
+            : 'unavailable');
       rejectPendingTCGInvestmentSaves(reason);
+      const writeStatus = getSyncWriteStatus().state;
+      if (writeStatus === 'queued' || writeStatus === 'saving') {
+        reportSyncWriteError(reason === 'too-large'
+          ? 'too-large'
+          : reason === 'conflict'
+            ? 'conflict'
+            : status === 'unauthenticated'
+              ? 'session'
+              : 'unavailable');
+      }
       const acceptedState = acceptedSnapshotRef.current ?? initialState;
       const acceptedMetadata = acceptedMetadataRef.current
         ?? normalizeSyncMetadata(undefined, acceptedState);
@@ -292,6 +325,9 @@ export function useNeonSync(): void {
 
     const push = async (): Promise<void> => {
       if (cancelled) return;
+
+      const writeVersion = syncWriteVersionRef.current;
+      reportSyncWriteSaving(writeVersion);
 
       for (let attempt = 0; attempt < 3 && !cancelled; attempt += 1) {
         const local = pickSyncState();
@@ -352,8 +388,10 @@ export function useNeonSync(): void {
           // Keep a newer in-memory edit made while the request was in flight;
           // it will be sent by the next scheduled push.
           const current = pickSyncState();
+          confirmPendingSyncChanges(confirmed);
           if (JSON.stringify(current) === JSON.stringify(local)) {
             applyAcceptedState(confirmed, accepted.metadata);
+            reportSyncWriteSaved(writeVersion);
           } else {
             acceptedSnapshotRef.current = confirmed;
             acceptedMetadataRef.current = accepted.metadata;
@@ -412,6 +450,8 @@ export function useNeonSync(): void {
     };
 
     const schedulePush = (): void => {
+      rejectSupersededSyncChanges();
+      syncWriteVersionRef.current = queueSyncWrite();
       pushRequestedRef.current = true;
       if (pushInFlightRef.current) return;
       if (debounceRef.current) clearTimeout(debounceRef.current);

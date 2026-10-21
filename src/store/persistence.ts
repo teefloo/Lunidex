@@ -11,7 +11,10 @@ export interface ResilientStorageOptions {
   idb: IndexedDbOperations;
   idbAvailable: () => boolean;
   timeoutMs?: number;
+  onPersistenceError?: () => void;
 }
+
+export const PERSISTENCE_ERROR_EVENT = 'primedex:persistence-error';
 
 const DEFAULT_STORAGE_TIMEOUT_MS = 1_500;
 
@@ -46,7 +49,24 @@ export function createResilientStorage({
   idb,
   idbAvailable,
   timeoutMs = DEFAULT_STORAGE_TIMEOUT_MS,
+  onPersistenceError,
 }: ResilientStorageOptions): StateStorage {
+  let persistenceErrorReported = false;
+
+  const reportPersistenceFailure = (): void => {
+    if (persistenceErrorReported) return;
+    persistenceErrorReported = true;
+    try {
+      onPersistenceError?.();
+    } catch {
+      // Reporting must not make an otherwise usable in-memory session fail.
+    }
+  };
+
+  const reportPersistenceRecovery = (): void => {
+    persistenceErrorReported = false;
+  };
+
   const canUseIndexedDb = (): boolean => {
     try {
       return idbAvailable();
@@ -78,34 +98,50 @@ export function createResilientStorage({
       return getFallbackValue(name);
     },
     setItem: async (name, value) => {
+      let persisted = false;
       if (canUseIndexedDb()) {
         try {
           await withTimeout(idb.set(name, value), timeoutMs);
+          persisted = true;
         } catch {
-          // Keep the synchronous fallback below as the durable best effort.
+          // Keep the fallback below as the durable best effort.
         }
       }
 
       try {
-        getLocalStorage()?.setItem(name, value);
+        const localStorage = getLocalStorage();
+        if (localStorage) {
+          localStorage.setItem(name, value);
+          persisted = true;
+        }
       } catch {
-        // Persistence is best effort; the in-memory Zustand state remains usable.
+        // Persistence is best effort; the in-memory state remains usable.
       }
+      if (persisted) reportPersistenceRecovery();
+      else reportPersistenceFailure();
     },
     removeItem: async (name) => {
+      let persisted = false;
       if (canUseIndexedDb()) {
         try {
           await withTimeout(idb.del(name), timeoutMs);
+          persisted = true;
         } catch {
           // Continue and remove the fallback copy as well.
         }
       }
 
       try {
-        getLocalStorage()?.removeItem(name);
+        const localStorage = getLocalStorage();
+        if (localStorage) {
+          localStorage.removeItem(name);
+          persisted = true;
+        }
       } catch {
         // Persistence is best effort.
       }
+      if (persisted) reportPersistenceRecovery();
+      else reportPersistenceFailure();
     },
   };
 }
