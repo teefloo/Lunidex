@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  AlertCircle,
   Filter,
   Loader2,
   RefreshCw,
@@ -25,6 +24,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 import { getAllAbilities } from '@/lib/api/graphql';
 import type { AbilityListItem, GraphQLAbilityData } from '@/types/pokemon';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
@@ -208,20 +208,26 @@ export default function AbilitiesPageClient({
                 </div>
               </div>
 
-              {isError ? (
-                <div className="glass-card flex flex-col items-center justify-center rounded-sm border-dashed px-6 py-16 text-center">
-                  <AlertCircle className="mb-4 h-8 w-8 text-primary" />
-                  <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground/90">
-                    {t('abilities_page.load_error', { defaultValue: 'Failed to load abilities' })}
-                  </h3>
-                  <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/35">
-                    {error instanceof Error ? error.message : ''}
-                  </p>
-                  <Button className="mt-6 h-11 px-5 uppercase tracking-[0.18em]" onClick={() => void refetch()}>
-                    <RefreshCw className="h-4 w-4" />
-                    {t('common.retry', { defaultValue: 'Retry' })}
-                  </Button>
-                </div>
+              {isError && rawAbilities ? (
+                <RecoverableError
+                  title={t('abilities_page.load_error', { defaultValue: 'Failed to refresh abilities' })}
+                  description={t('common.load_failed')}
+                  retryLabel={t('common.retry')}
+                  retrying={isFetching}
+                  error={error}
+                  onRetry={() => void refetch()}
+                  className="mb-5 px-4 py-5"
+                />
+              ) : null}
+              {isError && !rawAbilities ? (
+                <RecoverableError
+                  title={t('abilities_page.load_error', { defaultValue: 'Failed to load abilities' })}
+                  description={t('common.load_failed')}
+                  retryLabel={t('common.retry')}
+                  retrying={isFetching}
+                  error={error}
+                  onRetry={() => void refetch()}
+                />
               ) : isLoading ? (
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   {Array.from({ length: 12 }).map((_, index) => (

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  AlertCircle,
   Filter,
   Loader2,
   Package,
@@ -26,6 +25,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 import { getAllItems } from '@/lib/api/graphql';
 import type { GraphQLItemData, ItemListItem } from '@/types/pokemon';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
@@ -248,20 +248,26 @@ export default function ItemsPageClient({
                 </div>
               </div>
 
-              {isError ? (
-                <div className="glass-card flex flex-col items-center justify-center rounded-sm border-dashed px-6 py-16 text-center">
-                  <AlertCircle className="mb-4 h-8 w-8 text-primary" />
-                  <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground/90">
-                    {t('items_page.load_error', { defaultValue: 'Failed to load items' })}
-                  </h3>
-                  <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/80">
-                    {error instanceof Error ? error.message : ''}
-                  </p>
-                  <Button className="mt-6 h-11 px-5 uppercase tracking-[0.18em]" onClick={() => void refetch()}>
-                    <RefreshCw className="h-4 w-4" />
-                    {t('common.retry', { defaultValue: 'Retry' })}
-                  </Button>
-                </div>
+              {isError && rawItems ? (
+                <RecoverableError
+                  title={t('items_page.load_error', { defaultValue: 'Failed to refresh items' })}
+                  description={t('common.load_failed')}
+                  retryLabel={t('common.retry')}
+                  retrying={isFetching}
+                  error={error}
+                  onRetry={() => void refetch()}
+                  className="mb-5 px-4 py-5"
+                />
+              ) : null}
+              {isError && !rawItems ? (
+                <RecoverableError
+                  title={t('items_page.load_error', { defaultValue: 'Failed to load items' })}
+                  description={t('common.load_failed')}
+                  retryLabel={t('common.retry')}
+                  retrying={isFetching}
+                  error={error}
+                  onRetry={() => void refetch()}
+                />
               ) : isLoading ? (
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   {Array.from({ length: 12 }).map((_, index) => (

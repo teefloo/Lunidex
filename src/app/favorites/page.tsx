@@ -5,23 +5,26 @@ import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useQuery } from '@tanstack/react-query';
 import { getAllPokemonNames } from '@/lib/api';
-import { PokemonCard } from '@/components/pokemon/PokemonCard';
+import { PokemonCard, PokemonCardSkeleton } from '@/components/pokemon/PokemonCard';
 import { Heart, Home, Ghost } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 export default function FavoritesPage() {
   const favorites = usePrimeDexStore((state) => state.favorites);
+  const hasHydrated = usePrimeDexStore((state) => state._hasHydrated);
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
 
-  const { data: allNames, isLoading } = useQuery({
+  const { data: allNames, isPending, isFetching, isError, error, refetch } = useQuery({
     queryKey: ['allPokemonNames'],
     queryFn: getAllPokemonNames,
     staleTime: 30 * 60 * 1000,
+    enabled: hasHydrated && favorites.length > 0,
   });
 
   const favoritePokemon = useMemo(() => {
@@ -40,16 +43,38 @@ export default function FavoritesPage() {
         <PageHeader
           icon={Heart}
           title={t('favorites.title')}
-          subtitle={`${t('favorites.subtitle')} ${t('favorites.count', { count: favoritePokemon.length })}`}
+          subtitle={hasHydrated
+            ? `${t('favorites.subtitle')} ${t('favorites.count', { count: favoritePokemon.length })}`
+            : t('favorites.loading')}
           eyebrow={t('favorites.eyebrow', { defaultValue: 'Lunidex' })}
           className="mt-16 md:mt-20"
         />
+        {isError && allNames ? (
+          <RecoverableError
+            title={t('favorites.title')}
+            description={t('common.load_failed')}
+            retryLabel={t('common.retry')}
+            retrying={isFetching}
+            error={error}
+            onRetry={() => void refetch()}
+            className="mb-5 px-4 py-5"
+          />
+        ) : null}
 
-        {isLoading ? (
-          <div className="flex flex-col justify-center items-center h-64 gap-4">
-            <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-            <p className="text-foreground/30 font-black tracking-[0.2em] uppercase text-[11px]">{t('favorites.loading')}</p>
+        {!hasHydrated || (favorites.length > 0 && isPending) ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" aria-busy="true" role="status">
+            <span className="sr-only">{t('favorites.loading')}</span>
+            {Array.from({ length: 5 }, (_, index) => <PokemonCardSkeleton key={index} />)}
           </div>
+        ) : isError && !allNames ? (
+          <RecoverableError
+            title={t('favorites.title')}
+            description={t('common.load_failed')}
+            retryLabel={t('common.retry')}
+            retrying={isFetching}
+            error={error}
+            onRetry={() => void refetch()}
+          />
         ) : favoritePokemon.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}

@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
@@ -141,7 +142,7 @@ export default function PokemonList() {
   });
 
   // 1. Summary Data : Loaded on demand (Search or Filters)
-  const { data: allSummary, isLoading: isLoadingSummary, error: summaryError } = useQuery({
+  const { data: allSummary, isLoading: isLoadingSummary, isFetching: isFetchingSummary, error: summaryError, refetch: refetchSummary } = useQuery({
     queryKey: pokemonKeys.allSummary(),
     queryFn: () => getAllPokemonSummary(),
     enabled: !isBasicMode || !!searchTerm, // Load only if filtering or searching
@@ -162,7 +163,7 @@ export default function PokemonList() {
   });
 
   // 2. Detailed Data : Loaded ONLY if advanced filters are used
-  const { data: allDetailed, isLoading: isLoadingDetailed, error: detailedError } = useQuery({
+  const { data: allDetailed, isLoading: isLoadingDetailed, isFetching: isFetchingDetailed, error: detailedError, refetch: refetchDetailed } = useQuery({
     queryKey: pokemonKeys.allDetailed(),
     queryFn: () => getAllPokemonDetailed(),
     enabled: needsDetailedData,
@@ -179,6 +180,7 @@ export default function PokemonList() {
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingInfinite,
+    isFetching: isFetchingInfinite,
     error: infiniteError,
     refetch: refetchInfinite,
   } = useInfiniteQuery({
@@ -471,26 +473,33 @@ export default function PokemonList() {
         <Button
           variant="outline"
           onClick={() => void refetchInfinite()}
+          disabled={isFetchingInfinite}
+          aria-busy={isFetchingInfinite}
           className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2"
         >
-          <RotateCcw className="w-4 h-4" /> {t('common.retry', { defaultValue: 'Retry' })}
+          <RotateCcw className={`w-4 h-4 ${isFetchingInfinite ? 'motion-safe:animate-spin' : ''}`} /> {isFetchingInfinite ? t('common.loading') : t('common.retry', { defaultValue: 'Retry' })}
         </Button>
       </div>
     );
   }
 
   if (detailedError || (!isBasicMode && summaryError)) {
-    const dataError = detailedError ?? summaryError;
-    return (
-      <div className="pokedex-empty-state flex flex-col items-center justify-center py-20 px-4 text-center space-y-6">
-        <SearchX className="w-20 h-20 text-red-500/40" />
-        <h2 className="text-2xl font-black uppercase tracking-tight text-muted-foreground">{t('list.error_loading')}</h2>
-        <p className="text-sm text-muted-foreground max-w-md">{(dataError as Error)?.message || t('list.error_desc')}</p>
-        <Button variant="outline" onClick={resetFilters} className="rounded-sm px-8 py-6 h-auto font-black uppercase tracking-[0.2em] text-xs border-primary/20 hover:bg-primary/10 gap-2">
-          <RotateCcw className="w-4 h-4" /> {t('filters.reset')}
-        </Button>
-      </div>
-    );
+    const retrying = needsDetailedData ? isFetchingDetailed : isFetchingSummary;
+    const retry = needsDetailedData ? refetchDetailed : refetchSummary;
+    if (displayedPokemon.length === 0) {
+      return (
+        <RecoverableError
+          title={t('list.error_loading')}
+          description={t('list.error_desc')}
+          retryLabel={t('common.retry')}
+          retryingLabel={t('common.loading')}
+          retrying={retrying}
+          error={needsDetailedData ? detailedError : summaryError}
+          onRetry={() => void retry()}
+          className="mx-auto my-12 max-w-3xl px-4"
+        />
+      );
+    }
   }
 
   if (displayedPokemon.length === 0) {
@@ -560,6 +569,30 @@ export default function PokemonList() {
       ) : null}
 
       <div className="mx-auto w-full max-w-6xl px-2 sm:px-2">
+        {(detailedError || (!isBasicMode && summaryError)) ? (
+          <RecoverableError
+            title={t('list.error_loading')}
+            description={t('list.error_desc')}
+            retryLabel={t('common.retry')}
+            retryingLabel={t('common.loading')}
+            retrying={needsDetailedData ? isFetchingDetailed : isFetchingSummary}
+            error={needsDetailedData ? detailedError : summaryError}
+            onRetry={() => void (needsDetailedData ? refetchDetailed() : refetchSummary())}
+            className="mb-5 px-4 py-6"
+          />
+        ) : null}
+        {isBasicMode && infiniteError && (infiniteData?.pages.length ?? 0) > 0 ? (
+          <RecoverableError
+            title={t('list.error_loading')}
+            description={t('list.error_desc')}
+            retryLabel={t('common.retry')}
+            retryingLabel={t('common.loading')}
+            retrying={isFetchingInfinite}
+            error={infiniteError}
+            onRetry={() => void refetchInfinite()}
+            className="mb-5 px-4 py-6"
+          />
+        ) : null}
         <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
           {displayedPokemon.map((p, idx) => (
             <div key={p.id} className="pokemon-grid-item">

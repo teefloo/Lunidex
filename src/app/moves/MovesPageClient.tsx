@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  AlertCircle,
   Filter,
   Gauge,
   Loader2,
@@ -38,6 +37,7 @@ import { getReadableTextColor } from '@/lib/color-contrast';
 import { TYPE_COLORS, type GraphQLMoveData, type MoveListItem } from '@/types/pokemon';
 import MoveDetailModal from './MoveDetailModal';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 const ALL_TYPES = [
   'normal',
@@ -365,11 +365,13 @@ export default function MovesPageClient({
               </div>
 
               {isError ? (
-                <ErrorState
+                <RecoverableError
                   title={t('moves_page.load_error')}
                   description={t('moves_page.load_error_desc')}
-                  details={error instanceof Error ? error.message : null}
                   retryLabel={t('common.retry')}
+                  retryingLabel={t('common.loading')}
+                  retrying={isFetching}
+                  error={error}
                   onRetry={() => void refetch()}
                 />
               ) : isLoading ? (
@@ -681,39 +683,6 @@ function MovesSkeleton() {
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function ErrorState({
-  title,
-  description,
-  details,
-  retryLabel,
-  onRetry,
-}: {
-  title: string;
-  description: string;
-  details: string | null;
-  retryLabel: string;
-  onRetry: () => void;
-}) {
-  return (
-    <div className="glass-card flex flex-col items-center justify-center rounded-sm border-dashed px-6 py-16 text-center">
-      <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-        <AlertCircle className="h-8 w-8 text-primary" />
-      </div>
-      <h3 className="text-xl font-black uppercase tracking-[0.2em] text-foreground/90">{title}</h3>
-      <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/35">{description}</p>
-      {details && (
-        <p className="mt-3 max-w-xl rounded-sm border border-border/70 bg-muted/40 px-4 py-3 font-mono text-[11px] leading-5 text-foreground/45">
-          {details}
-        </p>
-      )}
-      <Button className="mt-6 h-11 px-5 uppercase tracking-[0.18em]" onClick={onRetry}>
-        <RefreshCw className="h-4 w-4" />
-        {retryLabel}
-      </Button>
     </div>
   );
 }

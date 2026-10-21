@@ -26,6 +26,7 @@ import {
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 interface GqlPokemonData {
   id?: number;
@@ -75,7 +76,7 @@ const CHIP_ACTIVE =
 export function PokemonCardSkeleton() {
   return (
     <div className="pokedex-card-skeleton py-1 px-1">
-      <div className="relative h-[18rem] p-4 flex flex-col animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
+      <div className="relative h-[18rem] p-4 flex flex-col motion-safe:animate-pulse rounded-sm border border-border/50 bg-card/60 overflow-hidden">
         <div className="flex justify-between items-center w-full mb-3">
           <Skeleton className="h-4 w-12 bg-muted/40" />
           <div className="flex gap-1.5">
@@ -124,7 +125,7 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const hasUsableData = !!(initialData?.pokemon?.id &&
     ((pokemonGql?.types?.length ?? 0) > 0 || (pokemonGql?.pokemon_v2_pokemontypes?.length ?? 0) > 0));
 
-  const { data, isLoading } = useQuery<{
+  const { data, isLoading, isError, isFetching, error, refetch } = useQuery<{
     pokemon: Partial<PokemonDetail>;
     species?: Partial<PokemonSpecies>;
   }>({
@@ -204,6 +205,21 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
   if (isLoading && !displayData) {
     return <PokemonCardSkeleton />;
+  }
+
+  if (isError && !displayData) {
+    return (
+      <RecoverableError
+        title={t('common.load_failed')}
+        description={t('list.error_desc')}
+        retryLabel={t('common.retry')}
+        retryingLabel={t('common.loading')}
+        retrying={isFetching}
+        error={error}
+        onRetry={() => void refetch()}
+        className="min-h-[18rem] px-3 py-6"
+      />
+    );
   }
 
   if (!displayData || !displayData.pokemon) return null;
