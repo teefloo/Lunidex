@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { TYPE_COLORS } from '@/types/pokemon';
 import type { PokemonDetail } from '@/types/pokemon';
+import { canvasToBlob } from '@/lib/canvas-export';
+import { toast } from '@/lib/toast';
 
 interface TeamExportButtonProps {
   pokemonData: PokemonDetail[];
@@ -25,13 +27,22 @@ const TEXT_PRIMARY = '#ffffff';
 const TEXT_DIM = 'rgba(255,255,255,0.45)';
 const TYPE_BADGE_HEIGHT = 20;
 const TYPE_BADGE_RADIUS = 10;
+const IMAGE_LOAD_TIMEOUT_MS = 8_000;
 
 function loadImage(src: string): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
+    let settled = false;
+    const timeout = window.setTimeout(() => finish(null), IMAGE_LOAD_TIMEOUT_MS);
+    const finish = (image: HTMLImageElement | null) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      resolve(image);
+    };
+    img.onload = () => finish(img);
+    img.onerror = () => finish(null);
     img.src = src;
   });
 }
@@ -210,46 +221,53 @@ async function buildTeamCanvas(
 export function TeamExportButton({ pokemonData }: TeamExportButtonProps) {
   const { t } = useTranslation();
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState('');
+  const exportInFlight = useRef(false);
 
   const handleExport = async () => {
-    if (isExporting || pokemonData.length === 0) return;
+    if (exportInFlight.current || pokemonData.length === 0) return;
+    exportInFlight.current = true;
     setIsExporting(true);
+    setExportError('');
     try {
       const canvas = await buildTeamCanvas(pokemonData, t);
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) return;
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'my-team-primedex.png';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        },
-        'image/png',
-      );
+      const blob = await canvasToBlob(canvas);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'my-team-primedex.png';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.setTimeout(() => URL.revokeObjectURL(url), 0);
+      toast.success(t('team.export_complete'));
+    } catch {
+      setExportError(t('team.export_failed'));
     } finally {
+      exportInFlight.current = false;
       setIsExporting(false);
     }
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={handleExport}
-      disabled={isExporting || pokemonData.length === 0}
-      title={t('team.export_tooltip')}
-      className="rounded-full text-[11px] sm:text-[11px] font-black uppercase border-primary/20 text-primary hover:bg-primary/10"
-    >
-      {isExporting ? (
-        <Loader2 className="w-2.5 h-2.5 animate-spin" />
-      ) : (
-        <Download className="w-2.5 h-2.5" />
-      )}
-      {isExporting ? t('team.exporting') : t('team.export_image')}
-    </Button>
+    <div className="flex flex-col items-start gap-1" aria-busy={isExporting}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => void handleExport()}
+        disabled={isExporting || pokemonData.length === 0}
+        aria-busy={isExporting}
+        title={t('team.export_tooltip')}
+        className="rounded-full border-primary/20 text-[11px] font-black uppercase text-primary hover:bg-primary/10"
+      >
+        {isExporting ? (
+          <Loader2 className="h-2.5 w-2.5 motion-safe:animate-spin" aria-hidden="true" />
+        ) : (
+          <Download className="h-2.5 w-2.5" aria-hidden="true" />
+        )}
+        {isExporting ? t('team.exporting') : t('team.export_image')}
+      </Button>
+      {exportError ? <p className="max-w-56 text-xs text-destructive" role="alert">{exportError}</p> : null}
+    </div>
   );
 }
