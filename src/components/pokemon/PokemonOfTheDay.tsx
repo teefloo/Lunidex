@@ -31,11 +31,11 @@ export default async function PokemonOfTheDay() {
   let species;
   let localized;
   try {
-    [pokemon, species, localized] = await Promise.all([
+    [pokemon, species] = await Promise.all([
       getPokemonDetailCached(name),
       getPokemonSpeciesCached(getBaseSpeciesName(name)),
-      getLocalizedPokemonDataCached(name, langId).catch(() => null),
     ]);
+    localized = await getLocalizedPokemonDataCached(pokemon.species.name, langId).catch(() => null);
   } catch {
     return null;
   }

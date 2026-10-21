@@ -22,6 +22,7 @@ export interface TCGIllustratorGallery {
   page: number;
   pageCount: number;
   hasUnavailableDetails: boolean;
+  isUnavailable: boolean;
 }
 
 export class TCGIllustratorAttributionMismatchError extends Error {
@@ -39,11 +40,23 @@ export async function loadTCGIllustratorGallery(
   const identity = normalizeTCGIllustratorIdentity(identityValue);
   if (!identity || !Number.isInteger(page) || page < 1) return null;
 
-  const selectedLanguageNames = await getTCGIllustratorsCached(language);
+  let selectedLanguageNames: string[];
+  try {
+    selectedLanguageNames = await getTCGIllustratorsCached(language);
+  } catch {
+    return unavailableGallery(identityValue.trim(), identity, language, page);
+  }
   const selectedAliases = getTCGIllustratorAliases(selectedLanguageNames, identity);
-  const knownNames = selectedAliases.length > 0
-    ? selectedAliases
-    : await findIllustratorInOtherLanguages(identity, language);
+  let knownNames: string[];
+  if (selectedAliases.length > 0) {
+    knownNames = selectedAliases;
+  } else {
+    try {
+      knownNames = await findIllustratorInOtherLanguages(identity, language);
+    } catch {
+      return unavailableGallery(identityValue.trim(), identity, language, page);
+    }
+  }
 
   if (knownNames.length === 0) return null;
   const artist = knownNames[0]?.trim() ?? identityValue.trim();
@@ -58,10 +71,16 @@ export async function loadTCGIllustratorGallery(
       page,
       pageCount: 0,
       hasUnavailableDetails: false,
+      isUnavailable: false,
     };
   }
 
-  const lists = await Promise.all(selectedAliases.map((alias) => getTCGIllustratorCardsCached(alias, language)));
+  let lists: TCGCard[][];
+  try {
+    lists = await Promise.all(selectedAliases.map((alias) => getTCGIllustratorCardsCached(alias, language)));
+  } catch {
+    return unavailableGallery(artist, identity, language, page);
+  }
   const allCards = mergeTCGIllustratorCards(lists).map((summary) => {
     if (summary.illustrator
       && normalizeTCGIllustratorIdentity(summary.illustrator) !== identity) {
@@ -105,6 +124,26 @@ export async function loadTCGIllustratorGallery(
     page,
     pageCount: paged.pageCount,
     hasUnavailableDetails,
+    isUnavailable: false,
+  };
+}
+
+function unavailableGallery(
+  artist: string,
+  identity: string,
+  language: TCGCardLanguage,
+  page: number,
+): TCGIllustratorGallery {
+  return {
+    artist,
+    identity,
+    language,
+    cards: [],
+    total: 0,
+    page,
+    pageCount: 0,
+    hasUnavailableDetails: false,
+    isUnavailable: true,
   };
 }
 

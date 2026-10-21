@@ -50,9 +50,11 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
           <h1 className="mt-2 break-words font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl">
             {gallery.artist}
           </h1>
-          <p className="mt-3 text-sm font-bold text-muted-foreground" aria-live="polite">
-            {t('tcg.illustrator_cards_count', { count: gallery.total })}
-          </p>
+          {!gallery.isUnavailable && (
+            <p className="mt-3 text-sm font-bold text-muted-foreground" aria-live="polite">
+              {t('tcg.illustrator_cards_count', { count: gallery.total })}
+            </p>
+          )}
         </div>
         <TCGLanguageSelector
           value={gallery.language}
@@ -62,7 +64,19 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
         />
       </header>
 
-      {gallery.hasUnavailableDetails && (
+      {gallery.isUnavailable ? (
+        <div className="flex flex-col gap-3 rounded-sm border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-foreground sm:flex-row sm:items-center sm:justify-between" role="alert">
+          <p>{t('tcg.illustrator_catalog_unavailable')}</p>
+          <button
+            type="button"
+            onClick={() => router.refresh()}
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-sm border border-amber-500/40 px-3 font-bold transition-colors hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/70"
+          >
+            <RotateCw aria-hidden="true" className="h-4 w-4" />
+            {t('tcg.illustrator_retry')}
+          </button>
+        </div>
+      ) : gallery.hasUnavailableDetails && (
         <div className="flex flex-col gap-3 rounded-sm border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-foreground sm:flex-row sm:items-center sm:justify-between" role="status" aria-live="polite">
           <p>{t('tcg.illustrator_details_unavailable')}</p>
           <button
@@ -76,7 +90,7 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
         </div>
       )}
 
-      {gallery.total === 0 ? (
+      {gallery.isUnavailable ? null : gallery.total === 0 ? (
         <section className="glass-surface rounded-sm p-8 text-center" aria-labelledby="tcg-illustrator-empty-title">
           <h2 id="tcg-illustrator-empty-title" className="text-xl font-black text-foreground">
             {t('tcg.no_cards')}

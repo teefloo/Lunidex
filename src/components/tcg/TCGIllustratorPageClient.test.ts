@@ -35,6 +35,7 @@ const baseGallery = {
   page: 1,
   pageCount: 2,
   hasUnavailableDetails: false,
+  isUnavailable: false,
 };
 
 describe('TCGIllustratorPageClient', () => {
@@ -56,5 +57,15 @@ describe('TCGIllustratorPageClient', () => {
 
     expect(markup).toContain('tcg.illustrator_empty');
     expect(markup).not.toContain('data-card-id=');
+  });
+
+  it('shows a retry action when TCGdex could not load the illustrator catalog', () => {
+    const markup = renderToStaticMarkup(createElement(TCGIllustratorPageClient, {
+      gallery: { ...baseGallery, cards: [], total: 0, pageCount: 0, isUnavailable: true },
+    }));
+
+    expect(markup).toContain('tcg.illustrator_catalog_unavailable');
+    expect(markup).toContain('tcg.illustrator_retry');
+    expect(markup).not.toContain('tcg.illustrator_empty');
   });
 });

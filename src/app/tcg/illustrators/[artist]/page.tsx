@@ -31,12 +31,14 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const route = await getRouteData(artist, query);
   const t = await getServerT();
   const title = t('tcg.illustrator_meta_title', { artist: route.gallery.artist });
-  const description = route.gallery.total > 0
-    ? t('tcg.illustrator_meta_description', {
-      artist: route.gallery.artist,
-      count: route.gallery.total,
-    })
-    : t('tcg.illustrator_meta_description_empty', { artist: route.gallery.artist });
+  const description = route.gallery.isUnavailable
+    ? t('tcg.illustrator_meta_description_unavailable', { artist: route.gallery.artist })
+    : route.gallery.total > 0
+      ? t('tcg.illustrator_meta_description', {
+        artist: route.gallery.artist,
+        count: route.gallery.total,
+      })
+      : t('tcg.illustrator_meta_description_empty', { artist: route.gallery.artist });
   const path = buildTCGIllustratorPath(route.gallery.identity, route.tcgLanguage, route.page);
   const canonical = `/${route.currentLanguage}${path}`;
   const ogImage = `${SITE_URL}${DEFAULT_OG_IMAGE.url}`;
@@ -44,7 +46,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     language,
     `/${language}${path}`,
   ]));
-  const indexable = route.gallery.total > 0;
+  const indexable = !route.gallery.isUnavailable && route.gallery.total > 0;
 
   return {
     title: { absolute: title },
@@ -126,7 +128,8 @@ async function getRouteData(
     const decodedArtist = decodeArtistSegment(artist);
     if (decodedArtist !== artist) gallery = await getGalleryCached(decodedArtist, tcgLanguage, page);
   }
-  if (!gallery || (gallery.total === 0 && page !== 1) || (gallery.total > 0 && page > gallery.pageCount)) {
+  if (!gallery || (!gallery.isUnavailable && gallery.total === 0 && page !== 1)
+    || (!gallery.isUnavailable && gallery.total > 0 && page > gallery.pageCount)) {
     notFound();
   }
 

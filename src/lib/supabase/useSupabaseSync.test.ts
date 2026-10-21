@@ -78,6 +78,13 @@ describe('account sync initialization', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    usePrimeDexStore.setState({
+      favorites: [],
+      tcgWishlistCards: [],
+      tcgCustomCollections: [],
+      tcgCustomCollectionCards: [],
+      tcgInvestments: [],
+    });
     setSyncAccessStatus('checking');
     resetSyncWriteStatus();
     vi.useRealTimers();
@@ -135,10 +142,20 @@ describe('account sync initialization', () => {
     expect(container.querySelector('output')?.textContent).toBe('ready');
   });
 
-  it('rolls back a custom collection rejected by the 2 MB account limit with a specific message', async () => {
+  it('keeps a custom collection locally when the cloud rejects its size and retries that saved state', async () => {
+    const collection = {
+      id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+      name: 'Oversized binder',
+      createdAt: '2026-10-19T10:00:00.000Z',
+      updatedAt: '2026-10-19T10:00:00.000Z',
+    };
     mocks.fetchAppApi
       .mockResolvedValueOnce(response(200, { data: {}, updatedAt: '2026-10-19T10:00:00.000Z' }))
-      .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }));
+      .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }))
+      .mockResolvedValueOnce(response(200, {
+        data: { tcgCustomCollections: [collection] },
+        updatedAt: '2026-10-19T10:01:00.000Z',
+      }));
 
     await renderSync();
     await act(async () => {
@@ -150,23 +167,34 @@ describe('account sync initialization', () => {
 
     await act(async () => {
       usePrimeDexStore.setState({
-        tcgCustomCollections: [{
-          id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
-          name: 'Oversized binder',
-          createdAt: '2026-10-19T10:00:00.000Z',
-          updatedAt: '2026-10-19T10:00:00.000Z',
-        }],
+        tcgCustomCollections: [collection],
       });
       await vi.advanceTimersByTimeAsync(100);
       await Promise.resolve();
       await Promise.resolve();
     });
 
-    expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([collection]);
     expect(container.querySelector('output')?.textContent).toBe('ready');
     expect(getSyncWriteStatus()).toEqual({ state: 'error', reason: 'too-large' });
     const { toast } = await import('@/lib/toast');
     expect(toast.error).toHaveBeenCalledWith('tcg.custom_collections.document_too_large');
+
+    await act(async () => {
+      resetSyncWriteStatus();
+      retrySyncAccess();
+      await vi.advanceTimersByTimeAsync(100);
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(mocks.fetchAppApi).toHaveBeenCalledTimes(3);
+    expect(mocks.fetchAppApi.mock.calls[2]?.[1]).toMatchObject({ method: 'PUT' });
+    expect(JSON.parse(String(mocks.fetchAppApi.mock.calls[2]?.[1]?.body))).toMatchObject({
+      data: { tcgCustomCollections: [collection] },
+    });
+    expect(getSyncWriteStatus().state).toBe('saved');
   });
 
   it('clears investment records when the authenticated account changes or signs out', async () => {
@@ -251,7 +279,7 @@ describe('account sync initialization', () => {
     expect(getSyncWriteStatus()).toEqual({ state: 'saved' });
   });
 
-  it('reports an oversized investment write as failed and restores the accepted lots', async () => {
+  it('reports an oversized investment write as failed and keeps the local lot for retry', async () => {
     mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
       .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }));
     await renderSync();
@@ -259,7 +287,7 @@ describe('account sync initialization', () => {
     const save = saveTCGInvestmentConfirmed(investmentInput);
     await act(async () => vi.advanceTimersByTimeAsync(100));
     await expect(save).resolves.toEqual({ ok: false, reason: 'too-large' });
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
     expect(container.querySelector('output')?.textContent).toBe('ready');
   });
 
@@ -288,7 +316,7 @@ describe('account sync initialization', () => {
     await expect(second).resolves.toEqual({ ok: true, id: laterLot.id });
   });
 
-  it('bounds a hung PUT and ignores a late acceptance after rolling back', async () => {
+  it('bounds a hung PUT, keeps the local edit, and ignores a late acceptance', async () => {
     let accept: (value: Response) => void = () => undefined;
     let signal: AbortSignal | undefined;
     mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
@@ -303,11 +331,11 @@ describe('account sync initialization', () => {
     await act(async () => vi.advanceTimersByTimeAsync(5100));
     await expect(save).resolves.toEqual({ ok: false, reason: 'unavailable' });
     expect(signal?.aborted).toBe(true);
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
     await act(async () => {
       accept(response(200, { data: { tcgInvestments: [lot] }, updatedAt: '2026-10-20T10:00:00.000Z' }));
     });
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
   });
 
   it('rejects a pending save when the account changes', async () => {
@@ -332,17 +360,17 @@ describe('account sync initialization', () => {
     await expect(save).resolves.toEqual({ ok: false, reason: 'conflict' });
     expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
 
-    // A later rejected mutation must roll back to the server's accepted state,
-    // without resurrecting the investment excluded from the earlier response.
+    // The later local edit stays available after rejection without restoring
+    // the investment excluded from the earlier accepted server response.
     await act(async () => {
       usePrimeDexStore.setState({ tcgWishlistCards: ['base1-2'] });
       await vi.advanceTimersByTimeAsync(100);
     });
-    expect(usePrimeDexStore.getState().tcgWishlistCards).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgWishlistCards).toEqual(['base1-2']);
     expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
   });
 
-  it('preserves a newer in-flight edit but rolls its failure back to the actual accepted snapshot', async () => {
+  it('preserves a newer in-flight edit when its write is rejected', async () => {
     const respond: Array<(value: Response) => void> = [];
     mocks.fetchAppApi.mockResolvedValueOnce(response(200, { data: {}, updatedAt: null }))
       .mockImplementation(() => new Promise<Response>((resolve) => { respond.push(resolve); }));
@@ -360,7 +388,7 @@ describe('account sync initialization', () => {
 
     await act(async () => { respond[1](response(413, { error: 'State payload is too large' })); });
     await expect(newer).resolves.toEqual({ ok: false, reason: 'too-large' });
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments[0]?.quantity).toBe(2);
   });
 
   it('rejects an invalid successful write response instead of assuming the request was accepted', async () => {
@@ -371,7 +399,7 @@ describe('account sync initialization', () => {
     const save = saveTCGInvestmentConfirmed(investmentInput);
     await act(async () => vi.advanceTimersByTimeAsync(100));
     await expect(save).resolves.toEqual({ ok: false, reason: 'invalid' });
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
   });
 
   it('rejects an in-flight save when offline and ignores its later completion', async () => {
@@ -414,7 +442,7 @@ describe('account sync initialization', () => {
     expect(usePrimeDexStore.getState().tcgInvestments[0].id).toBe(creationId);
     await act(async () => vi.advanceTimersByTimeAsync(5100));
     await expect(first).resolves.toEqual({ ok: false, reason: 'unavailable' });
-    expect(usePrimeDexStore.getState().tcgInvestments).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgInvestments).toHaveLength(1);
     const retry = saveTCGInvestmentConfirmed(investmentInput, undefined, creationId);
     await act(async () => vi.advanceTimersByTimeAsync(100));
     await expect(retry).resolves.toEqual({ ok: true, id: creationId });

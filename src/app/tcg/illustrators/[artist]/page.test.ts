@@ -20,6 +20,7 @@ const gallery = {
   page: 2,
   pageCount: 2,
   hasUnavailableDetails: false,
+  isUnavailable: false,
 };
 
 function props(page?: string) {
@@ -36,6 +37,7 @@ describe('TCG illustrator page metadata and routing', () => {
     mocks.translate.mockResolvedValue((key: string, values?: Record<string, string | number>) => {
       if (key === 'tcg.illustrator_meta_title') return `${values?.artist} | Lunidex`;
       if (key === 'tcg.illustrator_meta_description') return `${values?.count} cards illustrated by ${values?.artist}`;
+      if (key === 'tcg.illustrator_meta_description_unavailable') return `Cards by ${values?.artist} are temporarily unavailable`;
       return key;
     });
   });
@@ -67,6 +69,15 @@ describe('TCG illustrator page metadata and routing', () => {
     mocks.gallery.mockResolvedValue({ ...gallery, cards: [], total: 0, pageCount: 0 });
     const metadata = await generateMetadata(props());
 
+    expect(metadata.robots).toMatchObject({ index: false, follow: true });
+  });
+
+  it('does not describe a temporary catalog failure as an empty artist page', async () => {
+    mocks.gallery.mockResolvedValue({ ...gallery, cards: [], total: 0, pageCount: 0, isUnavailable: true });
+
+    const metadata = await generateMetadata(props());
+
+    expect(metadata.description).toBe('Cards by Shinji Kanda are temporarily unavailable');
     expect(metadata.robots).toMatchObject({ index: false, follow: true });
   });
 

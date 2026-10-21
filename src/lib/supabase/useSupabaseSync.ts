@@ -200,7 +200,8 @@ async function saveRemoteState(
 /**
  * Online-only sync for the web app. The remote user_state row is the source of
  * truth; browser storage is deliberately not used as an anonymous or account
- * snapshot and failed writes are rolled back from the last accepted remote state.
+ * snapshot. Failed writes keep the local edit pending so the user can retry it;
+ * the remote state remains authoritative after a confirmed save.
  */
 export function useNeonSync(): void {
   const { i18n } = useTranslation();
@@ -220,6 +221,7 @@ export function useNeonSync(): void {
   const remoteUpdatedAtRef = useRef<string | null>(null);
   const pushInFlightRef = useRef<Promise<void> | null>(null);
   const pushRequestedRef = useRef(false);
+  const hasPendingLocalChangesRef = useRef(false);
   const applyingRemoteRef = useRef(false);
   const syncWriteVersionRef = useRef(0);
 
@@ -258,6 +260,7 @@ export function useNeonSync(): void {
       remoteSnapshotRef.current = resetState;
       remoteUpdatedAtRef.current = null;
       pushRequestedRef.current = false;
+      hasPendingLocalChangesRef.current = false;
       setSyncAccessStatus(status);
       if (status === 'unavailable') {
         reportFallback('sync-unavailable', { feature: 'sync', operation: 'session-reset' });
@@ -288,18 +291,20 @@ export function useNeonSync(): void {
               ? 'session'
               : 'unavailable');
       }
-      const acceptedState = acceptedSnapshotRef.current ?? initialState;
-      const acceptedMetadata = acceptedMetadataRef.current
-        ?? normalizeSyncMetadata(undefined, acceptedState);
-      applyAcceptedState(acceptedState, acceptedMetadata);
       if (status === 'unavailable' && preserveCollectionPage && window.navigator.onLine) {
-        reportFallback('sync-unavailable', { feature: 'sync', operation: 'write-rollback' });
+        previousSnapshotRef.current = pickSyncState();
+        hasPendingLocalChangesRef.current = true;
+        reportFallback('sync-unavailable', { feature: 'sync', operation: 'write-deferred' });
         toast.error(failureMessage ?? i18n.t('auth.sync_unavailable', {
           defaultValue: 'Your saved data is temporarily unavailable. Please try again in a moment.',
         }));
         setSyncAccessStatus('ready');
         return;
       }
+      const acceptedState = acceptedSnapshotRef.current ?? initialState;
+      const acceptedMetadata = acceptedMetadataRef.current
+        ?? normalizeSyncMetadata(undefined, acceptedState);
+      applyAcceptedState(acceptedState, acceptedMetadata);
       setSyncAccessStatus(status);
     };
 
@@ -319,10 +324,6 @@ export function useNeonSync(): void {
 
     resetSession('checking');
     const deviceId = getDeviceId();
-    const unregisterRetry = onSyncAccessRetry(() => {
-      setOnlineVersion((version) => version + 1);
-    });
-
     const push = async (): Promise<void> => {
       if (cancelled) return;
 
@@ -392,9 +393,11 @@ export function useNeonSync(): void {
           if (JSON.stringify(current) === JSON.stringify(local)) {
             applyAcceptedState(confirmed, accepted.metadata);
             reportSyncWriteSaved(writeVersion);
+            hasPendingLocalChangesRef.current = false;
           } else {
             acceptedSnapshotRef.current = confirmed;
             acceptedMetadataRef.current = accepted.metadata;
+            hasPendingLocalChangesRef.current = true;
           }
           confirmTCGInvestmentSaves(local.tcgInvestments, confirmed.tcgInvestments);
           return;
@@ -451,6 +454,7 @@ export function useNeonSync(): void {
 
     const schedulePush = (): void => {
       rejectSupersededSyncChanges();
+      hasPendingLocalChangesRef.current = true;
       syncWriteVersionRef.current = queueSyncWrite();
       pushRequestedRef.current = true;
       if (pushInFlightRef.current) return;
@@ -460,6 +464,11 @@ export function useNeonSync(): void {
         startPush();
       }, SYNC_DEBOUNCE_MS);
     };
+
+    const unregisterRetry = onSyncAccessRetry(() => {
+      if (hasPendingLocalChangesRef.current) schedulePush();
+      else setOnlineVersion((version) => version + 1);
+    });
 
     const init = async (): Promise<void> => {
       try {
@@ -475,6 +484,7 @@ export function useNeonSync(): void {
           deviceId,
         );
         applyAcceptedState(reconciled.state, reconciled.metadata);
+        hasPendingLocalChangesRef.current = false;
         setSyncAccessStatus('ready');
 
         unsubscribe = usePrimeDexStore.subscribe(() => {

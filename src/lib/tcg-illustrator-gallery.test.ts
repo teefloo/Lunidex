@@ -42,6 +42,33 @@ describe('TCG illustrator gallery loader', () => {
     expect(mocks.summaries).not.toHaveBeenCalled();
   });
 
+  it('returns a retryable unavailable result when the illustrator index fails', async () => {
+    mocks.indexes.mockRejectedValue(new Error('TCGdex is temporarily unavailable'));
+
+    const gallery = await loadTCGIllustratorGallery('Shinji Kanda', 'en', 1);
+
+    expect(gallery).toMatchObject({
+      artist: 'Shinji Kanda',
+      total: 0,
+      cards: [],
+      isUnavailable: true,
+    });
+  });
+
+  it('returns a retryable unavailable result when an illustrator card index fails', async () => {
+    mocks.indexes.mockImplementation(async (lang: string) => lang === 'en' ? ['Shinji Kanda'] : []);
+    mocks.summaries.mockRejectedValue(new Error('TCGdex is temporarily unavailable'));
+
+    const gallery = await loadTCGIllustratorGallery('shinji kanda', 'en', 1);
+
+    expect(gallery).toMatchObject({
+      artist: 'Shinji Kanda',
+      total: 0,
+      cards: [],
+      isUnavailable: true,
+    });
+  });
+
   it('returns null for an unknown credit and rejects contradictory card attribution', async () => {
     mocks.indexes.mockResolvedValue([]);
     await expect(loadTCGIllustratorGallery('unknown artist', 'en', 1)).resolves.toBeNull();
