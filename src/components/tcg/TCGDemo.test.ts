@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TCGSetAlbumData } from '@/types/tcg';
 
 const mocks = vi.hoisted(() => ({
-  auth: { enabled: true, loading: false, user: null as null | { id: string } },
+  auth: { enabled: true, loading: false, user: null as null | { id: string }, retrySession: vi.fn() },
   track: vi.fn().mockResolvedValue(true),
   queryEnabled: [] as boolean[],
   queryRetry: [] as (boolean | undefined)[],
@@ -38,7 +38,7 @@ vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: readon
   mocks.queryOptions.push(options);
   mocks.queryEnabled.push(Boolean(options.enabled));
   mocks.queryRetry.push(options.retry);
-  const isAlbumQuery = options.queryKey.includes('collection-set-album-v2');
+  const isAlbumQuery = options.queryKey.includes('collection-set-album-v3');
   const isActivationQuery = options.queryKey.includes('activation-sets');
   const isCollectionCatalogQuery = options.queryKey.includes('collection-sets');
   const isSetDetailQuery = options.queryKey.includes('activation-set-details');
@@ -278,7 +278,7 @@ describe('TCG demo and account boundaries', () => {
 
     await render();
 
-    const query = mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v2')).at(-1);
+    const query = mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1);
     expect(query?.enabled).toBe(true);
     expect(container.textContent).toContain('Your collection is still syncing');
     expect(container.textContent).not.toContain('Demo checklist');
@@ -292,7 +292,7 @@ describe('TCG demo and account boundaries', () => {
 
     expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
     expect(progress()).toBeUndefined();
-    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v2')).at(-1)?.retry).toBe(false);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.retry).toBe(false);
 
     mocks.albumLoading = false;
     await render();

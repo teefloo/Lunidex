@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { FolderPlus, Search } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { FolderPlus, Loader2, Search } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
@@ -11,6 +11,9 @@ import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard } from '@/types/tcg';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
+import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
+import { pickSyncState } from '@/lib/supabase/sync-state';
+import { waitForSyncChange, type SyncChangeFailure } from '@/lib/sync-confirmation';
 
 interface TCGCustomCollectionPickerProps {
   open: boolean;
@@ -33,6 +36,8 @@ export function TCGCustomCollectionPicker({ open, onOpenChange, card, language }
   const [query, setQuery] = useState('');
   const [formOpen, setFormOpen] = useState(false);
   const [error, setError] = useState('');
+  const [busyCollectionId, setBusyCollectionId] = useState<string | null>(null);
+  const toggleGuard = useRef(false);
   const filteredCollections = useMemo(() => {
     const normalized = normalizeSearch(query);
     return normalized
@@ -40,13 +45,39 @@ export function TCGCustomCollectionPicker({ open, onOpenChange, card, language }
       : collections;
   }, [collections, query]);
 
-  const toggleCollection = (collectionId: string) => {
+  const syncErrorMessage = (reason: SyncChangeFailure): string => t(reason === 'too-large'
+    ? 'common.sync_too_large'
+    : reason === 'conflict'
+      ? 'common.sync_conflict'
+      : reason === 'session'
+        ? 'common.sync_session'
+        : 'common.sync_failed');
+
+  const toggleCollection = async (collectionId: string) => {
+    if (toggleGuard.current) return;
     setError('');
+    if (!hasSyncAccess()) {
+      requestSyncAccess();
+      setError(t('tcg.custom_collections.sync_required'));
+      return;
+    }
     const selected = memberships.some((entry) => entry.collectionId === collectionId && entry.cardId === card.id && entry.language === language);
     const changed = selected
       ? removeCard(collectionId, card.id, language)
       : addCard(collectionId, { cardId: card.id, language, cardName: card.name });
-    if (!changed) setError(selected ? t('tcg.custom_collections.remove_error') : t('tcg.custom_collections.add_error'));
+    if (!changed) {
+      setError(selected ? t('tcg.custom_collections.remove_error') : t('tcg.custom_collections.add_error'));
+      return;
+    }
+    toggleGuard.current = true;
+    setBusyCollectionId(collectionId);
+    try {
+      const result = await waitForSyncChange(pickSyncState(), pickSyncState);
+      if (!result.ok) setError(syncErrorMessage(result.reason));
+    } finally {
+      toggleGuard.current = false;
+      setBusyCollectionId(null);
+    }
   };
 
   const addToNewCollection = (collectionId: string) => {
@@ -84,16 +115,18 @@ export function TCGCustomCollectionPicker({ open, onOpenChange, card, language }
               {filteredCollections.map((collection) => {
                 const selected = memberships.some((entry) => entry.collectionId === collection.id && entry.cardId === card.id && entry.language === language);
                 return (
-                  <li key={collection.id}>
+                  <li key={collection.id} aria-busy={busyCollectionId === collection.id}>
                     <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-sm border border-border/50 bg-card/50 px-3 py-2 hover:border-primary/45 focus-within:ring-2 focus-within:ring-primary">
                       <input
                         type="checkbox"
                         checked={selected}
-                        onChange={() => toggleCollection(collection.id)}
+                        onChange={() => void toggleCollection(collection.id)}
+                        disabled={busyCollectionId !== null}
                         aria-label={collection.name}
                         className="h-5 w-5 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                       <span className="min-w-0 flex-1 truncate text-sm font-bold">{collection.name}</span>
+                      {busyCollectionId === collection.id ? <Loader2 className="h-4 w-4 shrink-0 motion-safe:animate-spin text-primary" aria-label={t('common.saving_changes')} /> : null}
                       {selected && <span className="text-xs font-black text-primary">{t('tcg.custom_collections.already_added')}</span>}
                     </label>
                   </li>

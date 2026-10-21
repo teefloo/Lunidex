@@ -15,6 +15,8 @@ import { TCGWishlistContent } from '@/components/tcg/TCGWishlistContent';
 import { resolveRequestedTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { decodeTCGCollectionKey } from '@/lib/tcg-collections';
 import { getTCGSetIdsFromWishlist } from '@/lib/tcg-wishlist';
+import { Skeleton } from '@/components/ui/skeleton';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 export function TCGWishlistPage() {
   const { t } = useTranslation();
@@ -79,12 +81,31 @@ export function TCGWishlistPage() {
     for (let i = 0; i < relevantSetIds.length; i++) {
       const set = setQueries[i]?.data;
       const cardData = cardQueries[i]?.data;
-      if (set && cardData) {
-        map.set(relevantSetIds[i], { set, cards: cardData });
+      const resolvedSet = set ?? cardData?.find((card) => card.set)?.set;
+      if (resolvedSet && cardData) {
+        map.set(relevantSetIds[i], { set: resolvedSet, cards: cardData });
       }
     }
     return map;
   }, [cardQueries, relevantSetIds, setQueries]);
+  const failedSetIds = relevantSetIds.filter((_, index) => (
+    setQueries[index]?.isError || cardQueries[index]?.isError
+  ));
+  const failedQueryError = setQueries.find((query) => query?.isError)?.error
+    ?? cardQueries.find((query) => query?.isError)?.error;
+  const loadingCards = setQueries.some((query) => query?.isPending)
+    || cardQueries.some((query) => query?.isPending);
+  const retryingCards = setQueries.some((query) => query?.isFetching)
+    || cardQueries.some((query) => query?.isFetching);
+  const retryFailedSets = () => {
+    for (const setId of failedSetIds) {
+      const index = relevantSetIds.indexOf(setId);
+      const setQuery = setQueries[index];
+      const cardsQuery = cardQueries[index];
+      if (setQuery?.isError) void setQuery.refetch();
+      if (cardsQuery?.isError) void cardsQuery.refetch();
+    }
+  };
 
   return (
     <div className="app-page">
@@ -100,7 +121,41 @@ export function TCGWishlistPage() {
             {tcgWishlistCards.length} {t('tcg.cards')}
           </p>
         </div>
-        <TCGWishlistContent setsMap={setsMap} tcgLanguage={resolvedLang} />
+        {!mounted || !hasHydrated ? (
+          <div aria-busy="true" role="status">
+            <span className="sr-only">{t('tcg.collection_loading')}</span>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="aspect-[2.15/3] rounded-lg" />)}
+            </div>
+          </div>
+        ) : tcgWishlistCards.length === 0 ? (
+          <TCGWishlistContent setsMap={setsMap} tcgLanguage={resolvedLang} />
+        ) : (
+          <div className="space-y-4">
+            {failedSetIds.length > 0 && (
+              <RecoverableError
+                title={t('common.load_failed')}
+                description={t('common.load_failed')}
+                retryLabel={t('common.retry')}
+                retryingLabel={t('common.loading')}
+                retrying={retryingCards}
+                error={failedQueryError}
+                onRetry={retryFailedSets}
+                className="px-4 py-4"
+              />
+            )}
+            {loadingCards && setsMap.size === 0 ? (
+              <div aria-busy="true" role="status">
+                <span className="sr-only">{t('tcg.collection_loading')}</span>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                  {Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="aspect-[2.15/3] rounded-lg" />)}
+                </div>
+              </div>
+            ) : failedSetIds.length > 0 && setsMap.size === 0 ? null : (
+              <TCGWishlistContent setsMap={setsMap} tcgLanguage={resolvedLang} />
+            )}
+          </div>
+        )}
       </main>
     </div>
   );

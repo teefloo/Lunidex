@@ -8,6 +8,7 @@ const localMockBaseUrl = !e2eBaseUrl || /^http:\/\/(localhost|127\.0\.0\.1):3000
 const customE2EEnabled = process.env.E2E_CUSTOM_COLLECTIONS === '1' && localMockBaseUrl;
 
 type E2EState = Record<string, unknown>;
+type CatalogOutcome = 'success' | 'empty' | 'network-error' | 'server-error';
 
 function makeState(collections: unknown[] = [], cards: unknown[] = []): E2EState {
   return {
@@ -47,7 +48,13 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
   let stateVersion = updatedAt;
   let activeCardRequests = 0;
   let maximumActiveCardRequests = 0;
-  let catalogFailure = false;
+  let catalogOutcome: CatalogOutcome = 'success';
+  let holdCatalogResponse = false;
+  let releaseCatalogResponse: (() => void) | null = null;
+  let catalogRequestCount = 0;
+  let rejectStateWrites = false;
+  let pendingConflictResponses = 0;
+  let stateWriteCount = 0;
   const cardRequestDelayMs = 30;
 
   await context.route('**/api/auth/**', async (route: Route) => {
@@ -71,6 +78,16 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: state, updatedAt: stateVersion }) });
       return;
     }
+    stateWriteCount += 1;
+    if (pendingConflictResponses > 0) {
+      pendingConflictResponses -= 1;
+      await route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ data: state, updatedAt: stateVersion }) });
+      return;
+    }
+    if (rejectStateWrites) {
+      await route.fulfill({ status: 413, contentType: 'application/json', body: JSON.stringify({ error: 'State payload is too large' }) });
+      return;
+    }
     const body = route.request().postDataJSON() as { data?: E2EState };
     state = body.data ?? state;
     stateVersion = new Date(Date.parse(stateVersion) + 1_000).toISOString();
@@ -90,8 +107,21 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
       return;
     }
     if (url.pathname.endsWith('/cards')) {
-      if (catalogFailure) {
+      catalogRequestCount += 1;
+      if (holdCatalogResponse) {
+        await new Promise<void>((resolve) => { releaseCatalogResponse = resolve; });
+        releaseCatalogResponse = null;
+      }
+      if (catalogOutcome === 'network-error') {
+        await route.abort('internetdisconnected');
+        return;
+      }
+      if (catalogOutcome === 'server-error') {
         await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'catalog unavailable' }) });
+        return;
+      }
+      if (catalogOutcome === 'empty') {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
         return;
       }
       await route.fulfill({
@@ -126,8 +156,19 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
 
   return {
     getState: () => state,
+    getStateWriteCount: () => stateWriteCount,
+    getCatalogRequestCount: () => catalogRequestCount,
     getMaximumActiveCardRequests: () => maximumActiveCardRequests,
-    setCatalogFailure: (failed: boolean) => { catalogFailure = failed; },
+    setCatalogOutcome: (outcome: CatalogOutcome) => { catalogOutcome = outcome; },
+    setCatalogResponseHeld: (held: boolean) => {
+      holdCatalogResponse = held;
+      if (!held) {
+        releaseCatalogResponse?.();
+        releaseCatalogResponse = null;
+      }
+    },
+    setRejectStateWrites: (rejected: boolean) => { rejectStateWrites = rejected; },
+    conflictNextStateWrites: (count = 1) => { pendingConflictResponses = count; },
   };
 }
 
@@ -176,10 +217,33 @@ for (const viewport of [
     if (await collapseIssues.isVisible()) await collapseIssues.click();
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Already added' })).toBeVisible();
-    app.setCatalogFailure(true);
-    await search.fill('offline lookup');
+    app.setCatalogOutcome('server-error');
+    let requestCount = app.getCatalogRequestCount();
+    await search.fill('server error lookup');
+    await expect.poll(() => app.getCatalogRequestCount()).toBeGreaterThan(requestCount);
     await expect(panel.getByRole('alert')).toContainText('Cards could not be searched. Check your connection and try again.');
-    app.setCatalogFailure(false);
+    app.setCatalogOutcome('network-error');
+    requestCount = app.getCatalogRequestCount();
+    await search.fill('interrupted lookup');
+    await expect.poll(() => app.getCatalogRequestCount()).toBeGreaterThan(requestCount);
+    await expect(panel.getByRole('alert')).toContainText('Cards could not be searched. Check your connection and try again.');
+    app.setCatalogOutcome('success');
+    await panel.getByRole('button', { name: 'Try again', exact: true }).click();
+    await expect(page.getByRole('list', { name: 'Search cards' }).getByText('Charizard')).toBeVisible();
+
+    app.setCatalogResponseHeld(true);
+    requestCount = app.getCatalogRequestCount();
+    await search.fill('controlled wait');
+    await expect.poll(() => app.getCatalogRequestCount()).toBeGreaterThan(requestCount);
+    await expect(panel.locator('[aria-busy="true"]')).toBeVisible();
+    app.setCatalogResponseHeld(false);
+    await expect(page.getByRole('list', { name: 'Search cards' }).getByText('Charizard')).toBeVisible();
+
+    app.setCatalogOutcome('empty');
+    requestCount = app.getCatalogRequestCount();
+    await search.fill('empty search');
+    await expect.poll(() => app.getCatalogRequestCount()).toBeGreaterThan(requestCount);
+    await expect(panel.getByRole('status')).toContainText('No matching collections or cards.');
     await page.keyboard.press('Escape');
     await expect(panel).toBeHidden();
     await expect(page.getByRole('button', { name: 'Add cards' }).first()).toBeFocused();
@@ -233,6 +297,118 @@ test('a missing binder card becomes owned without changing series after tapping 
   expect(app.getState().tcgOwnedCards).toEqual([]);
   await expect.poll(() => (app.getState().tcgCollectionCards as unknown[] | undefined)?.length).toBe(0);
 
+  await context.close();
+});
+
+test('backup import keeps its preview after a rejected write and export starts a download', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const fixture = await mockAuthenticatedApp(context, makeState());
+  const page = await context.newPage();
+  await page.goto('/en/tcg/collection?view=custom');
+  await page.waitForResponse((response) => response.url().includes('/api/user-state') && response.request().method() === 'GET');
+  await page.getByRole('button', { name: 'More', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+
+  const settings = page.getByRole('dialog', { name: 'Settings' });
+  await expect(settings.getByText('Data Export & Import')).toBeVisible();
+  const backup = JSON.stringify({ version: '3.0', exportedAt: updatedAt, data: { favorites: [25], team: [25, 6] } });
+  await settings.locator('input[type="file"]').setInputFiles({ name: 'fixture-backup.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
+  const preview = page.getByRole('dialog', { name: 'Import Data' });
+  await expect(preview).toBeVisible();
+  await expect(preview).toContainText('Favorites');
+
+  fixture.setRejectStateWrites(true);
+  const importButton = preview.getByRole('button', { name: 'Import', exact: true });
+  await importButton.click();
+  await expect(preview.getByRole('alert')).toContainText('too large');
+  await expect(preview).toBeVisible();
+
+  fixture.setRejectStateWrites(false);
+  await importButton.click();
+  await expect(preview).toBeHidden();
+  await expect(page.getByText('Data imported successfully')).toBeVisible();
+  await expect.poll(() => fixture.getState().favorites).toEqual([25]);
+
+  const downloadPromise = page.waitForEvent('download');
+  await settings.getByRole('button', { name: 'Export', exact: true }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/^primedex-backup-\d{4}-\d{2}-\d{2}\.json$/);
+  await context.close();
+});
+
+test('custom collection form retains its value after a rejected write and closes only after retry is saved', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const fixture = await mockAuthenticatedApp(context, makeState());
+  const page = await context.newPage();
+  await page.goto('/en/tcg/collection?view=custom');
+  await page.waitForResponse((response) => response.url().includes('/api/user-state') && response.request().method() === 'GET');
+  await expect(page.getByRole('heading', { name: 'Custom collections', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Create collection' }).first().click();
+
+  const form = page.getByRole('dialog', { name: 'New collection' });
+  const nameInput = form.getByLabel('Name');
+  await nameInput.fill('Retry binder');
+  fixture.setRejectStateWrites(true);
+  await form.getByRole('button', { name: 'Save', exact: true }).evaluate((button) => {
+    (button as HTMLButtonElement).click();
+    (button as HTMLButtonElement).click();
+  });
+
+  await expect(form.getByRole('alert')).toContainText('too large');
+  await expect(nameInput).toHaveValue('Retry binder');
+  await expect(form).toBeVisible();
+  expect(fixture.getStateWriteCount()).toBe(1);
+
+  fixture.setRejectStateWrites(false);
+  await form.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(form).toBeHidden();
+  await expect.poll(() => (fixture.getState().tcgCustomCollections as { name: string }[])[0]?.name).toBe('Retry binder');
+  expect(fixture.getStateWriteCount()).toBe(2);
+  await context.close();
+});
+
+test('custom collection save reconciles one version conflict before confirming the write', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const fixture = await mockAuthenticatedApp(context, makeState());
+  const page = await context.newPage();
+  await page.goto('/en/tcg/collection?view=custom');
+  await page.waitForResponse((response) => response.url().includes('/api/user-state') && response.request().method() === 'GET');
+  await expect(page.getByRole('heading', { name: 'Custom collections', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Create collection' }).first().click();
+
+  const form = page.getByRole('dialog', { name: 'New collection' });
+  await form.getByLabel('Name').fill('Conflict retry');
+  fixture.conflictNextStateWrites();
+  await form.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(form).toBeHidden();
+  await expect.poll(() => (fixture.getState().tcgCustomCollections as { name: string }[])[0]?.name).toBe('Conflict retry');
+  expect(fixture.getStateWriteCount()).toBe(2);
+  await context.close();
+});
+
+test('custom collection stays usable at 320px with keyboard focus and reduced motion', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const context = await browser.newContext({ viewport: { width: 320, height: 720 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
+  const fixture = await mockAuthenticatedApp(context, makeState());
+  const page = await context.newPage();
+  await page.goto('/en/tcg/collection?view=custom');
+  await page.waitForResponse((response) => response.url().includes('/api/user-state') && response.request().method() === 'GET');
+  await expect(page.getByRole('heading', { name: 'Custom collections', exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+  const createButton = page.getByRole('button', { name: 'Create collection' }).first();
+  await createButton.focus();
+  await expect(createButton).toBeFocused();
+  await page.keyboard.press('Enter');
+  const form = page.getByRole('dialog', { name: 'New collection' });
+  await expect(form).toBeVisible();
+  const bounds = await form.boundingBox();
+  expect(bounds?.width).toBeLessThanOrEqual(320);
+  await expect(form.getByLabel('Name')).toBeFocused();
+  expect(fixture.getStateWriteCount()).toBe(0);
   await context.close();
 });
 

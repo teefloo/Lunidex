@@ -37,6 +37,7 @@ import {
 } from '@/lib/tcg-research';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
@@ -55,7 +56,7 @@ const TCGFilters = dynamic(
   () => import('./TCGFilters').then((module) => ({ default: module.TCGFilters })),
   {
     ssr: false,
-    loading: () => <div className="h-32 animate-pulse rounded-sm bg-card/40" />,
+    loading: () => <div className="h-32 motion-safe:animate-pulse rounded-sm bg-card/40" />,
   },
 );
 
@@ -152,6 +153,8 @@ export function TCGResearchDesk({
   const {
     data: filterOptions,
     isError: isFilterOptionsError,
+    isFetching: isFetchingFilterOptions,
+    error: filterOptionsError,
     refetch: refetchFilterOptions,
   } = useQuery({
     queryKey: tcgKeys.filterOptions(resolvedLang),
@@ -257,6 +260,9 @@ export function TCGResearchDesk({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
+    error: catalogError,
+    refetch: refetchCatalog,
   } = useInfiniteQuery({
     queryKey: tcgKeys.catalog(effectiveFilters, resolvedLang, 24, ownershipQueryKey),
     queryFn: async ({ pageParam, signal }) => searchCards(effectiveFilters, resolvedLang, pageParam, 24, signal, ownedIds, wishlistIds, false),
@@ -275,7 +281,7 @@ export function TCGResearchDesk({
 
   useEffect(() => {
     const loadMoreButton = loadMoreRef.current;
-    if (!loadMoreButton || !hasNextPage || isFetchingNextPage) return;
+    if (!loadMoreButton || !hasNextPage || isFetchingNextPage || isFetchNextPageError) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -288,7 +294,7 @@ export function TCGResearchDesk({
 
     observer.observe(loadMoreButton);
     return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, totalCards]);
+  }, [fetchNextPage, hasNextPage, isFetchNextPageError, isFetchingNextPage, totalCards]);
 
   // Search drives the query key, so every keystroke would otherwise fire a
   // fresh upstream request and a router.replace. Coalesce edits for 300 ms.
@@ -496,27 +502,43 @@ export function TCGResearchDesk({
             <CardGridSkeleton viewMode={viewMode} />
           ) : isResolvingDefaultSet ? (
             isFilterOptionsError || filterOptions ? (
-              <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80" role="alert">
-                <p>{t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}</p>
-                <button
-                  type="button"
-                  onClick={() => void refetchFilterOptions()}
-                  className="mt-3 inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-                >
-                  {t('common.retry', { defaultValue: 'Retry' })}
-                </button>
-              </div>
+              <RecoverableError
+                title={t('tcg.activation.sets_load_error', { defaultValue: 'Unable to load sets right now.' })}
+                description={t('common.load_failed')}
+                retryLabel={t('common.retry', { defaultValue: 'Retry' })}
+                retryingLabel={t('common.loading')}
+                retrying={isFetchingFilterOptions}
+                error={filterOptionsError}
+                onRetry={() => void refetchFilterOptions()}
+                className="px-4 py-5"
+              />
             ) : (
               <CardGridSkeleton viewMode={viewMode} />
             )
           ) : isLoading ? (
             <CardGridSkeleton viewMode={viewMode} />
-          ) : isError ? (
-            <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-foreground/80">
-              {t('tcg.catalog_load_error', { defaultValue: 'Unable to load cards. Please try again.' })}
-            </p>
+          ) : isError && cards.length === 0 ? (
+            <RecoverableError
+              title={t('tcg.catalog_load_error', { defaultValue: 'Unable to load cards' })}
+              description={t('common.load_failed')}
+              retryLabel={t('common.retry')}
+              retrying={isFetching}
+              error={catalogError}
+              onRetry={() => void refetchCatalog()}
+            />
           ) : cards.length > 0 ? (
             <>
+              {isError && !isFetchNextPageError ? (
+                <RecoverableError
+                  title={t('tcg.catalog_load_error', { defaultValue: 'Unable to refresh cards' })}
+                  description={t('common.load_failed')}
+                  retryLabel={t('common.retry')}
+                  retrying={isFetching}
+                  error={catalogError}
+                  onRetry={() => void refetchCatalog()}
+                  className="px-4 py-5"
+                />
+              ) : null}
               <CardResults
                 cards={visibleCards}
                 onCardClick={openCard}
@@ -529,9 +551,10 @@ export function TCGResearchDesk({
                   type="button"
                   onClick={() => void fetchNextPage()}
                   disabled={isFetchingNextPage}
+                  aria-busy={isFetchingNextPage}
                   className="mx-auto flex min-h-11 items-center justify-center rounded-sm border border-border/45 bg-card/55 px-5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/60 transition-colors hover:border-primary/35 hover:bg-primary/10 hover:text-primary"
                 >
-                  {isFetchingNextPage ? t('tcg.refreshing', { defaultValue: 'Loading…' }) : t('tcg.load_more_cards', { defaultValue: 'Load more cards' })}
+                  {isFetchingNextPage ? t('tcg.refreshing', { defaultValue: 'Loading…' }) : isFetchNextPageError ? t('common.retry') : t('tcg.load_more_cards', { defaultValue: 'Load more cards' })}
                 </button>
               )}
             </>
@@ -899,7 +922,7 @@ function CardGridSkeleton({ viewMode }: { viewMode: TCGCardViewMode }) {
         <div
           key={index}
           className={cn(
-            'rounded-[1rem] border border-border/40 bg-card/45 animate-pulse',
+            'rounded-[1rem] border border-border/40 bg-card/45 motion-safe:animate-pulse',
             isList ? 'h-44' : 'aspect-[2.05/2.88]',
           )}
         />

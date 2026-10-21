@@ -39,6 +39,8 @@ import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { toast } from '@/lib/toast';
+import { classifyRecoverableError } from '@/lib/error-feedback';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -69,7 +71,6 @@ import {
   fetchSealedProduct,
   fetchSealedSources,
   fetchSealedTransactions,
-  SealedApiError,
   updateSealedAlias,
   updateSealedTransaction,
   voidSealedTransaction,
@@ -122,11 +123,8 @@ interface SealedErrorPresentation {
 }
 
 function presentSealedError(error: unknown, t: (key: string, options?: Record<string, unknown>) => string): SealedErrorPresentation {
-  const rawMessage = error instanceof Error ? error.message : typeof error === 'string' ? error : '';
-  const normalizedMessage = rawMessage.toLowerCase();
-  const status = error instanceof SealedApiError ? error.status : null;
-
-  if (status === 401) {
+  const category = classifyRecoverableError(error);
+  if (category === 'session') {
     return {
       title: t('tcg.sealed.auth_error_title'),
       message: t('tcg.sealed.auth_error_description'),
@@ -134,7 +132,7 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
     };
   }
 
-  if (status === 429) {
+  if (category === 'limit') {
     return {
       title: t('tcg.sealed.rate_limit_title'),
       message: t('tcg.sealed.rate_limit_description'),
@@ -142,7 +140,7 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
     };
   }
 
-  if (status === 404) {
+  if (category === 'missing') {
     return {
       title: t('tcg.sealed.error_title'),
       message: t('tcg.sealed.no_catalogue'),
@@ -150,18 +148,20 @@ function presentSealedError(error: unknown, t: (key: string, options?: Record<st
     };
   }
 
-  const unavailable = status !== null && status >= 500
-    || normalizedMessage.includes('temporarily unavailable')
-    || normalizedMessage.includes('request failed')
-    || normalizedMessage.includes('failed to fetch')
-    || normalizedMessage.includes('networkerror');
+  if (category === 'conflict') {
+    return { title: t('tcg.sealed.error_title'), message: t('tcg.sealed.revision_conflict'), unavailable: false };
+  }
+
+  if (category === 'forbidden' || category === 'validation') {
+    return { title: t('tcg.sealed.error_title'), message: t(`common.error_${category}`), unavailable: false };
+  }
+
+  const unavailable = category === 'network' || category === 'timeout' || category === 'server';
 
   if (unavailable) {
     return {
       title: t('tcg.sealed.unavailable_title'),
-      message: process.env.NODE_ENV === 'development'
-        ? t('tcg.sealed.local_unavailable_description')
-        : t('tcg.sealed.unavailable_description'),
+      message: t(`common.error_${category}`),
       unavailable: true,
     };
   }
@@ -434,7 +434,14 @@ function quantityLabel(quantity: number, t: (key: string, options?: Record<strin
   return `${quantity} ${t(unitKey)}`;
 }
 
-function TransactionRow({ transaction, product, giveProduct, language, t, onEdit, onVoid }: {
+interface VoidFeedbackProps {
+  voidingTransactionId: string | null;
+  voidFailureTransactionId: string | null;
+  voidError?: string;
+  onRetryVoid: () => void;
+}
+
+function TransactionRow({ transaction, product, giveProduct, language, t, onEdit, onVoid, voiding = false, voidError, onRetryVoid }: {
   transaction: SealedTransaction;
   product?: SealedProduct;
   giveProduct?: SealedProduct;
@@ -442,6 +449,9 @@ function TransactionRow({ transaction, product, giveProduct, language, t, onEdit
   t: (key: string, options?: Record<string, unknown>) => string;
   onEdit: () => void;
   onVoid: () => void;
+  voiding?: boolean;
+  voidError?: string;
+  onRetryVoid?: () => void;
 }) {
   const isExchange = transaction.kind === 'exchange';
   const exchangeSummary = formatSealedExchangeSummary(transaction, new Map([
@@ -473,18 +483,19 @@ function TransactionRow({ transaction, product, giveProduct, language, t, onEdit
           <Pencil aria-hidden="true" />
         </Button>
         {!transaction.voided ? (
-          <Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={onVoid} aria-label={t('tcg.sealed.void')} title={t('tcg.sealed.void')}>
-            <Ban aria-hidden="true" />
+          <Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={onVoid} disabled={voiding} aria-busy={voiding} aria-label={t('tcg.sealed.void')} title={t('tcg.sealed.void')}>
+            {voiding ? <Loader2 className="motion-safe:animate-spin" aria-hidden="true" /> : <Ban aria-hidden="true" />}
           </Button>
         ) : null}
       </div>
+      {voidError ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-destructive/30 bg-destructive/10 p-3 sm:col-span-full" role="alert"><p className="text-sm text-destructive">{voidError}</p><Button type="button" size="sm" variant="outline" onClick={onRetryVoid} disabled={!onRetryVoid}>{t('tcg.sealed.retry')}</Button></div> : null}
     </div>
   );
 }
 
 const SEALED_FORM_FOCUS_CLASS = 'sealed-form-control focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-1 focus-visible:outline-offset-0 focus-visible:outline-primary/60';
 
-function TransactionForm({ state, products, ownedProducts, exchangeProducts, lots, language, t, onClose, onSave, busy }: { state: FormState; products: SealedProduct[]; ownedProducts: SealedSaleProductCandidate[]; exchangeProducts: SealedExchangeProductCandidate[]; lots: SealedOverviewResponse['lots']; language: string; t: (key: string, options?: Record<string, unknown>) => string; onClose: () => void; onSave: (draft: SealedTransactionDraft, existing?: SealedTransaction) => void; busy: boolean }) {
+function TransactionForm({ state, products, ownedProducts, exchangeProducts, lots, language, t, onClose, onSave, busy, error }: { state: FormState; products: SealedProduct[]; ownedProducts: SealedSaleProductCandidate[]; exchangeProducts: SealedExchangeProductCandidate[]; lots: SealedOverviewResponse['lots']; language: string; t: (key: string, options?: Record<string, unknown>) => string; onClose: () => void; onSave: (draft: SealedTransactionDraft, existing?: SealedTransaction) => void; busy: boolean; error?: string }) {
   const existing = state.transaction;
   const initial: SealedTransactionDraft = existing ?? {
     kind: state.kind ?? 'buy',
@@ -595,6 +606,7 @@ function TransactionForm({ state, products, ownedProducts, exchangeProducts, lot
     : [];
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (busy) return;
     if (form.kind === 'exchange') {
       if (!form.exchangeGive || form.exchangeGive.cardmarketProductId <= 0 || form.exchangeGive.quantity <= 0 || form.cardmarketProductId <= 0 || form.quantity <= 0) return;
       onSave({ ...form, unitPriceCents: 0, feesCents: 0, shippingCents: 0, discountCents: 0, paymentFeesCents: 0, otherCostsCents: 0, selections }, existing);
@@ -622,7 +634,7 @@ function TransactionForm({ state, products, ownedProducts, exchangeProducts, lot
   const productListOpen = catalogueOpen && !selectedProduct && (form.kind === 'sell' || productSearch.trim().length > 1);
   const sourceListOpen = sourceOpen && !selectedGiveProduct;
   const canSave = Boolean(form.cardmarketProductId > 0 && selectedProduct && (form.kind !== 'exchange' || (form.exchangeGive && form.exchangeGive.cardmarketProductId > 0 && form.exchangeGive.quantity > 0 && (selectedGiveProduct || existing))));
-  return <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}><DialogContent className="!overflow-hidden sm:max-w-2xl"><DialogHeader><DialogTitle>{existing ? t('tcg.sealed.edit_transaction') : t('tcg.sealed.add_transaction')}</DialogTitle><DialogDescription>{t('tcg.sealed.private_note')}</DialogDescription></DialogHeader><form onSubmit={submit} className="flex min-h-0 flex-col gap-5">
+  return <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}><DialogContent className="!overflow-hidden sm:max-w-2xl" aria-busy={busy}><DialogHeader><DialogTitle>{existing ? t('tcg.sealed.edit_transaction') : t('tcg.sealed.add_transaction')}</DialogTitle><DialogDescription>{t('tcg.sealed.private_note')}</DialogDescription></DialogHeader><form onSubmit={submit} className="flex min-h-0 flex-col gap-5">
     <div className="min-h-0 max-h-[calc(100dvh-13rem)] overflow-y-auto overscroll-contain pr-1 sm:max-h-[calc(100dvh-15rem)]"><div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.buy')} / {t('tcg.sealed.sell')} / {t('tcg.sealed.exchange')}</span><select className={`glass-control h-11 w-full px-3 text-sm ${SEALED_FORM_FOCUS_CLASS}`} value={form.kind} onChange={(event) => handleKindChange(event.target.value as 'buy' | 'sell' | 'exchange')} disabled={Boolean(existing)}><option value="buy">{t('tcg.sealed.buy')}</option><option value="sell">{t('tcg.sealed.sell')}</option><option value="exchange">{t('tcg.sealed.exchange')}</option></select></label><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.date')}</span><Input className={SEALED_FORM_FOCUS_CLASS} type="date" max={todayDay()} value={form.date} onChange={(event) => setField('date', event.target.value)} /></label></div>
       {form.kind === 'exchange' ? <div className="grid gap-4 sm:grid-cols-2">
@@ -635,7 +647,8 @@ function TransactionForm({ state, products, ownedProducts, exchangeProducts, lot
       {(form.kind === 'sell' || form.kind === 'exchange') && form.allocationMethod === 'manual' ? <div className="rounded-sm border border-primary/25 bg-primary/5 p-3"><p className="text-xs text-foreground/60">{t('tcg.sealed.manual_hint')}</p><div className="mt-3 space-y-2">{availableLots.length ? availableLots.map((lot) => { const capacity = lot.remaining + (manualLots[lot.transaction.id] ?? 0); return <label key={lot.transaction.id} className="flex items-center justify-between gap-3 text-sm"><span className="min-w-0 truncate">{dateLabel(lot.transaction.date, language)} · {quantityLabel(capacity, t)}</span><Input className={`h-9 w-24 ${SEALED_FORM_FOCUS_CLASS}`} type="number" min="0" max={capacity} value={manualLots[lot.transaction.id] ?? 0} onChange={(event) => setManualLots((current) => ({ ...current, [lot.transaction.id]: Math.min(capacity, Math.max(0, Math.floor(Number(event.target.value) || 0))) }))} /></label>; }) : <p className="text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</div></div> : null}
       <div className="grid gap-3 sm:grid-cols-2">{textField(t('tcg.sealed.platform'), 'platform')}{textField(t('tcg.sealed.counterparty'), 'counterparty')}{textField(t('tcg.sealed.storage'), 'storage')}</div><label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.notes')}</span><Textarea className={SEALED_FORM_FOCUS_CLASS} value={form.notes} onChange={(event) => setField('notes', event.target.value)} maxLength={4000} /></label>
     </div></div>
-    <DialogFooter className="shrink-0"><Button type="button" variant="outline" onClick={onClose}>{t('tcg.sealed.cancel')}</Button><Button type="submit" disabled={busy || !canSave}>{busy ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Check aria-hidden="true" />}{t('tcg.sealed.save')}</Button></DialogFooter>
+    {error ? <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p> : null}
+    <DialogFooter className="shrink-0"><Button type="button" variant="outline" onClick={onClose} disabled={busy}>{t('tcg.sealed.cancel')}</Button><Button type="submit" disabled={busy || !canSave} aria-busy={busy}>{busy ? <Loader2 className="motion-safe:animate-spin" aria-hidden="true" /> : <Check aria-hidden="true" />}{busy ? t('common.saving_changes') : t('tcg.sealed.save')}</Button></DialogFooter>
   </form></DialogContent></Dialog>;
 }
 
@@ -658,6 +671,9 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   const [marketPage, setMarketPage] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<unknown>(null);
+  const [voidFailure, setVoidFailure] = useState<SealedTransaction | null>(null);
+  const saveGuard = useRef(false);
+  const voidGuard = useRef(false);
   const view: SealedView = rawView === 'product' || (rawView === 'products' && productId) ? 'product' : (['dashboard', 'collection', 'journal', 'sales', 'cashflow', 'analytics', 'catalogue', 'market', 'sources'].includes(rawView) ? rawView as SealedView : 'dashboard');
   const ready = mounted && !authLoading && Boolean(user) && syncStatus === 'ready';
   const overview = useQuery<SealedOverviewResponse>({ queryKey: ['tcg-sealed', 'overview', rangeGroup, periodFrom, periodTo], queryFn: ({ signal }) => fetchSealedOverview({ from: periodFrom || undefined, to: periodTo, group: rangeGroup, signal }), enabled: ready && view !== 'market' });
@@ -667,12 +683,21 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   const sources = useQuery<SealedSourcesResponse>({ queryKey: ['tcg-sealed', 'sources'], queryFn: ({ signal }) => fetchSealedSources(signal), enabled: ready && view === 'sources' });
   const productDetail = useQuery<SealedProductDetailResponse>({ queryKey: ['tcg-sealed', 'product', productId], queryFn: ({ signal }) => fetchSealedProduct(productId as number, signal), enabled: ready && view === 'product' && productId !== undefined });
   const invalidate = () => { void queryClient.invalidateQueries({ queryKey: ['tcg-sealed'] }); };
-  const saveMutation = useMutation({ mutationFn: ({ draft, existing }: { draft: SealedTransactionDraft; existing?: SealedTransaction }) => existing ? updateSealedTransaction({ ...existing, ...draft }, overview.data?.revision) : createSealedTransaction(draft, overview.data?.revision), onSuccess: () => { setForm(null); invalidate(); } });
-  const voidMutation = useMutation({ mutationFn: (transaction: SealedTransaction) => voidSealedTransaction(transaction, overview.data?.revision), onSuccess: invalidate });
+  const saveMutation = useMutation({
+    mutationFn: ({ draft, existing }: { draft: SealedTransactionDraft; existing?: SealedTransaction }) => existing ? updateSealedTransaction({ ...existing, ...draft }, overview.data?.revision) : createSealedTransaction(draft, overview.data?.revision),
+    onSuccess: () => { setForm(null); invalidate(); toast.success(t('tcg.sealed.transaction_saved')); },
+    onSettled: () => { saveGuard.current = false; },
+  });
+  const voidMutation = useMutation({
+    mutationFn: (transaction: SealedTransaction) => voidSealedTransaction(transaction, overview.data?.revision),
+    onSuccess: () => { setVoidFailure(null); invalidate(); toast.success(t('tcg.sealed.transaction_voided')); },
+    onError: (_error, transaction) => { setVoidFailure(transaction); invalidate(); },
+    onSettled: () => { voidGuard.current = false; },
+  });
   const transactionProducts = useMemo(() => new Map((overview.data?.positions ?? []).map((position) => [position.product.cardmarketProductId, position.product])), [overview.data?.positions]);
   const saleProducts = useMemo(() => getSealedSaleProducts(overview.data?.positions ?? []), [overview.data?.positions]);
   const exchangeProducts = useMemo(() => getSealedExchangeProducts(overview.data?.positions ?? []), [overview.data?.positions]);
-  const openForm = (state: FormState = {}) => setForm(state);
+  const openForm = (state: FormState = {}) => { saveMutation.reset(); setForm(state); };
   const changePeriod = (preset: PeriodPreset) => {
     const today = todayDay();
     setPeriodPreset(preset);
@@ -682,7 +707,26 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
     else if (preset === 'custom') setPeriodFrom('');
     else setPeriodFrom(dayShift(today, -(Number(preset) - 1)));
   };
-  const onVoid = (transaction: SealedTransaction) => { if (window.confirm(t('tcg.sealed.cancel_confirm'))) voidMutation.mutate(transaction); };
+  const saveTransaction = (draft: SealedTransactionDraft, existing?: SealedTransaction) => {
+    if (saveGuard.current) return;
+    saveGuard.current = true;
+    saveMutation.mutate({ draft, existing });
+  };
+  const startVoid = (transaction: SealedTransaction) => {
+    if (voidGuard.current) return;
+    voidGuard.current = true;
+    voidMutation.reset();
+    setVoidFailure(null);
+    voidMutation.mutate(transaction);
+  };
+  const onVoid = (transaction: SealedTransaction) => {
+    if (voidGuard.current) return;
+    if (window.confirm(t('tcg.sealed.cancel_confirm'))) startVoid(transaction);
+  };
+  const retryVoid = () => {
+    if (!voidFailure || voidGuard.current) return;
+    startVoid(voidFailure);
+  };
   const exportFile = async (format: 'json' | 'csv') => {
     setExporting(true);
     setExportError(null);
@@ -765,16 +809,16 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
     {overview.isPending ? <LoadingState label={t('tcg.sealed.loading')} /> : currentOverview ? <>
       {view === 'dashboard' ? <DashboardView data={currentOverview} language={language} t={t} localizedHref={localizedHref} onAdd={() => openForm()} /> : null}
       {view === 'collection' ? <CollectionView data={currentOverview} language={language} t={t} localizedHref={localizedHref} onAdd={(product) => openForm({ product, kind: 'buy' })} /> : null}
-      {view === 'journal' ? <JournalView data={currentOverview} transactions={transactions.data?.transactions ?? []} loading={transactions.isPending} error={transactions.error} language={language} t={t} onAdd={() => openForm()} onEdit={(transaction) => openForm({ transaction, product: transactionProducts.get(transaction.cardmarketProductId), giveProduct: transaction.exchangeGive ? transactionProducts.get(transaction.exchangeGive.cardmarketProductId) : undefined })} onVoid={onVoid} onRetry={() => void transactions.refetch()} /> : null}
-      {view === 'sales' ? <SalesView data={currentOverview} language={language} t={t} onEdit={(transaction) => openForm({ transaction, product: transactionProducts.get(transaction.cardmarketProductId) })} onVoid={onVoid} /> : null}
+      {view === 'journal' ? <JournalView data={currentOverview} transactions={transactions.data?.transactions ?? []} loading={transactions.isPending} error={transactions.error} language={language} t={t} onAdd={() => openForm()} onEdit={(transaction) => openForm({ transaction, product: transactionProducts.get(transaction.cardmarketProductId), giveProduct: transaction.exchangeGive ? transactionProducts.get(transaction.exchangeGive.cardmarketProductId) : undefined })} onVoid={onVoid} onRetry={() => void transactions.refetch()} voidingTransactionId={voidMutation.isPending ? voidMutation.variables?.id ?? null : null} voidFailureTransactionId={voidFailure?.id ?? null} voidError={voidMutation.error ? presentSealedError(voidMutation.error, t).message : undefined} onRetryVoid={retryVoid} /> : null}
+      {view === 'sales' ? <SalesView data={currentOverview} language={language} t={t} onEdit={(transaction) => openForm({ transaction, product: transactionProducts.get(transaction.cardmarketProductId) })} onVoid={onVoid} voidingTransactionId={voidMutation.isPending ? voidMutation.variables?.id ?? null : null} voidFailureTransactionId={voidFailure?.id ?? null} voidError={voidMutation.error ? presentSealedError(voidMutation.error, t).message : undefined} onRetryVoid={retryVoid} /> : null}
       {view === 'cashflow' ? <CashflowView data={currentOverview} language={language} t={t} group={rangeGroup} onGroupChange={setRangeGroup} /> : null}
       {view === 'analytics' ? <AnalyticsView data={currentOverview} language={language} t={t} /> : null}
       {view === 'catalogue' ? <CatalogueView data={catalogue.data} error={catalogue.error} query={catalogueQuery} page={cataloguePage} language={language} t={t} onQuery={(value) => { setCatalogueQuery(value); setCataloguePage(0); }} onPage={setCataloguePage} onAdd={(product) => openForm({ product, kind: 'buy' })} onRetry={() => void catalogue.refetch()} loading={catalogue.isPending} /> : null}
       {view === 'sources' ? <SourcesView data={sources.data} loading={sources.isPending} error={sources.error} language={language} t={t} onRetry={() => void sources.refetch()} /> : null}
-      {view === 'product' ? <ProductView data={productDetail.data} loading={productDetail.isPending} error={productDetail.error} language={language} t={t} localizedHref={localizedHref} onAdd={(product) => openForm({ product, kind: 'buy' })} onEdit={(transaction) => openForm({ transaction, product: productDetail.data?.products.find((product) => product.cardmarketProductId === transaction.cardmarketProductId), giveProduct: transaction.exchangeGive ? productDetail.data?.products.find((product) => product.cardmarketProductId === transaction.exchangeGive?.cardmarketProductId) : undefined })} onVoid={onVoid} onRetry={() => void productDetail.refetch()} /> : null}
+      {view === 'product' ? <ProductView data={productDetail.data} loading={productDetail.isPending} error={productDetail.error} language={language} t={t} localizedHref={localizedHref} onAdd={(product) => openForm({ product, kind: 'buy' })} onEdit={(transaction) => openForm({ transaction, product: productDetail.data?.products.find((product) => product.cardmarketProductId === transaction.cardmarketProductId), giveProduct: transaction.exchangeGive ? productDetail.data?.products.find((product) => product.cardmarketProductId === transaction.exchangeGive?.cardmarketProductId) : undefined })} onVoid={onVoid} onRetry={() => void productDetail.refetch()} voidingTransactionId={voidMutation.isPending ? voidMutation.variables?.id ?? null : null} voidFailureTransactionId={voidFailure?.id ?? null} voidError={voidMutation.error ? presentSealedError(voidMutation.error, t).message : undefined} onRetryVoid={retryVoid} /> : null}
     </> : null}
     {!(overviewError && !currentOverview) ? <p className="mt-8 text-center text-xs text-foreground/40">{t('tcg.sealed.private_note')}</p> : null}
-    {form ? <TransactionForm state={form} products={catalogue.data?.products ?? []} ownedProducts={saleProducts} exchangeProducts={exchangeProducts} lots={currentOverview?.lots ?? []} language={language} t={t} onClose={() => setForm(null)} onSave={(draft, existing) => saveMutation.mutate({ draft, existing })} busy={saveMutation.isPending} /> : null}
+    {form ? <TransactionForm state={form} products={catalogue.data?.products ?? []} ownedProducts={saleProducts} exchangeProducts={exchangeProducts} lots={currentOverview?.lots ?? []} language={language} t={t} onClose={() => setForm(null)} onSave={saveTransaction} error={saveMutation.error ? presentSealedError(saveMutation.error, t).message : undefined} busy={saveMutation.isPending} /> : null}
   </PageFrame>;
 }
 
@@ -853,7 +897,7 @@ function CollectionView({ data, language, t, localizedHref, onAdd }: { data: Sea
   </div>;
 }
 
-function JournalView({ data, transactions, loading, error, language, t, onAdd, onEdit, onVoid, onRetry }: { data: SealedOverviewResponse; transactions: SealedTransaction[]; loading: boolean; error: unknown; language: string; t: (key: string, options?: Record<string, unknown>) => string; onAdd: () => void; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void; onRetry: () => void }) {
+function JournalView({ data, transactions, loading, error, language, t, onAdd, onEdit, onVoid, onRetry, voidingTransactionId, voidFailureTransactionId, voidError, onRetryVoid }: { data: SealedOverviewResponse; transactions: SealedTransaction[]; loading: boolean; error: unknown; language: string; t: (key: string, options?: Record<string, unknown>) => string; onAdd: () => void; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void; onRetry: () => void } & VoidFeedbackProps) {
   const [query, setQuery] = useState('');
   if (loading) return <LoadingState label={t('tcg.sealed.loading')} />;
   if (error) return <ErrorPanel error={error} onRetry={onRetry} t={t} />;
@@ -865,14 +909,14 @@ function JournalView({ data, transactions, loading, error, language, t, onAdd, o
     const haystack = [product?.name, product?.alias, giveProduct?.name, giveProduct?.alias, transaction.platform, transaction.counterparty, transaction.notes, transaction.cardmarketProductId, transaction.exchangeGive?.cardmarketProductId, transaction.language, transaction.exchangeGive?.language].join(' ').toLocaleLowerCase();
     return haystack.includes(query.trim().toLocaleLowerCase());
   });
-  return <Card><CardHeader><CardTitle className="flex items-center justify-between gap-3"><span>{t('tcg.sealed.journal')}</span><Button type="button" size="sm" onClick={onAdd}><Plus aria-hidden="true" />{t('tcg.sealed.add_transaction')}</Button></CardTitle></CardHeader><CardContent className="p-0"><div className="border-b border-border/50 p-3"><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('tcg.sealed.search')} aria-label={t('tcg.sealed.search')} /></div>{visibleTransactions.length ? visibleTransactions.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} product={byId.get(transaction.cardmarketProductId)} giveProduct={transaction.exchangeGive ? byId.get(transaction.exchangeGive.cardmarketProductId) : undefined} language={language} t={t} onEdit={() => onEdit(transaction)} onVoid={() => onVoid(transaction)} />) : <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</CardContent></Card>;
+  return <Card><CardHeader><CardTitle className="flex items-center justify-between gap-3"><span>{t('tcg.sealed.journal')}</span><Button type="button" size="sm" onClick={onAdd}><Plus aria-hidden="true" />{t('tcg.sealed.add_transaction')}</Button></CardTitle></CardHeader><CardContent className="p-0"><div className="border-b border-border/50 p-3"><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('tcg.sealed.search')} aria-label={t('tcg.sealed.search')} /></div>{visibleTransactions.length ? visibleTransactions.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} product={byId.get(transaction.cardmarketProductId)} giveProduct={transaction.exchangeGive ? byId.get(transaction.exchangeGive.cardmarketProductId) : undefined} language={language} t={t} onEdit={() => onEdit(transaction)} onVoid={() => onVoid(transaction)} voiding={voidingTransactionId === transaction.id} voidError={voidFailureTransactionId === transaction.id ? voidError : undefined} onRetryVoid={onRetryVoid} />) : <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</CardContent></Card>;
 }
 
-function SalesView({ data, language, t, onEdit, onVoid }: { data: SealedOverviewResponse; language: string; t: (key: string, options?: Record<string, unknown>) => string; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void }) {
+function SalesView({ data, language, t, onEdit, onVoid, voidingTransactionId, voidFailureTransactionId, voidError, onRetryVoid }: { data: SealedOverviewResponse; language: string; t: (key: string, options?: Record<string, unknown>) => string; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void } & VoidFeedbackProps) {
   const productById = new Map(data.positions.map((position) => [position.cardmarketProductId, position.product]));
   const sales = data.sales.filter((sale) => sale.transaction.date >= data.period.from && sale.transaction.date <= data.period.to);
   const soldUnits = sales.reduce((total, sale) => total + sale.transaction.quantity, 0);
-  return <div className="space-y-6"><div className="grid gap-3 sm:grid-cols-3"><StatCard icon={TrendingUp} label={t('tcg.sealed.realized')} value={money(data.period.realizedCents, language)} tone={data.period.realizedCents >= 0 ? 'positive' : 'negative'} /><StatCard icon={ShoppingCart} label={t('tcg.sealed.sold')} value={String(soldUnits)} /><StatCard icon={BarChart3} label={t('tcg.sealed.roi_portfolio')} value={percent(data.totals.roi)} /></div><Card><CardHeader><CardTitle>{t('tcg.sealed.sales')}</CardTitle></CardHeader><CardContent className="p-0">{sales.length ? sales.map((sale) => { const product = productById.get(sale.transaction.cardmarketProductId); return <div key={sale.transaction.id} className="grid gap-3 border-b border-border/50 px-4 py-4 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px_auto] sm:items-center"><div className="min-w-0"><p className="truncate font-bold">{product?.alias ?? product?.name ?? `#${sale.transaction.cardmarketProductId}`}</p><p className="mt-1 text-xs text-foreground/45">{dateLabel(sale.transaction.date, language)} · {quantityLabel(sale.transaction.quantity, t)} · {sale.transaction.allocationMethod.toUpperCase()}</p></div><span className="text-sm text-foreground/65">{t('tcg.sealed.gross')} {money(sale.grossCents, language)}</span><span className="text-sm text-foreground/65">{t('tcg.sealed.net')} {money(sale.netCents, language)}</span><span className={sale.profitCents >= 0 ? 'font-bold text-emerald-400' : 'font-bold text-rose-400'}>{money(sale.profitCents, language)}<span className="ml-1 text-xs">({percent(sale.roi)})</span></span><div className="flex gap-2 sm:justify-end"><Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={() => onEdit(sale.transaction)} aria-label={t('tcg.sealed.edit')} title={t('tcg.sealed.edit')}><Pencil aria-hidden="true" /></Button><Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={() => onVoid(sale.transaction)} aria-label={t('tcg.sealed.void')} title={t('tcg.sealed.void')}><Ban aria-hidden="true" /></Button></div></div>; }) : <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</CardContent></Card></div>;
+  return <div className="space-y-6"><div className="grid gap-3 sm:grid-cols-3"><StatCard icon={TrendingUp} label={t('tcg.sealed.realized')} value={money(data.period.realizedCents, language)} tone={data.period.realizedCents >= 0 ? 'positive' : 'negative'} /><StatCard icon={ShoppingCart} label={t('tcg.sealed.sold')} value={String(soldUnits)} /><StatCard icon={BarChart3} label={t('tcg.sealed.roi_portfolio')} value={percent(data.totals.roi)} /></div><Card><CardHeader><CardTitle>{t('tcg.sealed.sales')}</CardTitle></CardHeader><CardContent className="p-0">{sales.length ? sales.map((sale) => { const product = productById.get(sale.transaction.cardmarketProductId); const busy = voidingTransactionId === sale.transaction.id; return <div key={sale.transaction.id} className="grid gap-3 border-b border-border/50 px-4 py-4 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px_auto] sm:items-center"><div className="min-w-0"><p className="truncate font-bold">{product?.alias ?? product?.name ?? `#${sale.transaction.cardmarketProductId}`}</p><p className="mt-1 text-xs text-foreground/45">{dateLabel(sale.transaction.date, language)} · {quantityLabel(sale.transaction.quantity, t)} · {sale.transaction.allocationMethod.toUpperCase()}</p></div><span className="text-sm text-foreground/65">{t('tcg.sealed.gross')} {money(sale.grossCents, language)}</span><span className="text-sm text-foreground/65">{t('tcg.sealed.net')} {money(sale.netCents, language)}</span><span className={sale.profitCents >= 0 ? 'font-bold text-emerald-400' : 'font-bold text-rose-400'}>{money(sale.profitCents, language)}<span className="ml-1 text-xs">({percent(sale.roi)})</span></span><div className="flex gap-2 sm:justify-end"><Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={() => onEdit(sale.transaction)} aria-label={t('tcg.sealed.edit')} title={t('tcg.sealed.edit')}><Pencil aria-hidden="true" /></Button><Button variant="ghost" size="icon-sm" className="min-h-11 min-w-11" type="button" onClick={() => onVoid(sale.transaction)} disabled={busy} aria-busy={busy} aria-label={t('tcg.sealed.void')} title={t('tcg.sealed.void')}>{busy ? <Loader2 className="motion-safe:animate-spin" aria-hidden="true" /> : <Ban aria-hidden="true" />}</Button></div>{voidFailureTransactionId === sale.transaction.id && voidError ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-destructive/30 bg-destructive/10 p-3 sm:col-span-full" role="alert"><p className="text-sm text-destructive">{voidError}</p><Button type="button" size="sm" variant="outline" onClick={onRetryVoid}>{t('tcg.sealed.retry')}</Button></div> : null}</div>; }) : <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}</CardContent></Card></div>;
 }
 
 function CashflowView({ data, language, t, group, onGroupChange }: { data: SealedOverviewResponse; language: string; t: (key: string, options?: Record<string, unknown>) => string; group: 'day' | 'month' | 'year'; onGroupChange: (group: 'day' | 'month' | 'year') => void }) { return <div className="space-y-6"><div className="flex justify-end"><label className="flex items-center gap-2 text-xs font-bold text-foreground/55">{t('tcg.sealed.period')}<select className="glass-control h-10 px-3 text-sm" value={group} onChange={(event) => onGroupChange(event.target.value as typeof group)}><option value="month">{t('tcg.sealed.month')}</option><option value="day">{t('tcg.sealed.day')}</option><option value="year">{t('tcg.sealed.year')}</option></select></label></div><div className="grid gap-3 sm:grid-cols-3"><StatCard icon={ArrowDownRight} label={t('tcg.sealed.invested')} value={money(data.period.buysCents, language)} tone="negative" /><StatCard icon={ArrowUpRight} label={t('tcg.sealed.recovered')} value={money(data.period.netSalesCents, language)} tone="positive" /><StatCard icon={WalletCards} label={t('tcg.sealed.cash_flow')} value={money(data.period.cashFlowCents, language)} tone={data.period.cashFlowCents >= 0 ? 'positive' : 'negative'} /></div><Card><CardHeader><CardTitle>{t('tcg.sealed.cashflow')}</CardTitle></CardHeader><CardContent className="p-0"><div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left text-sm"><thead className="border-b border-border/50 text-[10px] font-black uppercase tracking-[0.12em] text-foreground/45"><tr><th className="px-4 py-3">{t('tcg.sealed.period')}</th><th className="px-4 py-3">{t('tcg.sealed.buy')}</th><th className="px-4 py-3">{t('tcg.sealed.sell')}</th><th className="px-4 py-3">{t('tcg.sealed.cash_flow')}</th><th className="px-4 py-3">{t('tcg.sealed.stock_cost')}</th></tr></thead><tbody>{data.cashflow.map((row) => <tr key={row.period} className="border-b border-border/35"><td className="px-4 py-3 font-bold">{row.period}</td><td className="px-4 py-3 text-rose-300">{money(row.buysCents + row.buyFeesCents - row.discountCents, language)}</td><td className="px-4 py-3 text-emerald-300">{money(row.netSalesCents, language)}</td><td className={`px-4 py-3 font-bold ${row.netCents >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{money(row.netCents, language)}</td><td className="px-4 py-3">{money(row.stockCostCents, language)}</td></tr>)}</tbody></table></div>{!data.cashflow.length ? <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p> : null}</CardContent></Card></div>; }
@@ -992,13 +1036,13 @@ function AliasEditor({ product, t }: { product: SealedProduct; t: (key: string, 
             {t('tcg.sealed.save_alias')}
           </Button>
         </form>
-        {mutation.error instanceof Error ? <p className="mt-3 text-sm text-rose-300" role="alert">{mutation.error.message}</p> : null}
+        {mutation.error ? <p className="mt-3 text-sm text-rose-300" role="alert">{presentSealedError(mutation.error, t).message}</p> : null}
       </CardContent>
     </Card>
   );
 }
 
-function ProductView({ data, loading, error, language, t, localizedHref, onAdd, onEdit, onVoid, onRetry }: { data?: SealedProductDetailResponse; loading: boolean; error: unknown; language: string; t: (key: string, options?: Record<string, unknown>) => string; localizedHref: (path: string) => string; onAdd: (product: SealedProduct) => void; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void; onRetry: () => void }) {
+function ProductView({ data, loading, error, language, t, localizedHref, onAdd, onEdit, onVoid, onRetry, voidingTransactionId, voidFailureTransactionId, voidError, onRetryVoid }: { data?: SealedProductDetailResponse; loading: boolean; error: unknown; language: string; t: (key: string, options?: Record<string, unknown>) => string; localizedHref: (path: string) => string; onAdd: (product: SealedProduct) => void; onEdit: (transaction: SealedTransaction) => void; onVoid: (transaction: SealedTransaction) => void; onRetry: () => void } & VoidFeedbackProps) {
   if (loading) return <LoadingState label={t('tcg.sealed.loading')} />;
   if (error || !data) return <ErrorPanel error={error} fallbackMessage={t('tcg.sealed.load_error')} onRetry={onRetry} t={t} />;
   const productById = new Map(data.products.map((product) => [product.cardmarketProductId, product]));
@@ -1042,7 +1086,7 @@ function ProductView({ data, loading, error, language, t, localizedHref, onAdd, 
         <CardHeader><CardTitle>{t('tcg.sealed.journal')}</CardTitle></CardHeader>
         <CardContent className="p-0">
           {data.transactions.length
-            ? data.transactions.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} product={productById.get(transaction.cardmarketProductId) ?? data.product} giveProduct={transaction.exchangeGive ? productById.get(transaction.exchangeGive.cardmarketProductId) : undefined} language={language} t={t} onEdit={() => onEdit(transaction)} onVoid={() => onVoid(transaction)} />)
+            ? data.transactions.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} product={productById.get(transaction.cardmarketProductId) ?? data.product} giveProduct={transaction.exchangeGive ? productById.get(transaction.exchangeGive.cardmarketProductId) : undefined} language={language} t={t} onEdit={() => onEdit(transaction)} onVoid={() => onVoid(transaction)} voiding={voidingTransactionId === transaction.id} voidError={voidFailureTransactionId === transaction.id ? voidError : undefined} onRetryVoid={onRetryVoid} />)
             : <p className="p-10 text-center text-sm text-foreground/50">{t('tcg.sealed.no_transactions')}</p>}
         </CardContent>
       </Card>

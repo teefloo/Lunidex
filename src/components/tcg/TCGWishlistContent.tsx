@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Copy, Plus, Trash2, Sparkles, ListOrdered, AlertCircle } from 'lucide-react';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useTranslation } from '@/lib/i18n';
+import { toast } from '@/lib/toast';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -83,12 +84,15 @@ export function TCGWishlistContent({ setsMap, tcgLanguage }: TCGWishlistContentP
     return [...manualCards].sort((a, b) => (a.set?.name ?? '').localeCompare(b.set?.name ?? ''));
   }, [manualCards, sortBy]);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const text = formatWishlistCopyPaste(sortedManual);
-    navigator.clipboard.writeText(text).then(() => {
+    try {
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    }).catch(() => {});
+    } catch {
+      toast.error(t('common.copy_failed'));
+    }
   };
 
   if (!mounted) return null;
