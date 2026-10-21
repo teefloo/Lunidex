@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 // ---------------------------------------------------------------------------
 // Hooks
@@ -135,8 +136,8 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
   const localeHref = useLocaleHref();
   const [search, setSearch] = useState('');
 
-  const { data: eggMoves, isLoading: movesLoading, error: movesError } = useEggMoves(pokemonName);
-  const { data: speciesData, isLoading: speciesLoading } = usePokemonEggGroups(pokemonName);
+  const { data: eggMoves, isLoading: movesLoading, isError: movesError, error: movesErrorDetail, isFetching: movesFetching, refetch: refetchMoves } = useEggMoves(pokemonName);
+  const { data: speciesData, isLoading: speciesLoading, isError: speciesError, error: speciesErrorDetail, isFetching: speciesFetching, refetch: refetchSpecies } = usePokemonEggGroups(pokemonName);
 
   const isLoading = movesLoading || speciesLoading;
   const eggGroups = speciesData?.eggGroups ?? [];
@@ -157,12 +158,9 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
     );
   }
 
-  if (movesError) {
+  if (movesError && !eggMoves) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-foreground/40 gap-2">
-        <Egg className="h-8 w-8 opacity-30" />
-        <p className="text-sm font-bold uppercase tracking-widest">{t('breeding.error_loading')}</p>
-      </div>
+      <RecoverableError title={t('breeding.error_loading')} description={t('common.load_failed')} error={movesErrorDetail} onRetry={() => void refetchMoves()} retrying={movesFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} />
     );
   }
 
@@ -189,6 +187,9 @@ export function EggMoveExplorer({ pokemonName }: EggMoveExplorerProps) {
           {moveCountLabel}
         </Badge>
       </div>
+
+      {movesError ? <RecoverableError title={t('breeding.error_loading')} description={t('common.load_failed')} error={movesErrorDetail} onRetry={() => void refetchMoves()} retrying={movesFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact /> : null}
+      {speciesError ? <RecoverableError title={t('common.load_failed')} description={t('common.load_failed')} error={speciesErrorDetail} onRetry={() => void refetchSpecies()} retrying={speciesFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact /> : null}
 
       {/* Search */}
       <div className="relative">

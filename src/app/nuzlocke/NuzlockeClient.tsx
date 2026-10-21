@@ -16,6 +16,7 @@ import { pokemonKeys } from '@/lib/api/keys';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { formatName, cn } from '@/lib/utils';
 import type { NuzlockeEncounterStatus } from '@/types/nuzlocke';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 const STATUS_CONFIG: Record<NuzlockeEncounterStatus, { icon: typeof Heart; color: string; labelKey: string; fallback: string }> = {
   alive: { icon: Heart, color: 'text-green-500', labelKey: 'nuzlocke.status_alive', fallback: 'Alive' },
@@ -44,7 +45,7 @@ export default function NuzlockeClient() {
 
   const selectedRun = runs.find((r) => r.id === selectedRunId) ?? null;
 
-  const { data: allPokemon } = useQuery({
+  const { data: allPokemon, isPending: isPokemonIndexPending, isFetching: isPokemonIndexFetching, isError: isPokemonIndexError, error: pokemonIndexError, refetch: refetchPokemonIndex } = useQuery({
     queryKey: pokemonKeys.allSearchIndex(),
     queryFn: () => getAllPokemonSearchIndex(),
     enabled: mounted && pokemonSearch.trim().length > 0,
@@ -287,6 +288,9 @@ export default function NuzlockeClient() {
                           })}
                         </div>
                       )}
+                      {pokemonSearch.trim() && isPokemonIndexPending ? <p className="mt-2 text-xs text-foreground/55" role="status" aria-busy="true">{t('common.loading')}</p> : null}
+                      {pokemonSearch.trim() && isPokemonIndexError ? <RecoverableError title={t('common.load_failed')} description={t('common.load_failed')} error={pokemonIndexError} onRetry={() => void refetchPokemonIndex()} retrying={isPokemonIndexFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact className="mt-2" /> : null}
+                      {pokemonSearch.trim() && allPokemon && !isPokemonIndexPending && !isPokemonIndexError && pokemonResults.length === 0 ? <p className="mt-2 text-xs text-foreground/55" role="status">{t('pokemon.no_results', { defaultValue: 'No Pokémon found' })}</p> : null}
                     </div>
                   </div>
                   <Button

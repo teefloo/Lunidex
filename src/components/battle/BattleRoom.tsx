@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Copy, Users, Wifi, WifiOff, MessageSquare } from 'lucide-react';
+import { Send, Copy, Users, Wifi, WifiOff, MessageSquare, Loader2 } from 'lucide-react';
 import { getNeonAccessToken, isNeonAuthConfigured } from '@/lib/neon/client';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
+import { toast } from '@/lib/toast';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 interface ChatMessage {
   id: string;
@@ -39,26 +42,26 @@ function parseChatMessages(value: unknown): ChatMessage[] {
   });
 }
 
-async function readError(response: Response, fallback: string): Promise<string> {
-  try {
-    const body = await response.json() as { error?: unknown };
-    return typeof body.error === 'string' ? body.error : fallback;
-  } catch {
-    return fallback;
-  }
+function requestError(status: number): Error & { status: number } {
+  return Object.assign(new Error('Battle room request failed'), { status });
 }
 
 export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
+  const { t } = useTranslation();
   const [connected, setConnected] = useState(false);
   const [playersOnline, setPlayersOnline] = useState<string[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(() => (
+  const [error, setError] = useState<unknown | null>(() => (
     isNeonAuthConfigured
       ? null
-      : 'Neon Auth is not configured — PvP mode requires a Neon connection.'
+      : new Error('Battle room is unavailable in this environment')
   ));
+  const [retrying, setRetrying] = useState(false);
+  const [chatError, setChatError] = useState<unknown | null>(null);
+  const [chatSending, setChatSending] = useState(false);
+  const chatSendGuard = useRef(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const applyRoom = useCallback((room: BattleRoomState) => {
@@ -73,19 +76,19 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
 
   const loadRoom = useCallback(async () => {
     const token = await getNeonAccessToken();
-    if (!token) throw new Error('Your Neon Auth session has expired. Please sign in again.');
+    if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
     const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: 'no-store',
     });
-    if (!response.ok) throw new Error(await readError(response, 'Unable to load the battle room.'));
+    if (!response.ok) throw requestError(response.status);
     applyRoom(await response.json() as BattleRoomState);
   }, [applyRoom, roomId]);
 
   const joinRoom = useCallback(async () => {
     const token = await getNeonAccessToken();
-    if (!token) throw new Error('Your Neon Auth session has expired. Please sign in again.');
+    if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
     const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
       method: 'PATCH',
@@ -95,7 +98,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
       },
       body: JSON.stringify({ action: 'join' }),
     });
-    if (!response.ok) throw new Error(await readError(response, 'Unable to join the battle room.'));
+    if (!response.ok) throw requestError(response.status);
     applyRoom(await response.json() as BattleRoomState);
   }, [applyRoom, roomId]);
 
@@ -117,7 +120,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
           void loadRoom().catch((loadError: unknown) => {
             if (!active) return;
             setConnected(false);
-            setError(loadError instanceof Error ? loadError.message : 'Connection to battle room lost.');
+            setError(loadError);
           }).finally(() => {
             pollInFlight = false;
           });
@@ -125,7 +128,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
       } catch (joinError: unknown) {
         if (!active) return;
         setConnected(false);
-        setError(joinError instanceof Error ? joinError.message : 'Unable to join the battle room.');
+        setError(joinError);
       }
     };
 
@@ -142,16 +145,16 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
 
   const sendChat = useCallback(async () => {
     const text = chatInput.trim();
-    if (!text || !connected) return;
-
-    const token = await getNeonAccessToken();
-    if (!token) {
-      setError('Your Neon Auth session has expired. Please sign in again.');
-      return;
-    }
-
-    setChatInput('');
+    if (!text || !connected || chatSendGuard.current) return;
+    chatSendGuard.current = true;
+    setChatSending(true);
     try {
+      const token = await getNeonAccessToken();
+      if (!token) {
+        setChatError(Object.assign(new Error('Session expired'), { status: 401 }));
+        return;
+      }
+      setChatInput('');
       const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
         method: 'PATCH',
         headers: {
@@ -161,15 +164,19 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
         body: JSON.stringify({ action: 'chat', text }),
       });
       if (!response.ok) {
-        setError(await readError(response, 'Unable to send the message.'));
+        setChatError(requestError(response.status));
         setChatInput(text);
         return;
       }
       applyRoom(await response.json() as BattleRoomState);
-    } catch {
+      setChatError(null);
+    } catch (sendError) {
       // Keep the typed message so a transient network failure does not lose it.
       setChatInput(text);
-      setError('Unable to send the message. Check your connection and try again.');
+      setChatError(sendError);
+    } finally {
+      chatSendGuard.current = false;
+      setChatSending(false);
     }
   }, [applyRoom, chatInput, connected, roomId]);
 
@@ -178,14 +185,32 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    }).catch(() => {});
-  }, [roomId]);
+    }).catch(() => toast.error(t('common.copy_failed')));
+  }, [roomId, t]);
+
+  const retryConnection = async () => {
+    setRetrying(true);
+    setError(null);
+    try {
+      await joinRoom();
+    } catch (retryError) {
+      setError(retryError);
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   if (error) {
     return (
-      <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-4">
-        <p className="font-mono text-sm text-destructive">{error}</p>
-      </div>
+      <RecoverableError
+        title={t('common.load_failed')}
+        description={t('common.load_failed')}
+        error={error}
+        retryLabel={t('common.retry')}
+        retryingLabel={t('common.loading')}
+        retrying={retrying}
+        onRetry={() => void retryConnection()}
+      />
     );
   }
 
@@ -196,7 +221,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
           {connected ? (
             <Wifi className="h-4 w-4 text-green-500" />
           ) : (
-            <WifiOff className="h-4 w-4 animate-pulse text-muted-foreground" />
+            <WifiOff className="h-4 w-4 motion-safe:animate-pulse text-muted-foreground" />
           )}
           <div>
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -211,7 +236,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
         <button
           type="button"
           onClick={copyRoomLink}
-          className="flex items-center gap-1.5 rounded-sm border border-border/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-all hover:border-border hover:bg-muted/40"
+          className="flex min-h-11 items-center gap-1.5 rounded-sm border border-border/60 px-3 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-all hover:border-border hover:bg-muted/40"
         >
           <Copy className="h-3 w-3" />
           {copied ? 'Copied!' : 'Copy link'}
@@ -276,24 +301,26 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
           <input
             type="text"
             value={chatInput}
-            onChange={(event) => setChatInput(event.target.value)}
+            onChange={(event) => { setChatInput(event.target.value); setChatError(null); }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') void sendChat();
             }}
             placeholder="Type a message..."
-            disabled={!connected}
-            className="h-9 flex-1 rounded-sm border border-border/70 bg-background/50 px-3 font-mono text-[11px] placeholder:text-muted-foreground/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
+            disabled={!connected || chatSending}
+            className="h-11 flex-1 rounded-sm border border-border/70 bg-background/50 px-3 font-mono text-[11px] placeholder:text-muted-foreground/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
           />
           <button
             type="button"
             onClick={() => void sendChat()}
-            disabled={!connected || !chatInput.trim()}
+            disabled={!connected || !chatInput.trim() || chatSending}
+            aria-busy={chatSending}
             aria-label="Send message"
-            className="flex h-9 w-9 items-center justify-center rounded-sm border border-primary bg-primary/10 text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary/10 text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Send className="h-3.5 w-3.5" />
+            {chatSending ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <Send className="h-3.5 w-3.5" />}
           </button>
         </div>
+        {chatError ? <RecoverableError title={t('common.request_failed')} description={t('common.error_unknown')} error={chatError} retryLabel={t('common.retry')} retryingLabel={t('common.saving_changes')} retrying={chatSending} onRetry={() => void sendChat()} compact /> : null}
       </div>
     </div>
   );

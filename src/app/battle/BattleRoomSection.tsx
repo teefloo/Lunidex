@@ -1,29 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Wifi, Plus, LogIn } from 'lucide-react';
 import BattleRoom from '@/components/battle/BattleRoom';
 import { getNeonAccessToken } from '@/lib/neon/client';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 export default function BattleRoomSection() {
   const searchParams = useSearchParams();
   const urlRoomId = searchParams.get('room');
   const { enabled, loading, user } = useAuth();
+  const { t } = useTranslation();
 
   const [roomId, setRoomId] = useState<string | null>(urlRoomId);
   const [joinInput, setJoinInput] = useState('');
   const [creating, setCreating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
+  const createGuard = useRef(false);
 
   const createRoom = async () => {
+    if (createGuard.current) return;
+    createGuard.current = true;
     setCreating(true);
     setError(null);
     try {
       const token = await getNeonAccessToken();
-      if (!token) throw new Error('Please sign in before creating a battle room.');
+      if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
       const res = await fetch('/api/battle/room', {
         method: 'POST',
@@ -34,8 +40,7 @@ export default function BattleRoomSection() {
         body: JSON.stringify({}),
       });
       if (!res.ok) {
-        const body = await res.json() as { error?: string };
-        throw new Error(body.error ?? 'Failed to create room');
+        throw Object.assign(new Error('Battle room request failed'), { status: res.status });
       }
       const data = await res.json() as { roomId: string };
       setRoomId(data.roomId);
@@ -43,8 +48,9 @@ export default function BattleRoomSection() {
       url.searchParams.set('room', data.roomId);
       window.history.pushState({}, '', url.toString());
     } catch (createError: unknown) {
-      setError(createError instanceof Error ? createError.message : 'Unknown error');
+      setError(createError);
     } finally {
+      createGuard.current = false;
       setCreating(false);
     }
   };
@@ -61,7 +67,7 @@ export default function BattleRoomSection() {
   if (loading) {
     return (
       <div className="flex h-20 items-center justify-center">
-        <span className="animate-pulse font-mono text-[11px] text-muted-foreground">Initialising…</span>
+        <span className="motion-safe:animate-pulse font-mono text-[11px] text-muted-foreground" role="status">{t('common.loading')}</span>
       </div>
     );
   }
@@ -89,24 +95,21 @@ export default function BattleRoomSection() {
         </p>
       </div>
 
-      {error && (
-        <p className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 font-mono text-xs text-destructive">
-          {error}
-        </p>
-      )}
+      {error ? <RecoverableError title={t('common.request_failed')} description={t('common.error_unknown')} error={error} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} retrying={creating} onRetry={() => void createRoom()} compact /> : null}
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
           onClick={() => void createRoom()}
           disabled={creating}
+          aria-busy={creating}
           className={cn(
             'flex flex-1 items-center justify-center gap-2 rounded-sm border border-primary bg-primary/10 px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
           )}
         >
-          <Plus className="h-3.5 w-3.5" />
-          {creating ? 'Creating…' : 'Create Room'}
+          {creating ? <Wifi className="h-4 w-4 motion-safe:animate-pulse" aria-hidden="true" /> : <Plus className="h-3.5 w-3.5" />}
+          {creating ? t('common.loading') : 'Create Room'}
         </button>
 
         <div className="flex flex-1 gap-2">

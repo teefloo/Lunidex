@@ -17,6 +17,7 @@ import { getAllPokemonNames, getMoveDetail, getPokemonDetail } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { getPokemonDisplayName } from '@/lib/form-names';
 import { useTranslation } from '@/lib/i18n';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -45,10 +46,14 @@ function PokemonSelector({
   const [suggestions, setSuggestions] = useState<{ name: string; id: number }[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loadError, setLoadError] = useState<unknown>(null);
+  const [retrySelection, setRetrySelection] = useState<string | null>(null);
 
   const search = useCallback(async (q: string) => {
-    if (q.length < 2) { setSuggestions([]); return; }
+    if (q.length < 2) { setSuggestions([]); setLoadError(null); return; }
     setLoading(true);
+    setLoadError(null);
+    setRetrySelection(null);
     try {
       const pokemon = await getAllPokemonNames();
       const matches = pokemon
@@ -59,8 +64,8 @@ function PokemonSelector({
           return { name: p.name, id: parseInt(parts[parts.length - 2]) };
         });
       setSuggestions(matches);
-    } catch {
-      setSuggestions([]);
+    } catch (error) {
+      setLoadError(error);
     } finally {
       setLoading(false);
     }
@@ -74,6 +79,8 @@ function PokemonSelector({
   const selectPokemon = useCallback(async (name: string) => {
     setLoading(true);
     setOpen(false);
+    setLoadError(null);
+    setRetrySelection(name);
     try {
       const pokemon = await getPokemonDetail(name);
 
@@ -104,8 +111,10 @@ function PokemonSelector({
       onChange({ pokemon, moves });
       setQuery(name);
       setSuggestions([]);
-    } catch {
-      // ignore
+      setLoadError(null);
+      setRetrySelection(null);
+    } catch (error) {
+      setLoadError(error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +146,7 @@ function PokemonSelector({
         <input
           type="text"
           value={query}
-          onChange={e => { setQuery(e.target.value); setOpen(true); }}
+          onChange={e => { setQuery(e.target.value); setOpen(true); setLoadError(null); setRetrySelection(null); }}
           onFocus={() => setOpen(true)}
           aria-label={label}
           placeholder={t('battle.search_pokemon')}
@@ -170,6 +179,8 @@ function PokemonSelector({
             ))}
           </div>
         )}
+        {loadError ? <RecoverableError title={t('common.request_failed')} description={t('common.error_unknown')} error={loadError} onRetry={() => { if (retrySelection) void selectPokemon(retrySelection); else void search(query); }} retrying={loading} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact className="mt-2" /> : null}
+        {open && query.trim().length >= 2 && !loading && !loadError && suggestions.length === 0 ? <p role="status" className="mt-2 text-xs text-muted-foreground">{t('pokemon.no_results', { defaultValue: 'No Pokémon found' })}</p> : null}
       </div>
 
       {/* Pokemon card */}

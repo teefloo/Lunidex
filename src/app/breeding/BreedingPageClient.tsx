@@ -10,6 +10,7 @@ import { getAllPokemonSearchIndex } from '@/lib/api/graphql';
 import { pokemonKeys } from '@/lib/api/keys';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 interface BreedingPageClientProps {
   initialPokemon?: string;
@@ -31,7 +32,7 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
   const [explorerInput, setExplorerInput] = useState(initialPokemon ?? '');
   const [explorerOpen, setExplorerOpen] = useState(false);
 
-  const { data: explorerAllPokemon } = useQuery({
+  const { data: explorerAllPokemon, isPending: isExplorerIndexPending, isFetching: isExplorerIndexFetching, isError: isExplorerIndexError, error: explorerIndexError, refetch: refetchExplorerIndex } = useQuery({
     queryKey: pokemonKeys.allSearchIndex(),
     queryFn: getAllPokemonSearchIndex,
     staleTime: 24 * 60 * 60 * 1000,
@@ -162,6 +163,9 @@ export function BreedingPageClient({ initialPokemon, initialTab }: BreedingPageC
                         })}
                       </div>
                     )}
+                    {explorerInput.trim() && isExplorerIndexPending ? <p className="mt-2 text-left text-xs text-foreground/55" role="status" aria-busy="true">{t('common.loading')}</p> : null}
+                    {explorerInput.trim() && isExplorerIndexError ? <RecoverableError title={t('common.load_failed')} description={t('common.load_failed')} error={explorerIndexError} onRetry={() => void refetchExplorerIndex()} retrying={isExplorerIndexFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact className="mt-2" /> : null}
+                    {explorerInput.trim() && explorerAllPokemon && !isExplorerIndexPending && !isExplorerIndexError && explorerResults.length === 0 ? <p className="mt-2 text-left text-xs text-foreground/55" role="status">{t('pokemon.no_results', { defaultValue: 'No Pokémon found' })}</p> : null}
                   </div>
                   <button
                     type="button"

@@ -2,11 +2,12 @@
 
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, RotateCcw, Zap } from 'lucide-react';
+import { Search, RotateCcw, Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import NatureSelector, { NATURES, type NatureName } from './NatureSelector';
 import StatInput from './StatInput';
 import { useTranslation } from '@/lib/i18n';
+import { RecoverableError } from '@/components/ui/RecoverableError';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -95,7 +96,7 @@ export default function EVPlanner() {
   const [ivs, setIvs]                   = useState<BaseStats>({ ...FULL_IVS });
   const [evs, setEvs]                   = useState<BaseStats>({ ...ZERO_EVS });
 
-  const { data: baseStats, isFetching, isError } = useQuery({
+  const { data: baseStats, isFetching, isError, error: statsError, refetch: refetchStats } = useQuery({
     queryKey: ['pokemon-base-stats', pokemonName],
     queryFn: () => fetchPokemonStats(pokemonName),
     enabled: pokemonName.length > 0,
@@ -161,14 +162,15 @@ export default function EVPlanner() {
             size="icon-touch"
             onClick={handleSearch}
             disabled={isFetching}
+            aria-busy={isFetching}
             className="rounded-sm border-border/60"
             aria-label={t('ev_iv.search_pokemon')}
           >
-            <Search className="h-4 w-4" />
+            {isFetching ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <Search className="h-4 w-4" />}
           </Button>
         </div>
-        {isFetching && <p className="text-[11px] text-foreground animate-pulse" aria-live="polite">{t('ev_iv.loading')}</p>}
-        {isError   && <p className="text-[11px] text-red-700 dark:text-red-300" role="alert">{t('ev_iv.not_found')}</p>}
+        {isFetching ? <p className="text-[11px] text-foreground" role="status" aria-live="polite" aria-busy="true">{t('ev_iv.loading')}</p> : null}
+        {isError ? <RecoverableError title={t('common.request_failed')} description={t('common.error_unknown')} error={statsError} onRetry={() => void refetchStats()} retrying={isFetching} retryLabel={t('common.retry')} retryingLabel={t('common.loading')} compact /> : null}
         {baseStats && !isFetching && (
           <p className="text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold capitalize" aria-live="polite">
             {t('ev_iv.base_stats_loaded', { name: pokemonName })}
