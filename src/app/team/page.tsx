@@ -93,6 +93,19 @@ export default function TeamPage() {
 
   const resolvedLang = useClientLanguage();
 
+  const keepActionsMenuVisible = () => {
+    window.requestAnimationFrame(() => {
+      const menu = actionsMenuRef.current;
+      const panel = menu?.querySelector<HTMLElement>('.team-actions-menu-panel');
+      if (!menu?.open || !panel) return;
+
+      const bottomNav = document.querySelector<HTMLElement>('.primary-bottom-nav');
+      const visibleBottom = bottomNav?.getBoundingClientRect().top ?? window.innerHeight;
+      const overflow = panel.getBoundingClientRect().bottom - visibleBottom;
+      if (overflow > 0) window.scrollBy({ top: overflow + 12, behavior: 'auto' });
+    });
+  };
+
   useEffect(() => {
     const closeOnOutsidePointer = (event: PointerEvent) => {
       const menu = actionsMenuRef.current;
@@ -238,7 +251,7 @@ export default function TeamPage() {
               className="rounded-full font-black uppercase tracking-widest gap-2 bg-secondary/30 border-border/60"
             />
           ) : (
-            <details ref={actionsMenuRef} className="team-actions-menu">
+            <details ref={actionsMenuRef} className="team-actions-menu" onToggle={keepActionsMenuVisible}>
               <summary>{t('nav.more')}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" /></summary>
               <div className="team-actions-menu-panel" onClick={(event) => {
                 if ((event.target as HTMLElement).closest('a, button')) {
@@ -283,7 +296,9 @@ export default function TeamPage() {
                   onClick={() => {
                     navigator.clipboard.writeText(team.join('-')).then(() => {
                       toast.success(t('detail.copied'));
-                    }).catch(() => {});
+                    }).catch(() => {
+                      toast.error(t('common.copy_failed'));
+                    });
                   }}
                   className="rounded-full font-black uppercase tracking-widest"
                 >

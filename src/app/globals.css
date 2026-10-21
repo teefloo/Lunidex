@@ -1610,6 +1610,10 @@ h1 { letter-spacing: 0; }
   transform: rotate(180deg);
 }
 
+.page-header-surface:has(.team-actions-menu[open]) {
+  overflow: visible;
+}
+
 .team-actions-menu-panel {
   position: absolute;
   top: calc(100% + 0.35rem);
@@ -1624,6 +1628,12 @@ h1 { letter-spacing: 0; }
   background: var(--card);
   box-shadow: 0 0.9rem 2.25rem color-mix(in oklab, var(--pixel-shadow) 65%, transparent);
   padding: 0.6rem;
+}
+
+@media (max-width: 39.999rem) {
+  .team-actions-menu-panel {
+    width: min(19rem, calc(100vw - 2rem), 100%);
+  }
 }
 
 .team-actions-menu-panel > * {
