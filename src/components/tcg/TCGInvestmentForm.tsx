@@ -67,6 +67,14 @@ export function TCGInvestmentForm({ lot, initialCard, language, onClose, onSaved
     setErrors((current) => ({ ...current, [field]: undefined }));
     setSaveError('');
   };
+  const copyMarketReference = () => {
+    if (!reference) return;
+    const updatedAt = reference.updatedAt ? new Date(reference.updatedAt) : null;
+    const valuedOn = updatedAt && Number.isFinite(updatedAt.getTime()) ? updatedAt.toISOString().slice(0, 10) : '';
+    setDraft((current) => ({ ...current, estimate: reference.amount.toFixed(2), valuedOn, confirmed: false }));
+    setErrors((current) => ({ ...current, estimate: undefined, valuedOn: undefined, confirmed: undefined }));
+    setSaveError('');
+  };
   const close = () => {
     if (pending) return;
     if (!dirty || window.confirm(t('investments.discard_confirm'))) onClose();
@@ -219,7 +227,7 @@ export function TCGInvestmentForm({ lot, initialCard, language, onClose, onSaved
                 {refreshError && <p role="alert" className="text-sm text-destructive">{t('investments.reference_error')}</p>}
                 <div className="flex flex-wrap gap-2">
                   <Button type="button" variant="outline" disabled={refreshing || detail.isFetching} onClick={() => void refresh()}>{t(refreshing ? 'investments.reference_loading' : 'investments.refresh')}</Button>
-                  {reference && marketReference?.matchesFinish && <Button type="button" variant="outline" onClick={() => change('estimate', reference.amount.toFixed(2), true)}>{t('investments.use_reference')}</Button>}
+                  {reference && <Button type="button" variant="outline" onClick={copyMarketReference}>{t(marketReference?.matchesFinish ? 'investments.use_reference' : 'investments.copy_reference')}</Button>}
                 </div>
               </section>
               <p className="text-sm text-muted-foreground">{t('investments.price_note')}</p>
