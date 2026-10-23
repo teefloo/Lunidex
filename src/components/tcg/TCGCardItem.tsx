@@ -105,13 +105,13 @@ export const TCGCardItem = memo(function TCGCardItem({
                 {card.name}
               </Link>
             </h3>
-            <p className="mt-0.5 truncate text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60 sm:text-xs">
+            <p className="mt-0.5 line-clamp-2 whitespace-normal break-words text-[11px] font-black uppercase leading-snug tracking-[0.1em] text-foreground/60 sm:text-xs">
               {card.set?.id ? (
                 <Link
                   href={`${localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                   prefetch={false}
                   onClick={(event) => event.stopPropagation()}
-                  className="inline-flex min-h-11 items-center transition-colors hover:text-primary"
+                  className="block min-h-11 max-w-full py-2 leading-snug transition-colors hover:text-primary [overflow-wrap:anywhere]"
                 >
                   {card.set.name}
                 </Link>
@@ -126,14 +126,15 @@ export const TCGCardItem = memo(function TCGCardItem({
           </span>
         </div>
 
-        <div className="flex flex-nowrap items-center gap-1 overflow-hidden text-[11px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-xs">
+        <div className="flex min-w-0 flex-wrap items-center gap-1 text-[10px] font-black uppercase tracking-[0.08em] text-foreground/65 sm:text-xs">
+          <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-1.5 py-0.5 tabular-nums">#{card.localId}</span>
           {card.category && (
-            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
+            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-1.5 py-0.5">
               {getTCGCategoryLabel(card.category, t)}
             </span>
           )}
           {card.hp ? (
-            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-0.75 py-0.5">
+            <span className="shrink-0 rounded-sm border border-border/40 bg-muted/40 px-1.5 py-0.5">
               HP {card.hp}
             </span>
           ) : null}

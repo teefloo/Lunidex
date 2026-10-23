@@ -327,7 +327,7 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
           <Stat label={t('tcg.collection_sets_completed')} value={`${stats.completeSets}/${stats.totalSets}`} />
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.1em] text-foreground/60">{t('tcg.collection_overall_progress')}</p>
-            <p className="mt-1 tabular-nums text-3xl font-black leading-none">{stats.percentage}%</p>
+            <p className="mt-1 tabular-nums text-3xl font-black leading-none">{stats.totalCards > 0 && stats.ownedInCollections > 0 && stats.percentage === 0 ? '<1%' : `${stats.percentage}%`}</p>
             <TCGProgressBar owned={stats.ownedInCollections} total={stats.totalCards} size="sm" className="mt-2 w-full" />
           </div>
         </div>

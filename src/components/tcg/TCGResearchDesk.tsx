@@ -515,7 +515,7 @@ export function TCGResearchDesk({
             ) : (
               <CardGridSkeleton viewMode={viewMode} />
             )
-          ) : isLoading ? (
+          ) : isLoading || (isFetching && cards.length === 0 && !isError) ? (
             <CardGridSkeleton viewMode={viewMode} />
           ) : isError && cards.length === 0 ? (
             <RecoverableError
@@ -749,17 +749,23 @@ function ResultSummary({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3">
+    <div
+      className="rounded-[1.4rem] border border-border/50 bg-card/45 px-4 py-3"
+      role={isFetching && count === 0 ? 'status' : undefined}
+      aria-live={isFetching && count === 0 ? 'polite' : undefined}
+    >
       <div className="space-y-1">
         <div className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/35">
           {isFetching ? t('tcg.refreshing') : t('tcg.cards_found')}
         </div>
-        <div className="text-sm font-semibold text-foreground/70">
-          {activeSetName
-            ? t('tcg.card_count_in_set', { count, set: activeSetName })
-            : t('tcg.results_count', { count })
-          }
-        </div>
+        {!(isFetching && count === 0) && (
+          <div className="text-sm font-semibold text-foreground/70">
+            {activeSetName
+              ? t('tcg.card_count_in_set', { count, set: activeSetName })
+              : t('tcg.results_count', { count })
+            }
+          </div>
+        )}
       </div>
     </div>
   );

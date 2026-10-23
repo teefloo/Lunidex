@@ -206,7 +206,18 @@ export function TCGStartPage() {
               <TCGDataLangBanner resolvedLang={resolvedLanguage} onTryEnglish={tryEnglish} />
             </div>
 
-            <label htmlFor="set-search" className="mt-7 block text-sm font-bold text-foreground/80">
+            <Link
+              href={attributedCatalogHref}
+              className="mt-5 flex min-h-12 w-full items-center justify-between gap-3 rounded-sm border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>{t('tcg.activation.search_cards_instead')}</span>
+              </span>
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+
+            <label htmlFor="set-search" className="mt-5 block text-sm font-bold text-foreground/80">
               {t('tcg.activation.search_sets')}
             </label>
             <div className="relative mt-2">
@@ -280,9 +291,6 @@ export function TCGStartPage() {
             )}
           </section>
 
-          <Link href={localeHref('/tcg')} className="mt-8 inline-flex min-h-11 items-center text-sm font-bold text-foreground/60 underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
-            {t('tcg.activation.search_cards_instead')}
-          </Link>
         </section>
       </main>
     </div>

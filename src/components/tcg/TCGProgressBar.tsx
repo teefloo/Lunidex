@@ -18,7 +18,8 @@ export function TCGProgressBar({
   className,
 }: TCGProgressBarProps) {
   const percentage = total > 0 ? Math.round((owned / total) * 100) : 0;
-  const isComplete = owned >= total;
+  const fillPercentage = total > 0 && owned > 0 ? Math.max(percentage, 1) : percentage;
+  const isComplete = total > 0 && owned >= total;
 
   const heights = { sm: 'h-1', md: 'h-2', lg: 'h-3' };
 
@@ -32,7 +33,7 @@ export function TCGProgressBar({
               ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
               : 'bg-gradient-to-r from-primary/60 to-primary',
           )}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
+          style={{ width: `${Math.min(fillPercentage, 100)}%` }}
         />
       </div>
       {showLabel && (

@@ -283,7 +283,7 @@ export function TCGAlbumPage({
         {demoOwnership && <p className="mb-3 text-sm font-bold text-primary">{t('tcg.demo.title')}</p>}
         <TCGProgressBar owned={completion.owned} total={completion.total} size="lg" className="max-w-md" />
         {demoOwnership && <>
-          <p role="status" aria-live="polite" aria-atomic="true" className="mt-2 text-sm font-semibold tabular-nums">{t('tcg.demo.progress', { owned: completion.owned, total: completion.total, percent: completion.percentage })}</p>
+          <p role="status" aria-live="polite" aria-atomic="true" className="mt-2 text-sm font-semibold tabular-nums">{t('tcg.demo.progress', { owned: completion.owned, total: completion.total, percent: completion.total > 0 && completion.owned > 0 && completion.percentage === 0 ? '<1' : completion.percentage })}</p>
           <TCGDemoNotice setId={set.id} language={selectedLanguage} />
         </>}
         {activation && !demoOwnership && firstValueReached && (
