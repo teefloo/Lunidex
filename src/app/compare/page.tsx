@@ -1,6 +1,6 @@
 'use client';
 
-import { parseSharedPokemonIds } from '@/lib/shared-pokemon-ids';
+import { parseSharedPokemonIds, shouldUseSharedPokemonCompare } from '@/lib/shared-pokemon-ids';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -39,6 +39,7 @@ import { Button } from '@/components/ui/button';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
+import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { toast } from '@/lib/toast';
 import dynamic from 'next/dynamic';
 
@@ -68,6 +69,7 @@ export default function ComparePage() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const syncStatus = useSyncAccessStatus();
   const [compareSearch, setCompareSearch] = useState('');
 
   const resolvedLang = useClientLanguage();
@@ -81,7 +83,7 @@ export default function ComparePage() {
     return parseSharedPokemonIds(searchParams.get('ids'), 3);
   }, [searchParams]);
 
-  const isSharedCompare = searchParams.has('ids');
+  const isSharedCompare = shouldUseSharedPokemonCompare(syncStatus === 'ready', searchParams.has('ids'));
   const activeCompareIds = isSharedCompare ? sharedCompareIds : compareList;
 
   const buildCompareUrl = useCallback((ids: number[]) => {

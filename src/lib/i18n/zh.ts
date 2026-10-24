@@ -14,7 +14,7 @@ export default {
     investments: tcgInvestmentsTranslations.zh,
     not_found_page: notFoundPageTranslations.zh,
     items_page: mobileToolsTranslations.zh.items_page,
-    command_palette: {"title":"搜索 Lunidex","description":"搜索页面和宝可梦。TCG 卡牌请在卡牌目录中搜索。","placeholder":"搜索页面、宝可梦和工具…","no_results":"没有结果。","pages":"页面","items":"道具","moves":"招式","abilities":"特性","pokemon":"宝可梦"},
+    command_palette: {"title":"搜索 Lunidex","description":"搜索页面和宝可梦。TCG 卡牌请在卡牌目录中搜索。","placeholder":"搜索页面、宝可梦和工具…","no_results":"没有结果。","searching":"正在搜索…","pages":"页面","items":"道具","moves":"招式","abilities":"特性","pokemon":"宝可梦"},
     booster_guides: boosterGuidesTranslations.zh,
     pokedex_page: {
       featured_eyebrow: '探索宝可梦图鉴',

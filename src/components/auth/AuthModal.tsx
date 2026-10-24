@@ -169,7 +169,7 @@ export default function AuthModal({
       disablePointerDismissal
       onOpenChange={handleDialogOpenChange}
     >
-      <DialogContent className="sm:max-w-md" data-ph-no-capture aria-busy={busy}>
+      <DialogContent className="z-[402] sm:max-w-md" overlayClassName="z-[401]" data-ph-no-capture aria-busy={busy}>
         <DialogHeader>
           <LunidexLogo alt="Lunidex" sizes="40px" className="mb-2 h-10 w-10 object-contain" />
           <DialogTitle className="text-xl font-black tracking-tight">
@@ -193,13 +193,13 @@ export default function AuthModal({
               <div className="relative">
                 <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
                 <Input
+                  name="name"
                   type="text"
                   required
                   autoComplete="name"
                   value={name}
                   onChange={(e) => { setName(e.target.value); setErrorMessage(null); }}
                   disabled={busy}
-                  placeholder="Sacha"
                   className="pl-9"
                 />
               </div>
@@ -213,13 +213,13 @@ export default function AuthModal({
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
               <Input
+                name="email"
                 type="email"
                 required
                 autoComplete="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setErrorMessage(null); }}
                 disabled={busy}
-                placeholder="ash@pallet.town"
                 className="pl-9"
               />
             </div>
@@ -232,6 +232,7 @@ export default function AuthModal({
             <div className="relative">
               <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40" />
               <Input
+                name="password"
                 type="password"
                 required
                 minLength={6}
@@ -239,7 +240,6 @@ export default function AuthModal({
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setErrorMessage(null); }}
                 disabled={busy}
-                placeholder="••••••••"
                 className="pl-9"
               />
             </div>

@@ -14,7 +14,7 @@ export default {
     investments: tcgInvestmentsTranslations.en,
     not_found_page: notFoundPageTranslations.en,
     items_page: mobileToolsTranslations.en.items_page,
-    command_palette: {"title":"Search Lunidex","description":"Search pages and Pokémon. Search TCG cards in the card catalog.","placeholder":"Search pages, Pokémon, and tools…","no_results":"No results found.","pages":"Pages","items":"Items","moves":"Moves","abilities":"Abilities","pokemon":"Pokémon"},
+    command_palette: {"title":"Search Lunidex","description":"Search pages and Pokémon. Search TCG cards in the card catalog.","placeholder":"Search pages, Pokémon, and tools…","no_results":"No results found.","searching":"Searching…","pages":"Pages","items":"Items","moves":"Moves","abilities":"Abilities","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.en,
     pokedex_page: {
       featured_eyebrow: 'Explore the Pokédex',

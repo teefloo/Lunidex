@@ -15,7 +15,7 @@ import { useTranslation } from '@/lib/i18n';
 import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
 import { trackProductEvent } from '@/lib/product-measurement';
-import { getTCGAlbumCardPrimaryAction } from '@/lib/tcg-album-card-actions';
+import { getTCGAlbumCardPrimaryAction, getTCGCardAccessibleName } from '@/lib/tcg-album-card-actions';
 
 interface TCGAlbumCardProps {
   card: TCGCard;
@@ -52,6 +52,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
   const [actionFeedback, setActionFeedback] = useState('');
+  const accessibleCardName = getTCGCardAccessibleName(card.name, card.localId);
   const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
   const toggleOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
   const totalOwnedQuantity = ownerships.reduce((sum, ownership) => sum + ownership.quantity, 0);
@@ -93,7 +94,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
         type="button"
         onClick={onToggleOwned ? () => onToggleOwned(card.id) : primaryAction === 'add' ? handleAdd : () => onView?.(card)}
         className="group/card relative aspect-[2.15/3] cursor-pointer touch-manipulation overflow-hidden rounded-sm text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        aria-label={t(onToggleOwned ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: card.name })}
+        aria-label={t(onToggleOwned ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: accessibleCardName })}
         aria-pressed={onToggleOwned ? owned : undefined}
       >
         <TCGCardImage
@@ -151,7 +152,7 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
       <button
         type="button"
         onClick={owned && !onToggleOwned ? () => onManage?.(card) : () => onView?.(card)}
-        aria-label={t(owned && !onToggleOwned ? 'tcg.collection_manage_card_aria' : 'detail.view_card_aria', { name: card.name, count: totalOwnedQuantity, defaultValue: owned && !onToggleOwned ? `Manage ${card.name}` : `View ${card.name} card` })}
+        aria-label={t(owned && !onToggleOwned ? 'tcg.collection_manage_card_aria' : 'detail.view_card_aria', { name: accessibleCardName, count: totalOwnedQuantity, defaultValue: owned && !onToggleOwned ? `Manage ${accessibleCardName}` : `View ${accessibleCardName} card` })}
         className={cn(
           'min-h-11 w-full rounded-sm border px-2 text-[11px] font-black uppercase tracking-[0.05em] transition-[border-color,background-color,color] duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70',
           owned

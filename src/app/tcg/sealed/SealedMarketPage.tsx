@@ -85,7 +85,10 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
         </article>;
       })}</div> : <p className="mt-4 rounded-sm border border-dashed border-border/60 p-10 text-center text-sm text-foreground/60">{t('tcg.sealed.no_catalogue')}</p>}
       {pageCount > 1 ? <nav aria-label={copy('products')} className="mt-7 flex items-center justify-between gap-4"><Link aria-disabled={filters.page === 0} href={link(lang, { ...filters, page: Math.max(0, filters.page - 1) })} className={`text-sm font-bold text-primary ${filters.page === 0 ? 'pointer-events-none opacity-40' : ''}`}>{copy('previous')}</Link><span className="text-sm font-bold tabular-nums">{filters.page + 1} / {pageCount}</span><Link aria-disabled={filters.page + 1 >= pageCount} href={link(lang, { ...filters, page: filters.page + 1 })} className={`text-sm font-bold text-primary ${filters.page + 1 >= pageCount ? 'pointer-events-none opacity-40' : ''}`}>{copy('next')}</Link></nav> : null}
-    </> : <p role="alert" className="mt-7 rounded-sm border border-dashed border-border/60 p-10 text-center text-sm text-foreground/60">{copy('error')}</p>}
+    </> : <div role="alert" className="mt-7 flex flex-wrap items-center justify-center gap-4 rounded-sm border border-dashed border-border/60 p-10 text-center text-sm text-foreground/60">
+      <p>{copy('error')}</p>
+      <a href={link(lang, filters)} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 font-bold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{t('common.retry', { defaultValue: 'Retry' })}</a>
+    </div>}
 
     <nav aria-label={copy('title')} className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-primary">
       <Link href={`/${lang}/tcg/sealed/releases`} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{t('tcg.editorial_sealed.releases.link')}</Link>

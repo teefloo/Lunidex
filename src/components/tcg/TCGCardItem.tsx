@@ -16,6 +16,7 @@ import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCategoryLabel, getTCGRarityLabel } from '@/lib/tcg-labels';
 import { trackProductEvent } from '@/lib/product-measurement';
 import { getTCGCardOwnershipTogglePresentation } from '@/lib/tcg-card-ownership-actions';
+import { getTCGCardAccessibleName } from '@/lib/tcg-album-card-actions';
 import { TCGMarketSummary } from './TCGMarketSummary';
 
 interface TCGCardItemProps {
@@ -36,6 +37,7 @@ export const TCGCardItem = memo(function TCGCardItem({
   collectionKey,
 }: TCGCardItemProps) {
   const { t } = useTranslation();
+  const accessibleCardName = getTCGCardAccessibleName(card.name, card.localId);
   const mounted = useMounted();
   const localeHref = useLocaleHref();
   const {
@@ -168,7 +170,7 @@ export const TCGCardItem = memo(function TCGCardItem({
               : 'border-border/45 bg-card/60 text-foreground/45 hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400',
           )}
           aria-pressed={ownershipPresentation.pressed}
-          aria-label={t(ownershipPresentation.ariaLabelKey, { name: card.name })}
+          aria-label={t(ownershipPresentation.ariaLabelKey, { name: accessibleCardName })}
         >
           {owned
             ? <PackageCheck className="h-3.5 w-3.5" aria-hidden="true" />

@@ -12,4 +12,16 @@ describe('shared Pokémon selections', () => {
     expect(parseSharedPokemonIds('-25,6', 3)).toEqual([6]);
     expect(parseSharedPokemonIds('-25', 3)).toEqual([]);
   });
+
+  it('uses shareable URL state for anonymous Pokémon comparisons', async () => {
+    const helpers = await import('./shared-pokemon-ids');
+    const shouldUseSharedState = Reflect.get(helpers, 'shouldUseSharedPokemonCompare');
+
+    expect(typeof shouldUseSharedState).toBe('function');
+    if (typeof shouldUseSharedState === 'function') {
+      expect(shouldUseSharedState(false, false)).toBe(true);
+      expect(shouldUseSharedState(true, false)).toBe(false);
+      expect(shouldUseSharedState(true, true)).toBe(true);
+    }
+  });
 });

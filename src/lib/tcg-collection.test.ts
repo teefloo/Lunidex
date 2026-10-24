@@ -392,6 +392,24 @@ describe('TCG physical variant pricing', () => {
     });
   });
 
+  it('estimates prices from hydrated collection-card projections', () => {
+    const estimate = estimateMissingCardsValue([
+      {
+        id: 'sv03.5-025',
+        localId: '025',
+        name: 'Pikachu',
+        setId: 'sv03.5',
+        value: { amount: 0.18, currency: 'EUR', provider: 'cardmarket' },
+      } satisfies TCGCollectionCard,
+    ]);
+
+    expect(estimate).toEqual({
+      groups: [{ currency: 'EUR', provider: 'cardmarket', total: 0.18, count: 1 }],
+      pricedCount: 1,
+      unpricedCount: 0,
+    });
+  });
+
   it('ranks meaningful missing cards before bulk rarities and uses value as a tie-breaker', () => {
     const cards: TCGCollectionCard[] = [
       { id: 'set-001', localId: '001', name: 'Bulk', setId: 'set', rarity: 'Uncommon', value: { amount: 99, currency: 'EUR' } },

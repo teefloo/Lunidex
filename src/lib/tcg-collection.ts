@@ -569,12 +569,14 @@ export interface MissingCardsEstimate {
 }
 
 /** Sum one representative quote per missing card, keeping providers and currencies separate. */
-export function estimateMissingCardsValue(missingCards: TCGCard[]): MissingCardsEstimate {
+export function estimateMissingCardsValue(
+  missingCards: readonly (TCGCard | TCGCollectionCard)[],
+): MissingCardsEstimate {
   const totals = new Map<string, MissingCardsEstimateGroup>();
   let pricedCount = 0;
 
   for (const card of missingCards) {
-    const value = getCardMarketValue(card);
+    const value = 'setId' in card ? card.value ?? null : getCardMarketValue(card);
     if (!value || !Number.isFinite(value.amount) || value.amount <= 0) continue;
     const currency = value.currency.trim().toUpperCase();
     const provider = value.provider ?? (currency === 'EUR' ? 'cardmarket' : 'tcgplayer');

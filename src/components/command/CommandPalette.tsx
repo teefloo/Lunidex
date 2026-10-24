@@ -29,6 +29,7 @@ import {
 import { pokemonKeys } from '@/lib/api/keys';
 import { languageToPokemonLanguageId } from '@/lib/languages';
 import { formatName } from '@/lib/utils';
+import { getCommandPaletteEmptyState } from '@/lib/command-palette-state';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import { usePrimeDexStore } from '@/store/primedex';
 import {
@@ -78,28 +79,28 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
     };
   }, []);
 
-  const { data: allPokemon } = useQuery({
+  const { data: allPokemon, isFetching: isFetchingPokemon } = useQuery({
     queryKey: pokemonKeys.allSearchIndex(),
     queryFn: () => getAllPokemonSearchIndex(),
     enabled: open && hasQuery,
     staleTime: 24 * 60 * 60 * 1000,
   });
 
-  const { data: allItems } = useQuery({
+  const { data: allItems, isFetching: isFetchingItems } = useQuery({
     queryKey: ['items', languageId],
     queryFn: () => getAllItems(languageId),
     enabled: open && hasQuery,
     staleTime: 24 * 60 * 60 * 1000,
   });
 
-  const { data: allMoves } = useQuery({
+  const { data: allMoves, isFetching: isFetchingMoves } = useQuery({
     queryKey: ['moves', languageId],
     queryFn: () => getAllMoves(languageId),
     enabled: open && hasQuery,
     staleTime: 24 * 60 * 60 * 1000,
   });
 
-  const { data: allAbilities } = useQuery({
+  const { data: allAbilities, isFetching: isFetchingAbilities } = useQuery({
     queryKey: ['abilities', languageId],
     queryFn: () => getAllAbilities(languageId),
     enabled: open && hasQuery,
@@ -163,6 +164,12 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
       return matchesDestinationSearch(item, search, resolvedLang, label);
     });
   }, [hasQuery, resolvedLang, search, t]);
+  const resultCount = pageResults.length + itemResults.length + moveResults.length + abilityResults.length + pokemonResults.length;
+  const emptyState = getCommandPaletteEmptyState({
+    hasQuery,
+    isFetching: isFetchingPokemon || isFetchingItems || isFetchingMoves || isFetchingAbilities,
+    resultCount,
+  });
 
   const navigate = useCallback((href: string) => {
     setOpen(false);
@@ -185,7 +192,9 @@ export function CommandPalette({ initialOpen = false }: { initialOpen?: boolean 
         />
         <CommandList>
           <CommandEmpty>
-            {t('command_palette.no_results', { defaultValue: 'No results found.' })}
+            {emptyState === 'loading'
+              ? t('command_palette.searching', { defaultValue: 'Searching…' })
+              : t('command_palette.no_results', { defaultValue: 'No results found.' })}
           </CommandEmpty>
 
           {pageResults.length > 0 && (

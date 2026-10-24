@@ -14,7 +14,7 @@ export default {
     investments: tcgInvestmentsTranslations.ja,
     not_found_page: notFoundPageTranslations.ja,
     items_page: mobileToolsTranslations.ja.items_page,
-    command_palette: {"title":"Lunidexを検索","description":"ページとポケモンを検索します。TCGカードはカードカタログで探せます。","placeholder":"ページ、ポケモン、ツールを検索…","no_results":"結果がありません。","pages":"ページ","items":"道具","moves":"技","abilities":"特性","pokemon":"ポケモン"},
+    command_palette: {"title":"Lunidexを検索","description":"ページとポケモンを検索します。TCGカードはカードカタログで探せます。","placeholder":"ページ、ポケモン、ツールを検索…","no_results":"結果がありません。","searching":"検索中…","pages":"ページ","items":"道具","moves":"技","abilities":"特性","pokemon":"ポケモン"},
     booster_guides: boosterGuidesTranslations.ja,
     pokedex_page: {
       featured_eyebrow: 'ポケモン図鑑を探索',

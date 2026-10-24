@@ -34,6 +34,7 @@ import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
 import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
+import { getTCGCardAccessibleName } from '@/lib/tcg-album-card-actions';
 import { DEFAULT_TCG_DISPLAY_CURRENCY } from '@/lib/tcg-currency';
 import { getCardmarketProductUrl } from '@/lib/tcg-marketplace';
 import { cn } from '@/lib/utils';
@@ -460,7 +461,7 @@ export function TCGCardDetailContent({
                         active={ownershipPresentation.pressed}
                         onClick={handleOwnedToggle}
                         label={t(ownershipPresentation.labelKey)}
-                        ariaLabel={t(demoOwnership ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : ownershipPresentation.ariaLabelKey, { name: displayCard.name })}
+                        ariaLabel={t(demoOwnership ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : ownershipPresentation.ariaLabelKey, { name: getTCGCardAccessibleName(displayCard.name, displayCard.localId) })}
                         ariaPressed={ownershipPresentation.pressed}
                       />
                     )}

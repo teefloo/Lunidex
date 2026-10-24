@@ -101,7 +101,9 @@ describe('TCG demo and account boundaries', () => {
     expect(button).toBeInstanceOf(HTMLButtonElement);
     await act(async () => (button as HTMLButtonElement).click());
   };
-  const cardButton = (name: string, owned = false) => container.querySelector(`[aria-label="Demo: mark ${name} as ${owned ? 'missing' : 'owned'}"]`);
+  const cardButton = (name: string, owned = false) => Array.from(container.querySelectorAll<HTMLButtonElement>('button[aria-label^="Demo: mark "]'))
+    .find((button) => button.getAttribute('aria-label')?.startsWith(`Demo: mark ${name} #`)
+      && button.getAttribute('aria-label')?.endsWith(owned ? ' as missing' : ' as owned')) ?? null;
   const progress = () => container.querySelector('[aria-atomic="true"]')?.textContent;
 
   beforeEach(() => {
@@ -142,7 +144,7 @@ describe('TCG demo and account boundaries', () => {
     await render(); await click(cardButton('Alakazam'));
     await click(container.querySelector('article button:last-of-type'));
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
-    await click(document.querySelector('[role="dialog"] [aria-label="Demo: mark Alakazam as missing"]'));
+    await click(document.querySelector('[role="dialog"] [aria-label="Demo: mark Alakazam #1 as missing"]'));
     expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
     expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual([]);
     await click(document.querySelector('[role="dialog"] [aria-label="Close"]'));
@@ -182,7 +184,7 @@ describe('TCG demo and account boundaries', () => {
     expect(container.textContent).toContain('Demo changes were discarded');
     expect(container.textContent).toContain('1/2');
     expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(original);
-    await click(container.querySelector('[aria-label="Add Bulbasaur to my collection"]'));
+    await click(container.querySelector('[aria-label="Add Bulbasaur #2 to my collection"]'));
     expect(usePrimeDexStore.getState().isTCGCollectionCardOwned(key, 'base1-2')).toBe(true);
     expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(expect.arrayContaining(original));
     expect(container.textContent).not.toContain('Demo checklist');
@@ -205,7 +207,7 @@ describe('TCG demo and account boundaries', () => {
       unsubscribe();
     }
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
-    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.enabled).toBe(true);
   });
 
   it('loads the public album while auth and local persistence hydration are unresolved', async () => {
@@ -215,7 +217,7 @@ describe('TCG demo and account boundaries', () => {
 
     await render();
 
-    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.enabled).toBe(true);
     expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
     expect(container.textContent).toContain('Missing');
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
@@ -323,7 +325,7 @@ describe('TCG demo and account boundaries', () => {
       await render();
       expect(cardButton('Alakazam')).not.toBeNull();
       expect(progress()).toBe('Owned 0 / 2 · Progress 0%');
-      expect(mocks.queryEnabled.at(-1)).toBe(true);
+      expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.enabled).toBe(true);
       await click(cardButton('Alakazam'));
       expect(progress()).toBe('Owned 1 / 2 · Progress 50%');
       expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(storedBefore);
@@ -393,7 +395,7 @@ describe('TCG demo and account boundaries', () => {
 
     expect(cardButton('Alakazam')).toBeNull();
     expect(container.textContent).not.toContain('Demo checklist');
-    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.enabled).toBe(true);
   });
 
   it('shows a retryable album error instead of leaving an API failure on a loader', async () => {
@@ -402,7 +404,7 @@ describe('TCG demo and account boundaries', () => {
 
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load');
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
-    expect(mocks.queryRetry.at(-1)).toBe(false);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.retry).toBe(false);
   });
 
   it('shows a retryable album error for an authenticated account after sync is ready', async () => {
@@ -412,7 +414,7 @@ describe('TCG demo and account boundaries', () => {
 
     await render();
 
-    expect(mocks.queryEnabled.at(-1)).toBe(true);
+    expect(mocks.queryOptions.filter((option) => option.queryKey.includes('collection-set-album-v3')).at(-1)?.enabled).toBe(true);
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('Unable to load');
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
     expect(container.querySelector('button')?.textContent).toContain('Retry');

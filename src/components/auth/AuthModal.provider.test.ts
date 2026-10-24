@@ -167,4 +167,28 @@ describe('AuthModal during lazy SDK loading', () => {
     expect(document.querySelector('[role="dialog"]')).toBe(dialog);
     expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('The service is temporarily unavailable. Please try again.');
   });
+
+  it('shows an unavailable-service message for Neon quota errors', async () => {
+    mocks.signIn.mockResolvedValue({
+      error: {
+        message: 'Your account or project has exceeded the quota.',
+        code: 'GENERIC_QUOTA_EXCEEDED',
+        cause: { code: '53000' },
+      },
+    });
+    await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode: 'signin' }))));
+    await act(async () => container.querySelector('button')?.click());
+
+    const dialog = document.querySelector('[role="dialog"]');
+    await act(async () => {
+      fillAutofillField(dialog!.querySelector<HTMLInputElement>('input[type="email"]')!, 'qa@lunidex.invalid');
+      fillAutofillField(dialog!.querySelector<HTMLInputElement>('input[type="password"]')!, 'synthetic-only-password');
+    });
+    await act(async () => {
+      dialog?.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+
+    expect(dialog?.querySelector('[role="alert"]')?.textContent)
+      .toBe('The service is temporarily unavailable. Please try again.');
+  });
 });

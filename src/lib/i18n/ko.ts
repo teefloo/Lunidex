@@ -14,7 +14,7 @@ export default {
     investments: tcgInvestmentsTranslations.ko,
     not_found_page: notFoundPageTranslations.ko,
     items_page: mobileToolsTranslations.ko.items_page,
-    command_palette: {"title":"Lunidex 검색","description":"페이지와 포켓몬을 검색합니다. TCG 카드는 카드 카탈로그에서 찾아보세요.","placeholder":"페이지, 포켓몬, 도구 검색…","no_results":"검색 결과가 없습니다.","pages":"페이지","items":"도구","moves":"기술","abilities":"특성","pokemon":"포켓몬"},
+    command_palette: {"title":"Lunidex 검색","description":"페이지와 포켓몬을 검색합니다. TCG 카드는 카드 카탈로그에서 찾아보세요.","placeholder":"페이지, 포켓몬, 도구 검색…","no_results":"검색 결과가 없습니다.","searching":"검색 중…","pages":"페이지","items":"도구","moves":"기술","abilities":"특성","pokemon":"포켓몬"},
     booster_guides: boosterGuidesTranslations.ko,
     pokedex_page: {
       featured_eyebrow: '포켓몬 도감 탐색',

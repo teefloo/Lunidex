@@ -14,7 +14,7 @@ export default {
     investments: tcgInvestmentsTranslations.es,
     not_found_page: notFoundPageTranslations.es,
     items_page: mobileToolsTranslations.es.items_page,
-    command_palette: {"title":"Buscar en Lunidex","description":"Busca páginas y Pokémon. Para buscar cartas TCG, abre el catálogo de cartas.","placeholder":"Buscar páginas, Pokémon y herramientas…","no_results":"No se encontraron resultados.","pages":"Páginas","items":"Objetos","moves":"Movimientos","abilities":"Habilidades","pokemon":"Pokémon"},
+    command_palette: {"title":"Buscar en Lunidex","description":"Busca páginas y Pokémon. Para buscar cartas TCG, abre el catálogo de cartas.","placeholder":"Buscar páginas, Pokémon y herramientas…","no_results":"No se encontraron resultados.","searching":"Buscando…","pages":"Páginas","items":"Objetos","moves":"Movimientos","abilities":"Habilidades","pokemon":"Pokémon"},
     booster_guides: boosterGuidesTranslations.es,
     pokedex_page: {
       featured_eyebrow: 'Explora la Pokédex',

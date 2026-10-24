@@ -7,3 +7,11 @@ export function parseSharedPokemonIds(raw: string | null, limit: number): number
     .map(Number)
     .filter((id) => Number.isSafeInteger(id) && id > 0))].slice(0, limit);
 }
+
+/** Use URL-backed selections until a comparison can be persisted to the account. */
+export function shouldUseSharedPokemonCompare(
+  hasPersistentAccess: boolean,
+  hasSharedIds: boolean,
+): boolean {
+  return hasSharedIds || !hasPersistentAccess;
+}

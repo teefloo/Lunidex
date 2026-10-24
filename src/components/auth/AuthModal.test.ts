@@ -23,7 +23,10 @@ vi.mock('@/components/ui/LunidexLogo', () => ({ default: () => null }));
 
 vi.mock('@/components/ui/dialog', async () => {
   const { createElement } = await import('react');
-  const container = ({ children }: { children?: ReactNode }) => createElement('div', null, children);
+  const container = ({ children, className, overlayClassName }: { children?: ReactNode; className?: string; overlayClassName?: string }) => createElement('div', {
+    className,
+    'data-overlay-class': overlayClassName ?? '',
+  }, children);
   return {
     Dialog: ({
       open,
@@ -98,6 +101,27 @@ describe('AuthModal', () => {
     await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
     expect(container.textContent).toContain('Create your account');
     expect(container.textContent).toContain('Name');
+  });
+
+  it('layers authentication above an open card detail modal', async () => {
+    await act(async () => root.render(createElement(AuthModal, { open: true, onOpenChange: vi.fn() })));
+
+    const content = container.querySelector<HTMLElement>('[data-overlay-class]');
+    expect(content?.className).toContain('z-[402]');
+    expect(content?.dataset.overlayClass).toBe('z-[401]');
+  });
+
+  it('names empty signup fields without showing sample values as entered data', async () => {
+    await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
+
+    const name = container.querySelector<HTMLInputElement>('input[autocomplete="name"]');
+    const email = container.querySelector<HTMLInputElement>('input[autocomplete="email"]');
+    const password = container.querySelector<HTMLInputElement>('input[autocomplete="new-password"]');
+
+    expect(name?.name).toBe('name');
+    expect(email?.name).toBe('email');
+    expect(password?.name).toBe('password');
+    expect([name?.placeholder, email?.placeholder, password?.placeholder]).toEqual(['', '', '']);
   });
 
   it('keeps the modal open when a password suggestion consumes Escape', async () => {

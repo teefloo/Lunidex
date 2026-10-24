@@ -66,8 +66,21 @@ interface AuthContextValue {
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
+function isQuotaExceededError(error: unknown, depth = 0): boolean {
+  if (depth > 3 || typeof error !== 'object' || error === null) return false;
+  const candidate = error as { status?: unknown; statusCode?: unknown; code?: unknown; cause?: unknown; error?: unknown };
+  const status = candidate.status ?? candidate.statusCode;
+  const code = typeof candidate.code === 'string' ? candidate.code.toUpperCase() : '';
+  if (status === 402 || code === 'GENERIC_QUOTA_EXCEEDED' || code === '53000') return true;
+  return isQuotaExceededError(candidate.cause, depth + 1)
+    || isQuotaExceededError(candidate.error, depth + 1);
+}
+
 function normalizeError(error: unknown): AuthErrorLike | null {
   if (!error) return null;
+  if (isQuotaExceededError(error)) {
+    return { name: 'AuthUnavailable', message: 'Authentication is temporarily unavailable.' };
+  }
   if (typeof error === 'string') return { name: 'AuthError', message: error };
   if (error instanceof Error) {
     if (error.name === 'AbortError' || error.name === 'TimeoutError') {

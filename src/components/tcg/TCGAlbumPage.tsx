@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,6 +12,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
+import { fetchSetCollectionCards } from '@/lib/api/tcg';
 import {
   getSetCompletion,
   getDisplayableCompletionByRarity,
@@ -75,6 +77,7 @@ export function TCGAlbumPage({
   const ownedList = usePrimeDexStore((s) => s.tcgOwnedCards);
   const collectionCards = usePrimeDexStore((s) => s.tcgCollectionCards);
   const browseLanguage = usePrimeDexStore((s) => s.tcgBrowseLanguage);
+  const displayCurrency = usePrimeDexStore((s) => s.tcgDisplayCurrency);
   const selectedLanguage = language ?? browseLanguage;
   const resolvedCollectionKey = collectionKey ?? encodeTCGCollectionKey(selectedLanguage, set.id) ?? undefined;
   const persistentOwnedIds = useMemo(() => new Set(
@@ -98,6 +101,7 @@ export function TCGAlbumPage({
   const [search, setSearch] = useState('');
   const [rarityFilter, setRarityFilter] = useState<string | null>(null);
   const [showMissingOnly, setShowMissingOnly] = useState(false);
+  const [isEstimateOpen, setIsEstimateOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<TCGCard | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [managedCard, setManagedCard] = useState<TCGCard | null>(null);
@@ -164,7 +168,22 @@ export function TCGAlbumPage({
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
   const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
-  const completionEstimate = useMemo(() => estimateMissingCardsValue(missingCards), [missingCards]);
+  const estimateCardsQuery = useQuery({
+    queryKey: ['tcg', 'collection-set-cards-v2', set.id, selectedLanguage, displayCurrency],
+    queryFn: ({ signal }) => fetchSetCollectionCards(set.id, selectedLanguage, signal, displayCurrency),
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+    enabled: isEstimateOpen && missingCards.length > 0,
+  });
+  const pricedMissingCards = useMemo(() => {
+    if (!estimateCardsQuery.data) return missingCards;
+    const missingIds = new Set(missingCards.map((card) => card.id));
+    return estimateCardsQuery.data.filter((card) => missingIds.has(card.id));
+  }, [estimateCardsQuery.data, missingCards]);
+  const completionEstimate = useMemo(
+    () => estimateMissingCardsValue(pricedMissingCards),
+    [pricedMissingCards],
+  );
   const startHref = `/tcg/start?${startQuery ?? `tcgLang=${encodeURIComponent(selectedLanguage)}`}`;
   const backHref = activation || demoOwnership
     ? startHref
@@ -393,34 +412,54 @@ export function TCGAlbumPage({
       ) : null}
 
       {missingCards.length > 0 ? (
-        <details className="rounded-sm border border-border/35 bg-card/20 px-3">
+        <details
+          className="rounded-sm border border-border/35 bg-card/20 px-3"
+          onToggle={(event) => setIsEstimateOpen(event.currentTarget.open)}
+        >
           <summary className="min-h-11 cursor-pointer py-3 text-xs font-bold text-foreground/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
             {t('tcg.completion_estimate_title')}
           </summary>
           <div className="border-t border-border/30 pb-3 pt-2" aria-labelledby="tcg-completion-estimate-title">
             <h2 id="tcg-completion-estimate-title" className="sr-only">{t('tcg.completion_estimate_title')}</h2>
-            <p className="text-xs font-semibold text-foreground/65">
-              {t('tcg.completion_estimate_coverage', { priced: completionEstimate.pricedCount, missing: missingCards.length })}
-            </p>
-            {completionEstimate.groups.length > 0 ? (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {completionEstimate.groups.map((group) => {
-                  let formattedTotal: string;
-                  try {
-                    formattedTotal = new Intl.NumberFormat(interfaceLanguage, { style: 'currency', currency: group.currency, maximumFractionDigits: 2 }).format(group.total);
-                  } catch {
-                    formattedTotal = `${group.total.toFixed(2)} ${group.currency}`;
-                  }
-                  return (
-                    <p key={group.provider + ':' + group.currency} className="rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-bold tabular-nums text-primary">
-                      {t('tcg.completion_estimate_partial_total', { total: formattedTotal, count: group.count, source: group.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer' })}
-                    </p>
-                  );
-                })}
+            {estimateCardsQuery.isPending ? (
+              <p className="text-sm font-semibold text-foreground/65" role="status" aria-live="polite">{t('tcg.collection_loading')}</p>
+            ) : estimateCardsQuery.isError ? (
+              <div className="flex flex-wrap items-center justify-between gap-3" role="alert">
+                <p className="text-sm font-semibold text-foreground/65">{t('tcg.collection_insights_error')}</p>
+                <button
+                  type="button"
+                  onClick={() => { void estimateCardsQuery.refetch(); }}
+                  className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-3 text-xs font-bold text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  {t('common.retry', { defaultValue: 'Retry' })}
+                </button>
               </div>
-            ) : <p className="mt-2 text-sm font-semibold text-foreground/55">{t('tcg.completion_estimate_no_prices')}</p>}
-            {completionEstimate.unpricedCount > 0 ? <p className="mt-2 text-[11px] font-medium text-amber-200/75">{t('tcg.completion_estimate_unpriced', { count: completionEstimate.unpricedCount })}</p> : null}
-            <p className="mt-2 text-[11px] text-muted-foreground">{t('tcg.completion_estimate_method')}</p>
+            ) : (
+              <>
+                <p className="text-xs font-semibold text-foreground/65">
+                  {t('tcg.completion_estimate_coverage', { priced: completionEstimate.pricedCount, missing: missingCards.length })}
+                </p>
+                {completionEstimate.groups.length > 0 ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {completionEstimate.groups.map((group) => {
+                      let formattedTotal: string;
+                      try {
+                        formattedTotal = new Intl.NumberFormat(interfaceLanguage, { style: 'currency', currency: group.currency, maximumFractionDigits: 2 }).format(group.total);
+                      } catch {
+                        formattedTotal = `${group.total.toFixed(2)} ${group.currency}`;
+                      }
+                      return (
+                        <p key={group.provider + ':' + group.currency} className="rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-bold tabular-nums text-primary">
+                          {t('tcg.completion_estimate_partial_total', { total: formattedTotal, count: group.count, source: group.provider === 'cardmarket' ? 'Cardmarket' : 'TCGplayer' })}
+                        </p>
+                      );
+                    })}
+                  </div>
+                ) : <p className="mt-2 text-sm font-semibold text-foreground/55">{t('tcg.completion_estimate_no_prices')}</p>}
+                {completionEstimate.unpricedCount > 0 ? <p className="mt-2 text-[11px] font-medium text-amber-200/75">{t('tcg.completion_estimate_unpriced', { count: completionEstimate.unpricedCount })}</p> : null}
+                <p className="mt-2 text-[11px] text-muted-foreground">{t('tcg.completion_estimate_method')}</p>
+              </>
+            )}
           </div>
         </details>
       ) : null}
