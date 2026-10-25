@@ -5,7 +5,7 @@ import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getPublicSealedProduct } from '@/lib/tcg-sealed-server';
 import { sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
 
-const CACHE = { 'Cache-Control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=600' };
+const CACHE = { 'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=21600' };
 const NO_STORE = { 'Cache-Control': 'private, no-store' };
 
 async function getMarketProduct(request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<NextResponse> {

@@ -5,6 +5,10 @@ import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 
 const PRICE_HISTORY_MAX_REQUESTS_PER_MINUTE = 60;
+const PUBLIC_CACHE_HEADERS = {
+  'Cache-Control': 'public, max-age=0, s-maxage=21600, stale-while-revalidate=86400',
+  'Vercel-CDN-Cache-Control': 'max-age=21600',
+};
 
 interface RouteParams {
   params: Promise<{ cardId: string }>;
@@ -52,7 +56,7 @@ async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
   // metric and source timestamp together before a comparable series is served.
   return NextResponse.json(
     { history: [], status: rows.length > 0 ? 'unqualified-history' : 'empty' },
-    { headers: { 'Cache-Control': 'no-store' } },
+    { headers: PUBLIC_CACHE_HEADERS },
   );
 }
 

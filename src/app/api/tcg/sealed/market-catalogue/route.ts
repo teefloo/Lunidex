@@ -6,7 +6,7 @@ import { searchPublicSealedCatalogue } from '@/lib/tcg-sealed-server';
 import { sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
 import { parsePublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 
-const PUBLIC_MARKET_CACHE = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
+const PUBLIC_MARKET_CACHE = 'public, max-age=0, s-maxage=3600, stale-while-revalidate=21600';
 const PRIVATE_NO_STORE = { 'Cache-Control': 'private, no-store' };
 
 async function getMarketCatalogue(request: NextRequest): Promise<NextResponse> {

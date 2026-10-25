@@ -4,7 +4,7 @@ import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getPublicSealedGuide } from '@/lib/tcg-sealed-guide-server';
 
-const CACHE = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
+const CACHE = 'public, max-age=0, s-maxage=3600, stale-while-revalidate=21600';
 const NO_CACHE = { 'Cache-Control': 'private, no-store' };
 
 async function getGuide(request: NextRequest): Promise<NextResponse> {
