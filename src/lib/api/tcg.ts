@@ -210,8 +210,9 @@ function getTcgCardCacheKey(cardId: string, lang: string, localizedOnly = false)
   return localizedOnly ? `${languageKey}-localized-only` : languageKey;
 }
 
-function getTcgSetCardsCacheKey(setId: string, lang: string): string {
-  return `tcg-set-cards-v6-${setId}-${resolveTcgLang(lang)}`;
+function getTcgSetCardsCacheKey(setId: string, lang: string, localizedOnly = false): string {
+  const languageKey = `tcg-set-cards-v7-${setId}-${resolveTcgLang(lang)}`;
+  return localizedOnly ? `${languageKey}-localized-only` : languageKey;
 }
 
 function getTcgCardFailureCacheKey(cacheKey: string, options: GetTCGCardOptions): string {
@@ -1369,11 +1370,13 @@ async function getCardsBySetUncached(
   setId: string,
   lang = 'en',
   signal?: AbortSignal,
+  options: GetCardsBySetOptions = {},
 ): Promise<TCGCard[]> {
   const tcgLang = resolveTcgLang(lang);
-  // v6 invalidates earlier partial-set caches so public checklist pages can
+  // v7 invalidates earlier partial-set caches so public checklist pages can
   // safely hydrate the complete set response before becoming indexable.
-  const cacheKey = getTcgSetCardsCacheKey(setId, tcgLang);
+  const allowEnglishFallback = options.allowEnglishFallback !== false;
+  const cacheKey = getTcgSetCardsCacheKey(setId, tcgLang, !allowEnglishFallback);
   const failure = tcgSetCardsFailureCache.get(cacheKey);
   if (failure) {
     throwIfAborted(signal);
@@ -1412,7 +1415,24 @@ async function getCardsBySetUncached(
       });
       throw new Error('Invalid TCGdex set response');
     }
-    const cards = data.cards?.filter((card) => card && card.id).map((card) => normaliseCard({ ...card, source: 'TCGames' }, tcgLang)) || [];
+    const set = normaliseSet(data, tcgLang);
+    const cards = data.cards
+      .filter((card) => card && card.id)
+      .map((card) => {
+        const normalizedCard = normaliseCard({ ...card, source: 'TCGames' }, tcgLang);
+        return {
+          ...normalizedCard,
+          set: normalizedCard.set
+            ? {
+                ...set,
+                ...normalizedCard.set,
+                serie: set.serie ?? normalizedCard.set.serie,
+                logo: set.logo ?? normalizedCard.set.logo,
+                symbol: set.symbol ?? normalizedCard.set.symbol,
+              }
+            : set,
+        };
+      });
 
     if (cards.length > 0) {
       tcgSetCardsMemoryCache.set(cacheKey, cards);
@@ -1428,7 +1448,7 @@ async function getCardsBySetUncached(
   } catch (error) {
     if (signal?.aborted) throw error;
 
-    if (tcgLang !== 'en') {
+    if (allowEnglishFallback && tcgLang !== 'en') {
       const fallbackCards = await getCardsBySet(setId, 'en', signal);
       if (fallbackCards.length > 0) {
         tcgSetCardsFailureCache.set(cacheKey, {});
@@ -1452,16 +1472,22 @@ async function getCardsBySetUncached(
   }
 }
 
+export interface GetCardsBySetOptions {
+  /** Keep a localized set response localized instead of replacing it with English data. */
+  allowEnglishFallback?: boolean;
+}
+
 export const getCardsBySet = async (
   setId: string,
   lang = 'en',
   signal?: AbortSignal,
+  options: GetCardsBySetOptions = {},
 ): Promise<TCGCard[]> => {
-  if (signal) return getCardsBySetUncached(setId, lang, signal);
+  if (signal) return getCardsBySetUncached(setId, lang, signal, options);
 
-  const requestKey = getTcgSetCardsCacheKey(setId, lang);
+  const requestKey = getTcgSetCardsCacheKey(setId, lang, options.allowEnglishFallback === false);
   return dedupeTcgRequest(pendingTcgSetCardsRequests, requestKey, () =>
-    getCardsBySetUncached(setId, lang));
+    getCardsBySetUncached(setId, lang, undefined, options));
 };
 
 function isRawSetBrief(value: unknown): value is RawSet {
@@ -2437,16 +2463,22 @@ export const getPokemonCards = async (
         ...searchFilters,
         searchTerm: englishSearchName || englishName,
       }, 'en')).filter((card) => isPokemonNameInCardTitle(card.name, associationNames));
-      const localizedCards = await mapWithConcurrency(
-        englishSummaries,
+      const candidateIds = new Set(englishSummaries.map((card) => card.id.toLowerCase()));
+      const setIds = [...new Set(englishSummaries
+        .map((card) => card.set?.id ?? getCardSetId(card.id))
+        .filter((setId): setId is string => Boolean(setId)))];
+      const localizedSetCards = await mapWithConcurrency(
+        setIds,
         VISUAL_METADATA_CONCURRENCY,
-        (card) => getTCGCard(card.id, tcgLang, undefined, { allowEnglishFallback: false }),
+        (setId) => getCardsBySet(setId, tcgLang, undefined, { allowEnglishFallback: false }),
       );
 
       // Do not put an English card into a localized page when TCGdex has no
       // localized detail for that card. Showing fewer cards is preferable to
-      // silently mixing languages in the same grid.
-      cards = localizedCards.filter((card): card is TCGCard => Boolean(card));
+      // silently mixing languages in the same grid. Hydrate by distinct set
+      // so a search result with many cards does not issue one detail request
+      // for every candidate.
+      cards = localizedSetCards.flat().filter((card) => candidateIds.has(card.id.toLowerCase()));
     }
 
     const cardsWithSetMetadata = await attachPokemonCardSetMetadata(cards, tcgLang);

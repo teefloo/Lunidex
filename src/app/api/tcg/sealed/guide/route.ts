@@ -3,6 +3,7 @@ import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getPublicSealedGuide } from '@/lib/tcg-sealed-guide-server';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 const CACHE = 'public, max-age=0, s-maxage=3600, stale-while-revalidate=21600';
 const NO_CACHE = { 'Cache-Control': 'private, no-store' };
@@ -16,7 +17,13 @@ async function getGuide(request: NextRequest): Promise<NextResponse> {
   try {
     const result = await getPublicSealedGuide(sql, new Date().toISOString().slice(0, 10));
     return NextResponse.json(result, { headers: { 'Cache-Control': result.index.status === 'available' ? CACHE : 'public, no-store' } });
-  } catch {
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'tcg-sealed',
+      route: '/api/tcg/sealed/guide',
+      method: 'GET',
+      operation: 'guide-read',
+    });
     return NextResponse.json({ error: 'Sealed guide unavailable.' }, { status: 503, headers: NO_CACHE });
   }
 }

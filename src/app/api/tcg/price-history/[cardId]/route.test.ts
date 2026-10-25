@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ sql: vi.fn(), getNeonClient: vi.fn(), getTCGCardCached: vi.fn() }));
+const mocks = vi.hoisted(() => ({ sql: vi.fn(), getNeonClient: vi.fn(), getTCGCardCached: vi.fn(), reportSentryException: vi.fn() }));
 vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
 vi.mock('@/lib/api/server-cache', () => ({ getTCGCardCached: mocks.getTCGCardCached }));
 vi.mock('@/lib/rate-limit', () => ({ rateLimit: () => true, ipKey: () => 'test' }));
+vi.mock('@/lib/sentry-observability', () => ({ reportSentryException: mocks.reportSentryException }));
 vi.mock('@/lib/api/observed-route', () => ({ withObservedRouteHandler: (_route: string, _feature: string, handler: unknown) => handler }));
 
 import { GET } from './route';
@@ -51,5 +52,22 @@ describe('card price history safety', () => {
 
     expect(await response.json()).toEqual({ history: [], status: 'unavailable' });
     expect(mocks.sql).not.toHaveBeenCalled();
+  });
+
+  it('returns unavailable and captures the database exception when the query fails', async () => {
+    const error = new Error('Neon database is over quota');
+    mocks.sql.mockRejectedValue(error);
+
+    const response = await requestHistory();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(await response.json()).toEqual({ history: [], status: 'unavailable' });
+    expect(mocks.reportSentryException).toHaveBeenCalledWith(error, {
+      feature: 'tcg',
+      route: '/api/tcg/price-history/:id',
+      method: 'GET',
+      operation: 'price-history-read',
+    });
   });
 });

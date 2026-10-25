@@ -14,13 +14,15 @@ import {
   sha256,
 } from '@/lib/public-api';
 
-const { getNeonClient, getNeonUserFromRequest, ensureNeonUser } = vi.hoisted(() => ({
+const { getNeonClient, getNeonUserFromRequest, ensureNeonUser, reportSentryException } = vi.hoisted(() => ({
   getNeonClient: vi.fn(),
   getNeonUserFromRequest: vi.fn(),
   ensureNeonUser: vi.fn(),
+  reportSentryException: vi.fn(),
 }));
 vi.mock('@/lib/neon/server', () => ({ getNeonClient }));
 vi.mock('@/lib/neon/auth', () => ({ getNeonUserFromRequest, ensureNeonUser }));
+vi.mock('@/lib/sentry-observability', () => ({ reportSentryException }));
 
 const userId = '00000000-0000-4000-8000-000000000001';
 
@@ -92,6 +94,7 @@ describe('public API key authentication and management', () => {
     getNeonClient.mockReset();
     getNeonUserFromRequest.mockReset();
     ensureNeonUser.mockReset();
+    reportSentryException.mockReset();
   });
 
   it('returns an unavailable response when account access cannot be checked', async () => {
@@ -234,5 +237,29 @@ describe('public API key authentication and management', () => {
     const requested = JSON.parse(String(allowed.transactionCalls[1].values[0])) as Array<{ bucket_type: string }>;
     expect(requested.map((row) => row.bucket_type)).toEqual(['write_minute', 'write_day']);
     expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('preserves the public API 503 and captures a quota reservation failure', async () => {
+    const error = new Error('Neon database is over quota');
+    const fixture = makeQuotaSql('read_write');
+    Object.assign(fixture.sql, { transaction: vi.fn().mockRejectedValue(error) });
+    getNeonClient.mockReturnValue(fixture.sql);
+
+    const response = await runPublicApi(
+      request(fixture.token),
+      '/api/v1/sealed/catalogue',
+      'read',
+      undefined,
+      async () => apiResponse({ ok: true }),
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toMatchObject({ error: { code: 'API_UNAVAILABLE' } });
+    expect(reportSentryException).toHaveBeenCalledWith(error, {
+      feature: 'api',
+      route: '/api/v1/sealed/catalogue',
+      method: 'GET',
+      operation: 'quota-reservation',
+    });
   });
 });

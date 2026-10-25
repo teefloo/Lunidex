@@ -6,6 +6,7 @@ import { createHash } from 'crypto';
 import { normalizeCampaignSlug } from '@/lib/campaigns';
 import { getProductMeasurementConsentFromCookie } from '@/lib/posthog-consent';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 const allowed = {
   tcg_start_opened: [['home_cta', 'catalog', 'direct', 'seo', 'campaign']], tcg_set_search_used: [['length_1_3', 'length_4_8', 'length_9_plus']],
@@ -66,7 +67,13 @@ async function postProductAnalytics(request: NextRequest): Promise<NextResponse>
       )
     `;
     return new NextResponse(null, { status: 204, headers });
-  } catch {
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'analytics',
+      route: '/api/analytics/product',
+      method: 'POST',
+      operation: 'daily-metric-increment',
+    });
     return new NextResponse(null, { status: 503, headers });
   }
 }

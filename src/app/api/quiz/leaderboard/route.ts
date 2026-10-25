@@ -17,6 +17,7 @@ import {
 } from '@/lib/leaderboard';
 import { DAILY_MARATHON_MAX_WRONG, QUIZ_ATTEMPT_MAX_AGE_MINUTES } from '@/lib/quiz-attempt';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 /** Row shape returned by the quiz_leaderboard_* RPCs (rank may arrive as bigint). */
 interface LeaderboardRpcRow {
@@ -79,56 +80,69 @@ async function getQuizLeaderboard(request: NextRequest): Promise<NextResponse> {
 
   const start = periodStartDate(periodParam);
 
-  // Identify the caller (if signed in) so their rank can be surfaced even
-  // outside the returned top N.
-  let callerId: string | null = null;
-  const currentUser = await getNeonUserFromRequest(request);
-  if (currentUser && await ensureNeonUser(sql, currentUser) !== false) {
-    callerId = currentUser.id;
+  try {
+    // Identify the caller (if signed in) so their rank can be surfaced even
+    // outside the returned top N.
+    let callerId: string | null = null;
+    const currentUser = await getNeonUserFromRequest(request);
+    if (currentUser && await ensureNeonUser(sql, currentUser) !== false) {
+      callerId = currentUser.id;
+    }
+
+    // One ranking pass serves both the top N and the caller's own row: a null
+    // uuid never matches, so anonymous callers simply get the top N back.
+    const data = await sql`
+      with best as (
+        select distinct on (qs.user_id)
+          qs.user_id, qs.pseudo, qs.score, qs.date
+        from public.quiz_scores qs
+        where (${start}::date is null or qs.date >= ${start}::date)
+          and qs.mode = ${DAILY_LEADERBOARD_MODE}
+          and qs.challenge = ${DAILY_LEADERBOARD_CHALLENGE}
+          and qs.score between 0 and 10
+        order by qs.user_id, qs.score desc, qs.date asc
+      ),
+      ranked as (
+        select row_number() over (order by best.score desc, best.date asc) as rank,
+          best.user_id, best.pseudo, best.score, best.date
+        from best
+      )
+      select rank, user_id, pseudo, score, date
+      from ranked
+      where rank <= ${LEADERBOARD_TOP_N}
+        or user_id = ${callerId}::uuid
+      order by rank
+    ` as LeaderboardRpcRow[];
+
+    const entries = data
+      .filter((row) => Number(row.rank) <= LEADERBOARD_TOP_N)
+      .map(toEntry);
+    const callerRow = callerId
+      ? data.find((row) => row.user_id === callerId)
+      : undefined;
+    const userEntry = callerRow ? toEntry(callerRow) : null;
+
+    const response: LeaderboardResponse = {
+      period: periodParam,
+      entries,
+      userRank: userEntry?.rank ?? null,
+      userEntry,
+    };
+    return NextResponse.json(response, {
+      headers: { 'Cache-Control': 'private, no-store' },
+    });
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'quiz',
+      route: '/api/quiz/leaderboard',
+      method: 'GET',
+      operation: 'leaderboard-read',
+    });
+    return NextResponse.json(
+      { error: 'Leaderboard unavailable' },
+      { status: 503, headers: { 'Cache-Control': 'private, no-store' } },
+    );
   }
-
-  // One ranking pass serves both the top N and the caller's own row: a null
-  // uuid never matches, so anonymous callers simply get the top N back.
-  const data = await sql`
-    with best as (
-      select distinct on (qs.user_id)
-        qs.user_id, qs.pseudo, qs.score, qs.date
-      from public.quiz_scores qs
-      where (${start}::date is null or qs.date >= ${start}::date)
-        and qs.mode = ${DAILY_LEADERBOARD_MODE}
-        and qs.challenge = ${DAILY_LEADERBOARD_CHALLENGE}
-        and qs.score between 0 and 10
-      order by qs.user_id, qs.score desc, qs.date asc
-    ),
-    ranked as (
-      select row_number() over (order by best.score desc, best.date asc) as rank,
-        best.user_id, best.pseudo, best.score, best.date
-      from best
-    )
-    select rank, user_id, pseudo, score, date
-    from ranked
-    where rank <= ${LEADERBOARD_TOP_N}
-      or user_id = ${callerId}::uuid
-    order by rank
-  ` as LeaderboardRpcRow[];
-
-  const entries = data
-    .filter((row) => Number(row.rank) <= LEADERBOARD_TOP_N)
-    .map(toEntry);
-  const callerRow = callerId
-    ? data.find((row) => row.user_id === callerId)
-    : undefined;
-  const userEntry = callerRow ? toEntry(callerRow) : null;
-
-  const response: LeaderboardResponse = {
-    period: periodParam,
-    entries,
-    userRank: userEntry?.rank ?? null,
-    userEntry,
-  };
-  return NextResponse.json(response, {
-    headers: { 'Cache-Control': 'private, no-store' },
-  });
 }
 
 async function postQuizLeaderboard(request: NextRequest): Promise<NextResponse> {

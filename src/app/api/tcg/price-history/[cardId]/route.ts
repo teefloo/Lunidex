@@ -3,6 +3,7 @@ import { getNeonClient } from '@/lib/neon/server';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 const PRICE_HISTORY_MAX_REQUESTS_PER_MINUTE = 60;
 const PUBLIC_CACHE_HEADERS = {
@@ -44,13 +45,27 @@ async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
   // metric that produced each point. Their top-level Cardmarket values may
   // describe a different finish from the current card reference. Reading them
   // cannot safely repair their identity, and GET must never create snapshots.
-  const rows = await sql`
-    select recorded_at
-    from public.tcg_price_history
-    where card_id = ${cardId}
-      and recorded_at >= ${since}::timestamptz
-    limit 1
-  ` as Array<{ recorded_at: string }>;
+  let rows: Array<{ recorded_at: string }>;
+  try {
+    rows = await sql`
+      select recorded_at
+      from public.tcg_price_history
+      where card_id = ${cardId}
+        and recorded_at >= ${since}::timestamptz
+      limit 1
+    ` as Array<{ recorded_at: string }>;
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'tcg',
+      route: '/api/tcg/price-history/:id',
+      method: 'GET',
+      operation: 'price-history-read',
+    });
+    return NextResponse.json(
+      { history: [], status: 'unavailable' },
+      { headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
 
   // A future writer must persist language, finish/printing, source, currency,
   // metric and source timestamp together before a comparable series is served.

@@ -5,6 +5,7 @@ import { getNeonUserFromRequest, ensureNeonUser } from '@/lib/neon/auth';
 import { isInactiveAccountError } from '@/lib/neon/errors';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { readJsonBody } from '@/lib/api/route-helpers';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 export type ApiPermission = 'read' | 'read_write';
 export type ApiOperation = 'read' | 'write';
@@ -314,7 +315,13 @@ export async function runPublicApi(
   let authentication: PublicApiContext | NextResponse;
   try {
     authentication = await authenticateApiKey(request, operation);
-  } catch {
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'api',
+      route: endpoint,
+      method: request.method,
+      operation: 'api-key-authentication',
+    });
     return apiError(503, 'API_UNAVAILABLE', 'The API is temporarily unavailable.');
   }
   if (!isApiContext(authentication)) return authentication;
@@ -326,6 +333,12 @@ export async function runPublicApi(
     if (error instanceof ApiAccountUnavailableError || isInactiveAccountError(error)) {
       return apiError(410, 'ACCOUNT_UNAVAILABLE', 'This account is being deleted.');
     }
+    reportSentryException(error, {
+      feature: 'api',
+      route: endpoint,
+      method: request.method,
+      operation: 'quota-reservation',
+    });
     return apiError(503, 'API_UNAVAILABLE', 'The API is temporarily unavailable.');
   }
   if (!quota.allowed) {
@@ -338,6 +351,14 @@ export async function runPublicApi(
   try {
     response = await handler(authentication);
   } catch (error) {
+    if (!(error instanceof ApiAccountUnavailableError) && !isInactiveAccountError(error)) {
+      reportSentryException(error, {
+        feature: 'api',
+        route: endpoint,
+        method: request.method,
+        operation: 'request-handler',
+      });
+    }
     response = mapApiError(error);
   }
   try {
@@ -350,7 +371,13 @@ export async function runPublicApi(
     if (accountRows[0]?.deletion_state !== 'active') {
       response = apiError(410, 'ACCOUNT_UNAVAILABLE', 'This account is being deleted.');
     }
-  } catch {
+  } catch (error) {
+    reportSentryException(error, {
+      feature: 'api',
+      route: endpoint,
+      method: request.method,
+      operation: 'account-state-check',
+    });
     response = apiError(503, 'API_UNAVAILABLE', 'The API is temporarily unavailable.');
   }
   await recordUsage(authentication, endpoint, response.status).catch(() => undefined);
