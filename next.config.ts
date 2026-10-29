@@ -262,6 +262,11 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['framer-motion', '@tanstack/react-query', 'lucide-react', 'recharts', 'sonner', 'cmdk', 'i18next', 'react-i18next'],
     optimizeCss: true,
   },
+  // The generated Pokémon OG route reads this fallback at runtime. Static
+  // public assets are not inferred as filesystem dependencies by that read.
+  outputFileTracingIncludes: {
+    '/pokemon/[name]/opengraph-image': ['./public/og/lunidex-og.jpg'],
+  },
   images: {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
